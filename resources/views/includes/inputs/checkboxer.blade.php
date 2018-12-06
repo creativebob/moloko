@@ -1,9 +1,7 @@
 {{-- Чекбоксер --}}
 
 @php
-
 	$filter = $value;
-
 @endphp
 
 @if(!empty($filter[$name]))

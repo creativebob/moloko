@@ -16,7 +16,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -44,56 +44,31 @@ class Employee extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at',
+        'employment_date',
+        'dismissal_date'
+    ];
     protected $fillable = [
-        'vacancy_id',
+        'company_id',
+        'staffer_id',
         'user_id',
         'employment_date',
         'dismissal_date',
+        'dismissal_description',
+        'author_id',
     ];
-
-    public function setEmploymentDateAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('.', $value);
-            $this->attributes['employment_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
-        };
-    }
-
-    public function getEmploymentDateAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('-', $value);
-            $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
-            return $value;
-        };
-    }
-
-    public function setDismissalDateAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('.', $value);
-            $this->attributes['dismissal_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
-        };
-    }
-
-    public function getDismissalDateAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('-', $value);
-            $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
-            return $value;
-        };
-    }
 
     // Получаем вакансию для сотрудников.
     public function staffer()
     {
         return $this->belongsTo('App\Staffer');
+    }
+
+    // Компания
+    public function company()
+    {
+        return $this->belongsTo('App\Company');
     }
 
     // Получаем сотрудника.
@@ -107,5 +82,35 @@ class Employee extends Model
     {
         return $this->belongsTo('App\User', 'author_id');
     }
+
+    // --------------------------------------- Запросы -----------------------------------------
+    // public function getIndex($request, $answer, $user)
+    // {
+    //     return $this->moderatorLimit($answer)
+    //     ->companiesLimit($answer)
+
+    //     // Так как сущность не филиала зависимая, но по факту
+    //     // все таки зависимая через staff, то делаем нестандартную фильтрацию (прямо в запросе)
+    //     ->when($answer['dependence'] == true, function ($query) use ($user) {
+    //         return $query->whereHas('staffer', function($q) use ($user){
+    //             $q->where('filial_id', $user->filial_id);
+    //         });
+    //     })
+
+    //     // ->authors($answer)
+    //     ->systemItem($answer) // Фильтр по системным записям
+    //     ->booklistFilter($request)
+    //     ->filter($request, 'position_id', 'staffer')
+    //     ->filter($request, 'department_id', 'staffer')
+    //     ->dateIntervalFilter($request, 'date_employment')
+    //     ->orderBy('moderation', 'desc')
+    //     ->orderBy('sort', 'asc')
+    //     ->paginate(30);
+    // }
+
+    // public function getItem($id, $answer)
+    // {
+    //     return $this->moderatorLimit($answer)->findOrFail($id);
+    // }
 
 }

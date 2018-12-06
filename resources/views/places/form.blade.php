@@ -28,12 +28,12 @@
 
                         <div class="small-12 medium-12 cell">
                             <label>Название помещения
-                                @include('includes.inputs.string', ['name'=>'name', 'value'=>$place->name, 'required'=>'required'])
+                                @include('includes.inputs.string', ['name'=>'name', 'value'=>$place->name, 'required' => true])
                             </label>
                         </div>
                         <div class="small-12 medium-12 cell">
                             <label>Описание
-                                @include('includes.inputs.varchar', ['name'=>'description', 'value'=>$place->description, 'required'=>''])
+                                @include('includes.inputs.varchar', ['name'=>'description', 'value'=>$place->description])
                             </label>
                         </div>
 
@@ -49,46 +49,31 @@
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
-                        <label class="input-icon">Город
-                            @php
-                            $city_name = null;
-                            $city_id = null;
-                            if(isset($place->location->city->name)) {
-                            $city_name = $place->location->city->name;
-                            $city_id = $place->location->city->id;
-                        }
-                        @endphp
-                        @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
-                    </label>
+                        {{-- Город --}}
+                       @include('includes.inputs.city_search', ['city' => isset($place->location->city->name) ? $place->location->city : null, 'id' => 'cityForm', 'required' => true])
                 </div>
                 <div class="small-12 medium-12 cell">
                     <label>Адрес
-                        @php
-                        $address = null;
-                        if (isset($place->location->address)) {
-                        $address = $place->location->address;
-                    }
-                    @endphp
-                    @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+                        @include('includes.inputs.address', ['value' => isset($place->location->address) ? $place->location->address : null, 'name'=>'address'])
                 </label>
 
             </div>
 
             <div class="small-12 medium-6 cell">
                 <label>Площадь, м2
-                    @include('includes.inputs.digit', ['name'=>'square', 'value'=>$place->square, 'required'=>'required'])
+                    @include('includes.inputs.digit', ['name'=>'square', 'value'=>$place->square, 'required' => true])
                 </label>
             </div>
             <div class="small-12 medium-6 cell">
                 <label>Форма владения
-                    @include('includes.inputs.string', ['name'=>'rent_status', 'value'=>$place->rent_status, 'required'=>''])
+                    @include('includes.inputs.string', ['name'=>'rent_status', 'value'=>$place->rent_status])
                 </label>
             </div>
 
             @include('includes.scripts.class.checkboxer')
 
             <div class="small-12 medium-12 cell checkbox checkboxer">
-                @include('includes.inputs.checkboxer', ['name'=>'places_types', 'value'=>$places_types_checkboxer])      
+                @include('includes.inputs.checkboxer', ['name'=>'places_types', 'value'=>$places_types_checkboxer])
             </div>
 
         </div>
@@ -103,7 +88,7 @@
 </div>
 
 {{-- Чекбоксы управления --}}
-@include('includes.control.checkboxes', ['item' => $place])   
+@include('includes.control.checkboxes', ['item' => $place])
 
 <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}

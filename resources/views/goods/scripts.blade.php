@@ -2,77 +2,42 @@
 
     function setUnitAbbrevation(list) {
         $('#unit-change').text($('#' + list + ' :selected').data('abbreviation'));
+        // alert($('#' + list + ' :selected').data('abbreviation'));
     };
 
-    // function setGroupProductAbbrevation($list) {
-    //     $('#unit-change').text($('#' + list + ' :selected').data('abbreviation'));
-    // };
+    // При смене категории единиц измерения меняем список единиц измерения
+    $(document).on('change', '#select-units_categories', function() {
+        $.post('/admin/get_units_list', {units_category_id: $(this).val()}, function(html){
+            $('#select-units').html(html);
+            setUnitAbbrevation('select-units');
+        });
+    });
 
     $(document).on('click', '.unit-change', function(event) {
         event.preventDefault();
         $('#units-block div').toggle();
     });
 
-    $(document).on('change', '#units-categories-list', function() {
-        var id = $(this).val();
-        // alert(id);
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/get_units_list',
-            type: "POST",
-            data: {id: id, entity: 'goods'},
-            success: function(html){
-                $('#units-list').html(html);
-                // $('#units-list').prop('disabled', false);
-                setUnitAbbrevation('units-list');
-                // $('#unit-change').text($('#units-list option:first').data('abbreviation'));
-            }
-        }); 
+    $(document).on('change', '#select-units, #select-goods_products', function() {
+        setUnitAbbrevation($(this).attr('id'));
     });
 
-    $(document).on('change', '#units-list, #goods-products-list', function() {
-        $('#unit-change').text($(this).find(':selected').data('abbreviation'));
-    });
-
-    $(document).on('change', '#goods-categories-list', function() {
+    $(document).on('change', '#select-goods_categories', function() {
 
         // var id = $(this).val();
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/goods_products_create_mode',
-            type: "POST",
-            data: $('#form-cur-goods-add').serialize(),
-            success: function(html){
+        $.post('/admin/goods_products_create_mode', $('#form-cur_goods-create').serialize(), function(html){
                 // alert(html);
                 $('#mode').html(html);
-                Foundation.reInit($('#form-cur-goods-add'));
-            }
-        }); 
+                Foundation.reInit($('#form-cur_goods-create'));
+            });
     });
 
     $(document).on('change', '.mode-select', function() {
-
-        var id = $(this).val();
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_goods_count',
-            type: "POST",
-            data: {id: id},
-            success: function(html){
-                // alert(html);
-                $('#mode').html(html);
-
-            }
-        }); 
+        $.post('/admin/ajax_goods_count', {id: $(this).val()}, function(html){
+            // alert(html);
+            $('#mode').html(html);
+        });
     });
 
     $(document).on('click', '#set-status', function(event) {
@@ -88,30 +53,13 @@
                 set_status = 'one';
             }
             // alert(set_status + ' ' + mode);
-
             // alert(id);
 
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/goods_products_create_mode',
-                type: "POST",
-                data: {mode: mode, goods_category_id: $('#goods-categories-list').val(), set_status: set_status},
-                success: function(html){
-                    // $('#goods-categories-list').removeAttr('class');
-                    // $('#goods-categories-list').addClass(mode);
-                    // alert(html);
-                    $('#mode').html(html);
-                    // $('#unit-change').removeClass('unit-change')
-                    // $('#units-block div').hide();
-                    setUnitAbbrevation('goods-products-list');
-                    // $('#unit-change').text($('#goods-products-list').find(':selected').data('abbreviation'));
-
-                    Foundation.reInit($('#form-cur-goods-add'));
-
-                }
-            });  
+            $.post('/admin/goods_products_create_mode', {mode: mode, goods_category_id: $('#select-goods_categories').val(), set_status: set_status}, function(html){
+                $('#mode').html(html);
+                setUnitAbbrevation('select-goods_products');
+                Foundation.reInit($('#form-cur_goods-create'));
+            });
         }
     });
 
@@ -128,46 +76,33 @@
         }
         // alert(checkbox_status + ' ' + set_status);
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/goods_products_create_mode',
-            type: "POST",
-            data: {mode: mode, goods_category_id: $('#goods-categories-list').val(), set_status: set_status},
-            success: function(html){
-                // $('#goods-categories-list').removeAttr('class');
-                // $('#goods-categories-list').addClass(mode);
-                // alert(html);
-                $('#mode').html(html);
-                if (mode == 'mode-select') {
-                    $('#unit-change').removeClass('unit-change');
-                    $('#units-block div').hide();
-                    setUnitAbbrevation('goods-products-list');
-                    // $('#unit-change').text($('#goods-products-list').find(':selected').data('abbreviation'));
-                } else {
-                    $('#unit-change').addClass('unit-change');
-                    setUnitAbbrevation('units-list');
-                    // $('#unit-change').text($('#units-list :selected').data('abbreviation'));
-                }
-                Foundation.reInit($('#form-cur-goods-add'));
-
+        $.post('/admin/goods_products_create_mode', {mode: mode, goods_category_id: $('#select-goods_categories').val(), set_status: set_status}, function(html){
+            $('#mode').html(html);
+            if (mode == 'mode-select') {
+                $('#unit-change').removeClass('unit-change');
+                $('#units-block div').hide();
+                setUnitAbbrevation('select-goods_products');
+                // $('#unit-change').text($('#select-goods_products').find(':selected').data('abbreviation'));
+            } else {
+                $('#unit-change').addClass('unit-change');
+                setUnitAbbrevation('select-units');
+                // $('#unit-change').text($('#select-units :selected').data('abbreviation'));
             }
-        }); 
+            Foundation.reInit($('#form-cur_goods-create'));
+        });
     });
 
     $(document).on('keyup', 'input[name=goods_product_name], input[name=name]', function(event) {
         event.preventDefault();
 
         if ($('input[name=goods_product_name]').val() == $('input[name=name]').val()) {
-            $('.item-error').css('display', 'block');
+            $('.item-error').show();
             $('.modal-button').attr('disabled', true);
         } else {
-            $('.item-error').css('display', 'none');
+            $('.item-error').hide();
             $('.modal-button').attr('disabled', false);
         }
     });
-
 
 </script>
 

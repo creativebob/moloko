@@ -30,9 +30,9 @@
             <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
             <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
 
-            <li class="tabs-title"><a data-tabs-target="catalogs" href="#catalogs">Каталоги</a></li> 
+            <li class="tabs-title"><a data-tabs-target="catalogs" href="#catalogs">Каталоги</a></li>
 
-            <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li> 
+            <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li>
 
         </ul>
     </div>
@@ -79,7 +79,7 @@
                                 <label>Группа
                                     {{ Form::select('services_product_id', $services_products_list, $service->services_product_id) }}
                                 </label>
-                                
+
                                 <label>Категория
                                     <select name="services_category_id">
                                         @php
@@ -90,7 +90,7 @@
 
                                 <div class="small-12 cell">
                                     <label>Описание услуги
-                                        @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$service->description, 'required'=>''])
+                                        @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$service->description])
                                     </label>
                                 </div>
                                 <div class="grid-x grid-margin-x">
@@ -114,7 +114,7 @@
                                 </div>
                             </div>
 
-                            
+
                         </div>
 
                     </div>
@@ -133,7 +133,7 @@
                                     <label>Удобный (вручную)
                                         {{ Form::text('manually', $service->manually) }}
                                     </label>
-                                </div> 
+                                </div>
                                 <div class="small-12 medium-4 cell">
                                     <label>Программный
                                         {{ Form::text('internal', $service->services_article->internal, ['required', 'disabled']) }}
@@ -225,7 +225,7 @@
             <div class="tabs-panel" id="catalogs">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
-                       
+
 
                         <fieldset class="fieldset-access">
                             <legend>Каталоги</legend>
@@ -275,7 +275,7 @@
                 </div>
             </div>
 
-            
+
 
         </div>
     </div>
@@ -346,7 +346,7 @@ $settings = config()->get('settings');
 
     } else {
         alert(result['error_message']);
-    }; 
+    };
 }
 })
         });
@@ -382,7 +382,7 @@ $settings = config()->get('settings');
 
                     } else {
                         alert(result['error_message']);
-                    }; 
+                    };
                 }
             })
         });
@@ -574,7 +574,7 @@ $settings = config()->get('settings');
             $('#metrics-' + id).remove();
         } else {
             alert(result['error_message']);
-        }; 
+        };
     }
 })
     }
@@ -647,8 +647,8 @@ $settings = config()->get('settings');
 
         // alert(html);
         $('#form-photo-edit').html(html);
-        // $('#first-add').foundation();
-        // $('#first-add').foundation('open');
+        // $('#modal-create').foundation();
+        // $('#modal-create').foundation('open');
     }
 })
     });
@@ -671,8 +671,8 @@ $settings = config()->get('settings');
             success: function(html){
         // alert(html);
         $('#form-photo-edit').html(html);
-        // $('#first-add').foundation();
-        // $('#first-add').foundation('open');
+        // $('#modal-create').foundation();
+        // $('#modal-create').foundation('open');
     }
 })
     });
@@ -720,8 +720,8 @@ $settings = config()->get('settings');
         // alert(html);
         $('#photos-list').html(html);
 
-        // $('#first-add').foundation();
-        // $('#first-add').foundation('open');
+        // $('#modal-create').foundation();
+        // $('#modal-create').foundation('open');
     }
 })
             });

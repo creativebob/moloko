@@ -37,6 +37,7 @@ class OrderController extends Controller
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
+        ->whereNull('draft')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
@@ -127,7 +128,7 @@ class OrderController extends Controller
         $company_id = $user->company_id;
 
         // Находим или создаем заказ для лида
-        $order = Order::firstOrCreate(['lead_id' => $request->lead_id, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
+        $order = Order::firstOrCreate(['lead_id' => $request->lead_id, 'draft' => 1, 'company_id' => $company_id], ['author_id' => $user_id]);
         // $order = Order::firstOrCreate(['lead_id' => 9443, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
 
         // Находим сущность, чтоб опрелделить модель

@@ -9,157 +9,77 @@ use App\ServicesProduct;
 use App\ServicesCategory;
 use App\Property;
 use App\Company;
-
 use App\EntitySetting;
-
-// use App\Company;
-// use App\Photo;
-// use App\Album;
-// use App\AlbumEntity;
-
-// use App\Metric;
-// use App\Article;
-// use App\Value;
-// use App\Booklist;
-// use App\Entity;
-// use App\List_item;
-// use App\Unit;
-// 
 use App\UnitsCategory;
 
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\ServicesCategoryRequest;
 
-// Политика
-use App\Policies\ServicesCategoryPolicy;
-
-// Общие классы
-use Illuminate\Support\Facades\Log;
-
-// Специфические классы 
-
 // На удаление
 use Illuminate\Support\Facades\Auth;
 
 class ServicesCategoryController extends Controller
 {
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'services_categories';
-    protected $entity_dependence = false;
+
+    // Настройки сконтроллера
+    public function __construct(ServicesCategory $services_category)
+    {
+        $this->middleware('auth');
+        $this->services_category = $services_category;
+        $this->class = ServicesCategory::class;
+        $this->model = 'App\ServicesCategory';
+        $this->entity_table = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+        $this->type = 'edit';
+    }
 
     public function index(Request $request)
     {
 
         // Подключение политики
-        $this->authorize('index', ServicesCategory::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_table);
 
-        // -----------------------------------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // -----------------------------------------------------------------------------------------------------------------------
-        $services_categories = ServicesCategory::with('services_products')
-        ->withCount('services_products')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get()
-        ->groupBy('parent_id');
-        // dd($services_categories);
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Получаем массив с вложенными элементами дял отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
-        // $services_categories_tree = get_index_tree_with_rights($services_categories, $user);
-        // dd($services_categories_tree);
+        $answer = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('includes.menu-views.enter', ['grouped_items' => $services_categories, 'class' => 'App\ServicesCategory', 'entity' => $this->entity_name, 'type' => 'edit', 'id' => $request->id]);
+
+            $id = $request->id;
+            return view('includes.menu_views.category_list',
+                [
+                    'items' => $this->services_category->getIndex($request, $answer),
+                    'entity' => $this->entity_table,
+                    'class' => $this->model,
+                    'type' => $this->type,
+                    'count' => count($this->services_category->getIndex($request, $answer)),
+                    'id' => $request->id
+                ]
+            );
         }
 
-        $entity = $this->entity_name;
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-        // dd($page_info);
-
-        return view('services_categories.index', compact('services_categories', 'page_info', 'entity'));
+        // Отдаем на шаблон
+        return view('includes.menu_views.index',
+            [
+                'items' => $this->services_category->getIndex($request, $answer),
+                'page_info' => $page_info,
+                'entity' => $this->entity_table,
+                'class' => $this->model,
+                'type' => $this->type,
+            ]
+        );
     }
 
     public function create(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), ServicesCategory::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $services_category = new ServicesCategory;
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // $services_modes_list = ServicesMode::where('type', 'services')->get()->pluck('name', 'id');
-        $services_types_list = Company::with('services_types')
-        ->where('id', $user->company_id)
-        ->get()->first()
-        ->services_types
-        ->pluck('name', 'id')
-        ->toarray();
-
-        // dd($services_types_list);
-
-        // Если добавляем вложенный элемент
-        if (isset($request->parent_id)) {
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
-
-            // Главный запрос
-            $services_categories = ServicesCategory::moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
-            ->where('id', $request->category_id)
-            ->orWhere('category_id', $request->category_id)
-            ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
-            ->keyBy('id')
-            ->toArray();
-
-            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $services_categories_list = get_select_tree($services_categories, $request->parent_id, null, null);
-            // echo $services_categories_list;
-
-            $services_category = ServicesCategory::with('services_products')->findOrFail($request->parent_id);
-            $services_list = $services_category->services_products->pluck('name', 'id');
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_units_categories = operator_right('units_categories', false, 'index');
-
-            // Главный запрос
-            $units_categories_list = UnitsCategory::with(['units' => function ($query) {
-                $query->pluck('name', 'id');
-            }])
-            ->moderatorLimit($answer_units_categories)
-            ->companiesLimit($answer_units_categories)
-            ->authors($answer_units_categories)
-            ->systemItem($answer_units_categories) // Фильтр по системным записям
-            ->template($answer_units_categories)
-            ->orderBy('sort', 'asc')
-            ->get()
-            ->pluck('name', 'id');
-
-            return view('services_categories.create-medium', compact('services_category', 'services_categories_list', 'type', 'services_types_list', 'units_categories_list', 'services_list'));
-        } else {
-
-            return view('services_categories.create-first', compact('services_category', 'services_types_list'));
-        }
+        return view('services_categories.create', ['services_category' => new $this->class, 'parent_id' => $request->parent_id, 'category_id' => $request->category_id]);
     }
 
     public function store(ServicesCategoryRequest $request)
@@ -188,7 +108,7 @@ class ServicesCategoryController extends Controller
         $services_category->display = $request->display;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
@@ -198,7 +118,7 @@ class ServicesCategoryController extends Controller
         // Смотрим что пришло
         // Если категория
         if ($request->first_item == 1) {
-            $services_category->category_status = 1; 
+            $services_category->category_status = 1;
             $services_category->services_mode_id = $request->services_mode_id;
         }
 
@@ -245,7 +165,7 @@ class ServicesCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_services_categories = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_services_categories = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $services_category = ServicesCategory::with(['services_mode', 'metrics.unit', 'metrics.values'])
@@ -287,7 +207,7 @@ class ServicesCategoryController extends Controller
             ->moderatorLimit($answer_metrics)
             ->companiesLimit($answer_metrics)
             ->authors($answer_metrics)
-            ->systemItem($answer_metrics); // Фильтр по системным записям 
+            ->systemItem($answer_metrics); // Фильтр по системным записям
         }])
         ->withCount('metrics')
         ->orderBy('sort', 'asc')
@@ -331,7 +251,7 @@ class ServicesCategoryController extends Controller
             ->moderatorLimit($answer_services_categories)
             ->companiesLimit($answer_services_categories)
             ->authors($answer_services_categories)
-            ->systemItem($answer_services_categories); // Фильтр по системным записям 
+            ->systemItem($answer_services_categories); // Фильтр по системным записям
         }])
         ->moderatorLimit($answer_services_modes)
         ->companiesLimit($answer_services_modes)
@@ -379,7 +299,7 @@ class ServicesCategoryController extends Controller
         } else {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+            $answer = operator_right($this->entity_table, $this->entity_dependence, 'index');
 
             // Главный запрос
             $services_categories = ServicesCategory::moderatorLimit($answer)
@@ -389,7 +309,7 @@ class ServicesCategoryController extends Controller
             ->where('id', $request->category_id)
             ->orWhere('category_id', $request->category_id)
             ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
+            ->get(['id','name','parent_id'])
             ->keyBy('id')
             ->toArray();
 
@@ -408,7 +328,7 @@ class ServicesCategoryController extends Controller
         // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_table, $this->entity_table, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $services_category = servicesCategory::moderatorLimit($answer)->findOrFail($id);
@@ -433,7 +353,7 @@ class ServicesCategoryController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_table])->first();
 
             if ($get_settings) {
 
@@ -458,7 +378,7 @@ class ServicesCategoryController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -470,7 +390,7 @@ class ServicesCategoryController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -480,14 +400,14 @@ class ServicesCategoryController extends Controller
             }
 
             // Директория
-            $directory = $company_id.'/media/services_categories/'.$services_category->id.'/img/';
+            $directory = $company_id.'/media/services_categories/'.$services_category->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($services_category->photo_id) {
                 $array = save_photo($request, $directory, 'avatar-'.time(), null, $services_category->photo_id, $settings);
             } else {
                 $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
-                
+
             }
             $photo = $array['photo'];
 
@@ -512,12 +432,12 @@ class ServicesCategoryController extends Controller
             ->update(['services_mode_id' => $request->services_mode_id]);
 
         }
-        
+
         $services_category->display = $request->display;
 
         // Делаем заглавной первую букву
-        // $services_category->name = get_first_letter($request->name); 
-        // 
+        // $services_category->name = get_first_letter($request->name);
+        //
         $services_category->name = $request->name;
 
         $services_category->save();
@@ -538,7 +458,7 @@ class ServicesCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $services_category = ServicesCategory::withCount('services_products')->moderatorLimit($answer)->findOrFail($id);
@@ -620,14 +540,14 @@ class ServicesCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+        $answer = operator_right($this->entity_table, $this->entity_dependence, 'index');
 
         // Главный запрос
         $services_categories = ServicesCategory::moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 
@@ -671,7 +591,7 @@ class ServicesCategoryController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -698,7 +618,7 @@ class ServicesCategoryController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -710,13 +630,13 @@ class ServicesCategoryController extends Controller
     }
 
 
-    
+
 
     public function ajax_update(Request $request, $id)
     {
         // dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_name, 'update');
+        $answer = operator_right($this->entity_table, $this->entity_table, 'update');
 
         // ГЛАВНЫЙ ЗАПРОС:
         $services_category = ServicesCategory::moderatorLimit($answer)->findOrFail($id);
@@ -731,7 +651,7 @@ class ServicesCategoryController extends Controller
         $user_id = hideGod($user);
 
         $company_id = $user->company_id;
-        
+
         // Если прикрепили фото
         if ($request->hasFile('photo')) {
 
@@ -741,7 +661,7 @@ class ServicesCategoryController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_table])->first();
 
             if ($get_settings) {
 
@@ -766,7 +686,7 @@ class ServicesCategoryController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -778,7 +698,7 @@ class ServicesCategoryController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -788,7 +708,7 @@ class ServicesCategoryController extends Controller
             }
 
             // Директория
-            $directory = $company_id.'/media/services_categories/'.$services_category->id.'/img/';
+            $directory = $company_id.'/media/services_categories/'.$services_category->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($services_category->photo_id) {
@@ -796,7 +716,7 @@ class ServicesCategoryController extends Controller
 
             } else {
                 $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
-                
+
             }
             $photo = $array['photo'];
 
@@ -821,11 +741,11 @@ class ServicesCategoryController extends Controller
             ->update(['services_type_id' => $request->services_type_id]);
 
         }
-        
+
         $services_category->display = $request->display;
 
         // Делаем заглавной первую букву
-        $services_category->name = get_first_letter($request->name); 
+        $services_category->name = get_first_letter($request->name);
 
         $services_category->save();
 
@@ -840,7 +760,7 @@ class ServicesCategoryController extends Controller
             ];
         }
     }
-    
+
     // Конкретная категория
     public function api_show(Request $request, $id)
     {

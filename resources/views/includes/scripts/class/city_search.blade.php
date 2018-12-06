@@ -13,12 +13,13 @@
 
             // Получаем фрагмент текста
             let city = $(elem).val();
+            let id = this.id;
 
             // Если символов больше 3 - делаем запрос
             if (city.length > 2) {
 
-                let id = this.id;
                 let timerId;
+                let time = this.time;
 
                 // Выполняем запрос
                 clearTimeout(timerId);
@@ -36,7 +37,6 @@
                             type: "POST",
                             data: {city_name: city},
                             beforeSend: function () {
-
                                 $('#' + id +  ' .city-check').addClass('icon-load');
                             },
                             success: function(html){
@@ -83,6 +83,8 @@
             $(elem).removeClass('icon-find-no').removeClass('sprite-16');
             $('#' + this.id + ' .table-over').remove();
         }
+
+
 
     }
 

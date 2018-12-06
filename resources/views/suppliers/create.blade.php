@@ -21,7 +21,7 @@
 @section('content')
 
   {{ Form::open(['url' => '/admin/suppliers', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
-    @include('suppliers.form', ['submitButtonText' => 'Добавить поставщика', 'param' => ''])
+    @include('companies.form', ['submitButtonText' => 'Добавить поставщика', 'param' => ''])
   {{ Form::close() }}
 
 @endsection

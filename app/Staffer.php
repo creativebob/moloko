@@ -16,9 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-    
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -55,51 +52,103 @@ class Staffer extends Model
         'filial_id'
     ];
 
-    // Получаем отдел данной должности.
+    // Отдел должности.
     public function department()
     {
         return $this->belongsTo('App\Department');
     }
 
-    // Получаем Филиал данной должности.
+    // Филиал должности.
     public function filial()
     {
         return $this->belongsTo('App\Department', 'filial_id');
     }
 
-    // Получаем должность
+    // Должность
     public function position()
     {
         return $this->belongsTo('App\Position');
     }
 
-    // Получаем пользователя
+    // Пользователь
     public function user()
     {
         return $this->belongsTo('App\User');
     }
 
-    // Получаем сотрудников
+    // Сотрудники
     public function employees()
     {
         return $this->hasMany('App\Employee');
     }
 
-    // Получаем компанию
+    // Текущий сотрудник
+    public function employee()
+    {
+        return $this->hasOne('App\Employee')->whereNull('dismissal_date');
+    }
+
+    // Компания
     public function company()
     {
         return $this->belongsTo('App\Company');
     }
 
-    // Получаем автора
+    // Автор
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');
     }
 
+    // Получаем все графики на сотрудника
     public function schedules()
     {
-        return $this->belongsToMany('App\Schedule', 'schedule_entity', 'entity_id', 'schedule_id')->where('entity', 'staff');
+        return $this->morphToMany('App\Schedule', 'schedule_entities')->withPivot('mode');
+    }
+
+    // Получаем график компании в адаптированном под шаблон виде
+    public function getMainScheduleAttribute($value) {
+        $main_schedule = $this->morphToMany('App\Schedule', 'schedule_entities')->with('worktimes')->wherePivot('mode', 'main')->first();
+        if($main_schedule != null){
+            return $main_schedule;
+        } else {
+            return $value;
+        }
+    }
+
+    // Получаем график компании в адаптированном под шаблон виде
+    public function getWorktimeAttribute($value) {
+        $worktime = $this->morphToMany('App\Schedule', 'schedule_entities')->wherePivot('mode', 'main')->first();
+        if($worktime != null){
+            $worktime = $worktime->worktimes;
+            return worktime_to_format($worktime->keyBy('weekday'));
+        } else {
+            return $value;
+        }
+    }
+
+    // Получаем
+    public function worktime()
+    {
+        return $this->hasMany('App\Worktime');
+    }
+
+    // --------------------------------------- Запросы -----------------------------------------
+    public function getIndex($request, $answer)
+    {
+        return $this->with('filial', 'department', 'user.main_phones', 'position', 'employee', 'company.filials')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->booklistFilter($request)
+        ->filter($request, 'position_id')
+        ->filter($request, 'department_id')
+        ->dateIntervalFilter($request, 'date_employment')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->paginate(30);
     }
 
 }

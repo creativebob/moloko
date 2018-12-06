@@ -17,21 +17,25 @@ class CreateDealersTable extends Migration
             $table->increments('id');
 
             $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
-            // $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->integer('contragent_id')->nullable()->unsigned()->comment('ID контрагента');
-            // $table->foreign('contragent_id')->references('id')->on('companies');
+            $table->integer('client_id')->nullable()->unsigned()->comment('ID клиента');
+            $table->foreign('client_id')->references('id')->on('clients');
+
+            $table->integer('discount')->nullable()->unsigned()->comment('Скидка дилера');
+            $table->text('description')->nullable()->comment('Описание дилера');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-            // $table->foreign('author_id')->references('id')->on('users');
+            $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
             $table->timestamps();
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
+            $table->softDeletes();
         });
     }
 

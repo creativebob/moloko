@@ -9,169 +9,114 @@ use App\Sector;
 use Illuminate\Http\Request;
 use App\Http\Requests\SectorRequest;
 
-// Политика
-use App\Policies\SectorPolicy;
+// Подключаем трейт записи и обновления категорий
+use App\Http\Controllers\Traits\CategoryControllerTrait;
 
-// Общие классы
-use Illuminate\Support\Facades\Log;
-
-// Специфические классы 
-
-// На удаление
-use Illuminate\Support\Facades\Auth;
+// Транслитерация
+use Transliterate;
 
 class SectorController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'sectors';
-    protected $entity_dependence = false;
+    // Настройки сконтроллера
+    public function __construct(Sector $sector)
+    {
+        $this->middleware('auth');
+        $this->sector = $sector;
+        $this->class = Sector::class;
+        $this->model = 'App\Sector';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+        $this->type = 'modal';
+    }
+
+    // Используем трейт записи и обновления категорий
+    use CategoryControllerTrait;
 
     public function index(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Sector::class);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // -----------------------------------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // -----------------------------------------------------------------------------------------------------------------------
-
-        $sectors = Sector::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->template($answer) // Выводим шаблоны альбомов
-        ->booklistFilter($request)
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get()
-        ->groupBy('parent_id');
-
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             'booklist'              // Списки пользователя
         ]);
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Получаем массив с вложенными элементами для отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
-        // $sectors_tree = get_index_tree_with_rights($sectors, $user);
-        // dd($sectors_tree);
-
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-        
+        $page_info = pageInfo($this->entity_alias);
+
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('includes.menu-views.enter', ['grouped_items' => $sectors, 'class' => 'App\Sector', 'entity' => $this->entity_name, 'type' => 'modal', 'id' => $request->id]);
+
+            return view('includes.menu_views.category_list',
+                [
+                    'items' => $this->sector->getIndex($request, $answer),
+                    'entity' => $this->entity_alias,
+                    'class' => $this->model,
+                    'type' => $this->type,
+                    'count' => count($this->sector->getIndex($request, $answer)),
+                    'id' => $request->id,
+                    'nested' => 'companies_count',
+                ]
+            );
         }
 
-        $entity = $this->entity_name;
-
         // Отдаем на шаблон
-        return view('sectors.index', compact('sectors', 'page_info', 'filter', 'entity'));
+        return view('includes.menu_views.index',
+            [
+                'items' => $this->sector->getIndex($request, $answer),
+                'page_info' => $page_info,
+                'entity' => $this->entity_alias,
+                'class' => $this->model,
+                'type' => $this->type,
+                'filter' => $filter,
+                'id' => $request->id,
+                'nested' => 'companies_count',
+            ]
+        );
     }
-
 
     public function create(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Sector::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $sector = new Sector;
-
-        if (isset($request->parent_id)) {
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
-
-            // Главный запрос
-            $sectors = Sector::moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
-            ->template($answer) // Выводим шаблоны альбомов
-            ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
-            ->keyBy('id')
-            ->toArray();
-
-            // dd($sectors);
-
-            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $sectors_list = get_select_tree($sectors, $request->parent_id, null, null);
-
-            return view('sectors.create-medium', ['sector' => $sector, 'sectors_list' => $sectors_list]);
-        } else {
-            return view('sectors.create-first', ['sector' => $sector]);
-        }
+        return view('includes.menu_views.create', [
+            'item' => new $this->class,
+            'entity' => $this->entity_alias,
+            'title' => 'Добавление сектора',
+            'parent_id' => $request->parent_id,
+            'category_id' => $request->category_id
+        ]);
     }
 
     public function store(SectorRequest $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Sector::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+        // Заполнение и проверка основных полей в трейте
+        $sector = $this->storeCategory($request);
 
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        // Пишем в базу
-        $sector = new Sector;
-        $sector->company_id = $company_id;
-        $sector->author_id = $user_id;
-
-        // Модерация и системная запись
-        $sector->system_item = $request->system_item;
-
-        $sector->display = $request->display;
-        
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false){
-            $sector->moderation = 1;
-        }
-        
-        // Смотрим что пришло
-        // Если категория
-        if ($request->first_item == 1) {
-            $sector->category_status = 1;
-        }
-
-        // Если вложенный
-        if ($request->medium_item == 1) {
-            $sector->parent_id = $request->parent_id;
-        }
-
-        // Делаем заглавной первую буквуa
-        $sector->name = get_first_letter($request->name);
+        // Тег
+        $sector->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
 
         $sector->save();
 
         if ($sector) {
-
             // Переадресовываем на index
-            return redirect()->action('SectorController@index', ['id' => $sector->id]);
+            return redirect()->route('sectors.index', ['id' => $sector->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -188,79 +133,40 @@ class SectorController extends Controller
     public function edit($id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $sector = Sector::moderatorLimit($answer)->findOrFail($id);
+        // Получаем из сессии необходимые данные (Функция находится в Helpers)
+        $sector = $this->sector->getItem($id, operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)));
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
 
-        if ($sector->category_status == 1) {
-
-            // Меняем категорию
-            return view('sectors.edit-first', ['sector' => $sector]);
-        } else {
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
-
-            // Главный запрос
-            $sectors = Sector::moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->authors($answer)
-            ->systemItem($answer) // Фильтр по системным записям
-            ->template($answer) // Выводим шаблоны альбомов
-            ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
-            ->keyBy('id')
-            ->toArray();
-
-            // dd($sectors);
-
-            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-            $sectors_list = get_select_tree($sectors, $sector->parent_id, null, null);
-
-            return view('sectors.edit-medium', ['sector' => $sector, 'sectors_list' => $sectors_list]);
-        }
+        return view('includes.menu_views.edit', [
+            'item' => $sector,
+            'entity' => $this->entity_alias,
+            'title' => 'Редактирование сектора',
+            'parent_id' => $sector->parent_id,
+            'category_id' => $sector->category_id
+        ]);
     }
 
     public function update(SectorRequest $request, $id)
-    {    
+    {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $sector = Sector::moderatorLimit($answer)->findOrFail($id);
+        // Получаем из сессии необходимые данные (Функция находится в Helpers)
+        $sector = $this->sector->getItem($id, operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)));
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
 
-        // Получаем авторизованного пользователя
-        $user = $request->user();
+        // Заполнение и проверка основных полей в трейте
+        $sector = $this->updateCategory($request, $sector);
 
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        // Модерация и системная запись
-        $sector->system_item = $request->system_item;
-        $sector->moderation = $request->moderation;
-
-        $sector->display = $request->display;
-
-        $sector->parent_id = $request->parent_id;
-        $sector->editor_id = $user_id;
-
-        // Делаем заглавной первую букву
-        $sector->name = get_first_letter($request->name);
+        $sector->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
 
         $sector->save();
 
         if ($sector) {
             // Переадресовываем на index
-            return redirect()->action('SectorController@index', ['id' => $sector->id]);
+            return redirect()->route('sectors.index', ['id' => $sector->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -270,185 +176,46 @@ class SectorController extends Controller
     }
 
     public function destroy(Request $request, $id)
-    { 
+    {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        // Получаем из сессии необходимые данные (Функция находится в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $sector = Sector::moderatorLimit($answer)->findOrFail($id);
+        $sector = $this->sector->getItem($answer, $id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
 
-        // Удаляем ajax
-        // Проверяем содержит ли индустрия вложения
-        $sector_parent = Sector::moderatorLimit($answer)->whereParent_id($id)->first();
-
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
+        // Проверяем содержит ли сектор вложения
+        $sectors_count = Sector::moderatorLimit($answer)
+        ->whereParent_id($sector->id)
+        ->count();
 
         // Если содержит, то даем сообщение об ошибке
-        if ($sector_parent) {
+        if ($sectors_count > 0) {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Данная область содержит населенные пункты, удаление невозможно'
+                'error_message' => 'Категория содержит вложенные элементы, удаление невозможно!'
             ];
         } else {
 
-            // Если нет, мягко удаляем
-            if ($sector->category_status == 1) {
-                $parent = null;
-            } else {
-                $parent = $sector->parent_id;
-            }
+            $parent_id = $sector->parent_id;
 
-            $sector->editor_id = $user_id;
+            // Скрываем бога
+            $sector->editor_id = hideGod($request->user());
             $sector->save();
 
             $sector = Sector::destroy($id);
 
             if ($sector) {
                 // Переадресовываем на index
-                return redirect()->action('SectorController@index', ['id' => $parent]);
+                return redirect()->route('sectors.index', ['id' => $parent_id]);
             } else {
                 $result = [
                     'error_status' => 1,
-                    'error_message' => 'Ошибка при записи сектора!'
+                    'error_message' => 'Ошибка при удалении сектора!'
                 ];
             }
         }
-    }
-
-    // Проверка наличия в базе
-    public function ajax_check(Request $request)
-    {
-
-        // Проверка отдела в нашей базе данных
-        $sector = Sector::where('name', $request->name)->first();
-
-        // Если такое название есть
-        if ($sector) {
-            $result = [
-                'error_status' => 1,
-            ];
-
-        // Если нет
-        } else {
-            $result = [
-                'error_status' => 0
-            ];
-        }
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Список секторов
-    public function sectors_list(Request $request)
-    {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
-
-        // Главный запрос
-        $sectors = Sector::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->get(['id','name','category_status','parent_id'])
-        ->keyBy('id')
-        ->toArray();
-
-        // dd($sectors);
-
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $sectors_list = get_select_tree($products_categories, $request->parent, null, $request->id);
-        // dd($sectors_list);
-
-        // Отдаем ajax
-        echo json_encode($sectors_list, JSON_UNESCAPED_UNICODE);
-
-    }
-
-  // Сортировка
-    public function ajax_sort(Request $request)
-    {
-        $result = '';
-        $i = 1;
-
-        foreach ($request->sectors as $item) {
-            Sector::where('id', $item)->update(['sort' => $i]);
-
-            // Проверка на ошибки
-            // if ($sector) {
-            //   $result = [
-            //     'error_status' => 0,
-            //   ];
-            // } else {
-            //   $result = [
-            //     'error_status' => 1,
-            //     'msg' => 'Произошла непредвиденная ошибка, попробуйте перезагрузить страницу и попробуйте еще раз'
-            //   ];
-            // }
-            // return json_encode($result, JSON_UNESCAPED_UNICODE);
-
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Sector::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Sector::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 }

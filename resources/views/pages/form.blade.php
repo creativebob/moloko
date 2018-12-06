@@ -15,16 +15,16 @@
     @endif
     <!-- Страница -->
     <label>Название страницы
-      @include('includes.inputs.string', ['name'=>'name', 'value'=>$page->name, 'required'=>'required'])
+      @include('includes.inputs.string', ['name'=>'name', 'value'=>$page->name, 'required' => true])
     </label>
     <label>Заголовок страницы
-      @include('includes.inputs.string', ['name'=>'title', 'value'=>$page->title, 'required'=>'required'])
+      @include('includes.inputs.string', ['name'=>'title', 'value'=>$page->title, 'required' => true])
     </label>
     <label>Описание страницы
-      @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$page->description, 'required'=>''])
+      @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$page->description])
     </label>
     <label>Алиас страницы
-      @include('includes.inputs.text-en', ['name'=>'alias', 'value'=>$page->alias, 'required'=>'required'])
+      @include('includes.inputs.text-en', ['name'=>'alias', 'value'=>$page->alias, 'required' => true])
       <div class="sprite-input-right find-status" id="name-check"></div>
       <div class="item-error">Такая страница уже существует!</div>
     </label>
@@ -45,7 +45,7 @@
   </div>
 
   {{-- Чекбоксы управления --}}
-  @include('includes.control.checkboxes', ['item' => $page])   
+  @include('includes.control.checkboxes', ['item' => $page])
 
   <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
     {{ Form::submit($submitButtonText, ['class'=>'button']) }}

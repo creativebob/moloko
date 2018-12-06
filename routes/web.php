@@ -12,6 +12,8 @@ use App\RawsArticle;
 
 use Carbon\Carbon;
 
+use Fomvasss\Dadata\Facades\DadataSuggest;
+
 // use GuzzleHttp\Client;
 
 /*
@@ -27,10 +29,9 @@ use Carbon\Carbon;
 
 Auth::routes();
 
+
 // Вход в панель управления
-Route::get('/', function () {
-    return view('layouts.enter');
-});
+Route::get('/', 'AppController@enter');
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
@@ -46,95 +47,7 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 
 // ---------------------------- Методы для парсера и одноразовые ----------------------------------------
 Route::any('/check_class', 'ClassController@check_class');
-
 Route::any('/lol', 'GoodsController@check_coincidence_name');
-
-
-// Route::get('/lol', function () {
-
-//     $leads = Lead::withCount(['choices_goods_categories', 'choices_services_categories', 'choices_raws_categories'])->get();
-//     $count_goods = $leads->where('choices_goods_categories_count', '>', 1)->count();
-//     dd($count_goods);
-
-//     $count_services = $leads->where('choices_services_categories_count', '>', 1)->count();
-//     dd($count_services);
-
-//     $count_raws = $leads->where('choices_raws_categories_count', '>', 1)->count();
-//     dd($count_raws);
-// });
-// Route::get('/columns', function () {
-//     $columns = Schema::getColumnListing('leads');
-//     // dd($columns);
-//     $text = "<select>";
-//     foreach ($columns as $column) {
-//      $text .= "<option>" . $column . "</option>";
-//     }
-//     $text .= "</select>";
-//    echo $text;
-// });
-
-// Route::any('/lol', function () {
-
-//     $leads = Lead::with('location.city')
-//     ->whereHas('location', function ($q) {
-//         $q->whereNotNull('address')->whereNull('longitude')->whereNull('latitude');
-//     })
-//     // ->inRandomOrder()
-//     // ->first();
-//     ->get();
-//     // dd($lead);
-
-//     $count = 0;
-
-//     foreach ($leads as $lead) {
-
-//         // $client = new Client('https://geocode-maps.yandex.ru/1.x/?');
-//         // $request = $client->createRequest();
-//         // $request->getQuery()
-//         // ->set('geocode', $lead->location->city->name . ', ' .$lead->location->address)
-//         // ->set('format', 'json');
-
-//         $request_params = [
-//             'geocode' => $lead->location->city->name . ', ' .$lead->location->address,
-//             'format' => 'json',
-
-//         ];
-//         $params = http_build_query($request_params);
-
-//     // dd($get_params);
-
-//         $result = (file_get_contents('https://geocode-maps.yandex.ru/1.x/?' . $params));
-//     // dd($get_params);
-
-//          /** @var $response Response */
-//  $result = $request->send();
-
-//         $res = json_decode($result);
-//         if (count($res->response->GeoObjectCollection->featureMember) == 1) {
-
-//             // echo $request_params['geocode']. "\r\n";
-//             $string = $res->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
-//             $position = explode(' ', $string);
-
-//             $location = Location::whereId($lead->location_id)->update(['longitude' => $position[0], 'latitude' => $position[1]]);
-//             // dd($lead->id);
-//         // $date = $
-
-//             $count++;
-//         }
-//     }
-
-//     dd('Гатова - ' . $count);
-
-
-//     // $result = (file_get_contents('http://search.maps.sputnik.ru/search?'.$get_params));
-
-//     // echo $request_params['q']. "\r\n";
-
-//     // $res = json_decode($result);
-//     // dd($res->result);
-// });
-
 Route::get('/entity_page', 'ParserController@entity_page')->middleware('auth');
 // Route::get('/geoposition_locations', 'ParserController@geoposition_locations')->middleware('auth');
 // Route::get('/geoposition_locations_parse', 'ParserController@geoposition_locations_parse')->middleware('auth');
@@ -149,101 +62,107 @@ Route::get('/entity_page', 'ParserController@entity_page')->middleware('auth');
 // Route::get('/cac_parser', 'ParserController@challenges_active_count')->middleware('auth');
 Route::get('/choice_parser', 'ParserController@choice_parser')->middleware('auth');
 
-Route::get('/map', function() {
-
-    // $lead = Lead::with('location')
-    // ->whereHas('location', function ($q) {
-    //     $q->whereNotNull('latitude');
-    // })
-    // // ->inRandomOrder()
-    // // ->first();
-
-    $leads = Lead::with(['location.city', 'main_phones', 'stage', 'claims' => function ($q) {
-        $q->whereStatus(1);
-    }])
-    ->whereHas('location', function ($q) {
-        $q->whereNotNull('longitude')->whereNotNull('latitude');
-    })
-    ->where('stage_id', '!=', 13)
-    ->where('lead_type_id', '!=', 3)
-    ->get();
-    // dd($leads);
-
-    $lead = $leads->first();
-    // dd($lead);
-
-    $mass = [];
-    foreach ($leads as $lead) {
-
-        $claims_count = count($lead->claims) > 0 ? count($lead->claims) : 0;
-
-        $mass[] = [
-            'coords' => [(float)$lead->location->latitude, (float)$lead->location->longitude],
-            'info' => [
-                'name' => "<a href=" . asset('admin/leads/' . $lead->id .'/edit') . " target=_blank>" . $lead->name . "</a>",
-                'order' => $lead->case_number,
-                'phone' => decorPhone($lead->main_phone->phone),
-                'address' => 'г. ' . $lead->location->city->name . ', ' . $lead->location->address,
-                'stage' => [
-                    'id' => $lead->stage_id,
-                    'name' => $lead->stage->name,
-                ],
-                'claims_count' => $claims_count,
-            ]
-        ];
-    };
-
-    // $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
-
-    // dd($mass);
-    // $coords = $mass;
-
-    $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
-
-    // dd($coords);
-
-    // dd($lead);
-
-    return view('leads.map', compact('lead', 'coords'));
-})->middleware('auth');
-
-Route::get('/route', function() {
-
-    $lead = Lead::with(['location'])
-    ->whereHas('location', function ($q) {
-        $q->whereNotNull('longitude')->whereNotNull('latitude');
-    })
-    ->where('stage_id', '!=', 13)
-    ->where('lead_type_id', '!=', 3)
-    ->inRandomOrder()
-    ->first();
+// Route::get('/dadata', function() {
+//     $result = DadataSuggest::suggest("party", ["query"=>"солтысяк"]);
+//     dd($result);
+// })->middleware('auth');
 
 
-    $mass = [
-        'coords' => [(float)$lead->location->latitude, (float)$lead->location->longitude],
-    ];
+// Route::get('/map', function() {
 
-    $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
+//     // $lead = Lead::with('location')
+//     // ->whereHas('location', function ($q) {
+//     //     $q->whereNotNull('latitude');
+//     // })
+//     // // ->inRandomOrder()
+//     // // ->first();
 
-    return view('leads.route', compact('coords'));
-})->middleware('auth');
+//     $leads = Lead::with(['location.city', 'main_phones', 'stage', 'claims' => function ($q) {
+//         $q->whereStatus(1);
+//     }])
+//     ->whereHas('location', function ($q) {
+//         $q->whereNotNull('longitude')->whereNotNull('latitude');
+//     })
+//     ->where('stage_id', '!=', 13)
+//     ->where('lead_type_id', '!=', 3)
+//     ->get();
+//     // dd($leads);
 
-Route::get('/mounth', function() {
+//     $lead = $leads->first();
+//     // dd($lead);
+
+//     $mass = [];
+//     foreach ($leads as $lead) {
+
+//         $claims_count = count($lead->claims) > 0 ? count($lead->claims) : 0;
+
+//         $mass[] = [
+//             'coords' => [(float)$lead->location->latitude, (float)$lead->location->longitude],
+//             'info' => [
+//                 'name' => "<a href=" . asset('admin/leads/' . $lead->id .'/edit') . " target=_blank>" . $lead->name . "</a>",
+//                 'order' => $lead->case_number,
+//                 'phone' => decorPhone($lead->main_phone->phone),
+//                 'address' => 'г. ' . $lead->location->city->name . ', ' . $lead->location->address,
+//                 'stage' => [
+//                     'id' => $lead->stage_id,
+//                     'name' => $lead->stage->name,
+//                 ],
+//                 'claims_count' => $claims_count,
+//             ]
+//         ];
+//     };
+
+//     // $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
+
+//     // dd($mass);
+//     // $coords = $mass;
+
+//     $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
+
+//     // dd($coords);
+
+//     // dd($lead);
+
+//     return view('leads.map', compact('lead', 'coords'));
+// })->middleware('auth');
+
+// Route::get('/route', function() {
+
+//     $lead = Lead::with(['location'])
+//     ->whereHas('location', function ($q) {
+//         $q->whereNotNull('longitude')->whereNotNull('latitude');
+//     })
+//     ->where('stage_id', '!=', 13)
+//     ->where('lead_type_id', '!=', 3)
+//     ->inRandomOrder()
+//     ->first();
 
 
-    $start = new Carbon('first day of last month');
-    $start->startOfMonth();
-    $end = new Carbon('last day of last month');
-    $end->endOfMonth();
+//     $mass = [
+//         'coords' => [(float)$lead->location->latitude, (float)$lead->location->longitude],
+//     ];
 
-    // dd($end);
+//     $coords = json_encode($mass, JSON_UNESCAPED_UNICODE);
 
-    $leads = Lead::where('created_at', '>=', $start)->where('created_at', '<=', $end)->whereNull('draft')->get();
-    // dd($leads);
-    $telegram_message = "Отчет за сентябрь: \r\n\r\nЗвонков: ".count($leads->where('lead_type_id', 1))."\r\Заявок с сайта: ".count($leads->where('lead_type_id', 2))."\r\n\r\nВсего: ".count($leads);
+//     return view('leads.route', compact('coords'));
+// })->middleware('auth');
 
-    dd($telegram_message);
-})->middleware('auth');
+// Route::get('/mounth', function() {
+
+
+//     $start = new Carbon('first day of last month');
+//     $start->startOfMonth();
+//     $end = new Carbon('last day of last month');
+//     $end->endOfMonth();
+
+//     // dd($end);
+
+//     $leads = Lead::where('created_at', '>=', $start)->where('created_at', '<=', $end)->whereNull('draft')->get();
+//     // dd($leads);
+//     $telegram_message = "Отчет за сентябрь: \r\n\r\nЗвонков: ".count($leads->where('lead_type_id', 1))."\r\Заявок с сайта: ".count($leads->where('lead_type_id', 2))."\r\n\r\nВсего: ".count($leads);
+
+//     dd($telegram_message);
+// })->middleware('auth');
 
 // ------------------------------------ Telegram ----------------------------------------
 
@@ -280,6 +199,8 @@ Route::post('/sort/{entity_alias}', 'AppController@ajax_sort')->middleware('auth
 Route::post('/system_item', 'AppController@ajax_system_item')->middleware('auth');
 // Отображение на сайте
 Route::post('/display', 'AppController@ajax_display')->middleware('auth');
+// Отображение на сайте
+Route::post('/check', 'AppController@ajax_check')->middleware('auth');
 
 
 // --------------------------------------- Настройки -----------------------------------------------
@@ -309,11 +230,6 @@ Route::any('/catalog_products/add_product', 'CatalogProductController@add_produc
 Route::any('/albums_categories', 'AlbumsCategoryController@index')->middleware('auth');
 // Основные методы
 Route::resource('/albums_categories', 'AlbumsCategoryController')->middleware('auth');
-// Проверка на существование категории альбомов
-Route::post('/albums_category_check', 'AlbumsCategoryController@ajax_check')->middleware('auth');
-// Select категорий альбомов
-Route::post('/albums_categories_list', 'AlbumsCategoryController@albums_categories_list')->middleware('auth');
-
 
 // --------------------------------------- Альбомы -----------------------------------------------
 
@@ -351,7 +267,7 @@ Route::patch('/ajax_update_photo/{id}', 'PhotoController@update_photo')->middlew
 Route::resource('/places', 'PlaceController')->middleware('auth');
 
 // --------------------------------------- Склады -----------------------------------------------
-Route::resource('stocks', 'StockController')->middleware('auth');
+// Route::resource('stocks', 'StockController')->middleware('auth');
 
 // --------------------------------------- Свойства -----------------------------------------------
 Route::post('/ajax_add_property', 'PropertyController@add_property')->middleware('auth');
@@ -363,9 +279,10 @@ Route::resource('/metrics', 'MetricController')->middleware('auth');
 
 // Пишем метрику через ajax
 Route::post('/ajax_store_metric', 'MetricController@ajax_store')->middleware('auth');
+
 // Добавляем / удаляем связь сущности с метрикой
 Route::match(['get', 'post'], '/ajax_add_relation_metric', 'MetricController@ajax_add_relation')->middleware('auth');
-Route::post('/ajax_delete_relation_metric', 'MetricController@ajax_delete_relation')->middleware('auth');
+Route::any('/ajax_delete_relation_metric', 'MetricController@ajax_delete_relation')->middleware('auth');
 
 Route::post('/ajax_add_metric_value', 'MetricController@add_metric_value')->middleware('auth');
 
@@ -379,7 +296,7 @@ Route::post('/ajax_delete_relation_composition', 'CompositionController@ajax_del
 
 Route::post('/ajax_add_page_composition', 'CompositionController@ajax_add')->middleware('auth');
 
-Route::post('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
+Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
 
 
@@ -389,8 +306,6 @@ Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middlew
 Route::any('/raws_categories', 'RawsCategoryController@index')->middleware('auth');
 // Основные методы
 Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth');
-// Проверка на существование категории продукции
-Route::post('/raws_category_check', 'RawsCategoryController@ajax_check')->middleware('auth');
 
 
 // --------------------------------- Продукция сырья --------------------------------------------
@@ -422,8 +337,6 @@ Route::any('/goods_categories', 'GoodsCategoryController@index')->middleware('au
 Route::match(['get', 'post'], '/goods_categories/{id}/edit', 'GoodsCategoryController@edit')->middleware('auth');
 // Основные методы
 Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('auth');
-// Проверка на существование
-Route::post('/goods_category_check', 'GoodsCategoryController@ajax_check')->middleware('auth');
 
 // Отображение на сайте
 Route::any('/goods_categories_get_products', 'GoodsCategoryController@ajax_get_products')->middleware('auth');
@@ -445,6 +358,10 @@ Route::any('/goods_products_list', 'GoodsProductController@ajax_get_products_lis
 
 // ---------------------------------- Товары (Артикулы) -------------------------------------------
 // Route::any('/goods/create', 'GoodsController@create')->middleware('auth');
+//
+// Фотки
+Route::any('/goods/add_photo', 'GoodsController@add_photo')->middleware('auth');
+Route::post('/goods/photos', 'GoodsController@photos')->middleware('auth');
 
 // Основные методы
 Route::resource('/goods', 'GoodsController')->middleware('auth');
@@ -455,9 +372,9 @@ Route::post('/goods/archive/{id}', 'GoodsController@archive')->middleware('auth'
 // Отображение на сайте
 Route::post('/goods_sync', 'GoodsController@ajax_sync')->middleware('auth');
 
-// Фотки
-Route::any('/goods/add_photo', 'GoodsController@add_photo')->middleware('auth');
-Route::post('/goods/photos', 'GoodsController@photos')->middleware('auth');
+Route::any('/goods_check', 'GoodsController@ajax_check')->middleware('auth');
+
+
 
 
 // -------------------------------- Категории услуг -------------------------------------------
@@ -499,11 +416,6 @@ Route::post('/service/photos', 'ServiceController@photos')->middleware('auth');
 Route::any('/sectors', 'SectorController@index')->middleware('auth');
 // Основные методы
 Route::resource('/sectors', 'SectorController')->middleware('auth');
-// Проверка на существование сектора
-Route::post('/sector_check', 'SectorController@ajax_check')->middleware('auth');
-// Select секторов
-Route::post('/sectors_list', 'SectorController@sectors_list')->middleware('auth');
-
 
 // --------------------------------------- Компании -----------------------------------------------
 
@@ -617,7 +529,7 @@ Route::post('/accounts_check', 'AccountController@ajax_check')->middleware('auth
 // --------------------------------------- Рекламные кампании -----------------------------------------------
 
 // Основные методы
-Route::resource('/campaigns', 'CampaignController')->middleware('auth');
+// Route::resource('/campaigns', 'CampaignController')->middleware('auth');
 
 
 // --------------------------------------- Отзывы -----------------------------------------------
@@ -629,19 +541,19 @@ Route::resource('/feedback', 'FeedbackController')->middleware('auth');
 // --------------------------------------- Расходы -----------------------------------------------
 
 // Основные методы
-Route::resource('/expenses', 'ExpenseController')->middleware('auth');
+// Route::resource('/expenses', 'ExpenseController')->middleware('auth');
 
 
 // --------------------------------------- Зарплаты -----------------------------------------------
 
 // Основные методы
-Route::resource('/salaries', 'SalaryController')->middleware('auth');
+// Route::resource('/salaries', 'SalaryController')->middleware('auth');
 
 
 // --------------------------------------- Социальные сети -----------------------------------------------
 
 // Основные методы
-Route::resource('social_networks', 'SocialNetworkController')->middleware('auth');
+// Route::resource('social_networks', 'SocialNetworkController')->middleware('auth');
 
 
 // -------------------------------------- Поставщики -----------------------------------------------
@@ -665,7 +577,9 @@ Route::resource('/dealers', 'DealerController')->middleware('auth');
 // ------------------------------------ Клиенты ----------------------------------------------------------
 
 // Основные методы
-Route::patch('/add_client', 'ClientController@ajax_create')->middleware('auth');
+Route::patch('/create_client', 'ClientController@ajax_create')->middleware('auth');
+Route::any('/store_client', 'ClientController@ajax_store')->middleware('auth');
+
 Route::resource('/clients', 'ClientController')->middleware('auth');
 
 
@@ -673,6 +587,16 @@ Route::resource('/clients', 'ClientController')->middleware('auth');
 
 // Основные методы
 Route::resource('banks', 'BankController')->middleware('auth');
+
+
+// ------------------------------------ Банковские аккаунты -------------------------------------------------
+
+// Основные методы
+Route::any('/create_bank_account', 'BankAccountController@ajax_create')->middleware('auth');
+Route::any('/edit_bank_account', 'BankAccountController@ajax_edit')->middleware('auth');
+Route::any('/update_bank_account', 'BankAccountController@ajax_update')->middleware('auth');
+Route::any('/store_bank_account', 'BankAccountController@ajax_store')->middleware('auth');
+Route::resource('/bank_accounts', 'BankAccountController')->middleware('auth');
 
 
 // ------------------------------------- Правила доступа ----------------------------------------------------

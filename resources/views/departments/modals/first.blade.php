@@ -12,10 +12,10 @@
     <div class="tabs-panel is-active" id="department">
       <div class="grid-x grid-padding-x align-center modal-content inputs">
         <div class="small-10 cell">
-          @include('includes.inputs.city_search', ['city' => isset($department->location->city->name) ? $department->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
+          @include('includes.inputs.city_search', ['city' => isset($department->location->city->name) ? $department->location->city : null, 'id' => 'cityForm', 'required' => true])
         </label>
         <label>Название филиала
-          @include('includes.inputs.name', ['value'=>$department->name, 'name'=>'name', 'required'=>'required'])
+          @include('includes.inputs.name', ['value'=>$department->name, 'name'=>'name', 'required' => true])
           <div class="item-error">Такой филиал уже существует в организации!</div>
         </label>
         <label>Адресс филиала
@@ -25,10 +25,10 @@
           $address = $department->location->address;
         }
         @endphp
-        @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+        @include('includes.inputs.address', ['value'=>$address, 'name'=>'address'])
       </label>
       <label>Телефон филиала
-        @include('includes.inputs.phone', ['value'=>isset($department->main_phone->phone) ? $department->main_phone->phone : null, 'name'=>'main_phone', 'required'=>''])
+        @include('includes.inputs.phone', ['value'=>isset($department->main_phone->phone) ? $department->main_phone->phone : null, 'name'=>'main_phone'])
       </label>
       {{ Form::hidden('department_id', $department->id, ['id' => 'department-id']) }}
       {{ Form::hidden('first_item', 0, ['class' => 'first-item']) }}

@@ -100,7 +100,7 @@ class ParserController extends Controller
             } else {
                 $address = $old_lead->address_company;
             }
-            
+
             $location = Location::firstOrCreate(['address' => $address, 'city_id' => $old_lead->city->new_city_id], ['country_id' => 1, 'author_id' => 1]);
 
             if ($location->id != $lead->location_id) {
@@ -182,7 +182,7 @@ class ParserController extends Controller
         $locations = OldLocation::get();
 
         foreach ($locations as $location) {
-            
+
             $update = Location::where('id', $location->id)->update(['latitude' => $location->latitude, 'longitude' => $location->longitude, 'parse_count' => $location->parse_count, 'answer_count' => $location->answer_count]);
         }
 
@@ -198,7 +198,7 @@ class ParserController extends Controller
     $leads = Lead::with('challenges_active')->get();
 
         foreach ($leads as $lead) {
-            
+
             if($lead->challenges_active->count() > 0){
                 $leads = Lead::where('id', $lead->id)
                 ->update(['challenges_active_count' => $lead->challenges_active->count()]);
@@ -217,11 +217,11 @@ class ParserController extends Controller
 
         $choices = Choice::get();
         foreach ($choices as $choice) {
-        
+
 
             if(isset($choice->lead_id)){
                 $leads = Lead::where('id', $choice->lead_id)
-                ->update(['choice_id' => $choice->choices_id, 'choice_type' => $choice->choices_type]);                
+                ->update(['choice_id' => $choice->choices_id, 'choice_type' => $choice->choices_type]);
             }
 
         }
@@ -311,7 +311,7 @@ class ParserController extends Controller
                 $lead->lead_type_id = 2;
                 $lead->site_id = 2;
             } else {
-                $lead->lead_type_id = 1; 
+                $lead->lead_type_id = 1;
             }
 
             $lead->manager_id = $old_lead->manager->new_user_id;
@@ -495,10 +495,10 @@ class ParserController extends Controller
             }
 
 
-            echo 'Текущий лид: '.$mass['get_lead'].', записан в новую базу: '.$mass['save_lead'].', отметка: '.$mass['parse_lead']."\r\n";   
+            echo 'Текущий лид: '.$mass['get_lead'].', записан в новую базу: '.$mass['save_lead'].', отметка: '.$mass['parse_lead']."\r\n";
 
         }
-            // echo '500 записей, id: '.$lead->id.', ';	
+            // echo '500 записей, id: '.$lead->id.', ';
         // });
 
         return redirect('/admin/leads');
@@ -519,7 +519,7 @@ class ParserController extends Controller
     {
 
         set_time_limit(0);
-        $leads = Lead::with('location', 'notes', 'challenges', 'claims')->where('old_lead_id', '!=', null)->get(['id', 'old_lead_id']);
+        $leads = Lead::with('location', 'notes', 'challenges', 'claims')->whereNotNull('old_lead_id')->get(['id', 'old_lead_id']);
         // dd($leads);
         $mass = [];
         $count = 0;
@@ -554,14 +554,14 @@ class ParserController extends Controller
                 return redirect('/admin/cities');
             }
 
-        } 
+        }
 
 
         return redirect('/admin/users');
         // $mass['count'] = $count;
             // dd($mass);
 
-        
+
     }
 
     public function adder(Request $request)
@@ -614,7 +614,7 @@ class ParserController extends Controller
                 } else {
                     $location->city_id = $old_lead->city->new_city_id;
                 }
-                
+
                 $location->author_id = 1;
                 $location->save();
 
@@ -653,7 +653,7 @@ class ParserController extends Controller
                     $lead->lead_type_id = 2;
                     $lead->site_id = 2;
                 } else {
-                    $lead->lead_type_id = 1; 
+                    $lead->lead_type_id = 1;
                 }
 
                 $lead->manager_id = $old_lead->manager->new_user_id;
@@ -706,7 +706,7 @@ class ParserController extends Controller
                                 'created_at' => $comment->date_note.' '.$comment->time_note.':00',
                             ];
                         }
-                        
+
                     }
                 }
 
@@ -836,21 +836,21 @@ class ParserController extends Controller
 
                 }
 
-                
-                echo 'Текущий лид: '.$mass['get_lead'].', записан в новую базу: '.$mass['save_lead'].', отметка: '.$mass['parse_lead']."\r\n";   
+
+                echo 'Текущий лид: '.$mass['get_lead'].', записан в новую базу: '.$mass['save_lead'].', отметка: '.$mass['parse_lead']."\r\n";
             }
         }
-            // echo '500 записей, id: '.$lead->id.', '; 
+            // echo '500 записей, id: '.$lead->id.', ';
         // });
 
         return redirect('/admin/users');
 
-        
 
-        
+
+
     }
 
-    
+
 
     /**
      * Store a newly created resource in storage.

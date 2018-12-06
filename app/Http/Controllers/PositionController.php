@@ -37,7 +37,7 @@ class PositionController extends Controller
     public function index(Request $request)
     {
 
-        // Включение контроля активного фильтра 
+        // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
@@ -125,11 +125,11 @@ class PositionController extends Controller
         // Получаем список секторов
         $sectors = Sector::get()->keyBy('id')->toArray();
         $sectors_cat = [];
-        foreach ($sectors as $id => &$node) {   
+        foreach ($sectors as $id => &$node) {
             //Если нет вложений
             if (!$node['parent_id']){
                 $sectors_cat[$id] = &$node;
-            } else { 
+            } else {
                 //Если есть потомки то перебераем массив
                 $sectors[$node['parent_id']]['children'][$id] = &$node;
             };
@@ -148,7 +148,7 @@ class PositionController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('positions.create', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications', 'charges', 'widgets'));  
+        return view('positions.create', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications', 'charges', 'widgets'));
     }
 
     public function store(PositionRequest $request)
@@ -276,11 +276,11 @@ class PositionController extends Controller
         // Получаем список секторов
         $sectors = Sector::get()->keyBy('id')->toArray();
         $sectors_cat = [];
-        foreach ($sectors as $id => &$node) {  
+        foreach ($sectors as $id => &$node) {
             //Если нет вложений
             if (!$node['parent_id']){
                 $sectors_cat[$id] = &$node;
-            } else { 
+            } else {
                 //Если есть потомки то перебераем массив
                 $sectors[$node['parent_id']]['children'][$id] = &$node;
             };
@@ -379,13 +379,13 @@ class PositionController extends Controller
                         foreach ($notifications as $notification) {
                             $notifications_message .= "   ".$notification->name."\r\n";
                         }
-                        
+
                         // $delete = $position->staff();
                         // Удаляем отключенные оповещения у пользователей
                         foreach ($users as $user) {
                             $user->notifications()->detach($notifications_sync['detached']);
                         }
-                        // dd($users->where('telegram_id', '!=', null));
+                        // dd($users->whereNotNull('telegram_id'));
                     }
                     $notifications_message .= "\r\nОзнакомиться с изменениями можно на вкладке \"Мой профиль\"\r\n";
 
@@ -414,7 +414,7 @@ class PositionController extends Controller
 
             }
             if (isset($notifications_message)) {
-                $destinations = $users->where('telegram_id', '!=', null);
+                $destinations = $users->whereNotNull('telegram_id');
                 if (isset($destinations)) {
                     send_message($destinations, $notifications_message);
                 }
@@ -478,7 +478,7 @@ class PositionController extends Controller
                 return redirect('/admin/positions');
             } else {
                 abort(403, 'Ошибка при удалении должности');
-            }; 
+            };
         } else {
 
             abort(403, 'Должность не найдена');
@@ -513,7 +513,7 @@ class PositionController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -540,7 +540,7 @@ class PositionController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [

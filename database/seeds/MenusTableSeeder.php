@@ -677,7 +677,7 @@ class MenusTableSeeder extends Seeder
         [
             'name' => 'Реклама',
             'icon' => null,
-            'alias' => 'null',
+            'alias' => null,
             'tag' => 'advertising',
             'parent_id' => 11,
             'page_id' => null,

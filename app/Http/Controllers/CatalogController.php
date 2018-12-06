@@ -17,7 +17,7 @@ use App\Policies\CatalogPolicy;
 // Общие классы
 use Illuminate\Support\Facades\Log;
 
-// Специфические классы 
+// Специфические классы
 // Транслитерация
 use Transliterate;
 
@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CatalogController extends Controller
 {
-    
+
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'catalogs';
     protected $entity_dependence = false;
@@ -39,13 +39,12 @@ class CatalogController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_catalogs = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
         $answer_sites = operator_right('sites', false,  getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
-        
+
         $site = Site::with(['catalogs' => function ($query) use ($answer_catalogs) {
             $query->moderatorLimit($answer_catalogs)
             ->companiesLimit($answer_catalogs)
@@ -62,19 +61,11 @@ class CatalogController extends Controller
         ->first();
         // dd($site);
 
-        $catalogs = $site->catalogs->groupBy('parent_id');
-        // dd($catalogs);
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Получаем массив с вложенными элементами для отображения дерева с правами, отдаем обьекты сущности и авторизованного пользователя
-        // $catalogs_tree = get_index_tree_with_rights($catalogs, $user);
-        // dd($catalogs_tree);
+        $catalogs = $site->catalogs;
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('includes.menu-views.enter', ['grouped_items' => $catalogs, 'class' => 'App\Catalog', 'entity' => $this->entity_name, 'type' => 'edit', 'id' => $request->id]);
+            return view('includes.menu_views.category_list', ['items' => $catalogs, 'class' => App\Catalog::class, 'entity' => $this->entity_name, 'type' => 'modal', 'id' => $request->id]);
         }
 
         $entity = $this->entity_name;
@@ -85,7 +76,7 @@ class CatalogController extends Controller
         // Так как сущность имеет определенного родителя
         $parent_page_info = pageInfo('sites');
 
-        return view('catalogs.index', compact('catalogs', 'site', 'page_info', 'parent_page_info', 'alias', 'entity'));
+        return view('catalogs.index', compact('catalogs', 'page_info', 'site', 'parent_page_info', 'alias'));
     }
 
     public function create(Request $request, $alias)
@@ -112,7 +103,7 @@ class CatalogController extends Controller
             ->where('id', $request->category_id)
             ->orWhere('category_id', $request->category_id)
             ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
+            ->get(['id','name','parent_id'])
             ->keyBy('id')
             ->toArray();
 
@@ -163,7 +154,7 @@ class CatalogController extends Controller
         // Смотрим что пришло
         // Если категория
         if ($request->first_item == 1) {
-            $catalog->category_status = 1; 
+            $catalog->category_status = 1;
         } else {
             $catalog->parent_id = $request->parent_id;
             $catalog->category_id = $request->category_id;
@@ -274,7 +265,7 @@ class CatalogController extends Controller
             ->where('id', $request->category_id)
             ->orWhere('category_id', $request->category_id)
             ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
+            ->get(['id','name','parent_id'])
             ->keyBy('id')
             ->toArray();
             // dd($catalog);
@@ -342,7 +333,7 @@ class CatalogController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -354,7 +345,7 @@ class CatalogController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -363,7 +354,7 @@ class CatalogController extends Controller
             }
 
             // Директория
-            $directory = $company_id.'/media/catalogs/'.$catalog->id.'/img/';
+            $directory = $company_id.'/media/catalogs/'.$catalog->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($catalog->photo_id) {
@@ -398,7 +389,7 @@ class CatalogController extends Controller
         $catalog->display = $request->display;
 
         // Делаем заглавной первую букву
-        $catalog->name = get_first_letter($request->name); 
+        $catalog->name = get_first_letter($request->name);
 
         $catalog->save();
 
@@ -504,7 +495,7 @@ class CatalogController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -531,7 +522,7 @@ class CatalogController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -600,5 +591,5 @@ class CatalogController extends Controller
         }
         return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
-    
+
 }

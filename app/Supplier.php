@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-// use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Scopes для главного запроса
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
@@ -27,11 +27,11 @@ class Supplier extends Model
 {
 
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use Notifiable;
-    // use SoftDeletes;
-    // 
+    use SoftDeletes;
+
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -49,14 +49,13 @@ class Supplier extends Model
     // protected $dates = ['deleted_at'];
     protected $fillable = [
         'company_id', 
-        'contragent_id', 
-        'manufacturer_status',
+        'supplier_id', 
     ];
 
     // Получаем компанию.
     public function company()
     {
-        return $this->belongsTo('App\Company', 'contragent_id');
+        return $this->belongsTo('App\Company', 'supplier_id');
     }
 
     // Получаем автора

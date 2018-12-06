@@ -16,9 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -86,7 +83,7 @@ class GoodsCategory extends Model
     // {
     //     return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'goods_categories');
     // }
-    public function metrics()
+    public function one_metrics()
     {
         return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'one');
     }
@@ -106,4 +103,34 @@ class GoodsCategory extends Model
     // {
     //     return $this->belongsToMany('App\Raw', 'compositions', 'goods_category_id', 'entity_id')->where('entity', 'raws');;
     // }
+
+    // --------------------------------------- Запросы -----------------------------------------
+    public function getIndex($request, $answer)
+    {
+        return $this->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->template($answer)
+        ->withCount('goods_products')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
+    }
+
+    public function getItem($id, $answer)
+    {
+        return $this->moderatorLimit($answer)->withCount('goods_products')->findOrFail($id);
+    }
+
+    // public function getIndexCount($answer, $request)
+    // {
+    //     return $this->moderatorLimit($answer)
+    //     ->companiesLimit($answer)
+    //     ->authors($answer)
+    //     ->systemItem($answer)
+    //     ->template($answer)
+    //     ->count();
+    // }
+
 }

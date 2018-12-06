@@ -26,7 +26,7 @@ function send_message($destinations, $message) {
 
 			if (isset($destination->telegram_id)) {
 				$response = Telegram::sendMessage([
-					'chat_id' => $destination->telegram_id, 
+					'chat_id' => $destination->telegram_id,
 					'text' => $message
 				]);
 			}

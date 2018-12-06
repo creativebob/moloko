@@ -18,7 +18,6 @@ use App\Scopes\Traits\ManufacturersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -28,7 +27,7 @@ class GoodsProduct extends Model
 {
 
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use Notifiable;
     use SoftDeletes;
@@ -103,10 +102,10 @@ class GoodsProduct extends Model
     {
         return $this->belongsTo('App\User', 'author_id');
     }
-    
+
     // Получаем компанию.
     public function company()
     {
         return $this->belongsTo('App\Company');
-    }    
+    }
 }

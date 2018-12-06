@@ -34,6 +34,9 @@
           <th class="td-name" data-serversort="name">Название поставщика</th>
           <th class="td-address">Адрес</th>
           <th class="td-phone">Телефон</th>
+          <th class="td-description">Описание</th>
+          <th class="td-discount">Скидка</th>
+          <th class="td-order-count">Кол-во заказов</th>
           <th class="td-user_id">Руководитель</th>
           <th class="td-control"></th>
           <th class="td-delete"></th>
@@ -42,7 +45,7 @@
       <tbody data-tbodyId="1" class="tbody-width">
         @if(!empty($dealers))
         @foreach($dealers as $dealer)
-        <tr class="item @if($user->company_id == $dealer->id)active @endif  @if($dealer->moderation == 1)no-moderation @endif" id="dealers-{{ $dealer->id }}" data-name="{{ $dealer->company->name }}">
+        <tr class="item @if($dealer->moderation == 1)no-moderation @endif" id="dealers-{{ $dealer->id }}" data-name="{{ $dealer->client->client->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
             <input type="checkbox" class="table-check" name="dealer_id" id="check-{{ $dealer->id }}"
@@ -67,15 +70,20 @@
             @if($edit == 1)
             <a href="dealers/{{ $dealer->id }}/edit">
               @endif
-              {{ $dealer->company->name }}
+              {{ $dealer->client->client->name or '' }} ({{ $dealer->client->client->legal_form->name or '' }})
               @if($edit == 1)
-            </a> 
+            </a>
             @endif
           </td>
           {{-- Если пользователь бог, то показываем для него переключатель на компанию --}}
-          <td class="td-address">@if(!empty($dealer->company->location->address)){{ $dealer->company->location->address }}@endif </td>
-          <td class="td-phone">{{ isset($dealer->company->main_phone->phone) ? decorPhone($dealer->company->main_phone->phone) : 'Номер не указан' }}</td>
-          <td class="td-user_id">{{ $dealer->company->director->first_name or ' ... ' }} {{ $dealer->company->director->second_name or ' ... ' }} </td>
+          <td class="td-address">@if(!empty($dealer->client->client->location->address)){{ $dealer->client->client->location->address }}@endif </td>
+          <td class="td-phone">{{ isset($dealer->client->client->main_phone->phone) ? decorPhone($dealer->client->client->main_phone->phone) : 'Номер не указан' }}</td>
+
+          <td class="td-description">@if(!empty($dealer->description)){{ $dealer->description }}@endif </td>
+          <td class="td-discount">@if(!empty($dealer->discount)){{ $dealer->discount }} %@endif </td>
+          <td class="td-order-counts">@if(!empty($dealer->client->orders)){{ $dealer->client->orders->count() }} @endif </td>
+
+          <td class="td-user_id">{{ $dealer->client->client->director->user->name or ' ... ' }} </td>
 
           {{-- Элементы управления --}}
           @include('includes.control.table-td', ['item' => $dealer])

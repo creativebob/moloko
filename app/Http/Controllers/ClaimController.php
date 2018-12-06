@@ -33,7 +33,7 @@ class ClaimController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Claim::class);
 
-        // Включение контроля активного фильтра 
+        // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
         if (($filter_url != null) && ($request->filter != 'active')) {
             return Redirect($filter_url);
@@ -147,7 +147,7 @@ class ClaimController extends Controller
         $claim = Claim::moderatorLimit($answer)
         ->companiesLimit($answer)
         // ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям 
+        ->systemItem($answer) // Фильтр по системным записям
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
@@ -218,7 +218,7 @@ class ClaimController extends Controller
 
 
         // Телефонный номер
-        $new_lead->phones()->attach($lead->main_phone->id, ['main' => 1]); 
+        $new_lead->phones()->attach($lead->main_phone->id, ['main' => 1]);
 
         $claim = new Claim;
         $claim->body = $request->body;
@@ -251,7 +251,7 @@ class ClaimController extends Controller
             }
 
             $telegram_message  = "РЕКЛАМАЦИЯ №" . $claim->source_lead->case_number . "\r\n\r\nСерийный номер: " . $claim->serial_number . "\r\nОписание: " . $claim->body . "\r\n\r\nНомер заказа: " . $lead->case_number . "\r\nКлиент: " . $lead->name . "\r\nТелефон: " . $lead->main_phone->phone . "\r\nАдрес: " . $address . "\r\nЭтап: " . $lead->stage->name. "\r\nМенеджер: " . $lead->manager->first_name . " " . $lead->manager->second_name;
-            
+
             $telegram_destinations = User::whereHas('staff', function ($query) {
                 $query->whereHas('position', function ($query) {
                     $query->whereHas('notifications', function ($query) {
@@ -259,7 +259,7 @@ class ClaimController extends Controller
                     });
                 });
             })
-            ->where('telegram_id', '!=', null)
+            ->whereNotNull('telegram_id')
             ->get(['telegram_id']);
 
             send_message($telegram_destinations, $telegram_message);
@@ -267,7 +267,7 @@ class ClaimController extends Controller
             $claims = $lead->claims;
 
             return view('leads.claim', compact('claims'));
-        }   
+        }
     }
 
     public function ajax_finish(Request $request)
@@ -293,7 +293,7 @@ class ClaimController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [

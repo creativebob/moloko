@@ -25,15 +25,13 @@ class SectorRequest extends FormRequest
     {
       return [
         'name' => 'string|max:255',
-        'first_item' => 'integer|max:1|nullable',
-        'medium_item' => 'integer|max:1|nullable',
-        'sector_id' => 'integer|nullable', 
-        'parent_id' => 'integer|nullable', 
-        
-        // 'category_id' => 'integer|nullable', 
-
+        'tag' => 'string|max:255|nullable',
+        'parent_id' => 'integer|nullable',
+        'category_id' => 'integer|nullable',
         'moderation' => 'integer|max:1|nullable',
-        'system_item' => 'integer|max:1|nullable', 
+        'system_item' => 'integer|max:1|nullable',
+        'display' => 'integer|max:1|nullable',
+        // 'sector_id' => 'integer|nullable',
       ];
     }
   }

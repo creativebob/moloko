@@ -6,11 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateAccountsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('accounts', function (Blueprint $table) {
@@ -22,6 +18,8 @@ class CreateAccountsTable extends Migration
             $table->string('login')->comment('Логин');
             $table->string('password')->nullable()->comment('Пароль');
             $table->string('api_token', 200)->nullable()->comment('Токен');
+            $table->string('secret', 200)->nullable()->comment('Секрет');
+
             $table->string('alias')->nullable()->index()->comment('Алиас аккаунта');
 
             $table->integer('source_id')->unsigned()->nullable()->comment('Id источника - внешний сервис');
@@ -45,11 +43,6 @@ class CreateAccountsTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('accounts');

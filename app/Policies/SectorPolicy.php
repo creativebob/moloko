@@ -41,7 +41,7 @@ class SectorPolicy
     }
 
     public function update(User $user, Sector $model)
-    { 
+    {
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }

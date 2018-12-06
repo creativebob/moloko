@@ -40,15 +40,15 @@
     <div class="grid-x grid-padding-x">
       <div class="small-12 medium-12 cell">
         <label>Заголовок фото
-          @include('includes.inputs.name', ['name'=>'title', 'value'=>$photo->title, 'required'=>'required'])
+          @include('includes.inputs.name', ['name'=>'title', 'value'=>$photo->title, 'required' => true])
         </label>
         <label>Описание
-          @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$photo->description, 'required'=>''])
+          @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$photo->description])
         </label>
       </div>
       <div class="small-12 medium-6 cell">
         <label>Ссылка на внешний адрес (В случае необходимости)
-          @include('includes.inputs.link', ['name'=>'link', 'value'=>$photo->link, 'required'=>''])
+          @include('includes.inputs.link', ['name'=>'link', 'value'=>$photo->link])
         </label>
       </div>
 
@@ -71,7 +71,7 @@
   </div>
 
   {{-- Чекбоксы управления --}}
-  @include('includes.control.checkboxes', ['item' => $photo])  
+  @include('includes.control.checkboxes', ['item' => $photo])
 
   <div class="small-12 small-text-center medium-text-left cell tabs-button tabs-margin-top">
     {{ Form::submit('Редактировать фото', ['class'=>'button']) }}

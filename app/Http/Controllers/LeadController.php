@@ -46,7 +46,7 @@ use App\Policies\LeadPolicy;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cookie;
 
-// Специфические классы 
+// Специфические классы
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 use Carbon\Carbon;
@@ -73,7 +73,7 @@ class LeadController extends Controller
         $result = extra_right('lead-service');
         $lead_all_managers = extra_right('lead-all-managers');
 
-        // Включение контроля активного фильтра 
+        // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
@@ -91,7 +91,7 @@ class LeadController extends Controller
         // --------------------------------------------------------------------------------------------------------
 
         $leads = Lead::with(
-            // 'location.city', 
+            // 'location.city',
             'choice',
             'lead_type',
             'lead_method',
@@ -106,7 +106,7 @@ class LeadController extends Controller
                 $query->select('id', 'first_name', 'second_name');
             }]);
         })
-            
+
         ->withCount(['challenges' => function ($query) {
             $query->whereNull('status');
         }])
@@ -123,7 +123,7 @@ class LeadController extends Controller
         ->filter($request, 'manager_id')
         ->filter($request, 'lead_type_id')
         ->filter($request, 'lead_method_id')
-        ->valueFilter($request, 'challenges_active_count')
+        ->booleanFilter($request, 'challenges_active_count')
         ->dateIntervalFilter($request, 'created_at')
         ->booklistFilter($request)
         ->orderBy('created_at', 'desc')
@@ -164,7 +164,7 @@ class LeadController extends Controller
         Carbon::setLocale('en');
         // dd(Carbon::getLocale());
 
-        // Включение контроля активного фильтра 
+        // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
@@ -183,8 +183,8 @@ class LeadController extends Controller
 
         // Запрос с выбором лидов по дате задачи == сегодняшней дате или меньше, не получается отсортировать по дате задачи, т.к. задач может быть много на одном лиде
         $leads = Lead::with(
-            'location.city', 
-            'choice', 
+            'location.city',
+            'choice',
             'manager',
             'stage',
             'challenges.challenge_type'
@@ -227,7 +227,7 @@ class LeadController extends Controller
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->manager($user)
         // ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям           
+        ->systemItem($answer) // Фильтр по системным записям
         ->get();
 
         $filter['status'] = null;
@@ -300,11 +300,11 @@ class LeadController extends Controller
             // ------------------------------------------------------------------------------------------------------------
 
             $result_search = Lead::with(
-                'location.city', 
-                'choice', 
+                'location.city',
+                'choice',
                 'manager',
                 'stage',
-                'challenges.challenge_type', 
+                'challenges.challenge_type',
                 'phones')
             ->companiesLimit($answer)
             ->whereNull('draft')
@@ -371,8 +371,8 @@ class LeadController extends Controller
             $lead->filial_id = $filial_id;
             $lead->name = NULL;
             $lead->company_name = NULL;
-            
-            
+
+
             $lead->draft = 1;
             $lead->author_id = $user->id;
             $lead->manager_id = $user->id;
@@ -541,7 +541,7 @@ class LeadController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -553,7 +553,7 @@ class LeadController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -563,7 +563,7 @@ class LeadController extends Controller
             }
 
             // Директория
-            $directory = $user->company_id.'/media/leads/'.$lead->id.'/img/';
+            $directory = $user->company_id.'/media/leads/'.$lead->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), настройки, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
@@ -608,7 +608,7 @@ class LeadController extends Controller
         ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->manager($user)
         // ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям 
+        ->systemItem($answer_roles) // Фильтр по системным записям
         ->pluck('name', 'id');
 
         return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list'));
@@ -633,7 +633,7 @@ class LeadController extends Controller
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         // ->where('manager_id', '!=', 1)
         // ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям 
+        ->systemItem($answer) // Фильтр по системным записям
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
@@ -650,15 +650,15 @@ class LeadController extends Controller
 
 
         // // $all_categories_list = null;
-        $goods_categories_list = GoodsCategory::where('category_status', 1)->get()->mapWithKeys(function ($item) {
+        $goods_categories_list = GoodsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
             return ['goods-' . $item->id => $item->name];
         })->toArray();
 
-        $services_categories_list = ServicesCategory::where('category_status', 1)->get()->mapWithKeys(function ($item) {
+        $services_categories_list = ServicesCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
             return ['service-' . $item->id => $item->name];
         })->toArray();
 
-        $raws_categories_list = RawsCategory::where('category_status', 1)->get()->mapWithKeys(function ($item) {
+        $raws_categories_list = RawsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
             return ['raw-' . $item->id => $item->name];
         })->toArray();
 
@@ -696,7 +696,7 @@ class LeadController extends Controller
         ->get()
         ->groupBy('parent_id');
         // dd($group_goods_categories);
-        
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
@@ -711,6 +711,7 @@ class LeadController extends Controller
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
     {
 
+        // dd($request);
         // Получаем авторизованного пользователя
         $user = $request->user();
 
@@ -728,7 +729,7 @@ class LeadController extends Controller
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         // ->manager($user)
         // ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям 
+        ->systemItem($answer) // Фильтр по системным записям
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
@@ -832,7 +833,7 @@ class LeadController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -844,7 +845,7 @@ class LeadController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -855,7 +856,7 @@ class LeadController extends Controller
 
             // dd($company_id);
             // Директория
-            $directory = $lead->company_id.'/media/leads/'.$lead->id.'/img/';
+            $directory = $lead->company_id.'/media/leads/'.$lead->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), настройки, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             if ($lead->photo_id) {
@@ -913,7 +914,7 @@ class LeadController extends Controller
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->manager($user)
         // ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям 
+        ->systemItem($answer) // Фильтр по системным записям
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
@@ -976,18 +977,18 @@ class LeadController extends Controller
         $lead_id = $request->lead_id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_lead = operator_right('leads', true, 'index');    
+        $answer_lead = operator_right('leads', true, 'index');
 
         // --------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------
 
         $finded_leads = Lead::with(
-            'location.city', 
+            'location.city',
             'choice',
             'manager',
             'stage',
-            'challenges.challenge_type', 
+            'challenges.challenge_type',
             'phones')
         ->companiesLimit($answer_lead)
         // ->authors($answer_lead) // Не фильтруем по авторам
@@ -1029,19 +1030,7 @@ class LeadController extends Controller
         $lead->manager_id = 1;
         $lead->save();
 
-        if ($lead) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при освобождении лида!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        return response()->json(isset($lead) ?? 'Ошибка при освобождении лида!');
     }
 
     // Назначение лида
@@ -1049,9 +1038,9 @@ class LeadController extends Controller
     {
 
         // Получаем данные для авторизованного пользователя
-        // $user = $request->user();
+        $user = $request->user();
 
-        $user = User::with('staff.position.charges')->findOrFail($request->user()->id);
+        $user = User::with('staff.position.charges')->findOrFail($user->id);
 
         foreach ($user->staff as $staffer) {
             // $staffer = $user->staff->first();
@@ -1064,9 +1053,11 @@ class LeadController extends Controller
                     // break;
                 }
 
-                if ($charge->alias == 'lead-appointment-self') {
-                    $direction = 1;
+                if (isset($request->manager_id)) {
+                    if (($charge->alias == 'lead-appointment-self') && ($user->id == $request->manager_id)) {
+                        $direction = 1;
                     // break;
+                    }
                 }
             }
         }
@@ -1123,7 +1114,7 @@ class LeadController extends Controller
         $lead = Lead::findOrFail($request->lead_id);
 
         $manager = User::find($request->appointed_id);
-        $lead->manager_id = $manager->id;       
+        $lead->manager_id = $manager->id;
 
         // Если номер пуст и планируется назначение на сотрудника, а не бота - то генерируем номер!
         if(($lead->case_number == NULL)&&($request->appointed_id != 1)){
@@ -1151,7 +1142,7 @@ class LeadController extends Controller
             $message = $user->first_name.' '.$user->second_name. ' '.$phrase_sex.' вам лида: ' . $lead->case_number . "\r\n\r\n";
             $message = lead_info($message, $lead);
             $telegram_destinations[] = $manager;
-            
+
             send_message($telegram_destinations, $message);
 
         } else {
@@ -1159,9 +1150,9 @@ class LeadController extends Controller
             if (isset($user->telegram_id)) {
 
                 // Если у менеджера нет телеграмма, оповещаем руководителя
-                $message = 'У ' . $manager->first_name.' '.$manager->second_name . " отсутствует Telegram ID, оповестите его другим способом!\r\n\r\n";
+                $message = 'У ' . $manager->first_name . ' ' . $manager->second_name . " отсутствует Telegram ID, оповестите его другим способом!\r\n\r\n";
                 $message = lead_info($message, $lead);
-                
+
                 $telegram_destinations[] = $user;
                 send_message($telegram_destinations, $message);
             } else {
@@ -1175,7 +1166,7 @@ class LeadController extends Controller
             'case_number' => $lead->case_number,
             'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
         ];
-        
+
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 

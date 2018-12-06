@@ -22,8 +22,8 @@ class CreateOrdersTable extends Migration
             $table->integer('lead_id')->unsigned()->nullable()->comment('Id лида');
             // $table->foreign('lead_id')->references('id')->on('leads');
 
-            $table->integer('user_id')->unsigned()->nullable()->comment('Id пользователя');
-            // $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('client_id')->unsigned()->nullable()->comment('Id пользователя');
+            $table->foreign('client_id')->references('id')->on('users');
 
             $table->text('description')->nullable()->comment('Описание');
 

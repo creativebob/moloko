@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use App\LegalForm;
 
 function num_format($number, $value) {
 
@@ -347,6 +348,52 @@ function get_first_letter($name){
 
 
 // ==============================================================================================
+// ФУНКЦИЯ - ФОРМАТИРОВАНИЕ РЕЖИМА РАБОТЫ ДЛЯ ФОРМЫ
+// ==============================================================================================
+
+
+// Получаем модель из тега 
+function worktime_to_format($worktime_mass){
+
+        for($x = 1; $x<8; $x++){
+
+            if(isset($worktime_mass[$x]->worktime_begin)){
+
+                $worktime_begin = $worktime_mass[$x]->worktime_begin;
+                $str_worktime_begin = secToTime($worktime_begin);
+                $worktime[$x]['begin'] = $str_worktime_begin;
+
+            } else {
+
+                $worktime[$x]['begin'] = null;
+            };
+
+            if(isset($worktime_mass[$x]->worktime_interval)){
+
+                $worktime_interval = $worktime_mass[$x]->worktime_interval;
+
+                if(($worktime_begin + $worktime_interval) > 86400){
+
+                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval - 86400);
+                } else {
+
+                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);
+                };
+
+                $worktime[$x]['end'] = $str_worktime_interval;
+            } else {
+
+                $worktime[$x]['end'] = null;
+            }
+
+        };
+
+    return $worktime;
+};
+
+
+
+// ==============================================================================================
 // ФУНКЦИИ - ИНТЕРЕСОВ ЛИДА (CHOICE)
 // ==============================================================================================
 
@@ -381,6 +428,29 @@ function genChoiceTag($item){
     return $choice_tag;
 }
 
+// Чистит имена компаний от организационных форм, и отдает id такой формы (legal_form_id)
+// если форма присутствовала в имени
+function cleanNameLegalForm($string){
+
+    $legal_form_list = LegalForm::get();
+    $legal_form_name = $legal_form_list->pluck('name', 'id');
+    $legal_form_full_name = $legal_form_list->pluck('full_name', 'id');
+
+    $result = false;
+
+    foreach($legal_form_name as $key => $value){
+
+        if (preg_match("/(^|\s)" . $value . "\s/i", $string, $matches)) {
+            $result['name'] = str_replace($matches[0], "", $string);
+            $result['legal_form_id'] = $key;
+            return $result;
+        };
+
+    }
+
+    return false;
+
+}
 
 
 ?>

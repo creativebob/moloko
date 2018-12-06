@@ -206,6 +206,11 @@ fieldset legend {
   margin: 0 -15px !important;
 }
 
+.callout {
+  line-height: 1.2;
+  font-size: 0.9rem;
+}
+
 .callout.alert {
   background-color: #000;
   border-bottom: 6px solid #ff0000;
@@ -1518,7 +1523,8 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   background-color: #eee;
   border-bottom: 1px solid #000 !important;
   font-style: 400;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  font-weight: normal;
 }
 #table-order.table-order tr td {
   background-color: #f5f5f5 !important;
@@ -2179,7 +2185,7 @@ a#task-toggle {
   z-index: 30;
 }
 .content .head-content {
-  padding: 1rem 10px;
+  padding: 0rem 10px 1rem 10px;
   z-index: 50;
   transition: width 0.3s ease;
 }

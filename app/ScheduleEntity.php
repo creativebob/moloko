@@ -43,8 +43,9 @@ class ScheduleEntity extends Model
     // use Filter;
     // use BooklistFilter;
     // use DateIntervalFilter;
-
-    protected $table = 'schedule_entity'; 
+ 
+    protected $dates = ['deleted_at', 'created_at'];
+    protected $table = 'schedule_entities'; 
 
     public function schedule()
   {

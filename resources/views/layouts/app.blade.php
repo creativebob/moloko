@@ -16,8 +16,6 @@ if (isset($session_access['user_info']['position_id'])) {
 }
 
 
-
-
 $rights_user_filial = collect($session_access['all_rights'])->keys()->implode('\n');
 
 if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' . count($session_access['list_authors']['authors_id']);} else {$count_authors = "";};

@@ -1,11 +1,3 @@
 {{-- Время --}}
-@php 
-	if(!isset($default)){
-		$value = '';
-	} else {
-		$value = $default;
-	};
-
-@endphp
-{{ Form::text($name, $value, ['class'=>'time-field', 'maxlength'=>'5', 'autocomplete'=>'off', 'pattern'=>'([0-1][0-9]|[2][0-3]):[0-5][0-9]', $required]) }}
+{{ Form::text($name, ($value ?? null), ['class'=>'time-field', 'maxlength'=>'5', 'autocomplete'=>'off', 'pattern'=>'([0-1][0-9]|[2][0-3]):[0-5][0-9]', (isset($required) ? 'required' : '')]) }}
 <!-- <span class="form-error">Что-то тут не так!</span> -->

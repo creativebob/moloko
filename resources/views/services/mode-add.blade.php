@@ -2,10 +2,10 @@
 <a id="mode-default" class="modes">Вернуться</a>
 </div>
 <label>Введите название новой группы
-  @include('includes.inputs.string', ['value'=>null, 'name'=>'service_product_name', 'required'=>'required'])
+  @include('includes.inputs.string', ['value'=>null, 'name'=>'service_product_name', 'required' => true])
 </label>
 <label>Название услуги
-  @include('includes.inputs.string', ['value'=>null, 'name'=>'name', 'required'=>'required'])
+  @include('includes.inputs.string', ['value'=>null, 'name'=>'name', 'required' => true])
   <div class="item-error">Названия услуги и группы услуг не должны совпадать!</div>
 </label>
 

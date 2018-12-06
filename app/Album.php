@@ -15,7 +15,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -44,7 +44,12 @@ class Album extends Model
     // use DateIntervalFilter;
 
     protected $fillable = [
-
+        'company_id',
+        'name',
+        'albums_category_id',
+        'alias',
+        'description',
+        'author_id',
     ];
 
     // Получаем компанию
@@ -62,7 +67,7 @@ class Album extends Model
     // Получаем фото
     public function photos()
     {
-        return $this->belongsToMany('App\Photo', 'album_entity', 'album_id', 'entity_id')->where('entity', 'photos');
+        return $this->morphedByMany('App\Photo', 'album_entity');
     }
 
     // Получаем продукцию

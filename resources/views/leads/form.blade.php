@@ -12,13 +12,11 @@
                         <label>Телефон
                             {{ Form::text('main_phone', isset($lead->main_phone->phone) ? $lead->main_phone->phone : null, ['class'=>'phone-field', 'maxlength'=>'17', 'autocomplete'=>'off', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'id'=>'phone', $autofocus, $readonly]) }}
                             <span class="form-error">Укажите номер</span>
-
                         </label>
-
                     </div>
                     <div class="small-6 medium-6 large-6 cell">
                         <label>Контактное лицо
-                            @include('includes.inputs.name', ['name'=>'name', 'value'=>$lead->name, 'required'=>'required'])
+                            @include('includes.inputs.name', ['name'=>'name', 'value'=>$lead->name, 'required' => true])
                             <input type="hidden" name="lead_id" value="{{$lead->id }}" id="lead_id" data-lead-id="{{$lead->id }}">
                         </label>
                     </div>
@@ -26,17 +24,7 @@
                     </div>
 
                     <div class="small-6 medium-6 large-6 cell">
-                        <label class="input-icon">
-                            @php
-                                $city_name = null;
-                                $city_id = null;
-                                if(isset($lead->location->city->name)) {
-                                    $city_name = $lead->location->city->name;
-                                    $city_id = $lead->location->city->id;
-                                }
-                            @endphp
-                            @include('includes.inputs.city_search', ['city' => isset($lead->location->city->name) ? $lead->location->city : null, 'id' => 'cityForm', 'required' => 'required'])
-                        </label>
+                            @include('includes.inputs.city_search', ['city' => isset($lead->location->city->name) ? $lead->location->city : null, 'id' => 'cityForm', 'required' => true])
                     </div>
                     <div class="small-6 medium-6 cell">
                         <label>Адрес
@@ -46,7 +34,7 @@
                                     $address = $lead->location->address;
                                 }
                             @endphp
-                            @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+                            @include('includes.inputs.address', ['value'=>$address, 'name'=>'address'])
                         </label>
                     </div>
                 </div>
@@ -57,7 +45,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 cell">
                         <label>Бюджет
-                            @include('includes.inputs.digit', ['name'=>'badget', 'value'=>$lead->badget, 'required'=>''])
+                            @include('includes.inputs.digit', ['name'=>'badget', 'value'=>$lead->badget])
                         </label>
                     </div>
                     <div class="small-12 cell">
@@ -136,16 +124,16 @@
 
                             <div class="small-12 medium-12 cell">
                                 <div class="grid-x grid-padding-x">
-                                    
+
                                     <div class="small-12 medium-6 cell">
                                         <label>Почта
-                                            @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email', 'required'=>''])
-                                        </label> 
+                                            @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email'])
+                                        </label>
                                     </div>
 
                                     <div class="small-12 medium-6 cell">
                                         <label>Компания
-                                            @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$lead->company_name, 'required'=>''])
+                                            @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$lead->company_name])
                                         </label>
                                     </div>
                                 </div>
@@ -164,7 +152,7 @@
                     <div class="tabs-panel" id="content-panel-address">
                         <div class="grid-x grid-padding-x">
                         <!-- <div id="port-address" class="small-12 cell">
-                            </div>  --> 
+                            </div>  -->
                         </div>
                     </div>
                     {{-- КОНЕЦ АДРЕСА --}}
@@ -175,7 +163,7 @@
                     <div class="tabs-panel" id="content-panel-history">
                         <div class="grid-x grid-padding-x">
                             <div id="port-history" class="small-12 cell">
-                            </div>  
+                            </div>
                         </div>
                     </div>
                     {{-- КОНЕЦ ИСТОРИЯ --}}
@@ -243,7 +231,7 @@
             {{-- КОНЕЦ КАТАЛОГ ПРОДУКЦИИ --}}
 
 
-            {{-- ДОКУМЕНТЫ 
+            {{-- ДОКУМЕНТЫ
             <div class="tabs-panel" id="content-panel-documents">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 large-6 cell">
@@ -261,7 +249,7 @@
                         @can ('index', App\Claim::class)
                         <fieldset class="fieldset-challenge">
                             <legend>Рекламации:</legend>
-                            <div class="grid-x grid-padding-x"> 
+                            <div class="grid-x grid-padding-x">
                                 <table class="table-challenges" id="table-challenges">
                                     <thead>
                                         <tr>
@@ -299,7 +287,7 @@
             </div>
             {{-- КОНЕЦ РЕКЛАМАЦИИ --}}
 
-            {{-- ЗАМЕРЫ 
+            {{-- ЗАМЕРЫ
             <div class="tabs-panel" id="content-panel-measurements">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 large-6 cell">
@@ -330,14 +318,14 @@
 
                                         {{-- Будем мутить селект в ручную --}}
 
-                                        @php 
+                                        {{-- @php
                                         if($lead->lead_method->mode != 1){
 
                                         $disabled_method_list = 'disabled';} else {
                                         $disabled_method_list = '';};
-                                        @endphp
+                                        @endphp --}}
 
-                                        {{ Form::select('lead_method', $lead_methods_list, $lead->lead_method_id, [$disabled_method_list]) }}
+                                        {{ Form::select('lead_method', $lead_methods_list, $lead->lead_method_id) }}
 
                                     </td><td></td>
                                 </tr>
@@ -345,7 +333,7 @@
                                 <td>
                                 @php if($lead->lead_method_id == 2){$choice_disabled = 'disabled';} else {$choice_disabled = '';}   @endphp
                                 {{ Form::select('choice_tag', $choices, genChoiceTag($lead), [$choice_disabled]) }}</td>
-                                <td></td>     
+                                <td></td>
                             </tr>
                             <tr>
                                 <td>Источник: </td><td>{{ $lead->source->name or ''}}</td><td></td>
@@ -368,7 +356,7 @@
                             <tr>
                                 <td>Менеджер: </td><td>{{ $lead->manager->name }}</td>
                                 <td>
-                                    @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
+                                    @if (extra_right('lead-appointment') || (extra_right('lead-appointment-self') && ($lead->manager_id == Auth::user()->id)) || ($lead->manager_id == Auth::user()->id))
                                     <a id="lead-free" class="button tiny">Освободить</a>
                                     @endif
                                 </td>
@@ -379,7 +367,7 @@
                         </table>
                     </div>
                 </div>
-            </div>            
+            </div>
             {{-- КОНЕЦ АТТРИБУЦИИ --}}
 
 
@@ -391,7 +379,7 @@
         @can('update', $lead)
             {{ Form::submit($submitButtonText, ['class'=>'button']) }}
         @else
-            {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }} 
+            {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }}
         @endcan
     </div>
 </div>

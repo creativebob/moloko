@@ -13,7 +13,7 @@
 	</td>
 
 	<td class="action">
-		@if ($challenge->appointed_id == Auth::user()->id) 
+		@if ($challenge->appointed_id == Auth::user()->id)
 		<a class="button finish-challenge">Выполнить</a>
 		@endif
 

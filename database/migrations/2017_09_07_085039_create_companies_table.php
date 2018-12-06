@@ -6,15 +6,14 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCompaniesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            // $table->foreign('company_id')->references('id')->on('companies');
+            // 
             $table->string('name')->nullable()->index()->comment('Имя компании');
             $table->string('alias', 40)->unique()->nullable()->index()->comment('Алиас компании');
 
@@ -26,8 +25,16 @@ class CreateCompaniesTable extends Migration
             $table->integer('location_id')->nullable()->unsigned()->comment('Адрес компании');
             $table->foreign('location_id')->references('id')->on('locations');
 
-            // $table->bigInteger('inn')->nullable()->unsigned()->comment('ИНН компании');
-            // $table->bigInteger('kpp')->nullable()->unsigned()->comment('КПП');
+            $table->integer('legal_form_id')->unsigned()->comment('Правовая форма');
+            $table->foreign('legal_form_id')->references('id')->on('legal_forms');
+
+            $table->bigInteger('inn')->nullable()->unsigned()->comment('ИНН компании');
+            $table->bigInteger('kpp')->nullable()->unsigned()->comment('КПП');
+
+            $table->bigInteger('ogrn')->nullable()->unsigned()->comment('Основной государственный регистрационный номер');
+            $table->bigInteger('okpo')->nullable()->unsigned()->comment('Общероссийский классификатор предприятий и организаций');
+            $table->string('okved')->nullable() ->comment('Общероссийский классификатор видов экономической деятельности');
+
             // $table->string('account_settlement', 20)->nullable()->comment('Расчетный счет');
             // $table->string('account_correspondent', 20)->nullable()->comment('Корреспондентский счет');
 
@@ -40,7 +47,6 @@ class CreateCompaniesTable extends Migration
 
             $table->integer('admin_user_id')->nullable()->unsigned()->comment('Администратор компании');
             // $table->foreign('user_id')->references('id')->on('users');
-
 
             $table->integer('schedule_id')->nullable()->unsigned()->comment('Id графика работы');
             $table->foreign('schedule_id')->references('id')->on('schedules');
@@ -64,11 +70,6 @@ class CreateCompaniesTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('companies');

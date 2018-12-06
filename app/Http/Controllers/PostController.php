@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
-// Специфические классы 
+// Специфические классы
 // Фотографии
 use Intervention\Image\ImageManagerStatic as Image;
 
@@ -45,7 +45,7 @@ class PostController extends Controller
     protected $entity_dependence = false;
 
     public function index(Request $request)
-    { 
+    {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Post::class);
@@ -84,7 +84,7 @@ class PostController extends Controller
         ]);
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
-       
+
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -109,7 +109,7 @@ class PostController extends Controller
         ->authors($answer_albums_categories)
         ->systemItem($answer_albums_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 
@@ -119,7 +119,7 @@ class PostController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('posts.create', compact('post', 'page_info', 'albums_categories_list'));  
+        return view('posts.create', compact('post', 'page_info', 'albums_categories_list'));
     }
 
     public function store(PostRequest $request)
@@ -196,7 +196,7 @@ class PostController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -208,7 +208,7 @@ class PostController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -218,7 +218,7 @@ class PostController extends Controller
             }
 
             // Директория
-            $directory = $company_id.'/media/posts/'.$post->id.'/img/';
+            $directory = $company_id.'/media/posts/'.$post->id.'/img';
 
             // Отправляем на хелпер request (в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
             $array = save_photo($request, $directory, 'preview-'.time(), null, null, $settings);
@@ -260,7 +260,7 @@ class PostController extends Controller
     public function edit(Request $request, $id)
     {
 
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));             
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $post = Post::moderatorLimit($answer)->findOrFail($id);
@@ -277,7 +277,7 @@ class PostController extends Controller
         ->authors($answer_albums_categories)
         ->systemItem($answer_albums_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 
@@ -345,7 +345,7 @@ class PostController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -357,7 +357,7 @@ class PostController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -369,7 +369,7 @@ class PostController extends Controller
 
 
             // Директория
-            $directory = $company_id.'/media/posts/'.$post->id.'/img/';
+            $directory = $company_id.'/media/posts/'.$post->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($post->photo_id) {
@@ -377,7 +377,7 @@ class PostController extends Controller
 
             } else {
                 $array = save_photo($request, $directory, 'preview-'.time(), null, null, $settings);
-                
+
             }
             $photo = $array['photo'];
 
@@ -544,7 +544,7 @@ class PostController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -571,7 +571,7 @@ class PostController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -622,7 +622,7 @@ class PostController extends Controller
     //         // });
     //     } else {
     //         return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
-    //     }  
+    //     }
     // }
 
     // Показываем новость на сайте

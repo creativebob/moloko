@@ -49,19 +49,19 @@ class Bank extends Model
     // protected $dates = ['deleted_at'];
     protected $fillable = [
         'company_id', 
-        'contragent_id', 
+        'bank_id', 
     ];
 
     // Получаем компании которые работают с банком
-    public function company()
+    public function contragents()
     {
-        return $this->belongsToMany('App\Company', 'company_id');
+        return $this->hasMany('App\Company', 'company_id');
     }
 
     // Получаем данные банка
-    public function self_company()
+    public function company()
     {
-        return $this->belongsTo('App\Company', 'contragent_id');
+        return $this->belongsTo('App\Company', 'bank_id');
     }
 
     // Получаем все зарегистрированные счета

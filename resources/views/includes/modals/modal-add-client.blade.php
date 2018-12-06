@@ -5,73 +5,99 @@
         </div>
     </div>
     {{ Form::open(['id'=>'form-client-add', 'data-abide', 'novalidate']) }}
+    <input type="hidden" name="lead_type_id" value="{{ $lead->lead_type_id }}">
+
     <div class="grid-x grid-padding-x align-center modal-content inputs">
         <div class="small-12 cell">
 
             <fieldset>
                 <legend>
                     <div class="switch alt-switch tiny">
-                        {{ Form::checkbox('private_status', 1, $lead->private_status, ['id'=>'yes-no', 'class' => 'switch-input']) }}
+                        {{ Form::checkbox('private_status', 2, $lead->private_status, ['id'=>'private_status', 'class' =>'switch-input']) }}
 
-                        <label class="switch-paddle" for="yes-no" data-toggle="lead-info-company lead-info-private lead-info-bank">
+                        <label class="switch-paddle" for="private_status" data-toggle="lead-info-company lead-info-private lead-info-bank">
                             <span class="show-for-sr">Компания?</span>
                             <span class="switch-active" aria-hidden="true" title="Физическое лицо"></span>
                             <span class="switch-inactive" aria-hidden="true" title="Юридическое лицо"></span>
                         </label>
 
                         <span id="title-switch-company-private">
-                            @if($lead->private_status == 1)
-                                Компания 
-                            @else 
-                                Физическое лицо 
-                            @endif
+                            @if($lead->private_status == 1) Компания @else Физическое лицо @endif
                         </span>
                     </div>
                 </legend>
-                
+
                 <div class="grid-x grid-padding-x" id="wrap-company-private">
 
                     <script>
                         $('#wrap-company-private').on('on.zf.toggler', function() {
                             $('#title-switch-company-private').text("Компания");
+                            $('#private_status').val(1);
+
+                            // Включаем обязательное заполнение
+                            $('[name=company_name]').attr('required', 'required');
+                            $('[name=inn]').attr('required', 'required');
+
+                            $('[name=passport_number]').removeAttr('required');
+                            $('[name=passport_date]').removeAttr('required');
+                            $('[name=passport_released]').removeAttr('required');
+                            // alert('На компанию');
+                            // $('.passport_address').removeAttr('required');
+
                         });
 
                         $('#wrap-company-private').on('off.zf.toggler', function() {
                             $('#title-switch-company-private').text("Физическое лицо");
+                            $('#private_status').val(2);
+
+                            // Включаем обязательное заполнение
+                            $('[name=passport_number]').attr('required', 'required');
+                            $('[name=passport_date]').attr('required', 'required');
+                            $('[name=passport_released]').attr('required', 'required');
+                            // $('.passport_address').attr('required', 'required');
+
+                            // Выключаем обязательное заполнение
+                            $('[name=company_name]').removeAttr('required');
+                            $('[name=inn]').removeAttr('required');
+                            // alert('На юзера');
+
                         });
                     </script>
 
                     <div class="small-12 medium-6 cell">
                         <label>Фамилия
-                            @include('includes.inputs.name', ['name'=>'second_name', 'value'=>$new_user->second_name, 'required'=>'required'])
+                            @include('includes.inputs.name', ['name'=>'second_name', 'value'=>$new_user->second_name, 'required' => true])
                         </label>
                         <label>Имя
-                            @include('includes.inputs.name', ['name'=>'first_name', 'value'=>$new_user->first_name, 'required'=>'required'])
+                            @include('includes.inputs.name', ['name'=>'first_name', 'value'=>$new_user->first_name, 'required' => true])
                         </label>
                         <label>Отчество
-                            @include('includes.inputs.name', ['name'=>'patronymic', 'value'=>$new_user->patronymic, 'required'=>''])
+                            @include('includes.inputs.name', ['name'=>'patronymic', 'value'=>$new_user->patronymic, 'required' => true])
                         </label>
+                      <label>Телефон
+                        @include('includes.inputs.phone', ['value' => isset($new_user->main_phone->phone) ? $new_user->main_phone->phone : null, 'name'=>'main_phone', 'required' => true, 'id' => 'main-phone'])
+                      </label>
                         <label>Почта
-                            @include('includes.inputs.email', ['value'=>$new_user->email, 'name'=>'email', 'required'=>''])
-                        </label> 
+                            @include('includes.inputs.email', ['value'=>$new_user->email, 'name'=>'email', 'required' => true])
+                        </label>
                     </div>
 
                     <div class="small-12 medium-6 cell lead-info-company" id="lead-info-company" data-toggler="switch-on">
                         <div class="grid-x grid-padding-x">
                             <div class="small-12 cell">
                                 <label>Компания
-                                    @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$new_company->company_name, 'required'=>''])
+                                    @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$new_company->company_name])
                                 </label>
                             </div>
 
                             <div class="small-12 cell">
                                 <label>ИНН
-                                    @include('includes.inputs.inn', ['value'=>$new_user->inn, 'name'=>'inn', 'required'=>''])
+                                    @include('includes.inputs.inn', ['value'=>$new_user->inn, 'name'=>'inn'])
                                 </label>
                             </div>
                             <div class="small-12 cell">
                                 <label>КПП
-                                    @include('includes.inputs.kpp', ['value'=>$new_user->kpp, 'name'=>'kpp', 'required'=>''])
+                                    @include('includes.inputs.kpp', ['value'=>$new_user->kpp, 'name'=>'kpp'])
                                 </label>
                             </div>
                         </div>
@@ -81,26 +107,26 @@
                         <div class="grid-x grid-padding-x">
                           <div class="small-12 cell">
                             <label>Паспорт (серия, номер)
-                              @include('includes.inputs.passport_number', ['name'=>'passport_number', 'value'=>$new_user->passport_number])
+                              @include('includes.inputs.passport_number', ['name'=>'passport_number', 'value'=>$new_user->passport_number, 'required' => true])
                             </label>
                           </div>
                           <div class="small-12 cell">
                             <label>Когда выдан
-                              @include('includes.inputs.date', ['name'=>'passport_date', 'value'=>$new_user->passport_date, 'required'=>''])
+                              @include('includes.inputs.date', ['name'=>'passport_date', 'value'=>$new_user->passport_date, 'required' => true])
                             </label>
                           </div>
                         </div>
                         <div class="grid-x grid-padding-x">
                           <div class="small-12 cell">
                             <label>Кем выдан
-                              {{ Form::text('passport_released', $new_user->passport_released, ['class'=>'varchar-field passport-released-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё -\.]{60}']) }}
+                              {{ Form::text('passport_released', $new_user->passport_released, ['class'=>'varchar-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'required' => true]) }}
                             </label>
                           </div>
                         </div>
                         <div class="grid-x grid-padding-x">
                           <div class="small-12 cell">
                             <label>Адрес прописки
-                              @include('includes.inputs.address', ['value'=>$new_user->passport_address, 'name'=>'passport_address', 'required'=>''])
+                              @include('includes.inputs.address', ['value'=>$new_user->passport_address, 'name'=>'passport_address'])
                             </label>
                           </div>
                         </div>
@@ -134,7 +160,7 @@
                                         }
                                     @endphp
 
-                                    @include('includes.inputs.city_search', ['city' => isset($lead->location->city->name) ? $lead->location->city : null, 'id' => 'cityFormModalClient', 'required' => 'required'])
+                                    @include('includes.inputs.city_search', ['city' => isset($lead->location->city->name) ? $lead->location->city : null, 'id' => 'cityFormModalClient', 'required' => true])
 
                                 </label>
                             </div>
@@ -146,7 +172,7 @@
                                             $address = $new_user->location->address;
                                         }
                                     @endphp
-                                    @include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+                                    @include('includes.inputs.address', ['value'=>$address, 'name'=>'address'])
                                 </label>
                             </div>
 
@@ -154,7 +180,7 @@
                     </div>
                     {{-- Конец блока адреса --}}
 
-                    
+
 
                     {{-- Начало блока банковских реквизитов --}}
                     <div class="small-12 cell lead-info-bank" id="lead-info-bank" data-toggler="switch-on">
@@ -163,29 +189,29 @@
 
                             <div class="small-12 medium-9 cell">
                                 <label>Банк
-                                    @include('includes.inputs.bank', ['value'=>$new_user->bank, 'name'=>'bank', 'required'=>''])
+                                    @include('includes.inputs.bank', ['value'=>$new_user->bank, 'name'=>'bank'])
                                 </label>
                             </div>
                             <div class="small-12 medium-3 cell">
                                 <label>БИК
-                                    @include('includes.inputs.bic', ['value'=>'', 'name'=>'bank', 'required'=>''])
+                                    @include('includes.inputs.bic', ['value'=>'', 'name'=>'bank'])
                                 </label>
                             </div>
                             <div class="small-12 medium-6 cell">
                                 <label>Р/С
-                                    @include('includes.inputs.account', ['value'=>$new_user->account_settlement, 'name'=>'account_settlement', 'required'=>''])
+                                    @include('includes.inputs.account', ['value'=>$new_user->account_settlement, 'name'=>'account_settlement'])
                                 </label>
                             </div>
                             <div class="small-12 medium-6 cell">
                                 <label>К/С
-                                    @include('includes.inputs.account', ['value'=>$new_user->account_correspondent, 'name'=>'account_correspondent', 'required'=>''])
+                                    @include('includes.inputs.account', ['value'=>$new_user->account_correspondent, 'name'=>'account_correspondent'])
                                 </label>
                             </div>
                         </div>
                     </div>
 
 
-                    {{-- Конец блока банковских реквизитов --}}            
+                    {{-- Конец блока банковских реквизитов --}}
 
             </fieldset>
 
@@ -198,7 +224,7 @@
     </div>
 
     {{ Form::close() }}
-    <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+    <div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
 
 @include('includes.scripts.inputs-mask')

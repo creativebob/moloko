@@ -12,6 +12,7 @@
     "doctrine/dbal": "^2.8",
     "elforastero/transliterate": "^1.1",
     "fideloper/proxy": "~3.3",
+    "fomvasss/laravel-dadata": "^2.0",
     "genealabs/laravel-model-caching": "^0.2.63",
     "intervention/image": "dev-master",
     "irazasyed/telegram-bot-sdk": "dev-master",

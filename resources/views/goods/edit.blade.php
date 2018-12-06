@@ -21,6 +21,10 @@
 </div>
 @endsection
 
+@php
+$disabled = $cur_goods->goods_article->draft == null;
+@endphp
+
 @section('content')
 <div class="grid-x tabs-wrap">
     <div class="small-12 cell">
@@ -40,10 +44,10 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            {{ Form::model($cur_goods, ['url' => ['/admin/goods/'.$cur_goods->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'cur-goods-form']) }}
+            {{ Form::model($cur_goods, ['url' => ['/admin/goods/'.$cur_goods->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'cur_goods-form']) }}
             {{ method_field('PATCH') }}
 
-            <!-- Общая информация -->
+            {{-- Общая информация --}}
             <div class="tabs-panel is-active" id="options">
 
                 {{-- Разделитель на первой вкладке --}}
@@ -61,26 +65,16 @@
                                 </label>
 
                                 <label>Группа
-                                    <div id="goods-products-select">
-                                        {{ Form::select('goods_product_id', $goods_products_list, $cur_goods->goods_article->goods_product_id, ['id' => 'goods-products-list']) }}
-                                    </div>
+                                    @include('includes.selects.goods_products', ['goods_category_id' => $cur_goods->goods_article->goods_product->goods_category_id, 'set_status' => $cur_goods->goods_article->goods_product->set_status, 'goods_product_id' => $cur_goods->goods_article->goods_product_id])
                                 </label>
 
                                 <label>Категория
-                                    <select name="goods_category_id" id="goods-categories-list">
-                                        @php
-                                        echo $goods_categories_list;
-                                        @endphp
-                                    </select>
+                                    @include('includes.selects.goods_categories', ['goods_category_id' => $cur_goods->goods_article->goods_product->goods_category_id])
                                 </label>
 
-                                <label>Производитель</label>
+                                @include('includes.selects.manufacturers', ['manufacturer_id' => $cur_goods->goods_article->manufacturer_id, 'draft' => $cur_goods->goods_article->draft])
 
-                                @if ($cur_goods->goods_article->draft == 1)
-                                {{ Form::select('manufacturer_id', $manufacturers_list, $cur_goods->goods_article->manufacturer_id, ['placeholder' => 'Выберите производителя'])}}
-                                @else
-                                {{ $cur_goods->goods_article->manufacturer->name or 'Не указан' }}
-                                @endif
+                                {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 
                             </div>
 
@@ -91,12 +85,10 @@
                                         {{ Form::file('photo') }}
                                     </label>
                                     <div class="text-center">
-                                        <img id="photo" @if (isset($cur_goods->photo_id)) src="/storage/{{ $cur_goods->company->id }}/media/goods/{{ $cur_goods->id }}/img/medium/{{ $cur_goods->photo->name }}" @endif>
+                                        <img id="photo" @isset($cur_goods->photo_id)) src="/storage/{{ $cur_goods->company->id }}/media/goods/{{ $cur_goods->id }}/img/medium/{{ $cur_goods->photo->name }}" @endisset>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
                     </div>
@@ -105,15 +97,17 @@
 
                     {{-- Правый блок на первой вкладке --}}
                     <div class="small-12 large-6 cell">
-                        {{ Form::open(['url' => 'goods', 'data-abide', 'novalidate', 'id' => 'cur-goods-form']) }}
+                        {{ Form::open(['url' => 'goods', 'data-abide', 'novalidate', 'id' => 'cur_goods-form']) }}
 
                         <fieldset class="fieldset-access">
                             <legend>Артикул</legend>
 
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-4 cell">
-                                    <label>Удобный (вручную)
-                                        {{ Form::text('manually', null) }}
+                                    <label id="loading">Удобный (вручную)
+                                        {{ Form::text('manually', null, ['class' => 'check-field']) }}
+                                        <div class="sprite-input-right find-status"></div>
+                                        <div class="item-error">Такой артикул уже существует!</div>
                                     </label>
                                 </div>
 
@@ -133,64 +127,41 @@
                         <div class="grid-x">
                             <div class="small-12 cell">
                                 <label>Описание товара
-                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$cur_goods->description, 'required'=>''])
+                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$cur_goods->description])
                                 </label>
                             </div>
                         </div>
 
                         @php
-                        $metric_relation = ($cur_goods->goods_article->goods_product->set_status == 'one') ? 'metrics' : 'set_metrics';
+                        $metric_relation = ($cur_goods->goods_article->goods_product->set_status == 'one') ? 'one_metrics' : 'set_metrics';
                         @endphp
 
-                        @if (count($cur_goods->goods_article->$metric_relation) || count($cur_goods->goods_article->goods_product->goods_category->$metric_relation))
+                        @if ($cur_goods->goods_article->metrics->isNotEmpty() || $cur_goods->goods_article->goods_product->goods_category->$metric_relation->isNotEmpty())
+
+                        @include('includes.scripts.class.metric_validation')
 
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
-
-
-                            {{-- Если черновик --}}
-                            @if ($cur_goods->goods_article->draft == 1)
-
                             <div id="metrics-list">
-                                @if (count($cur_goods->goods_article->$metric_relation))
 
                                 {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
-                                @isset ($cur_goods->goods_article->$metric_relation)
-                                @foreach ($cur_goods->goods_article->$metric_relation->unique() as $metric)
+                                @if ($cur_goods->goods_article->metrics->isNotEmpty())
+                                @foreach ($cur_goods->goods_article->metrics->unique() as $metric)
                                 @include('goods.metrics.metric_input', $metric)
                                 @endforeach
-                                @endisset
 
                                 @else
 
-                                @isset ($cur_goods->goods_article->goods_product->goods_category->$metric_relation)
+                                @if ($cur_goods->goods_article->goods_product->goods_category->$metric_relation->isNotEmpty())
                                 @foreach ($cur_goods->goods_article->goods_product->goods_category->$metric_relation as $metric)
                                 @include('goods.metrics.metric_input', $metric)
                                 @endforeach
-                                @endisset
+                                @endif
 
                                 @endif
+
                             </div>
-
-                            @else
-
-                            {{-- Если товар --}}
-                            @isset ($cur_goods->goods_article->$metric_relation)
-
-                            <table>
-                                <tbody>
-
-                                    @foreach ($cur_goods->goods_article->$metric_relation as $metric)
-                                    @include('goods.metrics.metric_value', $metric)
-                                    @endforeach
-
-                                </tbody>
-                            </table>
-
-                            @endisset
-
-                            @endif
                         </fieldset>
 
                         @endif
@@ -200,7 +171,6 @@
                             <div class="item-error" id="cur-goods-error">Такой артикул уже существует!<br>Измените значения!</div>
                         </div>
                         {{ Form::hidden('cur_goods_id', $cur_goods->id) }}
-
                     </div>
                     {{-- Конец правого блока на первой вкладке --}}
 
@@ -221,9 +191,9 @@
                     </div>
 
                 </div>{{-- Закрытие разделителя на блоки --}}
-            </div>{{-- Закрытите таба --}}
+            </div>
 
-            <!-- Ценообразование -->
+            {{-- Ценообразование --}}
             <div class="tabs-panel" id="price-rules">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
@@ -238,7 +208,7 @@
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
-                                    <label>Цена за (<span id="unit">{{ $cur_goods->goods_article->goods_product->unit->abbreviation }}</span>)
+                                    <label>Цена за (<span id="unit">{{ ($cur_goods->portion_status == null) ?$cur_goods->goods_article->goods_product->unit->abbreviation : 'порцию' }}</span>)
                                         {{ Form::number('price', $cur_goods->price) }}
                                     </label>
                                 </div>
@@ -247,7 +217,7 @@
 
                         <fieldset class="fieldset portion-fieldset" id="portion-fieldset">
                             <legend class="checkbox">
-                                {{ Form::checkbox('portion', 1, $cur_goods->portion_status, ['id' => 'portion']) }}
+                                {{ Form::checkbox('portion_status', 1, $cur_goods->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) }}
                                 <label for="portion">
                                     <span id="portion-change">Принимать порциями</span>
                                 </label>
@@ -257,30 +227,29 @@
                             <div class="grid-x grid-margin-x" id="portion-block">
                                 <div class="small-12 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
                                     <label>Имя&nbsp;порции
-                                        {{ Form::text('portion_name', $cur_goods->portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
+                                        {{ Form::text('portion_name', $cur_goods->portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
                                     </label>
                                 </div>
                                 <div class="small-6 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
                                     <label>Сокр.&nbsp;имя
-                                        {{ Form::text('portion_abbreviation',  $cur_goods->portion_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
+                                        {{ Form::text('portion_abbreviation',  $cur_goods->portion_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
                                     </label>
                                 </div>
                                 <div class="small-6 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
                                     <label>Кол-во,&nbsp;{{ $cur_goods->goods_article->goods_product->unit->abbreviation }}
                                         {{-- Количество чего-либо --}}
-                                        {{ Form::text('portion_count', $cur_goods->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
+                                        {{ Form::text('portion_count', $cur_goods->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
                                         <div class="sprite-input-right find-status" id="name-check"></div>
                                         <span class="form-error">Введите количество</span>
                                     </label>
                                 </div>
-                                {{ Form::hidden('portion_status', 0, ['id' => 'portion-status']) }}
                             </div>
                         </fieldset>
                     </div>
                 </div>
             </div>
 
-            <!-- Каталоги -->
+            {{-- Каталоги --}}
             <div class="tabs-panel" id="catalogs">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
@@ -290,18 +259,14 @@
                             <legend>Каталоги</legend>
 
                             {{-- Form::select('catalogs[]', $catalogs_list, $cur_goods->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
-                            <select name="catalogs[]" data-placeholder="Выберите каталоги..." multiple class="chosen-select">
-                                @php
-                                echo $catalogs_list;
-                                @endphp
-                            </select>
+                            @include('includes.selects.catalogs')
 
                         </fieldset>
                     </div>
                 </div>
             </div>
 
-            <!-- Состав -->
+            {{-- Состав --}}
             <div class="tabs-panel" id="compositions">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-9 cell">
@@ -325,11 +290,8 @@
                                 $composition_relation = ($cur_goods->goods_article->goods_product->set_status == 'one') ? 'compositions' : 'set_compositions';
                                 @endphp
 
-                                {{-- Если черновик --}}
-                                @if ($cur_goods->goods_article->draft == 1)
-
                                 {{-- У товара есть значения состава, берем их --}}
-                                @if (count($cur_goods->goods_article->$composition_relation))
+                                @if ($cur_goods->goods_article->$composition_relation->isNotEmpty())
 
                                 @foreach ($cur_goods->goods_article->$composition_relation as $composition)
                                 @include ('goods.compositions.composition_input', $composition)
@@ -338,7 +300,8 @@
                                 @else
 
                                 {{-- В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются --}}
-                                @if (($composition_relation != 'set_compositions') && count($cur_goods->goods_article->goods_product->goods_category->compositions))
+                                @if (($composition_relation != 'set_compositions') && ($cur_goods->goods_article->goods_product->goods_category->compositions->isNotEmpty())
+                                && ($cur_goods->goods_article->draft == 1))
                                 @foreach ($cur_goods->goods_article->goods_product->goods_category->compositions as $composition)
                                 @include ('goods.compositions.composition_input', $composition)
                                 @endforeach
@@ -346,38 +309,26 @@
 
                                 @endif
 
-                                @else
 
-                                {{-- У товара есть значения состава, берем их --}}
-                                @isset ($cur_goods->goods_article->$composition_relation)
-                                @foreach ($cur_goods->goods_article->$composition_relation as $composition)
-                                @include ('goods.compositions.composition_value', $composition)
-                                @endforeach
-                                @endisset
-
-                                @endif
                             </tbody>
                         </table>
                     </div>
 
+
+
                     <div class="small-12 medium-3 cell">
 
                         {{-- Если статус у товара статус черновика, то показываем сырье/товары для добавления, в зависимости от статуса набора --}}
-                        @isset ($composition_list)
+
                         @if ($cur_goods->goods_article->draft == 1)
+                        @isset ($composition_list)
 
+                        @if ($cur_goods->goods_article->$composition_relation->isNotEmpty())
+                        {{ Form::model($cur_goods->goods_article, []) }}
+                        @else
                         @if ($cur_goods->goods_article->goods_product->set_status == 'one')
-
-                        @if (count($cur_goods->goods_article->$composition_relation))
-                        {{ Form::model($cur_goods->goods_article, []) }}
-                        @else
                         {{ Form::model($cur_goods->goods_article->goods_product->goods_category, []) }}
-                        @endif
-
-                        @else
-
-                        {{ Form::model($cur_goods->goods_article, []) }}
-
+                        @endisset
                         @endif
 
                         <ul class="menu vertical">
@@ -409,20 +360,23 @@
                 </div>
             </div>
 
-            <!-- Фотографии -->
+            {{ Form::close() }}
+
+            {{-- Фотографии --}}
             <div class="tabs-panel" id="photos">
                 <div class="grid-x grid-padding-x">
 
+
                     <div class="small-12 medium-7 cell">
-                        {{ Form::open(['url' => '/admin/goods/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
-                        {{ Form::hidden('name', $cur_goods->name) }}
+                        {!!  Form::open(['url' => '/admin/goods/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) !!}
+                        {{ Form::hidden('name', $cur_goods->goods_article->name) }}
                         {{ Form::hidden('id', $cur_goods->id) }}
-                        {{ Form::close() }}
+                        {!! Form::close() !!}
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
-                            @if (isset($cur_goods->album_id))
+                            @isset($cur_goods->album_id)
                             @include('goods.photos', $cur_goods)
-                            @endif
+                            @endisset
 
                         </ul>
                     </div>
@@ -432,12 +386,13 @@
                         {{-- Форма редактированя фотки --}}
                         {{ Form::open(['url' => '/admin/goods/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
 
-                        {{ Form::hidden('name', $cur_goods->name) }}
+                        {{ Form::hidden('photo_name', $cur_goods->name) }}
                         {{ Form::hidden('id', $cur_goods->id) }}
                         {{ Form::close() }}
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -448,16 +403,12 @@
 @endsection
 
 @section('scripts')
-
-@include('includes.scripts.inputs-mask')
-@include('includes.scripts.upload-file')
-@include('goods.scripts')
-
 <script>
 
     // Основные настройки
     var cur_goods_id = '{{ $cur_goods->id }}';
     var set_status = '{{ $cur_goods->goods_article->goods_product->set_status }}';
+    var entity = 'goods';
 
     var metrics_count = '{{ count($cur_goods->goods_article->metrics) }}';
 
@@ -471,114 +422,43 @@
 
     var category_id = '{{ $cur_goods->goods_article->goods_product->goods_category_id }}';
 
+    var unit = '{{ $cur_goods->goods_article->goods_product->unit->abbreviation }}';
+
     // Мульти Select
     $(".chosen-select").chosen({width: "95%"});
 
-
-
-
-    $(document).on('change', '#goods-categories-list', function(event) {
+    $(document).on('change', '#select-goods_categories', function(event) {
         event.preventDefault();
 
         // Меняем группы
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/goods_products_list',
-            type: 'POST',
-            data: {goods_category_id: $(this).val(), goods_product_id: $('#goods-products-list').val(), set_status: set_status},
-            success: function(html){
-                // alert(html);
-                $('#goods-products-select').html(html);
-                // $('#metrics-list').foundation();
-            }
+        $.post('/admin/goods_products_list', {goods_category_id: $(this).val(), goods_product_id: $('#select-goods_products').val(), set_status: set_status}, function(list){
+            // alert(html);
+            $('#select-goods_products').replaceWith(list);
         });
     });
 
-    $(document).on('click', '#portion-change', function() {
-        $('#portion-block div').toggleClass('portion-hide');
-        $('#portion-fieldset').toggleClass('portion-fieldset');
-
-        // alert($(this).prop('checked'));
-
-        if ($('#portion-status').val() == 0) {
-            $('#unit').text('порцию');
-            $('#portion-status').val(1);
-        } else {
-            $('#unit').text('{{ $cur_goods->goods_article->goods_product->unit->abbreviation }}');
-            $('#portion-status').val(0);
-        }
-    });
-
-    // При клике на удаление метрики со страницы
-    $(document).on('click', '[data-open="delete-metric"]', function() {
-
-        // Находим описание сущности, id и название удаляемого элемента в родителе
-        var parent = $(this).closest('.item');
-        var id = parent.attr('id').split('-')[1];
-
-        // alert(id);
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_delete_relation_metric',
-            type: 'POST',
-            data: {id: id, entity: 'goods', entity_id: cur_goods_id},
-            success: function(date){
-
-                var result = $.parseJSON(date);
-                // alert(result);
-
-                if (result['error_status'] == 0) {
-
-                    // Удаляем элемент со страницы
-                    $('#metrics-' + id).remove();
-
-                    // В случае успеха обновляем список метрик
-                    // $.ajax({
-                    //   headers: {
-                    //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    //   },
-                    //   url: '/goods/' + cur_goods_id + '/edit',
-                    //   type: 'GET',
-                    //   data: $('#service-form').serialize(),
-                    //   success: function(html){
-                    //     // alert(html);
-                    //     $('#properties-dropdown').html(html);
-                    //   }
-                    // })
-
-                    // Убираем отмеченный чекбокс в списке метрик
-                    $('#add-metric-' + id).prop('checked', false);
-
-                } else {
-                    alert(result['error_message']);
-                };
-            }
-        })
+    $(document).on('click', '#portion', function() {
+        $('#portion-block div').toggle();
+        // $('#portion-fieldset').toggleClass('portion-fieldset');
+        $('#unit').text( $(this).prop('checked') ? 'порцию' : unit );
     });
 
     // При клике на удаление состава со страницы
     $(document).on('click', '[data-open="delete-composition"]', function() {
-        // находим описание сущности, id и название удаляемого элемента в родителе
+
+        // Находим описание сущности, id и название удаляемого элемента в родителе
         var parent = $(this).closest('.item');
-        var type = parent.attr('id').split('-')[0];
-        var id = parent.attr('id').split('-')[1];
-        var name = parent.data('name');
-        $('.title-composition').text(name);
+        // var type = parent.attr('id').split('-')[0];
+        $('.title-composition').text(parent.data('name'));
         // $('.delete-button').attr('id', 'del-' + type + '-' + id);
-        $('.composition-delete-button').attr('id', 'delete_metric-' + id);
+        $('.composition-delete-button').attr('id', 'delete_metric-' + parent.attr('id').split('-')[1]);
     });
 
-    // При клике на удаление метрики со страницы
+    // При клике на подтверждение удаления состава со страницы
     $(document).on('click', '.composition-delete-button', function() {
 
         // Находим id элемента в родителе
         var id = $(this).attr('id').split('-')[1];
-
         // alert(id);
 
         // Удаляем элемент со страницы
@@ -587,104 +467,20 @@
         // Убираем отмеченный чекбокс в списке метрик
         $('#add-composition-' + id).prop('checked', false);
 
-        Foundation.reInit($('#cur-goods-form'));
-
+        // Foundation.reInit($('#cur_goods-form'));
     });
-
-    // При клике на чекбокс метрики отображаем ее на странице
-    // $(document).on('click', '.add-composition', function() {
-
-    //     var id = $(this).val();
-    //     // alert(goods_category_id + ' ' + id);
-
-    //     // Если нужно добавить состав
-    //     if ($(this).prop('checked') == true) {
-    //         $.ajax({
-    //             headers: {
-    //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //             },
-    //             url: '/admin/ajax_add_page_composition',
-    //             type: 'POST',
-    //             data: {id: id, item_id: cur_goods_id, entity: 'goods'},
-    //             success: function(html){
-    //                 // alert(html);
-    //                 $('#composition-table').append(html);
-    //             }
-    //         })
-    //     } else {
-
-    //         // Если нужно удалить состав
-    //         $('#compositions-' + id).remove();
-    //     }
-    // });
-    // $(document).on('click', '[data-open="delete-composition"]', function() {
-
-    //     // Находим описание сущности, id и название удаляемого элемента в родителе
-    //     var parent = $(this).closest('.item');
-    //     var id = parent.attr('id').split('-')[1];
-
-    //     // alert(id);
-
-    //     $.ajax({
-    //         headers: {
-    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //         },
-    //         url: '/admin/ajax_delete_relation_composition',
-    //         type: 'POST',
-    //         data: {id: id, cur_goods_id: cur_goods_id},
-    //         success: function(date){
-
-    //             var result = $.parseJSON(date);
-    //             // alert(result);
-
-    //             if (result['error_status'] == 0) {
-
-    //                 // Удаляем элемент со страницы
-    //                 $('#compositions-' + id).remove();
-
-    //                 // Убираем отмеченный чекбокс в списке метрик
-    //                 $('#add-composition-' + id).prop('checked', false);
-
-    //             } else {
-    //                 alert(result['error_message']);
-    //             };
-    //         }
-    //     })
-    // });
 
     // При клике на удаление состава со страницы
     $(document).on('click', '[data-open="delete-value"]', function() {
 
         // Удаляем элемент со страницы
         $(this).closest('.item').remove();
-
-    });
-
-    // Когда при клике по табам активная вкладка артикула
-    $(document).on('change.zf.tabs', '.tabs-list', function() {
-        if ($('#goods:visible').length) {
-
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_get_cur_goods_inputs',
-                type: 'POST',
-                data: {cur_goods_id: cur_goods_id},
-                success: function(html){
-                    // alert(html);
-                    $('#cur-goods-inputs').html(html);
-                    $('#cur-goods-inputs').foundation();
-                    // Foundation.reInit($('#service-inputs'));
-                }
-            })
-        }
     });
 
     // Проверяем наличие артикула в базе при клике на кнопку добавления артикула
     // $(document).on('click', '#add-cur-goods', function(event) {
     //     event.preventDefault();
-    //     // alert($('#cur-goods-form').serialize());
+    //     // alert($('#cur_goods-form').serialize());
     //     // alert(cur_goods_id);
 
     //     $.ajax({
@@ -693,7 +489,7 @@
     //         },
     //         url: '/admin/goods/' + cur_goods_id,
     //         type: 'PATCH',
-    //         data: $('#cur-goods-form').serialize(),
+    //         data: $('#cur_goods-form').serialize(),
     //         success: function(data) {
     //             var result = $.parseJSON(data);
     //             // alert(result['error_status']);
@@ -708,11 +504,11 @@
     //     })
     // });
 
-    $(document).on('change', '#cur-goods-form input', function() {
-        // alert('lol');
-        $('#add-cur-goods').prop('disabled', false);
-        $('#cur-goods-error').css('display', 'none');
-    });
+    // $(document).on('change', '#cur_goods-form input', function() {
+    //     // alert('lol');
+    //     $('#add-cur-goods').prop('disabled', false);
+    //     $('#cur-goods-error').hide();
+    // });
 
     // При смнене свойства в select
     $(document).on('change', '#properties-select', function() {
@@ -726,56 +522,29 @@
             // alert(id);
             $('#property-id').val(id);
 
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_add_property',
-                type: 'POST',
-                data: {id: id, entity: 'goods'},
-                success: function(html){
-                    // alert(html);
-                    $('#property-form').html(html);
-                    $('#properties-dropdown').foundation('close');
-                }
+            $.post('/admin/ajax_add_property', {id: id, entity: 'goods'}, function(html) {
+                // alert(html);
+                $('#property-form').html(html);
+                $('#properties-dropdown').foundation('close');
             })
-        }
+        };
     });
 
     // При клике на кнопку под Select'ом свойств
     $(document).on('click', '#add-metric', function(event) {
         event.preventDefault();
-
         // alert($('#properties-form').serialize());
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/metrics',
-            type: 'POST',
-            data: $('#properties-form').serialize(),
-            success: function(html){
+        $.post('/admin/metrics', $('#properties-form').serialize(), function(html){
+            // alert(html);
+            $('#metrics-table').append(html);
+            $('#property-form').html('');
 
+            // В случае успеха обновляем список метрик
+            $.get('/admin/goods/' + cur_goods_id + '/edit', $('#cur_goods-form').serialize(), function(html) {
                 // alert(html);
-                $('#metrics-table').append(html);
-                $('#property-form').html('');
-
-                // В случае успеха обновляем список метрик
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/admin/goods/' + cur_goods_id + '/edit',
-                    type: 'GET',
-                    data: $('#cur-goods-form').serialize(),
-                    success: function(html){
-                        // alert(html);
-
-                        $('#properties-dropdown').html(html);
-                    }
-                })
-            }
+                $('#properties-dropdown').html(html);
+            })
         })
     });
 
@@ -784,18 +553,10 @@
         event.preventDefault();
 
         // alert($('#properties-form input[name=value]').val());
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_add_metric_value',
-            type: 'POST',
-            data: {value: $('#properties-form input[name=value]').val()},
-            success: function(html){
-                // alert(html);
-                $('#values-table').append(html);
-                $('#properties-form input[name=value]').val('');
-            }
+        $.post('/admin/ajax_add_metric_value', {value: $('#properties-form input[name=value]').val()}, function(html){
+            // alert(html);
+            $('#values-table').append(html);
+            $('#properties-form input[name=value]').val('');
         })
     });
 
@@ -807,42 +568,23 @@
 
         // Если нужно добавить метрику
         if ($(this).prop('checked') == true) {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_add_relation_metric',
-                type: 'POST',
-                data: {id: $(this).val(), entity: 'goods', entity_id: cur_goods_id},
-                success: function(html){
-
-                    // alert(html);
-                    $('#metrics-table').append(html);
-                    $('#property-form').html('');
-                }
+            $.post('/admin/ajax_add_relation_metric', {id: $(this).val(), entity: 'goods', entity_id: cur_goods_id}, function(html){
+                // alert(html);
+                $('#metrics-table').append(html);
+                $('#property-form').html('');
             })
         } else {
-
             // Если нужно удалить метрику
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_delete_relation_metric',
-                type: 'POST',
-                data: {id: $(this).val(), entity: 'goods', entity_id: cur_goods_id},
-                success: function(date){
+            $.post('/admin/ajax_delete_relation_metric', {id: $(this).val(), entity: 'goods', entity_id: cur_goods_id}, function(date){
+                var result = $.parseJSON(date);
+                // alert(result);
 
-                    var result = $.parseJSON(date);
-                    // alert(result);
+                if (result['error_status'] == 0) {
 
-                    if (result['error_status'] == 0) {
-
-                        $('#metrics-' + id).remove();
-                    } else {
-                        alert(result['error_message']);
-                    };
-                }
+                    $('#metrics-' + id).remove();
+                } else {
+                    alert(result['error_message']);
+                };
             })
         }
     });
@@ -854,35 +596,55 @@
         $('.checker-nested').hide();
 
         // Показываем нужную
-        $('#' +$(this).data('open')).show();
+        $('#' + $(this).data('open')).show();
     });
 
     // При клике на чекбокс метрики отображаем ее на странице
     $(document).on('click', '.add-composition', function() {
-
-        // alert(set_status);
         // alert($(this).val());
-        var id = $(this).val();
+        let id = $(this).val();
 
         // Если нужно добавить состав
-        if ($(this).prop('checked') == true) {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_add_page_composition',
-                type: 'POST',
-                data: {id: $(this).val(), entity: 'goods', cur_goods_id: cur_goods_id, set_status: set_status},
-                success: function(html){
-
-                    // alert(html);
-                    $('#composition-table').append(html);
-                }
+        if ($(this).prop('checked')) {
+            $.post('/admin/ajax_add_page_composition', {id: $(this).val(), entity: entity, set_status: set_status}, function(html){
+                // alert(html);
+                $('#composition-table').append(html);
             })
         } else {
-
             // Если нужно удалить состав
             $('#compositions-' + id).remove();
+        }
+    });
+
+    $(document).ready(function($) {
+        $('.checkboxer-title .form-error').hide();
+    });
+
+    // Валидация группы чекбоксов
+    // $(document).on('click', '.checkbox-group input:checkbox', function() {
+    //     let id = $(this).closest('.dropdown-pane').attr('id');
+    //     if ($(this).closest('.checkbox-group').find("input:checkbox:checked").length == 0) {
+    //         $('div[data-toggle=' + id + ']').find('.form-error').show();
+    //         $('#add-cur-goods').prop('disabled', true);
+    //     } else {
+    //         $('div[data-toggle=' + id + ']').find('.form-error').hide();
+    //         $('#add-cur-goods').prop('disabled', false);
+    //     };
+    // });
+
+    // Валидация при клике на кнопку
+    $(document).on('click', '#add-cur-goods', function(event) {
+        let error = 0;
+        $(".checkbox-group").each(function(i) {
+            if ($(this).find("input:checkbox:checked").length == 0) {
+                let id = $(this).closest('.dropdown-pane').attr('id');
+                $('div[data-toggle=' + id + ']').find('.form-error').show();
+                error = error + 1;
+            };
+        });
+        $('#cur_goods-form').foundation('validateForm');
+        if (error > 0) {
+            event.preventDefault();
         }
     });
 
@@ -910,8 +672,8 @@
 
                 // alert(html);
                 $('#form-photo-edit').html(html);
-                // $('#first-add').foundation();
-                // $('#first-add').foundation('open');
+                // $('#modal-create').foundation();
+                // $('#modal-create').foundation('open');
             }
         })
     });
@@ -934,8 +696,8 @@
             success: function(html){
                 // alert(html);
                 $('#form-photo-edit').html(html);
-                // $('#first-add').foundation();
-                // $('#first-add').foundation('open');
+                // $('#modal-create').foundation();
+                // $('#modal-create').foundation('open');
             }
         })
     });
@@ -963,32 +725,23 @@
     // Настройки dropzone
     Dropzone.options.myDropzone = {
         paramName: 'photo',
-        maxFilesize: {{ $settings_album['img_max_size'] }}, // MB
+        maxFilesize: '{{ $settings['img_max_size'] }}',
         maxFiles: 20,
-        acceptedFiles: '{{ $settings_album['img_formats'] }}',
+        acceptedFiles: '{{ $settings['img_formats'] }}',
         addRemoveLinks: true,
         init: function() {
             this.on("success", function(file, responseText) {
                 file.previewTemplate.setAttribute('id',responseText[0].id);
 
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/admin/goods/photos',
-                    type: 'POST',
-                    data: {cur_goods_id: cur_goods_id},
-                    success: function(html){
-                        // alert(html);
-                        $('#photos-list').html(html);
-
-                        // $('#first-add').foundation();
-                        // $('#first-add').foundation('open');
-                    }
+                $.post('/admin/goods/photos', {cur_goods_id: cur_goods_id}, function(html){
+                    // alert(html);
+                    $('#photos-list').html(html);
+                    // $('#modal-create').foundation();
+                    // $('#modal-create').foundation('open');
                 })
             });
             this.on("thumbnail", function(file) {
-                if (file.width < {{ $settings_album['img_min_width'] }} || file.height < {{ $settings_album['img_min_height'] }}) {
+                if (file.width < '{{ $settings['img_min_width'] }}' || file.height < '{{ $settings['img_min_height'] }}') {
                     file.rejectDimensions();
                 } else {
                     file.acceptDimensions();
@@ -997,9 +750,15 @@
         },
         accept: function(file, done) {
             file.acceptDimensions = done;
-            file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings_album['img_min_width'] }} px в ширину"); };
+            file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину"); };
         }
     };
 
 </script>
+
+@include('includes.scripts.inputs-mask')
+@include('includes.scripts.upload-file')
+@include('goods.scripts')
+{{-- Проверка поля на существование --}}
+@include('includes.scripts.check')
 @endsection

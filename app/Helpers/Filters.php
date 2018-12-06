@@ -150,11 +150,7 @@
         return $filter;
     }
 
-
-    // $filter - массив / тело фильтра
-
-
-    function addFilter($filter, $filter_query, $request, $title, $filter_name, $column, $relations = null, $filter_mode = null, $checkboxer_mode = 'filter'){
+    function addFilter($filter, $filter_query, $request, $title, $filter_name, $column, $relations = null, $filter_mode = null){
 
         // Готовим массив для наполнения пунктами коллекции
         $list_select = [];
@@ -166,46 +162,6 @@
 
         // ОПРЕДЕЛЯЕМ РЕЖИМ РАБОТЫ ФИЛЬТРА И ФОРМИРУЕМ ВЫПАДАЮЩИЙ СПИСОК
  
-        // Если режим не передали - пытаемся определить самостоятельно
-        if($filter_mode == null){
-
-            // Если выборка в текущей колекции или 
-            if($relations != null){
-
-                // Выбираем только уникальные ID
-                $filter_entity = $filter_query->unique($relations . '.' . $column);
-
-                if($column == 'id'){
-
-                    // Выборка по ID в третей коллекции
-                    $filter[$filter_name]['mode'] = 'external-self-one';
-                } else {
-
-                    // Выборка элементов (id и name) из третей коллекции по присутствию ID ее элементов во второй коллекции
-                    // по присутствию ID ее элементов в первой коллекции
-                    $filter[$filter_name]['mode'] = 'external-id-one';
-                };
-
-            } else {
-
-                // Выбираем только уникальные ID
-                $filter_entity = $filter_query->unique($column);
-
-                if($column == 'id'){
-
-                    // Выборка элементов по ID текущей коллекции
-                    $filter[$filter_name]['mode'] = 'internal-self-one';
-                } else {
-
-                    // Выборка элементов из другой коллекции по присутствию ID ее элементов в текущей коллекции
-                    $filter[$filter_name]['mode'] = 'internal-id-one';
-                };
-
-            };
-
-        } else {
-
-
             // Вытаскиеваем в зависимости от режима нужную коллекцию
             if($filter_mode == 'internal-self-one'){
 
@@ -237,7 +193,6 @@
                 }
 
             };
-
 
             // Вытаскиеваем в зависимости от режима нужную коллекцию
             if($filter_mode == 'external-id-one'){
@@ -315,23 +270,21 @@
 
             };
 
-        };
 
         $filter[$filter_name]['collection'] = $filter_entity;
 
-        if($request->$column == null){
+        if($request[$column] == null){
 
             $filter[$filter_name]['mass_id'] = null;
             $filter[$filter_name]['count_mass'] = 0;
             
         } else {
 
-            $filter[$filter_name]['mass_id'] = $request->$column; // Получаем список ID
+            $filter[$filter_name]['mass_id'] = $request[$column]; // Получаем список ID
 
+            if(is_array($request[$column])){
 
-            if(is_array($request->$column)){
-
-                $filter[$filter_name]['count_mass'] = count($request->$column);
+                $filter[$filter_name]['count_mass'] = count($request[$column]);
                 $filter['status'] = 'active';
                 $filter['count'] = $filter['count'] + 1;
 
@@ -351,23 +304,6 @@
         }
 
         $filter_entity_name = $filter['entity_name'];
-
-        // Если работаем в режиме фильтра - будем записывать куки
-        if($checkboxer_mode == 'filter'){
-
-            if($filter['count'] > 0) {
-                
-                // Пишем в куку
-                $filter_url = $request->fullUrl();
-                Cookie::queue('filter_' . $filter_entity_name, $filter_url, 1440);
-                
-            } else {
-
-                // Удаляем куку
-                Cookie::queue(Cookie::forget('filter_' . $filter_entity_name)); 
-            };
-        };
-
 
         return $filter;
 

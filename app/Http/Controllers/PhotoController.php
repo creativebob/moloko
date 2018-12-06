@@ -69,7 +69,7 @@ class PhotoController extends Controller
         ->filials($answer) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        ->booklistFilter($request) 
+        ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
@@ -83,7 +83,7 @@ class PhotoController extends Controller
         // ->filials($answer_album) // $industry должна существовать только для зависимых от филиала, иначе $industry должна null
         // ->authors($answer_album)
         // ->systemItem($answer_album) // Фильтр по системным записям
-        // ->booklistFilter($request) 
+        // ->booklistFilter($request)
         // ->orderBy('sort', 'asc')
         // ->first();
 
@@ -205,7 +205,7 @@ class PhotoController extends Controller
                 }
 
                 if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;  
+                    $settings['img_large_height'] = $get_settings->img_large_height;
                 }
 
                 if ($get_settings->img_formats != null) {
@@ -217,7 +217,7 @@ class PhotoController extends Controller
                 }
 
                 if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;   
+                    $settings['img_min_height'] = $get_settings->img_min_height;
                 }
 
                 if ($get_settings->img_max_size != null) {
@@ -226,7 +226,7 @@ class PhotoController extends Controller
                 }
             }
 
-            $directory = $user->company_id.'/media/albums/'.$album->id.'/img/';
+            $directory = $user->company_id.'/media/albums/'.$album->id.'/img';
             // $name = $album->alias.'-'.time();
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
@@ -250,7 +250,7 @@ class PhotoController extends Controller
             $upload_success = $array['upload_success'];
 
 
-            // } 
+            // }
             // Storage::disk('public')->put($directory.'/small/'.$image_name, $small->stream()->__toString());
             //   // dd($photo);
 
@@ -258,10 +258,10 @@ class PhotoController extends Controller
                 return response()->json($upload_success, 200);
             } else {
                 return response()->json('error', 400);
-            } 
+            }
         } else {
             return response()->json('error', 400);
-        } 
+        }
     }
 
     public function show($id)
@@ -410,7 +410,7 @@ class PhotoController extends Controller
     }
 
     // ------------------------------------------ Ajax --------------------------------------------------------
-    
+
     // Сортировка
     public function ajax_sort(Request $request)
     {
@@ -439,7 +439,7 @@ class PhotoController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -466,7 +466,7 @@ class PhotoController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -477,7 +477,7 @@ class PhotoController extends Controller
         echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-    
+
     public function get_photo(Request $request)
     {
 
@@ -522,5 +522,5 @@ class PhotoController extends Controller
         }
     }
 
-    
+
 }

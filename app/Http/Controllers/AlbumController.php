@@ -24,7 +24,7 @@ use App\Policies\AlbumPolicy;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cookie;
 
-// Специфические классы 
+// Специфические классы
 use Illuminate\Support\Facades\Storage;
 
 // На удаление
@@ -41,7 +41,7 @@ class AlbumController extends Controller
     public function index(Request $request)
     {
 
-        // Включение контроля активного фильтра 
+        // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
@@ -60,7 +60,7 @@ class AlbumController extends Controller
         ->withCount('photos')
         ->whereHas('albums_category', function ($query) {
 
-            $query->where('company_id', '!=', null)
+            $query->whereNotNull('company_id')
             ->where(function ($query) {
                 $query->where('system_item', 1)->orWhere('system_item', null);
             })->orWhere('company_id', null)->where(function ($query) {
@@ -115,7 +115,7 @@ class AlbumController extends Controller
         ->systemItem($answer_albums_categories) // Фильтр по системным записям
         ->template($answer_albums_categories) // Выводим шаблоны категорий альбомов
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 
@@ -256,7 +256,7 @@ class AlbumController extends Controller
         ->authors($answer_album)
         ->systemItem($answer_album) // Фильтр по системным записям
         ->whereAlias($alias)
-        ->booklistFilter($request) 
+        ->booklistFilter($request)
         ->first();
 
         // dd($album);
@@ -273,7 +273,7 @@ class AlbumController extends Controller
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
-        
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -294,7 +294,7 @@ class AlbumController extends Controller
         ->template($answer_albums_categories)
         ->systemItem($answer_albums_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 
@@ -394,14 +394,14 @@ class AlbumController extends Controller
         $album_settings->img_min_width = $request->img_min_width;
         $album_settings->img_min_height = $request->img_min_height;
         $album_settings->img_max_size = $request->img_max_size;
-    
+
         $album_settings->save();
 
         // Если параметров нет - удаляем запись из таблицы (чтоб не держать пустые)
         // if(
         //     ($album_settings->img_small_width == null)&&
         //     ($album_settings->img_small_height == null)&&
-        //     ($album_settings->img_medium_width == null)&&       
+        //     ($album_settings->img_medium_width == null)&&
         //     ($album_settings->img_medium_height == null)&&
         //     ($album_settings->img_large_width == null)&&
         //     ($album_settings->img_large_height == null)&&
@@ -532,7 +532,7 @@ class AlbumController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -559,7 +559,7 @@ class AlbumController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [

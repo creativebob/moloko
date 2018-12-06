@@ -11,6 +11,7 @@ use App\Manufacturer;
 use App\Dealer;
 use App\Client;
 use App\Bank;
+use App\BankAccount;
 
 use App\Role;
 use App\Place;
@@ -35,6 +36,10 @@ use App\CatalogProduct;
 
 use App\Account;
 use App\Post;
+use App\SocialNetwork;
+use App\Campaign;
+
+use App\Salary;
 
 use App\Position;
 
@@ -85,6 +90,7 @@ use App\Policies\ManufacturerPolicy;
 use App\Policies\DealerPolicy;
 use App\Policies\ClientPolicy;
 use App\Policies\BankPolicy;
+use App\Policies\BankAccountPolicy;
 
 use App\Policies\RolePolicy;
 use App\Policies\PlacePolicy;
@@ -110,6 +116,10 @@ use App\Policies\CatalogProductPolicy;
 
 use App\Policies\AccountPolicy;
 use App\Policies\PostPolicy;
+use App\Policies\SocialNetworkPolicy;
+use App\Policies\CampaignPolicy;
+
+use App\Policies\SalaryPolicy;
 
 use App\Policies\PositionPolicy;
 use App\Policies\StafferPolicy;
@@ -174,6 +184,8 @@ class AuthServiceProvider extends ServiceProvider
         Dealer::class => DealerPolicy::class, 
         Client::class => ClientPolicy::class,
         Bank::class => BankPolicy::class,
+        BankAccount::class => BankAccountPolicy::class,
+
         Right::class => RightPolicy::class, 
         Entity::class => EntityPolicy::class, 
         Role::class => RolePolicy::class,
@@ -183,6 +195,10 @@ class AuthServiceProvider extends ServiceProvider
 
         Account::class => AccountPolicy::class,
         Post::class => PostPolicy::class,
+        SocialNetwork::class => SocialNetworkPolicy::class,
+        Campaign::class => CampaignPolicy::class,
+
+        Salary::class => SalaryPolicy::class,
 
         Position::class => PositionPolicy::class,
         Region::class => RegionPolicy::class,

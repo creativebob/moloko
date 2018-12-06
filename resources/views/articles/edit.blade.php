@@ -86,7 +86,7 @@
                                         <div class="small-12 cell checkbox">
                                             {{ Form::checkbox('portion', 1, $article->display, ['id' => 'portion']) }}
                                             <label for="portion"><span>Принимать порциями</span></label>
-                                        </div>                                   
+                                        </div>
                                     </legend>
 
                                     <div class="grid-x grid-margin-x">
@@ -132,7 +132,7 @@
 
                             <div class="small-12 cell">
                                 <label>Описание товара
-                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$article->description, 'required'=>''])
+                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$article->description])
                                 </label>
                             </div>
                         </div>
@@ -153,7 +153,7 @@
                                     <label>Удобный (вручную)
                                         {{ Form::text('name', null, ['required']) }}
                                     </label>
-                                </div> 
+                                </div>
                                 <div class="small-12 medium-4 cell">
                                     <label>Программный
                                         {{ Form::text('internal', null, ['required', 'disabled']) }}
@@ -228,7 +228,7 @@
                     {{-- Чекбокс системной записи --}}
                     @can ('god', $article)
                     <div class="small-12 cell checkbox">
-                        @include('includes.inputs.system', ['value'=>$article->system_item, 'name'=>'system_item']) 
+                        @include('includes.inputs.system', ['value'=>$article->system_item, 'name'=>'system_item'])
                     </div>
                     @endcan
 
@@ -241,7 +241,7 @@
             </div>{{-- Закрытите таба --}}
 
 
-            
+
 
 
             <!-- Состав -->
@@ -250,7 +250,7 @@
                     <div class="small-12 medium-9 cell">
                         <table class="composition-table">
                             <thead>
-                                <tr> 
+                                <tr>
                                     @if ($article->template == 1)
                                     <th>Категория:</th>
                                     <th>Продукт:</th>
@@ -436,7 +436,7 @@ $settings = config()->get('settings');
 
     } else {
         alert(result['error_message']);
-    }; 
+    };
 }
 })
         });
@@ -472,7 +472,7 @@ $settings = config()->get('settings');
 
                     } else {
                         alert(result['error_message']);
-                    }; 
+                    };
                 }
             })
         });
@@ -664,7 +664,7 @@ $settings = config()->get('settings');
             $('#metrics-' + id).remove();
         } else {
             alert(result['error_message']);
-        }; 
+        };
     }
 })
     }
@@ -737,8 +737,8 @@ $settings = config()->get('settings');
 
         // alert(html);
         $('#form-photo-edit').html(html);
-        // $('#first-add').foundation();
-        // $('#first-add').foundation('open');
+        // $('#modal-create').foundation();
+        // $('#modal-create').foundation('open');
     }
 })
     });
@@ -761,8 +761,8 @@ $settings = config()->get('settings');
             success: function(html){
         // alert(html);
         $('#form-photo-edit').html(html);
-        // $('#first-add').foundation();
-        // $('#first-add').foundation('open');
+        // $('#modal-create').foundation();
+        // $('#modal-create').foundation('open');
     }
 })
     });
@@ -810,8 +810,8 @@ $settings = config()->get('settings');
         // alert(html);
         $('#photos-list').html(html);
 
-        // $('#first-add').foundation();
-        // $('#first-add').foundation('open');
+        // $('#modal-create').foundation();
+        // $('#modal-create').foundation('open');
     }
 })
             });

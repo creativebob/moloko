@@ -1,7 +1,7 @@
 @can ('index', App\Challenge::class)
 <fieldset class="fieldset-challenge">
 	<legend>Задачи:</legend>
-	<div class="grid-x grid-padding-x"> 
+	<div class="grid-x grid-padding-x">
 		<table class="table-challenges" id="table-challenges">
 			<thead>
 				<tr>
@@ -16,7 +16,7 @@
 				@if (count($item->challenges) > 0)
 				@include('includes.challenges.challenges', ['challenges' => $item->challenges])
 				@endif
-				
+
 			</tbody>
 		</table>
 	</div>

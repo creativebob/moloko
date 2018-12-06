@@ -18,7 +18,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-    
+
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -85,4 +85,22 @@ class ServicesCategory extends Model
     //     return $this->belongsToMany('App\Product', 'compositions', 'products_category_id', 'composition_id');
     // }
 
+
+    // --------------------------------------- Запросы -----------------------------------------
+    public function getIndex($request, $answer)
+    {
+        return $this->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->template($answer) // Выводим шаблоны альбомов
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
+    }
+
+    public function getItem($id, $answer)
+    {
+        return $this->moderatorLimit($answer)->findOrFail($id);
+    }
 }

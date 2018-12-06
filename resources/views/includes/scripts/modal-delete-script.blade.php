@@ -1,6 +1,8 @@
 <script type="text/javascript">
+
 // Мягкое удаление с refresh
 $(document).on('click', '[data-open="item-delete"]', function() {
+	
   // находим описание сущности, id и название удаляемого элемента в родителе
   var parent = $(this).closest('.item');
   var type = parent.attr('id').split('-')[0];

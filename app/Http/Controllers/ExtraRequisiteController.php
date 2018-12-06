@@ -11,6 +11,7 @@ use App\Staffer;
 use App\StageRole;
 use App\Sector;
 use App\Entity;
+use App\City;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -27,7 +28,7 @@ use Illuminate\Support\Facades\Schema;
 // На удаление
 use Illuminate\Support\Facades\Auth;
 
-class StageController extends Controller
+class ExtraRequisiteController extends Controller
 {
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'extra_requisites';
@@ -36,7 +37,7 @@ class StageController extends Controller
     public function index(Request $request)
     {
 
-        // Включение контроля активного фильтра 
+        // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
@@ -63,7 +64,7 @@ class StageController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
- 
+
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
@@ -85,26 +86,21 @@ class StageController extends Controller
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Stage::class);
+        $this->authorize(getmethod(__FUNCTION__), ExtraRequisite::class);
 
-        $stage = new Stage;
-
-        $entities = Entity::get();
-        $entities_list = $entities->pluck('name', 'id');
-
-        $fields_list = Schema::getColumnListing($entities->first()->alias);
+        $extra_requisite = new ExtraRequisite;
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('stages.create', compact('stage', 'page_info', 'entities_list', 'fields_list'));  
+        return view('extra_requisites.create', compact('extra_requisite', 'page_info'));
     }
 
-    public function store(StageRequest $request)
+    public function store(ExtraRequisiteRequest $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Stage::class);
+        $this->authorize(getmethod(__FUNCTION__), ExtraRequisite::class);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -253,7 +249,7 @@ class StageController extends Controller
                 return redirect('/admin/stages');
             } else {
                 abort(403, 'Ошибка при удалении этапа');
-            } 
+            }
         } else {
 
             abort(403, 'Этап не найден');
@@ -288,7 +284,7 @@ class StageController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -315,7 +311,7 @@ class StageController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [

@@ -18,67 +18,49 @@
                     <div class="grid-x grid-padding-x">
                         <div class="small-12 cell">
                             <label>Сотрудник:
-                                @php
-                                $block = null;
-                                @endphp
-                                @if (!empty($staffer->user_id))
-                                @php
-                                $block = 'disabled';
-                                @endphp
-                                @endif
-                                {{ Form::select('user_id', $users_list, $staffer->user_id, ['id'=>'staffer-select', 'placeholder'=>'Вакансия', $block]) }}
+
+
+                                @include('includes.selects.staff', ['disabled' => isset($staffer->user_id) ? true : '', 'mode' => isset($staffer->user_id) ? '' : 'vacancies'])
+
                             </label>
                         </div>
                         <div class="small-6 cell">
                             <label>Дата приема
-                                @php 
-                                $employment_date = null;
-                                @endphp
-                                @if (!empty($staffer))
-                                @foreach ($staffer->employees as $employee)
-                                @if (($employee->user_id == $staffer->user_id) && ($employee->dismissal_date == null))
-                                @php
-                                $employment_date = $employee->employment_date; 
-                                @endphp    
-                                @endif
-                                @endforeach
-                                {{ Form::text('employment_date', $employment_date, ['class'=>'employment_date date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off', 'required']) }}
-                                @endif
-                            </label>
-                        </div>
-                        <div class="small-6 cell">
-                            <label>Дата увольнения
-                                {{-- @include('includes.inputs.date', ['name'=>'dismissal_date', 'value'=>$user->birthday, 'required'=>'']) --}}
-                                {{ Form::text('dismissal_date', null, ['class'=>'dismissal_date date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
-                            </label>
-                        </div>
-
-                        {{-- Чекбоксы управления --}}
-                        @include('includes.control.checkboxes', ['item' => $staffer]) 
+                                @include('includes.inputs.date', ['value'=>($staffer->employee) ? $staffer->employee->employment_date->format('d.m.Y') : null, 'name'=>'employment_date', 'required' => true])
+                         </label>
+                     </div>
+                     <div class="small-6 cell">
+                        <label>Дата увольнения
+                            @include('includes.inputs.date', ['name'=>'dismissal_date'])
+                        </label>
                     </div>
-                </div>
-                <div class="small-12 medium-5 large-5 cell tabs-margin-top">
-                    <label>Причина увольнения
-                        {{ Form::textarea('dismissal_desc', null, ['class'=>'varchar-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
-                    </label>
-                </div>
-                <div class="small-0 medium-0 large-2 cell tabs-margin-top"></div>
-            </div> 
 
-        </div>
-
-        <!-- График работы -->
-        <div class="tabs-panel" id="worktimes">
-
-            <div class="grid-x grid-padding-x">
-                <div class="small-12 medium-6 cell tabs-margin-top">
-                    @include('includes.inputs.schedule', ['value'=>$worktime]) 
+                    {{-- Чекбоксы управления --}}
+                    @include('includes.control.checkboxes', ['item' => $staffer])
                 </div>
             </div>
-            
+            <div class="small-12 medium-5 large-5 cell tabs-margin-top">
+                <label>Причина увольнения
+                    {{ Form::textarea('dismissal_description', null, ['class'=>'varchar-field position-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
+                </label>
+            </div>
+            <div class="small-0 medium-0 large-2 cell tabs-margin-top"></div>
         </div>
 
     </div>
+
+    <!-- График работы -->
+    <div class="tabs-panel" id="worktimes">
+
+        <div class="grid-x grid-padding-x">
+            <div class="small-12 medium-6 cell tabs-margin-top">
+                @include('includes.inputs.schedule', ['worktime'=>$staffer->worktime])
+            </div>
+        </div>
+
+    </div>
+
+</div>
 </div>
 
 

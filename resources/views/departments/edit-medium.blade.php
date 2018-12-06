@@ -17,7 +17,7 @@
 <div class="tabs-wrap inputs">
   <div class="tabs-content" data-tabs-content="tabs">
 
-    
+
 	{{ Form::open(['id'=>'form-medium-edit', 'data-abide', 'novalidate']) }}
 	<div class="tabs-panel is-active" id="department">
 	<div class="grid-x grid-padding-x align-center modal-content inputs">
@@ -30,7 +30,7 @@
 				</select>
 			</label>
 			<label>Название отдела
-				@include('includes.inputs.name', ['value'=>$department->name, 'name'=>'name', 'required'=>'required'])
+				@include('includes.inputs.name', ['value'=>$department->name, 'name'=>'name', 'required' => true])
 				<div class="item-error">Данный отдел уже существует в этом филиале!</div>
 			</label>
 			<label class="input-icon">Введите город
@@ -42,7 +42,7 @@
 				$city_id = $department->location->city->id;
 			}
 			@endphp
-			@include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required'=>'required'])
+			@include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required' => true])
 		</label>
 		<label>Адрес отдела
 			@php
@@ -51,10 +51,10 @@
 			$address = $department->location->address;
 		}
 		@endphp
-		@include('includes.inputs.address', ['value'=>$address, 'name'=>'address', 'required'=>''])
+		@include('includes.inputs.address', ['value'=>$address, 'name'=>'address'])
 	</label>
 	<label>Телефон отдела
-		@include('includes.inputs.phone', ['value'=>$department->phone, 'name'=>'phone', 'required'=>''])
+		@include('includes.inputs.phone', ['value'=>$department->phone, 'name'=>'phone'])
 	</label>
 
 	{{-- Чекбокс отображения на сайте --}}
@@ -89,7 +89,7 @@
 <div class="tabs-panel" id="worktimes">
   <div class="grid-x grid-padding-x align-center">
     <div class="small-8 cell">
-      @include('includes.inputs.schedule', ['value'=>$worktime]) 
+      @include('includes.inputs.schedule', ['value'=>$worktime])
     </div>
   </div>
 </div>
@@ -99,7 +99,7 @@
 	</div>
 </div>
 {{ Form::close() }}
-<div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+<div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
 </div>
   </div>

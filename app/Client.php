@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-// use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Scopes для главного запроса
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
@@ -27,11 +27,11 @@ class Client extends Model
 {
 
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use Notifiable;
-    // use SoftDeletes;
-    // 
+    use SoftDeletes;
+
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -49,14 +49,8 @@ class Client extends Model
     // protected $dates = ['deleted_at'];
     protected $fillable = [
         'company_id', 
-        'contragent_id', 
+        'client_id', 
     ];
-
-    // Получаем компанию.
-    public function company()
-    {
-        return $this->belongsTo('App\Company', 'contragent_id');
-    }
 
     // Получаем автора
     public function author()
@@ -77,12 +71,18 @@ class Client extends Model
     }
 
     // Получаем комментарии
-    public function contragent()
+    public function client()
     {
         return $this->morphTo();
     }
 
-    // Получаем компанию.
+    // // Получаем компанию
+    // public function company()
+    // {
+    //     return $this->belongsTo('App\Company', 'company_id');
+    // }
+
+    // Получаем заказы
     public function orders()
     {
         return $this->hasMany('App\Order', 'client_id');

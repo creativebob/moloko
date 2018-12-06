@@ -42,7 +42,7 @@
     <div class="top-bar head-content">
       <div class="top-bar-left">
         <h2 class="header-content">{{ $page_info->title }}</h2>
-        <a class="icon-add sprite" data-open="first-add"></a>
+        <a class="icon-add sprite" data-open="modal-create"></a>
       </div>
       <div class="top-bar-right">
         @if (isset($filter))
@@ -122,7 +122,7 @@
             {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
             @if(!empty($filter['booklist']['booklists']['default']))
             {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-            @if (in_array($article->id, $filter['booklist']['booklists']['default'])) checked 
+            @if (in_array($article->id, $filter['booklist']['booklists']['default'])) checked
             @endif
             @endif
             >
@@ -151,7 +151,7 @@
               <a class="icon-delete sprite" data-open="item-delete"></a>
               @endcan
               @endif
-            </td>       
+            </td>
           </tr>
           @endforeach
           @endif
@@ -253,7 +253,7 @@
 
   // ----------- Добавление -------------
   // Открываем модалку
-  $(document).on('click', '[data-open="first-add"]', function() {
+  $(document).on('click', '[data-open="modal-create"]', function() {
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -262,27 +262,27 @@
       type: "GET",
       success: function(html){
         $('#modal').html(html);
-        $('#first-add').foundation();
-        $('#first-add').foundation('open');
+        $('#modal-create').foundation();
+        $('#modal-create').foundation('open');
       }
-    }); 
+    });
   });
 
-  
+
 
   // Проверка существования
-  $(document).on('keyup', '#form-first-add .name-field', function() {
+  $(document).on('keyup', '#form-modal-create .name-field', function() {
     // Получаем фрагмент текста
-    var name = $('#form-first-add .name-field').val();
+    var name = $('#form-modal-create .name-field').val();
     // Указываем название кнопки
     var submit = '.modal-button';
     // Значение поля с разрешением
-    var db = '#form-first-add .first-item';
+    var db = '#form-modal-create .first-item';
     // Выполняем запрос
-    clearTimeout(timerId);   
+    clearTimeout(timerId);
     timerId = setTimeout(function() {
       productCheck (name, submit, db)
-    }, time); 
+    }, time);
   });
 </script>
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}

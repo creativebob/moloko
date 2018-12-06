@@ -133,7 +133,7 @@ class GetAccessController extends Controller
 
 
                 // Получаем массив дополнительных прав
-                $extra_rights = $user->staff[0]->position->charges;
+                $extra_rights = $user->staff[0]->position->charges->pluck('name', 'alias')->toArray();
 
                 if($user_department != null){
                     $user_filial_id = $user_department->filial_id;

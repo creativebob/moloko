@@ -16,7 +16,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 // Фильтры
 // use App\Scopes\Filters\Filter;
 // use App\Scopes\Filters\BooklistFilter;
@@ -47,24 +47,49 @@ class AlbumsCategory extends Model
     protected $fillable = [
         'name',
         'parent_id',
-        'category_status',
+        'author_id',
+        'system_item'
     ];
 
-
-    // Получаем компании.
+    // Компании
     public function company()
     {
     	return $this->belongsTo('App\Company');
     }
 
+    // Альбомы
     public function albums()
     {
     	return $this->hasMany('App\Album');
     }
 
-    public function childs()
+
+    // --------------------------------------- Запросы -----------------------------------------
+    public function getIndex($request, $answer)
     {
-        return $this->hasMany('App\AlbumsCategory', 'parent_id', 'id')->orderBy('id');
+        return $this->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->template($answer)
+        ->withCount('albums')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
     }
 
+    public function getItem($id, $answer)
+    {
+        return $this->moderatorLimit($answer)->findOrFail($id);
+    }
+
+    // public function getIndexCount($answer, $request)
+    // {
+    //     return $this->moderatorLimit($answer)
+    //     ->companiesLimit($answer)
+    //     ->authors($answer)
+    //     ->systemItem($answer)
+    //     ->template($answer)
+    //     ->count();
+    // }
 }

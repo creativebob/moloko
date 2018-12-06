@@ -45,6 +45,9 @@
 @endsection
 
 @section('scripts')
+
+@include('includes.scripts.units-scripts')
+
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.scripts.delete-ajax-script')
 
@@ -55,7 +58,7 @@
 @include('includes.scripts.multilevel-menu-active-scripts')
 
 {{-- Список городов --}}
-@include('includes.scripts.cities-list')
+@include('includes.scripts.class.city_search')
 
 {{-- Скрипт отображения на сайте --}}
 @include('includes.scripts.ajax-display')
@@ -122,7 +125,7 @@
 
     // ----------- Добавление -------------
     // Открываем модалку
-    $(document).on('click', '[data-open="first-add"]', function() {
+    $(document).on('click', '[data-open="modal-create"]', function() {
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -131,25 +134,25 @@
             type: "GET",
             success: function(html){
                 $('#modal').html(html);
-                $('#first-add').foundation();
-                $('#first-add').foundation('open');
+                $('#modal-create').foundation();
+                $('#modal-create').foundation('open');
             }
-        }); 
+        });
     });
 
     // Проверка существования
-    $(document).on('keyup', '#form-first-add .name-field', function() {
+    $(document).on('keyup', '#form-modal-create .name-field', function() {
         // Получаем фрагмент текста
-        var name = $('#form-first-add .name-field').val();
+        var name = $('#form-modal-create .name-field').val();
         // Указываем название кнопки
         var submit = '.submit-add';
         // Значение поля с разрешением
-        var db = '#form-first-add .first-item';
+        var db = '#form-modal-create .first-item';
         // Выполняем запрос
-        clearTimeout(timerId);   
+        clearTimeout(timerId);
         timerId = setTimeout(function() {
             departmentCheck (name, submit, db, null);
-        }, time); 
+        }, time);
     });
 
     // ----------- Изменение -------------
@@ -183,10 +186,10 @@
         // Значение поля с разрешением
         var db = '#form-first-edit .first-item';
         // Выполняем запрос
-        clearTimeout(timerId);   
+        clearTimeout(timerId);
         timerId = setTimeout(function() {
             departmentCheck (name, submit, db, null);
-        }, time); 
+        }, time);
     });
 
     // ------------------------------- Отдел --------------------------------------------
@@ -212,7 +215,7 @@
                 $('#medium-add').foundation('open');
                 $('.filial-id').val(filial);
             }
-        }); 
+        });
     });
 
     // Проверка существования
@@ -226,10 +229,10 @@
         // Филиал
         var filial = $('#filial-id').val();
         // Выполняем запрос
-        clearTimeout(timerId);   
+        clearTimeout(timerId);
         timerId = setTimeout(function() {
           departmentCheck (name, submit, db, filial)
-      }, time); 
+      }, time);
     });
 
     // ----------- Изменение -------------
@@ -265,10 +268,10 @@
         // Филиал
         var filial = $('#filial-id').val();
         // Выполняем запрос
-        clearTimeout(timerId);   
+        clearTimeout(timerId);
         timerId = setTimeout(function() {
           departmentCheck (name, submit, db, filial)
-      }, time); 
+      }, time);
     });
 
   // ------------------------ Кнопка добавления ---------------------------------------

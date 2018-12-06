@@ -16,13 +16,13 @@
                     <div class="grid-x grid-margin-x">
                         <div class="small-12 medium-6 cell">
                             <label>Дата
-                                @include('includes.inputs.date', ['name'=>'deadline_date', 'value'=>null, 'required'=>''])
+                                @include('includes.inputs.date', ['name'=>'deadline_date', 'value'=>null])
                             </label>
                         </div>
 
                         <div class="small-12 medium-6 cell">
                             <label>Время
-                                @include('includes.inputs.time', ['name'=>'deadline_time', 'value'=>null, 'required'=>'', 'default' => '10:00'])
+                                @include('includes.inputs.time', ['name'=>'deadline_time', 'value'=>'10:00'])
                             </label>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
 
                 <div class="small-12 cell">
                     <label>Описание задачи
-                        @include('includes.inputs.textarea', ['name'=>'description', 'value'=>null, 'required'=>''])
+                        @include('includes.inputs.textarea', ['name'=>'description', 'value'=>null])
                     </label>
                 </div>
 
@@ -58,7 +58,7 @@
         </div>
     </div>
     {{ Form::close() }}
-    <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+    <div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
 
 @include('includes.scripts.inputs-mask')

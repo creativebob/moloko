@@ -3,8 +3,14 @@
 use App\Lead;
 use App\Claim;
 use Carbon\Carbon;
-
 use App\Location;
+use App\ServicesType;
+use App\Bank;
+use App\BankAccount;
+use App\Company;
+use App\Schedule;
+use App\Worktime;
+use App\Sector;
 
 use GuzzleHttp\Client;
 
@@ -184,24 +190,26 @@ function yandex_geocoder ($location) {
 }
 
 // Добавление
-function create_location($request) {
+function create_location($request, $country_id = null, $city_id = null, $address = null) {
 
-    // TODO: сюда умолчания из settings!
-    $country_id = isset($request->country_id) ? $request->country_id : 1;
-    $city_id = isset($request->city_id) ? $request->city_id : 1;
+        // Значения по умолчанию
+        $country_id_default = 1; // Страна: Россия
+        $city_id_default = 1; // Город: Иркутск
+        $address_default = null; // Адрес: не указываем
 
-    $address = isset($request->address) ? $request->address : null;
+        $country_id = $country_id ?? $request->country_id ?? $country_id_default;
+        $city_id = $city_id ?? $request->city_id ??  $city_id_default;
+        $address = $address ?? $request->address ?? $address_default;
 
-    // Скрываем бога
-    $user_id = hideGod($request->user());
+        // Скрываем бога
+        $user_id = hideGod($request->user());
 
-    // Ищем или создаем локацию
-    $location = Location::with('city')->firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
+        // Ищем или создаем локацию
+        $location = Location::with('city')->firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
 
-    yandex_geocoder($location);
+        yandex_geocoder($location);
 
-    return $location->id;
-
+        return $location->id;
 }
 
 // Обновление
@@ -236,5 +244,117 @@ function update_location($request, $item) {
     return $item;
 
 }
+
+
+// Обновление
+function addBankAccount($request, $company) {
+
+    // Пришли ли с запросом имя банка, его БИК и рассчетный счет клиента,
+    // которые так необходимы для создания нового аккаунта?
+    if((isset($request->bank_bic))&&(isset($request->bank_name))&&(isset($request->account_settlement))){
+
+        // Сохраняем в переменную наш БИК
+        $bic = $request->bank_bic;
+        $country_id = 3;
+        $city_id = 2;
+        $address = 'Партизанская, 8';
+        $legal_form_id = 4; // ПАО
+
+        // Проверяем существуют ли у пользователя такие счета в указанном банке
+        $cur_bank_account = BankAccount::whereNull('archive')
+        ->where('account_settlement', '=' , $request->account_settlement)
+        ->whereHas('bank', function($q) use ($bic){
+            $q->where('bic', $bic);
+        })->count();
+
+        // Если такого счета нет, то:
+        if($cur_bank_account == 0){
+
+            // Создаем новый банковский счёт
+            $bank_account = new BankAccount;
+
+            // Создаем алиас для нового банка
+            $company_alias = Transliterate::make($request->bank_name, ['type' => 'filename', 'lowercase' => true]);
+
+            $sector_bank_id = Sector::where('tag', 'bank')->firstOrFail()->id;
+            $location_bank_id = create_location($request, $country_id, $city_id, $address);
+
+            // Создаем новую компанию которая будет банком
+            $company_bank = Company::firstOrCreate(['bic' => $request->bank_bic], ['name' => $request->bank_name, 'alias' => $company_alias, 'sector_id' => $sector_bank_id, 'location_id' => $location_bank_id, 'legal_form_id'=> $legal_form_id]);
+
+            // Создаем банк, а если он уже есть - берем его ID
+            $bank = Bank::firstOrCreate(['company_id' => $request->company_id, 'bank_id' => $company_bank->id]);
+
+            $bank_account->bank_id = $company_bank->id;
+            $bank_account->holder_id = $company->id;
+            $bank_account->company_id = $request->user()->company ? $request->user()->company->id : $company->id;
+
+            $bank_account->account_settlement = $request->account_settlement;
+            $bank_account->account_correspondent = $request->account_correspondent;
+            $bank_account->author_id = $request->user()->id;
+            $bank_account->save();
+
+            return $bank_account ? true : false;
+
+        }
+
+    } else {
+
+        // Не достаточно данных
+        return false;
+    }
+}
+
+// Обновление
+function setSchedule($request, $company) {
+
+        $schedule = $company->main_schedule;
+
+        // Если не существует расписания для компании - создаем его
+        if($schedule){
+
+            $schedule_id = $schedule->id;
+
+        } else {
+
+            $schedule = new Schedule;
+            $schedule->company_id = $request->user()->company->id;
+            $schedule->name = 'График работы для ' . $company->name;
+            $schedule->description = null;
+            $schedule->save();
+
+            $company->schedules()->attach($schedule->id, ['mode'=>'main']);
+            $schedule_id = $schedule->id;
+
+        };
+
+        // Функция getWorktimes ловит все поля расписания из запроса и готовит к записи в worktimes
+        $mass_time = getWorktimes($request, $schedule_id);
+
+        // Удаляем все записи времени в worktimes для этого расписания
+        $worktimes = Worktime::where('schedule_id', $schedule_id)->forceDelete();
+
+        // Вставляем новое время в расписание
+        DB::table('worktimes')->insert($mass_time);
+
+        // Не достаточно данных
+        return true;
+}
+
+
+// Обновление
+function setServicesType($request, $company) {
+
+            // Записываем тип услуги
+            if(isset($request->services_types)){
+                $result = $company->services_types()->sync($request->services_types);
+            } else {
+                $result = $company->services_types()->detach();
+            };
+
+        return true;
+}
+
+
 
 ?>

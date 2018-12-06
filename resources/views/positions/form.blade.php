@@ -16,7 +16,7 @@
         @endif
         <!-- Должность -->
         <label>Название должности
-            @include('includes.inputs.name', ['value'=>$position->name, 'name'=>'name', 'required'=>'required'])
+            @include('includes.inputs.name', ['value'=>$position->name, 'name'=>'name', 'required' => true])
             <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
         <label>Страница должности:
@@ -24,7 +24,7 @@
         </label>
 
         {{-- Чекбоксы управления --}}
-        @include('includes.control.checkboxes', ['item' => $position]) 
+        @include('includes.control.checkboxes', ['item' => $position])
 
         <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
             {{ Form::submit($submitButtonText, ['class'=>'button position-button', 'disabled']) }}
@@ -50,7 +50,7 @@
                     <div class="tabs-panel is-active" id="roles">
                         <fieldset class="fieldset-access">
                             <legend>Настройка доступа</legend>
-                            <div class="grid-x grid-padding-x"> 
+                            <div class="grid-x grid-padding-x">
                                 <div class="small-12 cell">
 
                                     <ul>
@@ -71,14 +71,14 @@
 
                                 </div>
                             </div>
-                        </fieldset> 
+                        </fieldset>
                     </div>
 
                     <!-- Оповещения -->
                     <div class="tabs-panel" id="notifications">
                         <fieldset class="fieldset-access">
                             <legend>Настройка оповещений</legend>
-                            <div class="grid-x grid-padding-x"> 
+                            <div class="grid-x grid-padding-x">
                                 <div class="small-12 cell">
 
                                     <ul>
@@ -94,14 +94,14 @@
 
                                 </div>
                             </div>
-                        </fieldset> 
+                        </fieldset>
                     </div>
 
                     <!-- Оповещения -->
                     <div class="tabs-panel" id="charges">
                         <fieldset class="fieldset-access">
                             <legend>Настройка обязанностей</legend>
-                            <div class="grid-x grid-padding-x"> 
+                            <div class="grid-x grid-padding-x">
                                 <div class="small-12 cell">
 
                                     <ul>
@@ -117,14 +117,14 @@
 
                                 </div>
                             </div>
-                        </fieldset> 
+                        </fieldset>
                     </div>
 
                     <!-- Виджеты -->
                     <div class="tabs-panel" id="widgets">
                         <fieldset class="fieldset-access">
                             <legend>Настройка виджетов</legend>
-                            <div class="grid-x grid-padding-x"> 
+                            <div class="grid-x grid-padding-x">
                                 <div class="small-12 cell">
 
                                     <ul>
@@ -140,7 +140,7 @@
 
                                 </div>
                             </div>
-                        </fieldset> 
+                        </fieldset>
                     </div>
 
                 </div>
@@ -151,8 +151,8 @@
 
 
 
-    
 
-    
+
+
 </div>
 

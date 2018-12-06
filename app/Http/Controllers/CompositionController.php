@@ -95,16 +95,16 @@ class CompositionController extends Controller
     {
         if ($request->set_status == 'one') {
             $composition = RawsArticle::with(['raws_product' => function ($q) {
-                        $q->with('unit', 'raws_category');
-                    }])->findOrFail($request->id);  
+                $q->with('unit', 'raws_category');
+            }])->findOrFail($request->id);
         } else {
             $composition = GoodsArticle::with(['goods_product' => function ($q) {
-                        $q->with('unit', 'goods_category');
-                    }])->findOrFail($request->id);  
+                $q->with('unit', 'goods_category');
+            }])->findOrFail($request->id);
         }
         return view($request->entity.'.compositions.composition_input', compact('composition'));
     }
-    
+
     // Добавляем состав
     public function ajax_add_relation(Request $request)
     {
@@ -124,17 +124,6 @@ class CompositionController extends Controller
         $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
         $res = $goods_category->compositions()->detach($request->id);
 
-        if ($res) {
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-            $result = [
-                'error_message' => 'Не удалось удалить состав!',
-                'error_status' => 1,
-            ];
-        }
-        
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        return response()->json(isset($res) ? true : 'Не удалось удалить состав!');
     }
 }

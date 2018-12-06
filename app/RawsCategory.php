@@ -16,9 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -30,6 +27,7 @@ class RawsCategory extends Model
     // Включаем кеш
     use Cachable;
 
+    use Notifiable;
     use SoftDeletes;
 
     // Включаем Scopes
@@ -93,5 +91,34 @@ class RawsCategory extends Model
     // public function compositions()
     // {
     //     return $this->belongsToMany('App\RawsProduct', 'compositions', 'raws_category_id', 'composition_id');
+    // }
+
+    // --------------------------------------- Запросы -----------------------------------------
+    public function getIndex($request, $answer)
+    {
+        return $this->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->template($answer)
+        ->withCount('raws_products')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
+    }
+
+    public function getItem($id, $answer)
+    {
+        return $this->moderatorLimit($answer)->findOrFail($id);
+    }
+
+    // public function getIndexCount($answer, $request)
+    // {
+    //     return $this->moderatorLimit($answer)
+    //     ->companiesLimit($answer)
+    //     ->authors($answer)
+    //     ->systemItem($answer)
+    //     ->template($answer)
+    //     ->count();
     // }
 }

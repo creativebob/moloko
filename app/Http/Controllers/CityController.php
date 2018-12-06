@@ -109,7 +109,7 @@ class CityController extends Controller
                     // Записываем новую область
                     $region = new Region;
                     $region->name = $region_name;
-                    $region->author_id = $user_id;
+                    // $region->author_id = $user_id;
                     $region->system_item = 1;
                     $region->save();
 
@@ -139,7 +139,7 @@ class CityController extends Controller
                     // Записываем новую область
                     $region = new Region;
                     $region->name = 'Города Федерального значения';
-                    $region->author_id = $user_id;
+                    // $region->author_id = $user_id;
                     $region->system_item = 1;
                     $region->save();
 
@@ -175,7 +175,7 @@ class CityController extends Controller
                     $area = new Area;
                     $area->name = $area_name;
                     $area->region_id = $region_id;
-                    $area->author_id = $user_id;
+                    // $area->author_id = $user_id;
                     $area->system_item = 1;
                     $area->save();
 
@@ -219,7 +219,7 @@ class CityController extends Controller
                 $city->area_id = $area_id;
             }
 
-            $city->author_id = $user_id;
+            // $city->author_id = $user_id;
             $city->system_item = 1;
             $city->save();
 

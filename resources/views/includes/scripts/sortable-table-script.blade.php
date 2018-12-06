@@ -1,49 +1,32 @@
 <!-- <script type="text/javascript" src="/js/jquery.latest.min.js"></script> -->
 <script type="text/javascript">
-$(function() {
+    $(function() {
 
-  // Оставляем ширину у вырванного из потока элемента
-    var fixHelper = function(e, ui) {
-      ui.children().each(function() {
-        $(this).width($(this).width());
-      });
-      return ui;
-    };
+        // Оставляем ширину у вырванного из потока элемента
+        var fixHelper = function(e, ui) {
+            ui.children().each(function() {
+                $(this).width($(this).width());
+            });
+            return ui;
+        };
 
-  // Включаем перетаскивание
-  $("#content tbody").sortable({
-    axis: 'y',
-    helper: fixHelper, // ширина вырванного элемента
-    handle: 'td:first', // указываем за какой элемент можно тянуть
-    placeholder: "table-drop-color", // фон вырванного элемента
-    update: function( event, ui ) {
-      var data = $(this).sortable('serialize');
-      var entity_alias = $(this).children('.item').attr('id').split('-')[0];
+        // Включаем перетаскивание
+        $("#content tbody").sortable({
+            axis: 'y',
+            helper: fixHelper, // ширина вырванного элемента
+            handle: 'td:first', // указываем за какой элемент можно тянуть
+            placeholder: "table-drop-color", // фон вырванного элемента
+            update: function( event, ui ) {
+                var entity_alias = $(this).children('.item').attr('id').split('-')[0];
+                // alert(entity);
+                $.post("/admin/sort/" + entity_alias, $(this).sortable('serialize'), function() {
+                });
+            }
+        });
 
-      // alert(entity);
-      // alert(data);
-
-      // POST to server using $.post or $.ajax
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        data: data,
-        type: 'POST',
-        url: '/admin/sort/' + entity_alias,
-        // success: function(date){
-        //   var result = $.parseJSON(date);
-        //   if (result.error_status == 1) {
-        //     alert(result.msg);
-        //   };
-        // }
-      });
-    }
-  });
-  
-  // Чекбоксы
-  $(document).on('click', '.label-check', function () {
-    // alert('Это больше КЕК, ил все таки ЛОЛ?');
-  });
-});
+        // Чекбоксы
+        $(document).on('click', '.label-check', function () {
+            // alert('Это больше КЕК, ил все таки ЛОЛ?');
+        });
+    });
 </script>

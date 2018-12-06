@@ -13,10 +13,7 @@ class SidebarComposer
 
 		// Получаем список сущностей из сессии
 		$session = app('session')->get('access');
-		$entities_list = $session['settings']['entities_list'];
-		if (empty($entities_list)) {
-			$entities_list = [];
-		}
+		$entities_list = isset($session['settings']['entities_list']) ? $session['settings']['entities_list'] : [] ;
         // dd($entities_list);
 
         // Получаем меню (знаем что статика, поэтому указываем в таблице навигации id)
@@ -31,22 +28,10 @@ class SidebarComposer
 		->get();
 		// dd($menus->keyBy('name'));
 
-		$sidebar = $this->buildSidebarTree($menus);
+		$sidebar = buildSidebarTree($menus);
+		// dd($sidebar);
 
-		return $view->with('sidebar_tree', $sidebar);
+		return $view->with('sidebar', $sidebar);
 	}
 
-	public function buildSidebarTree($items)
-	{
-
-		$grouped = $items->groupBy('parent_id');
-
-		foreach ($items as $item) {
-			if ($grouped->has($item->id)) {
-				$item->childrens = $grouped[$item->id];
-			}
-		}
-
-		return $items->where('parent_id', null);
-	}
 }
