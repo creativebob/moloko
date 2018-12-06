@@ -29,7 +29,7 @@ trait CompanyControllerTrait
 	        $company->name = $result ? $result['name'] : $company_name;
 	        $company->legal_form_id = $result ? $result['legal_form_id'] : $request->legal_form_id;
 
-	        $company->alias = $request->alias ?? Transliterate::make($company->name .'_'. $number_id_company, ['type' => 'url', 'lowercase' => true]);
+	        $company->alias = $request->alias ?? Transliterate::make($company->name .'_'. $number_id_company, ['type' => 'filename', 'lowercase' => true]);
 	        $company->email = $request->email;
 	        $company->inn = $request->inn;
 	        $company->kpp = $request->kpp;

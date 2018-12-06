@@ -274,7 +274,7 @@ function addBankAccount($request, $company) {
             $bank_account = new BankAccount;
 
             // Создаем алиас для нового банка
-            $company_alias = Transliterate::make($request->bank_name, ['type' => 'url', 'lowercase' => true]);
+            $company_alias = Transliterate::make($request->bank_name, ['type' => 'filename', 'lowercase' => true]);
 
             $sector_bank_id = Sector::where('tag', 'bank')->firstOrFail()->id;
             $location_bank_id = create_location($request, $country_id, $city_id, $address);

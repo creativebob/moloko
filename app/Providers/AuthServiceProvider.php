@@ -36,6 +36,10 @@ use App\CatalogProduct;
 
 use App\Account;
 use App\Post;
+use App\SocialNetwork;
+use App\Campaign;
+
+use App\Salary;
 
 use App\Position;
 
@@ -112,6 +116,10 @@ use App\Policies\CatalogProductPolicy;
 
 use App\Policies\AccountPolicy;
 use App\Policies\PostPolicy;
+use App\Policies\SocialNetworkPolicy;
+use App\Policies\CampaignPolicy;
+
+use App\Policies\SalaryPolicy;
 
 use App\Policies\PositionPolicy;
 use App\Policies\StafferPolicy;
@@ -187,6 +195,10 @@ class AuthServiceProvider extends ServiceProvider
 
         Account::class => AccountPolicy::class,
         Post::class => PostPolicy::class,
+        SocialNetwork::class => SocialNetworkPolicy::class,
+        Campaign::class => CampaignPolicy::class,
+
+        Salary::class => SalaryPolicy::class,
 
         Position::class => PositionPolicy::class,
         Region::class => RegionPolicy::class,
