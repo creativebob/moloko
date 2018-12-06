@@ -276,7 +276,7 @@ class GoodsController extends Controller
                 'author_id' => $user_id
             ]);
 
-            $goods_product_id = $goods_product->goods_product_id;
+            $goods_product_id = $goods_product->id;
             break;
 
             case 'mode-select':
