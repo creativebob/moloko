@@ -113,7 +113,7 @@ class RawsProductController extends Controller
         ->authors($answer_raws_categories)
         ->systemItem($answer_raws_categories)
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
         // dd($raws_categories);
@@ -189,7 +189,7 @@ class RawsProductController extends Controller
         ->authors($answer_raws_categories)
         ->systemItem($answer_raws_categories)
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
         // dd($products_categories);

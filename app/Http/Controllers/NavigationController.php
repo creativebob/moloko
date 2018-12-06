@@ -19,7 +19,7 @@ use App\Policies\NavigationPolicy;
 // Общие классы
 use Illuminate\Support\Facades\Log;
 
-// Специфические классы 
+// Специфические классы
 
 // На удаление
 use Illuminate\Support\Facades\Auth;
@@ -137,7 +137,7 @@ class NavigationController extends Controller
         //         // Если нет вложений
         //         if (!$menu['parent_id']){
         //             $navigations_tree[$navigation->id]['menus'][$id] = &$menu;
-        //         } else { 
+        //         } else {
 
         //         // Если есть потомки то перебераем массив
         //             $navigation_id[$navigation->id]['menus'][$menu['parent_id']]['children'][$id] = &$menu;
@@ -183,7 +183,7 @@ class NavigationController extends Controller
 
         // После записи переходим на созданный пункт меню
         if($request->ajax()) {
-            return view('navigations.navigations-list', ['navigations' => $navigations, 'item' => $request->item, 'id' => $request->id, 'class' => 'App\Navigation', 'entity' => $entity, 'type' => 'modal']); 
+            return view('navigations.navigations-list', ['navigations' => $navigations, 'item' => $request->item, 'id' => $request->id, 'class' => 'App\Navigation', 'entity' => $entity, 'type' => 'modal']);
         }
 
         return view('navigations.index', compact('site', 'page_info', 'parent_page_info', 'pages_list', 'alias', 'menus', 'navigations', 'entity'));
@@ -217,7 +217,7 @@ class NavigationController extends Controller
         // Главный запрос
         $navigations_categories = NavigationsCategory::moderatorLimit($answer_navigations_categories)
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 
@@ -225,7 +225,7 @@ class NavigationController extends Controller
         $navigations_categories_list = get_select_tree($navigations_categories, null, null, null);
         // echo $navigations_categories_list;
 
-        return view('navigations.create-first', ['navigation' => $navigation, 'site' => $site, 'navigations_categories_list' => $navigations_categories_list]); 
+        return view('navigations.create-first', ['navigation' => $navigation, 'site' => $site, 'navigations_categories_list' => $navigations_categories_list]);
     }
 
 
@@ -317,7 +317,7 @@ class NavigationController extends Controller
         // Категории
         $navigations_categories = NavigationsCategory::moderatorLimit($answer_categories)
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 
@@ -480,7 +480,7 @@ class NavigationController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -507,7 +507,7 @@ class NavigationController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [

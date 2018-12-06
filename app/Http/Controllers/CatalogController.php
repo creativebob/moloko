@@ -103,7 +103,7 @@ class CatalogController extends Controller
             ->where('id', $request->category_id)
             ->orWhere('category_id', $request->category_id)
             ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
+            ->get(['id','name','parent_id'])
             ->keyBy('id')
             ->toArray();
 
@@ -265,7 +265,7 @@ class CatalogController extends Controller
             ->where('id', $request->category_id)
             ->orWhere('category_id', $request->category_id)
             ->orderBy('sort', 'asc')
-            ->get(['id','name','category_status','parent_id'])
+            ->get(['id','name','parent_id'])
             ->keyBy('id')
             ->toArray();
             // dd($catalog);

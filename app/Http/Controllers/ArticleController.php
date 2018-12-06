@@ -112,7 +112,7 @@ class ArticleController extends Controller
         ->systemItem($answer_products_categories) // Фильтр по системным записям
         ->where('type', $type)
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 
@@ -239,7 +239,7 @@ class ArticleController extends Controller
         ->systemItem($answer_products_categories) // Фильтр по системным записям
         ->whereType($article->product->products_category->type)
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 

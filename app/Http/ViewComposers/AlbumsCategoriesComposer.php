@@ -20,7 +20,7 @@ class AlbumsCategoriesComposer
         ->authors($answer)
         ->systemItem($answer)
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 

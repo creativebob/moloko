@@ -341,7 +341,7 @@ class ServiceController extends Controller
         ->authors($answer_services_categories)
         ->systemItem($answer_services_categories) // Фильтр по системным записям
         ->orderBy('sort', 'asc')
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
 
@@ -366,7 +366,7 @@ class ServiceController extends Controller
         ->companiesLimit($answer_catalogs)
         ->systemItem($answer_catalogs) // Фильтр по системным записям
         ->whereSite_id(2)
-        ->get(['id','name','category_status','parent_id'])
+        ->get(['id','name','parent_id'])
         ->keyBy('id')
         ->toArray();
         // dd($catalogs);
