@@ -38,78 +38,60 @@ class OrderController extends Controller
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->whereNull('draft')
+        ->booklistFilter($request)  // Фильтр по спискам
+        ->filter($request, 'client_id')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
         // dd($orders);
 
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+
+        $filter = setFilter($this->entity_name, $request, [
+            'client',               // Клиенты
+            'booklist'              // Списки пользователя
+        ]);
+
+        // Окончание фильтра -----------------------------------------------------------------------------------------
+
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('orders.index', compact('orders', 'page_info'));
+        return view('orders.index', compact('orders', 'page_info', 'filter'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Order  $order
-     * @return \Illuminate\Http\Response
-     */
     public function show(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Order  $order
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Order  $order
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Order  $order
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(Request $request, $id)
     {
         //

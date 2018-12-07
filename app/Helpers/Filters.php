@@ -396,6 +396,15 @@
         }
         // ----------------------------------------------------------------------------
 
+        // ФИЛЬТР ПО КЛИЕНТАМ ---------------------------------------------------------
+        if($name_filter == 'client'){
+
+            $filter[$name_filter]['title'] = 'Клиенты:';                                // Назавние фильтра
+            $column = 'client_id';                                                      // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterClientList();  // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
         // ФИЛЬТР ПО ГОРОДУ ------------------------------------------------------------
         if($name_filter == 'city'){
 
@@ -603,12 +612,17 @@
 
     }
 
-
     function getFilterCompanyList(){
 
         $companies = App\Company::orderBy('name', 'asc')
         ->get()->pluck('name', 'id')->toArray();
         return $companies;
+    }
+
+    function getFilterClientList(){
+
+        $clients = App\Client::with('client')->get()->pluck('client.name', 'id')->toArray();
+        return $clients;
     }
 
     function getFilterCityList(){

@@ -407,6 +407,12 @@ class User extends Authenticatable
         return $this->hasMany('App\Lead', 'manager_id');
     }
 
+    // Клиент
+    public function client()
+    {
+        return $this->morphOne('App\Client', 'client');
+    }
+
     // Бюджет
     public function badget()
     {

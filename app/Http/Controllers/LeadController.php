@@ -439,11 +439,16 @@ class LeadController extends Controller
             $lead = new Lead;
 
             $lead->name =   $request->name;
-            $lead->company_name =   $request->company_name;
-            // $lead->private_status = $request->private_status;
 
-        // $lead->sex = $request->sex;
-        // $lead->birthday = $request->birthday;
+            $lead->company_name = $request->company_name;
+            if(isset($request->company_name)){
+                $lead->private_status = 1;
+            } else {
+                $lead->private_status = null;
+            }
+
+            // $lead->sex = $request->sex;
+            // $lead->birthday = $request->birthday;
 
             $lead->stage_id =   $request->stage_id;
             $lead->badget =   $request->badget;

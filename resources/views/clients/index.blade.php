@@ -77,7 +77,7 @@
           <td class="td-phone">{{ isset($client->client->main_phone->phone) ? decorPhone($client->client->main_phone->phone) : 'Номер не указан' }}</td>
           
 
-          <td class="td-count-orders">{{-- $client->orders_count or ' ... ' --}} </td>
+          <td class="td-count-orders">@if(!empty($client->orders)){{ $client->orders->count() }} @endif </td>
           <td class="td-badget">{{-- $client->badget_count or ' ... ' --}} </td>
           <td class="td-time-frame">{{-- $client->time_frame or ' ... ' --}} </td>
           <td class="td-loyalty">{{-- $client->loyalty or ' ... ' --}} </td>

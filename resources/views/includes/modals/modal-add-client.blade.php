@@ -13,7 +13,7 @@
             <fieldset>
                 <legend>
                     <div class="switch alt-switch tiny">
-                        {{ Form::checkbox('private_status', 2, $lead->private_status, ['id'=>'private_status', 'class' =>'switch-input']) }}
+                        {{ Form::checkbox('private_status', null, $lead->private_status, ['id'=>'private_status', 'class' =>'switch-input']) }}
 
                         <label class="switch-paddle" for="private_status" data-toggle="lead-info-company lead-info-private lead-info-bank">
                             <span class="show-for-sr">Компания?</span>
@@ -48,7 +48,7 @@
 
                         $('#wrap-company-private').on('off.zf.toggler', function() {
                             $('#title-switch-company-private').text("Физическое лицо");
-                            $('#private_status').val(2);
+                            $('#private_status').val(null);
 
                             // Включаем обязательное заполнение
                             $('[name=passport_number]').attr('required', 'required');
@@ -82,7 +82,7 @@
                         </label>
                     </div>
 
-                    <div class="small-12 medium-6 cell lead-info-company" id="lead-info-company" data-toggler="switch-on">
+                    <div class="small-12 medium-6 cell lead-info-company @if($lead->private_status) switch-on @endif" id="lead-info-company" data-toggler="switch-on">
                         <div class="grid-x grid-padding-x">
                             <div class="small-12 cell">
                                 <label>Компания
@@ -103,7 +103,7 @@
                         </div>
                     </div>
 
-                    <div class="small-12 medium-6 cell lead-info-private" id="lead-info-private" data-toggler="switch-off">
+                    <div class="small-12 medium-6 cell lead-info-private @if($lead->private_status) switch-off @endif" id="lead-info-private" data-toggler="switch-off">
                         <div class="grid-x grid-padding-x">
                           <div class="small-12 cell">
                             <label>Паспорт (серия, номер)
@@ -183,7 +183,7 @@
 
 
                     {{-- Начало блока банковских реквизитов --}}
-                    <div class="small-12 cell lead-info-bank" id="lead-info-bank" data-toggler="switch-on">
+                    <div class="small-12 cell lead-info-bank @if($lead->private_status) switch-on @endif" id="lead-info-bank" data-toggler="switch-on">
                         <hr>
                         <div class="grid-x grid-padding-x">
 

@@ -26,7 +26,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-order-alias="orders">
+    <table class="table-content tablesorter orders" id="content" data-sticky-container data-entity-alias="orders">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -45,18 +45,28 @@
       <tbody data-tbodyId="1" class="tbody-width">
       @if(!empty($orders))
         @foreach($orders as $order)
-        <tr class="item @if($order->moderation == 1)no-moderation @endif" id="orders-{{ $order->id }}" data-name="{{ $order->name }}">
+          <tr class="item @if($order->moderation == 1)no-moderation @endif" id="orders-{{ $order->id }}" data-name="{{ $order->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $order->id }}"><label class="label-check" for="check-{{ $order->id }}"></label></td>
+          <td class="td-checkbox checkbox">
+
+            <input type="checkbox" class="table-check" name="order_id" id="check-{{ $order->id }}"
+            @if(!empty($filter['booklist']['booklists']['default']))
+            @if (in_array($order->id, $filter['booklist']['booklists']['default'])) checked
+            @endif
+            @endif
+            >
+            <label class="label-check" for="check-{{ $order->id }}"></label>
+
+          </td>
           <td class="td-name">
 
-          <a href="/admin/leads/{{ $order->lead_id }}/edit">
-          {{ $order->client->client->name }}
+          <a href="/admin/orders?client_id%5B%5D={{ $order->client->id }}" class="filter_link" title="Фильтровать">
+            {{ $order->client->client->name }}
+          </a>
           <br>
           <span class="tiny-text">
             {{ $order->client->client->location->city->name }}, {{ $order->client->client->location->address }}
           </span>
-          </a> 
           <td class="td-phone">
             {{ isset($order->client->client->main_phone->phone) ? decorPhone($order->client->client->main_phone->phone) : 'Номер не указан' }}
             @if($order->client->client->email)<br><span class="tiny-text">{{ $order->client->client->email or '' }}</span>@endif
@@ -98,20 +108,25 @@
     {{ $orders->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
   </div>
 </div>
-@endsection
 
-@section('modals')
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete')
-@endsection
 
-@section('scripts')
-{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+{{-- Скрипт сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
+@include('includes.scripts.sortable-table-script')
+@include('includes.scripts.pickmeup-script')
 
-  {{-- Скрипт сортировки --}}
-  @include('includes.scripts.sortable-table-script')
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
+
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
+
+{{-- Скрипт чекбоксов --}}
+@include('includes.scripts.checkbox-control')
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
+@include('includes.scripts.delete-ajax-script')
+
 @endsection
+
