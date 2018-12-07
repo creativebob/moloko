@@ -131,7 +131,7 @@ class LeadController extends Controller
         // ->orderBy('sort', 'asc')
         ->paginate(30);
 
-        // dd($leads[2]);
+        // dd($leads[4]);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -260,13 +260,10 @@ class LeadController extends Controller
         // Подключение политики
         $this->authorize('index', Lead::class);
 
-
-
         $entity_name = $this->entity_name;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
 
         $text_fragment = $request->text_fragment;
         $fragment_phone = NULL;
@@ -320,14 +317,14 @@ class LeadController extends Controller
 
                 if(isset($fragment_phone)){
                     $query->orWhereHas('phones', function($query) use ($fragment_phone){
-                     $query->where('phone', $fragment_phone);
-                 });
+                       $query->where('phone', $fragment_phone);
+                   });
                 };
 
                 if(isset($crop_phone)){
                     $query->orWhereHas('phones', function($query) use ($crop_phone){
-                     $query->where('crop', $crop_phone);
-                 });
+                       $query->where('crop', $crop_phone);
+                   });
                 };
 
             })
@@ -352,106 +349,104 @@ class LeadController extends Controller
 
         $user = $request->user();
 
-            // Подключение политики
-            $this->authorize(__FUNCTION__, Lead::class); // Проверка на create
-            // dd($user);
+        // Подключение политики
+        $this->authorize(__FUNCTION__, Lead::class); // Проверка на create
+        // dd($user);
 
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-            $lead = new Lead;
+        $lead = new Lead;
 
-            $company_id = $user->company_id;
-            $filial_id = $user->filial_id;
+        $company_id = $user->company_id;
+        $filial_id = $user->filial_id;
 
-            // Добавляем локацию
-            $lead->location_id = create_location($request);
+        // Добавляем локацию
+        $lead->location_id = create_location($request);
 
-            $lead->company_id = $company_id;
-            $lead->filial_id = $filial_id;
-            $lead->name = NULL;
-            $lead->company_name = NULL;
-
-
-            $lead->draft = 1;
-            $lead->author_id = $user->id;
-            $lead->manager_id = $user->id;
-            $lead->stage_id = 2;
-
-            // Если приходит тип обращения - пишем его!
-            // На валидации не пропускает к записи ничего кроме значений 1, 2 и 3
-            if(isset($request->lead_type)){
-                $lead_type = $request->lead_type;
-            } else {
-                $lead_type = 1;
-            };
-
-            $lead->lead_type_id = $lead_type;
-
-            $lead->lead_method_id = 1;
-            $lead->display = 1;
-            $lead->save();
-
-            $lead_number = getLeadNumbers($user, $lead);
-            $lead->case_number = $lead_number['case'];
-            $lead->serial_number = $lead_number['serial'];
-            $lead->save();
+        $lead->company_id = $company_id;
+        $lead->filial_id = $filial_id;
+        $lead->name = NULL;
+        $lead->company_name = NULL;
 
 
-            return Redirect('/admin/leads/' . $lead->id . '/edit');
+        $lead->draft = 1;
+        $lead->author_id = $user->id;
+        $lead->manager_id = $user->id;
+        $lead->stage_id = 2;
 
+        // Если приходит тип обращения - пишем его!
+        // На валидации не пропускает к записи ничего кроме значений 1, 2 и 3
+        if(isset($request->lead_type)){
+            $lead_type = $request->lead_type;
+        } else {
+            $lead_type = 1;
+        };
+
+        $lead->lead_type_id = $lead_type;
+
+        $lead->lead_method_id = 1;
+        $lead->display = 1;
+        $lead->save();
+
+        $lead_number = getLeadNumbers($user, $lead);
+        $lead->case_number = $lead_number['case'];
+        $lead->serial_number = $lead_number['serial'];
+        $lead->save();
+
+
+        return Redirect('/admin/leads/' . $lead->id . '/edit');
+
+    }
+
+    public function store(LeadRequest $request)
+    {
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), Lead::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        $company_id = $user->company_id;
+        $filial_id = $request->user()->filial_id;
+
+        // Пишем локацию
+        $location = new Location;
+        $location->country_id = $request->country_id;
+        $location->city_id = $request->city_id;
+        $location->address = $request->address;
+        $location->author_id = $user->id;
+        $location->save();
+
+        if ($location) {
+            $location_id = $location->id;
+        } else {
+            abort(403, 'Ошибка записи адреса');
         }
 
-        public function store(LeadRequest $request)
-        {
-
-            // Подключение политики
-            $this->authorize(getmethod(__FUNCTION__), Lead::class);
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-            // Получаем данные для авторизованного пользователя
-            $user = $request->user();
-
-            // Скрываем бога
-            $user_id = hideGod($user);
-
-            $company_id = $user->company_id;
-            $filial_id = $request->user()->filial_id;
-
-
-            // Пишем локацию
-            $location = new Location;
-            $location->country_id = $request->country_id;
-            $location->city_id = $request->city_id;
-            $location->address = $request->address;
-            $location->author_id = $user->id;
-            $location->save();
-
-            if ($location) {
-                $location_id = $location->id;
-            } else {
-                abort(403, 'Ошибка записи адреса');
-            }
-
         // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
-            $lead = new Lead;
+        $lead = new Lead;
+        $lead->name = $request->name;
 
-            $lead->name =   $request->name;
+        $lead->company_name = $request->company_name;
+        if(isset($request->company_name)){
+            $lead->private_status = 1;
+        } else {
+            $lead->private_status = null;
+        }
 
-            $lead->company_name = $request->company_name;
-            if(isset($request->company_name)){
-                $lead->private_status = 1;
-            } else {
-                $lead->private_status = null;
-            }
+        // $lead->sex = $request->sex;
+        // $lead->birthday = $request->birthday;
 
-            // $lead->sex = $request->sex;
-            // $lead->birthday = $request->birthday;
-
-            $lead->stage_id =   $request->stage_id;
-            $lead->badget =   $request->badget;
+        $lead->stage_id =   $request->stage_id;
+        $lead->badget =   $request->badget;
 
         $lead->display = 1; // Включаем видимость
         $lead->company_id = $company_id;
@@ -956,15 +951,10 @@ class LeadController extends Controller
             // Получаем данные для авторизованного пользователя
             $user = $request->user();
 
-            // Скрываем бога
-            $user_id = hideGod($user);
-
-            $company_id = $user->company_id;
-
             $note = new Note;
             $note->body = $request->body;
-            $note->company_id = $company_id;
-            $note->author_id = $user_id;
+            $note->company_id = $user->company_id;
+            $note->author_id = hideGod($user);
 
             $lead->notes()->save($note);
 
@@ -1084,7 +1074,7 @@ class LeadController extends Controller
 
             if($lead->case_number == NULL){
 
-            // Формируем номера обращения
+                // Формируем номера обращения
                 $lead_number = getLeadNumbers($user, $lead);
                 $lead->case_number = $lead_number['case'];
                 $lead->serial_number = $lead_number['serial'];
@@ -1093,11 +1083,36 @@ class LeadController extends Controller
             $lead->editor_id = $user->id;
             $lead->save();
 
+            // Ставим задачу
+            $challenge = new Challenge;
+            $challenge->company_id = $user->company_id;
+            $challenge->appointed_id = $user->id;
+            $challenge->challenges_type_id = 2;
+            $challenge->author_id = $user->id;
+
+            if ($lead->created_at->format('Y-m-d') == today()->format('Y-m-d')) {
+                $challenge->description = "Перезвонить через 15 минут!\r\n";
+                $challenge->priority_id = 3;
+                // Отдаем график работы и время в секундах
+                $challenge->deadline_date = getDeadline(null, 60*15);
+            } else {
+                $description = "Актуализировать информацию по лиду,\r\n";
+                $description .= "этап - ".$lead->stage->name;
+                $challenge->description = $description;
+                $challenge->priority_id = 2;
+                // Отдаем график работы и время в секундах (предварительно проверяем юзера на бога)
+                $challenge->deadline_date = getDeadline(getSchedule($user), 60*15);
+            }
+
+            $lead->challenges()->save($challenge);
+            $lead->increment('challenges_active_count');
+
             if ($user->sex == 1) {
                 $phrase_sex = 'принял';
             } else {
                 $phrase_sex = 'приняла';
             }
+
             $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
 
             $result = [
@@ -1113,12 +1128,14 @@ class LeadController extends Controller
     // Назначение лида
     public function ajax_distribute(Request $request)
     {
-
+        // тест
+        // $lead_id = 6297;
+        // $appointed_id = 11;
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
         $lead = Lead::findOrFail($request->lead_id);
 
-        $manager = User::find($request->appointed_id);
+        $manager = User::findOrFail($request->appointed_id);
         $lead->manager_id = $manager->id;
 
         // Если номер пуст и планируется назначение на сотрудника, а не бота - то генерируем номер!
@@ -1132,6 +1149,30 @@ class LeadController extends Controller
 
         $lead->editor_id = $user->id;
         $lead->save();
+
+        if ($request->appointed_id != 1) {
+
+            // Ставим задачу
+
+            $description = "Актуализировать информацию по лиду,\r\n";
+            $description .= "этап - ".$lead->stage->name;
+
+            $challenge = new Challenge;
+            $challenge->company_id = $user->company_id;
+            $challenge->appointed_id = $request->appointed_id;
+            $challenge->challenges_type_id = 2;
+            $challenge->description = $description;
+            $challenge->priority_id = 2;
+            $challenge->author_id = $user->id;
+
+            // Отдаем график работы и время в секундах (предварительно проверяем юзера на бога)
+            $challenge->deadline_date = getDeadline(getSchedule($manager), 60*60);
+
+            $lead->challenges()->save($challenge);
+            $lead->increment('challenges_active_count');
+
+        }
+
 
         if ($user->sex == 1) {
             $phrase_sex = 'назначил';

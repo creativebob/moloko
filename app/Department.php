@@ -137,10 +137,31 @@ class Department extends Model
         return $this->belongsTo('App\Location');
     }
 
-    // Графики
+     // Получаем все графики на сотрудника
     public function schedules()
     {
         return $this->morphToMany('App\Schedule', 'schedule_entities')->withPivot('mode');
+    }
+
+    // Получаем график компании в адаптированном под шаблон виде
+    public function getMainScheduleAttribute($value) {
+        $main_schedule = $this->morphToMany('App\Schedule', 'schedule_entities')->with('worktimes')->wherePivot('mode', 'main')->first();
+        if($main_schedule != null){
+            return $main_schedule;
+        } else {
+            return $value;
+        }
+    }
+
+    // Получаем график компании в адаптированном под шаблон виде
+    public function getWorktimeAttribute($value) {
+        $worktime = $this->morphToMany('App\Schedule', 'schedule_entities')->wherePivot('mode', 'main')->first();
+        if($worktime != null){
+            $worktime = $worktime->worktimes;
+            return worktime_to_format($worktime->keyBy('weekday'));
+        } else {
+            return $value;
+        }
     }
 
     // Телефоны

@@ -16,8 +16,8 @@ function decor_access_block($access_block) {
 }
 
 function decor_user_type($user_type) {
-    if($user_type == 1){$result = "Сотрудник";} 
-    elseif($user_type == 2){$result = "Клиент";} 
+    if($user_type == 1){$result = "Сотрудник";}
+    elseif($user_type == 2){$result = "Клиент";}
     else {$result = "Статус не определен";};
 
     return $result;
@@ -43,7 +43,7 @@ function secToTime($sec) {
 }
 
 function timeToSec($time) {
-    $mass = explode(":", $time);  
+    $mass = explode(":", $time);
     $hour = $mass[0];
     $min = $mass[1];
     $sec = $hour*60*60 + $min*60;
@@ -52,7 +52,7 @@ function timeToSec($time) {
 }
 
 // ====================================================================
-// Преобразует данные (Полученную на шаблоне дату) 
+// Преобразует данные (Полученную на шаблоне дату)
 // из плагина PickMeUp в формат базы данных
 // ====================================================================
 
@@ -65,7 +65,7 @@ function outPickMeUp($date) {
 
 
 // ====================================================================
-// Преобразует дату (Формат: date) для вывода 
+// Преобразует дату (Формат: date) для вывода
 // на шаблон через плагин PickMeUp
 // Если date равна Null, то отдает текущую дату
 // ====================================================================
@@ -116,25 +116,25 @@ function decorPhone($value) {
 
 function callPhone($value) {
 
-      // dd($value);
+    // dd($value);
 
-        if(strlen($value) == 11 ){
-                // $value = strtolower($value, "UTF-8");
-            $rest1 = '+7';
-                $rest2 = mb_substr($value, 1, 10); // возвращает "bcd"
-                $result = $rest1.$rest2;
-            };
+    if(strlen($value) == 11 ){
+        // $value = strtolower($value, "UTF-8");
+        $rest1 = '+7';
+        $rest2 = mb_substr($value, 1, 10); // возвращает "bcd"
+        $result = $rest1.$rest2;
+    };
 
-            if(strlen($value) < 6){
-                $result = "Номер не указан";
-            };
+    if(strlen($value) < 6){
+        $result = "Номер не указан";
+    };
 
-            if(strlen($value) == 0){
-                $result = NULL;
-            };
+    if(strlen($value) == 0){
+        $result = NULL;
+    };
 
-            return $result;
-        }
+    return $result;
+}
 
 function date_to_mysql($value)
 {
@@ -175,22 +175,19 @@ function getMassArguments($request, $name_argument){
 
 // Скрываем бога и ставим Id робота
 function hideGod($user){
-    if ($user->god == 1) {
 
     // Если бог, то ставим автором робота
-        $user_id = 1;
-    } else {
-        $user_id = $user->id;
-    }
-
-    return $user_id;
+    return $user->god == 1 ? 1 : $user->id;
 }
+
+
+
 
 // -----------------------------------------------------------------------------------------------
 // ПРИНИМАЕМ РАСПИСАНИЕ И ГОТОВИМ К ЗАПИСИ В БАЗУ ------------------------------------------------
 // -----------------------------------------------------------------------------------------------
 
-// Получает массив времени на неделю (начало/окончание расписания) полностью оформленный и готовый для записи 
+// Получает массив времени на неделю (начало/окончание расписания) полностью оформленный и готовый для записи
 // через DB в таблицу worktimes. Функции нужны следующие аргументы:
 // $request  - запрос приложения
 // $schedule_id - ID расписания для которого сохраняеться время.
@@ -213,7 +210,7 @@ function getWorktimes($request, $schedule_id){
     $schedule_mass[6]['worktime_begin'] = $request->sun_begin;
     $schedule_mass[6]['worktime_end'] = $request->sun_end;
 
-    // Переводим указанное время в секунды (а также делаем кое-какие проверки и доп.операции) 
+    // Переводим указанное время в секунды (а также делаем кое-какие проверки и доп.операции)
     // и сохраняем в другой массив.
 
     // Готовим массив
@@ -238,7 +235,7 @@ function getWorktimes($request, $schedule_id){
             'worktime_begin' => $worktime_begin,
             'worktime_interval' => $worktime_end
         ];
-    }   
+    }
 }
 
 // Отдаем готовый массив
@@ -258,7 +255,7 @@ function getWeekDay($date, $type = 0){
     if($type == 0){
 
         switch ($weekday) {
-            case 0: $weekday = 'Воскресенье'; break; 
+            case 0: $weekday = 'Воскресенье'; break;
             case 1: $weekday = 'Понедельник'; break;
             case 2: $weekday = 'Вторник'; break;
             case 3: $weekday = 'Среда'; break;
@@ -270,7 +267,7 @@ function getWeekDay($date, $type = 0){
     } else {
 
         switch ($weekday) {
-            case 0: $weekday = 'Вс'; break; 
+            case 0: $weekday = 'Вс'; break;
             case 1: $weekday = 'Пн'; break;
             case 2: $weekday = 'Вт'; break;
             case 3: $weekday = 'Ср'; break;
@@ -300,12 +297,12 @@ function getMonth($date, $type = 0){
             case 4: $month = 'Апрель'; break;
             case 5: $month = 'Май'; break;
             case 6: $month = 'Июнь'; break;
-            case 7: $month = 'Июль'; break; 
-            case 8: $month = 'Август'; break; 
-            case 9: $month = 'Сентябрь'; break; 
-            case 10: $month = 'Октябрь'; break; 
-            case 11: $month = 'Ноябрь'; break; 
-            case 12: $month = 'Декабрь'; break; 
+            case 7: $month = 'Июль'; break;
+            case 8: $month = 'Август'; break;
+            case 9: $month = 'Сентябрь'; break;
+            case 10: $month = 'Октябрь'; break;
+            case 11: $month = 'Ноябрь'; break;
+            case 12: $month = 'Декабрь'; break;
         }
 
     } else {
@@ -317,12 +314,12 @@ function getMonth($date, $type = 0){
             case 4: $month = 'Апр'; break;
             case 5: $month = 'Май'; break;
             case 6: $month = 'Июн'; break;
-            case 7: $month = 'Июл'; break; 
-            case 8: $month = 'Авг'; break; 
-            case 9: $month = 'Сен'; break; 
-            case 10: $month = 'Окт'; break; 
-            case 11: $month = 'Ноя'; break; 
-            case 12: $month = 'Дек'; break; 
+            case 7: $month = 'Июл'; break;
+            case 8: $month = 'Авг'; break;
+            case 9: $month = 'Сен'; break;
+            case 10: $month = 'Окт'; break;
+            case 11: $month = 'Ноя'; break;
+            case 12: $month = 'Дек'; break;
         }
 
     }
@@ -352,41 +349,41 @@ function get_first_letter($name){
 // ==============================================================================================
 
 
-// Получаем модель из тега 
+// Получаем модель из тега
 function worktime_to_format($worktime_mass){
 
-        for($x = 1; $x<8; $x++){
+    for($x = 1; $x<8; $x++){
 
-            if(isset($worktime_mass[$x]->worktime_begin)){
+        if(isset($worktime_mass[$x]->worktime_begin)){
 
-                $worktime_begin = $worktime_mass[$x]->worktime_begin;
-                $str_worktime_begin = secToTime($worktime_begin);
-                $worktime[$x]['begin'] = $str_worktime_begin;
+            $worktime_begin = $worktime_mass[$x]->worktime_begin;
+            $str_worktime_begin = secToTime($worktime_begin);
+            $worktime[$x]['begin'] = $str_worktime_begin;
 
+        } else {
+
+            $worktime[$x]['begin'] = null;
+        };
+
+        if(isset($worktime_mass[$x]->worktime_interval)){
+
+            $worktime_interval = $worktime_mass[$x]->worktime_interval;
+
+            if(($worktime_begin + $worktime_interval) > 86400){
+
+                $str_worktime_interval = secToTime($worktime_begin + $worktime_interval - 86400);
             } else {
 
-                $worktime[$x]['begin'] = null;
+                $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);
             };
 
-            if(isset($worktime_mass[$x]->worktime_interval)){
+            $worktime[$x]['end'] = $str_worktime_interval;
+        } else {
 
-                $worktime_interval = $worktime_mass[$x]->worktime_interval;
+            $worktime[$x]['end'] = null;
+        }
 
-                if(($worktime_begin + $worktime_interval) > 86400){
-
-                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval - 86400);
-                } else {
-
-                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);
-                };
-
-                $worktime[$x]['end'] = $str_worktime_interval;
-            } else {
-
-                $worktime[$x]['end'] = null;
-            }
-
-        };
+    };
 
     return $worktime;
 };
@@ -398,7 +395,7 @@ function worktime_to_format($worktime_mass){
 // ==============================================================================================
 
 
-// Получаем модель из тега 
+// Получаем модель из тега
 function getChoiceFromTag($choice_tag){
 
     $exp_result = explode('-', $choice_tag);
@@ -450,6 +447,79 @@ function cleanNameLegalForm($string){
 
     return false;
 
+}
+
+// Получаем график работы у юзера или бога
+function getSchedule($user){
+
+    if ($user->god == 1) {
+        $schedule = $user->company->filials->first()->main_schedule ?? $user->company->main_schedule;
+    } else {
+
+        $schedule = $user->staff->first()->main_schedule ?? $user->staff->first()->filial->main_schedule ?? $user->staff->first()->company->main_schedule;
+    }
+
+    // Если бог, то ставим автором робота
+    return $schedule;
+}
+
+// Отдает дату и время дедлайна в зависимости от графика работы
+// Получаем график работы чего либо, и количество секунд, через которые нужно назначить
+function getDeadline ($schedule = null, $seconds) {
+
+    $worktime = null;
+
+    // Если график существует
+    if ($schedule) {
+        $schedule = $schedule->load('worktimes');
+
+        // Порядковый номер дня
+        $day = date('N');
+        // $day = 7;
+        $days_count = 0;
+
+        for ($i = 1; $i < 9; $i++) {
+
+            // Ищем в графике текущий рабочий день, или ближайший следующий, в цикле из 7ми раз
+            $worktime = $schedule->worktimes->where('weekday', $day)->first();
+            // dd($worktime);
+
+            // Если находим расписание на день
+            if ($worktime) {
+
+                // Если рабочий день сегодня, сверяем время до конца дня
+                if ($worktime->weekday == date('N')) {
+
+                    $worktime_end = Carbon::createFromTimestamp(today()->timestamp + $worktime->worktime_begin + $worktime->worktime_interval);
+                    $deadline = Carbon::createFromTimestamp(now()->timestamp + $seconds);
+
+                    if ($deadline <= $worktime_end) {
+                        // dd('Дедлайн на текущий день - '.$deadline);
+                        return $deadline;
+                        break;
+                    }
+                } else {
+                    // Дата и время начала рабочего дня
+                    $deadline = Carbon::createFromTimestamp(today()->timestamp + $worktime->worktime_begin + $seconds)->addDays($days_count);
+                    // dd('Дедлайн на ближайший день - '.$deadline);
+                    return $deadline;
+                    break;
+                }
+            }
+
+            $day++;
+            $day = $day > 7 ? 1 : $day;
+            $days_count++;
+
+            // echo "Итерация = ".$i.", день = ".$day.", график - ". (isset($worktime) ? $worktime->id : "null")."<br>";
+        }
+        // dd($days_count);
+    }
+
+    // Если нет графика, или в графике нет рабочих дней отдаем текущее время + пришедшие секунды
+    if (!$schedule || !$worktime) {
+        return Carbon::createFromTimestamp(now()->timestamp + $seconds);
+    }
 }
 
 
