@@ -13,7 +13,7 @@ use Carbon\Carbon;
             'author',
             'appointed',
             'finisher',
-            'subject.choice',
+            'subject',
             'challenge_type'
         )
         ->where(function($query) use ($user_id){
@@ -38,24 +38,24 @@ use Carbon\Carbon;
                     return 'from_me';
                 }
 
-            }, 
+            },
             function($challenges) {
 
                 if($challenges->deadline_date < Carbon::today()){
-                    return 'last'; // А это то-же поле по нему мы и будем группировать    
+                    return 'last'; // А это то-же поле по нему мы и будем группировать
                 }
-                
+
                 if($challenges->deadline_date->format('d.m.Y') == Carbon::today()->format('d.m.Y')){
-                    return 'today'; // А это то-же поле по нему мы и будем группировать    
+                    return 'today'; // А это то-же поле по нему мы и будем группировать
                 }
 
                 if($challenges->deadline_date > Carbon::today()){
-                    return 'future'; // А это то-же поле по нему мы и будем группировать    
+                    return 'future'; // А это то-же поле по нему мы и будем группировать
                 }
 
-            }, 
+            },
             function($challenges) {
-                return Carbon::parse($challenges->deadline_date)->format('d.m.Y'); 
+                return Carbon::parse($challenges->deadline_date)->format('d.m.Y');
             }
         ]);
 

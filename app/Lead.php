@@ -65,7 +65,7 @@ class Lead extends Model
 
     protected $dates = ['deleted_at', 'created_at'];
     protected $fillable = [
-        'name', 
+        'name',
     ];
 
 
@@ -192,7 +192,6 @@ class Lead extends Model
     {
         return $this->morphMany('App\Challenge', 'subject')->whereNull('status');
     }
-    
 
     public function getFirstChallengeAttribute() {
         if(!empty($this->challenges->where('status', null)->sortByDesc('deadline_date')->first()))
