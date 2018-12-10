@@ -45,22 +45,31 @@ class RawsCategory extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
+        'company_id',
         'name',
+        'description',
+        'seo_description',
+        'photo_id',
         'parent_id',
-        'category_status',
+        'raws_mode_id',
+        'category_id',
+        'author_id',
+        'editor_id',
     ];
 
-    // Получаем компании.
+    // Компания
     public function company()
     {
         return $this->belongsTo('App\Company');
     }
 
+    // Группы
     public function raws_products()
     {
         return $this->hasMany('App\RawsProduct');
     }
 
+    // Режим
     public function raws_mode()
     {
         return $this->belongsTo('App\RawsMode');
@@ -72,53 +81,15 @@ class RawsCategory extends Model
         return $this->hasManyThrough('App\RawsArticle', 'App\RawsProduct');
     }
 
+    // Аватар
     public function photo()
     {
         return $this->belongsTo('App\Photo');
     }
 
-    // Получаем метрики
-    // public function metrics()
-    // {
-    //     return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'raws_categories');
-    // }
+    // Метрики
     public function metrics()
     {
         return $this->morphToMany('App\Metric', 'metric_entity');
     }
-
-    // // Получаем состав
-    // public function compositions()
-    // {
-    //     return $this->belongsToMany('App\RawsProduct', 'compositions', 'raws_category_id', 'composition_id');
-    // }
-
-    // --------------------------------------- Запросы -----------------------------------------
-    public function getIndex($request, $answer)
-    {
-        return $this->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->template($answer)
-        ->withCount('raws_products')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
-    }
-
-    public function getItem($id, $answer)
-    {
-        return $this->moderatorLimit($answer)->findOrFail($id);
-    }
-
-    // public function getIndexCount($answer, $request)
-    // {
-    //     return $this->moderatorLimit($answer)
-    //     ->companiesLimit($answer)
-    //     ->authors($answer)
-    //     ->systemItem($answer)
-    //     ->template($answer)
-    //     ->count();
-    // }
 }

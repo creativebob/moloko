@@ -25,6 +25,7 @@ function buildSidebarTree($items)
             $item->childrens = $grouped[$item->id];
         }
     }
+    // dd($items);
 
     return $items->where('parent_id', null);
 }

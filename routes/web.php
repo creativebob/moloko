@@ -411,6 +411,14 @@ Route::any('/service/add_photo', 'ServiceController@add_photo')->middleware('aut
 Route::post('/service/photos', 'ServiceController@photos')->middleware('auth');
 
 
+// -------------------------------- Расходные материалы -------------------------------------------
+
+// Текущая добавленная/удаленная категория
+Route::any('/expendables_categories', 'ExpendablesCategoryController@index')->middleware('auth');
+// Основные методы
+Route::resource('/expendables_categories', 'ExpendablesCategoryController')->middleware('auth');
+
+
 // ----------------------------------------- Секторы -----------------------------------------------
 // Текущий добавленный/удаленный сектор
 Route::any('/sectors', 'SectorController@index')->middleware('auth');

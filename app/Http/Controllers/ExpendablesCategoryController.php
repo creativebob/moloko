@@ -3,28 +3,25 @@
 namespace App\Http\Controllers;
 
 // Модели
-use App\Sector;
+use App\ExpendablesCategory;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\SectorRequest;
+use App\Http\Requests\ExpendablesCategoryRequest;
 
 // Подключаем трейт записи и обновления категорий
 use App\Http\Controllers\Traits\CategoryControllerTrait;
 
-// Транслитерация
-use Transliterate;
-
-class SectorController extends Controller
+class ExpendablesCategoryController extends Controller
 {
 
     // Настройки сконтроллера
-    public function __construct(Sector $sector)
+    public function __construct(ExpendablesCategory $expendables_categories)
     {
         $this->middleware('auth');
-        $this->sector = $sector;
-        $this->class = Sector::class;
-        $this->model = 'App\Sector';
+        $this->expendables_categories = $expendables_categories;
+        $this->class = ExpendablesCategory::class;
+        $this->model = 'App\ExpendablesCategory';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
         $this->type = 'modal';
@@ -39,25 +36,16 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // -----------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
-        // -----------------------------------------------------------------------------------------------------------
-
-        $filter = setFilter($this->entity_alias, $request, [
-            'booklist'              // Списки пользователя
-        ]);
-
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $sectors = Sector::moderatorLimit($answer)
+        $expendables_categories = ExpendablesCategory::moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->template($answer)
-        ->booklistFilter($request)
-        ->withCount('companies')
+        // ->withCount('companies')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
@@ -67,11 +55,11 @@ class SectorController extends Controller
 
             return view('includes.menu_views.category_list',
                 [
-                    'items' => $sectors,
+                    'items' => $expendables_categories,
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => $sectors->count(),
+                    'count' => $expendables_categories->count(),
                     'id' => $request->id,
                     'nested' => 'companies_count',
                 ]
@@ -81,12 +69,11 @@ class SectorController extends Controller
         // Отдаем на шаблон
         return view('includes.menu_views.index',
             [
-                'items' => $sectors,
+                'items' => $expendables_categories,
                 'page_info' => pageInfo($this->entity_alias),
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
-                'filter' => $filter,
                 'id' => $request->id,
                 'nested' => 'companies_count',
             ]
@@ -102,29 +89,26 @@ class SectorController extends Controller
         return view('includes.menu_views.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
-            'title' => 'Добавление сектора',
+            'title' => 'Добавление категории расходников',
             'parent_id' => $request->parent_id,
             'category_id' => $request->category_id
         ]);
     }
 
-    public function store(SectorRequest $request)
+    public function store(ExpendablesCategoryRequest $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Заполнение и проверка основных полей в трейте
-        $sector = $this->storeCategory($request);
+        $expendables_category = $this->storeCategory($request);
 
-        // Тег
-        $sector->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
+        $expendables_category->save();
 
-        $sector->save();
-
-        if ($sector) {
+        if ($expendables_category) {
             // Переадресовываем на index
-            return redirect()->route('sectors.index', ['id' => $sector->id]);
+            return redirect()->route('expendables_categories.index', ['id' => $expendables_category->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -141,38 +125,36 @@ class SectorController extends Controller
     public function edit($id)
     {
 
-        $sector = Sector::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
+        $expendables_category = ExpendablesCategory::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $sector);
+        $this->authorize(getmethod(__FUNCTION__), $expendables_category);
 
         return view('includes.menu_views.edit', [
-            'item' => $sector,
+            'item' => $expendables_category,
             'entity' => $this->entity_alias,
             'title' => 'Редактирование сектора',
-            'parent_id' => $sector->parent_id,
-            'category_id' => $sector->category_id
+            'parent_id' => $expendables_category->parent_id,
+            'category_id' => $expendables_category->category_id
         ]);
     }
 
-    public function update(SectorRequest $request, $id)
+    public function update(ExpendablesCategoryRequest $request, $id)
     {
 
-        $sector = Sector::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
+        $expendables_category = ExpendablesCategory::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $sector);
+        $this->authorize(getmethod(__FUNCTION__), $expendables_category);
 
         // Заполнение и проверка основных полей в трейте
-        $sector = $this->updateCategory($request, $sector);
+        $expendables_category = $this->updateCategory($request, $expendables_category);
 
-        $sector->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
+        $expendables_category->save();
 
-        $sector->save();
-
-        if ($sector) {
+        if ($expendables_category) {
             // Переадресовываем на index
-            return redirect()->route('sectors.index', ['id' => $sector->id]);
+            return redirect()->route('expendables_categories.index', ['id' => $expendables_category->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -187,18 +169,18 @@ class SectorController extends Controller
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $sector = Sector::moderatorLimit($answer)->findOrFail($id);
+        $expendables_category = ExpendablesCategory::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $sector);
+        $this->authorize(getmethod(__FUNCTION__), $expendables_category);
 
         // Проверяем содержит ли сектор вложения
-        $sectors_count = Sector::moderatorLimit($answer)
-        ->whereParent_id($sector->id)
+        $expendables_categories_count = ExpendablesCategory::moderatorLimit($answer)
+        ->whereParent_id($expendables_category->id)
         ->count();
 
         // Если содержит, то даем сообщение об ошибке
-        if ($sectors_count > 0) {
+        if ($expendables_categories_count > 0) {
             $result = [
                 'error_status' => 1,
                 'error_message' => 'Категория содержит вложенные элементы, удаление невозможно!'
@@ -206,16 +188,16 @@ class SectorController extends Controller
         } else {
 
             // Скрываем бога
-            $sector->editor_id = hideGod($request->user());
-            $sector->save();
+            $expendables_category->editor_id = hideGod($request->user());
+            $expendables_category->save();
 
-            $parent_id = $sector->parent_id;
+            $parent_id = $expendables_category->parent_id;
 
-            $sector = Sector::destroy($id);
+            $expendables_category = ExpendablesCategory::destroy($id);
 
-            if ($sector) {
+            if ($expendables_category) {
                 // Переадресовываем на index
-                return redirect()->route('sectors.index', ['id' => $parent_id]);
+                return redirect()->route('expendables_categories.index', ['id' => $parent_id]);
             } else {
                 $result = [
                     'error_status' => 1,

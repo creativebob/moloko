@@ -49,21 +49,28 @@ class RawsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
-
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $raws_categories = RawsCategory::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->template($answer)
+        ->withCount('raws_products')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
 
         // Отдаем Ajax
         if ($request->ajax()) {
 
             return view('includes.menu_views.category_list',
                 [
-                    'items' => $this->raws_category->getIndex($request, $answer),
+                    'items' => $raws_categories,
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => count($this->raws_category->getIndex($request, $answer)),
+                    'count' => $raws_categories->count(),
                     'id' => $request->id,
                     'nested' => 'raws_products_count',
                 ]
@@ -73,8 +80,8 @@ class RawsCategoryController extends Controller
         // Отдаем на шаблон
         return view('includes.menu_views.index',
             [
-                'items' => $this->raws_category->getIndex($request, $answer),
-                'page_info' => $page_info,
+                'items' => $raws_categories,
+                'page_info' => pageInfo($this->entity_alias),
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
@@ -103,7 +110,7 @@ class RawsCategoryController extends Controller
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), RawsCategory::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Заполнение и проверка основных полей в трейте
         $raws_category = $this->storeCategory($request);
@@ -269,7 +276,12 @@ class RawsCategoryController extends Controller
         // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $raws_category = $this->raws_category->getItem($id, operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)));
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $raws_category = RawsCategory::moderatorLimit($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_category);
@@ -277,7 +289,7 @@ class RawsCategoryController extends Controller
         // Заполнение и проверка основных полей в трейте
         $raws_category = $this->updateCategory($request, $raws_category);
 
-        // Если сменили тип категории продукции, то меняем его и всем вложенным элементам
+        // Если сменили тип категории сырья, то меняем его и всем вложенным элементам
         if (($raws_category->parent_id == null) && ($raws_category->raws_type_id != $request->raws_type_id)) {
             $raws_category->raws_type_id = $request->raws_type_id;
 

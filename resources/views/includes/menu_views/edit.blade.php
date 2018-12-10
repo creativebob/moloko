@@ -6,7 +6,7 @@
   </div>
   {{ Form::model($item,['id' => 'form-edit', 'data-abide', 'novalidate']) }}
 
-    @include($entity.'.form', ['submit_text' => 'Редактировать', 'class' => 'submit-edit'])
+  @include('includes.menu_views.modal', ['submit_text' => 'Редактировать', 'class' => 'submit-edit'])
 
   {{ Form::close() }}
   <div data-close class="icon-close-modal sprite close-modal add-item"></div>

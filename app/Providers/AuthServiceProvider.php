@@ -59,6 +59,8 @@ use App\ServicesCategory;
 use App\ServicesProduct;
 use App\Service;
 
+use App\ExpendablesCategory;
+
 use App\Goods;
 use App\GoodsCategory;
 use App\GoodsProduct;
@@ -137,6 +139,7 @@ use App\Policies\ServicePolicy;
 use App\Policies\ServicesCategoryPolicy;
 use App\Policies\ServicesProductPolicy;
 use App\Policies\ServicesArticlePolicy;
+use App\Policies\ExpendablesCategoryPolicy;
 
 use App\Policies\GoodsPolicy;
 use App\Policies\GoodsCategoryPolicy;
@@ -172,22 +175,22 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy', 
+        'App\Model' => 'App\Policies\ModelPolicy',
 
-        User::class => UserPolicy::class, 
-        RightsRole::class => RightsRolePolicy::class, 
-        Company::class => CompanyPolicy::class, 
-        ExtraRequisite::class => ExtraRequisitePolicy::class, 
+        User::class => UserPolicy::class,
+        RightsRole::class => RightsRolePolicy::class,
+        Company::class => CompanyPolicy::class,
+        ExtraRequisite::class => ExtraRequisitePolicy::class,
 
-        Supplier::class => SupplierPolicy::class, 
-        Manufacturer::class => ManufacturerPolicy::class, 
-        Dealer::class => DealerPolicy::class, 
+        Supplier::class => SupplierPolicy::class,
+        Manufacturer::class => ManufacturerPolicy::class,
+        Dealer::class => DealerPolicy::class,
         Client::class => ClientPolicy::class,
         Bank::class => BankPolicy::class,
         BankAccount::class => BankAccountPolicy::class,
 
-        Right::class => RightPolicy::class, 
-        Entity::class => EntityPolicy::class, 
+        Right::class => RightPolicy::class,
+        Entity::class => EntityPolicy::class,
         Role::class => RolePolicy::class,
         Place::class => PlacePolicy::class,
         Stock::class => StockPolicy::class,
@@ -221,10 +224,15 @@ class AuthServiceProvider extends ServiceProvider
         EntitySetting::class => EntitySettingPolicy::class,
         Photo::class => PhotoPolicy::class,
         Folder::class => FolderPolicy::class,
+
+        // Услуги
         Service::class => ServicePolicy::class,
         ServicesCategory::class => ServicesCategoryPolicy::class,
         ServicesProduct::class => ServicesProductPolicy::class,
         ServicesArticle::class => ServicesArticlePolicy::class,
+
+        ExpendablesCategory::class => ExpendablesCategoryPolicy::class,
+
         Goods::class => GoodsPolicy::class,
         GoodsCategory::class => GoodsCategoryPolicy::class,
         GoodsProduct::class => GoodsProductPolicy::class,

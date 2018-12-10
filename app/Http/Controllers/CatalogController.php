@@ -11,34 +11,32 @@ use App\EntitySetting;
 use Illuminate\Http\Request;
 use App\Http\Requests\CatalogRequest;
 
-// Политика
-use App\Policies\CatalogPolicy;
-
-// Общие классы
-use Illuminate\Support\Facades\Log;
-
-// Специфические классы
 // Транслитерация
 use Transliterate;
-
-// На удаление
-use Illuminate\Support\Facades\Auth;
 
 class CatalogController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'catalogs';
-    protected $entity_dependence = false;
+    // Настройки сконтроллера
+    public function __construct(Catalog $catalog)
+    {
+        $this->middleware('auth');
+        $this->catalog = $catalog;
+        $this->entity_alias = with(new Catalog)->getTable();;
+        $this->entity_dependence = false;
+        $this->class = Catalog::class;
+        $this->model = 'App\Catalog';
+        $this->type = 'modal';
+    }
 
     public function index(Request $request, $alias)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Catalog::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_catalogs = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_catalogs = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
         $answer_sites = operator_right('sites', false,  getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------
@@ -65,13 +63,13 @@ class CatalogController extends Controller
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('includes.menu_views.category_list', ['items' => $catalogs, 'class' => App\Catalog::class, 'entity' => $this->entity_name, 'type' => 'modal', 'id' => $request->id]);
+            return view('includes.menu_views.category_list', ['items' => $catalogs, 'class' => App\Catalog::class, 'entity' => $this->entity_alias, 'type' => 'modal', 'id' => $request->id]);
         }
 
-        $entity = $this->entity_name;
+        $entity = $this->entity_alias;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         // Так как сущность имеет определенного родителя
         $parent_page_info = pageInfo('sites');
@@ -93,7 +91,7 @@ class CatalogController extends Controller
         if (isset($request->parent_id)) {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+            $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
 
             // Главный запрос
             $catalogs = Catalog::moderatorLimit($answer)
@@ -144,7 +142,7 @@ class CatalogController extends Controller
         $catalog->display = $request->display;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
@@ -184,7 +182,7 @@ class CatalogController extends Controller
         $this->authorize('index', Catalog::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_catalogs = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_catalogs = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $answer_sites = operator_right('sites', false,  getmethod(__FUNCTION__));
 
@@ -212,7 +210,7 @@ class CatalogController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_catalogs = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_catalogs = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $catalog = Catalog::moderatorLimit($answer_catalogs)
@@ -229,7 +227,7 @@ class CatalogController extends Controller
         $user = $request->user();
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         // Так как сущность имеет определенного родителя
         $parent_page_info = pageInfo('sites');
@@ -255,7 +253,7 @@ class CatalogController extends Controller
         } else {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+            $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
 
             // Главный запрос
             $catalogs = Catalog::moderatorLimit($answer)
@@ -283,7 +281,7 @@ class CatalogController extends Controller
         // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_name, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_alias, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $catalog = Catalog::moderatorLimit($answer)->findOrFail($id);
@@ -308,7 +306,7 @@ class CatalogController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
 
             if ($get_settings) {
 
@@ -411,7 +409,7 @@ class CatalogController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $catalog = Catalog::moderatorLimit($answer)->findOrFail($id);

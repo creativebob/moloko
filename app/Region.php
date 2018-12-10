@@ -16,7 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-
 // Фильтры
 // use App\Scopes\Filters\Filter;
 // use App\Scopes\Filters\BooklistFilter;
@@ -26,7 +25,7 @@ class Region extends Model
 {
 
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use SoftDeletes;
 
@@ -42,22 +41,24 @@ class Region extends Model
     // use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
-
+    // Общая база
     // protected $connection = 'general';
 
+    protected $dates = ['deleted_at'];
+
     protected $fillable = [
-        'region_name',
-        'region_code',
-        'region_vk_external_id',
+        'name',
+        'code',
+        'vk_external_id',
     ];
 
-    // Получаем районы и города области.
+    // Районы
     public function areas()
     {
         return $this->hasMany('App\Area');
     }
 
+    // Города
     public function cities()
     {
         return $this->hasMany('App\City');

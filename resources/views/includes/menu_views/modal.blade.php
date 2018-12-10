@@ -7,11 +7,12 @@
         </label>
         @endisset
 
-        <label>Название категории
+        <label>Название
             @include('includes.inputs.name', ['required' => true, 'check' => true])
-            <div class="sprite-input-right find-status"></div>
-            <div class="item-error">Такая категория альбомов уже существует!</div>
+            <div class="item-error">Такое название уже существует!</div>
         </label>
+
+        @includeIf($entity.'.form')
 
         {{ Form::hidden('id', null, ['id' => 'item-id']) }}
         {{ Form::hidden('category_id', null, ['id' => 'category-id']) }}

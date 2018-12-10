@@ -51,7 +51,6 @@ class GoodsCategory extends Model
         'photo_id',
         'parent_id',
         'goods_mode_id',
-        'category_status',
         'category_id',
         'author_id',
         'editor_id',
@@ -63,31 +62,32 @@ class GoodsCategory extends Model
         return $this->belongsTo('App\Company');
     }
 
+    // Группы
     public function goods_products()
     {
         return $this->hasMany('App\GoodsProduct');
     }
 
+    // Режим товара
     public function goods_mode()
     {
         return $this->belongsTo('App\GoodsMode');
     }
 
+    // Аватар
     public function photo()
     {
         return $this->belongsTo('App\Photo');
     }
 
-    // Получаем метрики
-    // public function metrics()
-    // {
-    //     return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'goods_categories');
-    // }
+    // Метрики
+    // Один
     public function one_metrics()
     {
         return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'one');
     }
 
+    // набор
     public function set_metrics()
     {
         return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'set');
@@ -98,39 +98,4 @@ class GoodsCategory extends Model
     {
         return $this->morphedByMany('App\RawsArticle', 'compositions');
     }
-
-    // public function compositions()
-    // {
-    //     return $this->belongsToMany('App\Raw', 'compositions', 'goods_category_id', 'entity_id')->where('entity', 'raws');;
-    // }
-
-    // --------------------------------------- Запросы -----------------------------------------
-    public function getIndex($request, $answer)
-    {
-        return $this->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->template($answer)
-        ->withCount('goods_products')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
-    }
-
-    public function getItem($id, $answer)
-    {
-        return $this->moderatorLimit($answer)->withCount('goods_products')->findOrFail($id);
-    }
-
-    // public function getIndexCount($answer, $request)
-    // {
-    //     return $this->moderatorLimit($answer)
-    //     ->companiesLimit($answer)
-    //     ->authors($answer)
-    //     ->systemItem($answer)
-    //     ->template($answer)
-    //     ->count();
-    // }
-
 }

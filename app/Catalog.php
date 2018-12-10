@@ -19,7 +19,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-    
+
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -47,20 +47,27 @@ class Catalog extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+    protected $fillable = [
+        'company_id',
+        'name',
+        'parent_id',
+        'category_id',
+    ];
 
 
-    // Получаем сайт.
+    // Сайт
     public function site()
     {
         return $this->belongsTo('App\Site');
     }
 
-    // Получаем автора
+    // Аавтор
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');
     }
 
+    // Аватар
     public function photo()
     {
         return $this->belongsTo('App\Photo');
@@ -72,7 +79,7 @@ class Catalog extends Model
         return $this->morphedByMany('App\Service', 'catalog_products')->withPivot('id', 'display', 'sort');
     }
 
-     // Товары
+    // Товары
     public function goods()
     {
         return $this->morphedByMany('App\Goods', 'catalog_products')->withPivot('id', 'display', 'sort');

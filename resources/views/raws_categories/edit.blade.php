@@ -36,20 +36,6 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            @if ($errors->any())
-            <div class="alert callout" data-closable>
-                <h5>Неправильный формат данных:</h5>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @endif
-
             {{ Form::model($raws_category, ['url' => '/admin/raws_categories/'.$raws_category->id, 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'products-category-form']) }}
             {{ method_field('PATCH') }}
 
@@ -60,15 +46,22 @@
                     <div class="small-12 medium-6 cell">
 
                         <div class="grid-x grid-padding-x">
-                            @isset($raws_category->parent_id)
-                            <div class="small-12 medium-6 cell">
 
+                            @if(isset($raws_category->parent_id))
+
+                            <div class="small-12 medium-6 cell">
                                 <label>Расположение
                                     @include('includes.selects.categories_select', ['entity' => 'raws_categories', 'parent_id' => $raws_category->parent_id, 'id' => $raws_category->id])
                                 </label>
-
                             </div>
-                            @endisset
+
+                            @else
+
+                            <div class="small-12 medium-6 cell">
+                                @include('includes.selects.raws_modes')
+                            </div>
+
+                            @endif
 
                             <div class="small-12 medium-6 cell">
                                 <label>Название категории
@@ -106,12 +99,12 @@
                   {{ Form::file('photo') }}
               </label>
               <div class="text-center">
-                 <img id="photo" @if (isset($raws_category->photo_id)) src="/storage/{{ $raws_category->company->id }}/media/raws_categories/{{ $raws_category->id }}/img/medium/{{ $raws_category->photo->name }}" @endif>
-             </div>
-         </div>
+               <img id="photo" @if (isset($raws_category->photo_id)) src="/storage/{{ $raws_category->company->id }}/media/raws_categories/{{ $raws_category->id }}/img/medium/{{ $raws_category->photo->name }}" @endif>
+           </div>
+       </div>
 
-         {{-- Кнопка --}}
-         <div class="small-12 cell tabs-button tabs-margin-top">
+       {{-- Кнопка --}}
+       <div class="small-12 cell tabs-button tabs-margin-top">
           {{ Form::submit('Редактировать категорию услуг', ['class'=>'button']) }}
       </div>
   </div>

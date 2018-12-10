@@ -46,20 +46,27 @@ class GoodsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
-
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $goods_categories = GoodsCategory::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->template($answer)
+        ->withCount('goods_products')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
 
         // Отдаем Ajax
         if ($request->ajax()) {
             return view('includes.menu_views.category_list',
                 [
-                    'items' => $this->goods_category->getIndex($request, $answer),
+                    'items' => $goods_categories,
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => count($this->goods_category->getIndex($request, $answer)),
+                    'count' => $goods_categories->count(),
                     'id' => $request->id,
                     'nested' => 'goods_products_count',
                 ]
@@ -69,8 +76,8 @@ class GoodsCategoryController extends Controller
         // Отдаем на шаблон
         return view('includes.menu_views.index',
             [
-                'items' => $this->goods_category->getIndex($request, $answer),
-                'page_info' => $page_info,
+                'items' => $goods_categories,
+                'page_info' => pageInfo($this->entity_alias),
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
@@ -216,7 +223,7 @@ class GoodsCategoryController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo('goods_categories');
+        $page_info = pageInfo($this->entity_alias);
 
         return view('goods_categories.edit', compact('goods_category', 'page_info', 'properties', 'properties_list', 'composition_list'));
 
@@ -228,7 +235,8 @@ class GoodsCategoryController extends Controller
         // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $goods_category = $this->goods_category->getItem($id, operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)));
+        // $
+        $goods_category = GoodsCategory::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_category);
@@ -240,7 +248,7 @@ class GoodsCategoryController extends Controller
         if (($goods_category->parent_id == null) && ($goods_category->goods_type_id != $request->goods_type_id)) {
             $goods_category->goods_type_id = $request->goods_type_id;
 
-            $goods_categories = $this->class::whereCategory_id($id)
+            $goods_categories = GoodsCategory::whereCategory_id($id)
             ->update(['goods_mode_id' => $request->goods_mode_id]);
         }
 
@@ -289,18 +297,17 @@ class GoodsCategoryController extends Controller
             ];
         } else {
 
-            // Если нет, мягко удаляем
-            $parent = $goods_category->parent_id;
-
             $goods_category->editor_id = $user_id;
             $goods_category->save();
+
+            $parent_id = $goods_category->parent_id;
 
             $goods_category = GoodsCategory::destroy($id);
 
             if ($goods_category) {
 
                 // Переадресовываем на index
-                return redirect()->route('goods_categories.index', ['id' => $parent]);
+                return redirect()->route('goods_categories.index', ['id' => $parent_id]);
             } else {
                 $result = [
                     'error_status' => 1,
@@ -463,7 +470,6 @@ class GoodsCategoryController extends Controller
         $entity = 'goods';
 
         return view('leads.items', compact('goods_list', 'entity'));
-
     }
 
     public function ajax_get_metrics(Request $request)
@@ -471,7 +477,6 @@ class GoodsCategoryController extends Controller
 
         $item = GoodsCategory::with('metrics.property')->findOrFail($request->goods_category_id);
         return view('goods.metrics.metric_enter', compact('item'));
-
     }
 
     public function ajax_get_compositions(Request $request)
@@ -479,7 +484,6 @@ class GoodsCategoryController extends Controller
 
         $item = GoodsCategory::with('compositions.raws_product.unit')->findOrFail($request->goods_category_id);
         return view('goods.compositions.composition_enter', compact('item'));
-
     }
 
 }

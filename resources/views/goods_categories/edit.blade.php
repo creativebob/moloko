@@ -38,20 +38,6 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            @if ($errors->any())
-            <div class="alert callout" data-closable>
-                <h5>Неправильный формат данных:</h5>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @endif
-
             {{ Form::model($goods_category, ['url' => '/admin/goods_categories/'.$goods_category->id, 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'products-category-form']) }}
             {{ method_field('PATCH') }}
 
@@ -62,13 +48,22 @@
                     <div class="small-12 medium-6 cell">
 
                         <div class="grid-x grid-padding-x">
-                            @isset($goods_category->parent_id)
+
+                            @if(isset($goods_category->parent_id))
+
                             <div class="small-12 medium-6 cell">
                                 <label>Расположение
                                     @include('includes.selects.categories_select', ['entity' => 'goods_categories', 'parent_id' => $goods_category->parent_id, 'id' => $goods_category->id])
                                 </label>
                             </div>
-                            @endisset
+
+                            @else
+
+                            <div class="small-12 medium-6 cell">
+                                @include('includes.selects.goods_modes')
+                            </div>
+
+                            @endif
 
                             <div class="small-12 medium-6 cell">
                                 <label>Название категории

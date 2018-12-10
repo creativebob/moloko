@@ -13,7 +13,7 @@ $drop = 1;
     <a class="first-link @if($drop == 0) link-small @endif">
         <div class="icon-open sprite"></div>
         <span class="first-item-name">{{ $category->name }}</span>
-        <span class="number">{{ isset($category->childrens) ? count($category->childrens) : 0 }}</span>
+        <span class="number">{{ isset($category->childrens) ? $category->childrens->count() : 0 }}</span>
 
         @moderation ($category)
         <span class="no-moderation">Не отмодерированная запись!</span>

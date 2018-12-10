@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Scopes для главного запроса
+use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
@@ -16,12 +17,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-// Фильтры
-// use App\Scopes\Filters\Filter;
-// use App\Scopes\Filters\BooklistFilter;
-// use App\Scopes\Filters\DateIntervalFilter;
-
-class Area extends Model
+class ExpendablesCategory extends Model
 {
 
     // Включаем кеш
@@ -30,6 +26,7 @@ class Area extends Model
     use SoftDeletes;
 
     // Включаем Scopes
+    use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
     use SystemItemTraitScopes;
     use FilialsTraitScopes;
@@ -41,26 +38,20 @@ class Area extends Model
     // use BooklistFilter;
     // use DateIntervalFilter;
 
-    // Общая база
-    // protected $connection = 'general';
-
     protected $dates = ['deleted_at'];
-
     protected $fillable = [
-        'area_name',
-        'region_id',
+        'name',
+        'parent_id',
+        'category_id',
+        'author_id',
+        'display',
+        'system_item',
+        'mooderation'
     ];
 
-    // Область
-    public function region()
+    // Компании
+    public function company()
     {
-        return $this->belongsTo('App\Region');
+    	return $this->belongsTo('App\Company');
     }
-
-    // Города
-    public function cities()
-    {
-        return $this->hasMany('App\City');
-    }
-
 }
