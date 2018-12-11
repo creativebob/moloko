@@ -17,7 +17,7 @@
 
     <div class="icon-list">
         <div class="controls-list">
-            @include ('includes.control.menu_div', ['item' => $item, 'class' => $class, 'color' => 'black', 'nested' => $nested])
+            @include ('includes.control.categories_menu_div', ['item' => $item, 'class' => $class, 'color' => 'black', 'nested' => $nested])
         </div>
 
         <div class="actions-list">

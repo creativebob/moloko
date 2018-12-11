@@ -114,7 +114,7 @@ class StafferController extends Controller
         }
 
         $staffer->position_id = $request->position_id;
-        $staffer->department_id = $request->department_id;
+        $staffer->department_id = $request->parent_id;
         $staffer->filial_id = $request->filial_id;
 
         $staffer->save();

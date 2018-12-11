@@ -29,7 +29,6 @@ use Fomvasss\Dadata\Facades\DadataSuggest;
 
 Auth::routes();
 
-
 // Вход в панель управления
 Route::get('/', 'AppController@enter');
 
@@ -212,7 +211,7 @@ Route::resource('/settings', 'SettingController')->middleware('auth');
 
 // ---------------------------------------- Телефоны --------------------------------------------------
 
-Route::post('/add_extra_phone', 'PhoneController@ajax_add_extra_phone')->middleware('auth');
+Route::post('/add_extra_phone', 'PhoneController@ajax_add_extra_phone')->middleware('auth')->name('phones.add_extra_phone');;
 
 
 // -------------------------------------- Пользователи ------------------------------------------------
@@ -285,8 +284,6 @@ Route::match(['get', 'post'], '/ajax_add_relation_metric', 'MetricController@aja
 Route::any('/ajax_delete_relation_metric', 'MetricController@ajax_delete_relation')->middleware('auth');
 
 Route::post('/ajax_add_metric_value', 'MetricController@add_metric_value')->middleware('auth');
-
-
 
 
 // ---------------------------------------- Состав -------------------------------------------------
@@ -690,7 +687,7 @@ Route::get('/current_department/{section_id}/{item_id}', 'DepartmentController@c
 // Список отделов филиала
 Route::post('/departments_list', 'DepartmentController@departments_list')->middleware('auth');
 // Проверка на существование филиала/отдела
-Route::post('/department_check', 'DepartmentController@ajax_check')->middleware('auth');
+Route::any('/department_check', 'DepartmentController@ajax_check')->middleware('auth');
 
 
 // ----------------------------------------- Должности --------------------------------------------

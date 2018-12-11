@@ -127,7 +127,7 @@ $drop = 1;
 {{-- Скрипт чекбоксов и перетаскивания для меню --}}
 @include('includes.scripts.sortable-menu-script')
 
-@if(!empty($id))
+@if(isset($id))
 <script type="text/javascript">
 
     // Если средний элемент
@@ -167,5 +167,11 @@ $drop = 1;
     };
 </script>
 @endif
+
+@isset ($count)
+<script type="text/javascript">
+    $('.content-count').text('{{ $count }}');
+</script>
+@endisset
 
 

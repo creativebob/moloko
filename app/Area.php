@@ -47,8 +47,11 @@ class Area extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'area_name',
+        'name',
         'region_id',
+        'display',
+        'system_item',
+        'author_id'
     ];
 
     // Область

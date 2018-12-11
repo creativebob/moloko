@@ -12,7 +12,7 @@ use App\Page;
 use Illuminate\Http\Request;
 use App\Http\Requests\CityRequest;
 
-// Специфические классы
+// Транслитерация
 use Transliterate;
 
 // На удаление
@@ -95,12 +95,15 @@ class CityController extends Controller
 
     public function create()
     {
-        //
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        return view('cities.modal-create');
     }
 
     public function store(CityRequest $request)
     {
 
+        // dd($request);
         if ($request->city_db == 1) {
 
             // Подключение политики
@@ -112,16 +115,11 @@ class CityController extends Controller
             // Скрываем бога
             $user_id = hideGod($user);
 
-            $city_name = $request->city_name;
-
             // Если пришла область
             if (isset($request->region_name)) {
 
-                // Вносим пришедшие данные в переменные
-                $region_name = $request->region_name;
-
                 // Смотрим область
-                $region = Region::firstOrCreate(['name' => $region_name], ['system_item' => 1, 'author_id' => $user_id]);
+                $region = Region::firstOrCreate(['name' => $request->region_name], ['system_item' => 1, 'author_id' => $user_id]);
                 $region_id = $region->id;
             } else {
                 // Если пришел город без области (Москва, Питер)
@@ -133,11 +131,8 @@ class CityController extends Controller
             // Если пришел район
             if (isset($request->area_name)) {
 
-                // Вносим пришедшие данные в переменные
-                $area_name = $request->area_name;
-
                 // Смотрим район
-                $area = Area::firstOrCreate(['name' => $area_name], ['region_id' => $region_id, 'system_item' => 1, 'author_id' => $user_id]);
+                $area = Area::firstOrCreate(['name' => $request->area_name], ['region_id' => $region_id, 'system_item' => 1, 'author_id' => $user_id]);
                 // Берем id записанного района
                 $region_id = 0;
                 $area_id = $area->id;
@@ -147,17 +142,16 @@ class CityController extends Controller
 
             // Записываем город, его наличие в базе мы проверили ранее
             $city = new City;
-            $city->name = $city_name;
-            $city->code = $request->code;
+            // $city->code = $request->code;
+            $city_name = $request->city_name;
 
+            // Если городов больше одного, меняем алиас
             $count = City::whereName($city_name)->count();
             if ($count > 0) {
                 $count++;
                 $city_name = $city_name . $count;
             }
-
             $city->alias = Transliterate::make($city_name, ['type' => 'url', 'lowercase' => true]);
-
             $city->vk_external_id = $request->vk_external_id;
 
             if ($region_id != 0) {
@@ -201,48 +195,7 @@ class CityController extends Controller
 
     public function destroy(Request $request, $id)
     {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Удаляем город с обновлением
-        // Находим область и район города
-        $user = $request->user();
-
-        $city = City::moderatorLimit($answer)->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $city);
-
-        if ($city->area_id != null) {
-            $parent = $city->area_id;
-        } else {
-            $parent = $city->region_id;
-        }
-
-        if ($city) {
-            $city->editor_id = $user->id;
-            $city->save();
-
-            // Смотрим район
-            if (count($city->area) > 0) {
-                $area_id = $city->area->id;
-                $region_id = $city->area->region->id;
-            } else {
-                $area_id = 0;
-                $region_id = $city->region->id;
-            }
-
-            $city = City::destroy($id);
-
-            if ($city) {
-                return redirect()->action('CityController@index', ['id' => $parent]);
-            } else {
-                abort(403, 'Ошибка при удалении!');
-            }
-        } else {
-            abort(403, 'Населенный пункт не найден в базе данных!');
-        }
+        //
     }
 
     // Получаем список городов из базы вк
@@ -368,11 +321,11 @@ class CityController extends Controller
         // Подключение политики
         $this->authorize('index', $this->class);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
-
         // Проверка города в нашей базе данных
-        $cities = City::with('area', 'region')->moderatorLimit($answer)->where('name', 'like', $request->city_name.'%')->get();
+        $cities = City::with('area', 'region')
+        ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, 'index'))
+        ->where('name', 'like', $request->city_name.'%')
+        ->get();
         // dd($cities);
 
         return view('includes.cities.cities_table', compact('cities'));

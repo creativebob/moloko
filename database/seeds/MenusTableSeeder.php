@@ -433,7 +433,7 @@ class MenusTableSeeder extends Seeder
             'display' => 1,
             'sort' => 3,
         ],
-        
+
         [
             'name' => 'Населенные пункты',
             'icon' => null,
@@ -889,6 +889,22 @@ class MenusTableSeeder extends Seeder
             'tag' => 'stocks',
             'parent_id' => 35,
             'page_id' => 50,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
+        // 60
+        [
+            'name' => 'Категории расходных материалов',
+            'icon' => null,
+            'alias' => 'admin/expendables_categories',
+            'tag' => 'expendables_categories',
+            'parent_id' => 20,
+            'page_id' => 51,
             'navigation_id' => 2,
             'company_id' => null,
             'system_item' => 1,

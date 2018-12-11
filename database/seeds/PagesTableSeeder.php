@@ -541,7 +541,7 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'display' => null,
-            ],   
+            ],
 
             // 46
             [
@@ -554,7 +554,7 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'display' => null,
-            ],   
+            ],
 
             // 47
             [
@@ -580,7 +580,7 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'display' => null,
-            ],   
+            ],
 
             // 49
             [
@@ -593,7 +593,7 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'display' => null,
-            ],  
+            ],
 
             // 50
             [
@@ -606,7 +606,20 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'display' => null,
-            ],   
+            ],
+
+            // 51
+            [
+                'name' => 'Категории расходных материалов',
+                'site_id' => 1,
+                'title' => 'Категории расходных материалов',
+                'description' => 'Категории расходных материалов',
+                'alias' => 'expendables_categories',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
 
             // [
             //     'name' => 'Категории продукции',

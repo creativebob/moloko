@@ -11,7 +11,7 @@
 <div class="system-menu">
     {{-- Системный статус --}}
     @php
-        $nested = (($item->staff_count > 0) || isset($item->childrens)) ? 1 : 0;
+        $nested = (($item->$nested > 0) || isset($item->childrens)) ? 1 : 0;
     @endphp
     @can ('system', $item)
     @switch($item)

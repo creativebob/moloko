@@ -25,7 +25,7 @@ $drop = 1;
 
         <div class="controls-list">
 
-            @include ('includes.control.menu_div', ['item' => $category, 'class' => $class, 'color' => 'white'])
+            @include ('includes.control.categories_menu_div', ['item' => $category, 'class' => $class, 'color' => 'white'])
 
         </div>
 
@@ -44,7 +44,6 @@ $drop = 1;
 
             @case($type == 'edit')
             <a class="icon-list-edit sprite" href="/admin/{{ $entity }}/{{ $category->id }}/edit"></a>
-            @break
             @break
 
             @endswitch
@@ -68,6 +67,7 @@ $drop = 1;
         <input type="checkbox" name="" id="check-{{ $category->id }}">
         <label class="label-check white" for="check-{{ $category->id }}"></label>
     </div>
+
     <ul class="menu vertical medium-list" data-accordion-menu data-multi-open="false">
         @isset($category->childrens)
         @foreach ($category->childrens as $children)
@@ -133,6 +133,6 @@ $drop = 1;
 
 @isset ($count)
 <script type="text/javascript">
-    $('.content-count').text('{{ $count }}');
+    $('.content-count').text('{{ num_format($count, 0) }}');
 </script>
 @endisset

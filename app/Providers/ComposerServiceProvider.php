@@ -22,6 +22,7 @@ use App\Http\ViewComposers\RawsModesComposer;
 use App\Http\ViewComposers\CatalogsSelectComposer;
 
 use App\Http\ViewComposers\MenuViewComposer;
+use App\Http\ViewComposers\DepartmentsViewComposer;
 // use App\Http\ViewComposers\SectorsComposer;
 use App\Http\ViewComposers\GoodsCategoriesComposer;
 use App\Http\ViewComposers\GoodsProductsComposer;
@@ -29,7 +30,7 @@ use App\Http\ViewComposers\GoodsProductsComposer;
 
 use App\Http\ViewComposers\UsersComposer;
 use App\Http\ViewComposers\StaffComposer;
-
+use App\Http\ViewComposers\PositionsComposer;
 
 
 class ComposerServiceProvider extends ServiceProvider
@@ -54,7 +55,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.users', UsersComposer::class);
         view()->composer('includes.selects.staff', StaffComposer::class);
 
+        view()->composer('includes.selects.positions', PositionsComposer::class);
+
         view()->composer('includes.selects.catalogs', CatalogsSelectComposer::class);
+
 
         // Select'ы категорий
         view()->composer('includes.selects.categories_select', CategoriesSelectComposer::class);
@@ -62,6 +66,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         // Стандартные шаблоны типа "меню"
         view()->composer('includes.menu_views.category_list', MenuViewComposer::class);
+        view()->composer('departments.filials_list', DepartmentsViewComposer::class);
         // view()->composer('includes.selects.sectors', SectorsComposer::class);
         view()->composer('includes.selects.goods_categories', GoodsCategoriesComposer::class);
         view()->composer('includes.selects.goods_products', GoodsProductsComposer::class);

@@ -17,7 +17,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
@@ -28,7 +27,7 @@ class Department extends Model
 {
 
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use SoftDeletes;
 
@@ -48,7 +47,7 @@ class Department extends Model
     // Фильтрация для показа системных записей
     public function scopeOnlyFilial($query)
     {
-        return $query->Where('filial_status', '1');
+        return $query->where('parent_id', null);
     }
 
     public function getPhone($value) {
@@ -87,57 +86,52 @@ class Department extends Model
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'company_id',
-        'city_id',
-        'department_name',
-        'address',
-        'phone',
-        'department_parent_id',
-        'filial_status',
+        'location_id',
+        'name',
+        'parent_id',
         'filial_id',
+        'author_id',
+        'display',
+        'system-item',
     ];
 
-    // Получаем компанию.
+    // Компания
     public function company()
     {
         return $this->belongsTo('App\Company');
     }
 
-    // Получаем должности.
+    // Штат
     public function staff()
     {
         return $this->hasMany('App\Staffer');
     }
 
-    // Получаем вложенные отделы
-    public function childs()
-    {
-        return $this->hasMany('App\Department', 'parent_id', 'id');
-    }
+    // // Получаем вложенные отделы
+    // public function childs()
+    // {
+    //     return $this->hasMany('App\Department', 'parent_id', 'id');
+    // }
 
-    // Получаем город.
-    public function city()
-    {
-        return $this->belongsTo('App\City');
-    }
-
-    // Получаем роли филиала.
+    // Роли ???
     public function roles()
     {
         return $this->hasMany('App\Role');
     }
 
+    // Пользователи
     public function users()
     {
-        return $this->hasMany('App\User');
+        return $this->hasMany('App\User', 'filial_id');
     }
 
-    // Получаем локацию компании
+    // Локация
     public function location()
     {
         return $this->belongsTo('App\Location');
     }
 
-     // Получаем все графики на сотрудника
+     // Графики
     public function schedules()
     {
         return $this->morphToMany('App\Schedule', 'schedule_entities')->withPivot('mode');
@@ -169,7 +163,10 @@ class Department extends Model
     // Основной
     public function main_phone()
     {
-        return $this->morphToMany('App\Phone', 'phone_entity')->wherePivot('main', '=', 1)->whereNull('archive')->withPivot('archive');
+        return $this->morphToMany('App\Phone', 'phone_entity')
+        ->wherePivot('main', '=', 1)
+        ->whereNull('archive')
+        ->withPivot('archive');
     }
 
     public function getMainPhoneAttribute()

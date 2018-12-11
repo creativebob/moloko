@@ -22,11 +22,11 @@
                 beforeSend: function () {
                     item.siblings('.find-status').addClass('icon-load');
                 },
-                success: function(data){
+                success: function(count){
                     item.siblings('.find-status').removeClass('icon-load');
 
                     // Состояние ошибки
-                    if (data > 0) {
+                    if (count > 0) {
                         item.siblings('.item-error').show();
                     } else {
                         item.siblings('.item-error').hide();

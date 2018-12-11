@@ -50,6 +50,9 @@ class Region extends Model
         'name',
         'code',
         'vk_external_id',
+        'display',
+        'system_item',
+        'author_id'
     ];
 
     // Районы

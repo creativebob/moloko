@@ -51,7 +51,6 @@ class AlbumsCategoryController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            $id = $request->id;
             return view('includes.menu_views.category_list',
                 [
                     'items' => $albums_categories,
