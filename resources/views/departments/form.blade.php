@@ -32,7 +32,7 @@
 
                     <label>Название
                         @include('includes.inputs.name', ['value' => $department->name, 'required' => true])
-                        <div class="item-error">Такой {{ isset($parent_id) ? 'отдел' : 'филиал' }} уже существует в организации!</div>
+                            <div class="item-error">Такой {{ isset($parent_id) ? 'отдел' : 'филиал' }} уже существует в {{ isset($parent_id) ? 'филиале' : 'организации' }}!</div>
                     </label>
 
                     <label>Адресс

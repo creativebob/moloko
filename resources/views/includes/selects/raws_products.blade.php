@@ -1,0 +1,1 @@
+{{ Form::select('raws_product_id', $raws_products->pluck('name', 'id'), ($raws_product_id ?? null), ['id' => 'select-raws_products']) }}

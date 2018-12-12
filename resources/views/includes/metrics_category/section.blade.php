@@ -1,4 +1,5 @@
 @php
+$set_status = isset($set_status) ? $set_status : 'one';
 $metrics = ($set_status == 'one') ? 'one_metrics' : 'set_metrics';
 @endphp
 
@@ -20,9 +21,9 @@ $metrics = ($set_status == 'one') ? 'one_metrics' : 'set_metrics';
 			<tbody id="{{ $set_status }}-metrics-table">
 				{{-- Таблица метрик товара --}}
 
-				@if (count($goods_category->$metrics))
-				@foreach ($goods_category->$metrics as $metric)
-				@include('goods_categories.metrics.metric', ['metric' => $metric, 'set_status' => $set_status])
+				@if (count($category->$metrics))
+				@foreach ($category->$metrics as $metric)
+				@include('includes.metrics_category.metric', $metric)
 				@endforeach
 				@endif
 
@@ -31,19 +32,19 @@ $metrics = ($set_status == 'one') ? 'one_metrics' : 'set_metrics';
 	</div>
 	<div class="small-12 medium-4 cell">
 
-		{{ Form::open(['url' => '/add_goods_category_metric', 'id' => $set_status.'-properties-form', 'data-abide', 'novalidate']) }}
+		{{ Form::open(['url' => '/add_category_metric', 'id' => $set_status.'-properties-form', 'data-abide', 'novalidate']) }}
 		<fieldset>
 			<legend><a data-toggle="{{ $set_status }}-properties-dropdown">Добавить метрику</a></legend>
 			<div class="grid-x grid-padding-x" id="{{ $set_status }}-property-form"></div>
 		</fieldset>
 		{{ Form::hidden('set_status', $set_status) }}
-		{{ Form::hidden('entity_id', $goods_category->id) }}
+		{{ Form::hidden('entity_id', $category->id) }}
 		{{ Form::close() }}
 
 		{{-- Список свойств с метриками --}}
-		<div class="dropdown-pane" id="{{ $set_status }}-properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
+		<div class="dropdown-pane properties-dropdown" id="{{ $set_status }}-properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
 
-			@include('goods_categories.metrics.properties_form', ['properties' => $properties, 'set_status' => $set_status])
+			@include('includes.metrics_category.properties_form')
 
 		</div>
 	</div>
@@ -51,7 +52,7 @@ $metrics = ($set_status == 'one') ? 'one_metrics' : 'set_metrics';
 
 <script type="text/javascript">
 
-	let {{ $metrics }} = new Metrics("{{ $set_status }}", "goods_categories", "{{ $goods_category->id }}");
+	let {{ $metrics }} = new Metrics("{{ $set_status }}", "{{ $category->getTable() }}", "{{ $category->id }}");
 
 	// Таблица
 	$(document).on('click', "#{{ $set_status }}-metrics-table a[data-open=\"delete-metric\"]", function() {
@@ -78,6 +79,16 @@ $metrics = ($set_status == 'one') ? 'one_metrics' : 'set_metrics';
         event.preventDefault();
         {{ $metrics }}.addMetricValue();
     });
+
+
+    // При клике на свойство отображаем или скрываем его метрики
+    $(document).on('click', '.parent', function() {
+        // Скрываем все метрики
+        $('.checker-nested').hide();
+        // Показываем нужную
+        $('#' +$(this).data('open')).show();
+    });
+
 
 
 </script>

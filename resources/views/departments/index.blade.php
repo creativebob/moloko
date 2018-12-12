@@ -79,6 +79,8 @@
             // Если символов больше 3 - делаем запрос
             if (name.length > 3) {
 
+                // $(submit).prop('disabled', true);
+
                 // Сам ajax запрос
                 $.ajax({
                     url: "/admin/department_check",
@@ -118,7 +120,7 @@
             clearTimeout(timerId);
             timerId = setTimeout(function() {
                 departmentCheck (check);
-            }, 400);
+            }, 300);
         });
 
         // ----------- Добавление -------------
@@ -167,28 +169,24 @@
         });
 
 
-  // ------------------------ Кнопка обновления ---------------------------------------
-  $(document).on('click', '.submit-edit', function(event) {
-    event.preventDefault();
-
-    var id = $('#department-id').val();
-    // alert($(this).closest('form').serialize());
-
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/admin/departments/' + id,
-    type: "PATCH",
-    data: $(this).closest('form').serialize(),
-    success:function(html) {
-        // alert(html);
-        $('#content').html(html);
-        Foundation.reInit($('#content'));
-    }
-});
-});
+        // ------------------------ Кнопка обновления ---------------------------------------
+        $(document).on('click', '.submit-edit', function(event) {
+            var form = $(this).closest('form');
+            if (submitAjax(form.attr('id'))) {
+                $(this).prop('disabled', true);
+                $.ajax({
+                    url: '/admin/departments/' + form.find('#item-id').val(),
+                    type: "PATCH",
+                    data: form.serialize(),
+                    success:function(html) {
+                        form.closest('.reveal-overlay').remove();
+                        // alert(html);
+                        $('#content').html(html);
+                        Foundation.reInit($('#content'));
+                    }
+                });
+            };
+        });
 
         // ---------------------------------- Закрытие модалки -----------------------------------
         $(document).on('click', '.icon-close-modal', function() {

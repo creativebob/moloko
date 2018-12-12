@@ -95,7 +95,7 @@ class GoodsArticle extends Model
         return $this->belongsTo('App\Company', 'manufacturer_id');
     }
 
-    // Получаем альбом
+    // Альбом
     public function album()
     {
         return $this->belongsTo('App\Album');
@@ -113,7 +113,7 @@ class GoodsArticle extends Model
         return $this->belongsTo('App\Company');
     }
 
-    // Получаем автора
+    // Автор
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');

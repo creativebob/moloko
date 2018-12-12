@@ -151,88 +151,19 @@
 @include('raws.scripts')
 
 <script type="text/javascript">
-    // Обозначаем таймер для проверки
-    // var timerId;
-    // var time = 400;
-
-    // // Первая буква заглавная
-    // function newParagraph (name) {
-    //   name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
-    //   return name;
-    // };
-
-    //   // ------------------- Проверка на совпадение имени --------------------------------------
-    //   function rawsCheck (name, submit, db) {
-
-    //   // Блокируем аттрибут базы данных
-    //   $(db).val(0);
-
-    //   // Смотрим сколько символов
-    //   var lenname = name.length;
-
-    //     // Если символов больше 3 - делаем запрос
-    //     if (lenname > 3) {
-
-    //       // Первая буква сектора заглавная
-    //       name = newParagraph (name);
-
-    //       // Сам ajax запрос
-    //       $.ajax({
-    //         headers: {
-    //           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //         },
-    //         url: "/admin/raws_check",
-    //         type: "POST",
-    //         data: {name: name},
-    //         beforeSend: function () {
-    //           $('.find-status').addClass('icon-load');
-    //         },
-    //         success: function(date){
-    //           $('.find-status').removeClass('icon-load');
-    //           var result = $.parseJSON(date);
-    //           // Если ошибка
-    //           if (result.error_status == 1) {
-    //             $(submit).prop('disabled', true);
-    //             $('.item-error').css('display', 'block');
-    //             $(db).val(0);
-    //           } else {
-    //             // Выводим пришедшие данные на страницу
-    //             $(submit).prop('disabled', false);
-    //             $('.item-error').css('display', 'none');
-    //             $(db).val(1);
-    //           };
-    //         }
-    //       });
-    //     };
-    //     // Удаляем все значения, если символов меньше 3х
-    //     if (lenname <= 3) {
-    //       $(submit).prop('disabled', false);
-    //       $('.item-error').css('display', 'none');
-    //       $(db).val(0);
-    //     };
-    //   };
-
-    // ---------------------------- Продукция -----------------------------------------------
 
     // ----------- Добавление -------------
     // Открываем модалку
     $(document).on('click', '[data-open="modal-create"]', function() {
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/raws/create',
-            type: "GET",
-            success: function(html){
-
-                $('#modal').html(html);
-                $('#modal-create').foundation();
-                $('#modal-create').foundation('open');
-            }
+        $.get('/admin/raws/create', function(html){
+            $('#modal').html(html).foundation();
+            $('#modal-create').foundation('open');
         });
     });
 
+    // Закрываем модалку
     $(document).on('click', '.close-modal', function() {
+        // alert('lol');
         $('.reveal-overlay').remove();
     });
 </script>

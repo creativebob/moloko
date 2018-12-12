@@ -88,8 +88,8 @@ class RawsCategory extends Model
     }
 
     // Метрики
-    public function metrics()
+    public function one_metrics()
     {
-        return $this->morphToMany('App\Metric', 'metric_entity');
+        return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'one');
     }
 }

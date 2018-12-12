@@ -1,82 +1,90 @@
 <script type="text/javascript">
 
-    $(document).on('change', '#units-categories-list', function() {
-        var id = $(this).val();
-        // alert(id);
+    function setUnitAbbrevation(list) {
+        $('#unit-change').text($('#' + list + ' :selected').data('abbreviation'));
+        // alert($('#' + list + ' :selected').data('abbreviation'));
+    };
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/get_units_list',
-            type: "POST",
-            data: {units_category_id: id, entity: 'raws'},
-            success: function(html){
-                $('#units-list').html(html);
-                $('#units-list').prop('disabled', false);
-            }
+    // При смене категории единиц измерения меняем список единиц измерения
+    $(document).on('change', '#select-units_categories', function() {
+        $.post('/admin/get_units_list', {units_category_id: $(this).val()}, function(html){
+            $('#select-units').html(html);
+            setUnitAbbrevation('select-units');
         });
     });
 
-    $(document).on('change', '.mode-default', function() {
+    $(document).on('click', '.unit-change', function(event) {
+        event.preventDefault();
+        $('#units-block div').toggle();
+    });
+
+    $(document).on('change', '#select-units, #select-raws_products', function() {
+        setUnitAbbrevation($(this).attr('id'));
+    });
+
+    $(document).on('change', '#select-raws_categories', function() {
 
         // var id = $(this).val();
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_raws_modes',
-            type: "POST",
-            data: {mode: 'mode-default', raws_category_id: $('#raws-categories-list').val()},
-            success: function(html){
+        $.post('/admin/raws_products_create_mode', $('#form-raw-create').serialize(), function(html){
                 // alert(html);
                 $('#mode').html(html);
-                Foundation.reInit($('#form-raw-add'));
-            }
-        });
+                Foundation.reInit($('#form-raw-create'));
+            });
     });
 
     $(document).on('change', '.mode-select', function() {
-
-        var id = $(this).val();
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_raws_count',
-            type: "POST",
-            data: {id: id},
-            success: function(html){
-                // alert(html);
-                $('#mode').html(html);
-
-            }
+        $.post('/admin/ajax_raws_count', {id: $(this).val()}, function(html){
+            // alert(html);
+            $('#mode').html(html);
         });
+    });
+
+    $(document).on('click', '#set-status', function(event) {
+        // event.preventDefault();
+        var mode = $('input[name=mode]').val();
+
+        if (mode == 'mode-select') {
+            var checkbox_status = $(this).prop('checked');
+
+           let set_status = 'one';
+            // alert(set_status + ' ' + mode);
+            // alert(id);
+
+            $.post('/admin/raws_products_create_mode', {mode: mode, raws_category_id: $('#select-raws_categories').val(), set_status: set_status}, function(html){
+                $('#mode').html(html);
+                setUnitAbbrevation('select-raws_products');
+                Foundation.reInit($('#form-raw-create'));
+            });
+        }
     });
 
     $(document).on('click', '.modes', function(event) {
         event.preventDefault();
 
         var mode = $(this).attr('id');
-        // alert(id);
+        var checkbox_status = $('#set-status').prop('checked');
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_raws_modes',
-            type: "POST",
-            data: {mode: mode, raws_category_id: $('#raws-categories-list').val()},
-            success: function(html){
-                $('#raws-categories-list').removeAttr('class');
-                $('#raws-categories-list').addClass(mode);
-                // alert(html);
-                $('#mode').html(html);
-                Foundation.reInit($('#form-raw-add'));
+        if (checkbox_status == true) {
+            set_status = 'set';
+        } else {
+            set_status = 'one';
+        }
+        // alert(checkbox_status + ' ' + set_status);
 
+        $.post('/admin/raws_products_create_mode', {mode: mode, raws_category_id: $('#select-raws_categories').val(), set_status: set_status}, function(html){
+            $('#mode').html(html);
+            if (mode == 'mode-select') {
+                $('#unit-change').removeClass('unit-change');
+                $('#units-block div').hide();
+                setUnitAbbrevation('select-raws_products');
+                // $('#unit-change').text($('#select-goods_products').find(':selected').data('abbreviation'));
+            } else {
+                $('#unit-change').addClass('unit-change');
+                setUnitAbbrevation('select-units');
+                // $('#unit-change').text($('#select-units :selected').data('abbreviation'));
             }
+            Foundation.reInit($('#form-raw-create'));
         });
     });
 
@@ -84,14 +92,13 @@
         event.preventDefault();
 
         if ($('input[name=raws_product_name]').val() == $('input[name=name]').val()) {
-            $('.item-error').css('display', 'block');
+            $('.item-error').show();
             $('.modal-button').attr('disabled', true);
         } else {
-            $('.item-error').css('display', 'none');
+            $('.item-error').hide();
             $('.modal-button').attr('disabled', false);
         }
     });
-
 
 </script>
 

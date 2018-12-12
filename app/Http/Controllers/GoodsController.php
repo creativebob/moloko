@@ -3,27 +3,15 @@
 namespace App\Http\Controllers;
 
 // Модели
-use App\GoodsMode;
-use App\GoodsCategory;
-use App\GoodsProduct;
-use App\GoodsArticle;
 use App\Goods;
-
+use App\GoodsArticle;
+use App\GoodsProduct;
+use App\GoodsCategory;
 use App\RawsArticle;
 use App\Manufacturer;
-
 use App\Album;
-use App\AlbumEntity;
-
-use App\Photo;
-
-use App\UnitsCategory;
-use App\Unit;
-use App\Catalog;
 use App\Metric;
-
 use App\EntitySetting;
-use App\ArticleValue;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -34,8 +22,6 @@ use Illuminate\Support\Facades\Cookie;
 
 // Транслитерация
 use Transliterate;
-
-
 
 class GoodsController extends Controller
 {
@@ -49,14 +35,13 @@ class GoodsController extends Controller
         $this->model = 'App\Goods';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-        $this->type = 'edit';
     }
 
     public function index(Request $request)
     {
 
         // Подключение политики
-        $this->authorize('index', Goods::class);
+        $this->authorize('index', $this->class);
 
         // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_alias);
@@ -73,7 +58,12 @@ class GoodsController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------------
 
-        $goods = Goods::with('author', 'company', 'goods_article.goods_product.goods_category', 'catalogs.site')
+        $goods = Goods::with(
+            'author',
+            'company',
+            'goods_article.goods_product.goods_category',
+            'catalogs.site'
+        )
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -159,7 +149,7 @@ class GoodsController extends Controller
         ->moderatorLimit($answer_goods_categories)
         ->companiesLimit($answer_goods_categories)
         ->authors($answer_goods_categories)
-        ->systemItem($answer_goods_categories) // Фильтр по системным записям
+        ->systemItem($answer_goods_categories)
         ->orderBy('sort', 'asc')
         ->get();
 
@@ -196,7 +186,7 @@ class GoodsController extends Controller
             return view('ajax_error', compact('ajax_error'));
         }
 
-        $goods_products_count = $goods_categories[0]->goods_products_count;
+        $goods_products_count = $goods_categories->first()->goods_products_count;
         $parent_id = null;
 
         if ($request->cookie('conditions') != null) {
@@ -222,14 +212,18 @@ class GoodsController extends Controller
         $goods_categories_list = get_select_tree($goods_categories->keyBy('id')->toArray(), $parent_id, null, null);
         // echo $goods_categories_list;
 
-        return view('goods.create', ['cur_goods' => new $this->class, 'goods_categories_list' => $goods_categories_list, 'goods_products_count' => $goods_products_count]);
+        return view('goods.create', [
+            'cur_goods' => new $this->class,
+            'goods_categories_list' => $goods_categories_list,
+            'goods_products_count' => $goods_products_count
+        ]);
     }
 
     public function store(GoodsRequest $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Goods::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // dd($request);
 
@@ -310,10 +304,10 @@ class GoodsController extends Controller
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
 
                 // dd($request->quickly);
-                if ($request->quickly == 1) {
-                    return redirect('/admin/goods');
+                 if ($request->quickly == 1) {
+                    return redirect()->route('goods.index');
                 } else {
-                    return redirect('/admin/goods/'.$cur_goods->id.'/edit');
+                    return redirect()->route('goods.edit', ['id' => $cur_goods->id]);
                 }
             } else {
                 abort(403, 'Ошибка записи товара');

@@ -116,20 +116,11 @@ if($lead->manager_id == 1){
 	$(document).on('click', '#submit-appointed', function(event) {
 		event.preventDefault();
 
-		$.ajax({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
-			url: "/admin/lead_distribute",
-			type: "POST",
-			data: $(this).closest('form').serialize(),
-			success: function(date){
+		$(this).prop('disabled', true);
 
-				var url = '{{ url("admin/leads") }}/' + lead_id + '/edit';
-
-				window.location.replace(url);
-
-			}
+		$.post("/admin/lead_distribute", $(this).closest('form').serialize(), function(date){
+			let url = '{{ url("admin/leads") }}/' + lead_id + '/edit';
+			window.location.replace(url);
 		});
 	});
 

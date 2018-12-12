@@ -56,7 +56,7 @@ class GoodsCategory extends Model
         'editor_id',
     ];
 
-    // Получаем компании.
+    // Компания
     public function company()
     {
         return $this->belongsTo('App\Company');
@@ -68,7 +68,7 @@ class GoodsCategory extends Model
         return $this->hasMany('App\GoodsProduct');
     }
 
-    // Режим товара
+    // Режим
     public function goods_mode()
     {
         return $this->belongsTo('App\GoodsMode');
@@ -87,7 +87,7 @@ class GoodsCategory extends Model
         return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'one');
     }
 
-    // набор
+    // Набор
     public function set_metrics()
     {
         return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'set');

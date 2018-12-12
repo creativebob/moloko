@@ -142,146 +142,6 @@ class DepartmentController extends Controller
             'parent_id' => $request->parent_id,
             'filial_id' => $request->filial_id
         ]);
-
-        $department = new Department;
-
-
-        if (isset($request->parent_id)) {
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_departments = operator_right($this->entity_alias, $this->entity_dependence, 'index');
-
-            $department = Department::moderatorLimit($answer_departments)->where('id', $request->parent_id)->first();
-
-            if ($department->filial_status == 1) {
-
-                // Если филиал
-                $departments = Department::moderatorLimit($answer_departments)
-                ->companiesLimit($answer_departments)
-                ->filials($answer_departments) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-                ->authors($answer_departments)
-                ->systemItem($answer_departments) // Фильтр по системным записям
-                ->where('id', $request->parent_id)
-                ->orWhere('filial_id', $request->parent_id)
-                ->orderBy('sort', 'asc')
-                ->get(['id', 'name', 'filial_status', 'parent_id'])
-                ->keyBy('id')
-                ->toArray();
-
-                $filial_id = $department->id;
-            } else {
-
-                // Если отдел
-                $departments = Department::moderatorLimit($answer_departments)
-                ->companiesLimit($answer_departments)
-                ->filials($answer_departments) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-                ->authors($answer_departments)
-                ->systemItem($answer_departments) // Фильтр по системным записям
-                ->where('id', $department->filial_id)
-                ->orWhere('filial_id', $department->filial_id)
-                ->orderBy('sort', 'asc')
-                ->get(['id', 'name', 'filial_status', 'parent_id'])
-                ->keyBy('id')
-                ->toArray();
-
-                $filial_id = $department->filial_id;
-            }
-
-            // dd($departments);
-
-            // Не выносим в хелпер формирование списка, так так в филиалах не category_status, а filial_status
-
-            // Формируем дерево вложенности
-            $departments_cat = get_parents_tree($departments);
-
-            // echo json_encode($departments_cat);
-            // dd($departments_cat);
-
-            // Функция отрисовки option'ов
-            function tplMenu($item, $padding, $parent) {
-
-                $selected = '';
-                if ($item['id'] == $parent) {
-                    $selected = ' selected';
-                }
-                if ($item['filial_status'] == 1) {
-                    $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
-                } else {
-                    $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
-                }
-
-                // Добавляем пробелы вложенному элементу
-                if (isset($item['children'])) {
-                    $i = 1;
-                    for($j = 0; $j < $i; $j++){
-                        $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-                    }
-                    $i++;
-
-                    $menu .= showCat($item['children'], $padding, $parent);
-                }
-                return $menu;
-            }
-
-            // Рекурсивно считываем наш шаблон
-            function showCat($data, $padding, $parent){
-                $string = '';
-                $padding = $padding;
-                foreach($data as $item){
-                    $string .= tplMenu($item, $padding, $parent);
-                }
-                return $string;
-            }
-
-            // Получаем HTML разметку
-            $departments_list = showCat($departments_cat, '', $request->parent_id);
-
-            // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
-            // $departments_list = get_select_tree($departments, $request->parent_id, null, null);
-            // echo $departments_list;
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_staff = operator_right('staff', 'true', 'index');
-
-            // Смотрим на наличие должности в данном филиале, в массиве устанавливаем id должностей, которых не может быть более 1ой
-            $direction = Staffer::where(['position_id' => 1, 'filial_id' => $filial_id])->moderatorLimit($answer_staff)->count();
-
-            $repeat = [];
-
-            if ($direction == 1) {
-                $repeat[] = 1;
-            }
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer_positions = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-            // -------------------------------------------------------------------------------------------
-            // ГЛАВНЫЙ ЗАПРОС
-            // -------------------------------------------------------------------------------------------
-            $positions_list = Position::with('staff')->moderatorLimit($answer_positions)
-            ->companiesLimit($answer_positions)
-            ->filials($answer_positions) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-            ->authors($answer_positions)
-            ->systemItem($answer_positions) // Фильтр по системным записям
-            ->template($answer_positions) // Выводим шаблоны в список
-            ->whereNotIn('id', $repeat)
-            ->pluck('name', 'id');
-
-            $staffer = new Staffer;
-
-            // echo $positions_list;
-            // echo $department . ' ' . $positions_list . ' ' . $departments_list;
-
-            return view('departments.create-medium', compact('departments_list', 'positions_list', 'department', 'staffer'));
-        } else {
-
-
-            // Формируем пуcтой массив
-            $worktime = [];
-            for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
-
-                return view('departments.create-first', compact('department', 'worktime'));
-        }
     }
 
     public function store(DepartmentRequest $request)
@@ -364,138 +224,6 @@ class DepartmentController extends Controller
             'parent_id' => $department->parent_id,
             'category_id' => $department->category_id
         ]);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $department = Department::with('location', 'schedules.worktimes', 'main_phone')->moderatorLimit($answer)->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $department);
-
-        if(isset($department->schedules->first()->worktimes)){
-            $worktime_mass = $department->schedules->first()->worktimes->keyBy('weekday');
-        }
-
-        for($x = 1; $x<8; $x++){
-
-            if(isset($worktime_mass[$x]->worktime_begin)){
-
-                $worktime_begin = $worktime_mass[$x]->worktime_begin;
-                $str_worktime_begin = secToTime($worktime_begin);
-                $worktime[$x]['begin'] = $str_worktime_begin;
-
-            } else {
-
-                $worktime[$x]['begin'] = null;
-            }
-
-            if(isset($worktime_mass[$x]->worktime_interval)){
-
-                $worktime_interval = $worktime_mass[$x]->worktime_interval;
-
-                if(($worktime_begin + $worktime_interval) > 86400){
-
-                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval - 86400);
-                } else {
-
-                    $str_worktime_interval = secToTime($worktime_begin + $worktime_interval);
-                }
-
-                $worktime[$x]['end'] = $str_worktime_interval;
-            } else {
-
-                $worktime[$x]['end'] = null;
-            }
-
-        }
-
-        if ($department->filial_status == 1) {
-
-            // Меняем филиал
-            return view('departments.edit-first', compact('department', 'worktime'));
-        } else {
-
-            // Меняем отдел
-            $item_id = $department->id;
-            $filial_id = $department->filial_id;
-            $parent_id = $department->parent_id;
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
-
-            // Главный запрос
-            $departments = Department::moderatorLimit($answer)
-            ->where('id', $filial_id)
-            ->orWhere('filial_id', $filial_id)
-            ->orderBy('sort', 'asc')
-            ->get(['id', 'name', 'filial_status', 'parent_id'])
-            ->keyBy('id')
-            ->toArray();
-
-            // echo $departments;
-
-            // Не выносим в хелпер формирование списка, так так в филиалах не category_status, а filial_status
-
-            // Формируем дерево вложенности
-            $departments_cat = get_parents_tree($departments);
-
-            // echo json_encode($departments_cat, JSON_UNESCAPED_UNICODE);
-
-            // Функция отрисовки option'ов
-            function tplMenu($item, $padding, $id, $parent) {
-
-                // echo json_encode($item, JSON_UNESCAPED_UNICODE);
-                // Убираем из списка пришедший отдел
-                if ($item['id'] != $id) {
-
-                    $selected = '';
-                    if ($item['id'] == $parent) {
-                        $selected = ' selected';
-                    }
-                    if ($item['filial_status'] == 1) {
-                        $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$item['name'].'</option>';
-                    } else {
-                        $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
-                    }
-
-                    // Добавляем пробелы вложенному элементу
-                    if (isset($item['children'])) {
-                        $i = 1;
-                        for($j = 0; $j < $i; $j++){
-                            $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-                        }
-                        $i++;
-
-                        $menu .= showCat($item['children'], $padding, $id, $parent);
-                    }
-                    return $menu;
-                }
-            }
-
-            // Рекурсивно считываем наш шаблон
-            function showCat($data, $padding, $id, $parent){
-                $string = '';
-                $padding = $padding;
-
-                foreach($data as $item){
-                    $string .= tplMenu($item, $padding, $id, $parent);
-                }
-                return $string;
-            }
-
-            // echo $item_id . ' ' . json_encode($departments_cat, JSON_UNESCAPED_UNICODE);
-
-            // echo $parent_id;
-            // Получаем HTML разметку
-            $departments_list = showCat($departments_cat, '', $item_id, $parent_id);
-
-            // echo json_encode($departments_list);
-            // echo $department . ' ' . $departments_list;
-
-            return view('departments.edit-medium', compact('department', 'departments_list', 'worktime'));
-        }
     }
 
     public function update(DepartmentRequest $request, $id)
@@ -506,7 +234,7 @@ class DepartmentController extends Controller
         ;
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $department = Department::with('location', 'schedules.worktimes')->moderatorLimit($answer)->findOrFail($id);
+        $department = Department::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $department);
@@ -514,8 +242,6 @@ class DepartmentController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Скрываем бога
-        $user_id = hideGod($user);
 
         if (isset($department->location_id)) {
 
@@ -532,7 +258,7 @@ class DepartmentController extends Controller
         // Телефон
         $phones = add_phones($request, $department);
 
-        $department->editor_id = $user_id;
+        $department->editor_id = hideGod($user);
 
         $status = 'филиала';
         if ($request->medium_item == 1) {
@@ -545,40 +271,14 @@ class DepartmentController extends Controller
 
         $department->save();
 
-        // Если не существует расписания для компании - создаем его
-        if($department->schedules->count() < 1){
-
-            $schedule = new Schedule;
-            $schedule->company_id = $user->company_id;
-            $schedule->name = 'График работы для '.$status.': ' . $department->name;
-            $schedule->description = null;
-            $schedule->save();
-
-            // Создаем связь расписания с компанией
-            $schedule_entity = new ScheduleEntity;
-            $schedule_entity->schedule_id = $schedule->id;
-            $schedule_entity->entity_id = $department->id;
-            $schedule_entity->entity = 'departments';
-            $schedule_entity->save();
-
-            $schedule_id = $schedule->id;
-        } else {
-
-            $schedule_id = $department->schedules->first()->id;
-        }
-
-        // Функция getWorktimes ловит все поля расписания из запроса и готовит к записи в worktimes
-        $mass_time = getWorktimes($request, $schedule_id);
-
-        // Удаляем все записи времени в worktimes для этого расписания
-        $worktimes = Worktime::where('schedule_id', $schedule_id)->forceDelete();
-
-        // Вставляем новое время в расписание
-        DB::table('worktimes')->insert($mass_time);
-
         if ($department) {
+            // Расписание
+            setSchedule($request, $department);
+
+            // Телефон
+            add_phones($request, $department);
             // Переадресовываем на index
-            return redirect()->action('DepartmentController@index', ['id' => $department->id, 'item' => 'department']);
+            return redirect()->route('departments.index', ['id' => $department->id, 'item' => $this->entity_alias]);
         } else {
             abort(403, 'Ошибка при обновлении отдела!');
         }

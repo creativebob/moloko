@@ -71,6 +71,7 @@
 
         addMetric() {
             // alert($('#properties-form').serialize());
+            let entity = this.entity;
             let entity_id = this.entity_id;
             let set_status = this.set_status;
 
@@ -80,16 +81,22 @@
                 $('#' + set_status + '-property-form').html('');
 
                 // В случае успеха обновляем список метрик
-                $.post('/admin/goods_categories/' + goods_category_id + '/edit', {set_status: 'one'}, function(html){
-                    // alert(html);
-                    $('#one-properties-dropdown').html(html);
-                });
-
-                // В случае успеха обновляем список метрик
-                $.post('/admin/goods_categories/' + goods_category_id + '/edit', {set_status: 'set'}, function(html){
-                    // alert(html);
-                    $('#set-properties-dropdown').html(html);
-                });
+                if ($('.properties-dropdown').length == 1) {
+                    $.post('/admin/' + entity + '/' + entity_id + '/edit', {set_status: set_status}, function(html){
+                        // alert(html);
+                        $('.properties-dropdown').html(html);
+                    });
+                } else {
+                    $.post('/admin/' + entity + '/' + entity_id + '/edit', {set_status: 'one'}, function(html){
+                        // alert(html);
+                        $('#one-properties-dropdown').html(html);
+                    });
+                    // В случае успеха обновляем список метрик
+                    $.post('/admin/' + entity + '/' + entity_id + '/edit', {set_status: 'set'}, function(html){
+                        // alert(html);
+                        $('#set-properties-dropdown').html(html);
+                    });
+                }
             })
         }
 

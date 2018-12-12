@@ -29,13 +29,21 @@ $disabled = $cur_goods->goods_article->draft == null;
 <div class="grid-x tabs-wrap">
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
-            <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
-            <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
-
-            <li class="tabs-title"><a data-tabs-target="catalogs" href="#catalogs">Каталоги</a></li>
-
-            <li class="tabs-title"><a data-tabs-target="compositions" href="#compositions">Состав</a></li>
-            <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li>
+            <li class="tabs-title is-active">
+                <a href="#options" aria-selected="true">Общая информация</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tabs-target="catalogs" href="#catalogs">Каталоги</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tabs-target="compositions" href="#compositions">Состав</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tabs-target="photos" href="#photos">Фотографии</a>
+            </li>
         </ul>
     </div>
 </div>
@@ -44,7 +52,14 @@ $disabled = $cur_goods->goods_article->draft == null;
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            {{ Form::model($cur_goods, ['url' => ['/admin/goods/'.$cur_goods->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'cur_goods-form']) }}
+            {{ Form::model($cur_goods, [
+                'route' => ['goods.update', $cur_goods->id],
+                'data-abide',
+                'novalidate',
+                'files' => 'true',
+                'id' => 'form-cur_goods'
+            ]
+            ) }}
             {{ method_field('PATCH') }}
 
             {{-- Общая информация --}}
@@ -97,7 +112,7 @@ $disabled = $cur_goods->goods_article->draft == null;
 
                     {{-- Правый блок на первой вкладке --}}
                     <div class="small-12 large-6 cell">
-                        {{ Form::open(['url' => 'goods', 'data-abide', 'novalidate', 'id' => 'cur_goods-form']) }}
+                        {{ Form::open(['url' => 'goods', 'data-abide', 'novalidate', 'id' => 'form-cur_goods']) }}
 
                         <fieldset class="fieldset-access">
                             <legend>Артикул</legend>
@@ -127,7 +142,7 @@ $disabled = $cur_goods->goods_article->draft == null;
                         <div class="grid-x">
                             <div class="small-12 cell">
                                 <label>Описание товара
-                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$cur_goods->description])
+                                    @include('includes.inputs.textarea', ['name'=>'description', 'value' => $cur_goods->description])
                                 </label>
                             </div>
                         </div>
@@ -190,7 +205,7 @@ $disabled = $cur_goods->goods_article->draft == null;
                         {{ Form::submit('Редактировать товар', ['class'=>'button', 'id' => 'add-cur-goods']) }}
                     </div>
 
-                </div>{{-- Закрытие разделителя на блоки --}}
+                </div>
             </div>
 
             {{-- Ценообразование --}}
@@ -245,6 +260,7 @@ $disabled = $cur_goods->goods_article->draft == null;
                                 </div>
                             </div>
                         </fieldset>
+
                     </div>
                 </div>
             </div>
@@ -467,7 +483,7 @@ $disabled = $cur_goods->goods_article->draft == null;
         // Убираем отмеченный чекбокс в списке метрик
         $('#add-composition-' + id).prop('checked', false);
 
-        // Foundation.reInit($('#cur_goods-form'));
+        // Foundation.reInit($('#form-cur_goods'));
     });
 
     // При клике на удаление состава со страницы
@@ -480,7 +496,7 @@ $disabled = $cur_goods->goods_article->draft == null;
     // Проверяем наличие артикула в базе при клике на кнопку добавления артикула
     // $(document).on('click', '#add-cur-goods', function(event) {
     //     event.preventDefault();
-    //     // alert($('#cur_goods-form').serialize());
+    //     // alert($('#form-cur_goods').serialize());
     //     // alert(cur_goods_id);
 
     //     $.ajax({
@@ -489,7 +505,7 @@ $disabled = $cur_goods->goods_article->draft == null;
     //         },
     //         url: '/admin/goods/' + cur_goods_id,
     //         type: 'PATCH',
-    //         data: $('#cur_goods-form').serialize(),
+    //         data: $('#form-cur_goods').serialize(),
     //         success: function(data) {
     //             var result = $.parseJSON(data);
     //             // alert(result['error_status']);
@@ -504,7 +520,7 @@ $disabled = $cur_goods->goods_article->draft == null;
     //     })
     // });
 
-    // $(document).on('change', '#cur_goods-form input', function() {
+    // $(document).on('change', '#form-cur_goods input', function() {
     //     // alert('lol');
     //     $('#add-cur-goods').prop('disabled', false);
     //     $('#cur-goods-error').hide();
@@ -541,7 +557,7 @@ $disabled = $cur_goods->goods_article->draft == null;
             $('#property-form').html('');
 
             // В случае успеха обновляем список метрик
-            $.get('/admin/goods/' + cur_goods_id + '/edit', $('#cur_goods-form').serialize(), function(html) {
+            $.get('/admin/goods/' + cur_goods_id + '/edit', $('#form-cur_goods').serialize(), function(html) {
                 // alert(html);
                 $('#properties-dropdown').html(html);
             })
@@ -642,7 +658,7 @@ $disabled = $cur_goods->goods_article->draft == null;
                 error = error + 1;
             };
         });
-        $('#cur_goods-form').foundation('validateForm');
+        $('#form-cur_goods').foundation('validateForm');
         if (error > 0) {
             event.preventDefault();
         }

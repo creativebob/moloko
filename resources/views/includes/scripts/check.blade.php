@@ -1,4 +1,11 @@
+@isset ($entity)
+    <script>
+        var entity = '{{ $entity }}';
+    </script>
+@endisset
 <script type="text/javascript">
+
+
 
     // ------------------- Проверка на совпадение имени --------------------------------------
     function checkField (check, entity_alias = null, field = null) {

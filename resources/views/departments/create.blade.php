@@ -55,7 +55,7 @@
 
 						<label>Название
 							@include('includes.inputs.name', ['value' => $department->name, 'required' => true])
-							<div class="item-error">Такой {{ isset($parent_id) ? 'отдел' : 'филиал' }} уже существует в организации!</div>
+							<div class="item-error">Такой {{ isset($parent_id) ? 'отдел' : 'филиал' }} уже существует в {{ isset($parent_id) ? 'филиале' : 'организации' }}!</div>
 						</label>
 
 						<label>Адресс
@@ -114,8 +114,11 @@
 						{{-- @include('includes.control.checkboxes', ['item' => $staffer]) --}}
 
 						{{ Form::hidden('filial_id', 0, ['class' => 'filial-id']) }}
+
+						@include('includes.control.checkboxes', ['item' => new App\Staffer])
 					</div>
 				</div>
+
 				<div class="grid-x align-center">
 					<div class="small-6 medium-4 cell">
 						{{ Form::submit('Добавить должность', ['class'=>'button modal-button', 'id'=>'submit-staffer-create']) }}

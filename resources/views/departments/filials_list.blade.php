@@ -166,7 +166,7 @@ $drop = 1;
     };
 };
 
-if ('{{ $item }}' == 'staffer') {
+if ('{{ $item }}' == 'staff') {
 
   if ($('#staff-{{ $id }}').hasClass('medium-as-last')) {
           // Открываем вышестоящий

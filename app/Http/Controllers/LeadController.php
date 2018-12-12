@@ -1235,13 +1235,13 @@ class LeadController extends Controller
 
         $users_list = [];
         foreach ($users as $user) {
-            if (isset($user->staff[0]->position->name)) {
-                $position = $user->staff[0]->position->name;
+            if (isset($user->staff->first()->position->name)) {
+                $position = $user->staff->first()->position->name;
             } else {
                 $position = 'Cyberdyne Systems 101 серии 800';
             }
 
-            $users_list[$user->id] = $user->second_name . ' ' . $user->first_name . ' (' . $position . ')';
+            $users_list[$user->id] = $user->name . ' (' . $position . ')';
         }
 
         // dd($users_list);

@@ -24,6 +24,7 @@ class CreateRawsProductsTable extends Migration
             $table->string('photo_id')->index()->nullable()->comment('Обложка сырья');
             // $table->foreign('photo_id')->references('id')->on('photos');
 
+            $table->enum('set_status', ['one', 'set'])->comment('Статус набора (Один/набор)');
 
             $table->text('description')->nullable()->comment('Описание сырья');
 
@@ -36,10 +37,9 @@ class CreateRawsProductsTable extends Migration
             $table->integer('raws_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться сырье');
             $table->foreign('raws_category_id')->references('id')->on('raws_categories');
 
-
             $table->integer('album_id')->nullable()->unsigned()->comment('ID альбома');
             $table->foreign('album_id')->references('id')->on('albums');
-            
+
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -50,8 +50,8 @@ class CreateRawsProductsTable extends Migration
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
 
-            $table->timestamps();
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
+            $table->timestamps();
             $table->softDeletes();
         });
     }

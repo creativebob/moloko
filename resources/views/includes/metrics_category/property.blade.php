@@ -4,7 +4,7 @@
 		<ul class="checker">
 			@foreach ($property->metrics as $metric)
 
-			@include('goods_categories.metrics.metrics', ['metric' => $metric, 'set_status' => $set_status])
+			@include('includes.metrics_category.metrics', ['metric' => $metric, 'set_status' => $set_status])
 			@endforeach
 		</ul>
 	</div>

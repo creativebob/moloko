@@ -25,12 +25,15 @@ use App\Http\ViewComposers\MenuViewComposer;
 use App\Http\ViewComposers\DepartmentsViewComposer;
 // use App\Http\ViewComposers\SectorsComposer;
 use App\Http\ViewComposers\GoodsCategoriesComposer;
+use App\Http\ViewComposers\RawsCategoriesComposer;
 use App\Http\ViewComposers\GoodsProductsComposer;
+use App\Http\ViewComposers\RawsProductsComposer;
 // use App\Http\ViewComposers\AlbumsCategoriesComposer;
 
 use App\Http\ViewComposers\UsersComposer;
 use App\Http\ViewComposers\StaffComposer;
 use App\Http\ViewComposers\PositionsComposer;
+use App\Http\ViewComposers\PropertiesComposer;
 
 
 class ComposerServiceProvider extends ServiceProvider
@@ -56,6 +59,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.staff', StaffComposer::class);
 
         view()->composer('includes.selects.positions', PositionsComposer::class);
+        view()->composer('includes.metrics_category.properties_list', PropertiesComposer::class);
 
         view()->composer('includes.selects.catalogs', CatalogsSelectComposer::class);
 
@@ -69,7 +73,9 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('departments.filials_list', DepartmentsViewComposer::class);
         // view()->composer('includes.selects.sectors', SectorsComposer::class);
         view()->composer('includes.selects.goods_categories', GoodsCategoriesComposer::class);
+        view()->composer('includes.selects.raws_categories', RawsCategoriesComposer::class);
         view()->composer('includes.selects.goods_products', GoodsProductsComposer::class);
+        view()->composer('includes.selects.raws_products', RawsProductsComposer::class);
         // view()->composer('includes.selects.albums_categories', AlbumsCategoriesComposer::class);
     }
 

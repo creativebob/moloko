@@ -280,7 +280,7 @@ Route::resource('/metrics', 'MetricController')->middleware('auth');
 Route::post('/ajax_store_metric', 'MetricController@ajax_store')->middleware('auth');
 
 // Добавляем / удаляем связь сущности с метрикой
-Route::match(['get', 'post'], '/ajax_add_relation_metric', 'MetricController@ajax_add_relation')->middleware('auth');
+Route::match(['get', 'post'], '/ajax_add_relation_metric', 'MetricController@ajax_add_relation')->middleware('auth')->name('metrics.add_relation');
 Route::any('/ajax_delete_relation_metric', 'MetricController@ajax_delete_relation')->middleware('auth');
 
 Route::post('/ajax_add_metric_value', 'MetricController@add_metric_value')->middleware('auth');
@@ -301,6 +301,7 @@ Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middlew
 
 // Текущая добавленная/удаленная категория
 Route::any('/raws_categories', 'RawsCategoryController@index')->middleware('auth');
+Route::match(['get', 'post'], '/raws_categories/{id}/edit', 'RawsCategoryController@edit')->middleware('auth');
 // Основные методы
 Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth');
 
@@ -311,6 +312,8 @@ Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth'
 Route::resource('/raws_products', 'RawsProductController')->middleware('auth');
 
 Route::any('/ajax_raws_count', 'RawsProductController@ajax_count')->middleware('auth');
+Route::any('/raws_products_create_mode', 'RawsProductController@ajax_change_create_mode')->middleware('auth');
+
 Route::any('/ajax_raws_modes', 'RawsProductController@ajax_modes')->middleware('auth');
 
 

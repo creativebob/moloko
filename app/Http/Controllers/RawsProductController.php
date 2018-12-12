@@ -297,41 +297,6 @@ class RawsProductController extends Controller
         }
     }
 
-    // Проверка наличия в базе
-    public function ajax_check(Request $request)
-    {
-        $user = $request->user();
-
-        // Проверка отдела в нашей базе данных
-        $raws_product = RawsProduct::where(['name' => $request->name, 'company_id' => $user->company_id])->first();
-
-        // Если такое название есть
-        if ($raws_product) {
-            $result = [
-                'error_status' => 1,
-            ];
-
-        // Если нет
-        } else {
-            $result = [
-                'error_status' => 0
-            ];
-        }
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->raws_products as $item) {
-            RawsProduct::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
     // Добавление фоток
     public function product_photos(Request $request, $id)
     {
@@ -351,51 +316,6 @@ class RawsProductController extends Controller
 
         return view('products.photos', compact('page_info', 'product'));
 
-    }
-
-    // -------------------------------------- Exel ------------------------------------------
-    public function raws_products_download($type)
-    {
-        $data = RawsProduct::get(['name', 'description'])->toArray();
-        // dd($data);
-
-        return Excel::create('raws_products-'.Carbon::now()->format('d.m.Y'), function($excel) use ($data) {
-            $excel->sheet('Группы товаров', function($sheet) use ($data)
-            {
-                $sheet->fromArray($data);
-            });
-        })->download($type);
-    }
-
-    public function raws_products_import(Request $request)
-    {
-        if($request->hasFile('file')) {
-
-            // Получаем данные для авторизованного пользователя
-            $user = $request->user();
-
-            // Смотрим компанию пользователя
-            $company_id = $user->company_id;
-
-            // Скрываем бога
-            $user_id = hideGod($user);
-
-            Excel::load($request->file('file')->getRealPath(), function ($reader) use ($user_id, $company_id){
-                foreach ($reader->toArray() as $key => $row) {
-                    $data['company_id'] = $company_id;
-                    $data['name'] = $row['name'];
-                    $data['description'] = $row['description'];
-                    $data['raws_category_id'] = $row['raws_category_id'];
-                    $data['author_id'] = $user_id;
-
-                    if(!empty($data)) {
-                        DB::table('raws_products')->insert($data);
-                    }
-                }
-            });
-        }
-
-        return back();
     }
 
     public function ajax_count(Request $request)
@@ -427,7 +347,7 @@ class RawsProductController extends Controller
         }
     }
 
-    public function ajax_modes(Request $request)
+    public function ajax_change_create_mode(Request $request)
     {
         $mode = $request->mode;
         $raws_category_id = $request->raws_category_id;
@@ -440,26 +360,40 @@ class RawsProductController extends Controller
 
             $raws_category = RawsCategory::withCount('raws_products')->find($raws_category_id);
             $raws_products_count = $raws_category->raws_products_count;
-
-            return view('raws.mode-default', compact('raws_products_count'));
+            return view('raws.create_modes.mode_default', compact('raws_products_count'));
 
             break;
 
             case 'mode-select':
 
-            $raws_products_list = RawsProduct::where('raws_category_id', $raws_category_id)->get()->pluck('name', 'id');
-            return view('raws.mode-select', compact('raws_products_list'));
+            $raws_products = RawsProduct::with('unit')
+            ->where([
+                'raws_category_id' => $raws_category_id,
+                'set_status' => $request->set_status
+            ])
+            ->get(['id', 'name', 'unit_id']);
+            return view('raws.create_modes.mode_select', compact('raws_products'));
 
             break;
 
             case 'mode-add':
 
-            return view('raws.mode-add');
+            return view('raws.create_modes.mode_add');
 
             break;
 
         }
-   }
+    }
+
+    public function ajax_get_products_list(Request $request)
+    {
+
+        $raws_products = GoodsProduct::where(['raws_category_id' => $request->raws_category_id, 'set_status' => $request->set_status])
+        ->orWhere('id', $request->raws_product_id)
+        ->get(['id', 'name']);
+
+        return view('includes.selects.raws_products', ['raws_products' => $raws_products, 'raws_product_id' => $request->raws_product_id, 'set_status' => $request->set_status]);
+    }
 
 
 }

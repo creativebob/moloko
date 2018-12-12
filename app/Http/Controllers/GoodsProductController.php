@@ -16,9 +16,6 @@ use App\List_item;
 use Illuminate\Http\Request;
 use App\Http\Requests\GoodsProductRequest;
 
-// Политика
-use App\Policies\GoodsProductPolicy;
-
 // Общие классы
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
@@ -30,38 +27,47 @@ use DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\ImageManagerStatic as Image;
 
-// На удаление
-use Illuminate\Support\Facades\Auth;
-
 class GoodsProductController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'goods_products';
-    protected $entity_dependence = false;
+    // Настройки сконтроллера
+    public function __construct(GoodsProduct $goods_product)
+    {
+        $this->middleware('auth');
+        $this->goods_product = $goods_product;
+        $this->class = GoodsProduct::class;
+        $this->model = 'App\GoodsProduct';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+    }
 
     public function index(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), GoodsProduct::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_name);
+        $filter_url = autoFilter($request, $this->entity_alias);
         if(($filter_url != null)&&($request->filter != 'active')){
 
-            Cookie::queue(Cookie::forget('filter_' . $this->entity_name));
+            Cookie::queue(Cookie::forget('filter_' . $this->entity_alias));
             return Redirect($filter_url);
         }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // -----------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------------
 
-        $goods_products = GoodsProduct::with('author', 'company', 'goods_category', 'goods_articles.goods')
+        $goods_products = GoodsProduct::with(
+            'author',
+            'company',
+            'goods_category',
+            'goods_articles.goods'
+        )
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -78,7 +84,7 @@ class GoodsProductController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             'author',               // Автор записи
             'goods_category',       // Категория товара
             'booklist'              // Списки пользователя
@@ -87,19 +93,19 @@ class GoodsProductController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
-        return view('goods_products.index', compact('goods_products', 'page_info', 'product', 'filter'));
+        return view('goods_products.index', compact('goods_products', 'page_info', 'filter'));
     }
 
     public function create(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), GoodsProduct::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $answer_goods_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_goods_products = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $goods_product = new GoodsProduct;
 
@@ -125,7 +131,7 @@ class GoodsProductController extends Controller
         $goods_categories_list = get_select_tree($goods_categories, 1, null, null);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         return view('goods_products.create', compact('goods_product', 'page_info', 'goods_categories_list'));
     }
@@ -175,7 +181,7 @@ class GoodsProductController extends Controller
     {
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $answer_goods_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_goods_products = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $goods_product = GoodsProduct::with(['goods_category'])
         ->moderatorLimit($answer_goods_products)
@@ -206,7 +212,7 @@ class GoodsProductController extends Controller
         $goods_categories_list = get_select_tree($goods_categories, $goods_product->goods_category_id, null, null);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
 
 
@@ -225,7 +231,7 @@ class GoodsProductController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $goods_product = GoodsProduct::moderatorLimit($answer)->findOrFail($id);
@@ -246,10 +252,10 @@ class GoodsProductController extends Controller
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
             if ($goods_product->photo_id) {
-                $array = save_photo($request, $directory, $name, null, $goods_product->photo_id, $this->entity_name);
+                $array = save_photo($request, $directory, $name, null, $goods_product->photo_id, $this->entity_alias);
 
             } else {
-                $array = save_photo($request, $directory, $name, null, null, $this->entity_name);
+                $array = save_photo($request, $directory, $name, null, null, $this->entity_alias);
 
             }
             $photo = $array['photo'];
@@ -284,7 +290,7 @@ class GoodsProductController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $goods_product = GoodsProduct::with('goods')->moderatorLimit($answer)->findOrFail($id);
@@ -315,35 +321,12 @@ class GoodsProductController extends Controller
         }
     }
 
-    // Проверка наличия в базе
-    public function ajax_check(Request $request)
-    {
-        $user = $request->user();
-
-        // Проверка отдела в нашей базе данных
-        $goods_product = GoodsProduct::where(['name' => $request->name, 'company_id' => $user->company_id])->first();
-
-        // Если такое название есть
-        if ($goods_product) {
-            $result = [
-                'error_status' => 1,
-            ];
-
-        // Если нет
-        } else {
-            $result = [
-                'error_status' => 0
-            ];
-        }
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
     // Добавление фоток
     public function product_photos(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $product = Product::with('album.photos')->moderatorLimit($answer)->findOrFail($id);
@@ -353,7 +336,7 @@ class GoodsProductController extends Controller
         $this->authorize(getmethod('edit'), $product);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         return view('products.photos', compact('page_info', 'product'));
 
