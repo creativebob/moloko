@@ -26,7 +26,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" class="content-albums" data-sticky-container data-entity-alias="albums">
+    <table class="content-table tablesorter" id="content" class="content-albums" data-sticky-container data-entity-alias="albums">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -52,9 +52,9 @@
 
             <input type="checkbox" class="table-check" name="album_id" id="check-{{ $album->id }}"
             @if(!empty($filter['booklist']['booklists']['default']))
-            @if (in_array($album->id, $filter['booklist']['booklists']['default'])) checked 
+            @if (in_array($album->id, $filter['booklist']['booklists']['default'])) checked
             @endif
-            @endif 
+            @endif
             ><label class="label-check" for="check-{{ $album->id }}"></label></td>
             <td>
               <a href="/admin/albums/{{ $album->alias }}">
@@ -82,14 +82,14 @@
 
             {{-- Элементы управления --}}
           @include('includes.control.table-td', ['item' => $album])
-          
+
             <td class="td-delete">
               @if (($album->system_item != 1) && ($album->photos_count == 0))
               @can('delete', $album)
               <a class="icon-delete sprite" data-open="item-delete"></a>
               @endcan
               @endif
-            </td>       
+            </td>
           </tr>
           @endforeach
           @endif

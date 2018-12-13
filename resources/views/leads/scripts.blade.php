@@ -5,7 +5,7 @@
 
     CKEDITOR.replace('content-ckeditor');
 
-  // Конфигурация 
+  // Конфигурация
   CKEDITOR.config.toolbar = [
   ['Bold', 'Italic', 'NumberedList', 'BulletedList', 'Maximize', 'Source']
   ];
@@ -44,7 +44,7 @@ $(function() {
       type: "POST",
       data: $(this).closest('form').serialize(),
       success: function(html){
-          $('.table-content > tbody').append(html);
+          $('.content-table > tbody').append(html);
       }
   });
   });

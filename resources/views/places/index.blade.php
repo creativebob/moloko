@@ -26,7 +26,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="places">
+    <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="places">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -52,7 +52,7 @@
         {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
         @if(!empty($filter['booklist']['booklists']['default']))
         {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-        @if (in_array($place->id, $filter['booklist']['booklists']['default'])) checked 
+        @if (in_array($place->id, $filter['booklist']['booklists']['default'])) checked
         @endif
         @endif
         ><label class="label-check" for="check-{{ $place->id }}"></label>
@@ -71,7 +71,7 @@
           @endif
           {{ $place->name }}
           @if($edit == 1)
-      </a> 
+      </a>
       @endif
   </td>
   <td class="td-description">{{ $place->description }} </td>
@@ -86,10 +86,10 @@
   <td class="td-delete">
     @if ($place->system_item != 1)
     @can('delete', $place)
-    <a class="icon-delete sprite" data-open="item-delete"></a>  
+    <a class="icon-delete sprite" data-open="item-delete"></a>
     @endcan
     @endif
-  </td> 
+  </td>
 </tr>
 @endforeach
 @endif

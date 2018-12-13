@@ -47,31 +47,52 @@ class Raw extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
+    protected $fillable = [
+        'company_id',
+        'raws_article_id',
+        'description',
+        'manually',
+        'external',
+        'manufacturer_id',
+        'cost',
+        'price',
+        'album_id',
+        'photo_id',
 
+        'portion_status',
+        'portion_name',
+        'portion_abbreviation',
+        'portion_count',
 
+        'author_id',
+        'editor_id',
+    ];
+
+    // Артикул сырья
     public function raws_article()
     {
         return $this->belongsTo('App\RawsArticle');
     }
 
-    // Получаем компанию.
+    // Компания
     public function company()
     {
         return $this->belongsTo('App\Company');
     }
 
-    // Получаем автора
+    // Автор
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');
     }
 
-    // Получаем альбом
+    // Альбом
     public function album()
     {
         return $this->belongsTo('App\Album');
     }
 
+    // Аватар
     public function photo()
     {
         return $this->belongsTo('App\Photo');
@@ -83,8 +104,4 @@ class Raw extends Model
         return $this->morphToMany('App\Catalog', 'catalog_products');
     }
 
-    public function getRaw($answer, $id)
-    {
-        return $this->with('raws_article.raws_product')->moderatorLimit($answer)->findOrFail($id);
-    }
 }

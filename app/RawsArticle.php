@@ -15,7 +15,7 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use App\Scopes\Traits\SuppliersTraitScopes;
 
-// use Illuminate\Support\Facades\Auth;
+use App\Scopes\Traits\ManufacturersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
@@ -40,7 +40,8 @@ class RawsArticle extends Model
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
-    use SuppliersTraitScopes;
+
+    use ManufacturersTraitScopes;
 
     // Фильтры
     use Filter;

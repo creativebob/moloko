@@ -26,7 +26,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter content-posts" id="content" data-sticky-container data-entity-alias="posts">
+    <table class="content-table tablesorter content-posts" id="content" data-sticky-container data-entity-alias="posts">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -52,7 +52,7 @@
             {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
             @if(!empty($filter['booklist']['booklists']['default']))
             {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-            @if (in_array($post->id, $filter['booklist']['booklists']['default'])) checked 
+            @if (in_array($post->id, $filter['booklist']['booklists']['default'])) checked
             @endif
             @endif
             >
@@ -91,7 +91,7 @@
 
   {{-- Элементы управления --}}
             @include('includes.control.table-td', ['item' => $post])
-            
+
   <td class="td-delete">
     @if ($post->system_item != 1)
     @can('delete', $post)

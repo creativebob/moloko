@@ -32,7 +32,7 @@
 <div class="grid-x">
 
     <div class="small-12 cell">
-        <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="goods">
+        <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="goods">
             <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
                 <tr id="thead-content">
                     <th class="td-drop"></th>

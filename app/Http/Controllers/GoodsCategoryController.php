@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use App\GoodsCategory;
 use App\RawsArticle;
 
+use App\Goods;
+
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\GoodsCategoryRequest;

@@ -101,7 +101,7 @@ class GoodsArticle extends Model
         return $this->belongsTo('App\Album');
     }
 
-    // Фото
+    // Аватар
     public function photo()
     {
         return $this->belongsTo('App\Photo');

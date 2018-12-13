@@ -1,5 +1,5 @@
 @extends('layouts.app')
- 
+
 @section('inhead')
   @include('includes.scripts.table-inhead')
 @endsection
@@ -30,7 +30,7 @@
           {{ Form::open(['route' => 'companies.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
 
           <legend>Фильтрация</legend>
-            <div class="grid-x grid-padding-x"> 
+            <div class="grid-x grid-padding-x">
               <div class="small-6 cell">
                 <label>Статус пользователя
                   {{ Form::select('contragent_status', [ 'all' => 'Все пользователи','1' => 'Сотрудник', '2' => 'Клиент'], 'all') }}
@@ -54,13 +54,13 @@
 	</div>
 </div>
 @endsection
- 
+
 @section('content')
 
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="table-content" data-sticky-container>
+    <table class="content-table tablesorter" id="content-table" data-sticky-container>
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
@@ -82,7 +82,7 @@
             @if (isset($site->company_id))
             <a class="icon-delete sprite" data-open="item-delete"></a>
             @endif
-          </td>   
+          </td>
         </tr>
         @endforeach
       @endif

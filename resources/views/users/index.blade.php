@@ -26,7 +26,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="users">
+    <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="users">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -57,9 +57,9 @@
 
             <input type="checkbox" class="table-check" name="user_id" id="check-{{ $user->id }}"
             @if(!empty($filter['booklist']['booklists']['default']))
-            @if (in_array($user->id, $filter['booklist']['booklists']['default'])) checked 
+            @if (in_array($user->id, $filter['booklist']['booklists']['default'])) checked
             @endif
-            @endif 
+            @endif
             ><label class="label-check" for="check-{{ $user->id }}"></label>
           </td>
           <td class="td-second-name">
@@ -113,7 +113,7 @@
             <a class="icon-delete sprite" data-open="item-delete"></a>
             @endcan
             @endif
-          </td>       
+          </td>
         </tr>
         @endforeach
         @endif

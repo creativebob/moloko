@@ -2639,7 +2639,7 @@ a {
   width: 800px;
 }
 // ------------------------------------- Таблица поиска в модалке ------------------------------
-.table-content-search {
+.content-table-search {
 
   caption {
     font-family: $PFDDPL;
@@ -3341,7 +3341,7 @@ tbody {
                             }
 
                             // ----------------------------- Таблица в контенте --------------------------------------
-                            .table-content {
+                            .content-table {
 
                                 th:first-child:hover {
                                   cursor: default;
@@ -3363,7 +3363,7 @@ tbody {
                               }
                           }
 
-                          .table-content {
+                          .content-table {
                               border-collapse: separate;
                               width: 100%;
 

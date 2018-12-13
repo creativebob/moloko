@@ -314,7 +314,7 @@ Route::resource('/raws_products', 'RawsProductController')->middleware('auth');
 Route::any('/ajax_raws_count', 'RawsProductController@ajax_count')->middleware('auth');
 Route::any('/raws_products_create_mode', 'RawsProductController@ajax_change_create_mode')->middleware('auth');
 
-Route::any('/ajax_raws_modes', 'RawsProductController@ajax_modes')->middleware('auth');
+Route::any('/raws_products_list', 'RawsProductController@ajax_get_products_list')->middleware('auth');
 
 
 // ---------------------------------- Сырьё (Артикулы) -------------------------------------------

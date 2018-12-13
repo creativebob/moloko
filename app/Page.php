@@ -16,10 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-    
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -48,17 +44,19 @@ class Page extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+
+    protected $fillable = [
+        'name',
+        'site_id ',
+        'title',
+        'description',
+        'alias',
+    ];
+
     public function setMydateAttribute($value){
         $date_parts = explode('.', $value);
         $this->attributes['mydate'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
     }
-    protected $fillable = [
-        'name', 
-        'site_id ', 
-        'title', 
-        'description', 
-        'alias', 
-    ];
 
     // БЛОК ОПИСАНИЯ ФИЛЬТРОВ:
     // Фильтрация по статусу пользователя: клиент или сотрудник

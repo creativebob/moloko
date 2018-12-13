@@ -26,7 +26,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="feedback">
+    <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="feedback">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -51,7 +51,7 @@
         {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
         @if(!empty($filter['booklist']['booklists']['default']))
         {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-        @if (in_array($cur_feedback->id, $filter['booklist']['booklists']['default'])) checked 
+        @if (in_array($cur_feedback->id, $filter['booklist']['booklists']['default'])) checked
         @endif
         @endif
         ><label class="label-check" for="check-{{ $cur_feedback->id }}"></label>
@@ -84,10 +84,10 @@
   <td class="td-delete">
     @if ($cur_feedback->system_item != 1)
     @can('delete', $cur_feedback)
-    <a class="icon-delete sprite" data-open="item-delete"></a>  
+    <a class="icon-delete sprite" data-open="item-delete"></a>
     @endcan
     @endif
-</td> 
+</td>
 </tr>
 @endforeach
 @endif

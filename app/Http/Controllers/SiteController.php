@@ -4,54 +4,51 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Site;
-use App\Page;
-use App\Menu;
-use App\MenuSite;
-use App\Company;
-use App\Department;
 
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\SiteRequest;
 
-// Политика
-use App\Policies\SitePolicy;
-
-// Общие классы
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
-
-// На удаление
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-
 class SiteController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'sites';
-    protected $entity_dependence = false;
+    // Настройки контроллера
+    public function __construct(Site $site)
+    {
+        $this->middleware('auth');
+        $this->site = $site;
+        $this->class = Site::class;
+        $this->model = 'App\Site';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+    }
 
     public function index(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Site::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
 
-        $sites = Site::with('author', 'company')
+        $sites = Site::with(
+            'author',
+            'company',
+            'news',
+            'pages',
+            'navigations',
+            'catalogs'
+        )
+        ->withCount('pages')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
+        ->systemItem($answer)
         ->booklistFilter($request)
         // ->filter($request, 'author_id')
         ->orderBy('moderation', 'desc')
@@ -63,7 +60,7 @@ class SiteController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             // 'author',               // Автор записи
             // 'date_interval',     // Дата обращения
             'booklist'              // Списки пользователя
@@ -71,41 +68,24 @@ class SiteController extends Controller
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        return view('sites.index', compact('sites', 'page_info', 'filter'));
+        return view('sites.index',[
+            'sites' => $sites,
+            'page_info' => pageInfo($this->entity_alias),
+            'filter' => $filter,
+            'nested' => 'pages_count'
+        ]);
     }
 
     public function create(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Site::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Список меню для сайта
-        $answer_menus = operator_right('menus', false, 'index');
-
-        $menus = Menu::whereNavigation_id(1) // Только для сайтов, разделы сайта
-        ->moderatorLimit($answer_menus)
-        ->companiesLimit($answer_menus)
-        ->authors($answer_menus)
-        ->systemItem($answer_menus) // Фильтр по системным записям
-        ->template($answer_menus) // Выводим шаблоны в список
-        ->get();
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        $departments = Department::where(['filial_status' => 1, 'company_id' => $user->company_id])->get();
-        // dd($departments);
-
-        $site = new Site;
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        return view('sites.create', compact('site', 'menus', 'page_info', 'departments'));  
+        return view('sites.create', [
+            'site' => new $this->class,
+            'page_info' => pageInfo($this->entity_alias),
+        ]);
     }
 
 
@@ -113,27 +93,10 @@ class SiteController extends Controller
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Site::class);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Наполняем сущность данными
         $site = new Site;
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if($answer['automoderate'] == false){
-            $site->moderation = 1;
-        }
-
-        // Cистемная запись
-        $site->system_item = $request->system_item;
 
         $site->name = $request->name;
         $site->domain = $request->domain;
@@ -143,8 +106,22 @@ class SiteController extends Controller
         $site->alias = $site_alias[0];
 
         $site->api_token = str_random(60);
+
+        // Cистемная запись
+        $site->system_item = $request->system_item;
+        $site->display = $request->display;
+
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        if($answer['automoderate'] == false){
+            $site->moderation = 1;
+        }
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
         $site->company_id = $user->company_id;
-        $site->author_id = $user_id;
+        $site->author_id = hideGod($user);
+
         $site->save();
 
         if ($site) {
@@ -155,7 +132,7 @@ class SiteController extends Controller
             // Пришем список пришедших филиалов сайта
             $site->departments()->attach($request->departments);
 
-            return Redirect('/admin/sites');
+            return redirect()->route('sites.index');
         } else {
             abort(403, 'Ошибка записи сайта');
         }
@@ -169,54 +146,28 @@ class SiteController extends Controller
     public function edit(Request $request, $alias)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        $answer_menus = operator_right('menus', false, 'index');
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $site = Site::with(['departments', 'company' => function ($query) use ($user) {
-            $query->with(['departments' => function ($query) {
-                $query->where('filial_status', 1);
-            }])->where('id', $user->company_id)->first();
-        }])->moderatorLimit($answer)->whereAlias($alias)->first();
+        $site = Site::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        ->whereAlias($alias)
+        ->first();
         // dd($site);
-
-        $departments = $site->company->departments;
-        // dd($departments);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $site);
 
-        // Список меню для сайта
-        $menus = Menu::whereNavigation_id(1) // Только для сайтов, разделы сайта
-        ->moderatorLimit($answer_menus)
-        ->companiesLimit($answer_menus)
-        ->authors($answer_menus)
-        ->systemItem($answer_menus) // Фильтр по системным записям
-        ->template($answer_menus) // Выводим шаблоны в список
-        ->get();
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        return view('sites.edit', compact('site', 'menus', 'page_info', 'departments'));
+        return view('sites.edit', [
+            'site' => $site,
+            'page_info' => pageInfo($this->entity_alias),
+        ]);
     }
 
     public function update(SiteRequest $request, $id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $site = Site::moderatorLimit($answer)->findOrFail($id);
+        $site = Site::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        ->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('update', $site);
+        $this->authorize(getmethod(__FUNCTION__), $site);
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -229,9 +180,16 @@ class SiteController extends Controller
         if ($site->domain != $request->domain) {
             $site_alias = explode('.', $request->domain);
             $site->alias = $site_alias[0];
+
+            $site->domain = $request->domain;
         }
-        
-        $site->domain = $request->domain;
+
+        // Модерация и системная запись
+        $site->system_item = $request->system_item;
+        $site->display = $request->display;
+
+        $site->moderation = $request->moderation;
+
         $site->editor_id = $user_id;
         $site->save();
 
@@ -239,27 +197,19 @@ class SiteController extends Controller
 
             // Смотрим пришедние для сайта разделы и синхронизируем с существующими
             if (isset($request->menus)) {
-
-                // Синхронизируем с существующими
                 $site->menus()->sync($request->menus);
             } else {
-
-                // Если удалили последний раздел для сайта и пришел пустой массив
                 $site->menus()->detach();
             }
 
             // Смотрим пришедние для сайта филиалы и синхронизируем с существующими
             if (isset($request->menus)) {
-
-                // Синхронизируем с существующими
                 $site->departments()->sync($request->departments);
             } else {
-
-                // Если удалили последний филиал для сайта и пришел пустой массив
                 $site->departments()->detach();
             }
 
-            return Redirect('/admin/sites');
+            return redirect()->route('sites.index');
         } else {
             abort(403, 'Ошибка обновления сайта');
         }
@@ -268,168 +218,45 @@ class SiteController extends Controller
     public function destroy(Request $request, $id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $site = Site::moderatorLimit($answer)->findOrFail($id);
+        $site = Site::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $site);
 
+        $site->editor_id = hideGod($request->user());
+        $site->save();
+
+        $site = Site::destroy($id);
+
         if ($site) {
-
-            // Получаем пользователя
-            $user = $request->user();
-
-            // Скрываем бога
-            $user_id = hideGod($user);
-
-            $site->editor_id = $user_id;
-            $site->save();
-
-            // Удаляем сайт с обновлением
-            $site = Site::destroy($id);
-
-            if ($site) {
-                return Redirect('/admin/sites');
-            } else {
-                abort(403, 'Ошибка при удалении сайта');
-            }
+            return redirect()->route('sites.index');
         } else {
-            abort(403, 'Сайт не найден');
+            abort(403, 'Ошибка при удалении сайта');
         }
-    }
-
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->sites as $item) {
-            Site::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Site::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Site::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];  
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
     public function sections($alias)
-    { 
+    {
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $answer_sites = operator_right($this->entity_name, $this->entity_dependence, 'update');
-
-        $answer_menus = operator_right('menus', false, 'update');
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'update');
 
         $site = Site::with(['menus', 'author'])
-        ->moderatorLimit($answer_sites)
-        ->companiesLimit($answer_sites)
-        ->authors($answer_sites)
-        ->systemItem($answer_sites) // Фильтр по системным записям
-        ->template($answer_sites) // Выводим шаблоны в список
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        // ->template($answer)
         ->whereAlias($alias)
         ->first();
+        // dd($site);
 
         // Подключение политики
         $this->authorize('view', $site);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         return view('sites.sections', compact('site', 'page_info'));
-    }
-
-    // Проверка наличия в базе
-    public function ajax_check(Request $request)
-    {
-
-        // Проверка навигации по сайту в нашей базе данных
-        $site = Site::whereDomain($request->domain)->first();
-
-        // Если такой сайт существует
-        if ($site) {
-            $result = [
-                'error_status' => 1,
-            ];
-
-        // Если нет
-        } else {
-            $result = [
-                'error_status' => 0,
-            ];
-        }
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-
-    // ------------------------------------ API -----------------------------------------------------
-    // Получаем сайт по api
-    public function api_index (Request $request)
-    {
-        $site = Site::where('api_token', $request->token)->first();
-
-        if ($site) {
-        	
-        	// dd($request->action);
-            // return Cache::remember('site', 1, function() use ($domain) {
-            return redirect()->action('ApiController@index', ['alias' => $site->alias, 'action' => $request->action, 'domain' => $site->domain]);
-            // });
-        } else {
-            return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
-        }
     }
 }

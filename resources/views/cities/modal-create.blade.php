@@ -32,7 +32,7 @@
             {!! Form::hidden('city_db', 0, ['id' => 'city-db', 'pattern' => '[0-9]{1}']) !!}
         </div>
         <div class="small-12 medium-8 cell">
-            <table class="table-content-search">
+            <table class="content-table-search">
                 <caption>Результаты поиска в сторонней базе данных:</caption>
                 <tbody id="tbody-city-add">
                 </tbody>

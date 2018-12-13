@@ -48,7 +48,7 @@
     <label>Контент:
       {{ Form::textarea('content', $post->сontent, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
     </label>
-    <table class="table-content tabs-margin-top">
+    <table class="content-table tabs-margin-top">
       <caption>Прикрепленные альбомы</caption>
       <thead>
         <tr>

@@ -163,14 +163,14 @@ $disabled = $cur_goods->goods_article->draft == null;
                                 {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
                                 @if ($cur_goods->goods_article->metrics->isNotEmpty())
                                 @foreach ($cur_goods->goods_article->metrics->unique() as $metric)
-                                @include('goods.metrics.metric_input', $metric)
+                                @include('includes.metrics.metric_input', $metric)
                                 @endforeach
 
                                 @else
 
                                 @if ($cur_goods->goods_article->goods_product->goods_category->$metric_relation->isNotEmpty())
                                 @foreach ($cur_goods->goods_article->goods_product->goods_category->$metric_relation as $metric)
-                                @include('goods.metrics.metric_input', $metric)
+                                @include('includes.metrics.metric_input', $metric)
                                 @endforeach
                                 @endif
 

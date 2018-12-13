@@ -4,20 +4,17 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\News;
+
 use App\Site;
 use App\Photo;
 use App\AlbumsCategory;
 use App\AlbumEntity;
 use App\CityEntity;
-
 use App\EntitySetting;
 
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\NewsRequest;
-
-// Политика
-use App\Policies\NewsPolicy;
 
 // Общие классы
 use Illuminate\Support\Facades\Log;
@@ -32,30 +29,30 @@ use Intervention\Image\ImageManagerStatic as Image;
 // Транслитерация
 use Transliterate;
 
-// На удаление
-use App\Http\Controllers\Session;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-
 class NewsController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'news';
-    protected $entity_dependence = false;
+    // Настройки контроллера
+    public function __construct(News $cur_news)
+    {
+        $this->middleware('auth');
+        $this->cur_news = $cur_news;
+        $this->class = News::class;
+        $this->model = 'App\News';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+    }
 
     public function index(Request $request, $alias)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), News::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Получаем сайт
-        $answer_site = operator_right('sites', $this->entity_dependence, getmethod(__FUNCTION__));
-        $site = Site::moderatorLimit($answer_site)->whereAlias($alias)->first();
+
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -68,7 +65,9 @@ class NewsController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        ->whereSite_id($site->id) // Только для страниц сайта
+        ->whereHas('site', function ($q) use ($alias) {
+            $q->where('alias', $alias);
+        }) // Только для страниц сайта
         // ->whereHas('site', function ($query) use ($alias) {
         //     $query->whereAlias($alias);
         // })
@@ -87,20 +86,22 @@ class NewsController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             'date_interval',        // Дата
             'booklist'              // Списки пользователя
         ]);
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        // Так как сущность имеет определенного родителя
-        $parent_page_info = pageInfo('sites');
-
-        return view('news.index', compact('news', 'site', 'page_info', 'parent_page_info', 'alias', 'filter'));
+        return view('news.index',[
+            'news' => $news,
+            'page_info' => pageInfo($this->entity_alias),
+            'filter' => $filter,
+            'parent_page_info' => pageInfo('sites'),
+            'site' => Site::moderatorLimit(operator_right('sites', $this->entity_dependence, getmethod(__FUNCTION__)))
+            ->whereAlias($alias)
+            ->first(),
+        ]);
     }
 
     public function create(Request $request, $alias)
@@ -145,7 +146,7 @@ class NewsController extends Controller
         // dd($albums_categories_list);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         // Так как сущность имеет определенного родителя
         $parent_page_info = pageInfo('sites');
@@ -160,7 +161,7 @@ class NewsController extends Controller
         $this->authorize(getmethod(__FUNCTION__), News::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -214,7 +215,7 @@ class NewsController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
 
             if ($get_settings) {
 
@@ -278,7 +279,7 @@ class NewsController extends Controller
                 $albums = [];
                 foreach ($request->albums as $album) {
                     $albums[$album] = [
-                        'entity' => $this->entity_name,
+                        'entity' => $this->entity_alias,
                     ];
                 }
 
@@ -306,7 +307,7 @@ class NewsController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_site = operator_right('sites', false, getmethod(__FUNCTION__));
 
-        $answer_news = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_news = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         // Вытаскиваем через сайт, так как его нужно отдать на шаблон
@@ -357,7 +358,7 @@ class NewsController extends Controller
         // dd($albums_categories_list);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         // Так как сущность имеет определенного родителя
         $parent_page_info = pageInfo('sites');
@@ -369,7 +370,7 @@ class NewsController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $cur_news = News::moderatorLimit($answer)->findOrFail($id);
@@ -394,7 +395,7 @@ class NewsController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
 
             if ($get_settings) {
 
@@ -495,7 +496,7 @@ class NewsController extends Controller
                 $albums = [];
                 foreach ($request->albums as $album) {
                     $albums[$album] = [
-                        'entity' => $this->entity_name,
+                        'entity' => $this->entity_alias,
                     ];
                 }
                 $cur_news->albums()->sync($albums);
@@ -524,7 +525,7 @@ class NewsController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $cur_news = News::withCount('albums', 'cities')->moderatorLimit($answer)->findOrFail($id);
@@ -611,7 +612,7 @@ class NewsController extends Controller
         // Подключение политики
         $this->authorize(getmethod('index'), News::class);
 
-        $answer_news = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_news = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $answer_albums_categories = operator_right('albums_categories', false, getmethod(__FUNCTION__));
 

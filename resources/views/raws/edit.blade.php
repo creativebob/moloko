@@ -156,14 +156,14 @@ $disabled = $raw->raws_article->draft == null;
                                 {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
                                 @if ($raw->raws_article->metrics->isNotEmpty())
                                 @foreach ($raw->raws_article->metrics->unique() as $metric)
-                                @include('raws.metrics.metric_input', $metric)
+                                @include('includes.metrics.metric_input', $metric)
                                 @endforeach
 
                                 @else
 
                                 @if ($raw->raws_article->raws_product->raws_category->$metric_relation->isNotEmpty())
                                 @foreach ($raw->raws_article->raws_product->raws_category->$metric_relation as $metric)
-                                @include('raws.metrics.metric_input', $metric)
+                                @include('includes.metrics.metric_input', $metric)
                                 @endforeach
                                 @endif
 

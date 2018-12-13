@@ -314,7 +314,7 @@
       @if (isset($user->login))
       <div class="small-12 cell tabs-margin-top">
 
-        <table class="table-content">
+        <table class="content-table">
           <caption>Уровень доступа</caption>
           <thead>
             <tr>

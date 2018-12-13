@@ -8,7 +8,15 @@
         let id = item.closest('.item').attr('id').split('-')[1];
         let entity_alias = item.closest('.item').attr('id').split('-')[0];
 
-        var parent = item.closest('.controls-list');
+        // Oпределяем тип
+        if ($('#content').hasClass('content-list')) {
+            var type = 'menu';
+            var parent = item.closest('.controls-list');
+        } else {
+            var type = 'table';
+            var parent = item.closest('.item');
+        }
+
         var nested = item.data('nested');
 
         action = item.hasClass("icon-system-unlock") ? 'lock' : 'unlock';
@@ -20,12 +28,24 @@
                 if (action == 'lock') {
                     item.removeClass('icon-system-unlock');
                     item.addClass('icon-system-lock');
-                    parent.siblings('.actions-list').find('.del').html('');
+
+                    if (type == 'menu') {
+                        parent.siblings('.actions-list').find('.del').html('');
+                    } else {
+                        parent.find('.td-delete').html('');
+                    }
+
                 } else {
                     item.removeClass('icon-system-lock');
                     item.addClass('icon-system-unlock');
                     if (nested == 0) {
-                        parent.siblings('.actions-list').find('.del').html('<div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>');
+
+                        if (type == 'menu') {
+                           parent.siblings('.actions-list').find('.del').html('<div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>');
+                        } else {
+                            parent.find('.td-delete').html('<a class="icon-delete sprite" data-open="item-delete"></a>');
+                        }
+
                     };
                 }
             } else {

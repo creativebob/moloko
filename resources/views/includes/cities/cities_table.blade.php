@@ -1,4 +1,4 @@
-<table class="table-content-search table-over">
+<table class="content-table-search table-over">
 	<tbody>
 
 		@forelse ($cities as $city)

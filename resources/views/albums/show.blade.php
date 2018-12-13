@@ -60,7 +60,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="photos">
+    <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="photos">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"><div class="sprite icon-drop"></div></th>
@@ -85,9 +85,9 @@
           <td class="td-checkbox checkbox">
             <input type="checkbox" class="table-check" name="photo_id" id="check-{{ $photo->id }}"
             @if(!empty($filter['booklist']['booklists']['default']))
-            @if (in_array($photo->id, $filter['booklist']['booklists']['default'])) checked 
+            @if (in_array($photo->id, $filter['booklist']['booklists']['default'])) checked
             @endif
-            @endif 
+            @endif
             ><label class="label-check" for="check-{{ $photo->id }}"></label></td>
             <td class="td-photo">
               <a href="/admin/albums/{{ $album->alias }}/photos/{{ $photo->id }}/edit">
@@ -124,7 +124,7 @@
               <a class="icon-delete sprite" data-open="item-delete"></a>
               @endcan
               @endif
-            </td>       
+            </td>
           </tr>
           @endforeach
           @endif
@@ -162,7 +162,7 @@
 
   {{-- Скрипт системной записи --}}
   @include('includes.scripts.ajax-system')
-  
+
   <script type="text/javascript">
     $(function() {
     // Берем алиас сайта
@@ -179,5 +179,5 @@
       $('#form-item-del').attr('action', '/admin/albums/'+ alias + '/' + type + '/' + id);
     });
   });
-</script> 
+</script>
 @endsection

@@ -26,7 +26,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="roles">
+    <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="roles">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -61,14 +61,14 @@
               @endif
               {{ $role->name }}
               @if($edit == 1)
-            </a> 
+            </a>
             @endif
           </td>
           <td class="td-set">
             @if($edit == 1)
             @if(!empty($counts_directive_array[$role->id]['disabled_role']))
             <a class="button tiny" disabled>Настройка</a>
-            @else 
+            @else
             {{ link_to_route('roles.setting', 'Настройка', [$role->id], ['class'=>'button tiny']) }}
             @endif
             @endif
@@ -84,10 +84,10 @@
           <td class="td-delete">
             @if (($role->system_item !== 1) && ($role->company_id !== null))
             @can('delete', $role)
-            <a class="icon-delete sprite" data-open="item-delete"></a> 
+            <a class="icon-delete sprite" data-open="item-delete"></a>
             @endcan
-            @endif  
-          </td>     
+            @endif
+          </td>
         </tr>
         @endforeach
         @endif

@@ -1,5 +1,5 @@
 @extends('layouts.app')
- 
+
 @section('inhead')
 {{-- Скрипты таблиц в шапке --}}
   @include('includes.scripts.tablesorter-inhead')
@@ -20,13 +20,13 @@
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Order::class, 'type' => 'table'])
 @endsection
- 
+
 @section('content')
 
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter orders" id="content" data-sticky-container data-entity-alias="orders">
+    <table class="content-table tablesorter orders" id="content" data-sticky-container data-entity-alias="orders">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -72,13 +72,13 @@
             @if($order->client->client->email)<br><span class="tiny-text">{{ $order->client->client->email or '' }}</span>@endif
           </td>
           <td class="td-number">{{ $order->number or '' }}
-            <br><span class="tiny-text">{{ $order->lead->choice->name or '' }}</span> 
+            <br><span class="tiny-text">{{ $order->lead->choice->name or '' }}</span>
           </td>
 
 
           <td class="td-date">
             <span>{{ $order->created_at->format('d.m.Y') }}</span><br>
-            <span class="tiny-text">{{ $order->created_at->format('H:i') }}</span> 
+            <span class="tiny-text">{{ $order->created_at->format('H:i') }}</span>
           </td>
           <td class="td-amount">{{ num_format($order->amount, 0) }}</td>
           <td class="td-payment">{{ num_format($order->payment, 0) }}
@@ -91,8 +91,8 @@
             @can('delete', $order)
             <a class="icon-delete sprite" data-open="item-delete"></a>
             @endcan
-          @endif  
-          </td>     
+          @endif
+          </td>
         </tr>
         @endforeach
       @endif

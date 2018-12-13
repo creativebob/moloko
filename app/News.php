@@ -16,10 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -31,7 +27,7 @@ class News extends Model
 
     // Включаем кеш
     use Cachable;
-    
+
     use SoftDeletes;
 
     // Включаем Scopes
@@ -47,85 +43,56 @@ class News extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at',
+        'publish_begin_date',
+        'publish_end_date'
+    ];
+
     protected $fillable = [
         'name',
         'alias',
+        'title',
+        'preview',
+        'publish_begin_date',
+        'publish_end_date',
+        'content',
+        'site_id',
+        'photo_id',
         'company_id',
     ];
 
-    public function setPublishBeginDateAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('.', $value);
-            $this->attributes['publish_begin_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
-        };
-    }
-
-    public function getPublishBeginDateAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('-', $value);
-            $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
-            return $value;
-        };
-    }
-
-    public function setPublishEndDateAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('.', $value);
-            $this->attributes['publish_end_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
-        };
-    }
-
-    public function getPublishEndDateAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('-', $value);
-            $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
-            return $value;
-        };
-    }
-
-    // Получаем сайт.
+    // Cайт
     public function site()
     {
         return $this->belongsTo('App\Site');
     }
 
-    // Получаем компанию.
+    // Rомпания
     public function company()
     {
         return $this->belongsTo('App\Company');
     }
 
+    // Превью
     public function photo()
     {
         return $this->belongsTo('App\Photo');
     }
 
+    // Автор
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');
     }
 
-    // Получаем альбом
+    // Альбом
     public function albums()
     {
-        return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'news');
+        return $this->morphToMany('App\Album', 'album_entity');
     }
 
-    // Получаем города
-    // public function cities()
-    // {
-    //     return $this->belongsToMany('App\City', 'city_entity', 'entity_id', 'city_id')->where('entity', 'news');
-    // }
-    
+    // Города
     public function cities()
     {
         return $this->morphToMany('App\City', 'city_entities');

@@ -1,9 +1,9 @@
 @extends('layouts.app')
- 
+
 @section('inhead')
 <meta name="description" content="{{ $page_info->page_description }}" />
-  {{-- Скрипты таблиц в шапке --}}
-  @include('includes.scripts.tablesorter-inhead')
+{{-- Скрипты таблиц в шапке --}}
+@include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', $page_info->name)
@@ -12,103 +12,134 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-  @if(!empty($sites))
-    {{ num_format($sites->total(), 0) }}
-  @endif
+{{ $sites->isNotEmpty() ? num_format($sites->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Site::class, 'type' => 'table'])
 @endsection
- 
+
 @section('content')
 
 {{-- Таблица --}}
 <div class="grid-x">
-  <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="sites">
-      <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
-        <tr id="thead-content">
-          <th class="td-drop"></th>
-          <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-name">Название сайта</th>
-          <th class="td-domain">Домен сайта</th>
-          <th class="td-api-token">Api токен</th>
-          <th class="td-company-name">Компания</th>
-          <th class="td-edit">Изменить</th>
-          <th class="td-author">Автор</th>
-          <th class="td-control"></th>
-          <th class="td-delete"></th>
-        </tr>
-      </thead>
-      <tbody data-tbodyId="1" class="tbody-width">
-      @if(!empty($sites))
-        @foreach($sites as $site)
-        @php
-          $edit = 0;
-        @endphp
-        @can('update', $site)
-          @php
-            $edit = 1;
-          @endphp
-        @endcan
-        <tr class="item @if($site->moderation == 1)no-moderation @endif" id="sites-{{ $site->id }}" data-name="{{ $site->name }}">
-          <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox"><input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}"
+    <div class="small-12 cell">
 
-              {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
-              @if(!empty($filter['booklist']['booklists']['default']))
-                {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-                @if (in_array($site->id, $filter['booklist']['booklists']['default'])) checked 
-              @endif
-            @endif
+        <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="sites">
 
-            >
-            <label class="label-check" for="check-{{ $site->id }}"></label></td>
-          <td class="td-name">
-            @if($edit == 1)
-              <a href="/admin/sites/{{ $site->alias }}">
-            @endif
-            {{ $site->name }}
-            @if($edit == 1)
-              </a> 
-            @endif
-          </td>
-          <td class="td-domain"><a href="http://{{ $site->domain }}" target="_blank">{{ $site->domain }}</a></td>
-          <td class="td-api-token">{{ $site->api_token }}</td>
-          <td class="td-company-id">@if(!empty($site->company->name)) {{ $site->company->name }} @else @if($site->system_item == null) Шаблон @else Системная @endif @endif</td>
-          <td class="td-edit">
-            @if($edit == 1)
-            <a class="tiny button" href="/admin/sites/{{ $site->alias }}/edit">Редактировать</a>
-            @endif
-          </td>
-          <td class="td-author">@if(isset($site->author->first_name)) {{ $site->author->first_name . ' ' . $site->author->second_name }} @endif</td>
+            <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
+                <tr id="thead-content">
+                    <th class="td-drop"></th>
+                    <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
+                    <th class="td-name">Название сайта</th>
+                    <th class="td-domain">Домен сайта</th>
+                    <th class="td-api-token">Api токен</th>
+                    <th class="td-company-name">Компания</th>
+                    <th class="td-edit">Изменить</th>
+                    <th class="td-author">Автор</th>
+                    <th class="td-control"></th>
+                    <th class="td-delete"></th>
+                </tr>
+            </thead>
 
-          {{-- Элементы управления --}}
-          @include('includes.control.table-td', ['item' => $site])
+            <tbody data-tbodyId="1" class="tbody-width">
 
-          <td class="td-delete">
-            @if ($site->system_item != 1)
-              @can('delete', $site)
-              <a class="icon-delete sprite" data-open="item-delete"></a>
-              @endcan
-            @endif
-          </td>   
-        </tr>
-        @endforeach
-      @endif
-      </tbody>
-    </table>
-  </div>
+                @if(isset($sites) && $sites->isNotEmpty())
+                @foreach($sites as $site)
+
+                <tr class="item @if($site->moderation == 1)no-moderation @endif" id="sites-{{ $site->id }}" data-name="{{ $site->name }}">
+
+                    <td class="td-drop">
+                        <div class="sprite icon-drop"></div>
+                    </td>
+                    <td class="td-checkbox checkbox">
+                        <input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}"
+
+                        {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+                        @if(!empty($filter['booklist']['booklists']['default']))
+                        {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+                        @if (in_array($site->id, $filter['booklist']['booklists']['default'])) checked
+                        @endif
+                        @endif
+
+                        >
+                        <label class="label-check" for="check-{{ $site->id }}"></label>
+                    </td>
+                    <td class="td-name">
+
+                        @can('update', $site)
+                        {{ link_to_route('sites.sections', $site->name, $parameters = ['alias' => $site->alias], $attributes = []) }}
+                        @endcan
+
+                        @cannot('update', $site)
+                        {{ $site->name }}
+                        @endcannot
+
+                    </td>
+                    <td class="td-domain">
+                        <a href="http://{{ $site->domain }}" target="_blank">{{ $site->domain }}</a>
+                    </td>
+                    <td class="td-api-token">{{ $site->api_token }}</td>
+                    <td class="td-company-id">
+
+                        {{-- {{ isset($site->company->name) ? $site->company->name : $site->system_item == null ? 'Шаблон' : 'Системная' }} --}}
+                        @if(isset($site->company->name))
+                        {{ $site->company->name }}
+                        @else
+
+                        @if($site->system_item == null)
+                        Шаблон
+                        @else Системная
+                        @endif
+
+                        @endif
+
+                    </td>
+                    <td class="td-edit">
+
+                        @can('update', $site)
+                        {{ link_to_route('sites.edit', 'Редактировать', $parameters = ['alias' => $site->alias], $attributes = ['class' => 'tiny button']) }}
+                        @endcan
+
+                        @cannot('update', $site)
+                        {{ $site->name }}
+                        @endcannot
+
+                    </td>
+                    <td class="td-author">
+
+                        @if(isset($site->author->first_name))
+                        {{ $site->author->first_name . ' ' . $site->author->second_name }}
+                        @endif
+
+                    </td>
+
+                    {{-- Элементы управления --}}
+                    @include('includes.control.table_td', ['item' => $site])
+
+                    <td class="td-delete">
+
+                       @include('includes.control.item_delete_table', ['item' => $site])
+
+                    </td>
+                </tr>
+
+                @endforeach
+                @endif
+
+            </tbody>
+
+        </table>
+    </div>
 </div>
 
 {{-- Pagination --}}
 <div class="grid-x" id="pagination">
-  <div class="small-6 cell pagination-head">
-    <span class="pagination-title">Кол-во записей: {{ $sites->count() }}</span>
-    {{ $sites->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
-  </div>
+    <div class="small-6 cell pagination-head">
+        <span class="pagination-title">Кол-во записей: {{ $sites->count() }}</span>
+        {{ $sites->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
+    </div>
 </div>
 @endsection
 

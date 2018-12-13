@@ -62,33 +62,22 @@ class GoodsProduct extends Model
     ];
 
 
-    // Получаем категорию
+    // Категория
     public function goods_category()
     {
         return $this->belongsTo('App\GoodsCategory');
     }
 
-    // Получаем артикулы
+    // Артикулы
     public function goods_articles()
     {
         return $this->hasMany('App\GoodsArticle');
     }
 
-    // Получаем категорию
+    // Товары
     public function goods()
     {
         return $this->hasManyThrough('App\Goods', 'App\GoodsArticle');
-    }
-
-    public function photo()
-    {
-        return $this->belongsTo('App\Photo');
-    }
-
-    // Получаем еденицу измерения
-    public function unit()
-    {
-        return $this->belongsTo('App\Unit');
     }
 
     // Альбом
@@ -97,13 +86,25 @@ class GoodsProduct extends Model
         return $this->belongsTo('App\Album');
     }
 
-    // Получаем автора
+    // Аватар
+    public function photo()
+    {
+        return $this->belongsTo('App\Photo');
+    }
+
+    // Еденица измерения
+    public function unit()
+    {
+        return $this->belongsTo('App\Unit');
+    }
+
+    // Автора
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');
     }
 
-    // Получаем компанию.
+    // Компания
     public function company()
     {
         return $this->belongsTo('App\Company');

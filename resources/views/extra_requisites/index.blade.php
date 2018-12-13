@@ -26,7 +26,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="extra_requisites">
+    <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="extra_requisites">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -48,7 +48,7 @@
         {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
         @if(!empty($filter['booklist']['booklists']['default']))
         {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-        @if (in_array($extra_requisite->id, $filter['booklist']['booklists']['default'])) checked 
+        @if (in_array($extra_requisite->id, $filter['booklist']['booklists']['default'])) checked
         @endif
         @endif
         ><label class="label-check" for="check-{{ $extra_requisite->id }}"></label>
@@ -67,7 +67,7 @@
           @endif
           {{ $extra_requisite->name }}
           @if($edit == 1)
-      </a> 
+      </a>
       @endif
   </td>
   <td class="td-description">{{ $extra_requisite->description }} </td>
@@ -78,10 +78,10 @@
   <td class="td-delete">
     @if ($extra_requisite->system_item != 1)
     @can('delete', $extra_requisite)
-    <a class="icon-delete sprite" data-open="item-delete"></a>  
+    <a class="icon-delete sprite" data-open="item-delete"></a>
     @endcan
     @endif
-  </td> 
+  </td>
 </tr>
 @endforeach
 @endif

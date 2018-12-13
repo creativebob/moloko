@@ -26,7 +26,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="photos">
+    <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="photos">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -49,9 +49,9 @@
           <td class="td-checkbox checkbox">
             <input type="checkbox" class="table-check" name="photo_id" id="check-{{ $photo->id }}"
             @if(!empty($filter['booklist']['booklists']['default']))
-            @if (in_array($photo->id, $filter['booklist']['booklists']['default'])) checked 
+            @if (in_array($photo->id, $filter['booklist']['booklists']['default'])) checked
             @endif
-            @endif 
+            @endif
             ><label class="label-check" for="check-{{ $photo->id }}"></label></td>
             <td class="td">
               <a data-fancybox="photos" href="/storage/{{ $photo->company_id }}/media/albums/{{ $album->id }}/img/large/{{ $photo->name }}">
@@ -83,7 +83,7 @@
               <a class="icon-delete sprite" data-open="item-delete"></a>
               @endcan
               @endif
-            </td>       
+            </td>
           </tr>
           @endforeach
           @endif
@@ -134,6 +134,6 @@
       $('#form-item-del').attr('action', '/admin/albums/'+ alias + '/' + type + '/' + id);
     });
   });
-</script> 
+</script>
 
 @endsection

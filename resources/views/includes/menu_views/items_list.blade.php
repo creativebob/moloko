@@ -42,11 +42,7 @@
             @endcan
 
             <div class="del">
-                @can('delete', $item)
-                @if(empty($item->childrens) && ($item->system_item == null) && ($item->company_id != null) && ($item->$nested == 0))
-                <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
-                @endif
-                @endcan
+                @include('includes.control.item_delete_menu', ['item' => $item])
             </div>
         </div>
     </div>

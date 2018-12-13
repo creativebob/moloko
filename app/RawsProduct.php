@@ -46,15 +46,28 @@ class RawsProduct extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
+    protected $fillable = [
+        'company_id',
+        'name',
+        'photo_id',
+        'stauts',
+        'description',
+        'unit_id',
+        'rule_id',
+        'raws_category_id',
+        'album_id',
+        'author_id',
+        'editor_id',
+    ];
 
 
-    // Получаем категорию
+    // Категория
     public function raws_category()
     {
         return $this->belongsTo('App\RawsCategory');
     }
 
-     // Получаем категорию
+    // Артикулы
     public function raws_articles()
     {
         return $this->hasMany('App\RawsArticle');
@@ -66,30 +79,31 @@ class RawsProduct extends Model
         return $this->hasManyThrough('App\Raw', 'App\RawsArticle');
     }
 
-    public function photo()
-    {
-        return $this->belongsTo('App\Photo');
-    }
-
-    // Получаем еденицу измерения
-    public function unit()
-    {
-        return $this->belongsTo('App\Unit');
-    }
-
     // Альбом
     public function album()
     {
         return $this->belongsTo('App\Album');
     }
 
-    // Получаем автора
+    // Аватар
+    public function photo()
+    {
+        return $this->belongsTo('App\Photo');
+    }
+
+    // Еденица измерения
+    public function unit()
+    {
+        return $this->belongsTo('App\Unit');
+    }
+
+    // Автор
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');
     }
 
-    // Получаем компанию.
+    // Компания
     public function company()
     {
         return $this->belongsTo('App\Company');

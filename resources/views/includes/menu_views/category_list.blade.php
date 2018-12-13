@@ -50,11 +50,7 @@ $drop = 1;
             @endcan
 
             <div class="del">
-                @can('delete', $category)
-                @if(empty($category->childrens) && ($category->system_item == null) && ($category->company_id != null) && ($category->$nested == 0))
-                <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
-                @endif
-                @endcan
+                @include('includes.control.item_delete_menu', ['item' => $category])
             </div>
         </div>
 

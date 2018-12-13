@@ -33,7 +33,7 @@
                     if (result.error_status == 0) {
                         crash = 0;
                         // Перебираем циклом
-                        data = "<table class=\"table-content-search table-over\"><tbody>";
+                        data = "<table class=\"content-table-search table-over\"><tbody>";
                         for (var i = 0; i < result.count; i++) {
                             data = data + "<tr data-tr=\"" + i + "\"><td><a class=\"city-add\" data-city-id=\"" + result.cities.city_id[i] + "\">" + result.cities.city_name[i] + "</a></td><td><a class=\"city-add\">" + result.cities.area_name[i] + "</a></td><td><a class=\"city-add\">" + result.cities.region_name[i] + "</a></td></tr>";
                         };
@@ -43,7 +43,7 @@
                         crash = 1;
                         $('#city-check').addClass('icon-find-no');
                         $('#city-check').addClass('sprite-16');
-                        data = "<table class=\"table-content-search table-over\"><tbody><tr><td>Населенный пункт не найден в базе данных, @can('create', App\City::class)<a href=\"/admin/cities\" target=\"_blank\">добавьте его!</a>@endcan @cannot('create', App\City::class)обратитесь к администратору!@endcannot</td></tr></tbody><table>";
+                        data = "<table class=\"content-table-search table-over\"><tbody><tr><td>Населенный пункт не найден в базе данных, @can('create', App\City::class)<a href=\"/admin/cities\" target=\"_blank\">добавьте его!</a>@endcan @cannot('create', App\City::class)обратитесь к администратору!@endcannot</td></tr></tbody><table>";
                     };
                     // Выводим пришедшие данные на страницу
                     $('.input-icon').after(data);

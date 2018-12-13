@@ -68,29 +68,31 @@ class Goods extends Model
         'editor_id',
     ];
 
+    // Артикул товара
     public function goods_article()
     {
         return $this->belongsTo('App\GoodsArticle');
     }
 
-    // Получаем компанию.
+    // Компания
     public function company()
     {
         return $this->belongsTo('App\Company');
     }
 
-    // Получаем автора
+    // Автор
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');
     }
 
-    // Получаем альбом
+    // Альбом
     public function album()
     {
         return $this->belongsTo('App\Album');
     }
 
+    // Аватар
     public function photo()
     {
         return $this->belongsTo('App\Photo');
@@ -146,7 +148,7 @@ class Goods extends Model
     // }
 
 
-    // Получаем составы заказов
+    // Составы заказов
     public function order_compositions()
     {
         return $this->morphMany('App\OrderComposition', 'order_compositions');
