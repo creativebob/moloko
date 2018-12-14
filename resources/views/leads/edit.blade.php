@@ -257,7 +257,7 @@ if($lead->manager_id == 1){
 			success: function(html){
 				$('#goods-section').append(html);
 
-				$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
+				//$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
 			}
 		});
 	});
