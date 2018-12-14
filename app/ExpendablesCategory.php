@@ -49,6 +49,12 @@ class ExpendablesCategory extends Model
         'mooderation'
     ];
 
+    // Вложенные
+    public function childs()
+    {
+        return $this->hasMany('App\ExpendablesCategory', 'parent_id');
+    }
+
     // Компании
     public function company()
     {

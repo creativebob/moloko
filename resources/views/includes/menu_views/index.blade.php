@@ -46,7 +46,7 @@
 
 @section('scripts')
 <script type="text/javascript">
-    // Определяем сущьность для работы
+    // Определяем сущность для работы
     var entity = $('#content').data('entity-alias');
 
     $(function() {

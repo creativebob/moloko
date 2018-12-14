@@ -469,108 +469,32 @@ class AlbumController extends Controller
         }
     }
 
-    // Список албомов
-    public function albums_list(Request $request)
+    // ------------------------------------------- Ajax ---------------------------------------------
+
+    // Модалка прикрепления альбома
+    public function album_add(Request $request)
     {
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+        return view('includes.modals.album_add');
+    }
 
-        // Главный запрос
-        $albums = Album::moderatorLimit($answer)
-        ->where('albums_category_id', $request->id)
-        ->get();
-
-        $albums_list = '';
-        foreach ($albums as $album) {
-            $albums_list = $albums_list . '<option value="'.$album->id.'">'.$album->name.'</option>';
-        }
-
-        // Отдаем ajax
-        echo $albums_list;
+    // Список албомов
+    public function albums_select(Request $request)
+    {
+        return view('includes.selects.albums', ['albums_category_id' => $request->albums_category_id]);
     }
 
     // Список получаем альбом
-    public function get_album(Request $request)
+    public function album_get(Request $request)
     {
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, 'index');
+        $album = Album::moderatorLimit(operator_right($this->entity_name, $this->entity_dependence, 'index'))
+        ->findOrFail($request->album_id);
 
-        // Главный запрос
-        $album = Album::moderatorLimit($answer)->findOrFail($request->album_id);
-
-        // Отдаем Ajax
-        return view('news.albums', ['album' => $album]);
+        return view('news.album', compact('album'));
     }
 
-    // ------------------------------------------- Ajax ---------------------------------------------
 
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
 
-        $i = 1;
-
-        foreach ($request->albums as $item) {
-            Album::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Album::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Album::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-     // Проверка наличия в базе
+    // Проверка наличия в базе
     public function ajax_check(Request $request)
     {
 
@@ -595,4 +519,6 @@ class AlbumController extends Controller
 
         return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
+
+
 }

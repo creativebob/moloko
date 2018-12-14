@@ -204,45 +204,30 @@ class RawsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $raws_category = RawsCategory::withCount('raws_products')
+        $raws_category = RawsCategory::withCount('childs', 'raws_products')
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_category);
 
-        // Удаляем ajax
-        // Проверяем содержит ли индустрия вложения
-        $raws_category_count= RawsCategory::moderatorLimit($answer)
-        ->whereParent_id($id)
-        ->count();
+        // Скрываем бога
+        $raws_category->editor_id = hideGod($request->user());
+        $raws_category->save();
 
-        // Если содержит, то даем сообщение об ошибке
-        if ($raws_category_count || ($raws_category->raws_products_count > 0)) {
+        $parent_id = $raws_category->parent_id;
 
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Категория не пуста!'
-            ];
-        } else {
+        $raws_category = RawsCategory::destroy($id);
 
-            $raws_category->editor_id = hideGod($request->user()->id);
-            $raws_category->save();
-
-            $parent_id = $raws_category->parent_id;
-
-            $raws_category = RawsCategory::destroy($id);
-
-            if ($raws_category) {
+        if ($raws_category) {
 
                 // Переадресовываем на index
-                return redirect()->route('raws_categories.index', ['id' => $parent_id]);
-            } else {
-                $result = [
-                    'error_status' => 1,
-                    'error_message' => 'Ошибка при удалении категории!'
-                ];
-            }
+            return redirect()->route('raws_categories.index', ['id' => $parent_id]);
+        } else {
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при удалении категории!'
+            ];
         }
     }
 }

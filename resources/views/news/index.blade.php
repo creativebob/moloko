@@ -68,13 +68,15 @@
                         <img src="{{ isset($cur_news->photo_id) ? '/storage/'.$cur_news->company_id.'/media/news/'.$cur_news->id.'/img/small/'.$cur_news->photo->name : '/img/plug/news_small_default_color.jpg' }}" alt="{{ isset($cur_news->photo_id) ? $cur_news->name : 'Нет фото' }}">
                     </td>
                     <td class="td-name">
+
                         @can('update', $cur_news)
-                        {{ link_to_route('news.edit', $cur_news->name, $parameters = ['alias' => $cur_news->site->alias, 'news_alias' => $cur_news->alias], $attributes = []) }}
+                        {{ link_to_route('news.edit', $cur_news->name, $parameters = ['alias' => $cur_news->site->alias, 'news' => $cur_news->alias], $attributes = []) }}
                         @endcan
 
                         @cannot('update',  $cur_news)
                         {{ $cur_news->name }}
                         @endcannot
+
                     </td>
 
                     <td class="td-preview">{{ str_limit($cur_news->preview, 150) }}</td>
@@ -83,11 +85,9 @@
                     {{-- <span>Сайт:&nbsp;{{ $cur_news->site->name or ' ... ' }}</span>
                     <br><br> --}}
                     {{-- <span>Домен:&nbsp;{{ $cur_news->site->domen or ' ... ' }}</span><br> --}}
-                    @if ($cur_news->display == 1)
-                    <span>Алиас:&nbsp;<a href="http://{{ $cur_news->site->alias }}/{{ $cur_news->company->location->city->alias }}/news/{{ $cur_news->alias }}" target="_blank">{{ $cur_news->alias }}</a></span>
-                    @else
-                    не отображается
-                    @endif
+
+                    <span>Алиас:&nbsp;<a>{{ $cur_news->alias }}</a></span>
+
                     <br>
                     <td class="td-date-publish">
 

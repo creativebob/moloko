@@ -29,7 +29,8 @@ use App\Http\ViewComposers\GoodsCategoriesComposer;
 use App\Http\ViewComposers\RawsCategoriesComposer;
 use App\Http\ViewComposers\GoodsProductsComposer;
 use App\Http\ViewComposers\RawsProductsComposer;
-// use App\Http\ViewComposers\AlbumsCategoriesComposer;
+use App\Http\ViewComposers\AlbumsCategoriesSelectComposer;
+use App\Http\ViewComposers\AlbumsComposer;
 
 use App\Http\ViewComposers\UsersComposer;
 use App\Http\ViewComposers\StaffComposer;
@@ -83,7 +84,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.raws_categories', RawsCategoriesComposer::class);
         view()->composer('includes.selects.goods_products', GoodsProductsComposer::class);
         view()->composer('includes.selects.raws_products', RawsProductsComposer::class);
-        // view()->composer('includes.selects.albums_categories', AlbumsCategoriesComposer::class);
+        view()->composer('includes.selects.albums_categories', AlbumsCategoriesSelectComposer::class);
+        view()->composer('includes.selects.albums', AlbumsComposer::class);
     }
 
     public function register()

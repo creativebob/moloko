@@ -9,7 +9,7 @@ use App\Entity;
 class AppController extends Controller
 {
 
-    // Вход в приложение
+    // Вход в crm
     public function enter() {
         return view('layouts.enter');
     }

@@ -43,7 +43,13 @@ $drop = 1;
             @break
 
             @case($type == 'edit')
-            <a class="icon-list-edit sprite" href="/admin/{{ $entity }}/{{ $category->id }}/edit"></a>
+
+            @if (isset($alias))
+            {{ link_to_route($entity.'.edit', '', $parameters = ['alias' => $alias, 'id' => $category->id], $attributes = ['class' => 'icon-list-edit sprite']) }}
+            @else
+            {{ link_to_route($entity.'.edit', '', $parameters = ['id' => $category->id], $attributes = ['class' => 'icon-list-edit sprite']) }}
+            @endif
+
             @break
 
             @endswitch

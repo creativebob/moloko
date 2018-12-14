@@ -258,7 +258,7 @@ class StafferController extends Controller
 
         // Удаляем должность из отдела с обновлением
         // Находим филиал и отдел
-        $staffer->editor_id = $request->user()->id;
+        $staffer->editor_id = hideGod($request->user());
         $staffer->save();
 
         $parent_id = $staffer->department_id;

@@ -57,6 +57,12 @@ class RawsCategory extends Model
         'editor_id',
     ];
 
+    // Вложенные
+    public function childs()
+    {
+        return $this->hasMany('App\RawsCategory', 'parent_id');
+    }
+
     // Компания
     public function company()
     {

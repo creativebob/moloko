@@ -95,6 +95,12 @@ class Department extends Model
         'system-item',
     ];
 
+    // Вложенные
+    public function childs()
+    {
+        return $this->hasMany('App\Department', 'parent_id');
+    }
+
     // Компания
     public function company()
     {

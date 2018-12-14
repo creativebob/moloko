@@ -56,6 +56,12 @@ class GoodsCategory extends Model
         'editor_id',
     ];
 
+    // Вложенные
+    public function childs()
+    {
+        return $this->hasMany('App\GoodsCategory', 'parent_id');
+    }
+
     // Компания
     public function company()
     {

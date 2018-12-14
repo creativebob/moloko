@@ -24,14 +24,20 @@ class CatalogRequest extends FormRequest
     public function rules()
     {
       return [
-        'name' => 'string|max:255|required', 
+        'name' => 'string|max:255|required',
+        'alias' => 'string|max:255|nullable',
         'site_id' => 'integer|nullable',
-        'first_item' => 'integer|nullable',
-        'medium_item' => 'integer|nullable',
-        'moderation' => 'integer|max:1|nullable',
-        'display' => 'integer|max:1|nullable',
+
         'parent_id' => 'integer|nullable',
-        'system_item' => 'integer|max:1|nullable',          
+        'category_id' => 'integer|nullable',
+
+        'photo_id' => 'integer|nullable',
+        'description' => 'string|nullable',
+        'seo_description' => 'string|nullable',
+
+        'display' => 'integer|max:1|nullable',
+        'moderation' => 'integer|max:1|nullable',
+        'system_item' => 'integer|max:1|nullable',
       ];
     }
   }

@@ -18,6 +18,8 @@ class CategoriesSelectComposer
         // Главный запрос
         $items = $model::moderatorLimit($answer)
         ->systemItem($answer)
+        ->companiesLimit($answer)
+        ->systemItem($answer)
         ->orderBy('sort', 'asc')
         ->get(['id','name','parent_id']);
 

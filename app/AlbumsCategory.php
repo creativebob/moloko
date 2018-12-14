@@ -54,6 +54,12 @@ class AlbumsCategory extends Model
         'mooderation'
     ];
 
+    // Вложенные
+    public function childs()
+    {
+        return $this->hasMany('App\AlbumsCategory', 'parent_id');
+    }
+
     // Компании
     public function company()
     {

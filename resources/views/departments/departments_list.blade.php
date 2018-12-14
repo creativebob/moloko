@@ -21,9 +21,9 @@ $drop = 1;
             <div class="display-menu">
                 @can ('display', $department)
                 @display ($department)
-                <div class="icon-display-show white sprite" data-open="item-display"></div>
+                <div class="icon-display-show black sprite" data-open="item-display"></div>
                 @else
-                <div class="icon-display-hide white sprite" data-open="item-display"></div>
+                <div class="icon-display-hide black sprite" data-open="item-display"></div>
                 @enddisplay
                 @endcan
             </div>
@@ -37,21 +37,21 @@ $drop = 1;
                 @switch($department)
 
                 @case($department->system_item == 1 && $department->company_id == null)
-                <div class="icon-system-programm white sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
+                <div class="icon-system-programm black sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
                 @break
 
                 @case($department->system_item == null && $department->company_id == 1)
-                <div class="icon-system-unlock white sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
+                <div class="icon-system-unlock black sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
                 @break
 
                 @case($department->system_item == 1 && $department->company_id == 1)
-                <div class="icon-system-lock white sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
+                <div class="icon-system-lock black sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
                 @break
                 @endswitch
                 @endcan
 
                 @if ($department->system_item == null && $department->company_id == null)
-                <div class="icon-system-template white sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
+                <div class="icon-system-template black sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
                 @endif
             </div>
         </div>
@@ -68,7 +68,7 @@ $drop = 1;
 
             <div class="del">
                 @can('delete', $department)
-                @if(empty($department->childrens) && ($department->system_item == null) && ($department->company_id != null) && ($department->staff_count == 0))
+                @if(empty($department->childrens))
                 <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
                 @endif
                 @endcan

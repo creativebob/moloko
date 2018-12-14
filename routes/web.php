@@ -241,12 +241,16 @@ Route::get('/albums/{alias}/edit', 'AlbumController@edit')->middleware('auth')->
 Route::patch('/albums/{id}', 'AlbumController@update')->middleware('auth')->name('albums.update');
 Route::delete('/albums/{id}', 'AlbumController@destroy')->middleware('auth')->name('albums.destroy');
 
-// Получение альбомов по категории
-Route::post('/albums_list', 'AlbumController@albums_list')->middleware('auth');
-// Получение альбома
-Route::post('/get_album', 'AlbumController@get_album')->middleware('auth');
+
 // Проверка на существование
 Route::post('/albums_check', 'AlbumController@ajax_check')->middleware('auth');
+
+// Открытие модалки прикрепления альбома
+Route::post('/album_add', 'AlbumController@album_add')->middleware('auth')->name('album.add');
+// Получение альбомов по категории
+Route::post('/albums_select', 'AlbumController@albums_select')->middleware('auth');
+// Получение альбома
+Route::any('/album_get', 'AlbumController@album_get')->middleware('auth');
 
 
 // Группа с префиксом
@@ -773,11 +777,8 @@ Route::prefix('/sites/{alias}')->group(function () {
     Route::any('/catalogs', 'CatalogController@index')->middleware('auth');
     // Основные методы
     Route::resource('/catalogs', 'CatalogController')->middleware('auth');
-    // Проверка на существование каталога
+    // Проверка на существование
     Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
-    // Проверка на существование алиаса каталога
-    Route::post('/catalog_check_alias', 'CatalogController@ajax_check_alias')->middleware('auth');
-
 
     // -------------------------------- Продукция для каталогов сайта -------------------------------------
     // Основные методы

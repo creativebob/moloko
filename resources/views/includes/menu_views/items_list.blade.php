@@ -3,7 +3,7 @@
     <a class="medium-link @if($drop == 0) link-small @endif">
         <div class="icon-open sprite"></div>
         <span class="medium-item-name">{{ $item->name }}</span>
-        <span class="number">{{ isset($item->childrens) ? count($item->childrens) : 0 }}</span>
+        <span class="number">{{ isset($item->childrens) ? $item->childrens->count() : 0 }}</span>
     </a>
     @else
     <a class="medium-as-last-link">
@@ -17,7 +17,7 @@
 
     <div class="icon-list">
         <div class="controls-list">
-            @include ('includes.control.categories_menu_div', ['item' => $item, 'class' => $class, 'color' => 'black', 'nested' => $nested])
+            @include ('includes.control.categories_menu_div', ['item' => $item, 'class' => $class, 'color' => 'black'])
         </div>
 
         <div class="actions-list">
@@ -34,8 +34,11 @@
             @break
 
             @case($type == 'edit')
-            <a class="icon-list-edit sprite" href="/admin/{{ $entity }}/{{ $item->id }}/edit"></a>
-            @break
+            @if (isset($alias))
+            {{ link_to_route($entity.'.edit', '', $parameters = ['alias' => $alias, 'id' => $item->id], $attributes = ['class' => 'icon-list-edit sprite']) }}
+            @else
+            {{ link_to_route($entity.'.edit', '', $parameters = ['id' => $item->id], $attributes = ['class' => 'icon-list-edit sprite']) }}
+            @endif
             @break
 
             @endswitch

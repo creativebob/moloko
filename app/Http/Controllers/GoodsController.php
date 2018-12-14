@@ -813,9 +813,9 @@ class GoodsController extends Controller
                 return Redirect($backlink);
             }
 
-            return Redirect('/admin/goods');
+            return redirect()->route('goods.index');
         } else {
-            abort(403, 'Ошибка записи группы товаров');
+            abort(403, 'Ошибка обновления товара');
         }
     }
 

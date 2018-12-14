@@ -81,7 +81,7 @@ class AlbumsCategoryController extends Controller
     public function create(Request $request)
     {
 
-       // Подключение политики
+        // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         return view('includes.menu_views.create', [
@@ -169,43 +169,27 @@ class AlbumsCategoryController extends Controller
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $albums_category = $albums_categories_count = AlbumsCategory::moderatorLimit($answer)->findOrFail($id);
+        $albums_category = $albums_categories_count = AlbumsCategory::with('childs', 'albums')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);
 
-        // Удаляем ajax
-        // Проверяем содержит ли индустрия вложения
-        $albums_categories_count = $albums_categories_count = AlbumsCategory::moderatorLimit($answer)
-        ->whereParent_id($id)
-        ->count();
+        // Скрываем бога
+        $albums_category->editor_id = hideGod($request->user());
+        $albums_category->save();
 
-        // Если содержит, то даем сообщение об ошибке
-        if ($albums_categories_count > 0) {
+        $parent_id = $albums_category->parent_id;
 
+        $albums_category = AlbumsCategory::destroy($id);
+
+        if ($albums_category) {
+            // Переадресовываем на index
+            return redirect()->route('albums_categories.index', ['id' => $parent_id]);
+        } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Категория содержит вложенные элементы, удаление невозможно!'
+                'error_message' => 'Ошибка при удалении категории альбомов!'
             ];
-        } else {
-
-            // Скрываем бога
-            $albums_category->editor_id = hideGod($request->user());
-            $albums_category->save();
-
-            $parent_id = $albums_category->parent_id;
-
-            $albums_category = AlbumsCategory::destroy($id);
-
-            if ($albums_category) {
-                // Переадресовываем на index
-                return redirect()->route('albums_categories.index', ['id' => $parent_id]);
-            } else {
-                $result = [
-                    'error_status' => 1,
-                    'error_message' => 'Ошибка при удалении категории альбомов!'
-                ];
-            }
         }
     }
 

@@ -220,7 +220,7 @@ class DepartmentController extends Controller
         return view('departments.edit', [
             'department' => $department,
             'entity' => $this->entity_alias,
-            'title' => 'Редактирование категории альбомов',
+            'title' => isset($department->parent_id) ? 'Редактирование отдела' : 'Редактирование филиала',
             'parent_id' => $department->parent_id,
             'category_id' => $department->category_id
         ]);
@@ -229,19 +229,11 @@ class DepartmentController extends Controller
     public function update(DepartmentRequest $request, $id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_alias, getmethod(__FUNCTION__))
-        ;
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $department = Department::moderatorLimit($answer)->findOrFail($id);
+        $department = Department::moderatorLimit(operator_right($this->entity_alias, $this->entity_alias, getmethod(__FUNCTION__)))
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $department);
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
 
         if (isset($department->location_id)) {
 
@@ -255,19 +247,14 @@ class DepartmentController extends Controller
         $first = mb_strtoupper($first, 'UTF-8');
         $department->name = $first.$last;
 
-        // Телефон
-        $phones = add_phones($request, $department);
+        $department->editor_id = hideGod($request->user());
 
-        $department->editor_id = hideGod($user);
-
-        $status = 'филиала';
-        if ($request->medium_item == 1) {
-            $department->parent_id = $request->parent_id;
-            $status = 'отдела';
-        }
+        $status = isset($request->parent_id) ? 'отдела' : 'филиала';
+        $department->parent_id = $request->parent_id;
 
         // Отображение на сайте
         $department->display = $request->display;
+        $department->system_item = $request->system_item;
 
         $department->save();
 
@@ -291,48 +278,38 @@ class DepartmentController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $department = Department::withCount('staff', 'users')
+        $department = Department::with('staff', 'users', 'childs')
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $department);
 
-        // Удаляем ajax
-        // Проверяем содержит ли филиал / отдел вложения / должности
-        $department_parent = Department::moderatorLimit($answer)->whereParent_id($id)->first();
-
-        // Получаем авторизованного пользователя
+        // Получаем пользователя
         $user = $request->user();
 
-        if (isset($department_parent) || ($department->staff_count > 0) || ($department->users_count > 0)) {
+        // Скрываем бога
+        $department->editor_id = hideGod($user);
+        $department->save();
 
+        $parent = $department->parent_id;
+
+        $department = Department::destroy($id);
+
+        if ($department) {
+
+            // Перезаписываем сессию: меняем список филиалов и отделов на новый
+            $this->RSDepartments($user);
+
+            // Переадресовываем на index
+            return redirect()->route('departments.index', ['id' => $parent, 'item' => $this->entity_alias]);
+        } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Данный отдел не пуст, удаление невозможно'
+                'error_message' => 'Ошибка при удалении!'
             ];
-        } else {
-            $department->editor_id = $user->id;
-            $department->save();
-
-            $parent = $department->parent_id;
-
-            $department = Department::destroy($id);
-
-            if ($department) {
-
-                // Перезаписываем сессию: меняем список филиалов и отделов на новый
-                $this->RSDepartments($user);
-
-                // Переадресовываем на index
-                return redirect()->route('departments.index', ['id' => $parent, 'item' => $this->entity_alias]);
-            } else {
-                $result = [
-                    'error_status' => 1,
-                    'error_message' => 'Ошибка при удалении!'
-                ];
-            }
         }
+
     }
 
     public function ajax_check(Request $request)

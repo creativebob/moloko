@@ -56,6 +56,10 @@ class RawsCategoryPolicy
             return false;
         }
 
+        if ($model->childs->count() > 0) {
+            return false;
+        }
+
         return $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
     }
 

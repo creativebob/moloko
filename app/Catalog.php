@@ -16,10 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -47,13 +43,21 @@ class Catalog extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+
     protected $fillable = [
         'company_id',
         'name',
+        'alias',
         'parent_id',
         'category_id',
     ];
 
+
+    // Вложенные
+    public function childs()
+    {
+        return $this->hasMany('App\Catalog', 'parent_id');
+    }
 
     // Сайт
     public function site()
@@ -90,4 +94,6 @@ class Catalog extends Model
     {
         return $this->morphedByMany('App\Raw', 'catalog_products')->withPivot('id', 'display', 'sort');
     }
+
+
 }

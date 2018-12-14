@@ -48,7 +48,7 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            {{ Form::model($goods_category, ['url' => '/admin/goods_categories/'.$goods_category->id, 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'products-category-form']) }}
+            {{ Form::model($goods_category, ['route' => ['goods_categories.update', $goods_category->id], 'data-abide', 'novalidate', 'files' => 'true']) }}
             {{ method_field('PATCH') }}
 
             <!-- Общая информация -->
@@ -220,9 +220,6 @@
 @include('includes.scripts.modal-composition-delete-script')
 
 @include('includes.scripts.ckeditor')
-
-
-
 <script>
 
     // Основные настройки

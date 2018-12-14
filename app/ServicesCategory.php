@@ -53,6 +53,12 @@ class ServicesCategory extends Model
     'category_status',
     ];
 
+    // Вложенные
+    public function childs()
+    {
+        return $this->hasMany('App\ServicesCategory', 'parent_id');
+    }
+
     // Получаем компании.
     public function company()
     {

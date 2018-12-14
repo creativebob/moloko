@@ -18,6 +18,8 @@ $(document).on('click', '.delete-button-ajax', function(event) {
   event.preventDefault();
   var entity_alias = $(this).attr('id').split('-')[1];
   var id = $(this).attr('id').split('-')[2];
+  var buttons = $('.button');
+  buttons.prop('disabled', true);
 
   // Ajax
   $.ajax({
@@ -28,10 +30,12 @@ $(document).on('click', '.delete-button-ajax', function(event) {
     type: "DELETE",
     success: function (html) {
       // alert(html);
+      $('#item-delete-ajax').foundation('close');
       $('#content').html(html);
       Foundation.reInit($('#content'));
       $('.delete-button-ajax').removeAttr('id');
+      buttons.prop('disabled', false);
     }
   });
 });
-</script> 
+</script>

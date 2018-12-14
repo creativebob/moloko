@@ -53,6 +53,12 @@ class Sector extends Model
     ];
 
     // ------------------------------------- Отношения -----------------------------------------
+
+    // Вложенные
+    public function childs()
+    {
+        return $this->hasMany('App\Sector', 'parent_id');
+    }
     // Компания
     public function company()
     {

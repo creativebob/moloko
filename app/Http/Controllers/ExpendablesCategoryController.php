@@ -169,41 +169,27 @@ class ExpendablesCategoryController extends Controller
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $expendables_category = ExpendablesCategory::moderatorLimit($answer)->findOrFail($id);
+        $expendables_category = ExpendablesCategory::with('childs')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $expendables_category);
 
-        // Проверяем содержит ли сектор вложения
-        $expendables_categories_count = ExpendablesCategory::moderatorLimit($answer)
-        ->whereParent_id($expendables_category->id)
-        ->count();
+        // Скрываем бога
+        $expendables_category->editor_id = hideGod($request->user());
+        $expendables_category->save();
 
-        // Если содержит, то даем сообщение об ошибке
-        if ($expendables_categories_count > 0) {
+        $parent_id = $expendables_category->parent_id;
+
+        $expendables_category = ExpendablesCategory::destroy($id);
+
+        if ($expendables_category) {
+            // Переадресовываем на index
+            return redirect()->route('expendables_categories.index', ['id' => $parent_id]);
+        } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Категория содержит вложенные элементы, удаление невозможно!'
+                'error_message' => 'Ошибка при удалении расходников!'
             ];
-        } else {
-
-            // Скрываем бога
-            $expendables_category->editor_id = hideGod($request->user());
-            $expendables_category->save();
-
-            $parent_id = $expendables_category->parent_id;
-
-            $expendables_category = ExpendablesCategory::destroy($id);
-
-            if ($expendables_category) {
-                // Переадресовываем на index
-                return redirect()->route('expendables_categories.index', ['id' => $parent_id]);
-            } else {
-                $result = [
-                    'error_status' => 1,
-                    'error_message' => 'Ошибка при удалении сектора!'
-                ];
-            }
         }
     }
 }

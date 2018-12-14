@@ -240,45 +240,30 @@ class GoodsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $goods_category = GoodsCategory::withCount('goods_products')
+        $goods_category = GoodsCategory::with('childs', 'goods_products')
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_category);
 
-        // Удаляем ajax
-        // Проверяем содержит ли индустрия вложения
-        $goods_category_count = GoodsCategory::moderatorLimit($answer)
-        ->whereParent_id($id)
-        ->count();
+        // Скрываем бога
+        $goods_category->editor_id = hideGod($request->user());
+        $goods_category->save();
 
-        // Если содержит, то даем сообщение об ошибке
-        if ($goods_category_count > 0 || ($goods_category->goods_products_count > 0)) {
+        $parent_id = $goods_category->parent_id;
 
+        $goods_category = GoodsCategory::destroy($id);
+
+        if ($goods_category) {
+
+            // Переадресовываем на index
+            return redirect()->route('goods_categories.index', ['id' => $parent_id]);
+        } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Категория не пуста!'
+                'error_message' => 'Ошибка при записи сектора!'
             ];
-        } else {
-
-            $goods_category->editor_id = hideGod($request->user()->id);
-            $goods_category->save();
-
-            $parent_id = $goods_category->parent_id;
-
-            $goods_category = GoodsCategory::destroy($id);
-
-            if ($goods_category) {
-
-                // Переадресовываем на index
-                return redirect()->route('goods_categories.index', ['id' => $parent_id]);
-            } else {
-                $result = [
-                    'error_status' => 1,
-                    'error_message' => 'Ошибка при записи сектора!'
-                ];
-            }
         }
     }
 

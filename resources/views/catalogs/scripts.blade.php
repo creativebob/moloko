@@ -1,140 +1,62 @@
 <script type="text/javascript">
+    $(function () {
 
-    var siteAlias = '{{ $site->alias }}';
-    // alert(siteAlias);
+        // Берем алиас сайта
+        var site_alias = '{{ $site->alias }}';
 
-    // ------------------- Проверка на совпадение имени --------------------------------------
-    function catalogCheck (name, submit, db) {
+        // ------------------- Проверка на совпадение --------------------------------------
+        function checkField (check, field = null) {
 
-        // Блокируем аттрибут базы данных
-        $(db).val(0);
+            var item = check;
+            var value = item.val();
+            var id = item.closest('form').find('#item-id').val();
+            var submit = item.closest('form').find('.button');
+            field = field != null ? field : item.attr('name');
 
-        // Смотрим сколько символов
-        var lenname = name.length;
+            // Если символов больше 3 - делаем запрос
+            if (value.length > 3) {
+                // alert(value + ', ' + field + ', ' + entity_alias + ', ' + id);
 
-        // Если символов больше 3 - делаем запрос
-        if (lenname > 3) {
+                // Сам ajax запрос
+                $.ajax({
+                    url: '/admin/sites/' + site_alias + '/catalog_check',
+                    type: "POST",
+                    data: {value: value, field: field, id: id},
+                    beforeSend: function () {
+                        item.siblings('.find-status').addClass('icon-load');
+                    },
+                    success: function(count){
+                        item.siblings('.find-status').removeClass('icon-load');
 
-            // Первая буква сектора заглавная
-            // name = newParagraph (name);
-
-            // Сам ajax запрос
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/sites/' + siteAlias + '/catalog_check',
-                type: "POST",
-                data: {name: name},
-                beforeSend: function () {
-                    $('#name-check').addClass('icon-load');
-                },
-                success: function(date){
-                    $('#name-check').removeClass('icon-load');
-                    var result = $.parseJSON(date);
-                    // Если ошибка
-                    if (result.error_status == 1) {
-                        $(submit).prop('disabled', true);
-                        $('input[name="name"] ~ .item-error').css('display', 'block');
-                        $(db).val(0);
+                    // Состояние ошибки
+                    if (count > 0) {
+                        item.siblings('.item-error').show();
                     } else {
-                        // Выводим пришедшие данные на страницу
-                        $(submit).prop('disabled', false);
-                        $('input[name="name"] ~ .item-error').css('display', 'none');
-                        $(db).val(1);
+                        item.siblings('.item-error').hide();
                     };
+
+                    // Состояние кнопки
+                    $(submit).prop('disabled', item.closest('form').find($(".item-error:visible")).length > 0);
                 }
             });
+            } else {
+                item.siblings('.item-error').hide();
+                $(submit).prop('disabled', item.closest('form').find($(".item-error:visible")).length > 0);
+            };
         };
 
-        // Удаляем все значения, если символов меньше 3х
-        if (lenname <= 3) {
-            $(submit).prop('disabled', false);
-            $('.item-error').css('display', 'none');
-            $(db).val(0);
-        };
-    };
+        // Проверка существования
+        $(document).on('keyup', '.check-field', function() {
+            var check = $(this);
 
-    function aliasCheck (alias, submit, db) {
+            let timerId;
+            clearTimeout(timerId);
+            timerId = setTimeout(function() {
+                checkField(check);
+            }, 300);
+        });
 
-        // Блокируем аттрибут базы данных
-        $(db).val(0);
-
-        // Смотрим сколько символов
-        var lenName = alias.length;
-
-        // Если символов больше 3 - делаем запрос
-        if (lenName > 3) {
-
-            // Сам ajax запрос
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/sites/' + siteAlias + '/catalog_check_alias',
-                type: "POST",
-                data: {alias: alias},
-                beforeSend: function () {
-                    $('#alias-check').addClass('icon-load');
-                },
-                success: function(date) {
-                    $('#alias-check').removeClass('icon-load');
-                    var result = $.parseJSON(date);
-                    // Если ошибка
-                    if (result.error_status == 1) {
-                        $(submit).prop('disabled', true);
-                        $('input[name="alias"] ~ .item-error').css('display', 'block');
-                        $(db).val(0);
-                    } else {
-                        // Выводим пришедшие данные на страницу
-                        $(submit).prop('disabled', false);
-                        $('input[name="alias"] ~ .item-error').css('display', 'none');
-                        $(db).val(1);
-                    };
-                }
-            });
-        } else {
-            // Удаляем все значения, если символов меньше 3х
-            $(submit).prop('disabled', false);
-            $('.item-error').css('display', 'none');
-            $(db).val(0);
-        };
-    };
-
-    // Обозначаем таймер для проверки
-    var timerId;
-    var time = 400;
-
-    // Проверка существования
-    $(document).on('keyup', 'input[name="name"]', function() {
-        // Получаем фрагмент текста
-        var name = $('input[name="name"]').val();
-        // Указываем название кнопки
-        var submit = 'input[type="submit"]';
-        // Значение поля с разрешением
-        var db = '#form-modal-create .first-item';
-        // Выполняем запрос
-        clearTimeout(timerId);
-        timerId = setTimeout(function() {
-            catalogCheck (name, submit, db)
-        }, time);
     });
-
-    // Проверка существования алиаса
-    $(document).on('keyup', 'input[name="alias"]', function() {
-        // Получаем фрагмент текста
-        var alias = $('input[name="alias"]').val();
-        // Указываем название кнопки
-        var submit = 'input[type="submit"]';
-        // Значение поля с разрешением
-        var db = '#check';
-        // Выполняем запрос
-        clearTimeout(timerId);
-        timerId = setTimeout(function() {
-            aliasCheck (alias, submit, db);
-        }, time);
-    });
-
 </script>
 
 
