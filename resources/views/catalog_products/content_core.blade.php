@@ -26,7 +26,22 @@ $article = $type . '_article';
     <td class="td-name">
         <a href="/admin/{{ $type }}/{{ $item->id }}/edit">{{ $item->$article->name }}</a>
     </td>
-    <td class="td-type">Товар</td>
+    <td class="td-type">
+        @switch($type)
+        @case('goods')
+        Товар
+        @break
+
+        @case('raws')
+        Сырье
+        @break
+
+        @case('services')
+        Услуга
+        @break
+
+        @endswitch
+    </td>
     <td class="td-price">{{ num_format($item->price, 0) }}</td>
 
     @isset(Auth::user()->god)
