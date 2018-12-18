@@ -275,7 +275,7 @@ $disabled = $cur_goods->goods_article->draft == null;
                             <legend>Каталоги</legend>
 
                             {{-- Form::select('catalogs[]', $catalogs_list, $cur_goods->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
-                            @include('includes.selects.catalogs')
+                            @include('includes.selects.catalogs_chosen', ['parent_id' => $cur_goods->catalogs->keyBy('id')->toArray()])
 
                         </fieldset>
                     </div>

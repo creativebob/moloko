@@ -7,7 +7,7 @@
 
 @section('title', 'Редактировать лид')
 
-<!-- @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, isset($lead->case_number) ? $lead->case_number : 'нет номера')) -->
+{{-- @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, isset($lead->case_number) ? $lead->case_number : 'нет номера')) --}}
 
 
 @section('title-content')
@@ -81,7 +81,6 @@ if($lead->manager_id == 1){
 
     	// Снятие блокировки с поля номер телефона
     	$('#phone').attr('readonly', false);
-
     });
 
 	$(document).on('click', '#lead-free', function(event) {

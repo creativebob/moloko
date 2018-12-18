@@ -617,7 +617,7 @@ class RawController extends Controller
 
                 $catalogs_insert = [];
                 foreach ($request->catalogs as $catalog) {
-                    $mass[$catalog] = ['display' => 1];
+                    $catalogs_insert[$catalog] = ['display' => 1];
                 }
                 // dd($catalogs_insert);
                 $raw->catalogs()->sync($catalogs_insert);

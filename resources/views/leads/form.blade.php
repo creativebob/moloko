@@ -91,7 +91,7 @@
                                     </thead>
                                     <tbody id="goods-section">
 
-                                        @if (isset($lead->order->compositions))
+                                        @if (isset($lead->order))
                                         @foreach ($lead->order->compositions as $composition)
                                         @include('leads.goods', ['composition' => $composition])
                                         @endforeach

@@ -50,7 +50,12 @@ function tplMenu($item, $padding, $parent, $disable, $exception) {
     if ($item->id != $exception) {
 
         // Выбираем пункт родителя
-        $selected = $item->id == $parent ? ' selected' : '';
+        if (is_array($parent)) {
+            $selected = array_key_exists($item->id, $parent) ? ' selected' : '';
+        } else {
+            $selected = $item->id == $parent ? ' selected' : '';
+        };
+
         $disabled = $disable == 1 ? ' disabled' : '';
 
         // отрисовываем option's

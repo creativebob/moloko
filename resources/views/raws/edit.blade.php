@@ -267,7 +267,7 @@ $disabled = $raw->raws_article->draft == null;
                             <legend>Каталоги</legend>
 
                             {{-- Form::select('catalogs[]', $catalogs_list, $raw->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
-                            @include('includes.selects.catalogs')
+                            @include('includes.selects.catalogs_chosen', ['parent_id' => $raw->catalogs->keyBy('id')->toArray()])
 
                         </fieldset>
                     </div>

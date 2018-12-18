@@ -220,8 +220,6 @@ Route::resource('/users', 'UserController')->middleware('auth');
 Route::get('/myprofile', 'UserController@myprofile')->middleware('auth')->name('users.myprofile');
 Route::patch('/updatemyprofile', 'UserController@updatemyprofile')->middleware('auth')->name('users.updatemyprofile');
 
-// Поиск продукции для добавления на сайт
-Route::any('/catalog_products/add_product', 'CatalogProductController@add_product')->middleware('auth');
 
 // ---------------------------------- Категории альбомов -------------------------------------------
 
@@ -735,9 +733,14 @@ Route::get('/sites/{alias}', 'SiteController@sections')->middleware('auth')->nam
 // Проверка на существование домена сайта
 Route::post('/site_check', 'SiteController@ajax_check')->middleware('auth');
 
+// Поиск продукции для добавления на сайт
+Route::any('/catalog_product/search_add_product', 'CatalogProductController@search_add_product')->middleware('auth');
+
+// Поиск продукции для добавления на сайт
+Route::any('/catalog_product/add_product', 'CatalogProductController@add_product')->middleware('auth');
+
 // Разделы сайта
 Route::prefix('/sites/{alias}')->group(function () {
-
 
     // --------------------------------------- Страницы ---------------------------------------------
 
@@ -788,8 +791,7 @@ Route::prefix('/sites/{alias}')->group(function () {
 
 });
 
-// Поиск продукции для добавления на сайт
-Route::any('/catalog_products/search_add_product/{text_fragment}/{catalog_id}', 'CatalogProductController@search_add_product')->middleware('auth');
+
 
 
 // ------------------------------------- Отображение сессии -----------------------------------------

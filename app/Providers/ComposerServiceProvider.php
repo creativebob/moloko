@@ -65,7 +65,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.positions', PositionsComposer::class);
         view()->composer('includes.metrics_category.properties_list', PropertiesComposer::class);
 
-        view()->composer('includes.selects.catalogs', CatalogsSelectComposer::class);
+        view()->composer(['includes.selects.catalogs_chosen', 'includes.selects.catalogs'], CatalogsSelectComposer::class);
 
         view()->composer('includes.lists.site_menus', SiteMenusComposer::class);
 
