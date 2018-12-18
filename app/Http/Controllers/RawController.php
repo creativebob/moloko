@@ -376,6 +376,10 @@ class RawController extends Controller
             // Определяем количество метрик и составов
             $metrics_count = isset($request->metrics) ? count($request->metrics) : 0;
             // dd($metrics_count);
+            //
+            $compositions_count = 0;
+
+            $compositions_values = null;
 
             // Если пришли значения метрик
             $metrics_values = [];
@@ -678,72 +682,6 @@ class RawController extends Controller
         }
     }
 
-      // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->raws as $item) {
-            Raw::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Raw::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Raw::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
     public function get_inputs(Request $request)
     {
 
@@ -892,5 +830,107 @@ class RawController extends Controller
         $this->authorize(getmethod('edit'), $raw);
 
         return view('raws.photos', compact('raw'));
+    }
+
+    // -------------------------------------- Проверки на совпаденеи артикула ----------------------------------------------------
+
+    // Проверка имени по компании
+    public function check_coincidence_name($request)
+    {
+
+        // Смотрим имя артикула по системе
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_raws_articles = operator_right('raws_article', false, 'index');
+
+        $raws_articles = RawsArticle::moderatorLimit($answer_raws_articles)
+        ->companiesLimit($answer_raws_articles)
+        ->whereNull('draft')
+        ->whereNull('archive')
+        ->whereName($request->name)
+        ->get(['name', 'raws_product_id']);
+        // dd($raws_articles);
+        // dd($request);
+
+        if (count($raws_articles)) {
+
+            // Смотрим группу артикулов
+            $diff_count = $raws_articles->where('raws_product_id', '!=', $request->raws_product_id)->count();
+            // dd($diff_count);
+            if ($diff_count > 0) {
+                return true;
+            }
+        }
+    }
+
+    public function check_coincidence_article($metrics_count, $metrics_values, $compositions_count, $compositions_values, $raws_product_id, $manufacturer_id = null)
+    {
+
+        // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
+        $raws_articles = RawsArticle::with('metrics', 'compositions', 'set_compositions')
+        ->where('raws_product_id', $raws_product_id)
+        ->where(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count])
+        ->whereNull('draft')
+        ->whereNull('archive')
+        ->get();
+        // dd($raws_articles);
+
+        if ($raws_articles) {
+
+            // Создаем массив совпадений
+            $coincidence = [];
+            // dd($request);
+
+            // Сравниваем метрики
+            foreach ($raws_articles as $raws_article) {
+                // foreach ($raws_article->raws as $cur_raws) {
+                // dd($raws_articles);
+
+                // Формируем массив метрик артикула
+                $metrics_array = [];
+                foreach ($raws_article->metrics as $metric) {
+                    // dd($metric);
+                    $metrics_array[$metric->id][] = $metric->pivot->value;
+                }
+
+                // Если значения метрик совпали, создаюм ключ метрик
+                if ($metrics_array == $metrics_values) {
+                    $coincidence['metrics'] = 1;
+                }
+
+                // Формируем массив составов артикула
+                $compositions_array = [];
+                if ($raws_article->raws_product->set_status == 'one') {
+                    foreach ($raws_article->compositions as $composition) {
+                        // dd($composition);
+                        $compositions_array[$composition->id] = $composition->pivot->value;
+                    }
+                } else {
+                    foreach ($raws_article->set_compositions as $composition) {
+                        // dd($composition);
+                        $compositions_array[$composition->id] = $composition->pivot->value;
+                    }
+                }
+
+                if ($compositions_array == $compositions_values) {
+                    // Если значения метрик совпали, создаюм ключ метрик
+                    $coincidence['compositions'] = 1;
+                }
+
+                if ($raws_article->manufacturer_id == $manufacturer_id) {
+                    // Если значения метрик совпали, создаюм ключ метрик
+                    $coincidence['manufacturer'] = 1;
+                }
+                // }
+            }
+            // dd($coincidence);
+            // Если ключи присутствуют, даем ошибку
+            if (isset($coincidence['metrics']) && isset($coincidence['compositions']) && isset($coincidence['manufacturer'])) {
+
+                // dd('ошибка');
+                return true;
+                // dd('lol');
+            }
+        }
+        // dd($coincidence);
     }
 }
