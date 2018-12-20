@@ -27,7 +27,9 @@ $article = $type . '_article';
         <a href="/admin/{{ $type }}/{{ $item->id }}/edit">{{ $item->$article->name }}</a>
     </td>
     <td class="td-type">
+
         @switch($type)
+
         @case('goods')
         Товар
         @break
@@ -41,6 +43,7 @@ $article = $type . '_article';
         @break
 
         @endswitch
+
     </td>
     <td class="td-price">{{ num_format($item->price, 0) }}</td>
 

@@ -527,7 +527,7 @@ class RawController extends Controller
         // Если проверки пройдены, или меняем уже товар
 
         // -------------------------------------------------------------------------------------------------
-        // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
+        // ПЕРЕНОС ГРУППЫ СЫРЬЯ В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
 
         // Получаем выбранную категорию со страницы (то, что указал пользователь)
         $raws_category_id = $request->raws_category_id;
@@ -541,7 +541,7 @@ class RawController extends Controller
         }
 
         // -------------------------------------------------------------------------------------------------
-        // ПЕРЕНОС ТОВАРА В ДРУГУЮ ГРУППУ ПОЛЬЗОВАТЕЛЕМ
+        // ПЕРЕНОС СЫРЬЯ В ДРУГУЮ ГРУППУ ПОЛЬЗОВАТЕЛЕМ
         // Важно! Важно проверить, соответствеут ли группа в которую переноситься товар, метрикам самого товара
         // Если не соответствует - дать отказ. Если соответствует - осуществить перенос
 
@@ -574,7 +574,7 @@ class RawController extends Controller
 
             $directory = $user->company_id.'/media/raws/'.$raw->id.'/img';
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записанным обьектом фото, и результатом записи
+            // Отправляем на хелпер request(в нем находится фото и все его параметры,  директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записанным обьектом фото, и результатом записи
             $result = save_photo($request, $directory, 'avatar-'.time(), null, $raw->photo_id, $settings);
 
             $raw->photo_id = $result['photo']->id;
@@ -637,7 +637,7 @@ class RawController extends Controller
                 return Redirect($backlink);
             }
 
-            return Redirect('/admin/raws');
+            return redirect()->route('raws.index');
         } else {
             abort(403, 'Ошибка записи группы товаров');
         }
@@ -680,156 +680,6 @@ class RawController extends Controller
         } else {
             abort(403, 'Товар не найден');
         }
-    }
-
-    public function get_inputs(Request $request)
-    {
-
-        $product = Product::with('metrics.property', 'compositions.unit')->withCount('metrics', 'compositions')->findOrFail($request->product_id);
-        return view('products.raws-form', compact('product'));
-    }
-
-    public function add_photo(Request $request)
-    {
-
-        // Подключение политики
-        $this->authorize(getmethod('store'), Photo::class);
-
-        if ($request->hasFile('photo')) {
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            // $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
-
-            // Получаем авторизованного пользователя
-            $user = $request->user();
-
-            // Смотрим компанию пользователя
-            $company_id = $user->company_id;
-
-            // Скрываем бога
-            $user_id = hideGod($user);
-
-           // Иначе переводим заголовок в транслитерацию
-            $alias = Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]);
-
-            $album = Album::where(['company_id' => $company_id, 'name' => $request->name, 'albums_category_id' => 1])->first();
-
-            if ($album) {
-                $album_id = $album->id;
-            } else {
-                $album = new Album;
-                $album->company_id = $company_id;
-                $album->name = $request->name;
-                $album->alias = $alias;
-                $album->albums_category_id = 1;
-                $album->description = $request->name;
-                $album->author_id = $user_id;
-                $album->save();
-
-                $album_id = $album->id;
-            }
-
-            $raw = Raw::findOrFail($request->id);
-
-            if ($raw->album_id == null) {
-                $raw->album_id = $album_id;
-                $raw->save();
-
-                if (!$raw) {
-                    abort(403, 'Ошибка записи альбома в продукцию');
-                }
-            }
-
-            // Вытаскиваем настройки
-            // Вытаскиваем базовые настройки сохранения фото
-            $settings = config()->get('settings');
-
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id'=> 1])->first();
-
-            if ($get_settings) {
-
-                if ($get_settings->img_small_width != null) {
-                    $settings['img_small_width'] = $get_settings->img_small_width;
-                }
-
-                if ($get_settings->img_small_height != null) {
-                    $settings['img_small_height'] = $get_settings->img_small_height;
-                }
-
-                if ($get_settings->img_medium_width != null) {
-                    $settings['img_medium_width'] = $get_settings->img_medium_width;
-                }
-
-                if ($get_settings->img_medium_height != null) {
-                    $settings['img_medium_height'] = $get_settings->img_medium_height;
-                }
-
-                if ($get_settings->img_large_width != null) {
-                    $settings['img_large_width'] = $get_settings->img_large_width;
-                }
-
-                if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;
-                }
-
-                if ($get_settings->img_formats != null) {
-                    $settings['img_formats'] = $get_settings->img_formats;
-                }
-
-                if ($get_settings->img_min_width != null) {
-                    $settings['img_min_width'] = $get_settings->img_min_width;
-                }
-
-                if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;
-                }
-
-                if ($get_settings->img_max_size != null) {
-                    $settings['img_max_size'] = $get_settings->img_max_size;
-                }
-            }
-
-            $directory = $company_id.'/media/albums/'.$album_id.'/img';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-            $array = save_photo($request, $directory,  $alias.'-'.time(), $album_id, null, $settings);
-
-            $photo = $array['photo'];
-            $upload_success = $array['upload_success'];
-
-            $media = new AlbumEntity;
-            $media->album_id = $album_id;
-            $media->entity_id = $photo->id;
-            $media->entity = 'photos';
-            $media->save();
-
-            if ($upload_success) {
-
-                // Переадресовываем на index
-                return response()->json($upload_success, 200);
-            } else {
-                return response()->json('error', 400);
-            }
-        } else {
-            return response()->json('error', 400);
-        }
-    }
-
-    public function photos(Request $request)
-    {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $raw = Raw::with('album.photos')->moderatorLimit($answer)->findOrFail($request->raw_id);
-        // dd($product);
-
-        // Подключение политики
-        $this->authorize(getmethod('edit'), $raw);
-
-        return view('raws.photos', compact('raw'));
     }
 
     // -------------------------------------- Проверки на совпаденеи артикула ----------------------------------------------------

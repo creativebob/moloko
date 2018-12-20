@@ -104,4 +104,11 @@ class GoodsCategory extends Model
     {
         return $this->morphedByMany('App\RawsArticle', 'compositions');
     }
+
+    // Производители
+    public function manufacturers()
+    {
+        return $this->belongsToMany('App\Company', 'goods_category_manufacturer', 'goods_category_id', 'manufacturer_id');
+    }
+
 }

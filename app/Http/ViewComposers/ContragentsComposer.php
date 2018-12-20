@@ -3,22 +3,22 @@
 namespace App\Http\ViewComposers;
 
 use App\Company;
-use App\Manufacturer;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\View\View;
 
-class ManufacturersComposer
+class ContragentsComposer
 {
 	public function compose(View $view)
 	{
 
+        $name = $view->name;
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('companies', false, 'index');
+        $answer = operator_right($name, false, 'index');
 
         // Главный запрос
         $company = Company::with([
-            'manufacturers' => function ($q) {
+            $name => function ($q) {
                 $q->orderBy('sort', 'asc');
             }
         ])
@@ -34,7 +34,7 @@ class ManufacturersComposer
 
         // dd($view);
 
-        return $view->with('manufacturers', $company->manufacturers);
+        return $view->with('items', $company->$name);
     }
 
 }

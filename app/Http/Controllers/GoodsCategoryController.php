@@ -141,7 +141,9 @@ class GoodsCategoryController extends Controller
                 $q->with('unit', 'values');
             },
             'compositions.raws_product.unit',
-            'compositions'])
+            'compositions',
+            'manufacturers'
+        ])
         ->withCount('one_metrics', 'set_metrics', 'compositions')
         ->moderatorLimit($answer_goods_categories)
         ->findOrFail($id);
@@ -217,6 +219,13 @@ class GoodsCategoryController extends Controller
 
             $goods_categories = GoodsCategory::whereCategory_id($id)
             ->update(['goods_mode_id' => $request->goods_mode_id]);
+        }
+
+        // Производители
+        if (isset($request->manufacturers)) {
+            $goods_category->manufacturers()->sync($request->manufacturers);
+        } else {
+            $goods_category->manufacturers()->detach();
         }
 
         $goods_category->save();

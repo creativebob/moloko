@@ -860,7 +860,7 @@ class GoodsController extends Controller
         }
     }
 
-            // Отображение на сайте
+    // Отображение на сайте
     public function ajax_sync(Request $request)
     {
 
@@ -884,69 +884,6 @@ class GoodsController extends Controller
         return response()->json($goods_count);
     }
 
-    public function get_inputs(Request $request)
-    {
-
-        $product = Product::with('metrics.property', 'compositions.unit')->withCount('metrics', 'compositions')->findOrFail($request->product_id);
-        return view('products.cur_goods-form', compact('product'));
-        // $product = Product::with('metrics.property', 'compositions.unit')->findOrFail(1);
-        // dd($product);
-    }
-
-    public function add_photo(Request $request)
-    {
-
-        // Подключение политики
-        $this->authorize(getmethod('store'), Photo::class);
-
-        if ($request->hasFile('photo')) {
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            // $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
-
-            // Иначе переводим заголовок в транслитерацию
-            $alias = Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]);
-
-            $album = Album::firstOrCreate([
-                'company_id' => $request->user()->company_id,
-                'name' => $request->name,
-                'albums_category_id' => 1,
-            ], [
-                'alias' => $alias,
-                'description' => $request->name,
-                'author_id' => hideGod($request->user()),
-            ]);
-
-            Goods::where('id', $request->id)->update(['album_id' => $album->id]);
-
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id'=> 1])->first();
-
-            $settings = getSettings($get_settings);
-
-            $directory = $request->user()->company_id.'/media/albums/'.$album->id.'/img';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-            $array = save_photo($request, $directory,  $alias.'-'.time(), $album->id, null, $settings);
-
-            $photo = $array['photo'];
-            $upload_success = $array['upload_success'];
-
-            $album->photos()->attach($photo->id);
-
-            // $upload_success = true;
-
-            if ($upload_success) {
-                return response()->json($upload_success, 200);
-            } else {
-                return response()->json('error', 400);
-            }
-
-        } else {
-            return response()->json('error', 400);
-        }
-    }
-
     public function photos(Request $request)
     {
 
@@ -962,7 +899,6 @@ class GoodsController extends Controller
 
         return view('goods.photos', compact('cur_goods'));
     }
-
 
     // -------------------------------------- Проверки на совпаденеи артикула ----------------------------------------------------
 

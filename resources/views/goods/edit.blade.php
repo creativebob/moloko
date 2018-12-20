@@ -87,7 +87,11 @@ $disabled = $cur_goods->goods_article->draft == null;
                                     @include('includes.selects.goods_categories', ['goods_category_id' => $cur_goods->goods_article->goods_product->goods_category_id])
                                 </label>
 
-                                @include('includes.selects.manufacturers', ['manufacturer_id' => $cur_goods->goods_article->manufacturer_id, 'draft' => $cur_goods->goods_article->draft])
+                                <label>Производитель
+                                    {!! Form::select('manufacturer_id', $cur_goods->goods_article->goods_product->goods_category->manufacturers->pluck('name', 'id'), $cur_goods->goods_article->manufacturer_id, []) !!}
+                                </label>
+
+                                {{-- @include('includes.selects.manufacturers', ['manufacturer_id' => $cur_goods->goods_article->manufacturer_id, 'draft' => $cur_goods->goods_article->draft]) --}}
 
                                 {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 
@@ -384,27 +388,26 @@ $disabled = $cur_goods->goods_article->draft == null;
 
 
                     <div class="small-12 medium-7 cell">
-                        {!!  Form::open(['url' => '/admin/goods/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) !!}
+                        {!!  Form::open(['route' => ['photos.ajax_store', 'goods'], 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) !!}
+
                         {{ Form::hidden('name', $cur_goods->goods_article->name) }}
                         {{ Form::hidden('id', $cur_goods->id) }}
+                        {!! Form::hidden('entity', 'goods') !!}
+
                         {!! Form::close() !!}
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
                             @isset($cur_goods->album_id)
-                            @include('goods.photos', $cur_goods)
+                            @include('photos.photos', ['item' => $cur_goods])
                             @endisset
 
                         </ul>
                     </div>
 
-                    <div class="small-12 medium-5 cell">
+                    <div class="small-12 medium-5 cell" id="photo-edit-partail">
 
                         {{-- Форма редактированя фотки --}}
-                        {{ Form::open(['url' => '/admin/goods/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
 
-                        {{ Form::hidden('photo_name', $cur_goods->name) }}
-                        {{ Form::hidden('id', $cur_goods->id) }}
-                        {{ Form::close() }}
                     </div>
                 </div>
             </div>
@@ -434,7 +437,7 @@ $disabled = $cur_goods->goods_article->draft == null;
         var compositions_count = 0;
     }
 
-    var compositions_count = '{{ count($cur_goods->goods_article->metrics) }}';
+    // var compositions_count = '{{ count($cur_goods->goods_article->metrics) }}';
 
     var category_id = '{{ $cur_goods->goods_article->goods_product->goods_category_id }}';
 
@@ -615,7 +618,7 @@ $disabled = $cur_goods->goods_article->draft == null;
         $('#' + $(this).data('open')).show();
     });
 
-    // При клике на чекбокс метрики отображаем ее на странице
+    // При клике на чекбокс состава отображаем ее на странице
     $(document).on('click', '.add-composition', function() {
         // alert($(this).val());
         let id = $(this).val();
@@ -632,7 +635,7 @@ $disabled = $cur_goods->goods_article->draft == null;
         }
     });
 
-    $(document).ready(function($) {
+    $(function() {
         $('.checkboxer-title .form-error').hide();
     });
 
@@ -664,117 +667,13 @@ $disabled = $cur_goods->goods_article->draft == null;
         }
     });
 
-    // При клике на фотку подствляем ее значения в блок редактирования
-    $(document).on('click', '#photos-list img', function(event) {
-        event.preventDefault();
-
-        // Удаляем всем фоткам активынй класс
-        $('#photos-list img').removeClass('active');
-
-        // Наваливаем его текущей
-        $(this).addClass('active');
-
-        var id = $(this).data('id');
-
-        // Получаем инфу фотки
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_get_photo',
-            type: 'POST',
-            data: {id: id, entity: 'goods'},
-            success: function(html){
-
-                // alert(html);
-                $('#form-photo-edit').html(html);
-                // $('#modal-create').foundation();
-                // $('#modal-create').foundation('open');
-            }
-        })
-    });
-
-    // При сохранении информации фотки
-    $(document).on('click', '#form-photo-edit .button', function(event) {
-        event.preventDefault();
-
-        var id = $(this).closest('#form-photo-edit').find('input[name=id]').val();
-        // alert(id);
-
-        // Записываем инфу и обновляем
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_update_photo/' + id,
-            type: 'PATCH',
-            data: $(this).closest('#form-photo-edit').serialize(),
-            success: function(html){
-                // alert(html);
-                $('#form-photo-edit').html(html);
-                // $('#modal-create').foundation();
-                // $('#modal-create').foundation('open');
-            }
-        })
-    });
-
-    // Оставляем ширину у вырванного из потока элемента
-    var fixHelper = function(e, ui) {
-        ui.children().each(function() {
-            $(this).width($(this).width());
-        });
-        return ui;
-    };
-
-    // Включаем перетаскивание
-    $("#values-table tbody").sortable({
-        axis: 'y',
-        helper: fixHelper, // ширина вырванного элемента
-        handle: 'td:first', // указываем за какой элемент можно тянуть
-        placeholder: "table-drop-color", // фон вырванного элемента
-        update: function( event, ui ) {
-
-            var entity = $(this).children('.item').attr('id').split('-')[0];
-        }
-    });
-
-    // Настройки dropzone
-    Dropzone.options.myDropzone = {
-        paramName: 'photo',
-        maxFilesize: '{{ $settings['img_max_size'] }}',
-        maxFiles: 20,
-        acceptedFiles: '{{ $settings['img_formats'] }}',
-        addRemoveLinks: true,
-        init: function() {
-            this.on("success", function(file, responseText) {
-                file.previewTemplate.setAttribute('id',responseText[0].id);
-
-                $.post('/admin/goods/photos', {cur_goods_id: cur_goods_id}, function(html){
-                    // alert(html);
-                    $('#photos-list').html(html);
-                    // $('#modal-create').foundation();
-                    // $('#modal-create').foundation('open');
-                })
-            });
-            this.on("thumbnail", function(file) {
-                if (file.width < '{{ $settings['img_min_width'] }}' || file.height < '{{ $settings['img_min_height'] }}') {
-                    file.rejectDimensions();
-                } else {
-                    file.acceptDimensions();
-                }
-            });
-        },
-        accept: function(file, done) {
-            file.acceptDimensions = done;
-            file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину"); };
-        }
-    };
 
 </script>
 
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
 @include('goods.scripts')
+@include('includes.scripts.dropzone', ['settings' => $settings, 'item_id' => $cur_goods->id])
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check')
 @endsection

@@ -260,8 +260,13 @@ Route::prefix('/albums/{alias}')->group(function () {
   // Загрузка фоток через ajax через dropzone.js
 });
 
-Route::post('/ajax_get_photo', 'PhotoController@get_photo')->middleware('auth');
-Route::patch('/ajax_update_photo/{id}', 'PhotoController@update_photo')->middleware('auth');
+Route::post('/photo_index', 'PhotoController@ajax_index')->middleware('auth');
+
+Route::any('/photo_store', 'PhotoController@ajax_store')->middleware('auth')->name('photos.ajax_store');
+
+Route::post('/photo_edit/{id}', 'PhotoController@ajax_edit')->middleware('auth')->name('photos.ajax_edit');
+
+Route::patch('/photo_update/{id}', 'PhotoController@ajax_update')->middleware('auth');
 
 
 // --------------------------------------- Помещения -----------------------------------------------

@@ -2092,8 +2092,14 @@ a#task-toggle {
   margin-top: -16px;
 }
 
+#photos-list img {
+  cursor: pointer;
+}
 #photos-list .active {
-  border: 2px solid red;
+  border: 2px solid blue;
+}
+#photos-list .updated {
+  border: 2px solid green;
 }
 
 .tabs-margin-top {

@@ -248,11 +248,11 @@ fieldset {
 }
 
 .alt-switch span{
-        margin-bottom: 6px;
-        color: #000!important;
-        padding-left: 8px;
-        font-weight: normal;
-        vertical-align: super;
+    margin-bottom: 6px;
+    color: #000!important;
+    padding-left: 8px;
+    font-weight: normal;
+    vertical-align: super;
 }
 
 .lead-info-company, .lead-info-bank{
@@ -303,9 +303,9 @@ fieldset {
 
 // Для всех, кроме мобилок
 
-    .margin-left-15{
-        margin: 0 -15px !important;
-    }
+.margin-left-15{
+    margin: 0 -15px !important;
+}
 
 // Конец базовых корректировок
 
@@ -523,8 +523,8 @@ p {
 }
 
 .sidebar-open {
-        width: 240px;
-    }
+    width: 240px;
+}
 // Меняем выпадающий список профиля
 .dropdown-pane {
     width: 222px;
@@ -1836,21 +1836,21 @@ $multilevel-accordion-separator: #41444a;
   // background for main accordion items
   .is-accordion-submenu-parent a {
     background: $multilevel-accordion-bg;
-  }
+}
 
   // background for sub accordion items
   .is-accordion-submenu a {
     background: $multilevel-accordion-sub-bg;
-  }
+}
 
   // creates classes for nested elements, sub-item-*
   @for $i from 1 through 6 {
     .sublevel-#{$i} {
       text-indent: 0rem + $i;
-    }
   }
+}
 
-  a {
+a {
     color: $white;
     // sets accodion item separator color
     box-shadow: inset 0 -1px $multilevel-accordion-separator;
@@ -1858,13 +1858,13 @@ $multilevel-accordion-separator: #41444a;
     &::after {
       // sets accodion arrow color and direction
       border-color: $white transparent transparent;
-    }
   }
+}
 
   // padding for each list item
   .menu > li:not(.menu-text) > a {
     padding: 1.2rem 1rem;
-  }
+}
 }
 
 // // style for folder icon on subitem anchors without a submenu
@@ -1964,31 +1964,31 @@ $multilevel-accordion-separator: #41444a;
     border-collapse: separate;
     width: 100%;
 
-  thead{
+    thead{
 
-    tr th{
-        background-color: #eee;
-        border-bottom: 1px solid #000 !important;
-        font-weight: 400;
-        font-size: 0.8rem;
-        font-family: $SUIR;
+        tr th{
+            background-color: #eee;
+            border-bottom: 1px solid #000 !important;
+            font-weight: 400;
+            font-size: 0.8rem;
+            font-family: $SUIR;
+        }
+
     }
 
-}
+    tbody tr:first-child td {
+        border-top: 3px solid #eee;
+    }
 
-tbody tr:first-child td {
-    border-top: 3px solid #eee;
-}
+    tr th
+    {
+      padding: 1rem 1rem 0.4rem 1rem;
+  }
 
-tr th
-{
-  padding: 1rem 1rem 0.4rem 1rem;
-}
-
-tr th:nth-child(1), .table-notes tr td:nth-child(1)
-{
-  width: 35px !important;
-}
+  tr th:nth-child(1), .table-notes tr td:nth-child(1)
+  {
+      width: 35px !important;
+  }
 
 // tr th:nth-child(2), .table-notes tr td:nth-child(2)
 // {
@@ -2048,7 +2048,7 @@ tr th:nth-child(1), .table-notes tr td:nth-child(1)
     {
       min-width: 100px !important;
       font-size: 0.8rem;
-    }
+  }
 
   tr td.description
   {
@@ -2378,9 +2378,9 @@ a#task-toggle{
       margin-right: 0;
   }
 
-    .period-task .tabs-wrap {
-        padding-bottom: 1rem;
-    }
+  .period-task .tabs-wrap {
+    padding-bottom: 1rem;
+}
 
   // Tabs в менеджере задач
   .tabs-wrap {
@@ -2695,14 +2695,23 @@ tbody {
 
 #photos-list {
 
-  .active {
-    border: 2px solid red;
-}
+    img {
+        cursor: pointer;
+    }
+
+    .active {
+        border: 2px solid blue;
+    }
+
+    .updated {
+        border: 2px solid green;
+    }
 }
 
 .tabs-margin-top {
   margin-top: 2rem;
 }
+
 .tabs-wrap {
   padding: 0 10px;
   font-family: $PFDDPL;
@@ -3348,9 +3357,9 @@ tbody {
                               }
 
                               .is-stuck {
-                                 background-color: $body-bg-color;
+                               background-color: $body-bg-color;
 
-                                 tr {
+                               tr {
                                   display: block;
 
                                   //   th {
@@ -3780,17 +3789,17 @@ a:hover {
 
             .tabs-wrap {
 
-             .tabs-content {
-              margin: 0;
-              padding: 0 0.7rem;
+               .tabs-content {
+                  margin: 0;
+                  padding: 0 0.7rem;
+              }
+              .fieldset-access {
+                  padding: 1rem 0.6rem;
+              }
+
+
+
           }
-          .fieldset-access {
-              padding: 1rem 0.6rem;
-          }
-
-
-
-      }
       // Блочим элементы добавления/редактирования/удаления
       .content-list {
           .first-active {
@@ -4067,102 +4076,102 @@ a:hover {
                                                 //     cursor: pointer
                         // }
 
-.widget-table{
-    th{
-        font-size: 0.8rem;
-    }
+                        .widget-table{
+                            th{
+                                font-size: 0.8rem;
+                            }
 
-    th.common-th{
-        text-align: center;
-    }
+                            th.common-th{
+                                text-align: center;
+                            }
 
-    td{
-        font-size: 0.8rem;
-    }
+                            td{
+                                font-size: 0.8rem;
+                            }
 
-    .right-border{
-        border-right: 1px dotted #ccc;
-    }
+                            .right-border{
+                                border-right: 1px dotted #ccc;
+                            }
 
-    @media screen and (min-width: 640px) {
-        tbody tr:first-child td{
-            border-top: 1px solid #000;
-        }
-    }
+                            @media screen and (min-width: 640px) {
+                                tbody tr:first-child td{
+                                    border-top: 1px solid #000;
+                                }
+                            }
 
 
-}
+                        }
 
-.widget-h3{
-    font-size: 2rem;
-    font-weight: 600;
-}
+                        .widget-h3{
+                            font-size: 2rem;
+                            font-weight: 600;
+                        }
 
-$responsive-card-table-bottom-gap: 1.5rem;
-$responsive-card-table-stack-point: 640px;
-$responsive-card-table-label-bg: #ffffff;
+                        $responsive-card-table-bottom-gap: 1.5rem;
+                        $responsive-card-table-stack-point: 640px;
+                        $responsive-card-table-label-bg: #ffffff;
 
-.responsive-card-table {
-  border-collapse: collapse;
+                        .responsive-card-table {
+                          border-collapse: collapse;
 
-  &.unstriped tbody {
-    background-color: transparent;
-  }
+                          &.unstriped tbody {
+                            background-color: transparent;
+                        }
 
-  th {
-    background-color: $responsive-card-table-label-bg;
-  }
+                        th {
+                            background-color: $responsive-card-table-label-bg;
+                        }
 
-  tr,
-  th,
-  td {
-  }
+                        tr,
+                        th,
+                        td {
+                        }
 
-  @media screen and (max-width: $responsive-card-table-stack-point) {
-    thead tr {
-      position: absolute;
-      top: -9999em;
-      left: -9999em;
-    }
+                        @media screen and (max-width: $responsive-card-table-stack-point) {
+                            thead tr {
+                              position: absolute;
+                              top: -9999em;
+                              left: -9999em;
+                          }
 
-    tr {
-      display: block;
-    }
+                          tr {
+                              display: block;
+                          }
 
-    tr + tr {
-      margin-top: $responsive-card-table-bottom-gap;
-    }
-    /* Get table cells to act like rows */
+                          tr + tr {
+                              margin-top: $responsive-card-table-bottom-gap;
+                          }
+                          /* Get table cells to act like rows */
 
-    td {
-      border: none;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      padding-left: 50%;
-      position: relative;
+                          td {
+                              border: none;
+                              display: flex;
+                              justify-content: flex-start;
+                              align-items: center;
+                              padding-left: 50%;
+                              position: relative;
 
-      &:before {
-        content: attr(data-label);
-        display: inline-block;
-        font-weight: bold;
-        line-height: 1.5;
-        margin-left: -100%;
-        width: 100%;
-        position: relative;
-        z-index: 1;
-      }
+                              &:before {
+                                content: attr(data-label);
+                                display: inline-block;
+                                font-weight: bold;
+                                line-height: 1.5;
+                                margin-left: -100%;
+                                width: 100%;
+                                position: relative;
+                                z-index: 1;
+                            }
 
-      &:after {
-        content: '';
-        position: absolute;
-        background: $responsive-card-table-label-bg;
-        width: 45%;
-        height: 95%;
-        left: 1px;
-        top: 1px;
-        z-index: 0;
-      }
-    }
-  }
-}
+                            &:after {
+                                content: '';
+                                position: absolute;
+                                background: $responsive-card-table-label-bg;
+                                width: 45%;
+                                height: 95%;
+                                left: 1px;
+                                top: 1px;
+                                z-index: 0;
+                            }
+                        }
+                    }
+                }

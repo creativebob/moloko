@@ -15,6 +15,9 @@ use App\Http\ViewComposers\UnitsCategoriesComposer;
 use App\Http\ViewComposers\UnitsComposer;
 
 use App\Http\ViewComposers\ManufacturersComposer;
+
+use App\Http\ViewComposers\ContragentsComposer;
+
 use App\Http\ViewComposers\CategoriesSelectComposer;
 use App\Http\ViewComposers\GoodsModesComposer;
 use App\Http\ViewComposers\RawsModesComposer;
@@ -51,10 +54,12 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.legal_forms', LegalFormsSelectComposer::class);
         view()->composer('includes.inputs.checker', CheckerComposer::class);
 
+        view()->composer('includes.inputs.checker_contragents', ContragentsComposer::class);
+
         view()->composer(['includes.selects.units_categories'], UnitsCategoriesComposer::class);
         view()->composer(['includes.selects.units'], UnitsComposer::class);
 
-        view()->composer('includes.selects.manufacturers', ManufacturersComposer::class);
+        view()->composer(['includes.selects.manufacturers', 'includes.lists.manufacturers'], ManufacturersComposer::class);
 
         view()->composer('includes.selects.goods_modes', GoodsModesComposer::class);
         view()->composer('includes.selects.raws_modes', RawsModesComposer::class);
