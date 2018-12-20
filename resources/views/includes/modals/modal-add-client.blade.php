@@ -180,8 +180,6 @@
                     </div>
                     {{-- Конец блока адреса --}}
 
-
-
                     {{-- Начало блока банковских реквизитов --}}
                     <div class="small-12 cell lead-info-bank @if($lead->private_status) switch-on @endif" id="lead-info-bank" data-toggler="switch-on">
                         <hr>

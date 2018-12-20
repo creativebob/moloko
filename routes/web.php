@@ -574,6 +574,12 @@ Route::resource('/feedback', 'FeedbackController')->middleware('auth');
 Route::resource('/suppliers', 'SupplierController')->middleware('auth');
 
 
+// -------------------------------------- Заявки поставщикам ---------------------------------------------
+
+// Основные методы
+Route::resource('applications', 'ApplicationController')->middleware('auth');
+
+
 // ------------------------------------ Производители ----------------------------------------------------
 
 // Основные методы

@@ -6,7 +6,10 @@ use App\User;
 use App\RightsRole;
 use App\Company;
 use App\ExtraRequisite;
+
 use App\Supplier;
+use App\Application;
+
 use App\Manufacturer;
 use App\Dealer;
 use App\Client;
@@ -88,6 +91,8 @@ use App\Policies\CompanyPolicy;
 use App\Policies\ExtraRequisitePolicy;
 
 use App\Policies\SupplierPolicy;
+use App\Policies\ApplicationPolicy;
+
 use App\Policies\ManufacturerPolicy;
 use App\Policies\DealerPolicy;
 use App\Policies\ClientPolicy;
@@ -183,6 +188,8 @@ class AuthServiceProvider extends ServiceProvider
         ExtraRequisite::class => ExtraRequisitePolicy::class,
 
         Supplier::class => SupplierPolicy::class,
+        Application::class => ApplicationPolicy::class,
+
         Manufacturer::class => ManufacturerPolicy::class,
         Dealer::class => DealerPolicy::class,
         Client::class => ClientPolicy::class,

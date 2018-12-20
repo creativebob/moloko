@@ -214,6 +214,11 @@
                         @include('includes.inputs.checker', ['entity' => $company, 'model'=>'ServicesType', 'relation'=>'services_types', 'title'=>'Типы услуг'])
                     </div>
 
+                    <div class="small-12 cell checkbox">
+                        {{ Form::checkbox('external_control', 1, null, ['id' => 'external_control']) }}
+                        <label for="external_control"><span>Внешний контроль</span></label>
+                    </div>
+
                     {{-- Чекбоксы управления --}}
                     @include('includes.control.checkboxes', ['item' => $company])
                 </div>

@@ -405,6 +405,15 @@
         }
         // ----------------------------------------------------------------------------
 
+        // ФИЛЬТР ПО ПОСТАВЩИКАМ ------------------------------------------------------
+        if($name_filter == 'supplier'){
+
+            $filter[$name_filter]['title'] = 'Поставщики:';                                 // Назавние фильтра
+            $column = 'supplier_id';                                                        // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterSupplierList();    // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
         // ФИЛЬТР ПО ГОРОДУ ------------------------------------------------------------
         if($name_filter == 'city'){
 
@@ -623,6 +632,12 @@
 
         $clients = App\Client::with('client')->get()->pluck('client.name', 'id')->toArray();
         return $clients;
+    }
+
+    function getFilterSupplierList(){
+
+        $suppliers = App\Supplier::with('company')->get()->pluck('company.name', 'company.id')->toArray();
+        return $suppliers;
     }
 
     function getFilterCityList(){

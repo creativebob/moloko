@@ -15,6 +15,8 @@ use App\Http\ViewComposers\UnitsCategoriesComposer;
 use App\Http\ViewComposers\UnitsComposer;
 
 use App\Http\ViewComposers\ManufacturersComposer;
+use App\Http\ViewComposers\SupplierSelectComposer;
+
 use App\Http\ViewComposers\CategoriesSelectComposer;
 use App\Http\ViewComposers\GoodsModesComposer;
 use App\Http\ViewComposers\RawsModesComposer;
@@ -55,6 +57,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer(['includes.selects.units'], UnitsComposer::class);
 
         view()->composer('includes.selects.manufacturers', ManufacturersComposer::class);
+        view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);
 
         view()->composer('includes.selects.goods_modes', GoodsModesComposer::class);
         view()->composer('includes.selects.raws_modes', RawsModesComposer::class);
