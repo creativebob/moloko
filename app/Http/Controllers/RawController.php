@@ -18,7 +18,7 @@ use App\Photo;
 use App\UnitsCategory;
 use App\Catalog;
 
-use App\EntitySetting;
+use App\PhotoSetting;
 
 use App\ArticleValue;
 
@@ -328,7 +328,7 @@ class RawController extends Controller
         $settings = config()->get('settings');
         // dd($settings);
 
-        $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
+        $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
         // dd($get_settings);
 
         if ($get_settings){
@@ -336,7 +336,7 @@ class RawController extends Controller
             // dd($settings);
         }
 
-        $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id' => 1])->first();
+        $get_settings = PhotoSetting::where(['entity' => 'albums_categories', 'entity_id' => 1])->first();
         // dd($get_settings);
 
         if ($get_settings){
@@ -568,7 +568,7 @@ class RawController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
+            $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
 
             $settings = getSettings($get_settings);
 

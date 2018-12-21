@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 use App\Page;
 use App\Site;
 
-use App\EntitySetting;
+use App\PhotoSetting;
 
 // Валидация
 use App\Http\Requests\PageRequest;
@@ -149,7 +149,7 @@ class PageController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = PhotoSetting::where(['entity' => $this->entity_name])->first();
 
             if ($get_settings) {
 
@@ -284,7 +284,7 @@ class PageController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = PhotoSetting::where(['entity' => $this->entity_name])->first();
 
             if ($get_settings) {
 

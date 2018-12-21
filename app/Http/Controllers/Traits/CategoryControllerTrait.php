@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Traits;
 
-use App\EntitySetting;
+use App\PhotoSetting;
 
 trait CategoryControllerTrait
 {
@@ -69,7 +69,7 @@ trait CategoryControllerTrait
 
                 // Начинаем проверку настроек, от компании до альбома
                 // Смотрим общие настройки для сущности
-                $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
+                $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
 
                 if ($get_settings) {
 

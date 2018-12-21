@@ -26,7 +26,7 @@ class Album extends Model
 {
 
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use Notifiable;
 
@@ -47,6 +47,7 @@ class Album extends Model
         'company_id',
         'name',
         'albums_category_id',
+        'access',
         'alias',
         'description',
         'author_id',
@@ -95,10 +96,10 @@ class Album extends Model
     }
 
 
-    // Получаем настройки
-    public function album_settings()
+    // Настройки фоток
+    public function photo_settings()
     {
-        return $this->hasOne('App\EntitySetting', 'entity_id')->where('entity', 'albums');
+        return $this->morphOne('App\PhotoSetting', 'photo_settings');
     }
 
 }

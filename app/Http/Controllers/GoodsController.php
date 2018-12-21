@@ -11,7 +11,8 @@ use App\RawsArticle;
 use App\Manufacturer;
 use App\Album;
 use App\Metric;
-use App\EntitySetting;
+use App\PhotoSetting;
+use App\Entity;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -504,25 +505,10 @@ class GoodsController extends Controller
             // dd($composition_list);
         }
 
-        // Получаем настройки по умолчанию
-        $settings = config()->get('settings');
+
+
+        $settings = getSettings($this->entity_alias);
         // dd($settings);
-
-        $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
-        // dd($get_settings);
-
-        if ($get_settings){
-            $settings = getSettings($get_settings);
-            // dd($settings);
-        }
-
-        $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id' => 1])->first();
-        // dd($get_settings);
-
-        if ($get_settings){
-            $settings = getSettings($get_settings);
-            // dd($settings);
-        }
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
@@ -744,7 +730,7 @@ class GoodsController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
+            $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
 
             $settings = getSettings($get_settings);
 

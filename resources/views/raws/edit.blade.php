@@ -38,9 +38,13 @@ $disabled = $raw->raws_article->draft == null;
             <li class="tabs-title">
                 <a data-tabs-target="catalogs" href="#catalogs">Каталоги</a>
             </li>
+
+            {{-- @can('index', 'App\Photo') --}}
             <li class="tabs-title">
                 <a data-tabs-target="photos" href="#photos">Фотографии</a>
             </li>
+            {{-- @endcan --}}
+
         </ul>
     </div>
 </div>
@@ -275,11 +279,14 @@ $disabled = $raw->raws_article->draft == null;
             </div>
             {{ Form::close() }}
 
+            {{-- @can('index', 'App\Photo') --}}
             {{-- Фотографии --}}
             <div class="tabs-panel" id="photos">
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-7 cell">
+
+                        {{-- @can('create', 'App\Photo') --}}
                         {!!  Form::open(['route' => ['photos.ajax_store', 'raws'], 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) !!}
 
                         {!! Form::hidden('name', $raw->raws_article->name) !!}
@@ -287,6 +294,7 @@ $disabled = $raw->raws_article->draft == null;
                         {!! Form::hidden('entity', 'raws') !!}
 
                         {!! Form::close() !!}
+                        {{-- @endcan --}}
 
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
@@ -307,6 +315,7 @@ $disabled = $raw->raws_article->draft == null;
                     </div>
                 </div>
             </div>
+            {{-- @endcan --}}
 
         </div>
     </div>

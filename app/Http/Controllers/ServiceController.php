@@ -13,7 +13,7 @@ use App\AlbumEntity;
 use App\Photo;
 use App\Catalog;
 use App\Sector;
-use App\EntitySetting;
+use App\PhotoSetting;
 use App\ArticleValue;
 
 
@@ -462,7 +462,7 @@ class ServiceController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = PhotoSetting::where(['entity' => $this->entity_name])->first();
 
             if ($get_settings) {
 
@@ -755,7 +755,7 @@ class ServiceController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = PhotoSetting::where(['entity' => $this->entity_name])->first();
 
             if ($get_settings) {
 

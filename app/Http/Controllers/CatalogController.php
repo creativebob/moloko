@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 // Модели
 use App\Catalog;
 use App\Site;
-use App\EntitySetting;
+use App\PhotoSetting;
 
 // Валидация
 use Illuminate\Http\Request;

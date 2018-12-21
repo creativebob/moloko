@@ -49,7 +49,7 @@ use App\Sector;
 
 use App\Album;
 use App\AlbumsCategory;
-use App\EntitySetting;
+use App\PhotoSetting;
 
 use App\Photo;
 use App\Folder;
@@ -130,7 +130,7 @@ use App\Policies\SectorPolicy;
 
 use App\Policies\AlbumPolicy;
 use App\Policies\AlbumsCategoryPolicy;
-use App\Policies\EntitySettingPolicy;
+use App\Policies\PhotoSettingPolicy;
 
 use App\Policies\PhotoPolicy;
 use App\Policies\FolderPolicy;
@@ -221,7 +221,7 @@ class AuthServiceProvider extends ServiceProvider
         Sector::class => SectorPolicy::class,
         Album::class => AlbumPolicy::class,
         AlbumsCategory::class => AlbumsCategoryPolicy::class,
-        EntitySetting::class => EntitySettingPolicy::class,
+        PhotoSetting::class => PhotoSettingPolicy::class,
         Photo::class => PhotoPolicy::class,
         Folder::class => FolderPolicy::class,
 

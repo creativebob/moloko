@@ -24,12 +24,13 @@ class CreateAlbumsTable extends Migration
             $table->integer('albums_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться альбом');
             $table->foreign('albums_category_id')->references('id')->on('albums_categories');
 
-            $table->integer('access')->nullable()->unsigned()->comment('0 - личный, 1 - публичный');
+            $table->boolean('personal')->default(0)->comment('Личный');
+
             $table->string('alias')->index()->comment('Алиас альбома');
             $table->integer('delay')->nullable()->unsigned()->comment('Задержка во времени, сек');
 
             $table->string('photo_id')->index()->nullable()->comment('Обложка альбома');
-            
+
             $table->text('description')->nullable()->comment('Описание альбома');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');

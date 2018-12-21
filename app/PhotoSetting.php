@@ -16,20 +16,19 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
 // use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class EntitySetting extends Model
+class PhotoSetting extends Model
 {
 
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
-	use SoftDeletes;
+    // use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -45,4 +44,31 @@ class EntitySetting extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+
+    protected $fillable = [
+        'company_id',
+        'name',
+        'description',
+        'setting_id',
+        'setting_type',
+
+        'img_small_width',
+        'img_small_height',
+        'img_medium_width',
+        'img_medium_height',
+        'img_large_width',
+        'img_large_height',
+        'img_formats',
+        'img_min_width',
+        'img_min_height',
+        'img_max_size',
+
+        'author_id',
+    ];
+
+    public function settingable()
+    {
+        return $this->morphTo();
+    }
+
 }
