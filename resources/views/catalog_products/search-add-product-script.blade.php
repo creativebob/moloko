@@ -1,50 +1,29 @@
 <script type="text/javascript">
-    // Обозначаем таймер для проверки
-    var timerId;
-    var time = 400;
-
 
     var catalog_id = '{{ $catalog->id }}';
 
     // Проверка существования
     $(document).on('keyup', '#search_add_product_field', function() {
 
-        // Получаем фрагмент текста
-        var text_fragment = $('#search_add_product_field').val();
-
         // Выполняем запрос
-        clearTimeout(timerId);   
+        let timerId;
+        clearTimeout(timerId);
 
         timerId = setTimeout(function() {
 
-            SearchAddProductFragment();
+            searchProduct($('#search_add_product_field').val());
 
-        }, time); 
+        }, 400);
     });
 
-    function SearchAddProductFragment() {
-
-        // Получаем фрагмент текста
-        var text_fragment = $('#search_add_product_field').val();
-
-        // Смотрим сколько символов
-        var len_text_fragment = text_fragment.length;
+    function searchProduct(text_fragment) {
 
         // Если символов больше 3 - делаем запрос
-        if (len_text_fragment > 2) {
+        if (text_fragment.length > 2) {
 
-            $.ajax({
-
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: "/admin/catalog_products/search_add_product/" + text_fragment + "/" + catalog_id,
-                type: "POST",
-                data: {text_fragment: text_fragment},
-                success: function(html){
-                    // Выводим пришедшие данные на страницу
-                    $('#port-result-search-add-product').html(html);
-                } 
+            $.post("/admin/catalog_products/search_add_product/", {catalog_id: catalog_id, text_fragment: text_fragment}, function(html){
+                // Выводим пришедшие данные на страницу
+                $('#port-result-search-add-product').html(html);
             });
         } else {
             $('#port-result-search-add-product').html('');
@@ -73,28 +52,13 @@
         success: function(html){
 
             if (html == 'empty') {
-                // alert(html); 
+                // alert(html);
             } else {
                 // Выводим пришедшие данные на страницу
                 $('#content-core').html(html);
                 item.remove();
             };
-
-
-            // var result = $.parseJSON(date);
-            // // Если ошибка
-            // if (result.error_status == 1) {
-            //     $(submit).prop('disabled', true);
-            //     $('.item-error').css('display', 'block');
-            //     $(db).val(0);
-            // } else {
-
-            // }
-
-            
-            // $('#search-add-product-result-wrap').hide();
-
-        } 
+        }
     });
 });
 </script>

@@ -82,6 +82,27 @@
                                 </label>
                             </div>
                         </div>
+
+                        <div class="grid-x grid-padding-x">
+                            <div class="small-12 medium-6 cell checkbox checkboxer">
+
+                                {!! Form::model($goods_category, []) !!}
+
+                                {{-- Подключаем класс Checkboxer --}}
+                                @include('includes.scripts.class.checkboxer')
+
+                                @include('includes.inputs.checker_contragents', [
+                                    'entity' => $goods_category,
+                                    'title' => 'Производители',
+                                    'name' => 'manufacturers'
+                                ]
+                                )
+
+                                {!! Form::close() !!}
+
+                            </div>
+                        </div>
+
                     </div>
 
                     @include('includes.control.checkboxes', ['item' => $goods_category])

@@ -622,13 +622,27 @@ class LeadController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
 
-        $lead = Lead::with(['location.city', 'main_phones', 'extra_phones', 'medium', 'campaign', 'source', 'site', 'claims', 'lead_method', 'choice' => function ($query) {
-            $query->orderBy('created_at', 'asc');
-        }, 'notes' => function ($query) {
-            $query->orderBy('created_at', 'desc');
-        }, 'challenges' => function ($query) {
-            $query->with('challenge_type')->whereNull('status')->orderBy('deadline_date', 'asc');
-        }, 'orders.compositions.product'])
+        $lead = Lead::with([
+            'location.city',
+            'main_phones',
+            'extra_phones',
+            'medium',
+            'campaign',
+            'source',
+            'site',
+            'claims',
+            'lead_method',
+            'choice' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            }, 'notes' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }, 'challenges' => function ($query) {
+                $query->with('challenge_type')
+                ->whereNull('status')
+                ->orderBy('deadline_date', 'asc');
+            },
+            'orders.compositions.product'
+        ])
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         // ->where('manager_id', '!=', 1)
@@ -637,7 +651,7 @@ class LeadController extends Controller
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
-        // dd($lead);
+        // dd($lead->orders);
 
         // dd(Carbon::parse($lead->claims[0]->created_at)->format('d.m.Y'));
 

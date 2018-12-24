@@ -110,15 +110,18 @@ class OrderController extends Controller
         $company_id = $user->company_id;
 
         // Находим или создаем заказ для лида
-        $order = Order::firstOrCreate(['lead_id' => $request->lead_id, 'draft' => 1, 'company_id' => $company_id], ['author_id' => $user_id]);
+        $order = Order::firstOrCreate([
+            'lead_id' => $request->lead_id,
+            // 'draft' => 1,
+            'company_id' => $company_id
+        ], [
+            'author_id' => $user_id
+        ]);
         // $order = Order::firstOrCreate(['lead_id' => 9443, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
 
-        // Находим сущность, чтоб опрелделить модель
+        // Находим сущность
         $entity = Entity::where('alias', $request->entity)->first();
         // $entity = Entity::where('alias', 'goods')->first();
-
-        $type = $request->entity;
-        // $type = 'goods';
 
         // Формируем позицию заказа
         $composition = new OrderComposition;
@@ -139,40 +142,14 @@ class OrderController extends Controller
 
         // $order->compositions()->associate($composition)->save();
 
-        return view('leads.' . $type, compact('composition'));
+        return view('leads.' . $entity->alias, compact('composition'));
 
     }
 
     public function ajax_destroy_composition(Request $request, $id)
     {
 
+        return response()->json(OrderComposition::destroy($id));
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        // $note = Note::moderatorLimit($answer)->findOrFail($id);
-
-        // Подключение политики
-        // $this->authorize(getmethod(__FUNCTION__), $note);
-
-        $order_composition = OrderComposition::findOrFail($id);
-
-        // Удаляем ajax
-        $order_composition->delete();
-
-        if ($order_composition) {
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при удалении состава заказа!',
-            ];
-        }
-
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 }

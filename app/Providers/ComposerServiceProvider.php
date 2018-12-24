@@ -16,6 +16,7 @@ use App\Http\ViewComposers\UnitsComposer;
 
 use App\Http\ViewComposers\ManufacturersComposer;
 use App\Http\ViewComposers\SupplierSelectComposer;
+use App\Http\ViewComposers\ContragentsComposer;
 
 use App\Http\ViewComposers\CategoriesSelectComposer;
 use App\Http\ViewComposers\GoodsModesComposer;
@@ -53,11 +54,18 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.legal_forms', LegalFormsSelectComposer::class);
         view()->composer('includes.inputs.checker', CheckerComposer::class);
 
+        view()->composer('includes.inputs.checker_contragents', ContragentsComposer::class);
+
         view()->composer(['includes.selects.units_categories'], UnitsCategoriesComposer::class);
         view()->composer(['includes.selects.units'], UnitsComposer::class);
 
+
         view()->composer('includes.selects.manufacturers', ManufacturersComposer::class);
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);
+
+        // Conflict: то, что осталось в нижней части
+        // view()->composer(['includes.selects.manufacturers', 'includes.lists.manufacturers'], ManufacturersComposer::class);
+
 
         view()->composer('includes.selects.goods_modes', GoodsModesComposer::class);
         view()->composer('includes.selects.raws_modes', RawsModesComposer::class);
@@ -68,7 +76,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.positions', PositionsComposer::class);
         view()->composer('includes.metrics_category.properties_list', PropertiesComposer::class);
 
-        view()->composer('includes.selects.catalogs', CatalogsSelectComposer::class);
+        view()->composer(['includes.selects.catalogs_chosen', 'includes.selects.catalogs'], CatalogsSelectComposer::class);
 
         view()->composer('includes.lists.site_menus', SiteMenusComposer::class);
 

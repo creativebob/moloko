@@ -54,7 +54,9 @@
 
                 @foreach($raws as $raw)
                 <tr class="item @if($raw->moderation == 1)no-moderation @endif" id="raws-{{ $raw->id }}" data-name="{{ $raw->raws_article->name }}">
-                    <td class="td-drop"><div class="sprite icon-drop"></div></td>
+                    <td class="td-drop">
+                        <div class="sprite icon-drop"></div>
+                    </td>
                     <td class="td-checkbox checkbox">
                         <input type="checkbox" class="table-check" name="raw_id" id="check-{{ $raw->id }}"
                         {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
@@ -71,7 +73,9 @@
                             <img src="{{ isset($raw->photo_id) ? '/storage/'.$raw->company_id.'/media/raws/'.$raw->id.'/img/small/'.$raw->photo->name : '/crm/img/plug/raw_small_default_color.jpg' }}" alt="{{ isset($raw->photo_id) ? $raw->name : 'Нет фото' }}">
                         </a>
                     </td>
-                    <td class="td-name"><a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->raws_article->name }}</a></td>
+                    <td class="td-name">
+                        <a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->raws_article->name }}</a>
+                    </td>
                     <td class="td-raws_category">
                         <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->raws_article->raws_product->raws_category->id }}" class="filter_link" title="Фильтровать">{{ $raw->raws_article->raws_product->raws_category->name }}</a>
 

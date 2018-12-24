@@ -154,6 +154,9 @@
   		var entity_alias = $(this).attr('id').split('-')[0];
   		var id = $(this).attr('id').split('-')[1];
 
+  		var buttons = $('.button');
+        buttons.prop('disabled', true);
+
   		$.ajax({
   			headers: {
   				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -161,13 +164,12 @@
   			url: '/admin/' + entity_alias +'/' + id,
   			type: "DELETE",
   			success: function (data) {
-  				var result = $.parseJSON(data);
-          		// alert(result);
-
-          		if (result['error_status'] == 0) {
+  				$('#item-delete-ajax').foundation('close');
+                buttons.prop('disabled', false);
+          		if (data == true) {
           			$('#' + entity_alias + '-' + id).remove();
           		} else {
-          			alert(result['error_message']);
+          			alert('Ошибка при удалении комментария!');
           		};
           	}
           });

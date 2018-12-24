@@ -72,6 +72,7 @@ class CatalogController extends Controller
                     'type' => $this->type,
                     'count' => $catalogs->count(),
                     'id' => $request->id,
+                    'alias' => $alias
                 ]
             );
 

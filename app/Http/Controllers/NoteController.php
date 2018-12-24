@@ -9,8 +9,6 @@ use App\Note;
 use Illuminate\Http\Request;
 use App\Http\Requests\NoteRequest;
 
-// Политика
-use App\Policies\NotePolicy;
 
 class NoteController extends Controller
 {
@@ -31,38 +29,27 @@ class NoteController extends Controller
 
     public function store(NoteRequest $request)
     {
-      
+
         // $body = 'sfsdf432';
         // $entity_model = 'App\Lead';
-        // $id = 1;      
+        // $id = 1;
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Note::class);
 
+        $item = $request->model::findOrFail($request->id);
+
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        $company_id = $user->company_id;
-
         $note = new Note;
-
         $note->body = $request->body;
-        $note->company_id = $company_id;
-        $note->author_id = $user_id;
-        $note->save();
+        $note->company_id = $user->company_id;
+        $note->author_id = hideGod($user);
 
-        if ($note) {
+        $item->notes()->save($note);
 
-            $item = $request->model::findOrFail($request->id);
-
-            // Создание отношений между Car и buyer (Men/Women).
-            $item->notes()->save($note);
-    
-            return view('includes.notes.note', compact('note'));
-        }
+        return view('includes.notes.note', compact('note'));
     }
 
     public function show($id)
@@ -92,23 +79,13 @@ class NoteController extends Controller
     public function update(NoteRequest $request, $id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $note = Note::moderatorLimit($answer)->findOrFail($id);
+        $note = Note::moderatorLimit(operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $note);
 
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
         $note->body = $request->body;
-        $note->editor_id = $user_id;
+        $note->editor_id = hideGod($request->user());
         $note->save();
 
         if ($note) {
@@ -119,30 +96,11 @@ class NoteController extends Controller
     public function destroy(Request $request, $id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $note = Note::moderatorLimit($answer)->findOrFail($id);
+        $note = Note::moderatorLimit(operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $note);
 
-        // Удаляем ajax
-        $note = Note::destroy($id);
-
-        if ($note) {
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при удалении комментария!',
-            ];
-        }   
-
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
+        return response()->json($note->delete());
     }
 }

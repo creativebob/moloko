@@ -220,8 +220,6 @@ Route::resource('/users', 'UserController')->middleware('auth');
 Route::get('/myprofile', 'UserController@myprofile')->middleware('auth')->name('users.myprofile');
 Route::patch('/updatemyprofile', 'UserController@updatemyprofile')->middleware('auth')->name('users.updatemyprofile');
 
-// Поиск продукции для добавления на сайт
-Route::any('/catalog_products/add_product', 'CatalogProductController@add_product')->middleware('auth');
 
 // ---------------------------------- Категории альбомов -------------------------------------------
 
@@ -262,8 +260,13 @@ Route::prefix('/albums/{alias}')->group(function () {
   // Загрузка фоток через ajax через dropzone.js
 });
 
-Route::post('/ajax_get_photo', 'PhotoController@get_photo')->middleware('auth');
-Route::patch('/ajax_update_photo/{id}', 'PhotoController@update_photo')->middleware('auth');
+Route::post('/photo_index', 'PhotoController@ajax_index')->middleware('auth');
+
+Route::any('/photo_store', 'PhotoController@ajax_store')->middleware('auth')->name('photos.ajax_store');
+
+Route::post('/photo_edit/{id}', 'PhotoController@ajax_edit')->middleware('auth')->name('photos.ajax_edit');
+
+Route::patch('/photo_update/{id}', 'PhotoController@ajax_update')->middleware('auth');
 
 
 // --------------------------------------- Помещения -----------------------------------------------
@@ -741,9 +744,14 @@ Route::get('/sites/{alias}', 'SiteController@sections')->middleware('auth')->nam
 // Проверка на существование домена сайта
 Route::post('/site_check', 'SiteController@ajax_check')->middleware('auth');
 
+// Поиск продукции для добавления на сайт
+Route::any('/catalog_product/search_add_product', 'CatalogProductController@search_add_product')->middleware('auth');
+
+// Поиск продукции для добавления на сайт
+Route::any('/catalog_product/add_product', 'CatalogProductController@add_product')->middleware('auth');
+
 // Разделы сайта
 Route::prefix('/sites/{alias}')->group(function () {
-
 
     // --------------------------------------- Страницы ---------------------------------------------
 
@@ -794,8 +802,7 @@ Route::prefix('/sites/{alias}')->group(function () {
 
 });
 
-// Поиск продукции для добавления на сайт
-Route::any('/catalog_products/search_add_product/{text_fragment}/{catalog_id}', 'CatalogProductController@search_add_product')->middleware('auth');
+
 
 
 // ------------------------------------- Отображение сессии -----------------------------------------

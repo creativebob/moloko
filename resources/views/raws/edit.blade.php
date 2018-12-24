@@ -53,7 +53,7 @@ $disabled = $raw->raws_article->draft == null;
                 'route' => ['raws.update', $raw->id],
                 'data-abide',
                 'novalidate',
-                'files '=> 'true',
+                'files' => 'true',
                 'id' => 'form-raw'
             ]
             ) }}
@@ -267,7 +267,7 @@ $disabled = $raw->raws_article->draft == null;
                             <legend>Каталоги</legend>
 
                             {{-- Form::select('catalogs[]', $catalogs_list, $raw->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
-                            @include('includes.selects.catalogs')
+                            @include('includes.selects.catalogs_chosen', ['parent_id' => $raw->catalogs->keyBy('id')->toArray()])
 
                         </fieldset>
                     </div>
@@ -279,29 +279,31 @@ $disabled = $raw->raws_article->draft == null;
             <div class="tabs-panel" id="photos">
                 <div class="grid-x grid-padding-x">
 
-
                     <div class="small-12 medium-7 cell">
-                        {!!  Form::open(['url' => '/admin/raws/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) !!}
-                        {{ Form::hidden('name', $raw->raws_article->name) }}
-                        {{ Form::hidden('id', $raw->id) }}
+                        {!!  Form::open(['route' => ['photos.ajax_store', 'raws'], 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) !!}
+
+                        {!! Form::hidden('name', $raw->raws_article->name) !!}
+                        {!! Form::hidden('id', $raw->id) !!}
+                        {!! Form::hidden('entity', 'raws') !!}
+
                         {!! Form::close() !!}
+
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
                             @isset($raw->album_id)
-                            @include('raws.photos', $raw)
+                            {{-- @foreach ($item->album->photos as $photo) --}}
+                            @include('photos.photos', ['item' => $raw])
+                            {{-- @endforeach --}}
                             @endisset
 
                         </ul>
+
                     </div>
 
-                    <div class="small-12 medium-5 cell">
+                    <div class="small-12 medium-5 cell" id="photo-edit-partail">
 
                         {{-- Форма редактированя фотки --}}
-                        {{ Form::open(['url' => '/admin/raws/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
 
-                        {{ Form::hidden('photo_name', $raw->name) }}
-                        {{ Form::hidden('id', $raw->id) }}
-                        {{ Form::close() }}
                     </div>
                 </div>
             </div>
@@ -325,8 +327,6 @@ $disabled = $raw->raws_article->draft == null;
         var compositions_count = 0;
     }
 
-    var compositions_count = '{{ count($raw->raws_article->metrics) }}';
-
     var category_id = '{{ $raw->raws_article->raws_product->raws_category_id }}';
 
     var unit = '{{ $raw->raws_article->raws_product->unit->abbreviation }}';
@@ -348,40 +348,6 @@ $disabled = $raw->raws_article->draft == null;
         $('#portion-block div').toggle();
         // $('#portion-fieldset').toggleClass('portion-fieldset');
         $('#unit').text( $(this).prop('checked') ? 'порцию' : unit );
-    });
-
-    // При клике на удаление состава со страницы
-    $(document).on('click', '[data-open="delete-composition"]', function() {
-
-        // Находим описание сущности, id и название удаляемого элемента в родителе
-        var parent = $(this).closest('.item');
-        // var type = parent.attr('id').split('-')[0];
-        $('.title-composition').text(parent.data('name'));
-        // $('.delete-button').attr('id', 'del-' + type + '-' + id);
-        $('.composition-delete-button').attr('id', 'delete_metric-' + parent.attr('id').split('-')[1]);
-    });
-
-    // При клике на подтверждение удаления состава со страницы
-    $(document).on('click', '.composition-delete-button', function() {
-
-        // Находим id элемента в родителе
-        var id = $(this).attr('id').split('-')[1];
-        // alert(id);
-
-        // Удаляем элемент со страницы
-        $('#compositions-' + id).remove();
-
-        // Убираем отмеченный чекбокс в списке метрик
-        $('#add-composition-' + id).prop('checked', false);
-
-        // Foundation.reInit($('#form-raw'));
-    });
-
-    // При клике на удаление состава со страницы
-    $(document).on('click', '[data-open="delete-value"]', function() {
-
-        // Удаляем элемент со страницы
-        $(this).closest('.item').remove();
     });
 
     // Проверяем наличие артикула в базе при клике на кнопку добавления артикула
@@ -523,7 +489,7 @@ $disabled = $raw->raws_article->draft == null;
         }
     });
 
-    $(document).ready(function($) {
+    $(function() {
         $('.checkboxer-title .form-error').hide();
     });
 
@@ -540,7 +506,7 @@ $disabled = $raw->raws_article->draft == null;
     // });
 
     // Валидация при клике на кнопку
-    $(document).on('click', '#add-cur-raws', function(event) {
+    $(document).on('click', '#add-raws', function(event) {
         let error = 0;
         $(".checkbox-group").each(function(i) {
             if ($(this).find("input:checkbox:checked").length == 0) {
@@ -555,117 +521,14 @@ $disabled = $raw->raws_article->draft == null;
         }
     });
 
-    // При клике на фотку подствляем ее значения в блок редактирования
-    $(document).on('click', '#photos-list img', function(event) {
-        event.preventDefault();
 
-        // Удаляем всем фоткам активынй класс
-        $('#photos-list img').removeClass('active');
-
-        // Наваливаем его текущей
-        $(this).addClass('active');
-
-        var id = $(this).data('id');
-
-        // Получаем инфу фотки
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_get_photo',
-            type: 'POST',
-            data: {id: id, entity: 'raws'},
-            success: function(html){
-
-                // alert(html);
-                $('#form-photo-edit').html(html);
-                // $('#modal-create').foundation();
-                // $('#modal-create').foundation('open');
-            }
-        })
-    });
-
-    // При сохранении информации фотки
-    $(document).on('click', '#form-photo-edit .button', function(event) {
-        event.preventDefault();
-
-        var id = $(this).closest('#form-photo-edit').find('input[name=id]').val();
-        // alert(id);
-
-        // Записываем инфу и обновляем
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_update_photo/' + id,
-            type: 'PATCH',
-            data: $(this).closest('#form-photo-edit').serialize(),
-            success: function(html){
-                // alert(html);
-                $('#form-photo-edit').html(html);
-                // $('#modal-create').foundation();
-                // $('#modal-create').foundation('open');
-            }
-        })
-    });
-
-    // Оставляем ширину у вырванного из потока элемента
-    var fixHelper = function(e, ui) {
-        ui.children().each(function() {
-            $(this).width($(this).width());
-        });
-        return ui;
-    };
-
-    // Включаем перетаскивание
-    $("#values-table tbody").sortable({
-        axis: 'y',
-        helper: fixHelper, // ширина вырванного элемента
-        handle: 'td:first', // указываем за какой элемент можно тянуть
-        placeholder: "table-drop-color", // фон вырванного элемента
-        update: function( event, ui ) {
-
-            var entity = $(this).children('.item').attr('id').split('-')[0];
-        }
-    });
-
-    // Настройки dropzone
-    Dropzone.options.myDropzone = {
-        paramName: 'photo',
-        maxFilesize: '{{ $settings['img_max_size'] }}',
-        maxFiles: 20,
-        acceptedFiles: '{{ $settings['img_formats'] }}',
-        addRemoveLinks: true,
-        init: function() {
-            this.on("success", function(file, responseText) {
-                file.previewTemplate.setAttribute('id',responseText[0].id);
-
-                $.post('/admin/raws/photos', {raw_id: raw_id}, function(html){
-                    // alert(html);
-                    $('#photos-list').html(html);
-                    // $('#modal-create').foundation();
-                    // $('#modal-create').foundation('open');
-                })
-            });
-            this.on("thumbnail", function(file) {
-                if (file.width < '{{ $settings['img_min_width'] }}' || file.height < '{{ $settings['img_min_height'] }}') {
-                    file.rejectDimensions();
-                } else {
-                    file.acceptDimensions();
-                }
-            });
-        },
-        accept: function(file, done) {
-            file.acceptDimensions = done;
-            file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину"); };
-        }
-    };
 
 </script>
 
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
 @include('raws.scripts')
+@include('includes.scripts.dropzone', ['settings' => $settings, 'item_id' => $raw->id])
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check')
 @endsection
