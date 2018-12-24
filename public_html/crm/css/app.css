@@ -1547,7 +1547,7 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 }
 .products-list li a {
   position: relative;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   display: block;
   float: left;
   padding: 10px;
@@ -1571,8 +1571,12 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 .view-list.products-list li a .items-product-img {
   display: none;
 }
+.view-list.products-list li a .wrap-product-price {
+  width: 60px;
+}
 .view-list.products-list li a:hover {
   background-color: #f7f7f7;
+  font-weight: 600;
 }
 
 .view-block.products-list li a {
@@ -1595,7 +1599,7 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 
 .view-card.products-list li a {
   position: relative;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   display: block;
   float: left;
   padding: 10px;
@@ -1614,6 +1618,15 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 }
 .view-card.products-list li a .items-product-img {
   display: block;
+}
+.view-card.products-list li a h4 {
+  margin-bottom: 1rem;
+}
+.view-card.products-list li a .media-object-section {
+  padding-right: 1rem;
+}
+.view-card.products-list li a span.items-product-manufacturer {
+  color: #999;
 }
 .view-card.products-list li a:hover {
   background-color: #f7f7f7;

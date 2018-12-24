@@ -264,6 +264,8 @@ if($lead->manager_id == 1){
 @include('includes.scripts.notes', ['id' => $lead->id, 'model' => 'Lead'])
 @include('includes.scripts.challenges', ['id' => $lead->id, 'model' => 'Lead'])
 @include('includes.contragents.contragents', ['id' => $lead->id])
+
+@include('leads.pricing.pricing-script', ['id' => $lead->id, 'model' => 'Lead'])
 @endsection
 
 

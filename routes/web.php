@@ -479,10 +479,13 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->mi
 // Основные методы
 Route::resource('orders', 'OrderController')->middleware('auth');
 
+
 // Отображение на сайте
 Route::any('/orders_check', 'OrderController@ajax_check')->middleware('auth');
 
+Route::any('/order_compositions/{id}/edit', 'OrderCompositionController@ajax_edit')->middleware('auth');
 Route::delete('/order_compositions/{id}', 'OrderController@ajax_destroy_composition')->middleware('auth');
+
 
 
 // ------------------------------ Внутренние комментарии -----------------------------------------------

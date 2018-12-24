@@ -15,10 +15,23 @@
 			>
 	    </div>
 	  </div>
-	  <div class="media-object-section">
-	    <h4><span class="items-product-name">{{ $cur_goods->goods_article->name }}</span></h4>
-		<p class="items-product-description">{{ $cur_goods->description }}</p>
-		<span class="items-product-price">{{ $cur_goods->price }}</span>
+	  <div class="media-object-section cell">
+
+		<div class="grid-x grid-margin-x">
+			<div class="cell auto">
+				<h4>
+					<span class="items-product-name">{{ $cur_goods->goods_article->name }}</span>
+					@if($cur_goods->goods_article->manufacturer)
+					<span class="items-product-manufacturer"> ({{ $cur_goods->goods_article->manufacturer->name or '' }})</span>
+					@endif
+				</h4>	
+			</div>
+
+			<div class="cell shrink wrap-product-price">
+				<span class="items-product-price">{{ num_format($cur_goods->price, 0) }}</span>
+			</div>
+		</div>
+		<p class="items-product-description">{{ $cur_goods->description }}</p>	
 	  </div>
 	</div>
 

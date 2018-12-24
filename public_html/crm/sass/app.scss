@@ -1928,6 +1928,7 @@ thumb[orient="vertical"] {
     width: 200px !important;
 }
 
+
 .products-list{
 
     li {
@@ -1937,7 +1938,7 @@ thumb[orient="vertical"] {
 
         a {
             position: relative;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             display: block;
             float: left;
             padding: 10px;
@@ -1970,10 +1971,16 @@ thumb[orient="vertical"] {
             .items-product-img{
                 display: none;
             }
+
+            .wrap-product-price{
+                width: 60px;
+            }
+
         }
 
         a:hover{
             background-color: #f7f7f7;
+            font-weight: 600;
         }
     }
 }
@@ -2009,7 +2016,7 @@ thumb[orient="vertical"] {
     li {
         a {
             position: relative;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             display: block;
             float: left;
             padding: 10px;
@@ -2029,6 +2036,18 @@ thumb[orient="vertical"] {
 
             .items-product-img{
                 display: block;
+            }
+
+            h4{
+                margin-bottom: 1rem;
+            }
+
+            .media-object-section{
+                padding-right: 1rem;
+            }
+
+            span.items-product-manufacturer{
+                color: #999;
             }
         }
 
