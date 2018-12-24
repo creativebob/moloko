@@ -62,7 +62,7 @@
                     ><label class="label-check" for="check-{{ $album->id }}"></label></td>
                     <td>
                       <a href="/admin/albums/{{ $album->alias }}">
-                        <img src="{{ getPhotoPath($album) }}" alt="{{ isset($album->photo_id) ? $album->name : 'Нет фото' }}">
+                        <img src="{{ getPhotoPath($album, 'small') }}" alt="{{ isset($album->photo_id) ? $album->name : 'Нет фото' }}">
                     </a>
                 </td>
 

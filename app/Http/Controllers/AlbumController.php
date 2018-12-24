@@ -304,7 +304,7 @@ class AlbumController extends Controller
         ->first();
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $album);
+        $this->authorize(getmethod('show'), $album);
 
         $answer_photo = operator_right('photos', false, getmethod('index'));
         // dd($answer_photo);
@@ -317,7 +317,7 @@ class AlbumController extends Controller
             ->orderBy('sort', 'asc');
         }]);
 
-        return view('albums.show', [
+        return view('albums.sections', [
             'album' => $album,
             'page_info' => pageInfo($this->entity_alias)
         ]);
