@@ -445,18 +445,32 @@ class PhotoController extends Controller
 
         if ($request->hasFile('photo')) {
 
-            // Получаем пользователя
-            $user = $request->user();
+            // Обновляем id альбома
+            $entity = Entity::whereAlias($request->entity)->first();
+            $model = 'App\\'.$entity->model;
+            $item = $model::with('album')->findOrFail($request->id);
 
-            $album = Album::firstOrCreate([
-                'name' => $request->name,
-                'albums_category_id' => 1,
-                'company_id' => $user->company_id,
-            ], [
-                'description' => $request->name,
-                'alias' => Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]),
-                'author_id' => hideGod($user),
-            ]);
+            if ($item->has('album')) {
+                $album = $item->album;
+            } else {
+                // Получаем пользователя
+                $user = $request->user();
+
+                $album = Album::firstOrCreate(
+                    [
+                        'name' => $request->name,
+                        'albums_category_id' => 1,
+                        'company_id' => $user->company_id,
+                    ], [
+                        'description' => $request->name,
+                        'alias' => Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]),
+                        'author_id' => hideGod($user),
+                    ]
+                );
+
+                $item->album_id = $album->id;
+                $item->save();
+            }
 
             // if (isset($request->album_id)) {
             //     $album = Album::findOrFail($request->id);
@@ -475,21 +489,14 @@ class PhotoController extends Controller
             //     $album->save();
             // }
 
-            // Обновляем id альбома
-            $entity = Entity::whereAlias($request->entity)->first();
-            $model = 'App\\'.$entity->model;
-            $item = $model::findOrFail($request->id);
-            $item->album_id = $album->id;
-            $item->save();
-
             // $model::where('id', $request->id)->update(['album_id' => $album->id]);
 
             // Cохраняем / обновляем фото
-            $photo = savePhoto($request, $album);
+            $result = savePhotoInAlbum($request, $album);
 
-            $album->photos()->attach($photo->id);
+            $album->photos()->attach($result['photo']->id);
 
-            return response()->json($item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/omg/original/' . $photo->name, 200);
+            return response()->json($result['upload_success'], 200);
             // return response()->json($photo, 200);
 
         } else {
