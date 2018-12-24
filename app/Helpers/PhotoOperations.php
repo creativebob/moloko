@@ -1,5 +1,7 @@
 <?php
 use App\Photo;
+use App\PhotoSetting;
+use App\Entity;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -93,18 +95,86 @@ function save_photo($request, $directory, $name, $album_id = null, $id = null, $
 }
 
 // Настройки для фоток
-function getSettings($get_settings) {
+function getSettings($entity_alias, $ambum_id = null) {
+
     // Вытаскиваем настройки из конфига
-    $settings = config()->get('settings');
+    $settings = config('photo_settings');
+
     // dd($settings);
-    // dd($get_settings);
-    foreach ($settings as $key => $value) {
-        // Если есть ключ в пришедших настройках, то переписываем значение
-        if(isset($get_settings->$key)) {
-            $settings[$key] = $get_settings->$key;
+
+    $entity = Entity::with('photo_settings')
+    ->whereAlias($entity_alias)
+    ->first();
+
+    $get_settings = $entity->photo_settings;
+    if (isset($get_settings)) {
+
+        foreach ($settings as $key => $value) {
+            // Если есть ключ в пришедших настройках, то переписываем значение
+            if(isset($get_settings->$key)) {
+                $settings[$key] = $get_settings->$key;
+            }
         }
     }
+    // dd($get_settings);
+
     return $settings;
+}
+
+// Пишем / удаляем настройки для фоток, принимаем пришедшие данные, и запись, к которой нужно создать / удалить настройки
+function setSettings($request, $item) {
+
+
+    // Смотрим есть ли отношение
+    if (isset($item->photo_settings)) {
+        $photo_settings = $item->photo_settings;
+    } else {
+        $photo_settings = new PhotoSetting;
+    }
+
+    // Определяем список проверяемых значений
+    $settings = [
+        'img_small_width',
+        'img_small_height',
+        'img_medium_width',
+        'img_medium_height',
+        'img_large_width',
+        'img_large_height',
+        'img_formats',
+        'img_min_width',
+        'img_min_height',
+        'img_max_size',
+    ];
+
+    // Проверяем пришедшие данные
+    $count = 0;
+    foreach ($settings as $setting) {
+        $count += isset($request->$setting) ? 1 : 0;
+    }
+
+    // Если пришло хотя бы одно поле
+    if ($count > 0) {
+
+        // Вытаскиваем умолчания из конфига
+        $config = config('photo_settings');
+        // dd($config);
+
+        // Заполняем значения
+        foreach ($settings as $setting) {
+            $photo_settings->$setting = isset($request->$setting) ? $request->$setting : $config['$setting'];
+        }
+
+        // Ставим умолчания
+        $photo_settings->strict_mode = isset($request->strict_mode) ? $request->strict_mode : $config['strict_mode'];
+
+        $user = $request->user();
+        $photo_settings->company_id = $user->company_id;
+        $photo_settings->author_id = hideGod($user);
+
+        $item->photo_settings()->save($photo_settings);
+    } else {
+        $photo_settings->delete();
+    }
 }
 
 ?>

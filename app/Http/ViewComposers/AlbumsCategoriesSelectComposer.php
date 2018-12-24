@@ -18,11 +18,11 @@ class AlbumsCategoriesSelectComposer
         $albums_categories = AlbumsCategory::moderatorLimit($answer)
         ->systemItem($answer)
         ->companiesLimit($answer)
-        ->systemItem($answer)
-        ->whereDisplay(1)
-        ->has('albums')
+        // ->whereDisplay(1)
+        // ->has('albums')
         ->orderBy('sort', 'asc')
         ->get(['id','name','parent_id']);
+        // dd($albums_categories);
 
         // if ($albums_categories->count() == 0) {
 
@@ -38,6 +38,7 @@ class AlbumsCategoriesSelectComposer
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
         $albums_categories_tree = getSelectTree($albums_categories, ($view->parent_id ?? null), ($view->disable ?? null), ($view->id ?? null));
+        // dd($albums_categories_tree);
 
         return $view->with('albums_categories_tree', $albums_categories_tree);
     }

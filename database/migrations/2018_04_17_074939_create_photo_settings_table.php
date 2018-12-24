@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEntitySettingsTable extends Migration
+class CreatePhotoSettingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,13 @@ class CreateEntitySettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('entity_settings', function (Blueprint $table) {
+        Schema::create('photo_settings', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->integer('entity_id')->nullable()->unsigned()->comment('Id сущности');
-            // $table->foreign('entity_id')->references('id')->on('entities');
-            $table->string('entity')->nullable()->comment('Имя сущности');
+            $table->morphs('photo_settings')->nullable();
 
             $table->string('name')->nullable()->index()->comment('Название настройки');
             $table->text('description')->nullable()->comment('Описание настройки');
@@ -34,7 +32,8 @@ class CreateEntitySettingsTable extends Migration
             $table->integer('img_large_height')->nullable()->unsigned()->comment('Высота большого изображения');
 
             $table->string('img_formats')->nullable()->comment('Допустимые форматы');
-            $table->integer('upload_mode')->nullable()->unsigned()->comment('Режим загрузки изображений (1 - строгий / null - простой)');
+
+            $table->boolean('strict_mode')->default(0)->comment('Строгий режим загрузки изображений');
 
             $table->integer('img_min_width')->nullable()->unsigned()->comment('Минимальная ширина изображения');
             $table->integer('img_min_height')->nullable()->unsigned()->comment('Минимальная высота изображения');
@@ -61,6 +60,6 @@ class CreateEntitySettingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('entity_settings');
+        Schema::dropIfExists('photo_settings');
     }
 }

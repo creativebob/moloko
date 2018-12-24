@@ -10,7 +10,7 @@ use App\List_item;
 use App\Booklist;
 use App\AlbumEntity;
 
-use App\EntitySetting;
+use App\PhotoSetting;
 
 use App\Entity;
 
@@ -18,9 +18,6 @@ use App\Http\Controllers\Session;
 
 // Валидация
 use App\Http\Requests\PhotoRequest;
-
-// Политика
-use App\Policies\PhotoPolicy;
 
 // Подключаем фасады
 use Illuminate\Http\Request;
@@ -192,7 +189,7 @@ class PhotoController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для категории
-            $get_settings = EntitySetting::where(['entity' => 'albums', 'entity_id' => $album->id])->first();
+            $get_settings = PhotoSetting::where(['entity' => 'albums', 'entity_id' => $album->id])->first();
 
             if ($get_settings) {
 
@@ -278,17 +275,14 @@ class PhotoController extends Controller
 
     public function show($id)
     {
-
+        //
     }
 
     public function edit(Request $request, $alias, $id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = ;
-
         // ГЛАВНЫЙ ЗАПРОС:
-        $photo = Photo::with('album')->moderatorLimit($answer)->findOrFail($id);
+        $photo = Photo::with('album')->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
 
         // dd($photo);
 
@@ -361,7 +355,6 @@ class PhotoController extends Controller
         } else {
             abort(403, 'Ошибка при обновления фотографии!');
         }
-
     }
 
     public function destroy(Request $request, $alias, $id)
@@ -435,7 +428,7 @@ class PhotoController extends Controller
         // dd($item);
 
         // Подключение политики
-        $this->authorize(getmethod('edit'), $item);
+        // $this->authorize(getmethod('index'), $this->class);
 
         return view('photos.photos', compact('item'));
     }
@@ -445,7 +438,7 @@ class PhotoController extends Controller
     {
 
         // Подключение политики
-        $this->authorize(getmethod('store'), $this->class);
+        // $this->authorize(getmethod('store'), $this->class);
 
         if ($request->hasFile('photo')) {
 
@@ -465,16 +458,10 @@ class PhotoController extends Controller
                 'author_id' => hideGod($user),
             ]);
 
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id'=> 1])->first();
-
-            $settings = getSettings($get_settings);
-
             $directory = $user->company_id.'/media/albums/'.$album->id.'/img';
 
             // Отправляем на хелпер request(в нем находится фото и все его параметры, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-            $array = save_photo($request, $directory,  $alias.'-'.time(), $album->id, null, $settings);
+            $array = save_photo($request, $directory,  $alias.'-'.time(), $album->id, null, getSettings($this->entity_alias, $album->id));
 
             $photo = $array['photo'];
             $upload_success = $array['upload_success'];
@@ -488,9 +475,9 @@ class PhotoController extends Controller
             $model = 'App\\'.$entity->model;
 
             $item = $model::findOrFail($request->id);
-            if (isset($item->album_id)) {
+            // if (isset($item->album_id)) {
                 $item->album_id = $album->id;
-            }
+            // }
             // $model::where('id', $request->id)->update(['album_id' => $album->id]);
 
             if ($upload_success) {
@@ -508,7 +495,7 @@ class PhotoController extends Controller
     {
 
         $photo = Photo::with('album')
-        // ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod('edit')))
+        ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod('edit')))
         ->findOrFail($id);
 
         // Подключение политики
@@ -521,8 +508,8 @@ class PhotoController extends Controller
     {
 
         $photo = Photo::
-        // moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod('update')))
-        // ->
+        moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod('update')))
+        ->
         findOrFail($id);
 
         // Подключение политики

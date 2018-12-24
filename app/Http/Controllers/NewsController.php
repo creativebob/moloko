@@ -10,7 +10,7 @@ use App\Photo;
 use App\AlbumsCategory;
 use App\AlbumEntity;
 use App\CityEntity;
-use App\EntitySetting;
+use App\PhotoSetting;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -166,7 +166,7 @@ class NewsController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
+            $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
 
             $settings = getSettings($get_settings);
 
@@ -273,7 +273,7 @@ class NewsController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
+            $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
 
             $settings = getSettings($get_settings);
 

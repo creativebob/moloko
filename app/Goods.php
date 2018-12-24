@@ -154,4 +154,6 @@ class Goods extends Model
         return $this->morphMany('App\OrderComposition', 'order_compositions');
     }
 
+    // Сушьность
+
 }

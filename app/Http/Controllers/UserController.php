@@ -14,7 +14,7 @@ use App\Booklist;
 use App\Role;
 use App\Country;
 
-use App\EntitySetting;
+use App\PhotoSetting;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -214,7 +214,7 @@ class UserController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = PhotoSetting::where(['entity' => $this->entity_name])->first();
 
             if($get_settings){
 
@@ -261,7 +261,7 @@ class UserController extends Controller
             }
 
             // Смотрим, есть ли настройки на конкретный альбом
-            // $get_settings = EntitySetting::where(['entity_id' => $album_id, 'entity' => 'albums'])->first();
+            // $get_settings = PhotoSetting::where(['entity_id' => $album_id, 'entity' => 'albums'])->first();
 
             // if($get_settings){
 
@@ -510,7 +510,7 @@ class UserController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = PhotoSetting::where(['entity' => $this->entity_name])->first();
 
             if($get_settings){
 
@@ -819,7 +819,7 @@ class UserController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = PhotoSetting::where(['entity' => $this->entity_name])->first();
 
             if($get_settings){
 
