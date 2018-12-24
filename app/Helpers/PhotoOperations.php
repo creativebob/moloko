@@ -323,7 +323,7 @@ function setSettings($request, $item) {
 
         // Заполняем значения
         foreach ($settings as $setting) {
-            $photo_settings->$setting = isset($request->$setting) ? $request->$setting : $config['$setting'];
+            $photo_settings->$setting = isset($request->$setting) ? $request->$setting : $config[$setting];
         }
 
         // Ставим умолчания
@@ -352,6 +352,13 @@ function getPhotoPath($item, $size = 'medium') {
             return '/crm/img/plug/' . $item->getTable() . '_small_default_color.jpg';
         }
     }
+}
+
+// Путь до фотки в альбоме
+function getPhotoInAlbumPath($photo, $size = 'medium') {
+
+    return "/storage/" . $photo->company_id . "/media/albums/" . $photo->album_id . "/img/" . $size . "/" . $photo->name;
+
 }
 
 ?>

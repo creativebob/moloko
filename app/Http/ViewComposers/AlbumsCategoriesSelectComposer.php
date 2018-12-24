@@ -18,6 +18,7 @@ class AlbumsCategoriesSelectComposer
         $albums_categories = AlbumsCategory::moderatorLimit($answer)
         ->systemItem($answer)
         ->companiesLimit($answer)
+        ->template($answer)
         // ->whereDisplay(1)
         // ->has('albums')
         ->orderBy('sort', 'asc')

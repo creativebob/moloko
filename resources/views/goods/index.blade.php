@@ -16,9 +16,7 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-@if(!empty($goods))
-{{ num_format($goods->total(), 0) }}
-@endif
+{{ $goods->isNotEmpty() ? num_format($goods->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')

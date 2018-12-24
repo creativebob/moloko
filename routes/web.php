@@ -228,12 +228,13 @@ Route::any('/albums_categories', 'AlbumsCategoryController@index')->middleware('
 // Основные методы
 Route::resource('/albums_categories', 'AlbumsCategoryController')->middleware('auth');
 
+
 // --------------------------------------- Альбомы -----------------------------------------------
 
 // Route::resource('/albums', 'AlbumController')->middleware('auth');
 Route::get('/albums', 'AlbumController@index')->middleware('auth')->name('albums.index');
 Route::get('/albums/create', 'AlbumController@create')->middleware('auth')->name('albums.create');
-Route::get('/albums/{alias}', 'AlbumController@show')->middleware('auth')->name('albums.show');
+Route::get('/albums/{alias}', 'AlbumController@sections')->middleware('auth')->name('albums.sections');
 Route::post('/albums', 'AlbumController@store')->middleware('auth')->name('albums.store');
 Route::get('/albums/{alias}/edit', 'AlbumController@edit')->middleware('auth')->name('albums.edit');
 Route::patch('/albums/{id}', 'AlbumController@update')->middleware('auth')->name('albums.update');

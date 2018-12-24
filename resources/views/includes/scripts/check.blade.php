@@ -48,6 +48,7 @@
 
     // Проверка существования
     $(document).on('keyup', '.check-field', function() {
+
         var check = $(this);
 
         let timerId;

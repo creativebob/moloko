@@ -11,9 +11,7 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-@if(!empty($albums))
-{{ num_format($albums->total(), 0) }}
-@endif
+{{ $albums->isNotEmpty() ? num_format($albums->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')
@@ -73,6 +71,7 @@
                     @can('update', $album)
                     {{ link_to_route('albums.edit', $album->name, ['alias' => $album->alias], []) }}
                     @endcan
+
                     @cannot('update', $album)
                     {{ $album->name }}
                     @endcannot
