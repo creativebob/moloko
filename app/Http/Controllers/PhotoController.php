@@ -421,9 +421,12 @@ class PhotoController extends Controller
 
         $entity = Entity::whereAlias($request->entity)->first();
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($entity->alias, $this->entity_dependence, getmethod('index'));
+
         $model = 'App\\'.$entity->model;
         $item = $model::with('album.photos')
-        ->moderatorLimit(operator_right($entity->alias, $this->entity_dependence, getmethod('index')))
+        ->moderatorLimit($answer)
         ->findOrFail($request->id);
         // dd($item);
 
@@ -445,46 +448,49 @@ class PhotoController extends Controller
             // Получаем пользователя
             $user = $request->user();
 
-            // Иначе переводим заголовок в транслитерацию
-            $alias = Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]);
-
             $album = Album::firstOrCreate([
-                'company_id' => $user->company_id,
                 'name' => $request->name,
                 'albums_category_id' => 1,
+                'company_id' => $user->company_id,
             ], [
-                'alias' => $alias,
                 'description' => $request->name,
+                'alias' => Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]),
                 'author_id' => hideGod($user),
             ]);
 
-            $directory = $user->company_id.'/media/albums/'.$album->id.'/img';
+            // if (isset($request->album_id)) {
+            //     $album = Album::findOrFail($request->id);
+            // } else {
+            //     $album = new Album;
+            //     $album->name = $request->name;
+            //     $album->description = $request->name;
+            //     $album->alias = Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]);
+            //     $album->albums_category_id = 1;
 
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-            $array = save_photo($request, $directory,  $alias.'-'.time(), $album->id, null, getSettings($this->entity_alias, $album->id));
+            //     // Получаем пользователя
+            //     $user = $request->user();
+            //     $album->company_id = $user->company_id;
+            //     $album->author_id = hideGod($user);
 
-            $photo = $array['photo'];
-            $upload_success = $array['upload_success'];
-
-            $album->photos()->attach($photo->id);
-            // $upload_success = true;
+            //     $album->save();
+            // }
 
             // Обновляем id альбома
             $entity = Entity::whereAlias($request->entity)->first();
-
             $model = 'App\\'.$entity->model;
-
             $item = $model::findOrFail($request->id);
-            // if (isset($item->album_id)) {
-                $item->album_id = $album->id;
-            // }
+            $item->album_id = $album->id;
+            $item->save();
+
             // $model::where('id', $request->id)->update(['album_id' => $album->id]);
 
-            if ($upload_success) {
-                return response()->json($upload_success, 200);
-            } else {
-                return response()->json('error', 400);
-            }
+            // Cохраняем / обновляем фото
+            $photo = savePhoto($request, $album);
+
+            $album->photos()->attach($photo->id);
+
+            return response()->json($item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/omg/original/' . $photo->name, 200);
+            // return response()->json($photo, 200);
 
         } else {
             return response()->json('error', 400);
@@ -494,8 +500,11 @@ class PhotoController extends Controller
     public function ajax_edit(Request $request, $id)
     {
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('edit'));
+
         $photo = Photo::with('album')
-        ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod('edit')))
+        ->moderatorLimit($answer )
         ->findOrFail($id);
 
         // Подключение политики
@@ -507,10 +516,11 @@ class PhotoController extends Controller
     public function ajax_update(Request $request, $id)
     {
 
-        $photo = Photo::
-        moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod('update')))
-        ->
-        findOrFail($id);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('update'));
+
+        $photo = Photo::moderatorLimit($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         // $this->authorize('update', $photo);

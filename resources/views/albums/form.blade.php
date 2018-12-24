@@ -57,9 +57,8 @@
 
             <div class="small-12 medium-5 large-7 cell tabs-margin-top">
 
-                @isset($album->photo_id))
-                <img src="/storage/{{ $album->company_id }}/media/albums/{{ $album->id }}/img/medium/{{ $album->photo->name }}">
-                @endisset
+
+                <img src="{{ getPhotoPath($album) }}">
 
             </div>
 

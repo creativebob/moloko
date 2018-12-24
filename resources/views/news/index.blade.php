@@ -65,7 +65,7 @@
                         </label>
                     </td>
                     <td class="td-photo">
-                        <img src="{{ isset($cur_news->photo_id) ? '/storage/'.$cur_news->company_id.'/media/news/'.$cur_news->id.'/img/small/'.$cur_news->photo->name : '/img/plug/news_small_default_color.jpg' }}" alt="{{ isset($cur_news->photo_id) ? $cur_news->name : 'Нет фото' }}">
+                        <img src="{{ getPhotoPath($cur_news, 'small') }}" alt="{{ isset($cur_news->photo_id) ? $cur_news->name : 'Нет фото' }}">
                     </td>
                     <td class="td-name">
 

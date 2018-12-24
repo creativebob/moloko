@@ -101,7 +101,7 @@ $disabled = $raw->raws_article->draft == null;
                                         {{ Form::file('photo') }}
                                     </label>
                                     <div class="text-center">
-                                        <img id="photo" @isset($raw->photo_id)) src="/storage/{{ $raw->company->id }}/media/raws/{{ $raw->id }}/img/medium/{{ $raw->photo->name }}" @endisset>
+                                        <img id="photo" src="{{ getPhotoPath($raw) }}">
                                     </div>
                                 </div>
                             </div>
@@ -287,11 +287,20 @@ $disabled = $raw->raws_article->draft == null;
                     <div class="small-12 medium-7 cell">
 
                         {{-- @can('create', 'App\Photo') --}}
-                        {!!  Form::open(['route' => ['photos.ajax_store', 'raws'], 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) !!}
+                        {!!  Form::open([
+                            'route' => 'photos.ajax_store',
+                            'data-abide',
+                            'novalidate',
+                            'files' => 'true',
+                            'class' => 'dropzone',
+                            'id' => 'my-dropzone'
+                        ]
+                        ) !!}
 
                         {!! Form::hidden('name', $raw->raws_article->name) !!}
                         {!! Form::hidden('id', $raw->id) !!}
                         {!! Form::hidden('entity', 'raws') !!}
+                        {{-- {!! Form::hidden('album_id', $cur_goods->album_id) !!} --}}
 
                         {!! Form::close() !!}
                         {{-- @endcan --}}

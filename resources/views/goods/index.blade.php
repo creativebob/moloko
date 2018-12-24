@@ -57,9 +57,10 @@
                 </tr>
             </thead>
             <tbody data-tbodyId="1" class="tbody-width">
-                @if(!empty($goods))
 
+                @if($goods->isNotEmpty())
                 @foreach($goods as $cur_goods)
+
                 <tr class="item @if($cur_goods->moderation == 1)no-moderation @endif" id="goods-{{ $cur_goods->id }}" data-name="{{ $cur_goods->goods_article->name }}">
                     <td class="td-drop"><div class="sprite icon-drop"></div></td>
                     <td class="td-checkbox checkbox">
@@ -75,7 +76,7 @@
                     </td>
                     <td>
                         <a href="/admin/goods/{{ $cur_goods->id }}/edit">
-                            <img src="{{ isset($cur_goods->photo_id) ? '/storage/'.$cur_goods->company_id.'/media/goods/'.$cur_goods->id.'/img/small/'.$cur_goods->photo->name : '/crm/img/plug/goods_small_default_color.jpg' }}" alt="{{ isset($cur_goods->photo_id) ? $cur_goods->name : 'Нет фото' }}">
+                            <img src="{{ getPhotoPath($cur_goods, 'small') }}" alt="{{ isset($cur_goods->photo_id) ? $cur_goods->name : 'Нет фото' }}">
                         </a>
                     </td>
                     <td class="td-name">

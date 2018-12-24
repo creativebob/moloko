@@ -64,7 +64,7 @@
                     ><label class="label-check" for="check-{{ $album->id }}"></label></td>
                     <td>
                       <a href="/admin/albums/{{ $album->alias }}">
-                        <img src="{{ isset($album->photo_id) ? '/storage/'.$album->company_id.'/media/albums/'.$album->id.'/img/small/'.$album->photo->name : '/crm/img/plug/album_small_default_color.jpg' }}" alt="{{ isset($album->photo_id) ? $album->name : 'Нет фото' }}">
+                        <img src="{{ getPhotoPath($album) }}" alt="{{ isset($album->photo_id) ? $album->name : 'Нет фото' }}">
                     </a>
                 </td>
 

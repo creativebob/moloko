@@ -10,7 +10,6 @@ use App\Photo;
 use App\AlbumsCategory;
 use App\AlbumEntity;
 use App\CityEntity;
-use App\PhotoSetting;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -161,25 +160,10 @@ class NewsController extends Controller
 
         $cur_news->save();
 
-        // Если пришла фотография
-        if ($request->hasFile('photo')) {
-
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
-
-            $settings = getSettings($get_settings);
-
-            $directory = $user->company_id.'/media/news/'.$cur_news->id.'/img';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записанным обьектом фото, и результатом записи
-            $result = save_photo($request, $directory, 'preview-'.time(), null, $cur_news->photo_id, $settings);
-
-            $cur_news->photo_id = $result['photo']->id;
-            $cur_news->save();
-        }
-
         if ($cur_news) {
+
+            // Cохраняем / обновляем фото
+            savePhoto($request, $cur_news);
 
             // Когда новость записалась, смотрим пришедние для нее альбомы и пишем, т.к. это первая запись новости
             if (isset($request->albums)) {
@@ -268,26 +252,12 @@ class NewsController extends Controller
 
         $cur_news->editor_id = hideGod($user);
 
-        // Если пришла фотография
-        if ($request->hasFile('photo')) {
-
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
-
-            $settings = getSettings($get_settings);
-
-            $directory = $user->company_id.'/media/news/'.$cur_news->id.'/img';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записанным обьектом фото, и результатом записи
-            $result = save_photo($request, $directory, 'avatar-'.time(), null, $cur_news->photo_id, $settings);
-
-            $cur_news->photo_id = $result['photo']->id;
-        }
-
         $cur_news->save();
 
         if ($cur_news) {
+
+            // Cохраняем / обновляем фото
+            savePhoto($request, $cur_news);
 
             // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
             if (isset($request->albums)) {
