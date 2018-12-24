@@ -70,7 +70,7 @@
                     </td>
                     <td>
                         <a href="/admin/raws/{{ $raw->id }}/edit">
-                            <img src="{{ isset($raw->photo_id) ? '/storage/'.$raw->company_id.'/media/raws/'.$raw->id.'/img/small/'.$raw->photo->name : '/crm/img/plug/raw_small_default_color.jpg' }}" alt="{{ isset($raw->photo_id) ? $raw->name : 'Нет фото' }}">
+                            <img src="{{ getPhotoPath($raw, 'small') }}" alt="{{ isset($raw->photo_id) ? $raw->name : 'Нет фото' }}">
                         </a>
                     </td>
                     <td class="td-name">

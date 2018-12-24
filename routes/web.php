@@ -256,17 +256,17 @@ Route::prefix('/albums/{alias}')->group(function () {
 
   // ----------------------------------- Фотографии -----------------------------------------------
 
-    Route::resource('/photos', 'PhotoController')->middleware('auth');
+    Route::resource('/photos', 'PhotoController');
   // Загрузка фоток через ajax через dropzone.js
 });
 
-Route::post('/photo_index', 'PhotoController@ajax_index')->middleware('auth');
+Route::post('/photo_index', 'PhotoController@ajax_index');
 
-Route::any('/photo_store', 'PhotoController@ajax_store')->middleware('auth')->name('photos.ajax_store');
+Route::any('/photo_store', 'PhotoController@ajax_store')->name('photos.ajax_store');
 
-Route::post('/photo_edit/{id}', 'PhotoController@ajax_edit')->middleware('auth')->name('photos.ajax_edit');
+Route::post('/photo_edit/{id}', 'PhotoController@ajax_edit')->name('photos.ajax_edit');
 
-Route::patch('/photo_update/{id}', 'PhotoController@ajax_update')->middleware('auth');
+Route::patch('/photo_update/{id}', 'PhotoController@ajax_update');
 
 
 // --------------------------------------- Помещения -----------------------------------------------

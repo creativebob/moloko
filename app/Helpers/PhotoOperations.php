@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 
 // Сохраняем фотографию
-function save_photo($request, $directory, $name, $album_id = null, $id = null, $settings){
+function save_photo($request, $directory, $name, $album_id = null, $id = null, $settings) {
 
     $user = $request->user();
 
@@ -94,8 +94,100 @@ function save_photo($request, $directory, $name, $album_id = null, $id = null, $
     return $result;
 }
 
+// Сохраняем / обновляем фотографию
+function savePhoto($request, $item) {
+
+    if ($request->hasFile('photo')) {
+
+        $image = $request->file('photo');
+
+        $params = getimagesize($image);
+        $width = $params[0];
+        $height = $params[1];
+
+        $size = filesize($image)/1024;
+        // dd($size);
+
+        $settings = getSettings($item->getTable());
+
+        if ($width < $settings['img_min_width']) {
+            abort(403, 'Ширина фотографии мала!');
+        }
+
+        if ($height < $settings['img_min_height']) {
+            abort(403, 'Высота фотографии мала!');
+        }
+
+        if ($size > ($settings['img_max_size'] * 1024)) {
+            abort(403, 'Размер (Mb) фотографии высок!');
+        }
+
+        $directory = $item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
+
+        if ($item->photo_id) {
+            $photo = Photo::findOrFail($item->photo_id);
+
+            if ($photo) {
+                foreach (['small', 'medium', 'large', 'original'] as $value) {
+                    Storage::disk('public')->delete($directory.'/'.$value.'/'.$photo->name);
+                }
+            }
+        } else {
+            $photo = new Photo;
+        }
+
+        $extension = $image->getClientOriginalExtension();
+
+        $photo->extension = $extension;
+
+        $photo->width = $width;
+        $photo->height = $height;
+
+        $photo->size = number_format($size, 2, '.', '');
+
+        // $photo->album_id = $album_id;
+        $image_name = 'photo_' . time() . '.' . $extension;
+        $photo->name = $image_name;
+
+        $user = $request->user();
+        $photo->company_id = $user->company_id;
+        $photo->author_id = hideGod($user);
+
+        if ($item->getTable() == 'albums') {
+            $photo->album_id = $item->id;
+        }
+
+        $photo->save();
+        // dd('Функция маслает!');
+
+        // Сохранияем оригинал
+        $upload_success = $image->storeAs($directory.'/original', $image_name, 'public');
+
+        // dd($upload_success);
+
+        // Сохраняем small, medium и large
+        foreach (['small', 'medium', 'large'] as $value) {
+            // $item = Image::make($request->photo)->grab(1200, 795);
+            $folder = Image::make($request->photo)->widen($settings['img_'.$value.'_width']);
+            $save_path = storage_path('app/public/'.$directory.'/'.$value);
+            if (!file_exists($save_path)) {
+                mkdir($save_path, 0755);
+            }
+            $folder->save(storage_path('app/public/'.$directory.'/'.$value.'/'.$image_name));
+        }
+
+        if (isset($item->photo_id)) {
+            $item->photo_id = $photo->id;
+        }
+
+        $item->save();
+
+        return $photo;
+    }
+}
+
 // Настройки для фоток
-function getSettings($entity_alias, $ambum_id = null) {
+function getSettings($entity_alias, $album_id = null) {
 
     // Вытаскиваем настройки из конфига
     $settings = config('photo_settings');
@@ -107,6 +199,7 @@ function getSettings($entity_alias, $ambum_id = null) {
     ->first();
 
     $get_settings = $entity->photo_settings;
+
     if (isset($get_settings)) {
 
         foreach ($settings as $key => $value) {
@@ -174,6 +267,21 @@ function setSettings($request, $item) {
         $item->photo_settings()->save($photo_settings);
     } else {
         $photo_settings->delete();
+    }
+}
+
+// Путь до аватарки
+function getPhotoPath($item, $size = 'medium') {
+
+    if (isset($item->photo_id)) {
+        return "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
+    } else {
+        if ($item->getTable() == 'users') {
+            $sex = ($item->sex == 1) ? 'man' : 'woman';
+            return '/crm/img/plug/avatar_small_' . $sex . '.png';
+        } else {
+            return '/crm/img/plug/' . $item->getTable() . '_small_default_color.jpg';
+        }
     }
 }
 

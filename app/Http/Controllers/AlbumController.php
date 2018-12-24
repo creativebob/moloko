@@ -76,7 +76,7 @@ class AlbumController extends Controller
 
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
-        ->systemItem($answer) // Фильтр по системным записям
+        ->systemItem($answer)
         ->booklistFilter($request)
         ->filter($request, 'author')
         ->filter($request, 'company')

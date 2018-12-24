@@ -42,7 +42,7 @@
         </label>
 
         <div class="text-center">
-            <img id="photo" @if (isset($cur_news->photo_id)) src="/storage/{{ $cur_news->company->id }}/media/news/{{ $cur_news->id }}/img/original/{{ $cur_news->photo->name }}" @endif>
+            <img id="photo" src="{{ getPhotoPath($cur_news) }}">
         </div>
 
         <label>Алиас новости

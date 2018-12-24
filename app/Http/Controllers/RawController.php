@@ -18,7 +18,6 @@ use App\Photo;
 use App\UnitsCategory;
 use App\Catalog;
 
-use App\PhotoSetting;
 
 use App\ArticleValue;
 
@@ -325,24 +324,7 @@ class RawController extends Controller
         // dd($metrics_values);
 
         // Получаем настройки по умолчанию
-        $settings = config()->get('settings');
-        // dd($settings);
-
-        $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
-        // dd($get_settings);
-
-        if ($get_settings){
-            $settings = getSettings($get_settings);
-            // dd($settings);
-        }
-
-        $get_settings = PhotoSetting::where(['entity' => 'albums_categories', 'entity_id' => 1])->first();
-        // dd($get_settings);
-
-        if ($get_settings){
-            $settings = getSettings($get_settings);
-            // dd($settings);
-        }
+        $settings = getSettings($this->entity_alias);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
@@ -557,41 +539,12 @@ class RawController extends Controller
 
         // А, пока изменяем без проверки
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        // Если пришла фотография
-        if ($request->hasFile('photo')) {
-
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
-
-            $settings = getSettings($get_settings);
-
-            $directory = $user->company_id.'/media/raws/'.$raw->id.'/img';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры,  директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записанным обьектом фото, и результатом записи
-            $result = save_photo($request, $directory, 'avatar-'.time(), null, $raw->photo_id, $settings);
-
-            $raw->photo_id = $result['photo']->id;
-        }
-
         // Порции
-        // if (isset($request->portion_status)) {
         $raw->portion_status = $request->portion_status;
         $raw->portion_name = $request->portion_name;
         $raw->portion_abbreviation = $request->portion_abbreviation;
         $raw->portion_count = $request->portion_count;
-        // } else {
-        //     $raw->portion_status = null;
-        //     $raw->portion_name = null;
-        //     $raw->portion_abbreviation = null;
-        //     $raw->portion_count = null;
-        // }
+
 
         // Описание
         $raw->description = $request->description;
@@ -607,10 +560,14 @@ class RawController extends Controller
         // Общие данные
         $raw->display = $request->display;
         $raw->system_item = $request->system_item;
-        $raw->editor_id = $user_id;
+
+        $raw->editor_id = hideGod($request->user());
         $raw->save();
 
         if ($raw) {
+
+            // Cохраняем / обновляем фото
+            savePhoto($request, $raw);
 
             // Проверяем каталоги
             if (isset($request->catalogs)) {

@@ -104,7 +104,7 @@ $disabled = $cur_goods->goods_article->draft == null;
                                         {{ Form::file('photo') }}
                                     </label>
                                     <div class="text-center">
-                                        <img id="photo" @isset($cur_goods->photo_id)) src="/storage/{{ $cur_goods->company->id }}/media/goods/{{ $cur_goods->id }}/img/medium/{{ $cur_goods->photo->name }}" @endisset>
+                                        <img id="photo" src="{{ getPhotoPath($cur_goods) }}">
                                     </div>
                                 </div>
                             </div>
@@ -388,13 +388,24 @@ $disabled = $cur_goods->goods_article->draft == null;
 
 
                     <div class="small-12 medium-7 cell">
-                        {!!  Form::open(['route' => ['photos.ajax_store', 'goods'], 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) !!}
 
-                        {{ Form::hidden('name', $cur_goods->goods_article->name) }}
-                        {{ Form::hidden('id', $cur_goods->id) }}
+                        {!!  Form::open([
+                            'route' => 'photos.ajax_store',
+                            'data-abide',
+                            'novalidate',
+                            'files' => 'true',
+                            'class' => 'dropzone',
+                            'id' => 'my-dropzone'
+                        ]
+                        ) !!}
+
+                        {!! Form::hidden('name', $cur_goods->goods_article->name) !!}
+                        {!! Form::hidden('id', $cur_goods->id) !!}
                         {!! Form::hidden('entity', 'goods') !!}
+                        {{-- {!! Form::hidden('album_id', $cur_goods->album_id) !!} --}}
 
                         {!! Form::close() !!}
+
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
                             @isset($cur_goods->album_id)

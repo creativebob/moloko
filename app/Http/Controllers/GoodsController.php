@@ -11,7 +11,6 @@ use App\RawsArticle;
 use App\Manufacturer;
 use App\Album;
 use App\Metric;
-use App\PhotoSetting;
 use App\Entity;
 
 // Валидация
@@ -305,7 +304,7 @@ class GoodsController extends Controller
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
 
                 // dd($request->quickly);
-                 if ($request->quickly == 1) {
+                if ($request->quickly == 1) {
                     return redirect()->route('goods.index');
                 } else {
                     return redirect()->route('goods.edit', ['id' => $cur_goods->id]);
@@ -327,11 +326,11 @@ class GoodsController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Главный запрос
-        $cur_goods = Goods::moderatorLimit($answer_goods)->findOrFail($id);
-        // dd($cur_goods);
+        $cur_goods = Goods::moderatorLimit($answer)->findOrFail($id);
+        // dd($cur_goods->album);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
@@ -535,7 +534,7 @@ class GoodsController extends Controller
         // Получаем артикул товара
         $goods_article = $cur_goods->goods_article;
         // dd($cur_goods->goods_article->draft);
-        //
+
         // Проверки только для черновика
         if ($cur_goods->goods_article->draft == 1) {
 
@@ -719,41 +718,11 @@ class GoodsController extends Controller
 
         // А, пока изменяем без проверки
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        // Если пришла фотография
-        if ($request->hasFile('photo')) {
-
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
-
-            $settings = getSettings($get_settings);
-
-            $directory = $user->company_id.'/media/goods/'.$cur_goods->id.'/img';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записанным обьектом фото, и результатом записи
-            $result = save_photo($request, $directory, 'avatar-'.time(), null, $cur_goods->photo_id, $settings);
-
-            $cur_goods->photo_id = $result['photo']->id;
-        }
-
         // Порции
-        // if (isset($request->portion_status)) {
         $cur_goods->portion_status = $request->portion_status;
         $cur_goods->portion_name = $request->portion_name;
         $cur_goods->portion_abbreviation = $request->portion_abbreviation;
         $cur_goods->portion_count = $request->portion_count;
-        // } else {
-        //     $cur_goods->portion_status = null;
-        //     $cur_goods->portion_name = null;
-        //     $cur_goods->portion_abbreviation = null;
-        //     $cur_goods->portion_count = null;
-        // }
 
         // Описание
         $cur_goods->description = $request->description;
@@ -769,10 +738,14 @@ class GoodsController extends Controller
         // Общие данные
         $cur_goods->display = $request->display;
         $cur_goods->system_item = $request->system_item;
-        $cur_goods->editor_id = $user_id;
+
+        $cur_goods->editor_id = hideGod($request->user());
         $cur_goods->save();
 
         if ($cur_goods) {
+
+            // Cохраняем / обновляем фото
+            savePhoto($request, $cur_goods);
 
             // Проверяем каталоги
             if (isset($request->catalogs)) {

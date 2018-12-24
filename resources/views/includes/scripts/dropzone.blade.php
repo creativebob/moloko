@@ -75,26 +75,33 @@
         accept: function(file, done) {
             file.acceptDimensions = done;
             file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину"); };
-        }
+        },
+        // success: function(file, response)
+        // {
+        //     $.post('/admin/photo_index', {id: item_id, entity: entity}, function(html){
+        //             // alert(html);
+        //             $('#photos-list').html(html);
+        //         })
+        // }
     };
 
     // Оставляем ширину у вырванного из потока элемента
-    var fixHelper = function(e, ui) {
-        ui.children().each(function() {
-            $(this).width($(this).width());
-        });
-        return ui;
-    };
+    // var fixHelper = function(e, ui) {
+    //     ui.children().each(function() {
+    //         $(this).width($(this).width());
+    //     });
+    //     return ui;
+    // };
 
-    // Включаем перетаскивание
-    $("#values-table tbody").sortable({
-        axis: 'y',
-        helper: fixHelper, // ширина вырванного элемента
-        handle: 'td:first', // указываем за какой элемент можно тянуть
-        placeholder: "table-drop-color", // фон вырванного элемента
-        update: function( event, ui ) {
+    // // Включаем перетаскивание
+    // $("#values-table tbody").sortable({
+    //     axis: 'y',
+    //     helper: fixHelper, // ширина вырванного элемента
+    //     handle: 'td:first', // указываем за какой элемент можно тянуть
+    //     placeholder: "table-drop-color", // фон вырванного элемента
+    //     update: function( event, ui ) {
 
-            var entity = $(this).children('.item').attr('id').split('-')[0];
-        }
-    });
+    //         var entity = $(this).children('.item').attr('id').split('-')[0];
+    //     }
+    // });
 </script>
