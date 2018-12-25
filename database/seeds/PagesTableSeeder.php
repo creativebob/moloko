@@ -621,6 +621,32 @@ class PagesTableSeeder extends Seeder
                 'display' => null,
             ],
 
+            // 52
+            [
+                'name' => 'Заказы поставщикам',
+                'site_id' => 1,
+                'title' => 'Заказы поставщикам',
+                'description' => 'Заказы поставщикам',
+                'alias' => 'applications',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
+            // 53
+            [
+                'name' => 'Товарные накладные',
+                'site_id' => 1,
+                'title' => 'Товарные накладные',
+                'description' => 'Товарные накладные',
+                'alias' => 'consignments',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
             // [
             //     'name' => 'Категории продукции',
             //     'site_id' => 1,

@@ -646,6 +646,26 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
             ],
 
+            // 75
+            [
+                'name' => 'Заказы поставщикам',
+                'alias' => 'applications',
+                'model' => 'Application',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
+
+            // 76
+            [
+                'name' => 'Товарные накладные',
+                'alias' => 'consignments',
+                'model' => 'Сonsignment',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
+
         ]);
 
 }

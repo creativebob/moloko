@@ -34,12 +34,17 @@ Route::get('/', 'AppController@enter');
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
-Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+
 Route::get('/img/{path}', 'ImageController@show')->where('path', '.*');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
+
+
+// ----------------------------- Рабочий стол -------------------------------------
+
+Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 
 // -------------------------------------- Директории ---------------------------------------------------
 Route::get('directories', 'DirectoryController@index')->middleware('auth')->name('directories.index');
@@ -582,6 +587,12 @@ Route::resource('/suppliers', 'SupplierController')->middleware('auth');
 
 // Основные методы
 Route::resource('applications', 'ApplicationController')->middleware('auth');
+
+
+// -------------------------------------- Товарные накладные ---------------------------------------------
+
+// Основные методы
+Route::resource('consignments', 'ConsignmentController');
 
 
 // ------------------------------------ Производители ----------------------------------------------------
