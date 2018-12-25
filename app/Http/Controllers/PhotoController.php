@@ -256,7 +256,7 @@ class PhotoController extends Controller
             $model = 'App\\'.$entity->model;
             $item = $model::with('album')->findOrFail($request->id);
 
-            if ($item->has('album')) {
+            if (isset($item->album)) {
                 $album = $item->album;
             } else {
                 // Получаем пользователя
