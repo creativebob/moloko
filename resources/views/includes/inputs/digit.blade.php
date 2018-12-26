@@ -47,7 +47,7 @@ $("#digitfield-{{$name}}").keypress(function( b ){
 	if({{ $decimal_place }} == 0){	    		
     	var C = /[0-9\x25\x24\x23]/;
 	} else {
-    	var C = /[0-9\x25\x24\x23\x2c]/;
+    	var C = /[0-9\x25\x24\x23\x2e]/;
 	};
 
     var a = b.which;
