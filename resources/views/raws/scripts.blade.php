@@ -70,7 +70,8 @@
         } else {
             set_status = 'one';
         }
-        // alert(checkbox_status + ' ' + set_status);
+
+        // alert($('#select-raws_categories').val() + mode + set_status);
 
         $.post('/admin/raws_products_create_mode', {mode: mode, raws_category_id: $('#select-raws_categories').val(), set_status: set_status}, function(html){
             $('#mode').html(html);

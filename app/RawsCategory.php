@@ -98,4 +98,10 @@ class RawsCategory extends Model
     {
         return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'one');
     }
+
+    // Производители
+    public function manufacturers()
+    {
+        return $this->belongsToMany('App\Company', 'raws_category_manufacturer', 'raws_category_id', 'manufacturer_id');
+    }
 }

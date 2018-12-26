@@ -88,7 +88,9 @@ $disabled = $raw->article->draft == null;
                                     @include('includes.selects.raws_categories', ['raws_category_id' => $raw->article->product->raws_category_id])
                                 </label>
 
-                                @include('includes.selects.manufacturers', ['manufacturer_id' => $raw->article->manufacturer_id, 'draft' => $raw->article->draft])
+                                <label>Производитель
+                                    {!! Form::select('manufacturer_id', $raw->article->product->category->manufacturers->pluck('name', 'id'), $raw->article->manufacturer_id, []) !!}
+                                </label>
 
                                 {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 

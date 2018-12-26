@@ -220,23 +220,23 @@ class GoodsCategoryController extends Controller
         $goods_category = $this->updateCategory($request, $goods_category);
 
         // Если сменили тип категории продукции, то меняем его и всем вложенным элементам
-        if (($goods_category->parent_id == null) && ($goods_category->goods_type_id != $request->goods_type_id)) {
-            $goods_category->goods_type_id = $request->goods_type_id;
+        if (($goods_category->parent_id == null) && ($goods_category->goods_mode_id != $request->goods_mode_id)) {
+            $goods_category->goods_mode_id = $request->goods_mode_id;
 
             $goods_categories = GoodsCategory::whereCategory_id($id)
             ->update(['goods_mode_id' => $request->goods_mode_id]);
         }
 
-        // Производители
-        if (isset($request->manufacturers)) {
-            $goods_category->manufacturers()->sync($request->manufacturers);
-        } else {
-            $goods_category->manufacturers()->detach();
-        }
-
         $goods_category->save();
 
         if ($goods_category) {
+
+            // Производители
+            if (isset($request->manufacturers)) {
+                $goods_category->manufacturers()->sync($request->manufacturers);
+            } else {
+                $goods_category->manufacturers()->detach();
+            }
 
             // Переадресовываем на index
             return redirect()->route('goods_categories.index', ['id' => $goods_category->id]);

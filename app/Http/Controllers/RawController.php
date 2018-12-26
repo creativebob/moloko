@@ -117,8 +117,8 @@ class RawController extends Controller
         $answer_raws_categories = operator_right('raws_categories', false, 'index');
 
         // Главный запрос
-        $raws_categories = RawsCategory::withCount('products')
-        ->with('products')
+        $raws_categories = RawsCategory::withCount('products', 'manufacturers')
+        ->with('products', 'manufacturers')
         ->moderatorLimit($answer_raws_categories)
         ->companiesLimit($answer_raws_categories)
         ->authors($answer_raws_categories)
@@ -155,6 +155,19 @@ class RawController extends Controller
             $ajax_error['text'] = "Для начала необходимо добавить производителей. А уже потом будем добавлять сырьё. Ок?";
             $ajax_error['link'] = "/admin/manufacturers/create"; // Ссылка на кнопке
             $ajax_error['title_link'] = "Идем в раздел производителей"; // Текст на кнопке
+
+            return view('ajax_error', compact('ajax_error'));
+        }
+
+        // Если в категориях не добавлены производители
+        if ($raws_categories->where('manufacturers_count', 0)->count() == $raws_categories->count()){
+
+            // Описание ошибки
+            // $ajax_error = [];
+            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+            $ajax_error['text'] = "Для начала необходимо добавить производителей в категории. А уже потом будем добавлять товары. Ок?";
+            $ajax_error['link'] = "/admin/raws_categories"; // Ссылка на кнопке
+            $ajax_error['title_link'] = "Идем в раздел категорий cырья"; // Текст на кнопке
 
             return view('ajax_error', compact('ajax_error'));
         }

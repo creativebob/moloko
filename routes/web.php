@@ -345,8 +345,6 @@ Route::post('/raw/photos', 'RawController@photos')->middleware('auth');
 
 // -------------------------------- Категории товаров -------------------------------------------
 
-Route::any('/goods_categories/{id}', 'GoodsCategoryController@destroy')->middleware('auth');
-
 // Текущая добавленная/удаленная категория
 Route::any('/goods_categories', 'GoodsCategoryController@index')->middleware('auth');
 Route::match(['get', 'post'], '/goods_categories/{id}/edit', 'GoodsCategoryController@edit')->middleware('auth');

@@ -219,8 +219,9 @@ class RawsProductController extends Controller
 
             case 'mode-default':
 
-            $raws_category = RawsCategory::withCount('products')->find($raws_category_id);
-            $raws_products_count = $raws_category->raws_products_count;
+            $raws_category = RawsCategory::withCount('products')
+            ->find($raws_category_id);
+            $raws_products_count = $raws_category->products_count;
             return view('raws.create_modes.mode_default', compact('raws_products_count'));
 
             break;
@@ -254,5 +255,33 @@ class RawsProductController extends Controller
         ->get(['id', 'name']);
 
         return view('includes.selects.raws_products', ['raws_products' => $raws_products, 'raws_product_id' => $request->raws_product_id, 'set_status' => $request->set_status]);
+    }
+
+    public function ajax_count(Request $request)
+    {
+        // $id = 2;
+
+        $id = $request->id;
+
+        $goods_category = RawsCategory::withCount('products')->with('products')->findOrFail($id);
+
+        if ($goods_category->goods_products_count > 0) {
+
+            $goods_products_list = $goods_category->goods_products->pluck('name', 'id');
+
+            if ($goods_products_list) {
+
+                return view('goods.mode-select', compact('goods_products_list'));
+            } else {
+                $result = [
+                    'error_status' => 1,
+                    'error_message' => 'Ошибка при формировании списка групп товаров!',
+                ];
+            }
+
+        } else {
+
+            return view('goods.create_modes.mode-add');
+        }
     }
 }
