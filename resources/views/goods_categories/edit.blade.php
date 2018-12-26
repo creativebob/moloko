@@ -86,8 +86,6 @@
                         <div class="grid-x grid-padding-x">
                             <div class="small-12 medium-6 cell checkbox checkboxer">
 
-                                {!! Form::model($goods_category, []) !!}
-
                                 {{-- Подключаем класс Checkboxer --}}
                                 @include('includes.scripts.class.checkboxer')
 
@@ -97,8 +95,6 @@
                                     'name' => 'manufacturers'
                                 ]
                                 )
-
-                                {!! Form::close() !!}
 
                             </div>
                         </div>

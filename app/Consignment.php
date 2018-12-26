@@ -22,7 +22,7 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
 
-class Application extends Model
+class Consignment extends Model
 {
 
     // Включаем кеш
@@ -43,7 +43,7 @@ class Application extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    protected $dates = ['deleted_at', 'send_date'];
+    protected $dates = ['deleted_at', 'receipt_date'];
     protected $fillable = [
         'supplier_id',
         'company_id',
@@ -54,7 +54,7 @@ class Application extends Model
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo('App\User');
     }
 
     // Компания
@@ -63,16 +63,15 @@ class Application extends Model
         return $this->belongsTo('App\Company');
     }
 
-    // Получаем поставщика
+    // Поставщик
     public function supplier()
     {
-        return $this->belongsTo('App\Company', 'supplier_id');
+        return $this->belongsTo('App\Company');
     }
 
-    // Получаем этап
-    public function stage()
+    // Склад
+    public function stock()
     {
-        return $this->belongsTo('App\Stage');
+        return $this->belongsTo('App\Stock');
     }
-
 }

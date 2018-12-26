@@ -11,9 +11,7 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-@if(!empty($albums))
-{{ num_format($albums->total(), 0) }}
-@endif
+{{ $albums->isNotEmpty() ? num_format($albums->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')
@@ -64,7 +62,7 @@
                     ><label class="label-check" for="check-{{ $album->id }}"></label></td>
                     <td>
                       <a href="/admin/albums/{{ $album->alias }}">
-                        <img src="{{ getPhotoPath($album) }}" alt="{{ isset($album->photo_id) ? $album->name : 'Нет фото' }}">
+                        <img src="{{ getPhotoPath($album, 'small') }}" alt="{{ isset($album->photo_id) ? $album->name : 'Нет фото' }}">
                     </a>
                 </td>
 
@@ -73,6 +71,7 @@
                     @can('update', $album)
                     {{ link_to_route('albums.edit', $album->name, ['alias' => $album->alias], []) }}
                     @endcan
+
                     @cannot('update', $album)
                     {{ $album->name }}
                     @endcannot

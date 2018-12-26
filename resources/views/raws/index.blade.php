@@ -16,9 +16,7 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-@if(!empty($raws))
-{{ num_format($raws->total(), 0) }}
-@endif
+{{ $raws->isNotEmpty() ? num_format($raws->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')

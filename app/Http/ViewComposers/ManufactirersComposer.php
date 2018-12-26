@@ -24,7 +24,7 @@ class ManufacturersComposer
         ])
         ->moderatorLimit($answer)
         ->findOrFail(Auth::user()->company_id);
-        // dd($company);
+        dd($company);
 
         // $manufacturers = Company::whereHas('manufacturers', function ($q) {
         //     $q->pivot('company_id', Auth::user()->company_id)->orderBy('sort', 'asc');

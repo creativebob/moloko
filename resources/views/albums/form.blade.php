@@ -57,8 +57,9 @@
 
             <div class="small-12 medium-5 large-7 cell tabs-margin-top">
 
-
+                @isset ($album->photo_id)
                 <img src="{{ getPhotoPath($album) }}">
+                @endisset
 
             </div>
 

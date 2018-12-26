@@ -27,7 +27,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Если существует таблица с меню
         if (Schema::hasTable('photo_settings')) {
-            config()->set('photo_settings', PhotoSetting::whereNull('company_id')->first()->toArray());
+            config()->set('photo_settings', PhotoSetting::whereNull('company_id')
+                ->first()
+                ->toArray());
         } else {
             // Умолчания на случай, если нет доступа к базе (Для формирования autoload)
             $settings = [];
@@ -40,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
                 $settings['img_large_height'] = 0,
 
                 $settings['img_formats'] = 0,
-                $settings['imgstrict_mode'] = 0,
+                $settings['strict_mode'] = 0,
 
                 $settings['img_min_width'] = 0,
                 $settings['img_min_height'] = 0,

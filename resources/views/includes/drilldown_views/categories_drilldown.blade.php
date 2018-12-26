@@ -1,4 +1,4 @@
-<ul class="vertical menu drilldown" data-drilldown>
+<ul class="vertical menu drilldown" data-drilldown data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'>
 
     @foreach($grouped_items as $categories)
 

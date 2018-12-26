@@ -141,17 +141,18 @@ class GoodsController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods_categories = operator_right('goods_categories', false, 'index');
+        $answer = operator_right('goods_categories', false, 'index');
 
         // Главный запрос
-        $goods_categories = GoodsCategory::withCount('goods_products')
-        ->with('goods_products')
-        ->moderatorLimit($answer_goods_categories)
-        ->companiesLimit($answer_goods_categories)
-        ->authors($answer_goods_categories)
-        ->systemItem($answer_goods_categories)
+        $goods_categories = GoodsCategory::withCount('goods_products', 'manufacturers')
+        ->with('goods_products', 'manufacturers')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
         ->orderBy('sort', 'asc')
         ->get();
+        // dd($goods_categories->where('manufacturers_count', 0)->count());
 
         if ($goods_categories->count() == 0){
 
@@ -182,6 +183,19 @@ class GoodsController extends Controller
             $ajax_error['text'] = "Для начала необходимо добавить производителей. А уже потом будем добавлять товары. Ок?";
             $ajax_error['link'] = "/admin/manufacturers/create"; // Ссылка на кнопке
             $ajax_error['title_link'] = "Идем в раздел производителей"; // Текст на кнопке
+
+            return view('ajax_error', compact('ajax_error'));
+        }
+
+        // Если в категориях не добавлены производители
+        if ($goods_categories->where('manufacturers_count', 0)->count() == $goods_categories->count()){
+
+            // Описание ошибки
+            // $ajax_error = [];
+            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+            $ajax_error['text'] = "Для начала необходимо добавить производителей в категории. А уже потом будем добавлять товары. Ок?";
+            $ajax_error['link'] = "/admin/goods_categories"; // Ссылка на кнопке
+            $ajax_error['title_link'] = "Идем в раздел категорий товаров"; // Текст на кнопке
 
             return view('ajax_error', compact('ajax_error'));
         }
@@ -330,7 +344,6 @@ class GoodsController extends Controller
 
         // Главный запрос
         $cur_goods = Goods::moderatorLimit($answer)->findOrFail($id);
-        // dd($cur_goods->album);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);

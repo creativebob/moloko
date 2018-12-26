@@ -182,6 +182,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         'App\Model' => 'App\Policies\ModelPolicy',
 
+
+
         User::class => UserPolicy::class,
         RightsRole::class => RightsRolePolicy::class,
         Company::class => CompanyPolicy::class,
@@ -189,6 +191,7 @@ class AuthServiceProvider extends ServiceProvider
 
         Supplier::class => SupplierPolicy::class,
         Application::class => ApplicationPolicy::class,
+        'App\Consignment' => 'App\Policies\ConsignmentPolicy',
 
         Manufacturer::class => ManufacturerPolicy::class,
         Dealer::class => DealerPolicy::class,

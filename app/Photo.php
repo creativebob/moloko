@@ -18,7 +18,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-    
+
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -61,7 +61,7 @@ class Photo extends Model
         return $this->hasOne('App\News');
     }
 
-     public function avatar()
+    public function avatar()
     {
         return $this->hasOne('App\Album');
     }
@@ -75,7 +75,8 @@ class Photo extends Model
     // Получаем альбомы
     public function albums()
     {
-        return $this->belongsToMany('App\Album', 'album_entity', 'entity_id', 'album_id')->where('entity', 'photos');
+        return $this->morphToMany('App\Album', 'album_entity');
+
     }
 
     // Получаем автора

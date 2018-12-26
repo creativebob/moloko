@@ -177,7 +177,9 @@ class AlbumController extends Controller
     public function show(Request $request, $alias)
     {
 
-        $album = Album::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $album = Album::moderatorLimit($answer)
         ->whereAlias($alias)
         ->first();
 
@@ -280,7 +282,7 @@ class AlbumController extends Controller
 
         // Удаляем фотки
         $album->photos()->delete();
-        $album->settings()->delete();
+        $album->photo_settings()->delete();
 
         // Удаляем альбом с обновлением
         $album = Album::destroy($id);
@@ -290,6 +292,35 @@ class AlbumController extends Controller
         } else {
             abort(403, 'Ошибка при удалении альбома');
         }
+    }
+
+    public function sections(Request $request, $alias)
+    {
+
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $album = Album::moderatorLimit($answer)
+        ->whereAlias($alias)
+        ->first();
+
+        // Подключение политики
+        $this->authorize(getmethod('show'), $album);
+
+        $answer_photo = operator_right('photos', false, getmethod('index'));
+        // dd($answer_photo);
+
+        $album->load(['author', 'photos' => function ($query) use ($answer_photo){
+            $query->moderatorLimit($answer_photo)
+            ->companiesLimit($answer_photo)
+            ->authors($answer_photo)
+            ->systemItem($answer_photo)
+            ->orderBy('sort', 'asc');
+        }]);
+
+        return view('albums.sections', [
+            'album' => $album,
+            'page_info' => pageInfo($this->entity_alias)
+        ]);
     }
 
     // ------------------------------------------- Ajax ---------------------------------------------
