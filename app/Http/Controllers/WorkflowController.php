@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 // Модели
-use App\Order;
-use App\OrderComposition;
+use App\Estimate;
+use App\Workflow;
 use App\Entity;
 
 use Illuminate\Http\Request;
@@ -12,11 +12,11 @@ use Illuminate\Http\Request;
 // Политика
 // use App\Policies\NotePolicy;
 
-class OrderCompositionController extends Controller
+class WorkflowController extends Controller
 {
 
     // Сущность над которой производит операции контроллер
-    protected $entity_name = 'order_compositions';
+    protected $entity_name = 'workflows';
     protected $entity_dependence = false;
 
     public function index(Request $request)
@@ -47,7 +47,7 @@ class OrderCompositionController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('edit'));
 
-        $order_composition = OrderComposition::with('order')
+        $workflow = Workflow::with('estimate')
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
@@ -55,7 +55,7 @@ class OrderCompositionController extends Controller
 
         // $this->authorize(getmethod(__FUNCTION__), $order_composition);
 
-        return view('leads.pricing.pricing-modal', compact('order_composition'));
+        return view('leads.pricing.pricing-modal', compact('workflow'));
 
     }
 

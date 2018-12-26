@@ -12,7 +12,7 @@
 
                     <div class="small-12 cell">
                         <label>Закупочная цена единицы, руб
-                            @include('includes.inputs.digit', ['name'=>'cost', 'value'=>$order_composition->cost, 'decimal_place'=>2])
+                            @include('includes.inputs.digit', ['name'=>'cost', 'value'=>$workflow->cost ?? $workflow->product->cost, 'decimal_place'=>2])
                         </label>
                     </div>
 
@@ -22,12 +22,12 @@
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Наценка, %
-                                        @include('includes.inputs.digit', ['name'=>'margin_percent', 'value'=>$order_composition->margin_percent, 'decimal_place'=>4])
+                                        @include('includes.inputs.digit', ['name'=>'margin_percent', 'value'=>$workflow->margin_percent, 'decimal_place'=>4])
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Наценка, руб
-                                        @include('includes.inputs.digit', ['name'=>'margin_currency', 'value'=>$order_composition->margin_currency, 'decimal_place'=>2])
+                                        @include('includes.inputs.digit', ['name'=>'margin_currency', 'value'=>$workflow->margin_currency, 'decimal_place'=>2])
                                     </label>
                                 </div>
 
@@ -35,12 +35,12 @@
 
                                 <div class="small-12 medium-6 cell">
                                     <label>Допфикс наценка, %
-                                        @include('includes.inputs.digit', ['name'=>'extra_margin_percent', 'value'=>$order_composition->extra_margin_percent, 'decimal_place'=>4])
+                                        @include('includes.inputs.digit', ['name'=>'extra_margin_percent', 'value'=>$workflow->extra_margin_percent, 'decimal_place'=>4])
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Допфикс наценка, руб
-                                        @include('includes.inputs.digit', ['name'=>'extra_margin_currency', 'value'=>$order_composition->extra_margin_currency, 'decimal_place'=>2])
+                                        @include('includes.inputs.digit', ['name'=>'extra_margin_currency', 'value'=>$workflow->extra_margin_currency, 'decimal_place'=>2])
                                     </label>
                                 </div>
                             </div>
@@ -54,23 +54,23 @@
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Скидка, %
-                                        @include('includes.inputs.digit', ['name'=>'discount_percent', 'value'=>$order_composition->discount_percent, 'decimal_place'=>4])
+                                        @include('includes.inputs.digit', ['name'=>'discount_percent', 'value'=>$workflow->discount_percent, 'decimal_place'=>4])
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Скидка, руб
-                                        @include('includes.inputs.digit', ['name'=>'discount_currency', 'value'=>$order_composition->discount_currency, 'decimal_place'=>2])
+                                        @include('includes.inputs.digit', ['name'=>'discount_currency', 'value'=>$workflow->discount_currency, 'decimal_place'=>2])
                                     </label>
                                 </div>
 
                                 <div class="small-12 medium-6 cell">
                                     <label>Допфикс скидка, %
-                                        @include('includes.inputs.digit', ['name'=>'extra_discount_percent', 'value'=>$order_composition->extra_discount_percent, 'decimal_place'=>4])
+                                        @include('includes.inputs.digit', ['name'=>'extra_discount_percent', 'value'=>$workflow->extra_discount_percent, 'decimal_place'=>4])
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Допфикс скидка, руб
-                                        @include('includes.inputs.digit', ['name'=>'extra_discount_currency', 'value'=>$order_composition->extra_discount_currency, 'decimal_place'=>2])
+                                        @include('includes.inputs.digit', ['name'=>'extra_discount_currency', 'value'=>$workflow->extra_discount_currency, 'decimal_place'=>2])
                                     </label>
                                 </div>
                             </div>
@@ -80,18 +80,18 @@
 
                     <div class="small-12 medium-6 cell">
                         <label>Цена единицы, руб
-                            @include('includes.inputs.digit', ['name'=>'sum', 'value'=>$order_composition->sum, 'decimal_place'=>2])
+                            @include('includes.inputs.digit', ['name'=>'sum', 'value'=>$workflow->sum, 'decimal_place'=>2])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>Количество, единиц
-                            @include('includes.inputs.digit', ['name'=>'count', 'value'=>$order_composition->count])
+                            @include('includes.inputs.digit', ['name'=>'count', 'value'=>$workflow->count])
                         </label>
                     </div>
 
                     <div class="small-12 cell">
                         <label>Итоговая стоимость по позиции, руб
-                            @include('includes.inputs.digit', ['name'=>'total', 'value'=>$order_composition->total, 'decimal_place'=>2])
+                            @include('includes.inputs.digit', ['name'=>'total', 'value'=>$workflow->total ?? $workflow->product->price, 'decimal_place'=>2])
                         </label>
                     </div>
 
@@ -127,44 +127,41 @@ class PricingCalc {
         this.name = name;
 
         // Проверяем адекватность указанных в поле данных:
-        var reg=/^\d+$/
-        if (reg.test(limit_value) || limit_value == null){
-            this.limit = limit_value;
-        } else {
-            alert('Ограничивающее значение для цифрового поля ID: digitfield-' + this.name + ' задано не верно!');
-        };
+        // var reg=/^\d+$/
+        // if (reg.test(limit_value) || limit_value == null){
+        //     this.limit = limit_value;
+        // } else {
+        //     alert('Ограничивающее значение для цифрового поля ID: digitfield-' + this.name + ' задано не верно!');
+        // };
 
-        this.cost = cost;
+        // this.cost = cost;
 
-        this.margin_percent = margin_percent;
-        this.margin_currency = margin_currency;
-        this.margin_priority_currency = margin_priority_currency;
+        // this.margin_percent = margin_percent;
+        // this.margin_currency = margin_currency;
+        // this.margin_priority_currency = margin_priority_currency;
 
-        this.extra_margin_percent = extra_margin_percent;
-        this.extra_margin_currency = extra_margin_currency;
-        this.extra_margin_priority_currency = extra_margin_priority_currency;
+        // this.extra_margin_percent = extra_margin_percent;
+        // this.extra_margin_currency = extra_margin_currency;
+        // this.extra_margin_priority_currency = extra_margin_priority_currency;
 
-        this.discount_percent = discount_percent;
-        this.discount_currency = discount_currency;
-        this.discount_priority_currency = discount_priority_currency;
+        // this.discount_percent = discount_percent;
+        // this.discount_currency = discount_currency;
+        // this.discount_priority_currency = discount_priority_currency;
 
-        this.extra_discount_percent = extra_discount_percent;
-        this.extra_discount_currency = extra_discount_currency;
-        this.extra_discount_priority_currency = extra_discount_priority_currency;
+        // this.extra_discount_percent = extra_discount_percent;
+        // this.extra_discount_currency = extra_discount_currency;
+        // this.extra_discount_priority_currency = extra_discount_priority_currency;
 
-        this.count = count;
-        this.sum = sum;
-        this.total= total;
+        // this.count = count;
+        // this.sum = sum;
+        // this.total= total;
     }
 
 }
 
 // Создаем калькулятор ценообразования
 let PricingCalcOrder = new PricingCalc(
-    '{{ $name }}', 
-    {{ $limit }}, 
-    {{ $decimal_place }}
-);
+    'workflow_calc');
 
 
 $("#digitfield-count").keyup(function(event) {

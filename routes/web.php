@@ -489,6 +489,7 @@ Route::resource('estimates', 'EstimateController')->middleware('auth');
 Route::any('/estimates_check', 'EstimateController@ajax_check')->middleware('auth');
 
 Route::delete('/workflows/{id}', 'EstimateController@ajax_destroy_composition')->middleware('auth');
+Route::any('/workflows/{id}/edit', 'WorkflowController@ajax_edit')->middleware('auth');
 
 // --------------------------------------- Заказы -----------------------------------------------
 
@@ -498,10 +499,6 @@ Route::resource('orders', 'OrderController')->middleware('auth');
 
 // Отображение на сайте
 Route::any('/orders_check', 'OrderController@ajax_check')->middleware('auth');
-
-Route::any('/order_compositions/{id}/edit', 'OrderCompositionController@ajax_edit')->middleware('auth');
-Route::delete('/order_compositions/{id}', 'OrderController@ajax_destroy_composition')->middleware('auth');
-
 
 
 // ------------------------------ Внутренние комментарии -----------------------------------------------

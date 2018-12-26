@@ -11,7 +11,7 @@
 		event.preventDefault();
 
         var parent = $(this).closest('.item');
-        var composition_entity = parent.attr('id').split('-')[0];
+        var entity = parent.attr('id').split('-')[0];
         var entity_id = parent.attr('id').split('-')[1];
 
 		// alert('/admin/' + composition_entity + '/' + entity_id + '/edit');
@@ -20,7 +20,7 @@
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
-			url: '/admin/' + composition_entity + '/' + entity_id + '/edit',
+			url: '/admin/' + entity + '/' + entity_id + '/edit',
 			type: "GET",
 			success: function(html){
 				$('#modal').html(html);
