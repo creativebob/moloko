@@ -63,13 +63,13 @@ class GoodsProduct extends Model
 
 
     // Категория
-    public function goods_category()
+    public function category()
     {
-        return $this->belongsTo('App\GoodsCategory');
+        return $this->belongsTo('App\GoodsCategory', 'goods_category_id');
     }
 
     // Артикулы
-    public function goods_articles()
+    public function articles()
     {
         return $this->hasMany('App\GoodsArticle');
     }
@@ -101,7 +101,7 @@ class GoodsProduct extends Model
     // Автора
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo('App\User');
     }
 
     // Компания

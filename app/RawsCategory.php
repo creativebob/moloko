@@ -70,19 +70,19 @@ class RawsCategory extends Model
     }
 
     // Группы
-    public function raws_products()
+    public function products()
     {
         return $this->hasMany('App\RawsProduct');
     }
 
     // Режим
-    public function raws_mode()
+    public function mode()
     {
-        return $this->belongsTo('App\RawsMode');
+        return $this->belongsTo('App\RawsMode', 'raws_mode_id');
     }
 
     // Артикул
-    public function raws_articles()
+    public function articles()
     {
         return $this->hasManyThrough('App\RawsArticle', 'App\RawsProduct');
     }

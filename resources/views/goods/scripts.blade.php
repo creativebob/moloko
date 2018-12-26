@@ -74,7 +74,8 @@
         } else {
             set_status = 'one';
         }
-        // alert(checkbox_status + ' ' + set_status);
+
+        // alert($('#select-goods_categories').val() + mode + set_status);
 
         $.post('/admin/goods_products_create_mode', {mode: mode, goods_category_id: $('#select-goods_categories').val(), set_status: set_status}, function(html){
             $('#mode').html(html);

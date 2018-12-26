@@ -53,7 +53,7 @@ class RawsProductPolicy
 
     public function delete(User $user, RawsProduct $model)
     {
-        if ($model->raws_articles->count() > 0) {
+        if ($model->articles->count() > 0) {
             return false;
         }
 

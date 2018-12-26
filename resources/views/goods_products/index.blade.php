@@ -70,10 +70,10 @@
                         @endcannot
 
                         {{-- %5B%5D --}}
-                        ({{ link_to_route('goods.index', $goods_product->goods_articles_count, $parameters = ['goods_product_id' => $goods_product->id], $attributes = ['class' => 'filter_link light-text', 'title' => 'Перейти на список товаров']) }}) {{ ($goods_product->set_status == 'set') ? '(Набор)' : '' }}
+                        ({{ link_to_route('goods.index', $goods_product->articles_count, $parameters = ['goods_product_id' => $goods_product->id], $attributes = ['class' => 'filter_link light-text', 'title' => 'Перейти на список товаров']) }}) {{ ($goods_product->set_status == 'set') ? '(Набор)' : '' }}
 
                     </td>
-                    <td class="td-goods_category">{{ $goods_product->goods_category->name }}</td>
+                    <td class="td-goods_category">{{ $goods_product->category->name }}</td>
                     <td class="td-description">{{ $goods_product->description }}</td>
 
                     {{-- Элементы управления --}}

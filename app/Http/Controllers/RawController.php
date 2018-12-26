@@ -69,7 +69,7 @@ class RawController extends Controller
         $raws = Raw::with(
             'author',
             'company',
-            'raws_article.raws_product.raws_category',
+            'article.product.category',
             'catalogs.site'
         )
         ->moderatorLimit($answer)
@@ -78,9 +78,9 @@ class RawController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->booklistFilter($request)
         ->filter($request, 'author_id')
-        ->filter($request, 'raws_category_id', 'raws_article.raws_product')
-        ->filter($request, 'raws_product_id', 'raws_article')
-        ->whereHas('raws_article', function ($q) {
+        ->filter($request, 'raws_category_id', 'article.product')
+        ->filter($request, 'raws_product_id', 'article')
+        ->whereHas('article', function ($q) {
             $q->whereNull('archive');
         })
         ->orderBy('moderation', 'desc')
@@ -117,8 +117,8 @@ class RawController extends Controller
         $answer_raws_categories = operator_right('raws_categories', false, 'index');
 
         // Главный запрос
-        $raws_categories = RawsCategory::withCount('raws_products')
-        ->with('raws_products')
+        $raws_categories = RawsCategory::withCount('products')
+        ->with('products')
         ->moderatorLimit($answer_raws_categories)
         ->companiesLimit($answer_raws_categories)
         ->authors($answer_raws_categories)
@@ -259,7 +259,7 @@ class RawController extends Controller
             $raw->cost = $request->cost;
             $raw->company_id = $company_id;
             $raw->author_id = $user_id;
-            $raw->raws_article()->associate($raws_article);
+            $raw->article()->associate($raws_article);
             $raw->save();
 
             if ($raw) {
@@ -296,7 +296,7 @@ class RawController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Главный запрос
-        $raw = Raw::with('raws_article.metrics')->moderatorLimit($answer)->findOrFail($id);
+        $raw = Raw::with('article.metrics')->moderatorLimit($answer)->findOrFail($id);
         // dd($raw);
 
         // Подключение политики
@@ -305,10 +305,10 @@ class RawController extends Controller
         // -- TODO -- Перенести в запрос --
 
         // Массив со значениями метрик товара
-        if ($raw->raws_article->metrics->isNotEmpty()) {
+        if ($raw->article->metrics->isNotEmpty()) {
             // dd($raw->metrics);
             $metrics_values = [];
-            foreach ($raw->raws_article->metrics->groupBy('id') as $metric) {
+            foreach ($raw->article->metrics->groupBy('id') as $metric) {
                 // dd($metric);
                 if ((count($metric) == 1) && ($metric->first()->list_type != 'list')) {
                     $metrics_values[$metric->first()->id] = $metric->first()->pivot->value;
@@ -342,18 +342,18 @@ class RawController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $raw = Raw::with('raws_article.raws_product')->moderatorLimit($answer)->findOrFail($id);
+        $raw = Raw::with('article.product')->moderatorLimit($answer)->findOrFail($id);
         // dd($raw);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raw);
 
         // Получаем артикул товара
-        $raws_article = $raw->raws_article;
+        $raws_article = $raw->article;
         // dd($raw->raws_article->draft);
         //
         // Проверки только для черновика
-        if ($raw->raws_article->draft == 1) {
+        if ($raw->article->draft == 1) {
 
             // Определяем количество метрик и составов
             $metrics_count = isset($request->metrics) ? count($request->metrics) : 0;
@@ -421,9 +421,9 @@ class RawController extends Controller
             $manufacturer_id = isset($request->manufacturer_id) ? $request->manufacturer_id : null;
 
             // если в черновике поменяли производителя
-            if ($raw->raws_article->draft == 1) {
-                if ($manufacturer_id != $raw->raws_article->manufacturer_id) {
-                    $raws_article = $raw->raws_article;
+            if ($raw->article->draft == 1) {
+                if ($manufacturer_id != $raw->article->manufacturer_id) {
+                    $raws_article = $raw->article;
                     $raws_article->manufacturer_id = $manufacturer_id;
                     $raws_article->save();
                 }
@@ -485,7 +485,7 @@ class RawController extends Controller
         }
 
         // Если снят флаг черновика, проверяем на совпадение артикула
-        if (empty($request->draft) && $raw->raws_article->draft == 1) {
+        if (empty($request->draft) && $raw->article->draft == 1) {
 
             // dd($request);
 
@@ -500,7 +500,7 @@ class RawController extends Controller
                 return redirect()->back()->withInput()->withErrors('Такой артикул уже существует в группе!');
             }
 
-            $raws_article = $raw->raws_article;
+            $raws_article = $raw->article;
             $raws_article->draft = null;
             $raws_article->save();
             // $raws_article = rawsArticle::where('id', $raw->raws_article_id)->update(['draft' => null]);
@@ -515,10 +515,10 @@ class RawController extends Controller
         $raws_category_id = $request->raws_category_id;
 
         // Смотрим: была ли она изменена
-        if ($raw->raws_article->raws_product->raws_category_id != $raws_category_id) {
+        if ($raw->article->product->raws_category_id != $raws_category_id) {
 
             // Была изменена! Переназначаем категорию группе:
-            $item = RawsProduct::where('id', $raw->raws_article->raws_product_id)
+            $item = RawsProduct::where('id', $raw->article->raws_product_id)
             ->update(['raws_category_id' => $raws_category_id]);
         }
 
@@ -530,7 +530,7 @@ class RawController extends Controller
         // Получаем выбранную группу со страницы (то, что указал пользователь)
         $raws_product_id = $request->raws_product_id;
 
-        if ($raw->raws_article->raws_product_id != $raws_product_id ) {
+        if ($raw->article->raws_product_id != $raws_product_id ) {
 
             // Была изменена! Переназначаем категорию группе:
             $item = RawsArticle::where('id', $raw->raws_article_id)
@@ -706,7 +706,7 @@ class RawController extends Controller
 
                 // Формируем массив составов артикула
                 $compositions_array = [];
-                if ($raws_article->raws_product->set_status == 'one') {
+                if ($raws_article->product->set_status == 'one') {
                     foreach ($raws_article->compositions as $composition) {
                         // dd($composition);
                         $compositions_array[$composition->id] = $composition->pivot->value;

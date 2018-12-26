@@ -25,26 +25,28 @@ class CreateOrderCompositionsTable extends Migration
             $table->integer('product_id')->nullable()->unsigned()->comment('Id сущности');
             $table->string('product_type')->nullable()->comment('Сущность');
 
-            $table->integer('cost')->nullable()->comment('Себестоимость');
-            $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим мебестоимости');
-
             $table->integer('count')->nullable()->unsigned()->comment('Количество товаров');
 
-            $table->decimal('margin_percent', 10, 2)->nullable()->comment('Процент маржи');
-            $table->decimal('margin_currency', 10, 2)->nullable()->comment('Сумма маржи');
+            // $table->integer('cost')->nullable()->comment('Себестоимость');
+            // $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим мебестоимости');
 
-            $table->decimal('discount_percent', 10, 2)->nullable()->comment('Процент скидки');
-            $table->decimal('discount_currency', 10, 2)->nullable()->comment('Сумма скидки');
 
-            $table->decimal('extra_margin_percent', 10, 2)->nullable()->comment('Общий процент маржи');
-            $table->decimal('extra_margin_currency', 10, 2)->nullable()->comment('Общая сумма маржи');
 
-            $table->decimal('extra_discount_percent', 10, 2)->nullable()->comment('Общий процент скидки');
-            $table->decimal('extra_discount_currency', 10, 2)->nullable()->comment('Общая сумма скидки');
+            // $table->decimal('margin_percent', 10, 2)->nullable()->comment('Процент маржи');
+            // $table->decimal('margin_currency', 10, 2)->nullable()->comment('Сумма маржи');
+
+            // $table->decimal('discount_percent', 10, 2)->nullable()->comment('Процент скидки');
+            // $table->decimal('discount_currency', 10, 2)->nullable()->comment('Сумма скидки');
+
+            // $table->decimal('extra_margin_percent', 10, 2)->nullable()->comment('Общий процент маржи');
+            // $table->decimal('extra_margin_currency', 10, 2)->nullable()->comment('Общая сумма маржи');
+
+            // $table->decimal('extra_discount_percent', 10, 2)->nullable()->comment('Общий процент скидки');
+            // $table->decimal('extra_discount_currency', 10, 2)->nullable()->comment('Общая сумма скидки');
 
             $table->decimal('sum', 10, 2)->nullable()->comment('Сумма');
             $table->decimal('total', 10, 2)->nullable()->comment('Итоговая сумма');
-            $table->decimal('profit', 10, 2)->nullable()->comment('прибыль');
+            // $table->decimal('profit', 10, 2)->nullable()->comment('прибыль');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

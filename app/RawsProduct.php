@@ -62,13 +62,13 @@ class RawsProduct extends Model
 
 
     // Категория
-    public function raws_category()
+    public function category()
     {
-        return $this->belongsTo('App\RawsCategory');
+        return $this->belongsTo('App\RawsCategory', 'raws_category_id');
     }
 
     // Артикулы
-    public function raws_articles()
+    public function articles()
     {
         return $this->hasMany('App\RawsArticle');
     }
@@ -100,7 +100,7 @@ class RawsProduct extends Model
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo('App\User');
     }
 
     // Компания

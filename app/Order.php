@@ -55,7 +55,7 @@ class Order extends Model
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo('App\User');
     }
 
     // Компания
@@ -65,15 +65,9 @@ class Order extends Model
     }
 
     // Лид
-    public function lead()
+    public function application()
     {
-        return $this->belongsTo('App\Lead', 'lead_id');
-    }
-
-    // Получаем клиента
-    public function client()
-    {
-        return $this->belongsTo('App\Client', 'client_id');
+        return $this->belongsTo('App\Application');
     }
 
     // Состав

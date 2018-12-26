@@ -129,7 +129,7 @@
                             {{ Form::file('photo') }}
                         </label>
                         <div class="text-center">
-                            <img id="photo" @if (isset($goods_category->photo_id)) src="/storage/{{ $goods_category->company->id }}/media/goods_categories/{{ $goods_category->id }}/img/medium/{{ $goods_category->photo->name }}" @endif>
+                            <img id="photo" src="{{ getPhotoPath($goods_category) }}">
                         </div>
                     </div>
 
@@ -174,6 +174,7 @@
                                 </tr>
                             </thead>
                             <tbody id="composition-table">
+
                                 {{-- Таблица метрик товара --}}
                                 @if (!empty($goods_category->compositions))
 
@@ -182,6 +183,7 @@
                                 @endforeach
 
                                 @endif
+
                             </tbody>
                         </table>
                     </div>
@@ -200,7 +202,7 @@
                                     <ul class="checker" id="products-categories-list">
 
                                         @foreach ($composition_list['composition_categories'] as $category_name => $composition_articles)
-                                        @include('goods_categories.compositions.raws-category', ['composition_articles' => $composition_articles, 'category_name' => $category_name])
+                                        @include('goods_categories.compositions.categories', ['composition_articles' => $composition_articles, 'category_name' => $category_name])
                                         @endforeach
                                     </ul>
 
@@ -317,10 +319,6 @@
             }
         })
     });
-
-    @php
-    $settings = config()->get('settings');
-    @endphp
 
 
     // Настройки dropzone

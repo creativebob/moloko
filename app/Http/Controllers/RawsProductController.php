@@ -51,10 +51,10 @@ class RawsProductController extends Controller
         $raws_products = RawsProduct::with(
             'author',
             'company',
-            'raws_category',
-            'raws_articles'
+            'category',
+            'articles'
         )
-        ->withCount('raws_articles')
+        ->withCount('articles')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -111,6 +111,7 @@ class RawsProductController extends Controller
         $raws_product->name = $request->name;
         $raws_product->description = $request->description;
         $raws_product->raws_category_id = $request->raws_category_id;
+        $raws_product->unit_id = $request->unit_id;
 
         $raws_product->system_item = $request->system_item;
         $raws_product->display = $request->display;
@@ -164,8 +165,9 @@ class RawsProductController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $raws_product);
 
         $raws_product->name = $request->name;
-        $raws_product->raws_category_id = $request->raws_category_id;
         $raws_product->description = $request->description;
+        $raws_product->raws_category_id = $request->raws_category_id;
+        $raws_product->unit_id = $request->unit_id;
 
         // Модерация и системная запись
         $raws_product->system_item = $request->system_item;
@@ -196,7 +198,7 @@ class RawsProductController extends Controller
         $raws_product->editor_id = hideGod($request->user());
         $raws_product->save();
 
-        $raws_product = RawsProduct::destroy($id);
+        $raws_product->delete();
 
         if ($raws_product) {
             return redirect()->route('raws_products.index');
@@ -217,7 +219,7 @@ class RawsProductController extends Controller
 
             case 'mode-default':
 
-            $raws_category = RawsCategory::withCount('raws_products')->find($raws_category_id);
+            $raws_category = RawsCategory::withCount('products')->find($raws_category_id);
             $raws_products_count = $raws_category->raws_products_count;
             return view('raws.create_modes.mode_default', compact('raws_products_count'));
 

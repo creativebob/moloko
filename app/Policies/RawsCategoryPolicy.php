@@ -52,7 +52,7 @@ class RawsCategoryPolicy
         //     return false;
         // }
 
-        if ($model->raws_products->count() > 0) {
+        if ($model->products->count() > 0) {
             return false;
         }
 

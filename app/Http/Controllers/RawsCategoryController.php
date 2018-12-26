@@ -43,7 +43,7 @@ class RawsCategoryController extends Controller
         ->authors($answer)
         ->systemItem($answer)
         ->template($answer)
-        ->withCount('raws_products')
+        ->withCount('products')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
@@ -127,17 +127,17 @@ class RawsCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_raws_categories = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $raws_category = RawsCategory::with([
-            'raws_mode',
+            'mode',
             'one_metrics' => function ($q) {
                 $q->with('unit', 'values');
             },
         ])
         ->withCount('one_metrics')
-        ->moderatorLimit($answer_raws_categories)
+        ->moderatorLimit($answer)
         ->findOrFail($id);
         // dd($raws_category);
 
@@ -204,7 +204,7 @@ class RawsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $raws_category = RawsCategory::withCount('childs', 'raws_products')
+        $raws_category = RawsCategory::withCount('childs', 'products')
         ->moderatorLimit($answer)
         ->findOrFail($id);
 

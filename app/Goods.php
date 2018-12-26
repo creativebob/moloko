@@ -69,9 +69,9 @@ class Goods extends Model
     ];
 
     // Артикул товара
-    public function goods_article()
+    public function article()
     {
-        return $this->belongsTo('App\GoodsArticle');
+        return $this->belongsTo('App\GoodsArticle', 'goods_article_id');
     }
 
     // Компания
@@ -83,7 +83,7 @@ class Goods extends Model
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo('App\User');
     }
 
     // Альбом
@@ -104,56 +104,16 @@ class Goods extends Model
         return $this->morphToMany('App\Catalog', 'catalog_products');
     }
 
-    // // Метрики
-    // public function metrics()
-    // {
-    //     return $this->morphedByMany('App\Metric', 'goods_values')->withPivot('value');
-    // }
-
-    // // Состав
-    // // public function compositions_values()
-    // // {
-    // //     return $this->belongsToMany('App\Article', 'article_values', 'article_id', 'entity_id')->where('entity', 'articles')->withPivot('entity', 'value');
-    // // }
-
-    // // Состав (сырье)
-    // public function compositions()
-    // {
-    //     return $this->morphedByMany('App\RawsArticle', 'goods_values')->withPivot('value');
-    // }
-
-    // // Состав (набор)
-    // public function set_compositions()
-    // {
-    //     return $this->morphedByMany('App\GoodsArticle', 'goods_values')->withPivot('value');
-    // }
-
-    // public function getCompositions1Attribute() {
-
-    //     if ($this->goods_article->goods_product->status == 'one') {
-    //         return $this->morphedByMany('App\RawsArticle', 'goods_values')->withPivot('value');
-    //     } else {
-    //         return $this->morphedByMany('App\GoodsArticle', 'goods_values')->withPivot('value');
-    //     }
-    // }
-
-    // public function compositions_values()
-    // {
-    //     return $this->belongsToMany('App\Product', 'article_values', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
-    // }
-
-    // public function compositions()
-    // {
-    //     return $this->belongsToMany('App\Product', 'compositions', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
-    // }
-
+    // Рабочие процессы
+    public function workflows()
+    {
+        return $this->morphMany('App\Workflow', 'workflows');
+    }
 
     // Составы заказов
     public function order_compositions()
     {
         return $this->morphMany('App\OrderComposition', 'order_compositions');
     }
-
-    // Сушьность
 
 }

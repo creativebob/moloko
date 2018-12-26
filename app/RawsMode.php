@@ -48,7 +48,7 @@ class RawsMode extends Model
         'name',
     ];
 
-    public function raws_categories()
+    public function categories()
     {
         return $this->hasMany('App\RawsCategory');
     }

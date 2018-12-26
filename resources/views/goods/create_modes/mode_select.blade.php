@@ -2,17 +2,23 @@
 	<a id="mode-default" class="modes">Вернуться</a>
 </div>
 
-@if (count($goods_products))
+@if ($goods_products->isNotEmpty())
+
 <label>Группа товаров
-	<select name="goods_product_id" id="goods-products-list" required>
+	<select name="goods_product_id" id="select-goods_products" required>
+
 		@foreach ($goods_products as $goods_product)
 		<option value="{{ $goods_product->id }}" data-abbreviation="{{ $goods_product->unit->abbreviation }}">{{ $goods_product->name }}</option>
 		@endforeach
+
 	</select>
 	{{-- Form::select('goods_product_id', $goods_products_list, null, ['id' => 'goods-products-list']) --}}
 </label>
+
 @else
+
 В данной категории нет групп, выберите другую категорию или <a id="mode-default" class="modes">вернитесь назад</a>
+
 @endif
 
 {{ Form::hidden('mode', 'mode-select', ['id' => 'mode']) }}
