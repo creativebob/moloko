@@ -3,6 +3,8 @@
 @section('inhead')
 @include('includes.scripts.pickmeup-inhead')
 @include('includes.scripts.class.city_search')
+@include('includes.scripts.class.digitfield')
+
 @endsection
 
 @section('title', 'Редактировать лид')

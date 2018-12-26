@@ -27,9 +27,13 @@
     // Обычное текстовое поле
     $('.simple-field').mask('pp?pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp');
     // -------------------------- Числа --------------------------------
+
     // Дробное число
     $('.digit-field').mask('1?999999');
  
+    // Дробное число
+    $('.digit-field2').mask('1?8888');
+
     // Дробное число
     $('.digit-2-field').mask('1?9');
     $('.digit-3-field').mask('1?99');
@@ -84,4 +88,6 @@
     // Текстовые поля
     $.mask.definitions['p']='[A-Z]';
   });
+
+
 </script>

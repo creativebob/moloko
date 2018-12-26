@@ -45,7 +45,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 cell">
                         <label>Бюджет
-                            @include('includes.inputs.digit', ['name'=>'badget', 'value'=>$lead->badget])
+                            @include('includes.inputs.digit', ['name'=>'badget', 'value'=>$lead->badget, 'limit'=>10000, 'decimal_place'=>2])
                         </label>
                     </div>
                     <div class="small-12 cell">

@@ -22,29 +22,65 @@ class CreatePriceRulesTable extends Migration
             $table->string('name')->nullable()->comment('Имя ценовой политики');
             $table->text('description')->nullable()->comment('Описание ценовой политики');
 
+
+
             $table->boolean('margin_status')->comment('Статус наценки');
-            $table->decimal('margin_percent_min', 10, 2)->nullable()->comment('Минимум (проценты)');
-            $table->decimal('margin_percent_max', 10, 2)->nullable()->comment('Максимум (проценты)');
-            $table->decimal('margin_percent_default', 10, 2)->nullable()->comment('Умолчание (проценты)');
+            $table->boolean('margin_priority')->default(true)->comment('Приоритет процента наценки');
 
-            $table->decimal('margin_currency_min', 10, 2)->nullable()->comment('Минимум (валюта)');
-            $table->decimal('margin_currency_max', 10, 2)->nullable()->comment('Максимум (валюта)');
-            $table->decimal('margin_currency_default', 10, 2)->nullable()->comment('Умолчание (валюта)');
+            $table->decimal('margin_percent_min', 10, 2)->nullable()->comment('Минимум (проценты) наценки');
+            $table->decimal('margin_percent_max', 10, 2)->nullable()->comment('Максимум (проценты) наценки');
+            $table->decimal('margin_percent_default', 10, 2)->nullable()->comment('Умолчание (проценты) наценки');
 
-            $table->boolean('discount_status')->comment('Статус наценки');
-            $table->decimal('discount_percent_min', 10, 2)->nullable()->comment('Минимум (проценты)');
-            $table->decimal('discount_percent_max', 10, 2)->nullable()->comment('Максимум (проценты)');
-            $table->decimal('discount_percent_default', 10, 2)->nullable()->comment('Умолчание (проценты)');
+            $table->decimal('margin_currency_min', 10, 2)->nullable()->comment('Минимум (валюта) наценки');
+            $table->decimal('margin_currency_max', 10, 2)->nullable()->comment('Максимум (валюта) наценки');
+            $table->decimal('margin_currency_default', 10, 2)->nullable()->comment('Умолчание (валюта) наценки');
 
-            $table->decimal('discount_currency_min', 10, 2)->nullable()->comment('Минимум (валюта)');
-            $table->decimal('discount_currency_max', 10, 2)->nullable()->comment('Максимум (валюта)');
-            $table->decimal('discount_currency_default', 10, 2)->nullable()->comment('Умолчание (валюта)');
 
-            $table->boolean('extra_margin_status')->comment('Статус наценки');
-            $table->decimal('extra_margin_default', 10, 2)->nullable()->comment('Минимум (проценты)');
+
+
+            $table->boolean('extra_margin_status')->comment('Статус дополнительной наценки');
+            $table->boolean('extra_margin_priority')->default(true)->comment('Приоритет процента дополнительной наценки');
+
+            $table->decimal('extra_margin_percent_min', 10, 2)->nullable()->comment('Минимум (проценты) дополнительной наценки');
+            $table->decimal('extra_margin_percent_max', 10, 2)->nullable()->comment('Максимум (проценты) дополнительной наценки');
+            $table->decimal('extra_margin_percent_default', 10, 2)->nullable()->comment('Умолчание (проценты) дополнительной наценки');
+
+            $table->decimal('extra_margin_currency_min', 10, 2)->nullable()->comment('Минимум (валюта) дополнительной наценки');
+            $table->decimal('extra_margin_currency_max', 10, 2)->nullable()->comment('Максимум (валюта) дополнительной наценки');
+            $table->decimal('extra_margin_currency_default', 10, 2)->nullable()->comment('Умолчание (валюта) дополнительной наценки');
+
+
+
+
+            $table->boolean('discount_status')->comment('Статус скидки');
+            $table->boolean('discount_priority')->default(true)->comment('Приоритет процента у скидки');
+
+            $table->decimal('discount_percent_min', 10, 2)->nullable()->comment('Минимум (проценты) скидки');
+            $table->decimal('discount_percent_max', 10, 2)->nullable()->comment('Максимум (проценты) скидки');
+            $table->decimal('discount_percent_default', 10, 2)->nullable()->comment('Умолчание (проценты) скидки');
+
+            $table->decimal('discount_currency_min', 10, 2)->nullable()->comment('Минимум (валюта) скидки');
+            $table->decimal('discount_currency_max', 10, 2)->nullable()->comment('Максимум (валюта) скидки');
+            $table->decimal('discount_currency_default', 10, 2)->nullable()->comment('Умолчание (валюта) скидки');
+
+
+
+
+            $table->boolean('extra_discount_status')->comment('Статус дополнительной наценки');
+            $table->boolean('extra_discount_priority')->default(true)->comment('Приоритет процента');
+            
+            $table->decimal('extra_discount_percent_min', 10, 2)->nullable()->comment('Минимум (проценты) дополнительной скидки');
+            $table->decimal('extra_discount_percent_max', 10, 2)->nullable()->comment('Максимум (проценты) дополнительной скидки');
+            $table->decimal('extra_discount_percent_default', 10, 2)->nullable()->comment('Умолчание (проценты) дополнительной скидки');
+
+            $table->decimal('extra_discount_currency_min', 10, 2)->nullable()->comment('Минимум (валюта) дополнительной скидки');
+            $table->decimal('extra_discount_currency_max', 10, 2)->nullable()->comment('Максимум (валюта) дополнительной скидки');
+            $table->decimal('extra_discount_currency_default', 10, 2)->nullable()->comment('Умолчание (валюта) дополнительной скидки');
+
+
+
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
-
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');

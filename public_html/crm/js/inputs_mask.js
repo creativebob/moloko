@@ -24,14 +24,15 @@ jQuery(function($) {
     // Обычное текстовое поле
     $('.simple-field').mask('pp?pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp');
     // -------------------------- Числа --------------------------------
-    // Дробное число
-    $('.digit-field').mask('1?999999');
 
     // Дробное число
-    $('.digit-2-field').mask('1?9');
-    $('.digit-3-field').mask('1?99');
-    $('.digit-4-field').mask('1?999');
-    $('.digit-5-field').mask('1?9999');
+    $('.digit-field').mask('');
+
+    // Дробное число
+    $('.digit-2-field').mask('1?8');
+    $('.digit-3-field').mask('1?88');
+    $('.digit-4-field').mask('1?888');
+    $('.digit-5-field').mask('1?8888');
 
     // Дата
     $('.date-field').mask('99.99.9999');
