@@ -42,6 +42,8 @@ use App\Http\ViewComposers\PropertiesComposer;
 
 use App\Http\ViewComposers\SiteMenusComposer;
 
+use App\Http\ViewComposers\CategoriesDrilldownComposer;
+
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -84,6 +86,8 @@ class ComposerServiceProvider extends ServiceProvider
 
         // Select'ы категорий
         view()->composer('includes.selects.categories_select', CategoriesSelectComposer::class);
+
+        view()->composer('includes.drilldowns.categories', CategoriesDrilldownComposer::class);
 
 
         // Стандартные шаблоны типа "меню"

@@ -351,9 +351,6 @@ Route::match(['get', 'post'], '/goods_categories/{id}/edit', 'GoodsCategoryContr
 // Основные методы
 Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('auth');
 
-// Отображение на сайте
-Route::any('/goods_categories_get_products', 'GoodsCategoryController@ajax_get_products')->middleware('auth');
-
 Route::any('/goods_category_metrics', 'GoodsCategoryController@ajax_get_metrics')->middleware('auth');
 Route::any('/goods_category_compositions', 'GoodsCategoryController@ajax_get_compositions')->middleware('auth');
 
@@ -386,6 +383,9 @@ Route::post('/goods/archive/{id}', 'GoodsController@archive')->middleware('auth'
 Route::post('/goods_sync', 'GoodsController@ajax_sync')->middleware('auth');
 
 Route::any('/goods_check', 'GoodsController@ajax_check')->middleware('auth');
+
+// Отображение на сайте
+Route::any('/goods_categories_get_products', 'GoodsController@ajax_get_products')->middleware('auth');
 
 
 
@@ -479,6 +479,16 @@ Route::post('/leads_add_note', 'LeadController@ajax_add_note')->middleware('auth
 // Поиск лида по номеру телефона
 Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->middleware('auth');
 
+
+// --------------------------------------- Расчеты -----------------------------------------------
+
+// Основные методы
+Route::resource('estimates', 'EstimateController')->middleware('auth');
+
+// Отображение на сайте
+Route::any('/estimates_check', 'EstimateController@ajax_check')->middleware('auth');
+
+Route::delete('/workflows/{id}', 'EstimateController@ajax_destroy_composition')->middleware('auth');
 
 // --------------------------------------- Заказы -----------------------------------------------
 

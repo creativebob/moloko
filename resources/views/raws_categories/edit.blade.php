@@ -73,6 +73,23 @@
                                 </label>
                             </div>
                         </div>
+
+                        <div class="grid-x grid-padding-x">
+                            <div class="small-12 medium-6 cell checkbox checkboxer">
+
+                                {{-- Подключаем класс Checkboxer --}}
+                                @include('includes.scripts.class.checkboxer')
+
+                                @include('includes.inputs.checker_contragents', [
+                                    'entity' => $raws_category,
+                                    'title' => 'Производители',
+                                    'name' => 'manufacturers'
+                                ]
+                                )
+
+                            </div>
+                        </div>
+
                     </div>
 
                     @include('includes.control.checkboxes', ['item' => $raws_category])

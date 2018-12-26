@@ -56,10 +56,10 @@ class GoodsProductController extends Controller
         $goods_products = GoodsProduct::with(
             'author',
             'company',
-            'goods_category',
-            'goods_articles'
+            'category',
+            'articles'
         )
-        ->withCount('goods_articles')
+        ->withCount('articles')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -115,6 +115,7 @@ class GoodsProductController extends Controller
         $goods_product->name = $request->name;
         $goods_product->description = $request->description;
         $goods_product->goods_category_id = $request->goods_category_id;
+        $goods_product->unit_id = $request->unit_id;
 
         if (isset($request->set_status)) {
             $goods_product->set_status = $request->set_status;
@@ -139,7 +140,7 @@ class GoodsProductController extends Controller
 
         $goods_product->save();
 
-        if ($gods_product) {
+        if ($goods_product) {
             return redirect()->route('goods_products.index');
         } else {
             abort(403, 'Ошибка записи сайта');
@@ -176,8 +177,9 @@ class GoodsProductController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $goods_product);
 
         $goods_product->name = $request->name;
-        $goods_product->goods_category_id = $request->goods_category_id;
         $goods_product->description = $request->description;
+        $goods_product->goods_category_id = $request->goods_category_id;
+        $goods_product->unit_id = $request->unit_id;
 
         if (isset($request->set_status)) {
             $goods_product->set_status = $request->set_status;
@@ -202,7 +204,7 @@ class GoodsProductController extends Controller
     public function destroy(Request $request, $id)
     {
 
-        $goods_product = GoodsProduct::withCount('goods_articles')
+        $goods_product = GoodsProduct::with('articles')
         ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
         ->findOrFail($id);
 
@@ -212,7 +214,7 @@ class GoodsProductController extends Controller
         $goods_product->editor_id = hideGod($request->user());
         $goods_product->save();
 
-        $goods_product = GoodsProduct::destroy($id);
+        $goods_product->delete();
 
         if ($goods_product) {
             return redirect()->route('goods_products.index');
@@ -234,8 +236,9 @@ class GoodsProductController extends Controller
 
             case 'mode-default':
 
-            $goods_category = GoodsCategory::withCount('goods_products')->find($goods_category_id);
-            $goods_products_count = $goods_category->goods_products_count;
+            $goods_category = GoodsCategory::withCount('products')
+            ->find($goods_category_id);
+            $goods_products_count = $goods_category->products_count;
 
             return view('goods.create_modes.mode_default', compact('goods_products_count'));
 
@@ -243,7 +246,11 @@ class GoodsProductController extends Controller
 
             case 'mode-select':
 
-            $goods_products = GoodsProduct::with('unit')->where(['goods_category_id' => $goods_category_id, 'set_status' => $request->set_status])
+            $goods_products = GoodsProduct::with('unit')
+            ->where([
+                'goods_category_id' => $goods_category_id,
+                'set_status' => $request->set_status
+            ])
             ->get(['id', 'name', 'unit_id']);
             return view('goods.create_modes.mode_select', compact('goods_products'));
 
@@ -319,7 +326,7 @@ class GoodsProductController extends Controller
 
         $id = $request->id;
 
-        $goods_category = GoodsCategory::withCount('goods_products')->with('goods_products')->findOrFail($id);
+        $goods_category = GoodsCategory::withCount('products')->with('products')->findOrFail($id);
 
         if ($goods_category->goods_products_count > 0) {
 

@@ -9,12 +9,12 @@
 
 @section('title', 'Редактировать сырьё')
 
-@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $raw->raws_article))
+@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $raw->article))
 
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ сырьё &laquo{{ $raw->raws_article->name }}&raquo</h2>
+        <h2 class="header-content">РЕДАКТИРОВАТЬ сырьё &laquo{{ $raw->article->name }}&raquo</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -22,7 +22,7 @@
 @endsection
 
 @php
-$disabled = $raw->raws_article->draft == null;
+$disabled = $raw->article->draft == null;
 @endphp
 
 @section('content')
@@ -77,18 +77,20 @@ $disabled = $raw->raws_article->draft == null;
                             <div class="small-12 medium-6 cell">
 
                                 <label>Название сырья
-                                    {{ Form::text('name', $raw->raws_article->name, ['required', $disabled]) }}
+                                    {{ Form::text('name', $raw->article->name, ['required', $disabled]) }}
                                 </label>
 
                                 <label>Группа
-                                    @include('includes.selects.raws_products', ['raws_category_id' => $raw->raws_article->raws_product->raws_category_id, 'set_status' => $raw->raws_article->raws_product->set_status, 'raws_product_id' => $raw->raws_article->raws_product_id])
+                                    @include('includes.selects.raws_products', ['raws_category_id' => $raw->article->product->raws_category_id, 'set_status' => $raw->article->product->set_status, 'raws_product_id' => $raw->article->raws_product_id])
                                 </label>
 
                                 <label>Категория
-                                    @include('includes.selects.raws_categories', ['raws_category_id' => $raw->raws_article->raws_product->raws_category_id])
+                                    @include('includes.selects.raws_categories', ['raws_category_id' => $raw->article->product->raws_category_id])
                                 </label>
 
-                                @include('includes.selects.manufacturers', ['manufacturer_id' => $raw->raws_article->manufacturer_id, 'draft' => $raw->raws_article->draft])
+                                <label>Производитель
+                                    {!! Form::select('manufacturer_id', $raw->article->product->category->manufacturers->pluck('name', 'id'), $raw->article->manufacturer_id, []) !!}
+                                </label>
 
                                 {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 
@@ -145,10 +147,10 @@ $disabled = $raw->raws_article->draft == null;
                             </div>
                         </div>
                         @php
-                        $metric_relation = ($raw->raws_article->raws_product->set_status == 'one') ? 'one_metrics' : 'set_metrics';
+                        $metric_relation = ($raw->article->product->set_status == 'one') ? 'one_metrics' : 'set_metrics';
                         @endphp
 
-                        @if ($raw->raws_article->metrics->isNotEmpty() || $raw->raws_article->raws_product->raws_category->$metric_relation->isNotEmpty())
+                        @if ($raw->article->metrics->isNotEmpty() || $raw->article->product->category->$metric_relation->isNotEmpty())
 
                         @include('includes.scripts.class.metric_validation')
 
@@ -158,15 +160,15 @@ $disabled = $raw->raws_article->draft == null;
                             <div id="metrics-list">
 
                                 {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
-                                @if ($raw->raws_article->metrics->isNotEmpty())
-                                @foreach ($raw->raws_article->metrics->unique() as $metric)
+                                @if ($raw->article->metrics->isNotEmpty())
+                                @foreach ($raw->article->metrics->unique() as $metric)
                                 @include('includes.metrics.metric_input', $metric)
                                 @endforeach
 
                                 @else
 
-                                @if ($raw->raws_article->raws_product->raws_category->$metric_relation->isNotEmpty())
-                                @foreach ($raw->raws_article->raws_product->raws_category->$metric_relation as $metric)
+                                @if ($raw->article->product->category->$metric_relation->isNotEmpty())
+                                @foreach ($raw->article->product->category->$metric_relation as $metric)
                                 @include('includes.metrics.metric_input', $metric)
                                 @endforeach
                                 @endif
@@ -187,9 +189,9 @@ $disabled = $raw->raws_article->draft == null;
                     {{-- Конец правого блока на первой вкладке --}}
 
                     {{-- Чекбокс черновика --}}
-                    @if ($raw->raws_article->draft == 1)
+                    @if ($raw->article->draft == 1)
                     <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('draft', 1, $raw->raws_article->draft, ['id' => 'draft']) }}
+                        {{ Form::checkbox('draft', 1, $raw->article->draft, ['id' => 'draft']) }}
                         <label for="draft"><span>Черновик</span></label>
                     </div>
                     @endif
@@ -220,7 +222,7 @@ $disabled = $raw->raws_article->draft == null;
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
-                                    <label>Цена за (<span id="unit">{{ ($raw->portion_status == null) ?$raw->raws_article->raws_product->unit->abbreviation : 'порцию' }}</span>)
+                                    <label>Цена за (<span id="unit">{{ ($raw->portion_status == null) ?$raw->article->product->unit->abbreviation : 'порцию' }}</span>)
                                         {{ Form::number('price', $raw->price) }}
                                     </label>
                                 </div>
@@ -248,7 +250,7 @@ $disabled = $raw->raws_article->draft == null;
                                     </label>
                                 </div>
                                 <div class="small-6 cell @if ($raw->portion_status == null) portion-hide @endif">
-                                    <label>Кол-во,&nbsp;{{ $raw->raws_article->raws_product->unit->abbreviation }}
+                                    <label>Кол-во,&nbsp;{{ $raw->article->product->unit->abbreviation }}
                                         {{-- Количество чего-либо --}}
                                         {{ Form::text('portion_count', $raw->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
                                         <div class="sprite-input-right find-status" id="name-check"></div>
@@ -297,7 +299,7 @@ $disabled = $raw->raws_article->draft == null;
                         ]
                         ) !!}
 
-                        {!! Form::hidden('name', $raw->raws_article->name) !!}
+                        {!! Form::hidden('name', $raw->article->name) !!}
                         {!! Form::hidden('id', $raw->id) !!}
                         {!! Form::hidden('entity', 'raws') !!}
                         {{-- {!! Form::hidden('album_id', $cur_goods->album_id) !!} --}}
@@ -336,18 +338,18 @@ $disabled = $raw->raws_article->draft == null;
 
     // Основные настройки
     var raw_id = '{{ $raw->id }}';
-    var set_status = '{{ $raw->raws_article->raws_product->set_status }}';
+    var set_status = '{{ $raw->article->product->set_status }}';
     var entity = 'raws';
 
-    var metrics_count = '{{ count($raw->raws_article->metrics) }}';
+    var metrics_count = '{{ count($raw->article->metrics) }}';
 
     if (set_status == 'one') {
         var compositions_count = 0;
     }
 
-    var category_id = '{{ $raw->raws_article->raws_product->raws_category_id }}';
+    var category_id = '{{ $raw->article->product->category_id }}';
 
-    var unit = '{{ $raw->raws_article->raws_product->unit->abbreviation }}';
+    var unit = '{{ $raw->article->product->unit->abbreviation }}';
 
     // Мульти Select
     $(".chosen-select").chosen({width: "95%"});

@@ -43,7 +43,7 @@ class RawsCategoryController extends Controller
         ->authors($answer)
         ->systemItem($answer)
         ->template($answer)
-        ->withCount('raws_products')
+        ->withCount('products')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
@@ -127,17 +127,18 @@ class RawsCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_raws_categories = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $raws_category = RawsCategory::with([
-            'raws_mode',
+            'mode',
             'one_metrics' => function ($q) {
                 $q->with('unit', 'values');
             },
+            'manufacturers',
         ])
         ->withCount('one_metrics')
-        ->moderatorLimit($answer_raws_categories)
+        ->moderatorLimit($answer)
         ->findOrFail($id);
         // dd($raws_category);
 
@@ -157,7 +158,9 @@ class RawsCategoryController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('raws_categories.edit', compact('raws_category', 'page_info'));
+        $settings = getSettings($this->entity_alias);
+
+        return view('raws_categories.edit', compact('raws_category', 'page_info', 'settings'));
     }
 
     public function update(RawsCategoryRequest $request, $id)
@@ -176,8 +179,8 @@ class RawsCategoryController extends Controller
         $raws_category = $this->updateCategory($request, $raws_category);
 
         // Если сменили тип категории сырья, то меняем его и всем вложенным элементам
-        if (($raws_category->parent_id == null) && ($raws_category->raws_type_id != $request->raws_type_id)) {
-            $raws_category->raws_type_id = $request->raws_type_id;
+        if (($raws_category->parent_id == null) && ($raws_category->goods_mode_id != $request->goods_mode_id)) {
+            $raws_category->goods_mode_id = $request->goods_mode_id;
 
             $raws_categories = RawsCategory::whereCategory_id($id)
             ->update(['raws_mode_id' => $request->raws_mode_id]);
@@ -186,6 +189,13 @@ class RawsCategoryController extends Controller
         $raws_category->save();
 
         if ($raws_category) {
+
+            // Производители
+            if (isset($request->manufacturers)) {
+                $raws_category->manufacturers()->sync($request->manufacturers);
+            } else {
+                $raws_category->manufacturers()->detach();
+            }
 
            // Переадресовываем на index
             return redirect()->route('raws_categories.index', ['id' => $raws_category->id]);
@@ -204,7 +214,7 @@ class RawsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $raws_category = RawsCategory::withCount('childs', 'raws_products')
+        $raws_category = RawsCategory::withCount('childs', 'products')
         ->moderatorLimit($answer)
         ->findOrFail($id);
 

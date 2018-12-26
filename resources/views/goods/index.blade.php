@@ -59,7 +59,7 @@
                 @if($goods->isNotEmpty())
                 @foreach($goods as $cur_goods)
 
-                <tr class="item @if($cur_goods->moderation == 1)no-moderation @endif" id="goods-{{ $cur_goods->id }}" data-name="{{ $cur_goods->goods_article->name }}">
+                <tr class="item @if($cur_goods->moderation == 1)no-moderation @endif" id="goods-{{ $cur_goods->id }}" data-name="{{ $cur_goods->article->name }}">
                     <td class="td-drop"><div class="sprite icon-drop"></div></td>
                     <td class="td-checkbox checkbox">
                         <input type="checkbox" class="table-check" name="cur_goods_id" id="check-{{ $cur_goods->id }}"
@@ -78,13 +78,13 @@
                         </a>
                     </td>
                     <td class="td-name">
-                        <a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->goods_article->name }} @if ($cur_goods->goods_article->goods_product->set_status == 'set') (Набор) @endif</a>
+                        <a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->article->name }} @if ($cur_goods->article->product->set_status == 'set') (Набор) @endif</a>
                     </td>
                     <td class="td-goods_category">
-                        <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->goods_article->goods_product->goods_category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->goods_article->goods_product->goods_category->name }}</a>
+                        <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->article->product->category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->article->product->category->name }}</a>
                         <br>
-                        {{-- @if($cur_goods->goods_article->goods_product->name != $cur_goods->name) --}}
-                        <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->goods_article->goods_product->id }}" class="filter_link light-text">{{ $cur_goods->goods_article->goods_product->name }}</a>
+                        {{-- @if($cur_goods->article->product->name != $cur_goods->name) --}}
+                        <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->article->product->id }}" class="filter_link light-text">{{ $cur_goods->article->product->name }}</a>
                         {{-- @endif --}}
                     </td>
                     <td class="td-description">{{ $cur_goods->description }}</td>
@@ -98,7 +98,7 @@
 
                     </td>
 
-                    {{-- <td class="td-goods">{{ $cur_goods->goods_product->name }}</td> --}}
+                    {{-- <td class="td-goods">{{ $cur_goods->product->name }}</td> --}}
 
                     @if(Auth::user()->god == 1)
                     <td class="td-company-id">@if(!empty($cur_goods->company->name)) {{ $cur_goods->company->name }} @else @if($cur_goods->system_item == null) Шаблон @else Системная @endif @endif</td>

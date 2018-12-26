@@ -239,7 +239,7 @@ if($lead->manager_id == 1){
 		});
 	});
 
-	$(document).on('click', '.add-to-order', function(event) {
+	$(document).on('click', '.add-to-estimate', function(event) {
 		event.preventDefault();
 
 		var entity = $(this).attr('id').split('-')[0];
@@ -251,11 +251,11 @@ if($lead->manager_id == 1){
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
-			url: "/admin/orders_check",
+			url: "/admin/estimates_check",
 			type: "POST",
 			data: {lead_id: lead_id, item_id: id, entity: entity},
 			success: function(html){
-				$('#goods-section').append(html);
+				$('#' + entity + '-section').append(html);
 
 				//$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
 			}

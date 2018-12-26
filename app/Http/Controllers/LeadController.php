@@ -641,7 +641,7 @@ class LeadController extends Controller
                 ->whereNull('status')
                 ->orderBy('deadline_date', 'asc');
             },
-            'orders.compositions.product'
+            'estimates.workflows.product'
         ])
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -694,32 +694,13 @@ class LeadController extends Controller
         ->get()
         ->pluck('name', 'id');
 
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods_categories = operator_right('goods_categories', false, getmethod('index'));
-
-        // Получаем каталог товаров
-        $group_goods_categories = GoodsCategory::with('goods_products')
-        ->withCount('goods_products')
-        ->moderatorLimit($answer_goods_categories)
-        ->companiesLimit($answer_goods_categories)
-        ->authors($answer_goods_categories)
-        ->systemItem($answer_goods_categories) // Фильтр по системным записям
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get()
-        ->groupBy('parent_id');
-        // dd($group_goods_categories);
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
         // Задачи пользователя
         $list_challenges = challenges($request);
 
-        $entity = 'goods_categories';
-
-        return view('leads.edit', compact('lead', 'page_info', 'stages_list', 'entity', 'list_challenges', 'lead_methods_list', 'group_goods_categories', 'entity', 'choices'));
+        return view('leads.edit', compact('lead', 'page_info', 'stages_list', 'list_challenges', 'lead_methods_list', 'entity', 'choices'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)

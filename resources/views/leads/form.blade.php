@@ -91,9 +91,9 @@
                                     </thead>
                                     <tbody id="goods-section">
 
-                                        @if (isset($lead->order))
-                                        @foreach ($lead->order->compositions as $composition)
-                                        @include('leads.goods', ['composition' => $composition])
+                                        @if (isset($lead->estimate))
+                                        @foreach ($lead->estimate->workflows as $workflow)
+                                        @include('leads.item_for_estimate', ['workflow' => $workflow])
                                         @endforeach
                                         @endif
 
@@ -229,11 +229,7 @@
 
                                     {{-- СПИСОК КАТЕГРИЙ --}}
                                     <div class="small-12 cell search-in-catalog-panel">
-                                        @if (isset($group_goods_categories))
-
-                                        @include('includes.drilldown_views.categories_drilldown', ['grouped_items' => $group_goods_categories, 'entity' => 'goods_categories'])
-
-                                        @endif
+                                        @include('includes.drilldowns.categories', ['entity' => 'goods_categories'])
                                     </div>
                                 </div>
                             </div>
@@ -423,7 +419,7 @@
 
 {{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}
 @include('leads.autofind-lead-script')
-@include('includes.scripts.product-to-order-script')
+@include('includes.scripts.product-to-estimate-script')
 
 
 

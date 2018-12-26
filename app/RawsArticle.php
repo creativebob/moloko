@@ -62,9 +62,9 @@ class RawsArticle extends Model
     ];
 
     // Продукт
-    public function raws_product()
+    public function product()
     {
-        return $this->belongsTo('App\RawsProduct');
+        return $this->belongsTo('App\RawsProduct', 'raws_product_id');
     }
 
     // Сырье
@@ -82,7 +82,7 @@ class RawsArticle extends Model
     // Производитель
     public function manufacturer()
     {
-        return $this->belongsTo('App\Company', 'manufacturer_id');
+        return $this->belongsTo('App\Company');
     }
 
     // Альбом
@@ -106,6 +106,6 @@ class RawsArticle extends Model
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo('App\User');
     }
 }

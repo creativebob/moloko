@@ -47,7 +47,7 @@ class GoodsMode extends Model
         'name',
     ];
 
-    public function goods_categories()
+    public function categories()
     {
         return $this->hasMany('App\GoodsCategory');
     }

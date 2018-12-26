@@ -264,23 +264,23 @@ class Lead extends Model
     // }
 
     // Заказы
-    public function orders()
+    public function estimates()
     {
-        return $this->hasMany('App\Order');
+        return $this->hasMany('App\Estimate');
     }
 
     // Основной заказ
-    public function main_orders()
+    public function main_estimates()
     {
-        return $this->hasMany('App\Order')->whereNull('draft');
+        return $this->hasMany('App\Estimate')->whereNull('draft');
     }
 
     // Текущий заказ
-    public function getOrderAttribute()
+    public function getEstimateAttribute()
     {
-        if(!empty($this->main_orders->first()))
+        if(!empty($this->main_estimates->first()))
         {
-            $value = $this->main_orders->first();
+            $value = $this->main_estimates->first();
         } else {
             $value = null;
         }

@@ -70,19 +70,19 @@ class RawsCategory extends Model
     }
 
     // Группы
-    public function raws_products()
+    public function products()
     {
         return $this->hasMany('App\RawsProduct');
     }
 
     // Режим
-    public function raws_mode()
+    public function mode()
     {
-        return $this->belongsTo('App\RawsMode');
+        return $this->belongsTo('App\RawsMode', 'raws_mode_id');
     }
 
     // Артикул
-    public function raws_articles()
+    public function articles()
     {
         return $this->hasManyThrough('App\RawsArticle', 'App\RawsProduct');
     }
@@ -97,5 +97,11 @@ class RawsCategory extends Model
     public function one_metrics()
     {
         return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'one');
+    }
+
+    // Производители
+    public function manufacturers()
+    {
+        return $this->belongsToMany('App\Company', 'raws_category_manufacturer', 'raws_category_id', 'manufacturer_id');
     }
 }

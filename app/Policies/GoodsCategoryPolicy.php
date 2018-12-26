@@ -52,7 +52,7 @@ class GoodsCategoryPolicy
         //     return false;
         // }
 
-        if ($model->goods_products->count() > 0) {
+        if ($model->products->count() > 0) {
             return false;
         }
 

@@ -15,9 +15,16 @@ use Illuminate\Http\Request;
 class OrderController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'orders';
-    protected $entity_dependence = false;
+    // Настройки сконтроллера
+    public function __construct(Order $order)
+    {
+        $this->middleware('auth');
+        $this->order = $order;
+        $this->class = Order::class;
+        $this->model = 'App\Order';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+    }
 
     public function index(Request $request)
     {
@@ -25,7 +32,7 @@ class OrderController extends Controller
         $this->authorize(getmethod(__FUNCTION__), Order::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -49,7 +56,7 @@ class OrderController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             'client',               // Клиенты
             'booklist'              // Списки пользователя
         ]);
@@ -58,7 +65,7 @@ class OrderController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         return view('orders.index', compact('orders', 'page_info', 'filter'));
     }

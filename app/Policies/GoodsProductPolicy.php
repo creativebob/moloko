@@ -53,7 +53,7 @@ class GoodsProductPolicy
 
     public function delete(User $user, GoodsProduct $model)
     {
-        if ($model->goods_articles->count() > 0) {
+        if ($model->articles->count() > 0) {
             return false;
         }
 

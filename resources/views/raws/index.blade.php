@@ -51,7 +51,7 @@
                 @if(!empty($raws))
 
                 @foreach($raws as $raw)
-                <tr class="item @if($raw->moderation == 1)no-moderation @endif" id="raws-{{ $raw->id }}" data-name="{{ $raw->raws_article->name }}">
+                <tr class="item @if($raw->moderation == 1)no-moderation @endif" id="raws-{{ $raw->id }}" data-name="{{ $raw->article->name }}">
                     <td class="td-drop">
                         <div class="sprite icon-drop"></div>
                     </td>
@@ -72,14 +72,14 @@
                         </a>
                     </td>
                     <td class="td-name">
-                        <a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->raws_article->name }}</a>
+                        <a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->article->name }}</a>
                     </td>
                     <td class="td-raws_category">
-                        <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->raws_article->raws_product->raws_category->id }}" class="filter_link" title="Фильтровать">{{ $raw->raws_article->raws_product->raws_category->name }}</a>
+                        <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->article->product->category->id }}" class="filter_link" title="Фильтровать">{{ $raw->article->product->category->name }}</a>
 
                         <br>
-                        @if($raw->raws_article->raws_product->name != $raw->raws_article->name)
-                        <a href="/admin/raws?raws_product_id%5B%5D={{ $raw->raws_article->raws_product->id }}" class="filter_link light-text">{{ $raw->raws_article->raws_product->name }}</a>
+                        @if($raw->article->product->name != $raw->article->name)
+                        <a href="/admin/raws?raws_product_id%5B%5D={{ $raw->article->product->id }}" class="filter_link light-text">{{ $raw->article->product->name }}</a>
                         @endif
                     </td>
                     <td class="td-description">{{ $raw->description }}</td>

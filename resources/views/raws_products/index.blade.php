@@ -69,10 +69,10 @@
                         {{ $raws_product->name }}
                         @endcannot
 
-                        ({{ link_to_route('raws.index', $raws_product->raws_articles_count, $parameters = ['raws_product_id' => $raws_product->id], $attributes = ['class' => 'filter_link light-text', 'title' => 'Перейти на список товаров']) }}) {{ ($raws_product->set_status == 'set') ? '(Набор)' : '' }}
+                        ({{ link_to_route('raws.index', $raws_product->articles_count, $parameters = ['raws_product_id' => $raws_product->id], $attributes = ['class' => 'filter_link light-text', 'title' => 'Перейти на список товаров']) }}) {{ ($raws_product->set_status == 'set') ? '(Набор)' : '' }}
 
                   </td>
-                  <td class="td-raws_category">{{ $raws_product->raws_category->name }}</td>
+                  <td class="td-raws_category">{{ $raws_product->category->name }}</td>
                   <td class="td-description">{{ $raws_product->description }}</td>
 
                   {{-- Элементы управления --}}

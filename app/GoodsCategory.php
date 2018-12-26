@@ -69,15 +69,15 @@ class GoodsCategory extends Model
     }
 
     // Группы
-    public function goods_products()
+    public function products()
     {
         return $this->hasMany('App\GoodsProduct');
     }
 
     // Режим
-    public function goods_mode()
+    public function mode()
     {
-        return $this->belongsTo('App\GoodsMode');
+        return $this->belongsTo('App\GoodsMode', 'goods_mode_id');
     }
 
     // Аватар

@@ -83,7 +83,6 @@ use App\Rule;
 
 use App\Feedback;
 
-use App\Order;
 
 use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
@@ -165,7 +164,6 @@ use App\Policies\StagePolicy;
 
 use App\Policies\FeedbackPolicy;
 
-use App\Policies\OrderPolicy;
 
 
 use Illuminate\Support\Facades\Gate as GateContract;
@@ -181,6 +179,12 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\Model' => 'App\Policies\ModelPolicy',
+
+
+
+        // Расчеты и заказы
+        'App\Order' => 'App\Policies\OrderPolicy',
+        'App\Estimate' => 'App\Policies\EstimatePolicy',
 
 
 
@@ -255,7 +259,7 @@ class AuthServiceProvider extends ServiceProvider
         Claim::class => ClaimPolicy::class,
         Stage::class => StagePolicy::class,
         Feedback::class => FeedbackPolicy::class,
-        Order::class => OrderPolicy::class,
+
     ];
 
     public function boot()

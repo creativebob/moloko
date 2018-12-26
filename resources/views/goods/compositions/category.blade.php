@@ -1,22 +1,12 @@
 @php
-if ($composition_articles->first()->raws_product_id) {
 
-$category_id = $composition_articles->first()->raws_product->raws_category->id;
-$category_name = $composition_articles->first()->raws_product->raws_category->name;
-$name = 'compositions';
+$name = isset($composition_articles->first()->raws_product_id) ? 'compositions' : 'set_compositions';
 
-} else {
-
-$category_id = $composition_articles->first()->goods_product->goods_category->id;
-$category_name = $composition_articles->first()->goods_product->goods_category->name;
-$name = 'set_compositions';
-
-}
 @endphp
 
 <li>
-	<span class="parent" data-open="composition_category-{{ $category_id }}">{{ $category_name }}</span>
-	<div class="checker-nested" id="composition_category-{{ $category_id }}">
+	<span class="parent" data-open="composition_category-{{ $composition_articles->first()->product->category->id }}">{{ $composition_articles->first()->product->category->name }}</span>
+	<div class="checker-nested" id="composition_category-{{ $composition_articles->first()->product->category->id }}">
 		<ul class="checker">
 
 			@foreach($composition_articles as $article)
