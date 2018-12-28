@@ -1891,6 +1891,11 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   padding-left: 0 !important;
 }
 
+#extra-panel .button.tiny {
+  color: #fff;
+  margin-bottom: 0;
+}
+
 .claims .td-body {
   max-width: 400px;
 }
@@ -2160,8 +2165,8 @@ a#task-toggle {
 .breadcrumbs {
   margin: 0;
   background-color: #ffffff;
-  padding: 12px 20px;
-  height: auto;
+  padding: 2px 20px;
+  height: 35px;
   border-bottom: 1px solid #dcdcdc;
 }
 .breadcrumbs li {
@@ -2170,6 +2175,7 @@ a#task-toggle {
   font-family: "PFDinTextPro-Regular";
   font-size: 0.8rem;
   line-height: 1;
+  padding-top: 8px;
 }
 .breadcrumbs a {
   color: #5190ff;

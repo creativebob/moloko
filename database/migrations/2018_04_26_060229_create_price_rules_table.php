@@ -95,11 +95,7 @@ class CreatePriceRulesTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+
     public function down()
     {
         Schema::dropIfExists('price_rules');

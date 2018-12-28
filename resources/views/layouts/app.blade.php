@@ -201,9 +201,14 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                     {{-- Breadcrumbs --}}
                     @yield('breadcrumbs')
                 </div>
-                <div class="small-12 medium-3 cell text-right" id="exel">
+                <div class="small-12 medium-3 cell text-right" id="extra-panel">
+
+                    {{-- Planfact --}}
+                    @yield('planfact')
+
                     {{-- Exel --}}
                     @yield('exel')
+                    
                 </div>
             </div>
 

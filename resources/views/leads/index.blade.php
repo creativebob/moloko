@@ -14,6 +14,11 @@
 <!-- <a href="/admin/leads?calls=yes" class="button tiny">Перезвоны</a> -->
 @endsection
 
+@section('planfact')
+<a href="/admin/plans/leads" class="button tiny">План</a>
+<a href="/admin/statistics/leads" class="button tiny">Факт</a>
+@endsection
+
 @section('content-count')
 {{-- Количество элементов --}}
 @if(!empty($leads))

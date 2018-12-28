@@ -2473,6 +2473,19 @@ td.body{
 // ОКОНЧАНИЕ СТРАНИЦЫ ЛИДЫ ============================================================
 
 
+// НАЧАЛО СТРАНИЦЫ СТАТИСТИКА И ПЛАНЫ ===============================================================
+
+#extra-panel{
+
+    .button.tiny{
+        color: #fff;
+        margin-bottom: 0;
+    }
+}
+
+
+// ОКОНЧАНИЕ СТРАНИЦЫ СТАТИСТИКА И ПЛАНЫ ============================================================
+
 
 // РЕКЛАМАЦИИ  ============================================================
 
@@ -2806,8 +2819,8 @@ a#task-toggle{
 .breadcrumbs {
   margin: 0; // Обнуляем класс фонды
   background-color: $breadcrumbs-bg-color;
-  padding: 12px 20px;
-  height: auto;
+  padding: 2px 20px;
+  height: 35px;
   border-bottom: 1px solid $breadcrumbs-border-color;
 
   li {
@@ -2816,6 +2829,7 @@ a#task-toggle{
     font-family: $PFDTPR;
     font-size: 0.8rem;
     line-height: 1;
+    padding-top: 8px;
 }
 a {
     color: $breadcrumbs-a-color;

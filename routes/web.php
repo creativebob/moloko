@@ -451,8 +451,18 @@ Route::post('/companies/check_company', 'CompanyController@checkcompany')->middl
 // Основные методы
 Route::resource('/extra_requisites', 'ExtraRequisiteController')->middleware('auth');
 
+// ------------------------------------------------ Планирование -------------------------------------
 
-// --------------------------------------- Лиды -----------------------------------------------
+// Основные методы
+Route::resource('plans', 'PlansController')->middleware('auth');
+
+// ------------------------------------------------ Статистика ---------------------------------------
+
+// Основные методы
+Route::resource('statistics', 'StatisticsController')->middleware('auth');
+
+
+// ---------------------------------------------- Лиды -----------------------------------------------
 
 // Основные методы
 // Route::get('/lead/calls', 'LeadController@index')->middleware('auth');
