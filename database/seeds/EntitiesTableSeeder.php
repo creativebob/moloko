@@ -666,6 +666,16 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
             ],
 
+            // 77
+            [
+                'name' => 'Показатели',
+                'alias' => 'indicators',
+                'model' => 'Indicator',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
+
         ]);
 
 }

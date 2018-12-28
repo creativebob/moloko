@@ -130,6 +130,10 @@ class EntityController extends Controller
         $entity->system_item = 1;
         $entity->moderation = NULL;
 
+
+        $entity->statistic = $request->has('statistic');
+        $entity->dependence = $request->has('dependence');
+
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){$entity->moderation = 1;};
 
@@ -251,6 +255,9 @@ class EntityController extends Controller
         // Внесение изменений:
         $entity->name = $request->name;
         $entity->alias = $request->alias;
+
+        $entity->statistic = $request->has('statistic');
+        $entity->dependence = $request->has('dependence');
 
         $entity->save();
 

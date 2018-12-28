@@ -40,6 +40,7 @@
                         <label for="No"><span>Нет</span></label>
 
                     </div>
+
                 </div>
 
             </div>
@@ -54,6 +55,15 @@
     </div>
 
 
+    <div class="small-12 cell checkbox">
+        {{ Form::checkbox('statistic', 1, $entity->statistic, ['id'=>'statistic-checkbox']) }}
+        <label for="statistic-checkbox"><span>Статистика по сущности</span></label>
+    </div>
+
+    <div class="small-12 cell checkbox">
+        {{ Form::checkbox('dependence', 1, $entity->dependence, ['id'=>'dependence-checkbox']) }}
+        <label for="dependence-checkbox"><span>Филиалозависимость</span></label>
+    </div>
     {{-- Чекбоксы управления --}}
     @include('includes.control.checkboxes', ['item' => $entity])
 

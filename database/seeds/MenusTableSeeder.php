@@ -945,6 +945,22 @@ class MenusTableSeeder extends Seeder
             'sort' => null,
         ],
 
+        // 63
+        [
+            'name' => 'Показатели',
+            'icon' => null,
+            'alias' => 'admin/indicators',
+            'tag' => 'indicators',
+            'parent_id' => 28,
+            'page_id' => 54,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
 
 
     ]);
