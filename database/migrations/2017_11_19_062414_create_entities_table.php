@@ -15,13 +15,17 @@ class CreateEntitiesTable extends Migration
 
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
-            
+
             $table->string('alias')->index()->comment('Название как в базе данных');
             $table->string('model')->index()->comment('Название модели');
 
             $table->integer('rights_minus')->unsigned()->nullable()->comment('Исключает настройку прав на сущность при равной 1');
             $table->integer('validation_minus')->unsigned()->nullable()->comment('Исключает настройку дополнительной валидации страницы');
             $table->integer('feedback_minus')->unsigned()->nullable()->comment('Исключает добавление отзыва к сущности из под интерфейса');
+
+            $table->boolean('statistic')->default(0)->comment('Сбор статистики по сущности дял компании');
+
+            $table->boolean('dependence')->default(0)->comment('Филиалозависимость');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
@@ -42,5 +46,5 @@ class CreateEntitiesTable extends Migration
     {
         Schema::dropIfExists('entities');
     }
-    
+
 }

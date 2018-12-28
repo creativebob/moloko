@@ -647,6 +647,19 @@ class PagesTableSeeder extends Seeder
                 'display' => null,
             ],
 
+            // 54
+            [
+                'name' => 'Показатели',
+                'site_id' => 1,
+                'title' => 'Показатели',
+                'description' => 'Показатели',
+                'alias' => 'indicators',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
             // [
             //     'name' => 'Категории продукции',
             //     'site_id' => 1,

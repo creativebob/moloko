@@ -187,6 +187,9 @@ class AuthServiceProvider extends ServiceProvider
         'App\Estimate' => 'App\Policies\EstimatePolicy',
 
 
+        // Показатели
+        'App\Indicator' => 'App\Policies\IndicatorPolicy',
+
 
         User::class => UserPolicy::class,
         RightsRole::class => RightsRolePolicy::class,
