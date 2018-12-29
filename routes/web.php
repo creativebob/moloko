@@ -652,6 +652,12 @@ Route::any('/store_bank_account', 'BankAccountController@ajax_store')->middlewar
 Route::resource('/bank_accounts', 'BankAccountController')->middleware('auth');
 
 
+// -------------------------------------- Показатели ---------------------------------------------
+
+// Основные методы
+Route::resource('indicators', 'IndicatorController');
+
+
 // ------------------------------------- Правила доступа ----------------------------------------------------
 
 // Основные методы

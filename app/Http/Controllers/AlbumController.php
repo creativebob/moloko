@@ -147,6 +147,10 @@ class AlbumController extends Controller
             $album->moderation = 1;
         }
 
+        // Системная запись
+        $album->system_item = $request->system_item;
+        $album->display = $request->display;
+
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
         $album->company_id = $user->company_id;

@@ -11,7 +11,7 @@
             },
             url: '/admin/get_units_list',
             type: "POST",
-            data: {units_category_id: id, entity: 'raws'},
+            data: {units_category_id: id},
             success: function(html){
                 $('#units-list').html(html);
                 $('#units-list').prop('disabled', false);

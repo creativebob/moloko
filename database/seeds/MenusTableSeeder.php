@@ -951,7 +951,7 @@ class MenusTableSeeder extends Seeder
             'icon' => null,
             'alias' => 'admin/indicators',
             'tag' => 'indicators',
-            'parent_id' => 28,
+            'parent_id' => 14,
             'page_id' => 54,
             'navigation_id' => 2,
             'company_id' => null,
