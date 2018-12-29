@@ -35,6 +35,8 @@ use App\Http\ViewComposers\RawsProductsComposer;
 use App\Http\ViewComposers\AlbumsCategoriesSelectComposer;
 use App\Http\ViewComposers\AlbumsComposer;
 
+use App\Http\ViewComposers\indicatorsCategoriesSelectComposer;
+
 use App\Http\ViewComposers\UsersComposer;
 use App\Http\ViewComposers\StaffComposer;
 use App\Http\ViewComposers\PositionsComposer;
@@ -43,6 +45,8 @@ use App\Http\ViewComposers\PropertiesComposer;
 use App\Http\ViewComposers\SiteMenusComposer;
 
 use App\Http\ViewComposers\CategoriesDrilldownComposer;
+
+use App\Http\ViewComposers\EntitiesStatisticsSelectComposer;
 
 
 class ComposerServiceProvider extends ServiceProvider
@@ -101,6 +105,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.raws_products', RawsProductsComposer::class);
         view()->composer('includes.selects.albums_categories', AlbumsCategoriesSelectComposer::class);
         view()->composer('includes.selects.albums', AlbumsComposer::class);
+
+        view()->composer('includes.selects.indicators_categories', IndicatorsCategoriesSelectComposer::class);
+
+        view()->composer('includes.selects.entities_statistics', EntitiesStatisticsSelectComposer::class);
     }
 
     public function register()

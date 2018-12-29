@@ -2,83 +2,201 @@
 
 namespace App\Http\Controllers;
 
+// Модели
+use App\Indicator;
+
+// Валидация
 use Illuminate\Http\Request;
+use App\Http\Requests\IndicatorRequest;
 
 class IndicatorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    // Настройки сконтроллера
+    public function __construct(Indicator $indicator)
+    {
+        $this->middleware('auth');
+        $this->indicator = $indicator;
+        $this->class = Indicator::class;
+        $this->model = 'App\Indicator';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+    }
+
     public function index()
     {
-        //
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
+
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $indicators = Indicator::with([
+            'category',
+            'entity',
+            'unit'
+        ])
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->systemItem($answer)
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->paginate(30);
+
+        return view('indicators.index',
+            [
+                'indicators' => $indicators,
+                'page_info' => pageInfo($this->entity_alias),
+            ]
+        );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
+
+        return view('indicators.create', [
+            'indicator' => new $this->class,
+            'page_info' => pageInfo($this->entity_alias),
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(IndicatorRequest $request)
     {
-        //
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Наполняем сущность данными
+        $indicator = new Indicator;
+
+        $indicator->name = $request->name;
+        $indicator->description = $request->description;
+
+        $indicator->indicators_category_id = $request->indicators_category_id;
+        $indicator->entity_id = $request->entity_id;
+        $indicator->unit_id = $request->unit_id;
+
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        if($answer['automoderate'] == false){
+            $indicator->moderation = 1;
+        }
+
+        // Системная запись
+        $indicator->system_item = $request->system_item;
+        $indicator->display = $request->display;
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+        $indicator->company_id = $user->company_id;
+        $indicator->author_id = hideGod($user);
+
+        $indicator->save();
+
+        if ($indicator) {
+            // Переадресовываем на index
+            return redirect()->route('indicators.index');
+        } else {
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при записи показателя!'
+            ];
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        //
+
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $indicator = Indicator::moderatorLimit($answer)
+        ->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $indicator);
+
+        return view('indicators.edit', [
+            'indicator' => $indicator,
+            'page_info' => pageInfo($this->entity_alias),
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(IndicatorRequest $request, $id)
     {
-        //
+
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $indicator = Indicator::moderatorLimit($answer)
+        ->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $indicator);
+
+        // dd($request);
+
+        $indicator->name = $request->name;
+        $indicator->description = $request->description;
+
+        $indicator->indicators_category_id = $request->indicators_category_id;
+        $indicator->entity_id = $request->entity_id;
+        $indicator->unit_id = $request->unit_id;
+
+        // Системная запись
+        $indicator->system_item = $request->system_item;
+        $indicator->display = $request->display;
+        $indicator->moderation = $request->moderation;
+
+        $indicator->editor_id = hideGod($request->user());
+
+        $indicator->save();
+
+        if ($indicator) {
+            // Переадресовываем на index
+            return redirect()->route('indicators.index');
+        } else {
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при обновлении показателя!'
+            ];
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $indicator = Indicator::moderatorLimit($answer)
+        ->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $indicator);
+
+        $indicator->editor_id = hideGod($request->user());
+        $indicator->save();
+
+        // Удаляем альбом с обновлением
+        $indicator->delete();
+
+        if ($indicator) {
+            // Переадресовываем на index
+            return redirect()->route('indicators.index');
+        } else {
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при удалении показателя!'
+            ];
+        }
     }
 }

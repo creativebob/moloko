@@ -59,10 +59,10 @@ class Album extends Model
         return $this->belongsTo('App\Company');
     }
 
-    // Получаем категорию
-    public function albums_category()
+    // Категорию
+    public function category()
     {
-        return $this->belongsTo('App\AlbumsCategory');
+        return $this->belongsTo('App\AlbumsCategory', 'albums_category_id');
     }
 
     // Получаем фото

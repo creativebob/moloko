@@ -56,7 +56,7 @@ class IndicatorsTableSeeder extends Seeder
             $entity = new Entity;
             $entity->name = 'Показатели';
             $entity->alias = 'indicators';
-            $entity->model = 'Шndicator';
+            $entity->model = 'Indicator';
             $entity->rights_minus = null;
             $entity->system_item = 1;
             $entity->author_id = 1;
@@ -105,7 +105,7 @@ class IndicatorsTableSeeder extends Seeder
 
        $navigation_id = $navigation->id;
 
-       $menu = Menu::where('tag', 'sale')->first();
+       $menu = Menu::where('tag', 'guide')->first();
 
        $parent_menu_id = $menu->id;
 

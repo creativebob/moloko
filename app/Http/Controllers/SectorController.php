@@ -141,7 +141,8 @@ class SectorController extends Controller
     public function edit($id)
     {
 
-        $sector = Sector::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
+        $sector = Sector::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);

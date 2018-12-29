@@ -56,4 +56,16 @@ class Indicator extends Model
         return $this->belongsTo('App\IndicatorsCategory', 'indicators_category_id');
     }
 
+    // Сущность
+    public function entity()
+    {
+        return $this->belongsTo('App\Entity');
+    }
+
+    // Удиница измерения
+    public function unit()
+    {
+        return $this->belongsTo('App\Unit');
+    }
+
 }

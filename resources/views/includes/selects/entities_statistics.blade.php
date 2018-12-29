@@ -1,0 +1,1 @@
+{!! Form::select('entity_id', $entities->pluck('name', 'id'), null, []) !!}
