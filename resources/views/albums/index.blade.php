@@ -77,7 +77,7 @@
                     @endcannot
 
                 </td>
-                <td class="td-category">{{ $album->albums_category->name }}</td>
+                <td class="td-category">{{ $album->category->name }}</td>
                 <td class="td-description">{{ $album->description }}</td>
                 <td class="td-extra-info">
                     <ul>

@@ -61,11 +61,11 @@ class AlbumController extends Controller
         $albums = Album::with([
             'author',
             'company',
-            'albums_category'
+            'category'
         ])
         ->withCount('photos')
 
-        ->whereHas('albums_category', function ($query) {
+        ->whereHas('category', function ($query) {
             $query->whereNotNull('company_id')
             ->where(function ($query) {
                 $query->where('system_item', 1)->orWhere('system_item', null);
