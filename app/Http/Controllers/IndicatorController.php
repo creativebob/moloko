@@ -7,7 +7,7 @@ use App\Indicator;
 
 // Валидация
 use Illuminate\Http\Request;
-// use App\Http\Requests\IndicatorRequest;
+use App\Http\Requests\IndicatorRequest;
 
 class IndicatorController extends Controller
 {
@@ -63,7 +63,7 @@ class IndicatorController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(IndicatorRequest $request)
     {
 
         // Подключение политики
@@ -132,7 +132,7 @@ class IndicatorController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(IndicatorRequest $request, $id)
     {
 
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
