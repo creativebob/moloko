@@ -206,8 +206,8 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                     {{-- Planfact --}}
                     @yield('planfact')
 
-                    {{-- Exel --}}
-                    @yield('exel')
+                    {{-- Exсel --}}
+                    @yield('exсel')
                     
                 </div>
             </div>

@@ -42,6 +42,8 @@ use App\Post;
 use App\SocialNetwork;
 use App\Campaign;
 
+use App\Plan;
+
 use App\Salary;
 
 use App\Position;
@@ -125,6 +127,7 @@ use App\Policies\PostPolicy;
 use App\Policies\SocialNetworkPolicy;
 use App\Policies\CampaignPolicy;
 
+use App\Policies\PlanPolicy;
 use App\Policies\SalaryPolicy;
 
 use App\Policies\PositionPolicy;
@@ -218,6 +221,7 @@ class AuthServiceProvider extends ServiceProvider
         SocialNetwork::class => SocialNetworkPolicy::class,
         Campaign::class => CampaignPolicy::class,
 
+        Plan::class => PlanPolicy::class,
         Salary::class => SalaryPolicy::class,
 
         Position::class => PositionPolicy::class,
