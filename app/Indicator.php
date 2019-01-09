@@ -62,10 +62,22 @@ class Indicator extends Model
         return $this->belongsTo('App\Entity');
     }
 
-    // Удиница измерения
+    // Единица измерения
     public function unit()
     {
         return $this->belongsTo('App\Unit');
     }
+
+    // План
+    public function plans()
+    {
+        return $this->belongsTo('App\Plan');
+    }
+
+    // // Удиница измерения
+    // public function unit()
+    // {
+    //     return $this->belongsTo('App\Unit');
+    // }
 
 }

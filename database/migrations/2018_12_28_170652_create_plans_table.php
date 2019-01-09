@@ -16,7 +16,7 @@ class CreatePlansTable extends Migration
             // $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('filial_id')->unsigned()->nullable()->comment('Id отдела');
-            $table->foreign('filial_id')->references('id')->on('departments');
+            // $table->foreign('filial_id')->references('id')->on('departments');
 
             $table->integer('indicator_id')->nullable()->unsigned()->comment('ID индикатора');
             $table->integer('value')->nullable()->unsigned()->comment('Значение индикатора');

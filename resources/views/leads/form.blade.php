@@ -45,7 +45,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 cell">
                         <label>Бюджет
-                            @include('includes.inputs.digit', ['name'=>'badget', 'value'=>$lead->badget, 'limit'=>10000, 'decimal_place'=>2])
+                            @include('includes.inputs.digit', ['name' => 'badget', 'value' => $lead->badget, 'decimal_place'=>2])
                         </label>
                     </div>
                     <div class="small-12 cell">
@@ -221,7 +221,7 @@
                                     {{-- ПОИСК ПО ТОВАРАМ --}}
                                     <div class="small-12 cell search-in-catalog-panel">
                                         <label class="input-icon">
-                                            <input type="text" name="search" placeholder="Поиск" maxlength="25" autocomplete="off" required>
+                                            <input type="text" name="search" placeholder="Поиск" maxlength="25" autocomplete="off">
                                             <div class="sprite-input-left icon-search"></div>
                                             <span class="form-error">Обязательно нужно логиниться!</span>
                                         </label>

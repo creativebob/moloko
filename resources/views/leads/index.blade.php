@@ -15,8 +15,8 @@
 @endsection
 
 @section('planfact')
-<a href="/admin/plans/leads" class="button tiny">План</a>
-<a href="/admin/statistics/leads" class="button tiny">Факт</a>
+{{ link_to_route('plans.show', 'План', $parameters = ['alias' => 'leads'], $attributes = ['class' => 'button tiny']) }}
+{{ link_to_route('statistics.show', 'Факт', $parameters = ['alias' => 'leads'], $attributes = ['class' => 'button tiny']) }}
 @endsection
 
 @section('content-count')

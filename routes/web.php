@@ -453,8 +453,11 @@ Route::resource('/extra_requisites', 'ExtraRequisiteController')->middleware('au
 
 // ------------------------------------------------ Планирование -------------------------------------
 
+Route::get('plans', 'PlanController@index')->name('plans.index');
+
+Route::get('plans/{alias}', 'PlanController@show')->name('plans.show');
 // Основные методы
-Route::resource('plans', 'PlanController')->middleware('auth');
+// Route::resource('plans', 'PlanController')->middleware('auth');
 
 // ------------------------------------------------ Статистика ---------------------------------------
 
