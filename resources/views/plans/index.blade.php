@@ -12,9 +12,7 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-  @if(!empty($plans))
-    {{ num_format($plans->total(), 0) }}
-  @endif
+{{ $entities->isNotEmpty() ? num_format($entities->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')
@@ -25,59 +23,75 @@
 @section('content')
 {{-- Таблица --}}
 <div class="grid-x">
-  <div class="small-12 cell">
-    <table class="content-table tablesorter plans" id="content" data-sticky-container data-entity-alias="plans">
-      <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
-        <tr id="thead-content">
-          <th class="td-drop"></th>
-          <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
+    <div class="small-12 cell">
 
-          <th class="td-control"></th>
-          <th class="td-delete"></th>
-      </tr>
-  </thead>
-  <tbody data-tbodyId="1" class="tbody-width">
-    @if(!empty($plans))
-    @foreach($plans as $plan)
-    <tr class="item @if($user->claim_id == $claim->id)active @endif  @if($claim->moderation == 1)no-moderation @endif" id="plans-{{ $claim->id }}" data-name="{{ $claim->name }}">
-      <td class="td-drop"><div class="sprite icon-drop"></div></td>
-      <td class="td-checkbox checkbox">
-        <input type="checkbox" class="table-check" name="claim_id" id="check-{{ $claim->id }}"
+        <table class="content-table tablesorter plans" id="content" data-sticky-container data-entity-alias="plans">
 
-        {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
-        @if(!empty($filter['booklist']['booklists']['default']))
-        {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-        @if (in_array($claim->id, $filter['booklist']['booklists']['default'])) checked
-        @endif
-        @endif
-        ><label class="label-check" for="check-{{ $claim->id }}"></label>
-    </td>
-    
+            <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
+                <tr id="thead-content">
+                    <th class="td-drop"></th>
+                    <th class="td-checkbox checkbox-th">
+                        <input type="checkbox" class="table-check-all" name="" id="check-all">
+                        <label class="label-check" for="check-all"></label>
+                    </th>
+                    <th class="td-name"></th>
 
-  {{-- Элементы управления --}}
-  @include('includes.control.table-td', ['item' => $claim])
+                    {{-- <th class="td-control"></th>
+                    <th class="td-delete"></th> --}}
+                </tr>
+            </thead>
 
-  <td class="td-delete">
-    @if ($claim->system_item != 1)
-    @can('delete', $claim)
-    <a class="icon-delete sprite" data-open="item-delete"></a>
-    @endcan
-    @endif
-</td>
-</tr>
-@endforeach
-@endif
-</tbody>
-</table>
-</div>
+            <tbody data-tbodyId="1" class="tbody-width">
+
+                @if(!empty($entities))
+                @foreach($entities as $entity)
+
+                <tr class="item  @if($entity->moderation == 1)no-moderation @endif" id="plans-{{ $entity->id }}" data-name="{{ $entity->name }}">
+                    <td class="td-drop">
+                        <div class="sprite icon-drop"></div>
+                    </td>
+                    <td class="td-checkbox checkbox">
+                        <input type="checkbox" class="table-check" name="entitiy_id" id="check-{{ $entity->id }}"
+
+                        {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+                        @if(!empty($filter['booklist']['booklists']['default']))
+                        {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+                        @if (in_array($entity->id, $filter['booklist']['booklists']['default'])) checked
+                        @endif
+                        @endif
+                        ><label class="label-check" for="check-{{ $entity->id }}"></label>
+                    </td>
+
+                    <td class="td-name">{{ link_to_route('plans.show', $entity->name, $parameters = ['alias' => $entity->alias], $attributes = []) }}</td>
+
+
+                    {{-- Элементы управления --}}
+                    {{-- @include('includes.control.table-td', ['item' => $entitiy])
+
+                    <td class="td-delete">
+                        @can('delete', $entitiy)
+                        <a class="icon-delete sprite" data-open="item-delete"></a>
+                        @endcan
+                    </td> --}}
+
+                </tr>
+
+                @endforeach
+                @endif
+
+            </tbody>
+
+        </table>
+
+    </div>
 </div>
 
 {{-- Pagination --}}
 <div class="grid-x" id="pagination">
-  <div class="small-6 cell pagination-head">
-    <span class="pagination-title">Кол-во записей: {{ $plans->count() }}</span>
-    {{ $plans->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
-</div>
+    <div class="small-6 cell pagination-head">
+        <span class="pagination-title">Кол-во записей: {{ $entities->count() }}</span>
+        {{ $entities->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
+    </div>
 </div>
 @endsection
 

@@ -2,64 +2,44 @@
 
 namespace App\Http\Controllers;
 
+// Модели
 use App\Plan;
-
-// Модели которые отвечают за работу с правами + политики
-use App\Policies\PlanPolicy;
-
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Auth;
+use App\Entity;
+use App\Indicator;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\PlanRequest;
 
-// Прочие необходимые классы
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cookie;
-
-// use Illuminate\Support\Facades\Storage;
-// use Carbon\Carbon;
-// use Illuminate\Support\Facades\DB;
-
-
 
 class PlanController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'plans';
-    protected $entity_dependence = true;
+    // Настройки сконтроллера
+    public function __construct(Plan $plan)
+    {
+        $this->middleware('auth');
+        $this->plan = $plan;
+        $this->class = Plan::class;
+        $this->model = 'App\Plan';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+    }
 
     public function index(Request $request)
     {
 
-        $filter_url = autoFilter($request, $this->entity_name);
-        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Plan::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-
-        $plans = Plan::moderatorLimit($answer)
-        // ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->booklistFilter($request)
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
+        $entities = Entity::where('statistic', true)
         ->paginate(30);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             'booklist'              // Списки пользователя
         ]);
 
@@ -67,9 +47,9 @@ class PlanController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
-        return view('plans.index', compact('plans', 'page_info', 'filter', 'user'));
+        return view('plans.index', compact('entities', 'page_info', 'filter'));
     }
 
     /**
@@ -99,9 +79,25 @@ class PlanController extends Controller
      * @param  \App\Plan  $plan
      * @return \Illuminate\Http\Response
      */
-    public function show(Plan $plan)
+    public function show(Request $request, $alias)
     {
-        //
+
+        // Подключение политики
+        // $this->authorize(getmethod(__FUNCTION__), $this->class);
+
+        $indicators = Indicator::with(['plans' => function ($q) {
+            $q->where('year', 2019);
+        }])
+        ->whereHas('entity', function($q) use ($alias) {
+            $q->whereAlias($alias);
+        })->get();
+
+        // dd($indicators);
+
+        return view('plans.show', [
+            'indicators' => $indicators,
+            'page_info' => pageInfo($this->entity_alias),
+        ]);
     }
 
     /**
@@ -137,4 +133,5 @@ class PlanController extends Controller
     {
         //
     }
+
 }
