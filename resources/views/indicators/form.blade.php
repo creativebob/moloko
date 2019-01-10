@@ -15,19 +15,19 @@
 
             <div class="small-12 medium-6 cell">
                 <label>Категория
-                    @include('includes.selects.indicators_categories', ['indicators_category_id' => $indicator->indicators_category_id])
+                    @include('includes.selects.indicators_categories', ['indicators_category_id' => $indicator->indicators_category_id, 'disabled' => isset($form_method) ? true : null])
                 </label>
             </div>
 
             <div class="small-12 medium-6 cell">
                 <label>Сущность
-                    @include('includes.selects.entities_statistics', ['entity_id' => $indicator->entity_id])
+                    @include('includes.selects.entities_statistics', ['entity_id' => $indicator->entity_id, 'disabled' => isset($form_method) ? true : null])
                 </label>
             </div>
 
             <div class="small-12 medium-6 cell">
                 <label>Направление
-                    @include('includes.selects.directions')
+                    @include('includes.selects.directions', ['disabled' => isset($form_method) ? true : null])
                 </label>
             </div>
 
@@ -36,11 +36,11 @@
                     <div class="small-12 cell">
                         <div class="grid-x grid-margin-x">
                             <div class="small-12 medium-4 cell">
-                                @include('includes.selects.units_categories', ['default' => 6])
+                                @include('includes.selects.units_categories', ['default' => 6, 'disabled' => isset($form_method) ? true : null])
                             </div>
 
                             <div class="small-12 medium-4 cell">
-                                @include('includes.selects.units', ['default' => 26, 'units_category_id' => 6])
+                                @include('includes.selects.units', ['default' => 26, 'units_category_id' => 6, 'disabled' => isset($form_method) ? true : null])
                             </div>
 
                             <div class="small-12 medium-4 cell">
