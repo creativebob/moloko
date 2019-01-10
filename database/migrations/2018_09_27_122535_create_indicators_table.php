@@ -30,6 +30,11 @@ class CreateIndicatorsTable extends Migration
 
             $table->integer('unit_id')->unsigned()->nullable()->comment('Id еденицы измерения');
             // $table->foreign('unit_id')->references('id')->on('units');
+            
+            $table->integer('period_id')->unsigned()->nullable()->comment('Id временного периода');
+            // $table->foreign('period_id')->references('id')->on('periods');
+
+            $table->boolean('change_allowed')->default(0)->comment('Разрешение на изменение периода: true - разрешено, false - запрещено');
 
             $table->morphs('category')->nullable();
 
