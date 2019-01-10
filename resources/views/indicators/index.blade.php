@@ -74,7 +74,7 @@
                         @endcannot
 
                     </td>
-                    <td class="td-category">{{ $indicator->category->name }}</td>
+                    <td class="td-category">{{ $indicator->indicators_category->name }}</td>
                     <td class="td-description">{{ $indicator->description }}</td>
 
                     <td class="td-entity">{{ $indicator->entity->name }}</td>

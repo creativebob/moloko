@@ -36,6 +36,7 @@ use App\Http\ViewComposers\AlbumsCategoriesSelectComposer;
 use App\Http\ViewComposers\AlbumsComposer;
 
 use App\Http\ViewComposers\indicatorsCategoriesSelectComposer;
+use App\Http\ViewComposers\DirectionsComposer;
 
 use App\Http\ViewComposers\UsersComposer;
 use App\Http\ViewComposers\StaffComposer;
@@ -107,6 +108,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.albums', AlbumsComposer::class);
 
         view()->composer('includes.selects.indicators_categories', IndicatorsCategoriesSelectComposer::class);
+        view()->composer('includes.selects.directions', DirectionsComposer::class);
 
         view()->composer('includes.selects.entities_statistics', EntitiesStatisticsSelectComposer::class);
     }

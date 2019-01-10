@@ -68,7 +68,7 @@
 
                                         </tr>
 
-                    
+
                                     </tbody>
                                 </table>
 
@@ -115,7 +115,7 @@
         @endif
         ><label class="label-check" for="check-{{ $claim->id }}"></label>
     </td>
-    
+
 
   {{-- Элементы управления --}}
   @include('includes.control.table-td', ['item' => $claim])
@@ -165,12 +165,12 @@
 </div>
 
 {{-- Pagination --}}
-<div class="grid-x" id="pagination">
+{{-- <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
     <span class="pagination-title">Кол-во записей: {{ $plans->count() }}</span>
     {{ $plans->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
 </div>
-</div>
+</div> --}}
 @endsection
 
 @section('modals')

@@ -51,9 +51,15 @@ class Indicator extends Model
     }
 
     // Категория
-    public function category()
+    public function indicators_category()
     {
         return $this->belongsTo('App\IndicatorsCategory', 'indicators_category_id');
+    }
+
+    // Категория
+    public function category()
+    {
+        return $this->morphTo();
     }
 
     // Сущность

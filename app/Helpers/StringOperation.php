@@ -221,11 +221,11 @@ function getWorktimes($request, $schedule_id){
 
         // Проверяем наличие данных
         if (($schedule_mass[$n]['worktime_begin'] != null) && ($schedule_mass[$n]['worktime_end'] != null)) {
-           $worktime_begin = timeToSec($schedule_mass[$n]['worktime_begin']);
-           $worktime_end = timeToSec($schedule_mass[$n]['worktime_end']);
+         $worktime_begin = timeToSec($schedule_mass[$n]['worktime_begin']);
+         $worktime_end = timeToSec($schedule_mass[$n]['worktime_end']);
 
             // Делаем корректировку данных - если время работы переходит на следующие сутки (Например, с 09:00 до 03:00)
-           if ($worktime_end < $worktime_begin) {
+         if ($worktime_end < $worktime_begin) {
             $worktime_end = (86400 - $worktime_begin) + $worktime_end;
         } else {$worktime_end = $worktime_end - $worktime_begin;};
 
@@ -424,6 +424,8 @@ function genChoiceTag($item){
     // Отдаем
     return $choice_tag;
 }
+
+
 
 // Чистит имена компаний от организационных форм, и отдает id такой формы (legal_form_id)
 // если форма присутствовала в имени

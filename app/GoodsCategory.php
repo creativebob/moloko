@@ -111,4 +111,10 @@ class GoodsCategory extends Model
         return $this->belongsToMany('App\Company', 'goods_category_manufacturer', 'goods_category_id', 'manufacturer_id');
     }
 
+    // Направление
+    public function direction()
+    {
+        return $this->morphOne('App\Direction', 'category')->where('archive', false);
+    }
+
 }
