@@ -36,7 +36,7 @@
                         <label class="label-check" for="check-all"></label>
                     </th>
                     <th class="td-name">Название</th>
-                    <th class="td-category">Категория</th>
+                    <th class="td-category">Категория показателя</th>
                     <th class="td-description">Описание</th>
                     <th class="td-entity">Сущность</th>
                     <th class="td-author">Автор</th>
@@ -74,10 +74,10 @@
                         @endcannot
 
                     </td>
-                    <td class="td-category">{{ $indicator->category->name }}</td>
-                    <td class="td-description">{{ $indicator->description }}</td>
+                    <td class="td-category">{{ isset($indicator->category) ? $indicator->category->name : 'Нет' }}</td>
+                    <td class="td-description">{{ $indicator->description or ''}}</td>
 
-                    <td class="td-entity">{{ $indicator->entity->name }}</td>
+                    <td class="td-entity">{{ isset($indicator->entity) ? $indicator->entity->name : '' }}</td>
 
                     <td class="td-author">
                         {{ isset($indicator->author) ? $indicator->author->name : 'Не указан' }}

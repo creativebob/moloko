@@ -81,6 +81,7 @@ class IndicatorController extends Controller
         $indicator->indicators_category_id = $request->indicators_category_id;
         $indicator->entity_id = $request->entity_id;
         $indicator->unit_id = $request->unit_id;
+        $indicator->period_id = $request->period_id;
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -151,6 +152,7 @@ class IndicatorController extends Controller
         $indicator->indicators_category_id = $request->indicators_category_id;
         $indicator->entity_id = $request->entity_id;
         $indicator->unit_id = $request->unit_id;
+        $indicator->period_id = $request->period_id;
 
         // Системная запись
         $indicator->system_item = $request->system_item;

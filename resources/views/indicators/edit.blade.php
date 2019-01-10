@@ -17,9 +17,10 @@
 @section('content')
 
 {{ Form::model($indicator, ['route' => ['indicators.update', $indicator->id], 'data-abide', 'novalidate']) }}
+
 {{ method_field('PATCH') }}
 
-@include('indicators.form', ['submit_text' => 'Редактировать'])
+@include('indicators.form', ['submit_text' => 'Редактировать', 'form_method' => 'edit'])
 
 {{ Form::close() }}
 
