@@ -130,4 +130,7 @@
 
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check')
+
+{{-- Скрипт чекбоксов --}}
+@include('includes.scripts.checkbox_control_menu')
 @endsection

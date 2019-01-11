@@ -81,6 +81,9 @@ class GoodsCategoryController extends Controller
                 'type' => $this->type,
                 'id' => $request->id,
                 'nested' => 'goods_products_count',
+                'filter' => setFilter($this->entity_alias, $request, [
+                    'booklist'
+                ]),
             ]
         );
     }

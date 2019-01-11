@@ -39,16 +39,6 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // -----------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
-        // -----------------------------------------------------------------------------------------------------------
-
-        $filter = setFilter($this->entity_alias, $request, [
-            'booklist'              // Списки пользователя
-        ]);
-
-        // Окончание фильтра -----------------------------------------------------------------------------------------
-
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $sectors = Sector::moderatorLimit($answer)
@@ -86,9 +76,11 @@ class SectorController extends Controller
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
-                'filter' => $filter,
                 'id' => $request->id,
                 'nested' => 'companies_count',
+                'filter' => setFilter($this->entity_alias, $request, [
+                    'booklist'
+                ]),
             ]
         );
     }

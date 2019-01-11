@@ -118,6 +118,7 @@ class DatabaseSeeder extends Seeder
         // Маркетинг
         $this->call(MediumsTableSeeder::class);
         $this->call(SourcesTableSeeder::class);
+        $this->call(SourceServicesTableSeeder::class);
         $this->call(LeadTypesTableSeeder::class);
         $this->call(LeadMethodsTableSeeder::class);
 

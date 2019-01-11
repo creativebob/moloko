@@ -74,6 +74,9 @@ class AlbumsCategoryController extends Controller
                 'type' => $this->type,
                 'id' => $request->id,
                 'nested' => 'albums_count',
+                'filter' => setFilter($this->entity_alias, $request, [
+                    'booklist'
+                ]),
             ]
         );
     }

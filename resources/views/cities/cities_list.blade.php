@@ -70,7 +70,13 @@ $drop = 1;
                         @if ($drop == 1)
                         <div class="sprite icon-drop"></div>
                         @endif
-                        <input type="checkbox" name="" id="city-check-{{ $city->id }}">
+                        <input type="checkbox" name="" id="city-check-{{ $city->id }}"
+                        class="check-booklist"
+                        @if(!empty($filter['booklist']['booklists']['default']))
+                        @if (in_array($city->id, $filter['booklist']['booklists']['default'])) checked
+                        @endif
+                        @endif
+                        >
                         <label class="label-check" for="city-check-{{ $city->id }}"></label>
                     </div>
 
@@ -103,7 +109,13 @@ $drop = 1;
                 @if ($drop == 1)
                 <div class="sprite icon-drop"></div>
                 @endif
-                <input type="checkbox" name="" id="city-check-{{ $city->id }}">
+                <input type="checkbox" name="" id="city-check-{{ $city->id }}"
+                class="check-booklist"
+                @if(!empty($filter['booklist']['booklists']['default']))
+                @if (in_array($city->id, $filter['booklist']['booklists']['default'])) checked
+                @endif
+                @endif
+                >
                 <label class="label-check" for="city-check-{{ $city->id }}"></label>
             </div>
 

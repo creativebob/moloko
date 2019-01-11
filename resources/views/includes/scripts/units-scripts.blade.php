@@ -5,17 +5,9 @@
         var id = $(this).val();
         // alert(id);
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/get_units_list',
-            type: "POST",
-            data: {units_category_id: id},
-            success: function(html){
-                $('#units-list').html(html);
-                $('#units-list').prop('disabled', false);
-            }
+        $.post('/admin/get_units_list', {units_category_id: id}, function(html){
+            $('#units-list').html(html);
+            $('#units-list').prop('disabled', false);
         });
     });
 

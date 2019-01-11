@@ -60,6 +60,9 @@
 {{-- Скрипт системной записи --}}
 @include('includes.scripts.ajax-system')
 
+{{-- Скрипт чекбоксов --}}
+@include('includes.scripts.checkbox_control_menu')
+
 <script type="text/javascript">
     $(function() {
 

@@ -66,7 +66,12 @@ $drop = 1;
         @if ($drop == 1)
         <div class="sprite icon-drop"></div>
         @endif
-        <input type="checkbox" name="" id="check-{{ $category->id }}">
+        <input type="checkbox" name="" id="check-{{ $category->id }}" class="check-booklist"
+        @if(!empty($filter['booklist']['booklists']['default']))
+        @if (in_array($category->id, $filter['booklist']['booklists']['default'])) checked
+        @endif
+        @endif
+        >
         <label class="label-check white" for="check-{{ $category->id }}"></label>
     </div>
 

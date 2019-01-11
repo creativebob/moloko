@@ -87,10 +87,14 @@ class CityController extends Controller
             return view('cities.cities_list', ['regions' => $regions, 'id' => $request->id, 'count' => $count]);
         }
 
+        $filter = setFilter($this->entity_alias, $request, [
+            'booklist'              // Списки пользователя
+        ]);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('cities.index', compact('regions', 'page_info', 'count'));
+        return view('cities.index', compact('regions', 'page_info', 'count', 'filter'));
     }
 
     public function create()

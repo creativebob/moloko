@@ -163,10 +163,10 @@ class IndicatorController extends Controller
         $indicator->name = $request->name;
         $indicator->description = $request->description;
 
-        $indicator->indicators_category_id = $request->indicators_category_id;
-        $indicator->entity_id = $request->entity_id;
-        $indicator->unit_id = $request->unit_id;
-        $indicator->period_id = $request->period_id;
+        // $indicator->indicators_category_id = $request->indicators_category_id;
+        // $indicator->entity_id = $request->entity_id;
+        // $indicator->unit_id = $request->unit_id;
+        // $indicator->period_id = $request->period_id;
 
         // Системная запись
         $indicator->system_item = $request->system_item;

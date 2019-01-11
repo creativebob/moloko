@@ -25,7 +25,8 @@
 @section('scripts')
   @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
-  
+  @include('includes.scripts.source_services')
+
 @endsection
 
 

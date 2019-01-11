@@ -74,7 +74,7 @@
       @endif
   </td>
   <td class="td-description">{{ $account->description }} </td>
-  <td class="td-source">{{ $account->source->name }}</td>
+  <td class="td-source">{{ $account->source_service->source->name . ' ' . $account->source_service->name }}</td>
   <td class="td-login">{{ $account->login }}</td>
   <td class="td-alias">{{ $account->alias }}</td>
 
@@ -131,4 +131,6 @@
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
 @include('includes.scripts.delete-ajax-script')
+
+
 @endsection
