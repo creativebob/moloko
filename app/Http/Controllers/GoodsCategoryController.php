@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 
 // Подключаем трейт записи и обновления категорий
 use App\Http\Controllers\Traits\CategoryControllerTrait;
+use App\Http\Controllers\Traits\DirectionTrait;
 
 class GoodsCategoryController extends Controller
 {
@@ -35,6 +36,7 @@ class GoodsCategoryController extends Controller
 
     // Используем трейт записи и обновления категорий
     use CategoryControllerTrait;
+    use DirectionTrait;
 
     public function index(Request $request)
     {
@@ -79,6 +81,9 @@ class GoodsCategoryController extends Controller
                 'type' => $this->type,
                 'id' => $request->id,
                 'nested' => 'goods_products_count',
+                'filter' => setFilter($this->entity_alias, $request, [
+                    'booklist'
+                ]),
             ]
         );
     }
@@ -145,7 +150,8 @@ class GoodsCategoryController extends Controller
             },
             'compositions.product.unit',
             'compositions',
-            'manufacturers'
+            'manufacturers',
+            'direction'
         ])
         ->withCount('one_metrics', 'set_metrics', 'compositions')
         ->moderatorLimit($answer)
@@ -226,6 +232,11 @@ class GoodsCategoryController extends Controller
             $goods_categories = GoodsCategory::whereCategory_id($id)
             ->update(['goods_mode_id' => $request->goods_mode_id]);
         }
+
+        // dd($request);
+
+        // Проверка на направление
+        $this->checkDirection($request, $goods_category);
 
         $goods_category->save();
 

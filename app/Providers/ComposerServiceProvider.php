@@ -13,6 +13,8 @@ use App\Http\ViewComposers\CheckerComposer;
 
 use App\Http\ViewComposers\UnitsCategoriesComposer;
 use App\Http\ViewComposers\UnitsComposer;
+use App\Http\ViewComposers\SourceWithSourceServicesComposer;
+use App\Http\ViewComposers\SourceServicesComposer;
 use App\Http\ViewComposers\PeriodsComposer;
 use App\Http\ViewComposers\BooklistTypesComposer;
 
@@ -38,6 +40,7 @@ use App\Http\ViewComposers\AlbumsCategoriesSelectComposer;
 use App\Http\ViewComposers\AlbumsComposer;
 
 use App\Http\ViewComposers\indicatorsCategoriesSelectComposer;
+use App\Http\ViewComposers\DirectionsComposer;
 
 use App\Http\ViewComposers\UsersComposer;
 use App\Http\ViewComposers\StaffComposer;
@@ -66,6 +69,10 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer(['includes.selects.units_categories'], UnitsCategoriesComposer::class);
         view()->composer(['includes.selects.units'], UnitsComposer::class);
+
+        view()->composer(['includes.selects.source_with_source_services'], SourceWithSourceServicesComposer::class);
+        view()->composer(['includes.selects.source_services'], SourceServicesComposer::class);
+
         view()->composer(['includes.selects.periods'], PeriodsComposer::class);
 
         view()->composer(['includes.selects.booklist_types'], BooklistTypesComposer::class);
@@ -110,6 +117,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.albums', AlbumsComposer::class);
 
         view()->composer('includes.selects.indicators_categories', IndicatorsCategoriesSelectComposer::class);
+        view()->composer('includes.selects.directions', DirectionsComposer::class);
 
         view()->composer('includes.selects.entities_statistics', EntitiesStatisticsSelectComposer::class);
     }

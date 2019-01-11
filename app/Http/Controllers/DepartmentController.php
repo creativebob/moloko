@@ -86,17 +86,6 @@ class DepartmentController extends Controller
         // dd($departments);
         // ->groupBy('parent_id');
 
-
-        // -----------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
-        // -----------------------------------------------------------------------------------------------------------
-
-        $filter = setFilter($this->entity_alias, $request, [
-            'booklist'              // Списки пользователя
-        ]);
-
-        // Окончание фильтра -----------------------------------------------------------------------------------------
-
         // Создаем масив где ключ массива является ID меню
         // $departments_rights = [];
         // $departments_rights = $departments->keyBy('id');
@@ -122,9 +111,11 @@ class DepartmentController extends Controller
             [
                 'departments' => $departments,
                 'page_info' => pageInfo($this->entity_alias),
-                'filter' => $filter,
                 'class' => $this->class,
                 'type' => $this->type,
+                'filter' => setFilter($this->entity_alias, $request, [
+                    'booklist'
+                ]),
             ]
         );
     }

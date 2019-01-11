@@ -561,6 +561,12 @@ Route::post('/rule_delete', 'RuleController@ajax_destroy')->middleware('auth');
 Route::resource('/posts', 'PostController')->middleware('auth');
 
 
+// ---------------------------------------- Источники --------------------------------------------
+
+
+// Проверка на существование аккаунта
+Route::any('/get_source_services_list', 'SourceServiceController@get_source_services_list')->middleware('auth');
+
 // ---------------------------------------- Аккаунты --------------------------------------------
 
 // Основные методы

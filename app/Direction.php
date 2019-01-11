@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
+// use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Scopes для главного запроса
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
@@ -13,23 +13,23 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
+use App\Scopes\Traits\SuppliersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-
 
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class Account extends Model
+class Direction extends Model
 {
-
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
-    use SoftDeletes;
+    use Notifiable;
+    // use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -38,6 +38,7 @@ class Account extends Model
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
+    use SuppliersTraitScopes;
 
     // Фильтры
     use Filter;
@@ -47,28 +48,16 @@ class Account extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'name',
-        'domain',
         'company_id',
-        'appends',
+        'category_id',
+        'category_type',
+        'author_id',
     ];
 
-    // Получаем компанию.
-    public function company()
+    // Категории
+    public function category()
     {
-        return $this->belongsTo('App\Company');
-    }
-
-    // Получаем автора
-    public function author()
-    {
-        return $this->belongsTo('App\User', 'author_id');
-    }
-
-    // Получаем источник (сервис)
-    public function source_service()
-    {
-        return $this->belongsTo('App\SourceService');
+        return $this->morphTo();
     }
 
 }

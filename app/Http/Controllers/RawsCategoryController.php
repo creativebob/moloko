@@ -74,6 +74,9 @@ class RawsCategoryController extends Controller
                 'type' => $this->type,
                 'id' => $request->id,
                 'nested' => 'raws_products_count',
+                'filter' => setFilter($this->entity_alias, $request, [
+                    'booklist'
+                ]),
             ]
         );
     }

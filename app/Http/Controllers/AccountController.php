@@ -4,40 +4,31 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Account;
-use App\User;
-use App\Page;
-use App\Booklist;
-use App\Source;
-
-// Модели которые отвечают за работу с правами + политики
-use App\Policies\AccountPolicy;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Auth;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\AccountRequest;
 
-// Прочие необходимые классы
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cookie;
-
-// use Illuminate\Support\Facades\Storage;
-// use Carbon\Carbon;
-// use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'accounts';
-    protected $entity_dependence = false;
+    // Настройки сконтроллера
+    public function __construct(Account $account)
+    {
+        $this->middleware('auth');
+        $this->account = $account;
+        $this->class = Account::class;
+        $this->model = 'App\Account';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+    }
 
     public function index(Request $request)
     {
 
-        // Включение контроля активного фильтра 
-        $filter_url = autoFilter($request, $this->entity_name);
+        // Включение контроля активного фильтра
+        $filter_url = autoFilter($request, $this->entity_alias);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Подключение политики
@@ -47,23 +38,25 @@ class AccountController extends Controller
         $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // -----------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------
 
-        $accounts = Account::moderatorLimit($answer)
+        $accounts = Account::with('source_service.source')
+        ->moderatorLimit($answer)
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
+        // dd($accounts);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             'booklist'              // Списки пользователя
         ]);
 
@@ -71,7 +64,7 @@ class AccountController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         return view('accounts.index', compact('accounts', 'page_info', 'filter', 'user'));
     }
@@ -80,72 +73,58 @@ class AccountController extends Controller
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Account::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $account = new Account;
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        // // Подключение политики
-        // $this->authorize(getmethod('index'), PlacesType::class);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        // $answer_source = operator_right('source', 'false', 'index');
-
-        // Получаем список стран
-        $sources_list = Source::get()->pluck('name', 'id');
-
-        return view('accounts.create', compact('account', 'page_info', 'sources_list'));
+        return view('accounts.create', [
+            'account' => new $this->class,
+            'page_info' => pageInfo($this->entity_alias),
+        ]);
     }
 
     public function store(AccountRequest $request)
     {
+
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Account::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-        $user_id = $user->id;
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $account = new Account;
+
         $account->name = $request->name;
+        $account->source_service_id = $request->source_service_id;
         $account->description = $request->description;
         $account->alias = $request->alias;
-        
-        $account->name = $request->name;
-        $account->source_id = $request->source;
+
         $account->login = $request->login;
         $account->password = bcrypt($request->password);
+
         $account->api_token = $request->api_token;
         $account->secret = $request->secret;
-
-        if($user->company_id != null){
-            $account->company_id = $user->company_id;
-        } else {
-            $account->company_id = null;
-        };
-
-        $account->author_id = $user->id;
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
             $account->moderation = 1;
-        };
+        }
+
+        $account->system_item = $request->system_item;
+        $account->display = $request->display;
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        $account->company_id = $user->company_id;
+        $account->author_id = hideGod($user);
 
         $account->save();
 
         // Если запись удачна - будем записывать связи
         if($account){
-
+            return redirect()->route('accounts.index');
         } else {
             abort(403, 'Ошибка записи помещения');
-        };
-
-        return redirect('/admin/accounts');
+        }
     }
 
 
@@ -156,7 +135,7 @@ class AccountController extends Controller
         $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $account = Account::moderatorLimit($answer)->findOrFail($id);
@@ -175,21 +154,19 @@ class AccountController extends Controller
     public function edit(Request $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $account = Account::moderatorLimit($answer)->findOrFail($id);
-
-        // Получаем список сервисов
-        $sources_list = Source::get()->pluck('name', 'id');
+        // dd($account);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $account);
 
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        return view('accounts.edit', compact('account', 'page_info', 'sources_list'));
+        return view('accounts.edit', [
+            'account' => $account->load('source_service'),
+            'page_info' => pageInfo($this->entity_alias),
+        ]);
     }
 
 
@@ -200,20 +177,19 @@ class AccountController extends Controller
         $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $account = Account::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize('update', $account);
+        $this->authorize(getmethod(__FUNCTION__), $account);
 
         $account->name = $request->name;
         $account->description = $request->description;
         $account->alias = $request->alias;
-        
-        $account->name = $request->name;
-        $account->source_id = $request->source;
+        $account->source_service_id = $request->source_service_id;
+
         $account->login = $request->login;
 
         // Если пришел не пустой пароль
@@ -224,24 +200,26 @@ class AccountController extends Controller
         $account->api_token = $request->api_token;
         $account->secret = $request->secret;
 
+        $account->system_item = $request->system_item;
+        $account->display = $request->display;
+
+        $account->editor_id = hideGod($request->user());
+
         $account->save();
 
         // Если запись удачна - будем записывать связи
-        if($account){
-
+        if ($account){
+            return redirect()->route('accounts.index');
         } else {
             abort(403, 'Ошибка записи аккаунта');
-        };
-
-        return redirect('/admin/accounts');
-
+        }
     }
 
 
     public function destroy(Request $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $account = Account::moderatorLimit($answer)->findOrFail($id);
@@ -249,10 +227,18 @@ class AccountController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $account);
 
-        // Удаляем пользователя с обновлением
-        $account = Account::destroy($id);
+        // Скрываем бога
+        $account->editor_id = hideGod($request->user());
+        $account->save();
 
-        if($account) {return redirect('/admin/accounts');} else {abort(403,'Что-то пошло не так!');};
+        // Удаляем пользователя с обновлением
+        $account->delete();
+
+        if ($account) {
+            return redirect()->route('accounts.index');
+        } else {
+            abort(403,'Что-то пошло не так!');
+        }
     }
 
 }

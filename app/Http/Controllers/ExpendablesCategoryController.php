@@ -76,6 +76,9 @@ class ExpendablesCategoryController extends Controller
                 'type' => $this->type,
                 'id' => $request->id,
                 'nested' => 'companies_count',
+                'filter' => setFilter($this->entity_alias, $request, [
+                    'booklist'
+                ]),
             ]
         );
     }

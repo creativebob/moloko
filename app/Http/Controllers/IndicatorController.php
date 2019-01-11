@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 // Модели
 use App\Indicator;
 
+use App\Direction;
+
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\IndicatorRequest;
@@ -51,7 +53,7 @@ class IndicatorController extends Controller
         );
     }
 
-    public function create()
+    public function create(Request $request)
     {
 
         // Подключение политики
@@ -93,6 +95,15 @@ class IndicatorController extends Controller
         $indicator->system_item = $request->system_item;
         $indicator->display = $request->display;
 
+        if (isset($request->direction_id)) {
+
+            $direction = Direction::findOrFail($request->direction_id);
+            $indicator->category_id = $direction->category_id;
+            $indicator->category_type = $direction->category_type;
+
+        }
+
+
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
         $indicator->company_id = $user->company_id;
@@ -127,8 +138,11 @@ class IndicatorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $indicator);
 
+        // $indicator = $indicator->load('category', 'entity', 'indicators_category');
+        // dd($indicator);
+
         return view('indicators.edit', [
-            'indicator' => $indicator,
+            'indicator' => $indicator->load('category', 'entity', 'indicators_category'),
             'page_info' => pageInfo($this->entity_alias),
         ]);
     }
@@ -149,10 +163,10 @@ class IndicatorController extends Controller
         $indicator->name = $request->name;
         $indicator->description = $request->description;
 
-        $indicator->indicators_category_id = $request->indicators_category_id;
-        $indicator->entity_id = $request->entity_id;
-        $indicator->unit_id = $request->unit_id;
-        $indicator->period_id = $request->period_id;
+        // $indicator->indicators_category_id = $request->indicators_category_id;
+        // $indicator->entity_id = $request->entity_id;
+        // $indicator->unit_id = $request->unit_id;
+        // $indicator->period_id = $request->period_id;
 
         // Системная запись
         $indicator->system_item = $request->system_item;

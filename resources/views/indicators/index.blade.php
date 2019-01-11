@@ -74,8 +74,9 @@
                         @endcannot
 
                     </td>
-                    <td class="td-category">{{ isset($indicator->category) ? $indicator->category->name : 'Нет' }}</td>
-                    <td class="td-description">{{ $indicator->description or ''}}</td>
+
+                    <td class="td-category">{{ isset($indicator->indicators_category) ? $indicator->indicators_category->name : 'Нет' }}</td>
+                    <td class="td-description">{{ $indicator->description }}</td>
 
                     <td class="td-entity">{{ isset($indicator->entity) ? $indicator->entity->name : '' }}</td>
 

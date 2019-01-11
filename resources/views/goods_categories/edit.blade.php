@@ -101,6 +101,10 @@
 
                     </div>
 
+                    @if ($goods_category->parent_id == null)
+                        @include('includes.control.direction', ['direction' => isset($goods_category->direction) ])
+                    @endif
+
                     @include('includes.control.checkboxes', ['item' => $goods_category])
 
                     {{-- Кнопка --}}

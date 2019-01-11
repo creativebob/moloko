@@ -22,8 +22,8 @@ class CreateAccountsTable extends Migration
 
             $table->string('alias')->nullable()->index()->comment('Алиас аккаунта');
 
-            $table->integer('source_id')->unsigned()->nullable()->comment('Id источника - внешний сервис');
-            $table->foreign('source_id')->references('id')->on('sources');
+            $table->integer('source_service_id')->unsigned()->nullable()->comment('Id источника - внешний сервис');
+            $table->foreign('source_service_id')->references('id')->on('source_services');
 
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');

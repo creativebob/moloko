@@ -36,6 +36,8 @@ class CreateIndicatorsTable extends Migration
 
             $table->boolean('change_allowed')->default(0)->comment('Разрешение на изменение периода: true - разрешено, false - запрещено');
 
+            $table->morphs('category')->nullable();
+
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
