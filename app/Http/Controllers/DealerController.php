@@ -72,7 +72,7 @@ class DealerController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
 
-        $dealers = Dealer::with('client.client.main_phones', 'client.client.director', 'client.orders', 'client.client.location')
+        $dealers = Dealer::with('client.client.main_phones', 'client.orders')
         ->companiesLimit($answer)
         ->moderatorLimit($answer)
         ->authors($answer)
