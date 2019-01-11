@@ -75,6 +75,7 @@ class DatabaseSeeder extends Seeder
 
         // Списки
         $this->call(BooklistsTableSeeder::class);
+        $this->call(BooklistTypesTableSeeder::class);
         $this->call(BooklistUserTableSeeder::class);
         $this->call(ListItemsTableSeeder::class);
 

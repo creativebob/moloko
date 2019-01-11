@@ -1070,13 +1070,17 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 .inputs .input-group-label:first-child {
   margin-top: 0.25rem;
   margin-bottom: 0.85rem;
-  height: 26px;
+  height: 28px;
   color: #666666;
   background-color: #f5f5f5;
   font-size: 0.8rem;
   padding: 5px 10px 5px 10px;
   border: 1px solid #ccc;
   box-shadow: none;
+  border-right: none;
+}
+.inputs select.select-in-booklist {
+  width: 160px;
 }
 .inputs .input-group-button input {
   background-color: #000000;

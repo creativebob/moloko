@@ -146,6 +146,7 @@
 
         $filter[$filter_name]['list_select'] = $list_select; 
         $filter[$filter_name]['title'] = $title; // Назавние фильтра
+        $filter[$filter_name]['entity_alias'] = $entity_name; // Сущность буклиста
 
         return $filter;
     }

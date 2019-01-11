@@ -14,7 +14,7 @@ use App\Http\ViewComposers\CheckerComposer;
 use App\Http\ViewComposers\UnitsCategoriesComposer;
 use App\Http\ViewComposers\UnitsComposer;
 use App\Http\ViewComposers\PeriodsComposer;
-
+use App\Http\ViewComposers\BooklistTypesComposer;
 
 use App\Http\ViewComposers\ManufacturersComposer;
 use App\Http\ViewComposers\SupplierSelectComposer;
@@ -68,12 +68,13 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer(['includes.selects.units'], UnitsComposer::class);
         view()->composer(['includes.selects.periods'], PeriodsComposer::class);
 
+        view()->composer(['includes.selects.booklist_types'], BooklistTypesComposer::class);
+
         view()->composer('includes.selects.manufacturers', ManufacturersComposer::class);
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);
 
         // Conflict: то, что осталось в нижней части
         // view()->composer(['includes.selects.manufacturers', 'includes.lists.manufacturers'], ManufacturersComposer::class);
-
 
         view()->composer('includes.selects.goods_modes', GoodsModesComposer::class);
         view()->composer('includes.selects.raws_modes', RawsModesComposer::class);

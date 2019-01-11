@@ -13,8 +13,8 @@
 @section('content-count')
 
     {{-- Количество элементов --}}
-    @if(!empty($plans))
-        {{ num_format($plans->total(), 0) }}
+    @if(!empty($indicators))
+        {{ num_format($indicators->count(), 0) }}
     @endif
 @endsection
 
