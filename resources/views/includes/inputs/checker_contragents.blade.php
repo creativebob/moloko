@@ -1,7 +1,6 @@
 {{-- Чекер --}}
 
-
-@if(!empty($items))
+@if($contragents->isNotEmpty())
 <div class="checkboxer-wrap {{$name}}">
 	<div class="checkboxer-toggle" data-toggle="{{$name}}-dropdown-bottom-left" data-name="{{$name}}">
 		<div class="checkboxer-title">
@@ -23,10 +22,12 @@
 
 	<ul class="checkboxer-menu {{$name}}" data-name="{{$name}}">
 
-			@foreach ($items as $item)
+
+
+			@foreach ($contragents as $contragent)
 				<li>
-					{{ Form::checkbox($name . '[]', $item->id, null, ['id'=>$name.'-'.$item->id]) }}
-					<label for="{{$name}}-{{ $item->id }}"><span class="wrap-label-checkboxer">{{ $item->name }}</span></label>
+					{{ Form::checkbox($name . '[]', $contragent->id, null, ['id'=>$name.'-'.$contragent->id]) }}
+					<label for="{{$name}}-{{ $contragent->id }}"><span class="wrap-label-checkboxer">{{ $contragent->name }}</span></label>
 				</li>
 			@endforeach
 

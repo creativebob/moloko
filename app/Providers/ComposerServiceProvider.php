@@ -65,7 +65,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.legal_forms', LegalFormsSelectComposer::class);
         view()->composer('includes.inputs.checker', CheckerComposer::class);
 
-        view()->composer('includes.inputs.checker_contragents', ContragentsComposer::class);
+        view()->composer(['includes.inputs.checker_contragents', 'includes.selects.contragents'], ContragentsComposer::class);
 
         view()->composer(['includes.selects.units_categories'], UnitsCategoriesComposer::class);
         view()->composer(['includes.selects.units'], UnitsComposer::class);
