@@ -77,22 +77,23 @@
 
 
 
-<div class="input-group inputs small-12 cell">
+<div class="input-group inputs small-12 cell wrap-add-list-metric">
 
 		{{ Form::text('value', null, ['id' => $set_status.'-value', 'placeholder' => 'Введите значение']) }}
-
 
 	  <div class="input-group-button">
 		<a class="button add-value">Добавить в список</a>
 	  </div>
 </div>
 
+<div class="small-12 cell wrap-table-list-metric">
+	<table id="{{ $set_status }}-values-table" class="tablesorter unstriped table-list-metric">
+		<tbody id="{{ $set_status }}-values-tbody">
 
-<table id="{{ $set_status }}-values-table" class="tablesorter">
-	<tbody id="{{ $set_status }}-values-tbody">
+		</tbody>
+	</table>
+</div>
 
-	</tbody>
-</table>
 {{ Form::hidden('type', 'list') }}
 
 @break

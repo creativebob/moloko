@@ -3110,6 +3110,20 @@ a#task-toggle {
   height: 50px;
 }
 
+.table-list-metric {
+  text-align: left;
+}
+.table-list-metric .td-drop, .table-list-metric .td-delete {
+  width: 33px;
+}
+.table-list-metric td {
+  padding: 0.1rem 0.1rem 0.1rem;
+}
+
+.wrap-add-list-metric {
+  margin-bottom: 0px;
+}
+
 #units-block div {
   display: none;
 }
