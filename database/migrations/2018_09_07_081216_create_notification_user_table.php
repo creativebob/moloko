@@ -17,10 +17,10 @@ class CreateNotificationUserTable extends Migration
             $table->increments('id');
 
             $table->integer('notification_id')->nullable()->unsigned()->comment('ID оповещения');
-            // $table->foreign('notification_id')->references('id')->on('notifications');
+            $table->foreign('notification_id')->references('id')->on('notifications');
 
             $table->integer('user_id')->nullable()->unsigned()->comment('ID пользователя');
-            // $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
 
         });
     }

@@ -17,10 +17,10 @@ class CreateEstimatesTable extends Migration
             $table->increments('id');
 
             $table->integer('lead_id')->unsigned()->nullable()->comment('Id лида');
-            // $table->foreign('lead_id')->references('id')->on('leads');
+            $table->foreign('lead_id')->references('id')->on('leads');
 
             $table->integer('client_id')->unsigned()->nullable()->comment('Id пользователя');
-            // $table->foreign('client_id')->references('id')->on('users');
+            $table->foreign('client_id')->references('id')->on('users');
 
             $table->text('description')->nullable()->comment('Описание');
 
@@ -32,7 +32,7 @@ class CreateEstimatesTable extends Migration
 
             // Общие настройки
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
-            // $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
@@ -40,7 +40,7 @@ class CreateEstimatesTable extends Migration
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-            // $table->foreign('author_id')->references('id')->on('users');
+            $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 

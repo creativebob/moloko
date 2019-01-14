@@ -16,12 +16,8 @@ class CreatePriceRulesTable extends Migration
         Schema::create('price_rules', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
-            // $table->foreign('company_id')->references('id')->on('companies');
-
             $table->string('name')->nullable()->comment('Имя ценовой политики');
             $table->text('description')->nullable()->comment('Описание ценовой политики');
-
 
 
             $table->boolean('margin_status')->comment('Статус наценки');
@@ -34,7 +30,6 @@ class CreatePriceRulesTable extends Migration
             $table->decimal('margin_currency_min', 10, 2)->nullable()->default(0)->comment('Минимум (валюта) наценки');
             $table->decimal('margin_currency_max', 10, 2)->nullable()->default(10000000)->comment('Максимум (валюта) наценки');
             $table->decimal('margin_currency_default', 10, 2)->nullable()->default(0)->comment('Умолчание (валюта) наценки');
-
 
 
 
@@ -51,7 +46,6 @@ class CreatePriceRulesTable extends Migration
 
 
 
-
             $table->boolean('discount_status')->comment('Статус скидки');
             $table->boolean('discount_priority')->default(true)->comment('Приоритет процента у скидки');
 
@@ -65,10 +59,9 @@ class CreatePriceRulesTable extends Migration
 
 
 
-
             $table->boolean('extra_discount_status')->comment('Статус дополнительной наценки');
             $table->boolean('extra_discount_priority')->default(true)->comment('Приоритет процента');
-            
+
             $table->decimal('extra_discount_percent_min', 10, 2)->nullable()->default(0)->comment('Минимум (проценты) дополнительной скидки');
             $table->decimal('extra_discount_percent_max', 10, 2)->nullable()->default(10000)->comment('Максимум (проценты) дополнительной скидки');
             $table->decimal('extra_discount_percent_default', 10, 2)->nullable()->default(0)->comment('Умолчание (проценты) дополнительной скидки');
@@ -79,19 +72,23 @@ class CreatePriceRulesTable extends Migration
 
 
 
+            // Общие настройки
+            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+            $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
+            $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
-            $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
 
             $table->timestamps();
-            $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
             $table->softDeletes();
+
         });
     }
 
