@@ -6,7 +6,6 @@ namespace App\Http\Controllers;
 use App\Region;
 use App\Area;
 use App\City;
-use App\Page;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -113,22 +112,26 @@ class CityController extends Controller
             // Подключение политики
             $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-            // Получаем данные для авторизованного пользователя
-            $user = $request->user();
-
-            // Скрываем бога
-            $user_id = hideGod($user);
-
             // Если пришла область
             if (isset($request->region_name)) {
 
                 // Смотрим область
-                $region = Region::firstOrCreate(['name' => $request->region_name], ['system_item' => 1, 'author_id' => $user_id]);
+                $region = Region::firstOrCreate([
+                    'name' => $request->region_name
+                ], [
+                    'system_item' => 1,
+                    'author_id' => 1
+                ]);
                 $region_id = $region->id;
             } else {
                 // Если пришел город без области (Москва, Питер)
                 // Смотрим область
-                $region = Region::firstOrCreate(['name' => 'Города Федерального значения'], ['system_item' => 1, 'author_id' => $user_id]);
+                $region = Region::firstOrCreate([
+                    'name' => 'Города Федерального значения'
+                ], [
+                    'system_item' => 1,
+                    'author_id' => 1
+                ]);
                 $region_id = $region->id;
             }
 
@@ -136,16 +139,25 @@ class CityController extends Controller
             if (isset($request->area_name)) {
 
                 // Смотрим район
-                $area = Area::firstOrCreate(['name' => $request->area_name], ['region_id' => $region_id, 'system_item' => 1, 'author_id' => $user_id]);
+                $area = Area::firstOrCreate([
+                    'name' => $request->area_name,
+                    'region_id' => $region_id
+                ], [
+                    'system_item' => 1,
+                    'author_id' => 1
+                ]);
                 // Берем id записанного района
-                $region_id = 0;
+                $region_id = null;
                 $area_id = $area->id;
             } else {
-                $area_id = 0;
+                $area_id = null;
             }
 
             // Записываем город, его наличие в базе мы проверили ранее
             $city = new City;
+
+            $city->name = $request->city_name;
+
             // $city->code = $request->code;
             $city_name = $request->city_name;
 
@@ -155,16 +167,12 @@ class CityController extends Controller
                 $count++;
                 $city_name = $city_name . $count;
             }
+
             $city->alias = Transliterate::make($city_name, ['type' => 'url', 'lowercase' => true]);
             $city->vk_external_id = $request->vk_external_id;
 
-            if ($region_id != 0) {
-                $city->region_id = $region_id;
-            }
-
-            if ($area_id != 0) {
-                $city->area_id = $area_id;
-            }
+            $city->region_id = $region_id;
+            $city->area_id = $area_id;
 
             $city->author_id = 1;
             $city->system_item = 1;
