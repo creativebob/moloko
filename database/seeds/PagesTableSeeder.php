@@ -352,6 +352,7 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => null,
             ],
+
             [
                 'name' => 'Производители',
                 'site_id' => 1,
@@ -654,6 +655,42 @@ class PagesTableSeeder extends Seeder
                 'title' => 'Показатели',
                 'description' => 'Показатели',
                 'alias' => 'indicators',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
+            [
+                'name' => 'Расчеты',
+                'site_id' => 1,
+                'title' => 'Расчеты',
+                'description' => 'Расчеты',
+                'alias' => 'estimates',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
+            [
+                'name' => 'Дилеры',
+                'site_id' => 1,
+                'title' => 'Дилеры',
+                'description' => 'Дилеры',
+                'alias' => 'dealers',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
+            [
+                'name' => 'Банки',
+                'site_id' => 1,
+                'title' => 'Банки',
+                'description' => 'Банки',
+                'alias' => 'banks',
                 'company_id' => null,
                 'system_item' => 1,
                 'author_id' => 1,

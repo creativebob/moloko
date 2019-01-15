@@ -86,7 +86,7 @@ class DatabaseSeeder extends Seeder
         // Альбомы
         $this->call(AlbumsCategoriesTableSeeder::class);
         $this->call(AlbumsTableSeeder::class);
-        $this->call(EntitySettingsTableSeeder::class);
+        $this->call(PhotoSettingsTableSeeder::class);
 
         // Режимы
         $this->call(ServicesModesTableSeeder::class);
