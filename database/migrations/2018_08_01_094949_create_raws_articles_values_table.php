@@ -17,12 +17,11 @@ class CreateRawsArticlesValuesTable extends Migration
             $table->increments('id');
 
             $table->integer('raws_article_id')->nullable()->unsigned()->comment('ID метрики');
-            $table->foreign('raw_article_id')->references('id')->on('raws_articles');
+            $table->foreign('raws_article_id')->references('id')->on('raws_articles');
 
-            $table->morphs('raws_articles_values');
+            $table->morphs('raws_articles_values', 'raws_art_val');
 
             $table->string('value')->nullable()->comment('Значение');
-
 
         });
     }

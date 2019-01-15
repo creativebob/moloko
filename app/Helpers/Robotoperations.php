@@ -10,7 +10,6 @@ function add_note($item, $body){
 	$note->body = $body;
 	$note->company_id = $item->company_id;
 	$note->author_id = 1;
-	$note->save();
 
 	$item->notes()->save($note);
 
@@ -32,8 +31,6 @@ function send_message($destinations, $message) {
 			}
 		}
 	}
-
-
 }
 
 

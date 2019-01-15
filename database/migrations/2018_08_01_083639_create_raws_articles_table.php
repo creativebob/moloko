@@ -26,14 +26,12 @@ class CreateRawsArticlesTable extends Migration
 
             $table->text('description')->nullable()->comment('Описание артикула товара');
 
-            $table->integer('draft')->nullable()->unsigned()->comment('Статус шаблона');
-            $table->integer('archive')->nullable()->unsigned()->comment('Статус архива');
-
             $table->string('internal')->nullable()->comment('Имя генерируемого артикула');
 
             $table->integer('metrics_count')->nullable()->unsigned()->index()->comment('Количество метрик у артикула');
             $table->integer('compositions_count')->nullable()->unsigned()->index()->comment('Количество состава у артикула');
 
+            $table->integer('draft')->nullable()->unsigned()->comment('Статус шаблона');
             $table->integer('archive')->nullable()->unsigned()->comment('Статус архива');
 
 

@@ -33,7 +33,7 @@ class CreateIndicatorsTable extends Migration
 
             $table->boolean('change_allowed')->default(0)->comment('Разрешение на изменение периода: true - разрешено, false - запрещено');
 
-            $table->morphs('category')->nullable();
+            $table->morphs('category');
 
 
             // Общие настройки

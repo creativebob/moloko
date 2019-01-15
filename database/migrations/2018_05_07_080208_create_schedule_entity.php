@@ -15,7 +15,7 @@ class CreateScheduleEntity extends Migration
             $table->integer('schedule_id')->nullable()->unsigned()->comment('Id графика работ (расписания)');
             $table->foreign('schedule_id')->references('id')->on('schedules');
 
-            $table->morphs('schedule_entities');
+            $table->morphs('schedule_entities', 'sched_ent');
 
             $table->string('mode')->index()->nullable()->comment('Режим');
         });

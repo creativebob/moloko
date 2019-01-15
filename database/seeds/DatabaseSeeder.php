@@ -7,13 +7,6 @@ class DatabaseSeeder extends Seeder
 
     public function run()
     {
-        // Сферы деятельности компаний и должностей
-        $this->call(SectorsTableSeeder::class);
-        $this->call(LegalFormsTableSeeder::class);
-
-        // Графики работы
-        $this->call(SchedulesTableSeeder::class);
-        $this->call(WorktimesTableSeeder::class);
 
         // Наполнение локализаций
         $this->call(CountriesTableSeeder::class);
@@ -24,25 +17,21 @@ class DatabaseSeeder extends Seeder
         // Локации
         $this->call(LocationsTableSeeder::class);
 
-        // Пользователи и компании
-        $this->call(CompaniesTableSeeder::class);
-
-        // Филиалы / отделы
-        $this->call(DepartmentsTableSeeder::class);
+        // Пользователи
         $this->call(UsersTableSeeder::class);
 
         // Единицы измерения
         $this->call(UnitsCategoriesTableSeeder::class);
         $this->call(UnitsTableSeeder::class);
 
-        // Сайты, страницы
-        $this->call(SitesTableSeeder::class);
-        $this->call(PagesTableSeeder::class);
+        // Сферы деятельности компаний и должностей
+        $this->call(SectorsTableSeeder::class);
+        $this->call(LegalFormsTableSeeder::class);
 
-        $this->call(DepartmentSiteTableSeeder::class);
+        // Графики работы
+        $this->call(SchedulesTableSeeder::class);
+        $this->call(WorktimesTableSeeder::class);
 
-        // Должности
-        $this->call(PositionsTableSeeder::class);
 
         // Сущности
         $this->call(EntitiesTableSeeder::class);
@@ -52,7 +41,24 @@ class DatabaseSeeder extends Seeder
 
         // Создаем связи между действиями и сущностями
         $this->call(ActionEntityTableSeeder::class);
+
+        // Сайты, страницы
+        $this->call(SitesTableSeeder::class);
+        $this->call(PagesTableSeeder::class);
+
+        // Меню
+        $this->call(NavigationsCategoriesTableSeeder::class);
+        $this->call(NavigationsTableSeeder::class);
+        $this->call(MenusTableSeeder::class);
+        $this->call(MenuSiteTableSeeder::class);
+
+        // Связь страниц и сущностей
         $this->call(EntityPageTableSeeder::class);
+        // Связь сайта с филиалами
+        $this->call(DepartmentSiteTableSeeder::class);
+
+        // Должности
+        $this->call(PositionsTableSeeder::class);
 
         // Наполнение таблиц с правами
         $this->call(CategoryRightsTableSeeder::class);
@@ -67,20 +73,11 @@ class DatabaseSeeder extends Seeder
         $this->call(StaffTableSeeder::class);
         $this->call(EmployeesTableSeeder::class);
 
-        // Меню
-        $this->call(NavigationsCategoriesTableSeeder::class);
-        $this->call(NavigationsTableSeeder::class);
-        $this->call(MenusTableSeeder::class);
-        $this->call(MenuSiteTableSeeder::class);
-
         // Списки
         $this->call(BooklistsTableSeeder::class);
         $this->call(BooklistTypesTableSeeder::class);
         $this->call(BooklistUserTableSeeder::class);
         $this->call(ListItemsTableSeeder::class);
-
-        // Папки
-        $this->call(FolderTableSeeder::class);
 
         // Новости
         $this->call(NewsTableSeeder::class);
@@ -91,11 +88,10 @@ class DatabaseSeeder extends Seeder
         $this->call(AlbumsTableSeeder::class);
         $this->call(EntitySettingsTableSeeder::class);
 
-        // Услуги
+        // Режимы
         $this->call(ServicesModesTableSeeder::class);
-        $this->call(ServicesCategoriesTableSeeder::class);
-        $this->call(ServicesProductsTableSeeder::class);
-        $this->call(ServicesTableSeeder::class);
+        $this->call(GoodsModesTableSeeder::class);
+        $this->call(RawsModesTableSeeder::class);
 
         // Связь: Расписания с сущностями
         $this->call(ScheduleEntityTableSeeder::class);
@@ -109,9 +105,6 @@ class DatabaseSeeder extends Seeder
 
         // Сиды к новым миграциям
         $this->call(ServicesTypesTableSeeder::class);
-        $this->call(GoodsModesTableSeeder::class);
-
-        $this->call(RawsModesTableSeeder::class);
 
         // Помещения
         $this->call(PlacesTypesTableSeeder::class);

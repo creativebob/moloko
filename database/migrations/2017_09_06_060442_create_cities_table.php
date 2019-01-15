@@ -36,7 +36,7 @@ class CreateCitiesTable extends Migration
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-            $table->foreign('author_id')->references('id')->on('users');
+            // $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 

@@ -19,7 +19,7 @@ class CreateGoodsArticlesValuesTable extends Migration
             $table->integer('goods_article_id')->nullable()->unsigned()->comment('ID метрики');
             $table->foreign('goods_article_id')->references('id')->on('goods_articles');
 
-            $table->morphs('goods_articles_values');
+            $table->morphs('goods_articles_values', 'goods_art_val');
 
             $table->string('value')->nullable()->comment('Значение');
 
