@@ -163,7 +163,7 @@ class ClientController extends Controller
             // Если не найден, то создаем
             if(!isset($new_user)){
 
-                $crop_name = explode(" ", $request->name);
+                $crop_name = explode(' ', $request->name);
                 if(isset($crop_name[1])){$new_user->first_name = $crop_name[1];};
                 if(isset($crop_name[0])){$new_user->second_name = $crop_name[0];};
                 if(isset($crop_name[2])){$new_user->patronymic = $crop_name[2];};
