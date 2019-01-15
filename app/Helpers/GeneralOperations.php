@@ -52,20 +52,20 @@ function getLeadNumbers($user, $lead = null) {
     // Если это ДИЛЕРСКОЕ ОБРАЩЕНИЕ, то:
     if($lead->lead_type_id == 2){
 
-        // Делаем запрос: выбираем всех дилерских лидов на конкретный день 
+        // Делаем запрос: выбираем всех дилерских лидов на конкретный день
         $leads = Lead::moderatorLimit($answer_all_leads)
         ->companiesLimit($answer_all_leads)
         ->filials($answer_all_leads)
         ->where('lead_type_id', 2)
         ->whereDate('created_at', $lead_date->format('Y-m-d'))
-        ->get();      
+        ->get();
 
     }
 
     // Если это СЕРВИСНОЕ ОБРАЩЕНИЕ, то:
     if($lead->lead_type_id == 3){
 
-        // Делаем запрос: выбираем всех сервисных лидов на конкретный день 
+        // Делаем запрос: выбираем всех сервисных лидов на конкретный день
         $leads = Lead::moderatorLimit($answer_all_leads)
         ->companiesLimit($answer_all_leads)
         ->filials($answer_all_leads)
@@ -87,21 +87,21 @@ function getLeadNumbers($user, $lead = null) {
     if($lead_type_id == 1){
 
         $lead_numbers['case'] = $lead_date->format('dmy') . '/' .  $serial_number . '/' . $user->liter;
-        $lead_numbers['serial']  = $serial_number;           
+        $lead_numbers['serial']  = $serial_number;
     }
 
     // Создаем номер ДИЛЕРСКОГО обращения
     if($lead_type_id == 2){
 
         $lead_numbers['case'] = $lead_date->format('dmy') . 'д' .  $serial_number;
-        $lead_numbers['serial']  = $serial_number;          
+        $lead_numbers['serial']  = $serial_number;
     }
 
     // Создаем номер СЕРВИСНОГО обращения
     if($lead_type_id == 3){
 
         $lead_numbers['case'] = $lead_date->format('dmy') . 'сц' .  $serial_number;
-        $lead_numbers['serial']  = $serial_number;        
+        $lead_numbers['serial']  = $serial_number;
     }
 
     // Отдаем результат
@@ -210,54 +210,54 @@ function create_location($request, $country_id = null, $city_id = null, $address
         yandex_geocoder($location);
 
         return $location->id;
-}
+    }
 
 // Обновление
-function update_location($request, $item) {
+    function update_location($request, $item) {
 
     // Обновляем локацию
-    $item_location = $item->location;
+        $item_location = $item->location;
 
     // Проверяем страну, так как ее мы пока не выбираем
-    if (isset($request->country_id)) {
-        $country_id = ($item_location->country_id != $request->country_id) ? $request->country_id : $item_location->country_id;
-    } else {
-        $country_id = $item_location->country_id;
-    }
+        if (isset($request->country_id)) {
+            $country_id = ($item_location->country_id != $request->country_id) ? $request->country_id : $item_location->country_id;
+        } else {
+            $country_id = $item_location->country_id;
+        }
 
-    $city_id = ($item_location->city_id != $request->city_id) ? $city_id = $request->city_id : $item_location->city_id;
-    $address = ($item_location->address != $request->address) ? $address = $request->address : $item_location->address;
+        $city_id = ($item_location->city_id != $request->city_id) ? $city_id = $request->city_id : $item_location->city_id;
+        $address = ($item_location->address != $request->address) ? $address = $request->address : $item_location->address;
 
     // Скрываем бога
-    $user_id = hideGod($request->user());
+        $user_id = hideGod($request->user());
 
     // Ищем или создаем локацию
-    $location = Location::with('city')->firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
+        $location = Location::with('city')->firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
 
     // Если пришла другая локация, то переписываем
-    if ($item->location_id != $location->id) {
-        $item->location_id = $location->id;
+        if ($item->location_id != $location->id) {
+            $item->location_id = $location->id;
 
-        yandex_geocoder($location);
+            yandex_geocoder($location);
+        }
+
+        return $item;
+
     }
-
-    return $item;
-
-}
 
 
 // Обновление
-function addBankAccount($request, $company) {
+    function addBankAccount($request, $company) {
 
     // Пришли ли с запросом имя банка, его БИК и рассчетный счет клиента,
     // которые так необходимы для создания нового аккаунта?
-    if((isset($request->bank_bic))&&(isset($request->bank_name))&&(isset($request->account_settlement))){
+        if((isset($request->bank_bic))&&(isset($request->bank_name))&&(isset($request->account_settlement))){
 
         // Сохраняем в переменную наш БИК
-        $bic = $request->bank_bic;
-        $country_id = 3;
-        $city_id = 2;
-        $address = 'Партизанская, 8';
+            $bic = $request->bank_bic;
+            $country_id = 3;
+            $city_id = 2;
+            $address = 'Партизанская, 8';
         $legal_form_id = 4; // ПАО
 
         // Проверяем существуют ли у пользователя такие счета в указанном банке
@@ -308,37 +308,43 @@ function addBankAccount($request, $company) {
 // Обновление
 function setSchedule($request, $company) {
 
-        $schedule = $company->main_schedule;
+    $schedule = $company->main_schedule;
 
-        // Если не существует расписания для компании - создаем его
-        if($schedule){
+    // Если не существует расписания для компании - создаем его
+    if($schedule){
 
-            $schedule_id = $schedule->id;
+        $schedule_id = $schedule->id;
 
-        } else {
+    } else {
 
-            $schedule = new Schedule;
+        $schedule = new Schedule;
+
+        if (isset($request->user()->company_id)) {
             $schedule->company_id = $request->user()->company->id;
-            $schedule->name = 'График работы для ' . $company->name;
-            $schedule->description = null;
-            $schedule->save();
+        } else {
+            $schedule->company_id = $company->id;
+        }
 
-            $company->schedules()->attach($schedule->id, ['mode'=>'main']);
-            $schedule_id = $schedule->id;
+        $schedule->name = 'График работы для ' . $company->name;
+        $schedule->description = null;
+        $schedule->save();
 
-        };
+        $company->schedules()->attach($schedule->id, ['mode'=>'main']);
+        $schedule_id = $schedule->id;
+
+    };
 
         // Функция getWorktimes ловит все поля расписания из запроса и готовит к записи в worktimes
-        $mass_time = getWorktimes($request, $schedule_id);
+    $mass_time = getWorktimes($request, $schedule_id);
 
         // Удаляем все записи времени в worktimes для этого расписания
-        $worktimes = Worktime::where('schedule_id', $schedule_id)->forceDelete();
+    $worktimes = Worktime::where('schedule_id', $schedule_id)->forceDelete();
 
         // Вставляем новое время в расписание
-        DB::table('worktimes')->insert($mass_time);
+    DB::table('worktimes')->insert($mass_time);
 
         // Не достаточно данных
-        return true;
+    return true;
 }
 
 
@@ -346,13 +352,13 @@ function setSchedule($request, $company) {
 function setServicesType($request, $company) {
 
             // Записываем тип услуги
-            if(isset($request->services_types)){
-                $result = $company->services_types()->sync($request->services_types);
-            } else {
-                $result = $company->services_types()->detach();
-            };
+    if(isset($request->services_types)){
+        $result = $company->services_types()->sync($request->services_types);
+    } else {
+        $result = $company->services_types()->detach();
+    };
 
-        return true;
+    return true;
 }
 
 

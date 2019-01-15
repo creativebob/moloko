@@ -165,7 +165,7 @@ class CityController extends Controller
             $count = City::whereName($city_name)->count();
             if ($count > 0) {
                 $count++;
-                $city_name = $city_name . $count;
+                $city_name .= $count;
             }
 
             $city->alias = Transliterate::make($city_name, ['type' => 'url', 'lowercase' => true]);

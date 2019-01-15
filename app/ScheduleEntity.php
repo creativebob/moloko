@@ -15,7 +15,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -43,9 +43,9 @@ class ScheduleEntity extends Model
     // use Filter;
     // use BooklistFilter;
     // use DateIntervalFilter;
- 
+
     protected $dates = ['deleted_at', 'created_at'];
-    protected $table = 'schedule_entities'; 
+    protected $table = 'schedule_entities';
 
     public function schedule()
   {
