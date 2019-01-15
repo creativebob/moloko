@@ -21,7 +21,6 @@ class CreateAlbumEntitiesTable extends Migration
 
             $table->morphs('album_entity');
 
-            $table->timestamps();
         });
     }
 

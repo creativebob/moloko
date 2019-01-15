@@ -17,10 +17,10 @@ class CreateChargePositionTable extends Migration
             $table->increments('id');
 
             $table->integer('charge_id')->unsigned()->comment('ID обязанности');
-            // $table->foreign('charge_id')->references('id')->on('charges');
+            $table->foreign('charge_id')->references('id')->on('charges');
 
             $table->integer('position_id')->unsigned()->comment('ID должности');
-            // $table->foreign('position_id')->references('id')->on('positions');
+            $table->foreign('position_id')->references('id')->on('positions');
         });
     }
 

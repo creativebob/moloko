@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0887269f6ccadbf22a57e4a8890bdcff",
+    "content-hash": "075fbc835d4c2b0ea19b9dd76033b6c5",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -1477,6 +1477,49 @@
                 "tokenizer"
             ],
             "time": "2018-03-21T22:21:57+00:00"
+        },
+        {
+            "name": "laravel-frontend-presets/zurb-foundation",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-frontend-presets/zurb-foundation.git",
+                "reference": "df551f8f081c883a1fadff97dc5e24a713c1a920"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-frontend-presets/zurb-foundation/zipball/df551f8f081c883a1fadff97dc5e24a713c1a920",
+                "reference": "df551f8f081c883a1fadff97dc5e24a713c1a920",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^5.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "LaravelFrontendPresets\\ZurbFoundationPreset\\ZurbFoundationPresetServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "LaravelFrontendPresets\\ZurbFoundationPreset\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Laravel 5.5.x Front-end preset for Zurb Foundation",
+            "keywords": [
+                "foundation",
+                "laravel",
+                "preset",
+                "zurb-foundation"
+            ],
+            "time": "2018-11-06T06:29:41+00:00"
         },
         {
             "name": "laravel/framework",

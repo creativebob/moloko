@@ -18,11 +18,10 @@ class CreateDepartmentSiteTable extends Migration
 
             $table->integer('department_id')->nullable()->unsigned()->comment('Id филиала/отдела');
             $table->foreign('department_id')->references('id')->on('departments');
-            
+
             $table->integer('site_id')->nullable()->unsigned()->comment('Id сайта');
             $table->foreign('site_id')->references('id')->on('sites');
 
-            $table->timestamps();
         });
     }
 

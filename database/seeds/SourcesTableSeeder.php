@@ -20,7 +20,7 @@ class SourcesTableSeeder extends Seeder
                 'author_id' => 1,
         	],
             [
-                'name' => 'Гугл',
+                'name' => 'Google',
                 'description' => null,
                 'domain' => 'google.com',
                 'utm' => 'google',

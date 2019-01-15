@@ -17,12 +17,11 @@ class CreateMessengerPhoneTable extends Migration
             $table->increments('id');
 
             $table->integer('messenger_id')->unsigned()->comment('ID мессенджера');
-            // $table->foreign('messenger_id')->references('id')->on('messengers');
+            $table->foreign('messenger_id')->references('id')->on('messengers');
 
             $table->integer('phone_id')->unsigned()->comment('ID телефона');
-            // $table->foreign('phone_id')->references('id')->on('phones');
+            $table->foreign('phone_id')->references('id')->on('phones');
 
-            $table->timestamps();
         });
     }
 

@@ -16,6 +16,7 @@
     "genealabs/laravel-model-caching": "^0.2.63",
     "intervention/image": "dev-master",
     "irazasyed/telegram-bot-sdk": "dev-master",
+    "laravel-frontend-presets/zurb-foundation": "^2.1",
     "laravel/framework": "5.5.*",
     "laravel/tinker": "~1.0",
     "laravelcollective/html": "^5.4.0",
