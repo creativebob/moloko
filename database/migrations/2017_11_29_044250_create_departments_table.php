@@ -22,7 +22,7 @@ class CreateDepartmentsTable extends Migration
             $table->bigInteger('phone')->nullable()->comment('Телефон отдела');
             $table->integer('parent_id')->unsigned()->nullable()->comment('Id отдела, в котором находится отдел');
             $table->foreign('parent_id')->references('id')->on('departments');
-            $table->integer('filial_status')->unsigned()->nullable()->comment('Маркер филиала, чтобы определить при поиске');
+
             $table->integer('filial_id')->unsigned()->nullable()->comment('Id филиала, пишется каждому отделу');
             $table->foreign('filial_id')->references('id')->on('departments');
 

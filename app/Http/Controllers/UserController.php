@@ -114,7 +114,6 @@ class UserController extends Controller
         $user = new User;
         $roles = new Role;
 
-
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
 

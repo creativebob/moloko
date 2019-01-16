@@ -721,10 +721,10 @@ Menu::insert([
     [
         'name' => 'Отзывы',
         'icon' => null,
-        'alias' => 'admin/feedback',
-        'tag' => 'feedback',
+        'alias' => 'admin/feedbacks',
+        'tag' => 'feedbacks',
         'parent_id' => $menus->where('tag', 'marketings')->first()->id,
-        'page_id' => $pages->where('alias', 'feedback')->first()->id,
+        'page_id' => $pages->where('alias', 'feedbacks')->first()->id,
         'navigation_id' => 2,
         'company_id' => null,
         'system_item' => 1,

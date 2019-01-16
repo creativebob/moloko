@@ -51,14 +51,14 @@ class GetAccessController extends Controller
             // Получаем все отделы компании
             $departments = Department::whereCompany_id($user->company_id)->get();
 
-            // Настройка прав бога, если он авторизован под компанией 
+            // Настройка прав бога, если он авторизован под компанией
             foreach($departments as $department){
 
                 // Пишем в сессию список отделов
                 $access['company_info']['departments'][$department->id] = $department->name;
 
                 // Пишем в сессию список филиалов
-                if($department->filial_status == 1){
+                if($department->parent_id == null){
                     $access['company_info']['filials'][$department->id] = $department->name;
                 };
             }
@@ -68,7 +68,7 @@ class GetAccessController extends Controller
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         // РАЗДЕЛ ПРАВ ОБЫЧНОГО КЛИЕНТА КОМПАНИИ ----------------------------------------------------------------------------------------------------------------------------------
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        
+
         // Если пользователь авторизованный посетитель сайта - обычный клиент компании.
         if($user->user_type == 0){
 
@@ -137,7 +137,7 @@ class GetAccessController extends Controller
 
                 if($user_department != null){
                     $user_filial_id = $user_department->filial_id;
-                    $user_department_id = $user_department->department_id;             
+                    $user_department_id = $user_department->department_id;
                 } else {abort(403, "Пользователь не устроен в компании!");};
 
                 // dd($user->filial_id);
@@ -166,7 +166,7 @@ class GetAccessController extends Controller
                         };
                     } else {$list_authors = null;};
 
-                    if(!isset($list_authors)){$list_authors = null;}; 
+                    if(!isset($list_authors)){$list_authors = null;};
 
                     // -------------------------------------------------------------------------------------------------------
 
@@ -179,7 +179,7 @@ class GetAccessController extends Controller
                                 $all_rights[$right->alias_right]['departments'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->name;
 
                                 // Собираем из всех ролей филиалы и формируем их список к текущему праву
-                                if($departments->where('id', $role->pivot->department_id)->first()->filial_status == 1){
+                                if($departments->where('id', $role->pivot->department_id)->first()->parent_id == null){
                                 $all_rights[$right->alias_right]['filials'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->name;};
 
                                 // При обработке права на просмотр чужих записей добавляем список авторов к праву
@@ -274,21 +274,21 @@ class GetAccessController extends Controller
             $conditions = [];
 
             if ($settings) {
-                
+
                 foreach ($settings as $setting) {
                     $conditions['conditions'][$setting->key] = $setting->value;
                 }
 
                 // dd($user_settings);
-                
-                
+
+
             }
 
 
             // Перезаписываем сессию
             session(['access' => $access, 'conditions' => $conditions]);
 
-            
+
 
 
             if(isset($user_redirect)){
@@ -302,15 +302,15 @@ class GetAccessController extends Controller
             if(isset($request->method)){$action_method = $request->method;};
             if(isset($request->action_array)){$action_array = $request->action_array;};
 
-            
+
 
             // if((isset($action_method))&&(isset($action_method))){
 
             //     return redirect()->action($action_method, $action_array);
 
             // } else {
-                
-                return redirect()->route($link);                
+
+                return redirect()->route($link);
             // };
 
         };
