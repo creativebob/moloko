@@ -6,7 +6,7 @@
 
 @section('title', 'Редактировать новость')
 
-@section('breadcrumbs', Breadcrumbs::render('section-edit', $parent_page_info, $site, $page_info, $cur_news))
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $cur_news->name))
 
 @section('title-content')
 <div class="top-bar head-content">
@@ -20,7 +20,13 @@
 
 @section('content')
 
-{{ Form::model($cur_news, ['route' => ['news.update', $site->alias, $cur_news->alias], 'data-abide', 'novalidate', 'files' => 'true']) }}
+{{ Form::model($cur_news, [
+	'route' => ['news.update', $cur_news->id],
+	'data-abide',
+	'novalidate',
+	'files' => 'true'
+]
+) }}
 {{ method_field('PATCH') }}
 
 @include('news.form', ['submit_text' => 'Редактировать'])

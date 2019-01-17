@@ -10,6 +10,7 @@ $drop = 1;
 @if($category->parent_id == null)
 {{-- Если категория --}}
 <li class="first-item item @isset($category->childrens) parent @endisset" id="{{ $entity }}-{{ $category->id }}" data-name="{{ $category->name }}">
+
     <a class="first-link @if($drop == 0) link-small @endif">
         <div class="icon-open sprite"></div>
         <span class="first-item-name">{{ $category->name }}</span>

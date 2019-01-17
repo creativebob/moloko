@@ -6,7 +6,7 @@
 
 @section('title', 'Новая новость')
 
-@section('breadcrumbs', Breadcrumbs::render('section-create', $parent_page_info, $site, $page_info))
+@section('breadcrumbs', Breadcrumbs::render('create', $page_info))
 
 @section('title-content')
 <div class="top-bar head-content">
@@ -19,7 +19,13 @@
 @endsection
 
 @section('content')
-{{ Form::open(['route' => ['news.store', $site->alias], 'data-abide', 'novalidate', 'files' => 'true']) }}
+{{ Form::open([
+	'route' => 'news.store',
+	'data-abide',
+	'novalidate',
+	'files' => 'true'
+]
+) }}
 @include('news.form', ['submit_text' => 'Добавить'])
 {{ Form::close() }}
 @endsection

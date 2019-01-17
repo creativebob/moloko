@@ -39,7 +39,9 @@ use App\Http\ViewComposers\RawsProductsComposer;
 use App\Http\ViewComposers\AlbumsCategoriesSelectComposer;
 use App\Http\ViewComposers\AlbumsComposer;
 
-use App\Http\ViewComposers\indicatorsCategoriesSelectComposer;
+use App\Http\ViewComposers\NavigationsCategoriesSelectComposer;
+
+use App\Http\ViewComposers\IndicatorsCategoriesSelectComposer;
 use App\Http\ViewComposers\DirectionsComposer;
 
 use App\Http\ViewComposers\UsersComposer;
@@ -115,6 +117,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.raws_products', RawsProductsComposer::class);
         view()->composer('includes.selects.albums_categories', AlbumsCategoriesSelectComposer::class);
         view()->composer('includes.selects.albums', AlbumsComposer::class);
+
+        view()->composer('includes.selects.navigations_categories', NavigationsCategoriesSelectComposer::class);
 
         view()->composer('includes.selects.indicators_categories', IndicatorsCategoriesSelectComposer::class);
         view()->composer('includes.selects.directions', DirectionsComposer::class);

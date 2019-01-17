@@ -1,54 +1,119 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->name. ' ' . $site->name }}" />
-{{-- Скрипты меню в шапке --}}
-@include('includes.scripts.sortable-inhead')
+<meta name="description" content="{{ $page_info->description }}" />
+{{-- Скрипты таблиц в шапке --}}
+@include('includes.scripts.tablesorter-inhead')
 @endsection
 
-@section('title', $page_info->title . ' ' . $site->name)
+@section('title', $page_info->name)
 
-@section('breadcrumbs', Breadcrumbs::render('section', $parent_page_info, $site, $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('content-count')
 {{-- Количество элементов --}}
-{{ $navigations->isNotEmpty() ? num_format($navigations->count(), 0) : 0 }}
+{{ $navigations->isNotEmpty() ? num_format($navigations->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')
-{{-- Меню --}}
-@include('includes.title-content', ['page_info' => $page_info, 'page_alias' => 'sites/'.$site->alias.'/'.$page_info->alias, 'class' => App\Navigation::class, 'type' => 'sections-menu', 'name' => $site->name])
+{{-- Таблица --}}
+@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Navigation::class, 'type' => 'table'])
 @endsection
 
 @section('content')
-{{-- Список --}}
+{{-- Таблица --}}
 <div class="grid-x">
     <div class="small-12 cell">
-        <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="navigations">
-            @if($navigations->isNotEmpty())
 
-            {{-- Шаблон вывода и динамического обновления --}}
-            @include('navigations.navigations_list')
+        <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="navigations">
 
-            @endif
-        </ul>
+            <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
+                <tr id="thead-content">
+                    <th class="td-drop"></th>
+                    <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
+                    <th class="td-name" data-serversort="name">Название группы товаров</th>
+                    <th class="td-navigations_category">Категория</th>
+                    <th class="td-tree">Дерево</th>
+                    <th class="td-control"></th>
+                    <th class="td-delete"></th>
+                </tr>
+            </thead>
+
+            <tbody data-tbodyId="1" class="tbody-width">
+
+                @if(isset($navigations) && $navigations->isNotEmpty())
+                @foreach($navigations as $navigation)
+
+                <tr class="item @if($navigation->moderation == 1)no-moderation @endif" id="navigations-{{ $navigation->id }}" data-name="{{ $navigation->name }}">
+                    <td class="td-drop">
+                        <div class="sprite icon-drop"></div>
+                    </td>
+                    <td class="td-checkbox checkbox">
+                        <input type="checkbox" class="table-check" name="navigation_id" id="check-{{ $navigation->id }}"
+
+                        {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+                        @if(!empty($filter['booklist']['booklists']['default']))
+                        {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+                        @if (in_array($navigation->id, $filter['booklist']['booklists']['default'])) checked
+                        @endif
+                        @endif
+                        ><label class="label-check" for="check-{{ $navigation->id }}"></label>
+                    </td>
+                    <td class="td-name">
+
+                        @can('update', $navigation)
+                        {{ link_to_route('navigations.edit', $navigation->name, $parameters = ['id' => $navigation->id], $attributes = []) }}
+                        @endcan
+
+                        @cannot('update', $navigation)
+                        {{ $navigation->name }}
+                        @endcannot
+
+                    </td>
+
+                    <td class="td-navigations_category">{{ $navigation->category->name }}</td>
+
+                    <td class="td-tree">
+                        <a href="/admin/navigations/{{ $navigation->id }}/menus" class="button">Дерево</a>
+                    </td>
+
+                    {{-- Элементы управления --}}
+                    @include('includes.control.table_td', ['item' => $navigation])
+
+                    <td class="td-delete">
+
+                        @include('includes.control.item_delete_table', ['item' => $navigation])
+
+                    </td>
+                </tr>
+
+                @endforeach
+                @endif
+
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+{{-- Pagination --}}
+<div class="grid-x" id="pagination">
+    <div class="small-6 cell pagination-head">
+        <span class="pagination-title">Кол-во записей: {{ $navigations->count() }}</span>
+        {{ $navigations->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
     </div>
 </div>
 @endsection
 
 @section('modals')
-{{-- Модалки --}}
-<section id="modal"></section>
-{{-- Модалка удаления ajax --}}
-@include('includes.modals.modal-delete-ajax')
+{{-- Модалка удаления с refresh --}}
+@include('includes.modals.modal-delete')
 @endsection
 
 @section('scripts')
-{{-- Маска ввода --}}
-@include('includes.scripts.inputs-mask')
-
-{{-- Скрипт подсветки многоуровневого меню --}}
-@include('includes.scripts.multilevel-menu-active-scripts')
+{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+@include('includes.scripts.tablesorter-script')
+@include('includes.scripts.sortable-table-script')
 
 {{-- Скрипт отображения на сайте --}}
 @include('includes.scripts.ajax-display')
@@ -56,310 +121,9 @@
 {{-- Скрипт системной записи --}}
 @include('includes.scripts.ajax-system')
 
-<script type="text/javascript">
-    $(function() {
+{{-- Скрипт чекбоксов --}}
+@include('includes.scripts.checkbox-control')
 
-        // Берем алиас сайта
-        var siteAlias = '{{ $site->alias }}';
-
-        // ------------------------------ Удаление ajax -------------------------------------------
-        $(document).on('click', '[data-open="item-delete-ajax"]', function() {
-            // Находим описание сущности, id и название удаляемого элемента в родителе
-            var parent = $(this).closest('.item');
-            var entity_alias = parent.attr('id').split('-')[0];
-            var id = parent.attr('id').split('-')[1];
-            var name = parent.data('name');
-            $('.title-delete').text(name);
-            $('.delete-button-ajax').attr('id', 'del-' + entity_alias + '-' + id);
-        });
-
-        // Подтверждение удаления и само удаление
-        $(document).on('click', '.delete-button-ajax', function(event) {
-
-            // Блочим отправку формы
-            event.preventDefault();
-            var entity_alias = $(this).attr('id').split('-')[1];
-            var id = $(this).attr('id').split('-')[2];
-
-            // Ajax
-            $.ajax({
-              headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/sites/' + siteAlias + '/' + entity_alias + '/' + id,
-            type: "DELETE",
-            success: function (html) {
-                $('#content').html(html);
-                Foundation.reInit($('#content'));
-                $('#delete-button-ajax').removeAttr('id');
-                $('.title-delete').text('');
-            }
-        });
-        });
-
-  // Функция появления окна с ошибкой
-  function showError (msg) {
-    var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
-    return error;
-};
-
-  // ------------------- Проверка на совпадение имени --------------------------------------
-  // Обозначаем таймер для проверки
-  var timerId;
-  var time = 400;
-
-  // Первая буква заглавная
-  function newParagraph (name) {
-    name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
-    return name;
-};
-
-function navigationCheck (name, submit, db) {
-
-    // Блокируем аттрибут базы данных
-    $(db).val(0);
-
-    // Смотрим сколько символов
-    var lenName = name.length;
-
-    // Если символов больше 3 - делаем запрос
-    if (lenName > 3) {
-
-      // Первая буква сектора заглавная
-      name = newParagraph (name);
-
-      // Сам ajax запрос
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/sites/'+ siteAlias + '/navigation_check',
-      type: "POST",
-      data: {name: name},
-      beforeSend: function () {
-          $('.find-status').addClass('icon-load');
-      },
-      success: function(date){
-          $('.find-status').removeClass('icon-load');
-          var result = $.parseJSON(date);
-          // Если ошибка
-          if (result.error_status == 1) {
-            $(submit).prop('disabled', true);
-            $('.item-error').css('display', 'block');
-            $(db).val(0);
-        } else {
-            // Выводим пришедшие данные на страницу
-            $(submit).prop('disabled', false);
-            $('.item-error').css('display', 'none');
-            $(db).val(1);
-        };
-    }
-});
-  } else {
-      // Удаляем все значения, если символов меньше 3х
-      $(submit).prop('disabled', false);
-      $('.item-error').css('display', 'none');
-      $(db).val(0);
-  };
-};
-
-  // -------------------------------- Добавляем навигацию -------------------------------------
-  // Открываем модалку
-  $(document).on('click', '[data-open="modal-create"]', function() {
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/admin/sites/' + siteAlias + '/navigations/create',
-    type: "GET",
-    success: function(html){
-        $('#modal').html(html);
-        $('#modal-create').foundation();
-        $('#modal-create').foundation('open');
-    }
-});
-});
-
-  // Проверка существования
-  $(document).on('keyup', '#form-modal-create .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-modal-create .name-field').val();
-    // Указываем название кнопки
-    var submit = '#submit-modal-create';
-    // Значение поля с разрешением
-    var db = '#form-modal-create .first-item';
-    // Выполняем запрос
-    clearTimeout(timerId);
-    timerId = setTimeout(function() {
-      navigationCheck (name, submit, db);
-  }, time);
-});
-
-  // Добавляем
-  $(document).on('click', '#submit-modal-create', function(event) {
-    event.preventDefault();
-
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/admin/sites/' + siteAlias + '/navigations',
-    type: "POST",
-    data: $('#form-modal-create').serialize(),
-    success:function(html) {
-        $('#content').html(html);
-        Foundation.reInit($('#content'));
-    }
-});
-});
-
-  // ------------------------------- Редактируем навигацию -------------------------------------
-  // Открываем модалку
-  $(document).on('click', '[data-open="first-edit"]', function() {
-    // Получаем данные о разделе
-    var id = $(this).closest('.item').attr('id').split('-')[1];
-
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: "/admin/sites/" + siteAlias + "/navigations/" + id + "/edit",
-    type: "GET",
-    success: function(html) {
-        $('#modal').html(html);
-        $('#first-edit').foundation();
-        $('#first-edit').foundation('open');
-    }
-});
-});
-
-  // Проверка существования
-  $(document).on('keyup', '#form-first-edit .name-field', function() {
-    // Получаем фрагмент текста
-    var name = $('#form-first-edit .name-field').val();
-    // Указываем название кнопки
-    var submit = '#submit-first-edit';
-    // Значение поля с разрешением
-    var db = '#form-first-edit .first-item';
-    // Выполняем запрос
-    clearTimeout(timerId);
-    timerId = setTimeout(function() {
-      navigationCheck (name, submit, db);
-  }, time);
-});
-
-  // Меняем данные
-  $(document).on('click', '#submit-first-edit', function(event) {
-    event.preventDefault();
-
-    // Получаем id навигации
-    var id = $('#navigation-id').val();
-
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/admin/sites/' + siteAlias + '/navigations/' + id,
-    type: "PATCH",
-    data: $('#form-first-edit').serialize(),
-    success:function(html) {
-        $('#content').html(html);
-        Foundation.reInit($('#content'));
-    }
-});
-});
-
-  // -------------------------------- Добавление пункта меню -----------------------------------
-  // Открываем модалку
-  $(document).on('click', '[data-open="medium-add"]', function() {
-    var parent = $(this).closest('.item').attr('id').split('-')[1];
-    var navigation = $(this).closest('.first-item').attr('id').split('-')[1];
-    // alert(navigation + parent);
-    if (parent == navigation) {
-      // Если id родителя совпадает с id навигации, значит родитель навигация
-      parent = null;
-  };
-
-  $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/admin/sites/' + siteAlias + '/menus/create',
-    type: "GET",
-    data: {navigation_id: navigation, menu_parent_id: parent},
-    success: function(html){
-        $('#modal').html(html);
-        $('#medium-add').foundation();
-        $('#medium-add').foundation('open');
-    }
-});
-});
-
-  // Отправляем
-  $(document).on('click', '#submit-medium-add', function(event) {
-    event.preventDefault();
-
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/admin/sites/' + siteAlias + '/menus',
-    type: "POST",
-    data: $('#form-medium-add').serialize(),
-    success: function(html){
-        $('#content').html(html);
-        Foundation.reInit($('#content'));
-    }
-});
-});
-
-  // ----------------------------------- Редактируем меню -------------------------------------
-  // Открываем модалку
-  $(document).on('click', '[data-open="medium-edit"]', function() {
-    var id = $(this).closest('.item').attr('id').split('-')[1];
-    // Аjax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: "/admin/sites/" + siteAlias + "/menus/" + id + "/edit",
-    type: "GET",
-    success: function(html){
-        // alert(html);
-        $('#modal').html(html);
-        $('#medium-edit').foundation();
-        $('#medium-edit').foundation('open');
-        // $('#menu_id').val(id);
-    }
-});
-});
-
-  // Отправляем
-  $(document).on('click', '#submit-medium-edit', function(event) {
-    event.preventDefault();
-    var id =  $('#menu_id').val();
-    // Аjax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/admin/sites/' + siteAlias + '/menus/' + id,
-    type: "PATCH",
-    data: $('#form-medium-edit').serialize(),
-    success: function(html){
-        $('#content').html(html);
-        Foundation.reInit($('#content'));
-    }
-});
-});
-
-  // ---------------------------------- Закрытие модалки -----------------------------------
-  $(document).on('click', '.icon-close-modal, #submit-modal-create, #submit-first-edit, #submit-medium-add, #submit-medium-edit', function() {
-    $(this).closest('.reveal-overlay').remove();
-});
-});
-</script>
+{{-- Скрипт модалки удаления --}}
+@include('includes.scripts.modal-delete-script')
 @endsection

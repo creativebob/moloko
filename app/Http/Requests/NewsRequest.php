@@ -25,7 +25,6 @@ class NewsRequest extends FormRequest
     {
       return [
         'name' => 'string|max:255',
-        'site_id' => 'integer|nullable',
         'title' => 'string|max:255',
         'preview' => 'string',
         'content' => 'string|nullable',

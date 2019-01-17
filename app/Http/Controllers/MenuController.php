@@ -4,43 +4,56 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Menu;
-use App\Page;
-use App\Navigation;
-use App\Site;
 
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\MenuRequest;
 
-// Политика
-use App\Policies\MenuPolicy;
-
-// Общие классы
-use Illuminate\Support\Facades\Log;
-
-// Специфические классы 
-
-// На удаление
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Session;
 
 class MenuController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'menus';
-    protected $entity_dependence = false;
-
-    public function index(Request $request, $alias)
+    // Настройки контроллера
+    public function __construct(Menu $menu)
     {
-        //
+        $this->middleware('auth');
+        $this->menu = $menu;
+        $this->class = Menu::class;
+        $this->model = 'App\Menu';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
     }
 
-    public function create(Request $request, $alias)
-    {   
+    public function index(Request $request, $navigation_id)
+    {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Menu::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence,  getmethod(__FUNCTION__));
+
+        $menus = Menu::with('ancestor')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->where('navigation_id', $navigation_id)
+        ->get();
+        // dd($menus);
+
+        return view('menus.index', [
+            'menus' => $menus,
+            'page_info' => pageInfo($this->entity_alias),
+        ]);
+
+    }
+
+    public function create(Request $request, $navigation_id, $id)
+    {
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $item_parent = $request->parent_id;
         $navigation_id = $request->navigation_id;
@@ -49,9 +62,9 @@ class MenuController extends Controller
         // $navigation_id = 17;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_navigations = operator_right($this->entity_name, $this->entity_dependence,  getmethod(__FUNCTION__));
+        $answer_navigations = operator_right($this->entity_alias, $this->entity_dependence,  getmethod(__FUNCTION__));
 
-        $answer_menus = operator_right('menus', false,  getmethod(__FUNCTION__));
+        $answer = operator_right('menus', false,  getmethod(__FUNCTION__));
 
         $answer_pages = operator_right('pages', false,  getmethod(__FUNCTION__));
 
@@ -117,7 +130,7 @@ class MenuController extends Controller
                 // Если нет вложений
                 if (!$item['parent_id']){
                     $navigations_tree[$navigation->id]['children'][$id] = &$item;
-                } else { 
+                } else {
 
                     // Если есть потомки то перебераем массив
                     $navigation_id[$navigation->id]['children'][$item['parent_id']]['children'][$id] = &$item;
@@ -148,7 +161,7 @@ class MenuController extends Controller
                 $i = 1;
                 for($j = 0; $j < $i; $j++){
                     $padding .= '&nbsp;&nbsp;&nbsp;';
-                }     
+                }
                 $i++;
 
                 $menu .= showCat($item['children'], $padding, $parent);
@@ -180,7 +193,7 @@ class MenuController extends Controller
         // echo $navigation_list;
         $menu = new Menu;
 
-        return view('navigations.create-medium', compact('menu', 'navigation_list', 'pages_list', 'site')); 
+        return view('navigations.create-medium', compact('menu', 'navigation_list', 'pages_list', 'site'));
         // return view('navigations.create-medium', ['menu' => $menu, 'navigation_list' => $navigation_list, 'pages_list' => $pages_list, 'site' => $site]);
     }
 
@@ -200,7 +213,7 @@ class MenuController extends Controller
         $menu = new Menu;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
@@ -245,7 +258,7 @@ class MenuController extends Controller
                 abort(403, 'Ошибка при изменении страницы связанной с пунктом меню');
             }
         }
-        
+
         $menu->company_id = $user->company_id;
         $menu->author_id = $user_id;
         $menu->save();
@@ -270,7 +283,7 @@ class MenuController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $menu = Menu::moderatorLimit($answer)->findOrFail($id);
@@ -296,7 +309,7 @@ class MenuController extends Controller
         // -------------------------------------------------------------------------------------------
 
        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_navigations = operator_right($this->entity_name, $this->entity_dependence,  getmethod(__FUNCTION__));
+        $answer_navigations = operator_right($this->entity_alias, $this->entity_dependence,  getmethod(__FUNCTION__));
 
         $answer_menus = operator_right('menus', false,  getmethod(__FUNCTION__));
 
@@ -309,7 +322,7 @@ class MenuController extends Controller
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
-        
+
         $site = Site::with(['navigations' => function ($query) use ($answer_navigations) {
             $query->moderatorLimit($answer_navigations)
             ->companiesLimit($answer_navigations)
@@ -364,7 +377,7 @@ class MenuController extends Controller
                 // Если нет вложений
                 if (!$item['parent_id']){
                     $navigations_tree[$navigation->id]['children'][$id] = &$item;
-                } else { 
+                } else {
 
                 // Если есть потомки то перебераем массив
                     $navigation_id[$navigation->id]['children'][$item['parent_id']]['children'][$id] = &$item;
@@ -380,7 +393,7 @@ class MenuController extends Controller
         // Функция отрисовки option'ов
         function tplMenu($item, $padding, $parent, $id) {
 
-            // Убираем из списка пришедший пункт меню 
+            // Убираем из списка пришедший пункт меню
             if ($item['id'] != $id) {
 
                 $selected = '';
@@ -400,7 +413,7 @@ class MenuController extends Controller
                     $i = 1;
                     for($j = 0; $j < $i; $j++){
                         $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-                    }     
+                    }
                     $i++;
 
                     $menu .= showCat($item['children'], $padding, $parent, $id);
@@ -433,7 +446,7 @@ class MenuController extends Controller
         }
 
         // echo $pages_list;
-        return view('navigations.edit-medium', compact('menu', 'navigation_list', 'pages_list', 'site')); 
+        return view('navigations.edit-medium', compact('menu', 'navigation_list', 'pages_list', 'site'));
     }
 
     public function update(MenuRequest $request, $alias, $id)
@@ -449,7 +462,7 @@ class MenuController extends Controller
         $user_id = hideGod($user);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $menu = Menu::with('navigation')->moderatorLimit($answer)->findOrFail($id);
@@ -524,7 +537,7 @@ class MenuController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $menu = Menu::with('navigation')->moderatorLimit($answer)->findOrFail($id);
@@ -594,7 +607,7 @@ class MenuController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -621,7 +634,7 @@ class MenuController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [

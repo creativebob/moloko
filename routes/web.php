@@ -262,7 +262,7 @@ Route::prefix('/albums/{alias}')->group(function () {
 
   // ----------------------------------- Фотографии -----------------------------------------------
 
-    Route::resource('/photos', 'PhotoController');
+	Route::resource('/photos', 'PhotoController');
   // Загрузка фоток через ajax через dropzone.js
 });
 
@@ -462,7 +462,7 @@ Route::get('plans/{alias}', 'PlanController@show')->name('plans.show');
 // ------------------------------------------------ Статистика ---------------------------------------
 
 // Основные методы
-Route::resource('statistics', 'StatisticsController')->middleware('auth');
+// Route::resource('statistics', 'StatisticsController')->middleware('auth');
 
 
 // ---------------------------------------------- Лиды -----------------------------------------------
@@ -797,57 +797,64 @@ Route::any('/catalog_product/search_add_product', 'CatalogProductController@sear
 // Поиск продукции для добавления на сайт
 Route::any('/catalog_product/add_product', 'CatalogProductController@add_product')->middleware('auth');
 
+
+// --------------------------------------- Навигации --------------------------------------------
+
+// Основные методы
+Route::resource('/navigations', 'NavigationController')->middleware('auth');
+
+// Проверка на существование навигации
+Route::post('/navigation_check', 'NavigationController@ajax_check')->middleware('auth');
+
+
+
 // Разделы сайта
-Route::prefix('/sites/{alias}')->group(function () {
+Route::prefix('/navigations/{id}')->group(function () {
+
+	// ---------------------------------------- Меню -------------------------------------------
+
+	// Основные методы
+	Route::resource('/menus', 'MenuController')->middleware('auth');
+
+});
+
+
+
+// ---------------------------------------- Новости -------------------------------------------
+
+// Основные методы
+Route::resource('/news', 'NewsController')->middleware('auth');
+
+
+
 
     // --------------------------------------- Страницы ---------------------------------------------
 
     // Основные методы
-    Route::resource('/pages', 'PageController')->middleware('auth');
+Route::resource('/pages', 'PageController')->middleware('auth');
 
     // Проверка на существование страницы
-    Route::post('/page_check', 'PageController@ajax_check')->middleware('auth');
+Route::post('/page_check', 'PageController@ajax_check')->middleware('auth');
 
 
-    // --------------------------------------- Навигации --------------------------------------------
 
-    // Текущая добавленная/удаленная навигация
-    Route::any('/navigations', 'NavigationController@index')->middleware('auth');
-    // Основные методы
-    Route::resource('/navigations', 'NavigationController')->middleware('auth');
-    // Проверка на существование навигации
-    Route::post('/navigation_check', 'NavigationController@ajax_check')->middleware('auth');
-
-
-    // -------------------------------------------Меню ---------------------------------------------
-
-    // Основные методы
-    Route::resource('/menus', 'MenuController')->middleware('auth');
-
-
-    // ---------------------------------------- Новости --------------------------------------------
-
-    // Основные методы
-    Route::resource('/news', 'NewsController')->middleware('auth');
-    // Проверка на существование новости
-    Route::post('/news_check', 'NewsController@ajax_check')->middleware('auth');
 
     // ----------------------------------------- Каталог ------------------------------------------
 
     // Текущий добавленный/удаленный каталог
-    Route::any('/catalogs', 'CatalogController@index')->middleware('auth');
+Route::any('/catalogs', 'CatalogController@index')->middleware('auth');
     // Основные методы
-    Route::resource('/catalogs', 'CatalogController')->middleware('auth');
+Route::resource('/catalogs', 'CatalogController')->middleware('auth');
     // Проверка на существование
-    Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
+Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
 
     // -------------------------------- Продукция для каталогов сайта -------------------------------------
     // Основные методы
-    Route::get('/catalog_products/{id?}', 'CatalogProductController@show')->middleware('auth');
+Route::get('/catalog_products/{id?}', 'CatalogProductController@show')->middleware('auth');
     // Основные методы
-    Route::resource('/catalog_products', 'CatalogProductController')->middleware('auth');
+Route::resource('/catalog_products', 'CatalogProductController')->middleware('auth');
 
-});
+
 
 
 
