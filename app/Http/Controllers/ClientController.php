@@ -7,6 +7,7 @@ use App\User;
 use App\Department;
 use App\Staffer;
 use App\Employee;
+use App\Role;
 
 use App\Lead;
 use App\Client;
@@ -120,6 +121,7 @@ class ClientController extends Controller
         // 
         $new_user = new User;
         $new_company = new Company;
+
         $new_company->name = $request->company_name;
         $new_company->email = $request->email;
         
@@ -130,8 +132,7 @@ class ClientController extends Controller
         // Чистка номера
         $main_phone = cleanPhone($request->main_phone);
 
-
-        if((isset($request->company_name))||($lead->private_status == 1)){
+        if(($request->company_name != null)||($lead->private_status == 1)){
 
             // ======================= РАБОТАЕМ С КОМПАНИЯМИ ============================
             $lead->private_status = 1;
@@ -152,23 +153,29 @@ class ClientController extends Controller
 
         } else {
 
+            $lead->private_status = 0;
+
             // =============== РАБОТАЕМ С ФИЗИЧЕСКИМИ ЛИЦАМИ ============================
 
             // $lead->private_status = null;
 
-            $new_user = User::whereHas('phones', function($q) use ($main_phone){
+            $search_user = User::whereHas('phones', function($q) use ($main_phone){
                 $q->where('phone', $main_phone);
             })->first();
 
             // Если не найден, то создаем
-            if(!isset($new_user)){
+            if(!isset($search_user)){
 
                 $crop_name = explode(' ', $request->name);
                 if(isset($crop_name[1])){$new_user->first_name = $crop_name[1];};
                 if(isset($crop_name[0])){$new_user->second_name = $crop_name[0];};
                 if(isset($crop_name[2])){$new_user->patronymic = $crop_name[2];};
+
                 $new_user->email = $request->email;   
-            }
+                // $new_user->email = $request->email ?? 'creativebob@maio.ru';  
+            } else {
+                $new_user = $search_user;
+            };
 
         }
 
@@ -361,24 +368,81 @@ class ClientController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $client);
 
-        // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
-        $company_id = $client->client->id;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_company = operator_right('company', false, getmethod(__FUNCTION__));
-
-        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types')
-        ->moderatorLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->findOrFail($company_id);
-
-        $this->authorize(getmethod(__FUNCTION__), $company);
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('clients.edit', compact('client', 'page_info'));
+
+        // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
+        if($client->client_type == 'App\Company'){
+
+            $company_id = $client->client->id;
+
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
+
+            $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types')
+            // ->moderatorLimit($answer_company)
+            // ->authors($answer_company)
+            // ->systemItem($answer_company)
+            ->findOrFail($company_id);
+
+            $this->authorize(getmethod(__FUNCTION__), $company);
+
+            return view('clients.edit_client_company', compact('client', 'page_info'));
+        }
+
+        // ПОЛУЧАЕМ ФИЗИКА ------------------------------------------------------------------------------------------------
+        if($client->client_type == 'App\User'){
+
+
+            $user_id = $client->client->id;
+
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer_user = operator_right('users', true, getmethod(__FUNCTION__));
+
+            $user = User::with(
+            'location.city',
+            'roles',
+            'role_user',
+            'role_user.role',
+            'role_user.position',
+            'role_user.department',
+            'photo',
+            'main_phones',
+            'extra_phones'
+        )->moderatorLimit($answer_user)
+        ->findOrFail($user_id);
+
+        $this->authorize(getmethod(__FUNCTION__), $user);
+
+        // Функция из Helper отдает массив со списками для SELECT
+        $departments_list = getLS('users', 'index', 'departments');
+        $filials_list = getLS('users', 'index', 'filials');
+
+        $role = new Role;
+
+        $answer_roles = operator_right('roles', false, 'index');
+
+        $roles_list = Role::moderatorLimit($answer_roles)
+        ->companiesLimit($answer_roles)
+        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer_roles)
+        ->systemItem($answer_roles) // Фильтр по системным записям
+        ->template($answer_roles) // Выводим шаблоны в список
+        ->pluck('name', 'id');
+
+        // Получаем список стран
+        $countries_list = Country::get()->pluck('name', 'id');
+
+        // Сущность
+        $entity = $this->entity_name;
+
+
+            return view('clients.edit_client_user', compact('client', 'user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list', 'entity'));
+        }
+
+
+
     }
 
 
@@ -396,24 +460,50 @@ class ClientController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $client);
 
-        $company_id = $client->client->id;
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
+        // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
+        if($client->client_type == 'App\Company'){
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $company = Company::with('location', 'schedules.worktimes')->moderatorLimit($answer_company)->findOrFail($company_id);
+            $company_id = $client->client->id;
 
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $company);
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
 
-        // Отдаем работу по редактировнию компании трейту
-        $this->updateCompany($request, $client->client);
+            // ГЛАВНЫЙ ЗАПРОС:
+            $company = Company::with('location', 'schedules.worktimes')->moderatorLimit($answer_company)->findOrFail($company_id);
 
-        // Обновление информации по производителю:
-        // ...
+            // Подключение политики
+            $this->authorize(getmethod(__FUNCTION__), $company);
+
+            // Отдаем работу по редактировнию компании трейту
+            $this->updateCompany($request, $client->client);
+
+            // Обновление информации по производителю:
+            // ...
         
+        }
+
+        if($client->client_type == 'App\User'){
+
+            $user_id = $client->client->id;
+
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer_user = operator_right('users', false, getmethod(__FUNCTION__));
+
+            // ГЛАВНЫЙ ЗАПРОС:
+            $user = User::moderatorLimit($answer_user)->findOrFail($user_id);
+
+            // Подключение политики
+            $this->authorize(getmethod(__FUNCTION__), $user);
+
+            // Отдаем работу по редактировнию юзера трейту
+            $this->updateUser($request, $client->client);
+
+            // Обновление информации по клиенту:
+            // ...
         
+        }
+
         $client->save();
 
         return redirect('/admin/clients');
