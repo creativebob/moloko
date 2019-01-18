@@ -2,9 +2,6 @@
 @php
 $drop = 1;
 @endphp
-{{-- @can('sort', App\AlbumsCategory::class)
-$drop = 1;
-@endcan --}}
 
 @foreach ($categories as $category)
 @if($category->parent_id == null)
@@ -26,7 +23,12 @@ $drop = 1;
 
         <div class="controls-list">
 
-            @include ('includes.control.categories_menu_div', ['item' => $category, 'class' => $class, 'color' => 'white'])
+            @include ('includes.control.categories_menu_div', [
+                'item' => $category,
+                'class' => $class,
+                'color' => 'white'
+            ]
+            )
 
         </div>
 
@@ -104,6 +106,7 @@ $drop = 1;
 
         // Открываем элемент
         $('#{{ $entity }}-{{ $id }}').children('.medium-list').addClass('is-active');
+
     } else {
 
         // Если средний элемент
@@ -113,6 +116,7 @@ $drop = 1;
             $('#{{ $entity }}-{{ $id }}').addClass('medium-active');
             $('#{{ $entity }}-{{ $id }}').parent('.medium-list').addClass('is-active');
             $('#{{ $entity }}-{{ $id }}').children('.medium-list').addClass('is-active');
+
         };
 
         if ($('#{{ $entity }}-{{ $id }}').hasClass('medium-as-last')) {

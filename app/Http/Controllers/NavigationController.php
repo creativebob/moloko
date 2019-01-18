@@ -23,7 +23,7 @@ class NavigationController extends Controller
         $this->entity_dependence = false;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, $site_id)
     {
 
         // Подключение политики
@@ -36,6 +36,7 @@ class NavigationController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
+        ->where('site_id', $site_id)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);

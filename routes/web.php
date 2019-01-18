@@ -781,15 +781,23 @@ Route::get('/updatebooklist', 'BooklistController@setbooklist')->middleware('aut
 
 
 // ----------------------------------------- Сайты ----------------------------------------------
-Route::get('/sites', 'SiteController@index')->middleware('auth')->name('sites.index');
-Route::get('/sites/create', 'SiteController@create')->middleware('auth')->name('sites.create');
-Route::post('/sites', 'SiteController@store')->middleware('auth')->name('sites.store');
-Route::get('/sites/{alias}/edit', 'SiteController@edit')->middleware('auth')->name('sites.edit');
-Route::patch('/sites/{id}', 'SiteController@update')->middleware('auth')->name('sites.update');
-Route::delete('/sites/{id}', 'SiteController@destroy')->middleware('auth')->name('sites.destroy');
-Route::get('/sites/{alias}', 'SiteController@sections')->middleware('auth')->name('sites.sections');
+Route::resource('/sites', 'SiteController')->middleware('auth');
+Route::get('/sites/{id}/sections', 'SiteController@sections')->middleware('auth')->name('sites.sections');
 // Проверка на существование домена сайта
 Route::post('/site_check', 'SiteController@ajax_check')->middleware('auth');
+
+// Разделы сайта
+Route::prefix('/sites/{site_id}/sections')->group(function () {
+
+	// --------------------------------------- Навигации --------------------------------------------
+
+	// Основные методы
+	Route::resource('/navigations', 'NavigationController')->middleware('auth');
+
+	// Проверка на существование навигации
+	Route::post('/navigation_check', 'NavigationController@ajax_check')->middleware('auth');
+
+});
 
 // Поиск продукции для добавления на сайт
 Route::any('/catalog_product/search_add_product', 'CatalogProductController@search_add_product')->middleware('auth');
@@ -798,14 +806,20 @@ Route::any('/catalog_product/search_add_product', 'CatalogProductController@sear
 Route::any('/catalog_product/add_product', 'CatalogProductController@add_product')->middleware('auth');
 
 
-// --------------------------------------- Навигации --------------------------------------------
+
+
+
+
+// ---------------------------------------- Новости -------------------------------------------
 
 // Основные методы
-Route::resource('/navigations', 'NavigationController')->middleware('auth');
+Route::resource('/news', 'NewsController')->middleware('auth');
 
-// Проверка на существование навигации
-Route::post('/navigation_check', 'NavigationController@ajax_check')->middleware('auth');
 
+
+
+
+Route::delete('/menus/{id}', 'MenuController@destroy')->middleware('auth');
 
 
 // Разделы сайта
@@ -817,13 +831,6 @@ Route::prefix('/navigations/{id}')->group(function () {
 	Route::resource('/menus', 'MenuController')->middleware('auth');
 
 });
-
-
-
-// ---------------------------------------- Новости -------------------------------------------
-
-// Основные методы
-Route::resource('/news', 'NewsController')->middleware('auth');
 
 
 

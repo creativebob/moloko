@@ -19,11 +19,14 @@ class CreateNavigationsTable extends Migration
             $table->string('name')->nullable()->comment('Имя категории меню');
             $table->string('alias')->nullable()->comment('Алиас категории меню');
 
-            // $table->integer('site_id')->unsigned()->nullable()->comment('Id сайта меню');
-            // $table->foreign('site_id')->references('id')->on('sites');
+            $table->integer('site_id')->unsigned()->nullable()->comment('Id сайта');
+            $table->foreign('site_id')->references('id')->on('sites');
 
             $table->integer('navigations_category_id')->nullable()->unsigned()->comment('ID категории навигации');
             $table->foreign('navigations_category_id')->references('id')->on('navigations_categories');
+
+            $table->integer('align_id')->unsigned()->nullable()->comment('Id сайта меню');
+            $table->foreign('align_id')->references('id')->on('aligns');
 
 
             // Общие настройки

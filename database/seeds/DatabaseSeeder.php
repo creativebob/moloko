@@ -40,8 +40,10 @@ class DatabaseSeeder extends Seeder
         $this->call(SitesTableSeeder::class);
         $this->call(PagesTableSeeder::class);
 
+        $this->call(AlignsTableSeeder::class);
+
         // Меню
-        $this->call(NavigationsCategoriesTableSeeder::class);
+        // $this->call(NavigationsCategoriesTableSeeder::class);
         $this->call(NavigationsTableSeeder::class);
         $this->call(MenusTableSeeder::class);
         $this->call(MenuSiteTableSeeder::class);

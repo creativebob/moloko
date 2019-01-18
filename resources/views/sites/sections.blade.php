@@ -71,32 +71,27 @@
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
                     <th class="td-menu-name">Название раздела</th>
                     {{-- <th class="td-site-author">Автор</th> --}}
-                    <th class="td-delete"></th>
+                    {{-- <th class="td-delete"></th> --}}
                 </tr>
             </thead>
 
             <tbody data-tbodyId="1" class="tbody-width">
 
-                @if(isset($site->menus) && $site->menus->isNotEmpty())
-                @foreach($site->menus as $menu)
+                @if($sections->isNotEmpty())
+                @foreach($sections as $section)
 
                 <tr class="item" id="sites-{{ $site->id }}" data-name="{{ $site->name }}">
                     <td class="td-drop">
                         <div class="sprite icon-drop"></div>
                     </td>
                     <td class="td-checkbox checkbox">
-                        <input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}"><label class="label-check" for="check-{{ $site->id }}"></label>
+                        <input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}">
+                        <label class="label-check" for="check-{{ $site->id }}"></label>
                     </td>
                     <td class="td-menu-name">
 
-                        {{ link_to_route($menu->alias.'.index', $menu->name, $parameters = ['alias' => $site->alias], $attributes = []) }}
+                        {{ link_to_route($section->alias.'.index', $section->name, $parameters = ['site_id' => $site->id], $attributes = []) }}
 
-                    </td>
-                    {{-- <td class="td-site-author">@if(isset($site->author->first_name)) {{ $site->author->first_name . ' ' . $site->author->second_name }} @endif</td> --}}
-                    <td class="td-delete">
-                        @if (isset($site->company_id))
-                        <a class="icon-delete sprite" data-open="item-delete"></a>
-                        @endif
                     </td>
                 </tr>
 

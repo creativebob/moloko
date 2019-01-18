@@ -9,6 +9,12 @@ use App\Menu;
 use Illuminate\Http\Request;
 use App\Http\Requests\MenuRequest;
 
+// Подключаем трейт записи и обновления категорий
+use App\Http\Controllers\Traits\CategoryControllerTrait;
+
+// Транслитерация
+use Transliterate;
+
 
 class MenuController extends Controller
 {
@@ -22,7 +28,11 @@ class MenuController extends Controller
         $this->model = 'App\Menu';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
+        $this->type = 'modal';
     }
+
+    // Используем трейт записи и обновления категорий
+    use CategoryControllerTrait;
 
     public function index(Request $request, $navigation_id)
     {
@@ -42,235 +52,120 @@ class MenuController extends Controller
         ->get();
         // dd($menus);
 
+        // Отдаем Ajax
+        if ($request->ajax()) {
+
+            return view('includes.menu_views.category_list',
+                [
+                    'items' => $menus,
+                    'entity' => $this->entity_alias,
+                    'class' => $this->model,
+                    'type' => $this->type,
+                    'count' => $menus->count(),
+                    'id' => $request->id,
+                ]
+            );
+        }
+
+        // Отдаем на шаблон
         return view('menus.index', [
             'menus' => $menus,
             'page_info' => pageInfo($this->entity_alias),
+            'navigation_id' => $navigation_id
         ]);
-
     }
 
-    public function create(Request $request, $navigation_id, $id)
+    public function create(Request $request, $navigation_id)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $item_parent = $request->parent_id;
-        $navigation_id = $request->navigation_id;
-
-        // echo $navigation_id;
-        // $navigation_id = 17;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_navigations = operator_right($this->entity_alias, $this->entity_dependence,  getmethod(__FUNCTION__));
-
-        $answer = operator_right('menus', false,  getmethod(__FUNCTION__));
-
-        $answer_pages = operator_right('pages', false,  getmethod(__FUNCTION__));
-
-        $answer_navigations_categories = operator_right('navigations_categories', false,  getmethod(__FUNCTION__));
-
-        $answer_sites = operator_right('sites', false,  getmethod(__FUNCTION__));
-
-        // -------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // -------------------------------------------------------------------------------------------
-
-        $site = Site::with(['navigations' => function ($query) use ($answer_navigations) {
-            $query->moderatorLimit($answer_navigations)
-            ->companiesLimit($answer_navigations)
-            ->authors($answer_navigations)
-            ->systemItem($answer_navigations) // Фильтр по системным записям
-            ->withCount('menus')
-            ->orderBy('sort', 'asc');
-        }, 'navigations.menus' => function ($query) use ($answer_menus) {
-            $query->moderatorLimit($answer_menus)
-            ->companiesLimit($answer_menus)
-            ->authors($answer_menus)
-            ->systemItem($answer_menus) // Фильтр по системным записям
-            ->orderBy('sort', 'asc');
-        }, 'navigations.menus.page' => function ($query) use ($answer_pages) {
-            $query->moderatorLimit($answer_pages)
-            ->companiesLimit($answer_pages)
-            ->authors($answer_pages)
-            ->systemItem($answer_pages) // Фильтр по системным записям
-            ->orderBy('sort', 'asc');
-        }, 'navigations.navigations_category' => function ($query) use ($answer_navigations_categories) {
-            $query->moderatorLimit($answer_navigations_categories)
-            ->companiesLimit($answer_navigations_categories)
-            ->authors($answer_navigations_categories)
-            ->systemItem($answer_navigations_categories) // Фильтр по системным записям
-            ->template($answer_navigations_categories) // Выводим шаблоны в список
-            ->orderBy('sort', 'asc');
-        }])
-        ->moderatorLimit($answer_sites)
-        ->companiesLimit($answer_sites)
-        ->authors($answer_sites)
-        ->systemItem($answer_sites) // Фильтр по системным записям
-        ->whereAlias($alias)
-        ->first();
-
-        // dd($site);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $user = $request->user();
-
-        // Формируем дерево
-        $navigation_id = [];
-        $navigations_tree = [];
-        $navigations = $site->navigations->keyBy('id');
-
-        foreach ($navigations as $navigation) {
-            $navigation_id[$navigation->id]['children'] = $navigation->menus->keyBy('id')->toArray();
-
-            // Проверяем права на редактирование и удаление
-            foreach ($navigation_id[$navigation->id]['children'] as $id => &$item) {
-
-                // Функция построения дерева из массива от Tommy Lacroix
-                // Если нет вложений
-                if (!$item['parent_id']){
-                    $navigations_tree[$navigation->id]['children'][$id] = &$item;
-                } else {
-
-                    // Если есть потомки то перебераем массив
-                    $navigation_id[$navigation->id]['children'][$item['parent_id']]['children'][$id] = &$item;
-                }
-            }
-
-            // Записываем даныне навигации
-            $navigations_tree[$navigation->id]['id'] = $navigation->id;
-            $navigations_tree[$navigation->id]['name'] = $navigation->name;
-        }
-
-        // Функция отрисовки option'ов
-        function tplMenu($item, $padding, $parent) {
-
-            $selected = '';
-            if ($item['id'] == $parent) {
-                $selected = ' selected';
-            }
-
-            if (isset($item['navigation_id'])) {
-                $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$item['name'].'</option>';
-            } else {
-                $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
-            }
-
-            // Добавляем пробелы вложенному элементу
-            if (isset($item['children'])) {
-                $i = 1;
-                for($j = 0; $j < $i; $j++){
-                    $padding .= '&nbsp;&nbsp;&nbsp;';
-                }
-                $i++;
-
-                $menu .= showCat($item['children'], $padding, $parent);
-            }
-            return $menu;
-        }
-
-        // Рекурсивно считываем наш шаблон
-        function showCat($data, $padding, $parent){
-            $string = '';
-            $padding = $padding;
-            foreach($data as $item){
-                $string .= tplMenu($item, $padding, $parent);
-            }
-
-            return $string;
-        }
-
-        // Получаем HTML разметку
-        $navigation_list = showCat($navigations_tree, '', $item_parent);
-
-        // dd($navigation_list);
-
-        $pages_list = '';
-        foreach ($site->pages as $page) {
-            $pages_list = $pages_list . '<option value="'.$page->id.'">'.$page->name.'</option>';
-        }
-
-        // echo $navigation_list;
-        $menu = new Menu;
-
-        return view('navigations.create-medium', compact('menu', 'navigation_list', 'pages_list', 'site'));
-        // return view('navigations.create-medium', ['menu' => $menu, 'navigation_list' => $navigation_list, 'pages_list' => $pages_list, 'site' => $site]);
+        return view('includes.menu_views.create', [
+            'item' => new $this->class,
+            'entity' => $this->entity_alias,
+            'title' => 'Добавление пункта меню',
+            'parent_id' => $request->parent_id,
+            'category_id' => $request->category_id,
+            'navigation_id' => $navigation_id
+        ]);
     }
 
     public function store(MenuRequest $request, $alias)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Menu::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        // Наполняем сущность данными
         $menu = new Menu;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'store');
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
-            $navigation->moderation = 1;
+            $menu->moderation = 1;
         }
 
         // Системная запись
         $menu->system_item = $request->system_item;
+        $menu->display = $request->display;
 
-        $menu->name = $request->name;
+        $menu->parent_id = $request->parent_id;
+        $menu->navigation_id = $request->navigation_id;
+
+        // Делаем заглавной первую букву
+        $menu->name = get_first_letter($request->name);
+
         $menu->icon = $request->icon;
         $menu->alias = $request->alias;
 
-        // Если родителем является навигация
-        if ($request->navigation_id == $request->parent_id) {
-            $menu->navigation_id = $request->navigation_id;
-            $menu->parent_id = null;
-        } else {
-            $menu->navigation_id = $request->navigation_id;
-            $menu->parent_id = $request->parent_id;
-        }
+        $menu->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
 
-        $menu->display = $request->display;
         $menu->page_id = $request->page_id;
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+        $menu->company_id = $user->company_id;
+        $menu->author_id = hideGod($user);
+
+        $menu->save();
 
         // Если к пункту меню привязана страница и мы выключаем/вкючаем его отображение на сайте, то и меняем отображение и у страницы
         if (isset($request->page_id)) {
 
+            $menu->page()->save(['display' => $request->display]);
+
             // Находим страницу
-            $page = Page::whereId($request->page_id)->first();
+            // $page = Page::where('id', $request->page_id)
+            // ->first();
 
-            if ($request->display == 1) {
-                $page->display = 1;
-            } else {
-                $page->display = null;
-            }
+            // if ($request->display == 1) {
+            //     $page->display = 1;
+            // } else {
+            //     $page->display = null;
+            // }
 
-            $page->save();
+            // $page->save();
 
-            // Если страница не обновилась
-            if ($page == false) {
-                abort(403, 'Ошибка при изменении страницы связанной с пунктом меню');
-            }
+            // // Если страница не обновилась
+            // if ($page == false) {
+            //     abort(403, 'Ошибка при изменении страницы связанной с пунктом меню');
+            // }
         }
 
-        $menu->company_id = $user->company_id;
-        $menu->author_id = $user_id;
-        $menu->save();
-
         if ($menu) {
-        // Переадресовываем на index
-            return redirect()->action('NavigationController@index', ['id' => $menu->id, 'alias' => $alias, 'item' => 'menu']);
+
+            // Переадресовываем на index
+            return redirect()->route('menus.index', ['navigation_id' => $navigation_id, 'id' => $menu->id]);
+
         } else {
+
             $result = [
                 'error_status' => 1,
                 'error_message' => 'Ошибка при записи пункта меню!'
             ];
+
         }
     }
 
@@ -279,177 +174,29 @@ class MenuController extends Controller
         //
     }
 
-    public function edit(Request $request, $alias, $id)
+    public function edit(Request $request, $navigation_id, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $menu = Menu::moderatorLimit($answer)->findOrFail($id);
-        // echo $menu;
+        $menu = Menu::moderatorLimit($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $menu);
 
-        $item_id = $id;
-        if (isset($menu->parent_id)) {
-            $item_parent = $menu->parent_id;
-        } else {
-            $item_parent = $menu->navigation_id;
-        }
-        $page_id = $menu->page_id;
-        $navigation_id = $menu->navigation_id;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_site = operator_right('site', $this->entity_dependence, 'index');
-
-        // -------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // -------------------------------------------------------------------------------------------
-
-       // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_navigations = operator_right($this->entity_alias, $this->entity_dependence,  getmethod(__FUNCTION__));
-
-        $answer_menus = operator_right('menus', false,  getmethod(__FUNCTION__));
-
-        $answer_pages = operator_right('pages', false,  getmethod(__FUNCTION__));
-
-        $answer_navigations_categories = operator_right('navigations_categories', false,  getmethod(__FUNCTION__));
-
-        $answer_sites = operator_right('sites', false,  getmethod(__FUNCTION__));
-
-        // -------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // -------------------------------------------------------------------------------------------
-
-        $site = Site::with(['navigations' => function ($query) use ($answer_navigations) {
-            $query->moderatorLimit($answer_navigations)
-            ->companiesLimit($answer_navigations)
-            ->authors($answer_navigations)
-            ->systemItem($answer_navigations) // Фильтр по системным записям
-            ->withCount('menus')
-            ->orderBy('sort', 'asc');
-        }, 'navigations.menus' => function ($query) use ($answer_menus) {
-            $query->moderatorLimit($answer_menus)
-            ->companiesLimit($answer_menus)
-            ->authors($answer_menus)
-            ->systemItem($answer_menus) // Фильтр по системным записям
-            ->orderBy('sort', 'asc');
-        }, 'navigations.menus.page' => function ($query) use ($answer_pages) {
-            $query->moderatorLimit($answer_pages)
-            ->companiesLimit($answer_pages)
-            ->authors($answer_pages)
-            ->systemItem($answer_pages) // Фильтр по системным записям
-            ->orderBy('sort', 'asc');
-        }, 'navigations.navigations_category' => function ($query) use ($answer_navigations_categories) {
-            $query->moderatorLimit($answer_navigations_categories)
-            ->companiesLimit($answer_navigations_categories)
-            ->authors($answer_navigations_categories)
-            ->systemItem($answer_navigations_categories) // Фильтр по системным записям
-            ->template($answer_navigations_categories) // Выводим шаблоны в список
-            ->orderBy('sort', 'asc');
-        }])
-        ->moderatorLimit($answer_sites)
-        ->companiesLimit($answer_sites)
-        ->authors($answer_sites)
-        ->systemItem($answer_sites) // Фильтр по системным записям
-        ->whereAlias($alias)
-        ->first();
-
-        // dd($site);
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Формируем дерево
-        $navigation_id = [];
-        $navigations_tree = [];
-        $navigations = $site->navigations->keyBy('id');
-
-        foreach ($navigations as $navigation) {
-            $navigation_id[$navigation->id]['children'] = $navigation->menus->keyBy('id')->toArray();
-
-            // Проверяем права на редактирование и удаление
-            foreach ($navigation_id[$navigation->id]['children'] as $id => &$item) {
-
-                // Функция построения дерева из массива от Tommy Lacroix
-                // Если нет вложений
-                if (!$item['parent_id']){
-                    $navigations_tree[$navigation->id]['children'][$id] = &$item;
-                } else {
-
-                // Если есть потомки то перебераем массив
-                    $navigation_id[$navigation->id]['children'][$item['parent_id']]['children'][$id] = &$item;
-                }
-            }
-
-            // Записываем даныне навигации
-            $navigations_tree[$navigation->id]['id'] = $navigation->id;
-            $navigations_tree[$navigation->id]['name'] = $navigation->name;
-        }
-        // dd($navigations_tree);
-
-        // Функция отрисовки option'ов
-        function tplMenu($item, $padding, $parent, $id) {
-
-            // Убираем из списка пришедший пункт меню
-            if ($item['id'] != $id) {
-
-                $selected = '';
-                if ($item['id'] == $parent) {
-                    $selected = ' selected';
-                }
-
-                // dd($item);
-                if (isset($item['navigation_id'])) {
-                    $menu = '<option value="'.$item['id'].'"'.$selected.'>'.$item['name'].'</option>';
-                } else {
-                    $menu = '<option value="'.$item['id'].'" class="first"'.$selected.'>'.$padding.' '.$item['name'].'</option>';
-                }
-
-                // Добавляем пробелы вложенному элементу
-                if (isset($item['children'])) {
-                    $i = 1;
-                    for($j = 0; $j < $i; $j++){
-                        $padding .= '&nbsp;&nbsp;&nbsp;&nbsp;';
-                    }
-                    $i++;
-
-                    $menu .= showCat($item['children'], $padding, $parent, $id);
-                }
-                return $menu;
-            }
-        }
-
-        // Рекурсивно считываем наш шаблон
-        function showCat($data, $padding, $parent, $id){
-            $string = '';
-            $padding = $padding;
-            foreach($data as $item){
-                $string .= tplMenu($item, $padding, $parent, $id);
-            }
-            return $string;
-        }
-
-        // Получаем HTML разметку
-        $navigation_list = showCat($navigations_tree, '', $item_parent, $item_id);
-        // dd($navigation_list);
-
-        $pages_list = '';
-        foreach ($site->pages as $page) {
-            $selected = '';
-            if ($page_id == $page->id) {
-                $selected = ' selected';
-            }
-            $pages_list = $pages_list . '<option value="'.$page->id.'"'.$selected.'>'.$page->name.'</option>';
-        }
-
-        // echo $pages_list;
-        return view('navigations.edit-medium', compact('menu', 'navigation_list', 'pages_list', 'site'));
+        return view('includes.menu_views.edit', [
+            'item' => $menu,
+            'entity' => $this->entity_alias,
+            'title' => 'Редактирование пункта меню',
+            'parent_id' => $menu->parent_id,
+            'category_id' => $menu->category_id,
+            'navigation_id' => $navigation_id
+        ]);
     }
 
-    public function update(MenuRequest $request, $alias, $id)
+    public function update(MenuRequest $request, $navigation_id, $id)
     {
 
         // Получаем данные для авторизованного пользователя
@@ -533,115 +280,39 @@ class MenuController extends Controller
         }
     }
 
-    public function destroy(Request $request, $alias, $id)
+    public function destroy(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $menu = Menu::with('navigation')->moderatorLimit($answer)->findOrFail($id);
+        $menu = Menu::moderatorLimit($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $menu);
 
+        // Скрываем бога
+        $menu->editor_id = hideGod($request->user());
+        $menu->save();
 
+        $parent_id = $menu->parent_id;
         $navigation_id = $menu->navigation_id;
-        $site_id = $menu->navigation->site_id;
-        if (isset($menu->parent_id)) {
-            $parent_id = $menu->parent_id;
-        } else {
-            $parent_id = 0;
-        }
 
-        $navigation_id = $menu->navigation_id;
+        $menu->delete();
 
         if ($menu) {
-            $user = $request->user();
 
-            // Скрываем бога
-            $user_id = hideGod($user);
-
-            $menu->editor_id = $user_id;
-            $menu->save();
-
-            $menu = Menu::destroy($id);
-
-            // Удаляем с обновлением
-            if ($menu) {
             // Переадресовываем на index
-                return redirect()->action('NavigationController@index', ['alias' => $alias, 'id' => $navigation_id, 'item' => 'navigation']);
-            } else {
-                abort(403, 'Ошибка при удалении меню');
-            }
+            return redirect()->route('menus.index', ['navigation_id' => $navigation_id, 'id' => $parent_id]);
+
         } else {
-            abort(403, 'Меню не найдено');
-        }
-    }
-
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->menus as $item) {
-            Menu::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-
-    }
-
-    // Системная запись
-    public function ajax_system_item(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Menu::where('id', $request->id)->update(['system_item' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
+                'error_message' => 'Ошибка при удалении!'
             ];
         }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Menu::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
 }

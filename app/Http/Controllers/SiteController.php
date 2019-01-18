@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Site;
+use App\Entity;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -39,12 +40,10 @@ class SiteController extends Controller
         $sites = Site::with(
             'author',
             'company',
-            'news',
             'pages',
-            'navigations',
-            'catalogs'
+            'navigations'
         )
-        ->withCount('pages')
+        // ->withCount('pages')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -126,11 +125,11 @@ class SiteController extends Controller
 
         if ($site) {
 
-            // Пришем список пришедших разделов сайта
-            $site->menus()->attach($request->menus);
+            // // Пришем список пришедших разделов сайта
+            // $site->menus()->attach($request->menus);
 
-            // Пришем список пришедших филиалов сайта
-            $site->departments()->attach($request->departments);
+            // // Пришем список пришедших филиалов сайта
+            // $site->departments()->attach($request->departments);
 
             return redirect()->route('sites.index');
         } else {
@@ -143,12 +142,14 @@ class SiteController extends Controller
         //
     }
 
-    public function edit(Request $request, $alias)
+    public function edit(Request $request, $id)
     {
 
-        $site = Site::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->whereAlias($alias)
-        ->first();
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $site = Site::moderatorLimit($answer)
+        ->findOrFail($id);
         // dd($site);
 
         // Подключение политики
@@ -163,7 +164,10 @@ class SiteController extends Controller
     public function update(SiteRequest $request, $id)
     {
 
-        $site = Site::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $site = Site::moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
@@ -196,18 +200,18 @@ class SiteController extends Controller
         if ($site) {
 
             // Смотрим пришедние для сайта разделы и синхронизируем с существующими
-            if (isset($request->menus)) {
-                $site->menus()->sync($request->menus);
-            } else {
-                $site->menus()->detach();
-            }
+            // if (isset($request->menus)) {
+            //     $site->menus()->sync($request->menus);
+            // } else {
+            //     $site->menus()->detach();
+            // }
 
             // Смотрим пришедние для сайта филиалы и синхронизируем с существующими
-            if (isset($request->menus)) {
-                $site->departments()->sync($request->departments);
-            } else {
-                $site->departments()->detach();
-            }
+            // if (isset($request->menus)) {
+            //     $site->departments()->sync($request->departments);
+            // } else {
+            //     $site->departments()->detach();
+            // }
 
             return redirect()->route('sites.index');
         } else {
@@ -218,7 +222,10 @@ class SiteController extends Controller
     public function destroy(Request $request, $id)
     {
 
-        $site = Site::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $site = Site::moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
@@ -227,7 +234,7 @@ class SiteController extends Controller
         $site->editor_id = hideGod($request->user());
         $site->save();
 
-        $site = Site::destroy($id);
+        $site->delete();
 
         if ($site) {
             return redirect()->route('sites.index');
@@ -236,27 +243,24 @@ class SiteController extends Controller
         }
     }
 
-    public function sections($alias)
+    public function sections(Request $request, $id)
     {
 
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'update');
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('update'));
 
-        $site = Site::with(['menus', 'author'])
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        // ->template($answer)
-        ->whereAlias($alias)
-        ->first();
+        $site = Site::moderatorLimit($answer)
+        ->findOrFail($id);
         // dd($site);
 
         // Подключение политики
-        $this->authorize('view', $site);
+        $this->authorize('update', $site);
+
+        $sections = Entity::where('site', true)->get();
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('sites.sections', compact('site', 'page_info'));
+        return view('sites.sections', compact('site', 'sections', 'page_info'));
     }
 }

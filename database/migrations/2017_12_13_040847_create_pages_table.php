@@ -17,8 +17,10 @@ class CreatePagesTable extends Migration
             $table->increments('id');
 
             $table->string('name')->index()->comment('Название страницы');
+
             $table->integer('site_id')->unsigned()->nullable()->comment('Id сайта');
             $table->foreign('site_id')->references('id')->on('sites');
+
             $table->string('title')->comment('Title для страницы');
             $table->text('description')->comment('Description для страницы');
             $table->string('alias')->index()->comment('Алиас');
