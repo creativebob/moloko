@@ -188,17 +188,17 @@ class GoodsController extends Controller
         }
 
         // Если в категориях не добавлены производители
-        if ($goods_categories->where('manufacturers_count', 0)->count() == $goods_categories->count()){
+        // if ($goods_categories->where('manufacturers_count', 0)->count() == $goods_categories->count()){
 
-            // Описание ошибки
-            // $ajax_error = [];
-            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
-            $ajax_error['text'] = "Для начала необходимо добавить производителей в категории. А уже потом будем добавлять товары. Ок?";
-            $ajax_error['link'] = "/admin/goods_categories"; // Ссылка на кнопке
-            $ajax_error['title_link'] = "Идем в раздел категорий товаров"; // Текст на кнопке
+        //     // Описание ошибки
+        //     // $ajax_error = [];
+        //     $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+        //     $ajax_error['text'] = "Для начала необходимо добавить производителей в категории. А уже потом будем добавлять товары. Ок?";
+        //     $ajax_error['link'] = "/admin/goods_categories"; // Ссылка на кнопке
+        //     $ajax_error['title_link'] = "Идем в раздел категорий товаров"; // Текст на кнопке
 
-            return view('ajax_error', compact('ajax_error'));
-        }
+        //     return view('ajax_error', compact('ajax_error'));
+        // }
 
         $goods_products_count = $goods_categories->first()->goods_products_count;
         $parent_id = null;

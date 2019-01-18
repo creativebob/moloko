@@ -18,14 +18,14 @@ trait RewriteSessionDepartments
 	        // Получаем все отделы компании
 	        $my_departments = Department::whereCompany_id($user->company_id)->get();
 
-	        // Настройка прав бога, если он авторизован под компанией 
+	        // Настройка прав бога, если он авторизован под компанией
 	        foreach($my_departments as $my_department){
 
 	            // Пишем в сессию список отделов
 	            $access['company_info']['departments'][$my_department->id] = $my_department->name;
 
 	            // Пишем в сессию список филиалов
-	            if($my_department->filial_status == 1){
+	            if($my_department->parent_id == null){
 	                $access['company_info']['filials'][$my_department->id] = $my_department->name;
 	            };
 	        }

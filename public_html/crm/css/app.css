@@ -1450,13 +1450,13 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 .sidebar .icon-chatbot {
   background-position: -96px -256px;
 }
-.sidebar .icon-settings {
+.sidebar .icon-setting {
   background-position: -96px -224px;
 }
 .sidebar .icon-product {
   background-position: -96px -1024px;
 }
-.sidebar .icon-personals {
+.sidebar .icon-personal {
   background-position: -96px -1056px;
 }
 .sidebar .icon-process {
@@ -1492,13 +1492,13 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 .sidebar .nav > ul > li > .active .icon-chatbot, .sidebar .gen-menu-bot > li > .active .icon-chatbot {
   background-position: -160px -256px;
 }
-.sidebar .nav > ul > li > .active .icon-settings, .sidebar .gen-menu-bot > li > .active .icon-settings {
+.sidebar .nav > ul > li > .active .icon-setting, .sidebar .gen-menu-bot > li > .active .icon-setting {
   background-position: -160px -224px;
 }
 .sidebar .nav > ul > li > .active .icon-product, .sidebar .gen-menu-bot > li > .active .icon-product {
   background-position: -160px -1024px;
 }
-.sidebar .nav > ul > li > .active .icon-personals, .sidebar .gen-menu-bot > li > .active .icon-personals {
+.sidebar .nav > ul > li > .active .icon-personal, .sidebar .gen-menu-bot > li > .active .icon-personal {
   background-position: -160px -1056px;
 }
 .sidebar .nav > ul > li > .active .icon-process, .sidebar .gen-menu-bot > li > .active .icon-process {

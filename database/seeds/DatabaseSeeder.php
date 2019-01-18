@@ -10,12 +10,11 @@ class DatabaseSeeder extends Seeder
 
         // Наполнение локализаций
         $this->call(CountriesTableSeeder::class);
-        $this->call(RegionsTableSeeder::class);
-        $this->call(AreasTableSeeder::class);
-        $this->call(CitiesTableSeeder::class);
+        // $this->call(RegionsTableSeeder::class);
+        // $this->call(CitiesTableSeeder::class);
 
-        // Локации
-        $this->call(LocationsTableSeeder::class);
+        // // Локации
+        // $this->call(LocationsTableSeeder::class);
 
         // Пользователи
         $this->call(UsersTableSeeder::class);
@@ -27,11 +26,6 @@ class DatabaseSeeder extends Seeder
         // Сферы деятельности компаний и должностей
         $this->call(SectorsTableSeeder::class);
         $this->call(LegalFormsTableSeeder::class);
-
-        // Графики работы
-        $this->call(SchedulesTableSeeder::class);
-        $this->call(WorktimesTableSeeder::class);
-
 
         // Сущности
         $this->call(EntitiesTableSeeder::class);
@@ -54,8 +48,6 @@ class DatabaseSeeder extends Seeder
 
         // Связь страниц и сущностей
         $this->call(EntityPageTableSeeder::class);
-        // Связь сайта с филиалами
-        $this->call(DepartmentSiteTableSeeder::class);
 
         // Должности
         $this->call(PositionsTableSeeder::class);
@@ -69,39 +61,17 @@ class DatabaseSeeder extends Seeder
         $this->call(PositionRoleTableSeeder::class);
         $this->call(ChargesTableSeeder::class);
 
-        // Вакансии и сотрудники
-        $this->call(StaffTableSeeder::class);
-        $this->call(EmployeesTableSeeder::class);
-
-        // Списки
-        $this->call(BooklistsTableSeeder::class);
-        $this->call(BooklistTypesTableSeeder::class);
-        $this->call(BooklistUserTableSeeder::class);
-        $this->call(ListItemsTableSeeder::class);
-
-        // Новости
-        $this->call(NewsTableSeeder::class);
-        $this->call(CityEntityTableSeeder::class);
-
         // Альбомы
+        $this->call(PhotoSettingsTableSeeder::class);
         $this->call(AlbumsCategoriesTableSeeder::class);
-        $this->call(AlbumsTableSeeder::class);
-        $this->call(EntitySettingsTableSeeder::class);
 
         // Режимы
         $this->call(ServicesModesTableSeeder::class);
         $this->call(GoodsModesTableSeeder::class);
         $this->call(RawsModesTableSeeder::class);
 
-        // Связь: Расписания с сущностями
-        $this->call(ScheduleEntityTableSeeder::class);
-
-        // Связь: Клиенты - поставщики
-        $this->call(ContragentsTableSeeder::class);
-
+        // Свойства (для метрик)
         $this->call(PropertiesTableSeeder::class);
-        $this->call(MetricsTableSeeder::class);
-        $this->call(MetricEntityTableSeeder::class);
 
         // Сиды к новым миграциям
         $this->call(ServicesTypesTableSeeder::class);

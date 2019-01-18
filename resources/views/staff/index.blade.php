@@ -74,6 +74,10 @@
                         <a href="/admin/staff/{{ $staffer->id }}/edit">{{ isset($staffer->user) ? $staffer->user->name : 'Вакансия' }} ( {{ $staffer->position->name }} )</a>
                         @endcan
 
+                        @cannot('update', $staffer)
+                            {{ isset($staffer->user) ? $staffer->user->name : 'Вакансия' }} ( {{ $staffer->position->name }} )
+                        @endcannot
+
                     </td>
 
                     @if ($staffer->company->filials->count() > 1)

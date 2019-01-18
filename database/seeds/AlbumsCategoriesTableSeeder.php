@@ -2,14 +2,14 @@
 
 use Illuminate\Database\Seeder;
 
-use App\AlbumsCategories;
+use App\AlbumsCategory;
 
 class AlbumsCategoriesTableSeeder extends Seeder
 {
 
     public function run()
     {
-        AlbumsCategories::insert([
+        AlbumsCategory::insert([
             [
                 'name' => 'Системные альбомы',
                 'author_id' => 1,

@@ -33,7 +33,7 @@ class SitesTableSeeder extends Seeder
             //     'moderation' => null,
             //     'api_token' => str_random(60),
             // ],
-           
+
         ]);
     }
 }

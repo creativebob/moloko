@@ -345,8 +345,15 @@ function getPhotoPath($item, $size = 'medium') {
     if (isset($item->photo_id)) {
         return "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
     } else {
+
         if ($item->getTable() == 'users') {
-            $sex = ($item->sex == 1) ? 'man' : 'woman';
+
+            if (isset($item->sex)) {
+                $sex = ($item->sex == 1) ? 'man' : 'woman';
+            } else {
+                $sex = 'man';
+            }
+
             return '/crm/img/plug/avatar_small_' . $sex . '.png';
         } else {
             return '/crm/img/plug/' . $item->getTable() . '_small_default_color.jpg';

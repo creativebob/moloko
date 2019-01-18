@@ -16,7 +16,7 @@ class CreatePhotoSettingsTable extends Migration
         Schema::create('photo_settings', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->morphs('photo_settings');
+            $table->nullableMorphs('photo_settings');
 
             $table->string('name')->nullable()->index()->comment('Название настройки');
             $table->text('description')->nullable()->comment('Описание настройки');

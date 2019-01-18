@@ -18,25 +18,6 @@ class RegionsTableSeeder extends Seeder
 		        'vk_external_id' => 1127513,
                 'system_item' => 1,
      	    ],
-            [
-                'name' => 'Бурятия',
-                'code' => null,
-                'vk_external_id' => null,
-                'system_item' => 1,
-
-            ],
-            [
-                'name' => 'Красноярский край',
-                'code' => null,
-                'vk_external_id' => null,
-                'system_item' => 1,
-            ],
-            [
-                'name' => 'Забайкальский край',
-                'code' => null,
-                'vk_external_id' => null,
-                'system_item' => 1,
-            ],
         ]);
     }
 }
