@@ -16,7 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-
 // Фильтры
 // use App\Scopes\Filters\Filter;
 // use App\Scopes\Filters\BooklistFilter;
@@ -26,7 +25,7 @@ class City extends Model
 {
 
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use SoftDeletes;
 
@@ -42,47 +41,39 @@ class City extends Model
     // use BooklistFilter;
     // use DateIntervalFilter;
 
+    // Общая база
+    // protected $connection = 'general';
+    //
     protected $dates = ['deleted_at'];
 
     protected $table = 'cities';
 
-    // protected $connection = 'general';
     protected $fillable = [
-        'city_name',
+        'name',
         'region_id',
         'area_id',
-        'city_code',
-        'city_vk_external_id',
+        'code',
+        'vk_external_id',
+        'display',
+        'system_item',
+        'author_id'
     ];
 
-    // Получаем район данного города.
+    // Район
     public function area()
     {
         return $this->belongsTo('App\Area');
     }
 
-    // Получаем область данного города.
+    // Область
     public function region()
     {
         return $this->belongsTo('App\Region');
     }
 
-    // Получаем локации города.
+    // Локации
     public function locations()
     {
         return $this->hasMany('App\Location');
     }
-
-    // Получаем филиалы и отделы города.
-    public function departments()
-    {
-        return $this->hasMany('App\Department');
-    }
-
-    // Получаем пользователей.
-    public function users()
-    {
-        return $this->hasMany('App\User');
-    }
-
 }

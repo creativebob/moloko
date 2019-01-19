@@ -12,7 +12,7 @@ class LegalFormsSelectComposer
 	{
 
         $legal_forms_list = LegalForm::get()->pluck('name', 'id');
-	return $view->with('legal_forms_list', $legal_forms_list);
+		return $view->with('legal_forms_list', $legal_forms_list);
 
 	}
 

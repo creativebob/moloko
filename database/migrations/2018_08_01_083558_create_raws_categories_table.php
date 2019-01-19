@@ -30,10 +30,6 @@ class CreateRawsCategoriesTable extends Migration
             $table->integer('parent_id')->nullable()->unsigned()->comment('Id категории сырья');
             $table->foreign('parent_id')->references('id')->on('raws_categories');
 
-            // $table->enum('type', ['services', 'goods', 'raws'])->comment('Тип товара (Услуга/товар/сырье)');
-
-            $table->enum('status', ['one', 'set'])->comment('Статус набора (Один/набор)');
-
             $table->integer('raws_mode_id')->nullable()->unsigned()->comment('Вид продукции');
             $table->foreign('raws_mode_id')->references('id')->on('raws_modes');
 

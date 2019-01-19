@@ -28,7 +28,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
     <div class="small-12 cell">
-        <table class="table-content tablesorter content-employees" id="content" data-sticky-container data-entity-alias="employees">
+        <table class="content-table tablesorter content-employees" id="content" data-sticky-container data-entity-alias="employees">
 
             <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
                 <tr id="thead-content">

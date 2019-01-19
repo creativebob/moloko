@@ -1,120 +1,106 @@
-<script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
 <script>
-  CKEDITOR.replace('content-ckeditor');
 
-  $(function() {
-
-  	$(document).on('change', '#albums-categories-select', function() {
-     var id = $(this).val();
-
-     if (id == 0) {
-      $('#albums-select').prop('disabled', true);
-      $('#albums-select').html('');
-    } else {
-        // Сам ajax запрос
-        $.ajax({
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          },
-          url: "/admin/albums_list",
-          type: "POST",
-          data: {id: id},
-          success: function(html){
-            $('#albums-select').prop('disabled', false);
-            $('#albums-select').html(html);
-          }
+    // Добавление альбомов
+    $(document).on('click', '[data-open="album-add"]', function(event) {
+        event.preventDefault();
+        /* Act on the event */
+        $.post("/admin/album_add", function(html){
+            $('#modal').html(html).foundation();
+            $('#album-add').foundation('open');
         });
-      }
-    });	
+    });
+
+    $(document).on('change', '#select-albums_categories', function() {
+        var id = $(this).val();
+        // alert(id);
+
+        if (id == 0) {
+            $('#select-albums').html('');
+            $('#select-albums').prop('disabled', true);
+        } else {
+            $.post("/admin/albums_select", {albums_category_id: id}, function(html){
+                $('#select-albums').replaceWith(html);
+            });
+        }
+    });
 
     // Добавление альбома
     $(document).on('click', '#submit-album-add', function(event) {
-      // Блочим отправку формы
-      event.preventDefault();
+        // Блочим отправку формы
+        event.preventDefault();
+        $(this).prop('disabled', true);
+        var form = $(this).closest('form');
 
-      // Сам ajax запрос
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: "/admin/admin/get_album",
-        type: "POST",
-        data: $(this).closest('form').serialize(),
-        success: function(html){
-          $('.table-content > tbody').append(html);
-        }
-      });
+        $.post('/admin/album_get', form.serialize(), function(html){
+            $('#table-albums').append(html);
+            form.closest('.reveal-overlay').remove();
+        });
     });
 
-  });
+    // Удаление альбома
+    $(document).on('click', '.delete-button-ajax', function() {
+        $('#item-delete-ajax').foundation('close');
+    });
 
-  // Берем алиас сайта
-  var siteAlias = '{{ $alias }}';
+    // ------------------- Проверка на совпадение имени --------------------------------------
 
-  function dbCheck (alias, submit, db) {
+    // Берем алиас сайта
+    var site_alias = '{{ $site->alias }}';
+    var cur_news_id = '{{ $cur_news->id }}';
 
-    // Блокируем аттрибут базы данных
-    $(db).val(0);
+    function checkField (check) {
 
-    // Смотрим сколько символов
-    var lenName = alias.length;
+        var item = check;
+        var value = item.val();
+        var id = item.closest('form').find('#item-id').val();
+        var submit = item.closest('form').find('.button');
 
-    // Если символов больше 3 - делаем запрос
-    if (lenName > 3) {
+        // Если символов больше 3 - делаем запрос
+        if (value.length > 3) {
+            // alert(value + ', ' + field + ', ' + entity_alias + ', ' + id);
 
-      // Сам ajax запрос
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/admin/sites/' + siteAlias + '/news_check',
-        type: "POST",
-        data: {alias: alias},
-        beforeSend: function () {
-          $('.find-status').addClass('icon-load');
-        },
-        success: function(date) {
-          $('.find-status').removeClass('icon-load');
-          var result = $.parseJSON(date);
-          // Если ошибка
-          if (result.error_status == 1) {
-            $(submit).prop('disabled', true);
-            $('.item-error').css('display', 'block');
-            $(db).val(0);
-          } else {
-            // Выводим пришедшие данные на страницу
+            // Сам ajax запрос
+            $.ajax({
+                url: '/admin/sites/' + site_alias + '/news_check',
+                type: "POST",
+                data: {alias: value, id: cur_news_id},
+                beforeSend: function () {
+                    item.siblings('.find-status').addClass('icon-load');
+                },
+                success: function(count){
+                    item.siblings('.find-status').removeClass('icon-load');
+
+                    // Состояние ошибки
+                    if (count > 0) {
+                        item.siblings('.item-error').show();
+                        $(submit).prop('disabled', true);
+                    } else {
+                        item.siblings('.item-error').hide();
+                        $(submit).prop('disabled', false);
+                    };
+                }
+            });
+        } else {
+            item.siblings('.item-error').hide();
             $(submit).prop('disabled', false);
-            $('.item-error').css('display', 'none');
-            $(db).val(1);
-          };
-        }
-      });
-    } else {
-      // Удаляем все значения, если символов меньше 3х
-      $(submit).prop('disabled', false);
-      $('.item-error').css('display', 'none');
-      $(db).val(0);
+        };
     };
-  };
 
-  // Обозначаем таймер для проверки
-  var timerId;
-  var time = 400;
+    // Проверка существования
+    $(document).on('keyup', '[name="alias"]', function() {
+        var check = $(this);
 
-  // Проверка существования
-  $(document).on('keyup', 'input[name="alias"]', function() {
-    // Получаем фрагмент текста
-    var alias = $('input[name="alias"]').val();
-    // Указываем название кнопки
-    var submit = 'input[type="submit"]';
-    // Значение поля с разрешением
-    var db = '#check';
-    // Выполняем запрос
-    clearTimeout(timerId);   
-    timerId = setTimeout(function() {
-      dbCheck (alias, submit, db);
-    }, time); 
-  });
+        let timerId;
+        clearTimeout(timerId);
+        timerId = setTimeout(function() {
+            checkField(check);
+        }, 300);
+    });
+
+    // ---------------------------------- Закрытие модалки -----------------------------------
+    $(document).on('click', '.icon-close-modal', function() {
+        $(this).closest('.reveal-overlay').remove();
+    });
 </script>
 
 

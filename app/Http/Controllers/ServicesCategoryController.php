@@ -9,7 +9,7 @@ use App\ServicesProduct;
 use App\ServicesCategory;
 use App\Property;
 use App\Company;
-use App\EntitySetting;
+use App\PhotoSetting;
 use App\UnitsCategory;
 
 // Валидация
@@ -29,7 +29,7 @@ class ServicesCategoryController extends Controller
         $this->services_category = $services_category;
         $this->class = ServicesCategory::class;
         $this->model = 'App\ServicesCategory';
-        $this->entity_table = with(new $this->class)->getTable();
+        $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
         $this->type = 'edit';
     }
@@ -41,9 +41,9 @@ class ServicesCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_table);
+        $page_info = pageInfo($this->entity_alias);
 
-        $answer = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Отдаем Ajax
         if ($request->ajax()) {
@@ -52,7 +52,7 @@ class ServicesCategoryController extends Controller
             return view('includes.menu_views.category_list',
                 [
                     'items' => $this->services_category->getIndex($request, $answer),
-                    'entity' => $this->entity_table,
+                    'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
                     'count' => count($this->services_category->getIndex($request, $answer)),
@@ -66,9 +66,12 @@ class ServicesCategoryController extends Controller
             [
                 'items' => $this->services_category->getIndex($request, $answer),
                 'page_info' => $page_info,
-                'entity' => $this->entity_table,
+                'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
+                'filter' => setFilter($this->entity_alias, $request, [
+                    'booklist'
+                ]),
             ]
         );
     }
@@ -108,7 +111,7 @@ class ServicesCategoryController extends Controller
         $services_category->display = $request->display;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
@@ -165,7 +168,7 @@ class ServicesCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_services_categories = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer_services_categories = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $services_category = ServicesCategory::with(['services_mode', 'metrics.unit', 'metrics.values'])
@@ -299,7 +302,7 @@ class ServicesCategoryController extends Controller
         } else {
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($this->entity_table, $this->entity_dependence, 'index');
+            $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
 
             // Главный запрос
             $services_categories = ServicesCategory::moderatorLimit($answer)
@@ -328,7 +331,7 @@ class ServicesCategoryController extends Controller
         // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_table, $this->entity_table, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_alias, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $services_category = servicesCategory::moderatorLimit($answer)->findOrFail($id);
@@ -353,7 +356,7 @@ class ServicesCategoryController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_table])->first();
+            $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
 
             if ($get_settings) {
 
@@ -458,7 +461,7 @@ class ServicesCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_table, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $services_category = ServicesCategory::withCount('services_products')->moderatorLimit($answer)->findOrFail($id);
@@ -540,7 +543,7 @@ class ServicesCategoryController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_table, $this->entity_dependence, 'index');
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
 
         // Главный запрос
         $services_categories = ServicesCategory::moderatorLimit($answer)
@@ -636,7 +639,7 @@ class ServicesCategoryController extends Controller
     {
         // dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_table, $this->entity_table, 'update');
+        $answer = operator_right($this->entity_alias, $this->entity_alias, 'update');
 
         // ГЛАВНЫЙ ЗАПРОС:
         $services_category = ServicesCategory::moderatorLimit($answer)->findOrFail($id);
@@ -661,7 +664,7 @@ class ServicesCategoryController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_table])->first();
+            $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
 
             if ($get_settings) {
 

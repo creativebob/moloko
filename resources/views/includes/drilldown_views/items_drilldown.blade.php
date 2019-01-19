@@ -1,8 +1,9 @@
 {{-- Если вложенный --}}
 
 @foreach ($items as $item)
-<li>
+<li class="item-catalog">
 	<a class="get-products" id="{{ $entity }}-{{ $item->id }}">{{ $item->name }}</a>
+
 	@if(isset($grouped_items[$item->id]))
 
 	<ul class="menu vertical nested">

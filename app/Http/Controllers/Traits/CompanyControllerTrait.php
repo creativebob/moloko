@@ -39,13 +39,15 @@ trait CompanyControllerTrait
 	        $company->location_id = create_location($request);
 	        $company->sector_id = $request->sector_id;
 	        $company->author_id = $request->user()->id;
+            $company->external_control = $request->has('external_control');
+
 	        $company->save();
 
 	     }
 
         // Если запись удачна - будем записывать связи
         if($company){
-        	
+
             add_phones($request, $company);
             addBankAccount($request, $company);
             setSchedule($request, $company);
@@ -92,6 +94,7 @@ trait CompanyControllerTrait
             $company->sector_id = $request->sector_id;
         }
 
+        $company->external_control = $request->has('external_control');
         $company->save();
 
         if($company){

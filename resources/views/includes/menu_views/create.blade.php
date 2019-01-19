@@ -6,7 +6,8 @@
   </div>
   {{ Form::open(['id' => 'form-create', 'data-abide', 'novalidate']) }}
 
-    @include($entity.'.form', ['submit_text' => 'Добавить', 'class' => 'submit-create'])
+  @include('includes.menu_views.modal', ['submit_text' => 'Добавить', 'class' => 'submit-create'])
+
 
   {{ Form::close() }}
   <div data-close class="icon-close-modal sprite close-modal add-item"></div>

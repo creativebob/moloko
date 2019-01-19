@@ -4,7 +4,7 @@
 			<h5>ДОБАВЛЕНИЕ товара</h5>
 		</div>
 	</div>
-	{{ Form::open(['url' => '/admin/goods','id'=>'form-cur_goods-create', 'data-abide', 'novalidate']) }}
+	{{ Form::open(['route' => 'goods.store', 'id '=> 'form-cur_goods-create', 'data-abide', 'novalidate']) }}
 	<div class="grid-x grid-padding-x align-center modal-content inputs">
 		<div class="small-10 cell">
 
@@ -13,7 +13,7 @@
 				<div class="small-12 cell">
 
 					<label>Категория товаров
-						@include('includes.selects.goods_categories', ['entity' => 'goods_categories'])
+						@include('includes.selects.goods_categories', ['entity' => $cur_goods->getTable()])
 					</label>
 				</div>
 
@@ -63,7 +63,7 @@
 	</div>
 	<div class="grid-x align-center">
 		<div class="small-6 medium-4 cell">
-			{{ Form::submit('Добавить товар', ['data-close', 'class'=>'button modal-button']) }}
+			{{ Form::submit('Добавить', ['class' => 'button modal-button']) }}
 		</div>
 	</div>
 	{{ Form::close() }}

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('inhead')
-@include('includes.scripts.pickmeup-inhead')
 @include('includes.scripts.dropzone-inhead')
 @endsection
 
@@ -22,8 +21,8 @@
 @section('content')
 <div class="grid-x grid-padding-x">
     <div class="small-12 cell">
-        {{ Form::open(['url' => '/admin/albums/'.$alias.'/photos', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
-        {{ Form::close() }}
+        {!! Form::open(['route' => ['photos.store', $album->alias], 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) !!}
+        {!! Form::close() !!}
     </div>
 </div>
 @endsection
@@ -34,9 +33,6 @@
 @endsection
 
 @section('scripts')
-@include('includes.scripts.cities-list')
-@include('includes.scripts.inputs-mask')
-@include('includes.scripts.pickmeup-script')
 
 <script>
 
@@ -51,7 +47,7 @@
                 file.previewTemplate.setAttribute('id',responseText[0].id);
             });
             this.on("thumbnail", function(file) {
-                if ({{ $settings['upload_mode'] }} == 0) {
+                if ({{ $settings['strict_mode'] }} == 0) {
                     if (file.width < {{ $settings['img_min_width'] }} || file.height < {{ $settings['img_min_height'] }}) {
                         file.rejectDimensions()
                     }
@@ -71,10 +67,10 @@
         accept: function(file, done) {
             file.acceptDimensions = done;
             file.rejectDimensions = function() {
-                if ({{ $settings['upload_mode'] }} == 0) {
-                    done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину, и {{ $settings['img_min_height'] }} в высоту."); 
+                if ({{ $settings['strict_mode'] }} == 0) {
+                    done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину, и {{ $settings['img_min_height'] }} в высоту.");
                 } else {
-                    done("Размер должен быть {{ $settings['img_min_width'] }} px в ширину, и {{ $settings['img_min_height'] }} в высоту."); 
+                    done("Размер должен быть {{ $settings['img_min_width'] }} px в ширину, и {{ $settings['img_min_height'] }} в высоту.");
                 }
             };
         }

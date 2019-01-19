@@ -3,27 +3,15 @@
 namespace App\Http\Controllers;
 
 // Модели
-use App\GoodsMode;
-use App\GoodsCategory;
-use App\GoodsProduct;
-use App\GoodsArticle;
 use App\Goods;
-
+use App\GoodsArticle;
+use App\GoodsProduct;
+use App\GoodsCategory;
 use App\RawsArticle;
 use App\Manufacturer;
-
 use App\Album;
-use App\AlbumEntity;
-
-use App\Photo;
-
-use App\UnitsCategory;
-use App\Unit;
-use App\Catalog;
 use App\Metric;
-
-use App\EntitySetting;
-use App\ArticleValue;
+use App\Entity;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -34,8 +22,6 @@ use Illuminate\Support\Facades\Cookie;
 
 // Транслитерация
 use Transliterate;
-
-
 
 class GoodsController extends Controller
 {
@@ -49,14 +35,13 @@ class GoodsController extends Controller
         $this->model = 'App\Goods';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-        $this->type = 'edit';
     }
 
     public function index(Request $request)
     {
 
         // Подключение политики
-        $this->authorize('index', Goods::class);
+        $this->authorize('index', $this->class);
 
         // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_alias);
@@ -73,16 +58,21 @@ class GoodsController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------------
 
-        $goods = Goods::with('author', 'company', 'goods_article.goods_product.goods_category', 'catalogs.site')
+        $goods = Goods::with(
+            'author',
+            'company',
+            'article.product.category',
+            'catalogs.site'
+        )
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->booklistFilter($request)
         ->filter($request, 'author_id')
-        ->filter($request, 'goods_category_id', 'goods_article.goods_product')
-        ->filter($request, 'goods_product_id', 'goods_article')
-        ->whereHas('goods_article', function ($q) {
+        ->filter($request, 'goods_category_id', 'article.product')
+        ->filter($request, 'goods_product_id', 'article')
+        ->whereHas('article', function ($q) {
             $q->whereNull('archive');
         })
         ->orderBy('moderation', 'desc')
@@ -122,7 +112,7 @@ class GoodsController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // --------------------------------------------------------------------------------------------------------------
 
-        $result_search = Goods::with('author', 'company', 'goods_article.goods_product.goods_category')
+        $result_search = Goods::with('author', 'company', 'article.product.category')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -151,17 +141,18 @@ class GoodsController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods_categories = operator_right('goods_categories', false, 'index');
+        $answer = operator_right('goods_categories', false, 'index');
 
         // Главный запрос
-        $goods_categories = GoodsCategory::withCount('goods_products')
-        ->with('goods_products')
-        ->moderatorLimit($answer_goods_categories)
-        ->companiesLimit($answer_goods_categories)
-        ->authors($answer_goods_categories)
-        ->systemItem($answer_goods_categories) // Фильтр по системным записям
+        $goods_categories = GoodsCategory::withCount('products', 'manufacturers')
+        ->with('products', 'manufacturers')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
         ->orderBy('sort', 'asc')
         ->get();
+        // dd($goods_categories->where('manufacturers_count', 0)->count());
 
         if ($goods_categories->count() == 0){
 
@@ -196,7 +187,20 @@ class GoodsController extends Controller
             return view('ajax_error', compact('ajax_error'));
         }
 
-        $goods_products_count = $goods_categories[0]->goods_products_count;
+        // Если в категориях не добавлены производители
+        if ($goods_categories->where('manufacturers_count', 0)->count() == $goods_categories->count()){
+
+            // Описание ошибки
+            // $ajax_error = [];
+            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+            $ajax_error['text'] = "Для начала необходимо добавить производителей в категории. А уже потом будем добавлять товары. Ок?";
+            $ajax_error['link'] = "/admin/goods_categories"; // Ссылка на кнопке
+            $ajax_error['title_link'] = "Идем в раздел категорий товаров"; // Текст на кнопке
+
+            return view('ajax_error', compact('ajax_error'));
+        }
+
+        $goods_products_count = $goods_categories->first()->goods_products_count;
         $parent_id = null;
 
         if ($request->cookie('conditions') != null) {
@@ -222,14 +226,18 @@ class GoodsController extends Controller
         $goods_categories_list = get_select_tree($goods_categories->keyBy('id')->toArray(), $parent_id, null, null);
         // echo $goods_categories_list;
 
-        return view('goods.create', ['cur_goods' => new $this->class, 'goods_categories_list' => $goods_categories_list, 'goods_products_count' => $goods_products_count]);
+        return view('goods.create', [
+            'cur_goods' => new $this->class,
+            'goods_categories_list' => $goods_categories_list,
+            'goods_products_count' => $goods_products_count
+        ]);
     }
 
     public function store(GoodsRequest $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Goods::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // dd($request);
 
@@ -298,7 +306,7 @@ class GoodsController extends Controller
             $cur_goods->price = $request->price;
             $cur_goods->company_id = $company_id;
             $cur_goods->author_id = $user_id;
-            $cur_goods->goods_article()->associate($goods_article);
+            $cur_goods->article()->associate($goods_article);
             $cur_goods->save();
 
             if ($cur_goods) {
@@ -311,9 +319,9 @@ class GoodsController extends Controller
 
                 // dd($request->quickly);
                 if ($request->quickly == 1) {
-                    return redirect('/admin/goods');
+                    return redirect()->route('goods.index');
                 } else {
-                    return redirect('/admin/goods/'.$cur_goods->id.'/edit');
+                    return redirect()->route('goods.edit', ['id' => $cur_goods->id]);
                 }
             } else {
                 abort(403, 'Ошибка записи товара');
@@ -332,11 +340,10 @@ class GoodsController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Главный запрос
-        $cur_goods = Goods::moderatorLimit($answer_goods)->findOrFail($id);
-        // dd($cur_goods);
+        $cur_goods = Goods::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
@@ -424,10 +431,10 @@ class GoodsController extends Controller
         // -- TODO -- Перенести в запрос --
 
         // Массив со значениями метрик товара
-        if (count($cur_goods->goods_article->metrics)) {
+        if (count($cur_goods->article->metrics)) {
             // dd($cur_goods->metrics);
             $metrics_values = [];
-            foreach ($cur_goods->goods_article->metrics->groupBy('id') as $metric) {
+            foreach ($cur_goods->article->metrics->groupBy('id') as $metric) {
                 // dd($metric);
                 if ((count($metric) == 1) && ($metric->first()->list_type != 'list')) {
                     $metrics_values[$metric->first()->id] = $metric->first()->pivot->value;
@@ -443,19 +450,19 @@ class GoodsController extends Controller
         // dd($metrics_values);
         //
         // Если товар в статусе черновика
-        if ($cur_goods->goods_article->draft == 1) {
+        if ($cur_goods->article->draft == 1) {
 
             // Формируем списки составов
             // Статус товара "один"
-            if ($cur_goods->goods_article->goods_product->set_status == 'one') {
+            if ($cur_goods->article->product->set_status == 'one') {
 
                 // Получаем из сессии необходимые данные (Функция находиться в Helpers)
                 $answer_raws_categories = operator_right('raws_categories', false, 'index');
                 $answer_raws_products = operator_right('raws_products', false, 'index');
                 $answer_raws = operator_right('raws', false, 'index');
 
-                $raws_articles = RawsArticle::with(['raws_product' => function ($q) {
-                    $q->with(['raws_category' => function ($q) {
+                $raws_articles = RawsArticle::with(['product' => function ($q) {
+                    $q->with(['category' => function ($q) {
                         $q->select('id', 'name');
                     }])->select('id', 'name', 'raws_category_id');
                 }])
@@ -469,7 +476,7 @@ class GoodsController extends Controller
                 ->systemItem($answer_raws_categories)
                 ->get()
                 ->keyBy('id')
-                ->groupBy('raws_product.raws_category.name');
+                ->groupBy('product.category.name');
 
                 $composition_list = [
                     'name' => 'Сырье',
@@ -484,8 +491,8 @@ class GoodsController extends Controller
                 $answer_goods_products = operator_right('goods_products', false, 'index');
                 $answer_goods = operator_right('goods', false, 'index');
 
-                $goods_articles = GoodsArticle::with(['goods_product' => function ($q) {
-                    $q->with(['goods_category' => function ($q) {
+                $goods_articles = GoodsArticle::with(['product' => function ($q) {
+                    $q->with(['category' => function ($q) {
                         $q->select('id', 'name');
                     }])->select('id', 'name', 'goods_category_id');
                 }])
@@ -499,7 +506,7 @@ class GoodsController extends Controller
                 ->systemItem($answer_goods_categories)
                 ->get()
                 ->keyBy('id')
-                ->groupBy('goods_product.goods_category.name');
+                ->groupBy('product.category.name');
 
                 $composition_list = [
                     'name' => 'Товары',
@@ -510,25 +517,10 @@ class GoodsController extends Controller
             // dd($composition_list);
         }
 
-        // Получаем настройки по умолчанию
-        $settings = config()->get('settings');
+
+
+        $settings = getSettings($this->entity_alias);
         // dd($settings);
-
-        $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
-        // dd($get_settings);
-
-        if ($get_settings){
-            $settings = getSettings($get_settings);
-            // dd($settings);
-        }
-
-        $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id' => 1])->first();
-        // dd($get_settings);
-
-        if ($get_settings){
-            $settings = getSettings($get_settings);
-            // dd($settings);
-        }
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
@@ -546,18 +538,18 @@ class GoodsController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $cur_goods = Goods::with('goods_article.goods_product')->moderatorLimit($answer)->findOrFail($id);
+        $cur_goods = Goods::with('article.product')->moderatorLimit($answer)->findOrFail($id);
         // dd($cur_goods);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
         // Получаем артикул товара
-        $goods_article = $cur_goods->goods_article;
+        $goods_article = $cur_goods->article;
         // dd($cur_goods->goods_article->draft);
-        //
+
         // Проверки только для черновика
-        if ($cur_goods->goods_article->draft == 1) {
+        if ($cur_goods->article->draft == 1) {
 
             // Определяем количество метрик и составов
             $metrics_count = isset($request->metrics) ? count($request->metrics) : 0;
@@ -604,7 +596,7 @@ class GoodsController extends Controller
             if (isset($request->compositions_values)) {
                 // dd($request->compositions_values);
 
-                if ($cur_goods->goods_article->goods_product->set_status == 'one') {
+                if ($cur_goods->article->product->set_status == 'one') {
                     // Приводим значения в соответкствие
                     foreach ($request->compositions_values as $composition_id => $value) {
                         $compositions_values[$composition_id] = round($value , 2, PHP_ROUND_HALF_UP);
@@ -621,9 +613,9 @@ class GoodsController extends Controller
             $manufacturer_id = isset($request->manufacturer_id) ? $request->manufacturer_id : null;
 
             // если в черновике поменяли производителя
-            if ($cur_goods->goods_article->draft == 1) {
-                if ($manufacturer_id != $cur_goods->goods_article->manufacturer_id) {
-                    $goods_article = $cur_goods->goods_article;
+            if ($cur_goods->article->draft == 1) {
+                if ($manufacturer_id != $cur_goods->article->manufacturer_id) {
+                    $goods_article = $cur_goods->article;
                     $goods_article->manufacturer_id = $manufacturer_id;
                     $goods_article->save();
                 }
@@ -666,7 +658,7 @@ class GoodsController extends Controller
             }
 
             // Состав
-            $compositions_relation = ($goods_article->goods_product->set_status == 'one') ? 'compositions' : 'set_compositions';
+            $compositions_relation = ($goods_article->product->set_status == 'one') ? 'compositions' : 'set_compositions';
             if (count($compositions_values)) {
 
                 $goods_article->$compositions_relation()->detach();
@@ -685,7 +677,7 @@ class GoodsController extends Controller
         }
 
         // Если снят флаг черновика, проверяем на совпадение артикула
-        if (empty($request->draft) && $cur_goods->goods_article->draft == 1) {
+        if (empty($request->draft) && $cur_goods->article->draft == 1) {
 
             // dd($request);
 
@@ -700,7 +692,7 @@ class GoodsController extends Controller
                 return redirect()->back()->withInput()->withErrors('Такой артикул уже существует в группе!');
             }
 
-            $goods_article = $cur_goods->goods_article;
+            $goods_article = $cur_goods->article;
             $goods_article->draft = null;
             $goods_article->save();
             // $goods_article = GoodsArticle::where('id', $cur_goods->goods_article_id)->update(['draft' => null]);
@@ -715,10 +707,10 @@ class GoodsController extends Controller
         $goods_category_id = $request->goods_category_id;
 
         // Смотрим: была ли она изменена
-        if ($cur_goods->goods_article->goods_product->goods_category_id != $goods_category_id) {
+        if ($cur_goods->article->product->goods_category_id != $goods_category_id) {
 
             // Была изменена! Переназначаем категорию группе:
-            $item = GoodsProduct::where('id', $cur_goods->goods_article->goods_product_id)
+            $item = GoodsProduct::where('id', $cur_goods->article->goods_product_id)
             ->update(['goods_category_id' => $goods_category_id]);
         }
 
@@ -730,7 +722,7 @@ class GoodsController extends Controller
         // Получаем выбранную группу со страницы (то, что указал пользователь)
         $goods_product_id = $request->goods_product_id;
 
-        if ($cur_goods->goods_article->goods_product_id != $goods_product_id ) {
+        if ($cur_goods->article->goods_product_id != $goods_product_id ) {
 
             // Была изменена! Переназначаем категорию группе:
             $item = GoodsArticle::where('id', $cur_goods->goods_article_id)
@@ -739,41 +731,11 @@ class GoodsController extends Controller
 
         // А, пока изменяем без проверки
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        // Если пришла фотография
-        if ($request->hasFile('photo')) {
-
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => $this->entity_alias])->first();
-
-            $settings = getSettings($get_settings);
-
-            $directory = $user->company_id.'/media/goods/'.$cur_goods->id.'/img';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id компании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записанным обьектом фото, и результатом записи
-            $result = save_photo($request, $directory, 'avatar-'.time(), null, $cur_goods->photo_id, $settings);
-
-            $cur_goods->photo_id = $result['photo']->id;
-        }
-
         // Порции
-        // if (isset($request->portion_status)) {
         $cur_goods->portion_status = $request->portion_status;
         $cur_goods->portion_name = $request->portion_name;
         $cur_goods->portion_abbreviation = $request->portion_abbreviation;
         $cur_goods->portion_count = $request->portion_count;
-        // } else {
-        //     $cur_goods->portion_status = null;
-        //     $cur_goods->portion_name = null;
-        //     $cur_goods->portion_abbreviation = null;
-        //     $cur_goods->portion_count = null;
-        // }
 
         // Описание
         $cur_goods->description = $request->description;
@@ -789,17 +751,21 @@ class GoodsController extends Controller
         // Общие данные
         $cur_goods->display = $request->display;
         $cur_goods->system_item = $request->system_item;
-        $cur_goods->editor_id = $user_id;
+
+        $cur_goods->editor_id = hideGod($request->user());
         $cur_goods->save();
 
         if ($cur_goods) {
+
+            // Cохраняем / обновляем фото
+            savePhoto($request, $cur_goods);
 
             // Проверяем каталоги
             if (isset($request->catalogs)) {
 
                 $catalogs_insert = [];
                 foreach ($request->catalogs as $catalog) {
-                    $mass[$catalog] = ['display' => 1];
+                    $catalogs_insert[$catalog] = ['display' => 1];
                 }
                 // dd($catalogs_insert);
                 $cur_goods->catalogs()->sync($catalogs_insert);
@@ -819,9 +785,9 @@ class GoodsController extends Controller
                 return Redirect($backlink);
             }
 
-            return Redirect('/admin/goods');
+            return redirect()->route('goods.index');
         } else {
-            abort(403, 'Ошибка записи группы товаров');
+            abort(403, 'Ошибка обновления товара');
         }
     }
 
@@ -837,7 +803,7 @@ class GoodsController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $cur_goods = Goods::with('goods_article')->moderatorLimit($answer)->findOrFail($id);
+        $cur_goods = Goods::with('article')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize('delete', $cur_goods);
@@ -850,7 +816,7 @@ class GoodsController extends Controller
             // Скрываем бога
             $user_id = hideGod($user);
 
-            $goods_article = $cur_goods->goods_article;
+            $goods_article = $cur_goods->article;
 
             $goods_article->editor_id = $user_id;
             $goods_article->archive = 1;
@@ -866,11 +832,13 @@ class GoodsController extends Controller
         }
     }
 
-            // Отображение на сайте
+    // ----------------------------------- Ajax -----------------------------------------
+
+    // Отображение на сайте
     public function ajax_sync(Request $request)
     {
 
-                // Описание ошибки
+        // Описание ошибки
         $ajax_error = [];
         $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
         $ajax_error['text'] = "Для начала необходимо создать категории товаров. А уже потом будем добавлять товары. Ок?";
@@ -890,85 +858,31 @@ class GoodsController extends Controller
         return response()->json($goods_count);
     }
 
-    public function get_inputs(Request $request)
+    // Для заказа
+    public function ajax_get_products(Request $request)
     {
 
-        $product = Product::with('metrics.property', 'compositions.unit')->withCount('metrics', 'compositions')->findOrFail($request->product_id);
-        return view('products.cur_goods-form', compact('product'));
-        // $product = Product::with('metrics.property', 'compositions.unit')->findOrFail(1);
-        // dd($product);
+        $id = $request->id;
+        // $id = 3;
+
+        $goods_list = Goods::with('article', 'photo')
+        ->whereHas('article', function ($query) use ($id) {
+            $query->whereNull('draft')
+            ->whereNull('archive')
+            ->whereHas('product', function ($query) use ($id) {
+                $query->whereHas('category', function ($query) use ($id) {
+                    $query->where('id', $id);
+                });
+            });
+        })
+        ->get();
+        // dd($goods_list);
+
+        return view('leads.items_for_category', [
+            'items_list' => $goods_list,
+            'entity' => $this->entity_alias
+        ]);
     }
-
-    public function add_photo(Request $request)
-    {
-
-        // Подключение политики
-        $this->authorize(getmethod('store'), Photo::class);
-
-        if ($request->hasFile('photo')) {
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            // $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
-
-            // Иначе переводим заголовок в транслитерацию
-            $alias = Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]);
-
-            $album = Album::firstOrCreate([
-                'company_id' => $request->user()->company_id,
-                'name' => $request->name,
-                'albums_category_id' => 1,
-            ], [
-                'alias' => $alias,
-                'description' => $request->name,
-                'author_id' => hideGod($request->user()),
-            ]);
-
-            Goods::where('id', $request->id)->update(['album_id' => $album->id]);
-
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = EntitySetting::where(['entity' => 'albums_categories', 'entity_id'=> 1])->first();
-
-            $settings = getSettings($get_settings);
-
-            $directory = $request->user()->company_id.'/media/albums/'.$album->id.'/img';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-            $array = save_photo($request, $directory,  $alias.'-'.time(), $album->id, null, $settings);
-
-            $photo = $array['photo'];
-            $upload_success = $array['upload_success'];
-
-            $album->photos()->attach($photo->id);
-
-            // $upload_success = true;
-
-            if ($upload_success) {
-                return response()->json($upload_success, 200);
-            } else {
-                return response()->json('error', 400);
-            }
-
-        } else {
-            return response()->json('error', 400);
-        }
-    }
-
-    public function photos(Request $request)
-    {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $cur_goods = Goods::with('album.photos')->moderatorLimit($answer)->findOrFail($request->cur_goods_id);
-        // dd($product);
-
-        // Подключение политики
-        $this->authorize(getmethod('edit'), $cur_goods);
-
-        return view('goods.photos', compact('cur_goods'));
-    }
-
 
     // -------------------------------------- Проверки на совпаденеи артикула ----------------------------------------------------
 
@@ -1037,7 +951,7 @@ class GoodsController extends Controller
 
                 // Формируем массив составов артикула
                 $compositions_array = [];
-                if ($goods_article->goods_product->set_status == 'one') {
+                if ($goods_article->product->set_status == 'one') {
                     foreach ($goods_article->compositions as $composition) {
                         // dd($composition);
                         $compositions_array[$composition->id] = $composition->pivot->value;

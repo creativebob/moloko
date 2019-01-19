@@ -39,31 +39,29 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // -----------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
-        // -----------------------------------------------------------------------------------------------------------
-
-        $filter = setFilter($this->entity_alias, $request, [
-            'booklist'              // Списки пользователя
-        ]);
-
-        // Окончание фильтра -----------------------------------------------------------------------------------------
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
-
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $sectors = Sector::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->template($answer)
+        ->booklistFilter($request)
+        ->withCount('companies')
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
 
         // Отдаем Ajax
         if ($request->ajax()) {
 
             return view('includes.menu_views.category_list',
                 [
-                    'items' => $this->sector->getIndex($request, $answer),
+                    'items' => $sectors,
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => count($this->sector->getIndex($request, $answer)),
+                    'count' => $sectors->count(),
                     'id' => $request->id,
                     'nested' => 'companies_count',
                 ]
@@ -73,14 +71,16 @@ class SectorController extends Controller
         // Отдаем на шаблон
         return view('includes.menu_views.index',
             [
-                'items' => $this->sector->getIndex($request, $answer),
-                'page_info' => $page_info,
+                'items' => $sectors,
+                'page_info' => pageInfo($this->entity_alias),
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
-                'filter' => $filter,
                 'id' => $request->id,
                 'nested' => 'companies_count',
+                'filter' => setFilter($this->entity_alias, $request, [
+                    'booklist'
+                ]),
             ]
         );
     }
@@ -133,8 +133,8 @@ class SectorController extends Controller
     public function edit($id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $sector = $this->sector->getItem($id, operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)));
+        $sector = Sector::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
@@ -151,8 +151,8 @@ class SectorController extends Controller
     public function update(SectorRequest $request, $id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $sector = $this->sector->getItem($id, operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)));
+        $sector = Sector::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
@@ -170,7 +170,7 @@ class SectorController extends Controller
         } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Ошибка при записи сектора!'
+                'error_message' => 'Ошибка при обновлении сектора!'
             ];
         }
     }
@@ -181,7 +181,7 @@ class SectorController extends Controller
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $sector = $this->sector->getItem($answer, $id);
+        $sector = Sector::with('childs', 'companies')->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
@@ -199,11 +199,11 @@ class SectorController extends Controller
             ];
         } else {
 
-            $parent_id = $sector->parent_id;
-
             // Скрываем бога
             $sector->editor_id = hideGod($request->user());
             $sector->save();
+
+            $parent_id = $sector->parent_id;
 
             $sector = Sector::destroy($id);
 

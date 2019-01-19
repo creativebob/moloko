@@ -20,7 +20,7 @@ class GoodsCategoriesComposer
         ->orderBy('sort', 'asc')
         ->get(['id', 'name', 'parent_id']);
 
-        if (count($goods_categories) < 1) {
+        if ($goods_categories->count() == 0) {
 
             // Описание ошибки
             $ajax_error = [];

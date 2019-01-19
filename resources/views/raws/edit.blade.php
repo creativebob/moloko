@@ -9,28 +9,42 @@
 
 @section('title', 'Редактировать сырьё')
 
-@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $raw->raws_article))
+@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $raw->article))
 
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ сырьё &laquo{{ $raw->raws_article->name }}&raquo</h2>
+        <h2 class="header-content">РЕДАКТИРОВАТЬ сырьё &laquo{{ $raw->article->name }}&raquo</h2>
     </div>
     <div class="top-bar-right">
     </div>
 </div>
 @endsection
 
+@php
+$disabled = $raw->article->draft == null;
+@endphp
+
 @section('content')
 <div class="grid-x tabs-wrap">
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
-            <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
-            <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
+            <li class="tabs-title is-active">
+                <a href="#options" aria-selected="true">Общая информация</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tabs-target="catalogs" href="#catalogs">Каталоги</a>
+            </li>
 
-            <li class="tabs-title"><a data-tabs-target="catalogs" href="#catalogs">Каталоги</a></li>
+            {{-- @can('index', 'App\Photo') --}}
+            <li class="tabs-title">
+                <a data-tabs-target="photos" href="#photos">Фотографии</a>
+            </li>
+            {{-- @endcan --}}
 
-            <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li>
         </ul>
     </div>
 </div>
@@ -39,18 +53,17 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            {{ Form::model($raw, ['url' => ['/admin/raws/'.$raw->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'raws-form']) }}
+            {{ Form::model($raw, [
+                'route' => ['raws.update', $raw->id],
+                'data-abide',
+                'novalidate',
+                'files' => 'true',
+                'id' => 'form-raw'
+            ]
+            ) }}
             {{ method_field('PATCH') }}
 
-            @php
-            if ($raw->draft == 1) {
-                $disabled = '';
-            } else {
-                $disabled = 'disabled';
-            }
-            @endphp
-
-            <!-- Общая информация -->
+            {{-- Общая информация --}}
             <div class="tabs-panel is-active" id="options">
 
                 {{-- Разделитель на первой вкладке --}}
@@ -64,57 +77,24 @@
                             <div class="small-12 medium-6 cell">
 
                                 <label>Название сырья
-                                    {{ Form::text('name', $raw->raws_article->name, ['required', $disabled]) }}
+                                    {{ Form::text('name', $raw->article->name, ['required', $disabled]) }}
                                 </label>
 
                                 <label>Группа
-                                    {{ Form::select('raws_product_id', $raws_products_list, $raw->raws_article->raws_product_id, [$disabled]) }}
+                                    @include('includes.selects.raws_products', ['raws_category_id' => $raw->article->product->raws_category_id, 'set_status' => $raw->article->product->set_status, 'raws_product_id' => $raw->article->raws_product_id])
                                 </label>
 
-                                 <label>Категория
-                                    <select name="raws_category_id" {{ $disabled }}>
-                                        @php
-                                        echo $raws_categories_list;
-                                        @endphp
-                                    </select>
+                                <label>Категория
+                                    @include('includes.selects.raws_categories', ['raws_category_id' => $raw->article->product->raws_category_id])
                                 </label>
-
-                                <fieldset class="fieldset">
-                                    <legend class="checkbox">
-                                        {{ Form::checkbox('portion', 1, null, ['id' => 'portion']) }}
-                                        <label for="portion"><span>Принимать порциями</span></label>
-
-                                    </legend>
-
-                                    <div class="grid-x grid-margin-x">
-                                        <div class="small-12 medium-6 cell">
-                                            <label>Имя порции
-                                                {{ Form::text('lol', "", ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
-                                            </label>
-                                        </div>
-                                        <div class="small-6 medium-3 cell">
-                                            <label>Сокр. имя
-                                                {{ Form::text('lol',  "", ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
-                                            </label>
-                                        </div>
-                                        <div class="small-6 medium-3 cell">
-                                            <label>Кол-во
-                                                {{-- Количество чего-либо --}}
-                                                {{ Form::text('raw_count', 0, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}']) }}
-                                                <div class="sprite-input-right find-status" id="name-check"></div>
-                                                <span class="form-error">Введите количество</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </fieldset>
 
                                 <label>Производитель
-                                    {{ Form::select('manufacturer_id', $manufacturers_list, $raw->manufacturer_id, ['placeholder' => 'Выберите производителя', $disabled])}}
+                                    {!! Form::select('manufacturer_id', $raw->article->product->category->manufacturers->pluck('name', 'id'), $raw->article->manufacturer_id, []) !!}
                                 </label>
 
+                                {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
+
                             </div>
-
-
 
                             <div class="small-12 medium-6 cell">
 
@@ -123,12 +103,10 @@
                                         {{ Form::file('photo') }}
                                     </label>
                                     <div class="text-center">
-                                        <img id="photo" @if (isset($raw->photo_id)) src="/storage/{{ $raw->company->id }}/media/raws/{{ $raw->id }}/img/medium/{{ $raw->photo->name }}" @endif>
+                                        <img id="photo" src="{{ getPhotoPath($raw) }}">
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
 
                     </div>
@@ -137,7 +115,7 @@
 
                     {{-- Правый блок на первой вкладке --}}
                     <div class="small-12 large-6 cell">
-                        {{ Form::open(['url' => 'raws', 'data-abide', 'novalidate', 'id' => 'raws-form']) }}
+                        {{ Form::open(['url' => 'raws', 'data-abide', 'novalidate', 'id' => 'form-raw']) }}
 
                         <fieldset class="fieldset-access">
                             <legend>Артикул</legend>
@@ -164,48 +142,56 @@
                         <div class="grid-x">
                             <div class="small-12 cell">
                                 <label>Описание сырья
-                                    @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$raw->description])
+                                    @include('includes.inputs.textarea', ['name' => 'description', 'value' => $raw->description])
                                 </label>
                             </div>
                         </div>
-                        @if (($raw->raws_article->raws_product->raws_category->metrics_count > 0) || ($raw->metrics_values_count > 0))
+                        @php
+                        $metric_relation = ($raw->article->product->set_status == 'one') ? 'one_metrics' : 'set_metrics';
+                        @endphp
+
+                        @if ($raw->article->metrics->isNotEmpty() || $raw->article->product->category->$metric_relation->isNotEmpty())
+
+                        @include('includes.scripts.class.metric_validation')
+
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
-                            @if ($raw->draft == 1)
+                            <div id="metrics-list">
 
-                            @foreach ($raw->raws_article->raws_product->raws_category->metrics as $metric)
-                            @include('raws.metrics.metric-input', $metric)
-                            @endforeach
+                                {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
+                                @if ($raw->article->metrics->isNotEmpty())
+                                @foreach ($raw->article->metrics->unique() as $metric)
+                                @include('includes.metrics.metric_input', $metric)
+                                @endforeach
 
-                            @else
+                                @else
 
-                            @foreach ($raw->metrics_values as $metric)
-                            @include('raws.metrics.metric-value', $metric)
-                            @endforeach
+                                @if ($raw->article->product->category->$metric_relation->isNotEmpty())
+                                @foreach ($raw->article->product->category->$metric_relation as $metric)
+                                @include('includes.metrics.metric_input', $metric)
+                                @endforeach
+                                @endif
 
-                            @endif
+                                @endif
 
-                            {{-- @if ($raw->metrics_values_count > 0)
-                               @each('raws.metrics.metric-input', $raw->raws_article->raws_product->raws_category->metrics, 'metric')
-                               @each('raws.metrics.metric-value', $raw->metrics_values, 'metric')
-                               @endif --}}
+                            </div>
+                        </fieldset>
 
-                           </fieldset>
-                           @endif
-                           <div id="raws-inputs"></div>
-                           <div class="small-12 cell tabs-margin-top text-center">
-                            <div class="item-error" id="raws-error">Такой артикул уже существует!<br>Измените значения!</div>
+                        @endif
+
+                        <div id="raw-inputs"></div>
+                        <div class="small-12 cell tabs-margin-top text-center">
+                            <div class="item-error" id="raw-error">Такой артикул уже существует!<br>Измените значения!</div>
                         </div>
                         {{ Form::hidden('raw_id', $raw->id) }}
-
                     </div>
                     {{-- Конец правого блока на первой вкладке --}}
 
-                    @if ($raw->draft == 1)
                     {{-- Чекбокс черновика --}}
+                    @if ($raw->article->draft == 1)
                     <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('draft', 1, $raw->draft, ['id' => 'draft']) }}
+                        {{ Form::checkbox('draft', 1, $raw->article->draft, ['id' => 'draft']) }}
                         <label for="draft"><span>Черновик</span></label>
                     </div>
                     @endif
@@ -218,10 +204,10 @@
                         {{ Form::submit('Редактировать сырьё', ['class'=>'button', 'id' => 'add-raws']) }}
                     </div>
 
-                </div>{{-- Закрытие разделителя на блоки --}}
-            </div>{{-- Закрытите таба --}}
+                </div>
+            </div>
 
-            <!-- Ценообразование -->
+            {{-- Ценообразование --}}
             <div class="tabs-panel" id="price-rules">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
@@ -232,18 +218,44 @@
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Себестоимость
-                                        {{ Form::number('cost', $raw->cost, [$disabled]) }}
+                                        {{ Form::number('cost', $raw->cost) }}
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
-                                    <label>Цена
-                                        {{ Form::number('price', $raw->price, [$disabled]) }}
+                                    <label>Цена за (<span id="unit">{{ ($raw->portion_status == null) ?$raw->article->product->unit->abbreviation : 'порцию' }}</span>)
+                                        {{ Form::number('price', $raw->price) }}
                                     </label>
                                 </div>
+                            </div>
+                        </fieldset>
 
-                                <div class="small-12 cell checkbox">
-                                    {{ Form::checkbox('sail_status', 1, $raw->sail_status, ['id' => 'sail-status']) }}
-                                    <label for="sail-status"><span>Для продажи</span></label>
+                        <fieldset class="fieldset portion-fieldset" id="portion-fieldset">
+                            <legend class="checkbox">
+                                {{ Form::checkbox('portion_status', 1, $raw->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) }}
+                                <label for="portion">
+                                    <span id="portion-change">Принимать порциями</span>
+                                </label>
+
+                            </legend>
+
+                            <div class="grid-x grid-margin-x" id="portion-block">
+                                <div class="small-12 cell @if ($raw->portion_status == null) portion-hide @endif">
+                                    <label>Имя&nbsp;порции
+                                        {{ Form::text('portion_name', $raw->portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
+                                    </label>
+                                </div>
+                                <div class="small-6 cell @if ($raw->portion_status == null) portion-hide @endif">
+                                    <label>Сокр.&nbsp;имя
+                                        {{ Form::text('portion_abbreviation',  $raw->portion_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
+                                    </label>
+                                </div>
+                                <div class="small-6 cell @if ($raw->portion_status == null) portion-hide @endif">
+                                    <label>Кол-во,&nbsp;{{ $raw->article->product->unit->abbreviation }}
+                                        {{-- Количество чего-либо --}}
+                                        {{ Form::text('portion_count', $raw->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
+                                        <div class="sprite-input-right find-status" id="name-check"></div>
+                                        <span class="form-error">Введите количество</span>
+                                    </label>
                                 </div>
                             </div>
                         </fieldset>
@@ -261,11 +273,7 @@
                             <legend>Каталоги</legend>
 
                             {{-- Form::select('catalogs[]', $catalogs_list, $raw->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
-                            <select name="catalogs[]" data-placeholder="Выберите каталоги..." multiple class="chosen-select">
-                                @php
-                                echo $catalogs_list;
-                                @endphp
-                            </select>
+                            @include('includes.selects.catalogs_chosen', ['parent_id' => $raw->catalogs->keyBy('id')->toArray()])
 
                         </fieldset>
                     </div>
@@ -273,36 +281,52 @@
             </div>
             {{ Form::close() }}
 
-            <!-- Фотографии -->
+            {{-- @can('index', 'App\Photo') --}}
+            {{-- Фотографии --}}
             <div class="tabs-panel" id="photos">
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-7 cell">
-                        {{ Form::open(['url' => '/admin/raws/add_photo', 'data-abide', 'novalidate', 'files'=>'true', 'class'=> 'dropzone', 'id' => 'my-dropzone']) }}
-                        {{ Form::hidden('name', $raw->name) }}
-                        {{ Form::hidden('id', $raw->id) }}
-                        {{ Form::close() }}
+
+                        {{-- @can('create', 'App\Photo') --}}
+                        {!!  Form::open([
+                            'route' => 'photos.ajax_store',
+                            'data-abide',
+                            'novalidate',
+                            'files' => 'true',
+                            'class' => 'dropzone',
+                            'id' => 'my-dropzone'
+                        ]
+                        ) !!}
+
+                        {!! Form::hidden('name', $raw->article->name) !!}
+                        {!! Form::hidden('id', $raw->id) !!}
+                        {!! Form::hidden('entity', 'raws') !!}
+                        {{-- {!! Form::hidden('album_id', $cur_goods->album_id) !!} --}}
+
+                        {!! Form::close() !!}
+                        {{-- @endcan --}}
+
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
-                            @if (isset($raw->album_id))
 
-                            @include('raws.photos', $raw)
+                            @isset($raw->album_id)
+                            {{-- @foreach ($item->album->photos as $photo) --}}
+                            @include('photos.photos', ['item' => $raw])
+                            {{-- @endforeach --}}
+                            @endisset
 
-                            @endif
                         </ul>
+
                     </div>
 
-                    <div class="small-12 medium-5 cell">
+                    <div class="small-12 medium-5 cell" id="photo-edit-partail">
 
                         {{-- Форма редактированя фотки --}}
-                        {{ Form::open(['url' => '/admin/raws/edit_photo', 'data-abide', 'novalidate', 'id' => 'form-photo-edit']) }}
 
-                        {{ Form::hidden('name', $raw->name) }}
-                        {{ Form::hidden('id', $raw->id) }}
-                        {{ Form::close() }}
                     </div>
-
                 </div>
             </div>
+            {{-- @endcan --}}
 
         </div>
     </div>
@@ -310,137 +334,46 @@
 @endsection
 
 @section('scripts')
-
-@include('includes.scripts.inputs-mask')
-@include('includes.scripts.upload-file')
-@include('raws.scripts')
-
 <script>
 
-    // Основные ностойки
+    // Основные настройки
     var raw_id = '{{ $raw->id }}';
+    var set_status = '{{ $raw->article->product->set_status }}';
+    var entity = 'raws';
+
+    var metrics_count = '{{ count($raw->article->metrics) }}';
+
+    if (set_status == 'one') {
+        var compositions_count = 0;
+    }
+
+    var category_id = '{{ $raw->article->product->category_id }}';
+
+    var unit = '{{ $raw->article->product->unit->abbreviation }}';
 
     // Мульти Select
     $(".chosen-select").chosen({width: "95%"});
 
-    // При клике на удаление метрики со страницы
-    $(document).on('click', '[data-open="delete-metric"]', function() {
+    $(document).on('change', '#select-raws_categories', function(event) {
+        event.preventDefault();
 
-        // Находим описание сущности, id и название удаляемого элемента в родителе
-        var parent = $(this).closest('.item');
-        var id = parent.attr('id').split('-')[1];
-
-        // alert(id);
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_delete_relation_metric',
-            type: 'POST',
-            data: {id: id, entity: 'raws', entity_id: raw_id},
-            success: function(date){
-
-                var result = $.parseJSON(date);
-                // alert(result);
-
-                if (result['error_status'] == 0) {
-
-                    // Удаляем элемент со страницы
-                    $('#metrics-' + id).remove();
-
-                    // В случае успеха обновляем список метрик
-                    // $.ajax({
-                    //   headers: {
-                    //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    //   },
-                    //   url: '/raws/' + raw_id + '/edit',
-                    //   type: 'GET',
-                    //   data: $('#service-form').serialize(),
-                    //   success: function(html){
-                    //     // alert(html);
-                    //     $('#properties-dropdown').html(html);
-                    //   }
-                    // })
-
-                    // Убираем отмеченный чекбокс в списке метрик
-                    $('#add-metric-' + id).prop('checked', false);
-
-                } else {
-                    alert(result['error_message']);
-                };
-            }
-        })
+        // Меняем группы
+        $.post('/admin/raws_products_list', {raws_category_id: $(this).val(), raws_product_id: $('#select-raws_products').val(), set_status: set_status}, function(list){
+            // alert(html);
+            $('#select-raws_products').replaceWith(list);
+        });
     });
 
-    // При клике на удаление состава со страницы
-    $(document).on('click', '[data-open="delete-composition"]', function() {
-
-        // Находим описание сущности, id и название удаляемого элемента в родителе
-        var parent = $(this).closest('.item');
-        var id = parent.attr('id').split('-')[1];
-
-        // alert(id);
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_delete_relation_composition',
-            type: 'POST',
-            data: {id: id, raw_id: raw_id},
-            success: function(date){
-
-                var result = $.parseJSON(date);
-                // alert(result);
-
-                if (result['error_status'] == 0) {
-
-                    // Удаляем элемент со страницы
-                    $('#compositions-' + id).remove();
-
-                    // Убираем отмеченный чекбокс в списке метрик
-                    $('#add-composition-' + id).prop('checked', false);
-
-                } else {
-                    alert(result['error_message']);
-                };
-            }
-        })
-    });
-
-    // При клике на удаление состава со страницы
-    $(document).on('click', '[data-open="delete-value"]', function() {
-
-        // Удаляем элемент со страницы
-        $(this).closest('.item').remove();
-    });
-
-    // Когда при клике по табам активная вкладка артикула
-    $(document).on('change.zf.tabs', '.tabs-list', function() {
-        if ($('#raws:visible').length) {
-
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_get_raw_inputs',
-                type: 'POST',
-                data: {raw_id: raw_id},
-                success: function(html){
-                    // alert(html);
-                    $('#raws-inputs').html(html);
-                    $('#raws-inputs').foundation();
-                    // Foundation.reInit($('#service-inputs'));
-                }
-            })
-        }
+    $(document).on('click', '#portion', function() {
+        $('#portion-block div').toggle();
+        // $('#portion-fieldset').toggleClass('portion-fieldset');
+        $('#unit').text( $(this).prop('checked') ? 'порцию' : unit );
     });
 
     // Проверяем наличие артикула в базе при клике на кнопку добавления артикула
-    // $(document).on('click', '#add-raws', function(event) {
+    // $(document).on('click', '#add-cur-raws', function(event) {
     //     event.preventDefault();
-    //     // alert($('#raws-form').serialize());
+    //     // alert($('#form-raw').serialize());
     //     // alert(raw_id);
 
     //     $.ajax({
@@ -449,14 +382,14 @@
     //         },
     //         url: '/admin/raws/' + raw_id,
     //         type: 'PATCH',
-    //         data: $('#raws-form').serialize(),
+    //         data: $('#form-raw').serialize(),
     //         success: function(data) {
     //             var result = $.parseJSON(data);
     //             // alert(result['error_status']);
     //             // alert(data['metric_values']);
     //             if (result['error_status'] == 1) {
-    //                 $('#add-raws').prop('disabled', true);
-    //                 $('#raws-error').css('display', 'block');
+    //                 $('#add-cur-raws').prop('disabled', true);
+    //                 $('#cur-raws-error').css('display', 'block');
     //             } else {
 
     //             }
@@ -464,11 +397,11 @@
     //     })
     // });
 
-    $(document).on('change', '#raws-form input', function() {
-        // alert('lol');
-        $('#add-raws').prop('disabled', false);
-        $('#raws-error').css('display', 'none');
-    });
+    // $(document).on('change', '#form-raw input', function() {
+    //     // alert('lol');
+    //     $('#add-cur-raws').prop('disabled', false);
+    //     $('#cur-raws-error').hide();
+    // });
 
     // При смнене свойства в select
     $(document).on('change', '#properties-select', function() {
@@ -482,56 +415,29 @@
             // alert(id);
             $('#property-id').val(id);
 
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_add_property',
-                type: 'POST',
-                data: {id: id, entity: 'raws'},
-                success: function(html){
-                    // alert(html);
-                    $('#property-form').html(html);
-                    $('#properties-dropdown').foundation('close');
-                }
+            $.post('/admin/ajax_add_property', {id: id, entity: 'raws'}, function(html) {
+                // alert(html);
+                $('#property-form').html(html);
+                $('#properties-dropdown').foundation('close');
             })
-        }
+        };
     });
 
     // При клике на кнопку под Select'ом свойств
     $(document).on('click', '#add-metric', function(event) {
         event.preventDefault();
-
         // alert($('#properties-form').serialize());
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/metrics',
-            type: 'POST',
-            data: $('#properties-form').serialize(),
-            success: function(html){
+        $.post('/admin/metrics', $('#properties-form').serialize(), function(html){
+            // alert(html);
+            $('#metrics-table').append(html);
+            $('#property-form').html('');
 
+            // В случае успеха обновляем список метрик
+            $.get('/admin/raws/' + raw_id + '/edit', $('#form-raw').serialize(), function(html) {
                 // alert(html);
-                $('#metrics-table').append(html);
-                $('#property-form').html('');
-
-                // В случае успеха обновляем список метрик
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/admin/raws/' + raw_id + '/edit',
-                    type: 'GET',
-                    data: $('#raws-form').serialize(),
-                    success: function(html){
-                        // alert(html);
-
-                        $('#properties-dropdown').html(html);
-                    }
-                })
-            }
+                $('#properties-dropdown').html(html);
+            })
         })
     });
 
@@ -540,18 +446,10 @@
         event.preventDefault();
 
         // alert($('#properties-form input[name=value]').val());
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_add_metric_value',
-            type: 'POST',
-            data: {value: $('#properties-form input[name=value]').val()},
-            success: function(html){
-                // alert(html);
-                $('#values-table').append(html);
-                $('#properties-form input[name=value]').val('');
-            }
+        $.post('/admin/ajax_add_metric_value', {value: $('#properties-form input[name=value]').val()}, function(html){
+            // alert(html);
+            $('#values-table').append(html);
+            $('#properties-form input[name=value]').val('');
         })
     });
 
@@ -563,42 +461,23 @@
 
         // Если нужно добавить метрику
         if ($(this).prop('checked') == true) {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_add_relation_metric',
-                type: 'POST',
-                data: {id: $(this).val(), entity: 'raws', entity_id: raw_id},
-                success: function(html){
-
-                    // alert(html);
-                    $('#metrics-table').append(html);
-                    $('#property-form').html('');
-                }
+            $.post('/admin/ajax_add_relation_metric', {id: $(this).val(), entity: 'raws', entity_id: raw_id}, function(html){
+                // alert(html);
+                $('#metrics-table').append(html);
+                $('#property-form').html('');
             })
         } else {
-
             // Если нужно удалить метрику
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_delete_relation_metric',
-                type: 'POST',
-                data: {id: $(this).val(), entity: 'raws', entity_id: raw_id},
-                success: function(date){
+            $.post('/admin/ajax_delete_relation_metric', {id: $(this).val(), entity: 'raws', entity_id: raw_id}, function(date){
+                var result = $.parseJSON(date);
+                // alert(result);
 
-                    var result = $.parseJSON(date);
-                    // alert(result);
+                if (result['error_status'] == 0) {
 
-                    if (result['error_status'] == 0) {
-
-                        $('#metrics-' + id).remove();
-                    } else {
-                        alert(result['error_message']);
-                    };
-                }
+                    $('#metrics-' + id).remove();
+                } else {
+                    alert(result['error_message']);
+                };
             })
         }
     });
@@ -610,151 +489,66 @@
         $('.checker-nested').hide();
 
         // Показываем нужную
-        $('#' +$(this).data('open')).show();
+        $('#' + $(this).data('open')).show();
     });
 
     // При клике на чекбокс метрики отображаем ее на странице
     $(document).on('click', '.add-composition', function() {
-
         // alert($(this).val());
-        var id = $(this).val();
+        let id = $(this).val();
 
         // Если нужно добавить состав
-        if ($(this).prop('checked') == true) {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/ajax_add_page_composition',
-                type: 'POST',
-                data: {id: $(this).val(), entity: 'raws', raw_id: raw_id},
-                success: function(html){
-
-                    // alert(html);
-                    $('#composition-table').append(html);
-                }
+        if ($(this).prop('checked')) {
+            $.post('/admin/ajax_add_page_composition', {id: $(this).val(), entity: entity, set_status: set_status}, function(html){
+                // alert(html);
+                $('#composition-table').append(html);
             })
         } else {
-
             // Если нужно удалить состав
             $('#compositions-' + id).remove();
         }
     });
 
-    // При клике на фотку подствляем ее значения в блок редактирования
-    $(document).on('click', '#photos-list img', function(event) {
-        event.preventDefault();
-
-        // Удаляем всем фоткам активынй класс
-        $('#photos-list img').removeClass('active');
-
-        // Наваливаем его текущей
-        $(this).addClass('active');
-
-        var id = $(this).data('id');
-
-        // Получаем инфу фотки
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_get_photo',
-            type: 'POST',
-            data: {id: id, entity: 'raws'},
-            success: function(html){
-
-                // alert(html);
-                $('#form-photo-edit').html(html);
-                // $('#modal-create').foundation();
-                // $('#modal-create').foundation('open');
-            }
-        })
+    $(function() {
+        $('.checkboxer-title .form-error').hide();
     });
 
-    // При сохранении информации фотки
-    $(document).on('click', '#form-photo-edit .button', function(event) {
-        event.preventDefault();
+    // Валидация группы чекбоксов
+    // $(document).on('click', '.checkbox-group input:checkbox', function() {
+    //     let id = $(this).closest('.dropdown-pane').attr('id');
+    //     if ($(this).closest('.checkbox-group').find("input:checkbox:checked").length == 0) {
+    //         $('div[data-toggle=' + id + ']').find('.form-error').show();
+    //         $('#add-cur-raws').prop('disabled', true);
+    //     } else {
+    //         $('div[data-toggle=' + id + ']').find('.form-error').hide();
+    //         $('#add-cur-raws').prop('disabled', false);
+    //     };
+    // });
 
-        var id = $(this).closest('#form-photo-edit').find('input[name=id]').val();
-        // alert(id);
-
-        // Записываем инфу и обновляем
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_update_photo/' + id,
-            type: 'PATCH',
-            data: $(this).closest('#form-photo-edit').serialize(),
-            success: function(html){
-                // alert(html);
-                $('#form-photo-edit').html(html);
-                // $('#modal-create').foundation();
-                // $('#modal-create').foundation('open');
-            }
-        })
-    });
-
-    // Оставляем ширину у вырванного из потока элемента
-    var fixHelper = function(e, ui) {
-        ui.children().each(function() {
-            $(this).width($(this).width());
+    // Валидация при клике на кнопку
+    $(document).on('click', '#add-raws', function(event) {
+        let error = 0;
+        $(".checkbox-group").each(function(i) {
+            if ($(this).find("input:checkbox:checked").length == 0) {
+                let id = $(this).closest('.dropdown-pane').attr('id');
+                $('div[data-toggle=' + id + ']').find('.form-error').show();
+                error = error + 1;
+            };
         });
-        return ui;
-    };
-
-    // Включаем перетаскивание
-    $("#values-table tbody").sortable({
-        axis: 'y',
-        helper: fixHelper, // ширина вырванного элемента
-        handle: 'td:first', // указываем за какой элемент можно тянуть
-        placeholder: "table-drop-color", // фон вырванного элемента
-        update: function( event, ui ) {
-
-            var entity = $(this).children('.item').attr('id').split('-')[0];
+        $('#form-raw').foundation('validateForm');
+        if (error > 0) {
+            event.preventDefault();
         }
     });
 
-    // Настройки dropzone
-    Dropzone.options.myDropzone = {
-        paramName: 'photo',
-        maxFilesize: {{ $settings_album['img_max_size'] }}, // MB
-        maxFiles: 20,
-        acceptedFiles: '{{ $settings_album['img_formats'] }}',
-        addRemoveLinks: true,
-        init: function() {
-            this.on("success", function(file, responseText) {
-                file.previewTemplate.setAttribute('id',responseText[0].id);
 
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/admin/raws/photos',
-                    type: 'POST',
-                    data: {raw_id: raw_id},
-                    success: function(html){
-                        // alert(html);
-                        $('#photos-list').html(html);
-
-                        // $('#modal-create').foundation();
-                        // $('#modal-create').foundation('open');
-                    }
-                })
-            });
-            this.on("thumbnail", function(file) {
-                if (file.width < {{ $settings_album['img_min_width'] }} || file.height < {{ $settings_album['img_min_height'] }}) {
-                    file.rejectDimensions();
-                } else {
-                    file.acceptDimensions();
-                }
-            });
-        },
-        accept: function(file, done) {
-            file.acceptDimensions = done;
-            file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings_album['img_min_width'] }} px в ширину"); };
-        }
-    };
 
 </script>
+
+@include('includes.scripts.inputs-mask')
+@include('includes.scripts.upload-file')
+@include('raws.scripts')
+@include('includes.scripts.dropzone', ['settings' => $settings, 'item_id' => $raw->id])
+{{-- Проверка поля на существование --}}
+@include('includes.scripts.check')
 @endsection

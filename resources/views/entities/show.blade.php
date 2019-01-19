@@ -16,7 +16,7 @@
 
   {{ Form::model($entity, ['route' => ['entities.update', $entity->id], 'data-abide', 'novalidate']) }}
   {{ method_field('PATCH') }}
-    @include('entities.form', ['submitButtonText' => 'Редактировать сущность', 'param' => 'readonly'])
+    @include('entities.form', ['submit_text' => 'Редактировать сущность', 'param' => 'readonly'])
   {{ Form::close() }}
 
 @endsection

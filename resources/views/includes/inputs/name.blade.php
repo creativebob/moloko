@@ -1,7 +1,8 @@
 {{-- Имя записи сущности --}}
 @php
-	$max = 40;
+$max = 40;
 @endphp
+
 {{ Form::text(($name ?? 'name'), ($value ?? null),
 	[
 		'class' => 'varchar-field name-field' . (isset($check) ? ' check-field' : ''),

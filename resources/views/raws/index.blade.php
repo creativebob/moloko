@@ -16,9 +16,7 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-@if(!empty($raws))
-{{ num_format($raws->total(), 0) }}
-@endif
+{{ $raws->isNotEmpty() ? num_format($raws->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')
@@ -32,7 +30,7 @@
 <div class="grid-x">
 
     <div class="small-12 cell">
-        <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="raws">
+        <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="raws">
             <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
                 <tr id="thead-content">
                     <th class="td-drop"></th>
@@ -53,8 +51,10 @@
                 @if(!empty($raws))
 
                 @foreach($raws as $raw)
-                <tr class="item @if($raw->moderation == 1)no-moderation @endif" id="raws-{{ $raw->id }}" data-name="{{ $raw->raws_article->name }}">
-                    <td class="td-drop"><div class="sprite icon-drop"></div></td>
+                <tr class="item @if($raw->moderation == 1)no-moderation @endif" id="raws-{{ $raw->id }}" data-name="{{ $raw->article->name }}">
+                    <td class="td-drop">
+                        <div class="sprite icon-drop"></div>
+                    </td>
                     <td class="td-checkbox checkbox">
                         <input type="checkbox" class="table-check" name="raw_id" id="check-{{ $raw->id }}"
                         {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
@@ -68,16 +68,18 @@
                     </td>
                     <td>
                         <a href="/admin/raws/{{ $raw->id }}/edit">
-                            <img src="{{ isset($raw->photo_id) ? '/storage/'.$raw->company_id.'/media/raws/'.$raw->id.'/img/small/'.$raw->photo->name : '/crm/img/plug/raw_small_default_color.jpg' }}" alt="{{ isset($raw->photo_id) ? $raw->name : 'Нет фото' }}">
+                            <img src="{{ getPhotoPath($raw, 'small') }}" alt="{{ isset($raw->photo_id) ? $raw->name : 'Нет фото' }}">
                         </a>
                     </td>
-                    <td class="td-name"><a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->raws_article->name }}</a></td>
+                    <td class="td-name">
+                        <a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->article->name }}</a>
+                    </td>
                     <td class="td-raws_category">
-                        <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->raws_article->raws_product->raws_category->id }}" class="filter_link" title="Фильтровать">{{ $raw->raws_article->raws_product->raws_category->name }}</a>
+                        <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->article->product->category->id }}" class="filter_link" title="Фильтровать">{{ $raw->article->product->category->name }}</a>
 
                         <br>
-                        @if($raw->raws_article->raws_product->name != $raw->raws_article->name)
-                        <a href="/admin/raws?raws_product_id%5B%5D={{ $raw->raws_article->raws_product->id }}" class="filter_link light-text">{{ $raw->raws_article->raws_product->name }}</a>
+                        @if($raw->article->product->name != $raw->article->name)
+                        <a href="/admin/raws?raws_product_id%5B%5D={{ $raw->article->product->id }}" class="filter_link light-text">{{ $raw->article->product->name }}</a>
                         @endif
                     </td>
                     <td class="td-description">{{ $raw->description }}</td>
@@ -151,88 +153,19 @@
 @include('raws.scripts')
 
 <script type="text/javascript">
-    // Обозначаем таймер для проверки
-    // var timerId;
-    // var time = 400;
-
-    // // Первая буква заглавная
-    // function newParagraph (name) {
-    //   name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
-    //   return name;
-    // };
-
-    //   // ------------------- Проверка на совпадение имени --------------------------------------
-    //   function rawsCheck (name, submit, db) {
-
-    //   // Блокируем аттрибут базы данных
-    //   $(db).val(0);
-
-    //   // Смотрим сколько символов
-    //   var lenname = name.length;
-
-    //     // Если символов больше 3 - делаем запрос
-    //     if (lenname > 3) {
-
-    //       // Первая буква сектора заглавная
-    //       name = newParagraph (name);
-
-    //       // Сам ajax запрос
-    //       $.ajax({
-    //         headers: {
-    //           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //         },
-    //         url: "/admin/raws_check",
-    //         type: "POST",
-    //         data: {name: name},
-    //         beforeSend: function () {
-    //           $('.find-status').addClass('icon-load');
-    //         },
-    //         success: function(date){
-    //           $('.find-status').removeClass('icon-load');
-    //           var result = $.parseJSON(date);
-    //           // Если ошибка
-    //           if (result.error_status == 1) {
-    //             $(submit).prop('disabled', true);
-    //             $('.item-error').css('display', 'block');
-    //             $(db).val(0);
-    //           } else {
-    //             // Выводим пришедшие данные на страницу
-    //             $(submit).prop('disabled', false);
-    //             $('.item-error').css('display', 'none');
-    //             $(db).val(1);
-    //           };
-    //         }
-    //       });
-    //     };
-    //     // Удаляем все значения, если символов меньше 3х
-    //     if (lenname <= 3) {
-    //       $(submit).prop('disabled', false);
-    //       $('.item-error').css('display', 'none');
-    //       $(db).val(0);
-    //     };
-    //   };
-
-    // ---------------------------- Продукция -----------------------------------------------
 
     // ----------- Добавление -------------
     // Открываем модалку
     $(document).on('click', '[data-open="modal-create"]', function() {
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/raws/create',
-            type: "GET",
-            success: function(html){
-
-                $('#modal').html(html);
-                $('#modal-create').foundation();
-                $('#modal-create').foundation('open');
-            }
+        $.get('/admin/raws/create', function(html){
+            $('#modal').html(html).foundation();
+            $('#modal-create').foundation('open');
         });
     });
 
+    // Закрываем модалку
     $(document).on('click', '.close-modal', function() {
+        // alert('lol');
         $('.reveal-overlay').remove();
     });
 </script>

@@ -1,3 +1,3 @@
-<select name="catalogs[]" data-placeholder="Выберите каталоги..." multiple class="chosen-select">
+<select name="catalog_id" id="select-catalogs">
 	{!! $catalogs_list !!}
 </select>

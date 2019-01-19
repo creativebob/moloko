@@ -5,27 +5,29 @@
 @section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $album))
 
 @section('title-content')
-  <div class="top-bar head-content">
+<div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">РЕДАКТИРОВАТЬ альбом</h2>
+        <h2 class="header-content">РЕДАКТИРОВАТЬ альбом</h2>
     </div>
     <div class="top-bar-right">
     </div>
-  </div>
+</div>
 @endsection
 
 @section('content')
 
-  {{ Form::model($album, ['url' => '/admin/albums/'.$album->id, 'data-abide', 'novalidate']) }}
-  {{ method_field('PATCH') }}
+{{ Form::model($album, ['route' => ['albums.update', $album->id], 'data-abide', 'novalidate']) }}
+{{ method_field('PATCH') }}
 
-    @include('albums.form', ['submitButtonText' => 'Редактировать альбом', 'param'=>''])
-    
-  {{ Form::close() }}
+@include('albums.form', ['submit_text' => 'Редактировать'])
+
+{{ Form::close() }}
 
 @endsection
 
 @section('scripts')
-  @include('includes.scripts.inputs-mask')
-  @include('albums.scripts')
+@include('includes.scripts.inputs-mask')
+@include('albums.scripts')
+{{-- Проверка поля на существование --}}
+@include('includes.scripts.check', ['entity' => 'albums'])
 @endsection

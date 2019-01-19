@@ -12,9 +12,7 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-  @if(!empty($raws_products))
-    {{ num_format($raws_products->total(), 0) }}
-  @endif
+{{ $raws_products->isNotEmpty() ? num_format($raws_products->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')
@@ -25,66 +23,74 @@
 @section('content')
 {{-- Таблица --}}
 <div class="grid-x">
-  <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="raws_products">
-      <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
-        <tr id="thead-content">
-          <th class="td-drop"></th>
-          <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-name" data-serversort="name">Название группы сырья</th>
-          <th class="td-raws_catrgory">Категория</th>
-          <th class="td-description">Описание</th>
-          <th class="td-delete"></th>
-        </tr>
-      </thead>
-      <tbody data-tbodyId="1" class="tbody-width">
-        @if(!empty($raws_products))
-        @foreach($raws_products as $raws_product)
-        <tr class="item @if($raws_product->moderation == 1)no-moderation @endif" id="raws_products-{{ $raws_product->id }}" data-name="{{ $raws_product->name }}">
-          <td class="td-drop"><div class="sprite icon-drop"></div></td>
-          <td class="td-checkbox checkbox">
-            <input type="checkbox" class="table-check" name="raws_product_id" id="check-{{ $raws_product->id }}"
+    <div class="small-12 cell">
 
-              {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
-              @if(!empty($filter['booklist']['booklists']['default']))
-                {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-                @if (in_array($raws_product->id, $filter['booklist']['booklists']['default'])) checked 
-              @endif
+        <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="raws_products">
+
+            <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
+                <tr id="thead-content">
+                    <th class="td-drop"></th>
+                    <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
+                    <th class="td-name" data-serversort="name">Название группы сырья</th>
+                    <th class="td-raws_category">Категория</th>
+                    <th class="td-description">Описание</th>
+                    <th class="td-control"></th>
+                    <th class="td-delete"></th>
+                </tr>
+            </thead>
+
+            <tbody data-tbodyId="1" class="tbody-width">
+
+                @if(isset($raws_products) && $raws_products->isNotEmpty())
+                @foreach($raws_products as $raws_product)
+
+                <tr class="item @if($raws_product->moderation == 1)no-moderation @endif" id="raws_products-{{ $raws_product->id }}" data-name="{{ $raws_product->name }}">
+                    <td class="td-drop">
+                        <div class="sprite icon-drop"></div>
+                    </td>
+                    <td class="td-checkbox checkbox">
+                        <input type="checkbox" class="table-check" name="raws_product_id" id="check-{{ $raws_product->id }}"
+
+                        {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
+                        @if(!empty($filter['booklist']['booklists']['default']))
+                        {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
+                        @if (in_array($raws_product->id, $filter['booklist']['booklists']['default'])) checked
+                        @endif
+                        @endif
+                        ><label class="label-check" for="check-{{ $raws_product->id }}"></label>
+                    </td>
+                    <td class="td-name">
+
+                        @can('update', $raws_product)
+                        {{ link_to_route('raws_products.edit', $raws_product->name, $parameters = ['id' => $raws_product->id], $attributes = []) }}
+                        @endcan
+
+                        @cannot('update', $raws_product)
+                        {{ $raws_product->name }}
+                        @endcannot
+
+                        ({{ link_to_route('raws.index', $raws_product->articles_count, $parameters = ['raws_product_id' => $raws_product->id], $attributes = ['class' => 'filter_link light-text', 'title' => 'Перейти на список товаров']) }}) {{ ($raws_product->set_status == 'set') ? '(Набор)' : '' }}
+
+                  </td>
+                  <td class="td-raws_category">{{ $raws_product->category->name }}</td>
+                  <td class="td-description">{{ $raws_product->description }}</td>
+
+                  {{-- Элементы управления --}}
+                    @include('includes.control.table_td', ['item' => $raws_product])
+
+                  <td class="td-delete">
+
+                    @include('includes.control.item_delete_table', ['item' => $raws_product])
+
+                </td>
+            </tr>
+
+            @endforeach
             @endif
-            ><label class="label-check" for="check-{{ $raws_product->id }}"></label>
-          </td>
-          <td class="td-name">
-            @php
-            $edit = 0;
-            @endphp
-            @can('update', $raws_product)
-            @php
-            $edit = 1;
-            @endphp
-            @endcan
-            @if($edit == 1)
-            <a href="/admin/raws_products/{{ $raws_product->id }}/edit">
-              @endif
-              {{ $raws_product->name }} (<a href="/admin/raws?raws_product_id%5B%5D={{ $raws_product->id }}" title="Перейти на список товаров" class="filter_link light-text">{{ $raws_product->raws_articles->count() }}</a>)
-              @if($edit == 1)
-            </a>
-            @endif
-          </td>
-          <td class="td-raws_catrgory">{{ $raws_product->raws_category->name }}</td>
-          <td class="td-description">{{ $raws_product->description }}</td>
-          <td class="td-delete">
-            @if ($raws_product->system_item != 1)
-            @can('delete', $raws_product)
-            <a class="icon-delete sprite" data-open="item-delete"></a>  
-            @endcan
-            @endif
-          </td> 
-        </tr>
-        @endforeach
-        @endif
-      </tbody>
+
+        </tbody>
     </table>
-  </div>
+</div>
 </div>
 
 {{-- Pagination --}}
@@ -92,29 +98,29 @@
   <div class="small-6 cell pagination-head">
     <span class="pagination-title">Кол-во записей: {{ $raws_products->count() }}</span>
     {{ $raws_products->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
-  </div>
+</div>
 </div>
 @endsection
 
 @section('modals')
-  {{-- Модалка удаления с refresh --}}
-  @include('includes.modals.modal-delete')
-
-  {{-- Модалка удаления с refresh --}}
-  @include('includes.modals.modal-delete-ajax')
-
+{{-- Модалка удаления с refresh --}}
+@include('includes.modals.modal-delete')
 @endsection
 
 @section('scripts')
-  {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
-  @include('includes.scripts.tablesorter-script')
+{{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
+@include('includes.scripts.tablesorter-script')
+@include('includes.scripts.sortable-table-script')
 
-  {{-- Скрипт чекбоксов --}}
-  @include('includes.scripts.checkbox-control')
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
 
-  {{-- Скрипт модалки удаления --}}
-  @include('includes.scripts.modal-delete-script')
-  @include('includes.scripts.delete-ajax-script')
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
 
-  @include('includes.scripts.sortable-table-script')
+{{-- Скрипт чекбоксов --}}
+@include('includes.scripts.checkbox-control')
+
+{{-- Скрипт модалки удаления --}}
+@include('includes.scripts.modal-delete-script')
 @endsection

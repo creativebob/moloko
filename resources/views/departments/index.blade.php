@@ -12,14 +12,12 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-  @if(!empty($departments))
-    {{ num_format($departments->count(), 0) }}
-  @endif
+{{ $departments->isNotEmpty() ? num_format($departments->count(), 0) : 0 }}
 @endsection
 
 @section('title-content')
 {{-- Меню --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Department::class, 'type' => 'menu'])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => $class, 'type' => $type])
 @endsection
 
 @section('content')
@@ -27,12 +25,12 @@
 <div class="grid-x">
     <div class="small-12 cell">
         <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="departments">
-            @if($departments)
 
+            @if($departments->isNotEmpty())
             {{-- Шаблон вывода и динамического обновления --}}
-            @include('departments.enter', ['grouped_items' => $departments, 'class' => 'App\Department', 'entity' => $entity, 'type' => 'modal'])
-
+            @include('departments.filials_list')
             @endif
+
         </ul>
     </div>
 </div>
@@ -69,280 +67,132 @@
 <script type="text/javascript">
     $(function() {
 
-    // Обозначаем таймер для проверки
-    var timerId;
-    var time = 400;
+        // ------------------------ Проверка на совпадение названия --------------------
+        function departmentCheck (check) {
 
-    // ------------------------ Проверка на совпадение имени филиала --------------------
-    function departmentCheck (name, submit, db, filial) {
-        // Блокируем аттрибут базы данных
-        $(db).val(0);
+            var item = check;
+            var name = item.val();
+            var id = item.closest('form').find('#item-id').val();
+            var filial_id = item.closest('form').find('#filial-id').val();
+            var submit = item.closest('form').find('.button');
 
-        // Смотрим сколько символов
-        var lenName = name.length;
+            // Если символов больше 3 - делаем запрос
+            if (name.length > 3) {
 
-        // Если символов больше 3 - делаем запрос
-        if (lenName > 3) {
+                // $(submit).prop('disabled', true);
 
-            // Сам ajax запрос
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/department_check',
-                type: "POST",
-                data: {name: name, filial_id: filial},
-                beforeSend: function () {
-                    $('#name-check').addClass('icon-load');
-                },
-                success: function(date){
-                    $('#name-check').removeClass('icon-load');
-                    var result = $.parseJSON(date);
+                // Сам ajax запрос
+                $.ajax({
+                    url: "/admin/department_check",
+                    type: "POST",
+                    data: {name: name, filial_id: filial_id, id: id},
+                    beforeSend: function () {
+                        item.siblings('.find-status').addClass('icon-load');
+                    },
+                    success: function(count){
+                        item.siblings('.find-status').removeClass('icon-load');
 
-                    if (result.error_status == 1) {
+                        // Состояние ошибки
+                        if (count > 0) {
+                            item.siblings('.item-error').show();
+                        } else {
+                            item.siblings('.item-error').hide();
+                        };
 
-                        // Если ошибка
-                        $(submit).prop('disabled', true);
-                        $('.item-error').css('display', 'block');
-                        $(db).val(0);
-                    } else {
-
-                        // Выводим пришедшие данные на страницу
-                        $(submit).prop('disabled', false);
-                        $('.item-error').css('display', 'none');
-                        $(db).val(1);
-                    };
-                }
-            });
-        } else {
-            $(submit).prop('disabled', false);
-            $('.item-error').css('display', 'none');
-            $(db).val(0);
+                        // Состояние кнопки
+                        $(submit).prop('disabled', item.closest('form').find($(".item-error:visible")).length > 0);
+                    }
+                });
+            } else {
+                item.siblings('.item-error').hide();
+                $(submit).prop('disabled', item.closest('form').find($(".item-error:visible")).length > 0);
+            };
         };
-    };
 
-    // ---------------------------- Филиал -----------------------------------------------
+        // Проверка существования
+        $(document).on('keyup', '.name-field', function() {
 
-    // ----------- Добавление -------------
-    // Открываем модалку
-    $(document).on('click', '[data-open="modal-create"]', function() {
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/departments/create',
-            type: "GET",
-            success: function(html){
+            var check = $(this);
+
+            // Обозначаем таймер для проверки
+            let timerId;
+            // Выполняем запрос
+            clearTimeout(timerId);
+            timerId = setTimeout(function() {
+                departmentCheck (check);
+            }, 300);
+        });
+
+        // ----------- Добавление -------------
+        $(document).on('click', '[data-open="modal-create"]', function() {
+            $.get('/admin/departments/create', {
+                parent_id: $(this).closest('.item').hasClass('item') ? $(this).closest('.item').attr('id').split('-')[1] : null,
+                filial_id: $(this).closest('.first-item').hasClass('item') ? $(this).closest('.first-item').attr('id').split('-')[1] : null
+            }, function(html){
                 $('#modal').html(html);
-                $('#modal-create').foundation();
-                $('#modal-create').foundation('open');
+                $('#modal-create').foundation().foundation('open');
+            });
+        });
+
+        // ----------- Изменение -------------
+        $(document).on('click', '[data-open="modal-edit"]', function() {
+            let id = $(this).closest('.item').attr('id').split('-')[1];
+
+            $.get("/admin/departments/" + id + "/edit", function(html) {
+                $('#modal').html(html);
+                $('#modal-edit').foundation().foundation('open');
+            });
+        });
+
+        // ------------------------ Кнопка добавления ---------------------------------------
+        $(document).on('click', '.submit-create', function(event) {
+            var form = $(this).closest('form');
+            if (submitAjax(form.attr('id'))) {
+                $(this).prop('disabled', true);
+                $.post('/admin/departments', form.serialize(), function(html) {
+                    form.closest('.reveal-overlay').remove();
+                    $('#content').html(html);
+                    Foundation.reInit($('#content'));
+                });
             }
         });
-    });
 
-    // Проверка существования
-    $(document).on('keyup', '#form-modal-create .name-field', function() {
-        // Получаем фрагмент текста
-        var name = $('#form-modal-create .name-field').val();
-        // Указываем название кнопки
-        var submit = '.submit-add';
-        // Значение поля с разрешением
-        var db = '#form-modal-create .first-item';
-        // Выполняем запрос
-        clearTimeout(timerId);
-        timerId = setTimeout(function() {
-            departmentCheck (name, submit, db, null);
-        }, time);
-    });
+        // ------------------------ Кнопка добавления ---------------------------------------
+        $(document).on('click', '#submit-staffer-create', function(event) {
+            var form = $(this).closest('form');
+            $(this).prop('disabled', true);
+            $.post('/admin/staff', form.serialize(), function(html) {
+                form.closest('.reveal-overlay').remove();
+                $('#content').html(html);
+                Foundation.reInit($('#content'));
+            });
+        });
 
-    // ----------- Изменение -------------
 
-    // Открываем модалку
-    $(document).on('click', '[data-open="first-edit"]', function() {
-        // Получаем данные о разделе
-        var id = $(this).closest('.item').attr('id').split('-')[1];
+        // ------------------------ Кнопка обновления ---------------------------------------
+        $(document).on('click', '.submit-edit', function(event) {
+            var form = $(this).closest('form');
+            if (submitAjax(form.attr('id'))) {
+                $(this).prop('disabled', true);
+                $.ajax({
+                    url: '/admin/departments/' + form.find('#item-id').val(),
+                    type: "PATCH",
+                    data: form.serialize(),
+                    success:function(html) {
+                        form.closest('.reveal-overlay').remove();
+                        // alert(html);
+                        $('#content').html(html);
+                        Foundation.reInit($('#content'));
+                    }
+                });
+            };
+        });
 
-        // Ajax запрос
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: "/admin/departments/" + id + "/edit",
-            type: "GET",
-            success: function(html) {
-                $('#modal').html(html);
-                $('#first-edit').foundation();
-                $('#first-edit').foundation('open');
-            }
+        // ---------------------------------- Закрытие модалки -----------------------------------
+        $(document).on('click', '.icon-close-modal', function() {
+            $(this).closest('.reveal-overlay').remove();
         });
     });
-
-    // Проверка существования
-    $(document).on('keyup', '#form-first-edit .name-field', function() {
-        // Получаем фрагмент текста
-        var name = $('#form-first-edit .name-field').val();
-        // Указываем название кнопки
-        var submit = '.submit-edit';
-        // Значение поля с разрешением
-        var db = '#form-first-edit .first-item';
-        // Выполняем запрос
-        clearTimeout(timerId);
-        timerId = setTimeout(function() {
-            departmentCheck (name, submit, db, null);
-        }, time);
-    });
-
-    // ------------------------------- Отдел --------------------------------------------
-
-    // ----------- Добавление -------------
-    // Модалка
-    $(document).on('click', '[data-open="medium-add"]', function() {
-
-        var parent = $(this).closest('.item').attr('id').split('-')[1];
-        var filial = $(this).closest('.first-item').attr('id').split('-')[1];
-        // alert(parent + filial);
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/departments/create',
-            type: "GET",
-            data: {parent_id: parent, filial_id: filial},
-            success: function(html){
-                $('#modal').html(html);
-                $('#medium-add').foundation();
-                $('#medium-add').foundation('open');
-                $('.filial-id').val(filial);
-            }
-        });
-    });
-
-    // Проверка существования
-    $(document).on('keyup', '#form-medium-add .name-field', function() {
-        // Получаем фрагмент текста
-        var name = $('#form-medium-add .name-field').val();
-        // Указываем название кнопки
-        var submit = '.submit-add';
-        // Значение поля с разрешением
-        var db = '#form-medium-add .medium-item';
-        // Филиал
-        var filial = $('#filial-id').val();
-        // Выполняем запрос
-        clearTimeout(timerId);
-        timerId = setTimeout(function() {
-          departmentCheck (name, submit, db, filial)
-      }, time);
-    });
-
-    // ----------- Изменение -------------
-    // Открываем модалку
-    $(document).on('click', '[data-open="medium-edit"]', function() {
-        // Получаем данные о разделе
-        var id = $(this).closest('.item').attr('id').split('-')[1];
-
-        // Ajax запрос
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: "/admin/departments/" + id + "/edit",
-            type: "GET",
-            success: function(html) {
-                // alert(html);
-                $('#modal').html(html);
-                $('#medium-edit').foundation();
-                $('#medium-edit').foundation('open');
-            }
-        });
-    });
-
-    // Проверка существования
-    $(document).on('keyup', '#form-medium-edit .name-field', function() {
-        // Получаем фрагмент текста
-        var name = $('#form-medium-edit .name-field').val();
-        // Указываем название кнопки
-        var submit = '.submit-edit';
-        // Значение поля с разрешением
-        var db = '#form-medium-edit .medium-item';
-        // Филиал
-        var filial = $('#filial-id').val();
-        // Выполняем запрос
-        clearTimeout(timerId);
-        timerId = setTimeout(function() {
-          departmentCheck (name, submit, db, filial)
-      }, time);
-    });
-
-  // ------------------------ Кнопка добавления ---------------------------------------
-  $(document).on('click', '.submit-add', function(event) {
-    event.preventDefault();
-
-    // alert($(this).closest('form').serialize());
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/admin/departments',
-    type: "POST",
-    data: $(this).closest('form').serialize(),
-    success:function(html) {
-        $('#content').html(html);
-        Foundation.reInit($('#content'));
-    }
-});
-});
-
-  // Добавляем должность в филиал или отдел
-  $(document).on('click', '#submit-position-add', function(event) {
-    event.preventDefault();
-
-    // alert($(this).closest('form').serialize());
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/admin/staff',
-    type: "POST",
-    data: $(this).closest('form').serialize(),
-    success:function(html) {
-        $('#content').html(html);
-        Foundation.reInit($('#content'));
-    }
-});
-});
-
-  // ------------------------ Кнопка обновления ---------------------------------------
-  $(document).on('click', '.submit-edit', function(event) {
-    event.preventDefault();
-
-    var id = $('#department-id').val();
-    // alert($(this).closest('form').serialize());
-
-    // Ajax запрос
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    url: '/admin/departments/' + id,
-    type: "PATCH",
-    data: $(this).closest('form').serialize(),
-    success:function(html) {
-        // alert(html);
-        $('#content').html(html);
-        Foundation.reInit($('#content'));
-    }
-});
-});
-
-  // ---------------------------------- Закрытие модалки -----------------------------------
-  $(document).on('click', '.icon-close-modal, .submit-add, .submit-edit, #submit-position-add', function() {
-    $(this).closest('.reveal-overlay').remove();
-});
-});
-
 </script>
 
 {{-- Скрипт чекбоксов --}}

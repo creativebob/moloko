@@ -1,5 +1,5 @@
 @extends('layouts.app')
- 
+
 @section('inhead')
 {{-- Скрипты таблиц в шапке --}}
   @include('includes.scripts.tablesorter-inhead')
@@ -13,13 +13,13 @@
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Folder::class, 'type' => 'table'])
 @endsection
- 
+
 @section('content')
 
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="folders">
+    <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="folders">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -42,7 +42,7 @@
             @endcan
             {{ $folder->folder_name }}
             @can('update', $folder)
-            </a> 
+            </a>
             @endcan
           <td class="td-alias">{{ $folder->folder_alias }} </td>
           <td class="td-url">{{ $folder->folder_url }} </td>
@@ -51,7 +51,7 @@
             @can('delete', $folder)
             <a class="icon-delete sprite" data-open="item-delete"></a>
             @endcan
-          @endif       
+          @endif
         </tr>
         @endforeach
       @endif

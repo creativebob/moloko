@@ -93,7 +93,12 @@ class MetricController extends Controller
 
             // echo $metric;
             // Переадресовываем на получение метрики
-            return redirect()->action('MetricController@ajax_add_relation', ['id' => $metric->id, 'entity_id' => $request->entity_id, 'entity' => $request->entity, 'set_status' => $request->set_status]);
+            return redirect()->route('metrics.add_relation', [
+                'id' => $metric->id,
+                'entity_id' => $request->entity_id,
+                'entity' => $request->entity,
+                'set_status' => $request->set_status
+            ]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -152,71 +157,8 @@ class MetricController extends Controller
 
     // --------------------------------------------- Ajax -------------------------------------------------
 
-    public function ajax_store(Request $request)
-    {
-        // echo $request->values;
-        // $values = '';
-        // foreach ($request->values as $value) {
-        //     $values .= $value . 'n';
-        // }
-        // echo $values;
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-        $company_id = $user->company_id;
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        $metric = new Metric;
-        $metric->company_id = $company_id;
-        $metric->property_id = $request->property_id;
-        $metric->name = $request->name;
-        $metric->description = $request->description;
-        $metric->author_id = $user_id;
-
-        if ($request->type == 'numeric' || $request->type == 'percent') {
-            $metric->min = $request->min;
-            $metric->max = $request->max;
-            $metric->unit_id = $request->unit_id;
-            $metric->save();
-        }
-
-        if ($request->type == 'list') {
-            $metric->list_type = $request->list_type;
-            $metric->save();
-            $values = [];
-
-            foreach ($request->values as $value) {
-
-                $values[] = [
-                    'metric_id' => $metric->id,
-                    'value' => $value,
-                    'author_id' => $user_id,
-                    'company_id' => $company_id,
-                ];
-            }
-
-            $metric_values = MetricValue::insert($values);
-        }
-
-
-        if ($metric) {
-
-            // echo $metric;
-            // Переадресовываем на получение метрики
-            return redirect()->action('MetricController@ajax_add_relation', ['id' => $metric->id, 'entity_id' => $request->product_id, 'entity' => $request->entity, 'set_status' => $request->set_status]);
-        } else {
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при добавлении свойства!'
-            ];
-        }
-    }
-
     public function ajax_add_relation(Request $request)
     {
-
         $metric = Metric::findOrFail($request->id);
 
         $entity = $request->entity;
@@ -224,7 +166,10 @@ class MetricController extends Controller
         // Связываем сущность с метрикой
         $metric->$entity()->attach($request->entity_id, ['set_status' => $request->set_status]);
 
-        return view($request->entity.'.metrics.metric', ['metric' => $metric, 'set_status' => $request->set_status]);
+        return view('includes.metrics_category.metric', [
+            'metric' => $metric,
+            'set_status' => $request->set_status
+        ]);
     }
 
     public function ajax_delete_relation(Request $request)
@@ -237,7 +182,6 @@ class MetricController extends Controller
         $res = $metric->$entity()->wherePivot('set_status', $request->set_status)->detach($request->entity_id);
 
         return response()->json(isset($res) ?? 'Не удалось удалить метрику!');
-
     }
 
     public function add_metric_value(Request $request)

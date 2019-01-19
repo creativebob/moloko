@@ -10,6 +10,11 @@
 
 @section('breadcrumbs', Breadcrumbs::render('section', $parent_page_info, $site, $page_info))
 
+@section('content-count')
+{{-- Количество элементов --}}
+{{ (isset($catalog)) ? num_format(($catalog->services_count + $catalog->goods_count + $catalog->raws_count), 0) : 0 }}
+@endsection
+
 @section('title-content')
 {{-- Меню --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => null, 'type' => 'menu'])
@@ -28,11 +33,7 @@
 
             <div class="small-12 medium-6 cell">
                 <label>Разделы каталога:
-                    <select name="catalog_id" id="catalogs-list">
-                        @php
-                        echo $catalogs_list;
-                        @endphp
-                    </select>
+                    @include('includes.selects.catalogs', ['parent_id' => $catalog->id])
 
                 </label>
             </div>
@@ -48,18 +49,16 @@
     </div>
 
     {{-- Подключаем ПОИСК продукции для добавления на сайт --}}
-    @include('catalog_products.search-add-product-script')
+    {{--    @include('catalog_products.search-add-product-script') --}}
 
 </div>
 @endsection
 
 @section('content')
 {{-- Таблица --}}
-
-
 <div class="grid-x">
     <div class="small-12 cell">
-        <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="services">
+        <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="services">
             <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
                 <tr id="thead-content">
                     <th class="td-drop"></th>
@@ -80,7 +79,7 @@
 
             <tbody data-tbodyId="1" class="tbody-width" id="content-core">
                 {{-- Подрубаем ядро контента для ajax перезагрузки --}}
-                @include('catalog_products.content-core')
+                @include('catalog_products.content_core')
             </tbody>
 
         </table>
@@ -119,6 +118,56 @@
 <script type="text/javascript">
 
     var alias = '{{ $site->alias }}';
+    var catalog_id = '{{ $catalog->id }}';
+
+    function searchProduct(value) {
+
+        // Если символов больше 3 - делаем запрос
+        if (value.length > 2) {
+
+            $.post('/admin/catalog_product/search_add_product', {catalog_id: catalog_id, text_fragment: value}, function(html){
+                // Выводим пришедшие данные на страницу
+                $('#port-result-search-add-product').html(html);
+            });
+        } else {
+            $('#port-result-search-add-product').html('');
+        };
+    };
+
+    // Проверка существования
+    $(document).on('keyup', '#search_add_product_field', function() {
+
+        // Выполняем запрос
+        let timerId;
+        clearTimeout(timerId);
+
+        timerId = setTimeout(function() {
+            searchProduct($('#search_add_product_field').val());
+        }, 400);
+    });
+
+    // Добавление
+    $(document).on('click', '.add-product-button', function() {
+
+        // Получаем ID добавляемго продукта и его тип (goods / services / raws)
+        var product_type = $(this).attr('id').split('-')[0];
+        var product_id = $(this).attr('id').split('-')[1];
+        var catalog_id = $('#select-catalogs').val();
+
+        var item = $(this);
+
+        $.post("/admin/catalog_product/add_product", {product_type: product_type, product_id: product_id, catalog_id: catalog_id}, function(html){
+
+            if (html == 'empty') {
+                // alert(html);
+            } else {
+                // Выводим пришедшие данные на страницу
+                $('#content-core').html(html);
+                item.remove();
+            };
+        });
+    });
+
     // Мягкое удаление с ajax
     $(document).on('click', '[data-open="item-delete-ajax"]', function() {
 
@@ -139,135 +188,30 @@
         var entity_alias = $(this).attr('id').split('-')[1];
         var id = $(this).attr('id').split('-')[2];
 
+        var buttons = $('button');
+        buttons.prop('disabled', true);
+
         // Ajax
         $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
             url: '/admin/sites/' + alias + '/catalog_products/' + id,
             type: "DELETE",
-            success: function (date) {
-                var result = $.parseJSON(date);
-            // Если ошибка
-            if (result.error_status == 1) {
-              alert('ошибка');
-            } else {
-              // Выводим пришедшие данные на страницу
-              $('#catalog_products-' + id).remove();
-            };
+            success: function (res) {
+                $('#item-delete-ajax').foundation('close');
+                buttons.prop('disabled', false);
+                if (res == true) {
+                    // Удаляем со страницы
+                    $('#catalog_products-' + id).remove();
+                } else {
+                    alert('Ошибка удаления');
+                };
             }
         });
     });
 
-    $(document).on('change', '#catalogs-list', function(event) {
+    $(document).on('change', '#select-catalogs', function(event) {
         event.preventDefault();
         window.location = "/admin/sites/" + alias + "/catalog_products/" + $(this).val();
-
     });
 
-
-    // Обозначаем таймер для проверки
-    // var timerId;
-    // var time = 400;
-
-    // // Первая буква заглавная
-    // function newParagraph (name) {
-    //   name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
-    //   return name;
-    // };
-
-    // ------------------- Проверка на совпадение имени --------------------------------------
-    // function serviceCheck (name, submit, db) {
-
-    //   // Блокируем аттрибут базы данных
-    //   $(db).val(0);
-
-    //   // Смотрим сколько символов
-    //   var lenname = name.length;
-
-    //   // Если символов больше 3 - делаем запрос
-    //   if (lenname > 3) {
-
-    //     // Первая буква сектора заглавная
-    //     name = newParagraph (name);
-
-    //     // Сам ajax запрос
-    //     $.ajax({
-    //       headers: {
-    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //       },
-    //       url: "/admin/service_check",
-    //       type: "POST",
-    //       data: {name: name},
-    //       beforeSend: function () {
-    //         $('.find-status').addClass('icon-load');
-    //       },
-    //       success: function(date){
-    //         $('.find-status').removeClass('icon-load');
-    //         var result = $.parseJSON(date);
-    //         // Если ошибка
-    //         if (result.error_status == 1) {
-    //           $(submit).prop('disabled', true);
-    //           $('.item-error').css('display', 'block');
-    //           $(db).val(0);
-    //         } else {
-    //           // Выводим пришедшие данные на страницу
-    //           $(submit).prop('disabled', false);
-    //           $('.item-error').css('display', 'none');
-    //           $(db).val(1);
-    //         };
-    //       }
-    //     });
-    //   };
-    //   // Удаляем все значения, если символов меньше 3х
-    //   if (lenname <= 3) {
-    //     $(submit).prop('disabled', false);
-    //     $('.item-error').css('display', 'none');
-    //     $(db).val(0);
-    //   };
-    // };
-
-    // ---------------------------- Продукция -----------------------------------------------
-
-    // ----------- Добавление -------------
-    // Открываем модалку
-    $(document).on('click', '[data-open="modal-create"]', function() {
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/services/create',
-            type: "GET",
-            success: function(html){
-                $('#modal').html(html);
-                $('#modal-create').foundation();
-                $('#modal-create').foundation('open');
-            }
-        });
-    });
-
-    // Проверка существования
-    // $(document).on('keyup', '#form-modal-create .name-field', function() {
-
-    //   // Получаем фрагмент текста
-    //   var name = $('#form-modal-create .name-field').val();
-
-    //   // Указываем название кнопки
-    //   var submit = '.modal-button';
-
-    //   // Значение поля с разрешением
-    //   var db = '#form-modal-create .first-item';
-
-    //   // Выполняем запрос
-    //   clearTimeout(timerId);
-    //   timerId = setTimeout(function() {
-    //     serviceCheck (name, submit, db)
-    //   }, time);
-    // });
-
-    $(document).on('click', '.close-modal', function() {
-      // alert('lol');
-      $('.reveal-overlay').remove();
-  });
 </script>
 @endsection

@@ -6,15 +6,14 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateBooklistsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
         Schema::create('booklists', function (Blueprint $table) {
             $table->increments('id');
+
+            $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
+            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('name')->nullable()->comment('Имя списка');
             $table->text('description')->nullable()->comment('Описание списка');
@@ -24,8 +23,7 @@ class CreateBooklistsTable extends Migration
 
             $table->string('entity_alias')->index()->comment('Имя сущности');
 
-            $table->integer('company_id')->nullable()->unsigned()->comment('ID компании');
-            $table->foreign('company_id')->references('id')->on('companies');
+            $table->boolean('change_allowed')->default(0)->comment('Разрешение на внесение изменений в список с данным типом. Параметр наследуется списку.');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 

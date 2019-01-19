@@ -67,13 +67,6 @@ class EntityController extends Controller
         // Проверяем право на доступ к странице создания сущности
         // $this->authorize(getmethod(__FUNCTION__), Entity::class);
 
-        // Получаем новый экземпляр сущности
-        $entity = new Entity;
-
-
-
-
-
         // $actions = Action::get();
         // $entities = Entity::whereNull('rights_minus')->get();
         // $mass = [];
@@ -102,15 +95,10 @@ class EntityController extends Controller
 
         // DB::table('rights')->insert($mass);
 
-
-
-
-
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        return view('entities.create', compact('entity', 'page_info'));
+        return view('entities.create', [
+            'entity' => new Entity,
+            'page_info' => pageInfo($this->entity_name)
+        ]);
     }
 
 
@@ -125,7 +113,7 @@ class EntityController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Наполняем сущность данными
-        $user = Auth::user();  
+        $user = Auth::user();
 
         $entity = new entity;
         $entity->name = $request->name;
@@ -134,13 +122,17 @@ class EntityController extends Controller
 
         if($request->rights_minus == 0){
             $entity->rights_minus = Null;} else {
-                $entity->rights_minus = $rights_minus;     
+                $entity->rights_minus = $rights_minus;
             };
 
         // Вносим общие данные
         $entity->author_id = 1;
         $entity->system_item = 1;
         $entity->moderation = NULL;
+
+
+        $entity->statistic = $request->has('statistic');
+        $entity->dependence = $request->has('dependence');
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){$entity->moderation = 1;};
@@ -156,6 +148,9 @@ class EntityController extends Controller
         // $entity->filial_id = $filial_id;
 
         $entity->save();
+
+        // Настройки фотографий
+        setSettings($request, $entity);
 
         if($request->rights_minus == 0){
 
@@ -183,7 +178,7 @@ class EntityController extends Controller
 
         $actionentities = $actionentities->pluck('id')->toArray();
 
-        // Получаем все существующие разрешения (allow) 
+        // Получаем все существующие разрешения (allow)
         $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
 
         $mass = [];
@@ -194,7 +189,7 @@ class EntityController extends Controller
 
         DB::table('right_role')->insert($mass);
 
-        return redirect('/admin/entities');
+        return redirect()->route('entities.index');
     }
 
 
@@ -215,19 +210,34 @@ class EntityController extends Controller
 
     public function edit($id)
     {
+         // ------------------------------- Отправляет на SHOW? ----------------------------------
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // Получаем сущность которую будем редактировать
-        $entity = Entity::moderatorLimit($answer)->findOrFail($id);
+        // // Получаем сущность которую будем редактировать
+        // $entity = Entity::moderatorLimit($answer)->findOrFail($id);
+
+        // // Проверяем право на редактирование полученной сущности
+        // $this->authorize(getmethod(__FUNCTION__), $entity);
+
+        // // Инфо о странице
+        // $page_info = pageInfo($this->entity_name);
+
+        // return view('entities.show', compact('entity', 'page_info'));
+        //
+        // ----------------------------------------------------------------------------------------------
+
+
+        $entity = Entity::moderatorLimit(operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__)))
+        ->findOrFail($id);
 
         // Проверяем право на редактирование полученной сущности
         $this->authorize(getmethod(__FUNCTION__), $entity);
 
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        return view('entities.show', compact('entity', 'page_info'));
+        return view('entities.edit', [
+            'entity' => $entity,
+            'page_info' => pageInfo($this->entity_name)
+        ]);
     }
 
 
@@ -246,8 +256,15 @@ class EntityController extends Controller
         $entity->name = $request->name;
         $entity->alias = $request->alias;
 
+        $entity->statistic = $request->has('statistic');
+        $entity->dependence = $request->has('dependence');
+
         $entity->save();
-        return redirect('/admin/entities');
+
+        // Настройки фотографий
+        setSettings($request, $entity);
+
+        return redirect()->route('entities.index');
     }
 
     public function destroy($id)
@@ -260,7 +277,7 @@ class EntityController extends Controller
         $entity = Entity::moderatorLimit($answer)->findOrFail($id);
 
         // Проверяем право на удаление полученной сущности
-        $this->authorize(getmethod(__FUNCTION__), $entity);         
+        $this->authorize(getmethod(__FUNCTION__), $entity);
 
         // Удаляем сущность
         $entity = Entity::destroy($id);
@@ -269,7 +286,7 @@ class EntityController extends Controller
           return redirect('/admin/entities');
         } else {
           echo 'Произошла ошибка';
-        }; 
+        };
 
         Log::info('Удалили запись из таблица Сущности. ID: ' . $id);
     }

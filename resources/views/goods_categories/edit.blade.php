@@ -2,8 +2,8 @@
 
 @section('inhead')
 @include('includes.scripts.dropzone-inhead')
-@include('includes.scripts.fancybox-inhead')
-@include('includes.scripts.sortable-inhead')
+{{-- @include('includes.scripts.fancybox-inhead')
+@include('includes.scripts.sortable-inhead') --}}
 @endsection
 
 @section('title', 'Редактирование категории услуг')
@@ -24,11 +24,21 @@
 <div class="grid-x tabs-wrap">
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
-            <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
-            <li class="tabs-title"><a data-tabs-target="site" href="#site">Сайт</a></li>
-            <li class="tabs-title"><a data-tabs-target="properties" href="#properties">Свойства</a></li>
-            <li class="tabs-title"><a data-tabs-target="set-properties" href="#set-properties">Свойства (Набор)</a></li>
-            <li class="tabs-title"><a data-tabs-target="compositions" href="#compositions">Состав</a></li>
+            <li class="tabs-title is-active">
+                <a href="#options" aria-selected="true">Общая информация</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tabs-target="site" href="#site">Сайт</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tabs-target="properties" href="#properties">Свойства</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tabs-target="set-properties" href="#set-properties">Свойства (Набор)</a>
+            </li>
+            <li class="tabs-title">
+                <a data-tabs-target="compositions" href="#compositions">Состав</a>
+            </li>
             {{-- <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li> --}}
         </ul>
     </div>
@@ -38,21 +48,7 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            @if ($errors->any())
-            <div class="alert callout" data-closable>
-                <h5>Неправильный формат данных:</h5>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @endif
-
-            {{ Form::model($goods_category, ['url' => '/admin/goods_categories/'.$goods_category->id, 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'products-category-form']) }}
+            {{ Form::model($goods_category, ['route' => ['goods_categories.update', $goods_category->id], 'data-abide', 'novalidate', 'files' => 'true']) }}
             {{ method_field('PATCH') }}
 
             <!-- Общая информация -->
@@ -62,13 +58,22 @@
                     <div class="small-12 medium-6 cell">
 
                         <div class="grid-x grid-padding-x">
-                            @isset($goods_category->parent_id)
+
+                            @if(isset($goods_category->parent_id))
+
                             <div class="small-12 medium-6 cell">
                                 <label>Расположение
                                     @include('includes.selects.categories_select', ['entity' => 'goods_categories', 'parent_id' => $goods_category->parent_id, 'id' => $goods_category->id])
                                 </label>
                             </div>
-                            @endisset
+
+                            @else
+
+                            {{-- <div class="small-12 medium-6 cell"> --}}
+                                @include('includes.selects.goods_modes')
+                            {{-- </div> --}}
+
+                            @endif
 
                             <div class="small-12 medium-6 cell">
                                 <label>Название категории
@@ -77,7 +82,28 @@
                                 </label>
                             </div>
                         </div>
+
+                        <div class="grid-x grid-padding-x">
+                            <div class="small-12 medium-6 cell checkbox checkboxer">
+
+                                {{-- Подключаем класс Checkboxer --}}
+                                @include('includes.scripts.class.checkboxer')
+
+                                @include('includes.inputs.checker_contragents', [
+                                    'entity' => $goods_category,
+                                    'title' => 'Производители',
+                                    'name' => 'manufacturers'
+                                ]
+                                )
+
+                            </div>
+                        </div>
+
                     </div>
+
+                    @if ($goods_category->parent_id == null)
+                        @include('includes.control.direction', ['direction' => isset($goods_category->direction) ])
+                    @endif
 
                     @include('includes.control.checkboxes', ['item' => $goods_category])
 
@@ -95,10 +121,10 @@
 
                         <label>Описание:
                             {{ Form::textarea('description', $goods_category->description, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
-                        </label><br>
+                        </label>
 
                         <label>Description для сайта
-                            @include('includes.inputs.textarea', ['value'=>$goods_category->seo_description, 'name'=>'seo_description'])
+                            @include('includes.inputs.textarea', ['value' => $goods_category->seo_description, 'name' => 'seo_description'])
                         </label>
 
                     </div>
@@ -107,7 +133,7 @@
                             {{ Form::file('photo') }}
                         </label>
                         <div class="text-center">
-                            <img id="photo" @if (isset($goods_category->photo_id)) src="/storage/{{ $goods_category->company->id }}/media/goods_categories/{{ $goods_category->id }}/img/medium/{{ $goods_category->photo->name }}" @endif>
+                            <img id="photo" src="{{ getPhotoPath($goods_category) }}">
                         </div>
                     </div>
 
@@ -120,20 +146,19 @@
 
             {{ Form::close() }}
 
-
             {{-- Подключаем класс дял работы с метриками --}}
             @include('includes.scripts.class.metrics')
 
             <!-- Свойства -->
             <div class="tabs-panel" id="properties">
 
-                @include('goods_categories.metrics.section', ['goods_category' => $goods_category, 'properties' => $properties, 'set_status' => 'one'])
+                @include('includes.metrics_category.section', ['category' => $goods_category])
             </div>
 
             <!-- Свойства для набора -->
             <div class="tabs-panel" id="set-properties">
 
-                @include('goods_categories.metrics.section', ['goods_category' => $goods_category, 'properties' => $properties, 'set_status' => 'set'])
+                @include('includes.metrics_category.section', ['category' => $goods_category, 'set_status' => 'set'])
 
             </div>
 
@@ -153,6 +178,7 @@
                                 </tr>
                             </thead>
                             <tbody id="composition-table">
+
                                 {{-- Таблица метрик товара --}}
                                 @if (!empty($goods_category->compositions))
 
@@ -161,6 +187,7 @@
                                 @endforeach
 
                                 @endif
+
                             </tbody>
                         </table>
                     </div>
@@ -179,7 +206,7 @@
                                     <ul class="checker" id="products-categories-list">
 
                                         @foreach ($composition_list['composition_categories'] as $category_name => $composition_articles)
-                                        @include('goods_categories.compositions.raws-category', ['composition_articles' => $composition_articles, 'category_name' => $category_name])
+                                        @include('goods_categories.compositions.categories', ['composition_articles' => $composition_articles, 'category_name' => $category_name])
                                         @endforeach
                                     </ul>
 
@@ -215,24 +242,12 @@
 @include('includes.scripts.modal-metric-delete-script')
 @include('includes.scripts.modal-composition-delete-script')
 
-
-@php
-$settings = config()->get('settings');
-@endphp
-
-<script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
+@include('includes.scripts.ckeditor')
 <script>
-
-    CKEDITOR.replace('content-ckeditor');
-
-    // Конфигурация
-    CKEDITOR.config.toolbar = [
-    ['Bold', 'Italic', 'NumberedList', 'BulletedList', 'Maximize', 'Source']
-    ];
 
     // Основные настройки
     var goods_category_id = '{{ $goods_category->id }}';
-    var entity ='goods_categories';
+    var entity = '{{ $goods_category->getTable() }}';
 
     // При клике на удаление состава со страницы
     $(document).on('click', '[data-open="delete-value"]', function() {
@@ -241,28 +256,20 @@ $settings = config()->get('settings');
         $(this).closest('.item').remove();
     });
 
-    // При клике на свойство отображаем или скрываем его метрики
-    $(document).on('click', '.parent', function() {
-        // Скрываем все метрики
-        $('.checker-nested').hide();
-        // Показываем нужную
-        $('#' +$(this).data('open')).show();
-    });
-
-    // При клике на чекбокс метрики отображаем ее на странице
+    // При клике на чекбокс состава
     $(document).on('click', '.add-composition', function() {
         var id = $(this).val();
         // alert(goods_category_id + ' ' + id);
 
         if ($(this).prop('checked') == true) {
             // Если нужно добавить состав
-            $.post('/admin/ajax_add_relation_composition', {id: id, goods_category_id: goods_category_id, entity: 'goods_categories'}, function(html){
+            $.post('/admin/ajax_add_relation_composition', {id: id, goods_category_id: goods_category_id, entity: entity}, function(html){
                 // alert(html);
                 $('#composition-table').append(html);
             })
         } else {
             // Если нужно удалить состав
-            $.post('/admin/ajax_delete_relation_composition', {id: id, goods_category_id: goods_category_id, entity: 'goods_categories'}, function(data){
+            $.post('/admin/ajax_delete_relation_composition', {id: id, goods_category_id: goods_category_id, entity: entity}, function(data){
                 // alert(result);
                 if (data == true) {
                     $('#compositions-' + id).remove();
@@ -317,25 +324,6 @@ $settings = config()->get('settings');
         })
     });
 
-    // Оставляем ширину у вырванного из потока элемента
-    var fixHelper = function(e, ui) {
-        ui.children().each(function() {
-            $(this).width($(this).width());
-        });
-        return ui;
-    };
-
-    // Включаем перетаскивание
-    $("#values-table tbody").sortable({
-        axis: 'y',
-        helper: fixHelper, // ширина вырванного элемента
-        handle: 'td:first', // указываем за какой элемент можно тянуть
-        placeholder: "table-drop-color", // фон вырванного элемента
-        update: function( event, ui ) {
-
-            var entity = $(this).children('.item').attr('id').split('-')[0];
-        }
-    });
 
     // Настройки dropzone
     var minImageHeight = 795;

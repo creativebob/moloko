@@ -26,7 +26,7 @@ class AlbumsCategory extends Model
 {
 
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use SoftDeletes;
 
@@ -47,9 +47,18 @@ class AlbumsCategory extends Model
     protected $fillable = [
         'name',
         'parent_id',
+        'category_id',
         'author_id',
-        'system_item'
+        'display',
+        'system_item',
+        'mooderation'
     ];
+
+    // Вложенные
+    public function childs()
+    {
+        return $this->hasMany('App\AlbumsCategory', 'parent_id');
+    }
 
     // Компании
     public function company()
@@ -63,33 +72,4 @@ class AlbumsCategory extends Model
     	return $this->hasMany('App\Album');
     }
 
-
-    // --------------------------------------- Запросы -----------------------------------------
-    public function getIndex($request, $answer)
-    {
-        return $this->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->template($answer)
-        ->withCount('albums')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
-    }
-
-    public function getItem($id, $answer)
-    {
-        return $this->moderatorLimit($answer)->findOrFail($id);
-    }
-
-    // public function getIndexCount($answer, $request)
-    // {
-    //     return $this->moderatorLimit($answer)
-    //     ->companiesLimit($answer)
-    //     ->authors($answer)
-    //     ->systemItem($answer)
-    //     ->template($answer)
-    //     ->count();
-    // }
 }

@@ -27,7 +27,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="challenges">
+    <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="challenges">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -70,10 +70,10 @@
           <td class="td-delete">
             @if (($challenge->system_item !== 1) && ($challenge->company_id !== null))
             @can('delete', $challenge)
-            <a class="icon-delete sprite" data-open="item-delete"></a> 
+            <a class="icon-delete sprite" data-open="item-delete"></a>
             @endcan
-            @endif  
-          </td>     
+            @endif
+          </td>
         </tr>
         @endforeach
         @endif

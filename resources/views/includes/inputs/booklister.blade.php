@@ -4,8 +4,12 @@
 	$checkboxer_mass = $value;
 	$default_count = $checkboxer_mass['booklist']['booklists']['default_count'];
 	$main_mass = $checkboxer_mass[$name]['collection']->sortByDesc('id');
+
+	$entity_alias = $checkboxer_mass['booklist']['entity_alias'];
 	$request_mass = $checkboxer_mass['booklist']['booklists']['request_mass'];
 @endphp
+
+{{-- dd($main_mass) --}}
 
 @if(!empty($checkboxer_mass[$name]))
 <div class="checkboxer-wrap {{$name}}">
@@ -32,10 +36,16 @@
 <div class="dropdown-pane checkboxer-pane hover {{$name}}" data-position="bottom" data-alignment="left" id="{{$name}}-dropdown-bottom-left" data-dropdown data-auto-focus="true" data-close-on-click="true" data-h-offset="-17" data-v-offset="1">
 
 
+
 	<div class="input-group inputs @if ($default_count == 0) hide-elem @endif ">
 	  <span class="input-group-label">Выбрано элементов: {{$default_count}}</span>
 	  <input class="input-group-field" type="text" name="new_booklist" id="new_booklist" autocomplete="off">
 	  <input type="hidden" name="entity_alias" value="users">
+
+	  	{{-- Формирование специфических списков --}}
+
+		@include('includes.selects.booklist_types', ['entity_alias' => $entity_alias])
+
 	  <div class="input-group-button">
 	    <a href="#" class="button" id="button_send_booklister" onclick="button_send_booklister();">Создать список</a>
 	  </div>
@@ -168,9 +178,8 @@
 	function button_send_booklister() {
 
   		var new_booklist_name = document.getElementById('new_booklist').value;
+  		var booklist_type_id = document.getElementById('booklist_type_id').value;
   		var entity_alias = $('#content').data('entity-alias');
-
-  		alert(new_booklist_name + '  ' + entity_alias);
 
 		  $.ajax({
 
@@ -179,7 +188,7 @@
 		    },
 		    url: '/admin/setbooklist',
 		    type: "POST",
-		    data: {new_booklist_name: new_booklist_name, entity_alias: entity_alias},
+		    data: {new_booklist_name: new_booklist_name, entity_alias: entity_alias, booklist_type_id: booklist_type_id},
 		    success: function (html) {
 
 				cleanBooklister();

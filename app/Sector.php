@@ -53,6 +53,12 @@ class Sector extends Model
     ];
 
     // ------------------------------------- Отношения -----------------------------------------
+
+    // Вложенные
+    public function childs()
+    {
+        return $this->hasMany('App\Sector', 'parent_id');
+    }
     // Компания
     public function company()
     {
@@ -66,24 +72,24 @@ class Sector extends Model
     }
 
     // --------------------------------------- Запросы -----------------------------------------
-    public function getIndex($request, $answer)
-    {
-        return $this->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->template($answer)
-        ->booklistFilter($request)
-        ->withCount('companies')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
-    }
+    // public function getIndex($request, $answer)
+    // {
+    //     return $this->moderatorLimit($answer)
+    //     ->companiesLimit($answer)
+    //     ->authors($answer)
+    //     ->systemItem($answer)
+    //     ->template($answer)
+    //     ->booklistFilter($request)
+    //     ->withCount('companies')
+    //     ->orderBy('moderation', 'desc')
+    //     ->orderBy('sort', 'asc')
+    //     ->get();
+    // }
 
-    public function getItem($id, $answer)
-    {
-        return $this->moderatorLimit($answer)->findOrFail($id);
-    }
+    // public function getItem($id, $answer)
+    // {
+    //     return $this->moderatorLimit($answer)->findOrFail($id);
+    // }
 
     // public function getIndexCount($answer, $request)
     // {

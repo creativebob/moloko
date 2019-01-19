@@ -5,27 +5,27 @@
 @section('breadcrumbs', Breadcrumbs::render('create', $page_info))
 
 @section('title-content')
-	<div class="top-bar head-content">
+<div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">ДОБАВЛЕНИЕ нового сайта</h2>
+        <h2 class="header-content">ДОБАВЛЕНИЕ нового сайта</h2>
     </div>
     <div class="top-bar-right">
     </div>
-  </div>
+</div>
 @endsection
 
 @section('content')
 
-  {{ Form::open(['url' => '/admin/sites', 'data-abide', 'novalidate']) }}
-    @include('sites.form', ['submitButtonText' => 'Добавить Сайт', 'param' => ''])
-  {{ Form::close() }}
+{{ Form::open(['route' => 'sites.store', 'data-abide', 'novalidate']) }}
+@include('sites.form', ['submit_text' => 'Добавить'])
+{{ Form::close() }}
 
 @endsection
 
 @section('scripts')
-  @include('includes.scripts.inputs-mask')
-  @include('sites.check')
-  @include('sites.scripts')
+@include('includes.scripts.inputs-mask')
+@include('includes.scripts.check')
+@include('sites.scripts')
 @endsection
 
 

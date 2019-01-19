@@ -37,10 +37,9 @@ class CreateGoodsProductsTable extends Migration
             $table->integer('goods_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться товар');
             $table->foreign('goods_category_id')->references('id')->on('goods_categories');
 
-
             $table->integer('album_id')->nullable()->unsigned()->comment('ID альбома');
             $table->foreign('album_id')->references('id')->on('albums');
-            
+
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -51,8 +50,8 @@ class CreateGoodsProductsTable extends Migration
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
 
-            $table->timestamps();
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
+            $table->timestamps();
             $table->softDeletes();
         });
     }

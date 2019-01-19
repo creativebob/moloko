@@ -16,10 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-    
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -46,22 +42,24 @@ class Navigation extends Model
     // use Filter;
     // use BooklistFilter;
     // use DateIntervalFilter;
-    
+
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'name',
+        'alias',
         'site_id',
         'company_id',
+        'navigations_category_id',
     ];
 
-    // Получаем пункты навигации.
+    // Пункты навигации
     public function menus()
     {
         return $this->hasMany('App\Menu');
     }
 
-    // Получаем сайт навигации.
+    // Сайт
     public function site()
     {
         return $this->belongsTo('App\Site');
@@ -73,7 +71,7 @@ class Navigation extends Model
         return $this->belongsTo('App\NavigationsCategory');
     }
 
-    // Получаем автора
+    // Автор
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');

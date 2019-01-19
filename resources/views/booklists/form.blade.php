@@ -82,7 +82,7 @@
                 {{ Form::text('telegram_id', $user->telegram_id, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
                 <span class="form-error">Укажите номер Telegram</span>
               </label>
-              
+
             </div>
             <div class="small-12 medium-6 cell">
               <label class="input-icon">Город
@@ -145,14 +145,14 @@
               <label for="orgform-status-checkbox"><span>Директор компании (Юридическое лицо)</span></label>
             </div>
           </div>
-          <div class="grid-x grid-padding-x tabs-margin-top"> 
+          <div class="grid-x grid-padding-x tabs-margin-top">
             <div class="small-12 medium-6 cell">
               <label>Название компании
               {{ Form::text('company_name', $user->company_name, ['class'=>'company-name-field', 'maxlength'=>'40', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
-          <div class="grid-x grid-padding-x"> 
+          <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>ИНН
               {{ Form::text('inn', $user->inn, ['class'=>'inn-field', 'maxlength'=>'12', 'pattern'=>'[0-9]{12}', 'autocomplete'=>'off']) }}
@@ -164,14 +164,14 @@
               </label>
             </div>
           </div>
-          <div class="grid-x grid-padding-x"> 
+          <div class="grid-x grid-padding-x">
             <div class="small-12 medium-12 cell">
               <label>Банк
               {{ Form::text('bank', $user->bank, ['class'=>'bank-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
               </label>
             </div>
           </div>
-          <div class="grid-x grid-padding-x"> 
+          <div class="grid-x grid-padding-x">
             <div class="small-12 medium-6 cell">
               <label>Р/С
               {{ Form::text('account_settlement', $user->account_settlement, ['class'=>'account-settlement-field', 'maxlength'=>'20', 'pattern'=>'[0-9]{20}', 'autocomplete'=>'off']) }}
@@ -189,7 +189,7 @@
     <div class="small-12 medium-5 medium-offset-1 large-5 large-offset-2 cell">
       <fieldset class="fieldset-access">
         <legend>Настройка доступа</legend>
-        <div class="grid-x grid-padding-x"> 
+        <div class="grid-x grid-padding-x">
           <div class="small-12 cell">
             <label>Статус пользователя
               {{ Form::select('user_type', [ '1' => 'Пользователь системы', '2' => 'Клиент']) }}
@@ -205,7 +205,7 @@
           @endif
 
         </div>
-        <div class="grid-x grid-padding-x"> 
+        <div class="grid-x grid-padding-x">
           <div class="small-12 cell tabs-margin-top">
             <label>Логин
               {{ Form::text('login', $user->login, ['class'=>'login-field', 'maxlength'=>'20', 'autocomplete'=>'off', 'required']) }}
@@ -223,7 +223,7 @@
         </div>
         <div class="grid-x grid-padding-x">
           <div class="small-12 cell tabs-margin-top">
-            <table class="table-content">
+            <table class="content-table">
               <caption>Уровень доступа</caption>
               <thead>
                 <tr>
@@ -255,7 +255,7 @@
 
               </tbody>
             </table>
-           
+
           </div>
           <div class="small-8 small-offset-2 medium-6 medium-offset-3 text-center cell">
             <a class="button" data-open="role-add">Настройка доступа</a>
@@ -266,7 +266,7 @@
             <label for="access-block-checkbox"><span>Блокировать доступ</span></label>
           </div>
         </div>
-      </fieldset> 
+      </fieldset>
     </div>
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
       {{ Form::submit($submitButtonText, ['class'=>'button']) }}

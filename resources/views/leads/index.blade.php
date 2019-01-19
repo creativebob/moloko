@@ -14,6 +14,11 @@
 <!-- <a href="/admin/leads?calls=yes" class="button tiny">Перезвоны</a> -->
 @endsection
 
+@section('planfact')
+{{ link_to_route('plans.show', 'План', $parameters = ['alias' => 'leads'], $attributes = ['class' => 'button tiny']) }}
+{{ link_to_route('statistics.show', 'Факт', $parameters = ['alias' => 'leads'], $attributes = ['class' => 'button tiny']) }}
+@endsection
+
 @section('content-count')
 {{-- Количество элементов --}}
 @if(!empty($leads))
@@ -31,7 +36,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
     <div class="small-12 cell">
-        <table class="table-content tablesorter leads" id="content" data-sticky-container data-entity-alias="leads">
+        <table class="content-table tablesorter leads" id="content" data-sticky-container data-entity-alias="leads">
             <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
                 <tr id="thead-content">
                     <th class="td-drop"></th>

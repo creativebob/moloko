@@ -16,10 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-    
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -48,19 +44,34 @@ class Catalog extends Model
 
     protected $dates = ['deleted_at'];
 
+    protected $fillable = [
+        'company_id',
+        'name',
+        'alias',
+        'parent_id',
+        'category_id',
+    ];
 
-    // Получаем сайт.
+
+    // Вложенные
+    public function childs()
+    {
+        return $this->hasMany('App\Catalog', 'parent_id');
+    }
+
+    // Сайт
     public function site()
     {
         return $this->belongsTo('App\Site');
     }
 
-    // Получаем автора
+    // Аавтор
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');
     }
 
+    // Аватар
     public function photo()
     {
         return $this->belongsTo('App\Photo');
@@ -72,7 +83,7 @@ class Catalog extends Model
         return $this->morphedByMany('App\Service', 'catalog_products')->withPivot('id', 'display', 'sort');
     }
 
-     // Товары
+    // Товары
     public function goods()
     {
         return $this->morphedByMany('App\Goods', 'catalog_products')->withPivot('id', 'display', 'sort');
@@ -83,4 +94,6 @@ class Catalog extends Model
     {
         return $this->morphedByMany('App\Raw', 'catalog_products')->withPivot('id', 'display', 'sort');
     }
+
+
 }

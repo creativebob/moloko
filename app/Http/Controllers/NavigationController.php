@@ -13,180 +13,58 @@ use App\NavigationsCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests\NavigationRequest;
 
-// Политика
-use App\Policies\NavigationPolicy;
-
-// Общие классы
-use Illuminate\Support\Facades\Log;
-
-// Специфические классы
-
-// На удаление
-use Illuminate\Support\Facades\Auth;
-
 class NavigationController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'navigations';
-    protected $entity_dependence = false;
+    // Настройки контроллера
+    public function __construct(Navigation $navigation)
+    {
+        $this->middleware('auth');
+        $this->navigation = $navigation;
+        $this->class = Navigation::class;
+        $this->model = 'App\Navigation';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+    }
 
     public function index(Request $request, $alias)
     {
 
         // Подключение политики
-        $this->authorize( getmethod(__FUNCTION__), Navigation::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_navigations = operator_right($this->entity_name, $this->entity_dependence,  getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence,  getmethod(__FUNCTION__));
 
-        $answer_menus = operator_right('menus', false,  getmethod(__FUNCTION__));
-
-        $answer_pages = operator_right('pages', false,  getmethod(__FUNCTION__));
-
-        $answer_navigations_categories = operator_right('navigations_categories', false,  getmethod(__FUNCTION__));
-
-        $answer_sites = operator_right('sites', false,  getmethod(__FUNCTION__));
-
-        // -------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // -------------------------------------------------------------------------------------------
-        $site = Site::with(['navigations' => function ($query) use ($answer_navigations) {
-            $query->moderatorLimit($answer_navigations)
-            ->companiesLimit($answer_navigations)
-            ->authors($answer_navigations)
-            ->systemItem($answer_navigations) // Фильтр по системным записям
-            ->withCount('menus')
-            ->orderBy('moderation', 'desc')
+        $navigations = Navigation::with(['menus' => function ($query) {
+            $query->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc');
-        }, 'navigations.menus' => function ($query) use ($answer_menus) {
-            $query->moderatorLimit($answer_menus)
-            ->companiesLimit($answer_menus)
-            ->authors($answer_menus)
-            ->systemItem($answer_menus) // Фильтр по системным записям
-            ->orderBy('moderation', 'desc')
-            ->orderBy('sort', 'asc');
-        }, 'navigations.menus.page' => function ($query) use ($answer_pages) {
-            $query->moderatorLimit($answer_pages)
-            ->companiesLimit($answer_pages)
-            ->authors($answer_pages)
-            ->systemItem($answer_pages) // Фильтр по системным записям
-            ->orderBy('moderation', 'desc')
-            ->orderBy('sort', 'asc');
-        }, 'navigations.navigations_category'
-        //  => function ($query) use ($answer_navigations_categories) {
-        //     $query->moderatorLimit($answer_navigations_categories)
-        //     ->companiesLimit($answer_navigations_categories)
-        //     ->authors($answer_navigations_categories)
-        //     ->systemItem($answer_navigations_categories) // Фильтр по системным записям
-        //     ->orderBy('sort', 'asc');
-        // }
-    ])
-        ->moderatorLimit($answer_sites)
-        ->companiesLimit($answer_sites)
-        ->authors($answer_sites)
-        ->systemItem($answer_sites) // Фильтр по системным записям
-        ->whereAlias($alias)
-        ->first();
-
-        // $navigations = Navigation::with(['site', 'navigations.menus' => function ($query) {
-        //   $query->orderBy('sort', 'asc');
-        // }, 'navigations.menus.page', 'navigations.navigations_category'])
-        // ->moderatorLimit($answer)
-        // ->companiesLimit($answer)
-        // ->authors($answer)
-        // ->systemItem($answer) // Фильтр по системным записям
-        // ->whereHas('site', function ($query) use ($alias) {
-        //   $query->whereAlias($alias);
-        // })
-        // ->orderBy('sort', 'asc')
-        // ->get();
-
-        // dd($site->quantity);
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // $navigation_id = [];
-        // $navigations_tree = [];
-        $navigations = $site->navigations;
-
-        // foreach ($navigations as $navigation) {
-        //     $navigation_id[$navigation->id]['menus'] = $navigation->menus->keyBy('id')->toArray();
-
-        //     // Проверяем права на редактирование и удаление
-        //     foreach ($navigation_id[$navigation->id]['menus'] as $id => &$menu) {
-
-        //         $edit = 0;
-        //         $delete = 0;
-
-        //         if ($user->can('update', $navigation->menus->where('id', $id)->first())) {
-        //             $edit = 1;
-        //         }
-
-        //         if ($user->can('delete', $navigation->menus->where('id', $id)->first())) {
-        //             $delete = 1;
-        //         }
-
-        //         $navigation_id[$navigation->id]['menus'][$id]['edit'] = $edit;
-        //         $navigation_id[$navigation->id]['menus'][$id]['delete'] = $delete;
-
-        //         // dd($navigation->menus->where('id', $id));
-
-        //         // Функция построения дерева из массива от Tommy Lacroix
-        //         // Если нет вложений
-        //         if (!$menu['parent_id']){
-        //             $navigations_tree[$navigation->id]['menus'][$id] = &$menu;
-        //         } else {
-
-        //         // Если есть потомки то перебераем массив
-        //             $navigation_id[$navigation->id]['menus'][$menu['parent_id']]['children'][$id] = &$menu;
-        //         }
-        //     }
-
-        //     // Записываем даныне навигации
-        //     $navigations_tree[$navigation->id]['id'] = $navigation->id;
-        //     $navigations_tree[$navigation->id]['name'] = $navigation->name;
-        //     $navigations_tree[$navigation->id]['system_item'] = $navigation->system_item;
-        //     $navigations_tree[$navigation->id]['display'] = $navigation->display;
-        //     $navigations_tree[$navigation->id]['moderation'] = $navigation->moderation;
-        //     $navigations_tree[$navigation->id]['navigations_category'] = $navigation->navigations_category;
-        //     $navigations_tree[$navigation->id]['menus_count'] = $navigation->menus_count;
-
-        //     // Проверяем права на редактирование и удаление навигации
-        //     $edit = 0;
-        //     $delete = 0;
-
-        //     if ($user->can('update', $navigation)) {
-        //         $edit = 1;
-        //     }
-
-        //     if ($user->can('delete', $navigation)) {
-        //         $delete = 1;
-        //     }
-
-        //     $navigations_tree[$navigation->id]['edit'] = $edit;
-        //     $navigations_tree[$navigation->id]['delete'] = $delete;
-        // }
-        // dd($navigations_tree);
-
-        // $navigations = $site->navigations->pluck('name', 'id');
-        $pages_list = $site->pages->pluck('name', 'id');
-
-        $entity = $this->entity_name;
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        // Так как сущность имеет определенного родителя
-        $parent_page_info = pageInfo('sites');
+        }])
+        ->withCount('menus')
+        ->whereHas('site', function ($q) use ($alias) {
+            $q->whereAlias($alias);
+        })
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->orderBy('moderation', 'desc')
+        ->orderBy('sort', 'asc')
+        ->get();
 
         // После записи переходим на созданный пункт меню
         if($request->ajax()) {
             return view('navigations.navigations-list', ['navigations' => $navigations, 'item' => $request->item, 'id' => $request->id, 'class' => 'App\Navigation', 'entity' => $entity, 'type' => 'modal']);
         }
 
-        return view('navigations.index', compact('site', 'page_info', 'parent_page_info', 'pages_list', 'alias', 'menus', 'navigations', 'entity'));
+        return view('navigations.index',[
+            'navigations' => $navigations,
+            'page_info' => pageInfo($this->entity_alias),
+            'parent_page_info' => pageInfo('sites'),
+            'site' => Site::moderatorLimit(operator_right('sites', false, getmethod(__FUNCTION__)))
+            ->whereAlias($alias)
+            ->first(),
+        ]);
     }
 
 
@@ -251,7 +129,7 @@ class NavigationController extends Controller
         $navigation->system_item = $request->system_item;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
@@ -289,7 +167,7 @@ class NavigationController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $navigation = Navigation::moderatorLimit($answer)->findOrFail($id);
@@ -338,7 +216,7 @@ class NavigationController extends Controller
         $user_id = hideGod($user);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $navigation = Navigation::moderatorLimit($answer)->findOrFail($id);
@@ -382,7 +260,7 @@ class NavigationController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $navigation = Navigation::withCount('menus')->moderatorLimit($answer)->findOrFail($id);

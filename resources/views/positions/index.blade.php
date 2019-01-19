@@ -1,5 +1,5 @@
 @extends('layouts.app')
- 
+
 @section('inhead')
 <meta name="description" content="{{ $page_info->page_description }}" />
 {{-- Скрипты таблиц в шапке --}}
@@ -21,13 +21,13 @@
 {{-- Таблица --}}
 @include('includes.title-content', ['page_info' => $page_info, 'class' => App\Position::class, 'type' => 'table'])
 @endsection
- 
+
 @section('content')
 
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="positions">
+    <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="positions">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -53,7 +53,7 @@
               {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
               @if(!empty($filter['booklist']['booklists']['default']))
                 {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-                @if (in_array($position->id, $filter['booklist']['booklists']['default'])) checked 
+                @if (in_array($position->id, $filter['booklist']['booklists']['default'])) checked
               @endif
             @endif
 
@@ -65,7 +65,7 @@
             @endcan
             {{ $position->name }}
             @can('update', $position)
-            </a> 
+            </a>
             @endcan
           </td>
           <td class="td-page">{{ $position->page->alias }}</td>
@@ -81,7 +81,7 @@
               <a class="icon-delete sprite" data-open="item-delete"></a>
               @endcan
             @endif
-          </td>       
+          </td>
         </tr>
         @endforeach
       @endif

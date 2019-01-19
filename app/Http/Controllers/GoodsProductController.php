@@ -4,64 +4,62 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\GoodsProduct;
-use App\User;
 use App\GoodsCategory;
-use App\Company;
-use App\Photo;
-use App\Booklist;
-use App\Entity;
-use App\List_item;
 
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\GoodsProductRequest;
 
-// Политика
-use App\Policies\GoodsProductPolicy;
-
 // Общие классы
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
-use DB;
 
 // Специфические классы
 use Maatwebsite\Excel\Facades\Excel;
 use Intervention\Image\ImageManagerStatic as Image;
 
-// На удаление
-use Illuminate\Support\Facades\Auth;
-
 class GoodsProductController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'goods_products';
-    protected $entity_dependence = false;
+    // Настройки контроллера
+    public function __construct(GoodsProduct $goods_product)
+    {
+        $this->middleware('auth');
+        $this->goods_product = $goods_product;
+        $this->class = GoodsProduct::class;
+        $this->model = 'App\GoodsProduct';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+    }
 
     public function index(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), GoodsProduct::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_name);
+        $filter_url = autoFilter($request, $this->entity_alias);
         if(($filter_url != null)&&($request->filter != 'active')){
 
-            Cookie::queue(Cookie::forget('filter_' . $this->entity_name));
+            Cookie::queue(Cookie::forget('filter_' . $this->entity_alias));
             return Redirect($filter_url);
         }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // -----------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------------
 
-        $goods_products = GoodsProduct::with('author', 'company', 'goods_category', 'goods_articles.goods')
+        $goods_products = GoodsProduct::with(
+            'author',
+            'company',
+            'category',
+            'articles'
+        )
+        ->withCount('articles')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -78,7 +76,7 @@ class GoodsProductController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             'author',               // Автор записи
             'goods_category',       // Категория товара
             'booklist'              // Списки пользователя
@@ -86,84 +84,67 @@ class GoodsProductController extends Controller
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        return view('goods_products.index', compact('goods_products', 'page_info', 'product', 'filter'));
+        return view('goods_products.index',[
+            'goods_products' => $goods_products,
+            'page_info' => pageInfo($this->entity_alias),
+            'filter' => $filter,
+            'nested' => 'goods_articles_count'
+        ]);
     }
 
     public function create(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), GoodsProduct::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $answer_goods_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        $goods_product = new GoodsProduct;
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods_categories = operator_right('goods_categories', false, 'index');
-
-        // Категории
-        $goods_categories = GoodsCategory::moderatorLimit($answer_goods_categories)
-        ->companiesLimit($answer_goods_categories)
-        ->authors($answer_goods_categories)
-        ->systemItem($answer_goods_categories)
-        ->orderBy('sort', 'asc')
-        ->get(['id','name','parent_id'])
-        ->keyBy('id')
-        ->toArray();
-
-        // dd($goods_categories);
-
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $goods_categories_list = get_select_tree($goods_categories, 1, null, null);
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        return view('goods_products.create', compact('goods_product', 'page_info', 'goods_categories_list'));
+        return view('goods_products.create', [
+            'goods_product' => new $this->class,
+            'page_info' => pageInfo($this->entity_alias),
+        ]);
     }
 
     public function store(GoodsProductRequest $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), GoodsProduct::class);
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-
-        // Скрываем бога
-        $user_id = hideGod($user);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Наполняем сущность данными
         $goods_product = new GoodsProduct;
         $goods_product->name = $request->name;
         $goods_product->description = $request->description;
         $goods_product->goods_category_id = $request->goods_category_id;
+        $goods_product->unit_id = $request->unit_id;
 
-        // Автоматически отправляем запись на модерацию
-        // $product->moderation = 1;
+        if (isset($request->set_status)) {
+            $goods_product->set_status = $request->set_status;
+        }
 
-        // Модерация и системная запись
         $goods_product->system_item = $request->system_item;
-
         $goods_product->display = $request->display;
 
-        $goods_product->company_id = $company_id;
-        $goods_product->author_id = $user_id;
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        if ($answer['automoderate'] == false){
+            $goods_product->moderation = 1;
+        }
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        $goods_product->company_id = $user->company_id;
+        $goods_product->author_id = hideGod($user);
+
         $goods_product->save();
 
-        return redirect('/admin/goods_products');
+        if ($goods_product) {
+            return redirect()->route('goods_products.index');
+        } else {
+            abort(403, 'Ошибка записи сайта');
+        }
     }
 
     public function show($id)
@@ -174,108 +155,48 @@ class GoodsProductController extends Controller
     public function edit(Request $request, $id)
     {
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $answer_goods_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        $goods_product = GoodsProduct::with(['goods_category'])
-        ->moderatorLimit($answer_goods_products)
+        $goods_product = GoodsProduct::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
         ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_product);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods_categories = operator_right('goods_categories', false, 'index');
-
-        // Категории
-        $goods_categories = GoodsCategory::moderatorLimit($answer_goods_categories)
-        ->companiesLimit($answer_goods_categories)
-        ->authors($answer_goods_categories)
-        ->systemItem($answer_goods_categories)
-        ->orderBy('sort', 'asc')
-        ->get(['id','name','parent_id'])
-        ->keyBy('id')
-        ->toArray();
-
-        // dd($products_categories);
-
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $goods_categories_list = get_select_tree($goods_categories, $goods_product->goods_category_id, null, null);
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-
-
-        // Вот это вообще надо? Или это уже упразднили?
-        // --------------------------------------------------------------------------------------
-        if ($request->ajax()) {
-            // echo json_encode($properties);
-            return view('products.properties-list', ['properties' => $properties, 'product_metrics' => $product_metrics, 'properties_list' => $properties_list]);
-        }
-        // --------------------------------------------------------------------------------------
-
-        return view('goods_products.edit', compact('goods_product', 'page_info', 'goods_categories_list'));
+        return view('goods_products.edit', [
+            'goods_product' => $goods_product,
+            'page_info' => pageInfo($this->entity_alias),
+        ]);
     }
 
     public function update(GoodsProductRequest $request, $id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $goods_product = GoodsProduct::moderatorLimit($answer)->findOrFail($id);
+        $goods_product = GoodsProduct::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_product);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        if ($request->hasFile('photo')) {
-
-            $directory = $company_id.'/media/goods_products/'.$goods_product->id.'/img';
-            $name = 'avatar-'.time();
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-            if ($goods_product->photo_id) {
-                $array = save_photo($request, $directory, $name, null, $goods_product->photo_id, $this->entity_name);
-
-            } else {
-                $array = save_photo($request, $directory, $name, null, null, $this->entity_name);
-
-            }
-            $photo = $array['photo'];
-
-            $goods_product->photo_id = $photo->id;
-        }
-
         $goods_product->name = $request->name;
-        $goods_product->goods_category_id = $request->goods_category_id;
         $goods_product->description = $request->description;
+        $goods_product->goods_category_id = $request->goods_category_id;
+        $goods_product->unit_id = $request->unit_id;
+
+        if (isset($request->set_status)) {
+            $goods_product->set_status = $request->set_status;
+        }
 
         // Модерация и системная запись
         $goods_product->system_item = $request->system_item;
-        $goods_product->moderation = $request->moderation;
-
-        // Отображение на сайте
         $goods_product->display = $request->display;
 
-        $goods_product->editor_id = $user_id;
+        $goods_product->moderation = $request->moderation;
+
+        $goods_product->editor_id = hideGod($request->user());
         $goods_product->save();
 
         if ($goods_product) {
-
-            return Redirect('/admin/goods_products');
+            return redirect()->route('goods_products.index');
         } else {
-
             abort(403, 'Ошибка обновления группы товаров');
         }
     }
@@ -283,80 +204,75 @@ class GoodsProductController extends Controller
     public function destroy(Request $request, $id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $goods_product = GoodsProduct::with('goods')->moderatorLimit($answer)->findOrFail($id);
+        $goods_product = GoodsProduct::with('articles')
+        ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_product);
 
-        $user = $request->user();
+        $goods_product->editor_id = hideGod($request->user());
+        $goods_product->save();
+
+        $goods_product->delete();
 
         if ($goods_product) {
-            $goods_product->editor_id = $user->id;
-            $goods_product->save();
-
-            // Удаляем сайт с обновлением
-            $goods_product = GoodsProduct::destroy($id);
-
-            if ($goods_product) {
-            // $relations = AlbumMedia::whereAlbum_id($id)->pluck('media_id')->toArray();
-            // $photos = Photo::whereIn('id', $relations)->delete();
-            // $media = AlbumMedia::whereAlbum_id($id)->delete();
-
-                return Redirect('/admin/goods_products');
-            } else {
-                abort(403, 'Ошибка при удалении группы товаров');
-            }
+            return redirect()->route('goods_products.index');
         } else {
-            abort(403, 'Группа товаров не найдена');
+            abort(403, 'Ошибка удаления группы товаров');
         }
     }
 
-    // Проверка наличия в базе
-    public function ajax_check(Request $request)
+
+    // ------------------------------------- Ajax ------------------------------------------
+    public function ajax_change_create_mode(Request $request)
     {
-        $user = $request->user();
+        $mode = $request->mode;
+        $goods_category_id = $request->goods_category_id;
+        // $mode = 'mode-add';
+        // $entity = 'service_categories';
 
-        // Проверка отдела в нашей базе данных
-        $goods_product = GoodsProduct::where(['name' => $request->name, 'company_id' => $user->company_id])->first();
+        switch ($mode) {
 
-        // Если такое название есть
-        if ($goods_product) {
-            $result = [
-                'error_status' => 1,
-            ];
+            case 'mode-default':
 
-        // Если нет
-        } else {
-            $result = [
-                'error_status' => 0
-            ];
+            $goods_category = GoodsCategory::withCount('products')
+            ->find($goods_category_id);
+            $goods_products_count = $goods_category->products_count;
+
+            return view('goods.create_modes.mode_default', compact('goods_products_count'));
+
+            break;
+
+            case 'mode-select':
+
+            $goods_products = GoodsProduct::with('unit')
+            ->where([
+                'goods_category_id' => $goods_category_id,
+                'set_status' => $request->set_status
+            ])
+            ->get(['id', 'name', 'unit_id']);
+            return view('goods.create_modes.mode_select', compact('goods_products'));
+
+            break;
+
+            case 'mode-add':
+
+            return view('goods.create_modes.mode_add');
+
+            break;
+
         }
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 
-    // Добавление фоток
-    public function product_photos(Request $request, $id)
+    public function ajax_get_products_list(Request $request)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
+        $goods_products = GoodsProduct::where(['goods_category_id' => $request->goods_category_id, 'set_status' => $request->set_status])
+        ->orWhere('id', $request->goods_product_id)
+        ->get(['id', 'name']);
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $product = Product::with('album.photos')->moderatorLimit($answer)->findOrFail($id);
-        // dd($product);
-
-        // Подключение политики
-        $this->authorize(getmethod('edit'), $product);
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        return view('products.photos', compact('page_info', 'product'));
-
+        return view('includes.selects.goods_products', ['goods_products' => $goods_products, 'goods_product_id' => $request->goods_product_id, 'set_status' => $request->set_status]);
     }
 
     // -------------------------------------- Exel ------------------------------------------
@@ -410,7 +326,7 @@ class GoodsProductController extends Controller
 
         $id = $request->id;
 
-        $goods_category = GoodsCategory::withCount('goods_products')->with('goods_products')->findOrFail($id);
+        $goods_category = GoodsCategory::withCount('products')->with('products')->findOrFail($id);
 
         if ($goods_category->goods_products_count > 0) {
 
@@ -432,50 +348,7 @@ class GoodsProductController extends Controller
         }
     }
 
-    public function ajax_change_create_mode(Request $request)
-    {
-        $mode = $request->mode;
-        $goods_category_id = $request->goods_category_id;
-        // $mode = 'mode-add';
-        // $entity = 'service_categories';
 
-        switch ($mode) {
-
-            case 'mode-default':
-
-            $goods_category = GoodsCategory::withCount('goods_products')->find($goods_category_id);
-            $goods_products_count = $goods_category->goods_products_count;
-
-            return view('goods.create_modes.mode_default', compact('goods_products_count'));
-
-            break;
-
-            case 'mode-select':
-
-            $goods_products = GoodsProduct::with('unit')->where(['goods_category_id' => $goods_category_id, 'set_status' => $request->set_status])
-            ->get(['id', 'name', 'unit_id']);
-            return view('goods.create_modes.mode_select', compact('goods_products'));
-
-            break;
-
-            case 'mode-add':
-
-            return view('goods.create_modes.mode_add');
-
-            break;
-
-        }
-    }
-
-    public function ajax_get_products_list(Request $request)
-    {
-
-        $goods_products = GoodsProduct::where(['goods_category_id' => $request->goods_category_id, 'set_status' => $request->set_status])
-        ->orWhere('id', $request->goods_product_id)
-        ->get(['id', 'name']);
-
-        return view('includes.selects.goods_products', ['goods_products' => $goods_products, 'goods_product_id' => $request->goods_product_id, 'set_status' => $request->set_status]);
-    }
 
 
 }

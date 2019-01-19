@@ -13,7 +13,7 @@ $drop = 1;
     <a class="first-link @if($drop == 0) link-small @endif">
         <div class="icon-open sprite"></div>
         <span class="first-item-name">{{ $category->name }}</span>
-        <span class="number">{{ isset($category->childrens) ? count($category->childrens) : 0 }}</span>
+        <span class="number">{{ isset($category->childrens) ? $category->childrens->count() : 0 }}</span>
 
         @moderation ($category)
         <span class="no-moderation">Не отмодерированная запись!</span>
@@ -25,7 +25,7 @@ $drop = 1;
 
         <div class="controls-list">
 
-            @include ('includes.control.menu_div', ['item' => $category, 'class' => $class, 'color' => 'white'])
+            @include ('includes.control.categories_menu_div', ['item' => $category, 'class' => $class, 'color' => 'white'])
 
         </div>
 
@@ -43,19 +43,20 @@ $drop = 1;
             @break
 
             @case($type == 'edit')
-            <a class="icon-list-edit sprite" href="/admin/{{ $entity }}/{{ $category->id }}/edit"></a>
-            @break
+
+            @if (isset($alias))
+            {{ link_to_route($entity.'.edit', '', $parameters = ['alias' => $alias, 'id' => $category->id], $attributes = ['class' => 'icon-list-edit sprite']) }}
+            @else
+            {{ link_to_route($entity.'.edit', '', $parameters = ['id' => $category->id], $attributes = ['class' => 'icon-list-edit sprite']) }}
+            @endif
+
             @break
 
             @endswitch
             @endcan
 
             <div class="del">
-                @can('delete', $category)
-                @if(empty($category->childrens) && ($category->system_item == null) && ($category->company_id != null) && ($category->$nested == 0))
-                <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
-                @endif
-                @endcan
+                @include('includes.control.item_delete_menu', ['item' => $category])
             </div>
         </div>
 
@@ -65,9 +66,15 @@ $drop = 1;
         @if ($drop == 1)
         <div class="sprite icon-drop"></div>
         @endif
-        <input type="checkbox" name="" id="check-{{ $category->id }}">
+        <input type="checkbox" name="" id="check-{{ $category->id }}" class="check-booklist"
+        @if(!empty($filter['booklist']['booklists']['default']))
+        @if (in_array($category->id, $filter['booklist']['booklists']['default'])) checked
+        @endif
+        @endif
+        >
         <label class="label-check white" for="check-{{ $category->id }}"></label>
     </div>
+
     <ul class="menu vertical medium-list" data-accordion-menu data-multi-open="false">
         @isset($category->childrens)
         @foreach ($category->childrens as $children)
@@ -133,6 +140,6 @@ $drop = 1;
 
 @isset ($count)
 <script type="text/javascript">
-    $('.content-count').text('{{ $count }}');
+    $('.content-count').text('{{ num_format($count, 0) }}');
 </script>
 @endisset

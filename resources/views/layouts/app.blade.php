@@ -51,7 +51,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
 <title>@yield('title')</title>
 </head>
 {{-- Блочим все подергивания в блоке  --}}
-<body id="body" class="block-refresh"> 
+<body id="body" class="block-refresh">
 
 
     {{-- Хедер --}}
@@ -71,216 +71,216 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                     <ul>
                         {{-- <li>
                             @if(isset($session_god))
-                            {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }} 
+                            {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }}
                             @endif
                         </li> --}}
 
                         <li>
                             <a id="task-toggle"><img src="/crm/img/header/alert.png">
-                            @if(!empty($list_challenges['for_me']))
+                                @if(!empty($list_challenges['for_me']))
                                 <span class="challenges_count" id="challenges-count">{{ $list_challenges['for_me']->flatten()->count() }}</span>
-                            @endif
+                                @endif
                             </a></li>
-                        <li>
-                            <a data-toggle="profile">
-                                <span>
-                                    @if(isset(Auth::user()->company_id))
-                                    {{ $company_name }}  | 
+                            <li>
+                                <a data-toggle="profile">
+
+                                    <span>
+                                        @if(isset(Auth::user()->company_id))
+                                        {{ $company_name }}  |
+                                        @endif
+                                        {{ isset(Auth::user()->login) ? Auth::user()->login : 'Чужак' }} {{ $count_authors }}
+                                    </span>
+
+                                    <img src="{{ getPhotoPath(Auth::user(), 'small') }}" alt="Аватар" class="avatar">
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="dropdown-pane profile-head" id="profile" data-dropdown data-position="bottom" data-alignment="right" data-v-offset="10" data-h-offset="-30" data-close-on-click="true">
+                            <ul class="menu vertical">
+                                <li>{{ link_to_route('users.myprofile', 'Мой профиль', $value = Null) }} </li>
+                                {{-- <li><a href="">Настройки</a></li> --}}
+                                <li><hr></li>
+                                {{-- <li><a href="">Нужна помощь?</a></li> --}}
+                                <li>
+                                    @if(isset($company_id)&&($user_status == 1))
+                                    {{ link_to_route('users.getgod', 'Выйти из компании', $value = Null) }}
                                     @endif
-                                    {{ isset(Auth::user()->login) ? Auth::user()->login : 'Чужак' }} {{ $count_authors }}</span>
-                                    @php
-                                    $name = '';
-                                    if (Auth::user()->sex == 1) {
-                                    $name = 'avatar_small_man.png';
-                                } else {
-                                $name = 'avatar_small_woman.png';
-                            }
-                            @endphp
-                            <img src="{{ isset(Auth::user()->photo_id) ? '/storage/'.Auth::user()->company_id.'/media/users/'.Auth::user()->id.'/img/small/'.Auth::user()->avatar->name : '/crm/img/plug/'.$name }}" alt="Аватар" class="avatar">
-                        </a>
-                    </li>
+                                </li>
+                                <li>
+                                    @if(isset($session_god))
+                                    {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }}
+                                    @endif
+                                </li>
+                                <li>
+                                    @if(isset($session_access))
+                                    {{ link_to_route('help.show_session', 'Смотреть сессию', $value = Null, ['target' => '_blank']) }}
+                                @endif</li>
+
+                                {{-- Кнопка выхода --}}
+                                <li><a href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
+                                    document.getElementById('logout-form').submit();">Выход</a>
+                                </li>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    {{ csrf_field() }}
+                                </form>
+
+                            </ul>
+                        </div>
+                    </div>
+                </header>
+            </div>
+        </div>
+
+        @php
+        $session = session('conditions');
+
+        if ($session) {
+
+            $setting_sidebar = $session['conditions']['sidebar'];
+            if (isset($setting_sidebar)) {
+                if ($session['conditions']['sidebar'] == 'open') {
+                    $sidebar = 'sidebar-open';
+                } else {
+                    $sidebar = '';
+                }
+            } else {
+                $sidebar = '';
+            }
+
+            $setting_task = $session['conditions']['task'];
+            if (isset($setting_task)) {
+                if ($session['conditions']['task'] == 'open') {
+                    $task = 'task-open';
+                } else {
+                    $task = '';
+                }
+            } else {
+                $task = '';
+            }
+
+        } else {
+            $sidebar = 'sidebar-open';
+            $task = '';
+        }
+
+
+
+        @endphp
+
+        {{-- Основной сайдбар, весь функционал --}}
+        @include('layouts.sidebar', ['open' => $sidebar])
+
+
+        {{-- Менеджер задач --}}
+        @include('layouts.task-manager', ['open' => $task])
+
+
+        {{-- Основной контент --}}
+        <div id="wrapper">
+            <div class="grid-x">
+                <div class="small-12 cell errors">
+                    {{-- Блок ошибок --}}
+                    @if ($errors->any())
+                    <div class="alert callout" data-closable>
+                        <h5>Ошибки ввода данных:</h5>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                        <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            <div class="grid-x breadcrumbs block-refresh">
+                <div class="small-12 medium-9 cell">
+                    {{-- Breadcrumbs --}}
+                    @yield('breadcrumbs')
+                </div>
+                <div class="small-12 medium-3 cell text-right" id="extra-panel">
+
+                    {{-- Planfact --}}
+                    @yield('planfact')
+
+                    {{-- Exсel --}}
+                    @yield('exсel')
+                    
+                </div>
+            </div>
+
+
+
+            <main class="content">
+
+                {{-- Прилипающий заголовок --}}
+                @yield('title-content')
+
+                {{-- Функционал --}}
+                @yield('control-content')
+
+                {{-- Основой контент --}}
+                @yield('content')
+
+            </main>
+            {{-- Модальные окна --}}
+            @yield('modals')
+        </div>
+        {{-- Footer --}}
+        <footer class="grid-x footer">
+            <div class="small-12 cell">
+                <ul class="right">
+                    <li>КОЛ-ВО ЗАЯВОК С САЙТА: <span>12</span></li>
+                    <li>КОЛ-ВО ЗВОНКОВ: <span>9</span></li>
+                    <li>РЕКЛАМАЦИИ: <span>0</span></li>
+                    <li>ПОСТУПЛЕНИЯ ДЕНЕГ: <span>670 500</span></li>
+                    <li class="foot-drop" id="foot-drop"><a class="icon-footer sprite" data-toggle="foot-options"></a></li>
                 </ul>
-                <div class="dropdown-pane profile-head" id="profile" data-dropdown data-position="bottom" data-alignment="right" data-v-offset="10" data-h-offset="-30" data-close-on-click="true">
-                    <ul class="menu vertical">
-                        <li>{{ link_to_route('users.myprofile', 'Мой профиль', $value = Null) }} </li>
-                        {{-- <li><a href="">Настройки</a></li> --}}
-                        <li><hr></li>
-                        {{-- <li><a href="">Нужна помощь?</a></li> --}}
+                <div class="dropdown-pane foot-options" id="foot-options" data-dropdown data-position="top" data-alignment="right" data-v-offset="6" data-h-offset="-32" data-close-on-click="true">
+                    <ul class="menu vertical checkbox">
                         <li>
-                            @if(isset($company_id)&&($user_status == 1))
-                            {{ link_to_route('users.getgod', 'Выйти из компании', $value = Null) }} 
-                            @endif
+                            <input type="checkbox" name="" id="leads-option">
+                            <label for="leads-option"><span>Количество заявок</span></label>
                         </li>
                         <li>
-                            @if(isset($session_god))
-                            {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }} 
-                            @endif
+                            <input type="checkbox" name="" id="calls-option">
+                            <label for="calls-option"><span>Количество звонков</span></label>
                         </li>
                         <li>
-                            @if(isset($session_access))
-                            {{ link_to_route('help.show_session', 'Смотреть сессию', $value = Null, ['target' => '_blank']) }} 
-                        @endif</li>
-
-                        {{-- Кнопка выхода --}}
-                        <li><a href="{{ route('logout') }}"
-                            onclick="event.preventDefault();
-                            document.getElementById('logout-form').submit();">Выход</a>
+                            <input type="checkbox" name="" id="claim-option">
+                            <label for="claim-option"><span>Рекламации</span></label>
                         </li>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                        </form>
-
+                        <li>
+                            <input type="checkbox" name="" id="money-option">
+                            <label for="money-option"><span>Поступления денег</span></label>
+                        </li>
                     </ul>
                 </div>
             </div>
-        </header>
-    </div>
-</div>
-
-@php
-$session = session('conditions');
-
-if ($session) {
-
-$setting_sidebar = $session['conditions']['sidebar'];
-if (isset($setting_sidebar)) {
-if ($session['conditions']['sidebar'] == 'open') {
-$sidebar = 'sidebar-open';
-} else {
-$sidebar = '';
-}
-} else {
-$sidebar = '';
-}
-
-$setting_task = $session['conditions']['task'];
-if (isset($setting_task)) {
-if ($session['conditions']['task'] == 'open') {
-    $task = 'task-open';
-} else {
-    $task = '';
-}
-} else {
-$task = '';
-}
-    
-} else {
-    $sidebar = 'sidebar-open';
-    $task = '';
-}
-
-
-
-@endphp
-
-{{-- Основной сайдбар, весь функционал --}}
-@include('layouts.sidebar', ['open' => $sidebar])
-
-
-    {{-- Менеджер задач --}}
-    @include('layouts.task-manager', ['open' => $task])
-
-
-{{-- Основной контент --}}
-<div id="wrapper">
-    <div class="grid-x">
-        <div class="small-12 cell errors">
-            {{-- Блок ошибок --}}
-            @if ($errors->any())
-            <div class="alert callout" data-closable>
-                <h5>Ошибки ввода данных:</h5>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            @endif
-        </div>
-    </div>
-    <div class="grid-x breadcrumbs block-refresh">
-        <div class="small-12 medium-9 cell"> 
-            {{-- Breadcrumbs --}}
-            @yield('breadcrumbs')
-        </div>
-        <div class="small-12 medium-3 cell text-right" id="exel"> 
-            {{-- Exel --}}
-            @yield('exel')
-        </div>
-    </div>
-
-    
-    
-    <main class="content">
-
-        {{-- Прилипающий заголовок --}}
-        @yield('title-content')
-
-        {{-- Функционал --}}
-        @yield('control-content')
-
-        {{-- Основой контент --}}
-        @yield('content')
-
-    </main>
-    {{-- Модальные окна --}}
-    @yield('modals')
-</div>
-{{-- Footer --}}
-<footer class="grid-x footer">
-    <div class="small-12 cell"> 
-        <ul class="right">
-            <li>КОЛ-ВО ЗАЯВОК С САЙТА: <span>12</span></li>
-            <li>КОЛ-ВО ЗВОНКОВ: <span>9</span></li>
-            <li>РЕКЛАМАЦИИ: <span>0</span></li>
-            <li>ПОСТУПЛЕНИЯ ДЕНЕГ: <span>670 500</span></li>
-            <li class="foot-drop" id="foot-drop"><a class="icon-footer sprite" data-toggle="foot-options"></a></li>
-        </ul>
-        <div class="dropdown-pane foot-options" id="foot-options" data-dropdown data-position="top" data-alignment="right" data-v-offset="6" data-h-offset="-32" data-close-on-click="true">
-            <ul class="menu vertical checkbox">
-                <li>
-                    <input type="checkbox" name="" id="leads-option">
-                    <label for="leads-option"><span>Количество заявок</span></label>
-                </li>
-                <li>
-                    <input type="checkbox" name="" id="calls-option">
-                    <label for="calls-option"><span>Количество звонков</span></label>
-                </li>
-                <li>
-                    <input type="checkbox" name="" id="claim-option">
-                    <label for="claim-option"><span>Рекламации</span></label>
-                </li>
-                <li>
-                    <input type="checkbox" name="" id="money-option">
-                    <label for="money-option"><span>Поступления денег</span></label>
-                </li>
-            </ul>
-        </div>
-    </div>
-</footer>
-{{-- Скрипты --}}
-<script src="/crm/js/vendor/what-input.js"></script>
-<script src="/crm/js/vendor/foundation.js"></script>
-<script src="/crm/js/app.js"></script>
-<!-- Наши скрипты -->
-<script type="text/javascript">
-    $(function() {
-        console.log('Начало обработки страницы');
-    });
-    $(window).on('load', function () {
-        $("body").removeClass("block-refresh");
-        renderContent ();
-        setTimeout(function(){
-            $('#wrapper').css({'transition': 'margin 0.3s ease'});
-            $('#sidebar').css({'transition': 'width 0.3s ease'});
-            $('#task-manager').css({'transition': 'margin-right 0.3s ease'});
-            if ($("div").is("#head-content")) {
-                $('.head-content').css({'transition': 'width 0.3s ease'});
-            };
-            if ($("table").is("#table")) {
+        </footer>
+        {{-- Скрипты --}}
+        <script src="/crm/js/vendor/what-input.js"></script>
+        <script src="/crm/js/vendor/foundation.js"></script>
+        <script src="/crm/js/app.js"></script>
+        <!-- Наши скрипты -->
+        <script type="text/javascript">
+            $(function() {
+                console.log('Начало обработки страницы');
+            });
+            $(window).on('load', function () {
+                $("body").removeClass("block-refresh");
+                renderContent ();
+                setTimeout(function(){
+                    $('#wrapper').css({'transition': 'margin 0.3s ease'});
+                    $('#sidebar').css({'transition': 'width 0.3s ease'});
+                    $('#task-manager').css({'transition': 'margin-right 0.3s ease'});
+                    if ($("div").is("#head-content")) {
+                        $('.head-content').css({'transition': 'width 0.3s ease'});
+                    };
+                    if ($("table").is("#table")) {
                 // $('#thead-sticky').css({'transition': 'margin 0.1s ease'});
                 $('#thead-content').css({'transition': 'width 0.3s ease'});
                 $('#thead-content>th').css({'transition': 'width 0.3s ease'});
@@ -297,9 +297,9 @@ $task = '';
         // get_challenges();
 
     });
-    $(window).resize(function() {
-        renderContent ();
-    });
+            $(window).resize(function() {
+                renderContent ();
+            });
     // Иконка в футере при клике
     // $('.icon-footer').bind('click', function() {
     //   $('#foot-drop').toggleClass('active-foot-drop');

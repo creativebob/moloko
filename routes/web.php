@@ -29,18 +29,22 @@ use Fomvasss\Dadata\Facades\DadataSuggest;
 
 Auth::routes();
 
-
 // Вход в панель управления
 Route::get('/', 'AppController@enter');
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
-Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+
 Route::get('/img/{path}', 'ImageController@show')->where('path', '.*');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
+
+
+// ----------------------------- Рабочий стол -------------------------------------
+
+Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 
 // -------------------------------------- Директории ---------------------------------------------------
 Route::get('directories', 'DirectoryController@index')->middleware('auth')->name('directories.index');
@@ -212,7 +216,7 @@ Route::resource('/settings', 'SettingController')->middleware('auth');
 
 // ---------------------------------------- Телефоны --------------------------------------------------
 
-Route::post('/add_extra_phone', 'PhoneController@ajax_add_extra_phone')->middleware('auth');
+Route::post('/add_extra_phone', 'PhoneController@ajax_add_extra_phone')->middleware('auth')->name('phones.add_extra_phone');;
 
 
 // -------------------------------------- Пользователи ------------------------------------------------
@@ -221,8 +225,6 @@ Route::resource('/users', 'UserController')->middleware('auth');
 Route::get('/myprofile', 'UserController@myprofile')->middleware('auth')->name('users.myprofile');
 Route::patch('/updatemyprofile', 'UserController@updatemyprofile')->middleware('auth')->name('users.updatemyprofile');
 
-// Поиск продукции для добавления на сайт
-Route::any('/catalog_products/add_product', 'CatalogProductController@add_product')->middleware('auth');
 
 // ---------------------------------- Категории альбомов -------------------------------------------
 
@@ -231,23 +233,28 @@ Route::any('/albums_categories', 'AlbumsCategoryController@index')->middleware('
 // Основные методы
 Route::resource('/albums_categories', 'AlbumsCategoryController')->middleware('auth');
 
+
 // --------------------------------------- Альбомы -----------------------------------------------
 
 // Route::resource('/albums', 'AlbumController')->middleware('auth');
 Route::get('/albums', 'AlbumController@index')->middleware('auth')->name('albums.index');
 Route::get('/albums/create', 'AlbumController@create')->middleware('auth')->name('albums.create');
-Route::get('/albums/{alias}', 'AlbumController@show')->middleware('auth')->name('albums.show');
+Route::get('/albums/{alias}', 'AlbumController@sections')->middleware('auth')->name('albums.sections');
 Route::post('/albums', 'AlbumController@store')->middleware('auth')->name('albums.store');
 Route::get('/albums/{alias}/edit', 'AlbumController@edit')->middleware('auth')->name('albums.edit');
 Route::patch('/albums/{id}', 'AlbumController@update')->middleware('auth')->name('albums.update');
 Route::delete('/albums/{id}', 'AlbumController@destroy')->middleware('auth')->name('albums.destroy');
 
-// Получение альбомов по категории
-Route::post('/albums_list', 'AlbumController@albums_list')->middleware('auth');
-// Получение альбома
-Route::post('/get_album', 'AlbumController@get_album')->middleware('auth');
+
 // Проверка на существование
 Route::post('/albums_check', 'AlbumController@ajax_check')->middleware('auth');
+
+// Открытие модалки прикрепления альбома
+Route::post('/album_add', 'AlbumController@album_add')->middleware('auth')->name('album.add');
+// Получение альбомов по категории
+Route::post('/albums_select', 'AlbumController@albums_select')->middleware('auth');
+// Получение альбома
+Route::any('/album_get', 'AlbumController@album_get')->middleware('auth');
 
 
 // Группа с префиксом
@@ -255,12 +262,17 @@ Route::prefix('/albums/{alias}')->group(function () {
 
   // ----------------------------------- Фотографии -----------------------------------------------
 
-    Route::resource('/photos', 'PhotoController')->middleware('auth');
+    Route::resource('/photos', 'PhotoController');
   // Загрузка фоток через ajax через dropzone.js
 });
 
-Route::post('/ajax_get_photo', 'PhotoController@get_photo')->middleware('auth');
-Route::patch('/ajax_update_photo/{id}', 'PhotoController@update_photo')->middleware('auth');
+Route::post('/photo_index', 'PhotoController@ajax_index');
+
+Route::any('/photo_store', 'PhotoController@ajax_store')->name('photos.ajax_store');
+
+Route::post('/photo_edit/{id}', 'PhotoController@ajax_edit')->name('photos.ajax_edit');
+
+Route::patch('/photo_update/{id}', 'PhotoController@ajax_update');
 
 
 // --------------------------------------- Помещения -----------------------------------------------
@@ -281,12 +293,10 @@ Route::resource('/metrics', 'MetricController')->middleware('auth');
 Route::post('/ajax_store_metric', 'MetricController@ajax_store')->middleware('auth');
 
 // Добавляем / удаляем связь сущности с метрикой
-Route::match(['get', 'post'], '/ajax_add_relation_metric', 'MetricController@ajax_add_relation')->middleware('auth');
+Route::match(['get', 'post'], '/ajax_add_relation_metric', 'MetricController@ajax_add_relation')->middleware('auth')->name('metrics.add_relation');
 Route::any('/ajax_delete_relation_metric', 'MetricController@ajax_delete_relation')->middleware('auth');
 
 Route::post('/ajax_add_metric_value', 'MetricController@add_metric_value')->middleware('auth');
-
-
 
 
 // ---------------------------------------- Состав -------------------------------------------------
@@ -304,6 +314,7 @@ Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middlew
 
 // Текущая добавленная/удаленная категория
 Route::any('/raws_categories', 'RawsCategoryController@index')->middleware('auth');
+Route::match(['get', 'post'], '/raws_categories/{id}/edit', 'RawsCategoryController@edit')->middleware('auth');
 // Основные методы
 Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth');
 
@@ -314,7 +325,9 @@ Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth'
 Route::resource('/raws_products', 'RawsProductController')->middleware('auth');
 
 Route::any('/ajax_raws_count', 'RawsProductController@ajax_count')->middleware('auth');
-Route::any('/ajax_raws_modes', 'RawsProductController@ajax_modes')->middleware('auth');
+Route::any('/raws_products_create_mode', 'RawsProductController@ajax_change_create_mode')->middleware('auth');
+
+Route::any('/raws_products_list', 'RawsProductController@ajax_get_products_list')->middleware('auth');
 
 
 // ---------------------------------- Сырьё (Артикулы) -------------------------------------------
@@ -337,9 +350,6 @@ Route::any('/goods_categories', 'GoodsCategoryController@index')->middleware('au
 Route::match(['get', 'post'], '/goods_categories/{id}/edit', 'GoodsCategoryController@edit')->middleware('auth');
 // Основные методы
 Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('auth');
-
-// Отображение на сайте
-Route::any('/goods_categories_get_products', 'GoodsCategoryController@ajax_get_products')->middleware('auth');
 
 Route::any('/goods_category_metrics', 'GoodsCategoryController@ajax_get_metrics')->middleware('auth');
 Route::any('/goods_category_compositions', 'GoodsCategoryController@ajax_get_compositions')->middleware('auth');
@@ -373,6 +383,9 @@ Route::post('/goods/archive/{id}', 'GoodsController@archive')->middleware('auth'
 Route::post('/goods_sync', 'GoodsController@ajax_sync')->middleware('auth');
 
 Route::any('/goods_check', 'GoodsController@ajax_check')->middleware('auth');
+
+// Отображение на сайте
+Route::any('/goods_categories_get_products', 'GoodsController@ajax_get_products')->middleware('auth');
 
 
 
@@ -411,6 +424,14 @@ Route::any('/service/add_photo', 'ServiceController@add_photo')->middleware('aut
 Route::post('/service/photos', 'ServiceController@photos')->middleware('auth');
 
 
+// -------------------------------- Расходные материалы -------------------------------------------
+
+// Текущая добавленная/удаленная категория
+Route::any('/expendables_categories', 'ExpendablesCategoryController@index')->middleware('auth');
+// Основные методы
+Route::resource('/expendables_categories', 'ExpendablesCategoryController')->middleware('auth');
+
+
 // ----------------------------------------- Секторы -----------------------------------------------
 // Текущий добавленный/удаленный сектор
 Route::any('/sectors', 'SectorController@index')->middleware('auth');
@@ -430,8 +451,21 @@ Route::post('/companies/check_company', 'CompanyController@checkcompany')->middl
 // Основные методы
 Route::resource('/extra_requisites', 'ExtraRequisiteController')->middleware('auth');
 
+// ------------------------------------------------ Планирование -------------------------------------
 
-// --------------------------------------- Лиды -----------------------------------------------
+Route::get('plans', 'PlanController@index')->name('plans.index');
+
+Route::get('plans/{alias}', 'PlanController@show')->name('plans.show');
+// Основные методы
+// Route::resource('plans', 'PlanController')->middleware('auth');
+
+// ------------------------------------------------ Статистика ---------------------------------------
+
+// Основные методы
+Route::resource('statistics', 'StatisticsController')->middleware('auth');
+
+
+// ---------------------------------------------- Лиды -----------------------------------------------
 
 // Основные методы
 // Route::get('/lead/calls', 'LeadController@index')->middleware('auth');
@@ -459,15 +493,25 @@ Route::post('/leads_add_note', 'LeadController@ajax_add_note')->middleware('auth
 Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->middleware('auth');
 
 
+// --------------------------------------- Расчеты -----------------------------------------------
+
+// Основные методы
+Route::resource('estimates', 'EstimateController')->middleware('auth');
+
+// Отображение на сайте
+Route::any('/estimates_check', 'EstimateController@ajax_check')->middleware('auth');
+
+Route::delete('/workflows/{id}', 'EstimateController@ajax_destroy_composition')->middleware('auth');
+Route::any('/workflows/{id}/edit', 'WorkflowController@ajax_edit')->middleware('auth');
+
 // --------------------------------------- Заказы -----------------------------------------------
 
 // Основные методы
 Route::resource('orders', 'OrderController')->middleware('auth');
 
+
 // Отображение на сайте
 Route::any('/orders_check', 'OrderController@ajax_check')->middleware('auth');
-
-Route::delete('/order_compositions/{id}', 'OrderController@ajax_destroy_composition')->middleware('auth');
 
 
 // ------------------------------ Внутренние комментарии -----------------------------------------------
@@ -517,6 +561,12 @@ Route::post('/rule_delete', 'RuleController@ajax_destroy')->middleware('auth');
 Route::resource('/posts', 'PostController')->middleware('auth');
 
 
+// ---------------------------------------- Источники --------------------------------------------
+
+
+// Проверка на существование аккаунта
+Route::any('/get_source_services_list', 'SourceServiceController@get_source_services_list')->middleware('auth');
+
 // ---------------------------------------- Аккаунты --------------------------------------------
 
 // Основные методы
@@ -562,6 +612,18 @@ Route::resource('/feedback', 'FeedbackController')->middleware('auth');
 Route::resource('/suppliers', 'SupplierController')->middleware('auth');
 
 
+// -------------------------------------- Заявки поставщикам ---------------------------------------------
+
+// Основные методы
+Route::resource('applications', 'ApplicationController')->middleware('auth');
+
+
+// -------------------------------------- Товарные накладные ---------------------------------------------
+
+// Основные методы
+Route::resource('consignments', 'ConsignmentController');
+
+
 // ------------------------------------ Производители ----------------------------------------------------
 
 // Основные методы
@@ -597,6 +659,12 @@ Route::any('/edit_bank_account', 'BankAccountController@ajax_edit')->middleware(
 Route::any('/update_bank_account', 'BankAccountController@ajax_update')->middleware('auth');
 Route::any('/store_bank_account', 'BankAccountController@ajax_store')->middleware('auth');
 Route::resource('/bank_accounts', 'BankAccountController')->middleware('auth');
+
+
+// -------------------------------------- Показатели ---------------------------------------------
+
+// Основные методы
+Route::resource('indicators', 'IndicatorController');
 
 
 // ------------------------------------- Правила доступа ----------------------------------------------------
@@ -682,7 +750,7 @@ Route::get('/current_department/{section_id}/{item_id}', 'DepartmentController@c
 // Список отделов филиала
 Route::post('/departments_list', 'DepartmentController@departments_list')->middleware('auth');
 // Проверка на существование филиала/отдела
-Route::post('/department_check', 'DepartmentController@ajax_check')->middleware('auth');
+Route::any('/department_check', 'DepartmentController@ajax_check')->middleware('auth');
 
 
 // ----------------------------------------- Должности --------------------------------------------
@@ -723,9 +791,14 @@ Route::get('/sites/{alias}', 'SiteController@sections')->middleware('auth')->nam
 // Проверка на существование домена сайта
 Route::post('/site_check', 'SiteController@ajax_check')->middleware('auth');
 
+// Поиск продукции для добавления на сайт
+Route::any('/catalog_product/search_add_product', 'CatalogProductController@search_add_product')->middleware('auth');
+
+// Поиск продукции для добавления на сайт
+Route::any('/catalog_product/add_product', 'CatalogProductController@add_product')->middleware('auth');
+
 // Разделы сайта
 Route::prefix('/sites/{alias}')->group(function () {
-
 
     // --------------------------------------- Страницы ---------------------------------------------
 
@@ -765,11 +838,8 @@ Route::prefix('/sites/{alias}')->group(function () {
     Route::any('/catalogs', 'CatalogController@index')->middleware('auth');
     // Основные методы
     Route::resource('/catalogs', 'CatalogController')->middleware('auth');
-    // Проверка на существование каталога
+    // Проверка на существование
     Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
-    // Проверка на существование алиаса каталога
-    Route::post('/catalog_check_alias', 'CatalogController@ajax_check_alias')->middleware('auth');
-
 
     // -------------------------------- Продукция для каталогов сайта -------------------------------------
     // Основные методы
@@ -779,8 +849,7 @@ Route::prefix('/sites/{alias}')->group(function () {
 
 });
 
-// Поиск продукции для добавления на сайт
-Route::any('/catalog_products/search_add_product/{text_fragment}/{catalog_id}', 'CatalogProductController@search_add_product')->middleware('auth');
+
 
 
 // ------------------------------------- Отображение сессии -----------------------------------------

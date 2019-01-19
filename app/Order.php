@@ -16,13 +16,11 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
-// use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\DateIntervalFilter;
 
 class Order extends Model
 {
@@ -41,9 +39,9 @@ class Order extends Model
     use ModeratorLimitTraitScopes;
 
     // Фильтры
-    // use Filter;
-    // use BooklistFilter;
-    // use DateIntervalFilter;
+    use Filter;
+    use BooklistFilter;
+    use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
@@ -57,7 +55,7 @@ class Order extends Model
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo('App\User');
     }
 
     // Компания
@@ -67,15 +65,9 @@ class Order extends Model
     }
 
     // Лид
-    public function lead()
+    public function application()
     {
-        return $this->belongsTo('App\Lead', 'lead_id');
-    }
-
-    // Получаем клиента
-    public function client()
-    {
-        return $this->belongsTo('App\Client', 'client_id');
+        return $this->belongsTo('App\Application');
     }
 
     // Состав

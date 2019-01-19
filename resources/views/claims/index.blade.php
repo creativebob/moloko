@@ -26,7 +26,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter claims" id="content" data-sticky-container data-entity-alias="claims">
+    <table class="content-table tablesorter claims" id="content" data-sticky-container data-entity-alias="claims">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -53,14 +53,14 @@
         {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
         @if(!empty($filter['booklist']['booklists']['default']))
         {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-        @if (in_array($claim->id, $filter['booklist']['booklists']['default'])) checked 
+        @if (in_array($claim->id, $filter['booklist']['booklists']['default'])) checked
         @endif
         @endif
         ><label class="label-check" for="check-{{ $claim->id }}"></label>
     </td>
     <td class="td-date">
       <span>{{ $claim->created_at->format('d.m.Y') }}</span><br>
-      <span class="tiny-text">{{ $claim->created_at->format('H:i') }}</span>        
+      <span class="tiny-text">{{ $claim->created_at->format('H:i') }}</span>
     </td>
     <td class="td-lead-case-number">{{ $claim->source_lead->case_number or '' }}</td>
     <td class="td-serial-number">
@@ -99,10 +99,10 @@
   <td class="td-delete">
     @if ($claim->system_item != 1)
     @can('delete', $claim)
-    <a class="icon-delete sprite" data-open="item-delete"></a>  
+    <a class="icon-delete sprite" data-open="item-delete"></a>
     @endcan
     @endif
-</td> 
+</td>
 </tr>
 @endforeach
 @endif

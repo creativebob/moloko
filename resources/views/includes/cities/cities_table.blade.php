@@ -1,4 +1,4 @@
-<table class="table-content-search table-over">
+<table class="content-table-search table-over">
 	<tbody>
 
 		@forelse ($cities as $city)
@@ -7,10 +7,10 @@
 				<a class="city-add city-name">{{ $city->name }}</a>
 			</td>
 			<td>
-				<a class="city-add">{{ $city->area->name or '' }}</a>
+				<a class="city-add">{{ $city->area->name ?? '' }}</a>
 			</td>
 			<td>
-				<a class="city-add">{{ $city->region->name or $city->area->region->name }}</a>
+				<a class="city-add">{{ $city->region->name ?? $city->area->region->name }}</a>
 			</td>
 		</tr>
 		@empty

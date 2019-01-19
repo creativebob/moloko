@@ -51,43 +51,49 @@ class GoodsCategory extends Model
         'photo_id',
         'parent_id',
         'goods_mode_id',
-        'category_status',
         'category_id',
         'author_id',
         'editor_id',
     ];
 
-    // Получаем компании.
+    // Вложенные
+    public function childs()
+    {
+        return $this->hasMany('App\GoodsCategory', 'parent_id');
+    }
+
+    // Компания
     public function company()
     {
         return $this->belongsTo('App\Company');
     }
 
-    public function goods_products()
+    // Группы
+    public function products()
     {
         return $this->hasMany('App\GoodsProduct');
     }
 
-    public function goods_mode()
+    // Режим
+    public function mode()
     {
-        return $this->belongsTo('App\GoodsMode');
+        return $this->belongsTo('App\GoodsMode', 'goods_mode_id');
     }
 
+    // Аватар
     public function photo()
     {
         return $this->belongsTo('App\Photo');
     }
 
-    // Получаем метрики
-    // public function metrics()
-    // {
-    //     return $this->belongsToMany('App\Metric', 'metric_entity', 'entity_id', 'metric_id')->where('entity', 'goods_categories');
-    // }
+    // Метрики
+    // Один
     public function one_metrics()
     {
         return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'one');
     }
 
+    // Набор
     public function set_metrics()
     {
         return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'set');
@@ -99,38 +105,16 @@ class GoodsCategory extends Model
         return $this->morphedByMany('App\RawsArticle', 'compositions');
     }
 
-    // public function compositions()
-    // {
-    //     return $this->belongsToMany('App\Raw', 'compositions', 'goods_category_id', 'entity_id')->where('entity', 'raws');;
-    // }
-
-    // --------------------------------------- Запросы -----------------------------------------
-    public function getIndex($request, $answer)
+    // Производители
+    public function manufacturers()
     {
-        return $this->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->template($answer)
-        ->withCount('goods_products')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
+        return $this->belongsToMany('App\Company', 'goods_category_manufacturer', 'goods_category_id', 'manufacturer_id');
     }
 
-    public function getItem($id, $answer)
+    // Направление
+    public function direction()
     {
-        return $this->moderatorLimit($answer)->withCount('goods_products')->findOrFail($id);
+        return $this->morphOne('App\Direction', 'category')->where('archive', false);
     }
-
-    // public function getIndexCount($answer, $request)
-    // {
-    //     return $this->moderatorLimit($answer)
-    //     ->companiesLimit($answer)
-    //     ->authors($answer)
-    //     ->systemItem($answer)
-    //     ->template($answer)
-    //     ->count();
-    // }
 
 }

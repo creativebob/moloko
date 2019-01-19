@@ -10,6 +10,11 @@
 
 @section('breadcrumbs', Breadcrumbs::render('section', $parent_page_info, $site, $page_info))
 
+@section('content-count')
+{{-- Количество элементов --}}
+{{ $navigations->isNotEmpty() ? num_format($navigations->count(), 0) : 0 }}
+@endsection
+
 @section('title-content')
 {{-- Меню --}}
 @include('includes.title-content', ['page_info' => $page_info, 'page_alias' => 'sites/'.$site->alias.'/'.$page_info->alias, 'class' => App\Navigation::class, 'type' => 'sections-menu', 'name' => $site->name])
@@ -18,16 +23,16 @@
 @section('content')
 {{-- Список --}}
 <div class="grid-x">
-  <div class="small-12 cell">
-    <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="navigations">
-      @if($navigations)
+    <div class="small-12 cell">
+        <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="navigations">
+            @if($navigations->isNotEmpty())
 
-      {{-- Шаблон вывода и динамического обновления --}}
-      @include('navigations.navigations-list', ['navigations' => $navigations, 'class' => 'App\Navigation', 'entity' => $entity, 'type' => 'modal'])
+            {{-- Шаблон вывода и динамического обновления --}}
+            @include('navigations.navigations_list')
 
-      @endif
-    </ul>
-  </div>
+            @endif
+        </ul>
+    </div>
 </div>
 @endsection
 
@@ -52,51 +57,51 @@
 @include('includes.scripts.ajax-system')
 
 <script type="text/javascript">
-  $(function() {
+    $(function() {
 
-  // Берем алиас сайта
-  var siteAlias = '{{ $alias }}';
+        // Берем алиас сайта
+        var siteAlias = '{{ $site->alias }}';
 
-  // ------------------------------ Удаление ajax -------------------------------------------
-  $(document).on('click', '[data-open="item-delete-ajax"]', function() {
-    // Находим описание сущности, id и название удаляемого элемента в родителе
-    var parent = $(this).closest('.item');
-    var entity_alias = parent.attr('id').split('-')[0];
-    var id = parent.attr('id').split('-')[1];
-    var name = parent.data('name');
-    $('.title-delete').text(name);
-    $('.delete-button-ajax').attr('id', 'del-' + entity_alias + '-' + id);
-  });
+        // ------------------------------ Удаление ajax -------------------------------------------
+        $(document).on('click', '[data-open="item-delete-ajax"]', function() {
+            // Находим описание сущности, id и название удаляемого элемента в родителе
+            var parent = $(this).closest('.item');
+            var entity_alias = parent.attr('id').split('-')[0];
+            var id = parent.attr('id').split('-')[1];
+            var name = parent.data('name');
+            $('.title-delete').text(name);
+            $('.delete-button-ajax').attr('id', 'del-' + entity_alias + '-' + id);
+        });
 
-  // Подтверждение удаления и само удаление
-  $(document).on('click', '.delete-button-ajax', function(event) {
+        // Подтверждение удаления и само удаление
+        $(document).on('click', '.delete-button-ajax', function(event) {
 
-    // Блочим отправку формы
-    event.preventDefault();
-    var entity_alias = $(this).attr('id').split('-')[1];
-    var id = $(this).attr('id').split('-')[2];
+            // Блочим отправку формы
+            event.preventDefault();
+            var entity_alias = $(this).attr('id').split('-')[1];
+            var id = $(this).attr('id').split('-')[2];
 
-    // Ajax
-    $.ajax({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/sites/' + siteAlias + '/' + entity_alias + '/' + id,
-      type: "DELETE",
-      success: function (html) {
-        $('#content').html(html);
-        Foundation.reInit($('#content'));
-        $('#delete-button-ajax').removeAttr('id');
-        $('.title-delete').text('');
-      }
-    });
-  });
+            // Ajax
+            $.ajax({
+              headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            url: '/admin/sites/' + siteAlias + '/' + entity_alias + '/' + id,
+            type: "DELETE",
+            success: function (html) {
+                $('#content').html(html);
+                Foundation.reInit($('#content'));
+                $('#delete-button-ajax').removeAttr('id');
+                $('.title-delete').text('');
+            }
+        });
+        });
 
   // Функция появления окна с ошибкой
   function showError (msg) {
     var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
     return error;
-  };
+};
 
   // ------------------- Проверка на совпадение имени --------------------------------------
   // Обозначаем таймер для проверки
@@ -107,9 +112,9 @@
   function newParagraph (name) {
     name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
     return name;
-  };
+};
 
-  function navigationCheck (name, submit, db) {
+function navigationCheck (name, submit, db) {
 
     // Блокируем аттрибут базы данных
     $(db).val(0);
@@ -127,14 +132,14 @@
       $.ajax({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/admin/sites/'+ siteAlias + '/navigation_check',
-        type: "POST",
-        data: {name: name},
-        beforeSend: function () {
+      },
+      url: '/admin/sites/'+ siteAlias + '/navigation_check',
+      type: "POST",
+      data: {name: name},
+      beforeSend: function () {
           $('.find-status').addClass('icon-load');
-        },
-        success: function(date){
+      },
+      success: function(date){
           $('.find-status').removeClass('icon-load');
           var result = $.parseJSON(date);
           // Если ошибка
@@ -142,21 +147,21 @@
             $(submit).prop('disabled', true);
             $('.item-error').css('display', 'block');
             $(db).val(0);
-          } else {
+        } else {
             // Выводим пришедшие данные на страницу
             $(submit).prop('disabled', false);
             $('.item-error').css('display', 'none');
             $(db).val(1);
-          };
-        }
-      });
-    } else {
+        };
+    }
+});
+  } else {
       // Удаляем все значения, если символов меньше 3х
       $(submit).prop('disabled', false);
       $('.item-error').css('display', 'none');
       $(db).val(0);
-    };
   };
+};
 
   // -------------------------------- Добавляем навигацию -------------------------------------
   // Открываем модалку
@@ -164,16 +169,16 @@
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/sites/' + siteAlias + '/navigations/create',
-      type: "GET",
-      success: function(html){
+    },
+    url: '/admin/sites/' + siteAlias + '/navigations/create',
+    type: "GET",
+    success: function(html){
         $('#modal').html(html);
         $('#modal-create').foundation();
         $('#modal-create').foundation('open');
-      }
-    });
-  });
+    }
+});
+});
 
   // Проверка существования
   $(document).on('keyup', '#form-modal-create .name-field', function() {
@@ -187,8 +192,8 @@
     clearTimeout(timerId);
     timerId = setTimeout(function() {
       navigationCheck (name, submit, db);
-    }, time);
-  });
+  }, time);
+});
 
   // Добавляем
   $(document).on('click', '#submit-modal-create', function(event) {
@@ -198,16 +203,16 @@
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/sites/' + siteAlias + '/navigations',
-      type: "POST",
-      data: $('#form-modal-create').serialize(),
-      success:function(html) {
+    },
+    url: '/admin/sites/' + siteAlias + '/navigations',
+    type: "POST",
+    data: $('#form-modal-create').serialize(),
+    success:function(html) {
         $('#content').html(html);
         Foundation.reInit($('#content'));
-      }
-    });
-  });
+    }
+});
+});
 
   // ------------------------------- Редактируем навигацию -------------------------------------
   // Открываем модалку
@@ -219,16 +224,16 @@
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/admin/sites/" + siteAlias + "/navigations/" + id + "/edit",
-      type: "GET",
-      success: function(html) {
+    },
+    url: "/admin/sites/" + siteAlias + "/navigations/" + id + "/edit",
+    type: "GET",
+    success: function(html) {
         $('#modal').html(html);
         $('#first-edit').foundation();
         $('#first-edit').foundation('open');
-      }
-    });
-  });
+    }
+});
+});
 
   // Проверка существования
   $(document).on('keyup', '#form-first-edit .name-field', function() {
@@ -242,8 +247,8 @@
     clearTimeout(timerId);
     timerId = setTimeout(function() {
       navigationCheck (name, submit, db);
-    }, time);
-  });
+  }, time);
+});
 
   // Меняем данные
   $(document).on('click', '#submit-first-edit', function(event) {
@@ -256,16 +261,16 @@
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/sites/' + siteAlias + '/navigations/' + id,
-      type: "PATCH",
-      data: $('#form-first-edit').serialize(),
-      success:function(html) {
+    },
+    url: '/admin/sites/' + siteAlias + '/navigations/' + id,
+    type: "PATCH",
+    data: $('#form-first-edit').serialize(),
+    success:function(html) {
         $('#content').html(html);
         Foundation.reInit($('#content'));
-      }
-    });
-  });
+    }
+});
+});
 
   // -------------------------------- Добавление пункта меню -----------------------------------
   // Открываем модалку
@@ -276,22 +281,22 @@
     if (parent == navigation) {
       // Если id родителя совпадает с id навигации, значит родитель навигация
       parent = null;
-    };
+  };
 
-    $.ajax({
+  $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/sites/' + siteAlias + '/menus/create',
-      type: "GET",
-      data: {navigation_id: navigation, menu_parent_id: parent},
-      success: function(html){
+    },
+    url: '/admin/sites/' + siteAlias + '/menus/create',
+    type: "GET",
+    data: {navigation_id: navigation, menu_parent_id: parent},
+    success: function(html){
         $('#modal').html(html);
         $('#medium-add').foundation();
         $('#medium-add').foundation('open');
-      }
-    });
-  });
+    }
+});
+});
 
   // Отправляем
   $(document).on('click', '#submit-medium-add', function(event) {
@@ -300,16 +305,16 @@
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/sites/' + siteAlias + '/menus',
-      type: "POST",
-      data: $('#form-medium-add').serialize(),
-      success: function(html){
+    },
+    url: '/admin/sites/' + siteAlias + '/menus',
+    type: "POST",
+    data: $('#form-medium-add').serialize(),
+    success: function(html){
         $('#content').html(html);
         Foundation.reInit($('#content'));
-      }
-    });
-  });
+    }
+});
+});
 
   // ----------------------------------- Редактируем меню -------------------------------------
   // Открываем модалку
@@ -319,18 +324,18 @@
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: "/admin/sites/" + siteAlias + "/menus/" + id + "/edit",
-      type: "GET",
-      success: function(html){
+    },
+    url: "/admin/sites/" + siteAlias + "/menus/" + id + "/edit",
+    type: "GET",
+    success: function(html){
         // alert(html);
         $('#modal').html(html);
         $('#medium-edit').foundation();
         $('#medium-edit').foundation('open');
         // $('#menu_id').val(id);
-      }
-    });
-  });
+    }
+});
+});
 
   // Отправляем
   $(document).on('click', '#submit-medium-edit', function(event) {
@@ -340,21 +345,21 @@
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/sites/' + siteAlias + '/menus/' + id,
-      type: "PATCH",
-      data: $('#form-medium-edit').serialize(),
-      success: function(html){
+    },
+    url: '/admin/sites/' + siteAlias + '/menus/' + id,
+    type: "PATCH",
+    data: $('#form-medium-edit').serialize(),
+    success: function(html){
         $('#content').html(html);
         Foundation.reInit($('#content'));
-      }
-    });
-  });
+    }
+});
+});
 
   // ---------------------------------- Закрытие модалки -----------------------------------
   $(document).on('click', '.icon-close-modal, #submit-modal-create, #submit-first-edit, #submit-medium-add, #submit-medium-edit', function() {
     $(this).closest('.reveal-overlay').remove();
-  });
+});
 });
 </script>
 @endsection

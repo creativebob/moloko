@@ -10,11 +10,6 @@ class RawsModesComposer
 {
 	public function compose(View $view)
 	{
-
-        $raws_modes = RawsMode::orderBy('sort', 'asc')
-        ->get(['id', 'name']);
-
-        return $view->with('raws_modes', $raws_modes);
+        return $view->with('raws_modes', RawsMode::orderBy('sort', 'asc')->get(['id', 'name']));
     }
-
 }

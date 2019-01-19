@@ -65,7 +65,7 @@ class User extends Authenticatable
         }
     }
 
-    // Фильтрация по блокировке доступа: 
+    // Фильтрация по блокировке доступа:
     public function scopeAccessBlock($query, $access_block)
     {
         if(isset($access_block)){
@@ -88,7 +88,7 @@ class User extends Authenticatable
     public function setPassportDateAttribute($value) {
         if($value == Null){
             return $value;
-        } else 
+        } else
         {
             $date_parts = explode('.', $value);
             $this->attributes['passport_date'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
@@ -155,47 +155,47 @@ class User extends Authenticatable
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'login', 
-        'email', 
-        'password', 
-        'nickname', 
+        'login',
+        'email',
+        'password',
+        'nickname',
 
-        'first_name', 
-        'second_name', 
-        'patronymic', 
-        'sex', 
-        'birthday', 
+        'first_name',
+        'second_name',
+        'patronymic',
+        'sex',
+        'birthday',
 
-        'phone', 
-        'extra_phone', 
-        'telegram_id', 
-        'city_id', 
-        'address', 
+        'phone',
+        'extra_phone',
+        'telegram_id',
+        'city_id',
+        'address',
 
-        'orgform_status', 
-        // 'company_name', 
-        'user_inn', 
-        // 'kpp', 
-        // 'account_settlement', 
-        // 'account_correspondent', 
-        // 'bank', 
+        'orgform_status',
+        // 'company_name',
+        'user_inn',
+        // 'kpp',
+        // 'account_settlement',
+        // 'account_correspondent',
+        // 'bank',
 
-        'passport_number', 
-        'passport_released', 
-        'passport_date', 
-        'passport_address', 
+        'passport_number',
+        'passport_released',
+        'passport_date',
+        'passport_address',
 
-        'specialty', 
-        'about', 
-        'degree', 
+        'specialty',
+        'about',
+        'degree',
 
-        'user_type', 
-        'lead_id', 
-        'employee_id', 
-        'access_block', 
-        'company_id', 
-        'filial_id', 
-        'moderation', 
+        'user_type',
+        'lead_id',
+        'employee_id',
+        'access_block',
+        'company_id',
+        'filial_id',
+        'moderation',
     ];
 
     protected $hidden = [
@@ -260,21 +260,16 @@ class User extends Authenticatable
         return $this->belongsToMany('App\RoleUser');
     }
 
-    public function avatar()
+    // Фото
+    public function photo()
     {
-        return $this->belongsTo('App\Photo', 'photo_id', 'id');
+        return $this->belongsTo('App\Photo');
     }
 
     // Получаем локацию пользователя
     public function location()
     {
         return $this->belongsTo('App\Location');
-    }
-
-    // Получаем локацию пользователя
-    public function photo()
-    {
-        return $this->belongsTo('App\Photo');
     }
 
     // Получаем задачи
@@ -405,6 +400,12 @@ class User extends Authenticatable
     public function leads()
     {
         return $this->hasMany('App\Lead', 'manager_id');
+    }
+
+    // Клиент
+    public function client()
+    {
+        return $this->morphOne('App\Client', 'client');
     }
 
     // Бюджет

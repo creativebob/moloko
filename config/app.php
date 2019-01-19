@@ -253,7 +253,7 @@ return [
     ],
 
     // Наши настройки
-    'vk_api_token' => env('VK_API_TOKEN', null),
-    'telegram_bot_token' => env('TELEGRAM_BOT_TOKEN', null),
+    // 'vk_api_token' => env('VK_API_TOKEN'),
+    // 'telegram_bot_token' => env('TELEGRAM_BOT_TOKEN'),
 
 ];

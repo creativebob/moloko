@@ -16,7 +16,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -43,7 +43,7 @@ class Entity extends Model
     // use Filter;
     // use BooklistFilter;
     // use DateIntervalFilter;
-    
+
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'entity_name',
@@ -68,6 +68,12 @@ class Entity extends Model
     public function booklists()
     {
         return $this->hasMany('App\Booklist');
+    }
+
+    // Настройки фоток
+    public function photo_settings()
+    {
+        return $this->morphOne('App\PhotoSetting', 'photo_settings');
     }
 
 }

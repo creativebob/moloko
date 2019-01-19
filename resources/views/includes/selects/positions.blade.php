@@ -1,0 +1,1 @@
+{{ Form::select('position_id', $positions->pluck('name', 'id'), ['class'=>'select-positions']) }}

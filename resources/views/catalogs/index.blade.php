@@ -12,7 +12,7 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-{{ (isset($catalogs) && $catalogs->isNotEmpty()) ? num_format($catalogs->count(), 0) : 0 }}
+{{ $catalogs->isNotEmpty() ? num_format($catalogs->count(), 0) : 0 }}
 @endsection
 
 @section('title-content')
@@ -24,11 +24,11 @@
 {{-- Список --}}
 <div class="grid-x">
     <div class="small-12 cell">
-        <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="catalogs">
+        <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="{{ $entity }}">
 
-            @if (isset($sectors) && $sectors->isNotEmpty())
+            @if ($catalogs->isNotEmpty())
             {{-- Шаблон вывода и динамического обновления --}}
-            @include('includes.menu_views.category_list', ['items' => $catalogs, 'class' => App\Catalog::class, 'entity' => 'catalogs', 'type' => 'modal'])
+            @include('includes.menu_views.category_list', ['items' => $catalogs, 'alias' => $site->alias])
             @endif
 
         </ul>
@@ -43,25 +43,34 @@
 @endsection
 
 @section('scripts')
-
-{{-- Маска ввода --}}
-@include('includes.scripts.inputs-mask')
-
-{{-- Скрипт подсветки многоуровневого меню --}}
-@include('includes.scripts.multilevel-menu-active-scripts')
-
-{{-- Скрипт отображения на сайте --}}
-@include('includes.scripts.ajax-display')
-
-{{-- Скрипт системной записи --}}
-@include('includes.scripts.ajax-system')
-
 <script type="text/javascript">
-
-    // Берем алиас сайта
-    var siteAlias = '{{ $alias }}';
-
     $(function() {
+
+        // Берем алиас сайта
+        var site_alias = '{{ $site->alias }}';
+
+        // ----------- Добавление -------------
+        $(document).on('click', '[data-open="modal-create"]', function() {
+            $.get('/admin/sites/' + site_alias + '/catalogs/create', {
+                parent_id: $(this).closest('.item').hasClass('item') ? $(this).closest('.item').attr('id').split('-')[1] : null,
+                category_id: $(this).closest('.first-item').hasClass('item') ? $(this).closest('.first-item').attr('id').split('-')[1] : null
+            }, function(html) {
+                $('#modal').html(html).foundation();
+                $('#modal-create').foundation('open');
+            });
+        });
+        // ------------------------ Кнопка добавления ---------------------------------------
+        $(document).on('click', '.submit-create', function(event) {
+            var form = $(this).closest('form');
+            if (submitAjax(form.attr('id'))) {
+                $(this).prop('disabled', true);
+                $.post('/admin/sites/' + site_alias + '/catalogs', form.serialize(), function(html) {
+                    $('#content').html(html);
+                    form.closest('.reveal-overlay').remove();
+                    Foundation.reInit($('#content'));
+                });
+            }
+        });
 
         // ------------------------------ Удаление ajax -------------------------------------------
         $(document).on('click', '[data-open="item-delete-ajax"]', function() {
@@ -76,181 +85,48 @@
 
         // Подтверждение удаления и само удаление
         $(document).on('click', '.delete-button-ajax', function(event) {
-
             // Блочим отправку формы
             event.preventDefault();
+
+            var buttons = $('button');
+            buttons.prop('disabled', true);
+
             var entity_alias = $(this).attr('id').split('-')[1];
             var id = $(this).attr('id').split('-')[2];
 
             // Ajax
             $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/sites/' + siteAlias + '/catalogs/' + id,
+                url: '/admin/sites/' + site_alias + '/catalogs/' + id,
                 type: "DELETE",
                 success: function (html) {
                     $('#content').html(html);
                     Foundation.reInit($('#content'));
                     $('#delete-button-ajax').removeAttr('id');
                     $('.title-delete').text('');
+                    $('#item-delete-ajax').foundation('close');
+                    buttons.prop('disabled', false);
                 }
             });
         });
-
-        // Функция появления окна с ошибкой
-        function showError (msg) {
-            var error = "<div class=\"callout item-error\" data-closable><p>" + msg + "</p><button class=\"close-button error-close\" aria-label=\"Dismiss alert\" type=\"button\" data-close><span aria-hidden=\"true\">&times;</span></button></div>";
-            return error;
-        };
-
-        // Обозначаем таймер для проверки
-        var timerId;
-        var time = 400;
-
-        // Первая буква заглавная
-        function newParagraph (name) {
-            name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
-            return name;
-        };
-
-        // ------------------- Проверка на совпадение имени --------------------------------------
-        function catalogCheck (name, submit, db) {
-
-            // Блокируем аттрибут базы данных
-            $(db).val(0);
-
-            // Смотрим сколько символов
-            var lenname = name.length;
-
-            // Если символов больше 3 - делаем запрос
-            if (lenname > 3) {
-
-                // Первая буква сектора заглавная
-                name = newParagraph (name);
-
-                // Сам ajax запрос
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/admin/sites/' + siteAlias + '/catalog_check',
-                    type: "POST",
-                    data: {name: name},
-                    beforeSend: function () {
-                        $('.find-status').addClass('icon-load');
-                    },
-                    success: function(date){
-                        $('.find-status').removeClass('icon-load');
-                        var result = $.parseJSON(date);
-                        // Если ошибка
-                        if (result.error_status == 1) {
-                            $(submit).prop('disabled', true);
-                            $('.item-error').css('display', 'block');
-                            $(db).val(0);
-                        } else {
-                            // Выводим пришедшие данные на страницу
-                            $(submit).prop('disabled', false);
-                            $('.item-error').css('display', 'none');
-                            $(db).val(1);
-                        };
-                    }
-                });
-            };
-            // Удаляем все значения, если символов меньше 3х
-            if (lenname <= 3) {
-                $(submit).prop('disabled', false);
-                $('.item-error').css('display', 'none');
-                $(db).val(0);
-            };
-        };
-
-        // ---------------------------- Категория -----------------------------------------------
-
-        // ----------- Добавление -------------
-        // Открываем модалку
-        $(document).on('click', '[data-open="modal-create"]', function() {
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/sites/' + siteAlias + '/catalogs/create',
-                type: "GET",
-                success: function(html){
-                    // alert(html);
-                    $('#modal').html(html);
-                    $('#modal-create').foundation();
-                    $('#modal-create').foundation('open');
-                }
-            });
-        });
-
-        // Проверка существования
-        $(document).on('keyup', '#form-modal-create .name-field', function() {
-            // Получаем фрагмент текста
-            var name = $('#form-modal-create .name-field').val();
-            // Указываем название кнопки
-            var submit = '.submit-add';
-            // Значение поля с разрешением
-            var db = '#form-modal-create .first-item';
-            // Выполняем запрос
-            clearTimeout(timerId);
-            timerId = setTimeout(function() {
-                catalogCheck (name, submit, db)
-            }, time);
-        });
-
-        // ------------------------------- Вложенные категории --------------------------------------------
-
-        // ----------- Добавление -------------
-        // Модалка
-        $(document).on('click', '[data-open="medium-add"]', function() {
-
-            var parent = $(this).closest('.item').attr('id').split('-')[1];
-            var category = $(this).closest('.first-item').attr('id').split('-')[1];
-
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/sites/' + siteAlias + '/catalogs/create',
-                type: "GET",
-                data: {category_id: category, parent_id: parent},
-                success: function(html){
-                    $('#modal').html(html);
-                    $('#medium-add').foundation();
-                    $('#medium-add').foundation('open');
-                    $('#category-id').val(category);
-                }
-            });
-        });
-
-        // ------------------------ Кнопка добавления ---------------------------------------
-        $(document).on('click', '.submit-add', function(event) {
-            event.preventDefault();
-
-            // alert($(this).closest('form').serialize());
-            // Ajax запрос
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '/admin/sites/' + siteAlias + '/catalogs',
-                type: "POST",
-                data: $(this).closest('form').serialize(),
-                success:function(html) {
-                    // alert(html);
-                    $('#content').html(html);
-                    Foundation.reInit($('#content'));
-                }
-            });
-        });
-
 
         // ---------------------------------- Закрытие модалки -----------------------------------
-        $(document).on('click', '.icon-close-modal, .submit-edit, .submit-add, .submit-services-product-add', function() {
+        $(document).on('click', '.icon-close-modal', function() {
             $(this).closest('.reveal-overlay').remove();
         });
     });
 </script>
+
+{{-- Маска ввода --}}
+@include('includes.scripts.inputs-mask')
+
+{{-- Скрипт подсветки многоуровневого меню --}}
+@include('includes.scripts.multilevel-menu-active-scripts')
+
+{{-- Скрипт отображения на сайте --}}
+@include('includes.scripts.ajax-display')
+
+{{-- Скрипт системной записи --}}
+@include('includes.scripts.ajax-system')
+
+@include('catalogs.scripts')
 @endsection

@@ -1,6 +1,10 @@
 <script type="text/javascript">
 
-    // ------------------- Проверка на совпадение имени --------------------------------------
+    @isset ($entity)
+    var entity = '{{ $entity }}';
+    @endisset
+
+    // ------------------- Проверка на совпадение --------------------------------------
     function checkField (check, entity_alias = null, field = null) {
 
         var item = check;
@@ -22,11 +26,11 @@
                 beforeSend: function () {
                     item.siblings('.find-status').addClass('icon-load');
                 },
-                success: function(data){
+                success: function(count){
                     item.siblings('.find-status').removeClass('icon-load');
 
                     // Состояние ошибки
-                    if (data > 0) {
+                    if (count > 0) {
                         item.siblings('.item-error').show();
                     } else {
                         item.siblings('.item-error').hide();
@@ -44,6 +48,7 @@
 
     // Проверка существования
     $(document).on('keyup', '.check-field', function() {
+
         var check = $(this);
 
         let timerId;
@@ -52,4 +57,5 @@
             checkField(check);
         }, 300);
     });
+
 </script>

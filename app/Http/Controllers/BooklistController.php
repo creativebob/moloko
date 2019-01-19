@@ -206,6 +206,7 @@ class BooklistController extends Controller
     }
 
     public function setbooklist(Request $request)
+
     {
 
         if($request->new_booklist_name){
@@ -218,10 +219,12 @@ class BooklistController extends Controller
             if($booklist){
 
                 $booklist->name = $request->new_booklist_name;
+                $booklist->booklist_type_id = $request->booklist_type_id;
+                // $booklist->change_allowed = $request->change_allowed;
+
                 $booklist->save();
 
                 $booklist_id = $booklist->id;
-
                 $entity_id = Entity::where('alias', $request->entity_alias)->first()->id;
 
                 $booklist = new Booklist;
@@ -229,6 +232,7 @@ class BooklistController extends Controller
                 $booklist->author_id = $request->user()->id;
                 $booklist->entity_alias = $request->entity_alias;
                 $booklist->entity_id = $entity_id;
+
                 $booklist->save();
 
             } else {
@@ -243,6 +247,7 @@ class BooklistController extends Controller
                 $booklist->name = 'Default';
                 $booklist->author_id = $request->user()->id;
                 $booklist->entity_alias = $request->entity_alias;
+
                 $booklist->save();
             };
 

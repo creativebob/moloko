@@ -36,7 +36,7 @@
             {{-- Таблица --}}
               <div class="grid-x">
                 <div class="small-12 cell">
-                  <table class="table-content tablesorter" id="table-content">
+                  <table class="content-table tablesorter" id="content-table">
                     <thead class="thead-width">
                       <tr id="thead-content">
                         <th class="td-drop"><div class="sprite icon-drop"></div></th>
@@ -78,7 +78,7 @@
             {{-- Таблица --}}
             <div class="grid-x">
               <div class="small-12 cell">
-                <table class="table-content tablesorter" id="table-content">
+                <table class="content-table tablesorter" id="content-table">
                   <thead class="thead-width">
                     <tr id="thead-content">
                       <th class="td-drop"><div class="sprite icon-drop"></div></th>
@@ -135,7 +135,7 @@
     return ui;
   };
   // Включаем перетаскивание
-  $("#table-content tbody").sortable({
+  $("#content-table tbody").sortable({
       helper: fixHelper, // ширина вырванного элемента
       handle: 'td:first' // указываем за какой элемент можно тянуть
   }).disableSelection();
@@ -154,7 +154,7 @@
     });
   };
   checkedAllow();
-  
+
   // Запрет
   function checkedDeny() {
     parent.each(function(index) {
@@ -163,7 +163,7 @@
       if (checked == childs) {
         $(this).find('.table-check-deny').prop('checked', true);
       };
-    }); 
+    });
   };
   checkedDeny();
 
@@ -215,7 +215,7 @@
   // Разрешение
   $(document).on('click', '.table-check-allow', function() {
     // При клике на чекбокс сущности получаем id всех прав на сущность
-    var parent = $(this).closest('.parent'); 
+    var parent = $(this).closest('.parent');
     var rights = parent.find('.checkbox-allow').map(function(){
       return $(this).attr('id');
     }).get();
@@ -253,7 +253,7 @@
   $(document).on('click', '.table-check-deny', function() {
 
     // При клике на чекбокс сущности получаем id всех прав на сущность
-    var parent = $(this).closest('.parent'); 
+    var parent = $(this).closest('.parent');
     var rights = parent.find('.checkbox-deny').map(function(){
       return $(this).attr('id');
     }).get();

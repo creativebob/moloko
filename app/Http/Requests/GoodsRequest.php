@@ -36,7 +36,8 @@ class GoodsRequest extends FormRequest
         'goods_category_id' => 'integer|nullable',
         'goods_type_id' => 'integer|nullable',
 
-        'metrics.*'  => 'required|string|distinct',
+        'metrics.*'  => 'integer|distinct',
+        'compositions.*'  => 'integer|distinct',
 
         'display' => 'integer|max:1|nullable',
         'moderation' => 'integer|max:1|nullable',

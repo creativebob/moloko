@@ -4,64 +4,57 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\RawsProduct;
-use App\User;
 use App\RawsCategory;
-use App\Company;
-use App\Photo;
-use App\Booklist;
-use App\Entity;
-use App\List_item;
 
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\RawsProductRequest;
 
-// Политика
-use App\Policies\RawsProductPolicy;
-
 // Общие классы
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
-use DB;
-
-// Специфические классы
-use Maatwebsite\Excel\Facades\Excel;
-use Intervention\Image\ImageManagerStatic as Image;
-
-// На удаление
-use Illuminate\Support\Facades\Auth;
 
 class RawsProductController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'raws_products';
-    protected $entity_dependence = false;
+    // Настройки сконтроллера
+    public function __construct(RawsProduct $raws_product)
+    {
+        $this->middleware('auth');
+        $this->raws_product = $raws_product;
+        $this->class = RawsProduct::class;
+        $this->model = 'App\RawsProduct';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+    }
 
     public function index(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), RawsProduct::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_name);
+        $filter_url = autoFilter($request, $this->entity_alias);
         if(($filter_url != null)&&($request->filter != 'active')){
 
-            Cookie::queue(Cookie::forget('filter_' . $this->entity_name));
+            Cookie::queue(Cookie::forget('filter_' . $this->entity_alias));
             return Redirect($filter_url);
         };
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // -----------------------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------------
 
-        $raws_products = RawsProduct::with('author', 'company', 'raws_category', 'raws_articles.raws')
+        $raws_products = RawsProduct::with(
+            'author',
+            'company',
+            'category',
+            'articles'
+        )
+        ->withCount('articles')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -79,7 +72,7 @@ class RawsProductController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             'author',                   // Автор записи
             'raws_category',            // Категория сырья
             'booklist'                  // Списки пользователя
@@ -87,76 +80,59 @@ class RawsProductController extends Controller
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        return view('raws_products.index', compact('raws_products', 'page_info', 'product', 'filter'));
+        return view('raws_products.index',[
+            'raws_products' => $raws_products,
+            'page_info' => pageInfo($this->entity_alias),
+            'filter' => $filter,
+            'nested' => 'raws_articles_count'
+        ]);
     }
 
     public function create(Request $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), RawsProduct::class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $answer_raws_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        $raws_product = new RawsProduct;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_raws_categories = operator_right('raws_categories', false, 'index');
-
-        // Категории
-        $raws_categories = RawsCategory::moderatorLimit($answer_raws_categories)
-        ->companiesLimit($answer_raws_categories)
-        ->authors($answer_raws_categories)
-        ->systemItem($answer_raws_categories)
-        ->orderBy('sort', 'asc')
-        ->get(['id','name','parent_id'])
-        ->keyBy('id')
-        ->toArray();
-        // dd($raws_categories);
-
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $raws_categories_list = get_select_tree($raws_categories, 1, null, null);
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        return view('raws_products.create', compact('raws_product', 'page_info', 'raws_categories_list'));
+        return view('raws_products.create', [
+            'raws_product' => new $this->class,
+            'page_info' => pageInfo($this->entity_alias),
+        ]);
     }
 
     public function store(RawsProductRequest $request)
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), RawsProduct::class);
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-
-        // Скрываем бога
-        $user_id = hideGod($user);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Наполняем сущность данными
         $raws_product = new RawsProduct;
         $raws_product->name = $request->name;
         $raws_product->description = $request->description;
         $raws_product->raws_category_id = $request->raws_category_id;
+        $raws_product->unit_id = $request->unit_id;
 
-        // Модерация и системная запись
         $raws_product->system_item = $request->system_item;
         $raws_product->display = $request->display;
 
-        $raws_product->company_id = $company_id;
-        $raws_product->author_id = $user_id;
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        if ($answer['automoderate'] == false){
+            $raws_product->moderation = 1;
+        }
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        $raws_product->company_id = $user->company_id;
+        $raws_product->author_id = hideGod($user);
+
         $raws_product->save();
 
-        return redirect('/admin/raws_products');
+        return redirect()->route('raws_products.index');
     }
 
     public function show($id)
@@ -167,97 +143,44 @@ class RawsProductController extends Controller
     public function edit(Request $request, $id)
     {
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $answer_raws_products = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        $raws_product = RawsProduct::with(['raws_category'])
-        ->moderatorLimit($answer_raws_products)
+       $raws_product = RawsProduct::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
         ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_product);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_raws_categories = operator_right('raws_categories', false, 'index');
-
-        // Категории
-        $raws_categories = RawsCategory::moderatorLimit($answer_raws_categories)
-        ->companiesLimit($answer_raws_categories)
-        ->authors($answer_raws_categories)
-        ->systemItem($answer_raws_categories)
-        ->orderBy('sort', 'asc')
-        ->get(['id','name','parent_id'])
-        ->keyBy('id')
-        ->toArray();
-        // dd($products_categories);
-
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $raws_categories_list = get_select_tree($raws_categories, $raws_product->raws_category_id, null, null);
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        return view('raws_products.edit', compact('raws_product', 'page_info', 'raws_categories_list'));
+        return view('raws_products.edit', [
+            'raws_product' => $raws_product,
+            'page_info' => pageInfo($this->entity_alias),
+        ]);
     }
 
     public function update(RawsProductRequest $request, $id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $raws_product = RawsProduct::moderatorLimit($answer)->findOrFail($id);
+       $raws_product = RawsProduct::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+       ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_product);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        if ($request->hasFile('photo')) {
-
-            $directory = $company_id.'/media/raws_products/'.$raws_product->id.'/img';
-            $name = 'avatar-'.time();
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры, id автора, id сомпании, директорию сохранения, название фото, id (если обновляем)), в ответ придет МАССИВ с записсаным обьектом фото, и результатом записи
-            if ($raws_product->photo_id) {
-                $array = save_photo($request, $directory, $name, null, $raws_product->photo_id, $this->entity_name);
-
-            } else {
-                $array = save_photo($request, $directory, $name, null, null, $this->entity_name);
-
-            }
-            $photo = $array['photo'];
-
-            $raws_product->photo_id = $photo->id;
-        }
-
         $raws_product->name = $request->name;
-        $raws_product->raws_category_id = $request->raws_category_id;
         $raws_product->description = $request->description;
+        $raws_product->raws_category_id = $request->raws_category_id;
+        $raws_product->unit_id = $request->unit_id;
 
         // Модерация и системная запись
         $raws_product->system_item = $request->system_item;
-        $raws_product->moderation = $request->moderation;
-
-        // Отображение на сайте
         $raws_product->display = $request->display;
 
-        $raws_product->editor_id = $user_id;
+        $raws_product->moderation = $request->moderation;
+
+        $raws_product->editor_id = hideGod($request->user());
         $raws_product->save();
 
         if ($raws_product) {
-
-            return Redirect('/admin/raws_products');
+            return redirect()->route('raws_products.index');
         } else {
-
             abort(403, 'Ошибка обновления группы товаров');
         }
     }
@@ -265,169 +188,27 @@ class RawsProductController extends Controller
     public function destroy(Request $request, $id)
     {
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $raws_product = RawsProduct::with('raws')->moderatorLimit($answer)->findOrFail($id);
+        $raws_product = RawsProduct::withCount('raws_articles')
+        ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_product);
 
-        $user = $request->user();
+        $raws_product->editor_id = hideGod($request->user());
+        $raws_product->save();
+
+        $raws_product->delete();
 
         if ($raws_product) {
-            $raws_product->editor_id = $user->id;
-            $raws_product->save();
-
-            // Удаляем сайт с обновлением
-            $raws_product = RawsProduct::destroy($id);
-
-            if ($raws_product) {
-            // $relations = AlbumMedia::whereAlbum_id($id)->pluck('media_id')->toArray();
-            // $photos = Photo::whereIn('id', $relations)->delete();
-            // $media = AlbumMedia::whereAlbum_id($id)->delete();
-
-                return Redirect('/admin/raws_products');
-            } else {
-                abort(403, 'Ошибка при удалении группы товаров');
-            }
+            return redirect()->route('raws_products.index');
         } else {
-            abort(403, 'Группа товаров не найдена');
+            abort(403, 'Ошибка удаления группы товаров');
         }
     }
 
-    // Проверка наличия в базе
-    public function ajax_check(Request $request)
-    {
-        $user = $request->user();
-
-        // Проверка отдела в нашей базе данных
-        $raws_product = RawsProduct::where(['name' => $request->name, 'company_id' => $user->company_id])->first();
-
-        // Если такое название есть
-        if ($raws_product) {
-            $result = [
-                'error_status' => 1,
-            ];
-
-        // Если нет
-        } else {
-            $result = [
-                'error_status' => 0
-            ];
-        }
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->raws_products as $item) {
-            RawsProduct::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Добавление фоток
-    public function product_photos(Request $request, $id)
-    {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $product = Product::with('album.photos')->moderatorLimit($answer)->findOrFail($id);
-        // dd($product);
-
-        // Подключение политики
-        $this->authorize(getmethod('edit'), $product);
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        return view('products.photos', compact('page_info', 'product'));
-
-    }
-
-    // -------------------------------------- Exel ------------------------------------------
-    public function raws_products_download($type)
-    {
-        $data = RawsProduct::get(['name', 'description'])->toArray();
-        // dd($data);
-
-        return Excel::create('raws_products-'.Carbon::now()->format('d.m.Y'), function($excel) use ($data) {
-            $excel->sheet('Группы товаров', function($sheet) use ($data)
-            {
-                $sheet->fromArray($data);
-            });
-        })->download($type);
-    }
-
-    public function raws_products_import(Request $request)
-    {
-        if($request->hasFile('file')) {
-
-            // Получаем данные для авторизованного пользователя
-            $user = $request->user();
-
-            // Смотрим компанию пользователя
-            $company_id = $user->company_id;
-
-            // Скрываем бога
-            $user_id = hideGod($user);
-
-            Excel::load($request->file('file')->getRealPath(), function ($reader) use ($user_id, $company_id){
-                foreach ($reader->toArray() as $key => $row) {
-                    $data['company_id'] = $company_id;
-                    $data['name'] = $row['name'];
-                    $data['description'] = $row['description'];
-                    $data['raws_category_id'] = $row['raws_category_id'];
-                    $data['author_id'] = $user_id;
-
-                    if(!empty($data)) {
-                        DB::table('raws_products')->insert($data);
-                    }
-                }
-            });
-        }
-
-        return back();
-    }
-
-    public function ajax_count(Request $request)
-    {
-        // $id = 2;
-
-        $id = $request->id;
-
-        $raws_category = RawsCategory::withCount('raws_products')->with('raws_products')->findOrFail($id);
-
-
-        if ($raws_category->raws_products_count > 0) {
-
-            $raws_products_list = $raws_category->raws_products->pluck('name', 'id');
-
-            if ($raws_products_list) {
-
-                return view('raws.mode-select', compact('raws_products_list'));
-            } else {
-                $result = [
-                    'error_status' => 1,
-                    'error_message' => 'Ошибка при формировании списка групп товаров!',
-                ];
-            }
-
-        } else {
-
-            return view('raws.mode-add');
-        }
-    }
-
-    public function ajax_modes(Request $request)
+    // ------------------------------------- Ajax ------------------------------------------
+    public function ajax_change_create_mode(Request $request)
     {
         $mode = $request->mode;
         $raws_category_id = $request->raws_category_id;
@@ -438,28 +219,69 @@ class RawsProductController extends Controller
 
             case 'mode-default':
 
-            $raws_category = RawsCategory::withCount('raws_products')->find($raws_category_id);
-            $raws_products_count = $raws_category->raws_products_count;
-
-            return view('raws.mode-default', compact('raws_products_count'));
+            $raws_category = RawsCategory::withCount('products')
+            ->find($raws_category_id);
+            $raws_products_count = $raws_category->products_count;
+            return view('raws.create_modes.mode_default', compact('raws_products_count'));
 
             break;
 
             case 'mode-select':
 
-            $raws_products_list = RawsProduct::where('raws_category_id', $raws_category_id)->get()->pluck('name', 'id');
-            return view('raws.mode-select', compact('raws_products_list'));
+            $raws_products = RawsProduct::with('unit')
+            ->where([
+                'raws_category_id' => $raws_category_id,
+                'set_status' => $request->set_status
+            ])
+            ->get(['id', 'name', 'unit_id']);
+            return view('raws.create_modes.mode_select', compact('raws_products'));
 
             break;
 
             case 'mode-add':
 
-            return view('raws.mode-add');
+            return view('raws.create_modes.mode_add');
 
             break;
 
         }
-   }
+    }
 
+    public function ajax_get_products_list(Request $request)
+    {
 
+        $raws_products = RawsProduct::where(['raws_category_id' => $request->raws_category_id, 'set_status' => $request->set_status])
+        ->orWhere('id', $request->raws_product_id)
+        ->get(['id', 'name']);
+
+        return view('includes.selects.raws_products', ['raws_products' => $raws_products, 'raws_product_id' => $request->raws_product_id, 'set_status' => $request->set_status]);
+    }
+
+    public function ajax_count(Request $request)
+    {
+        // $id = 2;
+
+        $id = $request->id;
+
+        $goods_category = RawsCategory::withCount('products')->with('products')->findOrFail($id);
+
+        if ($goods_category->goods_products_count > 0) {
+
+            $goods_products_list = $goods_category->goods_products->pluck('name', 'id');
+
+            if ($goods_products_list) {
+
+                return view('goods.mode-select', compact('goods_products_list'));
+            } else {
+                $result = [
+                    'error_status' => 1,
+                    'error_message' => 'Ошибка при формировании списка групп товаров!',
+                ];
+            }
+
+        } else {
+
+            return view('goods.create_modes.mode-add');
+        }
+    }
 }

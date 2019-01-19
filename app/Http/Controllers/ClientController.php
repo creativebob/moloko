@@ -117,25 +117,60 @@ class ClientController extends Controller
         // $this->authorize(getmethod(__FUNCTION__), Client::class);
         // $this->authorize(getmethod(__FUNCTION__), Company::class);
         // $this->authorize(getmethod(__FUNCTION__), User::class);
-
+        // 
+        $new_user = new User;
         $new_company = new Company;
         $new_company->name = $request->company_name;
         $new_company->email = $request->email;
+        
         // ГЛАВНЫЙ ЗАПРОС:
 
         $lead = Lead::findOrFail($request->lead_id);
 
-        $new_user = new User;
+        // Чистка номера
+        $main_phone = cleanPhone($request->main_phone);
 
-        $crop_name = explode(" ", $request->name);
-        if(isset($crop_name[1])){$new_user->first_name = $crop_name[1];};
-        if(isset($crop_name[0])){$new_user->second_name = $crop_name[0];};
-        if(isset($crop_name[2])){$new_user->patronymic = $crop_name[2];};
 
-        $new_user->email = $request->email;
+        if((isset($request->company_name))||($lead->private_status == 1)){
 
-        // $new_user->location = $request->name;
-        // $new_user->second_name = $request->name;
+            // ======================= РАБОТАЕМ С КОМПАНИЯМИ ============================
+            $lead->private_status = 1;
+
+            // if($request->inn != null){
+
+            //     $find_company = Company::where('inn', $request->inn)->first();
+            //     if($find_company){$new_company = $find_company;};
+
+            // }
+
+            // $find_company = Company::whereHas('phones', function($q) use ($main_phone){
+            //     $q->where('phone', $main_phone);
+            // })->first();
+
+            // if($find_company){$new_company = $find_company;};
+
+
+        } else {
+
+            // =============== РАБОТАЕМ С ФИЗИЧЕСКИМИ ЛИЦАМИ ============================
+
+            // $lead->private_status = null;
+
+            $new_user = User::whereHas('phones', function($q) use ($main_phone){
+                $q->where('phone', $main_phone);
+            })->first();
+
+            // Если не найден, то создаем
+            if(!isset($new_user)){
+
+                $crop_name = explode(" ", $request->name);
+                if(isset($crop_name[1])){$new_user->first_name = $crop_name[1];};
+                if(isset($crop_name[0])){$new_user->second_name = $crop_name[0];};
+                if(isset($crop_name[2])){$new_user->patronymic = $crop_name[2];};
+                $new_user->email = $request->email;   
+            }
+
+        }
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -231,13 +266,26 @@ class ClientController extends Controller
 
         } else {
 
-            $new_user = $this->createUser($request);
+            // Чистка номера
+            $main_phone = cleanPhone($request->main_phone);
 
-            $client = new Client;
-            $client->client_id = $new_user->id;
-            $client->client_type = 'App\User';
-            $client->company_id = $request->user()->company->id;
-            $client->save();
+
+            $user = User::has('client')
+            ->whereHas('phones', function($q) use ($main_phone){
+                    $q->where('phone', $main_phone);
+            })->first();
+
+            // Если не найден, то создаем
+            if(!isset($client)){
+                $new_user = $this->createUser($request);
+
+                $client = new Client;
+                $client->client_id = $new_user->id;
+                $client->client_type = 'App\User';
+                $client->company_id = $request->user()->company->id;
+                $client->save();  
+            }
+
         }
 
         return 'Ок';

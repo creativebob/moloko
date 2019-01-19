@@ -25,7 +25,7 @@
           }
         });
       }
-    });	
+    });
 
     // Добавление альбома
     $(document).on('click', '#submit-album-add', function(event) {
@@ -41,7 +41,7 @@
         type: "POST",
         data: $(this).closest('form').serialize(),
         success: function(html){
-          $('.table-content > tbody').append(html);
+          $('.content-table > tbody').append(html);
         }
       });
     });
@@ -62,10 +62,10 @@
     // Значение поля с разрешением
     var db = '#check';
     // Выполняем запрос
-    clearTimeout(timerId);   
+    clearTimeout(timerId);
     timerId = setTimeout(function() {
       dbCheck (alias, submit, db);
-    }, time); 
+    }, time);
   });
 </script>
 

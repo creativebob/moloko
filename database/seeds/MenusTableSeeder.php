@@ -433,7 +433,7 @@ class MenusTableSeeder extends Seeder
             'display' => 1,
             'sort' => 3,
         ],
-        
+
         [
             'name' => 'Населенные пункты',
             'icon' => null,
@@ -889,6 +889,70 @@ class MenusTableSeeder extends Seeder
             'tag' => 'stocks',
             'parent_id' => 35,
             'page_id' => 50,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
+        // 60
+        [
+            'name' => 'Категории расходных материалов',
+            'icon' => null,
+            'alias' => 'admin/expendables_categories',
+            'tag' => 'expendables_categories',
+            'parent_id' => 20,
+            'page_id' => 51,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
+        // 61
+        [
+            'name' => 'Заказы поставщикам',
+            'icon' => null,
+            'alias' => 'admin/applications',
+            'tag' => 'applications',
+            'parent_id' => 35,
+            'page_id' => 52,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
+        // 62
+        [
+            'name' => 'Товарные накладные',
+            'icon' => null,
+            'alias' => 'admin/consignments',
+            'tag' => 'consignments',
+            'parent_id' => 35,
+            'page_id' => 53,
+            'navigation_id' => 2,
+            'company_id' => null,
+            'system_item' => 1,
+            'author_id' => 1,
+            'display' => 1,
+            'sort' => null,
+        ],
+
+        // 63
+        [
+            'name' => 'Показатели',
+            'icon' => null,
+            'alias' => 'admin/indicators',
+            'tag' => 'indicators',
+            'parent_id' => 14,
+            'page_id' => 54,
             'navigation_id' => 2,
             'company_id' => null,
             'system_item' => 1,

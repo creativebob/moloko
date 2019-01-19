@@ -3,11 +3,13 @@
 @section('inhead')
 @include('includes.scripts.pickmeup-inhead')
 @include('includes.scripts.class.city_search')
+@include('includes.scripts.class.digitfield')
+
 @endsection
 
 @section('title', 'Редактировать лид')
 
-<!-- @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, isset($lead->case_number) ? $lead->case_number : 'нет номера')) -->
+{{-- @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, isset($lead->case_number) ? $lead->case_number : 'нет номера')) --}}
 
 
 @section('title-content')
@@ -81,7 +83,6 @@ if($lead->manager_id == 1){
 
     	// Снятие блокировки с поля номер телефона
     	$('#phone').attr('readonly', false);
-
     });
 
 	$(document).on('click', '#lead-free', function(event) {
@@ -116,20 +117,11 @@ if($lead->manager_id == 1){
 	$(document).on('click', '#submit-appointed', function(event) {
 		event.preventDefault();
 
-		$.ajax({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
-			url: "/admin/lead_distribute",
-			type: "POST",
-			data: $(this).closest('form').serialize(),
-			success: function(date){
+		$(this).prop('disabled', true);
 
-				var url = '{{ url("admin/leads") }}/' + lead_id + '/edit';
-
-				window.location.replace(url);
-
-			}
+		$.post("/admin/lead_distribute", $(this).closest('form').serialize(), function(date){
+			let url = '{{ url("admin/leads") }}/' + lead_id + '/edit';
+			window.location.replace(url);
 		});
 	});
 
@@ -158,7 +150,6 @@ if($lead->manager_id == 1){
 				$('#add-claim').foundation('close')
 				$('#claims-list').html(html);
 				$('#form-claim-add textarea[name=body]').val('');
-
 
 			}
 		});
@@ -243,12 +234,12 @@ if($lead->manager_id == 1){
 			type: "POST",
 			data: {id: id},
 			success: function(html){
-				$('#items-list').html(html);
+				$('#items-list-products').html(html);
 			}
 		});
 	});
 
-	$(document).on('click', '.add-to-order', function(event) {
+	$(document).on('click', '.add-to-estimate', function(event) {
 		event.preventDefault();
 
 		var entity = $(this).attr('id').split('-')[0];
@@ -260,13 +251,13 @@ if($lead->manager_id == 1){
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
-			url: "/admin/orders_check",
+			url: "/admin/estimates_check",
 			type: "POST",
 			data: {lead_id: lead_id, item_id: id, entity: entity},
 			success: function(html){
-				$('#goods-section').append(html);
+				$('#' + entity + '-section').append(html);
 
-				$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
+				//$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
 			}
 		});
 	});
@@ -275,6 +266,8 @@ if($lead->manager_id == 1){
 @include('includes.scripts.notes', ['id' => $lead->id, 'model' => 'Lead'])
 @include('includes.scripts.challenges', ['id' => $lead->id, 'model' => 'Lead'])
 @include('includes.contragents.contragents', ['id' => $lead->id])
+
+@include('leads.pricing.pricing-script', ['id' => $lead->id, 'model' => 'Lead'])
 @endsection
 
 

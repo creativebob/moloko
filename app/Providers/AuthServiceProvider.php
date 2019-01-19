@@ -6,7 +6,10 @@ use App\User;
 use App\RightsRole;
 use App\Company;
 use App\ExtraRequisite;
+
 use App\Supplier;
+use App\Application;
+
 use App\Manufacturer;
 use App\Dealer;
 use App\Client;
@@ -39,6 +42,8 @@ use App\Post;
 use App\SocialNetwork;
 use App\Campaign;
 
+use App\Plan;
+
 use App\Salary;
 
 use App\Position;
@@ -49,7 +54,7 @@ use App\Sector;
 
 use App\Album;
 use App\AlbumsCategory;
-use App\EntitySetting;
+use App\PhotoSetting;
 
 use App\Photo;
 use App\Folder;
@@ -58,6 +63,8 @@ use App\ServicesArticle;
 use App\ServicesCategory;
 use App\ServicesProduct;
 use App\Service;
+
+use App\ExpendablesCategory;
 
 use App\Goods;
 use App\GoodsCategory;
@@ -78,7 +85,6 @@ use App\Rule;
 
 use App\Feedback;
 
-use App\Order;
 
 use App\Policies\UserPolicy;
 use App\Policies\RightsRolePolicy;
@@ -86,6 +92,8 @@ use App\Policies\CompanyPolicy;
 use App\Policies\ExtraRequisitePolicy;
 
 use App\Policies\SupplierPolicy;
+use App\Policies\ApplicationPolicy;
+
 use App\Policies\ManufacturerPolicy;
 use App\Policies\DealerPolicy;
 use App\Policies\ClientPolicy;
@@ -119,6 +127,7 @@ use App\Policies\PostPolicy;
 use App\Policies\SocialNetworkPolicy;
 use App\Policies\CampaignPolicy;
 
+use App\Policies\PlanPolicy;
 use App\Policies\SalaryPolicy;
 
 use App\Policies\PositionPolicy;
@@ -128,7 +137,7 @@ use App\Policies\SectorPolicy;
 
 use App\Policies\AlbumPolicy;
 use App\Policies\AlbumsCategoryPolicy;
-use App\Policies\EntitySettingPolicy;
+use App\Policies\PhotoSettingPolicy;
 
 use App\Policies\PhotoPolicy;
 use App\Policies\FolderPolicy;
@@ -137,6 +146,7 @@ use App\Policies\ServicePolicy;
 use App\Policies\ServicesCategoryPolicy;
 use App\Policies\ServicesProductPolicy;
 use App\Policies\ServicesArticlePolicy;
+use App\Policies\ExpendablesCategoryPolicy;
 
 use App\Policies\GoodsPolicy;
 use App\Policies\GoodsCategoryPolicy;
@@ -157,7 +167,6 @@ use App\Policies\StagePolicy;
 
 use App\Policies\FeedbackPolicy;
 
-use App\Policies\OrderPolicy;
 
 
 use Illuminate\Support\Facades\Gate as GateContract;
@@ -172,22 +181,36 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy', 
+        'App\Model' => 'App\Policies\ModelPolicy',
 
-        User::class => UserPolicy::class, 
-        RightsRole::class => RightsRolePolicy::class, 
-        Company::class => CompanyPolicy::class, 
-        ExtraRequisite::class => ExtraRequisitePolicy::class, 
 
-        Supplier::class => SupplierPolicy::class, 
-        Manufacturer::class => ManufacturerPolicy::class, 
-        Dealer::class => DealerPolicy::class, 
+
+        // Расчеты и заказы
+        'App\Order' => 'App\Policies\OrderPolicy',
+        'App\Estimate' => 'App\Policies\EstimatePolicy',
+
+
+        // Показатели
+        'App\Indicator' => 'App\Policies\IndicatorPolicy',
+
+
+        User::class => UserPolicy::class,
+        RightsRole::class => RightsRolePolicy::class,
+        Company::class => CompanyPolicy::class,
+        ExtraRequisite::class => ExtraRequisitePolicy::class,
+
+        Supplier::class => SupplierPolicy::class,
+        Application::class => ApplicationPolicy::class,
+        'App\Consignment' => 'App\Policies\ConsignmentPolicy',
+
+        Manufacturer::class => ManufacturerPolicy::class,
+        Dealer::class => DealerPolicy::class,
         Client::class => ClientPolicy::class,
         Bank::class => BankPolicy::class,
         BankAccount::class => BankAccountPolicy::class,
 
-        Right::class => RightPolicy::class, 
-        Entity::class => EntityPolicy::class, 
+        Right::class => RightPolicy::class,
+        Entity::class => EntityPolicy::class,
         Role::class => RolePolicy::class,
         Place::class => PlacePolicy::class,
         Stock::class => StockPolicy::class,
@@ -198,6 +221,7 @@ class AuthServiceProvider extends ServiceProvider
         SocialNetwork::class => SocialNetworkPolicy::class,
         Campaign::class => CampaignPolicy::class,
 
+        Plan::class => PlanPolicy::class,
         Salary::class => SalaryPolicy::class,
 
         Position::class => PositionPolicy::class,
@@ -218,13 +242,18 @@ class AuthServiceProvider extends ServiceProvider
         Sector::class => SectorPolicy::class,
         Album::class => AlbumPolicy::class,
         AlbumsCategory::class => AlbumsCategoryPolicy::class,
-        EntitySetting::class => EntitySettingPolicy::class,
+        PhotoSetting::class => PhotoSettingPolicy::class,
         Photo::class => PhotoPolicy::class,
         Folder::class => FolderPolicy::class,
+
+        // Услуги
         Service::class => ServicePolicy::class,
         ServicesCategory::class => ServicesCategoryPolicy::class,
         ServicesProduct::class => ServicesProductPolicy::class,
         ServicesArticle::class => ServicesArticlePolicy::class,
+
+        ExpendablesCategory::class => ExpendablesCategoryPolicy::class,
+
         Goods::class => GoodsPolicy::class,
         GoodsCategory::class => GoodsCategoryPolicy::class,
         GoodsProduct::class => GoodsProductPolicy::class,
@@ -237,7 +266,7 @@ class AuthServiceProvider extends ServiceProvider
         Claim::class => ClaimPolicy::class,
         Stage::class => StagePolicy::class,
         Feedback::class => FeedbackPolicy::class,
-        Order::class => OrderPolicy::class,
+
     ];
 
     public function boot()

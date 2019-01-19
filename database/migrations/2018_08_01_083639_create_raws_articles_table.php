@@ -22,9 +22,15 @@ class CreateRawsArticlesTable extends Migration
             $table->integer('raws_product_id')->nullable()->unsigned()->comment('ID товара');
             $table->foreign('raws_product_id')->references('id')->on('raws_products');
 
+            $table->integer('manufacturer_id')->nullable()->unsigned()->comment('Id производителя артикула');
+            $table->foreign('manufacturer_id')->references('id')->on('companies');
+
             $table->string('name')->nullable()->comment('Имя артикула');
 
             $table->text('description')->nullable()->comment('Описание артикула товара');
+
+            $table->integer('draft')->nullable()->unsigned()->comment('Статус шаблона');
+            $table->integer('archive')->nullable()->unsigned()->comment('Статус архива');
 
             $table->string('internal')->nullable()->comment('Имя генерируемого артикула');
 
@@ -32,8 +38,6 @@ class CreateRawsArticlesTable extends Migration
             $table->integer('compositions_count')->nullable()->unsigned()->index()->comment('Количество состава у артикула');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
-
-            $table->integer('archive')->nullable()->unsigned()->comment('Статус архива');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
@@ -43,8 +47,8 @@ class CreateRawsArticlesTable extends Migration
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
 
-            $table->timestamps();
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
+            $table->timestamps();
             $table->softDeletes();
         });
     }

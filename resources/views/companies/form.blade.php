@@ -5,24 +5,24 @@
 
             {{-- Подключаемые специфические разделы --}}
             @if(!empty($manufacturer))
-                <li class="tabs-title">
-                    <a data-tabs-target="content-panel-manufacturer" href="#content-panel-manufacturer">Рабочая информация</a>
-                </li>
+            <li class="tabs-title">
+                <a data-tabs-target="content-panel-manufacturer" href="#content-panel-manufacturer">Рабочая информация</a>
+            </li>
             @endif
             @if(!empty($dealer))
-                <li class="tabs-title">
-                    <a data-tabs-target="content-panel-dealer" href="#content-panel-dealer">Рабочая информация</a>
-                </li>
+            <li class="tabs-title">
+                <a data-tabs-target="content-panel-dealer" href="#content-panel-dealer">Рабочая информация</a>
+            </li>
             @endif
             @if(!empty($supplier))
-                <li class="tabs-title">
-                    <a data-tabs-target="content-panel-supplier" href="#content-panel-supplier">Рабочая информация</a>
-                </li>
+            <li class="tabs-title">
+                <a data-tabs-target="content-panel-supplier" href="#content-panel-supplier">Рабочая информация</a>
+            </li>
             @endif
             @if(!empty($client))
-                <li class="tabs-title">
-                    <a data-tabs-target="content-panel-client" href="#content-panel-client">Рабочая информация</a>
-                </li>
+            <li class="tabs-title">
+                <a data-tabs-target="content-panel-client" href="#content-panel-client">Рабочая информация</a>
+            </li>
             @endif
 
             <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Реквизиты</a></li>
@@ -44,7 +44,7 @@
                     </div>
                     <div class="small-10 medium-4 cell">
                         <label>Название компании
-                            @include('includes.inputs.name', ['value'=>$company->name, 'name'=>'name', 'required' => true])
+                            @include('includes.inputs.name', ['value'=>$company->name, 'required' => true])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
@@ -132,6 +132,28 @@
             <!-- Блок поставщика -->
             <div class="tabs-panel" id="content-panel-supplier">
                 <div class="grid-x grid-padding-x">
+
+                    <div class="small-12 medium-6 cell checkbox checkboxer">
+
+
+
+                        {{-- Подключаем класс Checkboxer --}}
+                        @include('includes.scripts.class.checkboxer')
+
+                        @include('includes.inputs.checker_contragents', [
+                            'entity' => $supplier,
+                            'title' => 'Производители',
+                            'name' => 'manufacturers'
+                        ]
+                        )
+
+                    </div>
+                    <div class="small-12 medium-6 cell checkbox">
+                        {{ Form::checkbox('preorder', 1, $supplier->preorder, ['id' => 'preorder-checkbox']) }}
+                        <label for="preorder-checkbox"><span>Предзаказ</span></label>
+                    </div>
+
+
                     <div class="small-12 medium-6 cell">
                         <label>Комментарий к поставщику
                             @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$supplier->description])
@@ -181,7 +203,7 @@
                         </label>
                     </div>
 
-                     <div class="small-12 cell" id="bank-accounts-list">
+                    <div class="small-12 cell" id="bank-accounts-list">
 
                         {{-- Подключаем банковские аккаунты --}}
                         @include('includes.bank_accounts.fieldset', ['company' => $company])
@@ -212,6 +234,11 @@
 
                         @include('includes.scripts.class.checkboxer')
                         @include('includes.inputs.checker', ['entity' => $company, 'model'=>'ServicesType', 'relation'=>'services_types', 'title'=>'Типы услуг'])
+                    </div>
+
+                    <div class="small-12 cell checkbox">
+                        {{ Form::checkbox('external_control', 1, null, ['id' => 'external_control']) }}
+                        <label for="external_control"><span>Внешний контроль</span></label>
                     </div>
 
                     {{-- Чекбоксы управления --}}

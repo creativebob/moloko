@@ -24,11 +24,15 @@ class SiteRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string|max:255|required', 
-            'domain' => 'string|max:255|required', 
+            'name' => 'string|max:255|required',
+            'domain' => 'string|max:255|required',
+
+            'menus.*'  => 'integer|distinct',
+            'departments.*'  => 'integer|distinct',
 
             'moderation' => 'integer|max:1|nullable',
-            'system_item' => 'integer|max:1|nullable', 
+            'system_item' => 'integer|max:1|nullable',
+            'display' => 'integer|max:1|nullable',
         ];
     }
 }

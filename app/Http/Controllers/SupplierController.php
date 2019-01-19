@@ -98,7 +98,7 @@ class SupplierController extends Controller
         return view('suppliers.index', compact('suppliers', 'page_info', 'filter', 'user'));
     }
 
-     public function create(Request $request)
+    public function create(Request $request)
     {
 
         //Подключение политики
@@ -218,6 +218,25 @@ class SupplierController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $supplier);
 
+        if (isset($request->manufacturers)) {
+            $manufacturers = [];
+            foreach ($request->manufacturers as $manufacturer) {
+                $manufacturers[$manufacturer] = [
+                    'company_id' => $request->user()->company_id
+                ];
+            }
+            // dd($manufacturers);
+
+            $supplier->manufacturers()->sync($manufacturers);
+        } else {
+            $supplier->manufacturers()->detach();
+        }
+
+        // dd($request);
+        $supplier->preorder = $request->has('preorder');
+
+        $supplier->save();
+
         $company_id = $supplier->company->id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -234,8 +253,8 @@ class SupplierController extends Controller
 
         // Обновление информации по производителю:
         // ...
-        
-        
+
+
         $supplier->save();
 
         return redirect('/admin/suppliers');

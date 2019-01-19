@@ -66,9 +66,9 @@ class Account extends Model
     }
 
     // Получаем источник (сервис)
-    public function source()
+    public function source_service()
     {
-        return $this->belongsTo('App\Source', 'source_id');
+        return $this->belongsTo('App\SourceService');
     }
 
 }

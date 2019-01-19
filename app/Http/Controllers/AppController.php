@@ -9,7 +9,7 @@ use App\Entity;
 class AppController extends Controller
 {
 
-    // Вход в приложение
+    // Вход в crm
     public function enter() {
         return view('layouts.enter');
     }
@@ -36,6 +36,21 @@ class AppController extends Controller
 
     	$entity = Entity::whereAlias($request->entity_alias)->first(['model']);
     	$model = 'App\\'.$entity->model;
+
+        // $item = $model::findOrFail($request->id);
+        // $item->system_item = ($request->action == 'lock') ? 1 : null;
+        // $item->save();
+
+        // if (isset($request->entity)) {
+        //     # code...
+        // } else {
+        //     if ($request->type == 'menu') {
+        //         return view('')
+        //     } else {
+
+        //     }
+        // }
+
         $item = $model::where('id', $request->id)->update(['system_item' => ($request->action == 'lock') ? 1 : null]);
 
         return response()->json(isset($item) ?? 'Ошибка при обновлении статуса системной записи!');

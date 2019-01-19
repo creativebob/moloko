@@ -24,15 +24,13 @@ class CityRequest extends FormRequest
     public function rules()
     {
         return [
-            'region_name' => 'string|max:255|nullable',
-            // 'region_code' => 'integer|nullable',
-            // 'region_vk_external_id' => 'integer|nullable',
-            'name' => 'string|nullable',
-            'checkbox' => 'integer|nullable',
+            'city_name' => 'string|nullable',
+            'code' => 'integer|nullable',
+            'vk_external_id' => 'integer|nullable',
             'area_name' => 'string|max:255|nullable',
-            'city_name' => 'string|max:255|nullable',
-            'city_code' => 'integer|nullable',
-            'vk_external_id' => 'integer|nullable', 
+            'region_name' => 'string|max:255|nullable',
+
+            'checkbox' => 'integer|nullable',
             'city_db' => 'integer|nullable',
 
         ];

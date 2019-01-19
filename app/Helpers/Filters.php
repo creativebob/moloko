@@ -146,6 +146,7 @@
 
         $filter[$filter_name]['list_select'] = $list_select; 
         $filter[$filter_name]['title'] = $title; // Назавние фильтра
+        $filter[$filter_name]['entity_alias'] = $entity_name; // Сущность буклиста
 
         return $filter;
     }
@@ -396,6 +397,24 @@
         }
         // ----------------------------------------------------------------------------
 
+        // ФИЛЬТР ПО КЛИЕНТАМ ---------------------------------------------------------
+        if($name_filter == 'client'){
+
+            $filter[$name_filter]['title'] = 'Клиенты:';                                // Назавние фильтра
+            $column = 'client_id';                                                      // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterClientList();  // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+        // ФИЛЬТР ПО ПОСТАВЩИКАМ ------------------------------------------------------
+        if($name_filter == 'supplier'){
+
+            $filter[$name_filter]['title'] = 'Поставщики:';                                 // Назавние фильтра
+            $column = 'supplier_id';                                                        // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterSupplierList();    // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
         // ФИЛЬТР ПО ГОРОДУ ------------------------------------------------------------
         if($name_filter == 'city'){
 
@@ -603,12 +622,23 @@
 
     }
 
-
     function getFilterCompanyList(){
 
         $companies = App\Company::orderBy('name', 'asc')
         ->get()->pluck('name', 'id')->toArray();
         return $companies;
+    }
+
+    function getFilterClientList(){
+
+        $clients = App\Client::with('client')->get()->pluck('client.name', 'id')->toArray();
+        return $clients;
+    }
+
+    function getFilterSupplierList(){
+
+        $suppliers = App\Supplier::with('company')->get()->pluck('company.name', 'company.id')->toArray();
+        return $suppliers;
     }
 
     function getFilterCityList(){

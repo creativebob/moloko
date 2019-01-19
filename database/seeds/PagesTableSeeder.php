@@ -541,7 +541,7 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'display' => null,
-            ],   
+            ],
 
             // 46
             [
@@ -554,7 +554,7 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'display' => null,
-            ],   
+            ],
 
             // 47
             [
@@ -580,7 +580,7 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'display' => null,
-            ],   
+            ],
 
             // 49
             [
@@ -593,7 +593,7 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'display' => null,
-            ],  
+            ],
 
             // 50
             [
@@ -606,7 +606,59 @@ class PagesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'display' => null,
-            ],   
+            ],
+
+            // 51
+            [
+                'name' => 'Категории расходных материалов',
+                'site_id' => 1,
+                'title' => 'Категории расходных материалов',
+                'description' => 'Категории расходных материалов',
+                'alias' => 'expendables_categories',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
+            // 52
+            [
+                'name' => 'Заказы поставщикам',
+                'site_id' => 1,
+                'title' => 'Заказы поставщикам',
+                'description' => 'Заказы поставщикам',
+                'alias' => 'applications',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
+            // 53
+            [
+                'name' => 'Товарные накладные',
+                'site_id' => 1,
+                'title' => 'Товарные накладные',
+                'description' => 'Товарные накладные',
+                'alias' => 'consignments',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
+
+            // 54
+            [
+                'name' => 'Показатели',
+                'site_id' => 1,
+                'title' => 'Показатели',
+                'description' => 'Показатели',
+                'alias' => 'indicators',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => null,
+            ],
 
             // [
             //     'name' => 'Категории продукции',

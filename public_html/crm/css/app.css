@@ -612,6 +612,43 @@ span.wrap-label-checkboxer {
   z-index: 50;
 }
 
+.icon-search {
+  background: url(img/search.svg) no-repeat;
+}
+
+.one-icon-16 {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+}
+
+.icon-button {
+  cursor: pointer;
+  margin: 0px 3px;
+  opacity: 0.3;
+}
+
+.icon-button:hover, .icon-button.active {
+  opacity: 1;
+}
+
+.icon-view-card {
+  background: url(img/view-card.svg) no-repeat;
+}
+
+.icon-view-block {
+  background: url(img/view-block.svg) no-repeat;
+}
+
+.icon-view-list {
+  background: url(img/view-list.svg) no-repeat;
+}
+
+.icon-view-setting {
+  background: url(img/view-setting.svg) no-repeat;
+}
+
 .icon-list-add {
   background-position: -128px -768px;
 }
@@ -1033,13 +1070,17 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 .inputs .input-group-label:first-child {
   margin-top: 0.25rem;
   margin-bottom: 0.85rem;
-  height: 26px;
+  height: 28px;
   color: #666666;
   background-color: #f5f5f5;
   font-size: 0.8rem;
   padding: 5px 10px 5px 10px;
   border: 1px solid #ccc;
   box-shadow: none;
+  border-right: none;
+}
+.inputs select.select-in-booklist {
+  width: 160px;
 }
 .inputs .input-group-button input {
   background-color: #000000;
@@ -1160,6 +1201,32 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 }
 .enter .forgot:hover {
   text-decoration: none;
+}
+
+.search-in-catalog-panel label {
+  position: relative;
+}
+.search-in-catalog-panel input {
+  border: none;
+  height: 2rem;
+  padding-left: 2rem !important;
+  box-shadow: none;
+}
+.search-in-catalog-panel .input-icon {
+  position: relative;
+}
+.search-in-catalog-panel .input-icon .sprite-input-left {
+  top: 7px;
+  left: 8px;
+  opacity: 0.2;
+  transition: 0.5s ease opacity;
+}
+.search-in-catalog-panel input:focus {
+  outline: none;
+  box-shadow: none;
+}
+.search-in-catalog-panel input:focus + .sprite-input-left {
+  opacity: 0.6;
 }
 
 .header-z-index {
@@ -1467,6 +1534,116 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   max-width: 10px !important;
 }
 
+.view-settings-panel {
+  padding: 8px 0px;
+  margin-bottom: 10px;
+  text-align: right;
+}
+
+.catalog-bar {
+  width: 200px !important;
+}
+
+.products-list li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.products-list li a {
+  position: relative;
+  font-size: 0.9rem;
+  display: block;
+  float: left;
+  padding: 10px;
+  margin: 1px;
+  width: 100%;
+  height: 30px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 4px;
+  box-shadow: 1px 1px 0px 1px #eee;
+  line-height: 1.2;
+  text-decoration: none;
+}
+.products-list li a:hover {
+  background-color: #f7f7f7;
+}
+
+.view-list.products-list li a .items-product-description {
+  display: none;
+}
+.view-list.products-list li a .items-product-img {
+  display: none;
+}
+.view-list.products-list li a .wrap-product-price {
+  width: 60px;
+}
+.view-list.products-list li a:hover {
+  background-color: #f7f7f7;
+  font-weight: 600;
+}
+
+.view-block.products-list li a {
+  padding: 10px;
+  margin: 1px;
+  width: 140px;
+  height: 80px;
+  background-color: #5B6B87;
+  color: #fff;
+}
+.view-block.products-list li a .items-product-description {
+  display: none;
+}
+.view-block.products-list li a .items-product-img {
+  display: none;
+}
+.view-block.products-list li a:hover {
+  background-color: #4B5B77;
+}
+
+.view-card.products-list li a {
+  position: relative;
+  font-size: 0.9rem;
+  display: block;
+  float: left;
+  padding: 10px;
+  margin: 1px;
+  width: 100%;
+  height: 200px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 4px;
+  box-shadow: 1px 1px 0px 1px #eee;
+  line-height: 1.2;
+  text-decoration: none;
+}
+.view-card.products-list li a .items-product-description {
+  display: block;
+}
+.view-card.products-list li a .items-product-img {
+  display: block;
+}
+.view-card.products-list li a h4 {
+  margin-bottom: 1rem;
+}
+.view-card.products-list li a .media-object-section {
+  padding-right: 1rem;
+}
+.view-card.products-list li a span.items-product-manufacturer {
+  color: #999;
+}
+.view-card.products-list li a:hover {
+  background-color: #f7f7f7;
+}
+
+.catalog-bar .item-catalog:hover > a {
+  background-color: #ddd;
+}
+.catalog-bar .get-products {
+  color: #000;
+  font-size: 0.9rem;
+}
+
 .multilevel-accordion-menu .is-accordion-submenu-parent a {
   background: #4d5158;
 }
@@ -1716,6 +1893,11 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 
 .tabs-panel {
   padding-left: 0 !important;
+}
+
+#extra-panel .button.tiny {
+  color: #fff;
+  margin-bottom: 0;
 }
 
 .claims .td-body {
@@ -1987,8 +2169,8 @@ a#task-toggle {
 .breadcrumbs {
   margin: 0;
   background-color: #ffffff;
-  padding: 12px 20px;
-  height: auto;
+  padding: 2px 20px;
+  height: 35px;
   border-bottom: 1px solid #dcdcdc;
 }
 .breadcrumbs li {
@@ -1997,6 +2179,7 @@ a#task-toggle {
   font-family: "PFDinTextPro-Regular";
   font-size: 0.8rem;
   line-height: 1;
+  padding-top: 8px;
 }
 .breadcrumbs a {
   color: #5190ff;
@@ -2051,7 +2234,7 @@ a#task-toggle {
   width: 800px;
 }
 
-.table-content-search caption {
+.content-table-search caption {
   font-family: "PFDinDisplayPro-Light";
   font-size: 0.875rem;
   font-weight: normal;
@@ -2059,28 +2242,28 @@ a#task-toggle {
   padding: 0;
   margin-bottom: 1rem;
 }
-.table-content-search tbody {
+.content-table-search tbody {
   border: none;
   background: none;
 }
-.table-content-search tbody tr:nth-child(even) {
+.content-table-search tbody tr:nth-child(even) {
   border-bottom: 0;
   background-color: #f6f6f6;
 }
-.table-content-search tbody td {
+.content-table-search tbody td {
   font-family: "SegoeUISemiLight";
   font-size: 0.8rem;
   border-bottom: 1px solid #dadada;
   line-height: 1;
   padding: 0.4rem 10px;
 }
-.table-content-search tbody td a {
+.content-table-search tbody td a {
   color: #5190ff;
 }
-.table-content-search tbody .icon-delete {
+.content-table-search tbody .icon-delete {
   background-position: -32px -512px;
 }
-.table-content-search tbody .icon-delete:hover {
+.content-table-search tbody .icon-delete:hover {
   background-position: 0px -512px;
 }
 
@@ -2092,8 +2275,14 @@ a#task-toggle {
   margin-top: -16px;
 }
 
+#photos-list img {
+  cursor: pointer;
+}
 #photos-list .active {
-  border: 2px solid red;
+  border: 2px solid blue;
+}
+#photos-list .updated {
+  border: 2px solid green;
 }
 
 .tabs-margin-top {
@@ -2524,53 +2713,53 @@ a#task-toggle {
 .content .content-list .last-list .last-item:last-child .last-link {
   border-bottom: none;
 }
-.content .table-content th:first-child:hover {
+.content .content-table th:first-child:hover {
   cursor: default;
 }
-.content .table-content .is-stuck {
+.content .content-table .is-stuck {
   background-color: #eeeeee;
 }
-.content .table-content .is-stuck tr {
+.content .content-table .is-stuck tr {
   display: block;
 }
-.content .table-content {
+.content .content-table {
   border-collapse: separate;
   width: 100%;
 }
-.content .table-content .table-drop-color {
+.content .content-table .table-drop-color {
   background-color: #ffffff;
 }
-.content .table-content caption {
+.content .content-table caption {
   font-family: "PFDinDisplayPro-Med";
   text-align: center;
   font-size: 0.875rem;
   font-weight: normal;
 }
-.content .table-content td.details-control {
+.content .content-table td.details-control {
   background: url("../resources/details_open.png") no-repeat center center;
   cursor: pointer;
 }
-.content .table-content tr.shown td.details-control {
+.content .content-table tr.shown td.details-control {
   background: url("../resources/details_close.png") no-repeat center center;
 }
-.content .table-content .td-checkbox, .content .table-content .td-drop, .content .table-content .td-delete {
+.content .content-table .td-checkbox, .content .content-table .td-drop, .content .content-table .td-delete {
   width: 32px;
 }
-.content .table-content thead, .content .table-content tbody, .content .table-content tfoot {
+.content .content-table thead, .content .content-table tbody, .content .content-table tfoot {
   border: none;
   background-color: #f6f6f6;
 }
-.content .table-content .tbody-margin {
+.content .content-table .tbody-margin {
   height: 1rem;
   background-color: #eeeeee;
 }
-.content .table-content thead th, .content .table-content tbody td {
+.content .content-table thead th, .content .content-table tbody td {
   padding: 4px;
 }
-.content .table-content .td-checkbox, .content .table-content .td-delete {
+.content .content-table .td-checkbox, .content .content-table .td-delete {
   padding: 0;
 }
-.content .table-content thead th {
+.content .content-table thead th {
   font-family: "PFDinDisplayPro-Med";
   font-size: 0.8rem;
   font-weight: normal;
@@ -2581,103 +2770,103 @@ a#task-toggle {
   background-repeat: repeat-x;
   background-position: bottom;
 }
-.content .table-content thead th .icon-drop {
+.content .content-table thead th .icon-drop {
   opacity: 0;
 }
-.content .table-content thead th:hover {
+.content .content-table thead th:hover {
   cursor: pointer;
 }
-.content .table-content thead th:focus {
+.content .content-table thead th:focus {
   outline: none;
 }
-.content .table-content thead .td-drop {
+.content .content-table thead .td-drop {
   width: 32px;
   padding: 0;
 }
-.content .table-content tbody {
+.content .content-table tbody {
   overflow-x: hidden;
 }
-.content .table-content tbody tr .icon-drop {
+.content .content-table tbody tr .icon-drop {
   opacity: 0;
 }
-.content .table-content tbody tr .button {
+.content .content-table tbody tr .button {
   margin-bottom: 0;
 }
-.content .table-content tbody .no-moderation td {
+.content .content-table tbody .no-moderation td {
   background-color: #ffcccc;
 }
-.content .table-content tbody tr:nth-child(even) {
+.content .content-table tbody tr:nth-child(even) {
   border-bottom: 0;
   background-color: #f6f6f6;
 }
-.content .table-content tbody tr:hover .icon-drop {
+.content .content-table tbody tr:hover .icon-drop {
   opacity: 0.3;
   transition: 0.5s;
 }
-.content .table-content tbody tr:hover .icon-drop:hover {
+.content .content-table tbody tr:hover .icon-drop:hover {
   opacity: 0.8;
 }
-.content .table-content tbody .td-drop {
+.content .content-table tbody .td-drop {
   width: 32px;
   padding: 0;
 }
-.content .table-content tbody td {
+.content .content-table tbody td {
   font-family: "SegoeUISemiLight";
   font-size: 0.8rem;
   border-top: 1px solid #eeeeee;
   border-bottom: 1px solid #eeeeee;
   line-height: 1.4;
 }
-.content .table-content tbody td.td-news-photo {
+.content .content-table tbody td.td-news-photo {
   width: 150px;
 }
-.content .table-content .active tr:first-child td {
+.content .content-table .active tr:first-child td {
   text-align: right;
   padding: 0;
   background-color: #eeeeee;
   border: none;
 }
-.content .table-content .active tr:first-child td a {
+.content .content-table .active tr:first-child td a {
   background-color: #5190ff;
   color: white;
   padding: 0 16px;
   display: inline-block;
 }
-.content .table-content .active tr:first-child td a .icon-search-table-close {
+.content .content-table .active tr:first-child td a .icon-search-table-close {
   background-position: -38px -678px;
   margin-right: 1rem;
   width: 20px;
   height: 20px;
 }
-.content .table-content .active tr:first-child td a span {
+.content .content-table .active tr:first-child td a span {
   display: inline-block;
   vertical-align: middle;
 }
-.content .table-content .active tr:nth-child(2) td {
+.content .content-table .active tr:nth-child(2) td {
   border-top: 2px solid #5190ff;
 }
-.content .table-content .active tr:last-child td {
+.content .content-table .active tr:last-child td {
   border-bottom: 2px solid #5190ff;
 }
-.content .table-content .active tr:not(.tr-close) td:first-child {
+.content .content-table .active tr:not(.tr-close) td:first-child {
   border-left: 2px solid #5190ff;
 }
-.content .table-content .active tr:not(.tr-close) td:last-child {
+.content .content-table .active tr:not(.tr-close) td:last-child {
   border-right: 2px solid #5190ff;
 }
-.content .table-content .tr-border tr:first-child td {
+.content .content-table .tr-border tr:first-child td {
   border-bottom: 4px solid #5190ff;
 }
-.content .table-content .tr-border tr:first-child td a .icon-search-table-close {
+.content .content-table .tr-border tr:first-child td a .icon-search-table-close {
   background-position: -6px -678px;
 }
-.content .table-content .tr-border tr:not(.tr-close) td {
+.content .content-table .tr-border tr:not(.tr-close) td {
   line-height: 0;
   padding: 0;
   visibility: hidden;
   height: 0;
 }
-.content .table-content .tr-border tr:not(.tr-close) td label, .content .table-content .tr-border tr:not(.tr-close) td a {
+.content .content-table .tr-border tr:not(.tr-close) td label, .content .content-table .tr-border tr:not(.tr-close) td a {
   display: none;
 }
 .content .case_number_field {

@@ -3,7 +3,7 @@
     <a class="medium-link @if($drop == 0) link-small @endif">
         <div class="icon-open sprite"></div>
         <span class="medium-item-name">{{ $item->name }}</span>
-        <span class="number">{{ isset($item->childrens) ? count($item->childrens) : 0 }}</span>
+        <span class="number">{{ isset($item->childrens) ? $item->childrens->count() : 0 }}</span>
     </a>
     @else
     <a class="medium-as-last-link">
@@ -17,7 +17,7 @@
 
     <div class="icon-list">
         <div class="controls-list">
-            @include ('includes.control.menu_div', ['item' => $item, 'class' => $class, 'color' => 'black', 'nested' => $nested])
+            @include ('includes.control.categories_menu_div', ['item' => $item, 'class' => $class, 'color' => 'black'])
         </div>
 
         <div class="actions-list">
@@ -34,19 +34,18 @@
             @break
 
             @case($type == 'edit')
-            <a class="icon-list-edit sprite" href="/admin/{{ $entity }}/{{ $item->id }}/edit"></a>
-            @break
+            @if (isset($alias))
+            {{ link_to_route($entity.'.edit', '', $parameters = ['alias' => $alias, 'id' => $item->id], $attributes = ['class' => 'icon-list-edit sprite']) }}
+            @else
+            {{ link_to_route($entity.'.edit', '', $parameters = ['id' => $item->id], $attributes = ['class' => 'icon-list-edit sprite']) }}
+            @endif
             @break
 
             @endswitch
             @endcan
 
             <div class="del">
-                @can('delete', $item)
-                @if(empty($item->childrens) && ($item->system_item == null) && ($item->company_id != null) && ($item->$nested == 0))
-                <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
-                @endif
-                @endcan
+                @include('includes.control.item_delete_menu', ['item' => $item])
             </div>
         </div>
     </div>
@@ -55,7 +54,12 @@
         @if ($drop == 1)
         <div class="sprite icon-drop"></div>
         @endif
-        <input type="checkbox" name="" id="check-{{ $item->id }}">
+        <input type="checkbox" name="" id="check-{{ $item->id }}" class="check-booklist"
+        @if(!empty($filter['booklist']['booklists']['default']))
+        @if (in_array($item->id, $filter['booklist']['booklists']['default'])) checked
+        @endif
+        @endif
+        >
         <label class="label-check" for="check-{{ $item->id }}"></label>
     </div>
     <ul class="menu vertical medium-list nested" data-accordion-menu data-multi-open="false">

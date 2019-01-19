@@ -60,9 +60,9 @@ class GoodsArticle extends Model
     ];
 
     // Продукт
-    public function goods_product()
+    public function product()
     {
-        return $this->belongsTo('App\GoodsProduct');
+        return $this->belongsTo('App\GoodsProduct', 'goods_product_id');
     }
 
     // Товар
@@ -92,16 +92,16 @@ class GoodsArticle extends Model
     // Производитель
     public function manufacturer()
     {
-        return $this->belongsTo('App\Company', 'manufacturer_id');
+        return $this->belongsTo('App\Company');
     }
 
-    // Получаем альбом
+    // Альбом
     public function album()
     {
         return $this->belongsTo('App\Album');
     }
 
-    // Фото
+    // Аватар
     public function photo()
     {
         return $this->belongsTo('App\Photo');
@@ -113,10 +113,10 @@ class GoodsArticle extends Model
         return $this->belongsTo('App\Company');
     }
 
-    // Получаем автора
+    // Автор
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo('App\User');
     }
 
 }

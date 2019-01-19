@@ -24,8 +24,6 @@ class CreateGoodsModesTable extends Migration
             $table->text('description')->nullable()->comment('Description для типа товаров');
             $table->string('alias')->index()->comment('Алиас типа товаров');
 
-            // $table->string('type')->index()->comment('Тип товара (service/goods)');
-
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -36,7 +34,7 @@ class CreateGoodsModesTable extends Migration
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
-            
+
             $table->timestamps();
             $table->softDeletes();
         });

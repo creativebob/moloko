@@ -103,7 +103,13 @@ class PropertyController extends Controller
             }
             // echo $property;
 
-            return view($request->entity.'.metrics.add_property', ['type' => $property->type, 'units_list' => $units_list, 'property_id' => $request->id, 'entity' => $request->entity, 'set_status' => $request->set_status]);
+            return view('includes.metrics_category.add_property', [
+                'type' => $property->type,
+                'units_list' => $units_list,
+                'property_id' => $request->id,
+                'entity' => $request->entity,
+                'set_status' => $request->set_status
+            ]);
         } else {
             $result = [
                 'error_status' => 1,

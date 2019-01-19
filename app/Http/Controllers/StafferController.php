@@ -114,7 +114,7 @@ class StafferController extends Controller
         }
 
         $staffer->position_id = $request->position_id;
-        $staffer->department_id = $request->department_id;
+        $staffer->department_id = $request->parent_id;
         $staffer->filial_id = $request->filial_id;
 
         $staffer->save();
@@ -122,7 +122,7 @@ class StafferController extends Controller
         if ($staffer) {
 
         // Переадресовываем на index
-            return redirect()->route('departments.index', ['id' => $staffer->id, 'item' => 'staff']);
+            return redirect()->route('departments.index', ['id' => $staffer->id, 'item' => $this->entity_alias]);
         } else {
             abort(403, 'Ошибка при записи штата!');
         }
@@ -249,23 +249,24 @@ class StafferController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, true, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $staffer = Staffer::with('department')->moderatorLimit($answer)->findOrFail($id);
-        $department_id = $staffer->department_id;
-
+        $staffer = Staffer::with('user')->moderatorLimit($answer)->findOrFail($id);
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $staffer);
 
         // Удаляем должность из отдела с обновлением
         // Находим филиал и отдел
-        $staffer->editor_id = $request->user()->id;
+        $staffer->editor_id = hideGod($request->user());
         $staffer->save();
+
+        $parent_id = $staffer->department_id;
+
         $staffer = Staffer::destroy($id);
 
         if ($staffer) {
-            return redirect()->route('departments.index', ['id' => $department_id, 'item' => 'department']);
+            return redirect()->route('departments.index', ['id' => $parent_id, 'item' => 'departments']);
         } else {
             abort(403, 'Ошибка при удалении штата');
         }

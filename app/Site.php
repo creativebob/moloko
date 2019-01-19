@@ -16,10 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -52,56 +48,53 @@ class Site extends Model
     protected $fillable = [
         'name',
         'domain',
-        'company_id',
-        'appends',
     ];
 
-    // Получаем страницы.
+    // Страницы
     public function pages()
     {
         return $this->hasMany('App\Page');
     }
 
-    // Получаем пункты меню.
-    public function menus()
-    {
-        return $this->belongsToMany('App\Menu');
-    }
-
-    // Получаем навигации.
+    // Навигации
     public function navigations()
     {
         return $this->hasMany('App\Navigation');
     }
 
-    // Получаем компанию.
+    // Пункты меню
+    public function menus()
+    {
+        return $this->belongsToMany('App\Menu');
+    }
+
+    // Компания
     public function company()
     {
         return $this->belongsTo('App\Company');
     }
 
-    // Получаем новости.
+    // Новости
     public function news()
     {
         return $this->hasMany('App\News');
     }
 
-    // Получаем каталоги.
+    // Каталоги
     public function catalogs()
     {
         return $this->hasMany('App\Catalog');
     }
 
-    // Получаем автора
+    // Автор
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo('App\User');
     }
 
-    // Получаем отделы
+    // Отделы
     public function departments()
     {
         return $this->belongsToMany('App\Department');
     }
-
 }

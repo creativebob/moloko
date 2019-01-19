@@ -186,9 +186,16 @@ class Company extends Model
         return $this->hasManyTrough('App\Dealer', 'App\Client', 'company_id');
     }
 
+    // Производители
     public function manufacturers()
     {
-        return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'manufacturer_id');
+        return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'manufacturer_id')->withPivot('company_id');
+    }
+
+    // Производитель
+    public function manufactured()
+    {
+        return $this->belongsToMany('App\Company', 'manufacturers', 'manufacturer_id', 'company_id');
     }
 
     // Получаем клиентов

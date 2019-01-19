@@ -26,7 +26,7 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="table-content tablesorter" id="content" data-sticky-container data-entity-alias="clients">
+    <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="clients">
       <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
         <tr id="thead-content">
           <th class="td-drop"></th>
@@ -54,7 +54,7 @@
             {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
             @if(!empty($filter['booklist']['booklists']['default']))
             {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-            @if (in_array($client->id, $filter['booklist']['booklists']['default'])) checked 
+            @if (in_array($client->id, $filter['booklist']['booklists']['default'])) checked
             @endif
             @endif
             ><label class="label-check" for="check-{{ $client->id }}"></label>
@@ -75,9 +75,9 @@
 
           <td class="td-address">@if(!empty($client->client->location->address)){{ $client->client->location->address }}@endif </td>
           <td class="td-phone">{{ isset($client->client->main_phone->phone) ? decorPhone($client->client->main_phone->phone) : 'Номер не указан' }}</td>
-          
 
-          <td class="td-count-orders">{{-- $client->orders_count or ' ... ' --}} </td>
+
+          <td class="td-count-orders">@if(!empty($client->orders)){{ $client->orders->count() }} @endif </td>
           <td class="td-badget">{{-- $client->badget_count or ' ... ' --}} </td>
           <td class="td-time-frame">{{-- $client->time_frame or ' ... ' --}} </td>
           <td class="td-loyalty">{{-- $client->loyalty or ' ... ' --}} </td>
@@ -90,10 +90,10 @@
           <td class="td-delete">
             @if ($client->system_item != 1)
             @can('delete', $client)
-            <a class="icon-delete sprite" data-open="item-delete"></a>  
+            <a class="icon-delete sprite" data-open="item-delete"></a>
             @endcan
             @endif
-          </td> 
+          </td>
         </tr>
         @endforeach
         @endif

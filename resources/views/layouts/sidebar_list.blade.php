@@ -2,13 +2,11 @@
 
 <li>
 	<a data-link="{{ $item->id }}"><span>{{ $item->name }}</span></a>
-	@isset($item->childrens)
 	<ul class="menu vertical nested">
 		@foreach($item->childrens as $children)
 		@include('layouts.sidebar_list', ['item' => $children])
 		@endforeach
 	</ul>
-	@endisset
 </li>
 
 @else
