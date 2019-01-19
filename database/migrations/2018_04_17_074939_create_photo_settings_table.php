@@ -16,10 +16,7 @@ class CreatePhotoSettingsTable extends Migration
         Schema::create('photo_settings', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
-            $table->foreign('company_id')->references('id')->on('companies');
-
-            $table->morphs('photo_settings')->nullable();
+            $table->nullableMorphs('photo_settings');
 
             $table->string('name')->nullable()->index()->comment('Название настройки');
             $table->text('description')->nullable()->comment('Описание настройки');
@@ -39,17 +36,24 @@ class CreatePhotoSettingsTable extends Migration
             $table->integer('img_min_height')->nullable()->unsigned()->comment('Минимальная высота изображения');
             $table->integer('img_max_size')->nullable()->unsigned()->comment('Размер изображения');
 
-            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+
+            // Общие настройки
+            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
+
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
+            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+            $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
+            $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
 
             $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
-            $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
+
             $table->timestamps();
-            $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
             $table->softDeletes();
+
         });
     }
 

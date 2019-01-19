@@ -17,13 +17,13 @@ class CreateManufacturerSupplierTable extends Migration
             $table->increments('id');
 
             $table->integer('company_id')->unsigned()->comment('Id компании');
-            // $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('manufacturer_id')->unsigned()->comment('Id производителя');
-            // $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
+            $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
 
             $table->integer('supplier_id')->unsigned()->comment('Id поставщика');
-            // $table->foreign('supplier_id')->references('id')->on('suppliers');
+            $table->foreign('supplier_id')->references('id')->on('suppliers');
 
         });
     }

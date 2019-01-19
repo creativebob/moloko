@@ -1074,7 +1074,7 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   color: #666666;
   background-color: #f5f5f5;
   font-size: 0.8rem;
-  padding: 5px 10px 5px 10px;
+  padding: 7px 10px 5px 10px;
   border: 1px solid #ccc;
   box-shadow: none;
   border-right: none;
@@ -1091,9 +1091,9 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   background-color: #000000;
   border-color: #000000;
   color: #ffffff;
-  height: 26px;
+  height: 28px;
   margin-top: 4px;
-  padding-top: 5px;
+  padding-top: 7px;
   font-size: 0.8rem;
 }
 
@@ -1450,13 +1450,13 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 .sidebar .icon-chatbot {
   background-position: -96px -256px;
 }
-.sidebar .icon-settings {
+.sidebar .icon-setting {
   background-position: -96px -224px;
 }
 .sidebar .icon-product {
   background-position: -96px -1024px;
 }
-.sidebar .icon-personals {
+.sidebar .icon-personal {
   background-position: -96px -1056px;
 }
 .sidebar .icon-process {
@@ -1492,13 +1492,13 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 .sidebar .nav > ul > li > .active .icon-chatbot, .sidebar .gen-menu-bot > li > .active .icon-chatbot {
   background-position: -160px -256px;
 }
-.sidebar .nav > ul > li > .active .icon-settings, .sidebar .gen-menu-bot > li > .active .icon-settings {
+.sidebar .nav > ul > li > .active .icon-setting, .sidebar .gen-menu-bot > li > .active .icon-setting {
   background-position: -160px -224px;
 }
 .sidebar .nav > ul > li > .active .icon-product, .sidebar .gen-menu-bot > li > .active .icon-product {
   background-position: -160px -1024px;
 }
-.sidebar .nav > ul > li > .active .icon-personals, .sidebar .gen-menu-bot > li > .active .icon-personals {
+.sidebar .nav > ul > li > .active .icon-personal, .sidebar .gen-menu-bot > li > .active .icon-personal {
   background-position: -160px -1056px;
 }
 .sidebar .nav > ul > li > .active .icon-process, .sidebar .gen-menu-bot > li > .active .icon-process {
@@ -3069,7 +3069,7 @@ a#task-toggle {
 }
 .checker li span {
   display: block;
-  padding: 6px 0px 6px 20px;
+  padding: 6px 0px 6px 5px;
   color: #000;
   text-decoration: none;
   margin: 0px 10px 0px 10px;
@@ -3100,6 +3100,28 @@ a#task-toggle {
   margin: 0;
   outline: none;
   cursor: pointer;
+}
+
+.wrap-add-new-metric {
+  margin-top: 1rem;
+}
+
+#one-properties-form textarea {
+  height: 50px;
+}
+
+.table-list-metric {
+  text-align: left;
+}
+.table-list-metric .td-drop, .table-list-metric .td-delete {
+  width: 33px;
+}
+.table-list-metric td {
+  padding: 0.1rem 0.1rem 0.1rem;
+}
+
+.wrap-add-list-metric {
+  margin-bottom: 0px;
 }
 
 #units-block div {

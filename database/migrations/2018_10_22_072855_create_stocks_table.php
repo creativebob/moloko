@@ -14,8 +14,8 @@ class CreateStocksTable extends Migration
             $table->increments('id');
 
             $table->integer('place_id')->nullable()->unsigned()->comment('Id помещения');
-            // $table->foreign('place_id')->references('id')->on('places');
-            
+            $table->foreign('place_id')->references('id')->on('places');
+
             $table->integer('stored_id')->nullable()->unsigned()->comment('Id сущности которая хранится на складе');
             $table->string('stored_type')->nullable()->comment('Сущность');
 

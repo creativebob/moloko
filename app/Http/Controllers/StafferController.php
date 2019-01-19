@@ -203,7 +203,6 @@ class StafferController extends Controller
                 $roles[$role->id] = [
                     'department_id' => $staffer->filial_id,
                     'position_id' => $staffer->position_id,
-                    'author_id' => $user_id,
                 ];
             }
 

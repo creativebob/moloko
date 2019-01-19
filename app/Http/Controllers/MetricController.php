@@ -187,7 +187,7 @@ class MetricController extends Controller
     public function add_metric_value(Request $request)
     {
         // Переадресовываем на получение метрики
-        return view($request->entity.'.metrics.value', ['value' => $request->value]);
+        return view('includes.metrics_category.value', ['value' => $request->value]);
     }
 
 }

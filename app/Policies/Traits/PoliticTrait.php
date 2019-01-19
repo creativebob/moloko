@@ -12,7 +12,6 @@ trait PoliticTrait
     public function getstatus($entity_name, $model, $method, $entity_dependence)
     {
 
-
         // Получаем данные из сессии
         $session  = session('access');
         $user_id = $session['user_info']['user_id'];
@@ -36,18 +35,18 @@ trait PoliticTrait
         // Бог авторизованный под компанией может редактировать
         if(($user_status == 1)&&($company_id != null)){
             if(isset($session['company_info']['filials'])){
-                return true;            
+                return true;
             };
-            
+
         };
 
 
-        // Если запись это сам юзер - сразу даем зеленый свет! 
+        // Если запись это сам юзер - сразу даем зеленый свет!
         if(($entity_name == 'users')&&($method == 'update')){
 
             if($user_id == $model->id){
 
-                return true; 
+                return true;
             };
         };
 
@@ -57,9 +56,11 @@ trait PoliticTrait
 
 
             if(isset($session['company_info']['filials'])){
-                return true;            
+
+                return true;
             } else {
                 return false;
+
                 // abort(403, "Для начала создайте филиал!");
             };
         };
@@ -79,9 +80,9 @@ trait PoliticTrait
                 // ($entity_name == 'menus')||
                 // ($entity_name == 'roles')||
 
-                ($entity_name == 'cities')||   
-                ($entity_name == 'regions')||   
-                ($entity_name == 'areas')||       
+                ($entity_name == 'cities')||
+                ($entity_name == 'regions')||
+                ($entity_name == 'areas')||
                 // ($entity_name == 'positions')||
                 // ($entity_name == 'entities')
                 ($entity_name == 'sectors')
@@ -94,12 +95,12 @@ trait PoliticTrait
 
                 // Запрещаем
                 return false;
-            };         
+            };
         };
 
         // Бог авторизованный под компанией может создавать
         if(($user_status == 1)&&($method == 'create')&&($company_id != null)){
-            return true;            
+            return true;
         };
 
         // Предупреждаем божественное влияние на create!
@@ -113,9 +114,9 @@ trait PoliticTrait
         //         ($entity_name == 'menus')||
         //         ($entity_name == 'roles')||
         //         // ($entity_name == 'companies')||
-        //         ($entity_name == 'cities')||   
-        //         ($entity_name == 'regions')||   
-        //         ($entity_name == 'areas')||       
+        //         ($entity_name == 'cities')||
+        //         ($entity_name == 'regions')||
+        //         ($entity_name == 'areas')||
         //         ($entity_name == 'positions')||
         //         ($entity_name == 'entities')
         //     ){
@@ -192,9 +193,9 @@ trait PoliticTrait
         // UPDATE / VIEW / DELETE  ----------------------------------------------------------------------------------------------------------------------------------
         //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        // Если сущность не зависит от филиалов, то переключаемся в режим 
+        // Если сущность не зависит от филиалов, то переключаемся в режим
         // независимости от филиалов.
-        // 
+        //
 
         // Получаем статус наличия права в связке с филиалом (Есть или нет)
         if(($method == 'update')||($method == 'delete')||($method == 'view')||($method == 'moderator')||($method == 'automoderate')){
@@ -209,7 +210,7 @@ trait PoliticTrait
 
                         //Разрешаем, так как блокировки нет!
                         $right_dep_status = true;
-                        
+
                     } else {
                         $right_dep_status = false;
                     };
@@ -227,7 +228,7 @@ trait PoliticTrait
 
                     //Разрешаем, так как блокировки нет!
                     $right_status = true;
-                    
+
                 } else {
                     $right_status = false;
                 };
@@ -328,7 +329,7 @@ trait PoliticTrait
 
                 //Разрешаем, так как блокировки нет!
                 $authors_status = true;
-                
+
             } else {
                 $authors_status = false;
                     // abort(403, 'Не прошли - 7! ;)');
@@ -400,7 +401,7 @@ trait PoliticTrait
         };
 
 
-        // Если запись это сам юзер - сразу даем зеленый свет! 
+        // Если запись это сам юзер - сразу даем зеленый свет!
         // if(($entity_name == 'users')&&($user_id == $model->id)&&($method = 'update')){
         //     return false;
         // };

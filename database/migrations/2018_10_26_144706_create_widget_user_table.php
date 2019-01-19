@@ -17,12 +17,12 @@ class CreateWidgetUserTable extends Migration
             $table->increments('id');
 
             $table->integer('widget_id')->unsigned()->comment('ID виджета');
-            // $table->foreign('charge_id')->references('id')->on('charges');
+            $table->foreign('widget_id')->references('id')->on('widgets');
 
             $table->integer('user_id')->unsigned()->comment('ID пользователя');
-            // $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
 
-            $table->integer('collapse')->nullable()->unsigned()->comment('Свернут');
+            $table->boolean('collapse')->default(0)->comment('Свернут');
         });
     }
 

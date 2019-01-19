@@ -196,13 +196,7 @@ class PositionController extends Controller
 
             // Когда должность записалась, смотрим пришедшие для нее роли
             if (isset($request->roles)) {
-                $roles = [];
-                foreach ($request->roles as $role) {
-                    $roles[$role] = [
-                        'author_id' => $user_id,
-                    ];
-                }
-                $position->roles()->attach($roles);
+                $position->roles()->attach($request->roles);
             }
 
             // Смотрим оповещения
@@ -220,10 +214,10 @@ class PositionController extends Controller
                 $position->widgets()->attach($request->widgets);
             }
 
-            return redirect('/admin/positions');
+            return redirect()->route('positions.index');
         } else {
             abort(403, 'Ошибка записи должности');
-        };
+        }
     }
 
     public function show($id)
@@ -340,13 +334,7 @@ class PositionController extends Controller
 
             // Когда должность обновилась, обновляем пришедшие для нее роли
             if (isset($request->roles)) {
-                $roles = [];
-                foreach ($request->roles as $role) {
-                    $roles[$role] = [
-                        'author_id' => $user_id,
-                    ];
-                }
-                $position->roles()->sync($roles);
+                $position->roles()->sync($request->roles);
             } else {
 
                 // Если удалили последнюю роль для должности и пришел пустой массив
@@ -445,10 +433,10 @@ class PositionController extends Controller
             //     });
             // })->get();
 
-            return redirect('/admin/positions');
+            return redirect()->route('positions.index');
         } else {
             abort(403, 'Ошибка записи должности');
-        };
+        }
     }
 
     public function destroy(Request $request, $id)

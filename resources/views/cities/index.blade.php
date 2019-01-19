@@ -28,8 +28,8 @@
 
             @if($regions->isNotEmpty())
             @include('cities.cities_list', $regions)
-            @else
-            <li class="empty-item"></li>
+            {{-- @else
+            <li class="empty-item"></li> --}}
             @endif
 
         </ul>

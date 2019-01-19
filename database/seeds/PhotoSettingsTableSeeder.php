@@ -5,7 +5,7 @@ use Illuminate\Database\Seeder;
 use App\Entity;
 use App\PhotoSetting;
 
-class EntitySettingsTableSeeder extends Seeder
+class PhotoSettingsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -19,8 +19,9 @@ class EntitySettingsTableSeeder extends Seeder
                 'company_id' => null,
 		        'name' => 'Общие настройки',
 		        'description' => 'Комментарий к настройке',
-                'setting_id' => null,
-                'setting_type' => null,
+
+                'photo_settings_id' => null,
+                'photo_settings_type' => null,
 
                 'img_small_width' => 150,  // Ширина маленького изображения
                 'img_small_height' => 99,  // Высота маленького изображения

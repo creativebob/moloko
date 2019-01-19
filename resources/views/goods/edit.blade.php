@@ -88,7 +88,21 @@ $disabled = $cur_goods->article->draft == null;
                                 </label>
 
                                 <label>Производитель
+
+                                    @if ($cur_goods->article->product->category->manufacturers->isNotEmpty())
+
                                     {!! Form::select('manufacturer_id', $cur_goods->article->product->category->manufacturers->pluck('name', 'id'), $cur_goods->article->manufacturer_id, []) !!}
+
+                                    @else
+
+                                    @include('includes.selects.contragents', [
+                                        'name' => 'manufacturers',
+                                        'value' => $cur_goods->article->manufacturer_id
+                                    ]
+                                    )
+
+                                    @endif
+
                                 </label>
 
                                 {{-- @include('includes.selects.manufacturers', ['manufacturer_id' => $cur_goods->article->manufacturer_id, 'draft' => $cur_goods->article->draft]) --}}

@@ -1,61 +1,99 @@
-<label class="small-12 cell">Название
-	@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required' => true])
-</label>
-<label class="small-12 cell">Описание
-	@include('includes.inputs.textarea', ['value'=>null, 'name'=>'description'])
-</label>
+<div class="small-12 cell">
+	<label>Название:
+		@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required' => true])
+	</label>
+</div>
+<div class="small-12 cell">
+	<label>Описание:
+		@include('includes.inputs.textarea', ['value'=>null, 'name'=>'description'])
+	</label>
+</div>
 
 @switch($type)
 
 @case('numeric')
-<label class="small-6 cell">Минимум
-	{{ Form::number('min') }}
-</label>
-<label class="small-6 cell">Максимум
-	{{ Form::number('max') }}
-</label>
-<label class="small-6 cell">Единица измерения
-	{{ Form::select('unit_id', $units_list, null) }}
-</label>
-<label class="small-6 cell">Знаки после запятой
-	{{ Form::select('decimal_place', ['0' => '0', '1' => '0,0', '2' => '0,00', '3' => '0,000'], null) }}
-</label>
+<div class="small-6 cell">
+	<label>Минимум
+		{{ Form::number('min') }}
+	</label>
+</div>
+<div class="small-6 cell">
+	<label>Максимум
+		{{ Form::number('max') }}
+	</label>
+</div>
+<div class="small-6 cell">
+	<label>Единица измерения
+		{{ Form::select('unit_id', $units_list, null) }}
+	</label>
+</div>
+<div class="small-6 cell">
+	<label>Знаки после запятой
+		{{ Form::select('decimal_place', ['0' => '0', '1' => '0,0', '2' => '0,00', '3' => '0,000'], null) }}
+	</label>
+</div>
+
 {{ Form::hidden('type', 'numeric') }}
 @break
 
 @case('percent')
-<label class="small-6 cell">Минимум
-	{{ Form::number('min') }}
-</label>
-<label class="small-6 cell">Максимум
-	{{ Form::number('max') }}
-</label>
-<label class="small-6 cell">Единица измерения
-	{{ Form::select('unit_id', $units_list, null) }}
-</label>
-<label class="small-6 cell">Знаки после запятой
-	{{ Form::select('decimal_place', ['0' => '0', '1' => '0,0', '2' => '0,00', '3' => '0,000'], null) }}
-</label>
+<div class="small-6 cell">
+	<label>Минимум
+		{{ Form::number('min') }}
+	</label>
+</div>
+
+<div class="small-6 cell">
+	<label>Максимум
+		{{ Form::number('max') }}
+	</label>
+</div>
+
+<div class="small-6 cell">
+	<label>Единица измерения
+		{{ Form::select('unit_id', $units_list, null) }}
+	</label>
+</div>
+
+<div class="small-6 cell">
+	<label>Знаки после запятой
+		{{ Form::select('decimal_place', ['0' => '0', '1' => '0,0', '2' => '0,00', '3' => '0,000'], null) }}
+	</label>
+</div>
+
 {{ Form::hidden('type', 'percent') }}
 @break
 
 @case('list')
-<div class="radiobutton">Тип списка<br>
-	{{ Form::radio('list_type', 'list', true, ['id' => $set_status.'-metric-list-type']) }}
-	<label for="{{ $set_status }}-metric-list-type"><span>Много значений</span></label>
-	{{ Form::radio('list_type', 'select', false, ['id' => $set_status.'-metric-select-type']) }}
-	<label for="{{ $set_status }}-metric-select-type"><span>Одно значение</span></label>
 
+<div class="small-12 cell">
+	<div class="radiobutton">
+		{{ Form::radio('list_type', 'list', true, ['id' => $set_status.'-metric-list-type']) }}
+		<label for="{{ $set_status }}-metric-list-type"><span>Выбор нескольких значений</span></label>
+		{{ Form::radio('list_type', 'select', false, ['id' => $set_status.'-metric-select-type']) }}
+		<label for="{{ $set_status }}-metric-select-type"><span>Выбор одного значения</span></label>
+	</div>
 </div>
-<label class="small-12 cell">Введите значение
-	{{ Form::text('value', null, ['id' => $set_status.'-value']) }}
-</label>
-<a class="button small-10 cell add-value">Добавить значение</a>
-<table id="{{ $set_status }}-values-table" class="tablesorter">
-	<tbody id="{{ $set_status }}-values-tbody">
 
-	</tbody>
-</table>
+
+
+<div class="input-group inputs small-12 cell wrap-add-list-metric">
+
+		{{ Form::text('value', null, ['id' => $set_status.'-value', 'placeholder' => 'Введите значение']) }}
+
+	  <div class="input-group-button">
+		<a class="button add-value">Добавить в список</a>
+	  </div>
+</div>
+
+<div class="small-12 cell wrap-table-list-metric">
+	<table id="{{ $set_status }}-values-table" class="tablesorter unstriped table-list-metric">
+		<tbody id="{{ $set_status }}-values-tbody">
+
+		</tbody>
+	</table>
+</div>
+
 {{ Form::hidden('type', 'list') }}
 
 @break
@@ -66,7 +104,7 @@
 {{ Form::hidden('entity', $entity) }}
 
 <div class="small-12 cell text-center">
-	<a class="button" id="add-metric">Добавить метрику</a>
+	<a class="button green-button" id="add-metric">Создать метрику</a>
 </div>
 
 

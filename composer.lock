@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0887269f6ccadbf22a57e4a8890bdcff",
+    "content-hash": "075fbc835d4c2b0ea19b9dd76033b6c5",
     "packages": [
         {
             "name": "appstract/laravel-opcache",
@@ -1479,6 +1479,49 @@
             "time": "2018-03-21T22:21:57+00:00"
         },
         {
+            "name": "laravel-frontend-presets/zurb-foundation",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-frontend-presets/zurb-foundation.git",
+                "reference": "df551f8f081c883a1fadff97dc5e24a713c1a920"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-frontend-presets/zurb-foundation/zipball/df551f8f081c883a1fadff97dc5e24a713c1a920",
+                "reference": "df551f8f081c883a1fadff97dc5e24a713c1a920",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "^5.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "LaravelFrontendPresets\\ZurbFoundationPreset\\ZurbFoundationPresetServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "LaravelFrontendPresets\\ZurbFoundationPreset\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Laravel 5.5.x Front-end preset for Zurb Foundation",
+            "keywords": [
+                "foundation",
+                "laravel",
+                "preset",
+                "zurb-foundation"
+            ],
+            "time": "2018-11-06T06:29:41+00:00"
+        },
+        {
             "name": "laravel/framework",
             "version": "v5.5.44",
             "source": {
@@ -2339,16 +2382,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.1.1",
+            "version": "v4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "8aae5b59b83bb4d0dbf07b0a835f2680a658f610"
+                "reference": "594bcae1fc0bccd3993d2f0d61a018e26ac2865a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/8aae5b59b83bb4d0dbf07b0a835f2680a658f610",
-                "reference": "8aae5b59b83bb4d0dbf07b0a835f2680a658f610",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/594bcae1fc0bccd3993d2f0d61a018e26ac2865a",
+                "reference": "594bcae1fc0bccd3993d2f0d61a018e26ac2865a",
                 "shasum": ""
             },
             "require": {
@@ -2364,7 +2407,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.1-dev"
+                    "dev-master": "4.2-dev"
                 }
             },
             "autoload": {
@@ -2386,7 +2429,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2018-12-26T11:32:39+00:00"
+            "time": "2019-01-12T16:31:37+00:00"
         },
         {
             "name": "paragonie/random_compat",

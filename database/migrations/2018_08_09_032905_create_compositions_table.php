@@ -18,10 +18,8 @@ class CreateCompositionsTable extends Migration
 
             $table->integer('goods_category_id')->nullable()->unsigned()->comment('Id категории продукции');
             $table->foreign('goods_category_id')->references('id')->on('goods_categories');
-            
-            $table->integer('compositions_id')->nullable()->unsigned()->comment('Id сущности связанной с категорией');
 
-            $table->string('compositions_type')->nullable()->comment('Имя сущности');
+            $table->morphs('compositions');
 
             $table->timestamps();
         });

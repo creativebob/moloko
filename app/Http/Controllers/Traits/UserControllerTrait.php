@@ -79,35 +79,70 @@ trait UserControllerTrait
 
 	public function updateUser($request, $user){
 
-       // Данные на обновление
-       $company->name = $request->name;
-
-        if ($company->alias != $request->alias) {
-            $company->alias = $request->alias;
-        }
-
-        $company->email = $request->email;
-        $company->legal_form_id = $request->legal_form_id;
-        $company->inn = $request->inn;
-        $company->kpp = $request->kpp;
-        $company->ogrn = $request->ogrn;
-        $company->okpo = $request->okpo;
-        $company->okved = $request->okved;
+        $filial_id = $request->filial_id;
 
         // Обновляем локацию
-        $company = update_location($request, $company);
+        $user = update_location($request, $user);
 
-        if ($company->sector_id != $request->sector_id) {
-            $company->sector_id = $request->sector_id;
+        $user->login = $request->login;
+        $user->email = $request->email;
+
+        // Если пришел не пустой пароль
+        if (isset($request->password)) {
+            $user->password = bcrypt($request->password);
         }
 
-        $company->save();
+        $user->nickname = $request->nickname;
+        $user->liter = $request->liter;
 
-        if($company){
+        $user->first_name = $request->first_name;
+        $user->second_name = $request->second_name;
+        $user->patronymic = $request->patronymic;
+        $user->sex = $request->sex;
+        $user->birthday = $request->birthday;
 
-            add_phones($request, $company);
+        // Телефон
+        $phones = add_phones($request, $user);
 
+        $user->telegram_id = $request->telegram_id;
+
+        $user->orgform_status = $request->orgform_status;
+
+        $user->user_inn = $request->inn;
+
+        $user->passport_address = $request->passport_address;
+        $user->passport_number = $request->passport_number;
+        $user->passport_released = $request->passport_released;
+        $user->passport_date = $request->passport_date;
+
+        $user->about = $request->about;
+        $user->specialty = $request->specialty;
+        $user->degree = $request->degree;
+        $user->quote = $request->quote;
+
+        $user->user_type = $request->user_type;
+        $user->lead_id = $request->lead_id;
+        $user->employee_id = $request->employee_id;
+        $user->access_block = $request->access_block;
+
+        $user->filial_id = $request->filial_id;
+
+        // Модерируем (Временно)
+        // if($answer['automoderate']){$user->moderation = null;};
+
+        $user->save();
+
+        if ($user) {
+
+            // Cохраняем / обновляем фото
+            savePhoto($request, $user);
+
+        } else {
+            abort(403, 'Ошибка при обновлении пользователя!');
         }
+
+
+
     }
 
 

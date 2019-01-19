@@ -19,7 +19,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-    
+
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
@@ -46,7 +46,7 @@ class Feedback extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    protected $table = 'feedback';
+    protected $table = 'feedbacks';
     protected $dates = ['created_at', 'updated_at', 'deleted_at', 'call_date'];
     protected $fillable = [
         'body',

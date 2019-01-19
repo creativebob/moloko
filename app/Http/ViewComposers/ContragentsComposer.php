@@ -13,28 +13,41 @@ class ContragentsComposer
 	{
 
         $name = $view->name;
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($name, false, 'index');
 
-        // Главный запрос
-        $company = Company::with([
-            $name => function ($q) {
-                $q->orderBy('sort', 'asc');
-            }
-        ])
-        ->moderatorLimit($answer)
-        ->findOrFail(Auth::user()->company_id);
-        // dd($company);
+        if (isset(Auth::user()->company_id)) {
 
-        // $manufacturers = Company::whereHas('manufacturers', function ($q) {
-        //     $q->pivot('company_id', Auth::user()->company_id)->orderBy('sort', 'asc');
-        // })
-        // ->moderatorLimit($answer)
-        // ->get();
+            // Главный запрос
+            $company = Company::with([
+                $name => function ($q) {
+                    $q->orderBy('sort', 'asc');
+                }
+            ])
+            ->moderatorLimit($answer)
+            ->findOrFail(Auth::user()->company_id);
 
-        // dd($view);
+            // dd($company->$name);
 
-        return $view->with('items', $company->$name);
+            // $manufacturers = Company::whereHas('manufacturers', function ($q) {
+            //     $q->pivot('company_id', Auth::user()->company_id)->orderBy('sort', 'asc');
+            // })
+            // ->moderatorLimit($answer)
+            // ->get();
+
+            // dd($view);
+
+            return $view->with('contragents', $company->$name);
+        } else {
+
+            $companies = Company::where('company_id', null)->get();
+            // dd($companies);
+
+            return $view->with('contragents', $companies);
+        }
+
+
     }
 
 }

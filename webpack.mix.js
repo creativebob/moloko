@@ -11,5 +11,13 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+mix.setPublicPath('public_html');
+
+mix.sass('resources/sass/app.scss', 'public_html/css')
+.js('resources/js/app.js', 'public_html/js');
+
+mix.browserSync('crmsystem/admin/');
+
+if (mix.inProduction()) {
+	mix.version();
+}

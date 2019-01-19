@@ -1380,7 +1380,7 @@ tr:hover {
         color: #666666;
         background-color: #f5f5f5;
         font-size: 0.8rem;
-        padding: 5px 10px 5px 10px;
+        padding: 7px 10px 5px 10px;
         border: 1px solid #ccc;
         box-shadow: none;
         border-right: none; // Возможно стоит убрать )))
@@ -1402,9 +1402,9 @@ tr:hover {
         background-color: $black;
         border-color: $black;
         color: $white;
-        height: 26px;
+        height: 28px;
         margin-top: 4px;
-        padding-top: 5px;
+        padding-top: 7px;
         font-size: 0.8rem;
     }
 
@@ -1821,14 +1821,14 @@ a:hover {
 .icon-chatbot {
     background-position:  -96px -256px;
 }
-.icon-settings {
+.icon-setting {
     background-position:  -96px -224px;
 }
 .icon-product {
     background-position:  -96px -1024px;
 }
 
-.icon-personals {
+.icon-personal {
     background-position: -96px -1056px;
 }
 
@@ -1868,13 +1868,13 @@ a:hover {
   .icon-chatbot {
       background-position: -160px -256px;
   }
-  .icon-settings {
+  .icon-setting {
       background-position: -160px -224px;
   }
   .icon-product {
       background-position: -160px -1024px;
   }
-  .icon-personals {
+  .icon-personal {
       background-position: -160px -1056px;
   }
   .icon-process {
@@ -4134,7 +4134,7 @@ a:hover {
 
   span {
       display: block;
-      padding: 6px 0px 6px 20px;
+      padding: 6px 0px 6px 5px;
       color: #000;
       text-decoration: none;
       margin: 0px 10px 0px 10px;
@@ -4182,8 +4182,29 @@ a:hover {
 }
 }
 
+.wrap-add-new-metric{
+    margin-top: 1rem;
+}
 
+#one-properties-form textarea{
+    height: 50px;
+}
 
+.table-list-metric{
+    text-align: left;
+
+    .td-drop, .td-delete {
+        width: 33px;
+    }
+
+    td {
+        padding: 0.1rem 0.1rem 0.1rem;
+    }
+}
+
+.wrap-add-list-metric{
+    margin-bottom: 0px;
+}
 
 #units-block {
     div {

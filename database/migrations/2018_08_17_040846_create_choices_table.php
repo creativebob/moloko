@@ -16,13 +16,11 @@ class CreateChoicesTable extends Migration
         Schema::create('choices', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('choices_id')->nullable()->unsigned()->comment('Id сущности');
-            $table->string('choices_type')->nullable()->comment('Сущность');
+            $table->morphs('choices');
 
             $table->integer('lead_id')->nullable()->unsigned()->comment('Id лида');
             $table->foreign('lead_id')->references('id')->on('leads');
 
-            $table->timestamps();
         });
     }
 

@@ -356,14 +356,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
             ],
             [
-                'name' => 'Группы товаров',
-                'alias' => 'products_groups',
-                'model' => 'ProductsGroup',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-            ],
-            [
                 'name' => 'Значения',
                 'alias' => 'values',
                 'model' => 'Value',
@@ -375,14 +367,6 @@ class EntitiesTableSeeder extends Seeder
                 'name' => 'Типы помещений',
                 'alias' => 'places_types',
                 'model' => 'PlacesType',
-                'rights_minus' => 1,
-                'system_item' => 1,
-                'author_id' => 1,
-            ],
-            [
-                'name' => 'Настройка альбомов',
-                'alias' => 'entity_settings',
-                'model' => 'EntitySetting',
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
@@ -579,7 +563,7 @@ class EntitiesTableSeeder extends Seeder
             // 68
             [
                 'name' => 'Отзывы',
-                'alias' => 'feedback',
+                'alias' => 'feedbacks',
                 'model' => 'Feedback',
                 'rights_minus' => null,
                 'system_item' => 1,
@@ -672,6 +656,16 @@ class EntitiesTableSeeder extends Seeder
                 'alias' => 'indicators',
                 'model' => 'Indicator',
                 'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+            ],
+
+            // 78
+            [
+                'name' => 'Настройка фоток',
+                'alias' => 'photo_settings',
+                'model' => 'PhotoSetting',
+                'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
             ],
