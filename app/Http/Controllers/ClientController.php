@@ -8,7 +8,6 @@ use App\Department;
 use App\Staffer;
 use App\Employee;
 use App\Role;
-
 use App\Lead;
 use App\Client;
 use App\Dealer;
@@ -317,11 +316,16 @@ class ClientController extends Controller
 
         $client = new Client;
 
+        // Создание нового клиента =========================================================
+
+        // Компания 
         $new_company = new Company;
+
         // Отдаем работу по созданию новой компании трейту
         $company = $this->createCompany($request, $new_company);
 
         $new_user = new User;
+
         // Отдаем работу по созданию нового юзера трейту
         $user = $this->createUser($request, $new_user);
 
@@ -391,7 +395,7 @@ class ClientController extends Controller
             return view('clients.edit_client_company', compact('client', 'page_info'));
         }
 
-        // ПОЛУЧАЕМ ФИЗИКА ------------------------------------------------------------------------------------------------
+        // ПОЛУЧАЕМ ФИЗ ЛИЦО ---------------------------------------------------------------------------------
         if($client->client_type == 'App\User'){
 
 
@@ -402,11 +406,6 @@ class ClientController extends Controller
 
             $user = User::with(
             'location.city',
-            'roles',
-            'role_user',
-            'role_user.role',
-            'role_user.position',
-            'role_user.department',
             'photo',
             'main_phones',
             'extra_phones'
@@ -415,32 +414,14 @@ class ClientController extends Controller
 
         $this->authorize(getmethod(__FUNCTION__), $user);
 
-        // Функция из Helper отдает массив со списками для SELECT
-        $departments_list = getLS('users', 'index', 'departments');
-        $filials_list = getLS('users', 'index', 'filials');
-
-        $role = new Role;
-
-        $answer_roles = operator_right('roles', false, 'index');
-
-        $roles_list = Role::moderatorLimit($answer_roles)
-        ->companiesLimit($answer_roles)
-        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям
-        ->template($answer_roles) // Выводим шаблоны в список
-        ->pluck('name', 'id');
-
         // Получаем список стран
         $countries_list = Country::get()->pluck('name', 'id');
 
         // Сущность
         $entity = $this->entity_name;
 
-
-            return view('clients.edit_client_user', compact('client', 'user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list', 'entity'));
+            return view('clients.edit_client_user', compact('client', 'user', 'page_info', 'countries_list', 'entity'));
         }
-
 
 
     }

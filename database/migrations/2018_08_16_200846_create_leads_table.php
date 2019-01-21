@@ -29,6 +29,8 @@ class CreateLeadsTable extends Migration
             $table->string('case_number', 20)->nullable()->index()->comment('Номер обращения по правилам компании');
             $table->integer('serial_number')->unsigned()->nullable()->comment('Дневной серийный номер лида по менеджеру');
 
+            
+
             $table->bigInteger('phone')->nullable()->comment('Телефон лида');
             $table->bigInteger('extra_phone')->nullable()->comment('Дополнительный телефон');
             $table->string('email')->nullable()->comment('Почта');

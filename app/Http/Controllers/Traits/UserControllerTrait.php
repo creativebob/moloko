@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Traits;
 use App\User;
+use App\RoleUser;
+use Illuminate\Support\Facades\DB;
 
 trait UserControllerTrait
 {
@@ -25,7 +27,6 @@ trait UserControllerTrait
         } else {
             $user->email = $request->email;            
         }
-
 
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
@@ -63,15 +64,51 @@ trait UserControllerTrait
         $user->author_id = $request->user()->id;
         $user->save();
 
-        // Если запись удачна - будем записывать связи
-        if($user){
 
-            add_phones($request, $user);
+        if($user) {
+
+            // Cохраняем / обновляем фото
+            savePhoto($request, $user);
+
+            // Телефон
+            $phones = add_phones($request, $user);
+
+            // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
+            if (isset($request->access)) {
+
+                $delete = RoleUser::whereUser_id($user->id)->delete();
+
+                $mass = [];
+                foreach ($request->access as $string) {
+                    $item = explode(',', $string);
+
+                    if ($item[2] == 'null') {
+                        $position = null;
+                    } else {
+                        $position = $item[2];
+                    }
+
+                    $mass[] = [
+                        'role_id' => $item[0],
+                        'department_id' => $item[1],
+                        'user_id' => $user->id,
+                        'position_id' => $position,
+                    ];
+                }
+
+                // dd($mass);
+                DB::table('role_user')->insert($mass);
+
+            } else {
+                // Если удалили последнюю роль для должности и пришел пустой массив
+                $delete = RoleUser::whereUser_id($user->id)->delete();
+            }
+
+            return Redirect('/admin/users');
 
         } else {
-
-            abort(403, 'Ошибка записи пользователя');
-        };
+            abort(403, 'Ошибка при обновлении пользователя!');
+        }
 
         return $user;
     }
@@ -140,6 +177,41 @@ trait UserControllerTrait
         } else {
             abort(403, 'Ошибка при обновлении пользователя!');
         }
+
+        // Выполняем, только если данные пришли не из userfrofile!
+        if(!isset($request->users_edit_mode)){
+
+            // Тут вписываем изменения по правам
+            if (isset($request->access)) {
+
+                $delete = RoleUser::whereUser_id($user->id)->delete();
+                $mass = [];
+                foreach ($request->access as $string) {
+
+                    $item = explode(',', $string);
+                    if ($item[2] == 'null') {
+                        $position = null;
+                    } else {
+                        $position = $item[2];
+                    }
+
+                    $mass[] = [
+                        'role_id' => $item[0],
+                        'department_id' => $item[1],
+                        'user_id' => $user->id,
+                        'position_id' => $position,
+                    ];
+                }
+
+                DB::table('role_user')->insert($mass);
+
+            } else {
+
+                // Если удалили последнюю роль для должности и пришел пустой массив
+                $delete = RoleUser::whereUser_id($user->id)->delete();
+            }
+
+        };
 
 
 

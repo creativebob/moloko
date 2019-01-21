@@ -7,7 +7,14 @@ use Illuminate\Support\ServiceProvider;
 
 use App\Http\ViewComposers\SidebarComposer;
 use App\Http\ViewComposers\SectorsSelectComposer;
-use App\Http\ViewComposers\CountriesSelectComposer;
+
+use App\Http\ViewComposers\CountriesComposer;
+
+use App\Http\ViewComposers\FilialsForUserComposer;
+use App\Http\ViewComposers\DepartmentsForUserComposer;
+
+use App\Http\ViewComposers\RolesComposer;
+
 use App\Http\ViewComposers\LegalFormsSelectComposer;
 use App\Http\ViewComposers\CheckerComposer;
 
@@ -61,7 +68,14 @@ class ComposerServiceProvider extends ServiceProvider
     {
         view()->composer('layouts.sidebar', SidebarComposer::class);
         view()->composer('includes.selects.sectors_select', SectorsSelectComposer::class);
-        view()->composer('includes.selects.countries', CountriesSelectComposer::class);
+
+        view()->composer('includes.selects.countries', CountriesComposer::class);
+
+        view()->composer('includes.selects.filials_for_user', FilialsForUserComposer::class);
+        view()->composer('includes.selects.departments_for_user', DepartmentsForUserComposer::class);
+
+        view()->composer('includes.selects.roles', RolesComposer::class);
+
         view()->composer('includes.selects.legal_forms', LegalFormsSelectComposer::class);
         view()->composer('includes.inputs.checker', CheckerComposer::class);
 
