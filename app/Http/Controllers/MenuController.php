@@ -34,7 +34,7 @@ class MenuController extends Controller
     // Используем трейт записи и обновления категорий
     use CategoryControllerTrait;
 
-    public function index(Request $request, $navigation_id)
+    public function index(Request $request, $site_id, $navigation_id)
     {
 
         // Подключение политики
@@ -43,8 +43,7 @@ class MenuController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence,  getmethod(__FUNCTION__));
 
-        $menus = Menu::with('ancestor')
-        ->moderatorLimit($answer)
+        $menus = Menu::moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
@@ -71,33 +70,46 @@ class MenuController extends Controller
         return view('menus.index', [
             'menus' => $menus,
             'page_info' => pageInfo($this->entity_alias),
+            'site_id' => $site_id,
             'navigation_id' => $navigation_id
         ]);
     }
 
-    public function create(Request $request, $navigation_id)
+    public function create(Request $request, $site_id, $navigation_id)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('includes.menu_views.create', [
-            'item' => new $this->class,
-            'entity' => $this->entity_alias,
-            'title' => 'Добавление пункта меню',
+        return view('menus.create', [
+            'menu' => new $this->class,
             'parent_id' => $request->parent_id,
             'category_id' => $request->category_id,
+            'site_id' => $site_id,
             'navigation_id' => $navigation_id
         ]);
     }
 
-    public function store(MenuRequest $request, $alias)
+    public function store(MenuRequest $request, $site_id, $navigation_id)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $menu = new Menu;
+
+        $menu->parent_id = $request->parent_id;
+        $menu->navigation_id = $navigation_id;
+
+        // Делаем заглавной первую букву
+        $menu->name = get_first_letter($request->name);
+
+        $menu->icon = $request->icon;
+        $menu->alias = $request->alias;
+
+        $menu->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
+
+        $menu->page_id = $request->page_id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, 'store');
@@ -110,19 +122,6 @@ class MenuController extends Controller
         // Системная запись
         $menu->system_item = $request->system_item;
         $menu->display = $request->display;
-
-        $menu->parent_id = $request->parent_id;
-        $menu->navigation_id = $request->navigation_id;
-
-        // Делаем заглавной первую букву
-        $menu->name = get_first_letter($request->name);
-
-        $menu->icon = $request->icon;
-        $menu->alias = $request->alias;
-
-        $menu->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
-
-        $menu->page_id = $request->page_id;
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -157,7 +156,7 @@ class MenuController extends Controller
         if ($menu) {
 
             // Переадресовываем на index
-            return redirect()->route('menus.index', ['navigation_id' => $navigation_id, 'id' => $menu->id]);
+            return redirect()->route('menus.index', ['site_id' => $site_id, 'navigation_id' => $navigation_id, 'id' => $menu->id]);
 
         } else {
 
@@ -174,7 +173,7 @@ class MenuController extends Controller
         //
     }
 
-    public function edit(Request $request, $navigation_id, $id)
+    public function edit(Request $request, $site_id, $navigation_id, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -186,17 +185,16 @@ class MenuController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $menu);
 
-        return view('includes.menu_views.edit', [
-            'item' => $menu,
-            'entity' => $this->entity_alias,
-            'title' => 'Редактирование пункта меню',
+        return view('menus.edit', [
+            'menu' => $menu,
             'parent_id' => $menu->parent_id,
             'category_id' => $menu->category_id,
+            'site_id' => $site_id,
             'navigation_id' => $navigation_id
         ]);
     }
 
-    public function update(MenuRequest $request, $navigation_id, $id)
+    public function update(MenuRequest $request, $site_id, $navigation_id, $id)
     {
 
         // Получаем данные для авторизованного пользователя
@@ -280,7 +278,7 @@ class MenuController extends Controller
         }
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $site_id, $navigation_id, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)

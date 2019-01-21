@@ -6,18 +6,18 @@
 
                 <div class="small-12 cell">
                     <label>Название
-                        @include('includes.inputs.name', ['required' => true, 'check' => true])
+                        @include('includes.inputs.name', ['required' => true])
                     </label>
                 </div>
 
-                <div class="small-12 cell">
+                {{-- <div class="small-12 cell">
                     <label>Категория
                         @include('includes.selects.navigations_categories', [
                             'navigations_category_id' => isset($navigation->navigations_category_id) ? $navigation->navigations_category_id : null
                         ]
                         )
                     </label>
-                </div>
+                </div> --}}
 
             </div>
         </div>

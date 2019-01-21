@@ -779,15 +779,26 @@ Route::resource('/booklists', 'BooklistController')->middleware('auth');
 Route::post('/setbooklist', 'BooklistController@setbooklist')->middleware('auth')->name('booklists.setbooklist');
 Route::get('/updatebooklist', 'BooklistController@setbooklist')->middleware('auth')->name('booklists.updatebooklist');
 
-
+Route::any('(:any)', 'SiteController@kek');
 // ----------------------------------------- Сайты ----------------------------------------------
 Route::resource('/sites', 'SiteController')->middleware('auth');
-Route::get('/sites/{id}/sections', 'SiteController@sections')->middleware('auth')->name('sites.sections');
+// Route::get('/sites/{id}/sections', 'SiteController@sections')->middleware('auth')->name('sites.sections');
 // Проверка на существование домена сайта
 Route::post('/site_check', 'SiteController@ajax_check')->middleware('auth');
 
+
+
+
 // Разделы сайта
-Route::prefix('/sites/{site_id}/sections')->group(function () {
+Route::prefix('/sites/{site_id}')->group(function () {
+
+	// --------------------------------------- Страницы ---------------------------------------------
+
+    // Основные методы
+	Route::resource('/pages', 'PageController')->middleware('auth');
+
+    // Проверка на существование страницы
+	Route::post('/page_check', 'PageController@ajax_check')->middleware('auth');
 
 	// --------------------------------------- Навигации --------------------------------------------
 
@@ -796,6 +807,15 @@ Route::prefix('/sites/{site_id}/sections')->group(function () {
 
 	// Проверка на существование навигации
 	Route::post('/navigation_check', 'NavigationController@ajax_check')->middleware('auth');
+
+	// Меню навигации
+	Route::prefix('/navigations/{navigation_id}')->group(function () {
+
+		// ---------------------------------------- Меню -------------------------------------------
+
+		// Основные методы
+		Route::resource('/menus', 'MenuController')->middleware('auth');
+	});
 
 });
 
@@ -817,52 +837,20 @@ Route::resource('/news', 'NewsController')->middleware('auth');
 
 
 
+// ----------------------------------------- Каталог ------------------------------------------
 
-
-Route::delete('/menus/{id}', 'MenuController@destroy')->middleware('auth');
-
-
-// Разделы сайта
-Route::prefix('/navigations/{id}')->group(function () {
-
-	// ---------------------------------------- Меню -------------------------------------------
-
-	// Основные методы
-	Route::resource('/menus', 'MenuController')->middleware('auth');
-
-});
-
-
-
-
-    // --------------------------------------- Страницы ---------------------------------------------
-
-    // Основные методы
-Route::resource('/pages', 'PageController')->middleware('auth');
-
-    // Проверка на существование страницы
-Route::post('/page_check', 'PageController@ajax_check')->middleware('auth');
-
-
-
-
-    // ----------------------------------------- Каталог ------------------------------------------
-
-    // Текущий добавленный/удаленный каталог
+// Текущий добавленный/удаленный каталог
 Route::any('/catalogs', 'CatalogController@index')->middleware('auth');
-    // Основные методы
+// Основные методы
 Route::resource('/catalogs', 'CatalogController')->middleware('auth');
-    // Проверка на существование
+// Проверка на существование
 Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
 
-    // -------------------------------- Продукция для каталогов сайта -------------------------------------
-    // Основные методы
+// -------------------------------- Продукция для каталогов сайта -------------------------------------
+// Основные методы
 Route::get('/catalog_products/{id?}', 'CatalogProductController@show')->middleware('auth');
-    // Основные методы
+// Основные методы
 Route::resource('/catalog_products', 'CatalogProductController')->middleware('auth');
-
-
-
 
 
 

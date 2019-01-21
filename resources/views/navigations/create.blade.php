@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Новая группа товаров')
+@section('title', 'Новая навигация')
 
-@section('breadcrumbs', Breadcrumbs::render('create', $page_info))
+{{-- @section('breadcrumbs', Breadcrumbs::render('create', $page_info)) --}}
 
 @section('title-content')
 <div class="top-bar head-content">
@@ -16,7 +16,7 @@
 
 @section('content')
 
-{{ Form::open(['route' => 'navigations.store', 'data-abide', 'novalidate']) }}
+{{ Form::open(['route' => ['navigations.store', $site_id], 'data-abide', 'novalidate']) }}
 @include('navigations.form', ['submit_text' => 'Добавить'])
 {{ Form::close() }}
 
@@ -24,8 +24,6 @@
 
 @section('scripts')
 @include('includes.scripts.inputs-mask')
-{{-- Проверка поля на существование --}}
-@include('includes.scripts.check', ['entity' => 'navigations'])
 @endsection
 
 

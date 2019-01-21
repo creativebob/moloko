@@ -12,19 +12,22 @@ class CreateMenusTable extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->integer('navigation_id')->unsigned()->nullable()->comment('Id навигации');
+            $table->foreign('navigation_id')->references('id')->on('navigations');
+
             $table->string('name')->nullable()->comment('Имя категории меню');
             $table->string('icon')->nullable()->comment('Имя иконки меню');
             $table->string('alias')->nullable()->comment('Ссылка на страницу');
             $table->string('tag')->nullable()->comment('Ключ для поиска');
 
-            $table->integer('parent_id')->unsigned()->nullable()->comment('Id родителя пункта меню');
-            $table->foreign('parent_id')->references('id')->on('menus');
-
-            $table->integer('navigation_id')->unsigned()->nullable()->comment('Id навигации');
-            $table->foreign('navigation_id')->references('id')->on('navigations');
-
             $table->integer('page_id')->unsigned()->nullable()->comment('Id страницы пункта меню');
             $table->foreign('page_id')->references('id')->on('pages');
+
+            $table->integer('parent_id')->nullable()->unsigned()->comment('Id родителя');
+            $table->foreign('parent_id')->references('id')->on('menus');
+
+            $table->integer('category_id')->unsigned()->nullable()->comment('Id категории');
+            $table->foreign('category_id')->references('id')->on('menus');
 
 
             // Общие настройки

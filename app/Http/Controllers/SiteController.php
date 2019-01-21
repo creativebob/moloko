@@ -137,9 +137,24 @@ class SiteController extends Controller
         }
     }
 
-    public function show(Request $request)
+    public function show(Request $request, $id)
     {
-        //
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('update'));
+
+        $site = Site::moderatorLimit($answer)
+        ->findOrFail($id);
+        // dd($site);
+
+        // Подключение политики
+        $this->authorize('update', $site);
+
+        return view('sites.sections', [
+            'site' => $site,
+            'sections' => Entity::where('site', true)->get(),
+            'page_info' => pageInfo($this->entity_alias)
+        ]);
     }
 
     public function edit(Request $request, $id)
@@ -262,5 +277,10 @@ class SiteController extends Controller
         $page_info = pageInfo($this->entity_alias);
 
         return view('sites.sections', compact('site', 'sections', 'page_info'));
+    }
+
+    public function kek(Request $request)
+    {
+        dd($request);
     }
 }

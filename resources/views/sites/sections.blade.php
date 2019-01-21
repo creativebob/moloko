@@ -6,7 +6,7 @@
 
 @section('title', $site->name)
 
-@section('breadcrumbs', Breadcrumbs::render('sections', $page_info, $site))
+{{-- @section('breadcrumbs', Breadcrumbs::render('sections', $page_info, $site)) --}}
 
 @section('title-content')
 {{-- Таблица --}}
@@ -44,17 +44,17 @@
                             </label>
                         </div>
                         <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-                         {{ Form::submit('Фильтрация', ['class'=>'button']) }}
-                     </div>
-                 </div>
+                           {{ Form::submit('Фильтрация', ['class'=>'button']) }}
+                       </div>
+                   </div>
 
-                 {{ Form::close() }}
+                   {{ Form::close() }}
 
-             </fieldset>
+               </fieldset>
 
-         </div>
-     </div>
- </div>
+           </div>
+       </div>
+   </div>
 </div>
 @endsection
 

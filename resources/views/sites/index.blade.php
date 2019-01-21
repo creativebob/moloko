@@ -99,7 +99,7 @@
                     <td class="td-edit">
 
                         @can('update', $site)
-                        {{ link_to_route('sites.sections', 'Разделы', $parameters = ['id' => $site->id], $attributes = ['class' => 'tiny button']) }}
+                        {{ link_to_route('sites.show', 'Разделы', $parameters = ['id' => $site->id], $attributes = ['class' => 'tiny button']) }}
 
                         @endcan
 

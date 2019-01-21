@@ -32,7 +32,8 @@ class NavigationController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence,  getmethod(__FUNCTION__));
 
-        $navigations = Navigation::moderatorLimit($answer)
+        $navigations = Navigation::with('ancestor')
+        ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
@@ -40,15 +41,17 @@ class NavigationController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
+        // dd($navigations);
 
-        return view('navigations.index',[
+        return view('navigations.index', [
             'navigations' => $navigations,
             'page_info' => pageInfo($this->entity_alias),
+            'site_id' => $site_id
         ]);
     }
 
 
-    public function create(Request $request)
+    public function create(Request $request, $site_id)
     {
 
         // Подключение политики
@@ -57,11 +60,12 @@ class NavigationController extends Controller
         return view('navigations.create', [
             'navigation' => new $this->class,
             'page_info' => pageInfo($this->entity_alias),
+            'site_id' => $site_id
         ]);
     }
 
 
-    public function store(NavigationRequest $request)
+    public function store(NavigationRequest $request, $site_id)
     {
 
         // Подключение политики
@@ -72,7 +76,10 @@ class NavigationController extends Controller
 
         // Делаем заглавной первую букву
         $navigation->name = get_first_letter($request->name);
-        $navigation->navigations_category_id = $request->navigations_category_id;
+
+        $navigation->site_id = $site_id;
+
+        // $navigation->navigations_category_id = $request->navigations_category_id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -97,7 +104,7 @@ class NavigationController extends Controller
         if ($navigation) {
 
             // Переадресовываем на index
-            return redirect()->route('navigations.index');
+            return redirect()->route('navigations.index', ['site_id' => $site_id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -111,7 +118,7 @@ class NavigationController extends Controller
         //
     }
 
-    public function edit(Request $request, $id)
+    public function edit(Request $request, $site_id, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -126,10 +133,11 @@ class NavigationController extends Controller
         return view('navigations.edit', [
             'navigation' => $navigation,
             'page_info' => pageInfo($this->entity_alias),
+            'site_id' => $site_id
         ]);
     }
 
-    public function update(NavigationRequest $request, $id)
+    public function update(NavigationRequest $request, $site_id, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -143,14 +151,8 @@ class NavigationController extends Controller
 
         // Делаем заглавной первую букву
         $navigation->name = get_first_letter($request->name);
-        $navigation->navigations_category_id = $request->navigations_category_id;
 
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false) {
-            $navigation->moderation = 1;
-        } else {
-            $navigation->moderation = $request->moderation;
-        }
+        // $navigation->navigations_category_id = $request->navigations_category_id;
 
         // Модерация и системная запись
         $navigation->system_item = $request->system_item;
@@ -163,7 +165,7 @@ class NavigationController extends Controller
         if ($navigation) {
 
             // Переадресовываем на index
-            return redirect()->route('navigations.index');
+            return redirect()->route('navigations.index', ['site_id' => $site_id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -172,7 +174,7 @@ class NavigationController extends Controller
         }
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $site_id, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -196,12 +198,47 @@ class NavigationController extends Controller
         if ($navigation) {
 
             // Переадресовываем на index
-            return redirect()->route('navigations.index');
+            return redirect()->route('navigations.index', ['site_id' => $site_id]);
         } else {
             $result = [
                 'error_status' => 1,
                 'error_message' => 'Ошибка при удалении навигации!'
             ];
         }
+    }
+
+    // ------------------------------------------- Ajax ---------------------------------------------
+
+    // Проверка наличия в базе
+    public function ajax_check (Request $request, $site_id)
+    {
+
+        // Проверка навигации по сайту в нашей базе данных
+        $result_count = Navigation::where([
+            'site_id' => $site_id,
+            'name' => $request_name
+        ])->count();
+
+        return response()->json($result_count);
+
+
+        $site = Site::withCount(['pages' => function($query) use ($page_alias) {
+            $query->whereAlias($page_alias);
+        }])->whereAlias($alias)->first();
+
+        // Если такая навигация есть
+        if ($site->pages_count > 0) {
+            $result = [
+                'error_status' => 1,
+            ];
+
+        // Если нет
+        } else {
+            $result = [
+                'error_status' => 0,
+            ];
+        }
+
+        return json_encode($result, JSON_UNESCAPED_UNICODE);
     }
 }

@@ -25,8 +25,8 @@ class NavigationRequest extends FormRequest
     {
       return [
         'name' => 'string|max:255|required',
-        'alias' => 'string|max:255|nullable',
-        'navigations_category_id' => 'integer|required',
+        // 'alias' => 'string|max:255|nullable',
+        // 'navigations_category_id' => 'integer',
 
         'display' => 'integer|max:1|nullable',
         'moderation' => 'integer|max:1|nullable',

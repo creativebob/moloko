@@ -50,6 +50,7 @@ use App\Http\ViewComposers\PositionsComposer;
 use App\Http\ViewComposers\PropertiesComposer;
 
 use App\Http\ViewComposers\SiteMenusComposer;
+use App\Http\ViewComposers\PagesComposer;
 
 use App\Http\ViewComposers\CategoriesDrilldownComposer;
 
@@ -98,6 +99,9 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.lists.site_menus', SiteMenusComposer::class);
 
+
+        // Страницы сайта
+        view()->composer('includes.selects.pages', PagesComposer::class);
 
 
         // Select'ы категорий

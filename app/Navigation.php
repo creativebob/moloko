@@ -76,4 +76,10 @@ class Navigation extends Model
     {
         return $this->belongsTo('App\User', 'author_id');
     }
+
+    // Предок
+    public function ancestor()
+    {
+        return $this->belongsTo('App\Site', 'site_id');
+    }
 }

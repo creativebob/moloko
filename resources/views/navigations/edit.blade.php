@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Редактировать группу товаров')
+@section('title', 'Редактировать навигацию')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $navigation->name))
+{{-- @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $navigation->name)) --}}
 
 @section('title-content')
 <div class="top-bar head-content">
@@ -16,7 +16,8 @@
 
 @section('content')
 
-{{ Form::model($navigation, ['route' => ['navigations.update', $navigation->id], 'data-abide', 'novalidate']) }}
+{{-- {{ Form::model($navigation, ['route' => ['navigations.update', $site_id, $navigation->id], 'data-abide', 'novalidate']) }} --}}
+{{ Form::model($navigation, ['url' => 'admin/sites/' . $site_id . '/navigations/' . $navigation->id, 'data-abide', 'novalidate']) }}
 {{ method_field('PATCH') }}
 @include('navigations.form', ['submit_text' => 'Редактировать'])
 {{ Form::close() }}
@@ -25,6 +26,4 @@
 
 @section('scripts')
 @include('includes.scripts.inputs-mask')
-{{-- Проверка поля на существование --}}
-@include('includes.scripts.check', ['entity' => 'navigations'])
 @endsection

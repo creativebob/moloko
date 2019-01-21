@@ -60,7 +60,7 @@
 @section('scripts')
 
 {{-- Скрипты --}}
-@include('includes.menu_views.scripts_with_ancestor', ['ancestor_id' => $navigation_id, 'ancestor_entity' => 'navigations'])
+@include('menus.scripts')
 
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.scripts.delete-ajax-script')
@@ -80,7 +80,6 @@
 <script type="text/javascript">
 
     $(function() {
-
 
 
     });

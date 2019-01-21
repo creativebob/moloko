@@ -1480,16 +1480,16 @@
         },
         {
             "name": "laravel-frontend-presets/zurb-foundation",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-frontend-presets/zurb-foundation.git",
-                "reference": "df551f8f081c883a1fadff97dc5e24a713c1a920"
+                "reference": "021cb419c082aedb7f4cfc799a335421d33443b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-frontend-presets/zurb-foundation/zipball/df551f8f081c883a1fadff97dc5e24a713c1a920",
-                "reference": "df551f8f081c883a1fadff97dc5e24a713c1a920",
+                "url": "https://api.github.com/repos/laravel-frontend-presets/zurb-foundation/zipball/021cb419c082aedb7f4cfc799a335421d33443b7",
+                "reference": "021cb419c082aedb7f4cfc799a335421d33443b7",
                 "shasum": ""
             },
             "require": {
@@ -1519,7 +1519,7 @@
                 "preset",
                 "zurb-foundation"
             ],
-            "time": "2018-11-06T06:29:41+00:00"
+            "time": "2019-01-16T10:26:56+00:00"
         },
         {
             "name": "laravel/framework",
