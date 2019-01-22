@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('inhead')
+    @include('includes.scripts.pickmeup-inhead')
     @include('includes.scripts.class.city_search')
 @endsection
 
@@ -26,16 +27,20 @@
 @endsection
 
 @section('modals')
-    <section id="modal"></section>
+    {{-- Модалка добавления роли --}}
+    @include('includes.modals.modal-add-role')
+
     {{-- Модалка удаления с ajax --}}
     @include('includes.modals.modal-delete-ajax')
 @endsection
 
 @section('scripts')
+    @include('users.scripts')
     @include('includes.scripts.inputs-mask')
-    @include('includes.scripts.modal-delete-script')
+    @include('includes.scripts.pickmeup-script')
+    @include('includes.scripts.delete-from-page-script')
+    @include('includes.scripts.upload-file')
     @include('includes.scripts.extra-phone')
-<!--     @include('includes.bank_accounts.bank-account-script', ['id' => $client->client->id]) -->
 @endsection
 
 

@@ -124,21 +124,14 @@ class UserController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // Получаем данные для авторизованного пользователя
-        $user_auth = $request->user();
-
-        // Скрываем бога
-        $user_auth_id = hideGod($user_auth);
-
-        $company_id = $user_auth->company_id;
-
-        $filial_id = $request->filial_id;
 
         // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
         $new_user = new User;
 
         // Отдаем работу по созданию нового юзера трейту
         $new_user = $this->createUser($request, $new_user);
+
+        return Redirect('/admin/users');
 
     }
 
@@ -150,7 +143,7 @@ class UserController extends Controller
 
     public function edit(Request $request, $id)
     {
-        
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 

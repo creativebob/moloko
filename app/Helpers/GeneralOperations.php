@@ -11,6 +11,7 @@ use App\Company;
 use App\Schedule;
 use App\Worktime;
 use App\Sector;
+use App\RoleUser;
 
 use GuzzleHttp\Client;
 
@@ -362,5 +363,50 @@ function setServicesType($request, $company) {
 }
 
 
+
+// Обновление набора ролей
+function setRoles($request, $user) {
+
+
+    // Выполняем, только если данные пришли не из userfrofile!
+    if(!isset($request->users_edit_mode)){
+
+		if (isset($request->access)) {
+
+			$delete = RoleUser::whereUser_id($user->id)->delete();
+			$mass = [];
+			foreach ($request->access as $string) {
+
+				$item = explode(',', $string);
+
+				if ($item[2] == 'null') {
+					$position = null;
+				} else {
+					$position = $item[2];
+				}
+
+				$mass[] = [
+					'role_id' => $item[0],
+					'department_id' => $item[1],
+					'user_id' => $user->id,
+					'position_id' => $position,
+				];
+			}
+
+			DB::table('role_user')->insert($mass);
+
+			// Успешно
+			return true;
+
+		} else {
+
+			// Если удалили последнюю роль для должности и пришел пустой массив
+			$delete = RoleUser::whereUser_id($user->id)->delete();
+
+			// Успешно
+			return true;
+		}
+	}
+}
 
 ?>

@@ -18,6 +18,8 @@ use App\Http\ViewComposers\RolesComposer;
 use App\Http\ViewComposers\LegalFormsSelectComposer;
 use App\Http\ViewComposers\CheckerComposer;
 
+use App\Http\ViewComposers\LoyaltiesComposer;
+
 use App\Http\ViewComposers\UnitsCategoriesComposer;
 use App\Http\ViewComposers\UnitsComposer;
 use App\Http\ViewComposers\SourceWithSourceServicesComposer;
@@ -78,6 +80,8 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.selects.legal_forms', LegalFormsSelectComposer::class);
         view()->composer('includes.inputs.checker', CheckerComposer::class);
+
+        view()->composer('includes.selects.loyalties', LoyaltiesComposer::class);
 
         view()->composer(['includes.inputs.checker_contragents', 'includes.selects.contragents'], ContragentsComposer::class);
 

@@ -138,9 +138,20 @@
                                     </div>
                                 </div>
 
+                                @if($lead->client)
+                                    <span>Клиент: {{ $lead->client->client->name or '' }}</span><br>
 
-                                {{-- Подключаем клиентов --}}
-                                @include('includes.contragents.fieldset', ['item' => $lead])
+                                    <span>Лояльность: {{ $lead->client->loyalty->name or '' }}</span>
+
+                                @else
+
+                                    {{-- Подключаем клиентов --}}
+                                    @include('includes.contragents.fieldset', ['item' => $lead])
+
+                                @endif
+
+
+
                             </div>
                         </div>
                     </div>

@@ -38,8 +38,8 @@ class UserRequest extends FormRequest
             // 'sex' => 'nullable', 
             'birthday' => 'date|after:01.01.1940|nullable', 
 
-            'main_phone' => 'string|max:17|required',
-            'extra_phones.*' => 'string|max:17|nullable',
+            // 'main_phone' => 'string|max:17|required',
+            // 'extra_phones.*' => 'string|max:17|nullable',
             
             'telegram_id' => 'integer|nullable', 
             'city_id' => 'integer|nullable', 
@@ -54,7 +54,7 @@ class UserRequest extends FormRequest
 
             'bank' => 'required_if:orgform_status,1|nullable', 
 
-            'passport_number' => 'string|max:13|nullable', 
+            'passport_number' => 'unique:users|string|max:13|nullable', 
             'passport_released' => 'string|max:255|nullable', 
             'passport_date' => 'date|after:01.01.1970|before:today|nullable', 
             'passport_address' => 'string|max:255|nullable', 
@@ -64,9 +64,6 @@ class UserRequest extends FormRequest
             'quote' => 'string|max:500|nullable', 
 
             // 'user_type' => 'required', 
-
-            // 'lead_id' => 'required', 
-            // 'employee_id' => 'required', 
 
             'access_block' => 'boolean|nullable', 
 
@@ -84,7 +81,7 @@ class UserRequest extends FormRequest
     public function messages()
     {
         return [
-            'first_name.required' => 'Ебать, как звать, еблан!',
+            'first_name.required' => 'Напишите имя пользователя',
         ];
     }
 

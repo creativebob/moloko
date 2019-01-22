@@ -2,6 +2,14 @@
 	<div class="small-12 cell">
 		<ul class="tabs-list" data-tabs id="tabs">
 			<li class="tabs-title is-active"><a href="#content-panel-1" aria-selected="true">Учетные данные</a></li>
+
+            {{-- Подключаемые специфические разделы --}}
+            @if(!empty($client))
+            <li class="tabs-title">
+                <a data-tabs-target="content-panel-client" href="#content-panel-client">Коммуникация</a>
+            </li>
+            @endif
+
 			<li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Персональные данные</a></li>
 			<li class="tabs-title"><a data-tabs-target="content-panel-3" href="#content-panel-3">Представитель компании</a></li>
 			<li class="tabs-title"><a data-tabs-target="content-panel-4" href="#content-panel-4">Образование и опыт</a></li>
@@ -87,7 +95,7 @@
 					</div>
 					<div class="small-12 medium-6 cell">
 						<label>Почта
-						@include('includes.inputs.email', ['value'=>$user->email, 'name'=>'email', 'required' => true])
+						@include('includes.inputs.email', ['value'=>$user->email, 'name'=>'email'])
 						</label>
 					</div>
 					<div class="small-12 medium-6 cell">
@@ -99,11 +107,32 @@
 
 					<div class="small-12 medium-6 cell">
 						<label>Метка пользователя (литер):
-							@include('includes.inputs.string', ['name'=>'liter', 'value'=>$user->liter, 'required' => true])
+							@include('includes.inputs.string', ['name'=>'liter', 'value'=>$user->liter])
 						</label>
 					</div>
 				</div>
 			</div>
+
+            @if(!empty($client))
+
+            <!-- Блок клиента -->
+            <div class="tabs-panel" id="content-panel-client">
+                <div class="grid-x grid-padding-x">
+
+                    <div class="small-12 medium-12 cell">
+                        @include('includes.selects.loyalties', ['value'=>$client->loyalty_id])
+                    </div>
+
+                    <div class="small-12 medium-12 cell">
+                        <label>Комментарий к клиенту
+                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$client->description])
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- Конец блока клиента -->
+            
+            @endif
 
 			<!-- Персональные данные -->
 			<div class="tabs-panel" id="content-panel-2">
@@ -138,7 +167,7 @@
 				<div class="grid-x grid-padding-x">
 					<div class="small-12 medium-12 cell">
 						<label>Кем выдан
-							{{ Form::text('passport_released', $user->passport_released, ['class'=>'varchar-field passport-released-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё -\.]{60}']) }}
+							{{ Form::text('passport_released', $user->passport_released, ['class'=>'varchar-field passport-released-field', 'maxlength'=>'60', 'autocomplete'=>'off']) }}
 						</label>
 					</div>
 				</div>
