@@ -37,7 +37,7 @@
             {{-- Шаблон вывода и динамического обновления --}}
             @include('includes.menu_views.category_list', [
                 'items' => $menus,
-                'class' => Menu::class,
+                'class' => App\Menu::class,
                 'entity' => 'menus',
                 'type' => 'modal'
             ]

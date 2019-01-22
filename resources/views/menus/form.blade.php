@@ -21,6 +21,8 @@
 			<div class="grid-x grid-padding-x align-center">
 				<div class="small-10 cell">
 
+					{{ Form::hidden('menu_id', $menu->id, ['id' => 'menu-id']) }}
+
 					<label>Название
 						@include('includes.inputs.name', ['required' => true])
 					</label>
@@ -43,17 +45,18 @@
 			<div class="grid-x grid-padding-x align-center">
 				<div class="small-10 cell">
 
+					@isset ($category_id)
 					<label>Добавляем пункт в:
-						<select name="parent_id" class="menu_list">
-
-						</select>
+						@include('includes.selects.menus', ['navigation_id' => $navigation_id, 'parent_id' => $parent_id, 'item_id' => $menu->id])
 					</label>
+					@endisset
+
 
 					<label>Введите имя иконки
 						@include('includes.inputs.text-en', ['name' => 'icon'])
 					</label>
 
-					{{ Form::hidden('menu_id', $menu->id, ['id' => 'menu_id']) }}
+
 				</div>
 			</div>
 		</div>
@@ -62,11 +65,11 @@
 </div>
 
 <div class="grid-x align-center">
-    <div class="small-6 medium-4 cell text-center">
-        {{ Form::submit($submit_text, ['class' => 'button modal-button ' . $class]) }}
-    </div>
+	<div class="small-6 medium-4 cell text-center">
+		{{ Form::submit($submit_text, ['class' => 'button modal-button ' . $class]) }}
+	</div>
 </div>
 
 <script type="text/javascript">
-    $.getScript("/crm/js/inputs_mask.js");
+	$.getScript("/crm/js/inputs_mask.js");
 </script>

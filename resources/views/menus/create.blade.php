@@ -6,7 +6,7 @@
         </div>
     </div>
 
-    {{ Form::open(['data-abide', 'novalidate']) }}
+    {{ Form::open(['id' => 'form-create', 'data-abide', 'novalidate']) }}
 
     @include('menus.form', ['submit_text' => 'Добавить', 'class' => 'submit-create'])
 

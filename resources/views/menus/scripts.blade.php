@@ -12,8 +12,8 @@
                 parent_id: $(this).closest('.item').hasClass('item') ? $(this).closest('.item').attr('id').split('-')[1] : null,
                 category_id: $(this).closest('.first-item').hasClass('item') ? $(this).closest('.first-item').attr('id').split('-')[1] : null
             }, function(html) {
-                $('#modal').html(html).foundation();
-                $('#modal-create').foundation('open');
+                $('#modal').html(html);
+                $('#modal-create').foundation().foundation('open');
             });
         });
 
@@ -22,8 +22,8 @@
             let id = $(this).closest('.item').attr('id').split('-')[1];
 
             $.get('/admin/sites/' + site_id + '/navigations/' + navigation_id + '/menus/' + id + '/edit', function(html) {
-                $('#modal').html(html).foundation();
-                $('#modal-edit').foundation('open');
+                $('#modal').html(html);
+                $('#modal-edit').foundation().foundation('open');
             });
         });
 
@@ -48,7 +48,7 @@
 
                 // Ajax запрос
                 $.ajax({
-                    url: '/admin/sites/' + site_id + '/navigations/' + navigation_id + '/menus/' + form.find('input[name=id]').val(),
+                    url: '/admin/sites/' + site_id + '/navigations/' + navigation_id + '/menus/' + form.find('#menu-id').val(),
                     type: "PATCH",
                     data: form.serialize(),
                     success:function(html) {

@@ -97,6 +97,7 @@
                     <th class="td-drop"></th>
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
                     <th class="td-name" data-serversort="name">Название группы товаров</th>
+                    <th class="td-align">Расположение</th>
                     <th class="td-navigations_category">Категория</th>
                     <th class="td-tree">Дерево</th>
                     <th class="td-control"></th>
@@ -135,6 +136,8 @@
                         @endcannot
 
                     </td>
+
+                    <td class="td-align">{{ $navigation->align->name }}</td>
 
                     <td class="td-navigations_category">{{-- $navigation->category->name --}}</td>
 

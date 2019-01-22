@@ -77,6 +77,12 @@ class Navigation extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
+    // Расположение
+    public function align()
+    {
+        return $this->belongsTo('App\Align');
+    }
+
     // Предок
     public function ancestor()
     {

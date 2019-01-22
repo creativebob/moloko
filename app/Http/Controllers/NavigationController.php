@@ -32,7 +32,7 @@ class NavigationController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence,  getmethod(__FUNCTION__));
 
-        $navigations = Navigation::with('ancestor')
+        $navigations = Navigation::with('align')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -78,6 +78,8 @@ class NavigationController extends Controller
         $navigation->name = get_first_letter($request->name);
 
         $navigation->site_id = $site_id;
+
+        $navigation->align_id = $request->align_id;
 
         // $navigation->navigations_category_id = $request->navigations_category_id;
 
@@ -151,6 +153,8 @@ class NavigationController extends Controller
 
         // Делаем заглавной первую букву
         $navigation->name = get_first_letter($request->name);
+
+        $navigation->align_id = $request->align_id;
 
         // $navigation->navigations_category_id = $request->navigations_category_id;
 

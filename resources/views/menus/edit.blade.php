@@ -5,7 +5,7 @@
         </div>
     </div>
 
-    {{ Form::model($menu, ['data-abide', 'novalidate']) }}
+    {{ Form::model($menu, ['id' => 'form-edit', 'data-abide', 'novalidate']) }}
 
     @include('menus.form', ['submit_text' => 'Редактировать', 'class' => 'submit-edit'])
 

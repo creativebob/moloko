@@ -96,42 +96,21 @@ class MenuController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $menu = new Menu;
+        // Заполнение и проверка основных полей в трейте
+        $menu = $this->storeCategory($request);
 
-        $menu->parent_id = $request->parent_id;
         $menu->navigation_id = $navigation_id;
-
-        // Делаем заглавной первую букву
-        $menu->name = get_first_letter($request->name);
+        $menu->page_id = $request->page_id;
 
         $menu->icon = $request->icon;
         $menu->alias = $request->alias;
 
         $menu->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
 
-        $menu->page_id = $request->page_id;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'store');
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false){
-            $menu->moderation = 1;
-        }
-
-        // Системная запись
-        $menu->system_item = $request->system_item;
-        $menu->display = $request->display;
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-        $menu->company_id = $user->company_id;
-        $menu->author_id = hideGod($user);
-
         $menu->save();
 
         // Если к пункту меню привязана страница и мы выключаем/вкючаем его отображение на сайте, то и меняем отображение и у страницы
-        if (isset($request->page_id)) {
+        if (isset($menu->page_id)) {
 
             $menu->page()->save(['display' => $request->display]);
 
@@ -197,79 +176,40 @@ class MenuController extends Controller
     public function update(MenuRequest $request, $site_id, $navigation_id, $id)
     {
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $menu = Menu::with('navigation')->moderatorLimit($answer)->findOrFail($id);
+        $menu = Menu::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $menu);
 
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false){
-            $menu->moderation = 1;
-        } else {
-            $menu->moderation = $request->moderation;
-        }
+        // Заполнение и проверка основных полей в трейте
+        $menu = $this->updateCategory($request, $menu);
 
-        // Системная запись
-        $menu->system_item = $request->system_item;
-
-        $site_id = $menu->navigation->site_id;
-        $menu->name = $request->name;
-        $menu->alias = $request->alias;
-        $menu->icon = $request->icon;
-
-        // Если родителем является навигация
-        if ($request->navigation_id == $request->parent_id) {
-            $menu->navigation_id = $request->navigation_id;
-            $menu->parent_id = null;
-        } else {
-            $menu->navigation_id = $request->navigation_id;
-            $menu->parent_id = $request->parent_id;
-        }
-
-        $menu->display = $request->display;
+        $menu->navigation_id = $navigation_id;
         $menu->page_id = $request->page_id;
 
-        // Если к пункту меню привязана страница и мы выключаем/вкючаем его отображение на сайте, то и меняем отображение и у страницы
-        if (isset($request->page_id)) {
+        $menu->icon = $request->icon;
+        $menu->alias = $request->alias;
 
-            // Находим страницу
-            $page = Page::whereId($request->page_id)->first();
+        $menu->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
 
-            if ($request->display == 1) {
-                $page->display = 1;
-            } else {
-                $page->display = null;
-            }
-
-            $page->save();
-
-            // Если страница не обновилась
-            if ($page == false) {
-                abort(403, 'Ошибка при изменении страницы связанной с пунктом меню');
-            }
-        }
-
-        $menu->editor_id = $user_id;
         $menu->save();
+
+        // Если к пункту меню привязана страница и мы выключаем/вкючаем его отображение на сайте, то и меняем отображение и у страницы
+        if (isset($menu->page_id)) {
+
+            $menu->page()->save(['display' => $request->display]);
+
+        }
 
         // dd($menu);
         if ($menu) {
 
             // Переадресовываем на index
-            return redirect()->action('NavigationController@index', ['id' => $menu->id, 'alias' => $alias, 'item' => 'menu']);
+            return redirect()->route('menus.index', ['site_id' => $site_id, 'navigation_id' => $navigation_id, 'id' => $menu->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -296,14 +236,13 @@ class MenuController extends Controller
         $menu->save();
 
         $parent_id = $menu->parent_id;
-        $navigation_id = $menu->navigation_id;
 
         $menu->delete();
 
         if ($menu) {
 
             // Переадресовываем на index
-            return redirect()->route('menus.index', ['navigation_id' => $navigation_id, 'id' => $parent_id]);
+            return redirect()->route('menus.index', ['site_id' => $site_id, 'navigation_id' => $navigation_id, 'id' => $parent_id]);
 
         } else {
             $result = [

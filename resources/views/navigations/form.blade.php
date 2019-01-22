@@ -4,9 +4,15 @@
 
             <div class="grid-x grid-padding-x">
 
-                <div class="small-12 cell">
+                <div class="small-6 cell">
                     <label>Название
                         @include('includes.inputs.name', ['required' => true])
+                    </label>
+                </div>
+
+                <div class="small-6 cell">
+                    <label>Расположение
+                        @include('includes.selects.aligns')
                     </label>
                 </div>
 

@@ -813,8 +813,12 @@ Route::prefix('/sites/{site_id}')->group(function () {
 
 		// ---------------------------------------- Меню -------------------------------------------
 
+		// Текущая добавленная/удаленная категория
+		Route::any('/menus', 'MenuController@index');
+
 		// Основные методы
-		Route::resource('/menus', 'MenuController')->middleware('auth');
+		Route::resource('/menus', 'MenuController');
+
 	});
 
 });

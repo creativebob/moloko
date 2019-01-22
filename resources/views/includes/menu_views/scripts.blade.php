@@ -11,8 +11,8 @@
                 parent_id: $(this).closest('.item').hasClass('item') ? $(this).closest('.item').attr('id').split('-')[1] : null,
                 category_id: $(this).closest('.first-item').hasClass('item') ? $(this).closest('.first-item').attr('id').split('-')[1] : null
             }, function(html) {
-                $('#modal').html(html).foundation();
-                $('#modal-create').foundation('open');
+                $('#modal').html(html);
+                $('#modal-create').foundation().foundation('open');
             });
         });
 
@@ -21,8 +21,8 @@
             let id = $(this).closest('.item').attr('id').split('-')[1];
 
             $.get("/admin/" + entity + "/" + id + "/edit", function(html) {
-                $('#modal').html(html).foundation();
-                $('#modal-edit').foundation('open');
+                $('#modal').html(html);
+                $('#modal-edit').foundation().foundation('open');
             });
         });
 
