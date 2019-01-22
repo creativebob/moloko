@@ -29,6 +29,8 @@ class CreateMenusTable extends Migration
             $table->integer('category_id')->unsigned()->nullable()->comment('Id категории');
             $table->foreign('category_id')->references('id')->on('menus');
 
+            $table->boolean('new_blank')->default(0)->comment('Новая вкладка');
+
 
             // Общие настройки
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
