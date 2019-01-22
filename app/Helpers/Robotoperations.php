@@ -33,6 +33,4 @@ function send_message($destinations, $message) {
 	}
 }
 
-
-
 ?>

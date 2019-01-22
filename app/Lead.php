@@ -160,6 +160,12 @@ class Lead extends Model
         return $this->belongsTo('App\User', 'manager_id');
     }
 
+    // Получаем клиента
+    public function client()
+    {
+        return $this->belongsTo('App\Client', 'client_id');
+    }
+
     // Получаем рекламации
     public function claims()
     {

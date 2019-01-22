@@ -30,8 +30,13 @@ trait CategoryControllerTrait
             $category->moderation = 1;
         }
 
-        $category->parent_id = $request->parent_id;
-        $category->category_id = $request->category_id;
+        if (isset($request->parent_id)) {
+
+            $category->parent_id = $request->parent_id;
+
+            $parent = $this->class::findOrFail($request->parent_id);
+            $category->category_id = isset($parent->category_id) ? $parent->category_id : $parent->id;
+        }
 
         // Делаем заглавной первую букву
         $category->name = get_first_letter($request->name);
@@ -48,7 +53,14 @@ trait CategoryControllerTrait
         $category->moderation = $request->moderation;
         $category->display = $request->display;
 
-        $category->parent_id = $request->parent_id;
+        if (isset($request->parent_id)) {
+
+            $category->parent_id = $request->parent_id;
+
+            $parent = $this->class::findOrFail($request->parent_id);
+            $category->category_id = isset($parent->category_id) ? $parent->category_id : $parent->id;
+        }
+
         $category->editor_id = hideGod($request->user());
 
         // Делаем заглавной первую букву
@@ -60,7 +72,6 @@ trait CategoryControllerTrait
             break;
 
             case 'edit':
-            // Если прикрепили фото
             savePhoto($request, $category);
 
             $category->description = $request->description;

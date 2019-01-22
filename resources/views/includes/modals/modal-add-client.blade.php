@@ -6,6 +6,7 @@
     </div>
     {{ Form::open(['id'=>'form-client-add', 'data-abide', 'novalidate']) }}
     <input type="hidden" name="lead_type_id" value="{{ $lead->lead_type_id }}">
+    <input type="hidden" name="lead_id" value="{{ $lead->id }}">
 
     <div class="grid-x grid-padding-x align-center modal-content inputs">
         <div class="small-12 cell">
@@ -78,7 +79,7 @@
                         @include('includes.inputs.phone', ['value' => isset($new_user->main_phone->phone) ? $new_user->main_phone->phone : null, 'name'=>'main_phone', 'required' => true, 'id' => 'main-phone'])
                       </label>
                         <label>Почта
-                            @include('includes.inputs.email', ['value'=>$new_user->email, 'name'=>'email', 'required' => true])
+                            @include('includes.inputs.email', ['value'=>$new_user->email, 'name'=>'email'])
                         </label>
                     </div>
 
@@ -107,19 +108,19 @@
                         <div class="grid-x grid-padding-x">
                           <div class="small-12 cell">
                             <label>Паспорт (серия, номер)
-                              @include('includes.inputs.passport_number', ['name'=>'passport_number', 'value'=>$new_user->passport_number, 'required' => true])
+                              @include('includes.inputs.passport_number', ['name'=>'passport_number', 'value'=>$new_user->passport_number])
                             </label>
                           </div>
                           <div class="small-12 cell">
                             <label>Когда выдан
-                              @include('includes.inputs.date', ['name'=>'passport_date', 'value'=>$new_user->passport_date, 'required' => true])
+                              @include('includes.inputs.date', ['name'=>'passport_date', 'value'=>$new_user->passport_date])
                             </label>
                           </div>
                         </div>
                         <div class="grid-x grid-padding-x">
                           <div class="small-12 cell">
                             <label>Кем выдан
-                              {{ Form::text('passport_released', $new_user->passport_released, ['class'=>'varchar-field', 'maxlength'=>'60', 'autocomplete'=>'off', 'required' => true]) }}
+                                @include('includes.inputs.varchar', ['name'=>'passport_released', 'value'=>$new_user->passport_released, 'maxlength'=>'60', 'autocomplete'=>'off'])
                             </label>
                           </div>
                         </div>

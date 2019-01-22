@@ -16,6 +16,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Пользователи',
@@ -24,6 +25,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Отделы',
@@ -32,6 +34,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Штат',
@@ -40,6 +43,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Сотрудники',
@@ -48,6 +52,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 6 Настройка
@@ -58,6 +63,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Роли',
@@ -66,6 +72,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Правила',
@@ -74,6 +81,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 9 Маркетинг
@@ -84,6 +92,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Страницы',
@@ -92,6 +101,26 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 1,
+            ],
+            [
+                'name' => 'Навигации',
+                'alias' => 'navigations',
+                'model' => 'Navigation',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 1,
+            ],
+
+            [
+                'name' => 'Меню',
+                'alias' => 'menus',
+                'model' => 'Menu',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Новости',
@@ -100,6 +129,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 1,
             ],
             [
                 'name' => 'Альбомы',
@@ -108,6 +138,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 13 Списки
@@ -118,6 +149,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Списки',
@@ -126,6 +158,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Секторы',
@@ -134,6 +167,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Папки',
@@ -142,6 +176,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             [
@@ -151,6 +186,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Фотографии',
@@ -159,6 +195,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 19 Продукция
@@ -169,6 +206,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Категории услуг',
@@ -177,6 +215,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Категории сырья',
@@ -185,6 +224,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Товары',
@@ -193,6 +233,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Услуги',
@@ -201,6 +242,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Сырьё',
@@ -209,6 +251,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Помещения',
@@ -217,26 +260,11 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 27 Сущности, связаныне с одной страницей
-            [
-                'name' => 'Навигации',
-                'alias' => 'navigations',
-                'model' => 'Navigation',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-            ],
 
-            [
-                'name' => 'Меню',
-                'alias' => 'menus',
-                'model' => 'Menu',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-            ],
 
             [
                 'name' => 'Области',
@@ -245,6 +273,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Районы',
@@ -253,6 +282,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Населенные пункты',
@@ -261,6 +291,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // Сущности без страниц отображения
@@ -273,6 +304,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Категории навигаци',
@@ -281,6 +313,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             [
@@ -290,6 +323,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Единицы измерения',
@@ -298,6 +332,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Страны',
@@ -306,6 +341,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Сущности связанные с городами',
@@ -314,6 +350,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Расписания',
@@ -322,6 +359,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Локации',
@@ -330,6 +368,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Настройки',
@@ -338,6 +377,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Метрики',
@@ -346,6 +386,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Состав',
@@ -354,6 +395,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Значения',
@@ -362,6 +404,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Типы помещений',
@@ -370,6 +413,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Режимы товаров',
@@ -378,6 +422,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Режимы услуг',
@@ -386,6 +431,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Режимы сырья',
@@ -394,6 +440,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Группы товаров',
@@ -402,6 +449,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Группы услуг',
@@ -410,6 +458,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Группы сырья',
@@ -418,6 +467,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Поставщики',
@@ -426,6 +476,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Клиенты',
@@ -434,6 +485,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Производители',
@@ -442,6 +494,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Операционные расходы',
@@ -450,6 +503,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Зарплаты',
@@ -458,6 +512,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Рекламные кампании',
@@ -466,6 +521,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Социальные сети',
@@ -474,6 +530,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
             [
                 'name' => 'Лиды',
@@ -482,6 +539,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             [
@@ -491,6 +549,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             [
@@ -500,6 +559,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             [
@@ -509,6 +569,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             [
@@ -518,6 +579,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             [
@@ -527,6 +589,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 65
@@ -537,6 +600,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
 
@@ -548,6 +612,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 67
@@ -558,6 +623,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 68
@@ -568,6 +634,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 69
@@ -578,6 +645,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 70
@@ -588,6 +656,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 71
@@ -598,6 +667,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 72
@@ -608,6 +678,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 73
@@ -618,6 +689,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 74
@@ -628,6 +700,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 75
@@ -638,6 +711,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 76
@@ -648,6 +722,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 77
@@ -658,6 +733,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
             // 78
@@ -668,6 +744,7 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
+                'site' => 0,
             ],
 
         ]);

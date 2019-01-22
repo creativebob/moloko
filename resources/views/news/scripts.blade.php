@@ -45,7 +45,6 @@
     // ------------------- Проверка на совпадение имени --------------------------------------
 
     // Берем алиас сайта
-    var site_alias = '{{ $site->alias }}';
     var cur_news_id = '{{ $cur_news->id }}';
 
     function checkField (check) {
@@ -61,7 +60,7 @@
 
             // Сам ajax запрос
             $.ajax({
-                url: '/admin/sites/' + site_alias + '/news_check',
+                url: '/admin/news_check',
                 type: "POST",
                 data: {alias: value, id: cur_news_id},
                 beforeSend: function () {

@@ -16,10 +16,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-    
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -46,30 +42,44 @@ class Menu extends Model
     // use Filter;
     // use BooklistFilter;
     // use DateIntervalFilter;
-    
+
     // protected $table = 'menu';
     protected $dates = ['deleted_at'];
+
     protected $fillable = [
         'name',
         'parent_id',
         'page_id',
     ];
 
-    // Получаем навигацию меню.
+    // Навигации
     public function navigation()
     {
         return $this->belongsTo('App\Navigation');
     }
 
-    // Получаем страницу меню.
+    // Страница
     public function page()
     {
         return $this->belongsTo('App\Page');
     }
 
-    // Получаем сайты.
-    public function sites()
+    // Предок
+    public function ancestor()
     {
-        return $this->belongsToMany('App\Site');
+        return $this->belongsTo('App\Navigation', 'navigation_id');
     }
+
+    // Получаем сайты
+    // public function sites()
+    // {
+    //     return $this->belongsToMany('App\Site');
+    // }
+
+    // Сущность
+    // public function entity()
+    // {
+    //     return $this->belongsTo('App\Navigation')->where('alias', 'menus');
+    // }
+
 }

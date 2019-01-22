@@ -7,4 +7,4 @@
 	(isset($required) ? 'required' : '')
 ]
 ) }}
-<span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
+<span class="form-error">Введите хотя бы 3 символа</span>

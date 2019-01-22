@@ -8,9 +8,11 @@ use App\Department;
 use App\Staffer;
 use App\Employee;
 use App\Role;
-
 use App\Lead;
+
 use App\Client;
+use App\Loyalty;
+
 use App\Dealer;
 use App\Company;
 use App\Page;
@@ -33,7 +35,10 @@ use Illuminate\Support\Facades\Auth;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
+
 use App\Http\Requests\CompanyRequest;
+use App\Http\Requests\ClientRequest;
+
 use App\Http\Requests\SupplierRequest;
 
 // Общие классы
@@ -77,7 +82,7 @@ class ClientController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
 
-        $clients = Client::with('author', 'client.main_phones')
+        $clients = Client::with('author', 'client.main_phones', 'loyalty')
         // ->withCount(['orders' => function($q) {
         //     $q->whereNull('draft');
         // }])
@@ -189,8 +194,6 @@ class ClientController extends Controller
     public function ajax_store(Request $request)
     {
 
-        // dd('Тут');
-
         // Подключение политики
         // $this->authorize(getmethod(__FUNCTION__), Client::class);
         // $this->authorize(getmethod(__FUNCTION__), Company::class);
@@ -295,11 +298,17 @@ class ClientController extends Controller
 
         }
 
+
+        // После создания клиента необходимо связать его с лидом
+        $lead = Lead::findOrFail($request->lead_id);
+        $lead->client_id = $client->id;
+        $lead->save();
+
         return 'Ок';
     }
 
 
-    public function store(CompanyRequest $request)
+    public function store(ClientRequest $request)
     {
 
         // Подключение политики
@@ -317,11 +326,16 @@ class ClientController extends Controller
 
         $client = new Client;
 
+        // Создание нового клиента =========================================================
+
+        // Компания 
         $new_company = new Company;
+
         // Отдаем работу по созданию новой компании трейту
         $company = $this->createCompany($request, $new_company);
 
         $new_user = new User;
+
         // Отдаем работу по созданию нового юзера трейту
         $user = $this->createUser($request, $new_user);
 
@@ -353,7 +367,7 @@ class ClientController extends Controller
     }
 
 
-    public function edit(Request $request, $id)
+    public function edit(Client $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -391,7 +405,7 @@ class ClientController extends Controller
             return view('clients.edit_client_company', compact('client', 'page_info'));
         }
 
-        // ПОЛУЧАЕМ ФИЗИКА ------------------------------------------------------------------------------------------------
+        // ПОЛУЧАЕМ ФИЗ ЛИЦО ---------------------------------------------------------------------------------
         if($client->client_type == 'App\User'){
 
 
@@ -402,45 +416,16 @@ class ClientController extends Controller
 
             $user = User::with(
             'location.city',
-            'roles',
-            'role_user',
-            'role_user.role',
-            'role_user.position',
-            'role_user.department',
             'photo',
             'main_phones',
             'extra_phones'
-        )->moderatorLimit($answer_user)
-        ->findOrFail($user_id);
+            )->moderatorLimit($answer_user)
+            ->findOrFail($user_id);
 
-        $this->authorize(getmethod(__FUNCTION__), $user);
+            $this->authorize(getmethod(__FUNCTION__), $user);
 
-        // Функция из Helper отдает массив со списками для SELECT
-        $departments_list = getLS('users', 'index', 'departments');
-        $filials_list = getLS('users', 'index', 'filials');
-
-        $role = new Role;
-
-        $answer_roles = operator_right('roles', false, 'index');
-
-        $roles_list = Role::moderatorLimit($answer_roles)
-        ->companiesLimit($answer_roles)
-        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям
-        ->template($answer_roles) // Выводим шаблоны в список
-        ->pluck('name', 'id');
-
-        // Получаем список стран
-        $countries_list = Country::get()->pluck('name', 'id');
-
-        // Сущность
-        $entity = $this->entity_name;
-
-
-            return view('clients.edit_client_user', compact('client', 'user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list', 'entity'));
+            return view('clients.edit_client_user', compact('client', 'user', 'page_info'));
         }
-
 
 
     }
@@ -478,9 +463,6 @@ class ClientController extends Controller
             // Отдаем работу по редактировнию компании трейту
             $this->updateCompany($request, $client->client);
 
-            // Обновление информации по производителю:
-            // ...
-        
         }
 
         if($client->client_type == 'App\User'){
@@ -498,11 +480,12 @@ class ClientController extends Controller
 
             // Отдаем работу по редактировнию юзера трейту
             $this->updateUser($request, $client->client);
-
-            // Обновление информации по клиенту:
-            // ...
         
         }
+
+        // Обновление информации по клиенту:
+        $client->description = $request->description;
+        $client->loyalty_id = $request->loyalty_id;
 
         $client->save();
 
@@ -510,39 +493,39 @@ class ClientController extends Controller
     }
 
 
-    public function destroy(Request $request,$id)
+    public function destroy(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $dealer = Dealer::moderatorLimit($answer)->findOrFail($id);
+        $client = Client::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $dealer);
+        $this->authorize(getmethod(__FUNCTION__), $client);
 
-        if ($dealer) {
+        if ($client) {
 
             $user = $request->user();
 
             // Скрываем бога
             $user_id = hideGod($user);
-            $dealer->editor_id = $user_id;
-            $dealer->save();
+            $client->editor_id = $user_id;
+            $client->save();
 
-            $dealer = Dealer::destroy($id);
+            $client = Client::destroy($id);
 
             // Удаляем компанию с обновлением
-            if($dealer) {
-                return redirect('/admin/dealers');
+            if($client) {
+                return redirect('/admin/clients');
 
             } else {
-                abort(403, 'Ошибка при удалении поставщика');
+                abort(403, 'Ошибка при удалении клиента');
             }
 
         } else {
-            abort(403, 'Поставщик не найдена');
+            abort(403, 'Клиент не найден');
         }
     }
 

@@ -6,7 +6,7 @@ use App\Country;
 
 use Illuminate\View\View;
 
-class CountriesSelectComposer
+class CountriesComposer
 {
 	public function compose(View $view)
 	{

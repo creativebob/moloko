@@ -36,6 +36,18 @@ class ParserController extends Controller
      */
 
 
+    public function update_menus(Request $request)
+    {
+
+        $delete = Menu::where('navigation_id', 1)->delete();
+
+        $menus = Menu::where('navigation_id', 2)->update(['navigation_id' => 1]);
+
+
+        dd('Гатова');
+
+    }
+
     public function entity_page(Request $request)
     {
 

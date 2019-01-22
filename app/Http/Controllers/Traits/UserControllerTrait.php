@@ -2,76 +2,129 @@
 
 namespace App\Http\Controllers\Traits;
 use App\User;
+use App\RoleUser;
+use Illuminate\Support\Facades\DB;
 
 trait UserControllerTrait
 {
 
 	public function createUser($request){
 
-        $user = new User;
+        // Подготовка: -------------------------------------------------------------------------------------
 
+        // Получаем данные для авторизованного пользователя
+        $user_auth = $request->user();
+
+        // Скрываем бога
+        $user_auth_id = hideGod($user_auth);
+        $company_id = $user_auth->company_id;
+
+
+        // СОЗДАЕМ ПОЛЬЗОВАТЕЛЯ ----------------------------------------------------------------------------
+
+        $user = new User;
         $user_number = User::count();
 
+
+        // Данные для доступа ----------------------------------------------------------
+        
+        // Логин:
         if(!isset($request->login)){
+
+            // Если не указан логин, то генерируем
             $user->login = 'user_'.$user_number;
         } else {
+
+            // Если логин указан, то вписываем
             $user->login = $request->login;
         }
 
-        if(!isset($request->email)){
-            $gen_string = str_random(8);
-            $gen_email = $gen_string . '@mail.ru';
-            $request->email = $gen_email;
-        } else {
-            $user->email = $request->email;            
-        }
-
-
-        $user->email = $request->email;
+        // Пароль:
         $user->password = bcrypt($request->password);
         $user->nickname = $request->nickname;
-        $user->liter = $request->liter;
 
+        // Блокировка доступа
+        $user->access_block = $request->access_block;
+
+        // Тип пользователя (Видимо, требует переработки. Идея устарела.)
+        $user->user_type = $request->user_type;
+
+
+        // Компания и филиал ----------------------------------------------------------
+        $user->company_id = $request->user()->company->id;
+        $user->filial_id = $request->filial_id;
+
+
+        // Данные человека ------------------------------------------------------------
+        
         $user->first_name =   $request->first_name;
         $user->second_name = $request->second_name;
         $user->patronymic = $request->patronymic;
         $user->sex = $user->sex ?? 1;
         $user->birthday = $request->birthday;
-        $user->company_id = $request->user()->company->id;
+
+        // Литера (Особая идентификационная отметка, например в номере договора)
+        $user->liter = $request->liter;
+
+
+        // Контактные данные: ----------------------------------------------------------
+
+        // Электронная почта
+        if(!isset($request->email)){
+
+            // Если не указана почта:
+            // Генератор почты (Ну, вообще-то он не нужен...)
+            $gen_string = str_random(8);
+            $gen_email = $gen_string . '@mail.ru';
+            $request->email = $gen_email;
+
+        } else {
+
+            // Если указана:
+            $user->email = $request->email;            
+        }
+
+        // Мессенджеры
         $user->telegram_id = $request->telegram_id;
         
         // Добавляем локацию
         $user->location_id = create_location($request);
 
-        $user->user_inn = $request->inn;
 
+        // Паспортные и прочие регистрационные данные ---------------------------------
+        $user->user_inn = $request->inn;
         $user->passport_address = $request->passport_address;
         $user->passport_number = $request->passport_number;
         $user->passport_released = $request->passport_released;
         $user->passport_date = $request->passport_date;
 
+
+        // Профессиональные и личные особенности --------------------------------------
         $user->about = $request->about;
         $user->specialty = $request->specialty;
         $user->degree = $request->degree;
         $user->quote = $request->quote;
 
-        $user->user_type = $request->user_type;
-        $user->lead_id = $request->lead_id;
-        $user->employee_id = $request->employee_id;
-        $user->access_block = $request->access_block;
-
         $user->author_id = $request->user()->id;
         $user->save();
 
-        // Если запись удачна - будем записывать связи
-        if($user){
+        if($user) {
 
-            add_phones($request, $user);
+            // Cохраняем или обновляем фото
+            savePhoto($request, $user);
+
+            // Сохряняем или обновляем телефон
+            $phones = add_phones($request, $user);
+
+            // Cохраняем или обновляем роли
+            $result_setroles = setRoles($request, $user);
+
+            return $user;
 
         } else {
 
-            abort(403, 'Ошибка записи пользователя');
-        };
+            abort(403, 'Ошибка при создании пользователя!');
+        }
 
         return $user;
     }
@@ -79,70 +132,131 @@ trait UserControllerTrait
 
 	public function updateUser($request, $user){
 
-        $filial_id = $request->filial_id;
+        // Подготовка: -------------------------------------------------------------------------------------
 
-        // Обновляем локацию
-        $user = update_location($request, $user);
+        // Получаем данные для авторизованного пользователя
+        $user_auth = $request->user();
 
-        $user->login = $request->login;
-        $user->email = $request->email;
+        // Скрываем бога
+        $user_auth_id = hideGod($user_auth);
+        $company_id = $user_auth->company_id;
 
+
+        // ОБНОВЛЯЕМ ПОЛЬЗОВАТЕЛЯ --------------------------------------------------------------------------
+
+
+        // Данные для доступа ----------------------------------------------------------
+        
+        // Логин:
+        if(!isset($request->login)){
+
+            // Если не указан логин, то генерируем
+            $user->login = 'user_'.$user_number;
+        } else {
+
+            // Если логин указан, то вписываем
+            $user->login = $request->login;
+        }
+
+        // Пароль:
         // Если пришел не пустой пароль
         if (isset($request->password)) {
             $user->password = bcrypt($request->password);
         }
 
         $user->nickname = $request->nickname;
-        $user->liter = $request->liter;
 
-        $user->first_name = $request->first_name;
+        // Блокировка доступа
+        $user->access_block = $request->access_block;
+
+        // Тип пользователя (Видимо, требует переработки. Идея устарела.)
+        $user->user_type = $request->user_type;
+
+
+        // Компания и филиал ----------------------------------------------------------
+        $user->company_id = $request->user()->company->id;
+        $user->filial_id = $request->filial_id;
+
+
+        // Данные человека ------------------------------------------------------------
+        
+        $user->first_name =   $request->first_name;
         $user->second_name = $request->second_name;
         $user->patronymic = $request->patronymic;
-        $user->sex = $request->sex;
+        $user->sex = $user->sex ?? 1;
         $user->birthday = $request->birthday;
 
-        // Телефон
-        $phones = add_phones($request, $user);
+        // Литера (Особая идентификационная отметка, например в номере договора)
+        $user->liter = $request->liter;
 
+
+
+        // Контактные данные: ----------------------------------------------------------
+
+        // Электронная почта
+        if(!isset($request->email)){
+
+            // Если не указана почта:
+            // Генератор почты (Ну, вообще-то он не нужен...)
+
+            // $gen_string = str_random(8);
+            // $gen_email = $gen_string . '@mail.ru';
+            // $request->email = $gen_email;
+
+            // Когда генератор выключен, пишем то, что пришло
+            $user->email = $request->email;
+
+        } else {
+
+            // Если указана:
+            $user->email = $request->email;            
+        }
+
+        // Мессенджеры
         $user->telegram_id = $request->telegram_id;
+        
+        // Добавляем локацию
+        $user->location_id = create_location($request);
 
-        $user->orgform_status = $request->orgform_status;
 
+        // Паспортные и прочие регистрационные данные ---------------------------------
         $user->user_inn = $request->inn;
-
         $user->passport_address = $request->passport_address;
         $user->passport_number = $request->passport_number;
         $user->passport_released = $request->passport_released;
         $user->passport_date = $request->passport_date;
 
+
+        // Профессиональные и личные особенности --------------------------------------
         $user->about = $request->about;
         $user->specialty = $request->specialty;
         $user->degree = $request->degree;
         $user->quote = $request->quote;
 
-        $user->user_type = $request->user_type;
-        $user->lead_id = $request->lead_id;
-        $user->employee_id = $request->employee_id;
-        $user->access_block = $request->access_block;
-
-        $user->filial_id = $request->filial_id;
+        $user->author_id = $request->user()->id;
+        $user->save();
 
         // Модерируем (Временно)
         // if($answer['automoderate']){$user->moderation = null;};
 
-        $user->save();
+        if($user) {
 
-        if ($user) {
-
-            // Cохраняем / обновляем фото
+            // Cохраняем или обновляем фото
             savePhoto($request, $user);
 
+            // Сохряняем или обновляем телефон
+            $phones = add_phones($request, $user);
+
+            // Cохраняем или обновляем роли
+            $result_setroles = setRoles($request, $user);
+
         } else {
-            abort(403, 'Ошибка при обновлении пользователя!');
+
+            abort(403, 'Ошибка при создании пользователя!');
         }
 
 
-
+        return $user;
     }
 
 

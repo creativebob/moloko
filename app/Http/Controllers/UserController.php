@@ -34,12 +34,16 @@ use App\Http\Controllers\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+use App\Http\Controllers\Traits\UserControllerTrait;
+
 class UserController extends Controller
 {
 
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'users';
     protected $entity_dependence = true;
+
+    use UserControllerTrait;
 
     public function index(Request $request)
     {
@@ -103,27 +107,12 @@ class UserController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // Функция из Helper отдает массив со списками для SELECT
-        $departments_list = getLS('users', 'view', 'departments');
-        $filials_list = getLS('users', 'view', 'departments');
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_roles = operator_right('roles', false, 'index');
-        $roles_list = Role::whereCompany_id($user_auth->company_id)->moderatorLimit($answer_roles)->pluck('name', 'id');
-
         $user = new User;
-        $roles = new Role;
-
-        // Получаем список стран
-        $countries_list = Country::get()->pluck('name', 'id');
-
-        // Сущность
-        $entity = $this->entity_name;
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('users.create', compact('user', 'roles', 'filials_list', 'departments_list', 'roles_list', 'page_info', 'countries_list', 'entity'));
+        return view('users.create', compact('user', 'page_info'));
     }
 
     public function store(UserRequest $request)
@@ -135,200 +124,45 @@ class UserController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // Получаем данные для авторизованного пользователя
-        $user_auth = $request->user();
-
-        // Скрываем бога
-        $user_auth_id = hideGod($user_auth);
-
-        $company_id = $user_auth->company_id;
-
-        $filial_id = $request->filial_id;
 
         // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
-        $user = new User;
+        $new_user = new User;
 
-        $user->login = $request->login;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->nickname = $request->nickname;
-        $user->liter = $request->liter;
+        // Отдаем работу по созданию нового юзера трейту
+        $new_user = $this->createUser($request, $new_user);
 
-        $user->first_name =   $request->first_name;
-        $user->second_name = $request->second_name;
-        $user->patronymic = $request->patronymic;
-        $user->sex = $request->sex;
-        $user->birthday = $request->birthday;
+        return Redirect('/admin/users');
 
-        $user->company_id = $company_id;
-
-        $user->telegram_id = $request->telegram_id;
-
-        // Добавляем локацию
-        $user->location_id = create_location($request);
-
-        $user->user_inn = $request->inn;
-
-        $user->passport_address = $request->passport_address;
-        $user->passport_number = $request->passport_number;
-        $user->passport_released = $request->passport_released;
-        $user->passport_date = $request->passport_date;
-
-        $user->about = $request->about;
-        $user->specialty = $request->specialty;
-        $user->degree = $request->degree;
-        $user->quote = $request->quote;
-
-        $user->user_type = $request->user_type;
-        $user->lead_id = $request->lead_id;
-        $user->employee_id = $request->employee_id;
-        $user->access_block = $request->access_block;
-
-        $user->author_id = $user_auth_id;
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if($answer['automoderate'] == false){
-            $user->moderation = 1;
-        }
-
-        // Пишем ID компании авторизованного пользователя
-        if($company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
-        $user->company_id = $company_id;
-
-        // Пишем ID филиала авторизованного пользователя
-        if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
-        $user->filial_id = $filial_id;
-
-
-        $user->save();
-
-        if ($user) {
-
-            // Cохраняем / обновляем фото
-            savePhoto($request, $user);
-
-            // Телефон
-            $phones = add_phones($request, $user);
-
-            // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
-            if (isset($request->access)) {
-
-                $delete = RoleUser::whereUser_id($user->id)->delete();
-
-                $mass = [];
-                foreach ($request->access as $string) {
-                    $item = explode(',', $string);
-
-                    if ($item[2] == 'null') {
-                        $position = null;
-                    } else {
-                        $position = $item[2];
-                    }
-
-                    $mass[] = [
-                        'role_id' => $item[0],
-                        'department_id' => $item[1],
-                        'user_id' => $user->id,
-                        'position_id' => $position,
-                    ];
-                }
-
-                // dd($mass);
-                DB::table('role_user')->insert($mass);
-
-            } else {
-                // Если удалили последнюю роль для должности и пришел пустой массив
-                $delete = RoleUser::whereUser_id($user->id)->delete();
-            }
-
-            return Redirect('/admin/users');
-
-        } else {
-            abort(403, 'Ошибка при обновлении пользователя!');
-        }
     }
 
     public function show(Request $request, $id)
     {
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::moderatorLimit($answer)->findOrFail($id);
 
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $user);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Функция из Helper отдает массив со списками для SELECT
-        $departments_list = getLS('users', 'view', 'departments');
-        $filials_list = getLS('users', 'view', 'filials');
-
-        $role = new Role;
-        $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
-
-        $answer_roles = operator_right('roles', false, 'index');
-
-        $roles_list = Role::moderatorLimit($answer_roles)
-        ->companiesLimit($answer_roles)
-        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям
-        ->pluck('name', 'id');
-
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list'));
     }
 
     public function edit(Request $request, $id)
     {
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::with(
             'location.city',
-            'roles',
-            'role_user',
-            'role_user.role',
-            'role_user.position',
-            'role_user.department',
             'photo',
             'main_phones',
             'extra_phones'
         )->moderatorLimit($answer)
         ->findOrFail($id);
-        // dd($user);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
 
-        // Функция из Helper отдает массив со списками для SELECT
-        $departments_list = getLS('users', 'index', 'departments');
-        $filials_list = getLS('users', 'index', 'filials');
-
-        $role = new Role;
-
-        $answer_roles = operator_right('roles', false, 'index');
-
-        $roles_list = Role::moderatorLimit($answer_roles)
-        ->companiesLimit($answer_roles)
-        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям
-        ->template($answer_roles) // Выводим шаблоны в список
-        ->pluck('name', 'id');
-
-        // Получаем список стран
-        $countries_list = Country::get()->pluck('name', 'id');
-
-        // Сущность
-        $entity = $this->entity_name;
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-        // dd($user);
 
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list', 'entity'));
+        return view('users.edit', compact('user', 'page_info'));
     }
 
     public function update(UserRequest $request, $id)
@@ -339,8 +173,6 @@ class UserController extends Controller
         $user_auth_id = hideGod($user_auth);
 
         $company_id = $user_auth->company_id;
-
-        // dd($company_id);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -353,106 +185,12 @@ class UserController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
 
-        // Обновляем локацию
-        $user = update_location($request, $user);
-
-        $user->login = $request->login;
-        $user->email = $request->email;
-
-        // Если пришел не пустой пароль
-        if (isset($request->password)) {
-            $user->password = bcrypt($request->password);
-        }
-
-        $user->nickname = $request->nickname;
-        $user->liter = $request->liter;
-
-        $user->first_name = $request->first_name;
-        $user->second_name = $request->second_name;
-        $user->patronymic = $request->patronymic;
-        $user->sex = $request->sex;
-        $user->birthday = $request->birthday;
-
-        // Телефон
-        $phones = add_phones($request, $user);
-
-        $user->telegram_id = $request->telegram_id;
-
-        $user->orgform_status = $request->orgform_status;
-
-        $user->user_inn = $request->inn;
-
-        $user->passport_address = $request->passport_address;
-        $user->passport_number = $request->passport_number;
-        $user->passport_released = $request->passport_released;
-        $user->passport_date = $request->passport_date;
-
-        $user->about = $request->about;
-        $user->specialty = $request->specialty;
-        $user->degree = $request->degree;
-        $user->quote = $request->quote;
-
-        $user->user_type = $request->user_type;
-        $user->lead_id = $request->lead_id;
-        $user->employee_id = $request->employee_id;
-        $user->access_block = $request->access_block;
-
-        $user->filial_id = $request->filial_id;
-
-        // Модерируем (Временно)
-        if($answer['automoderate']){$user->moderation = null;};
-
-        $user->save();
-
-        if ($user) {
-
-            // Cохраняем / обновляем фото
-            savePhoto($request, $user);
-
-        } else {
-            abort(403, 'Ошибка при обновлении пользователя!');
-        }
-
-        // Выполняем, только если данные пришли не из userfrofile!
-        if(!isset($request->users_edit_mode)){
-
-            // Тут вписываем изменения по правам
-            if (isset($request->access)) {
-
-                $delete = RoleUser::whereUser_id($user->id)->delete();
-                $mass = [];
-                foreach ($request->access as $string) {
-
-                    $item = explode(',', $string);
-                    if ($item[2] == 'null') {
-                        $position = null;
-                    } else {
-                        $position = $item[2];
-                    }
-
-                    $mass[] = [
-                        'role_id' => $item[0],
-                        'department_id' => $item[1],
-                        'user_id' => $user->id,
-                        'position_id' => $position,
-                    ];
-                }
-
-                DB::table('role_user')->insert($mass);
-
-            } else {
-
-                // Если удалили последнюю роль для должности и пришел пустой массив
-                $delete = RoleUser::whereUser_id($user->id)->delete();
-            }
-
-        };
-
+        // Отдаем работу по созданию нового юзера трейту
+        $user = $this->updateUser($request, $user);
 
         $backroute = $request->backroute;
 
         if(isset($backroute)){
-                // return redirect()->back();
             return redirect($backroute);
         };
 
@@ -479,9 +217,9 @@ class UserController extends Controller
     }
 
 
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------------------------
     // СПЕЦИФИЧЕСКИЕ МЕТОДЫ СУЩНОСТИ
-    // --------------------------------------------------------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------------------------
 
     public function getauthcompany($company_id)
     {

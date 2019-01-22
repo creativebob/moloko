@@ -29,6 +29,8 @@ class CreateLeadsTable extends Migration
             $table->string('case_number', 20)->nullable()->index()->comment('Номер обращения по правилам компании');
             $table->integer('serial_number')->unsigned()->nullable()->comment('Дневной серийный номер лида по менеджеру');
 
+            
+
             $table->bigInteger('phone')->nullable()->comment('Телефон лида');
             $table->bigInteger('extra_phone')->nullable()->comment('Дополнительный телефон');
             $table->string('email')->nullable()->comment('Почта');
@@ -70,6 +72,9 @@ class CreateLeadsTable extends Migration
 
             $table->integer('choice_id')->nullable()->unsigned()->default(null)->comment('ID сущности которая интересует');
             $table->string('choice_type')->nullable()->comment('Модель сущности');
+
+            $table->integer('client_id')->nullable()->unsigned()->comment('Клиент');
+            $table->foreign('client_id')->references('id')->on('clients');
 
             // Старый id из другой базы
             $table->integer('old_lead_id')->nullable()->unsigned()->comment('ID из другой базы');

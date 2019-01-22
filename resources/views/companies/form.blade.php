@@ -21,7 +21,7 @@
             @endif
             @if(!empty($client))
             <li class="tabs-title">
-                <a data-tabs-target="content-panel-client" href="#content-panel-client">Рабочая информация</a>
+                <a data-tabs-target="content-panel-client" href="#content-panel-client">Коммуникация</a>
             </li>
             @endif
 
@@ -168,7 +168,12 @@
             <!-- Блок клиента -->
             <div class="tabs-panel" id="content-panel-client">
                 <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-6 cell">
+
+                    <div class="small-12 medium-12 cell">
+                        @include('includes.selects.loyalties', ['value'=>$client->loyalty_id])
+                    </div>
+
+                    <div class="small-12 medium-12 cell">
                         <label>Комментарий к клиенту
                             @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$client->description])
                         </label>
