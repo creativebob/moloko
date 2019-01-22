@@ -50,13 +50,13 @@ class SitePolicy
             return false;
         }
 
-        if ($model->news->count() > 0) {
-            return false;
-        }
+        // if ($model->news->count() > 0) {
+        //     return false;
+        // }
 
-        if ($model->catalogs->count() > 0) {
-            return false;
-        }
+        // if ($model->catalogs->count() > 0) {
+        //     return false;
+        // }
 
         return $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
     }

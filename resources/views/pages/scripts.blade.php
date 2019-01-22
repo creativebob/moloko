@@ -1,9 +1,7 @@
-<script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
 <script>
-	CKEDITOR.replace('content-ckeditor');
 
 	// Берем алиас сайта
-    var siteAlias = '{{ $alias }}';
+    var site_id = '{{ $site_id }}';
 
     function dbCheck (alias, submit, db) {
 
@@ -21,7 +19,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '/admin/sites/' + siteAlias + '/page_check',
+                url: '/admin/sites/' + site_id + '/page_check',
                 type: "POST",
                 data: {alias: alias},
                 beforeSend: function () {

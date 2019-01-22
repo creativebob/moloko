@@ -1,8 +1,6 @@
 <div class="grid-x grid-padding-x inputs tabs-margin-top">
     <div class="small-12 medium-7 large-5 cell ">
 
-        {{ Form::hidden('site_id', $site->id) }}
-
         <!-- Страница -->
         <label>Название новости
             @include('includes.inputs.string', ['name'=>'name', 'value' => $cur_news->name, 'required' => true])

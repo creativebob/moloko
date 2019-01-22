@@ -17,8 +17,8 @@ class CreateNewsTable extends Migration
             $table->increments('id');
 
             $table->string('name')->index()->comment('Название новости');
-            $table->integer('site_id')->unsigned()->nullable()->comment('Id сайта');
-            $table->foreign('site_id')->references('id')->on('sites');
+            // $table->integer('site_id')->unsigned()->nullable()->comment('Id сайта');
+            // $table->foreign('site_id')->references('id')->on('sites');
             $table->string('title')->comment('Title для новости');
             $table->text('preview')->nullable()->comment('Превью для новости');
             $table->integer('photo_id')->nullable()->unsigned()->comment('Фото для превью для новости');

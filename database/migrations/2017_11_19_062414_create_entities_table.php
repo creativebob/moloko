@@ -24,6 +24,7 @@ class CreateEntitiesTable extends Migration
             $table->boolean('statistic')->default(0)->comment('Сбор статистики по сущности дял компании');
 
             $table->boolean('dependence')->default(0)->comment('Филиалозависимость');
+            $table->boolean('site')->default(0)->comment('Раздел сайта');
 
 
             // Общие настройки
