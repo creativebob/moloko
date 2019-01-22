@@ -270,6 +270,17 @@ class PagesTableSeeder extends Seeder
                 'display' => 1,
             ],
             [
+                'name' => 'Меню',
+                'site_id' => 1,
+                'title' => 'Меню',
+                'description' => 'Меню',
+                'alias' => 'menus',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
+            [
                 'name' => 'Аккаунты',
                 'site_id' => 1,
                 'title' => 'Аккаунты',

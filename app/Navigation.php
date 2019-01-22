@@ -66,14 +66,26 @@ class Navigation extends Model
     }
 
     // Категории навигации
-    public function navigations_category()
+    public function category()
     {
-        return $this->belongsTo('App\NavigationsCategory');
+        return $this->belongsTo('App\NavigationsCategory', 'navigations_category_id');
     }
 
     // Автор
     public function author()
     {
         return $this->belongsTo('App\User', 'author_id');
+    }
+
+    // Расположение
+    public function align()
+    {
+        return $this->belongsTo('App\Align');
+    }
+
+    // Предок
+    public function ancestor()
+    {
+        return $this->belongsTo('App\Site', 'site_id');
     }
 }

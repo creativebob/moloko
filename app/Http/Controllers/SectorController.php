@@ -133,7 +133,10 @@ class SectorController extends Controller
     public function edit($id)
     {
 
-        $sector = Sector::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $sector = Sector::moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
@@ -186,36 +189,24 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
 
-        // Проверяем содержит ли сектор вложения
-        $sectors_count = Sector::moderatorLimit($answer)
-        ->whereParent_id($sector->id)
-        ->count();
+        // Скрываем бога
+        $sector->editor_id = hideGod($request->user());
+        $sector->save();
 
-        // Если содержит, то даем сообщение об ошибке
-        if ($sectors_count > 0) {
+        $parent_id = $sector->parent_id;
+
+        $sector->delete();
+
+        if ($sector) {
+
+            // Переадресовываем на index
+            return redirect()->route('sectors.index', ['id' => $parent_id]);
+
+        } else {
             $result = [
                 'error_status' => 1,
-                'error_message' => 'Категория содержит вложенные элементы, удаление невозможно!'
+                'error_message' => 'Ошибка при удалении!'
             ];
-        } else {
-
-            // Скрываем бога
-            $sector->editor_id = hideGod($request->user());
-            $sector->save();
-
-            $parent_id = $sector->parent_id;
-
-            $sector = Sector::destroy($id);
-
-            if ($sector) {
-                // Переадресовываем на index
-                return redirect()->route('sectors.index', ['id' => $parent_id]);
-            } else {
-                $result = [
-                    'error_status' => 1,
-                    'error_message' => 'Ошибка при удалении сектора!'
-                ];
-            }
         }
     }
 }

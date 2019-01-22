@@ -1,14 +1,29 @@
+@extends('layouts.app')
 
+@section('title', 'Редактировать навигацию')
 
-  {{ Form::model($company, ['route' => ['companies.update', $company->id], 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+{{-- @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $navigation->name)) --}}
 
-    @include('navigations.modals.menu', ['submitButtonText' => 'Редактировать пункт', 'param'=>''])
+@section('title-content')
+<div class="top-bar head-content">
+    <div class="top-bar-left">
+        <h2 class="header-content">РЕДАКТИРОВАНИЕ НАвигации</h2>
+    </div>
+    <div class="top-bar-right">
+    </div>
+</div>
+@endsection
 
-  {{ Form::close() }}
+@section('content')
 
+{{-- {{ Form::model($navigation, ['route' => ['navigations.update', $site_id, $navigation->id], 'data-abide', 'novalidate']) }} --}}
+{{ Form::model($navigation, ['url' => 'admin/sites/' . $site_id . '/navigations/' . $navigation->id, 'data-abide', 'novalidate']) }}
+{{ method_field('PATCH') }}
+@include('navigations.form', ['submit_text' => 'Редактировать'])
+{{ Form::close() }}
 
+@endsection
 
-  @include('includes.scripts.inputs-mask')
-
-
-
+@section('scripts')
+@include('includes.scripts.inputs-mask')
+@endsection

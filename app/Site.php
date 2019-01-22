@@ -50,6 +50,18 @@ class Site extends Model
         'domain',
     ];
 
+    // Компания
+    public function company()
+    {
+        return $this->belongsTo('App\Company');
+    }
+
+    // Автор
+    public function author()
+    {
+        return $this->belongsTo('App\User');
+    }
+
     // Страницы
     public function pages()
     {
@@ -62,39 +74,4 @@ class Site extends Model
         return $this->hasMany('App\Navigation');
     }
 
-    // Пункты меню
-    public function menus()
-    {
-        return $this->belongsToMany('App\Menu');
-    }
-
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo('App\Company');
-    }
-
-    // Новости
-    public function news()
-    {
-        return $this->hasMany('App\News');
-    }
-
-    // Каталоги
-    public function catalogs()
-    {
-        return $this->hasMany('App\Catalog');
-    }
-
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo('App\User');
-    }
-
-    // Отделы
-    public function departments()
-    {
-        return $this->belongsToMany('App\Department');
-    }
 }

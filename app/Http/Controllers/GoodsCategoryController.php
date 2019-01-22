@@ -236,7 +236,10 @@ class GoodsCategoryController extends Controller
         // dd($request);
 
         // Проверка на направление
-        $this->checkDirection($request, $goods_category);
+        if ($goods_category->parent_id == null) {
+            $this->checkDirection($request, $goods_category);
+        }
+
 
         $goods_category->save();
 

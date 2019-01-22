@@ -22,7 +22,7 @@ class SidebarComposer
 		})
 		->where('display', 1)
 		->orWhere(function ($q) {
-			$q->whereNull('page_id')->where(['navigation_id' => 2, 'display' => 1]);
+			$q->whereNull('page_id')->where(['navigation_id' => 1, 'display' => 1]);
 		})
 		->orderBy('sort', 'asc')
 		->get();

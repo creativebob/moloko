@@ -1,4 +1,4 @@
-<div class="grid-x tabs-wrap align-center tabs-margin-top">
+<div class="grid-x tabs-wrap tabs-margin-top align-center">
     <div class="small-8 cell">
 
         <ul class="tabs-list" data-tabs id="tabs">
@@ -66,7 +66,7 @@
 
 <div class="grid-x align-center">
     <div class="small-6 medium-4 cell text-center">
-        {{ Form::submit($submit_text, ['class'=>'button modal-button '.$class]) }}
+        {{ Form::submit($submit_text, ['class' => 'button modal-button ' . $class]) }}
     </div>
 </div>
 

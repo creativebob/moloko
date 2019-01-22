@@ -8,7 +8,7 @@
 
 @section('title', $page_info->name)
 
-@section('breadcrumbs', Breadcrumbs::render('section', $parent_page_info, $site, $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('content-count')
 {{-- Количество элементов --}}
@@ -17,7 +17,12 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'page_alias' => 'sites/'.$site->alias.'/'.$page_info->alias, 'class' => App\News::class, 'type' => 'section-table', 'name' => $site->name])
+@include('includes.title-content', [
+    'page_info' => $page_info,
+    'class' => App\News::class,
+    'type' => 'table',
+]
+)
 @endsection
 
 @section('content')
@@ -70,7 +75,7 @@
                     <td class="td-name">
 
                         @can('update', $cur_news)
-                        {{ link_to_route('news.edit', $cur_news->name, $parameters = ['alias' => $cur_news->site->alias, 'news' => $cur_news->alias], $attributes = []) }}
+                        {{ link_to_route('news.edit', $cur_news->name, $parameters = ['news' => $cur_news->alias], $attributes = []) }}
                         @endcan
 
                         @cannot('update',  $cur_news)
@@ -148,7 +153,8 @@
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
 
-<script type="text/javascript">
+{{-- <script type="text/javascript">
+
     $(function() {
         // Берем алиас сайта
         var alias = '{{ $site->alias }}';
@@ -164,7 +170,8 @@
             $('#form-item-del').attr('action', '/admin/sites/'+ alias + '/' + type + '/' + id);
         });
     });
-</script>
+
+</script> --}}
 @endsection
 
 
