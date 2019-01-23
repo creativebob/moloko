@@ -36,9 +36,7 @@ Route::get('/', 'AppController@enter');
 // Route::resource('/site_api', 'ApiController');
 
 Route::get('/img/{path}', 'ImageController@show')->where('path', '.*');
-
 Route::get('/home', 'HomeController@index')->name('home');
-
 Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
 
 
