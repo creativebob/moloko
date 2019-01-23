@@ -53,8 +53,6 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 Route::any('/check_class', 'ClassController@check_class');
 Route::any('/lol', 'GoodsController@check_coincidence_name');
 Route::get('/entity_page', 'ParserController@entity_page')->middleware('auth');
-
-Route::get('/update_menus', 'ParserController@update_menus')->middleware('auth');
 // Route::get('/geoposition_locations', 'ParserController@geoposition_locations')->middleware('auth');
 // Route::get('/geoposition_locations_parse', 'ParserController@geoposition_locations_parse')->middleware('auth');
 // Route::get('/city', 'ParserController@city')->middleware('auth');
@@ -187,7 +185,6 @@ Route::get('/telegram_updates', 'TelegramController@get_updates');
 // Получаем сообщение от бота
 Route::post('/telegram_message', 'TelegramController@get_message');
 // Route::post('/'.env('TELEGRAM_BOT_TOKEN'), 'TelegramController@get_message');
-
 
 Route::get('/vk', 'VkController@market')->middleware('auth');
 
@@ -464,7 +461,7 @@ Route::get('plans/{alias}', 'PlanController@show')->name('plans.show');
 // ------------------------------------------------ Статистика ---------------------------------------
 
 // Основные методы
-// Route::resource('statistics', 'StatisticsController')->middleware('auth');
+Route::resource('statistics', 'StatisticsController')->middleware('auth');
 
 
 // ---------------------------------------------- Лиды -----------------------------------------------

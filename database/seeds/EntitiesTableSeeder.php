@@ -497,6 +497,15 @@ class EntitiesTableSeeder extends Seeder
                 'site' => 0,
             ],
             [
+                'name' => 'Дилеры',
+                'alias' => 'dealers',
+                'model' => 'Dealer',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+            ],
+            [
                 'name' => 'Операционные расходы',
                 'alias' => 'expenses',
                 'model' => 'Expense',

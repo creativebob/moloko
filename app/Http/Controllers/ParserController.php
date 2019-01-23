@@ -10,6 +10,7 @@ use App\Choice;
 use App\City;
 use App\Challenge;
 use App\Claim;
+use App\Menu;
 
 use App\Company;
 use App\Department;
@@ -20,7 +21,6 @@ use App\Page;
 use App\Entity;
 use App\EntityPage;
 
-
 use App\Location;
 
 use Carbon\Carbon;
@@ -29,22 +29,14 @@ use Illuminate\Http\Request;
 
 class ParserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
 
     public function update_menus(Request $request)
     {
 
         $delete = Menu::where('navigation_id', 1)->delete();
-
         $menus = Menu::where('navigation_id', 2)->update(['navigation_id' => 1]);
 
-
-        dd('Гатова');
+        dd('Все готово! Вы молодец.');
 
     }
 

@@ -165,6 +165,7 @@
             @endif
 
             @if(!empty($client))
+
             <!-- Блок клиента -->
             <div class="tabs-panel" id="content-panel-client">
                 <div class="grid-x grid-padding-x">
@@ -181,6 +182,7 @@
                 </div>
             </div>
             <!-- Конец блока клиента -->
+            
             @endif
 
 

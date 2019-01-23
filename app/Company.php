@@ -198,6 +198,12 @@ class Company extends Model
         return $this->belongsToMany('App\Company', 'manufacturers', 'manufacturer_id', 'company_id');
     }
 
+    // Являемся ли мы производтелем для себя?
+    // public function manufacturer_self()
+    // {
+    //     return $this->hasMany('App\Dealer', 'dealer_id');
+    // }
+
     // Получаем клиентов
     public function clients()
     {

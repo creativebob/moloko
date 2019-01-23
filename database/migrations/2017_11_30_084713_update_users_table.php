@@ -52,11 +52,7 @@ class UpdateUsersTable extends Migration
             $table->string('liter')->nullable()->unique()->comment('Литера')->after('quote');   
 
             $table->integer('user_type')->nullable()->unsigned()->comment('Сотрудник 1 или Клиент 0')->after('liter');
-            $table->integer('lead_id')->nullable()->unsigned()->comment('Id лида')->after('user_type');
-            // $table->foreign('lead_id')->references('lead_id')->on('leads');
-            $table->integer('employee_id')->nullable()->unsigned()->comment('Id сотрудника')->after('lead_id');
-            // $table->foreign('employee_id')->references('employee_id')->on('employees');
-            $table->integer('access_block')->nullable()->unsigned()->comment('Доступ открыт 0 или Блокирован 1')->default('0')->after('employee_id');
+            $table->integer('access_block')->nullable()->unsigned()->comment('Доступ открыт 0 или Блокирован 1')->default('0')->after('user_type');
 
             $table->integer('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('access_block');
             $table->integer('filial_id')->nullable()->unsigned()->comment('ID филиала компании')->after('company_id');
@@ -116,8 +112,6 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('passport_address');
 
             $table->dropColumn('user_type');
-            $table->dropColumn('lead_id');
-            $table->dropColumn('employee_id');
             $table->dropColumn('access_block');
             $table->dropColumn('god');
             $table->dropColumn('moderation');  
