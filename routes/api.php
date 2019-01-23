@@ -22,6 +22,9 @@ use Illuminate\Http\Request;
 // 	return $request->user();
 // });
 
+// Прием лида
+Route::get('/lead', 'Api\AppController@lead');
+
 Route::post('/goods_check', 'Api\GoodsController@checkArticle');
 
 
