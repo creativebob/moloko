@@ -53,6 +53,9 @@ Route::get('directories', 'DirectoryController@index')->middleware('auth')->name
 Route::any('/check_class', 'ClassController@check_class');
 Route::any('/lol', 'GoodsController@check_coincidence_name');
 Route::get('/entity_page', 'ParserController@entity_page')->middleware('auth');
+
+Route::get('/update_menus', 'ParserController@update_menus')->middleware('auth');
+
 // Route::get('/geoposition_locations', 'ParserController@geoposition_locations')->middleware('auth');
 // Route::get('/geoposition_locations_parse', 'ParserController@geoposition_locations_parse')->middleware('auth');
 // Route::get('/city', 'ParserController@city')->middleware('auth');
