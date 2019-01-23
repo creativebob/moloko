@@ -23,6 +23,8 @@ use App\EntityPage;
 
 use App\Location;
 
+use App\Menu;
+
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;
