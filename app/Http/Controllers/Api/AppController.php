@@ -10,18 +10,18 @@ use App\Entity;
 use App\Site;
 use App\City;
 use App\Lead;
+use App\Source;
 
 class AppController extends Controller
 {
 
     // --------------------------------------- Отправка данных формы ------------------------------------
-    public function lead(Request $request)
+    public function lead_store(Request $request)
     {
 
-        dd('lol');
+        dd($request);
         $site = Site::where('domain', $request->domain)->first();
         $mail_from = "order@".$site->domain;
-
 
         // Заголовки email
         $header = "Content-type: text/html; charset=\"utf8\" \r\n";
@@ -41,42 +41,41 @@ class AppController extends Controller
         $filial_id = $site->company->filials->first()->id;
 
         // Города (статика)
-        switch ($city_alias) {
-            case 'irkutsk':
+        // switch ($city_alias) {
+        //     case 'irkutsk':
 
-            break;
+        //     break;
 
-            case 'ulanude':
-            $city_id = 2;
-            $city_name = 'Улан-Удэ';
-            $filial_id = null;
-            break;
-        }
+        //     case 'ulanude':
+        //     $city_id = 2;
+        //     $city_name = 'Улан-Удэ';
+        //     $filial_id = null;
+        //     break;
+        // }
 
         // Создаем лида
         $lead = new Lead;
 
-        if ($request->cookie('utm-source') != null) {
-            $utm_source = "\r\nПлощадка: " . Cookie::get('utm-source');
-            $source = Source::where('utm', Cookie::get('utm-source'))->first();
-            $lead->source_id = $source->id;
+        if (isset($request->utm_source)) {
+            $utm_source = "\r\nПлощадка: " . $request->utm_source;
+            $lead->source_id = Source::where('utm', $request->utm_source)->first()->id;
         } else {
             $utm_source = '';
         }
 
-        if ($request->cookie('utm-term') != null) {
-            $utm_term = "\r\nКлиент искал: " . Cookie::get('utm-term');
-            $lead->utm_term = Cookie::get('utm-term');
+        if (isset($request->utm_term)) != null) {
+            $utm_term = "\r\nКлиент искал: " . $request->utm_term;
+            $lead->utm_term = $request->utm_term;
         } else {
             $utm_term = '';
         }
 
-        if ($request->cookie('utm-content') != null) {
-            $lead->utm_content = Cookie::get('utm-content');
+        if (isset($request->utm_content)) != null) {
+            $lead->utm_content = $request->utm_content;
         }
 
-        if ($request->cookie('utm-campaign') != null) {
-            $lead->campaign_id = Cookie::get('utm-campaign');
+        if (isset($request->utm_campaign)) != null) {
+            $lead->campaign_id = $request->utm_campaign;
         }
 
 
@@ -85,13 +84,13 @@ class AppController extends Controller
         $lead->name = "Контакт с сайта";
 
         // Форма звонка
-        if ($request->form == 'form-call') {
+        if ($request->form == 'form_call') {
 
             // Если не было отправок от пользователя
-            if ($request->cookie('form-call') == null) {
+            if ($request->cookie('form_call') == null) {
                 // dd($request);
 
-                $form_name = 'form-call';
+                $form_name = 'form_call';
 
                 // Формируем email
                 $name = $request->name;
@@ -138,13 +137,13 @@ class AppController extends Controller
         }
 
         // Форма обратой связи
-        if ($request->form == 'form-feedback') {
+        if ($request->form == 'form_feedback') {
 
             // Если не было отправок от пользователя
-            if ($request->cookie('form-feedback') == null) {
+            if ($request->cookie('form_feedback') == null) {
                 // dd($request);
 
-                $form_name = 'form-feedback';
+                $form_name = 'form_feedback';
 
                 // Формируем email
                 $name = 'Вопрос с сайта';
@@ -188,12 +187,12 @@ class AppController extends Controller
         }
 
         // Форма замера
-        if ($request->form == 'form-measurement') {
+        if ($request->form == 'form_measurement') {
 
             // Если не было отправок от пользователя
-            if($request->cookie('form-measurement') == null) {
+            if($request->cookie('form_measurement') == null) {
 
-                $form_name = 'form-measurement';
+                $form_name = 'form_measurement';
 
                 // Формируем email
                 $name = $request->name;
@@ -240,12 +239,12 @@ class AppController extends Controller
         }
 
         // Форма уличных ворот
-        if ($request->form == 'form-street-gates') {
+        if ($request->form == 'form_street-gates') {
 
             // Если не было отправок от пользователя
-            if($request->cookie('form-street-gates') == null) {
+            if($request->cookie('form_street-gates') == null) {
 
-                $form_name = 'form-street-gates';
+                $form_name = 'form_street-gates';
 
                 // Формируем email
                 $main_phone = $request->main_phone;
@@ -287,12 +286,12 @@ class AppController extends Controller
         }
 
         // Форма секционных ворот
-        if ($request->form == 'form-section-gates') {
+        if ($request->form == 'form_section-gates') {
 
             // Если не было отправок от пользователя
-            if($request->cookie('form-section-gates') == null) {
+            if($request->cookie('form_section-gates') == null) {
 
-                $form_name = 'form-section-gates';
+                $form_name = 'form_section-gates';
 
                 // Формируем email
                 $name = $request->name;
@@ -353,12 +352,12 @@ class AppController extends Controller
         }
 
         // Форма забора
-        if ($request->form == 'form-fence') {
+        if ($request->form == 'form_fence') {
 
             // Если не было отправок от пользователя
-            if($request->cookie('form-fence') == null) {
+            if($request->cookie('form_fence') == null) {
 
-                $form_name = 'form-fence';
+                $form_name = 'form_fence';
 
                 // Формируем email
                 $main_phone = $request->main_phone;
@@ -421,12 +420,12 @@ class AppController extends Controller
         }
 
         // Форма ангара
-        if ($request->form == 'form-hangar') {
+        if ($request->form == 'form_hangar') {
 
             // Если не было отправок от пользователя
-            if($request->cookie('form-hangar') == null) {
+            if($request->cookie('form_hangar') == null) {
 
-                $form_name = 'form-hangar';
+                $form_name = 'form_hangar';
 
                 // Формируем email
                 $main_phone = $request->main_phone;
@@ -468,13 +467,13 @@ class AppController extends Controller
         }
 
         // Форма сервисного центра
-        if ($request->form == 'form-service-center') {
+        if ($request->form == 'form_service-center') {
 
             // Если не было отправок от пользователя
-            if($request->cookie('form-service-center') == null) {
+            if($request->cookie('form_service-center') == null) {
                 // dd($request);
 
-                $form_name = 'form-service-center';
+                $form_name = 'form_service-center';
 
                 // Формируем email
                 $name = $request->name;
@@ -517,13 +516,13 @@ class AppController extends Controller
         }
 
         // Форма отправки в другой город
-        if ($request->form == 'form-city') {
+        if ($request->form == 'form_city') {
 
             // Если не было отправок от пользователя
-            if($request->cookie('form-city') == null) {
+            if($request->cookie('form_city') == null) {
                 // dd($request);
 
-                $form_name = 'form-city';
+                $form_name = 'form_city';
 
                 // Формируем email
                 $name = $request->name;
