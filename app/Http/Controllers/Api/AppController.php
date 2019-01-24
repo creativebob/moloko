@@ -41,6 +41,10 @@ class AppController extends Controller
         $date = Carbon::now()->timezone('Asia/Irkutsk')->format('dmy');
 
         $city = City::where('alias', $request->city_alias)->first();
+        if (!$city) {
+            $city = City::where('alias', 'irkutsk')->first();
+        }
+
         $city_id = $city->id;
         $city_name = $city->name;
 
