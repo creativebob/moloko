@@ -13,6 +13,7 @@ use App\Lead;
 use App\Source;
 use App\User;
 use App\Location;
+use App\Phone;
 
 use Carbon\Carbon;
 
@@ -25,8 +26,11 @@ class AppController extends Controller
     public function lead_store(Request $request)
     {
 
+        $response = $request->response;
+
         // dd($request);
-        $site = Site::where('api_token', $request->api_token)->first();
+        $site = Site::where('api_token', $response['api_token'])->first();
+
         $mail_from = "order@".$site->domain;
 
         // Заголовки email
@@ -40,67 +44,54 @@ class AppController extends Controller
         $time_task = Carbon::now()->timezone('Asia/Irkutsk')->addMinutes(15)->format('H:i');
         $date = Carbon::now()->timezone('Asia/Irkutsk')->format('dmy');
 
-        $city = City::where('alias', $request->city_alias)->first();
+        $city = City::where('alias', $response['city_alias'])->first();
         if (!$city) {
             $city = City::where('alias', 'irkutsk')->first();
         }
+
+
 
         $city_id = $city->id;
         $city_name = $city->name;
 
         $filial_id = $site->company->filials->where('location.city_id', $city_id)->first()->id;
 
-        // Города (статика)
-        // switch ($city_alias) {
-        //     case 'irkutsk':
-
-        //     break;
-
-        //     case 'ulanude':
-        //     $city_id = 2;
-        //     $city_name = 'Улан-Удэ';
-        //     $filial_id = null;
-        //     break;
-        // }
-
         // Создаем лида
         $lead = new Lead;
 
-        if (isset($request->utm_source)) {
-            $utm_source = "\r\nПлощадка: " . $request->utm_source;
-            $lead->source_id = Source::where('utm', $request->utm_source)->first()->id;
+        if (isset($response['utm_source'])) {
+            $utm_source = "\r\nПлощадка: " . $response['utm_source'];
+            $lead->source_id = Source::where('utm', $response['utm_source'])->first()->id;
         } else {
             $utm_source = '';
         }
 
-        if (isset($request->utm_term)) {
-            $utm_term = "\r\nКлиент искал: " . $request->utm_term;
-            $lead->utm_term = $request->utm_term;
+        if (isset($response['utm_term'])) {
+            $utm_term = "\r\nКлиент искал: " . $response['utm_term'];
+            $lead->utm_term = $response['utm_term'];
         } else {
             $utm_term = '';
         }
 
-        if (isset($request->utm_content)) {
-            $lead->utm_content = $request->utm_content;
+        if (isset($response['utm_content'])) {
+            $lead->utm_content = $response['utm_content'];
         }
 
-        if (isset($request->utm_campaign)) {
-            $lead->campaign_id = $request->utm_campaign;
+        if (isset($response['utm_campaign'])) {
+            $lead->campaign_id = $response['utm_campaign'];
         }
-
 
         $timenow = Carbon::now()->timezone('Asia/Irkutsk')->format('H:i');
 
         $lead->name = "Контакт с сайта";
 
-
         // Форма звонка
-        if ($request->form == 'form_call') {
+        if ($response['form'] == 'form-call') {
 
             // Формируем email
-            $name = $request->name;
-            $main_phone = $request->main_phone;
-            $remark = $request->remark;
+            $name = $response['name'];
+            $main_phone = $response['phone'];
+            $remark = $response['remark'];
 
             $email_message = "
             <html>
@@ -125,14 +116,18 @@ class AppController extends Controller
             ";
             $subject = "Вам написали письмо с сайта!";
 
+
+
             // Формируем сообщение в telegram
             $message  = "Филиал: " . $city_name . "\r\n";
+
             $message .= "Клиент: " . $name . "\r\n";
             $message .= "Тел: " . $main_phone . "\r\n";
             $message .= "Сообщение: " . $remark . "\r\n";
-            $message .= "Город: " . $city_name."\r\n".$utm_source.$utm_term;
+            $message .= "Город: " . $city_name."\r\n";
+            $message .=$utm_source.$utm_term;
 
-            $choice_id = $request->category_id;
+            $choice_id = $response['category_id'] == 0 ? null : $response['category_id'];
             $choice_type = 'App\GoodsCategory';
 
             $lead->name = $name;
@@ -140,13 +135,13 @@ class AppController extends Controller
         }
 
         // Форма обратой связи
-        if ($request->form == 'form_feedback') {
+        if ($response['form'] == 'form-feedback') {
 
             // Формируем email
             $name = 'Вопрос с сайта';
-            $main_phone = $request->main_phone;
-            $remark = $request->remark;
-            $question = $request->question;
+            $main_phone = $response['phone'];
+            $remark = $response['remark'];
+            $question = $response['question'];
 
             $email_message = "
             <html>
@@ -182,14 +177,14 @@ class AppController extends Controller
         }
 
         // Форма замера
-        if ($request->form == 'form_measurement') {
+        if ($response['form'] == 'form-measurement') {
 
             // Формируем email
-            $name = $request->name;
-            $main_phone = $request->main_phone;
-            $address = $request->address;
-            $date = $request->date;
-            $time = $request->time;
+            $name = $response['name'];
+            $main_phone = $response['phone'];
+            $address = $response['address'];
+            $date = $response['date'];
+            $time = isset($response['time']) ? $response['time'] : '10:00';
 
             $email_message = "
             <html>
@@ -219,7 +214,7 @@ class AppController extends Controller
             // Формируем сообщение в telegram
             $message  = "Филиал: " . $city_name . "\r\n". "Клиент: " . $name . "\r\n" . "Тел: " . $main_phone . "\r\n\r\nВызов замерщика: \r\n\r\n" . "Дата замера: " . $date . "\r\n" . "Время замера: " . $time . "\r\n". "Адрес: " . $address."\r\n".$utm_source.$utm_term;
 
-            $choice_id = $request->category_id;
+            $choice_id = $response['category_id'];
             $choice_type = 'App\ServicesCategory';
 
             $lead->name = $name;
@@ -227,13 +222,13 @@ class AppController extends Controller
         }
 
         // Форма уличных ворот
-        if ($request->form == 'form_street-gates') {
+        if ($response['form'] == 'form-street_gates') {
 
             // Формируем email
-            $main_phone = $request->main_phone;
-            $width = $request->width;
-            $height = $request->height;
-            $type = $request->type;
+            $main_phone = $response['phone'];
+            $width = $response['width'];
+            $height = $response['height'];
+            $type = $response['type'];
 
             $email_message = "
             <html>
@@ -261,27 +256,27 @@ class AppController extends Controller
 
             $message  = "Филиал: " . $city_name . "\r\n". "Тел: " . $main_phone . "\r\n\r\nЗаказ расчета стоимости уличных ворот по указанным параметрам: \r\n\r\n" . "Тип ворот: " . $type . "\r\n" . "Ширина проема: " . $width . "\r\n". "Высота проема: " . $height."\r\n".$utm_source.$utm_term;
 
-            $choice_id = $request->category_id;
+            $choice_id = $response['category_id'];
             $choice_type = 'App\GoodsCategory';
             $lead->lead_type_id = 1;
         }
 
         // Форма секционных ворот
-        if ($request->form == 'form_section-gates') {
+        if ($response['form'] == 'form-section_gates') {
 
             // Формируем email
-            $name = $request->name;
-            $main_phone = $request->main_phone;
+            $name = $response['name'];
+            $main_phone = $response['phone'];
 
-            $width = $request->width;
-            $height = $request->height;
-            // $left_wall = $request->left_wall; // Левый пристенок
-            // $right_wall = $request->right_wall; // Правый пристенок
-            // $lintel = $request->lintel; // Притолока
-            // $length = $request->length; // Длина гаража
+            $width = $response['width'];
+            $height = $response['height'];
+            // $left_wall = $response['left_wall']; // Левый пристенок
+            // $right_wall = $response['right_wall']; // Правый пристенок
+            // $lintel = $response['lintel']; // Притолока
+            // $length = $response['length']; // Длина гаража
 
-            $option = $request->option;
-            $gate = $request->gate;
+            $option = $response['option'];
+            $gate = $response['gate'];
 
             // <span>Левый пристенок: <strong>$left_wall</strong> мм.</span><br>
             // <span>Правый пристенок: <strong>$right_wall</strong> мм.</span><br>
@@ -318,7 +313,7 @@ class AppController extends Controller
 
             $message  = "Филиал: " . $city_name . "\r\nКлиент: " . $name . "\r\nТел: " . $main_phone . "\r\n\r\nЗаказ расчета стоимости секционных ворот по следующим параметрам: \r\n\r\nШирина проема: " . $width . "\r\nВысота проема: " . $height . "\r\nОпции: " . $option . "\r\nКалитка: " . $gate."\r\n".$utm_source.$utm_term;
 
-            $choice_id = $request->category_id;
+            $choice_id = $response['category_id'];
             $choice_type = 'App\GoodsCategory';
 
             $lead->name = $name;
@@ -326,15 +321,15 @@ class AppController extends Controller
         }
 
         // Форма забора
-        if ($request->form == 'form_fence') {
+        if ($response['form'] == 'form-fence') {
 
             // Формируем email
-            $main_phone = $request->main_phone;
-            $name = $request->name;
-            $height = $request->height;
-            $width = $request->width;
-            $type = $request->type;
-            $foundation = $request->foundation;
+            $main_phone = $response['phone'];
+            $name = $response['name'];
+            $height = $response['height'];
+            $width = $response['width'];
+            $type = $response['type'];
+            $foundation = $response['foundation'];
 
             $email_message = "
             <html>
@@ -379,7 +374,7 @@ class AppController extends Controller
             //     // default: $service_id = 42;
             // }
 
-            $choice_id = $request->category_id;
+            $choice_id = $response['category_id'];
             $choice_type = 'App\GoodsCategory';
 
             $lead->name = $name;
@@ -387,13 +382,13 @@ class AppController extends Controller
         }
 
         // Форма ангара
-        if ($request->form == 'form_hangar') {
+        if ($response['form'] == 'form-hangar') {
 
             // Формируем email
-            $main_phone = $request->main_phone;
-            $height = $request->height;
-            $width = $request->width;
-            $length = $request->length;
+            $main_phone = $response['phone'];
+            $height = $response['height'];
+            $width = $response['width'];
+            $length = $response['length'];
 
             $email_message = "
             <html>
@@ -421,18 +416,18 @@ class AppController extends Controller
 
             $message  = "Филиал: " . $city_name .  "\r\nТел: " . $main_phone . "\r\n\r\nЗаказ расчета стоимости ангара по указанным параметрам: \r\n\r\nШирина ангара: " . $width . "\r\nВысота ангара: " . $height ."\r\nДлина ангара: " . $length."\r\n".$utm_source.$utm_term;
 
-            $choice_id = $request->category_id;
+            $choice_id = $response['category_id'];
             $choice_type = 'App\GoodsCategory';
             $lead->lead_type_id = 1;
         }
 
         // Форма сервисного центра
-        if ($request->form == 'form_service-center') {
+        if ($response['form'] == 'form-service_center') {
 
             // Формируем email
-            $name = $request->name;
-            $main_phone = $request->main_phone;
-            $type = $request->type;
+            $name = $response['name'];
+            $main_phone = $response['phone'];
+            $type = $response['type'];
 
             $email_message = "
             <html>
@@ -460,7 +455,7 @@ class AppController extends Controller
             // Формируем сообщение в telegram
             $message  = "Филиал: " . $city_name . "\r\nКлиент: " . $name . "\r\nТел: " . $main_phone . "\r\nСервисное обращение: " . $type . "\r\nГород: " . $city_name."\r\n".$utm_source.$utm_term;
 
-            $choice_id = $request->category_id;
+            $choice_id = $response['category_id'];
             $choice_type = 'App\ServicesCategory';
 
             $lead->name = $name;
@@ -468,12 +463,12 @@ class AppController extends Controller
         }
 
         // Форма отправки в другой город
-        if ($request->form == 'form_city') {
+        if ($response['form'] == 'form-city') {
 
             // Формируем email
-            $name = $request->name;
-            $main_phone = $request->main_phone;
-            $city = $request->city;
+            $name = $response['name'];
+            $main_phone = $response['phone'];
+            $city = $response['city'];
 
             $email_message = "
             <html>
@@ -508,125 +503,83 @@ class AppController extends Controller
             $lead->lead_type_id = 1;
         }
 
-        if (isset($request->form)) {
+        $form_name = $response['form'];
 
-            $form_name = $request->form;
+        $destinations_email = ["info@vorotamars.ru"];
 
-            $destinations_email = ["info@vorotamars.ru"];
-
-            $telegram_destinations = User::whereHas('staff', function ($query) {
-                $query->whereHas('position', function ($query) {
-                    $query->whereHas('notifications', function ($query) {
-                        $query->where('notification_id', 1);
-                    });
+        $telegram_destinations = User::whereHas('staff', function ($query) {
+            $query->whereHas('position', function ($query) {
+                $query->whereHas('notifications', function ($query) {
+                    $query->where('notification_id', 1);
                 });
-            })
-            ->where('telegram_id', '!=', null)
-            ->get(['telegram_id']);
-            // $dest = [];
-            // foreach ($destinations as $telegram_id) {
-            //     # code...
-            // }
-                // dd($telegram_destinations);
+            });
+        })
+        ->where('telegram_id', '!=', null)
+        ->get(['telegram_id']);
 
-            // $destinations_email = ["makc_berluskone@mail.ru"];
-            // $telegram_destinations = ["293282078","296553060","295132857", "311241212", "460642600", "228265675", "-284455497", "669765237"];
-            // $telegram_destinations = ["228265675"];
+        // Пишем локацию
+        $lead_address = isset($address) ? $address : null;
 
-            // 293282078 Леша
-            // 296553060 Юра
-            // 295132857 Коля
-            // 254040191 Вася
-            // 282109089 Руслан
-            // 311241212 Алексей Владимирович
-            // 183726286 Игорь
-            // 460642600 Анна
-            // 228265675 Максим
-            // 669765237 Юля
+        $location = Location::firstOrCreate(['country_id' => 1, 'city_id' => $city_id, 'address' => $lead_address], ['author_id' => 1]);
 
-            // $destinations_group_telegram = '-284455497';
+        // Заполняем умолчания
+        $lead->company_id = $site->company_id;
+        $lead->filial_id = $filial_id;
+        $lead->author_id = 1;
+        $lead->site_id = $site->id;
+        $lead->manager_id = 1;
+        $lead->location_id = $location->id;
+        $lead->stage_id = 2;
+        $lead->lead_method_id = 2;
+        $lead->display = 1;
 
-            // Пишем локацию
-            $lead_address = isset($address) ? $address : null;
+        $count_leads_site = Lead::where('site_id', $site->id)->whereDate('created_at', Carbon::now()->format('Y-m-d'))->count();
+        $serial_num_site = $count_leads_site + 1;
 
-            $location = Location::firstOrCreate(['country_id' => 1, 'city_id' => $city_id, 'address' => $lead_address], ['author_id' => 1]);
+        if ($choice_type != null) {
+            $lead->choice_id = $choice_id;
+            $lead->choice_type = $choice_type;
+        }
 
-            // Заполняем умолчания
-            $lead->company_id = $site->company_id;
-            $lead->filial_id = $filial_id;
-            $lead->author_id = 1;
-            $lead->site_id = $site->id; // Сайт компании
-            $lead->manager_id = 1;
-            $lead->location_id = $location->id;
-            $lead->stage_id = 2; // Этап - Обращение
-            $lead->lead_method_id = 2; // Обращение с сайта
-            $lead->display = 1;
-
-            // $date_start = '2018-05-30';
-            // $max_leads = Lead::where(['manager_id' => 1])->whereDay('created_at', Carbon::now()->format('d'))->max('serial_number');
-            // $serial_number = $max_leads + 1;
-            // $lead->serial_number = $serial_number;
-
-            // $lead->case_number = $date."/".$serial_number."/";
-
-            $count_leads_site = Lead::where('site_id', $site->id)->whereDate('created_at', Carbon::now()->format('Y-m-d'))->count();
-            $serial_num_site = $count_leads_site + 1;
-
-            if ($choice_type != null) {
-                $lead->choice_id = $choice_id;
-                $lead->choice_type = $choice_type;
-            }
-
-            $lead->save();
+        $lead->save();
 
 
-            if ($lead) {
+        if ($lead) {
 
-                // Телефон
-                $phones = add_phones($request, $lead);
+            // Пишем или ищем новый и создаем связь
+            $phone = Phone::firstOrCreate(
+                ['phone' => cleanPhone($main_phone)
+            ], [
+                'crop' => substr(cleanPhone($main_phone), -4),
+            ]);
+                // dd($phone);
+            $lead->phones()->attach($phone->id, ['main' => 1]);
 
-                // $choice = new Choice;
-                // $choice->lead_id = $lead->id;
-                // $choice->choices_id = $old_lead->service->choise_id;
-                // $choice->choices_type = $old_lead->service->choise_type;
-                // $choice->save();
+            $lead->notes()->create([
+                'company_id' => $site->company_id,
+                'body' => $message,
+                'author_id' => 1,
+            ]);
 
-                // if ($choice == false) {
-                //     dd('Ошибка записи предпочтения лида.');
-                // }
-
-                $lead->notes()->create([
-                    'company_id' => 1,
-                    'body' => $message,
-                    'author_id' => 1,
-                ]);
-
-
-
-                $message = "Номер заявки: " . $serial_num_site . " (id:" . $lead->id . ")\r\n" . $message;
+            $message = "Номер заявки: " . $serial_num_site . " (id:" . $lead->id . ")\r\n" . $message;
 
                 // Отправляем на каждый email
-                foreach ($destinations_email as $email) {
-                    mail($email, $subject, $email_message, $header);
-                }
-
-                send_message($telegram_destinations, $message);
-
-                // // Отправляем на каждый telegram
-                // foreach ($telegram_destinations as $item) {
-
-                //     $response = Telegram::sendMessage([
-                //         'chat_id' => $item->telegram_id,
-                //         'text' => $message
-                //     ]);
-                // }
-
-                // Кидаем в группу лидов
-                $response = Telegram::sendMessage([
-                    'chat_id' => '-284455497',
-                    'text' => $message
-                ]);
+            foreach ($destinations_email as $email) {
+                mail($email, $subject, $email_message, $header);
             }
+
+            send_message($telegram_destinations, $message);
+
+            // Кидаем в группу лидов
+            $response = Telegram::sendMessage([
+                'chat_id' => '-284455497',
+                'text' => $message
+            ]);
         }
+
+        // Отвечаем сайту
+        return response()->json([
+            'status' => 'ok',
+        ]);
     }
 }

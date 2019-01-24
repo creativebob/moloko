@@ -23,7 +23,7 @@ use Illuminate\Http\Request;
 // });
 
 // Прием лида
-Route::get('/lead_store', 'Api\AppController@lead_store');
+Route::any('/lead_store', 'Api\AppController@lead_store');
 
 Route::post('/goods_check', 'Api\GoodsController@checkArticle');
 
