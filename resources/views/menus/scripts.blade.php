@@ -17,16 +17,6 @@
             });
         });
 
-        // ----------- Изменение -------------
-        $(document).on('click', '.sprite-edit', function() {
-            let id = $(this).closest('.item').attr('id').split('-')[1];
-
-            $.get('/admin/sites/' + site_id + '/navigations/' + navigation_id + '/menus/' + id + '/edit', function(html) {
-                $('#modal').html(html);
-                $('#modal-edit').foundation().foundation('open');
-            });
-        });
-
         // ------------------------ Кнопка добавления ---------------------------------------
         $(document).on('click', '.submit-create', function(event) {
             var form = $(this).closest('form');
@@ -38,6 +28,16 @@
                     Foundation.reInit($('#content'));
                 });
             }
+        });
+
+        // ----------- Изменение -------------
+        $(document).on('click', '.sprite-edit', function() {
+            let id = $(this).closest('.item').attr('id').split('-')[1];
+
+            $.get('/admin/sites/' + site_id + '/navigations/' + navigation_id + '/menus/' + id + '/edit', function(html) {
+                $('#modal').html(html);
+                $('#modal-edit').foundation().foundation('open');
+            });
         });
 
         // ------------------------ Кнопка обновления ---------------------------------------
@@ -58,6 +58,45 @@
                     }
                 });
             }
+        });
+
+        // ----------- Удаление -------------
+        $(document).on('click', '[data-open="item-delete-ajax"]', function() {
+
+            // Находим описание сущности, id и название удаляемого элемента в родителе
+            var parent = $(this).closest('.item');
+            var entity_alias = parent.attr('id').split('-')[0];
+            var id = parent.attr('id').split('-')[1];
+            var name = parent.data('name');
+            $('.title-delete').text(name);
+            $('.delete-button-ajax').attr('id', 'del-' + entity_alias + '-' + id);
+        });
+
+        // ------------------------ Кнопка удаления ---------------------------------------
+        $(document).on('click', '.delete-button-ajax', function(event) {
+
+            // Блочим отправку формы
+            event.preventDefault();
+            var entity_alias = $(this).attr('id').split('-')[1];
+            var id = $(this).attr('id').split('-')[2];
+            var buttons = $('.button');
+            buttons.prop('disabled', true);
+
+            alert('/admin/sites/' + site_id + '/navigations/' + navigation_id + '/menus/' + id);
+
+            // Ajax
+            $.ajax({
+                url: '/admin/sites/' + site_id + '/navigations/' + navigation_id + '/menus/' + id,
+                type: "DELETE",
+                success: function (html) {
+                    // alert(html);
+                    $('#item-delete-ajax').foundation('close');
+                    $('#content').html(html);
+                    Foundation.reInit($('#content'));
+                    $('.delete-button-ajax').removeAttr('id');
+                    buttons.prop('disabled', false);
+                }
+            });
         });
 
         // ---------------------------------- Закрытие модалки -----------------------------------

@@ -24,16 +24,14 @@ class MenuRequest extends FormRequest
     public function rules()
     {
       return [
-        'name' => 'string|max:255', 
+        'name' => 'string|max:255',
         'icon' => 'string|max:255|nullable',
         'alias' => 'string|max:255|nullable',
-        'navigation_id' => 'integer', 
-        'parent_id' => 'integer|nullable', 
+        'parent_id' => 'integer|nullable',
         'page_id' => 'integer|nullable',
-        'site_id' =>  'integer',
 
         'moderation' => 'integer|max:1|nullable',
-        'system_item' => 'integer|max:1|nullable',          
+        'system_item' => 'integer|max:1|nullable',
       ];
     }
   }
