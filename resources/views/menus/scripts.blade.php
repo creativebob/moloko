@@ -82,8 +82,6 @@
             var buttons = $('.button');
             buttons.prop('disabled', true);
 
-            alert('/admin/sites/' + site_id + '/navigations/' + navigation_id + '/menus/' + id);
-
             // Ajax
             $.ajax({
                 url: '/admin/sites/' + site_id + '/navigations/' + navigation_id + '/menus/' + id,
