@@ -546,8 +546,6 @@ class AppController extends Controller
 
             // $destinations_group_telegram = '-284455497';
 
-            ;
-
             // Пишем локацию
             $lead_address = isset($address) ? $address : null;
 
@@ -628,6 +626,7 @@ class AppController extends Controller
                     'chat_id' => '-284455497',
                     'text' => $message
                 ]);
-
             }
         }
+    }
+}
