@@ -75,5 +75,6 @@
 </div>
 
 <script type="text/javascript">
-    // $.getScript("/crm/js/inputs_mask.js");
+    $.getScript("/crm/js/jquery.maskedinput.js");
+    $.getScript("/crm/js/inputs_mask.js");
 </script>
