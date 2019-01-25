@@ -35,7 +35,13 @@
 						@include('includes.selects.pages', ['site_id' => $site_id])
 					</label>
 
+					<div class="small-12 cell checkbox">
+						{{ Form::checkbox('new_blank', 1, null, ['id' => 'new_blank']) }}
+						<label for="new_blank"><span>Новая вкладка</span></label>
+					</div>
+
 					@include('includes.control.checkboxes', ['item' => $menu])
+
 				</div>
 			</div>
 		</div>
@@ -51,11 +57,9 @@
 					</label>
 					@endisset
 
-
 					<label>Введите имя иконки
 						@include('includes.inputs.text-en', ['name' => 'icon'])
 					</label>
-
 
 				</div>
 			</div>
@@ -71,5 +75,5 @@
 </div>
 
 <script type="text/javascript">
-	$.getScript("/crm/js/inputs_mask.js");
+    // $.getScript("/crm/js/inputs_mask.js");
 </script>

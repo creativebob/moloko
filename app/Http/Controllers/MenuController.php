@@ -107,6 +107,8 @@ class MenuController extends Controller
 
         $menu->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
 
+        $menu->new_blank = $request->has('new_blank');
+
         $menu->save();
 
         // Если к пункту меню привязана страница и мы выключаем/вкючаем его отображение на сайте, то и меняем отображение и у страницы
@@ -176,6 +178,8 @@ class MenuController extends Controller
         $menu->alias = $request->alias;
 
         $menu->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
+
+        $menu->new_blank = $request->has('new_blank');
 
         $menu->save();
 
