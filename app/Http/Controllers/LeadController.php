@@ -455,7 +455,7 @@ class LeadController extends Controller
 
         if(($request->extra_phone != Null)&&($request->extra_phone != "")){
             $lead->extra_phone = cleanPhone($request->extra_phone);
-        };
+        }; // Что это, блять?
 
         // $lead->telegram_id = $request->telegram_id;
         $lead->location_id = $location_id;
@@ -501,6 +501,10 @@ class LeadController extends Controller
         $lead->serial_number = $lead_number['serial'];
 
         // Конец формирования номера обращения ----------------------------------
+
+        // Проверяем, есть ли в базе клиент с таким номером
+        $searched_client = check_client_by_phones($request->main_phone);
+        dd($searched_client);
 
         $lead->save();
 
@@ -777,6 +781,11 @@ class LeadController extends Controller
         // $lead->patronymic = $request->patronymic;
         // $lead->sex = $request->sex;
         // $lead->birthday = $request->birthday;
+
+        // Проверяем, есть ли в базе клиент с таким номером
+        // $searched_client = check_client_by_phones($request->main_phone);
+        // dd($searched_client);
+
 
         // Телефон
         $phones = add_phones($request, $lead);

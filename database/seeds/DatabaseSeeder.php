@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(RegionsTableSeeder::class);
         // $this->call(CitiesTableSeeder::class);
 
-        // // Локации
+        // Локации
         // $this->call(LocationsTableSeeder::class);
 
         // Пользователи

@@ -279,7 +279,6 @@ class ClientController extends Controller
             // Чистка номера
             $main_phone = cleanPhone($request->main_phone);
 
-
             $user = User::has('client')
             ->whereHas('phones', function($q) use ($main_phone){
                     $q->where('phone', $main_phone);
@@ -287,6 +286,7 @@ class ClientController extends Controller
 
             // Если не найден, то создаем
             if(!isset($client)){
+                
                 $new_user = $this->createUser($request);
 
                 $client = new Client;
@@ -295,6 +295,8 @@ class ClientController extends Controller
                 $client->company_id = $request->user()->company->id;
                 $client->save();  
             }
+
+
 
         }
 

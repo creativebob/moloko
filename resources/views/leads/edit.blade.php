@@ -12,13 +12,16 @@
 @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, isset($lead->case_number) ? $lead->case_number : 'нет номера'))
 
 @section('title-content')
-<div class="top-bar head-content">
-	<div class="top-bar-left">
-		<h2 class="header-content">ЛИД №: <input id="show-case-number" name="show_case_number" readonly class="case_number_field" value="{{ $lead->case_number }}"> </h2>
-	</div>
-	<div class="top-bar-right">
-	</div>
-</div>
+
+<!-- 	<div class="top-bar head-content">
+		<div class="top-bar-left">
+			<h2 class="header-content">ЛИД №: <input id="show-case-number" name="show_case_number" readonly class="case_number_field" value="{{ $lead->case_number }}"> </h2>
+		</div>
+		<div class="top-bar-right wrap_lead_badget">
+			@include('includes.inputs.digit', ['name' => 'badget', 'value' => $lead->badget, 'decimal_place'=>2])
+		</div>
+	</div> -->
+	
 @endsection
 
 

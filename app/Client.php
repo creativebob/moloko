@@ -88,4 +88,7 @@ class Client extends Model
         return $this->hasMany('App\Order', 'client_id');
     }
 
+
+
+
 }

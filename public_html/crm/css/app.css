@@ -138,12 +138,17 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 
 fieldset {
   border: 1px solid #d6d6d6;
-  padding: 1rem 2rem 2rem;
-  margin-bottom: 1rem;
+  padding: 0.4rem 2rem 1rem;
+  margin-bottom: 0.4rem;
+  border-radius: 10px;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
 }
 fieldset legend {
   font-family: "PFDinDisplayPro-Med";
   padding: 0 1rem;
+  margin-left: -1rem;
 }
 
 .alt-switch .switch-paddle {
@@ -1895,6 +1900,23 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   padding-left: 0 !important;
 }
 
+.wrap_lead_badget input {
+  padding: 5px 0.8rem;
+  width: 180px;
+  height: 2.4rem;
+  min-width: 4rem;
+  background-color: #ffffff;
+  cursor: text;
+  border-style: none;
+  border: 1px solid #999;
+  margin-right: 0;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  font-family: "PFDinTextCondPro-Regular";
+  font-size: 1.8rem;
+  float: right;
+}
+
 #extra-panel .button.tiny {
   color: #fff;
   margin-bottom: 0;
@@ -2294,7 +2316,7 @@ a#task-toggle {
   font-family: "PFDinDisplayPro-Light";
 }
 .tabs-wrap .tabs-title > a:focus, .tabs-wrap .tabs-title > a[aria-selected='true'] {
-  background-color: #ac4747;
+  background-color: #000000;
   color: #ffffff;
 }
 .tabs-wrap .tabs-list {
@@ -2304,16 +2326,19 @@ a#task-toggle {
 }
 .tabs-wrap .tabs-list li {
   border: 1px solid #eeeeee;
-  background-color: #ffffff;
+  background-color: #a75252;
 }
 .tabs-wrap .tabs-list li a {
-  color: #000000;
-  padding: 5px 20px;
+  color: #ffffff;
+  padding: 7px 20px 5px 20px;
   font-size: 0.875rem;
   outline: none;
 }
-.tabs-wrap .tabs-list li .is-active a {
-  background-color: #ffffff;
+.tabs-wrap .tabs-list li a:hover {
+  background-color: #873232;
+}
+.tabs-wrap .tabs-list li.is-active a:hover {
+  background-color: #000000;
 }
 .tabs-wrap .tabs-content {
   border: none;

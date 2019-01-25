@@ -111,6 +111,8 @@ $black: #000000;
 $body-bg-color: #eeeeee;
 $crm-blue: #1779ba;
 $green: #7e9a06;
+$mars-red-black: #a75252;
+$mars-red-black-dark: #873232;
 
 $green-light: #6e8a00;
 $red-light: #ffc2c2;
@@ -186,7 +188,7 @@ $list-item-nested-border-bottom-color: #dddddd;
 $list-item-active-bg-color: #ae4747;
 
 // Tabs (Несколько вкладок)
-$tabs-active-bg-color: #ac4747;
+$tabs-active-bg-color: #000000;
 $tabs-active-color: #ffffff;
 $tabs-fieldset-border-color: #d6d6d6;
 
@@ -233,12 +235,19 @@ $dropdown-width: 14rem;
 // Базовые корректировки
 fieldset {
     border: 1px solid  $tabs-fieldset-border-color;
-    padding: 1rem 2rem 2rem;
-    margin-bottom: 1rem;
+    padding: 0.4rem 2rem 1rem;
+    margin-bottom: 0.4rem;
+
+    border-radius: 10px;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    // border-top: none;
 
     legend {
         font-family: $PFDDPM;
         padding: 0 1rem;
+       	margin-left: -1rem;
     }
 }
 
@@ -2475,6 +2484,28 @@ td.body{
 }
 
 
+.wrap_lead_badget{
+    input{
+        padding: 5px 0.8rem;
+        width: 180px;
+        height: 2.4rem;
+        min-width: 4rem;
+        background-color: #ffffff;
+        cursor: text;
+        border-style: none;
+        border: 1px solid #999;
+        margin-right: 0;
+        margin-bottom: 0;
+        text-transform: uppercase;
+        font-family: "PFDinTextCondPro-Regular";
+        font-size: 1.8rem;
+        float: right;
+
+    }
+}
+
+
+
 // ОКОНЧАНИЕ СТРАНИЦЫ ЛИДЫ ============================================================
 
 
@@ -2985,33 +3016,43 @@ tbody {
     background-color: $tabs-active-bg-color;
     color: $tabs-active-color;
 }
+
 //Меню с заголовками
 .tabs-list {
-    margin-bottom: 2rem;
+	margin-bottom: 2rem;
 
-    // Обнуляем фонду
-    border: none;
-    background: none;
+	// Обнуляем фонду
+	border: none;
+	background: none;
 
-    li {
-      border: 1px solid $content-bg-color;
-      background-color: $white;
+	li {
+		border: 1px solid $content-bg-color;
+		background-color: $mars-red-black;
 
-      a {
-        color: $black;
-        padding: 5px 20px;
-        font-size: 0.875rem;
+		a {
+			color: $white;
+			padding: 7px 20px 5px 20px;
+			font-size: 0.875rem;
 
-        // Обнуляем фонду
-        outline: none;
-    }
-    .is-active {
-        a{
-          background-color: $tabs-active-color;
-      }
-  }
+			// Обнуляем фонду
+			outline: none;
+		}
+
+		a:hover{
+			background-color: $mars-red-black-dark;
+		}
+
+	}
+
+	li.is-active{
+		a:hover{
+			background-color: $black;
+		}
+
+	}
 }
-}
+
+
 //Контент tabs
 .tabs-content {
 

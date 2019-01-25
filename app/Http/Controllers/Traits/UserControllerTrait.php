@@ -19,12 +19,16 @@ trait UserControllerTrait
         $user_auth_id = hideGod($user_auth);
         $company_id = $user_auth->company_id;
 
+        // Проверка на существование:
+        // Проверка по номеру телефона
+        
+        $finded_user = User::where('main');
+
 
         // СОЗДАЕМ ПОЛЬЗОВАТЕЛЯ ----------------------------------------------------------------------------
 
         $user = new User;
         $user_number = User::count();
-
 
         // Данные для доступа ----------------------------------------------------------
         
@@ -70,18 +74,18 @@ trait UserControllerTrait
         // Контактные данные: ----------------------------------------------------------
 
         // Электронная почта
-        if(!isset($request->email)){
+        if($request->email == null){
 
             // Если не указана почта:
             // Генератор почты (Ну, вообще-то он не нужен...)
-            $gen_string = str_random(8);
-            $gen_email = $gen_string . '@mail.ru';
-            $request->email = $gen_email;
+            $gen_string = str_random(12);
+            $gen_email = 'retyrtyrtyrty@mail.ru';
+            $user->email = $gen_email;
 
         } else {
 
             // Если указана:
-            $user->email = $request->email;            
+            $user->email = 'pondfgdfgal@mail.ru';           
         }
 
         // Мессенджеры
@@ -201,7 +205,7 @@ trait UserControllerTrait
 
             // $gen_string = str_random(8);
             // $gen_email = $gen_string . '@mail.ru';
-            // $request->email = $gen_email;
+            // $user->email = $gen_email;
 
             // Когда генератор выключен, пишем то, что пришло
             $user->email = $request->email;

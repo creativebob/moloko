@@ -1,5 +1,6 @@
 <?php
 use App\Phone;
+use App\Client;
 
 // Функция записи/обновления основного/дополнительных номеров телефона, принимает $request (в нем лежат основной номер и массив с дополнительными) и экземпляр модели, чтоб через нее делать связь
 function add_phones($request, $item) {
@@ -87,5 +88,25 @@ function add_phones($request, $item) {
 		}
 	}
 }
+
+
+function check_client_by_phones($phone) {
+
+	$phone = cleanPhone($phone);
+
+    // $client_id = Client::with('client.phones')->first();
+
+ //    $client = Client::whereHas('client', function($q) use ($phone){
+ //    	$q->whereHas('phones', function($q) use ($phone){
+ //            $q->where('phone', $phone);
+ //    	});
+	// })->first();
+
+ //    dd($client);
+
+	// return $client_id;
+	return null;
+}
+
 
 ?>
