@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Traits;
 
+use App\Manufacturer;
+
 trait CreateCompanyTrait
 {
+
+        dd('Тут же я!');
 
         // Новые данные
         $company->name = $request->name;
@@ -27,6 +31,21 @@ trait CreateCompanyTrait
             addBankAccount($company, $request);
             setSchedule($company, $request);
             setServicesType();
+
+            // Если компания производит для себя, создадим ее связь с собой как с производителем
+            if($request->manufacturer_self == 1){
+
+                // Создаем связь
+                $manufacturer = new Manufacturer;
+                $manufacturer->company_id = $company->id;
+                $manufacturer->manufacturer_id = $company->id;
+
+                // Запись информации по производителю если нужно:
+                // ...
+
+                $manufacturer->save();
+
+            }
 
         } else {
 

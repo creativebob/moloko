@@ -19,10 +19,11 @@ class CreateManufacturersTable extends Migration
             $table->integer('manufacturer_id')->nullable()->unsigned()->comment('ID контрагента');
             $table->foreign('manufacturer_id')->references('id')->on('companies');
 
-
             // Общие настройки
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
+
+            $table->boolean('archive')->default(0)->comment('Статус архива');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');

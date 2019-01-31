@@ -595,6 +595,16 @@
         // ----------------------------------------------------------------------------
 
 
+        // ФИЛЬТР ПО СТРАНЕ ПРОИЗВОДИТЕЛЮ ---------------------------------------------
+        if($name_filter == 'manufacturer_country'){
+
+            $filter[$name_filter]['title'] = 'Страна производителя:';                                   // Назавние фильтра
+            $column = 'country_id';                                                                     // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterManufacturerCountryList();     // Генерируем список 
+        }
+        // ----------------------------------------------------------------------------
+
+
         // ОБЩИЕ ДЛЯ ФИЛЬТРА НАСТРОЙКИ ====================================================
 
         // Проверка на пустоту данных которые пришли из URL по текущему фильтру
@@ -771,5 +781,15 @@
         return $places_types;
 
     }
+
+    function getFilterManufacturerCountryList(){
+
+        $country_id = App\Manufacturer::with('company.location.country')->get()->pluck('company.location.country.id')->toArray();
+        $countries = App\Country::whereIn('id', $country_id)->get()->sortByDesc('name')->pluck('name', 'id')->toArray();
+        if(isset($countries)){asort($countries);}
+        return $countries;
+
+    }
+
 
 ?>

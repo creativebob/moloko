@@ -176,6 +176,18 @@ class CompanyController extends Controller
 
         $this->authorize(getmethod(__FUNCTION__), $company);
 
+        // Готовим информацию: является ли компания производителем для себя?
+        // Результат упаковываем в новосозданное поле: manufacturer_self в виде true или false
+
+        // Получаем связь компании с собой как производителя
+        $manufacturer = Manufacturer::where('company_id', $company->id)->where('manufacturer_id', $company->id)->where('archive', 0)->first();
+
+        if($manufacturer != null){
+            $company->manufacturer_self = true;
+        } else {
+            $company->manufacturer_self = false;
+        };
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 

@@ -69,10 +69,15 @@ class ManufacturerController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
 
-        $manufacturers = Manufacturer::with('author', 'company')
+        $manufacturers = Manufacturer::with('author', 'company.location.country', 'company.sector', 'company.legal_form')
+        ->companiesLimit($answer)
+        ->where('archive', 0)
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
+        ->whereHas('company', function($q) use ($request){
+            $q->filter($request, 'country_id', 'location');
+        })
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
@@ -83,7 +88,7 @@ class ManufacturerController extends Controller
         // -----------------------------------------------------------------------------------------------------------
 
         $filter = setFilter($this->entity_name, $request, [
-            'city',                 // Город
+            'manufacturer_country', // Страна производителя
             'sector',               // Направление деятельности
             'booklist'              // Списки пользователя
         ]);
@@ -193,6 +198,8 @@ class ManufacturerController extends Controller
 
         $this->authorize(getmethod(__FUNCTION__), $company);
 
+
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
@@ -257,10 +264,16 @@ class ManufacturerController extends Controller
 
             // Скрываем бога
             $user_id = hideGod($user);
+
             $manufacturer->editor_id = $user_id;
+
+            // Архивируем связь
+            $manufacturer->archive = 1;
+
             $manufacturer->save();
 
-            $manufacturer = Manufacturer::destroy($id);
+            // Удаляем наглухо: мягко
+            // $manufacturer = Manufacturer::destroy($id);
 
             // Удаляем компанию с обновлением
             if($manufacturer) {

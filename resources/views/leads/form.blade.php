@@ -227,17 +227,17 @@
 
 
                             <fieldset class="fieldset-challenge">
-                                <legend>Этап процесса:</legend>
+                                <legend>Контроль процесса:</legend>
                                 <div class="grid-x grid-padding-x">
                                     <div class="small-12 medium-6 cell">
-                                        <label>
-                                            {{ Form::select('stage_id', $stages_list, $lead->stage_id) }}
-                                        </label>
+
+                                        {{-- Подключаем этапы процесса --}}
+                                        @include('includes.selects.stages', ['value' => $lead->stage_id])
+
                                     </div>
 
                                 </div>
                             </fieldset>
-
 
                                 {{-- Подключаем задачи --}}
                                 @include('includes.challenges.fieldset', ['item' => $lead])

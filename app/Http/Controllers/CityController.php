@@ -25,7 +25,7 @@ class CityController extends Controller
     {
         $this->middleware('auth');
         $this->city = $city;
-        $this->entity_alias = with(new City)->getTable();;
+        $this->entity_alias = with(new City)->getTable();
         $this->entity_dependence = false;
         $this->class = City::class;
         $this->model = 'App\City';

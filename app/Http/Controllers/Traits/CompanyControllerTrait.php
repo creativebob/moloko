@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\Traits;
+
 use App\Company;
+use App\Manufacturer;
 
 // Транслитерация
 use Transliterate;
@@ -59,6 +61,22 @@ trait CompanyControllerTrait
             setSchedule($request, $company);
             setServicesType($request, $company);
 
+            // Если компания производит для себя, создадим ее связь с собой как с производителем
+            if($request->manufacturer_self == 1){
+
+                // Создаем связь
+                $manufacturer = new Manufacturer;
+                $manufacturer->company_id = $company->id;
+                $manufacturer->manufacturer_id = $company->id;
+
+                // Запись информации по производителю если нужно:
+                // ...
+
+                $manufacturer->save();
+
+            }
+
+
         } else {
 
             abort(403, 'Ошибка записи компании');
@@ -109,6 +127,40 @@ trait CompanyControllerTrait
             addBankAccount($request, $company);
             setSchedule($request, $company);
             setServicesType($request, $company);
+
+            $manufacturer = Manufacturer::where('company_id', $company->id)
+            ->where('manufacturer_id', $company->id)
+            ->first();
+
+
+            if(($manufacturer != null) && ($request->manufacturer_self != null)){
+
+
+                if($manufacturer->archive == 1){
+
+                    // Восстанавливаем связь из архива
+                    $manufacturer->archive = 0;
+                    $manufacturer->save();
+                }
+
+            }
+
+
+            if(($manufacturer == null) && ($request->manufacturer_self != null)){
+
+                    // Создаем связь c нуля
+                    $manufacturer = new Manufacturer;
+                    $manufacturer->company_id = $company->id;
+                    $manufacturer->manufacturer_id = $company->id;
+
+                    // Запись информации по производителю если нужно:
+                    // ...
+
+                    $manufacturer->save();
+
+            }
+
+
         }
     }
 

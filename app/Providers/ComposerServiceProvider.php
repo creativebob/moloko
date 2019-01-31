@@ -8,6 +8,8 @@ use Illuminate\Support\ServiceProvider;
 use App\Http\ViewComposers\SidebarComposer;
 use App\Http\ViewComposers\SectorsSelectComposer;
 
+use App\Http\ViewComposers\StagesComposer;
+
 use App\Http\ViewComposers\CountriesComposer;
 
 use App\Http\ViewComposers\FilialsForUserComposer;
@@ -77,6 +79,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.sectors_select', SectorsSelectComposer::class);
 
         view()->composer('includes.selects.countries', CountriesComposer::class);
+        view()->composer('includes.selects.stages', StagesComposer::class);
 
         view()->composer('includes.selects.filials_for_user', FilialsForUserComposer::class);
         view()->composer('includes.selects.departments_for_user', DepartmentsForUserComposer::class);

@@ -686,17 +686,6 @@ class LeadController extends Controller
             'Сырье' => $raws_categories_list,
         ];
 
-        // Получаем список этапов
-        $answer_stages = operator_right('stages', false, 'index');
-        $stages_list = Stage::moderatorLimit($answer_stages)
-        // ->companiesLimit($answer_stages)
-        // ->authors($answer_stages)
-        ->template($answer_stages)
-        // ->systemItem($answer_stages) // Фильтр по системным записям
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get()
-        ->pluck('name', 'id');
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
@@ -704,7 +693,7 @@ class LeadController extends Controller
         // Задачи пользователя
         $list_challenges = challenges($request);
 
-        return view('leads.edit', compact('lead', 'page_info', 'stages_list', 'list_challenges', 'lead_methods_list', 'entity', 'choices'));
+        return view('leads.edit', compact('lead', 'page_info', 'list_challenges', 'lead_methods_list', 'entity', 'choices'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)

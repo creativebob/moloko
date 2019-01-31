@@ -220,7 +220,6 @@
                 </div>
 
 
-
             </div>
             <!-- Конец реквизиты -->
 
@@ -247,6 +246,19 @@
                         {{ Form::checkbox('external_control', 1, null, ['id' => 'external_control']) }}
                         <label for="external_control"><span>Внешний контроль</span></label>
                     </div>
+
+
+                    {{-- Только для формы редактирования компании предлагаем указать связь с собой как с производителем
+                    Поле manufacturer_self приходит только с контроллера Company --}}
+
+                    @if(isset($company->manufacturer_self))
+                        @if($company->manufacturer_self == false)
+                            <div class="small-12 cell checkbox">
+                                {{ Form::checkbox('manufacturer_self', 1, $company->manufacturer_self, ['id' => 'manufacturer_self']) }}
+                                <label for="manufacturer_self"><span>Производитель</span></label>
+                            </div>
+                        @endif
+                    @endif
 
                     {{-- Чекбоксы управления --}}
                     @include('includes.control.checkboxes', ['item' => $company])

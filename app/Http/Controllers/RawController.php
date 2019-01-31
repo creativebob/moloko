@@ -502,20 +502,27 @@ class RawController extends Controller
 
             // dd($request);
 
+
             $check_name = $this->check_coincidence_name($request);
+
             // dd($check_name);
             if ($check_name) {
                 return redirect()->back()->withInput()->withErrors('Такой артикул уже существует других в группах');
             }
 
             $check_article = $this->check_coincidence_article($metrics_count, $metrics_values, $compositions_count, $compositions_values, $request->raws_product_id, $manufacturer_id);
+            
             if ($check_article) {
+
                 return redirect()->back()->withInput()->withErrors('Такой артикул уже существует в группе!');
             }
 
             $raws_article = $raw->article;
             $raws_article->draft = null;
             $raws_article->save();
+
+
+
             // $raws_article = rawsArticle::where('id', $raw->raws_article_id)->update(['draft' => null]);
         }
 
@@ -685,6 +692,7 @@ class RawController extends Controller
     public function check_coincidence_article($metrics_count, $metrics_values, $compositions_count, $compositions_values, $raws_product_id, $manufacturer_id = null)
     {
 
+
         // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
         $raws_articles = RawsArticle::with('metrics', 'compositions', 'set_compositions')
         ->where('raws_product_id', $raws_product_id)
@@ -692,6 +700,7 @@ class RawController extends Controller
         ->whereNull('draft')
         ->whereNull('archive')
         ->get();
+        
         // dd($raws_articles);
 
         if ($raws_articles) {
