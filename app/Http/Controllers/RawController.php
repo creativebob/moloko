@@ -6,20 +6,8 @@ namespace App\Http\Controllers;
 use App\Raw;
 use App\RawsArticle;
 use App\RawsProduct;
-use App\RawsCategory;
-use App\RawsMode;
 use App\Manufacturer;
-
 use App\Metric;
-
-use App\Album;
-use App\AlbumEntity;
-use App\Photo;
-use App\UnitsCategory;
-use App\Catalog;
-
-
-use App\ArticleValue;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -130,10 +118,10 @@ class RawController extends Controller
 
             // Описание ошибки
             $ajax_error = [];
-            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+            $ajax_error['title'] = "Обратите внимание!";
             $ajax_error['text'] = "Для начала необходимо создать категории сырья. А уже потом будем добавлять сырье. Ок?";
-            $ajax_error['link'] = "/admin/raws_categories"; // Ссылка на кнопке
-            $ajax_error['title_link'] = "Идем в раздел категорий"; // Текст на кнопке
+            $ajax_error['link'] = "/admin/raws_categories";
+            $ajax_error['title_link'] = "Идем в раздел категорий";
 
             return view('ajax_error', compact('ajax_error'));
         }
@@ -160,33 +148,33 @@ class RawController extends Controller
         }
 
         // Если в категориях не добавлены производители
-        if ($raws_categories->where('manufacturers_count', 0)->count() == $raws_categories->count()){
+        // if ($raws_categories->where('manufacturers_count', 0)->count() == $raws_categories->count()){
 
-            // Описание ошибки
-            // $ajax_error = [];
-            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
-            $ajax_error['text'] = "Для начала необходимо добавить производителей в категории. А уже потом будем добавлять товары. Ок?";
-            $ajax_error['link'] = "/admin/raws_categories"; // Ссылка на кнопке
-            $ajax_error['title_link'] = "Идем в раздел категорий cырья"; // Текст на кнопке
+        //     // Описание ошибки
+        //     // $ajax_error = [];
+        //     $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+        //     $ajax_error['text'] = "Для начала необходимо добавить производителей в категории. А уже потом будем добавлять сырьё. Ок?";
+        //     $ajax_error['link'] = "/admin/raws_categories"; // Ссылка на кнопке
+        //     $ajax_error['title_link'] = "Идем в раздел категорий cырья"; // Текст на кнопке
 
-            return view('ajax_error', compact('ajax_error'));
-        }
+        //     return view('ajax_error', compact('ajax_error'));
+        // }
 
         $raws_products_count = $raws_categories->first()->raws_products_count;
         $parent_id = null;
 
-        if ($request->cookie('conditions') != null) {
+        // if ($request->cookie('conditions') != null) {
 
-            $condition = Cookie::get('conditions');
-            if(isset($condition['raws_category'])) {
-                $raws_category_id = $condition['raws_category'];
-                $raws_category = $raws_categories->find($raws_category_id);
-                // dd($raws_category);
-                $raws_products_count = $raws_category->raws_products_count;
-                $parent_id = $raws_category_id;
-                // dd($raws_products_count);
-            }
-        }
+        //     $condition = Cookie::get('conditions');
+        //     if(isset($condition['raws_category'])) {
+        //         $raws_category_id = $condition['raws_category'];
+        //         $raws_category = $raws_categories->find($raws_category_id);
+        //         // dd($raws_category);
+        //         $raws_products_count = $raws_category->raws_products_count;
+        //         $parent_id = $raws_category_id;
+        //         // dd($raws_products_count);
+        //     }
+        // }
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
         $raws_categories_list = get_select_tree($raws_categories->keyBy('id')->toArray(), $parent_id, null, null);
@@ -511,7 +499,7 @@ class RawController extends Controller
             }
 
             $check_article = $this->check_coincidence_article($metrics_count, $metrics_values, $compositions_count, $compositions_values, $request->raws_product_id, $manufacturer_id);
-            
+
             if ($check_article) {
 
                 return redirect()->back()->withInput()->withErrors('Такой артикул уже существует в группе!');
@@ -635,7 +623,7 @@ class RawController extends Controller
         $raw = Raw::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $raw);
+        $this->authorize(getmethod('destroy'), $raw);
 
         if ($raw) {
 
@@ -645,21 +633,22 @@ class RawController extends Controller
             // Скрываем бога
             $user_id = hideGod($user);
 
+            RawsArticle::where('id', $raw->raws_article_id)->update(['editor_id' => $user_id, 'archive' => 1]);
+
             $raw->editor_id = $user_id;
-            $raw->archive = 1;
             $raw->save();
 
             if ($raw) {
-                return Redirect('/admin/raws');
+                return redirect()->route('raws.index');
             } else {
-                abort(403, 'Ошибка при архивации товара');
+                abort(403, 'Ошибка при архивации сырья');
             }
         } else {
-            abort(403, 'Товар не найден');
+            abort(403, 'Сырьё не найдено');
         }
     }
 
-    // -------------------------------------- Проверки на совпаденеи артикула ----------------------------------------------------
+    // -------------------------------------- Проверки на совпадение артикула ----------------------------------------------------
 
     // Проверка имени по компании
     public function check_coincidence_name($request)
@@ -700,7 +689,7 @@ class RawController extends Controller
         ->whereNull('draft')
         ->whereNull('archive')
         ->get();
-        
+
         // dd($raws_articles);
 
         if ($raws_articles) {
