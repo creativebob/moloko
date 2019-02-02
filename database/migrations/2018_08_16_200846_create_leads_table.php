@@ -68,7 +68,7 @@ class CreateLeadsTable extends Migration
             $table->integer('stage_id')->nullable()->unsigned()->comment('ID этапа');
             $table->foreign('stage_id')->references('id')->on('stages');
 
-            $table->integer('chellenges_active_count')->default(0)->unsigned()->comment('Кол-во активных задач');
+            $table->integer('challenges_active_count')->default(0)->unsigned()->comment('Кол-во активных задач');
 
             $table->integer('choice_id')->nullable()->unsigned()->default(null)->comment('ID сущности которая интересует');
             $table->string('choice_type')->nullable()->comment('Модель сущности');

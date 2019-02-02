@@ -74,6 +74,8 @@ class UserController extends Controller
         // ->where('id', '!=', $request->user()->id) // Только для сущности USERS
         // ->orWhere('id', $request->user()->id) // Только для сущности USERS
         ->filter($request, 'city_id', 'location')
+        ->booleanArrayFilter($request, 'user_type')
+        ->booleanArrayFilter($request, 'access_block')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
@@ -85,6 +87,8 @@ class UserController extends Controller
 
         $filter = setFilter($this->entity_name, $request, [
             'city',                 // Город
+            'user_type',            // Свой - чужой
+            'access_block',         // Доступ
             'booklist'              // Списки пользователя
         ]);
 

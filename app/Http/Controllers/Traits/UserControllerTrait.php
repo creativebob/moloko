@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Traits;
+
 use App\User;
 use App\RoleUser;
+use App\Phone;
+
 use Illuminate\Support\Facades\DB;
 
 trait UserControllerTrait
@@ -21,17 +24,17 @@ trait UserControllerTrait
 
         // Проверка на существование:
         // Проверка по номеру телефона
-        
-        $finded_user = User::where('main');
 
+        $finded_user = User::where('main');
 
         // СОЗДАЕМ ПОЛЬЗОВАТЕЛЯ ----------------------------------------------------------------------------
 
         $user = new User;
-        $user_number = User::count();
+
+        $user_number = User::all()->last()->id;
 
         // Данные для доступа ----------------------------------------------------------
-        
+
         // Логин:
         if(!isset($request->login)){
 
@@ -60,7 +63,7 @@ trait UserControllerTrait
 
 
         // Данные человека ------------------------------------------------------------
-        
+
         $user->first_name =   $request->first_name;
         $user->second_name = $request->second_name;
         $user->patronymic = $request->patronymic;
@@ -85,12 +88,12 @@ trait UserControllerTrait
         } else {
 
             // Если указана:
-            $user->email = 'pondfgdfgal@mail.ru';           
+            $user->email = 'pondfgdfgal@mail.ru';
         }
 
         // Мессенджеры
         $user->telegram_id = $request->telegram_id;
-        
+
         // Добавляем локацию
         $user->location_id = create_location($request);
 
@@ -122,7 +125,6 @@ trait UserControllerTrait
 
             // Cохраняем или обновляем роли
             $result_setroles = setRoles($request, $user);
-
             return $user;
 
         } else {
@@ -131,6 +133,37 @@ trait UserControllerTrait
         }
 
         return $user;
+    }
+
+
+    public function createUserByPhone($phone){
+
+        $user_number = User::all()->last()->id;
+        $user_number = $user_number + 1;
+
+        $user = new User;
+        $user->login = 'user_'.$user_number;
+        $user->password = bcrypt(str_random(12));
+
+        $user->access_block = 1;
+        $user->user_type = 0;
+        $user->save();
+
+        if($user) {
+
+            // Если номера нет, пишем или ищем новый и создаем связь
+            $new_phone = Phone::firstOrCreate(
+                ['phone' => cleanPhone($phone)
+            ], [
+                'crop' => substr(cleanPhone($phone), -4),
+            ]);
+
+            $user->phones()->attach($new_phone->id, ['main' => 1]);
+            return $user;
+
+        } else {
+            abort(403, 'Ошибка при создании пользователя по номеру телефона!');
+        }
     }
 
 

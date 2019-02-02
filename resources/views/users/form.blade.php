@@ -36,6 +36,13 @@
 						</label>
 					</div>
 					<div class="small-12 large-6 cell">
+
+						@if($user->nickname != null)
+							<label>Временное имя
+								@include('includes.inputs.name', ['name'=>'nickname', 'value'=>$user->nickname])
+							</label>
+						@endif
+
 						<label>Выберите аватар
 							{{ Form::file('photo') }}
 						</label>
@@ -266,7 +273,7 @@
 			<div class="grid-x grid-padding-x">
 				<div class="small-12 cell">
 					<label>Статус пользователя
-						{{ Form::select('user_type', [ '1' => 'Пользователь системы', '2' => 'Клиент']) }}
+						{{ Form::select('user_type', [ '0' => 'Чужой', '1' => 'Свой']) }}
 					</label>
 				</div>
 

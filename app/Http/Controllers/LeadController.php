@@ -59,9 +59,13 @@ use App\Http\Controllers\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+// Подрубаем трейт записи и обновления компании
+use App\Http\Controllers\Traits\UserControllerTrait;
 
 class LeadController extends Controller
 {
+
+    use UserControllerTrait;
 
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'leads';
@@ -123,7 +127,7 @@ class LeadController extends Controller
         ->filter($request, 'manager_id')
         ->filter($request, 'lead_type_id')
         ->filter($request, 'lead_method_id')
-        ->booleanFilter($request, 'challenges_active_count')
+        ->booleanArrayFilter($request, 'challenges_active_count')
         ->dateIntervalFilter($request, 'created_at')
         ->booklistFilter($request)
         ->orderBy('created_at', 'desc')
@@ -144,7 +148,8 @@ class LeadController extends Controller
             'lead_type',            // Тип обращения
             'manager',              // Менеджер
             'date_interval',        // Дата обращения
-            'booklist'              // Списки пользователя
+            'booklist',               // Списки пользователя
+            'challenges_active_count' // Активные и не активные задачи
         ]);
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
@@ -765,15 +770,39 @@ class LeadController extends Controller
         $lead->choice_type = $choiceFromTag['type'];
         $lead->choice_id = $choiceFromTag['id'];
 
-        // $lead->first_name = $request->first_name;
-        // $lead->second_name = $request->second_name;
-        // $lead->patronymic = $request->patronymic;
-        // $lead->sex = $request->sex;
-        // $lead->birthday = $request->birthday;
 
-        // Проверяем, есть ли в базе клиент с таким номером
-        // $searched_client = check_client_by_phones($request->main_phone);
-        // dd($searched_client);
+
+        // Работаем с ПОЛЬЗОВАТЕЛЕМ лида ================================================================
+
+        // Проверяем, есть ли в базе телефонов пользователь с таким номером
+        $user_for_lead = check_user_by_phones($request->main_phone);
+        if($user_for_lead != null){
+
+            // Если есть: записываем в лида ID найденного в системе пользователя
+            $lead->user_id = $user_for_lead->id;
+
+        } else {
+
+            // Если нет: создаем нового пользователя по номеру телефона
+            // используя трейт экспресс создание пользователя
+            $user_for_lead = $this->createUserByPhone($request->main_phone);
+            $user_for_lead->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
+
+            // Если к пользователю нужно добавить инфы, тут можно апнуть юзера: ----------------------------------
+
+                $user_for_lead->nickname = $request->name;
+
+                // Компания и филиал ----------------------------------------------------------
+                $user_for_lead->company_id = $request->user()->company->id;
+                $user_for_lead->filial_id = $request->user()->filial_id;
+                $user_for_lead->save();
+
+            // Конец апдейта юзеара -------------------------------------------------
+
+        };
+
+        // Конец работы с ПОЛЬЗОВАТЕЛЕМ лида ==============================================================
+
 
 
         // Телефон
@@ -786,83 +815,6 @@ class LeadController extends Controller
         // $lead->telegram_id = $request->telegram_id;
         // $lead->orgform_status = $request->orgform_status;
         // $lead->user_inn = $request->inn;
-
-        // $lead->passport_address = $request->passport_address;
-        // $lead->passport_number = $request->passport_number;
-        // $lead->passport_released = $request->passport_released;
-        // $lead->passport_date = $request->passport_date;
-
-        // Если прикрепили фото
-        if ($request->hasFile('photo')) {
-
-            // Вытаскиваем настройки
-            // Вытаскиваем базовые настройки сохранения фото
-            $settings = config()->get('settings');
-
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = PhotoSetting::where(['entity' => $this->entity_name])->first();
-
-            if($get_settings){
-
-                if ($get_settings->img_small_width != null) {
-                    $settings['img_small_width'] = $get_settings->img_small_width;
-                }
-
-                if ($get_settings->img_small_height != null) {
-                    $settings['img_small_height'] = $get_settings->img_small_height;
-                }
-
-                if ($get_settings->img_medium_width != null) {
-                    $settings['img_medium_width'] = $get_settings->img_medium_width;
-                }
-
-                if ($get_settings->img_medium_height != null) {
-                    $settings['img_medium_height'] = $get_settings->img_medium_height;
-                }
-
-                if ($get_settings->img_large_width != null) {
-                    $settings['img_large_width'] = $get_settings->img_large_width;
-                }
-
-                if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;
-                }
-
-                if ($get_settings->img_formats != null) {
-                    $settings['img_formats'] = $get_settings->img_formats;
-                }
-
-                if ($get_settings->img_min_width != null) {
-                    $settings['img_min_width'] = $get_settings->img_min_width;
-                }
-
-                if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;
-                }
-
-                if ($get_settings->img_max_size != null) {
-                    $settings['img_max_size'] = $get_settings->img_max_size;
-
-                }
-            }
-
-            // dd($company_id);
-            // Директория
-            $directory = $lead->company_id.'/media/leads/'.$lead->id.'/img';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), настройки, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
-            if ($lead->photo_id) {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, $lead->photo_id, $settings);
-
-            } else {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
-            }
-
-            $photo = $array['photo'];
-
-            $lead->photo_id = $photo->id;
-        }
 
         // Модерируем (Временно)
         if($answer['automoderate']){$lead->moderation = null;};

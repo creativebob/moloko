@@ -2,7 +2,9 @@
 use App\Phone;
 use App\Client;
 
-// Функция записи/обновления основного/дополнительных номеров телефона, принимает $request (в нем лежат основной номер и массив с дополнительными) и экземпляр модели, чтоб через нее делать связь
+// Функция записи/обновления основного/дополнительных номеров телефона, принимает $request 
+// (в нем лежат основной номер и массив с дополнительными) и экземпляр модели, чтоб через нее делать связь
+
 function add_phones($request, $item) {
 
     // Телефон
@@ -90,22 +92,29 @@ function add_phones($request, $item) {
 }
 
 
-function check_client_by_phones($phone) {
+// Функция нахождения экземпляра модели пользователя 
+// по номеру телефона (грязному)
 
-	$phone = cleanPhone($phone);
+function check_user_by_phones($phone_search) {
 
-    // $client_id = Client::with('client.phones')->first();
+	// Чистим телефон: приводим к исключительно числовому виду
+	$phone_search = cleanPhone($phone_search);
 
- //    $client = Client::whereHas('client', function($q) use ($phone){
- //    	$q->whereHas('phones', function($q) use ($phone){
- //            $q->where('phone', $phone);
- //    	});
-	// })->first();
+	// Ищем телефон в базе телефонов
+	$phone = Phone::where('phone', $phone_search)->first();
 
- //    dd($client);
+	if(!empty($phone)){
 
-	// return $client_id;
-	return null;
+		// Получаем пользователя владельца телефона
+		$result = $phone->user_owner->first();
+	} else {
+
+		// Так как не нашли, результат делаем нудевым
+		$result = null;
+	};
+	
+	// Отдаем результат
+	return $result;
 }
 
 

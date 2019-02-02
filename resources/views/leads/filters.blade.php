@@ -70,7 +70,9 @@
                 <div class="grid-x">
                     <div class="small-12 cell checkbox checkboxer">
 
-                        {!! Form::select('challenges_active_count', ['2' => 'Все', '0' => 'Нет активных задач', '1' => 'Только с задачами'], null) !!}
+                        @include('includes.inputs.checkboxer', ['name'=>'challenges_active_count', 'value' => $filter])
+
+<!--                         {!! Form::select('challenges_active_count', ['2' => 'Все', '0' => 'Нет активных задач', '1' => 'Только с задачами'], null) !!} -->
 
                     </div>
                 </div>

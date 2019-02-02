@@ -47,11 +47,11 @@ class UpdateUsersTable extends Migration
             $table->text('about')->nullable()->comment('Информация о пользователе')->after('passport_address');
             $table->text('specialty')->nullable()->comment('Специальность')->after('about');
             $table->text('degree')->nullable()->comment('Ученая степень, звание')->after('specialty');
-            $table->text('quote')->nullable()->comment('Цитата, высказывание, фраза')->after('degree');   
+            $table->text('quote')->nullable()->comment('Цитата, высказывание, фраза')->after('degree');
 
             $table->string('liter')->nullable()->unique()->comment('Литера')->after('quote');   
 
-            $table->integer('user_type')->nullable()->unsigned()->comment('Сотрудник 1 или Клиент 0')->after('liter');
+            $table->boolean('user_type')->default(0)->comment('Свой 1 или Чужой 0')->after('liter');
             $table->integer('access_block')->nullable()->unsigned()->comment('Доступ открыт 0 или Блокирован 1')->default('0')->after('user_type');
 
             $table->integer('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('access_block');

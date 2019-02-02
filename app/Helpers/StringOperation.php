@@ -16,8 +16,8 @@ function decor_access_block($access_block) {
 }
 
 function decor_user_type($user_type) {
-    if($user_type == 1){$result = "Сотрудник";}
-    elseif($user_type == 2){$result = "Клиент";}
+    if($user_type == 1){$result = "Свой";}
+    elseif($user_type == 0){$result = "Чужой";}
     else {$result = "Статус не определен";};
 
     return $result;

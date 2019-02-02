@@ -13,6 +13,7 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
+use App\Scopes\Filters\BooleanArrayFilter;
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -36,7 +37,8 @@ class User extends Authenticatable
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
-
+    use BooleanArrayFilter;
+    
     // Фильтры
     use Filter;
     use BooklistFilter;
