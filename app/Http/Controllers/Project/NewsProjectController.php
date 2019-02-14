@@ -3,12 +3,19 @@
 namespace App\Http\Controllers\Project;
 
 // Модель
+use App\News;
 use App\Site;
+
+// Кеш
+use Illuminate\Support\Facades\Cache;
+
+// Карбон (дата и время)
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ContactsProjectController extends Controller
+class NewsProjectController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,30 +25,41 @@ class ContactsProjectController extends Controller
     public function index(Request $request, $city)
     {
 
-        $site = Site::with(['departments.location.city', 'departments.schedules.worktimes', 'pages' => function ($query) {
+        // dd($city);
+
+        $content = News::with(['company', 'author.staff' => function ($query) {
+            $query->with('position')->whereDisplay(1);
+        }, 'photo'])
+        ->whereHas('cities', function ($query) use ($city) {
+            $query->whereAlias($city);
+        })
+        ->where('site_id', 2)
+        ->where('display', 1)
+        ->whereNull('moderation')
+        ->where('publish_begin_date', '<', Carbon::now())
+        ->where(function ($query) {
+            $query->where('publish_end_date', '>', Carbon::now())->orWhereNull('publish_end_date');
+        })
+        ->get();
+
+        // dd($news);
+
+        $alias = 'news';
+
+        // $site = Cache::rememberForever('vorotamars', function() {
+        $site = Site::with(['departments.location.city', 'pages' => function ($query) {
             $query->where('display', 1);
         }, 'navigations' => function ($query) {
             $query->with(['navigations_category', 'menus' => function ($query) {
                 $query->with('page')->where('display', 1);
             }]);
         }])->findOrFail(2);
+        //     return $site;
+        // });
+        // dd($request);
 
-        $alias = 'contacts';
 
-
-        $departments_worktimes = $site->departments->keyBy('location.city.alias');
-
-            // dd($departments_worktimes[$city]);
-
-        $department_worktime = [];
-        foreach ($departments_worktimes[$city]->schedules[0]->worktimes as $worktime) {
-                // dd($worktime);
-            $department_worktime[$worktime->weekday]['worktime_begin'] = secToTime($worktime->worktime_begin);
-            $department_worktime[$worktime->weekday]['worktime_end'] = secToTime($worktime->worktime_begin + $worktime->worktime_interval);
-        }
-            // dd($department_worktime);
-
-         $page = $site->pages->where('alias', $alias)->first();
+        $page = $site->pages->where('alias', $alias)->first();
 
         $navigations = $site->navigations->keyBy('navigations_category.tag');
 
@@ -104,9 +122,8 @@ class ContactsProjectController extends Controller
         abort(404, 'Такой страницы не существует...');
     }
 
-    return view('project.contacts.index', compact('alias', 'page', 'city', 'navigations', 'departments', 'content', 'alias', 'department_worktime'));
-
-    }
+    return view('project.news.index', compact('alias', 'page', 'city', 'navigations', 'departments', 'content', 'alias', 'department_worktime'));
+}
 
     /**
      * Show the form for creating a new resource.

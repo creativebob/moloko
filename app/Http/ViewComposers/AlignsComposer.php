@@ -15,8 +15,7 @@ class AlignsComposer
         $answer = operator_right('aligns', false, 'index');
 
         // Главный запрос
-        $aligns = Align::moderatorLimit($answer)
-        ->get();
+        $aligns = Align::get();
 
         return $view->with('aligns', $aligns);
     }

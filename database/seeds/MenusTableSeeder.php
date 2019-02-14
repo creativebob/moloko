@@ -342,6 +342,20 @@ Menu::insert([
 
     // Продукция
     [
+        'name' => 'Группы артикулов',
+        'icon' => null,
+        'alias' => 'admin/articles_groups',
+        'tag' => 'articles_groups',
+        'parent_id' => $menus->where('tag', 'products')->first()->id,
+        'page_id' => $pages->where('alias', 'articles_groups')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => null,
+    ],
+    [
         'name' => 'Товары',
         'icon' => null,
         'alias' => 'admin/goods',
@@ -441,48 +455,8 @@ Menu::insert([
         'sort' => null,
     ],
 
-    [
-        'name' => 'Группы товаров',
-        'icon' => null,
-        'alias' => 'admin/goods_products',
-        'tag' => 'goods_products',
-        'parent_id' => $menus->where('tag', 'products')->first()->id,
-        'page_id' => $pages->where('alias', 'goods_products')->first()->id,
-        'navigation_id' => 1,
-        'company_id' => null,
-        'system_item' => 1,
-        'author_id' => 1,
-        'display' => 1,
-        'sort' => null,
-    ],
-    [
-        'name' => 'Группы услуг',
-        'icon' => null,
-        'alias' => 'admin/services_products',
-        'tag' => 'services_products',
-        'parent_id' => $menus->where('tag', 'products')->first()->id,
-        'page_id' => $pages->where('alias', 'services_products')->first()->id,
-        'navigation_id' => 1,
-        'company_id' => null,
-        'system_item' => 1,
-        'author_id' => 1,
-        'display' => 1,
-        'sort' => null,
-    ],
-    [
-        'name' => 'Группы сырья',
-        'icon' => null,
-        'alias' => 'admin/raws_products',
-        'tag' => 'raws_products',
-        'parent_id' => $menus->where('tag', 'products')->first()->id,
-        'page_id' => $pages->where('alias', 'raws_products')->first()->id,
-        'navigation_id' => 1,
-        'company_id' => null,
-        'system_item' => 1,
-        'author_id' => 1,
-        'display' => 1,
-        'sort' => null,
-    ],
+
+
 
     // Финансы
     [

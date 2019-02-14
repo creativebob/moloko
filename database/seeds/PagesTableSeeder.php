@@ -362,6 +362,18 @@ class PagesTableSeeder extends Seeder
 
             // ------------------------------ Продукция --------------------------
 
+            [
+                'name' => 'Группы артикулов',
+                'site_id' => 1,
+                'title' => 'Группы артикулов',
+                'description' => 'Группы артикулов',
+                'alias' => 'articles_groups',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
+
             // Товары
             [
                 'name' => 'Категории товаров',
@@ -369,17 +381,6 @@ class PagesTableSeeder extends Seeder
                 'title' => 'Категории товаров',
                 'description' => 'Категории товаров',
                 'alias' => 'goods_categories',
-                'company_id' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'display' => 1,
-            ],
-            [
-                'name' => 'Группы товаров',
-                'site_id' => 1,
-                'title' => 'Группы товаров',
-                'description' => 'Группы товаров',
-                'alias' => 'goods_products',
                 'company_id' => null,
                 'system_item' => 1,
                 'author_id' => 1,
@@ -410,17 +411,6 @@ class PagesTableSeeder extends Seeder
                 'display' => 1,
             ],
             [
-                'name' => 'Группы услуг',
-                'site_id' => 1,
-                'title' => 'Группы услуг',
-                'description' => 'Группы услуг',
-                'alias' => 'services_products',
-                'company_id' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'display' => 1,
-            ],
-            [
                 'name' => 'Услуги',
                 'site_id' => 1,
                 'title' => 'Услуги',
@@ -439,17 +429,6 @@ class PagesTableSeeder extends Seeder
                 'title' => 'Категории сырья',
                 'description' => 'Категории сырья',
                 'alias' => 'raws_categories',
-                'company_id' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'display' => 1,
-            ],
-            [
-                'name' => 'Группы сырья',
-                'site_id' => 1,
-                'title' => 'Группы сырья',
-                'description' => 'Группы сырья',
-                'alias' => 'raws_products',
                 'company_id' => null,
                 'system_item' => 1,
                 'author_id' => 1,
