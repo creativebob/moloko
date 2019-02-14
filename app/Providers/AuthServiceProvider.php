@@ -184,6 +184,8 @@ class AuthServiceProvider extends ServiceProvider
         'App\Model' => 'App\Policies\ModelPolicy',
 
 
+        // Артикулы
+        'App\ArticlesGroup' => 'App\Policies\ArticlesGroupPolicy',
 
         // Расчеты и заказы
         'App\Order' => 'App\Policies\OrderPolicy',
