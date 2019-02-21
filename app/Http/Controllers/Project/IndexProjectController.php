@@ -44,7 +44,7 @@ class IndexProjectController extends Controller
     // Настройки сконтроллера
     public function __construct()
     {
-        $this->site = Site::where('domain', 'vorotamars.ru')->first();
+        $this->site = Site::where('domain', 'site.ru')->first();
     }
 
     // Пишем в куки utm-метки

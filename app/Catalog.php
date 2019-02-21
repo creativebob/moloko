@@ -52,12 +52,12 @@ class Catalog extends Model
         'category_id',
     ];
 
-
-    // Вложенные
-    public function childs()
+    // Пункты
+    public function items()
     {
-        return $this->hasMany('App\Catalog', 'parent_id');
+        return $this->hasMany('App\CatalogsItem');
     }
+
 
     // Сайт
     public function site()

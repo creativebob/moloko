@@ -541,13 +541,12 @@ class EntitiesTableSeeder extends Seeder
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
-                'site' => 0,
+                'site' => 1,
             ],
-
             [
-                'name' => 'Каталоги с продукцией',
-                'alias' => 'catalog_products',
-                'model' => 'CatalogProduct',
+                'name' => 'Состав каталогов',
+                'alias' => 'catalogs_items',
+                'model' => 'CatalogsItem',
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,

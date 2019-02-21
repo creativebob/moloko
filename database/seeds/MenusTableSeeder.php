@@ -339,6 +339,20 @@ Menu::insert([
         'display' => 1,
         'sort' => null,
     ],
+    [
+        'name' => 'Каталоги',
+        'icon' => null,
+        'alias' => 'admin/catalogs',
+        'tag' => 'catalogs',
+        'parent_id' => $menus->where('tag', 'sales')->first()->id,
+        'page_id' => $pages->where('alias', 'catalogs')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => null,
+    ],
 
     // Продукция
     [

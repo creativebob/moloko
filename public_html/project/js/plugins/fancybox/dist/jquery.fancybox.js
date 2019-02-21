@@ -63,7 +63,7 @@
             'slideShow',
             'fullScreen',
             'thumbs',
-            'share',
+            // 'share',
             //'download',
             //'zoom',
             'close'
@@ -373,7 +373,7 @@
         // Internationalization
         // ============
 
-        lang : 'en',
+        lang : 'ru',
         i18n : {
             'en' : {
                 CLOSE       : 'Close',
@@ -400,6 +400,19 @@
                 DOWNLOAD    : 'Herunterladen',
                 SHARE       : 'Teilen',
                 ZOOM        : 'Maßstab'
+            },
+            'ru' : {
+                CLOSE       : 'Закрыть',
+                NEXT        : 'Вперед',
+                PREV        : 'Назад',
+                ERROR       : 'The requested content cannot be loaded. <br/> Please try again later.',
+                PLAY_START  : 'Слайд-шоу',
+                PLAY_STOP   : 'Остановить слайд-шоу',
+                FULL_SCREEN : 'Во весь экран',
+                THUMBS      : 'Шаблоны',
+                DOWNLOAD    : 'Скачать',
+                SHARE       : 'Поделиться',
+                ZOOM        : 'Увеличить'
             }
         }
 

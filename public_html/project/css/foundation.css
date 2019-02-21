@@ -532,6 +532,8 @@ textarea {
 .grid-x {
   display: -ms-flexbox;
   display: flex;
+  max-width: 75rem;
+  margin: 0 auto;
   -ms-flex-flow: row wrap;
       flex-flow: row wrap; }
 
@@ -2291,7 +2293,7 @@ h6, .h6 {
 
 a {
   line-height: inherit;
-  color: #1779ba;
+  color: #2199e8;
   text-decoration: none;
   cursor: pointer; }
   a:hover, a:focus {
@@ -2501,7 +2503,7 @@ ul.no-bullet, ol.no-bullet {
   line-height: 1;
   text-align: center;
   cursor: pointer;
-  background-color: #1779ba;
+  background-color: #2199e8;
   color: #fefefe; }
   [data-whatinput='mouse'] .button {
     outline: 0; }

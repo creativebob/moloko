@@ -4,15 +4,19 @@ use Illuminate\Database\Seeder;
 
 use App\Region;
 use App\City;
+
 use App\Company;
 use App\Location;
 use App\Department;
 use App\User;
 use App\Staffer;
+
 use App\Site;
 use App\Page;
 use App\Navigation;
 use App\Menu;
+
+use App\Catalog;
 
 class StartTableSeeder extends Seeder
 {
@@ -71,6 +75,7 @@ class StartTableSeeder extends Seeder
         		'name' => 'Иркуцкий',
         		'company_id' => 1,
         		'location_id' => 1,
+                'display' => 1,
         		'author_id' => 3
         	]
         ]);
@@ -200,6 +205,16 @@ class StartTableSeeder extends Seeder
                 'display' => 1,
                 'tag' => 'punkt-1',
                 'page_id' => Page::where(['site_id' => 2, 'alias' => 'third'])->first()->id,
+            ],
+        ]);
+
+        Catalog::insert([
+            [
+                'name' => 'Тестовый',
+                'description' => 'Тест',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => 1,
             ],
         ]);
     }

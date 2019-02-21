@@ -70,6 +70,13 @@ use App\Http\ViewComposers\CategoriesDrilldownComposer;
 use App\Http\ViewComposers\EntitiesStatisticsSelectComposer;
 
 
+// Project
+use App\Http\ViewComposers\Project\NavigationsComposer as ProjectNavigationsComposer;
+use App\Http\ViewComposers\Project\DepartmentsComposer as ProjectFilialsComposer;
+use App\Http\ViewComposers\Project\WorktimesComposer as ProjectWorktimesComposer;
+use App\Http\ViewComposers\Project\CitiesComposer as ProjectCitiesComposer;
+
+
 class ComposerServiceProvider extends ServiceProvider
 {
 
@@ -153,6 +160,13 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.directions', DirectionsComposer::class);
 
         view()->composer('includes.selects.entities_statistics', EntitiesStatisticsSelectComposer::class);
+
+
+        // Project
+        view()->composer('project.layouts.app', ProjectNavigationsComposer::class);
+        view()->composer(['project.includes.partials.filials_with_link_to_map', 'project.includes.partials.filials_info', 'project.includes.partials.contacts_info'], ProjectFilialsComposer::class);
+        view()->composer('project.includes.partials.cities_list', ProjectCitiesComposer::class);
+        view()->composer('project.includes.partials.schedule', ProjectWorktimesComposer::class);
     }
 
     public function register()

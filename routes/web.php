@@ -467,7 +467,7 @@ Route::get('plans/{alias}', 'PlanController@show')->name('plans.show');
 // ------------------------------------------------ Статистика ---------------------------------------
 
 // Основные методы
-Route::resource('statistics', 'StatisticsController')->middleware('auth');
+// Route::resource('statistics', 'StatisticsController')->middleware('auth');
 
 
 // ---------------------------------------------- Лиды -----------------------------------------------
@@ -828,16 +828,6 @@ Route::prefix('/sites/{site_id}')->group(function () {
 
 });
 
-// Поиск продукции для добавления на сайт
-Route::any('/catalog_product/search_add_product', 'CatalogProductController@search_add_product')->middleware('auth');
-
-// Поиск продукции для добавления на сайт
-Route::any('/catalog_product/add_product', 'CatalogProductController@add_product')->middleware('auth');
-
-
-
-
-
 
 // ---------------------------------------- Новости -------------------------------------------
 
@@ -846,20 +836,24 @@ Route::resource('/news', 'NewsController')->middleware('auth');
 
 
 
-// ----------------------------------------- Каталог ------------------------------------------
+// ----------------------------------------- Каталоги ------------------------------------------
 
-// Текущий добавленный/удаленный каталог
-Route::any('/catalogs', 'CatalogController@index')->middleware('auth');
 // Основные методы
-Route::resource('/catalogs', 'CatalogController')->middleware('auth');
+Route::resource('catalogs', 'CatalogController');
 // Проверка на существование
-Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
+// Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
 
-// -------------------------------- Продукция для каталогов сайта -------------------------------------
-// Основные методы
-Route::get('/catalog_products/{id?}', 'CatalogProductController@show')->middleware('auth');
-// Основные методы
-Route::resource('/catalog_products', 'CatalogProductController')->middleware('auth');
+// -------------------------------- Наполнение каталогов -------------------------------------
+
+Route::prefix('catalogs/{catalog_id}')->group(function () {
+
+	// Текущий добавленный/удаленный пунк меню
+	Route::any('catalogs_items', 'CatalogsItemController@index');
+
+	// Основные методы
+	Route::resource('catalogs_items', 'CatalogsItemController');
+});
+
 
 
 

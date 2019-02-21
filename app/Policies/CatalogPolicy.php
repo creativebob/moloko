@@ -49,21 +49,21 @@ class CatalogPolicy
             return false;
         }
 
-        if ($model->services->count() > 0) {
+        if ($model->items->count() > 0) {
             return false;
         }
 
-        if ($model->goods->count() > 0) {
-            return false;
-        }
+        // if ($model->goods->count() > 0) {
+        //     return false;
+        // }
 
-        if ($model->raws->count() > 0) {
-            return false;
-        }
+        // if ($model->raws->count() > 0) {
+        //     return false;
+        // }
 
-        if ($model->childs->count() > 0) {
-            return false;
-        }
+        // if ($model->childs->count() > 0) {
+        //     return false;
+        // }
 
         return $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
     }
