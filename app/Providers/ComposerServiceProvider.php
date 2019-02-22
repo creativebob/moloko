@@ -62,6 +62,7 @@ use App\Http\ViewComposers\StaffComposer;
 use App\Http\ViewComposers\PositionsComposer;
 use App\Http\ViewComposers\PropertiesComposer;
 
+use App\Http\ViewComposers\SitesComposer;
 use App\Http\ViewComposers\SiteMenusComposer;
 use App\Http\ViewComposers\PagesComposer;
 
@@ -127,6 +128,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer(['includes.selects.catalogs_chosen', 'includes.selects.catalogs'], CatalogsSelectComposer::class);
 
+        view()->composer('includes.lists.sites', SitesComposer::class);
         view()->composer('includes.lists.site_menus', SiteMenusComposer::class);
 
 

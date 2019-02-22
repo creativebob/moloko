@@ -115,6 +115,8 @@ class StartTableSeeder extends Seeder
         	]
         ]);
 
+        User::where('login', 'makc_berluskone')->update(['company_id' => 1]);
+
         $user = User::where('login', 'testovik')->first();
         $user->phones()->attach(1, ['main' => 1]);
 

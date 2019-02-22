@@ -22,10 +22,10 @@ class CreateCatalogsItemsTable extends Migration
             $table->string('name')->index()->comment('Название категории товаров');
 
             $table->integer('parent_id')->nullable()->unsigned()->comment('Id категории товара');
-            $table->foreign('parent_id')->references('id')->on('goods_categories');
+            $table->foreign('parent_id')->references('id')->on('catalogs_items');
 
             $table->integer('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
-            $table->foreign('category_id')->references('id')->on('goods_categories');
+            $table->foreign('category_id')->references('id')->on('catalogs_items');
 
 
             // Общие настройки

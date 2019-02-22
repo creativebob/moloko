@@ -59,10 +59,10 @@ class Catalog extends Model
     }
 
 
-    // Сайт
-    public function site()
+    // Сайты
+    public function sites()
     {
-        return $this->belongsTo('App\Site');
+        return $this->belongsToMany('App\Site', 'catalog_site');
     }
 
     // Аавтор

@@ -19,9 +19,10 @@
         // ----------- Кнопка добавления ---------------------------------------
         $(document).on('click', '.submit-create', function(event) {
             var form = $(this).closest('form');
+
             if (submitAjax(form.attr('id'))) {
                 $(this).prop('disabled', true);
-                $.post('/admin/sites/' + catalog_id + '/navigations/' + navigation_id + '/menus', form.serialize(), function(html) {
+                $.post('/admin/catalogs/' + catalog_id + '/catalogs_items', form.serialize(), function(html) {
                     form.closest('.reveal-overlay').remove();
                     $('#content').html(html);
                     Foundation.reInit($('#content'));
@@ -33,7 +34,7 @@
         $(document).on('click', '.sprite-edit', function() {
             let id = $(this).closest('.item').attr('id').split('-')[1];
 
-            $.get('/admin/sites/' + catalog_id + '/navigations/' + navigation_id + '/menus/' + id + '/edit', function(html) {
+            $.get('/admin/catalogs/' + catalog_id + '/catalogs_items/' + id + '/edit', function(html) {
                 $('#modal').html(html);
                 $('#modal-edit').foundation().foundation('open');
             });
@@ -47,7 +48,7 @@
 
                 // Ajax запрос
                 $.ajax({
-                    url: '/admin/sites/' + catalog_id + '/navigations/' + navigation_id + '/menus/' + form.find('#menu-id').val(),
+                    url: '/admin/catalogs/' + catalog_id + '/catalogs_items/' + form.find('#item-id').val(),
                     type: "PATCH",
                     data: form.serialize(),
                     success:function(html) {
@@ -83,7 +84,7 @@
 
             // Ajax
             $.ajax({
-                url: '/admin/sites/' + catalog_id + '/navigations/' + navigation_id + '/menus/' + id,
+                url: '/admin/catalogs/' + catalog_id + '/catalogs_items/' + id,
                 type: "DELETE",
                 success: function (html) {
                     // alert(html);

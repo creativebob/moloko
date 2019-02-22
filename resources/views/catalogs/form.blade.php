@@ -9,6 +9,11 @@
             @include('includes.inputs.textarea', ['name' => 'description'])
         </label>
 
+        <fieldset>
+            <legend>Сайты</legend>
+            @include('includes.lists.sites', ['item' => $catalog])
+        </fieldset>
+
         {{-- <label>Алиас
             @include('includes.inputs.text-en', ['name' => 'alias'])
             <div class="sprite-input-right find-status" id="name-check"></div>

@@ -101,6 +101,11 @@ class CatalogController extends Controller
 
         if ($catalog) {
 
+            // Сайты
+            if (isset($request->sites)) {
+                $catalog->sites()->attach($request->sites);
+            }
+
             return redirect()->route('catalogs.index');
 
         } else {
@@ -159,6 +164,15 @@ class CatalogController extends Controller
         $catalog->save();
 
         if ($catalog) {
+
+            // Обновляем сайты
+            if (isset($request->sites)) {
+                $catalog->sites()->sync($request->sites);
+            } else {
+
+                // Если удалили последнюю роль для должности и пришел пустой массив
+                $catalog->sites()->detach();
+            }
 
             return redirect()->route('catalogs.index');
 

@@ -38,7 +38,7 @@ class CatalogsItemController extends Controller
     {
 
         // Подключение политики
-        // $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -78,7 +78,7 @@ class CatalogsItemController extends Controller
     public function create(Request $request, $catalog_id)
     {
         // Подключение политики
-        // $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
         // dd('lol');
 
         return view('includes.menu_views.create', [
@@ -86,12 +86,14 @@ class CatalogsItemController extends Controller
             'entity' => $this->entity_alias,
             'title' => 'Добавление пункта каталога',
             'parent_id' => $request->parent_id,
-            'category_id' => $request->category_id
+            'category_id' => $request->category_id,
+            'catalog_id' => $catalog_id,
         ]);
     }
 
     public function store(CatalogsItemRequest $request, $catalog_id)
     {
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -102,9 +104,7 @@ class CatalogsItemController extends Controller
 
         // $catalogs_item->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
 
-
         $catalogs_item->save();
-
 
         if ($catalogs_item) {
 
@@ -139,11 +139,13 @@ class CatalogsItemController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_item);
 
-        return view('catalogs_items.edit', [
-            'catalogs_item' => $catalogs_item,
+        return view('includes.menu_views.edit', [
+            'item' => $catalogs_item,
+            'entity' => $this->entity_alias,
+            'title' => 'Редактирование пункта каталога',
             'parent_id' => $catalogs_item->parent_id,
             'category_id' => $catalogs_item->category_id,
-            'catalog_id' => $catalog_id
+            'catalog_id' => $catalog_id,
         ]);
     }
 
@@ -163,7 +165,7 @@ class CatalogsItemController extends Controller
         // Заполнение и проверка основных полей в трейте
         $catalogs_item = $this->updateCategory($request, $catalogs_item);
 
-        $catalogs_item->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
+        // $catalogs_item->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
 
         $catalogs_item->save();
         // dd($catalogs_item);

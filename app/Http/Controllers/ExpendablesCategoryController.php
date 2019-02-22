@@ -128,7 +128,10 @@ class ExpendablesCategoryController extends Controller
     public function edit($id)
     {
 
-        $expendables_category = ExpendablesCategory::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $expendables_category = ExpendablesCategory::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $expendables_category);
@@ -145,7 +148,10 @@ class ExpendablesCategoryController extends Controller
     public function update(ExpendablesCategoryRequest $request, $id)
     {
 
-        $expendables_category = ExpendablesCategory::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $expendables_category = ExpendablesCategory::moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $expendables_category);
