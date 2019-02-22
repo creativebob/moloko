@@ -85,8 +85,8 @@ class ArticlesGroupController extends Controller
         $articles_group->description = $request->description;
         $articles_group->unit_id = $request->unit_id;
 
-        $articles_group->system_item = $request->system_item;
-        $articles_group->display = $request->display;
+        $articles_group->set_status = $request->has('set_status');
+
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -95,6 +95,9 @@ class ArticlesGroupController extends Controller
         if ($answer['automoderate'] == false){
             $articles_group->moderation = 1;
         }
+
+        $articles_group->system_item = $request->system_item;
+        $articles_group->display = $request->display;
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -141,6 +144,11 @@ class ArticlesGroupController extends Controller
         $articles_group->name = $request->name;
         $articles_group->description = $request->description;
         $articles_group->unit_id = $request->unit_id;
+
+        if ($articles_group->articles->count() == 0) {
+            $articles_group->set_status = $request->has('set_status');
+        }
+
 
         // Модерация и системная запись
         $articles_group->system_item = $request->system_item;
