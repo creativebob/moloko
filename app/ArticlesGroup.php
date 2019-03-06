@@ -23,7 +23,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 
-class Article extends Model
+class ArticlesGroup extends Model
 {
     // Включаем кеш
     use Cachable;
@@ -48,51 +48,21 @@ class Article extends Model
 
     protected $fillable = [
         'company_id',
-        'articles_group_id',
         'name',
+        'photo_id',
+        'stauts',
         'description',
-        'internal',
-        'manufacturer_id',
-        'metrics_count',
-        'compositions_count',
+        'unit_id',
+        'rule_id',
+        'album_id',
         'author_id',
         'editor_id',
     ];
 
-    // Группа
-    public function group()
+    // Артикулы
+    public function articles()
     {
-        return $this->belongsTo('App\ArticlesGroup', 'articles_group_id');
-    }
-
-    // Товар
-    // public function goods()
-    // {
-    //     return $this->hasMany('App\Goods');
-    // }
-
-    // Метрики
-    public function metrics()
-    {
-        return $this->morphedByMany('App\Metric', 'articles_values')->withPivot('value');
-    }
-
-    // Состав (сырье)
-    public function compositions()
-    {
-        return $this->morphedByMany('App\Article', 'articles_values')->withPivot('value');
-    }
-
-    // Состав (набор)
-    // public function set_compositions()
-    // {
-    //     return $this->morphedByMany('App\Article', 'articles_values')->withPivot('value');
-    // }
-
-    // Производитель
-    public function manufacturer()
-    {
-        return $this->belongsTo('App\Company');
+        return $this->hasMany('App\Article');
     }
 
     // Альбом
@@ -107,15 +77,21 @@ class Article extends Model
         return $this->belongsTo('App\Photo');
     }
 
+    // Еденица измерения
+    public function unit()
+    {
+        return $this->belongsTo('App\Unit');
+    }
+
+    // Автора
+    public function author()
+    {
+        return $this->belongsTo('App\User');
+    }
+
     // Компания
     public function company()
     {
         return $this->belongsTo('App\Company');
-    }
-
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo('App\User');
     }
 }

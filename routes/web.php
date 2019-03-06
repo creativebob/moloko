@@ -310,6 +310,11 @@ Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
 
 
+// ---------------------------------- Артикулы -------------------------------------------
+// Основные методы
+Route::resource('articles_groups', 'ArticlesGroupController')->middleware('auth');
+
+
 // ------------------------------------- Категории сырья -------------------------------------------
 
 // Текущая добавленная/удаленная категория
