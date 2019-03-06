@@ -142,9 +142,9 @@ class SupplierController extends Controller
         $supplier->company_id = $request->user()->company->id;
         $supplier->supplier_id = $company->id;
 
-        // Запись информации по производителю:
-        // ...
-
+        // Запись информации по поставщику:
+        $supplier->description = $request->description;
+        $supplier->preorder = $request->preorder;
 
         $supplier->save();
 
@@ -251,9 +251,9 @@ class SupplierController extends Controller
         // Отдаем работу по редактировнию компании трейту
         $this->updateCompany($request, $supplier->company);
 
-        // Обновление информации по производителю:
-        // ...
-
+        // Обновление информации по поставщику:
+        $supplier->description = $request->description;
+        $supplier->preorder = $request->preorder;
 
         $supplier->save();
 

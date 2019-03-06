@@ -52,7 +52,7 @@ class UpdateUsersTable extends Migration
             $table->string('liter')->nullable()->unique()->comment('Литера')->after('quote');   
 
             $table->boolean('user_type')->default(0)->comment('Свой 1 или Чужой 0')->after('liter');
-            $table->integer('access_block')->nullable()->unsigned()->comment('Доступ открыт 0 или Блокирован 1')->default('0')->after('user_type');
+            $table->boolean('access_block')->default(1)->comment('Доступ открыт 0 или Блокирован 1')->default('0')->after('user_type');
 
             $table->integer('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('access_block');
             $table->integer('filial_id')->nullable()->unsigned()->comment('ID филиала компании')->after('company_id');

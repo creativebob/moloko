@@ -30,7 +30,6 @@ trait UserControllerTrait
         // СОЗДАЕМ ПОЛЬЗОВАТЕЛЯ ----------------------------------------------------------------------------
 
         $user = new User;
-
         $user_number = User::all()->last()->id;
 
         // Данные для доступа ----------------------------------------------------------
@@ -51,10 +50,10 @@ trait UserControllerTrait
         $user->nickname = $request->nickname;
 
         // Блокировка доступа
-        $user->access_block = $request->access_block;
+        if($request->access_block == 1){$user->access_block = 1;} else {$user->access_block = 0;};
 
         // Тип пользователя (Видимо, требует переработки. Идея устарела.)
-        $user->user_type = $request->user_type;
+        $user->user_type = $request->has('user_type');
 
 
         // Компания и филиал ----------------------------------------------------------
@@ -64,10 +63,10 @@ trait UserControllerTrait
 
         // Данные человека ------------------------------------------------------------
 
-        $user->first_name =   $request->first_name;
+        $user->first_name = $request->first_name;
         $user->second_name = $request->second_name;
         $user->patronymic = $request->patronymic;
-        $user->sex = $user->sex ?? 1;
+        $user->sex = $request->sex ?? 1;
         $user->birthday = $request->birthday;
 
         // Литера (Особая идентификационная отметка, например в номере договора)
@@ -81,14 +80,16 @@ trait UserControllerTrait
 
             // Если не указана почта:
             // Генератор почты (Ну, вообще-то он не нужен...)
-            $gen_string = str_random(12);
-            $gen_email = 'retyrtyrtyrty@mail.ru';
-            $user->email = $gen_email;
+            // $gen_string = str_random(12);
+            // $gen_email = $gen_string . '@mail.ru';
+            // $user->email = $gen_email;
+
+            $user->email = $request->email;
 
         } else {
 
             // Если указана:
-            $user->email = 'pondfgdfgal@mail.ru';
+            $user->email = $request->email;
         }
 
         // Мессенджеры
@@ -134,7 +135,6 @@ trait UserControllerTrait
 
         return $user;
     }
-
 
     public function createUserByPhone($phone){
 
@@ -183,12 +183,14 @@ trait UserControllerTrait
 
 
         // Данные для доступа ----------------------------------------------------------
-        
+
         // Логин:
         if(!isset($request->login)){
 
             // Если не указан логин, то генерируем
+            $user_number = User::all()->last()->id;
             $user->login = 'user_'.$user_number;
+
         } else {
 
             // Если логин указан, то вписываем
@@ -204,10 +206,10 @@ trait UserControllerTrait
         $user->nickname = $request->nickname;
 
         // Блокировка доступа
-        $user->access_block = $request->access_block;
+        if($request->access_block == 1){$user->access_block = 1;} else {$user->access_block = 0;};
 
         // Тип пользователя (Видимо, требует переработки. Идея устарела.)
-        $user->user_type = $request->user_type;
+        $user->user_type = $request->has('user_type');
 
 
         // Компания и филиал ----------------------------------------------------------
@@ -216,11 +218,11 @@ trait UserControllerTrait
 
 
         // Данные человека ------------------------------------------------------------
-        
+
         $user->first_name =   $request->first_name;
         $user->second_name = $request->second_name;
         $user->patronymic = $request->patronymic;
-        $user->sex = $user->sex ?? 1;
+        $user->sex = $request->sex ?? 1;
         $user->birthday = $request->birthday;
 
         // Литера (Особая идентификационная отметка, например в номере договора)
@@ -246,12 +248,12 @@ trait UserControllerTrait
         } else {
 
             // Если указана:
-            $user->email = $request->email;            
+            $user->email = $request->email;
         }
 
         // Мессенджеры
         $user->telegram_id = $request->telegram_id;
-        
+
         // Добавляем локацию
         $user->location_id = create_location($request);
 
@@ -291,7 +293,6 @@ trait UserControllerTrait
 
             abort(403, 'Ошибка при создании пользователя!');
         }
-
 
         return $user;
     }

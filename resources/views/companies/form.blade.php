@@ -16,7 +16,7 @@
             @endif
             @if(!empty($supplier))
             <li class="tabs-title">
-                <a data-tabs-target="content-panel-supplier" href="#content-panel-supplier">Рабочая информация</a>
+                <a data-tabs-target="content-panel-supplier" href="#content-panel-supplier">Информация о дилере</a>
             </li>
             @endif
             @if(!empty($client))

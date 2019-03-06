@@ -22,7 +22,6 @@ class CreateDealersTable extends Migration
             $table->integer('discount')->nullable()->unsigned()->comment('Скидка дилера');
             $table->text('description')->nullable()->comment('Описание дилера');
 
-
             // Общие настройки
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');

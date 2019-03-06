@@ -270,18 +270,18 @@ Menu::insert([
 
     // Продажи
     [
-        'name' => 'Заказы',
+        'name' => 'Клиентские заказы',
         'icon' => null,
-        'alias' => 'admin/orders',
-        'tag' => 'orders',
+        'alias' => 'admin/estimates',
+        'tag' => 'estimates',
         'parent_id' => $menus->where('tag', 'sales')->first()->id,
-        'page_id' => $pages->where('alias', 'orders')->first()->id,
+        'page_id' => $pages->where('alias', 'estimates')->first()->id,
         'navigation_id' => 1,
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 2,
     ],
     [
         'name' => 'Дилеры',
@@ -295,21 +295,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
-    ],
-    [
-        'name' => 'Расчеты',
-        'icon' => null,
-        'alias' => 'admin/estimates',
-        'tag' => 'estimates',
-        'parent_id' => $menus->where('tag', 'sales')->first()->id,
-        'page_id' => $pages->where('alias', 'estimates')->first()->id,
-        'navigation_id' => 1,
-        'company_id' => null,
-        'system_item' => 1,
-        'author_id' => 1,
-        'display' => 1,
-        'sort' => null,
+        'sort' => 4,
     ],
     [
         'name' => 'Лиды',
@@ -323,7 +309,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 1,
     ],
     [
         'name' => 'Клиенты',
@@ -337,7 +323,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 3,
     ],
 
     // Продукция
@@ -564,6 +550,20 @@ Menu::insert([
         'tag' => 'applications',
         'parent_id' => $menus->where('tag', 'productions')->first()->id,
         'page_id' => $pages->where('alias', 'applications')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => null,
+    ],
+    [
+        'name' => 'Исходящие заказы',
+        'icon' => null,
+        'alias' => 'admin/orders',
+        'tag' => 'orders',
+        'parent_id' => $menus->where('tag', 'productions')->first()->id,
+        'page_id' => $pages->where('alias', 'orders')->first()->id,
         'navigation_id' => 1,
         'company_id' => null,
         'system_item' => 1,
@@ -802,8 +802,6 @@ Menu::insert([
         'display' => 1,
         'sort' => null,
     ],
-
-
 
 
     // -------------------------- Непонятные сущности, которые не знаю куда отнести --------------------------------------------

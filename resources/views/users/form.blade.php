@@ -6,7 +6,12 @@
             {{-- Подключаемые специфические разделы --}}
             @if(!empty($client))
             <li class="tabs-title">
-                <a data-tabs-target="content-panel-client" href="#content-panel-client">Коммуникация</a>
+                <a data-tabs-target="content-panel-client" href="#content-panel-client">О клиенте</a>
+            </li>
+            @endif
+            @if(!empty($dealer))
+            <li class="tabs-title">
+                <a data-tabs-target="content-panel-dealer" href="#content-panel-dealer">Информация о дилере</a>
             </li>
             @endif
 
@@ -138,8 +143,27 @@
                 </div>
             </div>
             <!-- Конец блока клиента -->
-            
             @endif
+
+            @if(!empty($dealer))
+            <!-- Блок дилера -->
+            <div class="tabs-panel" id="content-panel-dealer">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-6 cell">
+                        <label>Комментарий к дилеру
+                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$dealer->description])
+                        </label>
+                    </div>
+                    <div class="small-6 medium-3 cell">
+                        <label>Скидка
+                            @include('includes.inputs.digit', ['name'=>'discount', 'value'=>$dealer->discount])
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- Конец блока дилера -->
+            @endif
+
 
 			<!-- Персональные данные -->
 			<div class="tabs-panel" id="content-panel-2">

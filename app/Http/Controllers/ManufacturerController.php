@@ -145,9 +145,7 @@ class ManufacturerController extends Controller
         $manufacturer->manufacturer_id = $new_company->id;
 
         // Запись информации по производителю:
-        // ...
-
-
+        $manufacturer->description = $request->description;
         $manufacturer->save();
 
         return redirect('/admin/manufacturers');
@@ -236,10 +234,8 @@ class ManufacturerController extends Controller
         // Отдаем работу по редактировнию компании трейту
         $this->updateCompany($request, $manufacturer->company);
 
-        // Обновление информации по производителю:
-        // ...
-        
-        
+        // Запись информации по производителю:
+        $manufacturer->description = $request->description;
         $manufacturer->save();
 
         return redirect('/admin/manufacturers');

@@ -626,7 +626,7 @@ class EntitiesTableSeeder extends Seeder
 
             // 67
             [
-                'name' => 'Заказы',
+                'name' => 'Исходящие заказы',
                 'alias' => 'orders',
                 'model' => 'Order',
                 'rights_minus' => null,
@@ -714,7 +714,7 @@ class EntitiesTableSeeder extends Seeder
 
             // 75
             [
-                'name' => 'Заказы поставщикам',
+                'name' => 'Заявки поставщикам',
                 'alias' => 'applications',
                 'model' => 'Application',
                 'rights_minus' => null,
@@ -751,6 +751,17 @@ class EntitiesTableSeeder extends Seeder
                 'alias' => 'photo_settings',
                 'model' => 'PhotoSetting',
                 'rights_minus' => 1,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+            ],
+
+            // 79
+            [
+                'name' => 'Клиентские заказы',
+                'alias' => 'estimates',
+                'model' => 'Estimate',
+                'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,

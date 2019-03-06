@@ -7,7 +7,7 @@
 
 @section('title', 'Редактировать клиента')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $client->client->name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $client->clientable->name))
 
 @section('title-content')
 <div class="top-bar head-content">
@@ -20,9 +20,9 @@
 @endsection
 
 @section('content')
-    {{ Form::model($client->client, ['url' => '/admin/clients/'.$client->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+    {{ Form::model($client->clientable, ['url' => '/admin/clients/'.$client->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
     {{ method_field('PATCH') }}
-        @include('users.form', ['submitButtonText' => 'Редактировать', 'param'=>'', 'user'=>$client->client])
+        @include('users.form', ['submitButtonText' => 'Редактировать', 'param'=>'', 'user'=>$client->clientable])
     {{ Form::close() }}
 @endsection
 

@@ -435,6 +435,7 @@ function cleanNameLegalForm($string){
     $legal_form_name = $legal_form_list->pluck('name', 'id');
     $legal_form_full_name = $legal_form_list->pluck('full_name', 'id');
 
+    // dd($legal_form_full_name);
     $result = false;
 
     foreach($legal_form_name as $key => $value){

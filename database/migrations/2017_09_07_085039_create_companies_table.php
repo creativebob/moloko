@@ -20,7 +20,7 @@ class CreateCompaniesTable extends Migration
             $table->integer('location_id')->nullable()->unsigned()->comment('Адрес компании');
             $table->foreign('location_id')->references('id')->on('locations');
 
-            $table->integer('legal_form_id')->unsigned()->comment('Правовая форма');
+            $table->integer('legal_form_id')->default(1)->unsigned()->comment('Правовая форма');
             // $table->foreign('legal_form_id')->references('id')->on('legal_forms');
 
             $table->bigInteger('inn')->nullable()->unsigned()->comment('ИНН компании');

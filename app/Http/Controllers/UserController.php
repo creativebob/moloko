@@ -17,6 +17,7 @@ use App\Country;
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserUpdateRequest;
 
 // Политики
 use App\Policies\UserPolicy;
@@ -130,10 +131,8 @@ class UserController extends Controller
 
 
         // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
-        $new_user = new User;
-
         // Отдаем работу по созданию нового юзера трейту
-        $new_user = $this->createUser($request, $new_user);
+        $new_user = $this->createUser($request);
 
         return Redirect('/admin/users');
 
@@ -169,7 +168,7 @@ class UserController extends Controller
         return view('users.edit', compact('user', 'page_info'));
     }
 
-    public function update(UserRequest $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
         // Получаем авторизованного пользователя
         $user_auth = $request->user();

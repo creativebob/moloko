@@ -21,44 +21,44 @@
 			@include('includes.inputs.digit', ['name' => 'badget', 'value' => $lead->badget, 'decimal_place'=>2])
 		</div>
 	</div> -->
-	
+
 @endsection
 
 
 @section('content')
 
-{{ Form::model($lead, ['url' => '/admin/leads/'.$lead->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'id' => 'form-lead', 'files'=>'true']) }}
+	{{ Form::model($lead, ['url' => '/admin/leads/'.$lead->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'id' => 'form-lead', 'files'=>'true']) }}
 
-{{ method_field('PATCH') }}
+	{{ method_field('PATCH') }}
 
-@php
+	@php
 
-$readonly = '';
-$autofocus = 'autofocus';
-
-if(isset($lead->main_phone)){
-
-	if($lead->main_phone->phone != null){
-		$readonly = 'readonly';
-		$autofocus = '';
-	} else {
 		$readonly = '';
 		$autofocus = 'autofocus';
-	}
-}
 
-if($lead->manager_id == 1){
-	$disabled_leadbot = 'disabled';
-} else {
-	$disabled_leadbot = '';
-}
+		if(isset($lead->main_phone)){
+
+			if($lead->main_phone->phone != null){
+				$readonly = 'readonly';
+				$autofocus = '';
+			} else {
+				$readonly = '';
+				$autofocus = 'autofocus';
+			}
+		}
+
+		if($lead->manager_id == 1){
+			$disabled_leadbot = 'disabled';
+		} else {
+			$disabled_leadbot = '';
+		}
 
 
-@endphp
+	@endphp
 
-@include('leads.form', ['submitButtonText' => 'Сохранить', 'param'=>'', $readonly, $autofocus])
+	@include('leads.form', ['submitButtonText' => 'Сохранить', 'param'=>'', $readonly, $autofocus])
 
-{{ Form::close() }}
+	{{ Form::close() }}
 
 @endsection
 

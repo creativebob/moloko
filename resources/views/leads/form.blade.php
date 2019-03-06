@@ -151,7 +151,7 @@
                                 </div>
 
                                 @if($lead->client)
-                                    <span>Клиент: {{ $lead->client->client->name or '' }}</span><br>
+                                    <span>Клиент: <a href="/admin/clients/{{$lead->client->id}}/edit">{{ $lead->client->clientable->name or '' }}</a></span><br>
 
                                     <span>Лояльность: {{ $lead->client->loyalty->name or '' }}</span>
 

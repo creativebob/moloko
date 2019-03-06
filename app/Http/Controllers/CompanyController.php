@@ -61,6 +61,8 @@ class CompanyController extends Controller
     public function index(Request $request)
     {
 
+
+
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
@@ -102,7 +104,6 @@ class CompanyController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-
         return view('companies.index', compact('companies', 'page_info', 'filter', 'user'));
     }
 

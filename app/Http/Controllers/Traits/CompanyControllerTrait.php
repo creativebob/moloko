@@ -13,31 +13,40 @@ trait CompanyControllerTrait
 	public function createCompany($request)
     {
 
-
         $company = Company::where('inn', $request->inn)->whereNotNull('inn')->first();
         if(empty($company)){
 
             $company = new Company;
-            if (Company::count() == 0) {
-                $number_id_company = 1;
-            } else {
-                $last_id_company = Company::latest()->first()->id;
-                $number_id_company = $last_id_company + 1;
-            }
 
+            $company->name = $request->company_name;
 
 	        // Новые данные
-            $company_name = $request->company_name ?? $request->name;
+            // $company_name = $request->company_name ?? $request->name;
 
-	        // Чистка имени компаниии от правовой формы и определения ID такой формы в базе
-	        // Отдает массив с двумя переменными name и legal_form_id
-            $result = cleanNameLegalForm($company_name);
+	        // // Чистка имени компаниии от правовой формы и определения ID такой формы в базе
+	        // // Отдает массив с двумя переменными name и legal_form_id
+         //    $result = cleanNameLegalForm($company_name);
 
-	        // Если использовалась функция чистка имени - подставляем данные с нее
-            $company->name = $result ? $result['name'] : $company_name;
-            $company->legal_form_id = $result ? $result['legal_form_id'] : $request->legal_form_id;
+	        // // Если использовалась функция чистка имени - подставляем данные с нее
+         //    $company->name = $result ? $result['name'] : $company_name;
+         //    $company->legal_form_id = $result ? $result['legal_form_id'] : $request->legal_form_id;
 
-            $company->alias = $request->alias ?? Transliterate::make($company->name .'_'. $number_id_company, ['type' => 'filename', 'lowercase' => true]);
+            if(isset($request->alias)){
+                $company->alias = $request->alias;
+
+            } else {
+
+                // Вычисляем номер для использования в алиасе
+                if (Company::count() == 0) {
+                    $number_id_company = 1;
+                } else {
+                    $last_id_company = Company::latest()->first()->id;
+                    $number_id_company = $last_id_company + 1;
+                }
+
+                $company->alias = Transliterate::make($company->name .'_'. $number_id_company, ['type' => 'filename', 'lowercase' => true]);
+            }
+
             $company->email = $request->email;
             $company->inn = $request->inn;
             $company->kpp = $request->kpp;
@@ -92,13 +101,19 @@ trait CompanyControllerTrait
         // Новые данные
         $company_name = $request->company_name ?? $request->name;
 
+        // dd($company_name);
+
         // Чистка имени компаниии от правовой формы и определения ID такой формы в базе
         // Отдает массив с двумя переменными name и legal_form_id
         $result = cleanNameLegalForm($company_name);
 
         // Если использовалась функция чистка имени - подставляем данные с нее
-        $company->name = $result ? $result['name'] : $company_name;
+        if($result){$company->name = $result['name'];} else {$company->name = $company_name;};
+
+        // dd($company->name);
+
         $company->legal_form_id = $result ? $result['legal_form_id'] : $request->legal_form_id;
+
 
         if ($company->alias != $request->alias) {
             $company->alias = $request->alias;

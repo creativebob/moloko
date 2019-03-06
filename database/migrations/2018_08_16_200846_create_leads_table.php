@@ -73,6 +73,9 @@ class CreateLeadsTable extends Migration
             $table->integer('choice_id')->nullable()->unsigned()->default(null)->comment('ID сущности которая интересует');
             $table->string('choice_type')->nullable()->comment('Модель сущности');
 
+            $table->integer('user_id')->nullable()->unsigned()->comment('Пользователь');
+            $table->foreign('user_id')->references('id')->on('users');
+
             $table->integer('client_id')->nullable()->unsigned()->comment('Клиент');
             $table->foreign('client_id')->references('id')->on('clients');
 

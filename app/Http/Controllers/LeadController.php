@@ -399,9 +399,7 @@ class LeadController extends Controller
         $lead->serial_number = $lead_number['serial'];
         $lead->save();
 
-
         return Redirect('/admin/leads/' . $lead->id . '/edit');
-
     }
 
     public function store(LeadRequest $request)
@@ -435,6 +433,8 @@ class LeadController extends Controller
         } else {
             abort(403, 'Ошибка записи адреса');
         }
+
+        dd('Мы тут!');
 
         // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
         $lead = new Lead;
@@ -509,7 +509,7 @@ class LeadController extends Controller
 
         // Проверяем, есть ли в базе клиент с таким номером
         $searched_client = check_client_by_phones($request->main_phone);
-        dd($searched_client);
+        // dd($searched_client);
 
         $lead->save();
 
@@ -594,6 +594,8 @@ class LeadController extends Controller
     public function show(Request $request, $id)
     {
 
+
+        dd('Тупиковая ветка )');
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::findOrFail($id);
 
@@ -704,7 +706,6 @@ class LeadController extends Controller
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
     {
 
-        // dd($request);
         // Получаем авторизованного пользователя
         $user = $request->user();
 
@@ -725,6 +726,8 @@ class LeadController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->moderatorLimit($answer)
         ->findOrFail($id);
+
+
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
@@ -833,10 +836,10 @@ class LeadController extends Controller
 
         $backroute = $request->backroute;
 
-        if(isset($backroute)){
-                // return redirect()->back();
-            return redirect($backroute);
-        };
+        // if(isset($backroute)){
+        //         // return redirect()->back();
+        //     return redirect($backroute);
+        // };
 
         return redirect('/admin/leads');
     }
@@ -909,6 +912,8 @@ class LeadController extends Controller
 
     public function ajax_autofind_phone(Request $request)
     {
+
+
 
         // Подключение политики
         // $this->authorize('index', Lead::class);
@@ -1073,6 +1078,9 @@ class LeadController extends Controller
     // Назначение лида
     public function ajax_distribute(Request $request)
     {
+
+
+
         // тест
         // $lead_id = 6297;
         // $appointed_id = 11;

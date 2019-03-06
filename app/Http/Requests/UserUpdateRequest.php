@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 
-class UserRequest extends FormRequest
+class UserUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -54,7 +54,7 @@ class UserRequest extends FormRequest
 
             'bank' => 'required_if:orgform_status,1|nullable', 
 
-            'passport_number' => 'unique:users|string|max:13|nullable', 
+            'passport_number' => 'string|max:13|nullable', 
             'passport_released' => 'string|max:255|nullable', 
             'passport_date' => 'date|after:01.01.1970|before:today|nullable', 
             'passport_address' => 'string|max:255|nullable', 

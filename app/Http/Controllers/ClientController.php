@@ -82,10 +82,12 @@ class ClientController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
 
-        $clients = Client::with('author', 'client.main_phones', 'loyalty')
+        $clients = Client::with('author', 'clientable.main_phones', 'loyalty')
         // ->withCount(['orders' => function($q) {
         //     $q->whereNull('draft');
         // }])
+        ->companiesLimit($answer)
+        // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
@@ -123,13 +125,13 @@ class ClientController extends Controller
         // $this->authorize(getmethod(__FUNCTION__), Client::class);
         // $this->authorize(getmethod(__FUNCTION__), Company::class);
         // $this->authorize(getmethod(__FUNCTION__), User::class);
-        // 
+
         $new_user = new User;
         $new_company = new Company;
 
         $new_company->name = $request->company_name;
         $new_company->email = $request->email;
-        
+
         // ГЛАВНЫЙ ЗАПРОС:
 
         $lead = Lead::findOrFail($request->lead_id);
@@ -164,6 +166,20 @@ class ClientController extends Controller
 
             // $lead->private_status = null;
 
+            // Обработка входящих данных ------------------------------------------
+
+            // Можно будет использовать машиное обучение
+
+
+            $crop_name = explode(' ', $request->name);
+            if(isset($crop_name[1])){$first_name_gen = $crop_name[1];};
+            if(isset($crop_name[0])){$second_name_gen = $crop_name[0];};
+            if(isset($crop_name[2])){$patronymic_gen = $crop_name[2];};
+
+            // Конец обработки ------------------------------------------------------
+
+
+
             $search_user = User::whereHas('phones', function($q) use ($main_phone){
                 $q->where('phone', $main_phone);
             })->first();
@@ -171,15 +187,30 @@ class ClientController extends Controller
             // Если не найден, то создаем
             if(!isset($search_user)){
 
-                $crop_name = explode(' ', $request->name);
-                if(isset($crop_name[1])){$new_user->first_name = $crop_name[1];};
-                if(isset($crop_name[0])){$new_user->second_name = $crop_name[0];};
-                if(isset($crop_name[2])){$new_user->patronymic = $crop_name[2];};
 
-                $new_user->email = $request->email;   
-                // $new_user->email = $request->email ?? 'creativebob@maio.ru';  
+                // ПОДСТАНОВКА в случае отсутствия
+
+                $new_user->first_name = $first_name_gen;
+                $new_user->second_name = $second_name_gen;
+                $new_user->patronymic = $patronymic_gen ?? null;
+
+                $new_user->email = $request->email;
+
             } else {
+
                 $new_user = $search_user;
+                if(($new_user->first_name == null)&&($new_user->first_name == null)){
+
+                    // Если поля имя и отчество не заполнены
+                    if(isset($first_name_gen)){
+                        $new_user->first_name = $first_name_gen;
+                    }
+
+                    if(isset($second_name_gen)){
+                        $new_user->second_name = $second_name_gen;
+                    }
+
+                }
             };
 
         }
@@ -204,26 +235,31 @@ class ClientController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
+        Log::info('Попытка создания реквизитов клиента');
+
         if($request->private_status == 1){
 
-            $new_company = new Company;
+            Log::info('Видим, что это компания');
             $new_company = $this->createCompany($request);
 
             if($request->lead_type_id == 2){
 
+                Log::info('Видим, что это дилерский лид');
                 $client = new Client;
-                $client->client_id = $new_company->id;
-                $client->client_type = 'App\Company';
+                $client->clientable_id = $new_company->id;
+                $client->clientable_type = 'App\Company';
                 $client->company_id = $request->user()->company->id;
 
                 // Запись информации по клиенту:
                 // ...
 
                 $client->save();
+                Log::info('Сохраняем клиента компанию');
 
                 $dealer = new Dealer;
                 $dealer->client_id = $client->id;
                 $dealer->company_id = $request->user()->company->id;
+                $dealer->author_id = $user_id;
 
                 // Запись информации по дилеру:
                 // ...
@@ -232,31 +268,38 @@ class ClientController extends Controller
 
             } else {
 
+                Log::info('Видим, что это обычный лид');
                 $client = new Client;
-                $client->client_id = $new_company->id;
-                $client->client_type = 'App\Company';
+                $client->clientable_id = $new_company->id;
+                $client->clientable_type = 'App\Company';
                 $client->company_id = $request->user()->company->id;
+                $client->author_id = $user_id;
 
                 // Запись информации по клиенту:
                 // ...
 
                 $client->save();
-
+                Log::info('Сохраняем клиента компанию');
             }
 
             $department = new Department;
             $department->name = 'Филиал';
             $department->company_id = $new_company->id;
-            $department->location_id = $request->location_id;
-            $department->filial_status = 1;
+            $department->location_id = $new_company->location_id;
+            $department->author_id = $user_id;
             $department->save();
+            Log::info('Сохраняем отдел');
 
             // Создаем пользователя
             // $request->access_block = 1;
+
+            Log::info('Ща будем писать юзера');
             $new_user = $this->createUser($request);
 
+            // Добавляем после сохранения юзера еще инфы и снова сохраняем
             $new_user->company_id = $new_company->id;
             $new_user->save();
+            Log::info('Сохраняем нового юзера');
 
             $staffer = new Staffer;
             $staffer->user_id = $new_user->id;
@@ -264,42 +307,67 @@ class ClientController extends Controller
             $staffer->department_id = $department->id;
             $staffer->filial_id = $department->id;
             $staffer->company_id = $new_company->id;
+            $staffer->author_id = $user_id;
             $staffer->save();
+            Log::info('Сохраняем штат');
 
             $employee = new Employee;
             $employee->company_id = $new_company->id;
             $employee->staffer_id = $staffer->id;
             $employee->user_id = $new_user->id;
             $employee->employment_date = Carbon::today()->format('Y-m-d');
+            $employee->author_id = $user_id;
             $employee->save();
+            Log::info('Сохраняем должность. Устраиваем юзера.');
 
 
         } else {
 
+            Log::info('Видим, что это физик');
+
             // Чистка номера
             $main_phone = cleanPhone($request->main_phone);
+            Log::info('Вычистили номер телефона: ' . $main_phone);
 
-            $user = User::has('client')
-            ->whereHas('phones', function($q) use ($main_phone){
-                    $q->where('phone', $main_phone);
+            $user_for_client = User::whereHas('main_phones', function($q) use ($main_phone){
+                $q->where('phone', $main_phone);
             })->first();
 
             // Если не найден, то создаем
-            if(!isset($client)){
-                
-                $new_user = $this->createUser($request);
+            if(!isset($user_for_client)){
+                Log::info('Пользователь с таким номером телефона не встречается - будем создавать юзера!');
 
-                $client = new Client;
-                $client->client_id = $new_user->id;
-                $client->client_type = 'App\User';
-                $client->company_id = $request->user()->company->id;
-                $client->save();  
+                $user_for_client = $this->createUser($request);
+                Log::info('Создали юзера');
+
+            } else {
+
+                Log::info('Найден пользователь с таким номером телефона. ID: ' . $user_for_client);
+                $user_for_client = $this->updateUser($request, $user_for_client);
+
             }
 
+            // Ищем есть ли клиент с таким пользователем
+            $client = Client::where('clientable_id', $user_for_client->id)->where('clientable_type', 'App\User')->first();
 
+
+            if(!isset($client)){
+
+                Log::info('Будем создавать клиента');
+                $client = new Client;
+                $client->clientable_id = $user_for_client->id;
+                $client->clientable_type = 'App\User';
+                $client->company_id = $request->user()->company->id;
+                $client->save();
+                Log::info('Создали клиента');
+
+            } else {
+
+                Log::info('Есть такой клиент - берем его');
+
+            };
 
         }
-
 
         // После создания клиента необходимо связать его с лидом
         $lead = Lead::findOrFail($request->lead_id);
@@ -342,7 +410,7 @@ class ClientController extends Controller
         $user = $this->createUser($request, $new_user);
 
         $client->company_id = $request->user()->company->id;
-        $client->client_id = $company->id;
+        $client->clientable_id = $company->id;
 
         // Запись информации по клиенту:
         // ...
@@ -389,9 +457,9 @@ class ClientController extends Controller
 
 
         // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
-        if($client->client_type == 'App\Company'){
+        if($client->clientable_type == 'App\Company'){
 
-            $company_id = $client->client->id;
+            $company_id = $client->clientable->id;
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
@@ -408,10 +476,10 @@ class ClientController extends Controller
         }
 
         // ПОЛУЧАЕМ ФИЗ ЛИЦО ---------------------------------------------------------------------------------
-        if($client->client_type == 'App\User'){
+        if($client->clientable_type == 'App\User'){
 
 
-            $user_id = $client->client->id;
+            $user_id = $client->clientable->id;
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             $answer_user = operator_right('users', true, getmethod(__FUNCTION__));
@@ -449,9 +517,9 @@ class ClientController extends Controller
 
 
         // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
-        if($client->client_type == 'App\Company'){
+        if($client->clientable_type == 'App\Company'){
 
-            $company_id = $client->client->id;
+            $company_id = $client->clientable->id;
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
@@ -463,13 +531,13 @@ class ClientController extends Controller
             $this->authorize(getmethod(__FUNCTION__), $company);
 
             // Отдаем работу по редактировнию компании трейту
-            $this->updateCompany($request, $client->client);
+            $this->updateCompany($request, $client->clientable);
 
         }
 
-        if($client->client_type == 'App\User'){
+        if($client->clientable_type == 'App\User'){
 
-            $user_id = $client->client->id;
+            $user_id = $client->clientable->id;
 
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             $answer_user = operator_right('users', false, getmethod(__FUNCTION__));
@@ -481,7 +549,7 @@ class ClientController extends Controller
             $this->authorize(getmethod(__FUNCTION__), $user);
 
             // Отдаем работу по редактировнию юзера трейту
-            $this->updateUser($request, $client->client);
+            $this->updateUser($request, $client->clientable);
         
         }
 

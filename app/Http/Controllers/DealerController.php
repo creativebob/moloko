@@ -72,7 +72,7 @@ class DealerController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
 
-        $dealers = Dealer::with('client.client.main_phones', 'client.client.director', 'client.orders', 'client.client.location')
+        $dealers = Dealer::with('client.orders', 'client.clientable.main_phones')
         ->companiesLimit($answer)
         ->moderatorLimit($answer)
         ->authors($answer)
@@ -80,16 +80,27 @@ class DealerController extends Controller
 
         // Ограничение: выбираем только клиентов-компании.
         // В случае, если дилером может быть физлицо - необходимо убрать это ограничение.
-        ->whereHas('client', function($q){
-            return $q->where('client_type', 'App\Company');
-        })
-
+        // ->whereHas('client', function($q){
+        //     return $q
+        //     ->where('clientable_type', 'App\Company')
+        //     ->with(
+        //         'client.clientable.director.user')
+        //     ->orWhere(
+        //         'clientable_type', 'App\User');
+        // })
         ->filter($request, 'city_id', 'location')
         ->filter($request, 'sector_id')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
+
+        // $dealers->load('client.clientable.director.user');
+
+        // 'client.clientable.director.user'
+
+        // dd($dealers[8]->client);
+        // dd($dealers);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -154,8 +165,8 @@ class DealerController extends Controller
         $dealer->company_id = $request->user()->company->id;
 
         $client = new Client;
-        $client->client_id = $new_company->id;
-        $client->client_type = 'App\Company';
+        $client->clientable_id = $new_company->id;
+        $client->clientable_type = 'App\Company';
         $client->company_id = $request->user()->company->id;
 
         // Запись информации по клиенту:
@@ -206,25 +217,70 @@ class DealerController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $dealer);
 
-        // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
-        $company_id = $dealer->client->client->id;
-        // dd($company_id);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_company = operator_right('company', false, getmethod(__FUNCTION__));
-
-        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types')
-        ->moderatorLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->findOrFail($company_id);
-
-        $this->authorize(getmethod(__FUNCTION__), $company);
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('dealers.edit', compact('dealer', 'page_info'));
+        // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
+        if($dealer->client->clientable_type == 'App\Company'){
+
+            $company_id = $dealer->client->clientable->id;
+
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
+
+            $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types')
+            // ->moderatorLimit($answer_company)
+            // ->authors($answer_company)
+            // ->systemItem($answer_company)
+            ->findOrFail($company_id);
+
+            $this->authorize(getmethod(__FUNCTION__), $company);
+
+            return view('dealers.edit_dealer_company', compact('dealer', 'page_info'));
+        }
+
+        // ПОЛУЧАЕМ ФИЗ ЛИЦО ---------------------------------------------------------------------------------
+        if($dealer->client->clientable_type == 'App\User'){
+
+
+            $user_id = $dealer->client->clientable->id;
+
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer_user = operator_right('users', true, getmethod(__FUNCTION__));
+
+            $user = User::with(
+            'location.city',
+            'photo',
+            'main_phones',
+            'extra_phones'
+            )->moderatorLimit($answer_user)
+            ->findOrFail($user_id);
+
+            $this->authorize(getmethod(__FUNCTION__), $user);
+
+            return view('dealers.edit_dealer_user', compact('dealer', 'user', 'page_info'));
+        }
+
+
+
+        // // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
+        // $company_id = $dealer->client->clientable->id;
+        // // dd($company_id);
+
+        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer_company = operator_right('company', false, getmethod(__FUNCTION__));
+
+        // $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types')
+        // ->moderatorLimit($answer)
+        // ->authors($answer)
+        // ->systemItem($answer)
+        // ->findOrFail($company_id);
+
+        // $this->authorize(getmethod(__FUNCTION__), $company);
+
+
+
+        // return view('dealers.edit', compact('dealer', 'page_info'));
     }
 
 
@@ -243,7 +299,7 @@ class DealerController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $dealer);
 
-        $company_id = $dealer->client->client->id;
+        $company_id = $dealer->client->clientable->id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
@@ -255,7 +311,7 @@ class DealerController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $company);
 
         // Отдаем работу по редактировнию компании трейту
-        $this->updateCompany($request, $dealer->client->client);
+        $this->updateCompany($request, $dealer->client->clientable);
 
         // Обновление информации по дилеру:
         $dealer->discount = $request->discount;
