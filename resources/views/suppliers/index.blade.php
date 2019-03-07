@@ -67,7 +67,7 @@
             @if($edit == 1)
             <a href="suppliers/{{ $supplier->id }}/edit">
               @endif
-              {{ $supplier->company->name }}
+              {{ $supplier->company->name }} ({{ $supplier->company->legal_form->name or '' }})
               @if($edit == 1)
             </a>
             @endif

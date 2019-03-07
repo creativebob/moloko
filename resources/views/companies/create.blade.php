@@ -28,6 +28,7 @@
 
 @section('scripts')
   @include('includes.scripts.inputs-mask')
+  @include('companies.scripts')
 
   <script type="text/javascript">
   // Проверка существования компании

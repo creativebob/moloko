@@ -31,6 +31,7 @@ trait UserControllerTrait
 
         $user = new User;
         $user_number = User::all()->last()->id;
+        $user_number = $user_number + 1;
 
         // Данные для доступа ----------------------------------------------------------
 

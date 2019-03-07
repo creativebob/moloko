@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
 
         // Сущности
         $this->call(EntitiesTableSeeder::class);
+        $this->call(BooklistTypesTableSeeder::class);
 
         // Действия над сущностями
         $this->call(ActionsTableSeeder::class);

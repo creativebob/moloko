@@ -6,7 +6,8 @@ use App\Company;
 use App\Manufacturer;
 
 // Транслитерация
-use Transliterate;
+// use Transliterate;
+use Illuminate\Support\Str;
 
 trait CompanyControllerTrait
 {
@@ -18,7 +19,7 @@ trait CompanyControllerTrait
 
             $company = new Company;
 
-            $company->name = $request->company_name;
+            $company->name = $request->company_name ?? $request->name;
 
 	        // Новые данные
             // $company_name = $request->company_name ?? $request->name;
@@ -44,7 +45,10 @@ trait CompanyControllerTrait
                     $number_id_company = $last_id_company + 1;
                 }
 
-                $company->alias = Transliterate::make($company->name .'_'. $number_id_company, ['type' => 'filename', 'lowercase' => true]);
+                $company->alias = Str::slug($company->name) .'-'. $number_id_company;
+
+                // Если использовать нижнеее подчеркивание, то:
+                // $company->alias = Transliterate::make($company->name .'_'. $number_id_company, ['type' => 'filename', 'lowercase' => true]);
             }
 
             $company->email = $request->email;
@@ -57,6 +61,9 @@ trait CompanyControllerTrait
             $company->sector_id = $request->sector_id;
             $company->author_id = $request->user()->id;
             $company->external_control = $request->has('external_control');
+            $company->seo_description = $request->seo_description;
+            $company->about = $request->about;
+
 
             $company->save();
 
@@ -134,6 +141,9 @@ trait CompanyControllerTrait
         }
 
         $company->external_control = $request->has('external_control');
+        $company->seo_description = $request->seo_description;
+        $company->about = $request->about;
+
         $company->save();
 
         if($company){

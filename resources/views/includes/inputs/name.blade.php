@@ -14,4 +14,4 @@ $max = 40;
 	]
 	) }}
 	<div class="sprite-input-right find-status" id="name-check"></div>
-	<span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
+	<span class="form-error">Минимум 3 символа</span>

@@ -51,6 +51,7 @@ use Illuminate\Support\Facades\DB;
 // Подрубаем трейт записи и обновления компании
 use App\Http\Controllers\Traits\CompanyControllerTrait;
 use App\Http\Controllers\Traits\UserControllerTrait;
+use App\Http\Controllers\Traits\LeadControllerTrait;
 
 class ClientController extends Controller
 {
@@ -62,6 +63,7 @@ class ClientController extends Controller
     // Подключаем трейт записи и обновления компании
     use CompanyControllerTrait;
     use UserControllerTrait;
+    use LeadControllerTrait;
 
     public function index(Request $request)
     {
@@ -172,8 +174,10 @@ class ClientController extends Controller
 
 
             $crop_name = explode(' ', $request->name);
-            if(isset($crop_name[1])){$first_name_gen = $crop_name[1];};
-            if(isset($crop_name[0])){$second_name_gen = $crop_name[0];};
+            Log::info('Пробуем разбить пришедшее имя на части');
+
+            if(isset($crop_name[0])){$first_name_gen = $crop_name[0];};
+            if(isset($crop_name[1])){$second_name_gen = $crop_name[1];};
             if(isset($crop_name[2])){$patronymic_gen = $crop_name[2];};
 
             // Конец обработки ------------------------------------------------------
@@ -190,8 +194,8 @@ class ClientController extends Controller
 
                 // ПОДСТАНОВКА в случае отсутствия
 
-                $new_user->first_name = $first_name_gen;
-                $new_user->second_name = $second_name_gen;
+                $new_user->first_name = $first_name_gen ?? $request->name ?? 'Укажите фамилию';
+                $new_user->second_name = $second_name_gen ?? null;
                 $new_user->patronymic = $patronymic_gen ?? null;
 
                 $new_user->email = $request->email;
@@ -372,6 +376,17 @@ class ClientController extends Controller
         // После создания клиента необходимо связать его с лидом
         $lead = Lead::findOrFail($request->lead_id);
         $lead->client_id = $client->id;
+
+        // Выводим из черновика, так как создали юзера / клиента и связали с лидом
+        $lead->draft = null;
+
+        $this->updateLead($request, $lead);
+
+        // Если для лида еще не указали имя, берем его из карточки реквизитов
+        if($lead->name == null){
+            $lead->name = $user_for_client->first_name . ' ' . $user_for_client->second_name;
+        }
+
         $lead->save();
 
         return 'Ок';

@@ -27,6 +27,9 @@
 
             <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Реквизиты</a></li>
             <li class="tabs-title"><a data-tabs-target="content-panel-4" href="#content-panel-4">График работы</a></li>
+
+            <li class="tabs-title"><a data-tabs-target="content-panel-about" href="#content-panel-about">Описание</a></li>
+
             <li class="tabs-title"><a data-tabs-target="content-panel-5" href="#content-panel-5">Настройка</a></li>
         </ul>
     </div>
@@ -222,6 +225,25 @@
 
             </div>
             <!-- Конец реквизиты -->
+
+
+            <!-- Описание компании -->
+            <div class="tabs-panel" id="content-panel-about">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-12 cell">
+                        <label>Информация о компании:
+                            {{ Form::textarea('about', $company->about, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
+                        </label><br>
+                    </div>
+                    <div class="small-12 medium-12 cell">
+                        <label>Description (Описание для SEO)
+                            @include('includes.inputs.textarea', ['name'=>'seo_description', 'value'=>$company->seo_description])
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- Конец описания компании -->
+
 
             <!-- Настройки -->
             <div class="tabs-panel" id="content-panel-5">

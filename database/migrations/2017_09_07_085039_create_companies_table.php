@@ -15,6 +15,9 @@ class CreateCompaniesTable extends Migration
             $table->string('name')->nullable()->index()->comment('Имя компании');
             $table->string('alias', 40)->unique()->nullable()->index()->comment('Алиас компании');
 
+            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            // $table->foreign('company_id')->references('id')->on('companies');
+
             $table->string('email')->nullable()->comment('Почта');
 
             $table->integer('location_id')->nullable()->unsigned()->comment('Адрес компании');
@@ -29,11 +32,6 @@ class CreateCompaniesTable extends Migration
             $table->bigInteger('ogrn')->nullable()->unsigned()->comment('Основной государственный регистрационный номер');
             $table->bigInteger('okpo')->nullable()->unsigned()->comment('Общероссийский классификатор предприятий и организаций');
             $table->string('okved')->nullable() ->comment('Общероссийский классификатор видов экономической деятельности');
-
-            // $table->string('account_settlement', 20)->nullable()->comment('Расчетный счет');
-            // $table->string('account_correspondent', 20)->nullable()->comment('Корреспондентский счет');
-
-            // $table->string('bank', 60)->nullable()->comment('Название банка');
 
             $table->integer('bic') -> length (9)->nullable()->unsigned()->comment('Банковский идентификационный код');
 
@@ -51,11 +49,10 @@ class CreateCompaniesTable extends Migration
 
             $table->boolean('external_control')->default(0)->comment('Внешнее управление');
 
+            $table->text('about')->nullable()->comment('Информация о компании');
+            $table->text('seo_description')->nullable()->comment('Описание для сайта');
 
             // Общие настройки
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
-            // $table->foreign('company_id')->references('id')->on('companies');
-
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');

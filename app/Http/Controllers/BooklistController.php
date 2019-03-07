@@ -209,6 +209,8 @@ class BooklistController extends Controller
 
     {
 
+         Log::info('Попытка записать позиции буклиста:');
+
         if($request->new_booklist_name){
 
             $booklist = Booklist::where('author_id', $request->user()->id)
