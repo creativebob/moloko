@@ -43,12 +43,26 @@ class CatalogsItemController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $catalogs_items = CatalogsItem::moderatorLimit($answer)
+        $columns = [
+            'id',
+            'catalog_id',
+            'name',
+            'parent_id',
+            'company_id',
+            'sort',
+            'display',
+            'system_item',
+            'moderation',
+            'author_id'
+        ];
+
+        $catalogs_items = CatalogsItem::with('childs')
+        ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->where('catalog_id', $catalog_id)
-        ->get();
+        ->get($columns);
         // dd($catalogs_items);
 
         // Отдаем Ajax

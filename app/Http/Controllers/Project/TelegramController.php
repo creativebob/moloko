@@ -11,7 +11,7 @@ use Telegram\Bot\Api;
 use App\Http\Controllers\Controller;
 
 
-class TelegramProjectController extends Controller
+class TelegramController extends Controller
 {
 
   public function me(){
@@ -33,7 +33,7 @@ class TelegramProjectController extends Controller
     dd($updates);
   }
 
-  
+
 
   /**
    * Display a listing of the resource.
@@ -54,10 +54,10 @@ class TelegramProjectController extends Controller
   $telegram = new Api(env('TELEGRAM-BOT-TOKEN')); // Устанавливаем токен, полученный у BotFather
   $telegram->sendMessage([
     'chat_id' => $chat_id,
-    'text' => $text 
+    'text' => $text
   ]);
 
-  // $telegram->sendMessage([ 
+  // $telegram->sendMessage([
   //   'chat_id' => '228265675',
   //   'text' => "Отправьте текстовое сообщение."
   // ]);

@@ -10,42 +10,44 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-// Route::get('/{city}/telegram', 'Project\IndexProjectController@telegram');
+// Route::get('/{city}/telegram', 'IndexController@telegram');
 
 // Сбрасываем кеш
-Route::get('/cache/delete/{domain}', 'Project\IndexProjectController@delete_cache');
+Route::get('/cache/delete/{domain}', 'IndexController@delete_cache');
 
 
 // Первый запуск
-Route::get('/', 'Project\IndexProjectController@start')->name('start');
+Route::get('/', 'IndexController@start')->name('start');
 
 // // База знаний (статична)
-// Route::get('/knowledge/{link}', 'Project\IndexProjectController@knowledge');
+// Route::get('/knowledge/{link}', 'IndexController@knowledge');
 
 // Новости
-// Route::get('/news', 'Project\NewsProjectController@index')->name('news.index');
+// Route::get('/news', 'NewsController@index')->name('news.index');
 
+// Товары
+Route::get('/goods/{catalog_item_id}', 'GoodsController@index')->name('goods');
 
 // Коллектив
-// Route::get('/team', 'Project\IndexProjectController@team')->name('team.index');
+// Route::get('/team', 'IndexController@team')->name('team.index');
 
-// Route::any('/team/question', 'Project\IndexProjectController@question')->name('team.question');
+// Route::any('/team/question', 'IndexController@question')->name('team.question');
 
 // Контакты
-Route::get('/contacts', 'Project\IndexProjectController@contacts')->name('contacts');
+Route::get('/contacts', 'IndexController@contacts')->name('contacts');
 
 // Отправка
-Route::post('/sending', 'Project\IndexProjectController@sending')->name('sending');
+Route::post('/sending', 'IndexController@sending')->name('sending');
 // Отправлено
-Route::get('/success', 'Project\IndexProjectController@success')->name('success');
+Route::get('/success', 'IndexController@success')->name('success');
 // Ошибка
-Route::get('/error', 'Project\IndexProjectController@error')->name('error');
+Route::get('/error', 'IndexController@error')->name('error');
 
 // Смена города
-// Route::get('/change_city/{city_id}/{page_alias?}', 'Project\IndexProjectController@change_city')->name('change_city');
+// Route::get('/change_city/{city_id}/{page_alias?}', 'IndexController@change_city')->name('change_city');
 
 // Страницы
-Route::get('/{alias}', 'Project\IndexProjectController@index')->name('index');
+Route::get('/{alias}', 'IndexController@index')->name('index');
 // Конкретная страница
-// Route::get('/{city}/{alias}/{link}', 'Project\IndexProjectController@show')->name('show');
+// Route::get('/{city}/{alias}/{link}', 'IndexController@show')->name('show');
 

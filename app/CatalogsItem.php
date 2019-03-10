@@ -57,17 +57,24 @@ class CatalogsItem extends Model
 	// Каталог
 	public function catalog()
 	{
-		return $this->belongsTo('App\Catalog');
+		return $this->belongsTo(Catalog::class);
 	}
 
     // Вложенные
 	public function childs()
 	{
-		return $this->hasMany('App\CatalogsItem', 'parent_id');
+		return $this->hasMany(CatalogsItem::class, 'parent_id');
 	}
-	// Аавтор
+
+	// Автор
 	public function author()
 	{
-		return $this->belongsTo('App\User', 'author_id');
+		return $this->belongsTo(User::class);
 	}
+
+	// Товары каталога
+    public function goods()
+    {
+        return $this->belongsToMany(Goods::class, 'catalogs_items_goods', 'catalogs_item_id', 'goods_id');
+    }
 }

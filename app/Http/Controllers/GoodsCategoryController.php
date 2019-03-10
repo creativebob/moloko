@@ -51,7 +51,7 @@ class GoodsCategoryController extends Controller
         ->authors($answer)
         ->systemItem($answer)
         ->template($answer)
-        ->withCount('products')
+        // ->withCount('products')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
@@ -66,7 +66,7 @@ class GoodsCategoryController extends Controller
                     'type' => $this->type,
                     'count' => $goods_categories->count(),
                     'id' => $request->id,
-                    'nested' => 'goods_products_count',
+                    // 'nested' => 'goods_products_count',
                 ]
             );
         }
@@ -80,7 +80,7 @@ class GoodsCategoryController extends Controller
                 'class' => $this->model,
                 'type' => $this->type,
                 'id' => $request->id,
-                'nested' => 'goods_products_count',
+                // 'nested' => 'goods_products_count',
                 'filter' => setFilter($this->entity_alias, $request, [
                     'booklist'
                 ]),

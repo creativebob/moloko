@@ -379,7 +379,7 @@ Route::any('/goods/add_photo', 'GoodsController@add_photo')->middleware('auth');
 Route::post('/goods/photos', 'GoodsController@photos')->middleware('auth');
 
 // Основные методы
-Route::resource('/goods', 'GoodsController')->middleware('auth');
+Route::resource('/goods', 'GoodsController');
 Route::post('/goods/search/{text_fragment}', 'GoodsController@search')->middleware('auth');
 // Архивация
 Route::post('/goods/archive/{id}', 'GoodsController@archive')->middleware('auth');
@@ -392,6 +392,7 @@ Route::any('/goods_check', 'GoodsController@ajax_check')->middleware('auth');
 // Отображение на сайте
 Route::any('/goods_categories_get_products', 'GoodsController@ajax_get_products')->middleware('auth');
 
+Route::any('/goods_create_mode', 'GoodsController@ajax_change_create_mode')->middleware('auth');
 
 
 

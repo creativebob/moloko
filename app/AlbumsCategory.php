@@ -57,19 +57,19 @@ class AlbumsCategory extends Model
     // Вложенные
     public function childs()
     {
-        return $this->hasMany('App\AlbumsCategory', 'parent_id');
+        return $this->hasMany(AlbumsCategory::class, 'parent_id');
     }
 
     // Компании
     public function company()
     {
-    	return $this->belongsTo('App\Company');
+    	return $this->belongsTo(Company::class);
     }
 
     // Альбомы
     public function albums()
     {
-    	return $this->hasMany('App\Album');
+    	return $this->hasMany(Album::class);
     }
 
 }

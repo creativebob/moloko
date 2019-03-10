@@ -38,12 +38,13 @@ use Illuminate\Config\Repository;
 
 use App\Http\Controllers\Controller;
 
-class IndexProjectController extends Controller
+class IndexController extends Controller
 {
 
     // Настройки сконтроллера
-    public function __construct()
+    public function __construct(Request $request)
     {
+        // $domain = env('SITE_DOMAIN');
         $this->site = Site::where('domain', 'site.ru')->first();
     }
 
@@ -106,6 +107,8 @@ class IndexProjectController extends Controller
         }
 
         $this->utm($request);
+
+        dd($site->catalogs->first()->items->load('goods'));
 
         return view('project.'.$alias.'.index', compact('site', 'page'));
     }

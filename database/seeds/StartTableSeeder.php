@@ -18,6 +18,9 @@ use App\Menu;
 
 use App\Catalog;
 
+use App\GoodsCategory;
+use App\RawsCategory;
+
 class StartTableSeeder extends Seeder
 {
 
@@ -99,8 +102,8 @@ class StartTableSeeder extends Seeder
                 'email' => 'lol@mail.ru',
                 'password' => bcrypt('123123'),
                 'nickname' => 'testovik',
-                'first_name' => 'Тестовый',
-                'second_name' => 'Тестовый',
+                'first_name' => 'Сотрудник',
+                'second_name' => 'Первый',
                 'location_id' => 1,
                 'user_type' => 1,
                 'access_block' => 0,
@@ -212,8 +215,38 @@ class StartTableSeeder extends Seeder
 
         Catalog::insert([
             [
-                'name' => 'Тестовый',
+                'name' => 'Первый каталог',
                 'description' => 'Тест',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => 1,
+            ],
+        ]);
+
+        GoodsCategory::insert([
+            [
+                'name' => 'Первая категория товаров',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => 1,
+            ],
+            [
+                'name' => 'Вторая категория товаров',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => 1,
+            ],
+        ]);
+
+        RawsCategory::insert([
+            [
+                'name' => 'Первая категория сырья',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => 1,
+            ],
+            [
+                'name' => 'Вторая категория сырья',
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => 1,

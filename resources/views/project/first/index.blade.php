@@ -17,14 +17,9 @@
 	</div>
 	<aside class="cell small-12 medium-3 large-3 left-sidebar" id="topAnchor" data-sticky-container>
 		<nav data-sticky data-options="marginTop:8;" data-top-anchor="topAnchor" data-btm-anchor="callme:bottom">
-			<ul class="menu vertical specific" data-magellan data-offset="110">
-				<li><a href="#item1">Ангары</a></li>
-				<li><a href="#item2">Комплектность</a></li>
-				<li><a href="#item3">Модельный ряд</a></li>
-				<li><a href="#item4">Преимущества</a></li>
-				<li><a href="#item6">Сроки поставки и монтаж</a></li>
-				<li><a href="#callme">Заказать звонок</a></li>
-			</ul>
+
+			@include('project.includes.catalog.catalog')
+
 		</nav>
 	</aside>
 

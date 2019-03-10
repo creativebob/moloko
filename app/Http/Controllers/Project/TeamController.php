@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Project;
 
 // Модель
-use App\News;
+use App\Staffer;
 use App\Site;
 
 // Кеш
@@ -15,45 +15,40 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class NewsProjectController extends Controller
+// Куки, для контроля форм
+use Illuminate\Support\Facades\Cookie;
+
+class TeamController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request, $city)
+
+    public function index(Request $request)
     {
 
         // dd($city);
 
-        $content = News::with(['company', 'author.staff' => function ($query) {
-            $query->with('position')->whereDisplay(1);
-        }, 'photo'])
-        ->whereHas('cities', function ($query) use ($city) {
-            $query->whereAlias($city);
+        $content = Staffer::with('user', 'position')
+        ->whereHas('filial.location.city', function ($query) {
+            $query->where('id', Cookie::get('city_id'));
         })
-        ->where('site_id', 2)
+        ->where('company_id', 1)
         ->where('display', 1)
+        ->whereNotNull('user_id')
         ->whereNull('moderation')
-        ->where('publish_begin_date', '<', Carbon::now())
-        ->where(function ($query) {
-            $query->where('publish_end_date', '>', Carbon::now())->orWhereNull('publish_end_date');
-        })
+        ->orderBy('sort')
         ->get();
 
-        // dd($news);
+        // dd($content);
 
-        $alias = 'news';
+        $alias = 'team';
 
         // $site = Cache::rememberForever('vorotamars', function() {
-        $site = Site::with(['departments.location.city', 'pages' => function ($query) {
-            $query->where('display', 1);
-        }, 'navigations' => function ($query) {
-            $query->with(['navigations_category', 'menus' => function ($query) {
-                $query->with('page')->where('display', 1);
-            }]);
-        }])->findOrFail(2);
+            $site = Site::with(['departments.location.city', 'pages' => function ($query) {
+                $query->where('display', 1);
+            }, 'navigations' => function ($query) {
+                $query->with(['navigations_category', 'menus' => function ($query) {
+                    $query->with('page')->where('display', 1);
+                }]);
+            }])->findOrFail(2);
         //     return $site;
         // });
         // dd($request);
@@ -73,10 +68,6 @@ class NewsProjectController extends Controller
 
         // dd($cities);
         // dd($city);
-
-
-
-
         // dd($content);
 
         if (isset($request->utm_source)) {
@@ -95,21 +86,6 @@ class NewsProjectController extends Controller
             Cookie::queue('utm-medium ', $request->utm_medium, 135000);
         }
 
-        // Проверяем на существование города
-        if (!in_array($city, $cities)) {
-
-         $city = $cities[0];
-         $error_message = 'Такого филиала не существует...';
-
-         return view('project.errors.404', compact('error_message', 'alias', 'city', 'navigations', 'departments'));
-
-            // abort(404, 'Такого филиала не существует...');
-            // $city = $cities[0];
-            // return redirect()->action('IndexController@index', ['city' => $city, 'alias' => $alias]);
-     }   
-
-
-
         // $content = Cache::rememberForever($alias, function() use ($city, $alias) {
         //     return json_decode(file_get_contents(env('CRM_DOMAIN').'/api/'.$city.'/'.$alias.'?token='.env('API_TOKEN')), true);
         // });
@@ -118,21 +94,19 @@ class NewsProjectController extends Controller
         // dd($content);
 
         // Проверяем на существоввание страницы
-     if ($page == null) {
-        abort(404, 'Такой страницы не существует...');
+        if ($page == null) {
+            abort(404, 'Такой страницы не существует...');
+        }
+
+        return view('project.team.index', compact('alias', 'page', 'city', 'navigations', 'departments', 'content', 'alias', 'department_worktime'));
     }
 
-    return view('project.news.index', compact('alias', 'page', 'city', 'navigations', 'departments', 'content', 'alias', 'department_worktime'));
-}
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function feedback(Request $request, $city)
     {
-        //
+
+        $staffer = Staffer::with('user', 'position')->findOrFail($request->id);
+
+        return view('project.team.modal', compact('staffer', 'city'));
     }
 
     /**
