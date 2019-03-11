@@ -17,7 +17,7 @@ Route::get('/cache/delete/{domain}', 'IndexController@delete_cache');
 
 
 // Первый запуск
-Route::get('/', 'IndexController@start')->name('start');
+Route::get('/', 'IndexController@start')->name('project.start');
 
 // // База знаний (статична)
 // Route::get('/knowledge/{link}', 'IndexController@knowledge');
@@ -26,7 +26,7 @@ Route::get('/', 'IndexController@start')->name('start');
 // Route::get('/news', 'NewsController@index')->name('news.index');
 
 // Товары
-Route::get('/goods/{catalog_item_id}', 'GoodsController@index')->name('goods');
+Route::get('/goods/{catalog_item_id}', 'GoodsController@index')->name('project.goods');
 
 // Коллектив
 // Route::get('/team', 'IndexController@team')->name('team.index');
@@ -34,20 +34,20 @@ Route::get('/goods/{catalog_item_id}', 'GoodsController@index')->name('goods');
 // Route::any('/team/question', 'IndexController@question')->name('team.question');
 
 // Контакты
-Route::get('/contacts', 'IndexController@contacts')->name('contacts');
+Route::get('/contacts', 'IndexController@contacts')->name('project.contacts');
 
 // Отправка
-Route::post('/sending', 'IndexController@sending')->name('sending');
+Route::post('/sending', 'IndexController@sending')->name('project.sending');
 // Отправлено
-Route::get('/success', 'IndexController@success')->name('success');
+Route::get('/success', 'IndexController@success')->name('project.success');
 // Ошибка
-Route::get('/error', 'IndexController@error')->name('error');
+Route::get('/error', 'IndexController@error')->name('project.error');
 
 // Смена города
 // Route::get('/change_city/{city_id}/{page_alias?}', 'IndexController@change_city')->name('change_city');
 
 // Страницы
-Route::get('/{alias}', 'IndexController@index')->name('index');
+Route::get('/{alias}', 'IndexController@index')->name('project.index');
 // Конкретная страница
 // Route::get('/{city}/{alias}/{link}', 'IndexController@show')->name('show');
 

@@ -76,14 +76,14 @@ class IndexController extends Controller
 
         $this->utm($request);
 
-        return redirect()->action('Project\IndexProjectController@index', ['alias' => 'company']);
+        return redirect()->route('project.index', ['alias' => 'company']);
     }
 
     // Смена города
     public function change_city($city_id, $page_alias = null)
     {
         Cookie::queue('city_id', $city_id, 135000);
-        return redirect()->action('Project\IndexProjectController@index', ['alias' => $page_alias]);
+        return redirect()->route('project.index', ['alias' => $page_alias]);
     }
 
     // Общие страницы
@@ -108,7 +108,7 @@ class IndexController extends Controller
 
         $this->utm($request);
 
-        dd($site->catalogs->first()->items->load('goods'));
+        // dd($site->catalogs->first()->items->load('goods'));
 
         return view('project.'.$alias.'.index', compact('site', 'page'));
     }
