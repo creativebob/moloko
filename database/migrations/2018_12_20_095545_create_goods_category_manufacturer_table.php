@@ -20,7 +20,7 @@ class CreateGoodsCategoryManufacturerTable extends Migration
             $table->foreign('goods_category_id')->references('id')->on('goods_categories');
 
             $table->integer('manufacturer_id')->unsigned()->comment('Id производителя');
-            $table->foreign('manufacturer_id')->references('id')->on('companies');
+            $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
 
         });
     }

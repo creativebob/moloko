@@ -18,20 +18,20 @@
         $('#units-block div').toggle();
     });
 
-    $(document).on('change', '#select-units, #select-goods_products', function() {
+    $(document).on('change', '#select-units', function() {
         setUnitAbbrevation($(this).attr('id'));
     });
 
-    $(document).on('change', '#select-goods_categories', function() {
+    // $(document).on('change', '#select-goods_categories', function() {
 
-        // var id = $(this).val();
+    //     // var id = $(this).val();
 
-        $.post('/admin/goods_products_create_mode', $('#form-cur_goods-create').serialize(), function(html){
-                // alert(html);
-                $('#mode').html(html);
-                Foundation.reInit($('#form-cur_goods-create'));
-            });
-    });
+    //     $.post('/admin/goods_products_create_mode', $('#form-cur_goods-create').serialize(), function(html){
+    //             // alert(html);
+    //             $('#mode').html(html);
+    //             Foundation.reInit($('#form-cur_goods-create'));
+    //         });
+    // });
 
     $(document).on('change', '.mode-select', function() {
         $.post('/admin/ajax_goods_count', {id: $(this).val()}, function(html){
@@ -77,7 +77,7 @@
 
         // alert($('#select-goods_categories').val() + mode + set_status);
 
-        $.post('/admin/goods_products_create_mode', {mode: mode, goods_category_id: $('#select-goods_categories').val(), set_status: set_status}, function(html){
+        $.post('/admin/goods_create_mode', {mode: mode, goods_category_id: $('#select-goods_categories').val(), set_status: set_status}, function(html){
             $('#mode').html(html);
             if (mode == 'mode-select') {
                 $('#unit-change').removeClass('unit-change');

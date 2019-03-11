@@ -25,13 +25,9 @@
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active"><a href="#options" aria-selected="true">Общая информация</a></li>
-
-            @if ($type != 'raws')
             <li class="tabs-title"><a data-tabs-target="compositions" href="#compositions">Состав</a></li>
-            @endif
             <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li>
             <li class="tabs-title"><a data-tabs-target="photos" href="#photos">Фотографии</a></li>
-
         </ul>
     </div>
 </div>

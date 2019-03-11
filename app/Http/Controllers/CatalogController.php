@@ -4,15 +4,10 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Catalog;
-use App\Site;
-use App\PhotoSetting;
 
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\CatalogRequest;
-
-// Подключаем трейт записи и обновления категорий
-use App\Http\Controllers\Traits\CategoryControllerTrait;
 
 // Транслитерация
 use Transliterate;
@@ -29,14 +24,11 @@ class CatalogController extends Controller
         $this->entity_dependence = false;
         $this->class = Catalog::class;
         $this->model = 'App\Catalog';
-        $this->type = 'edit';
     }
 
-    // Используем трейт записи и обновления категорий
-    use CategoryControllerTrait;
-
-    public function index(Request $request, $alias)
+    public function index(Request $request)
     {
+
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
@@ -45,106 +37,94 @@ class CatalogController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $catalogs = Catalog::with([
-            'site',
-            'raws',
-            'goods',
-            'services'
+            'author',
         ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
-        ->whereHas('site', function ($q) use ($alias) {
-            $q->where('alias', $alias);
-        })
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
-        ->get();
-
-        // Отдаем Ajax
-        if ($request->ajax()) {
-
-            return view('includes.menu_views.category_list',
-                [
-                    'items' => $catalogs,
-                    'entity' => $this->entity_alias,
-                    'class' => $this->model,
-                    'type' => $this->type,
-                    'count' => $catalogs->count(),
-                    'id' => $request->id,
-                    'alias' => $alias
-                ]
-            );
-
-        }
+        ->paginate(30);
+        // dd($catalogs);
 
         return view('catalogs.index',[
             'catalogs' => $catalogs,
             'page_info' => pageInfo($this->entity_alias),
-            'parent_page_info' => pageInfo('sites'),
-            'site' => Site::moderatorLimit(operator_right('sites', false, getmethod(__FUNCTION__)))
-            ->whereAlias($alias)
-            ->first(),
-            'entity' => $this->entity_alias,
-            'class' => $this->model,
-            'type' => $this->type,
-            'id' => $request->id,
         ]);
     }
 
-    public function create(Request $request, $alias)
+    public function create(Request $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('includes.menu_views.create', [
-            'item' => new $this->class,
-            'entity' => $this->entity_alias,
-            'title' => 'Добавление каталога',
-            'parent_id' => $request->parent_id,
-            'category_id' => $request->category_id
+        return view('catalogs.create', [
+            'catalog' => new $this->class,
+            'page_info' => pageInfo($this->entity_alias),
         ]);
     }
 
-    public function store(CatalogRequest $request, $alias)
+    public function store(CatalogRequest $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Заполнение и проверка основных полей в трейте
-        $catalog = $this->storeCategory($request);
+        $catalog = new Catalog;
+        $catalog->name = $request->name;
+        $catalog->description = $request->description;
 
-        $site = Site::where(['alias' => $alias, 'company_id' => $request->user()->company_id])->first();
-        $catalog->site_id = $site->id;
 
         // Алиас
         $catalog->alias = empty($request->alias) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->alias;
+
+        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        if($answer['automoderate'] == false){
+            $catalog->moderation = 1;
+        }
+
+        // Cистемная запись
+        $catalog->system_item = $request->system_item;
+        $catalog->display = $request->display;
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        $catalog->company_id = $user->company_id;
+        $catalog->author_id = hideGod($user);
 
         $catalog->save();
 
         if ($catalog) {
 
-            return redirect()->route('catalogs.index', ['alias' => $alias, 'id' => $catalog->id]);
+            // Сайты
+            if (isset($request->sites)) {
+                $catalog->sites()->attach($request->sites);
+            }
+
+            return redirect()->route('catalogs.index');
 
         } else {
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при записи каталога!',
-            ];
+            abort(403, 'Ошибка при записи каталога!');
         }
     }
 
-    public function show(Request $request, $alias, $catalog_alias)
+    public function show(Request $request)
     {
         //
     }
 
-    public function edit(Request $request, $alias, $id)
+    public function edit(Request $request, $id)
     {
 
-        $catalog = Catalog::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $catalog = Catalog::moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
@@ -154,54 +134,61 @@ class CatalogController extends Controller
         return view('catalogs.edit', [
             'catalog' => $catalog,
             'page_info' => pageInfo($this->entity_alias),
-            'parent_page_info' => pageInfo('sites'),
-            'site' => Site::moderatorLimit(operator_right('sites', false, getmethod(__FUNCTION__)))
-            ->whereAlias($alias)
-            ->first(),
         ]);
     }
 
-    public function update(CatalogRequest $request, $alias, $id)
+    public function update(CatalogRequest $request, $id)
     {
 
-        $catalog = Catalog::moderatorLimit(operator_right($this->entity_alias, $this->entity_alias, getmethod(__FUNCTION__)))
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $catalog = Catalog::moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalog);
 
-        // Заполнение и проверка основных полей в трейте
-        $sector = $this->updateCategory($request, $catalog);
+        $catalog->name = $request->name;
+        $catalog->description = $request->description;
 
         // Если ввели алиас руками
         if (isset($request->alias) && ($catalog->alias != $request->alias)) {
             $catalog->alias = $request->alias;
-        } else {
-            // Иначе переводим заголовок в транслитерацию
-            $catalog->alias = Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]);
         }
+
+        $catalog->system_item = $request->system_item;
+        $catalog->moderation = $request->moderation;
+        $catalog->display = $request->display;
 
         $catalog->save();
 
         if ($catalog) {
-            // Переадресовываем на index
-            return redirect()->route('catalogs.index', ['alias' => $alias, 'id' => $catalog->id]);
+
+            // Обновляем сайты
+            if (isset($request->sites)) {
+                $catalog->sites()->sync($request->sites);
+            } else {
+
+                // Если удалили последнюю роль для должности и пришел пустой массив
+                $catalog->sites()->detach();
+            }
+
+            return redirect()->route('catalogs.index');
+
         } else {
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении каталога!'
-            ];
+            abort(403, 'Ошибка при обновлении каталога!');
         }
     }
 
-    public function destroy(Request $request, $alias, $id)
+    public function destroy(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $catalog = Catalog::with('childs', 'services', 'goods', 'raws')
+        $catalog = Catalog::with(['items'])
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
@@ -211,18 +198,14 @@ class CatalogController extends Controller
         $catalog->editor_id = hideGod($request->user());
         $catalog->save();
 
-        $parent_id = $catalog->parent_id;
-
-        $catalog = Catalog::destroy($id);
+        $catalog->delete();
 
         if ($catalog) {
-            // Переадресовываем на index
-            return redirect()->route('catalogs.index', ['alias' => $alias, 'id' => $parent_id]);
+
+            return redirect()->route('catalogs.index');
+
         } else {
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при удалении каталога!'
-            ];
+            abort(403, 'Ошибка при удалении каталога!');
         }
     }
 

@@ -33,7 +33,7 @@ class CreateGoodsCategoriesTable extends Migration
             $table->integer('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
             $table->foreign('category_id')->references('id')->on('goods_categories');
 
-            $table->boolean('direction')->default(0)->comment('Направление');
+            // $table->boolean('direction')->default(0)->comment('Направление');
 
 
             // Общие настройки

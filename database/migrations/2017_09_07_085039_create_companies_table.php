@@ -36,10 +36,10 @@ class CreateCompaniesTable extends Migration
             $table->integer('bic') -> length (9)->nullable()->unsigned()->comment('Банковский идентификационный код');
 
             $table->integer('director_user_id')->nullable()->unsigned()->comment('Директор компании');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('director_user_id')->references('id')->on('users');
 
-            // $table->integer('admin_user_id')->nullable()->unsigned()->comment('Администратор компании');
-            // $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('admin_user_id')->nullable()->unsigned()->comment('Администратор компании');
+            $table->foreign('admin_user_id')->references('id')->on('users');
 
             $table->integer('schedule_id')->nullable()->unsigned()->comment('Id графика работы');
             $table->foreign('schedule_id')->references('id')->on('schedules');

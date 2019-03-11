@@ -33,8 +33,8 @@
 
     @if ($articles_group->articles->count() == 0)
     <div class="small-12 cell checkbox set-status">
-        <input type="checkbox" name="set_status" id="set-status" value="set" {{ $articles_group->set_status == 'set' ? 'checked' : '' }}>
-        {{-- {{ Form::checkbox('set_status', 'set', $articles_group->set_status, ['id' => 'set-status']) }} --}}
+        {{-- <input type="checkbox" name="set_status" id="set-status" value="1"> --}}
+        {{ Form::checkbox('set_status', 1, null, ['id' => 'set-status']) }}
         <label for="set-status"><span>Набор</span></label>
     </div>
     @endif

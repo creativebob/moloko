@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\View\View;
 
-class ManufacturersComposer
+class Manufacturers1Composer
 {
 	public function compose(View $view)
 	{

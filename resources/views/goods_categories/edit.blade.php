@@ -89,7 +89,7 @@
                                 {{-- Подключаем класс Checkboxer --}}
                                 @include('includes.scripts.class.checkboxer')
 
-                                @include('includes.inputs.checker_contragents', [
+                                @include('includes.lists.manufacturers', [
                                     'entity' => $goods_category,
                                     'title' => 'Производители',
                                     'name' => 'manufacturers'
@@ -101,8 +101,12 @@
 
                     </div>
 
-                    @if ($goods_category->parent_id == null)
-                        @include('includes.control.direction', ['direction' => isset($goods_category->direction) ])
+                    @if ($goods_category->parent_id == null && $goods_category->has('direction'))
+                    <div class="small-12 cell checkbox">
+                        {{ Form::checkbox('direction', 1, ($goods_category->direction->archive == false) ? 1 : 0, ['id' => 'direction-checkbox']) }}
+                        <label for="direction-checkbox"><span>Направление</span></label>
+                        {{-- @include('includes.control.direction', ['direction' => isset($goods_category->direction) ]) --}}
+                    </div>
                     @endif
 
                     @include('includes.control.checkboxes', ['item' => $goods_category])
@@ -147,18 +151,18 @@
             {{ Form::close() }}
 
             {{-- Подключаем класс дял работы с метриками --}}
-            @include('includes.scripts.class.metrics')
+            {{-- @include('includes.scripts.class.metrics') --}}
 
             <!-- Свойства -->
             <div class="tabs-panel" id="properties">
 
-                @include('includes.metrics_category.section', ['category' => $goods_category])
+                {{-- @include('includes.metrics_category.section', ['category' => $goods_category]) --}}
             </div>
 
             <!-- Свойства для набора -->
             <div class="tabs-panel" id="set-properties">
 
-                @include('includes.metrics_category.section', ['category' => $goods_category, 'set_status' => 'set'])
+                {{-- @include('includes.metrics_category.section', ['category' => $goods_category, 'set_status' => 'set']) --}}
 
             </div>
 
@@ -180,20 +184,20 @@
                             <tbody id="composition-table">
 
                                 {{-- Таблица метрик товара --}}
-                                @if (!empty($goods_category->compositions))
+                                {{-- @if (!empty($goods_category->compositions))
 
                                 @foreach ($goods_category->compositions as $composition)
                                 @include ('goods_categories.compositions.composition_tr', $composition)
                                 @endforeach
 
-                                @endif
+                                @endif --}}
 
                             </tbody>
                         </table>
                     </div>
 
                     <div class="small-12 medium-3 cell">
-                        @if (isset($composition_list))
+                        {{-- @if (isset($composition_list))
                         {{ Form::model($goods_category, []) }}
 
                         <ul class="menu vertical">
@@ -216,7 +220,7 @@
 
                         </ul>
                         {{ Form::close() }}
-                        @endif
+                        @endif --}}
 
                     </div>
                 </div>

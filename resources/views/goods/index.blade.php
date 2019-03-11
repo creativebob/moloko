@@ -78,13 +78,13 @@
                         </a>
                     </td>
                     <td class="td-name">
-                        <a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->article->name }} @if ($cur_goods->article->product->set_status == 'set') (Набор) @endif</a>
+                        <a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->article->name }} {{-- @if ($cur_goods->article->group->set_status == 'set') (Набор) @endif --}}</a>
                     </td>
                     <td class="td-goods_category">
-                        <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->article->product->category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->article->product->category->name }}</a>
+                        <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->category->name }}</a>
                         <br>
                         {{-- @if($cur_goods->article->product->name != $cur_goods->name) --}}
-                        <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->article->product->id }}" class="filter_link light-text">{{ $cur_goods->article->product->name }}</a>
+                        <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->article->id }}" class="filter_link light-text">{{ $cur_goods->article->name }}</a>
                         {{-- @endif --}}
                     </td>
                     <td class="td-description">{{ $cur_goods->description }}</td>
@@ -92,9 +92,9 @@
 
                     <td class="td-catalog">
 
-                        @foreach ($cur_goods->catalogs as $catalog)
+                        {{-- @foreach ($cur_goods->catalogs as $catalog)
                         <a href="/admin/sites/{{ $catalog->site->alias }}/catalog_products/{{ $catalog->id }}" class="filter_link" title="Редактировать каталог">{{ $catalog->name }}</a>,
-                        @endforeach
+                        @endforeach --}}
 
                     </td>
 
@@ -106,7 +106,7 @@
 
                     {{-- <td class="td-sync-id"><a class="icon-sync sprite" data-open="item-sync"></a></td> --}}
 
-                    <td class="td-author">@if(isset($cur_goods->author->first_name)) {{ $cur_goods->author->first_name . ' ' . $cur_goods->author->second_name }} @endif</td>
+                    <td class="td-author">@if(isset($cur_goods->author->first_name)) {{ $cur_goods->author->name }} @endif</td>
 
                     {{-- Элементы управления --}}
                     @include('includes.control.table-td', ['item' => $cur_goods])

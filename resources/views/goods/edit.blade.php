@@ -52,7 +52,7 @@ $disabled = $cur_goods->article->draft == null;
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            {{ Form::model($cur_goods, [
+            {{ Form::model($article, [
                 'route' => ['goods.update', $cur_goods->id],
                 'data-abide',
                 'novalidate',
@@ -79,27 +79,23 @@ $disabled = $cur_goods->article->draft == null;
                                     {{ Form::text('name', $cur_goods->article->name, ['required']) }}
                                 </label>
 
-                                <label>Группа
+                                {{-- <label>Группа
                                     @include('includes.selects.goods_products', ['goods_category_id' => $cur_goods->article->product->goods_category_id, 'set_status' => $cur_goods->article->product->set_status, 'goods_product_id' => $cur_goods->article->goods_product_id])
-                                </label>
+                                </label> --}}
 
                                 <label>Категория
-                                    @include('includes.selects.goods_categories', ['goods_category_id' => $cur_goods->article->product->goods_category_id])
+                                    @include('includes.selects.goods_categories', ['goods_category_id' => $cur_goods->goods_category_id])
                                 </label>
 
                                 <label>Производитель
 
-                                    @if ($cur_goods->article->product->category->manufacturers->isNotEmpty())
+                                    @if ($cur_goods->category->manufacturers->isNotEmpty())
 
-                                    {!! Form::select('manufacturer_id', $cur_goods->article->product->category->manufacturers->pluck('name', 'id'), $cur_goods->article->manufacturer_id, []) !!}
+                                    {!! Form::select('manufacturer_id', $cur_goods->category->manufacturers->pluck('company.name', 'id'), $cur_goods->article->manufacturer_id, []) !!}
 
                                     @else
 
-                                    @include('includes.selects.contragents', [
-                                        'name' => 'manufacturers',
-                                        'value' => $cur_goods->article->manufacturer_id
-                                    ]
-                                    )
+                                    @include('includes.selects.manufacturers', ['manufacturer_id' => $cur_goods->article->manufacturer_id, 'item' => $cur_goods, 'draft' => $cur_goods->article->draft])
 
                                     @endif
 
@@ -160,16 +156,16 @@ $disabled = $cur_goods->article->draft == null;
                         <div class="grid-x">
                             <div class="small-12 cell">
                                 <label>Описание товара
-                                    @include('includes.inputs.textarea', ['name'=>'description', 'value' => $cur_goods->description])
+                                    @include('includes.inputs.textarea', ['name'=>'description', 'value' => $cur_goods->article->description])
                                 </label>
                             </div>
                         </div>
 
-                        @php
-                        $metric_relation = ($cur_goods->article->product->set_status == 'one') ? 'one_metrics' : 'set_metrics';
-                        @endphp
+                        {{-- @php
+                        $metric_relation = ($cur_goods->article->group->set_status == 'one') ? 'one_metrics' : 'set_metrics';
+                        @endphp --}}
 
-                        @if ($cur_goods->article->metrics->isNotEmpty() || $cur_goods->article->product->category->$metric_relation->isNotEmpty())
+                        {{-- @if ($cur_goods->article->metrics->isNotEmpty() || $cur_goods->category->$metric_relation->isNotEmpty())
 
                         @include('includes.scripts.class.metric_validation')
 
@@ -178,7 +174,7 @@ $disabled = $cur_goods->article->draft == null;
 
                             <div id="metrics-list">
 
-                                {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
+                                Если уже сохранили метрики товара, то тянем их с собой
                                 @if ($cur_goods->article->metrics->isNotEmpty())
                                 @foreach ($cur_goods->article->metrics->unique() as $metric)
                                 @include('includes.metrics.metric_input', $metric)
@@ -197,7 +193,7 @@ $disabled = $cur_goods->article->draft == null;
                             </div>
                         </fieldset>
 
-                        @endif
+                        @endif --}}
 
                         <div id="cur-goods-inputs"></div>
                         <div class="small-12 cell tabs-margin-top text-center">
@@ -237,12 +233,12 @@ $disabled = $cur_goods->article->draft == null;
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Себестоимость
-                                        {{ Form::number('cost', $cur_goods->cost) }}
+                                        {{ Form::number('cost', $cur_goods->article->cost) }}
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
-                                    <label>Цена за (<span id="unit">{{ ($cur_goods->portion_status == null) ?$cur_goods->article->product->unit->abbreviation : 'порцию' }}</span>)
-                                        {{ Form::number('price', $cur_goods->price) }}
+                                    <label>Цена за (<span id="unit">{{ ($cur_goods->article->portion_status == null) ? $cur_goods->article->group->unit->abbreviation : 'порцию' }}</span>)
+                                        {{ Form::number('price', $cur_goods->article->price) }}
                                     </label>
                                 </div>
                             </div>
@@ -250,7 +246,7 @@ $disabled = $cur_goods->article->draft == null;
 
                         <fieldset class="fieldset portion-fieldset" id="portion-fieldset">
                             <legend class="checkbox">
-                                {{ Form::checkbox('portion_status', 1, $cur_goods->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) }}
+                                {{ Form::checkbox('portion_status', 1, $cur_goods->article->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) }}
                                 <label for="portion">
                                     <span id="portion-change">Принимать порциями</span>
                                 </label>
@@ -260,18 +256,18 @@ $disabled = $cur_goods->article->draft == null;
                             <div class="grid-x grid-margin-x" id="portion-block">
                                 <div class="small-12 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
                                     <label>Имя&nbsp;порции
-                                        {{ Form::text('portion_name', $cur_goods->portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
+                                        {{ Form::text('portion_name', $cur_goods->article->portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
                                     </label>
                                 </div>
                                 <div class="small-6 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
                                     <label>Сокр.&nbsp;имя
-                                        {{ Form::text('portion_abbreviation',  $cur_goods->portion_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
+                                        {{ Form::text('portion_abbreviation',  $cur_goods->article->portion_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
                                     </label>
                                 </div>
                                 <div class="small-6 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
-                                    <label>Кол-во,&nbsp;{{ $cur_goods->article->product->unit->abbreviation }}
-                                        {{-- Количество чего-либо --}}
-                                        {{ Form::text('portion_count', $cur_goods->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
+                                    <label>Кол-во,&nbsp;{{ $cur_goods->article->group->unit->abbreviation }}
+                                        Количество чего-либо
+                                        {{ Form::text('portion_count', $cur_goods->article->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
                                         <div class="sprite-input-right find-status" id="name-check"></div>
                                         <span class="form-error">Введите количество</span>
                                     </label>
@@ -292,8 +288,11 @@ $disabled = $cur_goods->article->draft == null;
                         <fieldset class="fieldset-access">
                             <legend>Каталоги</legend>
 
+                            @include('includes.catalogs_with_items')
+
+
                             {{-- Form::select('catalogs[]', $catalogs_list, $cur_goods->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
-                            @include('includes.selects.catalogs_chosen', ['parent_id' => $cur_goods->catalogs->keyBy('id')->toArray()])
+                            {{-- @include('includes.selects.catalogs_chosen', ['parent_id' => $cur_goods->catalogs->keyBy('id')->toArray()]) --}}
 
                         </fieldset>
                     </div>
@@ -320,11 +319,11 @@ $disabled = $cur_goods->article->draft == null;
                             </thead>
                             <tbody id="composition-table">
 
-                                @php
+                               {{--  @php
                                 $composition_relation = ($cur_goods->article->product->set_status == 'one') ? 'compositions' : 'set_compositions';
                                 @endphp
 
-                                {{-- У товара есть значения состава, берем их --}}
+                                У товара есть значения состава, берем их
                                 @if ($cur_goods->article->$composition_relation->isNotEmpty())
 
                                 @foreach ($cur_goods->article->$composition_relation as $composition)
@@ -333,7 +332,7 @@ $disabled = $cur_goods->article->draft == null;
 
                                 @else
 
-                                {{-- В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются --}}
+                                В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются
                                 @if (($composition_relation != 'set_compositions') && ($cur_goods->article->product->category->compositions->isNotEmpty())
                                 && ($cur_goods->article->draft == 1))
                                 @foreach ($cur_goods->article->product->category->compositions as $composition)
@@ -341,7 +340,7 @@ $disabled = $cur_goods->article->draft == null;
                                 @endforeach
                                 @endif
 
-                                @endif
+                                @endif --}}
 
 
                             </tbody>
@@ -354,8 +353,8 @@ $disabled = $cur_goods->article->draft == null;
 
                         {{-- Если статус у товара статус черновика, то показываем сырье/товары для добавления, в зависимости от статуса набора --}}
 
-                        @if ($cur_goods->article->draft == 1)
-                        @isset ($composition_list)
+                        {{-- @if ($cur_goods->article->draft == 1) --}}
+                        {{-- @isset ($composition_list)
 
                         @if ($cur_goods->article->$composition_relation->isNotEmpty())
                         {{ Form::model($cur_goods->article, []) }}
@@ -363,9 +362,9 @@ $disabled = $cur_goods->article->draft == null;
                         @if ($cur_goods->article->product->set_status == 'one')
                         {{ Form::model($cur_goods->article->product->category, []) }}
                         @endisset
-                        @endif
+                        @endif --}}
 
-                        <ul class="menu vertical">
+                        {{-- <ul class="menu vertical">
 
                             @isset ($composition_list['composition_categories'])
                             <li>
@@ -388,7 +387,7 @@ $disabled = $cur_goods->article->draft == null;
                         {{ Form::close() }}
 
                         @endif
-                        @endisset
+                        @endisset --}}
 
                     </div>
                 </div>
@@ -451,22 +450,21 @@ $disabled = $cur_goods->article->draft == null;
 
     // Основные настройки
     var cur_goods_id = '{{ $cur_goods->id }}';
-    var set_status = '{{ $cur_goods->article->product->set_status }}';
+
     var entity = 'goods';
 
-    var metrics_count = '{{ count($cur_goods->article->metrics) }}';
+    var metrics_count = 0;
 
+    var set_status = 'one';
     if (set_status == 'one') {
-        var compositions_count = '{{ count($cur_goods->article->compositions) }}';
+        var compositions_count = 0;
     } else {
         var compositions_count = 0;
     }
 
-    // var compositions_count = '{{ count($cur_goods->article->metrics) }}';
+    var category_id = '{{ $cur_goods->goods_category_id }}';
 
-    var category_id = '{{ $cur_goods->article->product->goods_category_id }}';
-
-    var unit = '{{ $cur_goods->article->product->unit->abbreviation }}';
+    var unit = 'шт';
 
     // Мульти Select
     $(".chosen-select").chosen({width: "95%"});
@@ -700,5 +698,5 @@ $disabled = $cur_goods->article->draft == null;
 @include('goods.scripts')
 @include('includes.scripts.dropzone', ['settings' => $settings, 'item_id' => $cur_goods->id])
 {{-- Проверка поля на существование --}}
-@include('includes.scripts.check')
+@include('includes.scripts.check', ['entity' => 'articles', 'id' => $cur_goods->article->id])
 @endsection
