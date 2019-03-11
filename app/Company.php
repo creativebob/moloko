@@ -187,9 +187,20 @@ class Company extends Model
     }
 
     // Производители
+    // public function manufacturers()
+    // {
+    //     return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'manufacturer_id')->withPivot('company_id');
+    // }
+
+
+    // public function manufacturers_supplier()
+    // {
+    //     return $this->hasMany('App\Manufacturer', 'company_id');
+    // }
+
     public function manufacturers()
     {
-        return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'manufacturer_id')->withPivot('company_id');
+        return $this->hasMany('App\Manufacturer', 'company_id');
     }
 
     // Производитель

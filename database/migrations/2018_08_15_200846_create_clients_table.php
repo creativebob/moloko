@@ -16,12 +16,12 @@ class CreateClientsTable extends Migration
         Schema::create('clients', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('client_id')->nullable()->unsigned()->comment('Id сущности: как правило users или company');
-            $table->string('client_type')->nullable()->comment('Сущность');
+            $table->morphs('clientable');
+
+            $table->text('description')->nullable()->comment('Описание клиента');
 
             $table->integer('loyalty_id')->nullable()->unsigned()->default(4)->comment('Id лояльности');
             $table->foreign('loyalty_id')->references('id')->on('loyalties');
-
 
             // Общие настройки
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');

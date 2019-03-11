@@ -19,7 +19,7 @@
 @endsection
 
 @section('content')
-    {{ Form::model($dealer->client->clientable, ['url' => '/admin/clients/'.$dealer->client->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+    {{ Form::model($dealer->client->clientable, ['url' => '/admin/dealers/'.$dealer->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
     {{ method_field('PATCH') }}
         @include('companies.form', ['submitButtonText' => 'Редактировать', 'param'=>'', 'company'=>$dealer->client->clientable])
     {{ Form::close() }}

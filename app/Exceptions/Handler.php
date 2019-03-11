@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Auth;
 
 class Handler extends ExceptionHandler
 {
@@ -48,6 +49,25 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+
+        // Пробуем замутить исключение----------------------------------
+
+        if ($exception instanceof \Illuminate\Auth\AuthenticationException) {
+
+            Auth::logout();
+            return redirect()->route('login');
+
+            // return response()->view('errors.unauthorized', [], 403);
+        }
+
+        // if ($exception instanceof \Illuminate\Auth\Access\AuthorizationException) {
+
+        //     dd('Проблемы с правами, Бро!');
+        //     return response()->view('errors.unauthorized', [], 403);
+        // }
+
+        // Конец пробы -------------------------------------------------
+
         return parent::render($request, $exception);
     }
 

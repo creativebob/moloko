@@ -16,7 +16,7 @@ class CreateCompaniesTable extends Migration
             $table->string('alias', 40)->unique()->nullable()->index()->comment('Алиас компании');
 
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
-            // $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('email')->nullable()->comment('Почта');
 
@@ -24,7 +24,7 @@ class CreateCompaniesTable extends Migration
             $table->foreign('location_id')->references('id')->on('locations');
 
             $table->integer('legal_form_id')->default(1)->unsigned()->comment('Правовая форма');
-            // $table->foreign('legal_form_id')->references('id')->on('legal_forms');
+            $table->foreign('legal_form_id')->references('id')->on('legal_forms');
 
             $table->bigInteger('inn')->nullable()->unsigned()->comment('ИНН компании');
             $table->bigInteger('kpp')->nullable()->unsigned()->comment('КПП');
@@ -36,10 +36,10 @@ class CreateCompaniesTable extends Migration
             $table->integer('bic') -> length (9)->nullable()->unsigned()->comment('Банковский идентификационный код');
 
             $table->integer('director_user_id')->nullable()->unsigned()->comment('Директор компании');
-            // $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
 
             $table->integer('admin_user_id')->nullable()->unsigned()->comment('Администратор компании');
-            // $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
 
             $table->integer('schedule_id')->nullable()->unsigned()->comment('Id графика работы');
             $table->foreign('schedule_id')->references('id')->on('schedules');
