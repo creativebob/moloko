@@ -46,7 +46,12 @@ class GoodsCategoryController extends Controller
 
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $goods_categories = GoodsCategory::moderatorLimit($answer)
+        $goods_categories = GoodsCategory::with([
+            'goods',
+            'childs'
+        ])
+        ->withCount('childs')
+        ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
@@ -55,6 +60,7 @@ class GoodsCategoryController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
+        // dd($goods_categories->first()->getRelations());
 
         // Отдаем Ajax
         if ($request->ajax()) {
@@ -80,7 +86,7 @@ class GoodsCategoryController extends Controller
                 'class' => $this->model,
                 'type' => $this->type,
                 'id' => $request->id,
-                // 'nested' => 'goods_products_count',
+                'nested' => 'childs_count',
                 'filter' => setFilter($this->entity_alias, $request, [
                     'booklist'
                 ]),
@@ -148,12 +154,16 @@ class GoodsCategoryController extends Controller
             'set_metrics' => function ($q) {
                 $q->with('unit', 'values');
             },
-            'compositions.product.unit',
-            'compositions',
+            // 'compositions.product.unit',
+            // 'compositions',
             'manufacturers',
             'direction'
         ])
-        ->withCount('one_metrics', 'set_metrics', 'compositions')
+        ->withCount([
+            'one_metrics',
+            'set_metrics',
+            // 'compositions'
+        ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
         // dd($goods_category);
@@ -173,32 +183,32 @@ class GoodsCategoryController extends Controller
         $answer_raws_categories = operator_right('raws_categories', false, 'index');
         $answer_raws = operator_right('raws', false, 'index');
 
-        $raws_articles = RawsArticle::with(['product' => function ($q) {
-            $q->with(['category' => function ($q) {
-                $q->select('id', 'name');
-            }])->select('id', 'name', 'raws_category_id');
-        }])
-        ->select('id', 'name', 'raws_product_id')
-        ->whereHas('raws', function ($query) {
-            $query->whereNull('draft');
-        })
+        // $raws_articles = RawsArticle::with(['product' => function ($q) {
+        //     $q->with(['category' => function ($q) {
+        //         $q->select('id', 'name');
+        //     }])->select('id', 'name', 'raws_category_id');
+        // }])
+        // ->select('id', 'name', 'raws_product_id')
+        // ->whereHas('raws', function ($query) {
+        //     $query->whereNull('draft');
+        // })
 
-        // ->withCount('raws_products')
-        ->moderatorLimit($answer_raws_categories)
-        ->companiesLimit($answer_raws_categories)
-        // ->authors($answer_raws_categories)
-        // ->systemItem($answer_raws_categories) // Фильтр по системным записям
-        ->get()
-        ->keyBy('id')
-        ->groupBy('raws_product.raws_category.name');
+        // // ->withCount('raws_products')
+        // ->moderatorLimit($answer_raws_categories)
+        // ->companiesLimit($answer_raws_categories)
+        // // ->authors($answer_raws_categories)
+        // // ->systemItem($answer_raws_categories) // Фильтр по системным записям
+        // ->get()
+        // ->keyBy('id')
+        // ->groupBy('raws_product.raws_category.name');
         // ->toArray();
         // dd($raws_articles);
 
-        $composition_list = [
-            'name' => 'Сырье',
-            'alias' => 'raws',
-            'composition_categories' => $raws_articles,
-        ];
+        // $composition_list = [
+        //     'name' => 'Сырье',
+        //     'alias' => 'raws',
+        //     'composition_categories' => $raws_articles,
+        // ];
         // dd($composition_list);
 
 
@@ -207,7 +217,9 @@ class GoodsCategoryController extends Controller
 
         $settings = getSettings($this->entity_alias);
 
-        return view('goods_categories.edit', compact('goods_category', 'page_info', 'properties', 'properties_list', 'composition_list', 'settings'));
+        // dd($goods_category->direction);
+
+        return view('goods_categories.edit', compact('goods_category', 'page_info', 'settings'));
     }
 
     public function update(GoodsCategoryRequest $request, $id)
@@ -269,7 +281,10 @@ class GoodsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $goods_category = GoodsCategory::with('childs', 'products')
+        $goods_category = GoodsCategory::with([
+            'childs',
+            'goods'
+        ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
@@ -293,9 +308,9 @@ class GoodsCategoryController extends Controller
         // $directory = $goods_category->company_id . '/media/' . $this->entity_alias . '/' . $goods_category->id;
         // $del_dir = Storage::disk('public')->deleteDirectory($directory);
 
-        // $parent_id = $goods_category->parent_id;
+        $parent_id = $goods_category->parent_id;
 
-        $goods_category->destroy();
+        $goods_category->delete();
 
         if ($goods_category) {
 

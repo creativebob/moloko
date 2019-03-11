@@ -116,6 +116,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer(['includes.selects.booklist_types'], BooklistTypesComposer::class);
 
         view()->composer('includes.selects.manufacturers', ManufacturersComposer::class);
+        view()->composer('includes.lists.manufacturers', ManufacturersComposer::class);
 
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);
 

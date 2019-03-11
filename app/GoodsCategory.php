@@ -68,10 +68,10 @@ class GoodsCategory extends Model
         return $this->belongsTo('App\Company');
     }
 
-    // Группы
-    public function products()
+    // Товары
+    public function goods()
     {
-        return $this->hasMany('App\GoodsProduct');
+        return $this->hasMany('App\Goods');
     }
 
     // Режим
@@ -114,7 +114,8 @@ class GoodsCategory extends Model
     // Направление
     public function direction()
     {
-        return $this->morphOne('App\Direction', 'category')->where('archive', false);
+        return $this->morphOne('App\Direction', 'category');
+        // ->where('archive', false);
     }
 
 }
