@@ -71,8 +71,9 @@ class SupplierController extends Controller
 
         $suppliers = Supplier::with('author', 'company.main_phones')
         ->moderatorLimit($answer)
+        ->companiesLimit($answer)
         ->authors($answer)
-        ->systemItem($answer)
+        ->systemItem($answer) // Фильтр по системным записям
         ->filter($request, 'city_id', 'location')
         ->filter($request, 'sector_id')
         ->booklistFilter($request)
@@ -144,7 +145,7 @@ class SupplierController extends Controller
 
         // Запись информации по поставщику:
         $supplier->description = $request->description;
-        $supplier->preorder = $request->preorder;
+        $supplier->preorder = $request->preorder ?? 0;
 
         $supplier->save();
 
@@ -188,11 +189,13 @@ class SupplierController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_company = operator_right('company', false, getmethod(__FUNCTION__));
 
-        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types')
+        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types', 'manufacturers')
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->findOrFail($company_id);
+
+        // dd($company);
 
         $this->authorize(getmethod(__FUNCTION__), $company);
 
@@ -226,16 +229,16 @@ class SupplierController extends Controller
                 ];
             }
             // dd($manufacturers);
-
             $supplier->manufacturers()->sync($manufacturers);
+
         } else {
             $supplier->manufacturers()->detach();
         }
 
         // dd($request);
-        $supplier->preorder = $request->has('preorder');
+        // $supplier->preorder = $request->has('preorder');
 
-        $supplier->save();
+        // $supplier->save();
 
         $company_id = $supplier->company->id;
 
@@ -253,8 +256,7 @@ class SupplierController extends Controller
 
         // Обновление информации по поставщику:
         $supplier->description = $request->description;
-        $supplier->preorder = $request->preorder;
-
+        $supplier->preorder = $request->preorder ?? 0;
         $supplier->save();
 
         return redirect('/admin/suppliers');

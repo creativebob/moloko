@@ -16,7 +16,7 @@
             @endif
             @if(!empty($supplier))
             <li class="tabs-title">
-                <a data-tabs-target="content-panel-supplier" href="#content-panel-supplier">Информация о дилере</a>
+                <a data-tabs-target="content-panel-supplier" href="#content-panel-supplier">Информация о поставщике</a>
             </li>
             @endif
             @if(!empty($client))
@@ -118,7 +118,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
                         <label>Комментарий к дилеру
-                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$dealer->description])
+                            @include('includes.inputs.textarea', ['name'=>'description_dealer', 'value'=>$dealer->description_dealer])
                         </label>
                     </div>
                     <div class="small-6 medium-3 cell">

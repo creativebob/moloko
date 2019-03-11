@@ -64,6 +64,8 @@ trait CompanyControllerTrait
             $company->seo_description = $request->seo_description;
             $company->about = $request->about;
 
+            $result = cleanNameLegalForm($request->company_name);
+            $company->legal_form_id = $result ? $result['legal_form_id'] : $request->legal_form_id;
 
             $company->save();
 

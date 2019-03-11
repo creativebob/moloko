@@ -22,12 +22,10 @@
 
 	<ul class="checkboxer-menu {{$name}}" data-name="{{$name}}">
 
-
-
 			@foreach ($contragents as $contragent)
 				<li>
 					{{ Form::checkbox($name . '[]', $contragent->id, null, ['id'=>$name.'-'.$contragent->id]) }}
-					<label for="{{$name}}-{{ $contragent->id }}"><span class="wrap-label-checkboxer">{{ $contragent->name }}</span></label>
+					<label for="{{$name}}-{{ $contragent->id }}"><span class="wrap-label-checkboxer">{{ $contragent->company->name }}</span></label>
 				</li>
 			@endforeach
 

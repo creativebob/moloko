@@ -178,7 +178,7 @@ class DealerController extends Controller
 
         // Запись информации по дилеру:
         $dealer->discount = $request->discount;
-        $dealer->description = $request->description;
+        $dealer->description_dealer = $request->description_dealer;
         // ...
 
         $dealer->save();
@@ -315,10 +315,9 @@ class DealerController extends Controller
 
         // Обновление информации по дилеру:
         $dealer->discount = $request->discount;
-        $dealer->description = $request->description;
+        $dealer->description_dealer = $request->description_dealer;
         // ...
-        
-        
+
         $dealer->save();
 
         return redirect('/admin/dealers');

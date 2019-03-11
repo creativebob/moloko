@@ -30,6 +30,7 @@ use App\Http\ViewComposers\PeriodsComposer;
 use App\Http\ViewComposers\BooklistTypesComposer;
 
 use App\Http\ViewComposers\ManufacturersComposer;
+
 use App\Http\ViewComposers\SupplierSelectComposer;
 use App\Http\ViewComposers\ContragentsComposer;
 
@@ -115,6 +116,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer(['includes.selects.booklist_types'], BooklistTypesComposer::class);
 
         view()->composer('includes.selects.manufacturers', ManufacturersComposer::class);
+
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);
 
         // Conflict: то, что осталось в нижней части
