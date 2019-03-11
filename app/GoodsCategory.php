@@ -108,7 +108,7 @@ class GoodsCategory extends Model
     // Производители
     public function manufacturers()
     {
-        return $this->belongsToMany('App\Company', 'goods_category_manufacturer', 'goods_category_id', 'manufacturer_id');
+        return $this->belongsToMany(Manufacturer::class, 'goods_category_manufacturer');
     }
 
     // Направление

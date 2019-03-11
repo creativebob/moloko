@@ -91,15 +91,11 @@ $disabled = $cur_goods->article->draft == null;
 
                                     @if ($cur_goods->category->manufacturers->isNotEmpty())
 
-                                    {!! Form::select('manufacturer_id', $cur_goods->category->manufacturers->pluck('name', 'id'), $cur_goods->article->manufacturer_id, []) !!}
+                                    {!! Form::select('manufacturer_id', $cur_goods->category->manufacturers->pluck('company.name', 'id'), $cur_goods->article->manufacturer_id, []) !!}
 
                                     @else
 
-                                    @include('includes.selects.contragents', [
-                                        'name' => 'manufacturers',
-                                        'value' => $cur_goods->article->manufacturer_id
-                                    ]
-                                    )
+                                    @include('includes.selects.manufacturers', ['manufacturer_id' => $cur_goods->article->manufacturer_id, 'item' => $cur_goods, 'draft' => $cur_goods->article->draft])
 
                                     @endif
 
@@ -241,9 +237,9 @@ $disabled = $cur_goods->article->draft == null;
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
-                                    {{-- <label>Цена за (<span id="unit">{{ ($cur_goods->portion_status == null) ?$cur_goods->article->product->unit->abbreviation : 'порцию' }}</span>)
-                                        {{ Form::number('price', $cur_goods->price) }}
-                                    </label> --}}
+                                    <label>Цена за (<span id="unit">{{ ($cur_goods->article->portion_status == null) ? $cur_goods->article->group->unit->abbreviation : 'порцию' }}</span>)
+                                        {{ Form::number('price', $cur_goods->article->price) }}
+                                    </label>
                                 </div>
                             </div>
                         </fieldset>
@@ -269,12 +265,12 @@ $disabled = $cur_goods->article->draft == null;
                                     </label>
                                 </div>
                                 <div class="small-6 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
-                                    {{-- <label>Кол-во,&nbsp;{{ $cur_goods->article->product->unit->abbreviation }}
+                                    <label>Кол-во,&nbsp;{{ $cur_goods->article->group->unit->abbreviation }}
                                         Количество чего-либо
-                                        {{ Form::text('portion_count', $cur_goods->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
+                                        {{ Form::text('portion_count', $cur_goods->article->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
                                         <div class="sprite-input-right find-status" id="name-check"></div>
                                         <span class="form-error">Введите количество</span>
-                                    </label> --}}
+                                    </label>
                                 </div>
                             </div>
                         </fieldset>
@@ -465,8 +461,6 @@ $disabled = $cur_goods->article->draft == null;
     } else {
         var compositions_count = 0;
     }
-
-
 
     var category_id = '{{ $cur_goods->goods_category_id }}';
 
@@ -704,5 +698,5 @@ $disabled = $cur_goods->article->draft == null;
 @include('goods.scripts')
 @include('includes.scripts.dropzone', ['settings' => $settings, 'item_id' => $cur_goods->id])
 {{-- Проверка поля на существование --}}
-@include('includes.scripts.check', ['entity' => 'articles'])
+@include('includes.scripts.check', ['entity' => 'articles', 'id' => $cur_goods->article->id])
 @endsection

@@ -29,10 +29,10 @@ class CreateArticlesTable extends Migration
             $table->integer('manufacturer_id')->nullable()->unsigned()->comment('Id производителя артикула');
             $table->foreign('manufacturer_id')->references('id')->on('companies');
 
-            $table->integer('cost')->nullable()->comment('Фиксированная себестоимость (руками)');
+            $table->integer('cost_default')->nullable()->comment('Фиксированная себестоимость (руками)');
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим определения себестоимости');
 
-            $table->integer('price')->nullable()->comment('Фиксированная цена (руками)');
+            $table->integer('price_default')->nullable()->comment('Фиксированная цена (руками)');
             $table->integer('price_mode')->nullable()->unsigned()->comment('Режим определения цены');
             $table->integer('price_rule_id')->nullable()->unsigned()->comment('ID ценовой политики');
             $table->foreign('price_rule_id')->references('id')->on('price_rules');
