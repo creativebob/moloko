@@ -638,6 +638,16 @@ Route::resource('/manufacturers', 'ManufacturerController')->middleware('auth');
 // ------------------------------------ Дилеры ----- ----------------------------------------------------
 
 // Основные методы
+
+Route::get('/dealers/create-user', 'DealerController@createDealerUser')->middleware('auth')->name('dealers.createDealerUser');
+Route::get('/dealers/create-company', 'DealerController@createDealerCompany')->middleware('auth')->name('dealers.createDealerCompany');
+
+Route::post('/dealers/store-user', 'DealerController@storeUser')->middleware('auth')->name('dealers.storeUser');
+Route::post('/dealers/store-company', 'DealerController@storeCompany')->middleware('auth')->name('dealers.storeCompany');
+
+Route::patch('/dealers/update-user/{id}', 'DealerController@updateDealerUser')->middleware('auth')->name('dealers.updateDealerUser');
+Route::patch('/dealers/update-company/{id}', 'DealerController@updateDealerCompany')->middleware('auth')->name('dealers.updateDealerCompany');
+
 Route::resource('/dealers', 'DealerController')->middleware('auth');
 
 
@@ -836,14 +846,10 @@ Route::any('/catalog_product/add_product', 'CatalogProductController@add_product
 
 
 
-
-
-
 // ---------------------------------------- Новости -------------------------------------------
 
 // Основные методы
 Route::resource('/news', 'NewsController')->middleware('auth');
-
 
 
 // ----------------------------------------- Каталог ------------------------------------------

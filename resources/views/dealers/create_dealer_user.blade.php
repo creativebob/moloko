@@ -1,29 +1,29 @@
 @extends('layouts.app')
 
 @section('inhead')
-    @include('includes.scripts.pickmeup-inhead')
-    @include('includes.scripts.class.city_search')
+@include('includes.scripts.class.city_search')
 @endsection
 
-@section('title', 'Редактировать дилера')
+@section('title', 'Новый дилер')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $dealer->client->clientable->first_name))
+@section('breadcrumbs', Breadcrumbs::render('create', $page_info))
 
 @section('title-content')
-<div class="top-bar head-content">
+	<div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ ДИЛЕРА</h2>
+       <h2 class="header-content">ДОБАВЛЕНИЕ НОВОГО ДИЛЕРА</h2>
     </div>
     <div class="top-bar-right">
     </div>
-</div>
+  </div>
 @endsection
 
 @section('content')
-    {{ Form::model($dealer->client->clientable, ['url' => '/admin/dealers/update-user/'.$dealer->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
-    {{ method_field('PATCH') }}
-        @include('users.form', ['submitButtonText' => 'Редактировать', 'param'=>'', 'user'=>$dealer->client->clientable])
-    {{ Form::close() }}
+
+  {{ Form::open(['route' => 'dealers.storeUser', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+    @include('users.form', ['submitButtonText' => 'Добавить дилера', 'param' => ''])
+  {{ Form::close() }}
+
 @endsection
 
 @section('modals')
@@ -42,5 +42,6 @@
     @include('includes.scripts.upload-file')
     @include('includes.scripts.extra-phone')
 @endsection
+
 
 

@@ -17,32 +17,47 @@
 				{{-- Кнопки добавления для страницы ЛИДЫ --}}
 				@if($page_info->alias == 'leads')
 
-				@if(!empty(Auth::user()->staff[0]))
-				<div class="button-group">
-					@if(extra_right('lead-regular'))
-					{{ link_to_route('leads.create', '+ Обычное', ['lead_type' => 1], ['class' => 'button tiny']) }}
+					@if(!empty(Auth::user()->staff[0]))
+						<div class="button-group">
+							@if(extra_right('lead-regular'))
+							{{ link_to_route('leads.create', '+ Обычное', ['lead_type' => 1], ['class' => 'button tiny']) }}
+							@endif
+
+							@if(extra_right('lead-service'))
+							{{ link_to_route('leads.create', '+ Сервис', ['lead_type' => 3], ['class' => 'button tiny']) }}
+							@endif
+
+							@if(extra_right('lead-dealer'))
+							{{ link_to_route('leads.create', '+ Дилер', ['lead_type' => 2], ['class' => 'button tiny']) }}
+							@endif
+						</div>
 					@endif
 
-					@if(extra_right('lead-service'))
-					{{ link_to_route('leads.create', '+ Сервис', ['lead_type' => 3], ['class' => 'button tiny']) }}
+
+				@elseif($page_info->alias == 'dealers')
+
+					@if(!empty(Auth::user()->staff[0]))
+						<div class="button-group">
+							@if(extra_right('lead-regular'))
+							{{ link_to_route('dealers.createDealerCompany', '+ Компания', [], ['class' => 'button tiny']) }}
+							@endif
+
+							@if(extra_right('lead-service'))
+							{{ link_to_route('dealers.createDealerUser', '+ Физическое лицо', [], ['class' => 'button tiny']) }}
+							@endif
+
+						</div>
 					@endif
 
-					@if(extra_right('lead-dealer'))
-					{{ link_to_route('leads.create', '+ Дилер', ['lead_type' => 2], ['class' => 'button tiny']) }}
-					@endif
-
-				</div>
-
-				@endif
 
 				{{-- Кнопки добавления для остальных страниц --}}
 				@else
 
-				@if (isset($page_alias))
-				<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
-				@else
-				<a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite"></a>
-				@endif
+					@if (isset($page_alias))
+					<a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
+					@else
+					<a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite"></a>
+					@endif
 
 				@endif
 
