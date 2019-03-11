@@ -103,5 +103,8 @@ class DatabaseSeeder extends Seeder
         $this->call(NotificationsTableSeeder::class);
 
 
+        $this->call(StartTableSeeder::class);
+
+
     }
 }

@@ -1,4 +1,4 @@
-{{ Form::open(['route' => 'entities.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
+{{ Form::open(['url' => 'sites.$site->site_alias.pages.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET']) }}
   <legend>Фильтрация</legend>
   <div class="grid-x grid-padding-x"> 
     <div class="small-6 cell">

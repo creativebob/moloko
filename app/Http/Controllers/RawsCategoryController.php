@@ -43,7 +43,7 @@ class RawsCategoryController extends Controller
         ->authors($answer)
         ->systemItem($answer)
         ->template($answer)
-        ->withCount('products')
+        // ->withCount('products')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
@@ -59,7 +59,7 @@ class RawsCategoryController extends Controller
                     'type' => $this->type,
                     'count' => $raws_categories->count(),
                     'id' => $request->id,
-                    'nested' => 'raws_products_count',
+                    // 'nested' => 'raws_products_count',
                 ]
             );
         }
@@ -73,7 +73,7 @@ class RawsCategoryController extends Controller
                 'class' => $this->model,
                 'type' => $this->type,
                 'id' => $request->id,
-                'nested' => 'raws_products_count',
+                // 'nested' => 'raws_products_count',
                 'filter' => setFilter($this->entity_alias, $request, [
                     'booklist'
                 ]),

@@ -52,7 +52,6 @@ class CreateArticlesTable extends Migration
             $table->integer('compositions_count')->nullable()->unsigned()->index()->comment('Количество составов у артикула');
 
             $table->boolean('draft')->default(0)->unsigned()->comment('Статус черновика');
-            $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
 
             // Общие настройки
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');

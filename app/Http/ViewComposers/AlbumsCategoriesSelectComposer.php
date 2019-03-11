@@ -14,6 +14,12 @@ class AlbumsCategoriesSelectComposer
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('albums_categories', false, 'index');
 
+        $columns = [
+            'id',
+            'name',
+            'parent_id'
+        ];
+
         // Главный запрос
         $albums_categories = AlbumsCategory::moderatorLimit($answer)
         ->systemItem($answer)
@@ -22,7 +28,8 @@ class AlbumsCategoriesSelectComposer
         // ->whereDisplay(1)
         // ->has('albums')
         ->orderBy('sort', 'asc')
-        ->get(['id','name','parent_id']);
+        ->toBase()
+        ->get($columns);
         // dd($albums_categories);
 
         // if ($albums_categories->count() == 0) {

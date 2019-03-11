@@ -74,4 +74,10 @@ class Site extends Model
         return $this->hasMany('App\Navigation');
     }
 
+    // Каталоги
+    public function catalogs()
+    {
+        return $this->belongsToMany(Catalog::class, 'catalog_site');
+    }
+
 }

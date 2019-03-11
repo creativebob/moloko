@@ -23,7 +23,7 @@
 
 				<div class="small-12 cell">
 					<label>Название товара
-						@include('includes.inputs.string', ['value' => null, 'name' => 'name', 'required' => true])
+						@include('includes.inputs.string', ['name' => 'name', 'required' => true])
 						<div class="item-error">Названия товара и группы товаров не должны совпадать!</div>
 					</label>
 				</div>
@@ -48,7 +48,7 @@
 			</div>
 
 			<div class="small-12 cell checkbox set-status">
-				{{ Form::checkbox('set_status', 'set', null, ['id' => 'set-status']) }}
+				{{ Form::checkbox('set_status', 1, null, ['id' => 'set-status']) }}
 				<label for="set-status"><span>Набор</span></label>
 			</div>
 

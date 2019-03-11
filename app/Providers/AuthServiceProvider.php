@@ -34,8 +34,6 @@ use App\Page;
 use App\Navigation;
 use App\Menu;
 use App\News;
-use App\Catalog;
-use App\CatalogProduct;
 
 use App\Account;
 use App\Post;
@@ -119,8 +117,6 @@ use App\Policies\PagePolicy;
 use App\Policies\NavigationPolicy;
 use App\Policies\MenuPolicy;
 use App\Policies\NewsPolicy;
-use App\Policies\CatalogPolicy;
-use App\Policies\CatalogProductPolicy;
 
 use App\Policies\AccountPolicy;
 use App\Policies\PostPolicy;
@@ -195,6 +191,10 @@ class AuthServiceProvider extends ServiceProvider
         // Показатели
         'App\Indicator' => 'App\Policies\IndicatorPolicy',
 
+        // Каталоги
+        'App\Catalog' => 'App\Policies\CatalogPolicy',
+        'App\CatalogsItem' => 'App\Policies\CatalogsItemPolicy',
+
 
         User::class => UserPolicy::class,
         RightsRole::class => RightsRolePolicy::class,
@@ -237,8 +237,7 @@ class AuthServiceProvider extends ServiceProvider
         Page::class => PagePolicy::class,
         Site::class => SitePolicy::class,
         News::class => NewsPolicy::class,
-        Catalog::class => CatalogPolicy::class,
-        CatalogProduct::class => CatalogProductPolicy::class,
+
         Staffer::class => StafferPolicy::class,
         Booklist::class => BooklistPolicy::class,
         Sector::class => SectorPolicy::class,
