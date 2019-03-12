@@ -76,11 +76,15 @@ class GoodsController extends Controller
             'author',
             'company',
             'article' => function ($q) {
-                $q->with('group')
+                $q->with([
+                    'group',
+                    'photo'
+                ])
                 ->select([
                     'id',
                     'name',
-                    'articles_group_id'
+                    'articles_group_id',
+                    'photo_id'
                 ]);
             },
             'category' => function ($q) {
@@ -516,12 +520,12 @@ class GoodsController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
+
         $article = $this->updateArticle($request, $cur_goods);
 
         if ($article) {
 
-            // Cохраняем / обновляем фото
-            savePhoto($request, $article);
+
 
             // Проверяем каталоги
             if (isset($request->catalogs_items)) {

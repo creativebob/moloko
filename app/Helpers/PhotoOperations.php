@@ -347,8 +347,8 @@ function getPhotoPath($item, $size = 'medium') {
     if(isset($item->photo_id)) {
 
         // dd($item->photo);
-
-        return "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->Photo->name;
+        $path = "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
+        return $path;
     } else {
 
         if ($item->getTable() == 'users') {

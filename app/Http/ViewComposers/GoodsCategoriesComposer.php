@@ -16,6 +16,7 @@ class GoodsCategoriesComposer
 
         // Главный запрос
         $goods_categories = GoodsCategory::moderatorLimit($answer)
+        ->companiesLimit($answer)
         ->systemItem($answer)
         ->orderBy('sort', 'asc')
         ->get(['id', 'name', 'parent_id']);
