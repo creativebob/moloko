@@ -42,7 +42,7 @@
 
 				<div class="small-10 medium-4 cell">
 					<label>Цена за (<span id="unit-change" class="unit-change"></span>)
-						{{ Form::number('price') }}
+						{{ Form::number('price_default') }}
 					</label>
 				</div>
 			</div>

@@ -88,7 +88,7 @@
                         {{-- @endif --}}
                     </td>
                     <td class="td-description">{{ $cur_goods->description }}</td>
-                    <td class="td-price">{{ num_format($cur_goods->price, 0) }} </td>
+                    <td class="td-price">{{ num_format($cur_goods->article->price_default, 0) }} </td>
 
                     <td class="td-catalog">
 

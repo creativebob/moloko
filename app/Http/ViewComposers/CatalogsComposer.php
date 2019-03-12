@@ -17,6 +17,7 @@ class CatalogsComposer
         // Главный запрос
         $catalogs = Catalog::with('items')
         ->moderatorLimit($answer)
+        ->companiesLimit($answer)
         ->get();
 
         return $view->with('catalogs', $catalogs);

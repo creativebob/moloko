@@ -284,8 +284,8 @@ trait ArticleTrait
         $article->price_default = $request->price_default;
 
         // Общие данные
-        $article->display = $request->display;
-        $article->system_item = $request->system_item;
+        // $article->display = $request->display;
+        // $article->system_item = $request->system_item;
 
         $article->editor_id = hideGod($request->user());
         $article->save();

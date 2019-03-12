@@ -79,14 +79,14 @@ class GoodsController extends Controller
                 $q->with([
                     'group',
                     'photo'
-                ])
-                ->select([
-                    'id',
-                    'name',
-                    'articles_group_id',
-                    'photo_id',
-                    'company_id'
                 ]);
+                // ->select([
+                //     'id',
+                //     'name',
+                //     'articles_group_id',
+                //     'photo_id',
+                //     'company_id'
+                // ]);
             },
             'category' => function ($q) {
                 $q->select([
@@ -281,6 +281,10 @@ class GoodsController extends Controller
             $cur_goods = new Goods;
             $cur_goods->article_id = $article->id;
             $cur_goods->goods_category_id = $request->goods_category_id;
+
+            $cur_goods->display = $request->display;
+            $cur_goods->system_item = $request->system_item;
+
             $cur_goods->company_id = $user->company_id;
             $cur_goods->author_id = hideGod($user);
             $cur_goods->save();
@@ -526,7 +530,9 @@ class GoodsController extends Controller
 
         if ($article) {
 
-
+            $cur_goods->display = $request->display;
+            $cur_goods->system_item = $request->system_item;
+            $cur_goods->save();
 
             // Проверяем каталоги
             if (isset($request->catalogs_items)) {
