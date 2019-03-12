@@ -15,7 +15,7 @@
 
         var item = check;
         var value = item.val();
-        
+
         var submit = item.closest('form').find('.button');
         field = field != null ? field : item.attr('name');
         entity_alias = entity_alias != null ? entity_alias : entity;

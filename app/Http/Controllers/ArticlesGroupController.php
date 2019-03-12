@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\ArticlesGroup;
+use App\Entity;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -136,7 +137,7 @@ class ArticlesGroupController extends Controller
     {
 
         $articles_group = ArticlesGroup::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-       ->findOrFail($id);
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $articles_group);
@@ -186,5 +187,65 @@ class ArticlesGroupController extends Controller
         } else {
             abort(403, 'Ошибка удаления группы артикулов');
         }
+    }
+
+
+    public function ajax_count(Request $request)
+    {
+
+        $entity = Entity::whereAlias($request->entity)
+        ->first(['model']);
+        // dd($entity);
+        $model = 'App\\'.$entity->model;
+
+        $set_status = $request->set_status == 'true' ? 1 : 0;
+        // dd($set_status);
+        $category = $model::withCount('groups')
+        ->with(['groups' => function ($q) use ($set_status) {
+            $q->where('set_status', $set_status);
+        }])
+        ->findOrFail($request->category_id);
+        // dd($category);
+
+        $articles_groups = $category->groups;
+        // dd($articles_groups);
+
+        return view('goods.create_modes.mode_select', compact('articles_groups'));
+
+
+        // if ($category->groups_count > 0) {
+
+        //     $articles_groups = $category->groups;
+        //     return view('goods.create_modes.mode_select', compact('articles_groups'));
+
+        // } else {
+
+        //     return view('goods.create_modes.mode_add');
+        // }
+
+    }
+
+    public function ajax_set_status(Request $request)
+    {
+        $category_id = $request->category_id;
+        $set_status = $request->set_status;
+        // $mode = 'mode-add';
+        // $entity = 'service_categories';
+
+        $entity = Entity::whereAlias($request->entity)
+        ->first(['model']);
+        // dd($entity);
+        $model = 'App\\'.$entity->model;
+
+        $category = $model::with(['groups' => function ($q) use ($set_status) {
+            $q->with('unit')
+            ->where('set_status', $set_status);
+        }])
+        ->findOrFail($category_id);
+
+        $articles_groups = $category->groups;
+        return view('goods.create_modes.mode_select', compact('articles_groups'));
+
+
     }
 }
