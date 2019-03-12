@@ -12,8 +12,8 @@ class CreateBanksTable extends Migration
         Schema::create('banks', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('bank_id')->nullable()->unsigned()->comment('ID контрагента');
-            $table->foreign('contragent_id')->references('id')->on('companies');
+            $table->integer('bank_id')->nullable()->unsigned()->comment('ID банк-компании');
+            $table->foreign('bank_id')->references('id')->on('companies');
 
             // Общие настройки
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
