@@ -322,6 +322,46 @@
             <!-- Конец блока дилера -->
             @endif
 
+
+
+            @if(!empty($user))
+            <!-- Блок дилера -->
+            <div class="small-12 medium-6 cell">
+            </div>
+            <div class="small-12 medium-6 cell">
+                <div class="small-12 large-6 cell">
+                    <fieldset>
+                        <legend>Директор (руководитель)</legend>
+                        <div class="grid-x grid-padding-x">
+                            <div class="small-12 cell">
+                                <label>Фамилия
+                                    @include('includes.inputs.name', ['name'=>'second_name', 'value'=>$user->second_name, 'required' => true])
+                                </label>
+                            </div>
+                            <div class="small-12 cell">
+                                <label>Имя
+                                    @include('includes.inputs.name', ['name'=>'first_name', 'value'=>$user->first_name, 'required' => true])
+                                </label>
+                            </div>
+                            <div class="small-12 cell">
+                                <label>Отчество
+                                    @include('includes.inputs.name', ['name'=>'patronymic', 'value'=>$user->patronymic])
+                                </label>
+                            </div>
+                            <div class="small-12 medium-6 cell">
+                                <label>Телефон
+                                    @include('includes.inputs.phone', ['value' => isset($user->main_phone->phone) ? $user->main_phone->phone : null, 'name'=>'main_phone', 'required' => true, 'id' => 'main-phone'])
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <!-- Конец блока дилера -->
+            @endif
+
+
+
         </div>
     </div>
 
