@@ -290,6 +290,9 @@ trait ArticleTrait
         $article->editor_id = hideGod($request->user());
         $article->save();
 
+        // Cохраняем / обновляем фото
+        savePhoto($request, $article);
+
         return $article;
     }
 

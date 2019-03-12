@@ -114,7 +114,7 @@ $disabled = $cur_goods->article->draft == null;
                                         {{ Form::file('photo') }}
                                     </label>
                                     <div class="text-center">
-                                        <img id="photo" src="{{ getPhotoPath($cur_goods) }}">
+                                        <img id="photo" src="{{ getPhotoPath($article) }}">
                                     </div>
                                 </div>
                             </div>
@@ -206,7 +206,7 @@ $disabled = $cur_goods->article->draft == null;
                     {{-- Чекбокс черновика --}}
                     @if ($cur_goods->article->draft == 1)
                     <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('draft', 1, $cur_goods->article->draft, ['id' => 'draft']) }}
+                        {{ Form::checkbox('draft', 1, $article->draft, ['id' => 'draft']) }}
                         <label for="draft"><span>Черновик</span></label>
                     </div>
                     @endif
@@ -233,12 +233,12 @@ $disabled = $cur_goods->article->draft == null;
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Себестоимость
-                                        {{ Form::number('cost', $cur_goods->article->cost) }}
+                                        {{ Form::number('cost_default', $article->cost_default) }}
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
-                                    <label>Цена за (<span id="unit">{{ ($cur_goods->article->portion_status == null) ? $cur_goods->article->group->unit->abbreviation : 'порцию' }}</span>)
-                                        {{ Form::number('price', $cur_goods->article->price) }}
+                                    <label>Цена за (<span id="unit">{{ ($article->portion_status == null) ? $article->group->unit->abbreviation : 'порцию' }}</span>)
+                                        {{ Form::number('price_default', $article->price_default) }}
                                     </label>
                                 </div>
                             </div>
@@ -246,7 +246,7 @@ $disabled = $cur_goods->article->draft == null;
 
                         <fieldset class="fieldset portion-fieldset" id="portion-fieldset">
                             <legend class="checkbox">
-                                {{ Form::checkbox('portion_status', 1, $cur_goods->article->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) }}
+                                {{ Form::checkbox('portion_status', 1, $article->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) }}
                                 <label for="portion">
                                     <span id="portion-change">Принимать порциями</span>
                                 </label>
@@ -254,20 +254,20 @@ $disabled = $cur_goods->article->draft == null;
                             </legend>
 
                             <div class="grid-x grid-margin-x" id="portion-block">
-                                <div class="small-12 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
+                                <div class="small-12 cell @if ($article->portion_status == null) portion-hide @endif">
                                     <label>Имя&nbsp;порции
-                                        {{ Form::text('portion_name', $cur_goods->article->portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
+                                        {{ Form::text('portion_name', $article->portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
                                     </label>
                                 </div>
-                                <div class="small-6 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
+                                <div class="small-6 cell @if ($article->portion_status == null) portion-hide @endif">
                                     <label>Сокр.&nbsp;имя
-                                        {{ Form::text('portion_abbreviation',  $cur_goods->article->portion_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
+                                        {{ Form::text('portion_abbreviation',  $article->portion_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
                                     </label>
                                 </div>
-                                <div class="small-6 cell @if ($cur_goods->portion_status == null) portion-hide @endif">
-                                    <label>Кол-во,&nbsp;{{ $cur_goods->article->group->unit->abbreviation }}
+                                <div class="small-6 cell @if ($article->portion_status == null) portion-hide @endif">
+                                    <label>Кол-во,&nbsp;{{ $article->group->unit->abbreviation }}
                                         Количество чего-либо
-                                        {{ Form::text('portion_count', $cur_goods->article->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
+                                        {{ Form::text('portion_count', $article->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
                                         <div class="sprite-input-right find-status" id="name-check"></div>
                                         <span class="form-error">Введите количество</span>
                                     </label>
