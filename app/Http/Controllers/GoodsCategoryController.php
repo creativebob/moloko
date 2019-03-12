@@ -48,7 +48,8 @@ class GoodsCategoryController extends Controller
 
         $goods_categories = GoodsCategory::with([
             'goods',
-            'childs'
+            'childs',
+            'groups'
         ])
         ->withCount('childs')
         ->moderatorLimit($answer)
@@ -60,7 +61,7 @@ class GoodsCategoryController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
-        // dd($goods_categories->first()->getRelations());
+        // dd($goods_categories->has('groups'));
 
         // Отдаем Ajax
         if ($request->ajax()) {

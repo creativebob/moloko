@@ -84,7 +84,7 @@
                         <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->category->name }}</a>
                         <br>
                         {{-- @if($cur_goods->article->product->name != $cur_goods->name) --}}
-                        <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->article->id }}" class="filter_link light-text">{{ $cur_goods->article->name }}</a>
+                        <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->article->id }}" class="filter_link light-text">{{ $cur_goods->article->group->name }}</a>
                         {{-- @endif --}}
                     </td>
                     <td class="td-description">{{ $cur_goods->description }}</td>

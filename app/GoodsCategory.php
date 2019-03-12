@@ -2,20 +2,17 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Scopes для главного запроса
-use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
-use App\Scopes\Traits\SystemItemTraitScopes;
+use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
-use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
-
-// Подключаем кеш
+use App\Scopes\Traits\SystemItemTraitScopes;
+use App\Scopes\Traits\TemplateTraitScopes;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\Concerns\morphToMany;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -115,6 +112,12 @@ class GoodsCategory extends Model
     public function direction()
     {
         return $this->morphOne('App\Direction', 'category');
+        // ->where('archive', false);
+    }
+
+    public function groups()
+    {
+        return $this->morphToMany(ArticlesGroup::class, 'articles_group_entity');
         // ->where('archive', false);
     }
 

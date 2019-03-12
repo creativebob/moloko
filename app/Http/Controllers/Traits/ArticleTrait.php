@@ -8,7 +8,7 @@ use App\ArticlesGroup;
 trait ArticleTrait
 {
 
-	public function storeArticle($request)
+	public function storeArticle($request, $category)
     {
 
         // dd($request->has('set_status'));
@@ -30,8 +30,9 @@ trait ArticleTrait
                 'company_id' => $company_id,
                 'author_id' => $user_id
             ]);
-
-            $articles_group_id = $articles_group->id;
+            // Пишем к группе связь с категорией
+            $relation = $category->getTable();
+            $articles_group->$relation()->attach($category->id);
             break;
 
             case 'mode-add':
@@ -45,17 +46,20 @@ trait ArticleTrait
                 'company_id' => $company_id,
                 'author_id' => $user_id
             ]);
-
-            $articles_group_id = $articles_group->id;
+            // Пишем к группе связь с категорией
+            $relation = $category->getTable();
+            $articles_group->$relation()->attach($category->id);
             break;
 
             case 'mode-select':
-            $articles_group_id = $request->articles_group_id;
+            $articles_group = ArticlesGroup::findOrFail($request->articles_group_id);
             break;
         }
 
+
+
         $article = new Article;
-        $article->articles_group_id = $articles_group_id;
+        $article->articles_group_id = $articles_group->id;
         $article->draft = 1;
         $article->company_id = $company_id;
         $article->author_id = $user_id;

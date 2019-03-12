@@ -62,60 +62,60 @@ class Article extends Model
     // Группа
     public function group()
     {
-        return $this->belongsTo('App\ArticlesGroup', 'articles_group_id');
+        return $this->belongsTo(ArticlesGroup::class, 'articles_group_id');
     }
 
     // Товар
     // public function goods()
     // {
-    //     return $this->hasMany('App\Goods');
+    //     return $this->hasMany(Goods');
     // }
 
     // Метрики
     public function metrics()
     {
-        return $this->morphedByMany('App\Metric', 'articles_values')->withPivot('value');
+        return $this->morphedByMany(Metric::class, 'articles_values')->withPivot('value');
     }
 
     // Состав (сырье)
     public function compositions()
     {
-        return $this->morphedByMany('App\Article', 'articles_values')->withPivot('value');
+        return $this->morphedByMany(Article::class, 'articles_values')->withPivot('value');
     }
 
     // Состав (набор)
     // public function set_compositions()
     // {
-    //     return $this->morphedByMany('App\Article', 'articles_values')->withPivot('value');
+    //     return $this->morphedByMany(Article', 'articles_values')->withPivot('value');
     // }
 
     // Производитель
     public function manufacturer()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
     // Альбом
     public function album()
     {
-        return $this->belongsTo('App\Album');
+        return $this->belongsTo(Album::class);
     }
 
     // Аватар
     public function photo()
     {
-        return $this->belongsTo('App\Photo');
+        return $this->belongsTo(Photo::class);
     }
 
     // Компания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
 }

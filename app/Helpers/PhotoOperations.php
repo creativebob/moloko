@@ -267,6 +267,8 @@ function getSettings($entity_alias, $album_id = null) {
     ->whereAlias($entity_alias)
     ->first();
 
+    // dd($entity);
+
     $get_settings = $entity->photo_settings;
 
     if (isset($get_settings)) {

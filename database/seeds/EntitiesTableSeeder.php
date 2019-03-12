@@ -750,6 +750,17 @@ class EntitiesTableSeeder extends Seeder
                 'site' => 0,
             ],
 
+            // 81
+            [
+                'name' => 'Артикулы',
+                'alias' => 'articles',
+                'model' => 'Article',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+            ],
+
         ]);
 
 }

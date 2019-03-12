@@ -1,14 +1,13 @@
+@if ($articles_groups->isNotEmpty())
 <div class="small-12 cell up-input-button text-center">
 	<a id="mode-default" class="modes">Вернуться</a>
 </div>
 
-@if ($goods_products->isNotEmpty())
-
 <label>Группа товаров
-	<select name="goods_product_id" id="select-goods_products" required>
+	<select name="articles_group_id" id="select-articles_groups" required>
 
-		@foreach ($goods_products as $goods_product)
-		<option value="{{ $goods_product->id }}" data-abbreviation="{{ $goods_product->unit->abbreviation }}">{{ $goods_product->name }}</option>
+		@foreach ($articles_groups as $articles_group)
+		<option value="{{ $articles_group->id }}" data-abbreviation="{{ $articles_group->unit->abbreviation }}">{{ $articles_group->name }}</option>
 		@endforeach
 
 	</select>

@@ -79,7 +79,8 @@ class GoodsController extends Controller
                 $q->with('group')
                 ->select([
                     'id',
-                    'name'
+                    'name',
+                    'articles_group_id'
                 ]);
             },
             'category' => function ($q) {
@@ -263,7 +264,9 @@ class GoodsController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $article = $this->storeArticle($request);
+        $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
+        // dd($goods_category->load('groups'));
+        $article = $this->storeArticle($request, $goods_category);
 
         if ($article) {
 
@@ -510,8 +513,6 @@ class GoodsController extends Controller
         ->findOrFail($id);
         // dd($cur_goods);
 
-
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
@@ -586,12 +587,10 @@ class GoodsController extends Controller
     // Режим создания товара
     public function ajax_change_create_mode(Request $request)
     {
-        $mode = $request->mode;
-        $goods_category_id = $request->goods_category_id;
         // $mode = 'mode-add';
         // $entity = 'service_categories';
 
-        switch ($mode) {
+        switch ($request->mode) {
 
             case 'mode-default':
 
@@ -599,17 +598,20 @@ class GoodsController extends Controller
 
             break;
 
-            // case 'mode-select':
+            case 'mode-select':
 
-            // $goods_products = GoodsProduct::with('unit')
-            // ->where([
-            //     'goods_category_id' => $goods_category_id,
-            //     'set_status' => $request->set_status
-            // ])
-            // ->get(['id', 'name', 'unit_id']);
-            // return view('goods.create_modes.mode_select', compact('goods_products'));
+            $set_status = $request->set_status == 'true' ? 1 : 0;
+            $goods_category = GoodsCategory::with(['groups' => function ($q) use ($set_status) {
+                $q->with('unit')
+                ->where('set_status', $set_status);
+            }])
+            ->find($request->category_id);
 
-            // break;
+            $articles_groups = $goods_category->groups;
+
+            return view('goods.create_modes.mode_select', compact('articles_groups'));
+
+            break;
 
             case 'mode-add':
 

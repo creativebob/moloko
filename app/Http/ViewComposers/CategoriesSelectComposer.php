@@ -15,7 +15,11 @@ class CategoriesSelectComposer
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($view->entity, false, 'index');
 
-        $columns = ['id', 'name', 'parent_id'];
+        $columns = [
+            'id',
+            'name',
+            'parent_id'
+        ];
 
         // Главный запрос
         $items = $model::moderatorLimit($answer)
@@ -27,7 +31,7 @@ class CategoriesSelectComposer
         ->get($columns);
         // dd($items);
 
-        $items_list = getSelectTree($items, ($view->parent_id ?? null));
+        $items_list = getSelectTree($items, ($view->parent_id ?? null), null, ($view->id ?? null));
 
         return $view->with(compact('items_list'));
     }
