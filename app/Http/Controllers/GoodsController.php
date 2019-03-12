@@ -84,7 +84,8 @@ class GoodsController extends Controller
                     'id',
                     'name',
                     'articles_group_id',
-                    'photo_id'
+                    'photo_id',
+                    'company_id'
                 ]);
             },
             'category' => function ($q) {
