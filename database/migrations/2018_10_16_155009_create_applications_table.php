@@ -13,7 +13,7 @@ class CreateApplicationsTable extends Migration
             $table->increments('id');
 
             $table->integer('supplier_id')->unsigned()->nullable()->comment('Id поставщика');
-            // $table->foreign('supplier_id')->references('id')->on('suppliers');
+            $table->foreign('supplier_id')->references('id')->on('suppliers');
 
             $table->string('name')->index()->comment('Короткое название заявки');
             $table->text('description')->nullable()->comment('Описание');

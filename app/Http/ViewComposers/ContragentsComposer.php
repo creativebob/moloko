@@ -14,6 +14,11 @@ class ContragentsComposer
 
         $name = $view->name;
 
+
+        // Пока что, эта хуйня сугубо для supplier. Мы тут получаем список производителей с котороми он работает.
+        $manufacturers_list = $view->entity->$name ?? null;
+        // dd($manufacturers_list);
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($name, false, 'index');
 
@@ -38,13 +43,15 @@ class ContragentsComposer
 
             // dd($view);
 
-            return $view->with('contragents', $company->$name);
+            $contragents = $company->$name;
+
+            return $view->with(compact('contragents', 'manufacturers_list'));
+
         } else {
 
-            $companies = Company::where('company_id', null)->get();
-            // dd($companies);
-
-            return $view->with('contragents', $companies);
+            dd('Ты попал в ContragentsComposer');
+            // $companies = Company::where('company_id', null)->get();
+            // return $view->with('contragents', $companies);
         }
 
 

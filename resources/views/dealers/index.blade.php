@@ -31,8 +31,7 @@
         <tr id="thead-content">
           <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-          <th class="td-name" data-serversort="name">Название поставщика</th>
-          <th class="td-address">Адрес</th>
+          <th class="td-name" data-serversort="name">Название дилера</th>
           <th class="td-phone">Телефон</th>
           <th class="td-description">Описание</th>
           <th class="td-discount">Скидка</th>
@@ -73,10 +72,11 @@
               {{ $dealer->client->clientable->name or '' }} ({{ $dealer->client->clientable->legal_form->name or '' }})
               @if($edit == 1)
             </a>
+            <br>
+            <span class="tiny-text">@if(!empty($dealer->client->clientable->location->address)){{ $dealer->client->clientable->location->address }}@endif</span>
             @endif
           </td>
           {{-- Если пользователь бог, то показываем для него переключатель на компанию --}}
-          <td class="td-address">@if(!empty($dealer->client->clientable->location->address)){{ $dealer->client->clientable->location->address }}@endif </td>
           <td class="td-phone">{{ isset($dealer->client->clientable->main_phone->phone) ? decorPhone($dealer->client->clientable->main_phone->phone) : 'Номер не указан' }}</td>
 
           <td class="td-description">@if(!empty($dealer->description)){{ $dealer->description }}@endif </td>

@@ -146,7 +146,7 @@
                         @include('includes.inputs.checker_contragents', [
                             'entity' => $supplier,
                             'title' => 'Производители',
-                            'name' => 'manufacturers'
+                            'name' => 'manufacturers',
                         ]
                         )
 

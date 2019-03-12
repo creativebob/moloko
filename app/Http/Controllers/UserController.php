@@ -129,7 +129,6 @@ class UserController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-
         // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
         // Отдаем работу по созданию нового юзера трейту
         $new_user = $this->createUser($request);

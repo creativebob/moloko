@@ -197,6 +197,7 @@ class User extends Authenticatable
         'company_id',
         'filial_id',
         'moderation',
+        'photo_id'
     ];
 
     protected $hidden = [

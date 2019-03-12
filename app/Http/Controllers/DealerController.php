@@ -372,7 +372,7 @@ class DealerController extends Controller
     }
 
 
-    public function updateDealerUser(Request $request, $id)
+    public function updateDealerUser(UserUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)

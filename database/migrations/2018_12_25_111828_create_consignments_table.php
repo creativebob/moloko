@@ -17,7 +17,7 @@ class CreateConsignmentsTable extends Migration
             $table->increments('id');
 
             $table->integer('supplier_id')->unsigned()->nullable()->comment('Id поставщика');
-            // $table->foreign('supplier_id')->references('id')->on('suppliers');
+            $table->foreign('supplier_id')->references('id')->on('suppliers');
 
             $table->string('name')->nullable()->comment('Короткое название накладной');
             $table->text('description')->nullable()->comment('Описание');
