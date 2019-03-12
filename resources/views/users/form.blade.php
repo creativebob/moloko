@@ -53,7 +53,10 @@
 						</label>
 
 						<div class="text-center">
-							<img id="photo" src="{{ getPhotoPath($user) }}">
+							@php
+								$path = getPhotoPath($user);
+							@endphp
+							<img id="photo" src="{{ $path }}">
 						</div>
 					</div>
 				</div>
@@ -112,7 +115,7 @@
 					</div>
 					<div class="small-12 medium-6 cell">
 						<label>Телеграм ID
-							{{ Form::text('telegram_id', $user->telegram_id, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
+							{{ Form::text('telegram', $user->telegram, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
 							<span class="form-error">Укажите номер Telegram</span>
 						</label>
 					</div>

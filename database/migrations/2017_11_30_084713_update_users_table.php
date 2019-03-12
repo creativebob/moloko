@@ -29,7 +29,7 @@ class UpdateUsersTable extends Migration
 
             $table->bigInteger('phone')->unique()->nullable()->comment('Телефон')->after('birthday');
             $table->bigInteger('extra_phone')->nullable()->comment('Дополнительный телефон')->after('phone');
-            $table->bigInteger('telegram_id')->unsigned()->unique()->nullable()->comment('ID Telegram')->after('extra_phone');
+            $table->bigInteger('telegram')->unsigned()->unique()->nullable()->comment('Telegram')->after('extra_phone');
 
             $table->integer('location_id')->nullable()->unsigned()->comment('Адрес пользователя')->after('telegram_id');
 

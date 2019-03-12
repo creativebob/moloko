@@ -94,7 +94,7 @@ trait UserControllerTrait
         }
 
         // Мессенджеры
-        $user->telegram_id = $request->telegram_id;
+        $user->telegram = $request->telegram;
 
         // Добавляем локацию
         $user->location_id = create_location($request);
@@ -253,7 +253,7 @@ trait UserControllerTrait
         }
 
         // Мессенджеры
-        $user->telegram_id = $request->telegram_id;
+        $user->telegram = $request->telegram;
 
         // Добавляем локацию
         $user->location_id = create_location($request);

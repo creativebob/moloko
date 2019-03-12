@@ -342,8 +342,11 @@ function setSettings($request, $item) {
 // Путь до аватарки
 function getPhotoPath($item, $size = 'medium') {
 
-    if (isset($item->photo_id)) {
-        return "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
+    if(isset($item->photo_id)) {
+
+        // dd($item->photo);
+
+        return "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->Photo->name;
     } else {
 
         if ($item->getTable() == 'users') {

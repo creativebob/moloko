@@ -4,16 +4,24 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBanksTable extends Migration
+class CreateClientsTable extends Migration
 {
-
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
-        Schema::create('banks', function (Blueprint $table) {
+        Schema::create('clients', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('bank_id')->nullable()->unsigned()->comment('ID контрагента');
-            $table->foreign('contragent_id')->references('id')->on('companies');
+            $table->morphs('clientable');
+
+            $table->text('description')->nullable()->comment('Описание клиента');
+
+            $table->integer('loyalty_id')->nullable()->unsigned()->default(4)->comment('Id лояльности');
+            $table->foreign('loyalty_id')->references('id')->on('loyalties');
 
             // Общие настройки
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
@@ -35,8 +43,13 @@ class CreateBanksTable extends Migration
         });
     }
 
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
-        Schema::dropIfExists('banks');
+        Schema::dropIfExists('clients');
     }
 }

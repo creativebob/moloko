@@ -266,9 +266,9 @@
                                     </div>
 
                                     {{-- СПИСОК КАТЕГРИЙ --}}
-                                    <div class="small-12 cell search-in-catalog-panel">
+{{--                                     <div class="small-12 cell search-in-catalog-panel">
                                         @include('includes.drilldowns.categories', ['entity' => 'goods_categories'])
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 

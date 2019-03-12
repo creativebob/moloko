@@ -195,8 +195,6 @@ class SupplierController extends Controller
         ->systemItem($answer)
         ->findOrFail($company_id);
 
-        // dd($company);
-
         $this->authorize(getmethod(__FUNCTION__), $company);
 
         // Инфо о странице

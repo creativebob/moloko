@@ -13,7 +13,7 @@ class CreateBankAccountsTable extends Migration
             $table->increments('id');
 
             $table->integer('holder_id')->unsigned()->nullable()->comment('Компания держатель банковского счета');
-            // $table->foreign('holder_id')->references('id')->on('companies');
+            $table->foreign('holder_id')->references('id')->on('companies');
 
             $table->integer('bank_id')->nullable()->unsigned()->comment('Id банка');
             $table->foreign('bank_id')->references('id')->on('banks');

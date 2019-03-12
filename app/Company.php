@@ -192,11 +192,10 @@ class Company extends Model
     //     return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'manufacturer_id')->withPivot('company_id');
     // }
 
+    public function manufacturer_supplier()
+    {
 
-    // public function manufacturers_supplier()
-    // {
-    //     return $this->hasMany('App\Manufacturer', 'company_id');
-    // }
+    }
 
     public function manufacturers()
     {
