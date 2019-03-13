@@ -696,7 +696,7 @@ $disabled = $cur_goods->article->draft == null;
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
 @include('goods.scripts')
-@include('includes.scripts.dropzone', ['settings' => $settings, 'item_id' => $article->id])
+@include('includes.scripts.dropzone', ['settings' => $settings, 'item_id' => $article->id, 'entity' => 'articles'])
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check', ['entity' => 'articles', 'id' => $article->id])
 @endsection

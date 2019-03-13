@@ -49,7 +49,10 @@ class PhotoController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
         // dd($answer);
 
-        $photos = Photo::with(['author', 'company'])
+        $photos = Photo::with([
+            'author',
+            'company'
+        ])
         ->whereHas('album', function ($query) use ($alias) {
             $query->whereAlias($alias);
         })
