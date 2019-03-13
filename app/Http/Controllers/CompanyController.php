@@ -47,6 +47,8 @@ use Illuminate\Support\Facades\DB;
 
 // Подрубаем трейт записи и обновления компании
 use App\Http\Controllers\Traits\CompanyControllerTrait;
+use App\Http\Controllers\Traits\UserControllerTrait;
+use App\Http\Controllers\Traits\DepartmentControllerTrait;
 
 class CompanyController extends Controller
 {
@@ -57,11 +59,11 @@ class CompanyController extends Controller
 
     // Подключаем трейт записи и обновления компании
     use CompanyControllerTrait;
+    use UserControllerTrait;
+    use DepartmentControllerTrait;
 
     public function index(Request $request)
     {
-
-
 
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
@@ -115,11 +117,12 @@ class CompanyController extends Controller
 
         // Подключение политики
         $company = new Company;
+        $user = new User;
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('companies.create', compact('company', 'page_info'));
+        return view('companies.create', compact('company', 'user', 'page_info'));
     }
 
     public function store(CompanyRequest $request)
@@ -138,7 +141,40 @@ class CompanyController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Отдаем работу по созданию новой компании трейту
-        $this->createCompany($request);
+        $new_company = $this->createCompany($request);
+
+        // Следом автоматически создаем первый филиал у компании
+        $new_department = $this->createFirstDepartment($new_company);
+
+
+        // Чистка номера
+        $main_phone = cleanPhone($request->main_phone);
+
+        $new_user = User::whereHas('main_phones', function($q) use ($main_phone){
+            $q->where('phone', $main_phone);
+        })->first();
+
+        Log::info('Поискали номер телефона в базе...');
+
+        // Если не найден, то создаем
+        if(!isset($new_user)){
+
+            $new_user = $this->createUserByPhone($main_phone, $request);
+            Log::info('Создали юзера');
+
+            // Дописываем юзеру недостающие данные
+            $new_user->company_id = $new_company->id;
+            $new_user->filial_id = $new_department->id;
+            $new_user->save();
+
+        } else {
+
+            Log::info('Найден пользователь с таким номером телефона. ID: ' . $new_user);
+
+        }
+
+        // Создаем штатную единицу директора и устраиваем на нее юзера
+        $employee = $this->createDirector($new_company, $new_department, $new_user);
 
         return redirect('/admin/companies');
     }

@@ -52,6 +52,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Traits\CompanyControllerTrait;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Http\Controllers\Traits\LeadControllerTrait;
+use App\Http\Controllers\Traits\DepartmentControllerTrait;
 
 class ClientController extends Controller
 {
@@ -64,6 +65,7 @@ class ClientController extends Controller
     use CompanyControllerTrait;
     use UserControllerTrait;
     use LeadControllerTrait;
+    use DepartmentControllerTrait;
 
     public function index(Request $request)
     {
@@ -286,18 +288,10 @@ class ClientController extends Controller
                 Log::info('Сохраняем клиента компанию');
             }
 
-            $department = new Department;
-            $department->name = 'Филиал';
-            $department->company_id = $new_company->id;
-            $department->location_id = $new_company->location_id;
-            $department->author_id = $user_id;
-            $department->save();
-            Log::info('Сохраняем отдел');
+            // Создаем первый филиал
+            $new_department = $this->createFirstDepartment($new_company);
 
-            // Создаем пользователя
-            // $request->access_block = 1;
-
-            Log::info('Ща будем писать юзера');
+            Log::info('Сейчас будем писать юзера');
             $new_user = $this->createUser($request);
 
             // Добавляем после сохранения юзера еще инфы и снова сохраняем
@@ -305,25 +299,8 @@ class ClientController extends Controller
             $new_user->save();
             Log::info('Сохраняем нового юзера');
 
-            $staffer = new Staffer;
-            $staffer->user_id = $new_user->id;
-            $staffer->position_id = 1; // Директор
-            $staffer->department_id = $department->id;
-            $staffer->filial_id = $department->id;
-            $staffer->company_id = $new_company->id;
-            $staffer->author_id = $user_id;
-            $staffer->save();
-            Log::info('Сохраняем штат');
-
-            $employee = new Employee;
-            $employee->company_id = $new_company->id;
-            $employee->staffer_id = $staffer->id;
-            $employee->user_id = $new_user->id;
-            $employee->employment_date = Carbon::today()->format('Y-m-d');
-            $employee->author_id = $user_id;
-            $employee->save();
-            Log::info('Сохраняем должность. Устраиваем юзера.');
-
+            // Создаем штатную единицу директора и устраиваем на нее юзера
+            $employee = $this->createDirector($new_company, $new_department, $new_user);
 
         } else {
 
@@ -384,7 +361,10 @@ class ClientController extends Controller
 
         // Если для лида еще не указали имя, берем его из карточки реквизитов
         if($lead->name == null){
-            $lead->name = $user_for_client->first_name . ' ' . $user_for_client->second_name;
+
+            $lead_first_name = $user_for_client->first_name ?? 'Имя';
+            $lead_second_name = $user_for_client->second_name ?? 'Фамилия';
+            $lead->name = $lead_first_name . ' ' . $lead_second_name;
         }
 
         $lead->save();

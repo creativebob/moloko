@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Traits;
 use App\User;
 use App\RoleUser;
 use App\Phone;
-
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
 trait UserControllerTrait
@@ -137,7 +137,9 @@ trait UserControllerTrait
         return $user;
     }
 
-    public function createUserByPhone($phone){
+    public function createUserByPhone($phone, $request = null){
+
+        Log::info('Сработал трейт создания пользователя по номеру телефона');
 
         $user_number = User::all()->last()->id;
         $user_number = $user_number + 1;
@@ -145,6 +147,13 @@ trait UserControllerTrait
         $user = new User;
         $user->login = 'user_'.$user_number;
         $user->password = bcrypt(str_random(12));
+
+        if($request != null){
+
+            $user->first_name = $request->first_name;
+            $user->second_name = $request->second_name;
+            $user->patronymic = $request->patronymic;
+        }
 
         $user->access_block = 1;
         $user->user_type = 0;

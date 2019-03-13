@@ -77,9 +77,12 @@
             @endif
           </td>
           {{-- Если пользователь бог, то показываем для него переключатель на компанию --}}
-          <td class="td-phone">{{ isset($dealer->client->clientable->main_phone->phone) ? decorPhone($dealer->client->clientable->main_phone->phone) : 'Номер не указан' }}</td>
+          <td class="td-phone">{{ isset($dealer->client->clientable->main_phone->phone) ? decorPhone($dealer->client->clientable->main_phone->phone) : 'Номер не указан' }}
+          <br>
+          <span class="tiny-text">{{ $dealer->client->clientable->email }}</span>
+          </td>
 
-          <td class="td-description">@if(!empty($dealer->description)){{ $dealer->description }}@endif </td>
+          <td class="td-description">@if(!empty($dealer->description_dealer)){{ $dealer->description_dealer }}@endif </td>
           <td class="td-discount">@if(!empty($dealer->discount)){{ $dealer->discount }} %@endif </td>
           <td class="td-order-counts">@if(!empty($dealer->client->orders)){{ $dealer->client->orders->count() }} @endif </td>
 
