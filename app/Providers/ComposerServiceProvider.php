@@ -157,7 +157,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.lists.departments', DepartmentsComposer::class);
         // view()->composer('includes.selects.sectors', SectorsComposer::class);
 
-        view()->composer('includes.create_modes.categories_select', CategoriesComposer::class);
+        view()->composer(['includes.selects.categories','includes.create_modes.categories_select'], CategoriesComposer::class);
 
         view()->composer('includes.selects.goods_categories', GoodsCategoriesComposer::class);
         view()->composer('includes.selects.raws_categories', RawsCategoriesComposer::class);

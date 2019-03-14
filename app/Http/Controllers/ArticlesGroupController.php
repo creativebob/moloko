@@ -255,7 +255,7 @@ class ArticlesGroupController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
 
-        $relation = $request->entity;
+        $relation = $request->category_entity;
         $category_id = $request->category_id;
         $articles_group_id = $request->articles_group_id;
         $set_status = $request->set_status;

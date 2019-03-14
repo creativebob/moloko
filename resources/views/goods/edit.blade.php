@@ -132,7 +132,6 @@ $disabled = $cur_goods->article->draft == null;
 
                     {{-- Правый блок на первой вкладке --}}
                     <div class="small-12 large-6 cell">
-                        {{ Form::open(['url' => 'goods', 'data-abide', 'novalidate', 'id' => 'form-cur_goods']) }}
 
                         <fieldset class="fieldset-access">
                             <legend>Артикул</legend>
@@ -162,7 +161,7 @@ $disabled = $cur_goods->article->draft == null;
                         <div class="grid-x">
                             <div class="small-12 cell">
                                 <label>Описание товара
-                                    @include('includes.inputs.textarea', ['name'=>'description', 'value' => $cur_goods->article->description])
+                                    @include('includes.inputs.textarea', ['name' => 'description', 'value' => $cur_goods->article->description])
                                 </label>
                             </div>
                         </div>
@@ -210,7 +209,7 @@ $disabled = $cur_goods->article->draft == null;
                     {{-- Конец правого блока на первой вкладке --}}
 
                     {{-- Чекбокс черновика --}}
-                    @if ($cur_goods->article->draft == 1)
+                    @if ($article->draft == 1)
                     <div class="small-12 cell checkbox">
                         {{ Form::checkbox('draft', 1, $article->draft, ['id' => 'draft']) }}
                         <label for="draft"><span>Черновик</span></label>
@@ -455,40 +454,16 @@ $disabled = $cur_goods->article->draft == null;
 <script>
 
     // Основные настройки
-    var cur_goods_id = '{{ $cur_goods->id }}';
-
+    var item_id = '{{ $cur_goods->id }}';
     var entity = 'goods';
-
+    var category_entity = 'goods_categories';
     var metrics_count = 0;
-
     var set_status = '{{ $article->group->set_status }}';
-
     var category_id = '{{ $cur_goods->goods_category_id }}';
-
     var unit = 'шт';
 
     // Мульти Select
     $(".chosen-select").chosen({width: "95%"});
-
-    $(document).on('change', '#select-goods_categories', function(event) {
-        event.preventDefault();
-
-        // Меняем группы
-        $.post('/admin/articles_groups_list', {
-            entity: 'goods_categories',
-            category_id: $(this).val(),
-            articles_group_id: $('#select-articles_groups').val(),
-            set_status: set_status
-        }, function(list){
-            // alert(list);
-            $('#select-articles_groups').replaceWith(list);
-    });
-
-    $(document).on('click', '#portion', function() {
-        $('#portion-block div').toggle();
-        // $('#portion-fieldset').toggleClass('portion-fieldset');
-        $('#unit').text( $(this).prop('checked') ? 'порцию' : unit );
-    });
 
     // При клике на удаление состава со страницы
     $(document).on('click', '[data-open="delete-composition"]', function() {
@@ -588,7 +563,7 @@ $disabled = $cur_goods->article->draft == null;
             $('#property-form').html('');
 
             // В случае успеха обновляем список метрик
-            $.get('/admin/goods/' + cur_goods_id + '/edit', $('#form-cur_goods').serialize(), function(html) {
+            $.get('/admin/goods/' + item_id + '/edit', $('#form-cur_goods').serialize(), function(html) {
                 // alert(html);
                 $('#properties-dropdown').html(html);
             })
@@ -615,14 +590,14 @@ $disabled = $cur_goods->article->draft == null;
 
         // Если нужно добавить метрику
         if ($(this).prop('checked') == true) {
-            $.post('/admin/ajax_add_relation_metric', {id: $(this).val(), entity: 'goods', entity_id: cur_goods_id}, function(html){
+            $.post('/admin/ajax_add_relation_metric', {id: $(this).val(), entity: 'goods', entity_id: item_id}, function(html){
                 // alert(html);
                 $('#metrics-table').append(html);
                 $('#property-form').html('');
             })
         } else {
             // Если нужно удалить метрику
-            $.post('/admin/ajax_delete_relation_metric', {id: $(this).val(), entity: 'goods', entity_id: cur_goods_id}, function(date){
+            $.post('/admin/ajax_delete_relation_metric', {id: $(this).val(), entity: 'goods', entity_id: item_id}, function(date){
                 var result = $.parseJSON(date);
                 // alert(result);
 
@@ -694,14 +669,23 @@ $disabled = $cur_goods->article->draft == null;
             event.preventDefault();
         }
     });
-
-
 </script>
+
+@include('includes.edit_operations.change_articles_groups_script')
+@include('includes.edit_operations.change_portions_script')
 
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
-@include('goods.scripts')
-@include('includes.scripts.dropzone', ['settings' => $settings, 'item_id' => $article->id, 'entity' => 'articles'])
+{{-- @include('goods.scripts') --}}
+@include('includes.scripts.dropzone', [
+    'settings' => $settings,
+    'item_id' => $article->id
+]
+)
 {{-- Проверка поля на существование --}}
-@include('includes.scripts.check', ['entity' => 'articles', 'id' => $article->id])
+@include('includes.scripts.check', [
+    'entity' => 'articles',
+    'id' => $article->id
+]
+)
 @endsection
