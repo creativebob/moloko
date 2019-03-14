@@ -101,9 +101,14 @@
 
                     </div>
 
-                    @if ($goods_category->parent_id == null && $goods_category->has('direction'))
+                    @if ($goods_category->parent_id == null)
                     <div class="small-12 cell checkbox">
+                        @if ($goods_category->direction != null)
                         {{ Form::checkbox('direction', 1, ($goods_category->direction->archive == false) ? 1 : 0, ['id' => 'direction-checkbox']) }}
+                        @else
+                        {{ Form::checkbox('direction', 1, null, ['id' => 'direction-checkbox']) }}
+                        @endif
+                        
                         <label for="direction-checkbox"><span>Направление</span></label>
                         {{-- @include('includes.control.direction', ['direction' => isset($goods_category->direction) ]) --}}
                     </div>
