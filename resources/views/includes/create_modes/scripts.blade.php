@@ -1,6 +1,28 @@
 <script type="text/javascript">
 
+    // Название сущности
     var entity = '{{ $entity }}';
+
+    // Название категорий сущности
+    // var categoryEntity = '{{ $entity }}' + '_categories';
+    var categoryEntity = '{{ $category_entity }}';
+
+    // ----------- Добавление -------------
+    // Открываем модалку
+    $(document).on('click', '[data-open="modal-create"]', function() {
+        $.get('/admin/' + entity + '/create', function(html){
+            $('#modal').html(html).foundation();
+            $('#modal-create').foundation('open');
+        });
+    });
+
+    // Закрываем модалку
+    $(document).on('click', '.close-modal', function() {
+        // alert('lol');
+        $('.reveal-overlay').remove();
+    });
+
+    // --------------- Единицы измерения -------------------
 
     function setUnitAbbrevation(list) {
         $('#unit-change').text($('#' + list + ' :selected').data('abbreviation'));
@@ -35,49 +57,8 @@
     //         });
     // });
 
-    $(document).on('change', '.mode-select', function() {
-        $.post('/admin/ajax_articles_groups_count', {
-            id: $(this).val(),
-            entity: entity
-        }, function(html){
-            // alert(html);
-            $('#mode').html(html);
-        });
-    });
 
-
-    $(document).on('change', '#select-' + entity, function() {
-        if ($('input[name=mode]').val() == 'mode-select') {
-            $.post('/admin/ajax_articles_groups_count', {
-                category_id: $(this).val(),
-                entity: entity,
-                set_status: $('#set-status').prop('checked')
-            }, function(html){
-                // alert(html);
-                $('#mode').html(html);
-            });
-        } else {
-
-        }
-    });
-
-
-
-    $(document).on('click', '#set-status', function(event) {
-        // event.preventDefault();
-        if ($('input[name=mode]').val() == 'mode-select') {
-            $.post('/admin/ajax_articles_groups_count', {
-                entity: entity,
-                category_id: $('#select-' + entity).val(),
-                set_status: $(this).prop('checked')
-            }, function(html){
-                $('#mode').html(html);
-                setUnitAbbrevation('select-articles_groups');
-                Foundation.reInit($('#form-create'));
-            });
-        }
-    });
-
+    // ---------------- Режимы создания -----------------------
     $(document).on('click', '.modes', function(event) {
         event.preventDefault();
 
@@ -86,7 +67,8 @@
 
         $.post('/admin/create_mode', {
             mode: mode,
-            category_id: $('#select-' + entity).val(),
+            category_entity: categoryEntity,
+            category_id: $('#select-' + categoryEntity).val(),
             set_status: $('#set-status').prop('checked')
         }, function(html){
             $('#mode').html(html);
@@ -104,6 +86,50 @@
         });
     });
 
+
+    $(document).on('change', '.mode-select', function() {
+        $.post('/admin/ajax_articles_groups_count', {
+            id: $(this).val(),
+            entity: categoryEntity
+        }, function(html){
+            // alert(html);
+            $('#mode').html(html);
+        });
+    });
+
+
+    $(document).on('change', '#select-' + categoryEntity, function() {
+        if ($('input[name=mode]').val() == 'mode-select') {
+            $.post('/admin/ajax_articles_groups_count', {
+                category_id: $(this).val(),
+                entity: categoryEntity,
+                set_status: $('#set-status').prop('checked')
+            }, function(html){
+                // alert(html);
+                $('#mode').html(html);
+            });
+        };
+    });
+
+
+    // При переключении статуса набора
+    $(document).on('click', '#set-status', function(event) {
+        // event.preventDefault();
+        if ($('input[name=mode]').val() == 'mode-select') {
+            $.post('/admin/ajax_articles_groups_count', {
+                entity: categoryEntity,
+                category_id: $('#select-' + categoryEntity).val(),
+                set_status: $(this).prop('checked')
+            }, function(html){
+                $('#mode').html(html);
+                setUnitAbbrevation('select-articles_groups');
+                Foundation.reInit($('#form-create'));
+            });
+        }
+    });
+
+    
+    // Проверка на совпадение имени артикула и группы артикулов
     $(document).on('keyup', 'input[name=articles_group_name], input[name=name]', function(event) {
         event.preventDefault();
 

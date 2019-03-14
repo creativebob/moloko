@@ -22,6 +22,8 @@ class CreateRawsTable extends Migration
             $table->integer('raws_category_id')->nullable()->unsigned()->comment('Id категории сырья');
             $table->foreign('raws_category_id')->references('id')->on('raws_categories');
 
+            $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
+
 
             // Общие настройки
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');

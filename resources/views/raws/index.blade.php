@@ -10,9 +10,9 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
-@section('exel')
+{{-- @section('exel')
 @include('includes.title-exel', ['entity' => $page_info->alias])
-@endsection
+@endsection --}}
 
 @section('content-count')
 {{-- Количество элементов --}}
@@ -37,7 +37,7 @@
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
                     <th class="td-photo">Фото</th>
                     <th class="td-name">Название сырья</th>
-                    <th class="td-services_category">Категория</th>
+                    <th class="td-raws_category">Категория</th>
                     <th class="td-description">Описание</th>
                     <th class="td-cost">Себестоимость</th>
                     <th class="td-price">Цена</th>
@@ -48,7 +48,7 @@
                 </tr>
             </thead>
             <tbody data-tbodyId="1" class="tbody-width">
-                @if(!empty($raws))
+                @if($raws->isNotEmpty())
 
                 @foreach($raws as $raw)
                 <tr class="item @if($raw->moderation == 1)no-moderation @endif" id="raws-{{ $raw->id }}" data-name="{{ $raw->article->name }}">
@@ -68,32 +68,24 @@
                     </td>
                     <td>
                         <a href="/admin/raws/{{ $raw->id }}/edit">
-                            <img src="{{ getPhotoPath($raw, 'small') }}" alt="{{ isset($raw->photo_id) ? $raw->name : 'Нет фото' }}">
+                            <img src="{{ getPhotoPath($raw->article, 'small') }}" alt="{{ isset($raw->article->photo_id) ? $raw->article->name : 'Нет фото' }}">
                         </a>
                     </td>
                     <td class="td-name">
                         <a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->article->name }}</a>
                     </td>
                     <td class="td-raws_category">
-                        <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->article->product->category->id }}" class="filter_link" title="Фильтровать">{{ $raw->article->product->category->name }}</a>
+                        <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->category->id }}" class="filter_link" title="Фильтровать">{{ $raw->category->name }}</a>
 
                         <br>
-                        @if($raw->article->product->name != $raw->article->name)
-                        <a href="/admin/raws?raws_product_id%5B%5D={{ $raw->article->product->id }}" class="filter_link light-text">{{ $raw->article->product->name }}</a>
+                        @if($raw->article->group->name != $raw->article->name)
+                        <a href="/admin/raws?raws_product_id%5B%5D={{ $raw->article->id }}" class="filter_link light-text">{{ $raw->article->group->name }}</a>
                         @endif
                     </td>
-                    <td class="td-description">{{ $raw->description }}</td>
-                    <td class="td-cost">{{ num_format($raw->cost, 0) }}</td>
-                    <td class="td-price">{{ num_format($raw->price, 0) }}</td>
-                    <td class="td-catalog">
+                    <td class="td-description">{{ $raw->article->description }}</td>
+                    <td class="td-price">{{ num_format($raw->article->price_default, 0) }}</td>
 
-                        @foreach ($raw->catalogs as $catalog)
-                        <a href="/admin/sites/{{ $catalog->site->alias }}/catalog_products/{{ $catalog->id }}" class="filter_link" title="Редактировать каталог">{{ $catalog->name }}</a>,
-                        @endforeach
-
-                    </td>
-
-                    <td class="td-author">@if(isset($raw->author->first_name)) {{ $raw->author->first_name . ' ' . $raw->author->second_name }} @endif</td>
+                    <td class="td-author">@if(isset($raw->author->first_name)) {{ $raw->author->name }} @endif</td>
 
                     {{-- Элементы управления --}}
                     @include('includes.control.table-td', ['item' => $raw])
@@ -150,23 +142,10 @@
 @include('includes.scripts.modal-archive-script')
 
 @include('includes.scripts.inputs-mask')
-@include('raws.scripts')
+@include('includes.create_modes.scripts', ['entity' => 'raws', 'category_entity' => 'raws_categories'])
 
 <script type="text/javascript">
 
-    // ----------- Добавление -------------
-    // Открываем модалку
-    $(document).on('click', '[data-open="modal-create"]', function() {
-        $.get('/admin/raws/create', function(html){
-            $('#modal').html(html).foundation();
-            $('#modal-create').foundation('open');
-        });
-    });
-
-    // Закрываем модалку
-    $(document).on('click', '.close-modal', function() {
-        // alert('lol');
-        $('.reveal-overlay').remove();
-    });
+    
 </script>
 @endsection

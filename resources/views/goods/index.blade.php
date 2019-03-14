@@ -10,9 +10,9 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
-@section('exel')
+{{-- @section('exel')
 @include('includes.title-exel', ['entity' => $page_info->alias])
-@endsection
+@endsection --}}
 
 @section('content-count')
 {{-- Количество элементов --}}
@@ -87,7 +87,7 @@
                         <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->article->id }}" class="filter_link light-text">{{ $cur_goods->article->group->name }}</a>
                         {{-- @endif --}}
                     </td>
-                    <td class="td-description">{{ $cur_goods->description }}</td>
+                    <td class="td-description">{{ $cur_goods->article->description }}</td>
                     <td class="td-price">{{ num_format($cur_goods->article->price_default, 0) }} </td>
 
                     <td class="td-catalog">
@@ -165,7 +165,7 @@
 @include('includes.scripts.modal-archive-script')
 
 @include('includes.scripts.inputs-mask')
-@include('goods.scripts')
+@include('includes.create_modes.scripts', ['entity' => 'goods', 'category_entity' => 'goods_categories'])
 
 {{-- Скрипт синхронизации товара с сайтом на сайте --}}
 @include('includes.scripts.ajax-sync')

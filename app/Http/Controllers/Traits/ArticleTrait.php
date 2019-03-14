@@ -56,8 +56,6 @@ trait ArticleTrait
             break;
         }
 
-
-
         $article = new Article;
         $article->articles_group_id = $articles_group->id;
         $article->draft = 1;
@@ -235,19 +233,6 @@ trait ArticleTrait
 
         // Если проверки пройдены, или меняем уже товар
 
-        // -------------------------------------------------------------------------------------------------
-        // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-
-        // Получаем выбранную категорию со страницы (то, что указал пользователь)
-        $goods_category_id = $request->goods_category_id;
-
-        // Смотрим: была ли она изменена
-        // if ($item->article->product->goods_category_id != $goods_category_id) {
-
-        //     // Была изменена! Переназначаем категорию группе:
-        //     $item = GoodsProduct::where('id', $item->article->goods_product_id)
-        //     ->update(['goods_category_id' => $goods_category_id]);
-        // }
 
         // -------------------------------------------------------------------------------------------------
         // ПЕРЕНОС ТОВАРА В ДРУГУЮ ГРУППУ ПОЛЬЗОВАТЕЛЕМ
@@ -255,14 +240,13 @@ trait ArticleTrait
         // Если не соответствует - дать отказ. Если соответствует - осуществить перенос
 
         // Получаем выбранную группу со страницы (то, что указал пользователь)
-        // $goods_product_id = $request->goods_product_id;
+        $articles_group_id = $request->articles_group_id;
 
-        // if ($item->article->goods_product_id != $goods_product_id ) {
+        if ($article->articles_group_id != $articles_group_id ) {
 
-        //     // Была изменена! Переназначаем категорию группе:
-        //     $item = GoodsArticle::where('id', $item->goods_article_id)
-        //     ->update(['goods_product_id' => $goods_product_id]);
-        // }
+            // Была изменена! Переназначаем группу артикулу:
+            $article->articles_group_id = $articles_group_id;
+        }
 
         // А, пока изменяем без проверки
 

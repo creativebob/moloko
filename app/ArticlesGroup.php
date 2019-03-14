@@ -95,7 +95,7 @@ class ArticlesGroup extends Model
         return $this->belongsTo('App\Company');
     }
 
-    // Категории
+    // Категории товаров
     // public function categories()
     // {
     //     return $this->morphedByMany(GoodsCategory::class, 'articles_group_entity');
@@ -103,5 +103,11 @@ class ArticlesGroup extends Model
     public function goods_categories()
     {
         return $this->morphedByMany(GoodsCategory::class, 'articles_group_entity');
+    }
+
+    // Категории товаров
+    public function raws_categories()
+    {
+        return $this->morphedByMany(RawsCategory::class, 'articles_group_entity');
     }
 }

@@ -248,4 +248,33 @@ class ArticlesGroupController extends Controller
 
 
     }
+
+    public function ajax_articles_groups_list(Request $request)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
+
+        $relation = $request->entity;
+        $category_id = $request->category_id;
+        $articles_group_id = $request->articles_group_id;
+        $set_status = $request->set_status;
+        // dd($relation);
+
+        // Главный запрос
+        $articles_groups = ArticlesGroup::moderatorLimit($answer)
+        ->systemItem($answer)
+        ->companiesLimit($answer)
+        ->where('set_status', $set_status)
+        ->whereHas($relation, function ($q) use ($relation, $category_id) {
+            $q->where($relation.'.id', $category_id);
+        })
+        ->orWhere('id', $articles_group_id)
+        ->orderBy('sort', 'asc')
+        ->toBase()
+        ->get(['id','name']);
+        // dd($articles_groups);
+
+        return view('includes.selects.articles_groups_select', compact('articles_groups', 'articles_group_id'));
+    }
 }

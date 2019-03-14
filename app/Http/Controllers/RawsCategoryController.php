@@ -38,7 +38,13 @@ class RawsCategoryController extends Controller
 
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $raws_categories = RawsCategory::moderatorLimit($answer)
+        $raws_categories = RawsCategory::with([
+            'raws',
+            'childs',
+            'groups'
+        ])
+        ->withCount('childs')
+        ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
@@ -73,7 +79,7 @@ class RawsCategoryController extends Controller
                 'class' => $this->model,
                 'type' => $this->type,
                 'id' => $request->id,
-                // 'nested' => 'raws_products_count',
+                'nested' => 'childs_count',
                 'filter' => setFilter($this->entity_alias, $request, [
                     'booklist'
                 ]),
@@ -134,7 +140,7 @@ class RawsCategoryController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $raws_category = RawsCategory::with([
-            'mode',
+            // 'mode',
             'one_metrics' => function ($q) {
                 $q->with('unit', 'values');
             },
@@ -171,8 +177,10 @@ class RawsCategoryController extends Controller
 
         // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
 
-        // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $raws_category = RawsCategory::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $raws_category = RawsCategory::moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
@@ -217,7 +225,10 @@ class RawsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $raws_category = RawsCategory::withCount('childs', 'products')
+        $raws_category = RawsCategory::with([
+            'childs',
+            'raws'
+        ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
@@ -230,7 +241,7 @@ class RawsCategoryController extends Controller
 
         $parent_id = $raws_category->parent_id;
 
-        $raws_category = RawsCategory::destroy($id);
+        $raws_category->delete();
 
         if ($raws_category) {
 

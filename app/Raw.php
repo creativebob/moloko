@@ -68,40 +68,34 @@ class Raw extends Model
         'editor_id',
     ];
 
-    // Артикул сырья
+    // Артикул
     public function article()
     {
-        return $this->belongsTo('App\RawsArticle', 'raws_article_id');
+        return $this->belongsTo(Article::class);
+    }
+
+    // Категория
+    public function category()
+    {
+        return $this->belongsTo(RawsCategory::class, 'raws_category_id');
     }
 
     // Компания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
 
-    // Альбом
-    public function album()
+    // Рабочие процессы
+    public function workflows()
     {
-        return $this->belongsTo('App\Album');
-    }
-
-    // Аватар
-    public function photo()
-    {
-        return $this->belongsTo('App\Photo');
-    }
-
-    // Каталоги
-    public function catalogs()
-    {
-        return $this->morphToMany('App\Catalog', 'catalog_products');
+        return $this->morphMany(Workflow::class, 'workflows');
     }
 
 }

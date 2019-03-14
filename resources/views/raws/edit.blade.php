@@ -53,7 +53,7 @@ $disabled = $raw->article->draft == null;
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            {{ Form::model($raw, [
+            {{ Form::model($article, [
                 'route' => ['raws.update', $raw->id],
                 'data-abide',
                 'novalidate',

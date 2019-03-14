@@ -60,6 +60,10 @@ class GoodsPolicy
             return false;
         }
 
+        // if ($model->articles->count() > 0) {
+        //     return false;
+        // }
+
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
 
         return $result;

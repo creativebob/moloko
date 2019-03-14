@@ -202,8 +202,8 @@ class GoodsController extends Controller
         $answer = operator_right('manufacturers', false, 'index');
 
         $manufacturers_count = Manufacturer::moderatorLimit($answer)
+        ->companiesLimit($answer)
         ->systemItem($answer)
-        ->where('company_id', $request->user()->company_id)
         ->count();
 
         // Если нет производителей
@@ -253,13 +253,13 @@ class GoodsController extends Controller
         // $backlink = url()->previous();
         // Cookie::queue('backlink', $backlink, 1440);
 
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $goods_categories_list = get_select_tree($goods_categories->keyBy('id')->toArray(), $parent_id, null, null);
-        // echo $goods_categories_list;
-
-        return view('goods.create', [
-            'cur_goods' => new $this->class,
-            'goods_categories_list' => $goods_categories_list,
+        return view('includes.create_modes.create', [
+            'item' => new $this->class,
+            'title' => 'Добавление товара',
+            'entity' => $this->entity_alias,
+            'categories_select_name' => 'goods_category_id',
+            'category_entity_alias' => 'goods_categories',
+            'set_status' => true
         ]);
     }
 
@@ -323,7 +323,8 @@ class GoodsController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Главный запрос
-        $cur_goods = Goods::moderatorLimit($answer)->findOrFail($id);
+        $cur_goods = Goods::moderatorLimit($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
@@ -529,6 +530,24 @@ class GoodsController extends Controller
         $article = $this->updateArticle($request, $cur_goods);
 
         if ($article) {
+
+            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
+
+            // Получаем выбранную категорию со страницы (то, что указал пользователь)
+            $goods_category_id = $request->goods_category_id;
+
+            // Смотрим: была ли она изменена
+            if ($cur_goods->goods_category_id != $goods_category_id) {
+
+                $articles_group = $article->group;
+
+                // Была изменена! Переназначаем категорию товару и группе:
+                $articles_group->goods_categories()->detach($cur_goods->goods_category_id);
+                $cur_goods->goods_category_id = $goods_category_id;
+
+                $articles_group->goods_categories()->attach($goods_category_id);
+                // $articles_group->goods_categories()->updateExistingPivot($article->articles_group_id, $goods_category);
+            }
 
             $cur_goods->display = $request->display;
             $cur_goods->system_item = $request->system_item;

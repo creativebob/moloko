@@ -168,7 +168,7 @@ class GoodsCategoryController extends Controller
         ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
-        // dd($goods_category);
+        // dd($goods_category->manufacturers);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_category);
@@ -182,8 +182,8 @@ class GoodsCategoryController extends Controller
         }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_raws_categories = operator_right('raws_categories', false, 'index');
-        $answer_raws = operator_right('raws', false, 'index');
+        // $answer_raws_categories = operator_right('raws_categories', false, 'index');
+        // $answer_raws = operator_right('raws', false, 'index');
 
         // $raws_articles = RawsArticle::with(['product' => function ($q) {
         //     $q->with(['category' => function ($q) {
@@ -229,8 +229,10 @@ class GoodsCategoryController extends Controller
 
         // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
 
-        // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $goods_category = GoodsCategory::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $goods_category = GoodsCategory::moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
@@ -325,7 +327,4 @@ class GoodsCategoryController extends Controller
             ];
         }
     }
-
-    // ------------------------------------------------ Ajax -------------------------------------------------
-
 }

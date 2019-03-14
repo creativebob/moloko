@@ -44,6 +44,9 @@ use App\Http\ViewComposers\MenuViewComposer;
 use App\Http\ViewComposers\DepartmentsComposer;
 use App\Http\ViewComposers\DepartmentsViewComposer;
 // use App\Http\ViewComposers\SectorsComposer;
+
+use App\Http\ViewComposers\CategoriesComposer;
+
 use App\Http\ViewComposers\GoodsCategoriesComposer;
 use App\Http\ViewComposers\RawsCategoriesComposer;
 use App\Http\ViewComposers\GoodsProductsComposer;
@@ -73,6 +76,7 @@ use App\Http\ViewComposers\EntitiesStatisticsSelectComposer;
 
 use App\Http\ViewComposers\CatalogsComposer;
 
+use App\Http\ViewComposers\ArticlesGroupsComposer;
 
 // Project
 use App\Http\ViewComposers\Project\NavigationsComposer as ProjectNavigationsComposer;
@@ -152,6 +156,9 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('departments.filials_list', DepartmentsViewComposer::class);
         view()->composer('includes.lists.departments', DepartmentsComposer::class);
         // view()->composer('includes.selects.sectors', SectorsComposer::class);
+
+        view()->composer('includes.create_modes.categories_select', CategoriesComposer::class);
+
         view()->composer('includes.selects.goods_categories', GoodsCategoriesComposer::class);
         view()->composer('includes.selects.raws_categories', RawsCategoriesComposer::class);
         view()->composer('includes.selects.goods_products', GoodsProductsComposer::class);
@@ -169,6 +176,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.entities_statistics', EntitiesStatisticsSelectComposer::class);
 
         view()->composer('includes.catalogs_with_items', CatalogsComposer::class);
+
+        view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
 
 
         // Project

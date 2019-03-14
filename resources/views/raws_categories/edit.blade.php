@@ -39,7 +39,7 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            {{ Form::model($raws_category, ['url' => '/admin/raws_categories/'.$raws_category->id, 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'products-category-form']) }}
+            {{ Form::model($raws_category, ['route' => ['raws_categories.update', $raws_category->id], 'data-abide', 'novalidate', 'files'=>'true', 'id' => 'products-category-form']) }}
             {{ method_field('PATCH') }}
 
             {{-- Общая информация --}}

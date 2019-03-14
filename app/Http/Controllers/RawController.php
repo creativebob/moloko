@@ -4,20 +4,24 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Raw;
-use App\RawsArticle;
-use App\RawsProduct;
+use App\Article;
+use App\RawsCategory;
 use App\Manufacturer;
 use App\Metric;
+use App\Entity;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\RawsRequest;
+use App\Http\Requests\RawRequest;
 
 // Куки
 use Illuminate\Support\Facades\Cookie;
 
 // Транслитерация
 use Transliterate;
+
+// Трейты
+use App\Http\Controllers\Traits\ArticleTrait;
 
 class RawController extends Controller
 {
@@ -32,6 +36,8 @@ class RawController extends Controller
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
     }
+
+    use ArticleTrait;
 
     public function index(Request $request)
     {
@@ -54,26 +60,44 @@ class RawController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
 
-        $raws = Raw::with(
+        $columns = [
+            'id',
+            'article_id',
+            'raws_category_id',
+            'author_id',
+            'company_id'
+        ];
+
+        $raws = Raw::with([
             'author',
             'company',
-            'article.product.category',
-            'catalogs.site'
-        )
+            'article' => function ($q) {
+                $q->with([
+                    'group',
+                    'photo'
+                ]);
+            },
+            'category' => function ($q) {
+                $q->select([
+                    'id',
+                    'name'
+                ]);
+            },
+        ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->booklistFilter($request)
         ->filter($request, 'author_id')
-        ->filter($request, 'raws_category_id', 'article.product')
-        ->filter($request, 'raws_product_id', 'article')
-        ->whereHas('article', function ($q) {
-            $q->whereNull('archive');
-        })
+        // ->filter($request, 'raws_category_id', 'article.product')
+        // ->filter($request, 'raws_product_id', 'article')
+        ->where('archive', false)
+        ->select($columns)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
+        // dd($raws);
 
 
         // -----------------------------------------------------------------------------------------------------------
@@ -83,7 +107,7 @@ class RawController extends Controller
         $filter = setFilter($this->entity_alias, $request, [
             'author',               // Автор записи
             'raws_category',    // Категория услуги
-            'raws_product',     // Группа услуги
+            // 'raws_product',     // Группа услуги
             // 'date_interval',     // Дата обращения
             'booklist'              // Списки пользователя
         ]);
@@ -102,15 +126,15 @@ class RawController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_raws_categories = operator_right('raws_categories', false, 'index');
+        $answer = operator_right('raws_categories', false, 'index');
 
         // Главный запрос
-        $raws_categories = RawsCategory::withCount('products', 'manufacturers')
-        ->with('products', 'manufacturers')
-        ->moderatorLimit($answer_raws_categories)
-        ->companiesLimit($answer_raws_categories)
-        ->authors($answer_raws_categories)
-        ->systemItem($answer_raws_categories)
+        $raws_categories = RawsCategory::withCount('manufacturers')
+        ->with('manufacturers')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
         ->orderBy('sort', 'asc')
         ->get();
 
@@ -130,8 +154,8 @@ class RawController extends Controller
         $answer = operator_right('manufacturers', false, 'index');
 
         $manufacturers_count = Manufacturer::moderatorLimit($answer)
+        ->companiesLimit($answer)
         ->systemItem($answer)
-        ->where('company_id', $request->user()->company_id)
         ->count();
 
         // Если нет производителей
@@ -160,8 +184,7 @@ class RawController extends Controller
         //     return view('ajax_error', compact('ajax_error'));
         // }
 
-        $raws_products_count = $raws_categories->first()->raws_products_count;
-        $parent_id = null;
+        // $raws_products_count = $raws_categories->first()->raws_products_count;
 
         // if ($request->cookie('conditions') != null) {
 
@@ -176,102 +199,51 @@ class RawController extends Controller
         //     }
         // }
 
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $raws_categories_list = get_select_tree($raws_categories->keyBy('id')->toArray(), $parent_id, null, null);
-        // echo $raws_categories_list;
-
-        return view('raws.create', [
-            'raw' => new $this->class,
-            'raws_categories_list' => $raws_categories_list,
-            'raws_products_count' => $raws_products_count
+        return view('includes.create_modes.create', [
+            'item' => new $this->class,
+            'title' => 'Добавление сырья',
+            'entity' => $this->entity_alias,
+            'categories_select_name' => 'raws_category_id',
+            'category_entity_alias' => 'raws_categories',
+            'set_status' => false
         ]);
     }
 
-    public function store(Request $request)
+    public function store(RawRequest $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
-        // dd($request);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+        $raws_category = RawsCategory::findOrFail($request->raws_category_id);
+        // dd($goods_category->load('groups'));
+        $article = $this->storeArticle($request, $raws_category);
 
-        // Смотрим компанию пользователя
-        $company_id = $user->company_id;
+        if ($article) {
 
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        $name = $request->name;
-        $raws_category_id = $request->raws_category_id;
-
-        // Смотрим пришедший режим группы товаров
-        switch ($request->mode) {
-
-            case 'mode-default':
-            $raws_product = RawsProduct::firstOrCreate([
-                'name' => $request->name,
-                'raws_category_id' => $raws_category_id,
-                'set_status' => $request->set_status ? 'set' : 'one',
-            ], [
-                'unit_id' => $request->unit_id,
-                'system_item' => $request->system_item ? $request->system_item : null,
-                'display' => 1,
-                'company_id' => $company_id,
-                'author_id' => $user_id
-            ]);
-
-            $raws_product_id = $raws_product->id;
-            break;
-
-            case 'mode-add':
-            $raws_product = RawsProduct::firstOrCreate([
-                'name' => $request->raws_product_name,
-                'raws_category_id' => $raws_category_id,
-                'set_status' => $request->set_status ? 'set' : 'one',
-            ], [
-                'unit_id' => $request->unit_id,
-                'system_item' => $request->system_item ? $request->system_item : null,
-                'display' => 1,
-                'company_id' => $company_id,
-                'author_id' => $user_id
-            ]);
-
-            $raws_product_id = $raws_product->id;
-            break;
-
-            case 'mode-select':
-            $raws_product_id = $request->raws_product_id;
-            break;
-        }
-
-        $raws_article = new RawsArticle;
-        $raws_article->raws_product_id = $raws_product_id;
-        $raws_article->draft = 1;
-        $raws_article->company_id = $company_id;
-        $raws_article->author_id = $user_id;
-        $raws_article->name = $name;
-        $raws_article->save();
-
-        if ($raws_article) {
+            // Получаем данные для авторизованного пользователя
+            $user = $request->user();
 
             $raw = new Raw;
-            $raw->cost = $request->cost;
-            $raw->company_id = $company_id;
-            $raw->author_id = $user_id;
-            $raw->article()->associate($raws_article);
+            $raw->article_id = $article->id;
+            $raw->raws_category_id = $request->raws_category_id;
+
+            $raw->display = $request->display;
+            $raw->system_item = $request->system_item;
+
+            $raw->company_id = $user->company_id;
+            $raw->author_id = hideGod($user);
             $raw->save();
 
             if ($raw) {
 
-                // Пишем сессию
+                // Пишем куки состояния
                 // $mass = [
-                //     'raws_category' => $raws_category_id,
+                //     'goods_category' => $goods_category_id,
                 // ];
+                // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
 
-                // Cookie::queue('conditions', $mass, 1440);
-
+                // dd($request->quickly);
                 if ($request->quickly == 1) {
                     return redirect()->route('raws.index');
                 } else {
@@ -297,7 +269,8 @@ class RawController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Главный запрос
-        $raw = Raw::with('article.metrics')->moderatorLimit($answer)->findOrFail($id);
+        $raw = Raw::moderatorLimit($answer)
+        ->findOrFail($id);
         // dd($raw);
 
         // Подключение политики
@@ -305,24 +278,26 @@ class RawController extends Controller
 
         // -- TODO -- Перенести в запрос --
 
-        // Массив со значениями метрик товара
-        if ($raw->article->metrics->isNotEmpty()) {
-            // dd($raw->metrics);
-            $metrics_values = [];
-            foreach ($raw->article->metrics->groupBy('id') as $metric) {
-                // dd($metric);
-                if ((count($metric) == 1) && ($metric->first()->list_type != 'list')) {
-                    $metrics_values[$metric->first()->id] = $metric->first()->pivot->value;
-                } else {
-                    foreach ($metric as $value) {
-                        $metrics_values[$metric->first()->id][] = $value->pivot->value;
-                    }
-                }
-            }
-        } else {
-            $metrics_values = null;
-        }
-        // dd($metrics_values);
+        // // Массив со значениями метрик товара
+        // if ($raw->article->metrics->isNotEmpty()) {
+        //     // dd($raw->metrics);
+        //     $metrics_values = [];
+        //     foreach ($raw->article->metrics->groupBy('id') as $metric) {
+        //         // dd($metric);
+        //         if ((count($metric) == 1) && ($metric->first()->list_type != 'list')) {
+        //             $metrics_values[$metric->first()->id] = $metric->first()->pivot->value;
+        //         } else {
+        //             foreach ($metric as $value) {
+        //                 $metrics_values[$metric->first()->id][] = $value->pivot->value;
+        //             }
+        //         }
+        //     }
+        // } else {
+        //     $metrics_values = null;
+        // }
+        // // dd($metrics_values);
+
+        $article = $raw->article;
 
         // Получаем настройки по умолчанию
         $settings = getSettings($this->entity_alias);
@@ -331,10 +306,10 @@ class RawController extends Controller
         $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
 
-        return view('raws.edit', compact('raw', 'page_info',  'metrics_values', 'settings'));
+        return view('raws.edit', compact('raw', 'article', 'page_info', 'settings'));
     }
 
-    public function update(Request $request, $id)
+    public function update(RawRequest $request, $id)
     {
 
         // dd($request);
@@ -647,6 +622,47 @@ class RawController extends Controller
             abort(403, 'Сырьё не найдено');
         }
     }
+
+    // ----------------------------------- Ajax -----------------------------------------
+
+    // Режим создания товара
+    public function ajax_change_create_mode(Request $request)
+    {
+        // $mode = 'mode-add';
+        // $entity = 'service_categories';
+
+        switch ($request->mode) {
+
+            case 'mode-default':
+
+            return view('raws.create_modes.mode_default');
+
+            break;
+
+            case 'mode-select':
+
+            $set_status = $request->set_status == 'true' ? 1 : 0;
+            $raws_category = RawsCategory::with(['groups' => function ($q) use ($set_status) {
+                $q->with('unit')
+                ->where('set_status', $set_status);
+            }])
+            ->find($request->category_id);
+
+            $articles_groups = $raws_category->groups;
+
+            return view('raws.create_modes.mode_select', compact('articles_groups'));
+
+            break;
+
+            case 'mode-add':
+
+            return view('raws.create_modes.mode_add');
+
+            break;
+
+        }
+    }
+
 
     // -------------------------------------- Проверки на совпадение артикула ----------------------------------------------------
 

@@ -329,16 +329,16 @@ Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth'
 // Основные методы
 Route::resource('/raws_products', 'RawsProductController')->middleware('auth');
 
-Route::any('/ajax_raws_count', 'RawsProductController@ajax_count')->middleware('auth');
-Route::any('/raws_products_create_mode', 'RawsProductController@ajax_change_create_mode')->middleware('auth');
+// Route::any('/ajax_raws_count', 'RawsProductController@ajax_count')->middleware('auth');
+// Route::any('/raws_products_create_mode', 'RawsProductController@ajax_change_create_mode')->middleware('auth');
 
-Route::any('/raws_products_list', 'RawsProductController@ajax_get_products_list')->middleware('auth');
+// Route::any('/raws_products_list', 'RawsProductController@ajax_get_products_list')->middleware('auth');
 
 
 // ---------------------------------- Сырьё (Артикулы) -------------------------------------------
 
 // Основные методы
-Route::resource('/raws', 'RawController')->middleware('auth');
+Route::resource('/raws', 'RawController');
 // Route::get('/raws/search/{text_fragment}', 'RawController@search')->middleware('auth');
 Route::post('/raws/search/{text_fragment}', 'RawController@search')->middleware('auth');
 // Архивация
@@ -346,6 +346,8 @@ Route::post('/raws/archive/{id}', 'RawController@archive')->middleware('auth');
 // Фото
 Route::any('/raw/add_photo', 'RawController@add_photo')->middleware('auth');
 Route::post('/raw/photos', 'RawController@photos')->middleware('auth');
+
+Route::any('/raws_create_mode', 'RawController@ajax_change_create_mode')->middleware('auth');
 
 
 // -------------------------------- Категории товаров -------------------------------------------
@@ -392,7 +394,13 @@ Route::any('/goods_check', 'GoodsController@ajax_check')->middleware('auth');
 // Отображение на сайте
 Route::any('/goods_categories_get_products', 'GoodsController@ajax_get_products')->middleware('auth');
 
-Route::any('/goods_create_mode', 'GoodsController@ajax_change_create_mode')->middleware('auth');
+Route::any('/create_mode', 'CreateModeController@ajax_change_create_mode')->middleware('auth');
+
+Route::any('/ajax_articles_groups_count', 'ArticlesGroupController@ajax_count');
+
+Route::any('/ajax_articles_groups_set_status', 'ArticlesGroupController@ajax_set_status');
+
+Route::any('/articles_groups_list', 'ArticlesGroupController@ajax_articles_groups_list');
 
 
 
@@ -468,7 +476,7 @@ Route::get('plans/{alias}', 'PlanController@show')->name('plans.show');
 // ------------------------------------------------ Статистика ---------------------------------------
 
 // Основные методы
-Route::resource('statistics', 'StatisticsController')->middleware('auth');
+// Route::resource('statistics', 'StatisticsController')->middleware('auth');
 
 
 // ---------------------------------------------- Лиды -----------------------------------------------
@@ -841,10 +849,10 @@ Route::prefix('/sites/{site_id}')->group(function () {
 
 
 // Поиск продукции для добавления на сайт
-Route::any('/catalog_product/search_add_product', 'CatalogProductController@search_add_product')->middleware('auth');
+// Route::any('/catalog_product/search_add_product', 'CatalogProductController@search_add_product')->middleware('auth');
 
-// Поиск продукции для добавления на сайт
-Route::any('/catalog_product/add_product', 'CatalogProductController@add_product')->middleware('auth');
+// // Поиск продукции для добавления на сайт
+// Route::any('/catalog_product/add_product', 'CatalogProductController@add_product')->middleware('auth');
 
 
 
