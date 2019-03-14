@@ -365,10 +365,11 @@ Route::any('/goods_category_compositions', 'GoodsCategoryController@ajax_get_com
 // Основные методы
 Route::resource('/goods_products', 'GoodsProductController')->middleware('auth');
 
-Route::any('/ajax_articles_groups_count', 'ArticlesGroupController@ajax_count')->middleware('auth');
-Route::any('/ajax_articles_groups_set_status', 'ArticlesGroupController@ajax_set_status')->middleware('auth');
+Route::any('/ajax_articles_groups_count', 'ArticlesGroupController@ajax_count');
 
-Route::any('/goods_products_list', 'GoodsProductController@ajax_get_products_list')->middleware('auth');
+Route::any('/ajax_articles_groups_set_status', 'ArticlesGroupController@ajax_set_status');
+
+Route::any('/articles_groups_list', 'ArticlesGroupController@ajax_articles_groups_list');
 
 
 // ---------------------------------- Товары (Артикулы) -------------------------------------------

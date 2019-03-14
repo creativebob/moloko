@@ -56,8 +56,6 @@ trait ArticleTrait
             break;
         }
 
-
-
         $article = new Article;
         $article->articles_group_id = $articles_group->id;
         $article->draft = 1;
@@ -255,14 +253,13 @@ trait ArticleTrait
         // Если не соответствует - дать отказ. Если соответствует - осуществить перенос
 
         // Получаем выбранную группу со страницы (то, что указал пользователь)
-        // $goods_product_id = $request->goods_product_id;
+        $articles_group_id = $request->articles_group_id;
 
-        // if ($item->article->goods_product_id != $goods_product_id ) {
+        if ($article->articles_group_id != $articles_group_id ) {
 
-        //     // Была изменена! Переназначаем категорию группе:
-        //     $item = GoodsArticle::where('id', $item->goods_article_id)
-        //     ->update(['goods_product_id' => $goods_product_id]);
-        // }
+            // Была изменена! Переназначаем группу артикулу:
+            $article->articles_group_id = $articles_group_id;
+        }
 
         // А, пока изменяем без проверки
 
