@@ -157,6 +157,7 @@ class UserController extends Controller
             'extra_phones'
         )->moderatorLimit($answer)
         ->findOrFail($id);
+        dd($user);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);

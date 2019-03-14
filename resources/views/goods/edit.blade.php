@@ -412,9 +412,9 @@ $disabled = $cur_goods->article->draft == null;
                         ]
                         ) !!}
 
-                        {!! Form::hidden('name', $cur_goods->article->name) !!}
-                        {!! Form::hidden('id', $cur_goods->id) !!}
-                        {!! Form::hidden('entity', 'goods') !!}
+                        {!! Form::hidden('name', $article->name) !!}
+                        {!! Form::hidden('id', $article->id) !!}
+                        {!! Form::hidden('entity', 'articles') !!}
                         {{-- {!! Form::hidden('album_id', $cur_goods->album_id) !!} --}}
 
                         {!! Form::close() !!}
