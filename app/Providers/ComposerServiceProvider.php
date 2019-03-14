@@ -73,8 +73,6 @@ use App\Http\ViewComposers\EntitiesStatisticsSelectComposer;
 
 use App\Http\ViewComposers\CatalogsComposer;
 
-use App\Http\ViewComposers\ArticlesGroupsComposer;
-
 
 // Project
 use App\Http\ViewComposers\Project\NavigationsComposer as ProjectNavigationsComposer;
@@ -169,8 +167,6 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.directions', DirectionsComposer::class);
 
         view()->composer('includes.selects.entities_statistics', EntitiesStatisticsSelectComposer::class);
-
-        view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
 
         view()->composer('includes.catalogs_with_items', CatalogsComposer::class);
 

@@ -14,21 +14,13 @@ class ArticlesGroupsComposer
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('articles_groups', false, 'index');
 
-        $relation = $view->entity;
-        $category_id = $view->category_id;
-        $set_status = $view->set_status;
-        // dd($relation, $category_id);
-
         // Главный запрос
         $articles_groups = ArticlesGroup::moderatorLimit($answer)
         ->systemItem($answer)
         ->companiesLimit($answer)
-        ->where('set_status', $set_status)
-        ->whereHas($relation, function ($q) use ($relation, $category_id) {
-            $q->where($relation.'.id', $category_id);
-        })
+        // ->whereDisplay(1)
+        // ->has('albums')
         ->orderBy('sort', 'asc')
-        ->toBase()
         ->get(['id','name']);
         // dd($articles_groups);
 

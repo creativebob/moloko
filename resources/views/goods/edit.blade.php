@@ -79,15 +79,9 @@ $disabled = $cur_goods->article->draft == null;
                                     {{ Form::text('name', $cur_goods->article->name, ['required']) }}
                                 </label>
 
-                                <label>Группа
-                                    @include('includes.selects.articles_groups', [
-                                        'entity' => 'goods_categories',
-                                        'category_id' => $cur_goods->goods_category_id,
-                                        'set_status' => $article->group->set_status,
-                                        'articles_group_id' => $article->articles_group_id
-                                    ]
-                                    )
-                                </label>
+                                {{-- <label>Группа
+                                    @include('includes.selects.goods_products', ['goods_category_id' => $cur_goods->article->product->goods_category_id, 'set_status' => $cur_goods->article->product->set_status, 'goods_product_id' => $cur_goods->article->goods_product_id])
+                                </label> --}}
 
                                 <label>Категория
                                     @include('includes.selects.goods_categories', ['goods_category_id' => $cur_goods->goods_category_id])
@@ -461,12 +455,12 @@ $disabled = $cur_goods->article->draft == null;
 
     var metrics_count = 0;
 
-    var set_status = '{{ $article->group->set_status }}';
-    // if (set_status == 'one') {
-    //     var compositions_count = 0;
-    // } else {
-    //     var compositions_count = 0;
-    // }
+    var set_status = 'one';
+    if (set_status == 'one') {
+        var compositions_count = 0;
+    } else {
+        var compositions_count = 0;
+    }
 
     var category_id = '{{ $cur_goods->goods_category_id }}';
 
@@ -479,14 +473,9 @@ $disabled = $cur_goods->article->draft == null;
         event.preventDefault();
 
         // Меняем группы
-        $.post('/admin/articles_groups_list', {
-            entity: 'goods_categories',
-            category_id: $(this).val(),
-            articles_group_id: $('#select-articles_groups').val(),
-            set_status: set_status
-        }, function(list){
-            // alert(list);
-            $('#select-articles_groups').replaceWith(list);
+        $.post('/admin/goods_products_list', {goods_category_id: $(this).val(), goods_product_id: $('#select-goods_products').val(), set_status: set_status}, function(list){
+            // alert(html);
+            $('#select-goods_products').replaceWith(list);
         });
     });
 

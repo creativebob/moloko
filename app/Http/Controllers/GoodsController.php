@@ -530,29 +530,9 @@ class GoodsController extends Controller
 
         if ($article) {
 
-            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-
-            // Получаем выбранную категорию со страницы (то, что указал пользователь)
-            $goods_category_id = $request->goods_category_id;
-
-            // Смотрим: была ли она изменена
-            if ($cur_goods->goods_category_id != $goods_category_id) {
-
-                $articles_group = $article->group;
-
-                // Была изменена! Переназначаем категорию товару и группе:
-                $articles_group->goods_categories()->detach($cur_goods->goods_category_id);
-                $cur_goods->goods_category_id = $goods_category_id;
-
-                $articles_group->goods_categories()->attach($goods_category_id);
-                // $articles_group->goods_categories()->updateExistingPivot($article->articles_group_id, $goods_category);
-            }
-
             $cur_goods->display = $request->display;
             $cur_goods->system_item = $request->system_item;
             $cur_goods->save();
-
-            
 
             // Проверяем каталоги
             if (isset($request->catalogs_items)) {
