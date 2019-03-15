@@ -22,7 +22,6 @@ trait ArticleTrait
             case 'mode-default':
             $articles_group = ArticlesGroup::firstOrCreate([
                 'name' => $request->name,
-                'set_status' => $request->has('set_status'),
             ], [
                 'unit_id' => $request->unit_id,
                 'system_item' => $request->system_item ? $request->system_item : null,
@@ -38,7 +37,6 @@ trait ArticleTrait
             case 'mode-add':
             $articles_group = ArticlesGroup::firstOrCreate([
                 'name' => $request->articles_group_name,
-                'set_status' => $request->has('set_status'),
             ], [
                 'unit_id' => $request->unit_id,
                 'system_item' => $request->system_item ? $request->system_item : null,

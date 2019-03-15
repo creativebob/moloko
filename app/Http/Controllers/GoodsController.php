@@ -259,7 +259,6 @@ class GoodsController extends Controller
             'entity' => $this->entity_alias,
             'categories_select_name' => 'goods_category_id',
             'category_entity_alias' => 'goods_categories',
-            'set_status' => true
         ]);
     }
 
@@ -284,6 +283,8 @@ class GoodsController extends Controller
 
             $cur_goods->display = $request->display;
             $cur_goods->system_item = $request->system_item;
+
+            $cur_goods->set_status = $request->has('set_status');
 
             $cur_goods->company_id = $user->company_id;
             $cur_goods->author_id = hideGod($user);
@@ -507,7 +508,16 @@ class GoodsController extends Controller
         $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
 
-        return view('goods.edit', compact('cur_goods', 'article', 'page_info', 'settings'));
+        return view('includes.edit_operations.edit', [
+            'title' => 'Редактировать товар',
+            'item' => $cur_goods,
+            'article' => $article,
+            'page_info' => $page_info,
+            'settings' => $settings,
+            'entity' => $this->entity_alias,
+            'category_entity' => 'goods_categories',
+            'categories_select_name' => 'select-goods_categories',
+        ]);
     }
 
     public function update(Request $request, $id)

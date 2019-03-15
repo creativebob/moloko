@@ -8,7 +8,6 @@
             category_entity: category_entity,
             category_id: $(this).val(),
             articles_group_id: $('#select-articles_groups').val(),
-            set_status: set_status
         }, function(list){
             // alert(list);
             $('#select-articles_groups').replaceWith(list);

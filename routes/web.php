@@ -394,6 +394,8 @@ Route::any('/goods_check', 'GoodsController@ajax_check')->middleware('auth');
 // Отображение на сайте
 Route::any('/goods_categories_get_products', 'GoodsController@ajax_get_products')->middleware('auth');
 
+
+
 Route::any('/create_mode', 'CreateModeController@ajax_change_create_mode')->middleware('auth');
 
 Route::any('/ajax_articles_groups_count', 'ArticlesGroupController@ajax_count');

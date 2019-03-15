@@ -81,7 +81,6 @@ $disabled = $raw->article->draft == null;
                                     @include('includes.selects.articles_groups', [
                                         'entity' => 'raws_categories',
                                         'category_id' => $raw->raws_category_id,
-                                        'set_status' => $article->group->set_status,
                                         'articles_group_id' => $article->articles_group_id
                                     ]
                                     )
@@ -345,7 +344,7 @@ $disabled = $raw->article->draft == null;
     var entity = 'raws';
     var category_entity = 'raws_categories';
     var metrics_count = 0;
-    var set_status = '{{ $article->group->set_status }}';
+    var set_status = '{{ $raw->set_status }}';
     var category_id = '{{ $raw->raws_category_id }}';
     var unit = 'шт';
 

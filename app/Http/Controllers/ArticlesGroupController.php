@@ -258,14 +258,12 @@ class ArticlesGroupController extends Controller
         $relation = $request->category_entity;
         $category_id = $request->category_id;
         $articles_group_id = $request->articles_group_id;
-        $set_status = $request->set_status;
         // dd($relation);
 
         // Главный запрос
         $articles_groups = ArticlesGroup::moderatorLimit($answer)
         ->systemItem($answer)
         ->companiesLimit($answer)
-        ->where('set_status', $set_status)
         ->whereHas($relation, function ($q) use ($relation, $category_id) {
             $q->where($relation.'.id', $category_id);
         })

@@ -205,7 +205,6 @@ class RawController extends Controller
             'entity' => $this->entity_alias,
             'categories_select_name' => 'raws_category_id',
             'category_entity_alias' => 'raws_categories',
-            'set_status' => false
         ]);
     }
 
@@ -230,6 +229,8 @@ class RawController extends Controller
 
             $raw->display = $request->display;
             $raw->system_item = $request->system_item;
+
+            $raw->set_status = $request->has('set_status');
 
             $raw->company_id = $user->company_id;
             $raw->author_id = hideGod($user);
@@ -306,7 +307,16 @@ class RawController extends Controller
         $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
 
-        return view('raws.edit', compact('raw', 'article', 'page_info', 'settings'));
+        return view('includes.edit_operations.edit', [
+            'title' => 'Редактировать сырье',
+            'item' => $raw,
+            'article' => $article,
+            'page_info' => $page_info,
+            'settings' => $settings,
+            'entity' => $this->entity_alias,
+            'category_entity' => 'raws_categories',
+            'categories_select_name' => 'select-raws_categories',
+        ]);
     }
 
     public function update(RawRequest $request, $id)

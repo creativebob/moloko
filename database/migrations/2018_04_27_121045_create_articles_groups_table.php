@@ -22,9 +22,6 @@ class CreateArticlesGroupsTable extends Migration
             $table->integer('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
             $table->foreign('photo_id')->references('id')->on('photos');
 
-            $table->boolean('set_status')->default(0)->unsigned()->comment('Статус набора');
-            // $table->enum('set_status', ['one', 'set'])->comment('Статус набора (Один/набор)');
-
             $table->integer('unit_id')->nullable()->unsigned()->comment('Id единицы измерения');
             $table->foreign('unit_id')->references('id')->on('units');
 

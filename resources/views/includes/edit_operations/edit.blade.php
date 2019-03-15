@@ -7,14 +7,14 @@
 @include('includes.scripts.chosen-inhead')
 @endsection
 
-@section('title', 'Редактировать товар')
+@section('title', $title)
 
-@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $cur_goods->article))
+@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $article))
 
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ товар &laquo{{ $cur_goods->article->name }}&raquo</h2>
+        <h2 class="header-content">{{ $title }} &laquo{{ $article->name }}&raquo</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -22,28 +22,34 @@
 @endsection
 
 @php
-$disabled = $cur_goods->article->draft == null;
+$disabled = $article->draft == null;
 @endphp
 
 @section('content')
 <div class="grid-x tabs-wrap">
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
+
             <li class="tabs-title is-active">
                 <a href="#options" aria-selected="true">Общая информация</a>
             </li>
+
             <li class="tabs-title">
                 <a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a>
             </li>
+
             <li class="tabs-title">
                 <a data-tabs-target="catalogs" href="#catalogs">Каталоги</a>
             </li>
+
             <li class="tabs-title">
                 <a data-tabs-target="compositions" href="#compositions">Состав</a>
             </li>
+
             <li class="tabs-title">
                 <a data-tabs-target="photos" href="#photos">Фотографии</a>
             </li>
+
         </ul>
     </div>
 </div>
@@ -53,11 +59,11 @@ $disabled = $cur_goods->article->draft == null;
         <div class="tabs-content" data-tabs-content="tabs">
 
             {{ Form::model($article, [
-                'route' => ['goods.update', $cur_goods->id],
+                'route' => [$entity.'.update', $item->id],
                 'data-abide',
                 'novalidate',
                 'files' => 'true',
-                'id' => 'form-cur_goods'
+                'id' => 'form-edit'
             ]
             ) }}
             {{ method_field('PATCH') }}
@@ -75,38 +81,42 @@ $disabled = $cur_goods->article->draft == null;
                         <div class="grid-x grid-margin-x">
                             <div class="small-12 medium-6 cell">
 
-                                <label>Название товара
-                                    {{ Form::text('name', $cur_goods->article->name, ['required']) }}
+                                <label>Название
+                                    {{ Form::text('name', $article->name, ['required']) }}
                                 </label>
 
                                 <label>Группа
                                     @include('includes.selects.articles_groups', [
-                                        'entity' => 'goods_categories',
-                                        'category_id' => $cur_goods->goods_category_id,
+                                        'entity' => $category_entity,
+                                        'category_id' => $item->category->id,
                                         'articles_group_id' => $article->articles_group_id
                                     ]
                                     )
                                 </label>
 
                                 <label>Категория
-                                    @include('includes.selects.goods_categories', ['goods_category_id' => $cur_goods->goods_category_id])
+                                    @include('includes.selects.categories', [
+                                        'name' => $categories_select_name,
+                                        'entity' => $category_entity,
+                                        'category_entity_alias' => $category_entity,
+                                        'category_id' => $item->category->id
+                                    ]
+                                    )
                                 </label>
 
                                 <label>Производитель
 
-                                    @if ($cur_goods->category->manufacturers->isNotEmpty())
+                                    @if ($item->category->manufacturers->isNotEmpty())
 
-                                    {!! Form::select('manufacturer_id', $cur_goods->category->manufacturers->pluck('company.name', 'id'), $cur_goods->article->manufacturer_id, []) !!}
+                                    {!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $article->manufacturer_id, []) !!}
 
                                     @else
 
-                                    @include('includes.selects.manufacturers', ['manufacturer_id' => $cur_goods->article->manufacturer_id, 'item' => $cur_goods, 'draft' => $cur_goods->article->draft])
+                                    @include('includes.selects.manufacturers', ['manufacturer_id' => $article->manufacturer_id, 'item' => $item, 'draft' => $article->draft])
 
                                     @endif
 
                                 </label>
-
-                                {{-- @include('includes.selects.manufacturers', ['manufacturer_id' => $cur_goods->article->manufacturer_id, 'draft' => $cur_goods->article->draft]) --}}
 
                                 {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 
@@ -152,7 +162,7 @@ $disabled = $cur_goods->article->draft == null;
 
                                 <div class="small-12 medium-4 cell">
                                     <label>Программный</label>
-                                    {{ $cur_goods->article->internal }}
+                                    {{ $article->internal }}
                                 </div>
                             </div>
                         </fieldset>
@@ -160,7 +170,7 @@ $disabled = $cur_goods->article->draft == null;
                         <div class="grid-x">
                             <div class="small-12 cell">
                                 <label>Описание товара
-                                    @include('includes.inputs.textarea', ['name' => 'description', 'value' => $cur_goods->article->description])
+                                    @include('includes.inputs.textarea', ['name' => 'description', 'value' => $article->description])
                                 </label>
                             </div>
                         </div>
@@ -199,11 +209,11 @@ $disabled = $cur_goods->article->draft == null;
 
                         @endif --}}
 
-                        <div id="cur-goods-inputs"></div>
+                        <div id="item-inputs"></div>
                         <div class="small-12 cell tabs-margin-top text-center">
-                            <div class="item-error" id="cur-goods-error">Такой артикул уже существует!<br>Измените значения!</div>
+                            <div class="item-error" id="item-error">Такой артикул уже существует!<br>Измените значения!</div>
                         </div>
-                        {{ Form::hidden('cur_goods_id', $cur_goods->id) }}
+                        {{ Form::hidden('item_id', $item->id) }}
                     </div>
                     {{-- Конец правого блока на первой вкладке --}}
 
@@ -216,11 +226,11 @@ $disabled = $cur_goods->article->draft == null;
                     @endif
 
                     {{-- Чекбоксы управления --}}
-                    @include('includes.control.checkboxes', ['item' => $cur_goods])
+                    @include('includes.control.checkboxes', ['item' => $item])
 
                     {{-- Кнопка --}}
                     <div class="small-12 cell tabs-button tabs-margin-top">
-                        {{ Form::submit('Редактировать товар', ['class'=>'button', 'id' => 'add-cur-goods']) }}
+                        {{ Form::submit('Редактировать', ['class'=>'button', 'id' => 'add-item']) }}
                     </div>
 
                 </div>
@@ -425,8 +435,8 @@ $disabled = $cur_goods->article->draft == null;
 
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
-                            @isset($cur_goods->album_id)
-                            @include('photos.photos', ['item' => $cur_goods])
+                            @isset($item->album_id)
+                            @include('photos.photos', ['item' => $item])
                             @endisset
 
                         </ul>
@@ -453,12 +463,12 @@ $disabled = $cur_goods->article->draft == null;
 <script>
 
     // Основные настройки
-    var item_id = '{{ $cur_goods->id }}';
-    var entity = 'goods';
-    var category_entity = 'goods_categories';
+    var item_id = '{{ $item->id }}';
+    var entity = '{{ $entity }}';
+    var category_entity = '{{ $category_entity }}';
     var metrics_count = 0;
-    var set_status = '{{ $cur_goods->set_status }}';
-    var category_id = '{{ $cur_goods->goods_category_id }}';
+    var set_status = '{{ $item->set_status }}';
+    var category_id = '{{ $item->goods_category_id }}';
     var unit = 'шт';
 
     // Мульти Select
@@ -562,7 +572,7 @@ $disabled = $cur_goods->article->draft == null;
             $('#property-form').html('');
 
             // В случае успеха обновляем список метрик
-            $.get('/admin/goods/' + item_id + '/edit', $('#form-cur_goods').serialize(), function(html) {
+            $.get('/admin/goods/' + item_id + '/edit', $('#form-item').serialize(), function(html) {
                 // alert(html);
                 $('#properties-dropdown').html(html);
             })
@@ -663,7 +673,7 @@ $disabled = $cur_goods->article->draft == null;
                 error = error + 1;
             };
         });
-        $('#form-cur_goods').foundation('validateForm');
+        $('#form-item').foundation('validateForm');
         if (error > 0) {
             event.preventDefault();
         }
