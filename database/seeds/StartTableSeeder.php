@@ -10,6 +10,7 @@ use App\Location;
 use App\Department;
 use App\User;
 use App\Staffer;
+use App\Manufacturer;
 
 use App\Site;
 use App\Page;
@@ -17,6 +18,7 @@ use App\Navigation;
 use App\Menu;
 
 use App\Catalog;
+use App\CatalogsItem;
 
 use App\GoodsCategory;
 use App\RawsCategory;
@@ -223,6 +225,33 @@ class StartTableSeeder extends Seeder
             ],
         ]);
 
+        CatalogsItem::insert([
+            [
+                'catalog_id' => 1,
+                'name' => 'Первый',
+                'company_id' => 1,
+                'display' => 1,
+                'author_id' => 4
+
+            ],
+            [
+                'catalog_id' => 1,
+                'name' => 'Второй',
+                'company_id' => 1,
+                'display' => 1,
+                'author_id' => 4
+
+            ],
+            [
+                'catalog_id' => 1,
+                'name' => 'Третий',
+                'company_id' => 1,
+                'display' => 1,
+                'author_id' => 4
+
+            ],
+        ]);
+
         GoodsCategory::insert([
             [
                 'name' => 'Первая категория товаров',
@@ -252,5 +281,42 @@ class StartTableSeeder extends Seeder
                 'display' => 1,
             ],
         ]);
+
+        // Производители
+        Company::insert([
+            [
+                'name' => 'Первый',
+                'alias' => str_slug('Первый'),
+                'location_id' => 1,
+                'legal_form_id' => 1,
+                'sector_id' => 23,
+                'author_id' => 4
+            ],
+            [
+                'name' => 'Второй',
+                'alias' => str_slug('Второй'),
+                'location_id' => 1,
+                'legal_form_id' => 1,
+                'sector_id' => 23,
+                'author_id' => 4
+            ],
+        ]);
+
+        Manufacturer::insert([
+            [
+                'company_id' => 1,
+                'manufacturer_id' => 2
+            ],
+            [
+                'company_id' => 1,
+                'manufacturer_id' => 3
+            ],
+        ]);
+
+        $manufacturers = Manufacturer::get();
+        foreach ($manufacturers as $manufacturer) {
+            $manufacturer->company->phones()->attach(1, ['main' => 1]);
+        }
+
     }
 }

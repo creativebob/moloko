@@ -333,7 +333,7 @@ $disabled = $article->draft == null;
                             </thead>
                             <tbody id="composition-table">
 
-                               {{--  @php
+                                {{-- @php
                                 $composition_relation = ($cur_goods->article->product->set_status == 'one') ? 'compositions' : 'set_compositions';
                                 @endphp
 
@@ -346,7 +346,7 @@ $disabled = $article->draft == null;
 
                                 @else
 
-                                В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются
+                                {{-- В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются
                                 @if (($composition_relation != 'set_compositions') && ($cur_goods->article->product->category->compositions->isNotEmpty())
                                 && ($cur_goods->article->draft == 1))
                                 @foreach ($cur_goods->article->product->category->compositions as $composition)
@@ -367,8 +367,8 @@ $disabled = $article->draft == null;
 
                         {{-- Если статус у товара статус черновика, то показываем сырье/товары для добавления, в зависимости от статуса набора --}}
 
-                        {{-- @if ($cur_goods->article->draft == 1) --}}
-                        {{-- @isset ($composition_list)
+                        @if ($article->draft == 1)
+                        @isset ($composition_list)
 
                         @if ($cur_goods->article->$composition_relation->isNotEmpty())
                         {{ Form::model($cur_goods->article, []) }}
@@ -376,9 +376,9 @@ $disabled = $article->draft == null;
                         @if ($cur_goods->article->product->set_status == 'one')
                         {{ Form::model($cur_goods->article->product->category, []) }}
                         @endisset
-                        @endif --}}
+                        @endif
 
-                        {{-- <ul class="menu vertical">
+                        <ul class="menu vertical">
 
                             @isset ($composition_list['composition_categories'])
                             <li>
@@ -401,7 +401,7 @@ $disabled = $article->draft == null;
                         {{ Form::close() }}
 
                         @endif
-                        @endisset --}}
+                        @endisset
 
                     </div>
                 </div>
@@ -435,8 +435,8 @@ $disabled = $article->draft == null;
 
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
-                            @isset($item->album_id)
-                            @include('photos.photos', ['item' => $item])
+                            @isset($article->album_id)
+                            @include('includes.edit_operations.photos', ['item' => $article])
                             @endisset
 
                         </ul>
