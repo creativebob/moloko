@@ -46,7 +46,7 @@
 
 				<div class="small-10 medium-4 cell">
 					<label>Себестоимость за (<span id="unit-change" class="unit-change"></span>)
-						{{ Form::number('cost') }}
+						{{ Form::number('price_default') }}
 					</label>
 				</div>
 			</div>

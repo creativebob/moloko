@@ -346,7 +346,7 @@ $disabled = $article->draft == null;
 
                                 @else
 
-                                {{-- В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются
+                                В статусе набора у категории не может быть пресетов, берем только значения состава товара, если они имеются
                                 @if (($composition_relation != 'set_compositions') && ($cur_goods->article->product->category->compositions->isNotEmpty())
                                 && ($cur_goods->article->draft == 1))
                                 @foreach ($cur_goods->article->product->category->compositions as $composition)
@@ -368,40 +368,33 @@ $disabled = $article->draft == null;
                         {{-- Если статус у товара статус черновика, то показываем сырье/товары для добавления, в зависимости от статуса набора --}}
 
                         @if ($article->draft == 1)
-                        @isset ($composition_list)
 
-                        @if ($cur_goods->article->$composition_relation->isNotEmpty())
+                        {{-- @if ($cur_goods->article->$composition_relation->isNotEmpty())
                         {{ Form::model($cur_goods->article, []) }}
                         @else
                         @if ($cur_goods->article->product->set_status == 'one')
                         {{ Form::model($cur_goods->article->product->category, []) }}
                         @endisset
-                        @endif
+                        @endif --}}
 
                         <ul class="menu vertical">
 
-                            @isset ($composition_list['composition_categories'])
                             <li>
-                                <a class="button" data-toggle="{{ $composition_list['alias'] }}-dropdown">{{ $composition_list['name'] }}</a>
-                                <div class="dropdown-pane" id="{{ $composition_list['alias'] }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
+                                <a class="button" data-toggle="{{ $entity }}-dropdown">Состав</a>
+                                <div class="dropdown-pane" id="{{ $entity }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
 
-                                    <ul class="checker" id="products-categories-list">
-
-                                        @foreach ($composition_list['composition_categories'] as $category_name => $composition_articles)
-                                        @include('goods.compositions.category', ['composition_articles' => $composition_articles, 'category_name' => $category_name])
-                                        @endforeach
-
+                                    <ul class="checker" id="categories-list">
+                                        @include('includes.edit_operations.compositions_categories', ['item' => $item])
                                     </ul>
 
                                 </div>
                             </li>
-                            @endisset
+
                         </ul>
 
                         {{ Form::close() }}
 
                         @endif
-                        @endisset
 
                     </div>
                 </div>

@@ -86,6 +86,16 @@ class GoodsCategory extends Model
         return $this->belongsTo(Photo::class);
     }
 
+
+    // Артикулы
+    public function articles()
+    {
+        return $this->belongsToMany(Article::class, 'goods')
+        ->where('draft', false)
+        ->where('goods.archive', false);
+    }
+
+
     // Метрики
     // Один
     public function one_metrics()

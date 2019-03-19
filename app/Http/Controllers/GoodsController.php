@@ -516,7 +516,7 @@ class GoodsController extends Controller
             'settings' => $settings,
             'entity' => $this->entity_alias,
             'category_entity' => 'goods_categories',
-            'categories_select_name' => 'select-goods_categories',
+            'categories_select_name' => 'goods_category_id',
         ]);
     }
 

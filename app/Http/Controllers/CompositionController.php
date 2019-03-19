@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\Article;
 use App\GoodsProduct;
 use App\GoodsCategory;
 use App\Goods;
@@ -93,16 +94,8 @@ class CompositionController extends Controller
 
     public function ajax_add(Request $request)
     {
-        if ($request->set_status == 'one') {
-            $composition = RawsArticle::with(['raws_product' => function ($q) {
-                $q->with('unit', 'raws_category');
-            }])->findOrFail($request->id);
-        } else {
-            $composition = GoodsArticle::with(['goods_product' => function ($q) {
-                $q->with('unit', 'goods_category');
-            }])->findOrFail($request->id);
-        }
-        return view($request->entity.'.compositions.composition_input', compact('composition'));
+        $composition = Article::find($request->id);
+        return view('includes.compositions.composition_input', compact('composition'));
     }
 
     // Добавляем состав
