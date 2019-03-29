@@ -9,8 +9,9 @@ class EntitiesTableSeeder extends Seeder
 
     public function run()
     {
-        DB::table('entities')->insert([
-            // 1 ЦУП
+
+        // Первый уровень
+        Entity::insert([
             [
                 'name' => 'Компании',
                 'alias' => 'companies',
@@ -20,44 +21,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-            [
-                'name' => 'Пользователи',
-                'alias' => 'users',
-                'model' => 'User',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Отделы',
-                'alias' => 'departments',
-                'model' => 'Department',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Штат',
-                'alias' => 'staff',
-                'model' => 'Staffer',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Сотрудники',
-                'alias' => 'employees',
-                'model' => 'Employee',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-
-            // 6 Настройка
             [
                 'name' => 'Сущности',
                 'alias' => 'entities',
@@ -85,8 +48,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 9 Маркетинг
             [
                 'name' => 'Сайты',
                 'alias' => 'sites',
@@ -97,29 +58,10 @@ class EntitiesTableSeeder extends Seeder
                 'site' => 0,
             ],
             [
-                'name' => 'Страницы',
-                'alias' => 'pages',
-                'model' => 'Page',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 1,
-            ],
-            [
-                'name' => 'Навигации',
-                'alias' => 'navigations',
-                'model' => 'Navigation',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 1,
-            ],
-
-            [
-                'name' => 'Меню',
-                'alias' => 'menus',
-                'model' => 'Menu',
-                'rights_minus' => null,
+                'name' => 'Категории навигаци',
+                'alias' => 'navigations_categories',
+                'model' => 'NavigationsCategory',
+                'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
@@ -134,16 +76,14 @@ class EntitiesTableSeeder extends Seeder
                 'site' => 1,
             ],
             [
-                'name' => 'Альбомы',
-                'alias' => 'albums',
-                'model' => 'Album',
+                'name' => 'Категории альбомов',
+                'alias' => 'albums_categories',
+                'model' => 'AlbumsCategory',
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 13 Списки
             [
                 'name' => 'Должности',
                 'alias' => 'positions',
@@ -180,40 +120,10 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            [
-                'name' => 'Категории альбомов',
-                'alias' => 'albums_categories',
-                'model' => 'AlbumsCategory',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Фотографии',
-                'alias' => 'photos',
-                'model' => 'Photo',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-
-            // 19 Продукция
             [
                 'name' => 'Категории товаров',
                 'alias' => 'goods_categories',
                 'model' => 'GoodsCategory',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Категории услуг',
-                'alias' => 'services_categories',
-                'model' => 'ServicesCategory',
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
@@ -229,27 +139,18 @@ class EntitiesTableSeeder extends Seeder
                 'site' => 0,
             ],
             [
-                'name' => 'Товары',
-                'alias' => 'goods',
-                'model' => 'Goods',
+                'name' => 'Категории расходных материалов',
+                'alias' => 'expendables_categories',
+                'model' => 'ExpendablesCategory',
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
             ],
             [
-                'name' => 'Услуги',
-                'alias' => 'services',
-                'model' => 'Service',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Сырьё',
-                'alias' => 'raws',
-                'model' => 'Raw',
+                'name' => 'Категории услуг',
+                'alias' => 'services_categories',
+                'model' => 'ServicesCategory',
                 'rights_minus' => null,
                 'system_item' => 1,
                 'author_id' => 1,
@@ -264,10 +165,15 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 27 Сущности, связаныне с одной страницей
-
-
+            [
+                'name' => 'Страны',
+                'alias' => 'countries',
+                'model' => 'Country',
+                'rights_minus' => 1,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+            ],
             [
                 'name' => 'Области',
                 'alias' => 'regions',
@@ -295,10 +201,15 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // Сущности без страниц отображения
-
-            // Настройка
+            [
+                'name' => 'Сущности связанные с городами',
+                'alias' => 'city_entity',
+                'model' => 'CityEntity',
+                'rights_minus' => 1,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+            ],
             [
                 'name' => 'Категории правил',
                 'alias' => 'category_right',
@@ -309,16 +220,6 @@ class EntitiesTableSeeder extends Seeder
                 'site' => 0,
             ],
             [
-                'name' => 'Категории навигаци',
-                'alias' => 'navigations_categories',
-                'model' => 'NavigationsCategory',
-                'rights_minus' => 1,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-
-            [
                 'name' => 'Сущности с прикрепленными альбомами',
                 'alias' => 'album_entity',
                 'model' => 'AlbumEntity',
@@ -328,27 +229,9 @@ class EntitiesTableSeeder extends Seeder
                 'site' => 0,
             ],
             [
-                'name' => 'Единицы измерения',
-                'alias' => 'units',
-                'model' => 'Unit',
-                'rights_minus' => 1,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Страны',
-                'alias' => 'countries',
-                'model' => 'Country',
-                'rights_minus' => 1,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Сущности связанные с городами',
-                'alias' => 'city_entity',
-                'model' => 'CityEntity',
+                'name' => 'Категории единицы измерения',
+                'alias' => 'units_categories',
+                'model' => 'UnitsCategory',
                 'rights_minus' => 1,
                 'system_item' => 1,
                 'author_id' => 1,
@@ -417,69 +300,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-            // [
-            //     'name' => 'Режимы товаров',
-            //     'alias' => 'goods_modes',
-            //     'model' => 'GoodsMode',
-            //     'rights_minus' => null,
-            //     'system_item' => 1,
-            //     'author_id' => 1,
-            //     'site' => 0,
-            // ],
-            // [
-            //     'name' => 'Режимы услуг',
-            //     'alias' => 'services_modes',
-            //     'model' => 'ServicesMode',
-            //     'rights_minus' => 1,
-            //     'system_item' => 1,
-            //     'author_id' => 1,
-            //     'site' => 0,
-            // ],
-            // [
-            //     'name' => 'Режимы сырья',
-            //     'alias' => 'raws_modes',
-            //     'model' => 'RawsMode',
-            //     'rights_minus' => 1,
-            //     'system_item' => 1,
-            //     'author_id' => 1,
-            //     'site' => 0,
-            // ],
-            [
-                'name' => 'Поставщики',
-                'alias' => 'suppliers',
-                'model' => 'Supplier',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Клиенты',
-                'alias' => 'clients',
-                'model' => 'Client',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Производители',
-                'alias' => 'manufacturers',
-                'model' => 'Manufacturer',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Дилеры',
-                'alias' => 'dealers',
-                'model' => 'Dealer',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
             [
                 'name' => 'Операционные расходы',
                 'alias' => 'expenses',
@@ -506,6 +326,7 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+
             ],
             [
                 'name' => 'Социальные сети',
@@ -515,6 +336,7 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+
             ],
             [
                 'name' => 'Лиды',
@@ -525,17 +347,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            [
-                'name' => 'Артикулы услуг',
-                'alias' => 'services_articles',
-                'model' => 'ServicesArticle',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-
             [
                 'name' => 'Каталоги',
                 'alias' => 'catalogs',
@@ -546,16 +357,6 @@ class EntitiesTableSeeder extends Seeder
                 'site' => 1,
             ],
             [
-                'name' => 'Состав каталогов',
-                'alias' => 'catalogs_items',
-                'model' => 'CatalogsItem',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-
-            [
                 'name' => 'Этапы',
                 'alias' => 'stages',
                 'model' => 'Stage',
@@ -564,7 +365,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
             [
                 'name' => 'Внутренние комментарии',
                 'alias' => 'notes',
@@ -574,8 +374,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 65
             [
                 'name' => 'Задачи',
                 'alias' => 'challenges',
@@ -585,9 +383,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-
-            // 66
             [
                 'name' => 'Рекламации',
                 'alias' => 'claims',
@@ -597,8 +392,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 67
             [
                 'name' => 'Исходящие заказы',
                 'alias' => 'orders',
@@ -608,8 +401,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 68
             [
                 'name' => 'Отзывы',
                 'alias' => 'feedbacks',
@@ -619,8 +410,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 69
             [
                 'name' => 'Посты',
                 'alias' => 'posts',
@@ -630,8 +419,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 70
             [
                 'name' => 'Аккаунты',
                 'alias' => 'accounts',
@@ -641,8 +428,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 71
             [
                 'name' => 'Поля',
                 'alias' => 'fields',
@@ -652,8 +437,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 72
             [
                 'name' => 'Правила',
                 'alias' => 'rules',
@@ -663,8 +446,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 73
             [
                 'name' => 'Склад (Запасы продукции)',
                 'alias' => 'stocks',
@@ -674,19 +455,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 74
-            [
-                'name' => 'Категории расходных материалов',
-                'alias' => 'expendables_categories',
-                'model' => 'ExpendablesCategory',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-
-            // 75
             [
                 'name' => 'Заявки поставщикам',
                 'alias' => 'applications',
@@ -696,8 +464,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 76
             [
                 'name' => 'Товарные накладные',
                 'alias' => 'consignments',
@@ -707,8 +473,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 77
             [
                 'name' => 'Показатели',
                 'alias' => 'indicators',
@@ -718,8 +482,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 78
             [
                 'name' => 'Настройка фоток',
                 'alias' => 'photo_settings',
@@ -729,8 +491,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 79
             [
                 'name' => 'Клиентские заказы',
                 'alias' => 'estimates',
@@ -740,8 +500,6 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
-
-            // 80
             [
                 'name' => 'Группы артикулов',
                 'alias' => 'articles_groups',
@@ -751,8 +509,172 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
+        ]);
 
-            // 81
+        // Второй уровень
+        Entity::insert([
+
+            [
+                'name' => 'Поставщики',
+                'alias' => 'suppliers',
+                'model' => 'Supplier',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Клиенты',
+                'alias' => 'clients',
+                'model' => 'Client',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Производители',
+                'alias' => 'manufacturers',
+                'model' => 'Manufacturer',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Дилеры',
+                'alias' => 'dealers',
+                'model' => 'Dealer',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Пользователи',
+                'alias' => 'users',
+                'model' => 'User',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Отделы',
+                'alias' => 'departments',
+                'model' => 'Department',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Штат',
+                'alias' => 'staff',
+                'model' => 'Staffer',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Сотрудники',
+                'alias' => 'employees',
+                'model' => 'Employee',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Страницы',
+                'alias' => 'pages',
+                'model' => 'Page',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 1,
+                'ancestor_id' => Entity::whereAlias('sites')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Навигации',
+                'alias' => 'navigations',
+                'model' => 'Navigation',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 1,
+                'ancestor_id' => Entity::whereAlias('sites')->first(['id'])->id,
+            ],
+
+            [
+                'name' => 'Альбомы',
+                'alias' => 'albums',
+                'model' => 'Album',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('albums_categories')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Товары',
+                'alias' => 'goods',
+                'model' => 'Goods',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('goods_categories')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Сырьё',
+                'alias' => 'raws',
+                'model' => 'Raw',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('raws_categories')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Услуги',
+                'alias' => 'services',
+                'model' => 'Service',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('services_categories')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Единицы измерения',
+                'alias' => 'units',
+                'model' => 'Unit',
+                'rights_minus' => 1,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('units_categories')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Состав каталогов',
+                'alias' => 'catalogs_items',
+                'model' => 'CatalogsItem',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('catalogs')->first(['id'])->id,
+            ],
             [
                 'name' => 'Артикулы',
                 'alias' => 'articles',
@@ -761,11 +683,77 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'ancestor_id' => Entity::whereAlias('articles_groups')->first(['id'])->id,
             ],
-
         ]);
 
-    Entity::where('alias', 'goods')->update(['tmc' => 1, 'consist_id' => Entity::where('alias', 'raws')->first(['id'])->id]);
+        // Третий
+        Entity::insert([
+            [
+                'name' => 'Меню',
+                'alias' => 'menus',
+                'model' => 'Menu',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('navigations')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Фотографии',
+                'alias' => 'photos',
+                'model' => 'Photo',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('albums')->first(['id'])->id,
+            ],
+        ]);
+
+        // Обновляем тмц
+        Entity::where('alias', 'raws')->update(['tmc' => 1]);
+        Entity::where('alias', 'goods')->update([
+            'tmc' => 1,
+            'consist_id' => Entity::where('alias', 'raws')->first(['id'])->id
+        ]);
+
+        // [
+        //     'name' => 'Режимы товаров',
+        //     'alias' => 'goods_modes',
+        //     'model' => 'GoodsMode',
+        //     'rights_minus' => null,
+        //     'system_item' => 1,
+        //     'author_id' => 1,
+        //     'site' => 0,
+        // ],
+        // [
+        //     'name' => 'Режимы услуг',
+        //     'alias' => 'services_modes',
+        //     'model' => 'ServicesMode',
+        //     'rights_minus' => 1,
+        //     'system_item' => 1,
+        //     'author_id' => 1,
+        //     'site' => 0,
+        // ],
+        // [
+        //     'name' => 'Режимы сырья',
+        //     'alias' => 'raws_modes',
+        //     'model' => 'RawsMode',
+        //     'rights_minus' => 1,
+        //     'system_item' => 1,
+        //     'author_id' => 1,
+        //     'site' => 0,
+        // ],
+        // [
+        //     'name' => 'Артикулы услуг',
+        //     'alias' => 'services_articles',
+        //     'model' => 'ServicesArticle',
+        //     'rights_minus' => null,
+        //     'system_item' => 1,
+        //     'author_id' => 1,
+        //     'site' => 0,
+        // ],
 
 }
 }

@@ -78,14 +78,7 @@ use App\Http\ViewComposers\CatalogsComposer;
 
 use App\Http\ViewComposers\ArticlesGroupsComposer;
 use App\Http\ViewComposers\CompositionsCategoriesComposer;
-
-// Project
-use App\Http\ViewComposers\Project\NavigationsComposer as ProjectNavigationsComposer;
-use App\Http\ViewComposers\Project\DepartmentsComposer as ProjectFilialsComposer;
-use App\Http\ViewComposers\Project\WorktimesComposer as ProjectWorktimesComposer;
-use App\Http\ViewComposers\Project\CitiesComposer as ProjectCitiesComposer;
-use App\Http\ViewComposers\Project\CatalogsComposer as ProjectCatalogsComposer;
-use App\Http\ViewComposers\Project\CatalogsItemsComposer as ProjectCatalogsItemsComposer;
+use App\Http\ViewComposers\TmcComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -181,14 +174,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
         view()->composer('includes.edit_operations.compositions_categories', CompositionsCategoriesComposer::class);
 
+        view()->composer('includes.selects.tmc', TmcComposer::class);
 
-        // Project
-        view()->composer('project.layouts.app', ProjectNavigationsComposer::class);
-        view()->composer(['project.includes.partials.filials_with_link_to_map', 'project.includes.partials.filials_info', 'project.includes.partials.contacts_info'], ProjectFilialsComposer::class);
-        view()->composer('project.includes.partials.cities_list', ProjectCitiesComposer::class);
-        view()->composer('project.includes.partials.schedule', ProjectWorktimesComposer::class);
-        view()->composer('project.includes.catalog.catalog', ProjectCatalogsComposer::class);
-        view()->composer('project.includes.catalog.catalogs_items', ProjectCatalogsItemsComposer::class);
     }
 
     public function register()

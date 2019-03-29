@@ -46,34 +46,47 @@ class Entity extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'entity_name',
-        'entity_alias',
+        'name',
+        'alias',
     ];
 
     public function actions()
     {
-        return $this->belongsToMany('App\Action', 'action_entity', 'entity_id', 'action_id');
+        return $this->belongsToMany(Action::class, 'action_entity', 'entity_id', 'action_id');
     }
 
     public function actionentities()
     {
-        return $this->hasMany('App\Actionentity');
+        return $this->hasMany(ActionEntity::class);
     }
 
     public function pages()
     {
-        return $this->belongsToMany('App\Page');
+        return $this->belongsToMany(Page::class);
     }
 
     public function booklists()
     {
-        return $this->hasMany('App\Booklist');
+        return $this->hasMany(Booklist::class);
     }
 
     // Настройки фоток
     public function photo_settings()
     {
-        return $this->morphOne('App\PhotoSetting', 'photo_settings');
+        return $this->morphOne(PhotoSetting::class, 'photo_settings');
+    }
+
+    // Предок
+    public function ancestor()
+    {
+        return $this->belongsTo(Entity::class, 'ancestor_id');
+    }
+
+    // Состав
+    public function consist()
+    {
+        return $this->belongsTo(Entity::class, 'consist_id')
+        ->where('tmc', true);
     }
 
 }

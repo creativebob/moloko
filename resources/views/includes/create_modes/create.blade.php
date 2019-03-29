@@ -26,7 +26,7 @@
 				</div>
 
 				<div class="small-12 cell">
-					<label>Название сырья
+					<label>Название
 						@include('includes.inputs.string', ['value' => null, 'name' => 'name', 'required' => true])
 						<div class="item-error">Названия артикула и группы артикулов не должны совпадать!</div>
 					</label>

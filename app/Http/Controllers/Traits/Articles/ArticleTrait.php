@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Traits;
+namespace App\Http\Controllers\Traits\Articles;
 
 use App\Article;
 use App\ArticlesGroup;
@@ -80,6 +80,8 @@ trait ArticleTrait
         // Проверки только для черновика
         if ($article->draft == 1) {
 
+
+
             // Определяем количество метрик и составов
             $metrics_count = isset($request->metrics) ? count($request->metrics) : 0;
             // dd($metrics_count);
@@ -139,30 +141,33 @@ trait ArticleTrait
             // dd($compositions_values);
 
             // Производитель
-            $manufacturer_id = isset($request->manufacturer_id) ? $request->manufacturer_id : null;
+            $article->manufacturer_id = $request->manufacturer_id;
+            $manufacturer_id = $request->manufacturer_id;
 
             // если в черновике поменяли производителя
-            if ($article->draft == 1) {
-                if ($manufacturer_id != $article->manufacturer_id) {
-                    $article = $item->article;
-                    $article->manufacturer_id = $manufacturer_id;
-                    $article->save();
-                }
+            if ($manufacturer_id != $article->manufacturer_id) {
+                $article = $item->article;
+                $article->manufacturer_id = $manufacturer_id;
+                $article->save();
             }
+
 
             if ($article->name != $request->name) {
                 $article->name = $request->name;
             }
 
-            $article->manufacturer_id = $request->manufacturer_id;
-            $article->metrics_count = $metrics_count;
-            $article->compositions_count = $compositions_count;
+
+            // $article->metrics_count = $metrics_count;
+            // $article->compositions_count = $compositions_count;
             // $article->save();
 
             // Если нет прав на создание полноценной записи - запись отправляем на модерацию
             if ($answer['automoderate'] == false) {
                 $item->moderation = 1;
             }
+
+            // Проверяем составы
+            $this->compositions($request, $article);
 
             // Метрики
             // if (count($metrics_values)) {
@@ -276,6 +281,25 @@ trait ArticleTrait
         savePhoto($request, $article);
 
         return $article;
+    }
+
+
+    public function compositions($request, $article)
+    {
+
+        // Проверки только для черновика
+        if ($article->draft == 1) {
+
+            // if (isset($request->compositions)) {
+
+            $article->compositions()->sync($request->compositions);
+            // } else {
+            //     $article->compositions()->detach();
+            // }
+
+        }
+
+        // return $article;
     }
 
 }

@@ -72,7 +72,7 @@
                         </a>
                     </td>
                     <td class="td-name">
-                        <a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->article->name }}</a>
+                        <a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->article->name }} @if ($raw->set_status == 1) (Набор) @endif</a>
                     </td>
                     <td class="td-raws_category">
                         <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->category->id }}" class="filter_link" title="Фильтровать">{{ $raw->category->name }}</a>
@@ -146,6 +146,6 @@
 
 <script type="text/javascript">
 
-    
+
 </script>
 @endsection

@@ -78,7 +78,8 @@
                         </a>
                     </td>
                     <td class="td-name">
-                        <a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->article->name }} {{-- @if ($cur_goods->article->group->set_status == 'set') (Набор) @endif --}}</a>
+                        <a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->article->name }} @if ($cur_goods->set_status == 1) (Набор) @endif</a>
+
                     </td>
                     <td class="td-goods_category">
                         <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->category->name }}</a>

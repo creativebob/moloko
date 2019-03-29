@@ -10,6 +10,7 @@ use App\Location;
 use App\Department;
 use App\User;
 use App\Staffer;
+use App\Employee;
 use App\Manufacturer;
 
 use App\Site;
@@ -22,6 +23,8 @@ use App\CatalogsItem;
 
 use App\GoodsCategory;
 use App\RawsCategory;
+
+use Carbon\Carbon;
 
 class StartTableSeeder extends Seeder
 {
@@ -88,16 +91,6 @@ class StartTableSeeder extends Seeder
         $department = Department::first();
         $department->phones()->attach(1, ['main' => 1]);
 
-        Staffer::insert([
-        	[
-         		'company_id' => 1,
-        		'position_id' => 1,
-        		'department_id' => 1,
-        		'filial_id' => 1,
-        		'author_id' => 1
-        	]
-        ]);
-
         User::insert([
         	[
         		'login' => 'testovik',
@@ -124,6 +117,37 @@ class StartTableSeeder extends Seeder
 
         $user = User::where('login', 'testovik')->first();
         $user->phones()->attach(1, ['main' => 1]);
+
+        Staffer::insert([
+            [
+                'company_id' => 1,
+                'position_id' => 1,
+                'department_id' => 1,
+                'filial_id' => 1,
+                'author_id' => 1,
+                'user_id' => User::where('login', 'testovik')->first(['id'])->id,
+            ],
+        ]);
+
+        Employee::insert([
+            [
+                'staffer_id' => Staffer::first(['id'])->id,
+                'user_id' => User::where('login', 'testovik')->first(['id'])->id,
+                'employment_date' => Carbon::today(),
+                'company_id' => 1,
+                'author_id' => 1,
+
+            ],
+        ]);
+
+        DB::table('role_user')->insert([
+            [
+                'role_id' => 1,
+                'department_id' => 1,
+                'position_id' => 1,
+                'user_id' => User::where('login', 'testovik')->first(['id'])->id,
+            ],
+        ]);
 
         Site::insert([
         	[
@@ -249,6 +273,13 @@ class StartTableSeeder extends Seeder
                 'display' => 1,
                 'author_id' => 4
 
+            ],
+        ]);
+
+        DB::table('catalog_site')->insert([
+            [
+                'catalog_id' => 1,
+                'site_id' => 2,
             ],
         ]);
 

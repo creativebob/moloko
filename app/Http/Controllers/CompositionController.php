@@ -94,7 +94,9 @@ class CompositionController extends Controller
 
     public function ajax_add(Request $request)
     {
-        $composition = Article::find($request->id);
+        $composition = Article::with(['group.unit'])
+        ->find($request->id);
+
         return view('includes.compositions.composition_input', compact('composition'));
     }
 

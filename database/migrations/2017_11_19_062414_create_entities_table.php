@@ -21,15 +21,18 @@ class CreateEntitiesTable extends Migration
             $table->integer('validation_minus')->unsigned()->nullable()->comment('Исключает настройку дополнительной валидации страницы');
             $table->integer('feedback_minus')->unsigned()->nullable()->comment('Исключает добавление отзыва к сущности из под интерфейса');
 
-            $table->boolean('statistic')->default(0)->comment('Сбор статистики по сущности дял компании');
+            $table->integer('ancestor_id')->unsigned()->nullable()->comment('Id предка сущности');
+            $table->foreign('ancestor_id')->references('id')->on('entities');
+
+            $table->boolean('statistic')->default(0)->comment('Сбор статистики по сущности для компании');
 
             $table->boolean('dependence')->default(0)->comment('Филиалозависимость');
             $table->boolean('site')->default(0)->comment('Раздел сайта');
 
+            // Блок тмц
             $table->boolean('tmc')->default(0)->comment('ТМЦ');
             $table->integer('consist_id')->unsigned()->nullable()->comment('Id сущности, из которой состоит сущность');
             $table->foreign('consist_id')->references('id')->on('entities');
-
 
             // Общие настройки
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');

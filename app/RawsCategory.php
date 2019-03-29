@@ -75,6 +75,14 @@ class RawsCategory extends Model
         return $this->hasMany(Raw::class);
     }
 
+    // Артикулы
+    public function articles()
+    {
+        return $this->belongsToMany(Article::class, 'raws')
+        ->where('draft', false)
+        ->where('raws.archive', false);
+    }
+
     // Режим
     public function mode()
     {

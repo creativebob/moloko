@@ -68,6 +68,7 @@ $disabled = $article->draft == null;
             ) }}
             {{ method_field('PATCH') }}
 
+
             {{-- Общая информация --}}
             <div class="tabs-panel is-active" id="options">
 
@@ -143,6 +144,7 @@ $disabled = $article->draft == null;
                     <div class="small-12 large-6 cell">
 
                         <fieldset class="fieldset-access">
+
                             <legend>Артикул</legend>
 
                             <div class="grid-x grid-margin-x">
@@ -169,7 +171,7 @@ $disabled = $article->draft == null;
 
                         <div class="grid-x">
                             <div class="small-12 cell">
-                                <label>Описание товара
+                                <label>Описание
                                     @include('includes.inputs.textarea', ['name' => 'description', 'value' => $article->description])
                                 </label>
                             </div>
@@ -289,6 +291,7 @@ $disabled = $article->draft == null;
                             </div>
                         </fieldset>
 
+
                     </div>
                 </div>
             </div>
@@ -309,6 +312,7 @@ $disabled = $article->draft == null;
                             {{-- @include('includes.selects.catalogs_chosen', ['parent_id' => $cur_goods->catalogs->keyBy('id')->toArray()]) --}}
 
                         </fieldset>
+
                     </div>
                 </div>
             </div>
@@ -333,6 +337,9 @@ $disabled = $article->draft == null;
                             </thead>
                             <tbody id="composition-table">
 
+                                @foreach ($article->compositions as $composition)
+                                @include ('includes.compositions.composition_input', $composition)
+                                @endforeach
                                 {{-- @php
                                 $composition_relation = ($cur_goods->article->product->set_status == 'one') ? 'compositions' : 'set_compositions';
                                 @endphp
@@ -381,10 +388,11 @@ $disabled = $article->draft == null;
 
                             <li>
                                 <a class="button" data-toggle="{{ $entity }}-dropdown">Состав</a>
-                                <div class="dropdown-pane" id="{{ $entity }}-dropdown" data-dropdown data-position="bottom" data-alignment="left" data-close-on-click="true">
+                                <div class="dropdown-pane" id="{{ $entity }}-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
 
                                     <ul class="checker" id="categories-list">
-                                        @include('includes.edit_operations.compositions_categories', ['item' => $item])
+
+                                        @include('includes.edit_operations.compositions_categories', ['item' => $item, 'article' => $article])
                                     </ul>
 
                                 </div>
@@ -397,6 +405,7 @@ $disabled = $article->draft == null;
                         @endif
 
                     </div>
+
                 </div>
             </div>
 
@@ -630,7 +639,11 @@ $disabled = $article->draft == null;
 
         // Если нужно добавить состав
         if ($(this).prop('checked')) {
-            $.post('/admin/ajax_add_page_composition', {id: $(this).val(), entity: entity, set_status: set_status}, function(html){
+            $.post('/admin/ajax_add_page_composition', {
+                id: $(this).val(),
+                entity: entity,
+                set_status: set_status
+            }, function(html){
                 // alert(html);
                 $('#composition-table').append(html);
             })

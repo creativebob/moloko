@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Cookie;
 use Transliterate;
 
 // Трейты
-use App\Http\Controllers\Traits\ArticleTrait;
+use App\Http\Controllers\Traits\Articles\ArticleTrait;
 
 class GoodsController extends Controller
 {
@@ -68,6 +68,7 @@ class GoodsController extends Controller
             'id',
             'article_id',
             'goods_category_id',
+            'set_status',
             'author_id',
             'company_id'
         ];
@@ -499,8 +500,8 @@ class GoodsController extends Controller
         //     // dd($composition_list);
         // }
 
-        $article = $cur_goods->article;
-
+        $article = $cur_goods->article->load('compositions');
+        // dd($article->compositions->pluck('id')->toArray());
         $settings = getSettings($this->entity_alias);
         // dd($settings);
 
@@ -523,7 +524,7 @@ class GoodsController extends Controller
     public function update(Request $request, $id)
     {
 
-        // dd($request->catalogs_items);
+        // dd($request);
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -564,17 +565,7 @@ class GoodsController extends Controller
             $cur_goods->save();
 
             // Проверяем каталоги
-            if (isset($request->catalogs_items)) {
-
-                // $catalogs_insert = [];
-                // foreach ($request->catalogs as $catalog) {
-                //     $catalogs_insert[$catalog] = ['display' => 1];
-                // }
-                // dd($catalogs_insert);
-                $cur_goods->catalogs_items()->sync($request->catalogs_items);
-            } else {
-                $cur_goods->catalogs_items()->detach();
-            }
+            $cur_goods->catalogs_items()->sync($request->catalogs_items);
 
             // Если ли есть
             if ($request->cookie('backlink') != null) {

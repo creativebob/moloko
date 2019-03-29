@@ -12,30 +12,52 @@ class CompositionsCategoriesComposer
 	{
 
         $item = $view->item;
-        $alias = ($item->set_status == 1) ? $item->category->getTable() : $item->category->getTable();
-        $entity = Entity::whereAlias($alias)->first(['model']);
-        $model = 'App\\'.$entity->model;
+        $article = $view->article;
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($alias, false, 'index');
+        if ($item->set_status == 1) {
+            // Если набор, то состоит из себя
+            $alias = $item->category->getTable();
+        } else {
+            $entity = Entity::with('consist')
+            ->whereAlias($item->getTable())
+            ->first();
 
-        // $columns = [
-        //     'id',
-        //     'name',
-        //     'parent_id'
-        // ];
+            if (isset($entity->consist)) {
+                $alias = $entity->consist->ancestor->alias;
+            } else {
+                $alias = null;
+            }
+        }
 
-        $categories = $model::with('articles')
-        ->whereHas('articles')
-        ->moderatorLimit($answer)
-        ->systemItem($answer)
-        ->companiesLimit($answer)
-        ->systemItem($answer)
-        ->orderBy('sort', 'asc')
-        ->get();
-        // dd($categories);
+        if (isset($alias)) {
+            $entity = Entity::whereAlias($alias)->first(['model']);
+            $model = 'App\\'.$entity->model;
 
-        return $view->with(compact('categories'));
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer = operator_right($alias, false, 'index');
+
+            // $columns = [
+            //     'id',
+            //     'name',
+            //     'parent_id'
+            // ];
+
+            $categories = $model::with('articles')
+            ->whereHas('articles')
+            ->moderatorLimit($answer)
+            ->systemItem($answer)
+            ->companiesLimit($answer)
+            ->systemItem($answer)
+            ->orderBy('sort', 'asc')
+            ->get();
+            // dd($categories);
+        } else {
+            $categories = collect();
+            $alias = null;
+        }
+
+
+        return $view->with(compact('categories', 'article'));
     }
 
 }

@@ -9,12 +9,12 @@
 	<td>
 		<div class="wrap-input-table">
 			{{-- Количество чего-либо --}}
-			{{-- {{ Form::text('compositions_values['.$composition->id.']', $composition->pivot ? $composition->pivot->value : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder', 'id'=>'1', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }} --}}
+			{{ Form::text('compositions['.$composition->id.'][value]', $composition->pivot ? $composition->pivot->value : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder', 'id'=>'1', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="1" class="text-to-placeholder">
 
 				{{ $composition->group->unit->abbreviation }}
 
-			.</label>
+			</label>
 			<div class="sprite-input-right find-status" id="name-check"></div>
 			<span class="form-error">Введите количество</span>
 		</div>

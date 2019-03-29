@@ -74,13 +74,15 @@ class Article extends Model
     // Метрики
     public function metrics()
     {
-        return $this->morphedByMany(Metric::class, 'articles_values')->withPivot('value');
+        return $this->morphedByMany(Metric::class, 'articles_values')
+        ->withPivot('value');
     }
 
-    // Состав (сырье)
+    // Состав
     public function compositions()
     {
-        return $this->morphedByMany(Article::class, 'articles_values')->withPivot('value');
+        return $this->belongsToMany(Article::class, 'article_composition', 'article_id', 'composition_id')
+        ->withPivot('value');
     }
 
     // Состав (набор)
