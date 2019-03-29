@@ -2,6 +2,8 @@
 
 use Illuminate\Database\Seeder;
 
+use App\Entity;
+
 class EntitiesTableSeeder extends Seeder
 {
 
@@ -762,6 +764,8 @@ class EntitiesTableSeeder extends Seeder
             ],
 
         ]);
+
+    Entity::where('alias', 'goods')->update(['tmc' => 1, 'consist_id' => Entity::where('alias', 'raws')->first(['id'])->id]);
 
 }
 }

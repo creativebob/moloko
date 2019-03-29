@@ -26,6 +26,10 @@ class CreateEntitiesTable extends Migration
             $table->boolean('dependence')->default(0)->comment('Филиалозависимость');
             $table->boolean('site')->default(0)->comment('Раздел сайта');
 
+            $table->boolean('tmc')->default(0)->comment('ТМЦ');
+            $table->integer('consist_id')->unsigned()->nullable()->comment('Id сущности, из которой состоит сущность');
+            $table->foreign('consist_id')->references('id')->on('entities');
+
 
             // Общие настройки
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
