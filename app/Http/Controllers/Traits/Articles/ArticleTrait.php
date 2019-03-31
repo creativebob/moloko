@@ -29,9 +29,11 @@ trait ArticleTrait
                 'company_id' => $company_id,
                 'author_id' => $user_id
             ]);
+
             // Пишем к группе связь с категорией
             $relation = $category->getTable();
             $articles_group->$relation()->attach($category->id);
+
             break;
 
             case 'mode-add':
@@ -44,9 +46,11 @@ trait ArticleTrait
                 'company_id' => $company_id,
                 'author_id' => $user_id
             ]);
+
             // Пишем к группе связь с категорией
             $relation = $category->getTable();
             $articles_group->$relation()->attach($category->id);
+
             break;
 
             case 'mode-select':
@@ -56,7 +60,7 @@ trait ArticleTrait
 
         $article = new Article;
         $article->articles_group_id = $articles_group->id;
-        $article->draft = 1;
+        $article->draft = true;
         $article->company_id = $company_id;
         $article->author_id = $user_id;
         $article->name = $request->name;
@@ -83,7 +87,7 @@ trait ArticleTrait
 
 
             // Определяем количество метрик и составов
-            $metrics_count = isset($request->metrics) ? count($request->metrics) : 0;
+            // $metrics_count = isset($request->metrics) ? count($request->metrics) : 0;
             // dd($metrics_count);
 
             // Если пришли значения метрик
@@ -119,7 +123,7 @@ trait ArticleTrait
             //     // dd($metrics_values);
             // }
 
-            $compositions_count = isset($request->compositions_values) ? count($request->compositions_values) : 0;
+            // $compositions_count = isset($request->compositions_values) ? count($request->compositions_values) : 0;
             // dd($compositions_count);
 
             // Если пришли значения состава
@@ -141,16 +145,10 @@ trait ArticleTrait
             // dd($compositions_values);
 
             // Производитель
-            $article->manufacturer_id = $request->manufacturer_id;
             $manufacturer_id = $request->manufacturer_id;
-
-            // если в черновике поменяли производителя
             if ($manufacturer_id != $article->manufacturer_id) {
-                $article = $item->article;
                 $article->manufacturer_id = $manufacturer_id;
-                $article->save();
             }
-
 
             if ($article->name != $request->name) {
                 $article->name = $request->name;

@@ -198,12 +198,8 @@ class ArticlesGroupController extends Controller
         // dd($entity);
         $model = 'App\\'.$entity->model;
 
-        $set_status = $request->set_status == 'true' ? 1 : 0;
-        // dd($set_status);
         $category = $model::withCount('groups')
-        ->with(['groups' => function ($q) use ($set_status) {
-            $q->where('set_status', $set_status);
-        }])
+        ->with(['groups'])
         ->findOrFail($request->category_id);
         // dd($category);
 
@@ -228,7 +224,6 @@ class ArticlesGroupController extends Controller
     public function ajax_set_status(Request $request)
     {
         $category_id = $request->category_id;
-        $set_status = $request->set_status;
         // $mode = 'mode-add';
         // $entity = 'service_categories';
 
@@ -237,9 +232,8 @@ class ArticlesGroupController extends Controller
         // dd($entity);
         $model = 'App\\'.$entity->model;
 
-        $category = $model::with(['groups' => function ($q) use ($set_status) {
-            $q->with('unit')
-            ->where('set_status', $set_status);
+        $category = $model::with(['groups' => function ($q) {
+            $q->with('unit');
         }])
         ->findOrFail($category_id);
 

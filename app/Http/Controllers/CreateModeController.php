@@ -29,10 +29,8 @@ class CreateModeController extends Controller
 			$entity = Entity::whereAlias($request->category_entity)->first(['model']);
 			$model = 'App\\'.$entity->model;
 
-			$set_status = $request->set_status == 'true' ? 1 : 0;
-			$category = $model::with(['groups' => function ($q) use ($set_status) {
-				$q->with('unit')
-				->where('set_status', $set_status);
+			$category = $model::with(['groups' => function ($q) {
+				$q->with('unit');
 			}])
 			->find($request->category_id);
 

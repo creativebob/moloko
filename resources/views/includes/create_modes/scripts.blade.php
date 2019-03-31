@@ -68,8 +68,7 @@
         $.post('/admin/create_mode', {
             mode: mode,
             category_entity: categoryEntity,
-            category_id: $('#select-' + categoryEntity).val(),
-            set_status: $('#set-status').prop('checked')
+            category_id: $('#select-' + categoryEntity).val()
         }, function(html){
             $('#mode').html(html);
             if (mode == 'mode-select') {
@@ -102,8 +101,7 @@
         if ($('input[name=mode]').val() == 'mode-select') {
             $.post('/admin/ajax_articles_groups_count', {
                 category_id: $(this).val(),
-                entity: categoryEntity,
-                set_status: $('#set-status').prop('checked')
+                entity: categoryEntity
             }, function(html){
                 // alert(html);
                 $('#mode').html(html);
@@ -113,22 +111,22 @@
 
 
     // При переключении статуса набора
-    $(document).on('click', '#set-status', function(event) {
-        // event.preventDefault();
-        if ($('input[name=mode]').val() == 'mode-select') {
-            $.post('/admin/ajax_articles_groups_count', {
-                entity: categoryEntity,
-                category_id: $('#select-' + categoryEntity).val(),
-                set_status: $(this).prop('checked')
-            }, function(html){
-                $('#mode').html(html);
-                setUnitAbbrevation('select-articles_groups');
-                Foundation.reInit($('#form-create'));
-            });
-        }
-    });
+    // $(document).on('click', '#set-status', function(event) {
+    //     // event.preventDefault();
+    //     if ($('input[name=mode]').val() == 'mode-select') {
+    //         $.post('/admin/ajax_articles_groups_count', {
+    //             entity: categoryEntity,
+    //             category_id: $('#select-' + categoryEntity).val(),
+    //             set_status: $(this).prop('checked')
+    //         }, function(html){
+    //             $('#mode').html(html);
+    //             setUnitAbbrevation('select-articles_groups');
+    //             Foundation.reInit($('#form-create'));
+    //         });
+    //     }
+    // });
 
-    
+
     // Проверка на совпадение имени артикула и группы артикулов
     $(document).on('keyup', 'input[name=articles_group_name], input[name=name]', function(event) {
         event.preventDefault();
