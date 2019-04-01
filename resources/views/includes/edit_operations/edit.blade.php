@@ -38,9 +38,11 @@ $disabled = $article->draft == null;
                 <a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a>
             </li>
 
+            @if ($item->getTable() == 'goods')
             <li class="tabs-title">
                 <a data-tabs-target="catalogs" href="#catalogs">Каталоги</a>
             </li>
+            @endif
 
             <li class="tabs-title">
                 <a data-tabs-target="compositions" href="#compositions">Состав</a>
@@ -296,6 +298,7 @@ $disabled = $article->draft == null;
                 </div>
             </div>
 
+            @if ($item->getTable() == 'goods')
             {{-- Каталоги --}}
             <div class="tabs-panel" id="catalogs">
                 <div class="grid-x grid-padding-x">
@@ -316,6 +319,7 @@ $disabled = $article->draft == null;
                     </div>
                 </div>
             </div>
+            @endif
 
             {{-- Состав --}}
             <div class="tabs-panel" id="compositions">
