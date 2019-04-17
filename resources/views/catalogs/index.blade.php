@@ -100,6 +100,7 @@
                         <label class="label-check" for="check-all"></label>
                     </th>
                     <th class="td-name">Название</th>
+                    <th class="td-type">Тип</th>
                     <th class="td-alias">Алиас</th>
                     <th class="td-description">Описание</th>
                     <th class="td-tree">Дерево</th>
@@ -133,6 +134,7 @@
                         @endcannot
 
                     </td>
+                    <td class="td-type">{{ $catalog->type->name }}</td>
                     <td class="td-alias">{{ $catalog->alias }}</td>
                     <td class="td-description">{{ $catalog->description }}</td>
                     <td class="td-tree">

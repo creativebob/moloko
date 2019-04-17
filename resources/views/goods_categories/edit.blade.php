@@ -33,9 +33,9 @@
             <li class="tabs-title">
                 <a data-tabs-target="properties" href="#properties">Свойства</a>
             </li>
-            <li class="tabs-title">
+{{--             <li class="tabs-title">
                 <a data-tabs-target="set-properties" href="#set-properties">Свойства (Набор)</a>
-            </li>
+            </li> --}}
             <li class="tabs-title">
                 <a data-tabs-target="compositions" href="#compositions">Состав</a>
             </li>
@@ -51,7 +51,7 @@
             {{ Form::model($goods_category, ['route' => ['goods_categories.update', $goods_category->id], 'data-abide', 'novalidate', 'files' => 'true']) }}
             {{ method_field('PATCH') }}
 
-            <!-- Общая информация -->
+            {{-- Общая информация --}}
             <div class="tabs-panel is-active" id="options">
                 <div class="grid-x grid-padding-x">
 
@@ -108,7 +108,7 @@
                         @else
                         {{ Form::checkbox('direction', 1, null, ['id' => 'direction-checkbox']) }}
                         @endif
-                        
+
                         <label for="direction-checkbox"><span>Направление</span></label>
                         {{-- @include('includes.control.direction', ['direction' => isset($goods_category->direction) ]) --}}
                     </div>
@@ -123,7 +123,7 @@
                 </div>
             </div>
 
-            <!-- Сайт -->
+            {{-- Сайт --}}
             <div class="tabs-panel" id="site">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
@@ -153,27 +153,27 @@
                 </div>
             </div>
 
-            {{ Form::close() }}
 
-            {{-- Подключаем класс дял работы с метриками --}}
-            {{-- @include('includes.scripts.class.metrics') --}}
 
-            <!-- Свойства -->
+            {{-- Подключаем класс для работы с метриками --}}
+            @include('includes.metrics_category.class')
+
+            {{-- Свойства --}}
             <div class="tabs-panel" id="properties">
 
-                {{-- @include('includes.metrics_category.section', ['category' => $goods_category]) --}}
+                @include('includes.metrics_category.section', ['category' => $goods_category])
             </div>
 
             <!-- Свойства для набора -->
-            <div class="tabs-panel" id="set-properties">
+            {{-- <div class="tabs-panel" id="set-properties">
 
-                {{-- @include('includes.metrics_category.section', ['category' => $goods_category, 'set_status' => 'set']) --}}
+                @include('includes.metrics_category.section', ['category' => $goods_category, 'set_status' => 'set'])
 
-            </div>
+            </div> --}}
 
             {{-- Исключаем состав из сырья --}}
 
-            <!-- Состав -->
+            {{-- Состав --}}
             <div class="tabs-panel" id="compositions">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-9 cell">
@@ -188,20 +188,36 @@
                             </thead>
                             <tbody id="composition-table">
 
-                                {{-- Таблица метрик товара --}}
-                                {{-- @if (!empty($goods_category->compositions))
+                                {{-- Состав --}}
+                                @if ($goods_category->compositions->isNotEmpty())
 
                                 @foreach ($goods_category->compositions as $composition)
                                 @include ('goods_categories.compositions.composition_tr', $composition)
                                 @endforeach
 
-                                @endif --}}
+                                @endif
 
                             </tbody>
                         </table>
                     </div>
 
                     <div class="small-12 medium-3 cell">
+
+                        <ul class="menu vertical">
+
+                            <li>
+                                <a class="button" data-toggle="composition-dropdown">Состав</a>
+                                <div class="dropdown-pane" id="composition-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
+
+                                    <ul class="checker" id="categories-list">
+
+                                        @include('goods_categories.compositions.compositions_categories', ['alias' => 'raws_categories'])
+                                    </ul>
+
+                                </div>
+                            </li>
+
+                        </ul>
                         {{-- @if (isset($composition_list))
                         {{ Form::model($goods_category, []) }}
 
@@ -230,6 +246,8 @@
                     </div>
                 </div>
             </div>
+
+            {{ Form::close() }}
         </div>
     </div>
 </div>
@@ -247,8 +265,6 @@
 @include('includes.scripts.upload-file')
 @include('goods_categories.scripts')
 
-
-@include('includes.scripts.modal-metric-delete-script')
 @include('includes.scripts.modal-composition-delete-script')
 
 @include('includes.scripts.ckeditor')

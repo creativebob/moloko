@@ -97,23 +97,39 @@ class GoodsCategory extends Model
 
 
     // Метрики
-    // Один
-    public function one_metrics()
+    public function metrics()
     {
-        return $this->morphToMany(Metric::class, 'metric_entity')->where('set_status', 'one');
+        return $this->belongsToMany(Metric::class, 'preset_metric', 'category_id', 'metric_id');
     }
 
-    // Набор
-    public function set_metrics()
-    {
-        return $this->morphToMany(Metric::class, 'metric_entity')->where('set_status', 'set');
-    }
+    // Состав
+    // public function compositions()
+    // {
+    //     return $this->belongsToMany(Article::class, 'preset_composition', 'category_id', 'composition_id');
+    // }
 
-    // Состав (только сырье)
     public function compositions()
     {
-        return $this->morphedByMany(RawsArticle::class, 'compositions');
+        return $this->morphToMany(Article::class, 'preset_composition');
     }
+
+    // Один
+    // public function one_metrics()
+    // {
+    //     return $this->morphToMany(Metric::class, 'metric_entity')->where('set_status', 'one');
+    // }
+
+    // // Набор
+    // public function set_metrics()
+    // {
+    //     return $this->morphToMany(Metric::class, 'metric_entity')->where('set_status', 'set');
+    // }
+
+    // Состав (только сырье)
+    // public function compositions()
+    // {
+    //     return $this->morphedByMany(RawsArticle::class, 'compositions');
+    // }
 
     // Производители
     public function manufacturers()

@@ -254,7 +254,7 @@ class GoodsController extends Controller
         // $backlink = url()->previous();
         // Cookie::queue('backlink', $backlink, 1440);
 
-        return view('includes.create_modes.create', [
+        return view('includes.tmc.create.create', [
             'item' => new $this->class,
             'title' => 'Добавление товара',
             'entity' => $this->entity_alias,
@@ -292,6 +292,9 @@ class GoodsController extends Controller
             $cur_goods->save();
 
             if ($cur_goods) {
+
+                $metrics = $goods_category->metrics->pluck('id')->toArray();
+                $cur_goods->metrics()->sync($metrics);
 
                 // Пишем куки состояния
                 // $mass = [
@@ -500,6 +503,9 @@ class GoodsController extends Controller
         //     // dd($composition_list);
         // }
 
+        $cur_goods->load(['metrics.values', 'metrics.property', 'metrics.unit']);
+        // dd($cur_goods);
+        // dd($cur_goods->metrics->first()->pivot);
         $article = $cur_goods->article->load('compositions');
         // dd($article->compositions->pluck('id')->toArray());
         $settings = getSettings($this->entity_alias);
@@ -509,7 +515,7 @@ class GoodsController extends Controller
         $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
 
-        return view('includes.edit_operations.edit', [
+        return view('includes.tmc.edit.edit', [
             'title' => 'Редактировать товар',
             'item' => $cur_goods,
             'article' => $article,
@@ -523,8 +529,6 @@ class GoodsController extends Controller
 
     public function update(Request $request, $id)
     {
-
-        // dd($request);
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -564,7 +568,25 @@ class GoodsController extends Controller
             $cur_goods->system_item = $request->system_item;
             $cur_goods->save();
 
-            // Проверяем каталоги
+            // Каталоги
+            $cur_goods->catalogs_items()->sync($request->catalogs_items);
+
+            // Метрики
+            if ($request->has('metrics')) {
+                // dd($request);
+
+                $cur_goods->metrics()->detach();
+
+                $metrics_insert = [];
+                foreach ($request->metrics as $metric_id => $value) {
+                    if (is_array($value)) {
+                        $metrics_insert[$metric_id]['value'] = implode(',', $value);
+                    } else {
+                        $metrics_insert[$metric_id]['value'] = $value;
+                    }
+                }
+                $cur_goods->metrics()->sync($metrics_insert);
+            }
             $cur_goods->catalogs_items()->sync($request->catalogs_items);
 
             // Если ли есть

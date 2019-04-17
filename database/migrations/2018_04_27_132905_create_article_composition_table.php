@@ -14,15 +14,16 @@ class CreateArticleCompositionTable extends Migration
     public function up()
     {
         Schema::create('article_composition', function (Blueprint $table) {
-            $table->increments('id');
 
             $table->integer('article_id')->nullable()->unsigned()->comment('Id артикула');
             $table->foreign('article_id')->references('id')->on('articles');
 
+            // $table->morphs('composition');
+
             $table->integer('composition_id')->nullable()->unsigned()->comment('Id артикула состава');
             $table->foreign('composition_id')->references('id')->on('articles');
 
-            $table->integer('value')->unsigned()->comment('Значение');
+            $table->integer('value')->nullable()->unsigned()->comment('Значение');
         });
     }
 

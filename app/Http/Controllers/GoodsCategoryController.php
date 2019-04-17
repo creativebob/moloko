@@ -150,33 +150,37 @@ class GoodsCategoryController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $goods_category = GoodsCategory::with([
             // 'mode',
-            'one_metrics' => function ($q) {
+            // 'one_metrics' => function ($q) {
+            //     $q->with('unit', 'values');
+            // },
+            // 'set_metrics' => function ($q) {
+            //     $q->with('unit', 'values');
+            // },
+            'metrics' => function ($q) {
                 $q->with('unit', 'values');
             },
-            'set_metrics' => function ($q) {
-                $q->with('unit', 'values');
-            },
+            'compositions.group.unit',
             // 'compositions.product.unit',
             // 'compositions',
             'manufacturers',
             'direction'
         ])
         ->withCount([
-            'one_metrics',
-            'set_metrics',
+            // 'one_metrics',
+            // 'set_metrics',
+            'metrics',
             // 'compositions'
         ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
-        // dd($goods_category->manufacturers);
+        // dd($goods_category);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_category);
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('includes.metrics_category.properties_form', [
-                'set_status' => $request->set_status,
+            return view('includes.category_metrics.properties_list', [
                 'category' => $goods_category
             ]);
         }
@@ -220,13 +224,18 @@ class GoodsCategoryController extends Controller
         $settings = getSettings($this->entity_alias);
 
         // dd($goods_category->direction);
-
-        return view('goods_categories.edit', compact('goods_category', 'page_info', 'settings'));
+        return view('includes.tmc_categories.edit.edit', [
+            'title' => 'Редактирование категории товаров',
+            'category' => $goods_category,
+            'page_info' => $page_info,
+            'settings' => $settings,
+            'entity' => $this->entity_alias,
+        ]);
     }
 
     public function update(GoodsCategoryRequest $request, $id)
     {
-
+        // dd($request);
         // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -242,12 +251,12 @@ class GoodsCategoryController extends Controller
         $goods_category = $this->updateCategory($request, $goods_category);
 
         // Если сменили тип категории продукции, то меняем его и всем вложенным элементам
-        if (($goods_category->parent_id == null) && ($goods_category->goods_mode_id != $request->goods_mode_id)) {
-            $goods_category->goods_mode_id = $request->goods_mode_id;
+        // if (($goods_category->parent_id == null) && ($goods_category->goods_mode_id != $request->goods_mode_id)) {
+        //     $goods_category->goods_mode_id = $request->goods_mode_id;
 
-            $goods_categories = GoodsCategory::whereCategory_id($id)
-            ->update(['goods_mode_id' => $request->goods_mode_id]);
-        }
+        //     $goods_categories = GoodsCategory::whereCategory_id($id)
+        //     ->update(['goods_mode_id' => $request->goods_mode_id]);
+        // }
 
         // dd($request);
 
@@ -262,11 +271,14 @@ class GoodsCategoryController extends Controller
         if ($goods_category) {
 
             // Производители
-            if (isset($request->manufacturers)) {
-                $goods_category->manufacturers()->sync($request->manufacturers);
-            } else {
-                $goods_category->manufacturers()->detach();
-            }
+            $goods_category->manufacturers()->sync($request->manufacturers);
+
+            // dd($request);
+            // Метрики
+            $goods_category->metrics()->sync($request->metrics);
+
+            // Cостав
+            $goods_category->compositions()->sync($request->compositions);
 
             // Переадресовываем на index
             return redirect()->route('goods_categories.index', ['id' => $goods_category->id]);

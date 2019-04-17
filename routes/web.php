@@ -286,25 +286,23 @@ Route::post('/ajax_add_property', 'PropertyController@add_property')->middleware
 
 
 // ---------------------------------------- Метрики -------------------------------------------------
+Route::get('/metrics', 'MetricController@store')->middleware('auth');
 // Основные методы
 Route::resource('/metrics', 'MetricController')->middleware('auth');
 
-// Пишем метрику через ajax
-Route::post('/ajax_store_metric', 'MetricController@ajax_store')->middleware('auth');
+// Добавляем метрику на страницу
+Route::post('/ajax_get_metric', 'MetricController@ajax_get_metric')->middleware('auth');
 
-// Добавляем / удаляем связь сущности с метрикой
-Route::match(['get', 'post'], '/ajax_add_relation_metric', 'MetricController@ajax_add_relation')->middleware('auth')->name('metrics.add_relation');
-Route::any('/ajax_delete_relation_metric', 'MetricController@ajax_delete_relation')->middleware('auth');
-
-Route::post('/ajax_add_metric_value', 'MetricController@add_metric_value')->middleware('auth');
+// Добавляем значение метрики (список)
+Route::post('/ajax_get_metric_value', 'MetricController@ajax_get_metric_value')->middleware('auth');
 
 
 // ---------------------------------------- Состав -------------------------------------------------
 
-Route::post('/ajax_add_relation_composition', 'CompositionController@ajax_add_relation')->middleware('auth');
+Route::post('/ajax_get_category_composition', 'CompositionController@ajax_get_category_composition')->middleware('auth');
 Route::post('/ajax_delete_relation_composition', 'CompositionController@ajax_delete_relation')->middleware('auth');
 
-Route::post('/ajax_add_page_composition', 'CompositionController@ajax_add')->middleware('auth');
+Route::post('/ajax_get_tmc_composition', 'CompositionController@ajax_add')->middleware('auth');
 
 Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
@@ -354,7 +352,7 @@ Route::any('/raws_create_mode', 'RawController@ajax_change_create_mode')->middle
 
 // Текущая добавленная/удаленная категория
 Route::any('/goods_categories', 'GoodsCategoryController@index')->middleware('auth');
-Route::match(['get', 'post'], '/goods_categories/{id}/edit', 'GoodsCategoryController@edit')->middleware('auth');
+Route::post('/goods_categories/{id}/edit', 'GoodsCategoryController@edit')->middleware('auth');
 // Основные методы
 Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('auth');
 

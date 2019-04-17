@@ -141,12 +141,13 @@ class RawsCategoryController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $raws_category = RawsCategory::with([
             // 'mode',
-            'one_metrics' => function ($q) {
-                $q->with('unit', 'values');
-            },
+            // 'one_metrics' => function ($q) {
+            //     $q->with('unit', 'values');
+            // },
+            'compositions',
             'manufacturers',
         ])
-        ->withCount('one_metrics')
+        // ->withCount('one_metrics')
         ->moderatorLimit($answer)
         ->findOrFail($id);
         // dd($raws_category);
@@ -169,7 +170,14 @@ class RawsCategoryController extends Controller
 
         $settings = getSettings($this->entity_alias);
 
-        return view('raws_categories.edit', compact('raws_category', 'page_info', 'settings'));
+        // dd($goods_category->direction);
+        return view('includes.tmc_categories.edit.edit', [
+            'title' => 'Редактирование категории сырья',
+            'category' => $raws_category,
+            'page_info' => $page_info,
+            'settings' => $settings,
+            'entity' => $this->entity_alias,
+        ]);
     }
 
     public function update(RawsCategoryRequest $request, $id)
@@ -202,11 +210,7 @@ class RawsCategoryController extends Controller
         if ($raws_category) {
 
             // Производители
-            if (isset($request->manufacturers)) {
-                $raws_category->manufacturers()->sync($request->manufacturers);
-            } else {
-                $raws_category->manufacturers()->detach();
-            }
+            $raws_category->manufacturers()->sync($request->manufacturers);
 
            // Переадресовываем на index
             return redirect()->route('raws_categories.index', ['id' => $raws_category->id]);

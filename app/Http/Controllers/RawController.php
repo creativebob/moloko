@@ -200,7 +200,7 @@ class RawController extends Controller
         //     }
         // }
 
-        return view('includes.create_modes.create', [
+        return view('includes.tmc.create.create', [
             'item' => new $this->class,
             'title' => 'Добавление сырья',
             'entity' => $this->entity_alias,
@@ -309,7 +309,7 @@ class RawController extends Controller
         $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
 
-        return view('includes.edit_operations.edit', [
+        return view('includes.tmc.edit.edit', [
             'title' => 'Редактировать сырье',
             'item' => $raw,
             'article' => $article,

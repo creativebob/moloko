@@ -14,5 +14,9 @@
 	<div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
 
+@push('scripts')
+{{-- Проверка поля на существование --}}
+@include('includes.scripts.check')
+@endpush
 
 

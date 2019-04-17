@@ -67,6 +67,9 @@ trait ArticleTrait
         $article->price_default = $request->price_default;
         $article->save();
 
+        $compositions = $category->compositions->pluck('id')->toArray();
+        $article->compositions()->sync($compositions);
+
         return $article;
     }
 

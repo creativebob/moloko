@@ -95,10 +95,14 @@ class RawsCategory extends Model
         return $this->belongsTo(Photo::class);
     }
 
-    // Метрики
-    public function one_metrics()
+    // Состав
+    // public function compositions()
+    // {
+    //     return $this->belongsToMany(Article::class, 'preset_composition', 'category_id', 'composition_id');
+    // }
+    public function compositions()
     {
-        return $this->morphToMany(Metric::class, 'metric_entity')->where('set_status', 'one');
+        return $this->morphToMany(Article::class, 'preset_composition');
     }
 
     // Производители

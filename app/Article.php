@@ -71,13 +71,6 @@ class Article extends Model
     //     return $this->hasMany(Goods');
     // }
 
-    // Метрики
-    public function metrics()
-    {
-        return $this->morphedByMany(Metric::class, 'articles_values')
-        ->withPivot('value');
-    }
-
     // Состав
     public function compositions()
     {

@@ -14,7 +14,6 @@ class CreatePositionRoleTable extends Migration
     public function up()
     {
         Schema::create('position_role', function (Blueprint $table) {
-            $table->increments('id');
 
             $table->integer('position_id')->nullable()->unsigned()->comment('ID должности');
             $table->foreign('position_id')->references('id')->on('positions');

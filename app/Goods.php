@@ -77,6 +77,13 @@ class Goods extends Model
         return $this->belongsTo(User::class);
     }
 
+    // Метрики
+    public function metrics()
+    {
+        return $this->belongsToMany(Metric::class, 'goods_metric', 'goods_id', 'metric_id')
+        ->withPivot('value');
+    }
+
     // Пункты каталога
     public function catalogs_items()
     {

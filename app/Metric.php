@@ -33,15 +33,22 @@ class Metric extends Model
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
 
+
+
     public function goods_categories()
     {
-        return $this->morphedByMany('App\GoodsCategory', 'metric_entity');
+        return $this->belongsToMany(GoodsCategory::class, 'preset_metric', 'metric_id', 'category_id');
     }
 
-    public function raws_categories()
-    {
-        return $this->morphedByMany('App\RawsCategory', 'metric_entity');
-    }
+    // public function goods_categories()
+    // {
+    //     return $this->morphedByMany('App\GoodsCategory', 'metric_entity');
+    // }
+
+    // public function raws_categories()
+    // {
+    //     return $this->morphedByMany('App\RawsCategory', 'metric_entity');
+    // }
 
     // Получаем проодукцию
     // public function goods_categories()
@@ -58,17 +65,17 @@ class Metric extends Model
      // Получаем единицу измерения
     public function unit()
     {
-        return $this->belongsTo('App\Unit');
+        return $this->belongsTo(Unit::class);
     }
 
     // Получаем единицу измерения
     public function property()
     {
-        return $this->belongsTo('App\Property');
+        return $this->belongsTo(Property::class);
     }
 
     public function values()
     {
-        return $this->hasMany('App\MetricValue');
+        return $this->hasMany(MetricValue::class);
     }
 }
