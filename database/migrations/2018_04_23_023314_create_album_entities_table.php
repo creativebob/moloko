@@ -18,6 +18,7 @@ class CreateAlbumEntitiesTable extends Migration
             $table->integer('album_entities_id')->nullable()->unsigned()->comment('Id сущности связанной с альбомом');
             $table->string('album_entities_type')->index()->comment('Сущность обьекта');
 
+            $table->timestamps();
         });
     }
 
@@ -26,3 +27,5 @@ class CreateAlbumEntitiesTable extends Migration
         Schema::dropIfExists('album_entities');
     }
 }
+
+

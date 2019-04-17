@@ -464,7 +464,7 @@ Route::get('plans/{alias}', 'PlanController@show')->name('plans.show');
 // ------------------------------------------------ Статистика ---------------------------------------
 
 // Основные методы
-// Route::resource('statistics', 'StatisticsController')->middleware('auth');
+Route::resource('statistics', 'StatisticsController')->middleware('auth');
 
 
 // ---------------------------------------------- Лиды -----------------------------------------------

@@ -10,6 +10,7 @@ use App\Choice;
 use App\City;
 use App\Challenge;
 use App\Claim;
+use App\Menu;
 
 use App\Company;
 use App\Department;

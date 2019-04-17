@@ -164,6 +164,9 @@ class ClientController extends Controller
 
             // $lead->private_status = null;
 
+        }
+
+
             $search_user = User::whereHas('phones', function($q) use ($main_phone){
                 $q->where('phone', $main_phone);
             })->first();
@@ -182,7 +185,7 @@ class ClientController extends Controller
                 $new_user = $search_user;
             };
 
-        }
+
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
