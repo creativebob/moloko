@@ -32,6 +32,7 @@
 @endsection
 
 @section('scripts')
+    @include('companies.scripts')
     @include('includes.scripts.inputs-mask')
     @include('includes.scripts.modal-delete-script')
     @include('includes.scripts.extra-phone')

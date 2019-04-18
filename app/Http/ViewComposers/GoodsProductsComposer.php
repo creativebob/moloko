@@ -19,6 +19,7 @@ class GoodsProductsComposer
 
             // Группы товаров
             $goods_products = GoodsProduct::where(['goods_category_id' => $view->goods_category_id, 'set_status' => $view->set_status])
+            ->companiesLimit($answer)
             ->orderBy('sort', 'asc')
             ->get(['id', 'name']);
             // dd($goods_products);

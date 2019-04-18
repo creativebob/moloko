@@ -3,12 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
-use App\GoodsProduct;
-use App\GoodsCategory;
-use App\Goods;
-
-use App\RawsArticle;
-use App\GoodsArticle;
+use App\Article;
 
 use Illuminate\Http\Request;
 
@@ -93,37 +88,29 @@ class CompositionController extends Controller
 
     public function ajax_add(Request $request)
     {
-        if ($request->set_status == 'one') {
-            $composition = RawsArticle::with(['raws_product' => function ($q) {
-                $q->with('unit', 'raws_category');
-            }])->findOrFail($request->id);
-        } else {
-            $composition = GoodsArticle::with(['goods_product' => function ($q) {
-                $q->with('unit', 'goods_category');
-            }])->findOrFail($request->id);
-        }
-        return view($request->entity.'.compositions.composition_input', compact('composition'));
+        $composition = Article::with(['group.unit'])
+        ->find($request->id);
+
+        return view('includes.compositions.composition_input', compact('composition'));
     }
 
     // Добавляем состав
-    public function ajax_add_relation(Request $request)
+    public function ajax_get_category_composition(Request $request)
     {
 
-        $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
-        $goods_category->compositions()->attach($request->id);
+        $composition = Article::with('group.unit')
+        ->findOrFail($request->id);
 
-        $composition = RawsArticle::findOrFail($request->id);
-
-        return view($request->entity.'.compositions.composition_tr', compact('composition'));
+        return view('includes.tmc_categories.edit.compositions.composition_tr', compact('composition'));
     }
 
     // Удаляем состав
-    public function ajax_delete_relation(Request $request)
-    {
+    // public function ajax_delete_relation(Request $request)
+    // {
 
-        $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
-        $res = $goods_category->compositions()->detach($request->id);
+    //     $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
+    //     $res = $goods_category->compositions()->detach($request->id);
 
-        return response()->json(isset($res) ? true : 'Не удалось удалить состав!');
-    }
+    //     return response()->json(isset($res) ? true : 'Не удалось удалить состав!');
+    // }
 }

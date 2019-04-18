@@ -2,6 +2,7 @@
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active"><a href="#settings" aria-selected="true">Информация</a></li>
+            <li class="tabs-title"><a data-tabs-target="tmc" href="#tmc">ТМЦ</a></li>
             <li class="tabs-title"><a data-tabs-target="photos_settings" href="#photos_settings">Настройка фотографий</a></li>
         </ul>
     </div>
@@ -46,6 +47,28 @@
             </div>
             {{--     <div class="small-12 medium-5 large-7 cell tabs-margin-top">
             </div> --}}
+        </div>
+
+        {{-- Настройки тмц --}}
+        <div class="tabs-panel" id="tmc">
+            <div class="small-12 medium-7 large-5 cell tabs-margin-top">
+
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 cell checkbox">
+                        {{ Form::checkbox('tmc', 1, null, ['id' => 'tmc-checkbox']) }}
+                        <label for="tmc-checkbox"><span>ТМЦ</span></label>
+                    </div>
+                    <div class="small-12 cell">
+                        <label>Состав
+                            @include('includes.selects.tmc')
+                        </label>
+                    </div>
+
+
+
+                </div>
+
+            </div>
         </div>
 
         {{-- Настройки фотографий --}}

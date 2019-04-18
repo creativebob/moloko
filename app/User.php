@@ -13,6 +13,7 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
+use App\Scopes\Filters\BooleanArrayFilter;
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -36,12 +37,12 @@ class User extends Authenticatable
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
+    use BooleanArrayFilter;
 
     // Фильтры
     use Filter;
     use BooklistFilter;
     // use DateIntervalFilter;
-
 
     // Фильтрация по городу
     public function scopeUserFilter($query, $request)
@@ -196,6 +197,7 @@ class User extends Authenticatable
         'company_id',
         'filial_id',
         'moderation',
+        'photo_id'
     ];
 
     protected $hidden = [
@@ -378,6 +380,12 @@ class User extends Authenticatable
         return $value;
     }
 
+    // Получаем правовую форму
+    public function legal_form()
+    {
+        return $this->belongsTo('App\LegalForm', 'legal_form_id')->withDefault('Физлицо');
+    }
+
     // Дополнительные
     public function extra_phones()
     {
@@ -405,7 +413,7 @@ class User extends Authenticatable
     // Клиент
     public function client()
     {
-        return $this->morphOne('App\Client', 'client');
+        return $this->morphOne('App\Client', 'clientable');
     }
 
     // Бюджет

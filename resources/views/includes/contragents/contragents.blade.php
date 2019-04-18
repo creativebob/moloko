@@ -49,6 +49,7 @@
 		      		// $('#listing-bank-account').append(html);
 					$('#add-client').foundation('close');
 					$('#add-client').remove();
+					alert(html);
 				}
 			});
 		}

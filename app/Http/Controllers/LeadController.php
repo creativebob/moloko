@@ -30,8 +30,6 @@ use App\GoodsCategory;
 use App\ServicesCategory;
 use App\RawsCategory;
 
-// use App\Challenge_type;
-
 use App\PhotoSetting;
 
 // Валидация
@@ -51,17 +49,23 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
 use Carbon\Carbon;
 
-use App\Events\onAddLeadEvent;
-use Event;
+// use App\Events\onAddLeadEvent;
+// use Event;
 
 // На удаление
 use App\Http\Controllers\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
+// Подрубаем трейт записи и обновления компании
+use App\Http\Controllers\Traits\UserControllerTrait;
+use App\Http\Controllers\Traits\LeadControllerTrait;
 
 class LeadController extends Controller
 {
+
+    use UserControllerTrait;
+    use LeadControllerTrait;
 
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'leads';
@@ -84,11 +88,10 @@ class LeadController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-        // dd($answer);
 
-        // --------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
-        // --------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------
 
         $leads = Lead::with(
             // 'location.city',
@@ -123,15 +126,11 @@ class LeadController extends Controller
         ->filter($request, 'manager_id')
         ->filter($request, 'lead_type_id')
         ->filter($request, 'lead_method_id')
-        ->booleanFilter($request, 'challenges_active_count')
+        ->booleanArrayFilter($request, 'challenges_active_count')
         ->dateIntervalFilter($request, 'created_at')
         ->booklistFilter($request)
         ->orderBy('created_at', 'desc')
-        // ->orderBy('moderation', 'desc')
-        // ->orderBy('sort', 'asc')
         ->paginate(30);
-
-        // dd($leads[4]);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -144,7 +143,8 @@ class LeadController extends Controller
             'lead_type',            // Тип обращения
             'manager',              // Менеджер
             'date_interval',        // Дата обращения
-            'booklist'              // Списки пользователя
+            'booklist',               // Списки пользователя
+            'challenges_active_count' // Активные и не активные задачи
         ]);
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
@@ -156,6 +156,135 @@ class LeadController extends Controller
         // Задачи пользователя
         $list_challenges = challenges($request);
         return view('leads.index', compact('leads', 'page_info', 'user', 'filter', 'list_challenges', 'lead_all_managers'));
+    }
+
+
+    public function create(Request $request, $lead_type = 1)
+    {
+
+        // Подключение политики
+        $this->authorize(__FUNCTION__, Lead::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Отдаем работу по созданию нового лида трейту
+        $lead = $this->createLead($request);
+
+        return Redirect('/admin/leads/' . $lead->id . '/edit');
+    }
+
+
+    public function store(LeadRequest $request)
+    {
+
+        // Не используется.
+
+    }
+
+
+    public function show(Request $request, $id)
+    {
+
+        dd('Это show - Тупиковая ветка');
+
+    }
+
+
+    public function edit(Request $request, $id)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+
+        $lead = Lead::with([
+            'location.city',
+            'main_phones',
+            'extra_phones',
+            'medium',
+            'campaign',
+            'source',
+            'site',
+            'claims',
+            'lead_method',
+            'choice' => function ($query) {
+                $query->orderBy('created_at', 'asc');
+            }, 'notes' => function ($query) {
+                $query->orderBy('created_at', 'desc');
+            }, 'challenges' => function ($query) {
+                $query->with('challenge_type')
+                ->whereNull('status')
+                ->orderBy('deadline_date', 'asc');
+            },
+            'estimates.workflows.product'
+        ])
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        // ->where('manager_id', '!=', 1)
+        // ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->moderatorLimit($answer)
+        ->findOrFail($id);
+
+        // Подключение политики
+        // $this->authorize(getmethod(__FUNCTION__), $lead);
+
+        $lead_methods_list = LeadMethod::whereIn('mode', [1, 2, 3])->get()->pluck('name', 'id');
+
+        // // $all_categories_list = null;
+        $goods_categories_list = GoodsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
+            return ['goods-' . $item->id => $item->name];
+        })->toArray();
+
+        $services_categories_list = ServicesCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
+            return ['service-' . $item->id => $item->name];
+        })->toArray();
+
+        $raws_categories_list = RawsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
+            return ['raw-' . $item->id => $item->name];
+        })->toArray();
+
+        $choices = [
+            'Товары' => $goods_categories_list,
+            'Услуги' => $services_categories_list,
+            'Сырье' => $raws_categories_list,
+        ];
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        // Задачи пользователя
+        $list_challenges = challenges($request);
+
+        return view('leads.edit', compact('lead', 'page_info', 'list_challenges', 'lead_methods_list', 'entity', 'choices'));
+    }
+
+    public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
+    {
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $lead = Lead::with('location', 'company')
+        ->companiesLimit($answer)
+        ->filials($answer)
+        ->systemItem($answer)
+        ->moderatorLimit($answer)
+        ->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $lead);
+
+        // Отдаем работу по редактировнию лида трейту
+        $this->updateLead($request, $lead);
+
+        return redirect('/admin/leads');
     }
 
     public function leads_calls(Request $request)
@@ -213,13 +342,9 @@ class LeadController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
-
-
-        //     dd($leads->challenges);
-
-        // --------------------------------------------------------------------------------------------------------------------------
-        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ---------------------------------------------------------------------------------------------
-        // --------------------------------------------------------------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ----------------------------------------------------------------------
+        // ---------------------------------------------------------------------------------------------------
 
         $filter_query = Lead::with('location.city', 'manager', 'stage')
         ->moderatorLimit($answer)
@@ -344,553 +469,6 @@ class LeadController extends Controller
         }
     }
 
-    public function create(Request $request, $lead_type = 1)
-    {
-
-        $user = $request->user();
-
-        // Подключение политики
-        $this->authorize(__FUNCTION__, Lead::class); // Проверка на create
-        // dd($user);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        $lead = new Lead;
-
-        $company_id = $user->company_id;
-        $filial_id = $user->filial_id;
-
-        // Добавляем локацию
-        $lead->location_id = create_location($request);
-
-        $lead->company_id = $company_id;
-        $lead->filial_id = $filial_id;
-        $lead->name = NULL;
-        $lead->company_name = NULL;
-
-
-        $lead->draft = 1;
-        $lead->author_id = $user->id;
-        $lead->manager_id = $user->id;
-        $lead->stage_id = 2;
-
-        // Если приходит тип обращения - пишем его!
-        // На валидации не пропускает к записи ничего кроме значений 1, 2 и 3
-        if(isset($request->lead_type)){
-            $lead_type = $request->lead_type;
-        } else {
-            $lead_type = 1;
-        };
-
-        $lead->lead_type_id = $lead_type;
-
-        $lead->lead_method_id = 1;
-        $lead->display = 1;
-        $lead->save();
-
-        $lead_number = getLeadNumbers($user, $lead);
-        $lead->case_number = $lead_number['case'];
-        $lead->serial_number = $lead_number['serial'];
-        $lead->save();
-
-
-        return Redirect('/admin/leads/' . $lead->id . '/edit');
-
-    }
-
-    public function store(LeadRequest $request)
-    {
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), Lead::class);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        $company_id = $user->company_id;
-        $filial_id = $request->user()->filial_id;
-
-        // Пишем локацию
-        $location = new Location;
-        $location->country_id = $request->country_id;
-        $location->city_id = $request->city_id;
-        $location->address = $request->address;
-        $location->author_id = $user->id;
-        $location->save();
-
-        if ($location) {
-            $location_id = $location->id;
-        } else {
-            abort(403, 'Ошибка записи адреса');
-        }
-
-        // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
-        $lead = new Lead;
-        $lead->name = $request->name;
-
-        $lead->company_name = $request->company_name;
-        if(isset($request->company_name)){
-            $lead->private_status = 1;
-        } else {
-            $lead->private_status = null;
-        }
-
-        // $lead->sex = $request->sex;
-        // $lead->birthday = $request->birthday;
-
-        $lead->stage_id =   $request->stage_id;
-        $lead->badget =   $request->badget;
-
-        $lead->display = 1; // Включаем видимость
-        $lead->company_id = $company_id;
-
-        // $lead->phone = cleanPhone($request->phone);
-
-        if(($request->extra_phone != Null)&&($request->extra_phone != "")){
-            $lead->extra_phone = cleanPhone($request->extra_phone);
-        };
-
-        // $lead->telegram_id = $request->telegram_id;
-        $lead->location_id = $location_id;
-
-        // $lead->orgform_status = $request->orgform_status;
-        // $lead->user_inn = $request->inn;
-
-        // $user->passport_address = $request->passport_address;
-        // $user->passport_number = $request->passport_number;
-        // $user->passport_released = $request->passport_released;
-        // $user->passport_date = $request->passport_date;
-
-        // $user->about = $request->about;
-        // $user->specialty = $request->specialty;
-        // $user->degree = $request->degree;
-        // $user->quote = $request->quote;
-
-        $lead->author_id = $user_id;
-        $lead->manager_id = $user->id;
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if($answer['automoderate'] == false){
-            $lead->moderation = 1;
-        }
-
-        // Пишем ID компании авторизованного пользователя
-        if($company_id == null){abort(403, 'Необходимо авторизоваться под компанией');};
-        $lead->company_id = $company_id;
-
-        // Пишем ID филиала авторизованного пользователя
-        if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
-        $lead->filial_id = $filial_id;
-
-
-        // Формируем номера обращения
-        if(($user->staff->first()->position->id == 14)||($user->staff->first()->position->id == 15)) {
-            $lead_number = getLeadServiceCenterNumbers($user);
-        } else {
-            $lead_number = getLeadNumbers($user);
-        }
-
-        $lead->case_number = $lead_number['case'];
-        $lead->serial_number = $lead_number['serial'];
-
-        // Конец формирования номера обращения ----------------------------------
-
-        $lead->save();
-
-        // Телефон
-        $phones = add_phones($request, $lead);
-
-        // Если прикрепили фото
-        if ($request->hasFile('photo')) {
-
-            // Вытаскиваем настройки
-            // Вытаскиваем базовые настройки сохранения фото
-            $settings = config()->get('settings');
-
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = PhotoSetting::where(['entity' => $this->entity_name])->first();
-
-            if($get_settings){
-
-                if ($get_settings->img_small_width != null) {
-                    $settings['img_small_width'] = $get_settings->img_small_width;
-                }
-
-                if ($get_settings->img_small_height != null) {
-                    $settings['img_small_height'] = $get_settings->img_small_height;
-                }
-
-                if ($get_settings->img_medium_width != null) {
-                    $settings['img_medium_width'] = $get_settings->img_medium_width;
-                }
-
-                if ($get_settings->img_medium_height != null) {
-                    $settings['img_medium_height'] = $get_settings->img_medium_height;
-                }
-
-                if ($get_settings->img_large_width != null) {
-                    $settings['img_large_width'] = $get_settings->img_large_width;
-                }
-
-                if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;
-                }
-
-                if ($get_settings->img_formats != null) {
-                    $settings['img_formats'] = $get_settings->img_formats;
-                }
-
-                if ($get_settings->img_min_width != null) {
-                    $settings['img_min_width'] = $get_settings->img_min_width;
-                }
-
-                if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;
-                }
-
-                if ($get_settings->img_max_size != null) {
-                    $settings['img_max_size'] = $get_settings->img_max_size;
-
-                }
-            }
-
-            // Директория
-            $directory = $user->company_id.'/media/leads/'.$lead->id.'/img';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), настройки, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
-            $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
-            $photo = $array['photo'];
-
-            $lead->photo_id = $photo->id;
-            $lead->save();
-        }
-
-        if ($lead) {
-            return Redirect('/admin/leads');
-
-        } else {
-
-            abort(403, 'Ошибка при обновлении пользователя!');
-        }
-    }
-
-    public function show(Request $request, $id)
-    {
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::findOrFail($id);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $user);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Функция из Helper отдает массив со списками для SELECT
-        $departments_list = getLS('users', 'view', 'departments');
-        $filials_list = getLS('users', 'view', 'filials');
-
-        $role = new Role;
-        $role_users = RoleUser::with('role', 'department', 'position')->whereUser_id($user->id)->get();
-
-        $answer_roles = operator_right('roles', false, 'index');
-
-        $roles_list = Role::moderatorLimit($answer_roles)
-        ->companiesLimit($answer_roles)
-        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->manager($user)
-        // ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям
-        ->pluck('name', 'id');
-
-        return view('users.edit', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list'));
-    }
-
-    public function edit(Request $request, $id)
-    {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-
-        $lead = Lead::with([
-            'location.city',
-            'main_phones',
-            'extra_phones',
-            'medium',
-            'campaign',
-            'source',
-            'site',
-            'claims',
-            'lead_method',
-            'choice' => function ($query) {
-                $query->orderBy('created_at', 'asc');
-            }, 'notes' => function ($query) {
-                $query->orderBy('created_at', 'desc');
-            }, 'challenges' => function ($query) {
-                $query->with('challenge_type')
-                ->whereNull('status')
-                ->orderBy('deadline_date', 'asc');
-            },
-            'estimates.workflows.product'
-        ])
-        ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        // ->where('manager_id', '!=', 1)
-        // ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->moderatorLimit($answer)
-        ->findOrFail($id);
-
-        // dd($lead->orders);
-
-        // dd(Carbon::parse($lead->claims[0]->created_at)->format('d.m.Y'));
-
-        // dd($lead->notes->toArray());
-
-        // Подключение политики
-        // $this->authorize(getmethod(__FUNCTION__), $lead);
-
-        $lead_methods_list = LeadMethod::whereIn('mode', [1, 2, 3])->get()->pluck('name', 'id');
-
-
-        // // $all_categories_list = null;
-        $goods_categories_list = GoodsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
-            return ['goods-' . $item->id => $item->name];
-        })->toArray();
-
-        $services_categories_list = ServicesCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
-            return ['service-' . $item->id => $item->name];
-        })->toArray();
-
-        $raws_categories_list = RawsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
-            return ['raw-' . $item->id => $item->name];
-        })->toArray();
-
-        $choices = [
-            'Товары' => $goods_categories_list,
-            'Услуги' => $services_categories_list,
-            'Сырье' => $raws_categories_list,
-        ];
-
-        // Получаем список этапов
-        $answer_stages = operator_right('stages', false, 'index');
-        $stages_list = Stage::moderatorLimit($answer_stages)
-        // ->companiesLimit($answer_stages)
-        // ->authors($answer_stages)
-        ->template($answer_stages)
-        // ->systemItem($answer_stages) // Фильтр по системным записям
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get()
-        ->pluck('name', 'id');
-
-        // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-
-        // Задачи пользователя
-        $list_challenges = challenges($request);
-
-        return view('leads.edit', compact('lead', 'page_info', 'stages_list', 'list_challenges', 'lead_methods_list', 'entity', 'choices'));
-    }
-
-    public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
-    {
-
-        // dd($request);
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
-        // $user_id = hideGod($user);
-
-        $company_id = $user->company_id;
-        $filial_id = $user->filial_id;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $lead = Lead::with('location', 'company')
-        ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        // ->manager($user)
-        // ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->moderatorLimit($answer)
-        ->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $lead);
-
-        // // Пишем локацию
-        // $location = $lead->location;
-
-        // if((!isset($location->city_id))||($location->city_id != $request->city_id)) {
-
-        //     // Пишем локацию
-        //     $location = new Location;
-        //     $location->country_id = $request->country_id;
-        //     $location->city_id = $request->city_id;
-        //     $location->address = $request->address;
-        //     $location->author_id = $user->id;
-        //     $location->save();
-
-        //     if ($location) {
-        //         $location_id = $location->id;
-        //     } else {
-        //         abort(403, 'Ошибка записи адреса');
-        //     }
-        // }
-
-        // Обновляем локацию
-        $lead = update_location($request, $lead);
-
-        $lead->filial_id = $filial_id;
-        $lead->email = $request->email;
-
-        $lead->name = $request->name;
-        $lead->company_name = $request->company_name;
-        // $lead->private_status = $request->private_status;
-
-        $lead->stage_id = $request->stage_id;
-        $lead->badget = $request->badget;
-        $lead->lead_method_id = $request->lead_method;
-        $lead->draft = NULL;
-
-        $lead->editor_id = $user->id;
-
-        $choiceFromTag = getChoiceFromTag($request->choice_tag);
-        $lead->choice_type = $choiceFromTag['type'];
-        $lead->choice_id = $choiceFromTag['id'];
-
-        // $lead->first_name = $request->first_name;
-        // $lead->second_name = $request->second_name;
-        // $lead->patronymic = $request->patronymic;
-        // $lead->sex = $request->sex;
-        // $lead->birthday = $request->birthday;
-
-        // Телефон
-        $phones = add_phones($request, $lead);
-
-        // if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-        //     $lead->extra_phone = cleanPhone($request->extra_phone);
-        // } else {$lead->extra_phone = NULL;};
-
-        // $lead->telegram_id = $request->telegram_id;
-        // $lead->orgform_status = $request->orgform_status;
-        // $lead->user_inn = $request->inn;
-
-        // $lead->passport_address = $request->passport_address;
-        // $lead->passport_number = $request->passport_number;
-        // $lead->passport_released = $request->passport_released;
-        // $lead->passport_date = $request->passport_date;
-
-        // Если прикрепили фото
-        if ($request->hasFile('photo')) {
-
-            // Вытаскиваем настройки
-            // Вытаскиваем базовые настройки сохранения фото
-            $settings = config()->get('settings');
-
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = PhotoSetting::where(['entity' => $this->entity_name])->first();
-
-            if($get_settings){
-
-                if ($get_settings->img_small_width != null) {
-                    $settings['img_small_width'] = $get_settings->img_small_width;
-                }
-
-                if ($get_settings->img_small_height != null) {
-                    $settings['img_small_height'] = $get_settings->img_small_height;
-                }
-
-                if ($get_settings->img_medium_width != null) {
-                    $settings['img_medium_width'] = $get_settings->img_medium_width;
-                }
-
-                if ($get_settings->img_medium_height != null) {
-                    $settings['img_medium_height'] = $get_settings->img_medium_height;
-                }
-
-                if ($get_settings->img_large_width != null) {
-                    $settings['img_large_width'] = $get_settings->img_large_width;
-                }
-
-                if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;
-                }
-
-                if ($get_settings->img_formats != null) {
-                    $settings['img_formats'] = $get_settings->img_formats;
-                }
-
-                if ($get_settings->img_min_width != null) {
-                    $settings['img_min_width'] = $get_settings->img_min_width;
-                }
-
-                if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;
-                }
-
-                if ($get_settings->img_max_size != null) {
-                    $settings['img_max_size'] = $get_settings->img_max_size;
-
-                }
-            }
-
-            // dd($company_id);
-            // Директория
-            $directory = $lead->company_id.'/media/leads/'.$lead->id.'/img';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), настройки, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
-            if ($lead->photo_id) {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, $lead->photo_id, $settings);
-
-            } else {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
-            }
-
-            $photo = $array['photo'];
-
-            $lead->photo_id = $photo->id;
-        }
-
-        // Модерируем (Временно)
-        if($answer['automoderate']){$lead->moderation = null;};
-
-        $lead->save();
-
-        Event::fire(new onAddLeadEvent($lead, $user));
-
-
-        if ($lead) {
-
-        } else {
-            abort(403, 'Ошибка при обновлении пользователя!');
-        }
-
-
-        $backroute = $request->backroute;
-
-        if(isset($backroute)){
-                // return redirect()->back();
-            return redirect($backroute);
-        };
-
-        return redirect('/admin/leads');
-    }
-
     public function destroy(Request $request, $id)
     {
 
@@ -959,6 +537,8 @@ class LeadController extends Controller
 
     public function ajax_autofind_phone(Request $request)
     {
+
+
 
         // Подключение политики
         // $this->authorize('index', Lead::class);
@@ -1123,9 +703,7 @@ class LeadController extends Controller
     // Назначение лида
     public function ajax_distribute(Request $request)
     {
-        // тест
-        // $lead_id = 6297;
-        // $appointed_id = 11;
+
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
         $lead = Lead::findOrFail($request->lead_id);

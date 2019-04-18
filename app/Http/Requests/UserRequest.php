@@ -40,7 +40,7 @@ class UserRequest extends FormRequest
 
             // 'main_phone' => 'string|max:17|required',
             // 'extra_phones.*' => 'string|max:17|nullable',
-            
+
             'telegram_id' => 'integer|nullable', 
             'city_id' => 'integer|nullable', 
             'address' => 'string|max:255|nullable', 
@@ -64,8 +64,7 @@ class UserRequest extends FormRequest
             'quote' => 'string|max:500|nullable', 
 
             // 'user_type' => 'required', 
-
-            'access_block' => 'boolean|nullable', 
+            // 'access_block' => 'boolean|nullable', 
 
             'moderation' => 'integer|max:1|nullable',
             'system_item' => 'integer|max:1|nullable', 

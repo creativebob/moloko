@@ -17,7 +17,7 @@ class NavigationsCategoriesSelectComposer
         // Главный запрос
         $navigations_categories = NavigationsCategory::moderatorLimit($answer)
         // ->systemItem($answer)
-        // ->companiesLimit($answer)
+        ->companiesLimit($answer)
         // ->template($answer)
         // ->whereDisplay(1)
         // ->has('albums')

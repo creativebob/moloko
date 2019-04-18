@@ -89,7 +89,7 @@ class Company extends Model
             $q->whereNull('parent_id');
         })->whereHas('position', function($q){
             $q->where('direction_status', 1);
-        });
+        })->withDefault('Не найден');
     }
 
     public function bank_accounts()
@@ -187,22 +187,32 @@ class Company extends Model
     }
 
     // Производители
+    // public function manufacturers()
+    // {
+    //     return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'manufacturer_id')->withPivot('company_id');
+    // }
+
+    public function manufacturer_supplier()
+    {
+
+    }
+
     public function manufacturers()
     {
-        return $this->belongsToMany('App\Company', 'manufacturers', 'company_id', 'manufacturer_id')->withPivot('company_id');
+        return $this->hasMany('App\Manufacturer', 'company_id');
     }
 
     // Производитель
-    public function manufactured()
+    public function manufactured($company_id = null)
     {
-        return $this->belongsToMany('App\Company', 'manufacturers', 'manufacturer_id', 'company_id');
+        return $this->belongsToMany('App\Company', 'manufacturers', 'manufacturer_id', 'company_id')->where('manufacturer_id', $company_id);
     }
 
     // Получаем клиентов
-    public function clients()
-    {
-        return $this->belongsToMany('App\Company', 'clients', 'company_id', 'client_id');
-    }
+    // public function clients()
+    // {
+    //     return $this->belongsToMany('App\Company', 'clients', 'company_id', 'client_id');
+    // }
 
     // Получаем банки
     public function banks()
@@ -214,7 +224,7 @@ class Company extends Model
     // Получаем компании, где мы клиент
     public function we_clients()
     {
-        return $this->hasMany('App\Client', 'client_id');
+        return $this->hasMany('App\Client', 'clientable_id');
     }
 
     // Получаем компании, где мы поставщик

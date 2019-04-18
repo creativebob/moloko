@@ -67,7 +67,7 @@ class Supplier extends Model
     // Производители
     public function manufacturers()
     {
-        return $this->belongsToMany('App\Company', 'manufacturer_supplier', 'supplier_id', 'manufacturer_id');
+        return $this->belongsToMany('App\Manufacturer', 'manufacturer_supplier', 'supplier_id', 'manufacturer_id');
     }
 
 }

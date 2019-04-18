@@ -46,7 +46,7 @@
       <tbody data-tbodyId="1" class="tbody-width">
         @if(!empty($clients))
         @foreach($clients as $client)
-        <tr class="item @if($client->moderation == 1)no-moderation @endif" id="clients-{{ $client->id }}" data-name="{{ $client->client->name }}">
+        <tr class="item @if($client->moderation == 1)no-moderation @endif" id="clients-{{ $client->id }}" data-name="{{ $client->clientable->name }}">
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
             <input type="checkbox" class="table-check" name="dealer_id" id="check-{{ $client->id }}"
@@ -61,20 +61,20 @@
           </td>
           <td class="td-name">
 
-            @if($client->client_type == 'App\User')
+            @if($client->clientable_type == 'App\User')
               <a href="clients/{{ $client->id }}/edit">
-                {{ $client->client->name }}
+                {{ $client->clientable->name }}
               </a>
             @else
               <a href="clients/{{ $client->id }}/edit">
-                {{ $client->client->name }} ({{ $client->client->legal_form->name or '' }})
+                {{ $client->clientable->name }} ({{ $client->clientable->legal_form->name or '' }})
               </a>
             @endif
 
           </td>
 
-          <td class="td-address">@if(!empty($client->client->location->address)){{ $client->client->location->address }}@endif </td>
-          <td class="td-phone">{{ isset($client->client->main_phone->phone) ? decorPhone($client->client->main_phone->phone) : 'Номер не указан' }}</td>
+          <td class="td-address">@if(!empty($client->clientable->location->address)){{ $client->clientable->location->address }}@endif </td>
+          <td class="td-phone">{{ isset($client->clientable->main_phone->phone) ? decorPhone($client->clientable->main_phone->phone) : 'Номер не указан' }}</td>
 
 
           <td class="td-count-orders">@if(!empty($client->orders)){{ $client->orders->count() }} @endif </td>

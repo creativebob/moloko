@@ -16,6 +16,7 @@ class RawsCategoriesComposer
 
         // Главный запрос
         $raws_categories = RawsCategory::moderatorLimit($answer)
+        ->companiesLimit($answer)
         ->systemItem($answer)
         ->orderBy('sort', 'asc')
         ->get(['id', 'name', 'parent_id']);

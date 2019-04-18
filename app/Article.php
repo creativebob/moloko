@@ -13,11 +13,11 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\ContragentsTraitScopes;
+
+use App\Scopes\Traits\ManufacturersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -25,9 +25,8 @@ use App\Scopes\Filters\BooklistFilter;
 
 class Article extends Model
 {
-
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use Notifiable;
     use SoftDeletes;
@@ -39,73 +38,79 @@ class Article extends Model
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
-    use ContragentsTraitScopes;
+
+    use ManufacturersTraitScopes;
 
     // Фильтры
     use Filter;
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    // Метрики
-    public function metrics_values()
+    protected $fillable = [
+        'company_id',
+        'articles_group_id',
+        'name',
+        'description',
+        'internal',
+        'manufacturer_id',
+        'metrics_count',
+        'compositions_count',
+        'author_id',
+        'editor_id',
+    ];
+
+    // Группа
+    public function group()
     {
-        return $this->belongsToMany('App\Metric', 'article_values', 'article_id', 'entity_id')->where('entity', 'metrics')->withPivot('entity', 'value');
+        return $this->belongsTo(ArticlesGroup::class, 'articles_group_id');
     }
+
+    // Товар
+    // public function goods()
+    // {
+    //     return $this->hasMany(Goods');
+    // }
 
     // Состав
-    public function compositions_values()
+    public function compositions()
     {
-        return $this->belongsToMany('App\Article', 'article_values', 'article_id', 'entity_id')->where('entity', 'articles')->withPivot('entity', 'value');
+        return $this->belongsToMany(Article::class, 'article_composition', 'article_id', 'composition_id')
+        ->withPivot('value');
     }
 
-    // public function compositions_values()
+    // Состав (набор)
+    // public function set_compositions()
     // {
-    //     return $this->belongsToMany('App\Product', 'article_values', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
+    //     return $this->morphedByMany(Article', 'articles_values')->withPivot('value');
     // }
-
-    // public function compositions()
-    // {
-    //     return $this->belongsToMany('App\Product', 'compositions', 'article_id', 'entity_id')->where('entity', 'compositions')->withPivot('entity', 'value');
-    // }
-
-     // Продукт
-    public function product()
-    {
-        return $this->belongsTo('App\Product');
-    }
 
     // Производитель
     public function manufacturer()
     {
-        return $this->belongsTo('App\Company', 'manufacturer_id');
+        return $this->belongsTo(Company::class);
     }
 
-    //  // Продукт
-    // public function metrics_list($metrics_list)
-    // {
-    //     return $this->belongsToMany('App\Metric', 'article_values', 'article_id', 'entity_id')->where('entity', 'metrics')->wherePivotIn('entity_id', $metrics_list);
-    // }
-
-    // Получаем компанию.
-    public function company()
-    {
-        return $this->belongsTo('App\Company');
-    }
-
-    // Получаем автора
-    public function author()
-    {
-        return $this->belongsTo('App\User', 'author_id');
-    }
-
-    // Получаем альбом
+    // Альбом
     public function album()
     {
-        return $this->belongsTo('App\Album');
+        return $this->belongsTo(Album::class);
     }
 
+    // Аватар
     public function photo()
     {
-        return $this->belongsTo('App\Photo');
+        return $this->belongsTo(Photo::class);
+    }
+
+    // Компания
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    // Автор
+    public function author()
+    {
+        return $this->belongsTo(User::class);
     }
 }

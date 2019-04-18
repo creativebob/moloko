@@ -52,9 +52,9 @@ class RawsCategoryPolicy
         //     return false;
         // }
 
-        if ($model->products->count() > 0) {
-            return false;
-        }
+        // if ($model->products->count() > 0) {
+        //     return false;
+        // }
 
         if ($model->childs->count() > 0) {
             return false;

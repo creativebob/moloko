@@ -48,8 +48,8 @@ class Dealer extends Model
 
     // protected $dates = ['deleted_at'];
     protected $fillable = [
-        'company_id', 
-        'dealer_id', 
+        'company_id',
+        'dealer_id',
     ];
 
     // Получаем клиента
@@ -65,9 +65,9 @@ class Dealer extends Model
     }
 
     // Основной
-    public function main_phones()
-    {
-        return $this->morphToMany('App\Phone', 'phone_entity')->wherePivot('main', '=', 1)->whereNull('archive')->withPivot('archive');
-    }
+    // public function main_phones()
+    // {
+    //     return $this->morphToMany('App\Phone', 'phone_entity')->wherePivot('main', '=', 1)->whereNull('archive')->withPivot('archive');
+    // }
 
 }

@@ -71,8 +71,9 @@ class SupplierController extends Controller
 
         $suppliers = Supplier::with('author', 'company.main_phones')
         ->moderatorLimit($answer)
+        ->companiesLimit($answer)
         ->authors($answer)
-        ->systemItem($answer)
+        ->systemItem($answer) // Фильтр по системным записям
         ->filter($request, 'city_id', 'location')
         ->filter($request, 'sector_id')
         ->booklistFilter($request)
@@ -142,9 +143,9 @@ class SupplierController extends Controller
         $supplier->company_id = $request->user()->company->id;
         $supplier->supplier_id = $company->id;
 
-        // Запись информации по производителю:
-        // ...
-
+        // Запись информации по поставщику:
+        $supplier->description = $request->description;
+        $supplier->preorder = $request->preorder ?? 0;
 
         $supplier->save();
 
@@ -188,7 +189,7 @@ class SupplierController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_company = operator_right('company', false, getmethod(__FUNCTION__));
 
-        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types')
+        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types', 'manufacturers')
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
@@ -226,16 +227,16 @@ class SupplierController extends Controller
                 ];
             }
             // dd($manufacturers);
-
             $supplier->manufacturers()->sync($manufacturers);
+
         } else {
             $supplier->manufacturers()->detach();
         }
 
         // dd($request);
-        $supplier->preorder = $request->has('preorder');
+        // $supplier->preorder = $request->has('preorder');
 
-        $supplier->save();
+        // $supplier->save();
 
         $company_id = $supplier->company->id;
 
@@ -251,10 +252,9 @@ class SupplierController extends Controller
         // Отдаем работу по редактировнию компании трейту
         $this->updateCompany($request, $supplier->company);
 
-        // Обновление информации по производителю:
-        // ...
-
-
+        // Обновление информации по поставщику:
+        $supplier->description = $request->description;
+        $supplier->preorder = $request->preorder ?? 0;
         $supplier->save();
 
         return redirect('/admin/suppliers');

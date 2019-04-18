@@ -29,9 +29,9 @@ class UpdateUsersTable extends Migration
 
             $table->bigInteger('phone')->unique()->nullable()->comment('Телефон')->after('birthday');
             $table->bigInteger('extra_phone')->nullable()->comment('Дополнительный телефон')->after('phone');
-            $table->bigInteger('telegram_id')->unsigned()->unique()->nullable()->comment('ID Telegram')->after('extra_phone');
+            $table->bigInteger('telegram')->unsigned()->unique()->nullable()->comment('Telegram')->after('extra_phone');
 
-            $table->integer('location_id')->nullable()->unsigned()->comment('Адрес пользователя')->after('telegram_id');
+            $table->integer('location_id')->nullable()->unsigned()->comment('Адрес пользователя')->after('telegram');
 
             $table->string('photo')->nullable()->comment('Фото')->after('location_id');
              $table->integer('photo_id')->nullable()->unsigned()->comment('Id аватарки')->after('photo');
@@ -47,16 +47,12 @@ class UpdateUsersTable extends Migration
             $table->text('about')->nullable()->comment('Информация о пользователе')->after('passport_address');
             $table->text('specialty')->nullable()->comment('Специальность')->after('about');
             $table->text('degree')->nullable()->comment('Ученая степень, звание')->after('specialty');
-            $table->text('quote')->nullable()->comment('Цитата, высказывание, фраза')->after('degree');   
+            $table->text('quote')->nullable()->comment('Цитата, высказывание, фраза')->after('degree');
 
             $table->string('liter')->nullable()->unique()->comment('Литера')->after('quote');   
 
-            $table->integer('user_type')->nullable()->unsigned()->comment('Сотрудник 1 или Клиент 0')->after('liter');
-            $table->integer('lead_id')->nullable()->unsigned()->comment('Id лида')->after('user_type');
-            // $table->foreign('lead_id')->references('lead_id')->on('leads');
-            $table->integer('employee_id')->nullable()->unsigned()->comment('Id сотрудника')->after('lead_id');
-            // $table->foreign('employee_id')->references('employee_id')->on('employees');
-            $table->integer('access_block')->nullable()->unsigned()->comment('Доступ открыт 0 или Блокирован 1')->default('0')->after('employee_id');
+            $table->boolean('user_type')->default(0)->comment('Свой 1 или Чужой 0')->after('liter');
+            $table->boolean('access_block')->default(1)->comment('Доступ открыт 0 или Блокирован 1')->default('0')->after('user_type');
 
             $table->integer('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('access_block');
             $table->integer('filial_id')->nullable()->unsigned()->comment('ID филиала компании')->after('company_id');
@@ -116,8 +112,6 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('passport_address');
 
             $table->dropColumn('user_type');
-            $table->dropColumn('lead_id');
-            $table->dropColumn('employee_id');
             $table->dropColumn('access_block');
             $table->dropColumn('god');
             $table->dropColumn('moderation');  

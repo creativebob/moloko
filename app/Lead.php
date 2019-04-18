@@ -28,7 +28,7 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
 use App\Scopes\Filters\ValueFilter;
-use App\Scopes\Filters\BooleanFilter;
+use App\Scopes\Filters\BooleanArrayFilter;
 
 class Lead extends Model
 {
@@ -56,7 +56,7 @@ class Lead extends Model
     use BooklistFilter;
     use DateIntervalFilter;
     use ValueFilter;
-    use BooleanFilter;
+    use BooleanArrayFilter;
 
     // public $timestamps = false;
 
@@ -158,6 +158,12 @@ class Lead extends Model
     public function manager()
     {
         return $this->belongsTo('App\User', 'manager_id');
+    }
+
+    // Получаем пользователя
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'user_id');
     }
 
     // Получаем клиента

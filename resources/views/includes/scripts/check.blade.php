@@ -4,12 +4,18 @@
     var entity = '{{ $entity }}';
     @endisset
 
+    @isset ($id)
+    var id = '{{ $id }}';
+    @else
+    var id = item.closest('form').find('#item-id').val();
+    @endisset
+
     // ------------------- Проверка на совпадение --------------------------------------
     function checkField (check, entity_alias = null, field = null) {
 
         var item = check;
         var value = item.val();
-        var id = item.closest('form').find('#item-id').val();
+
         var submit = item.closest('form').find('.button');
         field = field != null ? field : item.attr('name');
         entity_alias = entity_alias != null ? entity_alias : entity;

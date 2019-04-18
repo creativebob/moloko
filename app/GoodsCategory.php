@@ -59,62 +59,95 @@ class GoodsCategory extends Model
     // Вложенные
     public function childs()
     {
-        return $this->hasMany('App\GoodsCategory', 'parent_id');
+        return $this->hasMany(GoodsCategory::class, 'parent_id');
     }
 
     // Компания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
-    // Группы
-    public function products()
+    // Товары
+    public function goods()
     {
-        return $this->hasMany('App\GoodsProduct');
+        return $this->hasMany(Goods::class);
     }
 
     // Режим
     public function mode()
     {
-        return $this->belongsTo('App\GoodsMode', 'goods_mode_id');
+        return $this->belongsTo(GoodsMode::class, 'goods_mode_id');
     }
 
     // Аватар
     public function photo()
     {
-        return $this->belongsTo('App\Photo');
+        return $this->belongsTo(Photo::class);
     }
+
+
+    // Артикулы
+    public function articles()
+    {
+        return $this->belongsToMany(Article::class, 'goods')
+        ->where('draft', false)
+        ->where('goods.archive', false);
+    }
+
 
     // Метрики
-    // Один
-    public function one_metrics()
+    public function metrics()
     {
-        return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'one');
+        return $this->belongsToMany(Metric::class, 'preset_metric', 'category_id', 'metric_id');
     }
 
-    // Набор
-    public function set_metrics()
-    {
-        return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'set');
-    }
+    // Состав
+    // public function compositions()
+    // {
+    //     return $this->belongsToMany(Article::class, 'preset_composition', 'category_id', 'composition_id');
+    // }
 
-    // Состав (только сырье)
     public function compositions()
     {
-        return $this->morphedByMany('App\RawsArticle', 'compositions');
+        return $this->morphToMany(Article::class, 'preset_composition');
     }
+
+    // Один
+    // public function one_metrics()
+    // {
+    //     return $this->morphToMany(Metric::class, 'metric_entity')->where('set_status', 'one');
+    // }
+
+    // // Набор
+    // public function set_metrics()
+    // {
+    //     return $this->morphToMany(Metric::class, 'metric_entity')->where('set_status', 'set');
+    // }
+
+    // Состав (только сырье)
+    // public function compositions()
+    // {
+    //     return $this->morphedByMany(RawsArticle::class, 'compositions');
+    // }
 
     // Производители
     public function manufacturers()
     {
-        return $this->belongsToMany('App\Company', 'goods_category_manufacturer', 'goods_category_id', 'manufacturer_id');
+        return $this->morphToMany(Manufacturer::class, 'categories_manufacturer');
     }
 
     // Направление
     public function direction()
     {
-        return $this->morphOne('App\Direction', 'category')->where('archive', false);
+        return $this->morphOne(Direction::class, 'category');
+        // ->where('archive', false);
+    }
+
+    public function groups()
+    {
+        return $this->morphToMany(ArticlesGroup::class, 'articles_group_entity');
+        // ->where('archive', false);
     }
 
 }

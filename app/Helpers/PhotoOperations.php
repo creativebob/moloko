@@ -267,6 +267,8 @@ function getSettings($entity_alias, $album_id = null) {
     ->whereAlias($entity_alias)
     ->first();
 
+    // dd($entity);
+
     $get_settings = $entity->photo_settings;
 
     if (isset($get_settings)) {
@@ -342,8 +344,10 @@ function setSettings($request, $item) {
 // Путь до аватарки
 function getPhotoPath($item, $size = 'medium') {
 
-    if (isset($item->photo_id)) {
-        return "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
+    if(isset($item->photo_id)) {
+
+        $path = "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
+        return $path;
     } else {
 
         if ($item->getTable() == 'users') {

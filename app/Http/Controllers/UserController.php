@@ -17,6 +17,7 @@ use App\Country;
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserUpdateRequest;
 
 // Политики
 use App\Policies\UserPolicy;
@@ -74,6 +75,8 @@ class UserController extends Controller
         // ->where('id', '!=', $request->user()->id) // Только для сущности USERS
         // ->orWhere('id', $request->user()->id) // Только для сущности USERS
         ->filter($request, 'city_id', 'location')
+        ->booleanArrayFilter($request, 'user_type')
+        ->booleanArrayFilter($request, 'access_block')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
@@ -85,6 +88,8 @@ class UserController extends Controller
 
         $filter = setFilter($this->entity_name, $request, [
             'city',                 // Город
+            'user_type',            // Свой - чужой
+            'access_block',         // Доступ
             'booklist'              // Списки пользователя
         ]);
 
@@ -93,7 +98,7 @@ class UserController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('users.index', compact('users', 'page_info', 'filter', 'user'));
+        return view('users.index', compact('users', 'page_info', 'filter'));
     }
 
     public function create(Request $request)
@@ -124,12 +129,9 @@ class UserController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-
         // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
-        $new_user = new User;
-
         // Отдаем работу по созданию нового юзера трейту
-        $new_user = $this->createUser($request, $new_user);
+        $new_user = $this->createUser($request);
 
         return Redirect('/admin/users');
 
@@ -155,6 +157,7 @@ class UserController extends Controller
             'extra_phones'
         )->moderatorLimit($answer)
         ->findOrFail($id);
+        // dd($user);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
@@ -165,7 +168,7 @@ class UserController extends Controller
         return view('users.edit', compact('user', 'page_info'));
     }
 
-    public function update(UserRequest $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
         // Получаем авторизованного пользователя
         $user_auth = $request->user();

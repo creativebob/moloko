@@ -49,71 +49,57 @@ class Goods extends Model
 
     protected $fillable = [
         'company_id',
-        'goods_article_id',
-        'description',
-        'manually',
-        'external',
-        'manufacturer_id',
-        'cost',
-        'price',
-        'album_id',
-        'photo_id',
-
-        'portion_status',
-        'portion_name',
-        'portion_abbreviation',
-        'portion_count',
-
-        'author_id',
-        'editor_id',
+        'article_id',
+        'goods_category_id',
     ];
 
-    // Артикул товара
+    // Артикул
     public function article()
     {
-        return $this->belongsTo('App\GoodsArticle', 'goods_article_id');
+        return $this->belongsTo(Article::class);
+    }
+
+    // Категория
+    public function category()
+    {
+        return $this->belongsTo(GoodsCategory::class, 'goods_category_id');
     }
 
     // Компания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
 
-    // Альбом
-    public function album()
+    // Метрики
+    public function metrics()
     {
-        return $this->belongsTo('App\Album');
+        return $this->belongsToMany(Metric::class, 'goods_metric', 'goods_id', 'metric_id')
+        ->withPivot('value');
     }
 
-    // Аватар
-    public function photo()
+    // Пункты каталога
+    public function catalogs_items()
     {
-        return $this->belongsTo('App\Photo');
-    }
-
-    // Каталоги
-    public function catalogs()
-    {
-        return $this->morphToMany('App\Catalog', 'catalog_products');
+        return $this->belongsToMany(CatalogsItem::class, 'catalogs_items_goods', 'goods_id', 'catalogs_item_id');
     }
 
     // Рабочие процессы
     public function workflows()
     {
-        return $this->morphMany('App\Workflow', 'workflows');
+        return $this->morphMany(Workflow::class, 'workflows');
     }
 
     // Составы заказов
     public function order_compositions()
     {
-        return $this->morphMany('App\OrderComposition', 'order_compositions');
+        return $this->morphMany(OrderComposition::class, 'order_compositions');
     }
 
 }

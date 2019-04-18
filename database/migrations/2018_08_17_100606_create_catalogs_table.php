@@ -16,25 +16,17 @@ class CreateCatalogsTable extends Migration
         Schema::create('catalogs', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('site_id')->nullable()->unsigned()->comment('ID сайта');
-            $table->foreign('site_id')->references('id')->on('sites');
-
             $table->string('name')->index()->comment('Название каталога');
             $table->string('alias')->index()->nullable()->comment('Алиас');
+
+            $table->integer('catalogs_type_id')->nullable()->unsigned()->comment('Id типа каталога');
+            $table->foreign('catalogs_type_id')->references('id')->on('catalogs_types');
 
             $table->text('description')->nullable()->comment('Описание каталога');
             $table->text('seo_description')->nullable()->comment('Описание для сайта для каталога');
 
             $table->integer('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
             $table->foreign('photo_id')->references('id')->on('photos');
-
-            $table->integer('parent_id')->nullable()->unsigned()->comment('Id категории товара');
-            $table->foreign('parent_id')->references('id')->on('catalogs');
-
-            $table->integer('category_status')->unsigned()->nullable()->comment('Статус категории');
-
-            $table->integer('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
-            $table->foreign('category_id')->references('id')->on('catalogs');
 
 
             // Общие настройки

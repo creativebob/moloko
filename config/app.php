@@ -53,6 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'domain' => env('SITE_DOMAIN'),
 
     /*
     |--------------------------------------------------------------------------
@@ -168,7 +169,7 @@ return [
 
         // Те, что подключаем сами, ручками )))
         Collective\Html\HtmlServiceProvider::class,
-        App\Providers\ComposerServiceProvider::class,
+
         Intervention\Image\ImageServiceProvider::class,
         ElForastero\Transliterate\TransliterationServiceProvider::class,
 
@@ -189,6 +190,9 @@ return [
         Unisharp\Ckeditor\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Telegram\Bot\Laravel\TelegramServiceProvider::class,
+
+        App\Providers\ComposerServiceProvider::class,
+        App\Providers\ObserverServiceProvider::class,
 
 
     ],

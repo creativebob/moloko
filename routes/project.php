@@ -10,16 +10,44 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+// Route::get('/{city}/telegram', 'IndexController@telegram');
 
-// Route::resource('/news', 'Project\NewsProjectController')->middleware('auth');
+// Сбрасываем кеш
+Route::get('/cache/delete/{domain}', 'IndexController@delete_cache');
 
-// Route::resource('/lolkek', 'Project\ServicesProjectController')->middleware('auth');
 
-// Кабинет
-// Route::get('/', function() {
-// 	return 'Сайт';
-// });
+// Первый запуск
+Route::get('/', 'IndexController@start')->name('project.start');
 
+// // База знаний (статична)
+// Route::get('/knowledge/{link}', 'IndexController@knowledge');
+
+// Новости
+// Route::get('/news', 'NewsController@index')->name('news.index');
+
+// Товары
+Route::get('/goods/{catalog_item_id}', 'GoodsController@index')->name('project.goods');
+
+// Коллектив
+// Route::get('/team', 'IndexController@team')->name('team.index');
+
+// Route::any('/team/question', 'IndexController@question')->name('team.question');
 
 // Контакты
-Route::resource('/contacts', 'Project\ContactsProjectController');
+Route::get('/contacts', 'IndexController@contacts')->name('project.contacts');
+
+// Отправка
+Route::post('/sending', 'IndexController@sending')->name('project.sending');
+// Отправлено
+Route::get('/success', 'IndexController@success')->name('project.success');
+// Ошибка
+Route::get('/error', 'IndexController@error')->name('project.error');
+
+// Смена города
+// Route::get('/change_city/{city_id}/{page_alias?}', 'IndexController@change_city')->name('change_city');
+
+// Страницы
+Route::get('/{alias}', 'IndexController@index')->name('project.index');
+// Конкретная страница
+// Route::get('/{city}/{alias}/{link}', 'IndexController@show')->name('show');
+

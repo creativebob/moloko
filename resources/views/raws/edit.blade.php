@@ -35,9 +35,6 @@ $disabled = $raw->article->draft == null;
             <li class="tabs-title">
                 <a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a>
             </li>
-            <li class="tabs-title">
-                <a data-tabs-target="catalogs" href="#catalogs">Каталоги</a>
-            </li>
 
             {{-- @can('index', 'App\Photo') --}}
             <li class="tabs-title">
@@ -53,7 +50,7 @@ $disabled = $raw->article->draft == null;
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            {{ Form::model($raw, [
+            {{ Form::model($article, [
                 'route' => ['raws.update', $raw->id],
                 'data-abide',
                 'novalidate',
@@ -77,19 +74,39 @@ $disabled = $raw->article->draft == null;
                             <div class="small-12 medium-6 cell">
 
                                 <label>Название сырья
-                                    {{ Form::text('name', $raw->article->name, ['required', $disabled]) }}
+                                    {{ Form::text('name', $raw->article->name, ['required']) }}
                                 </label>
 
                                 <label>Группа
-                                    @include('includes.selects.raws_products', ['raws_category_id' => $raw->article->product->raws_category_id, 'set_status' => $raw->article->product->set_status, 'raws_product_id' => $raw->article->raws_product_id])
+                                    @include('includes.selects.articles_groups', [
+                                        'entity' => 'raws_categories',
+                                        'category_id' => $raw->raws_category_id,
+                                        'articles_group_id' => $article->articles_group_id
+                                    ]
+                                    )
                                 </label>
 
                                 <label>Категория
-                                    @include('includes.selects.raws_categories', ['raws_category_id' => $raw->article->product->raws_category_id])
+                                    @include('includes.selects.categories', [
+                                        'name' => 'raws_category_id',
+                                        'entity' => 'raws_categories',
+                                        'category_entity_alias' => 'raws_categories',
+                                        'category_id' => $raw->raws_category_id
+                                    ]
+                                    )
                                 </label>
 
                                 <label>Производитель
-                                    {!! Form::select('manufacturer_id', $raw->article->product->category->manufacturers->pluck('name', 'id'), $raw->article->manufacturer_id, []) !!}
+
+                                    @if ($raw->category->manufacturers->isNotEmpty())
+
+                                    {!! Form::select('manufacturer_id', $raw->category->manufacturers->pluck('company.name', 'id'), $raw->article->manufacturer_id, []) !!}
+
+                                    @else
+
+                                    @include('includes.selects.manufacturers', ['manufacturer_id' => $raw->article->manufacturer_id, 'item' => $raw, 'draft' => $raw->article->draft])
+
+                                    @endif
                                 </label>
 
                                 {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
@@ -115,26 +132,27 @@ $disabled = $raw->article->draft == null;
 
                     {{-- Правый блок на первой вкладке --}}
                     <div class="small-12 large-6 cell">
-                        {{ Form::open(['url' => 'raws', 'data-abide', 'novalidate', 'id' => 'form-raw']) }}
 
                         <fieldset class="fieldset-access">
                             <legend>Артикул</legend>
 
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-4 cell">
-                                    <label>Удобный (вручную)
-                                        {{ Form::text('manually', null, [$disabled]) }}
-                                    </label>
-                                </div>
-                                <div class="small-12 medium-4 cell">
-                                    <label>Программный
-                                        {{ Form::text('internal', null, ['required', 'disabled']) }}
+                                    <label id="loading">Удобный (вручную)
+                                        {{ Form::text('manually', null, ['class' => 'check-field']) }}
+                                        <div class="sprite-input-right find-status"></div>
+                                        <div class="item-error">Такой артикул уже существует!</div>
                                     </label>
                                 </div>
                                 <div class="small-12 medium-4 cell">
                                     <label>Внешний
                                         {{ Form::text('external') }}
                                     </label>
+                                </div>
+
+                                <div class="small-12 medium-4 cell">
+                                    <label>Программный</label>
+                                    {{ $raw->article->internal }}
                                 </div>
                             </div>
                         </fieldset>
@@ -146,7 +164,7 @@ $disabled = $raw->article->draft == null;
                                 </label>
                             </div>
                         </div>
-                        @php
+                        {{-- @php
                         $metric_relation = ($raw->article->product->set_status == 'one') ? 'one_metrics' : 'set_metrics';
                         @endphp
 
@@ -159,7 +177,7 @@ $disabled = $raw->article->draft == null;
 
                             <div id="metrics-list">
 
-                                {{-- Если уже сохранили метрики товара, то тянем их с собой --}}
+                                {{-- Если уже сохранили метрики товара, то тянем их с собой
                                 @if ($raw->article->metrics->isNotEmpty())
                                 @foreach ($raw->article->metrics->unique() as $metric)
                                 @include('includes.metrics.metric_input', $metric)
@@ -176,232 +194,162 @@ $disabled = $raw->article->draft == null;
                                 @endif
 
                             </div>
-                        </fieldset>
+                        {{-- </fieldset>
 
+                            @endif --}}
+
+                            <div id="raw-inputs"></div>
+                            <div class="small-12 cell tabs-margin-top text-center">
+                                <div class="item-error" id="raw-error">Такой артикул уже существует!<br>Измените значения!</div>
+                            </div>
+                            {{ Form::hidden('raw_id', $raw->id) }}
+                        </div>
+                        {{-- Конец правого блока на первой вкладке --}}
+
+                        {{-- Чекбокс черновика --}}
+                        @if ($article->draft == 1)
+                        <div class="small-12 cell checkbox">
+                            {{ Form::checkbox('draft', 1, $article->draft, ['id' => 'draft']) }}
+                            <label for="draft"><span>Черновик</span></label>
+                        </div>
                         @endif
 
-                        <div id="raw-inputs"></div>
-                        <div class="small-12 cell tabs-margin-top text-center">
-                            <div class="item-error" id="raw-error">Такой артикул уже существует!<br>Измените значения!</div>
+                        {{-- Чекбоксы управления --}}
+                        @include('includes.control.checkboxes', ['item' => $raw])
+
+                        {{-- Кнопка --}}
+                        <div class="small-12 cell tabs-button tabs-margin-top">
+                            {{ Form::submit('Редактировать сырьё', ['class'=>'button', 'id' => 'add-raws']) }}
                         </div>
-                        {{ Form::hidden('raw_id', $raw->id) }}
-                    </div>
-                    {{-- Конец правого блока на первой вкладке --}}
-
-                    {{-- Чекбокс черновика --}}
-                    @if ($raw->article->draft == 1)
-                    <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('draft', 1, $raw->article->draft, ['id' => 'draft']) }}
-                        <label for="draft"><span>Черновик</span></label>
-                    </div>
-                    @endif
-
-                    {{-- Чекбоксы управления --}}
-                    @include('includes.control.checkboxes', ['item' => $raw])
-
-                    {{-- Кнопка --}}
-                    <div class="small-12 cell tabs-button tabs-margin-top">
-                        {{ Form::submit('Редактировать сырьё', ['class'=>'button', 'id' => 'add-raws']) }}
-                    </div>
-
-                </div>
-            </div>
-
-            {{-- Ценообразование --}}
-            <div class="tabs-panel" id="price-rules">
-                <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-6 cell">
-
-                        <fieldset class="fieldset-access">
-                            <legend>Базовые настройки</legend>
-
-                            <div class="grid-x grid-margin-x">
-                                <div class="small-12 medium-6 cell">
-                                    <label>Себестоимость
-                                        {{ Form::number('cost', $raw->cost) }}
-                                    </label>
-                                </div>
-                                <div class="small-12 medium-6 cell">
-                                    <label>Цена за (<span id="unit">{{ ($raw->portion_status == null) ?$raw->article->product->unit->abbreviation : 'порцию' }}</span>)
-                                        {{ Form::number('price', $raw->price) }}
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-
-                        <fieldset class="fieldset portion-fieldset" id="portion-fieldset">
-                            <legend class="checkbox">
-                                {{ Form::checkbox('portion_status', 1, $raw->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) }}
-                                <label for="portion">
-                                    <span id="portion-change">Принимать порциями</span>
-                                </label>
-
-                            </legend>
-
-                            <div class="grid-x grid-margin-x" id="portion-block">
-                                <div class="small-12 cell @if ($raw->portion_status == null) portion-hide @endif">
-                                    <label>Имя&nbsp;порции
-                                        {{ Form::text('portion_name', $raw->portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
-                                    </label>
-                                </div>
-                                <div class="small-6 cell @if ($raw->portion_status == null) portion-hide @endif">
-                                    <label>Сокр.&nbsp;имя
-                                        {{ Form::text('portion_abbreviation',  $raw->portion_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
-                                    </label>
-                                </div>
-                                <div class="small-6 cell @if ($raw->portion_status == null) portion-hide @endif">
-                                    <label>Кол-во,&nbsp;{{ $raw->article->product->unit->abbreviation }}
-                                        {{-- Количество чего-либо --}}
-                                        {{ Form::text('portion_count', $raw->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
-                                        <div class="sprite-input-right find-status" id="name-check"></div>
-                                        <span class="form-error">Введите количество</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Каталоги -->
-            <div class="tabs-panel" id="catalogs">
-                <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-6 cell">
-
-
-                        <fieldset class="fieldset-access">
-                            <legend>Каталоги</legend>
-
-                            {{-- Form::select('catalogs[]', $catalogs_list, $raw->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
-                            @include('includes.selects.catalogs_chosen', ['parent_id' => $raw->catalogs->keyBy('id')->toArray()])
-
-                        </fieldset>
-                    </div>
-                </div>
-            </div>
-            {{ Form::close() }}
-
-            {{-- @can('index', 'App\Photo') --}}
-            {{-- Фотографии --}}
-            <div class="tabs-panel" id="photos">
-                <div class="grid-x grid-padding-x">
-
-                    <div class="small-12 medium-7 cell">
-
-                        {{-- @can('create', 'App\Photo') --}}
-                        {!!  Form::open([
-                            'route' => 'photos.ajax_store',
-                            'data-abide',
-                            'novalidate',
-                            'files' => 'true',
-                            'class' => 'dropzone',
-                            'id' => 'my-dropzone'
-                        ]
-                        ) !!}
-
-                        {!! Form::hidden('name', $raw->article->name) !!}
-                        {!! Form::hidden('id', $raw->id) !!}
-                        {!! Form::hidden('entity', 'raws') !!}
-                        {{-- {!! Form::hidden('album_id', $cur_goods->album_id) !!} --}}
-
-                        {!! Form::close() !!}
-                        {{-- @endcan --}}
-
-                        <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
-
-                            @isset($raw->album_id)
-                            {{-- @foreach ($item->album->photos as $photo) --}}
-                            @include('photos.photos', ['item' => $raw])
-                            {{-- @endforeach --}}
-                            @endisset
-
-                        </ul>
-
-                    </div>
-
-                    <div class="small-12 medium-5 cell" id="photo-edit-partail">
-
-                        {{-- Форма редактированя фотки --}}
 
                     </div>
                 </div>
-            </div>
-            {{-- @endcan --}}
 
+                {{-- Ценообразование --}}
+                <div class="tabs-panel" id="price-rules">
+                    <div class="grid-x grid-padding-x">
+                        <div class="small-12 medium-6 cell">
+
+                            <fieldset class="fieldset-access">
+                                <legend>Базовые настройки</legend>
+
+                                <div class="grid-x grid-margin-x">
+                                    <div class="small-12 medium-6 cell">
+                                        <label>Себестоимость
+                                            {{ Form::number('cost_default', $article->cost_default) }}
+                                        </label>
+                                    </div>
+                                    <div class="small-12 medium-6 cell">
+                                        <label>Цена за (<span id="unit">{{ ($article->portion_status == null) ? $article->group->unit->abbreviation : 'порцию' }}</span>)
+                                            {{ Form::number('price_default', $article->price_default) }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset class="fieldset portion-fieldset" id="portion-fieldset">
+                                <legend class="checkbox">
+                                    {{ Form::checkbox('portion_status', 1, $article->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) }}
+                                    <label for="portion">
+                                        <span id="portion-change">Принимать порциями</span>
+                                    </label>
+
+                                </legend>
+
+                                <div class="grid-x grid-margin-x" id="portion-block">
+                                    <div class="small-12 cell @if ($article->portion_status == null) portion-hide @endif">
+                                        <label>Имя&nbsp;порции
+                                            {{ Form::text('portion_name', $article->portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
+                                        </label>
+                                    </div>
+                                    <div class="small-6 cell @if ($article->portion_status == null) portion-hide @endif">
+                                        <label>Сокр.&nbsp;имя
+                                            {{ Form::text('portion_abbreviation',  $article->portion_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
+                                        </label>
+                                    </div>
+                                    <div class="small-6 cell @if ($article->portion_status == null) portion-hide @endif">
+                                        <label>Кол-во,&nbsp;{{ $article->group->unit->abbreviation }}
+                                            Количество чего-либо
+                                            {{ Form::text('portion_count', $article->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : '']) }}
+                                            <div class="sprite-input-right find-status" id="name-check"></div>
+                                            <span class="form-error">Введите количество</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                        </div>
+                    </div>
+                </div>
+
+                {{ Form::close() }}
+
+                {{-- @can('index', 'App\Photo') --}}
+                {{-- Фотографии --}}
+                <div class="tabs-panel" id="photos">
+                    <div class="grid-x grid-padding-x">
+
+                        <div class="small-12 medium-7 cell">
+
+                            {{-- @can('create', 'App\Photo') --}}
+                            {!!  Form::open([
+                                'route' => 'photos.ajax_store',
+                                'data-abide',
+                                'novalidate',
+                                'files' => 'true',
+                                'class' => 'dropzone',
+                                'id' => 'my-dropzone'
+                            ]
+                            ) !!}
+
+                            {!! Form::hidden('name', $article->name) !!}
+                            {!! Form::hidden('id', $article->id) !!}
+                            {!! Form::hidden('entity', 'articles') !!}
+                            {{-- {!! Form::hidden('album_id', $cur_goods->album_id) !!} --}}
+
+                            {!! Form::close() !!}
+                            {{-- @endcan --}}
+
+                            <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
+
+                                @isset($raw->album_id)
+                                {{-- @foreach ($item->album->photos as $photo) --}}
+                                @include('photos.photos', ['item' => $raw])
+                                {{-- @endforeach --}}
+                                @endisset
+
+                            </ul>
+
+                        </div>
+
+                        <div class="small-12 medium-5 cell" id="photo-edit-partail">
+
+                            {{-- Форма редактированя фотки --}}
+
+                        </div>
+                    </div>
+                </div>
+                {{-- @endcan --}}
+
+            </div>
         </div>
     </div>
-</div>
-@endsection
+    @endsection
 
-@section('scripts')
-<script>
+    @push('scripts')
+    <script>
 
     // Основные настройки
-    var raw_id = '{{ $raw->id }}';
-    var set_status = '{{ $raw->article->product->set_status }}';
+    var item_id = '{{ $raw->id }}';
     var entity = 'raws';
-
-    var metrics_count = '{{ count($raw->article->metrics) }}';
-
-    if (set_status == 'one') {
-        var compositions_count = 0;
-    }
-
-    var category_id = '{{ $raw->article->product->category_id }}';
-
-    var unit = '{{ $raw->article->product->unit->abbreviation }}';
+    var category_entity = 'raws_categories';
+    var metrics_count = 0;
+    var set_status = '{{ $raw->set_status }}';
+    var category_id = '{{ $raw->raws_category_id }}';
+    var unit = 'шт';
 
     // Мульти Select
     $(".chosen-select").chosen({width: "95%"});
-
-    $(document).on('change', '#select-raws_categories', function(event) {
-        event.preventDefault();
-
-        // Меняем группы
-        $.post('/admin/raws_products_list', {raws_category_id: $(this).val(), raws_product_id: $('#select-raws_products').val(), set_status: set_status}, function(list){
-            // alert(html);
-            $('#select-raws_products').replaceWith(list);
-        });
-    });
-
-    $(document).on('click', '#portion', function() {
-        $('#portion-block div').toggle();
-        // $('#portion-fieldset').toggleClass('portion-fieldset');
-        $('#unit').text( $(this).prop('checked') ? 'порцию' : unit );
-    });
-
-    // Проверяем наличие артикула в базе при клике на кнопку добавления артикула
-    // $(document).on('click', '#add-cur-raws', function(event) {
-    //     event.preventDefault();
-    //     // alert($('#form-raw').serialize());
-    //     // alert(raw_id);
-
-    //     $.ajax({
-    //         headers: {
-    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //         },
-    //         url: '/admin/raws/' + raw_id,
-    //         type: 'PATCH',
-    //         data: $('#form-raw').serialize(),
-    //         success: function(data) {
-    //             var result = $.parseJSON(data);
-    //             // alert(result['error_status']);
-    //             // alert(data['metric_values']);
-    //             if (result['error_status'] == 1) {
-    //                 $('#add-cur-raws').prop('disabled', true);
-    //                 $('#cur-raws-error').css('display', 'block');
-    //             } else {
-
-    //             }
-    //         }
-    //     })
-    // });
-
-    // $(document).on('change', '#form-raw input', function() {
-    //     // alert('lol');
-    //     $('#add-cur-raws').prop('disabled', false);
-    //     $('#cur-raws-error').hide();
-    // });
 
     // При смнене свойства в select
     $(document).on('change', '#properties-select', function() {
@@ -513,18 +461,6 @@ $disabled = $raw->article->draft == null;
         $('.checkboxer-title .form-error').hide();
     });
 
-    // Валидация группы чекбоксов
-    // $(document).on('click', '.checkbox-group input:checkbox', function() {
-    //     let id = $(this).closest('.dropdown-pane').attr('id');
-    //     if ($(this).closest('.checkbox-group').find("input:checkbox:checked").length == 0) {
-    //         $('div[data-toggle=' + id + ']').find('.form-error').show();
-    //         $('#add-cur-raws').prop('disabled', true);
-    //     } else {
-    //         $('div[data-toggle=' + id + ']').find('.form-error').hide();
-    //         $('#add-cur-raws').prop('disabled', false);
-    //     };
-    // });
-
     // Валидация при клике на кнопку
     $(document).on('click', '#add-raws', function(event) {
         let error = 0;
@@ -541,14 +477,22 @@ $disabled = $raw->article->draft == null;
         }
     });
 
-
-
 </script>
+
+@include('includes.edit_operations.change_articles_groups_script')
+@include('includes.edit_operations.change_portions_script')
 
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
-@include('raws.scripts')
-@include('includes.scripts.dropzone', ['settings' => $settings, 'item_id' => $raw->id])
+@include('includes.scripts.dropzone', [
+    'settings' => $settings,
+    'item_id' => $raw->id
+]
+)
 {{-- Проверка поля на существование --}}
-@include('includes.scripts.check')
-@endsection
+@include('includes.scripts.check', [
+    'entity' => 'articles',
+    'id' => $article->id
+]
+)
+@endpush

@@ -10,6 +10,11 @@
 			@include('includes.inputs.checkboxer', ['name'=>'sector', 'value'=>$filter])			
  		</div>
  	</div>
+	<div class="grid-x">
+ 		<div class="small-12 medium-6 cell">
+			@include('includes.inputs.checkboxer', ['name'=>'manufacturer_country', 'value'=>$filter])			
+ 		</div>
+ 	</div>
 </div>
 <div class="small-12 medium-6 large-6 cell checkbox checkboxer">
 	<legend>Мои списки:</legend>

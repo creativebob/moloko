@@ -48,8 +48,8 @@ class Client extends Model
 
     // protected $dates = ['deleted_at'];
     protected $fillable = [
-        'company_id', 
-        'client_id', 
+        'company_id',
+        'client_id',
     ];
 
     // Получаем автора
@@ -70,22 +70,34 @@ class Client extends Model
         return $this->morphToMany('App\Phone', 'phone_entity')->wherePivot('main', '=', 1)->whereNull('archive')->withPivot('archive');
     }
 
-    // Получаем комментарии
-    public function client()
+    // Получаем компанию или пользователя
+    public function clientable()
     {
         return $this->morphTo();
     }
 
-    // // Получаем компанию
-    // public function company()
+
+    // // Получаем комментарии
+    // public function agent()
     // {
-    //     return $this->belongsTo('App\Company', 'company_id');
+    //     return $this->morphOne(Company::class, 'clientable');
     // }
+
+    // // Получаем компанию
+    public function company()
+    {
+        return $this->belongsTo('App\Company', 'clientable_id');
+    }
+
+
 
     // Получаем заказы
     public function orders()
     {
-        return $this->hasMany('App\Order', 'client_id');
+        return $this->hasMany('App\Estimate', 'client_id');
     }
+
+
+
 
 }

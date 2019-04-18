@@ -16,7 +16,7 @@
             @endif
             @if(!empty($supplier))
             <li class="tabs-title">
-                <a data-tabs-target="content-panel-supplier" href="#content-panel-supplier">Рабочая информация</a>
+                <a data-tabs-target="content-panel-supplier" href="#content-panel-supplier">Информация о поставщике</a>
             </li>
             @endif
             @if(!empty($client))
@@ -27,6 +27,9 @@
 
             <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Реквизиты</a></li>
             <li class="tabs-title"><a data-tabs-target="content-panel-4" href="#content-panel-4">График работы</a></li>
+
+            <li class="tabs-title"><a data-tabs-target="content-panel-about" href="#content-panel-about">Описание</a></li>
+
             <li class="tabs-title"><a data-tabs-target="content-panel-5" href="#content-panel-5">Настройка</a></li>
         </ul>
     </div>
@@ -115,7 +118,7 @@
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
                         <label>Комментарий к дилеру
-                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$dealer->description])
+                            @include('includes.inputs.textarea', ['name'=>'description_dealer', 'value'=>$dealer->description_dealer])
                         </label>
                     </div>
                     <div class="small-6 medium-3 cell">
@@ -143,7 +146,7 @@
                         @include('includes.inputs.checker_contragents', [
                             'entity' => $supplier,
                             'title' => 'Производители',
-                            'name' => 'manufacturers'
+                            'name' => 'manufacturers',
                         ]
                         )
 
@@ -165,6 +168,7 @@
             @endif
 
             @if(!empty($client))
+
             <!-- Блок клиента -->
             <div class="tabs-panel" id="content-panel-client">
                 <div class="grid-x grid-padding-x">
@@ -181,6 +185,7 @@
                 </div>
             </div>
             <!-- Конец блока клиента -->
+            
             @endif
 
 
@@ -218,9 +223,27 @@
                 </div>
 
 
-
             </div>
             <!-- Конец реквизиты -->
+
+
+            <!-- Описание компании -->
+            <div class="tabs-panel" id="content-panel-about">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-12 cell">
+                        <label>Информация о компании:
+                            {{ Form::textarea('about', $company->about, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
+                        </label><br>
+                    </div>
+                    <div class="small-12 medium-12 cell">
+                        <label>Description (Описание для SEO)
+                            @include('includes.inputs.textarea', ['name'=>'seo_description', 'value'=>$company->seo_description])
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- Конец описания компании -->
+
 
             <!-- Настройки -->
             <div class="tabs-panel" id="content-panel-5">
@@ -245,6 +268,19 @@
                         {{ Form::checkbox('external_control', 1, null, ['id' => 'external_control']) }}
                         <label for="external_control"><span>Внешний контроль</span></label>
                     </div>
+
+
+                    {{-- Только для формы редактирования компании предлагаем указать связь с собой как с производителем
+                    Поле manufacturer_self приходит только с контроллера Company --}}
+
+                    @if(isset($company->manufacturer_self))
+                        @if($company->manufacturer_self == false)
+                            <div class="small-12 cell checkbox">
+                                {{ Form::checkbox('manufacturer_self', 1, $company->manufacturer_self, ['id' => 'manufacturer_self']) }}
+                                <label for="manufacturer_self"><span>Производитель</span></label>
+                            </div>
+                        @endif
+                    @endif
 
                     {{-- Чекбоксы управления --}}
                     @include('includes.control.checkboxes', ['item' => $company])
@@ -285,6 +321,46 @@
             </div>
             <!-- Конец блока дилера -->
             @endif
+
+
+
+            @if(!empty($user))
+            <!-- Блок дилера -->
+            <div class="small-12 medium-6 cell">
+            </div>
+            <div class="small-12 medium-6 cell">
+                <div class="small-12 large-6 cell">
+                    <fieldset>
+                        <legend>Директор (руководитель)</legend>
+                        <div class="grid-x grid-padding-x">
+                            <div class="small-12 cell">
+                                <label>Фамилия
+                                    @include('includes.inputs.name', ['name'=>'second_name', 'value'=>$user->second_name, 'required' => true])
+                                </label>
+                            </div>
+                            <div class="small-12 cell">
+                                <label>Имя
+                                    @include('includes.inputs.name', ['name'=>'first_name', 'value'=>$user->first_name, 'required' => true])
+                                </label>
+                            </div>
+                            <div class="small-12 cell">
+                                <label>Отчество
+                                    @include('includes.inputs.name', ['name'=>'patronymic', 'value'=>$user->patronymic])
+                                </label>
+                            </div>
+                            <div class="small-12 medium-6 cell">
+                                <label>Телефон
+                                    @include('includes.inputs.phone', ['value' => isset($user->main_phone->phone) ? $user->main_phone->phone : null, 'name'=>'main_phone', 'required' => true, 'id' => 'main-phone'])
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <!-- Конец блока дилера -->
+            @endif
+
+
 
         </div>
     </div>

@@ -13,7 +13,7 @@ class ChallengesTypesTableSeeder extends Seeder
     {
         DB::table('challenges_types')->insert([
         	[
-		        'name' => 'Нет',
+		        'name' => 'Встреча',
 		        'description' => null,
                 'author_id' => 1,
         	],

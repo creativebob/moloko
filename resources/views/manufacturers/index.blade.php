@@ -32,9 +32,8 @@
           <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-name" data-serversort="name">Название производителя</th>
-          <th class="td-address">Адрес</th>
-          <th class="td-phone">Телефон</th>
-          <th class="td-user_id">Руководитель</th>
+          <th class="td-sector">Направление</th>
+          <th class="td-phone">Контактный телефон</th>
           <th class="td-control"></th>
           <th class="td-delete"></th>
         </tr>
@@ -67,15 +66,18 @@
             @if($edit == 1)
             <a href="manufacturers/{{ $manufacturer->id }}/edit">
               @endif
-              {{ $manufacturer->company->name }}
+              {{ $manufacturer->company->name }} ({{ $manufacturer->company->legal_form->name or '' }})
               @if($edit == 1)
             </a>
             @endif
+
+
+            <br><span class="tiny-text">{{ $manufacturer->company->location->country->name }}</span>
           </td>
+          <td class="td-sector">{{ $manufacturer->company->sector->name or ' ... ' }} </td>
+
           {{-- Если пользователь бог, то показываем для него переключатель на компанию --}}
-          <td class="td-address">@if(!empty($manufacturer->company->location->address)){{ $manufacturer->company->location->address }}@endif </td>
           <td class="td-phone">{{ isset($manufacturer->company->main_phone->phone) ? decorPhone($manufacturer->company->main_phone->phone) : 'Номер не указан' }}</td>
-          <td class="td-user_id">{{ $manufacturer->company->director->first_name or ' ... ' }} {{ $manufacturer->company->director->second_name or ' ... ' }} </td>
 
           {{-- Элементы управления --}}
           @include('includes.control.table-td', ['item' => $manufacturer])

@@ -208,7 +208,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
 
                     {{-- Exсel --}}
                     @yield('exсel')
-                    
+
                 </div>
             </div>
 
@@ -307,5 +307,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
 </script>
 {{-- Наши скрипты --}}
 @yield('scripts')
+
+@stack('scripts')
 </body>
 </html>

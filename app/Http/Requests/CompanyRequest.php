@@ -27,7 +27,7 @@ class CompanyRequest extends FormRequest
 
             'name' => 'string|max:255|required', 
             // 'alias' => 'string|max:255|alpha|unique:companies', 
-             'alias' => 'string|max:255|alpha',
+             'alias' => 'string|max:255|alpha_dash|nullable',
 
             'main_phone' => 'string|max:17|required',
             'extra_phones.*' => 'string|max:17|nullable',

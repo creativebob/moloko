@@ -13,13 +13,13 @@ use App\Right;
 // Модели которые отвечают за работу с правами + политики
 use App\RightsRole;
 use App\Role;
-use App\Policies\EntityPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
+use App\Http\Requests\EntityRequest;
 
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
@@ -147,6 +147,9 @@ class EntityController extends Controller
         // if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
         // $entity->filial_id = $filial_id;
 
+        //  Тмц
+        $this->tmc($request, $entity);
+
         $entity->save();
 
         // Настройки фотографий
@@ -259,6 +262,9 @@ class EntityController extends Controller
         $entity->statistic = $request->has('statistic');
         $entity->dependence = $request->has('dependence');
 
+        //  Тмц
+        $this->tmc($request, $entity);
+
         $entity->save();
 
         // Настройки фотографий
@@ -301,5 +307,17 @@ class EntityController extends Controller
             Entity::where('id', $item)->update(['sort' => $i]);
             $i++;
         }
+    }
+
+
+    // ------------------------------------------------ Общие методы ---------------------------------
+    public function tmc($request, $entity)
+    {
+        if ($request->has('tmc')) {
+            $entity->tmc = 1;
+            $entity->consist_id = $request->consist_id;
+        }
+
+        return $entity;
     }
 }

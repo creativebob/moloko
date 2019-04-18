@@ -22,12 +22,18 @@
 
 	<ul class="checkboxer-menu {{$name}}" data-name="{{$name}}">
 
-
-
 			@foreach ($contragents as $contragent)
 				<li>
-					{{ Form::checkbox($name . '[]', $contragent->id, null, ['id'=>$name.'-'.$contragent->id]) }}
-					<label for="{{$name}}-{{ $contragent->id }}"><span class="wrap-label-checkboxer">{{ $contragent->name }}</span></label>
+					@php
+						if($manufacturers_list->count() == 0){
+							$val = false;
+						} else {
+							$val = $manufacturers_list;
+						}
+					@endphp
+
+					{{ Form::checkbox($name . '[]', $contragent->id, $val, ['id'=>$name.'-'.$contragent->id]) }}
+					<label for="{{$name}}-{{ $contragent->id }}"><span class="wrap-label-checkboxer">{{ $contragent->company->name }}</span></label>
 				</li>
 			@endforeach
 

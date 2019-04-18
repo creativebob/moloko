@@ -595,6 +595,47 @@
         // ----------------------------------------------------------------------------
 
 
+        // ФИЛЬТР ПО СТРАНЕ ПРОИЗВОДИТЕЛЮ ---------------------------------------------
+        if($name_filter == 'manufacturer_country'){
+
+            $filter[$name_filter]['title'] = 'Страна производителя:';                                   // Назавние фильтра
+            $column = 'country_id';                                                                     // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterManufacturerCountryList();     // Генерируем список 
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО АКТИВНЫМ ЗАДАЧАМ---- ---------------------------------------------
+        if($name_filter == 'challenges_active_count'){
+
+            $filter[$name_filter]['title'] = 'Активные задачи:';                                        // Назавние фильтра
+            $column = 'challenges_active_count';                                                        // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterCACList();                     // Генерируем список
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО ТИПУ ПОЛЬЗОВАТЕЛЯ ------------------------------------------------
+        if($name_filter == 'user_type'){
+
+            $filter[$name_filter]['title'] = 'Тип пользователя:';
+            $column = 'user_type';
+            $filter[$name_filter]['list_select']['item_list'] = getFilterUserTypeList();
+        }
+        // ----------------------------------------------------------------------------
+
+
+        // ФИЛЬТР ПО БЛОКИРОВКЕ ПОЛЬЗОВАТЕЛЯ ------------------------------------------
+        if($name_filter == 'access_block'){
+
+            $filter[$name_filter]['title'] = 'Доступ:';
+            $column = 'access_block';
+            $filter[$name_filter]['list_select']['item_list'] = getFilterAccessBlockList();
+        }
+        // ----------------------------------------------------------------------------
+
+
+
         // ОБЩИЕ ДЛЯ ФИЛЬТРА НАСТРОЙКИ ====================================================
 
         // Проверка на пустоту данных которые пришли из URL по текущему фильтру
@@ -770,6 +811,42 @@
         ->get()->pluck('name', 'id')->toArray();
         return $places_types;
 
+    }
+
+    function getFilterManufacturerCountryList(){
+
+        $country_id = App\Manufacturer::with('company.location.country')->get()->pluck('company.location.country.id')->toArray();
+        $countries = App\Country::whereIn('id', $country_id)->get()->sortByDesc('name')->pluck('name', 'id')->toArray();
+        if(isset($countries)){asort($countries);}
+        return $countries;
+
+    }
+
+    function getFilterCACList(){
+        $array = [
+            1 => 'Есть активные задачи',
+            0 => 'Нет задач'
+        ];
+
+        return $array;
+    }
+
+    function getFilterUserTypeList(){
+        $array = [
+            0 => 'Чужой',
+            1 => 'Свой'
+        ];
+
+        return $array;
+    }
+
+    function getFilterAccessBlockList(){
+        $array = [
+            0 => 'Открыт',
+            1 => 'Блокирован'
+        ];
+
+        return $array;
     }
 
 ?>

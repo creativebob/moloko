@@ -107,30 +107,14 @@ class MenuController extends Controller
 
         $menu->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
 
+        $menu->new_blank = $request->has('new_blank');
+
         $menu->save();
 
         // Если к пункту меню привязана страница и мы выключаем/вкючаем его отображение на сайте, то и меняем отображение и у страницы
-        if (isset($menu->page_id)) {
-
-            $menu->page()->save(['display' => $request->display]);
-
-            // Находим страницу
-            // $page = Page::where('id', $request->page_id)
-            // ->first();
-
-            // if ($request->display == 1) {
-            //     $page->display = 1;
-            // } else {
-            //     $page->display = null;
-            // }
-
-            // $page->save();
-
-            // // Если страница не обновилась
-            // if ($page == false) {
-            //     abort(403, 'Ошибка при изменении страницы связанной с пунктом меню');
-            // }
-        }
+        // if (isset($menu->page_id)) {
+        //     $menu->page()->save(['display' => $request->display]);
+        // }
 
         if ($menu) {
 
@@ -188,7 +172,6 @@ class MenuController extends Controller
         // Заполнение и проверка основных полей в трейте
         $menu = $this->updateCategory($request, $menu);
 
-        $menu->navigation_id = $navigation_id;
         $menu->page_id = $request->page_id;
 
         $menu->icon = $request->icon;
@@ -196,14 +179,14 @@ class MenuController extends Controller
 
         $menu->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
 
+        $menu->new_blank = $request->has('new_blank');
+
         $menu->save();
 
         // Если к пункту меню привязана страница и мы выключаем/вкючаем его отображение на сайте, то и меняем отображение и у страницы
-        if (isset($menu->page_id)) {
-
-            $menu->page()->save(['display' => $request->display]);
-
-        }
+        // if (isset($menu->page_id)) {
+        //     $menu->page()->save(['display' => $request->display]);
+        // }
 
         // dd($menu);
         if ($menu) {

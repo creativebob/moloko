@@ -13,6 +13,8 @@
 
             <fieldset>
                 <legend>
+
+                
                     <div class="switch alt-switch tiny">
                         {{ Form::checkbox('private_status', null, $lead->private_status, ['id'=>'private_status', 'class' =>'switch-input']) }}
 

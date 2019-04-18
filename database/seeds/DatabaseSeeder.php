@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(RegionsTableSeeder::class);
         // $this->call(CitiesTableSeeder::class);
 
-        // // Локации
+        // Локации
         // $this->call(LocationsTableSeeder::class);
 
         // Пользователи
@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
 
         // Сущности
         $this->call(EntitiesTableSeeder::class);
+        $this->call(BooklistTypesTableSeeder::class);
 
         // Действия над сущностями
         $this->call(ActionsTableSeeder::class);
@@ -100,6 +101,10 @@ class DatabaseSeeder extends Seeder
         // Настройки должности
         $this->call(WidgetsTableSeeder::class);
         $this->call(NotificationsTableSeeder::class);
+
+        $this->call(CatalogsTypesTableSeeder::class);
+
+        $this->call(StartTableSeeder::class);
 
 
     }

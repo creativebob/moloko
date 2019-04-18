@@ -62,12 +62,6 @@
 {{-- Скрипты --}}
 @include('menus.scripts')
 
-{{-- Скрипт модалки удаления ajax --}}
-@include('includes.scripts.delete-ajax-script')
-
-{{-- Маска ввода --}}
-@include('includes.scripts.inputs-mask')
-
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
 
@@ -77,12 +71,4 @@
 {{-- Скрипт системной записи --}}
 @include('includes.scripts.ajax-system')
 
-<script type="text/javascript">
-
-    $(function() {
-
-
-    });
-
-</script>
 @endsection

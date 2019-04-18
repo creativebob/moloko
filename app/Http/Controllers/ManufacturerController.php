@@ -69,13 +69,21 @@ class ManufacturerController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
 
-        $manufacturers = Manufacturer::with('author', 'company')
-        ->companiesLimit($answer)
-        ->where('company_id', '!=', null)
 
+        // $manufacturers = Manufacturer::with('author', 'company')
+        // ->companiesLimit($answer)
+        // ->where('company_id', '!=', null)
+
+
+        $manufacturers = Manufacturer::with('author', 'company.location.country', 'company.sector', 'company.legal_form')
+        ->companiesLimit($answer)
+        ->where('archive', 0)
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
+        ->whereHas('company', function($q) use ($request){
+            $q->filter($request, 'country_id', 'location');
+        })
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
@@ -86,7 +94,7 @@ class ManufacturerController extends Controller
         // -----------------------------------------------------------------------------------------------------------
 
         $filter = setFilter($this->entity_name, $request, [
-            'city',                 // Город
+            'manufacturer_country', // Страна производителя
             'sector',               // Направление деятельности
             'booklist'              // Списки пользователя
         ]);
@@ -143,9 +151,7 @@ class ManufacturerController extends Controller
         $manufacturer->manufacturer_id = $new_company->id;
 
         // Запись информации по производителю:
-        // ...
-
-
+        $manufacturer->description_manufacturer = $request->description_manufacturer;
         $manufacturer->save();
 
         return redirect('/admin/manufacturers');
@@ -196,6 +202,8 @@ class ManufacturerController extends Controller
 
         $this->authorize(getmethod(__FUNCTION__), $company);
 
+
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
@@ -232,10 +240,8 @@ class ManufacturerController extends Controller
         // Отдаем работу по редактировнию компании трейту
         $this->updateCompany($request, $manufacturer->company);
 
-        // Обновление информации по производителю:
-        // ...
-        
-        
+        // Запись информации по производителю:
+        $manufacturer->description_manufacturer = $request->description_manufacturer;
         $manufacturer->save();
 
         return redirect('/admin/manufacturers');
@@ -260,10 +266,16 @@ class ManufacturerController extends Controller
 
             // Скрываем бога
             $user_id = hideGod($user);
+
             $manufacturer->editor_id = $user_id;
+
+            // Архивируем связь
+            $manufacturer->archive = 1;
+
             $manufacturer->save();
 
-            $manufacturer = Manufacturer::destroy($id);
+            // Удаляем наглухо: мягко
+            // $manufacturer = Manufacturer::destroy($id);
 
             // Удаляем компанию с обновлением
             if($manufacturer) {

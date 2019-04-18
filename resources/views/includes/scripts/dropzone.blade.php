@@ -1,5 +1,8 @@
 <script type="text/javascript">
 
+    @isset ($entity)
+    var entity = '{{ $entity }}';
+    @endisset
     var item_id = '{{ $item_id }}';
 
     // При клике на фотку подствляем ее значения в блок редактирования
@@ -59,7 +62,10 @@
             this.on("success", function(file, responseText) {
                 file.previewTemplate.setAttribute('id',responseText[0].id);
 
-                $.post('/admin/photo_index', {id: item_id, entity: entity}, function(html){
+                $.post('/admin/photo_index', {
+                    id: item_id,
+                    entity: entity
+                }, function(html){
                     // alert(html);
                     $('#photos-list').html(html);
                 })

@@ -6,8 +6,9 @@
 	</div>
 
 	{{ Form::model($item, ['id' => 'form-edit', 'data-abide', 'novalidate']) }}
+	{{-- {{ method_field('PATCH') }} --}}
 
-	@include('includes.menu_views.modal', ['submit_text' => 'Редактировать', 'class' => 'submit-edit'])
+	@include('includes.menu_views.form', ['submit_text' => 'Редактировать', 'class' => 'submit-edit'])
 
 	{{ Form::close() }}
 

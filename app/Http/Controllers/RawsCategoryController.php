@@ -38,12 +38,18 @@ class RawsCategoryController extends Controller
 
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $raws_categories = RawsCategory::moderatorLimit($answer)
+        $raws_categories = RawsCategory::with([
+            'raws',
+            'childs',
+            'groups'
+        ])
+        ->withCount('childs')
+        ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->template($answer)
-        ->withCount('products')
+        // ->withCount('products')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
@@ -59,7 +65,7 @@ class RawsCategoryController extends Controller
                     'type' => $this->type,
                     'count' => $raws_categories->count(),
                     'id' => $request->id,
-                    'nested' => 'raws_products_count',
+                    // 'nested' => 'raws_products_count',
                 ]
             );
         }
@@ -73,7 +79,7 @@ class RawsCategoryController extends Controller
                 'class' => $this->model,
                 'type' => $this->type,
                 'id' => $request->id,
-                'nested' => 'raws_products_count',
+                'nested' => 'childs_count',
                 'filter' => setFilter($this->entity_alias, $request, [
                     'booklist'
                 ]),
@@ -134,13 +140,14 @@ class RawsCategoryController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $raws_category = RawsCategory::with([
-            'mode',
-            'one_metrics' => function ($q) {
-                $q->with('unit', 'values');
-            },
+            // 'mode',
+            // 'one_metrics' => function ($q) {
+            //     $q->with('unit', 'values');
+            // },
+            'compositions',
             'manufacturers',
         ])
-        ->withCount('one_metrics')
+        // ->withCount('one_metrics')
         ->moderatorLimit($answer)
         ->findOrFail($id);
         // dd($raws_category);
@@ -163,7 +170,14 @@ class RawsCategoryController extends Controller
 
         $settings = getSettings($this->entity_alias);
 
-        return view('raws_categories.edit', compact('raws_category', 'page_info', 'settings'));
+        // dd($goods_category->direction);
+        return view('includes.tmc_categories.edit.edit', [
+            'title' => 'Редактирование категории сырья',
+            'category' => $raws_category,
+            'page_info' => $page_info,
+            'settings' => $settings,
+            'entity' => $this->entity_alias,
+        ]);
     }
 
     public function update(RawsCategoryRequest $request, $id)
@@ -171,8 +185,10 @@ class RawsCategoryController extends Controller
 
         // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
 
-        // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $raws_category = RawsCategory::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $raws_category = RawsCategory::moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
@@ -194,11 +210,7 @@ class RawsCategoryController extends Controller
         if ($raws_category) {
 
             // Производители
-            if (isset($request->manufacturers)) {
-                $raws_category->manufacturers()->sync($request->manufacturers);
-            } else {
-                $raws_category->manufacturers()->detach();
-            }
+            $raws_category->manufacturers()->sync($request->manufacturers);
 
            // Переадресовываем на index
             return redirect()->route('raws_categories.index', ['id' => $raws_category->id]);
@@ -217,7 +229,10 @@ class RawsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $raws_category = RawsCategory::withCount('childs', 'products')
+        $raws_category = RawsCategory::with([
+            'childs',
+            'raws'
+        ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
@@ -230,7 +245,7 @@ class RawsCategoryController extends Controller
 
         $parent_id = $raws_category->parent_id;
 
-        $raws_category = RawsCategory::destroy($id);
+        $raws_category->delete();
 
         if ($raws_category) {
 

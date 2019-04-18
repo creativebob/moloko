@@ -11,10 +11,11 @@ class DirectionsComposer
 {
 	public function compose(View $view)
 	{
+        $answer = operator_right('directions', true, 'index');
 
         // Главный запрос
         $directions = Direction::with('category')
-        ->where('company_id', Auth::user()->company_id)
+        ->companiesLimit($answer)
         // ->where('archive', false)
         ->get();
         // dd($directions);

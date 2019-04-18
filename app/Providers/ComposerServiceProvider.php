@@ -8,6 +8,8 @@ use Illuminate\Support\ServiceProvider;
 use App\Http\ViewComposers\SidebarComposer;
 use App\Http\ViewComposers\SectorsSelectComposer;
 
+use App\Http\ViewComposers\StagesComposer;
+
 use App\Http\ViewComposers\CountriesComposer;
 
 use App\Http\ViewComposers\FilialsForUserComposer;
@@ -28,6 +30,7 @@ use App\Http\ViewComposers\PeriodsComposer;
 use App\Http\ViewComposers\BooklistTypesComposer;
 
 use App\Http\ViewComposers\ManufacturersComposer;
+
 use App\Http\ViewComposers\SupplierSelectComposer;
 use App\Http\ViewComposers\ContragentsComposer;
 
@@ -41,6 +44,9 @@ use App\Http\ViewComposers\MenuViewComposer;
 use App\Http\ViewComposers\DepartmentsComposer;
 use App\Http\ViewComposers\DepartmentsViewComposer;
 // use App\Http\ViewComposers\SectorsComposer;
+
+use App\Http\ViewComposers\CategoriesComposer;
+
 use App\Http\ViewComposers\GoodsCategoriesComposer;
 use App\Http\ViewComposers\RawsCategoriesComposer;
 use App\Http\ViewComposers\GoodsProductsComposer;
@@ -60,6 +66,7 @@ use App\Http\ViewComposers\StaffComposer;
 use App\Http\ViewComposers\PositionsComposer;
 use App\Http\ViewComposers\PropertiesComposer;
 
+use App\Http\ViewComposers\SitesComposer;
 use App\Http\ViewComposers\SiteMenusComposer;
 use App\Http\ViewComposers\PagesComposer;
 
@@ -67,6 +74,13 @@ use App\Http\ViewComposers\CategoriesDrilldownComposer;
 
 use App\Http\ViewComposers\EntitiesStatisticsSelectComposer;
 
+use App\Http\ViewComposers\CatalogsComposer;
+use App\Http\ViewComposers\CatalogsTypesComposer;
+
+use App\Http\ViewComposers\ArticlesGroupsComposer;
+use App\Http\ViewComposers\CompositionsCategoriesComposer;
+use App\Http\ViewComposers\CompositionsComposer;
+use App\Http\ViewComposers\TmcComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -77,6 +91,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.sectors_select', SectorsSelectComposer::class);
 
         view()->composer('includes.selects.countries', CountriesComposer::class);
+        view()->composer('includes.selects.stages', StagesComposer::class);
 
         view()->composer('includes.selects.filials_for_user', FilialsForUserComposer::class);
         view()->composer('includes.selects.departments_for_user', DepartmentsForUserComposer::class);
@@ -100,7 +115,8 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer(['includes.selects.booklist_types'], BooklistTypesComposer::class);
 
-        view()->composer('includes.selects.manufacturers', ManufacturersComposer::class);
+        view()->composer(['includes.selects.manufacturers', 'includes.lists.manufacturers'], ManufacturersComposer::class);
+
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);
 
         // Conflict: то, что осталось в нижней части
@@ -113,10 +129,11 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.staff', StaffComposer::class);
 
         view()->composer('includes.selects.positions', PositionsComposer::class);
-        view()->composer('includes.metrics_category.properties_list', PropertiesComposer::class);
+        view()->composer('includes.category_metrics.properties_list', PropertiesComposer::class);
 
         view()->composer(['includes.selects.catalogs_chosen', 'includes.selects.catalogs'], CatalogsSelectComposer::class);
 
+        view()->composer('includes.lists.sites', SitesComposer::class);
         view()->composer('includes.lists.site_menus', SiteMenusComposer::class);
 
 
@@ -135,6 +152,9 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('departments.filials_list', DepartmentsViewComposer::class);
         view()->composer('includes.lists.departments', DepartmentsComposer::class);
         // view()->composer('includes.selects.sectors', SectorsComposer::class);
+
+        view()->composer(['includes.selects.categories','includes.tmc.create.categories_select'], CategoriesComposer::class);
+
         view()->composer('includes.selects.goods_categories', GoodsCategoriesComposer::class);
         view()->composer('includes.selects.raws_categories', RawsCategoriesComposer::class);
         view()->composer('includes.selects.goods_products', GoodsProductsComposer::class);
@@ -150,6 +170,17 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.directions', DirectionsComposer::class);
 
         view()->composer('includes.selects.entities_statistics', EntitiesStatisticsSelectComposer::class);
+
+        view()->composer('includes.catalogs_with_items', CatalogsComposer::class);
+        view()->composer('includes.selects.catalogs_types', CatalogsTypesComposer::class);
+
+        view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
+
+        view()->composer('includes.tmc_categories.edit.compositions.category_compositions', CompositionsCategoriesComposer::class);
+        view()->composer('includes.tmc.edit.compositions', CompositionsComposer::class);
+
+        view()->composer('includes.selects.tmc', TmcComposer::class);
+
     }
 
     public function register()

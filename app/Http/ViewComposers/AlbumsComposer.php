@@ -16,6 +16,7 @@ class AlbumsComposer
 
         // Главный запрос
         $albums = Album::moderatorLimit($answer)
+        ->companiesLimit($answer)
         ->where('albums_category_id', $view->albums_category_id)
         ->get();
 

@@ -10,9 +10,9 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
-@section('exel')
+{{-- @section('exel')
 @include('includes.title-exel', ['entity' => $page_info->alias])
-@endsection
+@endsection --}}
 
 @section('content-count')
 {{-- Количество элементов --}}
@@ -74,27 +74,28 @@
                     </td>
                     <td>
                         <a href="/admin/goods/{{ $cur_goods->id }}/edit">
-                            <img src="{{ getPhotoPath($cur_goods, 'small') }}" alt="{{ isset($cur_goods->photo_id) ? $cur_goods->name : 'Нет фото' }}">
+                            <img src="{{ getPhotoPath($cur_goods->article, 'small') }}" alt="{{ isset($cur_goods->article->photo_id) ? $cur_goods->article->name : 'Нет фото' }}">
                         </a>
                     </td>
                     <td class="td-name">
-                        <a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->article->name }} @if ($cur_goods->article->product->set_status == 'set') (Набор) @endif</a>
+                        <a href="/admin/goods/{{ $cur_goods->id }}/edit">{{ $cur_goods->article->name }} @if ($cur_goods->set_status == 1) (Набор) @endif</a>
+
                     </td>
                     <td class="td-goods_category">
-                        <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->article->product->category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->article->product->category->name }}</a>
+                        <a href="/admin/goods?goods_category_id%5B%5D={{ $cur_goods->category->id }}" class="filter_link" title="Фильтровать">{{ $cur_goods->category->name }}</a>
                         <br>
                         {{-- @if($cur_goods->article->product->name != $cur_goods->name) --}}
-                        <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->article->product->id }}" class="filter_link light-text">{{ $cur_goods->article->product->name }}</a>
+                        <a href="/admin/goods?goods_product_id%5B%5D={{ $cur_goods->article->id }}" class="filter_link light-text">{{ $cur_goods->article->group->name }}</a>
                         {{-- @endif --}}
                     </td>
-                    <td class="td-description">{{ $cur_goods->description }}</td>
-                    <td class="td-price">{{ num_format($cur_goods->price, 0) }} </td>
+                    <td class="td-description">{{ $cur_goods->article->description }}</td>
+                    <td class="td-price">{{ num_format($cur_goods->article->price_default, 0) }} </td>
 
                     <td class="td-catalog">
 
-                        @foreach ($cur_goods->catalogs as $catalog)
+                        {{-- @foreach ($cur_goods->catalogs as $catalog)
                         <a href="/admin/sites/{{ $catalog->site->alias }}/catalog_products/{{ $catalog->id }}" class="filter_link" title="Редактировать каталог">{{ $catalog->name }}</a>,
-                        @endforeach
+                        @endforeach --}}
 
                     </td>
 
@@ -106,7 +107,7 @@
 
                     {{-- <td class="td-sync-id"><a class="icon-sync sprite" data-open="item-sync"></a></td> --}}
 
-                    <td class="td-author">@if(isset($cur_goods->author->first_name)) {{ $cur_goods->author->first_name . ' ' . $cur_goods->author->second_name }} @endif</td>
+                    <td class="td-author">@if(isset($cur_goods->author->first_name)) {{ $cur_goods->author->name }} @endif</td>
 
                     {{-- Элементы управления --}}
                     @include('includes.control.table-td', ['item' => $cur_goods])
@@ -165,7 +166,7 @@
 @include('includes.scripts.modal-archive-script')
 
 @include('includes.scripts.inputs-mask')
-@include('goods.scripts')
+@include('includes.tmc.create.scripts', ['entity' => 'goods', 'category_entity' => 'goods_categories'])
 
 {{-- Скрипт синхронизации товара с сайтом на сайте --}}
 @include('includes.scripts.ajax-sync')

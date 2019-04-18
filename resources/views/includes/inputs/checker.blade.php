@@ -2,18 +2,19 @@
 
 
 @if(!empty($items))
+
 <div class="checkboxer-wrap {{$name}}">
 	<div class="checkboxer-toggle" data-toggle="{{$name}}-dropdown-bottom-left" data-name="{{$name}}">
 		<div class="checkboxer-title">
 			<span class="title">{{ $title }}</span>
-			<span class="count_filter_{{$name}}" id="count_filter_{{$name}}">({{ $entity->$name->count() }})</span>
+			<span class="count_filter_{{$name}}" id="count_filter_{{$name}}">({{$entity->$name ? $entity->$name->count() : 0}})</span>
 		</div>
 		<div class="checkboxer-button">
 			<span class="sprite icon-checkboxer"></span>
 		</div>
 	</div>
 
-	<div class="checkboxer-clean {{ $entity->$name->count() > 0 ? 'show-elem' : 'hide-elem' }}" onclick="event.stopPropagation()" data-name="{{$name}}">
+	<div class="checkboxer-clean {{ $entity->$name ? $entity->$name->count() : 0 > 0 ? 'show-elem' : 'hide-elem' }}" onclick="event.stopPropagation()" data-name="{{$name}}">
 		<span class="sprite icon-clean"></span>
 	</div>
 
@@ -36,7 +37,7 @@
 
 <script type="text/javascript">
 
-	let {{$name}} = new CheckBoxer("{{$name}}", {{ $entity->$name->count() }});
+	let {{$name}} = new CheckBoxer("{{$name}}", {{ $entity->$name ? $entity->$name->count() : 0 }});
 
   	$(".checkboxer-menu.{{$name}} :checkbox").click(function() {
 		{{$name}}.CheckBoxerAddDel(this);

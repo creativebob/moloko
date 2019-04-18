@@ -12,50 +12,53 @@
 @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, isset($lead->case_number) ? $lead->case_number : 'нет номера'))
 
 @section('title-content')
-<div class="top-bar head-content">
-	<div class="top-bar-left">
-		<h2 class="header-content">ЛИД №: <input id="show-case-number" name="show_case_number" readonly class="case_number_field" value="{{ $lead->case_number }}"> </h2>
-	</div>
-	<div class="top-bar-right">
-	</div>
-</div>
+
+<!-- 	<div class="top-bar head-content">
+		<div class="top-bar-left">
+			<h2 class="header-content">ЛИД №: <input id="show-case-number" name="show_case_number" readonly class="case_number_field" value="{{ $lead->case_number }}"> </h2>
+		</div>
+		<div class="top-bar-right wrap_lead_badget">
+			@include('includes.inputs.digit', ['name' => 'badget', 'value' => $lead->badget, 'decimal_place'=>2])
+		</div>
+	</div> -->
+
 @endsection
 
 
 @section('content')
 
-{{ Form::model($lead, ['url' => '/admin/leads/'.$lead->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'id' => 'form-lead', 'files'=>'true']) }}
+	{{ Form::model($lead, ['url' => '/admin/leads/'.$lead->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'id' => 'form-lead', 'files'=>'true']) }}
 
-{{ method_field('PATCH') }}
+	{{ method_field('PATCH') }}
 
-@php
+	@php
 
-$readonly = '';
-$autofocus = 'autofocus';
-
-if(isset($lead->main_phone)){
-
-	if($lead->main_phone->phone != null){
-		$readonly = 'readonly';
-		$autofocus = '';
-	} else {
 		$readonly = '';
 		$autofocus = 'autofocus';
-	}
-}
 
-if($lead->manager_id == 1){
-	$disabled_leadbot = 'disabled';
-} else {
-	$disabled_leadbot = '';
-}
+		if(isset($lead->main_phone)){
+
+			if($lead->main_phone->phone != null){
+				$readonly = 'readonly';
+				$autofocus = '';
+			} else {
+				$readonly = '';
+				$autofocus = 'autofocus';
+			}
+		}
+
+		if($lead->manager_id == 1){
+			$disabled_leadbot = 'disabled';
+		} else {
+			$disabled_leadbot = '';
+		}
 
 
-@endphp
+	@endphp
 
-@include('leads.form', ['submitButtonText' => 'Сохранить', 'param'=>'', $readonly, $autofocus])
+	@include('leads.form', ['submitButtonText' => 'Сохранить', 'param'=>'', $readonly, $autofocus])
 
-{{ Form::close() }}
+	{{ Form::close() }}
 
 @endsection
 

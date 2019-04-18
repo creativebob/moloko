@@ -36,9 +36,7 @@ Route::get('/', 'AppController@enter');
 // Route::resource('/site_api', 'ApiController');
 
 Route::get('/img/{path}', 'ImageController@show')->where('path', '.*');
-
 Route::get('/home', 'HomeController@index')->name('home');
-
 Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
 
 
@@ -55,6 +53,7 @@ Route::any('/lol', 'GoodsController@check_coincidence_name');
 Route::get('/entity_page', 'ParserController@entity_page')->middleware('auth');
 
 Route::get('/update_menus', 'ParserController@update_menus')->middleware('auth');
+
 // Route::get('/geoposition_locations', 'ParserController@geoposition_locations')->middleware('auth');
 // Route::get('/geoposition_locations_parse', 'ParserController@geoposition_locations_parse')->middleware('auth');
 // Route::get('/city', 'ParserController@city')->middleware('auth');
@@ -188,7 +187,6 @@ Route::get('/telegram_updates', 'TelegramController@get_updates');
 Route::post('/telegram_message', 'TelegramController@get_message');
 // Route::post('/'.env('TELEGRAM_BOT_TOKEN'), 'TelegramController@get_message');
 
-
 Route::get('/vk', 'VkController@market')->middleware('auth');
 
 // // Ответ для VK
@@ -288,28 +286,31 @@ Route::post('/ajax_add_property', 'PropertyController@add_property')->middleware
 
 
 // ---------------------------------------- Метрики -------------------------------------------------
+Route::get('/metrics', 'MetricController@store')->middleware('auth');
 // Основные методы
 Route::resource('/metrics', 'MetricController')->middleware('auth');
 
-// Пишем метрику через ajax
-Route::post('/ajax_store_metric', 'MetricController@ajax_store')->middleware('auth');
+// Добавляем метрику на страницу
+Route::post('/ajax_get_metric', 'MetricController@ajax_get_metric')->middleware('auth');
 
-// Добавляем / удаляем связь сущности с метрикой
-Route::match(['get', 'post'], '/ajax_add_relation_metric', 'MetricController@ajax_add_relation')->middleware('auth')->name('metrics.add_relation');
-Route::any('/ajax_delete_relation_metric', 'MetricController@ajax_delete_relation')->middleware('auth');
-
-Route::post('/ajax_add_metric_value', 'MetricController@add_metric_value')->middleware('auth');
+// Добавляем значение метрики (список)
+Route::post('/ajax_get_metric_value', 'MetricController@ajax_get_metric_value')->middleware('auth');
 
 
 // ---------------------------------------- Состав -------------------------------------------------
 
-Route::post('/ajax_add_relation_composition', 'CompositionController@ajax_add_relation')->middleware('auth');
+Route::post('/ajax_get_category_composition', 'CompositionController@ajax_get_category_composition')->middleware('auth');
 Route::post('/ajax_delete_relation_composition', 'CompositionController@ajax_delete_relation')->middleware('auth');
 
-Route::post('/ajax_add_page_composition', 'CompositionController@ajax_add')->middleware('auth');
+Route::post('/ajax_get_tmc_composition', 'CompositionController@ajax_add')->middleware('auth');
 
 Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
+
+
+// ---------------------------------- Артикулы -------------------------------------------
+// Основные методы
+Route::resource('articles_groups', 'ArticlesGroupController')->middleware('auth');
 
 
 // ------------------------------------- Категории сырья -------------------------------------------
@@ -326,16 +327,16 @@ Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth'
 // Основные методы
 Route::resource('/raws_products', 'RawsProductController')->middleware('auth');
 
-Route::any('/ajax_raws_count', 'RawsProductController@ajax_count')->middleware('auth');
-Route::any('/raws_products_create_mode', 'RawsProductController@ajax_change_create_mode')->middleware('auth');
+// Route::any('/ajax_raws_count', 'RawsProductController@ajax_count')->middleware('auth');
+// Route::any('/raws_products_create_mode', 'RawsProductController@ajax_change_create_mode')->middleware('auth');
 
-Route::any('/raws_products_list', 'RawsProductController@ajax_get_products_list')->middleware('auth');
+// Route::any('/raws_products_list', 'RawsProductController@ajax_get_products_list')->middleware('auth');
 
 
 // ---------------------------------- Сырьё (Артикулы) -------------------------------------------
 
 // Основные методы
-Route::resource('/raws', 'RawController')->middleware('auth');
+Route::resource('/raws', 'RawController');
 // Route::get('/raws/search/{text_fragment}', 'RawController@search')->middleware('auth');
 Route::post('/raws/search/{text_fragment}', 'RawController@search')->middleware('auth');
 // Архивация
@@ -344,12 +345,14 @@ Route::post('/raws/archive/{id}', 'RawController@archive')->middleware('auth');
 Route::any('/raw/add_photo', 'RawController@add_photo')->middleware('auth');
 Route::post('/raw/photos', 'RawController@photos')->middleware('auth');
 
+Route::any('/raws_create_mode', 'RawController@ajax_change_create_mode')->middleware('auth');
+
 
 // -------------------------------- Категории товаров -------------------------------------------
 
 // Текущая добавленная/удаленная категория
 Route::any('/goods_categories', 'GoodsCategoryController@index')->middleware('auth');
-Route::match(['get', 'post'], '/goods_categories/{id}/edit', 'GoodsCategoryController@edit')->middleware('auth');
+Route::post('/goods_categories/{id}/edit', 'GoodsCategoryController@edit')->middleware('auth');
 // Основные методы
 Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('auth');
 
@@ -362,8 +365,8 @@ Route::any('/goods_category_compositions', 'GoodsCategoryController@ajax_get_com
 // Основные методы
 Route::resource('/goods_products', 'GoodsProductController')->middleware('auth');
 
-Route::any('/ajax_goods_count', 'GoodsProductController@ajax_count')->middleware('auth');
-Route::any('/goods_products_create_mode', 'GoodsProductController@ajax_change_create_mode')->middleware('auth');
+Route::any('/ajax_articles_groups_count', 'ArticlesGroupController@ajax_count')->middleware('auth');
+Route::any('/ajax_articles_groups_set_status', 'ArticlesGroupController@ajax_set_status')->middleware('auth');
 
 Route::any('/goods_products_list', 'GoodsProductController@ajax_get_products_list')->middleware('auth');
 
@@ -376,7 +379,7 @@ Route::any('/goods/add_photo', 'GoodsController@add_photo')->middleware('auth');
 Route::post('/goods/photos', 'GoodsController@photos')->middleware('auth');
 
 // Основные методы
-Route::resource('/goods', 'GoodsController')->middleware('auth');
+Route::resource('/goods', 'GoodsController');
 Route::post('/goods/search/{text_fragment}', 'GoodsController@search')->middleware('auth');
 // Архивация
 Route::post('/goods/archive/{id}', 'GoodsController@archive')->middleware('auth');
@@ -389,6 +392,15 @@ Route::any('/goods_check', 'GoodsController@ajax_check')->middleware('auth');
 // Отображение на сайте
 Route::any('/goods_categories_get_products', 'GoodsController@ajax_get_products')->middleware('auth');
 
+
+
+Route::any('/create_mode', 'CreateModeController@ajax_change_create_mode')->middleware('auth');
+
+Route::any('/ajax_articles_groups_count', 'ArticlesGroupController@ajax_count');
+
+Route::any('/ajax_articles_groups_set_status', 'ArticlesGroupController@ajax_set_status');
+
+Route::any('/articles_groups_list', 'ArticlesGroupController@ajax_articles_groups_list');
 
 
 
@@ -635,6 +647,16 @@ Route::resource('/manufacturers', 'ManufacturerController')->middleware('auth');
 // ------------------------------------ Дилеры ----- ----------------------------------------------------
 
 // Основные методы
+
+Route::get('/dealers/create-user', 'DealerController@createDealerUser')->middleware('auth')->name('dealers.createDealerUser');
+Route::get('/dealers/create-company', 'DealerController@createDealerCompany')->middleware('auth')->name('dealers.createDealerCompany');
+
+Route::post('/dealers/store-user', 'DealerController@storeUser')->middleware('auth')->name('dealers.storeUser');
+Route::post('/dealers/store-company', 'DealerController@storeCompany')->middleware('auth')->name('dealers.storeCompany');
+
+Route::patch('/dealers/update-user/{id}', 'DealerController@updateDealerUser')->middleware('auth')->name('dealers.updateDealerUser');
+Route::patch('/dealers/update-company/{id}', 'DealerController@updateDealerCompany')->middleware('auth')->name('dealers.updateDealerCompany');
+
 Route::resource('/dealers', 'DealerController')->middleware('auth');
 
 
@@ -815,7 +837,7 @@ Route::prefix('/sites/{site_id}')->group(function () {
 
 		// ---------------------------------------- Меню -------------------------------------------
 
-		// Текущая добавленная/удаленная категория
+		// Текущий добавленный/удаленный пунк меню
 		Route::any('/menus', 'MenuController@index');
 
 		// Основные методы
@@ -825,13 +847,12 @@ Route::prefix('/sites/{site_id}')->group(function () {
 
 });
 
-// Поиск продукции для добавления на сайт
-Route::any('/catalog_product/search_add_product', 'CatalogProductController@search_add_product')->middleware('auth');
 
 // Поиск продукции для добавления на сайт
-Route::any('/catalog_product/add_product', 'CatalogProductController@add_product')->middleware('auth');
+// Route::any('/catalog_product/search_add_product', 'CatalogProductController@search_add_product')->middleware('auth');
 
-
+// // Поиск продукции для добавления на сайт
+// Route::any('/catalog_product/add_product', 'CatalogProductController@add_product')->middleware('auth');
 
 
 
@@ -842,21 +863,25 @@ Route::any('/catalog_product/add_product', 'CatalogProductController@add_product
 Route::resource('/news', 'NewsController')->middleware('auth');
 
 
+// ----------------------------------------- Каталоги ------------------------------------------
 
-// ----------------------------------------- Каталог ------------------------------------------
 
-// Текущий добавленный/удаленный каталог
-Route::any('/catalogs', 'CatalogController@index')->middleware('auth');
 // Основные методы
-Route::resource('/catalogs', 'CatalogController')->middleware('auth');
+Route::resource('catalogs', 'CatalogController');
 // Проверка на существование
-Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
+// Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
 
-// -------------------------------- Продукция для каталогов сайта -------------------------------------
-// Основные методы
-Route::get('/catalog_products/{id?}', 'CatalogProductController@show')->middleware('auth');
-// Основные методы
-Route::resource('/catalog_products', 'CatalogProductController')->middleware('auth');
+// -------------------------------- Наполнение каталогов -------------------------------------
+
+Route::prefix('catalogs/{catalog_id}')->group(function () {
+
+	// Текущий добавленный/удаленный пунк меню
+	Route::any('catalogs_items', 'CatalogsItemController@index');
+
+	// Основные методы
+	Route::resource('catalogs_items', 'CatalogsItemController');
+});
+
 
 
 

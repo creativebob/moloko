@@ -70,4 +70,10 @@ class Phone extends Model
 		return $this->morphedByMany('App\Company', 'phone_entity');
 	}
 
+	// Пользователь владелец номера
+	public function user_owner()
+	{
+		return $this->morphedByMany('App\User', 'phone_entity');
+	}
+
 }

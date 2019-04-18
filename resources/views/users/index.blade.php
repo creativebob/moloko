@@ -73,13 +73,16 @@
             @endcan
 
             @if($edit == 1)
-            <a href="/admin/users/{{ $user->id }}/edit">
+              <a href="/admin/users/{{ $user->id }}/edit">
+            @endif
+
+              {{ $user->second_name . " " . $user->first_name }}
+              @if($user->nickname != null)
+                {{ $user->nickname }}
               @endif
 
-              {{ $user->second_name . " " . $user->first_name . "  (". $user->nickname . ")" }}
-
-              @if($edit == 1)
-            </a>
+            @if($edit == 1)
+              </a>
             @endif
 
           </td>

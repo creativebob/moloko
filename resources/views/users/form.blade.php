@@ -6,7 +6,12 @@
             {{-- Подключаемые специфические разделы --}}
             @if(!empty($client))
             <li class="tabs-title">
-                <a data-tabs-target="content-panel-client" href="#content-panel-client">Коммуникация</a>
+                <a data-tabs-target="content-panel-client" href="#content-panel-client">О клиенте</a>
+            </li>
+            @endif
+            @if(!empty($dealer))
+            <li class="tabs-title">
+                <a data-tabs-target="content-panel-dealer" href="#content-panel-dealer">Информация о дилере</a>
             </li>
             @endif
 
@@ -36,12 +41,22 @@
 						</label>
 					</div>
 					<div class="small-12 large-6 cell">
+
+						@if($user->nickname != null)
+							<label>Временное имя
+								@include('includes.inputs.name', ['name'=>'nickname', 'value'=>$user->nickname])
+							</label>
+						@endif
+
 						<label>Выберите аватар
 							{{ Form::file('photo') }}
 						</label>
 
 						<div class="text-center">
-							<img id="photo" src="{{ getPhotoPath($user) }}">
+							@php
+								$path = getPhotoPath($user);
+							@endphp
+							<img id="photo" src="{{ $path }}">
 						</div>
 					</div>
 				</div>
@@ -100,7 +115,7 @@
 					</div>
 					<div class="small-12 medium-6 cell">
 						<label>Телеграм ID
-							{{ Form::text('telegram_id', $user->telegram_id, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
+							{{ Form::text('telegram', $user->telegram, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
 							<span class="form-error">Укажите номер Telegram</span>
 						</label>
 					</div>
@@ -131,8 +146,27 @@
                 </div>
             </div>
             <!-- Конец блока клиента -->
-            
             @endif
+
+            @if(!empty($dealer))
+            <!-- Блок дилера -->
+            <div class="tabs-panel" id="content-panel-dealer">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-6 cell">
+                        <label>Комментарий к дилеру
+                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$dealer->description])
+                        </label>
+                    </div>
+                    <div class="small-6 medium-3 cell">
+                        <label>Скидка
+                            @include('includes.inputs.digit', ['name'=>'discount', 'value'=>$dealer->discount])
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- Конец блока дилера -->
+            @endif
+
 
 			<!-- Персональные данные -->
 			<div class="tabs-panel" id="content-panel-2">
@@ -266,7 +300,7 @@
 			<div class="grid-x grid-padding-x">
 				<div class="small-12 cell">
 					<label>Статус пользователя
-						{{ Form::select('user_type', [ '1' => 'Пользователь системы', '2' => 'Клиент']) }}
+						{{ Form::select('user_type', [ '0' => 'Чужой', '1' => 'Свой']) }}
 					</label>
 				</div>
 

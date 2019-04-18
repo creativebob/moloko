@@ -60,48 +60,60 @@ class RawsCategory extends Model
     // Вложенные
     public function childs()
     {
-        return $this->hasMany('App\RawsCategory', 'parent_id');
+        return $this->hasMany(RawsCategory::class, 'parent_id');
     }
 
     // Компания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
-    // Группы
-    public function products()
+    // Сырье
+    public function raws()
     {
-        return $this->hasMany('App\RawsProduct');
+        return $this->hasMany(Raw::class);
+    }
+
+    // Артикулы
+    public function articles()
+    {
+        return $this->belongsToMany(Article::class, 'raws')
+        ->where('draft', false)
+        ->where('raws.archive', false);
     }
 
     // Режим
     public function mode()
     {
-        return $this->belongsTo('App\RawsMode', 'raws_mode_id');
-    }
-
-    // Артикул
-    public function articles()
-    {
-        return $this->hasManyThrough('App\RawsArticle', 'App\RawsProduct');
+        return $this->belongsTo(RawsMode::class, 'raws_mode_id');
     }
 
     // Аватар
     public function photo()
     {
-        return $this->belongsTo('App\Photo');
+        return $this->belongsTo(Photo::class);
     }
 
-    // Метрики
-    public function one_metrics()
+    // Состав
+    // public function compositions()
+    // {
+    //     return $this->belongsToMany(Article::class, 'preset_composition', 'category_id', 'composition_id');
+    // }
+    public function compositions()
     {
-        return $this->morphToMany('App\Metric', 'metric_entity')->where('set_status', 'one');
+        return $this->morphToMany(Article::class, 'preset_composition');
     }
 
     // Производители
     public function manufacturers()
     {
-        return $this->belongsToMany('App\Company', 'raws_category_manufacturer', 'raws_category_id', 'manufacturer_id');
+        return $this->morphToMany(Manufacturer::class, 'categories_manufacturer');
+    }
+
+    public function groups()
+    {
+        return $this->morphToMany(ArticlesGroup::class, 'articles_group_entity');
+        // ->where('archive', false);
     }
 }

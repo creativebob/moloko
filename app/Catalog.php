@@ -52,47 +52,35 @@ class Catalog extends Model
         'category_id',
     ];
 
-
-    // Вложенные
-    public function childs()
+    // Пункты
+    public function items()
     {
-        return $this->hasMany('App\Catalog', 'parent_id');
+        return $this->hasMany(CatalogsItem::class);
     }
 
-    // Сайт
-    public function site()
+
+    // Сайты
+    public function sites()
     {
-        return $this->belongsTo('App\Site');
+        return $this->belongsToMany(Site::class, 'catalog_site');
     }
 
     // Аавтор
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo(User::class);
     }
 
     // Аватар
     public function photo()
     {
-        return $this->belongsTo('App\Photo');
+        return $this->belongsTo(Photo::class);
     }
 
-    // Услуги
-    public function services()
+    // Тип каталога
+    public function type()
     {
-        return $this->morphedByMany('App\Service', 'catalog_products')->withPivot('id', 'display', 'sort');
-    }
-
-    // Товары
-    public function goods()
-    {
-        return $this->morphedByMany('App\Goods', 'catalog_products')->withPivot('id', 'display', 'sort');
-    }
-
-     // Сырье
-    public function raws()
-    {
-        return $this->morphedByMany('App\Raw', 'catalog_products')->withPivot('id', 'display', 'sort');
+        return $this->belongsTo(CatalogsType::class, 'catalogs_type_id');
     }
 
 

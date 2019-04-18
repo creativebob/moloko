@@ -1,4 +1,13 @@
 
+<div class="top-bar head-content">
+    <div class="top-bar-left">
+        <h2 class="header-content">ЛИД №: <input id="show-case-number" name="show_case_number" readonly class="case_number_field" value="{{ $lead->case_number }}"> </h2>
+    </div>
+    <div class="top-bar-right wrap_lead_badget">
+        @include('includes.inputs.digit', ['name' => 'badget', 'value' => $lead->badget, 'decimal_place'=>2])
+    </div>
+</div>
+
 <div class="grid-x tabs-wrap inputs">
 
     <!-- Левый блок -->
@@ -43,14 +52,16 @@
             <div class="small-12 medium-12 large-4 cell">
                 <!-- Пустой блок -->
                 <div class="grid-x grid-padding-x">
+
                     <div class="small-12 cell">
-                        <label>Бюджет
-                            @include('includes.inputs.digit', ['name' => 'badget', 'value' => $lead->badget, 'decimal_place'=>2])
+                        <label>Компания
+                            @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$lead->company_name])
                         </label>
                     </div>
+
                     <div class="small-12 cell">
-                        <label>Этап
-                            {{ Form::select('stage_id', $stages_list, $lead->stage_id) }}
+                        <label>E-mail
+                            @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email'])
                         </label>
                     </div>
 
@@ -76,13 +87,24 @@
                     <div class="tabs-panel is-active" id="content-panel-order">
 
                         <div class="grid-x">
+
+                            <div class="small-4 cell">
+                                <label>Предварительная стоимость:
+                                    @include('includes.inputs.digit', ['name' => 'badget', 'value' => $lead->badget, 'decimal_place'=>2])
+                                </label>
+                            </div>
+                            <div class="small-4 cell">
+                            </div>
+                            <div class="small-4 cell">
+                            </div>
+
                             <div class="small-12 medium-12 large-12 cell">
                                 <table class="table-order" id="table-order">
                                     <thead>
                                         <tr>
                                             <th>Наименование</th>
                                             <th>Кол-во</th>
-<!--                                             <th>Себестоимость</th>
+<!--                                        <th>Себестоимость</th>
                                             <th>ДопРасх</th>
                                             <th>Наценка</th> -->
                                             <th>Цена</th>
@@ -125,21 +147,11 @@
                             <div class="small-12 medium-12 cell">
                                 <div class="grid-x grid-padding-x">
 
-                                    <div class="small-12 medium-6 cell">
-                                        <label>Почта
-                                            @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email'])
-                                        </label>
-                                    </div>
 
-                                    <div class="small-12 medium-6 cell">
-                                        <label>Компания
-                                            @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$lead->company_name])
-                                        </label>
-                                    </div>
                                 </div>
 
                                 @if($lead->client)
-                                    <span>Клиент: {{ $lead->client->client->name or '' }}</span><br>
+                                    <span>Клиент: <a href="/admin/clients/{{$lead->client->id}}/edit">{{ $lead->client->clientable->name or '' }}</a></span><br>
 
                                     <span>Лояльность: {{ $lead->client->loyalty->name or '' }}</span>
 
@@ -194,7 +206,7 @@
             <div class="small-12 cell">
                 <ul class="tabs-list" data-tabs id="tabs-leads">
                     <li class="tabs-title is-active"><a href="#content-panel-notes" aria-selected="true">События</a></li>
-                    <li class="tabs-title"><a href="#content-panel-catalog" aria-selected="true">Каталог</a></li>
+                    <li class="tabs-title"><a href="#content-panel-catalog" aria-selected="true">Продукты</a></li>
                     {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
 
                     @can ('index', App\Claim::class)
@@ -212,6 +224,21 @@
                     <div class="tabs-panel is-active" id="content-panel-notes">
                         <div class="grid-x grid-padding-x">
                             <div class="small-12 large-12 cell">
+
+
+                            <fieldset class="fieldset-challenge">
+                                <legend>Контроль процесса:</legend>
+                                <div class="grid-x grid-padding-x">
+                                    <div class="small-12 medium-6 cell">
+
+                                        {{-- Подключаем этапы процесса --}}
+                                        @include('includes.selects.stages', ['value' => $lead->stage_id])
+
+                                    </div>
+
+                                </div>
+                            </fieldset>
+
                                 {{-- Подключаем задачи --}}
                                 @include('includes.challenges.fieldset', ['item' => $lead])
 
@@ -239,9 +266,9 @@
                                     </div>
 
                                     {{-- СПИСОК КАТЕГРИЙ --}}
-                                    <div class="small-12 cell search-in-catalog-panel">
+{{--                                     <div class="small-12 cell search-in-catalog-panel">
                                         @include('includes.drilldowns.categories', ['entity' => 'goods_categories'])
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 

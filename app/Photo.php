@@ -47,7 +47,8 @@ class Photo extends Model
     // use DateIntervalFilter;
 
     protected $fillable = [
-
+        'name',
+        'company_id',
     ];
 
     // Получаем компанию

@@ -22,6 +22,8 @@ class CreateBooklistsTable extends Migration
 
             $table->boolean('change_allowed')->default(0)->comment('Разрешение на внесение изменений в список с данным типом. Параметр наследуется списку.');
 
+            $table->integer('booklist_type_id')->unsigned()->default(1)->comment('Тип списка');
+            $table->foreign('booklist_type_id')->references('id')->on('booklist_types');
 
             // Общие настройки
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');

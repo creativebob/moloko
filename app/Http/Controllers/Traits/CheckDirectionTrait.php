@@ -9,7 +9,7 @@ trait DirectionTrait
 
 	public function checkDirection($request, $category)
     {
-
+        // dd($request->direction);
         if (isset($request->direction)) {
 
             $direction = Direction::firstOrCreate([
