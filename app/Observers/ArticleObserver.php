@@ -27,12 +27,12 @@ class ArticleObserver
         if ($article->getOriginal('draft') == 1) {
 
             // Определяем количество метрик
-            $metrics_count = isset($request->metrics) ? count($request->metrics) : 0;
-            $article->metrics_count = $metrics_count;
+            // $metrics_count = isset($request->metrics) ? count($request->metrics) : 0;
+            // $article->metrics_count = $metrics_count;
 
-            // Определяем количество составов
-            $compositions_count = isset($request->compositions) ? count($request->compositions) : 0;
-            $article->compositions_count = $compositions_count;
+            // // Определяем количество составов
+            // $compositions_count = isset($request->compositions) ? count($request->compositions) : 0;
+            // $article->compositions_count = $compositions_count;
 
             // Порции
             if ($request->has('portion_status')) {

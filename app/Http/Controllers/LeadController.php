@@ -258,7 +258,7 @@ class LeadController extends Controller
         // Задачи пользователя
         $list_challenges = challenges($request);
 
-        return view('leads.edit', compact('lead', 'page_info', 'list_challenges', 'lead_methods_list', 'entity', 'choices'));
+        return view('leads.edit', compact('lead', 'page_info', 'list_challenges', 'lead_methods_list', 'choices'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)

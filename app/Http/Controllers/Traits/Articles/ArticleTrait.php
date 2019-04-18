@@ -139,6 +139,7 @@ trait ArticleTrait
             ->where([
                 'articles_group_id' => $data['articles_group_id'],
                 'compositions_count' => $compositions_count,
+                'manufacturer_id' => $data['manufacturer_id'],
             ])
             ->where('id', '!=', $data['id'])
             ->get([
