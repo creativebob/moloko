@@ -182,13 +182,12 @@ $disabled = $article->draft == null;
                         {{-- Метрики --}}
                         @if ($item->getTable() == 'goods')
 
-
                         {{-- @php
                         $metric_relation = ($cur_goods->article->group->set_status == 'one') ? 'one_metrics' : 'set_metrics';
                         @endphp --}}
 
                         {{-- @if ($item->metrics->isNotEmpty() || $item->category->metrics->isNotEmpty()) --}}
-
+                        @if ($item->metrics->isNotEmpty())
                         @include('includes.tmc.edit.metric_validation')
 
                         <fieldset class="fieldset-access">
@@ -196,19 +195,15 @@ $disabled = $article->draft == null;
 
                             <div id="metrics-list">
 
-                                @if ($item->metrics->isNotEmpty())
-
                                 {{-- {!! Form::model($item) !!} --}}
                                 @foreach ($item->metrics as $metric)
                                 @include('includes.tmc.edit.metric_input', $metric)
                                 @endforeach
                                 {{-- {!! Form::close() !!} --}}
 
-                                @endif
-
-
                             </div>
                         </fieldset>
+                        @endif
                         @endif
 
                         {{-- @endif --}}

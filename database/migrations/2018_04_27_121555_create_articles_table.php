@@ -43,7 +43,7 @@ class CreateArticlesTable extends Migration
             $table->integer('photo_id')->nullable()->unsigned()->comment('ID аватара');
             $table->foreign('photo_id')->references('id')->on('photos');
 
-            $table->string('portion_status')->nullable()->comment('Статус порции');
+            $table->boolean('portion_status')->default(0)->unsigned()->comment('Статус порции');
             $table->string('portion_name')->nullable()->comment('Имя порции');
             $table->string('portion_abbreviation')->nullable()->comment('Сокращение порции');
             $table->integer('portion_count')->nullable()->unsigned()->comment('Количество в порции');

@@ -13,6 +13,7 @@ use App\Entity;
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\RawRequest;
+use App\Http\Requests\ArticleRequest;
 
 // Куки
 use Illuminate\Support\Facades\Cookie;
@@ -209,7 +210,7 @@ class RawController extends Controller
         ]);
     }
 
-    public function store(RawRequest $request)
+    public function store(ArticleRequest $request)
     {
 
         // Подключение политики
@@ -321,7 +322,7 @@ class RawController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(ArticleRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
@@ -336,9 +337,9 @@ class RawController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $raw);
 
 
-        $article = $this->updateArticle($request, $raw);
-
-        if ($article) {
+        $result = $this->updateArticle($request, $raw->article);
+        // Если результат не массив с ошибками, значит все прошло удачно
+        if (!is_array($result)) {
 
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
 
@@ -372,7 +373,9 @@ class RawController extends Controller
 
             return redirect()->route('raws.index');
         } else {
-            abort(403, 'Ошибка обновления товара');
+            return back()
+            ->withErrors($result)
+            ->withInput();
         }
     }
 

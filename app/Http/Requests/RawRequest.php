@@ -36,8 +36,6 @@ class RawRequest extends FormRequest
         'raws_category_id' => 'integer|nullable',
         'raws_type_id' => 'integer|nullable',
 
-        'metrics.*'  => 'required|string|distinct',
-
         'display' => 'integer|max:1|nullable',
         'moderation' => 'integer|max:1|nullable',
         'system_item' => 'integer|max:1|nullable',

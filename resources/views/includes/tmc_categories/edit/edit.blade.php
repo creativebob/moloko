@@ -176,6 +176,10 @@
             {{-- Исключаем состав из сырья --}}
 
             {{-- Состав --}}
+
+            {{-- Подключаем класс для работы с составами --}}
+            @include('includes.category_compositions.class')
+
             <div class="tabs-panel" id="compositions">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-9 cell">
@@ -193,8 +197,7 @@
                                 {{-- Состав --}}
                                 @if ($category->compositions->isNotEmpty())
 
-                                {{-- Подключаем класс для работы с составами --}}
-                                @include('includes.category_compositions.class')
+
 
                                 @foreach ($category->compositions as $composition)
                                 @include ('includes.tmc_categories.edit.compositions.composition_tr', $composition)
