@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Traits\Articles;
 use App\Article;
 use App\ArticlesGroup;
 
+// Валидация
+use App\Http\Requests\ArticleRequest;
+
 trait ArticleTrait
 {
 
-	public function storeArticle($request, $category)
+	public function storeArticle(ArticleRequest $request, $category)
     {
 
-        // dd($request->has('set_status'));
         $user = $request->user();
         $user_id = $user->id;
         $company_id = $user->company_id;
@@ -58,14 +60,10 @@ trait ArticleTrait
             break;
         }
 
-        $article = new Article;
-        $article->articles_group_id = $articles_group->id;
-        $article->draft = true;
-        $article->company_id = $company_id;
-        $article->author_id = $user_id;
-        $article->name = $request->name;
-        $article->price_default = $request->price_default;
-        $article->save();
+        $data = $request->input();
+        $data['articles_group_id'] = $articles_group->id;
+
+        $article = (new Article())->create($data);
 
         $compositions = $category->compositions->pluck('id')->toArray();
         $article->compositions()->sync($compositions);
@@ -74,233 +72,147 @@ trait ArticleTrait
     }
 
 
-    public function updateArticle($request, $item)
+    public function updateArticle(ArticleRequest $request, $article)
     {
 
-        // Получаем из сессии необходимые данные (Функция находится в Helpers)
-        $answer = operator_right('articles', false, 'update');
+        // Получаем пришедшие данные
+        $data = $request->input();
+        $data['old_draft'] = $article->draft;
 
-        // Получаем артикул товара
-        $article = $item->article;
-        // dd($item->goods_article->draft);
+        // Проверяем совпадение (отдаем пришедшие данные, т.к. мы не можем сейчас записать артикул, запись будет после проверки)
+        // Придет либо массив с ошибками, либо null
+        $result = $this->getCoincidenceArticle($data);
+        // dd($result);
 
-        // Проверки только для черновика
-        if ($article->draft == 1) {
+        // Если ошибок нет, то обновляем состав и сам артикул
+        if (empty($result)) {
 
+            // -------------------------------------------------------------------------------------------------
+            // TODO: ПЕРЕНОС ТОВАРА В ДРУГУЮ ГРУППУ ПОЛЬЗОВАТЕЛЕМ
+            // Важно! Важно проверить, соответствеут ли группа в которую переноситься товар, метрикам самого товара
+            // Если не соответствует - дать отказ. Если соответствует - осуществить перенос
 
-
-            // Определяем количество метрик и составов
-            // $metrics_count = isset($request->metrics) ? count($request->metrics) : 0;
-            // dd($metrics_count);
-
-            // Если пришли значения метрик
-            // $metrics_values = [];
-            // if (isset($request->metrics)) {
-            //     // dd($request->metrics);
-
-            //     // Получаем метрики, чтобы узнать их тип и знаки после запятой
-            //     $keys = array_keys($request->metrics);
-            //     // dd($keys);
-            //     $metrics = Metric::with(['property' => function ($q) {
-            //         $q->select('id', 'type');
-            //     }])
-            //     ->select('id', 'decimal_place', 'property_id')
-            //     ->findOrFail($keys)
-            //     ->keyBy('id');
-            //     // dd($metrics);
-
-            //     // Приводим значения в соответкствие
-            //     foreach ($request->metrics as $metric_id => $values) {
-            //         // dd($metrics[$metric_id]->decimal_place);
-            //         if (($metrics[$metric_id]->property->type == 'numeric') || ($metrics[$metric_id]->property->type == 'percent')) {
-            //             // dd(round($value[0] , $metrics[$metric_id]->decimal_place, PHP_ROUND_HALF_UP));
-            //             if ($metrics[$metric_id]->decimal_place != 0) {
-            //                 $metrics_values[$metric_id][] = round($values[0] , $metrics[$metric_id]->decimal_place, PHP_ROUND_HALF_UP);
-            //             } else {
-            //                 $metrics_values[$metric_id][] = (int)number_format($values[0], 0);
-            //             }
-            //         } else {
-            //             $metrics_values[$metric_id] = $values;
-            //         }
-            //     }
-            //     // dd($metrics_values);
+            // Получаем выбранную группу со страницы (то, что указал пользователь)
+            // $articles_group_id = $request->articles_group_id;
+            // if ($article->articles_group_id != $articles_group_id ) {
+            //     // Была изменена! Переназначаем группу артикулу:
+            //     $article->articles_group_id = $articles_group_id;
             // }
+            // А, пока изменяем без проверки
 
-            // $compositions_count = isset($request->compositions_values) ? count($request->compositions_values) : 0;
-            // dd($compositions_count);
+            // Обновляем составы
+            $this->setCompositions($article);
 
-            // Если пришли значения состава
-            // $compositions_values = [];
-            // if (isset($request->compositions_values)) {
-            //     // dd($request->compositions_values);
+            // Если ошибок и совпадений нет, то обновляем артикул
+            $data['draft'] = request()->has('draft');
+            $article->update($data);
 
-            //     if ($item->article->product->set_status == 'one') {
-            //         // Приводим значения в соответкствие
-            //         foreach ($request->compositions_values as $composition_id => $value) {
-            //             $compositions_values[$composition_id] = round($value , 2, PHP_ROUND_HALF_UP);
-            //         }
-            //     } else {
-            //         foreach ($request->compositions_values as $composition_id => $value) {
-            //             $compositions_values[$composition_id] = (int)number_format($value, 0);
-            //         }
-            //     }
-            // }
-            // dd($compositions_values);
+            // Cохраняем / обновляем фото
+            savePhoto($request, $article);
 
-            // Производитель
-            $manufacturer_id = $request->manufacturer_id;
-            if ($manufacturer_id != $article->manufacturer_id) {
-                $article->manufacturer_id = $manufacturer_id;
-            }
-
-            if ($article->name != $request->name) {
-                $article->name = $request->name;
-            }
-
-
-            // $article->metrics_count = $metrics_count;
-            // $article->compositions_count = $compositions_count;
-            // $article->save();
-
-            // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-            if ($answer['automoderate'] == false) {
-                $item->moderation = 1;
-            }
-
-            // Проверяем составы
-            $this->compositions($request, $article);
-
-            // Метрики
-            // if (count($metrics_values)) {
-
-            //     $goods_article->metrics()->detach();
-
-            //     $metrics_insert = [];
-            //     // $metric->min = round($request->min , $request->decimal_place, PHP_ROUND_HALF_UP);
-            //     foreach ($metrics_values as $metric_id => $values) {
-            //         foreach ($values as $value) {
-            //             // dd($value);
-            //             $goods_article->metrics()->attach([
-            //                 $metric_id => [
-            //                     'value' => $value,
-            //                 ]
-            //             ]);
-            //         }
-            //     }
-            //     // dd($metrics_insert);
-            // } else {
-            //     $article->metrics()->detach();
-            // }
-
-            // Состав
-            // $compositions_relation = ($goods_article->product->set_status == 'one') ? 'compositions' : 'set_compositions';
-            // if (count($compositions_values)) {
-
-            //     $goods_article->$compositions_relation()->detach();
-
-            //     $compositions_insert = [];
-            //     foreach ($compositions_values as $composition_id => $value) {
-            //         $compositions_insert[$composition_id] = [
-            //             'value' => $value,
-            //         ];
-            //     }
-            //     // dd($compositions_insert);
-            //     $goods_article->$compositions_relation()->attach($compositions_insert);
-            // } else {
-            //     $goods_article->$compositions_relation()->detach();
-            // }
+            return $article;
+        } else {
+            // Если были ошибки, отдаем массив с ошибками
+            return $result;
         }
-
-        $article->draft = $request->has('draft');
-
-        // Если снят флаг черновика, проверяем на совпадение артикула
-        // if (empty($request->draft) && $item->article->draft == 1) {
-
-        //     // dd($request);
-
-        //     $check_name = $this->check_coincidence_name($request);
-        //     // dd($check_name);
-        //     if ($check_name) {
-        //         return redirect()->back()->withInput()->withErrors('Такой артикул уже существует других в группах');
-        //     }
-
-        //     $check_article = $this->check_coincidence_article($metrics_count, $metrics_values, $compositions_count, $compositions_values, $request->goods_product_id, $manufacturer_id);
-        //     if ($check_article) {
-        //         return redirect()->back()->withInput()->withErrors('Такой артикул уже существует в группе!');
-        //     }
-
-        //     $goods_article = $item->article;
-        //     $goods_article->draft = null;
-        //     $goods_article->save();
-        //     // $goods_article = GoodsArticle::where('id', $item->goods_article_id)->update(['draft' => null]);
-        // }
-
-        // Если проверки пройдены, или меняем уже товар
-
-
-        // -------------------------------------------------------------------------------------------------
-        // ПЕРЕНОС ТОВАРА В ДРУГУЮ ГРУППУ ПОЛЬЗОВАТЕЛЕМ
-        // Важно! Важно проверить, соответствеут ли группа в которую переноситься товар, метрикам самого товара
-        // Если не соответствует - дать отказ. Если соответствует - осуществить перенос
-
-        // Получаем выбранную группу со страницы (то, что указал пользователь)
-        $articles_group_id = $request->articles_group_id;
-
-        if ($article->articles_group_id != $articles_group_id ) {
-
-            // Была изменена! Переназначаем группу артикулу:
-            $article->articles_group_id = $articles_group_id;
-        }
-
-        // А, пока изменяем без проверки
-
-        // Порции
-        $article->portion_status = $request->portion_status;
-        $article->portion_name = $request->portion_name;
-        $article->portion_abbreviation = $request->portion_abbreviation;
-        $article->portion_count = $request->portion_count;
-
-        // Описание
-        $article->description = $request->description;
-
-        // Названия артикулов
-        $article->manually = $request->manually;
-        $article->external = $request->external;
-
-        // Цены
-        $article->cost_default = $request->cost_default;
-        $article->price_default = $request->price_default;
-
-        // Общие данные
-        // $article->display = $request->display;
-        // $article->system_item = $request->system_item;
-
-        $article->editor_id = hideGod($request->user());
-        $article->save();
-
-        // Cохраняем / обновляем фото
-        savePhoto($request, $article);
-
-        return $article;
     }
 
+    protected function setCompositions(Article $article)
+    {
+        // ЗАпись состава только для черновика
+        if ($article->draft) {
+            $article->compositions()->sync(request()->compositions);
+        }
+    }
 
-    public function compositions($request, $article)
+    protected function getCoincidenceArticle($data)
     {
 
-        // Проверки только для черновика
-        if ($article->draft == 1) {
+        // Проверка только если статус черновика не пришел, а сам артикул находится в черновике
+        if (!request()->has('draft') && $data['old_draft'] == 1) {
 
-            // if (isset($request->compositions)) {
+            $compositions_count = isset($data['compositions']) ? count($data['compositions']) : 0;
 
-            $article->compositions()->sync($request->compositions);
-            // } else {
-            //     $article->compositions()->detach();
-            // }
+            $articles = Article::with([
+                'compositions',
+            ])
+            ->where([
+                'articles_group_id' => $data['articles_group_id'],
+                'compositions_count' => $compositions_count,
+            ])
+            ->where('id', '!=', $data['id'])
+            ->get([
+                'id',
+                'name',
+                'articles_group_id',
+                'compositions_count',
+                'manufacturer_id',
+            ]);
+            // dd($articles);
 
+            // Если нашлись артикулы
+            if ($articles->isNotEmpty()) {
+
+                // Проверяем на наличие состава
+                if ($compositions_count > 0) {
+
+                    // Формируем массив пришедших составов артикула
+                    $article_compositions = [];
+                    foreach ($data['compositions'] as $id => $composition) {
+                        $article_compositions[$id] = (int) $composition['value'];
+                    }
+
+                    // Проверяем значения составов
+                    foreach ($articles as $compared_article) {
+                        // Берем составы для первого найдденного артикула в группе
+                        $compared_article_compositions = [];
+
+                        foreach ($compared_article->compositions as $composition) {
+                            $compared_article_compositions[$composition->id] = $composition->pivot->value;
+                        }
+
+                        // Если составы и их значения совпали, проверяем произодителя
+                        if ($article_compositions == $compared_article_compositions) {
+
+                            // Если производители совпали, даем ошибку
+                            if ($data['manufacturer_id'] == $compared_article->manufacturer_id) {
+                                $result['msg'] = 'В данной групе существуют артикулы с аналогичным составом и производителем.';
+                                return $result;
+                            }
+                        } else {
+                            // Если составы разные, смотрим производителя
+
+                            // Если производители совпали смотрим имя
+                            if ($data['manufacturer_id'] == $compared_article->manufacturer_id) {
+
+                                // Если имя совпало даем ошибку
+                                if ($data['name'] == $compared_article->name) {
+                                    $result['msg'] = 'В данной групе существует артикул с таким именем.';
+                                    return $result;
+                                }
+                            }
+
+                            // Убиваем массив, чтоб создать новый
+                            unset($compared_article_compositions);
+                        }
+                    }
+                } else {
+
+                    // Состава нет, проверяем производителя
+                    foreach ($articles as $compared_article) {
+
+                        // Если производители совпали, проверяем имя
+                        if ($data['manufacturer_id'] == $compared_article->manufacturer_id) {
+
+                            // Если имя совпало, даем ошибку
+                            if ($data['name'] == $compared_article->name) {
+                                $result['msg'] = 'В данной групе существует данный артикул.';
+                                return $result;
+                            }
+                        }
+                    }
+                }
+            }
         }
-
-        // return $article;
     }
-
 }

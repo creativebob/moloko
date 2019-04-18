@@ -17,6 +17,7 @@ use App\Catalog;
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\GoodsRequest;
+use App\Http\Requests\ArticleRequest;
 
 // Куки
 use Illuminate\Support\Facades\Cookie;
@@ -263,7 +264,7 @@ class GoodsController extends Controller
         ]);
     }
 
-    public function store(GoodsRequest $request)
+    public function store(ArticleRequest $request)
     {
 
         // Подключение политики
@@ -527,7 +528,7 @@ class GoodsController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(ArticleRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
@@ -542,9 +543,9 @@ class GoodsController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
 
-        $article = $this->updateArticle($request, $cur_goods);
-
-        if ($article) {
+        $result = $this->updateArticle($request, $cur_goods->article);
+        // Если результат не массив с ошибками, значит все прошло удачно
+        if (!is_array($result)) {
 
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
 
@@ -597,7 +598,9 @@ class GoodsController extends Controller
 
             return redirect()->route('goods.index');
         } else {
-            abort(403, 'Ошибка обновления товара');
+            return back()
+            ->withErrors($result)
+            ->withInput();
         }
     }
 
