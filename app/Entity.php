@@ -82,6 +82,12 @@ class Entity extends Model
         return $this->belongsTo(Entity::class, 'ancestor_id');
     }
 
+    // Потомок
+    public function descendant()
+    {
+        return $this->hasOne(Entity::class, 'ancestor_id');
+    }
+
     // Состав
     public function consist()
     {

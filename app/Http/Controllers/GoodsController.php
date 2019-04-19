@@ -17,6 +17,7 @@ use App\Catalog;
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\GoodsRequest;
+use App\Http\Requests\ArticleRequest;
 
 // Куки
 use Illuminate\Support\Facades\Cookie;
@@ -254,7 +255,7 @@ class GoodsController extends Controller
         // $backlink = url()->previous();
         // Cookie::queue('backlink', $backlink, 1440);
 
-        return view('includes.create_modes.create', [
+        return view('includes.tmc.create.create', [
             'item' => new $this->class,
             'title' => 'Добавление товара',
             'entity' => $this->entity_alias,
@@ -263,7 +264,7 @@ class GoodsController extends Controller
         ]);
     }
 
-    public function store(GoodsRequest $request)
+    public function store(ArticleRequest $request)
     {
 
         // Подключение политики
@@ -292,6 +293,9 @@ class GoodsController extends Controller
             $cur_goods->save();
 
             if ($cur_goods) {
+
+                $metrics = $goods_category->metrics->pluck('id')->toArray();
+                $cur_goods->metrics()->sync($metrics);
 
                 // Пишем куки состояния
                 // $mass = [
@@ -500,6 +504,9 @@ class GoodsController extends Controller
         //     // dd($composition_list);
         // }
 
+        $cur_goods->load(['metrics.values', 'metrics.property', 'metrics.unit']);
+        // dd($cur_goods);
+        // dd($cur_goods->metrics->first()->pivot);
         $article = $cur_goods->article->load('compositions');
         // dd($article->compositions->pluck('id')->toArray());
         $settings = getSettings($this->entity_alias);
@@ -509,7 +516,7 @@ class GoodsController extends Controller
         $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
 
-        return view('includes.edit_operations.edit', [
+        return view('includes.tmc.edit.edit', [
             'title' => 'Редактировать товар',
             'item' => $cur_goods,
             'article' => $article,
@@ -521,10 +528,8 @@ class GoodsController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(ArticleRequest $request, $id)
     {
-
-        // dd($request);
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -538,9 +543,9 @@ class GoodsController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
 
-        $article = $this->updateArticle($request, $cur_goods);
-
-        if ($article) {
+        $result = $this->updateArticle($request, $cur_goods->article);
+        // Если результат не массив с ошибками, значит все прошло удачно
+        if (!is_array($result)) {
 
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
 
@@ -564,7 +569,25 @@ class GoodsController extends Controller
             $cur_goods->system_item = $request->system_item;
             $cur_goods->save();
 
-            // Проверяем каталоги
+            // Каталоги
+            $cur_goods->catalogs_items()->sync($request->catalogs_items);
+
+            // Метрики
+            if ($request->has('metrics')) {
+                // dd($request);
+
+                $cur_goods->metrics()->detach();
+
+                $metrics_insert = [];
+                foreach ($request->metrics as $metric_id => $value) {
+                    if (is_array($value)) {
+                        $metrics_insert[$metric_id]['value'] = implode(',', $value);
+                    } else {
+                        $metrics_insert[$metric_id]['value'] = $value;
+                    }
+                }
+                $cur_goods->metrics()->sync($metrics_insert);
+            }
             $cur_goods->catalogs_items()->sync($request->catalogs_items);
 
             // Если ли есть
@@ -575,7 +598,9 @@ class GoodsController extends Controller
 
             return redirect()->route('goods.index');
         } else {
-            abort(403, 'Ошибка обновления товара');
+            return back()
+            ->withErrors($result)
+            ->withInput();
         }
     }
 
@@ -615,43 +640,6 @@ class GoodsController extends Controller
 
     // ----------------------------------- Ajax -----------------------------------------
 
-    // Режим создания товара
-    public function ajax_change_create_mode(Request $request)
-    {
-        // $mode = 'mode-add';
-        // $entity = 'service_categories';
-
-        switch ($request->mode) {
-
-            case 'mode-default':
-
-            return view('goods.create_modes.mode_default');
-
-            break;
-
-            case 'mode-select':
-
-            $set_status = $request->set_status == 'true' ? 1 : 0;
-            $goods_category = GoodsCategory::with(['groups' => function ($q) use ($set_status) {
-                $q->with('unit')
-                ->where('set_status', $set_status);
-            }])
-            ->find($request->category_id);
-
-            $articles_groups = $goods_category->groups;
-
-            return view('goods.create_modes.mode_select', compact('articles_groups'));
-
-            break;
-
-            case 'mode-add':
-
-            return view('goods.create_modes.mode_add');
-
-            break;
-
-        }
-    }
     // Отображение на сайте
     public function ajax_sync(Request $request)
     {
@@ -701,108 +689,6 @@ class GoodsController extends Controller
             'items_list' => $goods_list,
             'entity' => $this->entity_alias
         ]);
-    }
-
-    // -------------------------------------- Проверки на совпаденеи артикула ----------------------------------------------------
-
-    // Проверка имени по компании
-    public function check_coincidence_name($request)
-    {
-
-        // Смотрим имя артикула по системе
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods_articles = operator_right('goods_article', false, 'index');
-
-        $goods_articles = GoodsArticle::moderatorLimit($answer_goods_articles)
-        ->companiesLimit($answer_goods_articles)
-        ->whereNull('draft')
-        ->whereNull('archive')
-        ->whereName($request->name)
-        ->get(['name', 'goods_product_id']);
-        // dd($goods_articles);
-        // dd($request);
-
-        if (count($goods_articles)) {
-
-            // Смотрим группу артикулов
-            $diff_count = $goods_articles->where('goods_product_id', '!=', $request->goods_product_id)->count();
-            // dd($diff_count);
-            if ($diff_count > 0) {
-                return true;
-            }
-        }
-    }
-
-    public function check_coincidence_article($metrics_count, $metrics_values, $compositions_count, $compositions_values, $goods_product_id, $manufacturer_id = null)
-    {
-
-        // Вытаскиваем артикулы продукции с нужным нам числом метрик и составов
-        $goods_articles = GoodsArticle::with('metrics', 'compositions', 'set_compositions')
-        ->where('goods_product_id', $goods_product_id)
-        ->where(['metrics_count' => $metrics_count, 'compositions_count' => $compositions_count])
-        ->whereNull('draft')
-        ->whereNull('archive')
-        ->get();
-        // dd($goods_articles);
-
-        if ($goods_articles) {
-
-            // Создаем массив совпадений
-            $coincidence = [];
-            // dd($request);
-
-            // Сравниваем метрики
-            foreach ($goods_articles as $goods_article) {
-                // foreach ($goods_article->goods as $cur_goods) {
-                // dd($goods_articles);
-
-                // Формируем массив метрик артикула
-                $metrics_array = [];
-                foreach ($goods_article->metrics as $metric) {
-                    // dd($metric);
-                    $metrics_array[$metric->id][] = $metric->pivot->value;
-                }
-
-                // Если значения метрик совпали, создаюм ключ метрик
-                if ($metrics_array == $metrics_values) {
-                    $coincidence['metrics'] = 1;
-                }
-
-                // Формируем массив составов артикула
-                $compositions_array = [];
-                if ($goods_article->product->set_status == 'one') {
-                    foreach ($goods_article->compositions as $composition) {
-                        // dd($composition);
-                        $compositions_array[$composition->id] = $composition->pivot->value;
-                    }
-                } else {
-                    foreach ($goods_article->set_compositions as $composition) {
-                        // dd($composition);
-                        $compositions_array[$composition->id] = $composition->pivot->value;
-                    }
-                }
-
-                if ($compositions_array == $compositions_values) {
-                    // Если значения метрик совпали, создаюм ключ метрик
-                    $coincidence['compositions'] = 1;
-                }
-
-                if ($goods_article->manufacturer_id == $manufacturer_id) {
-                    // Если значения метрик совпали, создаюм ключ метрик
-                    $coincidence['manufacturer'] = 1;
-                }
-                // }
-            }
-            // dd($coincidence);
-            // Если ключи присутствуют, даем ошибку
-            if (isset($coincidence['metrics']) && isset($coincidence['compositions']) && isset($coincidence['manufacturer'])) {
-
-                // dd('ошибка');
-                return true;
-                // dd('lol');
-            }
-        }
-        // dd($coincidence);
     }
 
 }

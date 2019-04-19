@@ -92,7 +92,8 @@ class PropertyController extends Controller
 
     public function add_property(Request $request)
     {
-        $property = Property::with('units_category.units')->findOrFail($request->id);
+        $property = Property::with('units_category.units')
+        ->findOrFail($request->id);
 
         if ($property) {
 
@@ -103,7 +104,7 @@ class PropertyController extends Controller
             }
             // echo $property;
 
-            return view('includes.metrics_category.add_property', [
+            return view('includes.category_metrics.add_property', [
                 'type' => $property->type,
                 'units_list' => $units_list,
                 'property_id' => $request->id,

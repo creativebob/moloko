@@ -18,6 +18,7 @@ use App\Page;
 use App\Navigation;
 use App\Menu;
 
+use App\CatalogsType;
 use App\Catalog;
 use App\CatalogsItem;
 
@@ -239,10 +240,13 @@ class StartTableSeeder extends Seeder
             ],
         ]);
 
+        $catalogs_type_id = CatalogsType::where('name', 'Товары')->first(['id'])->id;
+
         Catalog::insert([
             [
                 'name' => 'Первый каталог',
                 'description' => 'Тест',
+                'catalogs_type_id' => $catalogs_type_id,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => 1,

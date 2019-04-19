@@ -13,7 +13,7 @@
 				<div class="small-12 cell">
 
 					<label>Категория
-						@include('includes.create_modes.categories_select', [
+						@include('includes.tmc.create.categories_select', [
 							'categories_select_name' => $categories_select_name,
 							'category_entity_alias' => $category_entity_alias
 						]
@@ -22,7 +22,7 @@
 				</div>
 
 				<div id="mode" class="small-12 cell relative">
-					@include('includes.create_modes.mode_default')
+					@include('includes.tmc.create.mode_default')
 				</div>
 
 				<div class="small-12 cell">

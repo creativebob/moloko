@@ -4,12 +4,6 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Article;
-use App\GoodsProduct;
-use App\GoodsCategory;
-use App\Goods;
-
-use App\RawsArticle;
-use App\GoodsArticle;
 
 use Illuminate\Http\Request;
 
@@ -101,24 +95,22 @@ class CompositionController extends Controller
     }
 
     // Добавляем состав
-    public function ajax_add_relation(Request $request)
+    public function ajax_get_category_composition(Request $request)
     {
 
-        $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
-        $goods_category->compositions()->attach($request->id);
+        $composition = Article::with('group.unit')
+        ->findOrFail($request->id);
 
-        $composition = RawsArticle::findOrFail($request->id);
-
-        return view($request->entity.'.compositions.composition_tr', compact('composition'));
+        return view('includes.tmc_categories.edit.compositions.composition_tr', compact('composition'));
     }
 
     // Удаляем состав
-    public function ajax_delete_relation(Request $request)
-    {
+    // public function ajax_delete_relation(Request $request)
+    // {
 
-        $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
-        $res = $goods_category->compositions()->detach($request->id);
+    //     $goods_category = GoodsCategory::findOrFail($request->goods_category_id);
+    //     $res = $goods_category->compositions()->detach($request->id);
 
-        return response()->json(isset($res) ? true : 'Не удалось удалить состав!');
-    }
+    //     return response()->json(isset($res) ? true : 'Не удалось удалить состав!');
+    // }
 }

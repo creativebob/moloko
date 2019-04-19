@@ -77,6 +77,11 @@ class Catalog extends Model
         return $this->belongsTo(Photo::class);
     }
 
+    // Тип каталога
+    public function type()
+    {
+        return $this->belongsTo(CatalogsType::class, 'catalogs_type_id');
+    }
 
 
 }

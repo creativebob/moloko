@@ -47,16 +47,29 @@ class Article extends Model
     // use DateIntervalFilter;
 
     protected $fillable = [
-        'company_id',
-        'articles_group_id',
         'name',
         'description',
+
+        'articles_group_id',
+
         'internal',
+        'manually',
+        'external',
+
         'manufacturer_id',
-        'metrics_count',
-        'compositions_count',
-        'author_id',
-        'editor_id',
+
+        'cost_default',
+        'cost_mode',
+        'price_default',
+        'price_mode',
+        'price_rule_id',
+
+        'portion_status',
+        'portion_name',
+        'portion_abbreviation',
+        'portion_count',
+
+        'draft',
     ];
 
     // Группа
@@ -70,13 +83,6 @@ class Article extends Model
     // {
     //     return $this->hasMany(Goods');
     // }
-
-    // Метрики
-    public function metrics()
-    {
-        return $this->morphedByMany(Metric::class, 'articles_values')
-        ->withPivot('value');
-    }
 
     // Состав
     public function compositions()

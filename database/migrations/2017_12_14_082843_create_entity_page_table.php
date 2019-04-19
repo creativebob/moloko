@@ -14,7 +14,7 @@ class CreateEntityPageTable extends Migration
     public function up()
     {
         Schema::create('entity_page', function (Blueprint $table) {
-            $table->increments('id');
+
             $table->integer('entity_id')->nullable()->unsigned()->comment('ID сущности');
             $table->foreign('entity_id')->references('id')->on('entities');
 

@@ -15,8 +15,8 @@
 @endsection
 
 @section('planfact')
-{{ link_to_route('plans.show', 'План', $parameters = ['alias' => 'leads'], $attributes = ['class' => 'button tiny']) }}
-{{ link_to_route('statistics.show', 'Факт', $parameters = ['alias' => 'leads'], $attributes = ['class' => 'button tiny']) }}
+{{-- {{ link_to_route('plans.show', 'План', $parameters = ['alias' => 'leads'], $attributes = ['class' => 'button tiny']) }}
+{{ link_to_route('statistics.show', 'Факт', $parameters = ['alias' => 'leads'], $attributes = ['class' => 'button tiny']) }} --}}
 @endsection
 
 @section('content-count')

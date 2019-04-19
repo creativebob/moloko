@@ -14,7 +14,6 @@ class CreateAlbumEntitiesTable extends Migration
     public function up()
     {
         Schema::create('album_entities', function (Blueprint $table) {
-            $table->increments('id');
 
             $table->integer('album_id')->nullable()->unsigned()->comment('Id альбома');
             $table->foreign('album_id')->references('id')->on('albums');

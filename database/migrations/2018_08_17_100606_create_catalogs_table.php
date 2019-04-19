@@ -19,6 +19,9 @@ class CreateCatalogsTable extends Migration
             $table->string('name')->index()->comment('Название каталога');
             $table->string('alias')->index()->nullable()->comment('Алиас');
 
+            $table->integer('catalogs_type_id')->nullable()->unsigned()->comment('Id типа каталога');
+            $table->foreign('catalogs_type_id')->references('id')->on('catalogs_types');
+
             $table->text('description')->nullable()->comment('Описание каталога');
             $table->text('seo_description')->nullable()->comment('Описание для сайта для каталога');
 

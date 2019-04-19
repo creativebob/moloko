@@ -62,7 +62,10 @@ class MetricController extends Controller
         $metric->description = $request->description;
         $metric->author_id = $user_id;
 
-        if ($request->type == 'numeric' || $request->type == 'percent') {
+        if (
+            $request->type == 'numeric' ||
+            $request->type == 'percent'
+        ) {
             $metric->decimal_place = $request->decimal_place;
             $metric->min = round($request->min , $request->decimal_place, PHP_ROUND_HALF_UP);
             $metric->max = round($request->max , $request->decimal_place, PHP_ROUND_HALF_UP);
@@ -73,9 +76,9 @@ class MetricController extends Controller
         if ($request->type == 'list') {
             $metric->list_type = $request->list_type;
             $metric->save();
-            $values = [];
 
-            foreach ($request->values as $value) {
+            $values = [];
+            foreach ($request->metric_values as $value) {
 
                 $values[] = [
                     'metric_id' => $metric->id,
@@ -88,17 +91,18 @@ class MetricController extends Controller
             $metric_values = MetricValue::insert($values);
         }
 
-
         if ($metric) {
+            return view('includes.category_metrics.metric', [
+                'metric' => $metric,
+            ]);
 
             // echo $metric;
             // Переадресовываем на получение метрики
-            return redirect()->route('metrics.add_relation', [
-                'id' => $metric->id,
-                'entity_id' => $request->entity_id,
-                'entity' => $request->entity,
-                'set_status' => $request->set_status
-            ]);
+            // return redirect()->route('metrics.add_relation', [
+            //     'id' => $metric->id,
+            //     'entity_id' => $request->entity_id,
+            //     'entity' => $request->entity,
+            // ]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -115,8 +119,8 @@ class MetricController extends Controller
      */
     public function show($id)
     {
-        $metric = Metric::with('values')->findOrFail($id);
-        dd($metric);
+        // $metric = Metric::with('values')->findOrFail($id);
+        // dd($metric);
     }
 
     /**
@@ -157,37 +161,26 @@ class MetricController extends Controller
 
     // --------------------------------------------- Ajax -------------------------------------------------
 
-    public function ajax_add_relation(Request $request)
+    public function ajax_get_metric(Request $request)
     {
         $metric = Metric::findOrFail($request->id);
 
-        $entity = $request->entity;
-
-        // Связываем сущность с метрикой
-        $metric->$entity()->attach($request->entity_id, ['set_status' => $request->set_status]);
-
-        return view('includes.metrics_category.metric', [
-            'metric' => $metric,
-            'set_status' => $request->set_status
-        ]);
+        if ($metric) {
+            return view('includes.category_metrics.metric', [
+                'metric' => $metric,
+            ]);
+        } else {
+            $result = [
+                'error_status' => 1,
+                'error_message' => 'Ошибка при добавлении свойства!'
+            ];
+        }
     }
 
-    public function ajax_delete_relation(Request $request)
-    {
-
-        $metric = Metric::findOrFail($request->id);
-        $entity = $request->entity;
-
-        // Отвязываем сущность от метрики
-        $res = $metric->$entity()->wherePivot('set_status', $request->set_status)->detach($request->entity_id);
-
-        return response()->json(isset($res) ?? 'Не удалось удалить метрику!');
-    }
-
-    public function add_metric_value(Request $request)
+    public function ajax_get_metric_value(Request $request)
     {
         // Переадресовываем на получение метрики
-        return view('includes.metrics_category.value', ['value' => $request->value]);
+        return view('includes.category_metrics.value', ['value' => $request->value]);
     }
 
 }

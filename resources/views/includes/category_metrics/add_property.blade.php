@@ -1,11 +1,11 @@
 <div class="small-12 cell">
 	<label>Название:
-		@include('includes.inputs.name', ['value'=>null, 'name'=>'name', 'required' => true])
+		@include('includes.inputs.name', ['required' => true])
 	</label>
 </div>
 <div class="small-12 cell">
 	<label>Описание:
-		@include('includes.inputs.textarea', ['value'=>null, 'name'=>'description'])
+		@include('includes.inputs.textarea', ['name'=>'description'])
 	</label>
 </div>
 
@@ -68,10 +68,10 @@
 
 <div class="small-12 cell">
 	<div class="radiobutton">
-		{{ Form::radio('list_type', 'list', true, ['id' => $set_status.'-metric-list-type']) }}
-		<label for="{{ $set_status }}-metric-list-type"><span>Выбор нескольких значений</span></label>
-		{{ Form::radio('list_type', 'select', false, ['id' => $set_status.'-metric-select-type']) }}
-		<label for="{{ $set_status }}-metric-select-type"><span>Выбор одного значения</span></label>
+		{{ Form::radio('list_type', 'list', true, ['id' => 'metric-list-type']) }}
+		<label for="metric-list-type"><span>Выбор нескольких значений</span></label>
+		{{ Form::radio('list_type', 'select', false, ['id' => 'metric-select-type']) }}
+		<label for="metric-select-type"><span>Выбор одного значения</span></label>
 	</div>
 </div>
 
@@ -79,7 +79,7 @@
 
 <div class="input-group inputs small-12 cell wrap-add-list-metric">
 
-		{{ Form::text('value', null, ['id' => $set_status.'-value', 'placeholder' => 'Введите значение']) }}
+		{{ Form::text('value', null, ['id' => 'value', 'placeholder' => 'Введите значение']) }}
 
 	  <div class="input-group-button">
 		<a class="button add-value">Добавить в список</a>
@@ -87,8 +87,8 @@
 </div>
 
 <div class="small-12 cell wrap-table-list-metric">
-	<table id="{{ $set_status }}-values-table" class="tablesorter unstriped table-list-metric">
-		<tbody id="{{ $set_status }}-values-tbody">
+	<table id="values-table" class="tablesorter unstriped table-list-metric">
+		<tbody id="values-tbody">
 
 		</tbody>
 	</table>

@@ -60,4 +60,5 @@ class ExpendablesCategory extends Model
     {
     	return $this->belongsTo('App\Company');
     }
+
 }

@@ -37,6 +37,7 @@ class CatalogController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $catalogs = Catalog::with([
+            'type',
             'author',
         ])
         ->moderatorLimit($answer)
@@ -75,6 +76,7 @@ class CatalogController extends Controller
         $catalog = new Catalog;
         $catalog->name = $request->name;
         $catalog->description = $request->description;
+        $catalog->catalogs_type_id = $request->catalogs_type_id;
 
 
         // Алиас
@@ -151,6 +153,7 @@ class CatalogController extends Controller
 
         $catalog->name = $request->name;
         $catalog->description = $request->description;
+        $catalog->catalogs_type_id = $request->catalogs_type_id;
 
         // Если ввели алиас руками
         if (isset($request->alias) && ($catalog->alias != $request->alias)) {

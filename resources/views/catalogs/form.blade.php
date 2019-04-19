@@ -1,6 +1,10 @@
 <div class="grid-x grid-padding-x inputs tabs-margin-top">
     <div class="small-12 medium-7 large-5 cell ">
 
+        <label>Тип
+            @include('includes.selects.catalogs_types')
+        </label>
+
         <label>Название
             @include('includes.inputs.name', ['required' => true])
         </label>

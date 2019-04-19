@@ -179,39 +179,34 @@ $disabled = $article->draft == null;
                             </div>
                         </div>
 
+                        {{-- Метрики --}}
+                        @if ($item->getTable() == 'goods')
+
                         {{-- @php
                         $metric_relation = ($cur_goods->article->group->set_status == 'one') ? 'one_metrics' : 'set_metrics';
                         @endphp --}}
 
-                        {{-- @if ($cur_goods->article->metrics->isNotEmpty() || $cur_goods->category->$metric_relation->isNotEmpty())
-
-                        @include('includes.scripts.class.metric_validation')
+                        {{-- @if ($item->metrics->isNotEmpty() || $item->category->metrics->isNotEmpty()) --}}
+                        @if ($item->metrics->isNotEmpty())
+                        @include('includes.tmc.edit.metric_validation')
 
                         <fieldset class="fieldset-access">
                             <legend>Метрики</legend>
 
                             <div id="metrics-list">
 
-                                Если уже сохранили метрики товара, то тянем их с собой
-                                @if ($cur_goods->article->metrics->isNotEmpty())
-                                @foreach ($cur_goods->article->metrics->unique() as $metric)
-                                @include('includes.metrics.metric_input', $metric)
+                                {{-- {!! Form::model($item) !!} --}}
+                                @foreach ($item->metrics as $metric)
+                                @include('includes.tmc.edit.metric_input', $metric)
                                 @endforeach
-
-                                @else
-
-                                @if ($cur_goods->article->product->category->$metric_relation->isNotEmpty())
-                                @foreach ($cur_goods->article->product->category->$metric_relation as $metric)
-                                @include('includes.metrics.metric_input', $metric)
-                                @endforeach
-                                @endif
-
-                                @endif
+                                {{-- {!! Form::close() !!} --}}
 
                             </div>
                         </fieldset>
+                        @endif
+                        @endif
 
-                        @endif --}}
+                        {{-- @endif --}}
 
                         <div id="item-inputs"></div>
                         <div class="small-12 cell tabs-margin-top text-center">
@@ -308,7 +303,7 @@ $disabled = $article->draft == null;
                         <fieldset class="fieldset-access">
                             <legend>Каталоги</legend>
 
-                            @include('includes.catalogs_with_items')
+                            @include('includes.catalogs_with_items', ['type' => 'goods'])
 
 
                             {{-- Form::select('catalogs[]', $catalogs_list, $cur_goods->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
@@ -341,9 +336,11 @@ $disabled = $article->draft == null;
                             </thead>
                             <tbody id="composition-table">
 
+                                @if ($article->compositions->isNotEmpty())
                                 @foreach ($article->compositions as $composition)
                                 @include ('includes.compositions.composition_input', $composition)
                                 @endforeach
+                                @endif
                                 {{-- @php
                                 $composition_relation = ($cur_goods->article->product->set_status == 'one') ? 'compositions' : 'set_compositions';
                                 @endphp
@@ -396,7 +393,7 @@ $disabled = $article->draft == null;
 
                                     <ul class="checker" id="categories-list">
 
-                                        @include('includes.edit_operations.compositions_categories', ['item' => $item, 'article' => $article])
+                                        @include('includes.tmc.edit.compositions', ['item' => $item, 'article' => $article])
                                     </ul>
 
                                 </div>
@@ -404,7 +401,7 @@ $disabled = $article->draft == null;
 
                         </ul>
 
-                        {{ Form::close() }}
+                        {{-- {{ Form::close() }} --}}
 
                         @endif
 
@@ -442,7 +439,7 @@ $disabled = $article->draft == null;
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
                             @isset($article->album_id)
-                            @include('includes.edit_operations.photos', ['item' => $article])
+                            @include('includes.tmc.edit.photos', ['item' => $article])
                             @endisset
 
                         </ul>
@@ -643,7 +640,7 @@ $disabled = $article->draft == null;
 
         // Если нужно добавить состав
         if ($(this).prop('checked')) {
-            $.post('/admin/ajax_add_page_composition', {
+            $.post('/admin/ajax_get_tmc_composition', {
                 id: $(this).val(),
                 entity: entity,
                 set_status: set_status
@@ -690,8 +687,8 @@ $disabled = $article->draft == null;
     });
 </script>
 
-@include('includes.edit_operations.change_articles_groups_script')
-@include('includes.edit_operations.change_portions_script')
+@include('includes.tmc.edit.change_articles_groups_script')
+@include('includes.tmc.edit.change_portions_script')
 
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')

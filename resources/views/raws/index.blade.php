@@ -142,7 +142,7 @@
 @include('includes.scripts.modal-archive-script')
 
 @include('includes.scripts.inputs-mask')
-@include('includes.create_modes.scripts', ['entity' => 'raws', 'category_entity' => 'raws_categories'])
+@include('includes.tmc.create.scripts', ['entity' => 'raws', 'category_entity' => 'raws_categories'])
 
 <script type="text/javascript">
 
