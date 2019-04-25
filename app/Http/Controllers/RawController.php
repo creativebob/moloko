@@ -336,8 +336,9 @@ class RawController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raw);
 
+        $article = $raw->article;
 
-        $result = $this->updateArticle($request, $raw->article);
+        $result = $this->updateArticle($request, $article);
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 

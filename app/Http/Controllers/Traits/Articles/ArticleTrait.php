@@ -128,17 +128,15 @@ trait ArticleTrait
     protected function getCoincidenceArticle($data)
     {
 
+        // dd($data);
         // Проверка только если статус черновика не пришел, а сам артикул находится в черновике
         if (!request()->has('draft') && $data['old_draft'] == 1) {
-
-            $compositions_count = isset($data['compositions']) ? count($data['compositions']) : 0;
 
             $articles = Article::with([
                 'compositions',
             ])
             ->where([
                 'articles_group_id' => $data['articles_group_id'],
-                'compositions_count' => $compositions_count,
                 'manufacturer_id' => $data['manufacturer_id'],
             ])
             ->where('id', '!=', $data['id'])
@@ -155,64 +153,59 @@ trait ArticleTrait
             if ($articles->isNotEmpty()) {
 
                 // Проверяем на наличие состава
-                if ($compositions_count > 0) {
 
-                    // Формируем массив пришедших составов артикула
+                // Формируем массив пришедших составов артикула
+                if (isset($data['compositions'])) {
                     $article_compositions = [];
                     foreach ($data['compositions'] as $id => $composition) {
                         $article_compositions[$id] = (int) $composition['value'];
                     }
+                    // dd($article_compositions);
+                }
+                
 
-                    // Проверяем значения составов
-                    foreach ($articles as $compared_article) {
+                // Проверяем значения составов
+                foreach ($articles as $compared_article) {
+
+
+                    if ($compared_article->compositions->isNotEmpty()) {
                         // Берем составы для первого найдденного артикула в группе
                         $compared_article_compositions = [];
-
                         foreach ($compared_article->compositions as $composition) {
                             $compared_article_compositions[$composition->id] = $composition->pivot->value;
                         }
-
-                        // Если составы и их значения совпали, проверяем произодителя
+                        // dd($compared_article_compositions);
+                    }
+                    
+                    // Если составы и их значения совпали, то так как один производитель, даем ошибку
+                    if (isset($article_compositions) && isset($compared_article_compositions)) {
+                        // dd('lol1');
                         if ($article_compositions == $compared_article_compositions) {
-
-                            // Если производители совпали, даем ошибку
-                            if ($data['manufacturer_id'] == $compared_article->manufacturer_id) {
-                                $result['msg'] = 'В данной групе существуют артикулы с аналогичным составом и производителем.';
-                                return $result;
-                            }
+                            $result['msg'] = 'В данной групе существует артикул с таким именем и производителем.';
+                            return $result;
                         } else {
-                            // Если составы разные, смотрим производителя
-
-                            // Если производители совпали смотрим имя
-                            if ($data['manufacturer_id'] == $compared_article->manufacturer_id) {
-
-                                // Если имя совпало даем ошибку
-                                if ($data['name'] == $compared_article->name) {
-                                    $result['msg'] = 'В данной групе существует артикул с таким именем.';
-                                    return $result;
-                                }
-                            }
-
-                            // Убиваем массив, чтоб создать новый
-                            unset($compared_article_compositions);
-                        }
-                    }
-                } else {
-
-                    // Состава нет, проверяем производителя
-                    foreach ($articles as $compared_article) {
-
-                        // Если производители совпали, проверяем имя
-                        if ($data['manufacturer_id'] == $compared_article->manufacturer_id) {
-
-                            // Если имя совпало, даем ошибку
+                            // Если имя совпало даем ошибку
                             if ($data['name'] == $compared_article->name) {
-                                $result['msg'] = 'В данной групе существует данный артикул.';
+                                $result['msg'] = 'В данной групе существует артикул с таким именем.';
                                 return $result;
                             }
                         }
+
+                    } else {
+                        // Если составы разные, смотрим имя, так как производитель один
+
+                        // Если имя совпало даем ошибку
+                        if ($data['name'] == $compared_article->name) {
+                            $result['msg'] = 'В данной групе существует артикул с таким именем.';
+                            return $result;
+                        }
+                        
+                        // Убиваем массив, чтоб создать новый
+                        unset($compared_article_compositions);
                     }
+
                 }
+                // dd('lol');
             }
         }
     }

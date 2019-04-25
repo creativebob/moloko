@@ -542,8 +542,9 @@ class GoodsController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
+        $article = $cur_goods->article;
 
-        $result = $this->updateArticle($request, $cur_goods->article);
+        $result = $this->updateArticle($request, $article);
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
