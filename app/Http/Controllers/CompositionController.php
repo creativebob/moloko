@@ -88,7 +88,7 @@ class CompositionController extends Controller
 
     public function ajax_get_composition(Request $request)
     {
-        $composition = Raw::with(['article.group.unit'])
+        $composition = Raw::with(['article.group.unit', 'category'])
         ->find($request->id);
 
         return view('goods.compositions.composition_input', compact('composition'));
@@ -98,7 +98,7 @@ class CompositionController extends Controller
     public function ajax_get_category_composition(Request $request)
     {
 
-        $composition = Raw::with(['article.group.unit'])
+        $composition = Raw::with(['article.group.unit', 'category'])
         ->findOrFail($request->id);
 
         return view('goods_categories.compositions.composition_tr', compact('composition'));

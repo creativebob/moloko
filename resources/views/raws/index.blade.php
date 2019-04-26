@@ -88,7 +88,7 @@
                     <td class="td-author">@if(isset($raw->author->first_name)) {{ $raw->author->name }} @endif</td>
 
                     {{-- Элементы управления --}}
-                    @include('includes.control.table-td', ['item' => $raw])
+                    @include('includes.control.table_td', ['item' => $raw])
 
                     <td class="td-archive">
                         @if ($raw->system_item != 1)

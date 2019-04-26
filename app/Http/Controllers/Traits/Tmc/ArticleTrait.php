@@ -90,7 +90,6 @@ trait ArticleTrait
         if (empty($result)) {
 
             $result = $this->checks($request, $item);
-            // dd(__METHOD__, $result);
 
 
             if (is_array($result)) {
@@ -120,7 +119,7 @@ trait ArticleTrait
 
     protected function setCompositions(Article $article)
     {
-        // ЗАпись состава только для черновика
+        // Запись состава только для черновика
         if ($article->draft) {
             $article->compositions()->sync(request()->compositions);
         }
@@ -217,7 +216,6 @@ trait ArticleTrait
         if ($article->name != $request->name) {
 
             $result = $this->checkName($request, $item);
-            // dd($result_name);
             if (is_array($result)) {
                 return $result;
             }
@@ -225,7 +223,6 @@ trait ArticleTrait
 
         // Проверка смены группы
         if ($article->articles_group_id != $request->articles_group_id) {
-            // dd(__METHOD__, $item->article, $request);
             $data = $request->input();
             // Так как производителя блокируем на шаблоне, то добавляем руками в массив
             $data['manufacturer_id'] = $item->article->manufacturer_id;

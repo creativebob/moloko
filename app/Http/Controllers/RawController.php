@@ -67,7 +67,9 @@ class RawController extends Controller
             'category_id',
             'set_status',
             'author_id',
-            'company_id'
+            'company_id',
+            'display',
+            'system_item'
         ];
 
         $raws = Raw::with([

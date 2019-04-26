@@ -24,6 +24,13 @@ class CreateArticleCompositionTable extends Migration
             $table->foreign('raw_id')->references('id')->on('raws');
 
             $table->integer('value')->nullable()->unsigned()->comment('Значение');
+
+            $table->integer('use')->nullable()->unsigned()->comment('Использование');
+            $table->integer('leftover')->nullable()->unsigned()->comment('Остаток');
+            $table->integer('waste')->nullable()->unsigned()->comment('Отходы ');
+
+            $table->integer('leftover_operation_id')->nullable()->unsigned()->comment('Id операции над остатком');
+            $table->foreign('leftover_operation_id')->references('id')->on('leftover_operations');
         });
     }
 

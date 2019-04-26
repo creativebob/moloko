@@ -71,7 +71,9 @@ class GoodsController extends Controller
             'category_id',
             'set_status',
             'author_id',
-            'company_id'
+            'company_id',
+            'display',
+            'system_item'
         ];
 
         $goods = Goods::with([
@@ -343,7 +345,7 @@ class GoodsController extends Controller
         $cur_goods->load(['metrics.values', 'metrics.property', 'metrics.unit']);
         // dd($cur_goods);
         // dd($cur_goods->metrics->first()->pivot);
-        $article = $cur_goods->article->load('compositions.article.group.unit');
+        $article = $cur_goods->article->load('compositions.article.group.unit', 'compositions.category');
         // dd($article->compositions);
         $settings = getSettings($this->entity_alias);
         // dd($settings);

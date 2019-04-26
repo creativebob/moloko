@@ -1,4 +1,5 @@
 <tr class="item" id="table-compositions-{{ $composition->id }}" data-name="{{ $composition->article->name }}">
+	<td>{{ $composition->category->name }}</td>
 	<td>{{ $composition->article->name }}</td>
 	<td>{{ $composition->article->description }}</td>
 	<td>{{ $composition->article->group->unit->abbreviation }}</td>

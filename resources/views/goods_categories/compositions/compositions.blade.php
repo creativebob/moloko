@@ -5,6 +5,7 @@
 		<table class="composition-table">
 			<thead>
 				<tr>
+					<th>Категория</th>
 					<th>Название</th>
 					<th>Описание</th>
 					<th>Ед. изм.</th>

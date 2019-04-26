@@ -82,6 +82,8 @@ use App\Http\ViewComposers\CompositionsCategoriesComposer;
 use App\Http\ViewComposers\CompositionsComposer;
 use App\Http\ViewComposers\TmcComposer;
 
+use App\Http\ViewComposers\LeftoverOperationsComposer;
+
 class ComposerServiceProvider extends ServiceProvider
 {
 
@@ -180,6 +182,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer(['goods.compositions.compositions_list'], CompositionsComposer::class);
 
         view()->composer('includes.selects.tmc', TmcComposer::class);
+        view()->composer('goods.compositions.leftover_operations_select', LeftoverOperationsComposer::class);
+
 
     }
 

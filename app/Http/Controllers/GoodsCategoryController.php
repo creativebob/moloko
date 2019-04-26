@@ -160,6 +160,7 @@ class GoodsCategoryController extends Controller
                 $q->with('unit', 'values');
             },
             'compositions.article.group.unit',
+            'compositions.category',
             // 'compositions.product.unit',
             // 'compositions',
             'manufacturers',

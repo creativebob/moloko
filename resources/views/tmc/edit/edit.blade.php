@@ -161,7 +161,7 @@ $disabled = $article->draft == false;
 
                                 <div class="small-12 medium-4 cell">
                                     <label>Программный</label>
-                                    {{ $article->internal }}
+                                    {{ Form::text('internal', null, ['disabled']) }}
                                 </div>
                             </div>
                         </fieldset>
