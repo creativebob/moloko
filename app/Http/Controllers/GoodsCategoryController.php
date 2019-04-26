@@ -159,7 +159,7 @@ class GoodsCategoryController extends Controller
             'metrics' => function ($q) {
                 $q->with('unit', 'values');
             },
-            'compositions.group.unit',
+            'compositions.article.group.unit',
             // 'compositions.product.unit',
             // 'compositions',
             'manufacturers',
@@ -178,45 +178,12 @@ class GoodsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_category);
 
-        // Отдаем Ajax
+        // При добавлении метрики отдаем ajax новый список свойст и метрик
         if ($request->ajax()) {
-            return view('includes.category_metrics.properties_list', [
-                'category' => $goods_category
+            return view('goods_categories.metrics.properties_list', [
+                'category' => $goods_category,
             ]);
         }
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        // $answer_raws_categories = operator_right('raws_categories', false, 'index');
-        // $answer_raws = operator_right('raws', false, 'index');
-
-        // $raws_articles = RawsArticle::with(['product' => function ($q) {
-        //     $q->with(['category' => function ($q) {
-        //         $q->select('id', 'name');
-        //     }])->select('id', 'name', 'raws_category_id');
-        // }])
-        // ->select('id', 'name', 'raws_product_id')
-        // ->whereHas('raws', function ($query) {
-        //     $query->whereNull('draft');
-        // })
-
-        // // ->withCount('raws_products')
-        // ->moderatorLimit($answer_raws_categories)
-        // ->companiesLimit($answer_raws_categories)
-        // // ->authors($answer_raws_categories)
-        // // ->systemItem($answer_raws_categories) // Фильтр по системным записям
-        // ->get()
-        // ->keyBy('id')
-        // ->groupBy('raws_product.raws_category.name');
-        // ->toArray();
-        // dd($raws_articles);
-
-        // $composition_list = [
-        //     'name' => 'Сырье',
-        //     'alias' => 'raws',
-        //     'composition_categories' => $raws_articles,
-        // ];
-        // dd($composition_list);
-
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
@@ -224,7 +191,7 @@ class GoodsCategoryController extends Controller
         $settings = getSettings($this->entity_alias);
 
         // dd($goods_category->direction);
-        return view('includes.tmc_categories.edit.edit', [
+        return view('tmc_categories.edit.edit', [
             'title' => 'Редактирование категории товаров',
             'category' => $goods_category,
             'page_info' => $page_info,

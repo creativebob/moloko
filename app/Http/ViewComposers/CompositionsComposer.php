@@ -2,7 +2,7 @@
 
 namespace App\Http\ViewComposers;
 
-use App\Entity;
+use App\RawsCategory;
 
 use Illuminate\View\View;
 
@@ -11,53 +11,24 @@ class CompositionsComposer
 	public function compose(View $view)
 	{
 
-        $item = $view->item;
-        $article = $view->article;
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('raws_categories', false, 'index');
 
-        if ($item->set_status == 1) {
-            // Если набор, то состоит из себя
-            $alias = $item->category->getTable();
-        } else {
-            $entity = Entity::with('consist')
-            ->whereAlias($item->getTable())
-            ->first();
+        $raws_categories = RawsCategory::whereHas('raws', function ($q) {
+            $q->where('archive', false)
+            ->whereHas('article', function ($q) {
+                $q->where('draft', false);
+            });
+        })
+        ->moderatorLimit($answer)
+        ->systemItem($answer)
+        ->companiesLimit($answer)
+        ->systemItem($answer)
+        ->orderBy('sort', 'asc')
+        ->get();
+        // dd($raws_categories);
 
-            if (isset($entity->consist)) {
-                $alias = $entity->consist->ancestor->alias;
-            } else {
-                $alias = null;
-            }
-        }
-
-        if (isset($alias)) {
-            $entity = Entity::whereAlias($alias)->first(['model']);
-            $model = 'App\\'.$entity->model;
-
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right($alias, false, 'index');
-
-            // $columns = [
-            //     'id',
-            //     'name',
-            //     'parent_id'
-            // ];
-
-            $categories = $model::with('articles')
-            ->whereHas('articles')
-            ->moderatorLimit($answer)
-            ->systemItem($answer)
-            ->companiesLimit($answer)
-            ->systemItem($answer)
-            ->orderBy('sort', 'asc')
-            ->get();
-            // dd($categories);
-        } else {
-            $categories = collect();
-            $alias = null;
-        }
-
-
-        return $view->with(compact('categories', 'article'));
+        return $view->with(compact('raws_categories'));
     }
 
 }

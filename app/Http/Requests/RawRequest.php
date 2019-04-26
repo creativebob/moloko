@@ -33,7 +33,7 @@ class RawRequest extends FormRequest
 
         'quickly' => 'integer|nullable',
 
-        'raws_category_id' => 'integer|nullable',
+        'category_id' => 'integer|nullable',
         'raws_type_id' => 'integer|nullable',
 
         'display' => 'integer|max:1|nullable',

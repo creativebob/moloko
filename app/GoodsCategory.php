@@ -71,7 +71,7 @@ class GoodsCategory extends Model
     // Товары
     public function goods()
     {
-        return $this->hasMany(Goods::class);
+        return $this->hasMany(Goods::class, 'category_id');
     }
 
     // Режим
@@ -110,7 +110,7 @@ class GoodsCategory extends Model
 
     public function compositions()
     {
-        return $this->morphToMany(Article::class, 'preset_composition');
+        return $this->belongsToMany(Raw::class, 'preset_composition');
     }
 
     // Один

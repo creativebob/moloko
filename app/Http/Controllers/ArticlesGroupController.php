@@ -206,7 +206,7 @@ class ArticlesGroupController extends Controller
         $articles_groups = $category->groups;
         // dd($articles_groups);
 
-        return view('goods.create_modes.mode_select', compact('articles_groups'));
+        return view('tmc.create.mode_select', compact('articles_groups'));
 
 
         // if ($category->groups_count > 0) {

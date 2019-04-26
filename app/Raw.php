@@ -77,7 +77,7 @@ class Raw extends Model
     // Категория
     public function category()
     {
-        return $this->belongsTo(RawsCategory::class, 'raws_category_id');
+        return $this->belongsTo(RawsCategory::class);
     }
 
     // Компания

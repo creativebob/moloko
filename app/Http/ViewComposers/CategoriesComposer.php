@@ -24,7 +24,11 @@ class CategoriesComposer
         ->companiesLimit($answer)
         ->systemItem($answer)
         ->orderBy('sort', 'asc')
-        ->get(['id', 'name', 'parent_id']);
+        ->get([
+            'id',
+            'name',
+            'parent_id'
+        ]);
         // dd($categories);
 
         if ($categories->count() == 0) {

@@ -33,7 +33,7 @@ class GoodsRequest extends FormRequest
 
         'quickly' => 'integer|nullable',
 
-        'goods_category_id' => 'integer|nullable',
+        'category_id' => 'integer|nullable',
         'goods_type_id' => 'integer|nullable',
 
         'metrics.*'  => 'integer|distinct',

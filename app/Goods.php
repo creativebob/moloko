@@ -62,7 +62,7 @@ class Goods extends Model
     // Категория
     public function category()
     {
-        return $this->belongsTo(GoodsCategory::class, 'goods_category_id');
+        return $this->belongsTo(GoodsCategory::class);
     }
 
     // Компания

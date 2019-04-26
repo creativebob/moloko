@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Cookie;
 use Transliterate;
 
 // Трейты
-use App\Http\Controllers\Traits\Articles\ArticleTrait;
+use App\Http\Controllers\Traits\Tmc\ArticleTrait;
 
 class RawController extends Controller
 {
@@ -64,7 +64,7 @@ class RawController extends Controller
         $columns = [
             'id',
             'article_id',
-            'raws_category_id',
+            'category_id',
             'set_status',
             'author_id',
             'company_id'
@@ -201,11 +201,10 @@ class RawController extends Controller
         //     }
         // }
 
-        return view('includes.tmc.create.create', [
+        return view('tmc.create.create', [
             'item' => new $this->class,
             'title' => 'Добавление сырья',
             'entity' => $this->entity_alias,
-            'categories_select_name' => 'raws_category_id',
             'category_entity_alias' => 'raws_categories',
         ]);
     }
@@ -216,7 +215,7 @@ class RawController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $raws_category = RawsCategory::findOrFail($request->raws_category_id);
+        $raws_category = RawsCategory::findOrFail($request->category_id);
         // dd($goods_category->load('groups'));
         $article = $this->storeArticle($request, $raws_category);
 
@@ -227,7 +226,7 @@ class RawController extends Controller
 
             $raw = new Raw;
             $raw->article_id = $article->id;
-            $raw->raws_category_id = $request->raws_category_id;
+            $raw->category_id = $request->category_id;
 
             $raw->display = $request->display;
             $raw->system_item = $request->system_item;
@@ -279,27 +278,6 @@ class RawController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raw);
 
-        // -- TODO -- Перенести в запрос --
-
-        // // Массив со значениями метрик товара
-        // if ($raw->article->metrics->isNotEmpty()) {
-        //     // dd($raw->metrics);
-        //     $metrics_values = [];
-        //     foreach ($raw->article->metrics->groupBy('id') as $metric) {
-        //         // dd($metric);
-        //         if ((count($metric) == 1) && ($metric->first()->list_type != 'list')) {
-        //             $metrics_values[$metric->first()->id] = $metric->first()->pivot->value;
-        //         } else {
-        //             foreach ($metric as $value) {
-        //                 $metrics_values[$metric->first()->id][] = $value->pivot->value;
-        //             }
-        //         }
-        //     }
-        // } else {
-        //     $metrics_values = null;
-        // }
-        // // dd($metrics_values);
-
         $article = $raw->article;
         // dd($article);
 
@@ -310,7 +288,7 @@ class RawController extends Controller
         $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
 
-        return view('includes.tmc.edit.edit', [
+        return view('tmc.edit.edit', [
             'title' => 'Редактировать сырье',
             'item' => $raw,
             'article' => $article,
@@ -337,29 +315,14 @@ class RawController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $raw);
 
         $article = $raw->article;
+        // dd($article);
 
-        $result = $this->updateArticle($request, $article);
+        $result = $this->updateArticle($request, $raw);
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-
-            // dd($request);
-            // Получаем выбранную категорию со страницы (то, что указал пользователь)
-            $raws_category_id = $request->raws_category_id;
-
-            // Смотрим: была ли она изменена
-            if ($raw->raws_category_id != $raws_category_id) {
-
-                $articles_group = $article->group;
-
-                // Была изменена! Переназначаем категорию товару и группе:
-                $articles_group->raws_categories()->detach($raw->goods_category_id);
-                $raw->raws_category_id = $raws_category_id;
-
-                $articles_group->raws_categories()->attach($raws_category_id);
-                // $articles_group->goods_categories()->updateExistingPivot($article->articles_group_id, $goods_category);
-            }
+            $this->changeCategory($request, $raw);
 
             $raw->display = $request->display;
             $raw->system_item = $request->system_item;

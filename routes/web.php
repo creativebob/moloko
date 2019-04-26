@@ -302,7 +302,7 @@ Route::post('/ajax_get_metric_value', 'MetricController@ajax_get_metric_value')-
 Route::post('/ajax_get_category_composition', 'CompositionController@ajax_get_category_composition')->middleware('auth');
 Route::post('/ajax_delete_relation_composition', 'CompositionController@ajax_delete_relation')->middleware('auth');
 
-Route::post('/ajax_get_tmc_composition', 'CompositionController@ajax_add')->middleware('auth');
+Route::post('/ajax_get_tmc_composition', 'CompositionController@ajax_get_composition')->middleware('auth');
 
 Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');

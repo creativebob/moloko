@@ -87,7 +87,7 @@ class Article extends Model
     // Состав
     public function compositions()
     {
-        return $this->belongsToMany(Article::class, 'article_composition', 'article_id', 'composition_id')
+        return $this->belongsToMany(Raw::class, 'article_composition', 'article_id', 'raw_id')
         ->withPivot('value');
     }
 

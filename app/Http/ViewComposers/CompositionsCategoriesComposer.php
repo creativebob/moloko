@@ -2,7 +2,7 @@
 
 namespace App\Http\ViewComposers;
 
-use App\Entity;
+use App\RawsCategory;
 
 use Illuminate\View\View;
 
@@ -11,65 +11,29 @@ class CompositionsCategoriesComposer
 	public function compose(View $view)
 	{
 
-        // $item = $view->item;
-        // $article = $view->article;
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('raws_categories', false, 'index');
 
-        // if ($item->set_status == 1) {
-        //     // Если набор, то состоит из себя
-        //     $alias = $item->category->getTable();
-        // } else {
-        //     $entity = Entity::with('consist')
-        //     ->whereAlias($item->getTable())
-        //     ->first();
+        // $columns = [
+        //     'id',
+        //     'name',
+        //     'parent_id'
+        // ];
 
-        //     if (isset($entity->consist)) {
-        //         $alias = $entity->consist->ancestor->alias;
-        //     } else {
-        //         $alias = null;
-        //     }
-        // }
-        //
-        $alias = $view->alias;
-        // $alias = 'raws_categories';
-        // dd($alias);
+        $raws_categories = RawsCategory::whereHas('raws', function ($q) {
+            $q->where('archive', false)
+            ->whereHas('article', function ($q) {
+                $q->where('draft', false);
+            });
+        })
+        ->moderatorLimit($answer)
+        ->systemItem($answer)
+        ->companiesLimit($answer)
+        ->systemItem($answer)
+        ->orderBy('sort', 'asc')
+        ->get();
+        // dd($raws_categories);
 
-        if (isset($alias)) {
-            $entity = Entity::whereAlias($alias)->first();
-
-            $consist = $entity->descendant->consist;
-            // dd($consist->ancestor);
-            if (isset($consist)) {
-                // dd($consist->ancestor);
-
-                $model = 'App\\' . $consist->ancestor->model;
-
-                // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-                $answer = operator_right($consist->ancestor->alias, false, 'index');
-
-                // $columns = [
-                //     'id',
-                //     'name',
-                //     'parent_id'
-                // ];
-
-                $categories = $model::with('articles')
-                ->whereHas('articles')
-                ->moderatorLimit($answer)
-                ->systemItem($answer)
-                ->companiesLimit($answer)
-                ->systemItem($answer)
-                ->orderBy('sort', 'asc')
-                ->get();
-                // dd($categories);
-            } else {
-                $categories = collect();
-                $alias = null;
-            }
-
-            return $view->with(compact('categories'));
-        }
-
-
+        return $view->with(compact('raws_categories'));
     }
-
 }
