@@ -72,7 +72,7 @@ class RawsCategory extends Model
     // Сырье
     public function raws()
     {
-        return $this->hasMany(Raw::class);
+        return $this->hasMany(Raw::class, 'category_id');
     }
 
     // Артикулы
@@ -100,10 +100,6 @@ class RawsCategory extends Model
     // {
     //     return $this->belongsToMany(Article::class, 'preset_composition', 'category_id', 'composition_id');
     // }
-    public function compositions()
-    {
-        return $this->morphToMany(Article::class, 'preset_composition');
-    }
 
     // Производители
     public function manufacturers()

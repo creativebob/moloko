@@ -37,7 +37,7 @@
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
                     <th class="td-photo">Фото</th>
                     <th class="td-name">Название сырья</th>
-                    <th class="td-raws_category">Категория</th>
+                    <th class="td-category">Категория</th>
                     <th class="td-description">Описание</th>
                     <th class="td-cost">Себестоимость</th>
                     <th class="td-price">Цена</th>
@@ -75,7 +75,7 @@
                         <a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->article->name }} @if ($raw->set_status == 1) (Набор) @endif</a>
                     </td>
                     <td class="td-raws_category">
-                        <a href="/admin/raws?raws_category_id%5B%5D={{ $raw->category->id }}" class="filter_link" title="Фильтровать">{{ $raw->category->name }}</a>
+                        <a href="/admin/raws?category_id%5B%5D={{ $raw->category->id }}" class="filter_link" title="Фильтровать">{{ $raw->category->name }}</a>
 
                         <br>
                         @if($raw->article->group->name != $raw->article->name)
@@ -88,7 +88,7 @@
                     <td class="td-author">@if(isset($raw->author->first_name)) {{ $raw->author->name }} @endif</td>
 
                     {{-- Элементы управления --}}
-                    @include('includes.control.table-td', ['item' => $raw])
+                    @include('includes.control.table_td', ['item' => $raw])
 
                     <td class="td-archive">
                         @if ($raw->system_item != 1)
@@ -142,7 +142,7 @@
 @include('includes.scripts.modal-archive-script')
 
 @include('includes.scripts.inputs-mask')
-@include('includes.tmc.create.scripts', ['entity' => 'raws', 'category_entity' => 'raws_categories'])
+@include('tmc.create.scripts', ['entity' => 'raws', 'category_entity' => 'raws_categories'])
 
 <script type="text/javascript">
 

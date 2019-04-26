@@ -144,7 +144,7 @@ class SupplierController extends Controller
         $supplier->supplier_id = $company->id;
 
         // Запись информации по поставщику:
-        $supplier->description = $request->description;
+        $supplier->description_supplier = $request->description_supplier;
         $supplier->preorder = $request->preorder ?? 0;
 
         $supplier->save();

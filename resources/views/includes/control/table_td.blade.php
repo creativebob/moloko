@@ -1,6 +1,5 @@
 <td class="td-control">
 
-
         {{-- Отображение на сайте --}}
         @can ('display', $item)
         @display ($item)

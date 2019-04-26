@@ -144,7 +144,6 @@ class RawsCategoryController extends Controller
             // 'one_metrics' => function ($q) {
             //     $q->with('unit', 'values');
             // },
-            'compositions',
             'manufacturers',
         ])
         // ->withCount('one_metrics')
@@ -156,22 +155,13 @@ class RawsCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $raws_category);
         // dd($raws_category_metrics);
 
-        // Отдаем Ajax
-        if ($request->ajax()) {
-            return view('includes.metrics_category.properties_form', [
-                'set_status' => $request->set_status,
-                'category' => $raws_category
-            ]);
-        }
-        // dd($properties_list);
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
         $settings = getSettings($this->entity_alias);
 
         // dd($goods_category->direction);
-        return view('includes.tmc_categories.edit.edit', [
+        return view('tmc_categories.edit.edit', [
             'title' => 'Редактирование категории сырья',
             'category' => $raws_category,
             'page_info' => $page_info,

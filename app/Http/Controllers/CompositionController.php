@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
-use App\Article;
+use App\Raw;
 
 use Illuminate\Http\Request;
 
@@ -86,22 +86,22 @@ class CompositionController extends Controller
 
      // --------------------------------------------- Ajax -------------------------------------------------
 
-    public function ajax_add(Request $request)
+    public function ajax_get_composition(Request $request)
     {
-        $composition = Article::with(['group.unit'])
+        $composition = Raw::with(['article.group.unit', 'category'])
         ->find($request->id);
 
-        return view('includes.compositions.composition_input', compact('composition'));
+        return view('goods.compositions.composition_input', compact('composition'));
     }
 
     // Добавляем состав
     public function ajax_get_category_composition(Request $request)
     {
 
-        $composition = Article::with('group.unit')
+        $composition = Raw::with(['article.group.unit', 'category'])
         ->findOrFail($request->id);
 
-        return view('includes.tmc_categories.edit.compositions.composition_tr', compact('composition'));
+        return view('goods_categories.compositions.composition_tr', compact('composition'));
     }
 
     // Удаляем состав

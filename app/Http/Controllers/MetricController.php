@@ -92,7 +92,7 @@ class MetricController extends Controller
         }
 
         if ($metric) {
-            return view('includes.category_metrics.metric', [
+            return view('goods_categories.metrics.metric', [
                 'metric' => $metric,
             ]);
 
@@ -166,7 +166,7 @@ class MetricController extends Controller
         $metric = Metric::findOrFail($request->id);
 
         if ($metric) {
-            return view('includes.category_metrics.metric', [
+            return view('goods_categories.metrics.metric', [
                 'metric' => $metric,
             ]);
         } else {
@@ -180,7 +180,7 @@ class MetricController extends Controller
     public function ajax_get_metric_value(Request $request)
     {
         // Переадресовываем на получение метрики
-        return view('includes.category_metrics.value', ['value' => $request->value]);
+        return view('goods_categories.metrics.value', ['value' => $request->value]);
     }
 
 }

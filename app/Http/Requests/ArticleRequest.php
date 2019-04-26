@@ -24,6 +24,9 @@ class ArticleRequest extends FormRequest
     public function rules()
     {
         return [
+            'category_id' => 'string|nullable',
+            'unit_id' => 'string|nullable',
+
             'name' => 'string|max:255|required',
             'description' => 'string|nullable',
 

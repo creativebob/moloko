@@ -62,50 +62,52 @@ class ArticlesGroup extends Model
     // Артикулы
     public function articles()
     {
-        return $this->hasMany('App\Article');
+        return $this->hasMany(Article::class);
     }
 
     // Альбом
     public function album()
     {
-        return $this->belongsTo('App\Album');
+        return $this->belongsTo(Album::class);
     }
 
     // Аватар
     public function photo()
     {
-        return $this->belongsTo('App\Photo');
+        return $this->belongsTo(Photo::class);
     }
 
     // Еденица измерения
     public function unit()
     {
-        return $this->belongsTo('App\Unit');
+        return $this->belongsTo(Unit::class);
     }
 
     // Автора
     public function author()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
 
     // Компания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
-    // Категории товаров
+    // Категории
     // public function categories()
     // {
     //     return $this->morphedByMany(GoodsCategory::class, 'articles_group_entity');
     // }
+    
+    // Товаров
     public function goods_categories()
     {
         return $this->morphedByMany(GoodsCategory::class, 'articles_group_entity');
     }
 
-    // Категории товаров
+    // Сырья
     public function raws_categories()
     {
         return $this->morphedByMany(RawsCategory::class, 'articles_group_entity');

@@ -2981,16 +2981,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v6.2.0",
+            "version": "v6.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "6fa3232ff9d3f8237c0fae4b7ff05e1baa4cd707"
+                "reference": "5397cd05b0a0f7937c47b0adcb4c60e5ab936b6a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/6fa3232ff9d3f8237c0fae4b7ff05e1baa4cd707",
-                "reference": "6fa3232ff9d3f8237c0fae4b7ff05e1baa4cd707",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/5397cd05b0a0f7937c47b0adcb4c60e5ab936b6a",
+                "reference": "5397cd05b0a0f7937c47b0adcb4c60e5ab936b6a",
                 "shasum": ""
             },
             "require": {
@@ -3039,11 +3039,15 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2019-03-10T07:52:41+00:00"
+            "time": "2019-04-21T09:21:45+00:00"
         },
         {
             "name": "symfony/console",
+<<<<<<< HEAD
             "version": "v3.4.25",
+=======
+            "version": "v3.4.26",
+>>>>>>> 3fbe1071dd057d447182e9ee15ef80349d06c8c6
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
@@ -3183,7 +3187,11 @@
         },
         {
             "name": "symfony/css-selector",
+<<<<<<< HEAD
             "version": "v4.2.6",
+=======
+            "version": "v4.2.7",
+>>>>>>> 3fbe1071dd057d447182e9ee15ef80349d06c8c6
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
@@ -3236,7 +3244,11 @@
         },
         {
             "name": "symfony/debug",
+<<<<<<< HEAD
             "version": "v3.4.25",
+=======
+            "version": "v3.4.26",
+>>>>>>> 3fbe1071dd057d447182e9ee15ef80349d06c8c6
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/debug.git",
@@ -3292,7 +3304,11 @@
         },
         {
             "name": "symfony/event-dispatcher",
+<<<<<<< HEAD
             "version": "v4.2.6",
+=======
+            "version": "v4.2.7",
+>>>>>>> 3fbe1071dd057d447182e9ee15ef80349d06c8c6
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
@@ -3356,7 +3372,11 @@
         },
         {
             "name": "symfony/finder",
+<<<<<<< HEAD
             "version": "v3.4.25",
+=======
+            "version": "v3.4.26",
+>>>>>>> 3fbe1071dd057d447182e9ee15ef80349d06c8c6
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
@@ -3405,6 +3425,7 @@
         },
         {
             "name": "symfony/http-foundation",
+<<<<<<< HEAD
             "version": "v3.4.25",
             "source": {
                 "type": "git",
@@ -3415,6 +3436,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/http-foundation/zipball/61094ca72e8934c6502af5259ef6296eb09aa424",
                 "reference": "61094ca72e8934c6502af5259ef6296eb09aa424",
+=======
+            "version": "v3.4.26",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/http-foundation.git",
+                "reference": "90454ad44c95d75faf3507d56388056001b74baf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/90454ad44c95d75faf3507d56388056001b74baf",
+                "reference": "90454ad44c95d75faf3507d56388056001b74baf",
+>>>>>>> 3fbe1071dd057d447182e9ee15ef80349d06c8c6
                 "shasum": ""
             },
             "require": {
@@ -3455,6 +3488,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
             "time": "2019-03-25T07:48:46+00:00"
         },
         {
@@ -3469,6 +3503,22 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/http-kernel/zipball/8dcc4524176d0803e23ef8d4b49973baa9eab6dc",
                 "reference": "8dcc4524176d0803e23ef8d4b49973baa9eab6dc",
+=======
+            "time": "2019-04-17T14:51:18+00:00"
+        },
+        {
+            "name": "symfony/http-kernel",
+            "version": "v3.4.26",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/http-kernel.git",
+                "reference": "14fa41ccd38570b5e3120a3754bbaa144a15f311"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/http-kernel/zipball/14fa41ccd38570b5e3120a3754bbaa144a15f311",
+                "reference": "14fa41ccd38570b5e3120a3754bbaa144a15f311",
+>>>>>>> 3fbe1071dd057d447182e9ee15ef80349d06c8c6
                 "shasum": ""
             },
             "require": {
@@ -3544,7 +3594,11 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
+<<<<<<< HEAD
             "time": "2019-04-16T06:02:09+00:00"
+=======
+            "time": "2019-04-17T15:57:07+00:00"
+>>>>>>> 3fbe1071dd057d447182e9ee15ef80349d06c8c6
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -4008,7 +4062,11 @@
         },
         {
             "name": "symfony/process",
+<<<<<<< HEAD
             "version": "v3.4.25",
+=======
+            "version": "v3.4.26",
+>>>>>>> 3fbe1071dd057d447182e9ee15ef80349d06c8c6
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
@@ -4057,7 +4115,11 @@
         },
         {
             "name": "symfony/routing",
+<<<<<<< HEAD
             "version": "v3.4.25",
+=======
+            "version": "v3.4.26",
+>>>>>>> 3fbe1071dd057d447182e9ee15ef80349d06c8c6
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
@@ -4133,7 +4195,11 @@
         },
         {
             "name": "symfony/translation",
+<<<<<<< HEAD
             "version": "v4.2.6",
+=======
+            "version": "v4.2.7",
+>>>>>>> 3fbe1071dd057d447182e9ee15ef80349d06c8c6
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
@@ -4208,6 +4274,7 @@
         },
         {
             "name": "symfony/var-dumper",
+<<<<<<< HEAD
             "version": "v3.4.25",
             "source": {
                 "type": "git",
@@ -4218,6 +4285,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/var-dumper/zipball/e463ad286cb2c56527c56bfff9e1aa7bb471c04e",
                 "reference": "e463ad286cb2c56527c56bfff9e1aa7bb471c04e",
+=======
+            "version": "v3.4.26",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/var-dumper.git",
+                "reference": "f0883812642a6d6583a9e2ae6aec4ba134436f40"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/f0883812642a6d6583a9e2ae6aec4ba134436f40",
+                "reference": "f0883812642a6d6583a9e2ae6aec4ba134436f40",
+>>>>>>> 3fbe1071dd057d447182e9ee15ef80349d06c8c6
                 "shasum": ""
             },
             "require": {
@@ -4273,7 +4352,11 @@
                 "debug",
                 "dump"
             ],
+<<<<<<< HEAD
             "time": "2019-04-11T09:48:14+00:00"
+=======
+            "time": "2019-04-16T13:58:17+00:00"
+>>>>>>> 3fbe1071dd057d447182e9ee15ef80349d06c8c6
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",

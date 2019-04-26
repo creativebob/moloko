@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Photo;
 use App\Album;
 use App\Entity;
+use App\Article;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -228,21 +229,15 @@ class PhotoController extends Controller
     public function ajax_index(Request $request)
     {
 
-        $entity = Entity::whereAlias($request->entity)->first();
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($entity->alias, $this->entity_dependence, getmethod('index'));
-
-        $model = 'App\\'.$entity->model;
-        $item = $model::with('album.photos')
-        ->moderatorLimit($answer)
+        $article = Article::with('album.photos')
+        // ->moderatorLimit($answer)
         ->findOrFail($request->id);
         // dd($item);
 
         // Подключение политики
         // $this->authorize(getmethod('index'), $this->class);
 
-        return view('photos.photos', compact('item'));
+        return view('photos.photos', compact('article'));
     }
 
     // Сохраняем фото через dropzone

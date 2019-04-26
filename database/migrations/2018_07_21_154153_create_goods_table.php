@@ -19,8 +19,8 @@ class CreateGoodsTable extends Migration
             $table->integer('article_id')->nullable()->unsigned()->comment('Id артикула');
             $table->foreign('article_id')->references('id')->on('articles');
 
-            $table->integer('goods_category_id')->nullable()->unsigned()->comment('Id категории товаров');
-            $table->foreign('goods_category_id')->references('id')->on('goods_categories');
+            $table->integer('category_id')->nullable()->unsigned()->comment('Id категории товаров');
+            $table->foreign('category_id')->references('id')->on('goods_categories');
 
             $table->boolean('set_status')->default(0)->unsigned()->comment('Статус набора');
             // $table->enum('set_status', ['one', 'set'])->comment('Статус набора (Один/набор)');
