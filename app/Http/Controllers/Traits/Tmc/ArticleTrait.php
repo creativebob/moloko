@@ -281,8 +281,9 @@ trait ArticleTrait
             $category = $item->category;
 
                 // Была изменена! Переназначаем категорию товару и группе:
-            $category->groups()->detach($item->category_id);
-            $category->groups()->attach($category_id);
+            $category->groups()->detach($articles_group->id);
+            $category->groups()->attach($articles_group->id);
+            // $category->groups()->syncWithoutDetaching($category_id);
 
 
             $entity = Entity::where('alias', $item->getTable())
