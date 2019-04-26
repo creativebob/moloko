@@ -67,7 +67,7 @@ class Album extends Model
     // Получаем фото
     public function photos()
     {
-        return $this->morphedByMany('App\Photo', 'album_entity');
+        return $this->morphedByMany('App\Photo', 'album_entities');
     }
 
     // Получаем продукцию
