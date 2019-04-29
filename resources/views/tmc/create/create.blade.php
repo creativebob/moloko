@@ -1,3 +1,5 @@
+
+
 <div class="reveal" id="modal-create" data-reveal data-close-on-click="false">
 	<div class="grid-x">
 		<div class="small-12 cell modal-title">
@@ -44,7 +46,10 @@
 				</div>
 
 				<div class="small-10 medium-4 cell">
+
 					<label>Себестоимость за (<span id="unit-change" class="unit-change"></span>)
+						{{-- @include('includes.scripts.class.digitfield')
+						@include('includes.inputs.digit', ['name' => 'price_default', 'value' => null, 'decimal_place' => 2]) --}}
 						{{ Form::number('price_default') }}
 					</label>
 				</div>

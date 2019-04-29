@@ -59,7 +59,7 @@
                 @if($goods->isNotEmpty())
                 @foreach($goods as $cur_goods)
 
-                <tr class="item @if($cur_goods->moderation == 1)no-moderation @endif" id="goods-{{ $cur_goods->id }}" data-name="{{ $cur_goods->article->name }}">
+                <tr class="item @if($cur_goods->moderation == 1)no-moderation @endif @if($cur_goods->article->draft) draft @endif" id="goods-{{ $cur_goods->id }}" data-name="{{ $cur_goods->article->name }}">
                     <td class="td-drop"><div class="sprite icon-drop"></div></td>
                     <td class="td-checkbox checkbox">
                         <input type="checkbox" class="table-check" name="cur_goods_id" id="check-{{ $cur_goods->id }}"

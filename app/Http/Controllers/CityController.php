@@ -100,7 +100,7 @@ class CityController extends Controller
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
-        return view('cities.modal-create');
+        return view('cities.modal_create');
     }
 
     public function store(CityRequest $request)

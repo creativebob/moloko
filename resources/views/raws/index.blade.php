@@ -51,7 +51,7 @@
                 @if($raws->isNotEmpty())
 
                 @foreach($raws as $raw)
-                <tr class="item @if($raw->moderation == 1)no-moderation @endif" id="raws-{{ $raw->id }}" data-name="{{ $raw->article->name }}">
+                <tr class="item @if($raw->moderation == 1)no-moderation @endif @if($raw->article->draft) draft @endif" id="raws-{{ $raw->id }}" data-name="{{ $raw->article->name }}">
                     <td class="td-drop">
                         <div class="sprite icon-drop"></div>
                     </td>

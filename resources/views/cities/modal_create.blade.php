@@ -1,5 +1,5 @@
 {{-- Модалка добавления города --}}
-<div class="reveal rev-large" id="modal-create" data-reveal>
+<div class="reveal rev-large" id="modal-create" data-reveal data-close-on-click="false">
     <div class="grid-x">
         <div class="small-12 cell modal-title">
             <h5>ДОБАВЛЕНИЕ НАСЕЛЕННОГО ПУНКТА</h5>
@@ -32,9 +32,11 @@
             {!! Form::hidden('city_db', 0, ['id' => 'city-db', 'pattern' => '[0-9]{1}']) !!}
         </div>
         <div class="small-12 medium-8 cell">
-            <table class="content-table-search">
+
+            <table class="content-table-search hover unstriped">
                 <caption>Результаты поиска в сторонней базе данных:</caption>
                 <tbody id="tbody-city-add">
+
                 </tbody>
             </table>
         </div>

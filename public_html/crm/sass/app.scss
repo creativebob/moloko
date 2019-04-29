@@ -247,7 +247,7 @@ fieldset {
     legend {
         font-family: $PFDDPM;
         padding: 0 1rem;
-       	margin-left: -1rem;
+        margin-left: -1rem;
     }
 }
 
@@ -1000,11 +1000,11 @@ tr:hover {
     // &:hover {
         //     opacity: 1;
         // }
-}
+    }
 
-.icon-system-programm {
-    background-position: -64px -896px;
-    opacity: 0.2;
+    .icon-system-programm {
+        background-position: -64px -896px;
+        opacity: 0.2;
     // margin-left: 1rem;
     // z-index: 10;
 
@@ -1012,30 +1012,30 @@ tr:hover {
         //     opacity: 1;
         //     // z-index: 10;
         // }
-}
-
-
-.icon-sync {
-    background-position: 0px -1088px;
-    float: left;
-    margin-right: 0.6rem;
-    opacity: 0.4;
-    transition: opacity 0.5s ease;
-
-    &:hover {
-        opacity: 1;
     }
-}
 
 
-.active-filter {
-    background-position: -32px -352px !important;
+    .icon-sync {
+        background-position: 0px -1088px;
+        float: left;
+        margin-right: 0.6rem;
+        opacity: 0.4;
+        transition: opacity 0.5s ease;
 
-    &:hover {
-        background-position: -32px -352px;
-        opacity: 0.7;
+        &:hover {
+            opacity: 1;
+        }
     }
-}
+
+
+    .active-filter {
+        background-position: -32px -352px !important;
+
+        &:hover {
+            background-position: -32px -352px;
+            opacity: 0.7;
+        }
+    }
 
 
 // Иконка общего добавления
@@ -1207,36 +1207,36 @@ tr:hover {
             //   margin-right: 1rem;
             // }
 
-.checkboxer-pane::-webkit-scrollbar {
-    width:0.5rem;
-}
+            .checkboxer-pane::-webkit-scrollbar {
+                width:0.5rem;
+            }
 
-.checkboxer-button
-{
-    width: 34px;
-    position: absolute;
-    display: block;
-    text-align: right;
-    right: 0px;
-    top: 0px;
-}
+            .checkboxer-button
+            {
+                width: 34px;
+                position: absolute;
+                display: block;
+                text-align: right;
+                right: 0px;
+                top: 0px;
+            }
 
-.checkboxer-title
-{
-    width: 100%;
-}
+            .checkboxer-title
+            {
+                width: 100%;
+            }
 
-.checkboxer-button span, .checkboxer-title span
-{
-    height: 32px;
-    display: inline-block;
-    padding-top: 0.7rem;
-}
+            .checkboxer-button span, .checkboxer-title span
+            {
+                height: 32px;
+                display: inline-block;
+                padding-top: 0.7rem;
+            }
 
-.checkboxer-title span.count
-{
-    margin-left: 0.3rem;
-}
+            .checkboxer-title span.count
+            {
+                margin-left: 0.3rem;
+            }
 
 // Иконка checkboxer в фильтре
 // Состояние 1
@@ -1498,43 +1498,43 @@ tr:hover {
           left: 8px;
           opacity: 0.5;
           transition: 0.5s ease opacity;
-        }
-    }
+      }
+  }
 
-    input:focus {
-        border: none;
-        border-bottom: 1px solid $black;
-        outline: none;
-        box-shadow: none;
-    }
-    input:focus + .sprite-input-left {
-        opacity: 1;
-    }
-    .button {
-        width: 100%;
-        text-transform: uppercase;
-        font-family: $SUISB;
-        font-size: 0.75rem;
-        background-color: $sidebar-bg-color;
-        margin-top: 1rem;
-        margin-bottom: 0.4rem;
-    }
-    .button:hover {
-        background-color: $black;
-    }
-    .remember {
-        margin-left: -8px;
-    }
-    .forgot {
-        display: block;
-        margin-top: 0.8rem;
-        color: $index-forgot-color;
-        text-decoration: underline;
-        font-size: 0.7rem;
-    }
-    .forgot:hover {
-        text-decoration: none;
-    }
+  input:focus {
+    border: none;
+    border-bottom: 1px solid $black;
+    outline: none;
+    box-shadow: none;
+}
+input:focus + .sprite-input-left {
+    opacity: 1;
+}
+.button {
+    width: 100%;
+    text-transform: uppercase;
+    font-family: $SUISB;
+    font-size: 0.75rem;
+    background-color: $sidebar-bg-color;
+    margin-top: 1rem;
+    margin-bottom: 0.4rem;
+}
+.button:hover {
+    background-color: $black;
+}
+.remember {
+    margin-left: -8px;
+}
+.forgot {
+    display: block;
+    margin-top: 0.8rem;
+    color: $index-forgot-color;
+    text-decoration: underline;
+    font-size: 0.7rem;
+}
+.forgot:hover {
+    text-decoration: none;
+}
 }
 
 
@@ -1558,17 +1558,17 @@ tr:hover {
           left: 8px;
           opacity: 0.2;
           transition: 0.5s ease opacity;
-        }
-    }
+      }
+  }
 
-    input:focus {
-        outline: none;
-        box-shadow: none;
-    }
+  input:focus {
+    outline: none;
+    box-shadow: none;
+}
 
-    input:focus + .sprite-input-left {
-        opacity: 0.6;
-    }
+input:focus + .sprite-input-left {
+    opacity: 0.6;
+}
 
 }
 
@@ -2934,48 +2934,59 @@ a {
 // ------------------------------------- Таблица поиска в модалке ------------------------------
 .content-table-search {
 
-  caption {
-    font-family: $PFDDPL;
-    font-size: 0.875rem;
-    font-weight: normal;
-    color: $input-color;
-    padding: 0;
-    margin-bottom: 1rem;
+    // height: 200px;
+    // width: 100%;
+    // overflow: auto;
+    // display: block;
 
-}
+    caption {
+        font-family: $PFDDPL;
+        font-size: 0.875rem;
+        font-weight: normal;
+        color: $input-color;
+        padding: 0;
+        margin-bottom: 1rem;
 
-tbody {
-
-    // Убираем стандарнтый бордер и бекграунд фонды
-    border: none;
-    background: none;
-
-    // Убираем выделение каждой четной строки
-    tr:nth-child(even) {
-      border-bottom: 0;
-      background-color: $table-bg-color;
-  }
-
-  td {
-      font-family: $SUISL;
-      font-size: 0.8rem;
-      border-bottom: 1px solid $table-search-td-border-color;
-      line-height: 1;
-      padding: 0.4rem 10px;
-
-      a {
-        color: $table-search-td-color;
     }
 
+    tbody {
 
-}
-.icon-delete {
-  background-position: -32px -512px;
-}
-.icon-delete:hover {
-  background-position: 0px -512px;
-}
-}
+        display:block;
+        height:200px;
+        overflow:auto;
+
+        // Убираем стандарнтый бордер и бекграунд фонды
+        border: none;
+        background: none;
+
+        // Убираем выделение каждой четной строки
+        // tr:nth-child(even) {
+        //     border-bottom: 0;
+        //     background-color: $table-bg-color;
+        // }
+
+        td {
+            font-family: $SUISL;
+            font-size: 0.8rem;
+            border-bottom: 1px solid $table-search-td-border-color;
+            line-height: 1;
+            padding: 0.4rem 10px;
+
+            a {
+                color: $table-search-td-color;
+            }
+
+
+        }
+
+        .icon-delete {
+            background-position: -32px -512px;
+        }
+
+        .icon-delete:hover {
+            background-position: 0px -512px;
+        }
+    }
 }
 .table-over {
   position: absolute;
@@ -4499,3 +4510,10 @@ a:hover {
                         }
                     }
                 }
+
+.draft {
+
+    td{
+        background-color: grey;
+    }
+}

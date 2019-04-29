@@ -2265,12 +2265,11 @@ a#task-toggle {
   margin-bottom: 1rem;
 }
 .content-table-search tbody {
+  display: block;
+  height: 200px;
+  overflow: auto;
   border: none;
   background: none;
-}
-.content-table-search tbody tr:nth-child(even) {
-  border-bottom: 0;
-  background-color: #f6f6f6;
 }
 .content-table-search tbody td {
   font-family: "SegoeUISemiLight";
@@ -3277,4 +3276,8 @@ table.composition-table thead {
     top: 1px;
     z-index: 0;
   }
+}
+
+.draft td {
+  background-color: grey;
 }
