@@ -261,7 +261,7 @@ class GoodsController extends Controller
             'item' => new $this->class,
             'title' => 'Добавление товара',
             'entity' => $this->entity_alias,
-            'category_entity_alias' => 'goods_categories',
+            'category_entity' => 'goods_categories',
         ]);
     }
 
@@ -447,8 +447,9 @@ class GoodsController extends Controller
 
         if ($cur_goods) {
 
-            $cur_goods->editor_id = hideGod($request->user());
             $cur_goods->archive = true;
+
+            $cur_goods->editor_id = hideGod($request->user());
             $cur_goods->save();
 
             if ($cur_goods) {

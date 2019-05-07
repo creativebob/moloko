@@ -7,6 +7,9 @@ use Illuminate\Support\ServiceProvider;
 use App\Article;
 use App\Observers\ArticleObserver;
 
+use App\Process;
+use App\Observers\ProcessObserver;
+
 class ObserverServiceProvider extends ServiceProvider
 {
     /**
@@ -17,6 +20,8 @@ class ObserverServiceProvider extends ServiceProvider
     public function boot()
     {
         Article::observe(ArticleObserver::class);
+
+        Process::observe(ProcessObserver::class);
     }
 
     /**

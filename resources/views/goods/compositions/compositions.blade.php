@@ -7,7 +7,7 @@
 	<div class="grid-x grid-padding-x">
 		<div class="small-12 medium-9 cell">
 			{{-- Состав --}}
-			<table class="composition-table">
+			<table class="table-compositions">
 				<thead>
 					<tr>
 						<th>Категория:</th>

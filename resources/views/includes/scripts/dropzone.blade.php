@@ -1,10 +1,5 @@
 <script type="text/javascript">
 
-    @isset ($entity)
-    var entity = '{{ $entity }}';
-    @endisset
-    var item_id = '{{ $item_id }}';
-
     // При клике на фотку подствляем ее значения в блок редактирования
     $(document).on('click', '#photos-list .edit', function(event) {
         event.preventDefault();
@@ -27,10 +22,10 @@
     $(document).on('click', '#form-photo-edit .button', function(event) {
         event.preventDefault();
 
-        var button = $(this);
+        let button = $(this);
         button.prop('disabled', true);
 
-        var id = $(this).closest('#form-photo-edit').find('input[name=id]').val();
+        let id = $(this).closest('#form-photo-edit').find('input[name=id]').val();
         // alert(id);
 
         // Записываем инфу и обновляем
@@ -63,8 +58,8 @@
                 file.previewTemplate.setAttribute('id',responseText[0].id);
 
                 $.post('/admin/photo_index', {
-                    id: item_id,
-                    entity: entity
+                    id: '{{ $item_id }}',
+                    entity: '{{ $item_entity }}'
                 }, function(html){
                     // alert(html);
                     $('#photos-list').html(html);

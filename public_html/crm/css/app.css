@@ -3177,27 +3177,23 @@ a#task-toggle {
   padding-bottom: 0.4rem;
 }
 
-.composition-table {
+.table-compositions {
   border-collapse: separate;
   border-spacing: 0px 5px !important;
 }
-
-table.composition-table thead {
+.table-compositions thead {
   background-color: transparent;
 }
-
-.composition-table tr th {
+.table-compositions thead tr th {
   background-color: transparent !important;
   border-bottom: 3px solid #000;
 }
-
-.composition-table tr td {
+.table-compositions tr td {
   background-color: #fff;
   border-top: 2px solid #fff;
   padding: 0.1rem 0.625rem 0.1rem;
 }
-
-.composition-table tr:first-child td {
+.table-compositions tr:first-child td {
   background-color: #fff;
 }
 

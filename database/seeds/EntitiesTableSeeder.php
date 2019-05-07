@@ -157,6 +157,15 @@ class EntitiesTableSeeder extends Seeder
                 'site' => 0,
             ],
             [
+                'name' => 'Категории рабочих процессов',
+                'alias' => 'workflows_categories',
+                'model' => 'WorkflowsCategory',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+            ],
+            [
                 'name' => 'Помещения',
                 'alias' => 'places',
                 'model' => 'Place',
@@ -509,6 +518,15 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
             ],
+            [
+                'name' => 'Группы процессов',
+                'alias' => 'processes_groups',
+                'model' => 'ProcessesGroup',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+            ],
         ]);
 
         // Второй уровень
@@ -656,6 +674,16 @@ class EntitiesTableSeeder extends Seeder
                 'ancestor_id' => Entity::whereAlias('services_categories')->first(['id'])->id,
             ],
             [
+                'name' => 'Рабочие процессы',
+                'alias' => 'workflows',
+                'model' => 'Workflow',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('workflows_categories')->first(['id'])->id,
+            ],
+            [
                 'name' => 'Единицы измерения',
                 'alias' => 'units',
                 'model' => 'Unit',
@@ -684,6 +712,16 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('articles_groups')->first(['id'])->id,
+            ],
+            [
+                'name' => 'Процессы',
+                'alias' => 'processes',
+                'model' => 'Process',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('processes_groups')->first(['id'])->id,
             ],
         ]);
 

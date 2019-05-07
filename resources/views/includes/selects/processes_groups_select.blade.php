@@ -1,0 +1,1 @@
+{!! Form::select('processes_group_id', $processes_groups->pluck('name', 'id'), ($processes_group_id ?? null), ['id' => 'select-processes_groups']) !!}

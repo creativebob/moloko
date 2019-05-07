@@ -15,8 +15,8 @@
 				<div class="small-12 cell">
 
 					<label>Категория
-						@include('tmc.create.categories_select', [
-							'category_entity_alias' => $category_entity_alias
+						@include('includes.selects.categories', [
+							'category_entity' => $category_entity
 						]
 						)
 					</label>

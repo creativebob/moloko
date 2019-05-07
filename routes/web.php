@@ -266,7 +266,8 @@ Route::prefix('/albums/{alias}')->group(function () {
   // Загрузка фоток через ajax через dropzone.js
 });
 
-Route::post('/photo_index', 'PhotoController@ajax_index');
+Route::any('/photo_index', 'PhotoController@ajax_index');
+
 
 Route::any('/photo_store', 'PhotoController@ajax_store')->name('photos.ajax_store');
 
@@ -306,6 +307,11 @@ Route::post('/ajax_get_tmc_composition', 'CompositionController@ajax_get_composi
 
 Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
+
+
+
+Route::post('/ajax_get_category_workflow', 'WorkflowController@ajax_get_category_workflow')->middleware('auth');
+Route::post('/ajax_get_workflow', 'WorkflowController@ajax_get_workflow')->middleware('auth');
 
 
 // ---------------------------------- Артикулы -------------------------------------------
@@ -402,6 +408,8 @@ Route::any('/ajax_articles_groups_set_status', 'ArticlesGroupController@ajax_set
 
 Route::any('/articles_groups_list', 'ArticlesGroupController@ajax_articles_groups_list');
 
+Route::any('/processes_groups_list', 'ProcessesGroupController@ajax_processes_groups_list');
+
 
 
 // -------------------------------- Категории услуг -------------------------------------------
@@ -437,6 +445,29 @@ Route::post('/services/archive/{id}', 'ServiceController@archive')->middleware('
 Route::any('/service/add_photo', 'ServiceController@add_photo')->middleware('auth');
 Route::post('/service/photos', 'ServiceController@photos')->middleware('auth');
 
+
+// -------------------------------- Категории рабочих процессов -------------------------------------------
+
+// Текущая добавленная/удаленная категория
+Route::any('/workflows_categories', 'WorkflowsCategoryController@index')->middleware('auth');
+// Основные методы
+Route::resource('/workflows_categories', 'WorkflowsCategoryController')->middleware('auth');
+// Проверка на существование
+// Route::post('/workflows_category_check', 'ServicesCategoryController@ajax_check')->middleware('auth');
+
+
+// ---------------------------------- Рабочие процессы -------------------------------------------
+
+// Основные методы
+Route::resource('workflows', 'WorkflowController');
+
+// Архивация
+Route::post('/workflows/archive/{id}', 'WorkflowController@archive')->middleware('auth');
+// Фото
+Route::any('/workflow/add_photo', 'WorkflowController@add_photo')->middleware('auth');
+Route::post('/workflow/photos', 'WorkflowController@photos')->middleware('auth');
+
+Route::any('/workflows_create_mode', 'WorkflowController@ajax_change_create_mode')->middleware('auth');
 
 // -------------------------------- Расходные материалы -------------------------------------------
 

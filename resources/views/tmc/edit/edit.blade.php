@@ -95,8 +95,7 @@ $disabled = $article->draft == false;
 
                                 <label>Категория
                                     @include('includes.selects.categories', [
-                                        'entity' => $category_entity,
-                                        'category_entity_alias' => $category_entity,
+                                        'category_entity' => $category_entity,
                                         'category_id' => $item->category->id
                                     ]
                                     )
@@ -334,7 +333,8 @@ $disabled = $article->draft == false;
 
 @include('includes.scripts.dropzone', [
     'settings' => $settings,
-    'item_id' => $article->id
+    'item_id' => $article->id,
+    'item_entity' => 'articles'
 ]
 )
 {{-- Проверка поля на существование --}}

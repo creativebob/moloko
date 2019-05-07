@@ -7,8 +7,6 @@ use App\Raw;
 use App\Article;
 use App\RawsCategory;
 use App\Manufacturer;
-use App\Metric;
-use App\Entity;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -17,9 +15,6 @@ use App\Http\Requests\ArticleRequest;
 
 // Куки
 use Illuminate\Support\Facades\Cookie;
-
-// Транслитерация
-use Transliterate;
 
 // Трейты
 use App\Http\Controllers\Traits\Tmc\ArticleTrait;
@@ -207,7 +202,7 @@ class RawController extends Controller
             'item' => new $this->class,
             'title' => 'Добавление сырья',
             'entity' => $this->entity_alias,
-            'category_entity_alias' => 'raws_categories',
+            'category_entity' => 'raws_categories',
         ]);
     }
 
@@ -364,15 +359,10 @@ class RawController extends Controller
 
         if ($raw) {
 
-            // Получаем пользователя
-            $user = $request->user();
+            $raw->archive = true;
 
             // Скрываем бога
-            $user_id = hideGod($user);
-
-            RawsArticle::where('id', $raw->raws_article_id)->update(['editor_id' => $user_id, 'archive' => 1]);
-
-            $raw->editor_id = $user_id;
+            $raw->editor_id = hideGod($request->user());
             $raw->save();
 
             if ($raw) {

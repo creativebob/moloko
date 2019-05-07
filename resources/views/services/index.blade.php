@@ -10,15 +10,13 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
-@section('exel')
+{{-- @section('exel')
 @include('includes.title-exel', ['entity' => $page_info->alias])
-@endsection
+@endsection --}}
 
 @section('content-count')
 {{-- Количество элементов --}}
-  @if(!empty($services))
-    {{ num_format($services->total(), 0) }}
-  @endif
+{{ $services->isNotEmpty() ? num_format($services->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')
@@ -27,8 +25,10 @@
 @endsection
 
 @section('content')
+
 {{-- Таблица --}}
 <div class="grid-x">
+
     <div class="small-12 cell">
         <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="services">
             <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
@@ -36,15 +36,17 @@
                     <th class="td-drop"></th>
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
                     <th class="td-photo">Фото</th>
-                    <th class="td-name">Название услуги</th>
+                    <th class="td-name">Название товара</th>
                     <th class="td-services_category">Категория</th>
                     <th class="td-description">Описание</th>
                     <th class="td-price">Цена</th>
                     <th class="td-catalog">Разделы на сайте:</th>
-                    {{-- <th class="td-service">Группа</th>  --}}
+
+                    {{-- <th class="td-services">Группа</th>  --}}
 
                     @if(Auth::user()->god == 1)
                     <th class="td-company-id">Компания</th>
+                    {{-- <th class="td-sync-id">Добавить на сайт</th> --}}
                     @endif
 
                     <th class="td-author">Автор</th>
@@ -53,10 +55,11 @@
                 </tr>
             </thead>
             <tbody data-tbodyId="1" class="tbody-width">
-                @if(!empty($services))
 
+                @if($services->isNotEmpty())
                 @foreach($services as $service)
-                <tr class="item @if($service->moderation == 1)no-moderation @endif" id="services-{{ $service->id }}" data-name="{{ $service->services_article->name }}">
+
+                <tr class="item @if($service->moderation == 1)no-moderation @endif @if($service->process->draft) draft @endif" id="services-{{ $service->id }}" data-name="{{ $service->process->name }}">
                     <td class="td-drop"><div class="sprite icon-drop"></div></td>
                     <td class="td-checkbox checkbox">
                         <input type="checkbox" class="table-check" name="service_id" id="check-{{ $service->id }}"
@@ -69,37 +72,42 @@
                         >
                         <label class="label-check" for="check-{{ $service->id }}"></label>
                     </td>
-                    <td class="td-photo">
+                    <td>
                         <a href="/admin/services/{{ $service->id }}/edit">
-                            <img src="{{ isset($service->photo_id) ? '/storage/'.$service->company_id.'/media/services/'.$service->id.'/img/small/'.$service->photo->name : '/crm/img/plug/service_small_default_color.jpg' }}" alt="{{ isset($service->photo_id) ? $service->name : 'Нет фото' }}">
+                            <img src="{{ getPhotoPath($service->process, 'small') }}" alt="{{ isset($service->process->photo_id) ? $service->process->name : 'Нет фото' }}">
                         </a>
                     </td>
-                    <td class="td-name"><a href="/admin/services/{{ $service->id }}/edit">{{ $service->services_article->name }}</a></td>
-                    <td class="td-services_category">
-                        <a href="/admin/services?services_category_id%5B%5D={{ $service->services_article->services_product->services_category->id }}" class="filter_link" title="Фильтровать">{{ $service->services_article->services_product->services_category->name }}</a>
-                        <br>
-                        @if($service->services_article->services_product->name != $service->name)
-                        <a href="/admin/services?services_product_id%5B%5D={{ $service->services_article->services_product->id }}" class="filter_link light-text">{{ $service->services_article->services_product->name }}</a>
-                        @endif
+                    <td class="td-name">
+                        <a href="/admin/services/{{ $service->id }}/edit">{{ $service->process->name }} @if ($service->set_status == 1) (Набор) @endif</a>
+
                     </td>
-                    <td class="td-description">{{ $service->description }}</td>
-                    <td class="td-price">{{ num_format($service->price, 0) }}</td>
+                    <td class="td-services_category">
+                        <a href="/admin/services?services_category_id%5B%5D={{ $service->category->id }}" class="filter_link" title="Фильтровать">{{ $service->category->name }}</a>
+                        <br>
+                        {{-- @if($service->process->product->name != $service->name) --}}
+                        <a href="/admin/services?services_product_id%5B%5D={{ $service->process->id }}" class="filter_link light-text">{{ $service->process->group->name }}</a>
+                        {{-- @endif --}}
+                    </td>
+                    <td class="td-description">{{ $service->process->description }}</td>
+                    <td class="td-price">{{ num_format($service->process->price_default, 0) }} </td>
+
                     <td class="td-catalog">
 
-                        @foreach ($service->catalogs as $catalog)
+                        {{-- @foreach ($service->catalogs as $catalog)
                         <a href="/admin/sites/{{ $catalog->site->alias }}/catalog_products/{{ $catalog->id }}" class="filter_link" title="Редактировать каталог">{{ $catalog->name }}</a>,
-                        @endforeach
+                        @endforeach --}}
 
                     </td>
-                    {{-- <td class="td-service">{{ $service->services_article->services_product->name }}</td> --}}
 
+                    {{-- <td class="td-services">{{ $service->product->name }}</td> --}}
 
                     @if(Auth::user()->god == 1)
                     <td class="td-company-id">@if(!empty($service->company->name)) {{ $service->company->name }} @else @if($service->system_item == null) Шаблон @else Системная @endif @endif</td>
                     @endif
 
+                    {{-- <td class="td-sync-id"><a class="icon-sync sprite" data-open="item-sync"></a></td> --}}
 
-                    <td class="td-author">@if(isset($service->author->first_name)) {{ $service->author->first_name . ' ' . $service->author->second_name }} @endif</td>
+                    <td class="td-author">@if(isset($service->author->first_name)) {{ $service->author->name }} @endif</td>
 
                     {{-- Элементы управления --}}
                     @include('includes.control.table-td', ['item' => $service])
@@ -117,6 +125,7 @@
             </tbody>
         </table>
     </div>
+
 </div>
 
 {{-- Pagination --}}
@@ -138,6 +147,8 @@
 
 @section('scripts')
 
+@include('includes.scripts.units-scripts')
+
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
 @include('includes.scripts.sortable-table-script')
@@ -155,115 +166,27 @@
 @include('includes.scripts.modal-archive-script')
 
 @include('includes.scripts.inputs-mask')
-@include('services.scripts')
+@include('tmc.create.scripts', ['entity' => 'services', 'category_entity' => 'services_categories'])
+
+{{-- Скрипт синхронизации товара с сайтом на сайте --}}
+@include('includes.scripts.ajax-sync')
 
 <script type="text/javascript">
-
-
-  // Обозначаем таймер для проверки
-  // var timerId;
-  // var time = 400;
-
-  // // Первая буква заглавная
-  // function newParagraph (name) {
-  //   name = name.charAt(0).toUpperCase() + name.substr(1).toLowerCase();
-  //   return name;
-  // };
-
-    // ------------------- Проверка на совпадение имени --------------------------------------
-    // function serviceCheck (name, submit, db) {
-
-    //   // Блокируем аттрибут базы данных
-    //   $(db).val(0);
-
-    //   // Смотрим сколько символов
-    //   var lenname = name.length;
-
-    //   // Если символов больше 3 - делаем запрос
-    //   if (lenname > 3) {
-
-    //     // Первая буква сектора заглавная
-    //     name = newParagraph (name);
-
-    //     // Сам ajax запрос
-    //     $.ajax({
-    //       headers: {
-    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //       },
-    //       url: "/admin/service_check",
-    //       type: "POST",
-    //       data: {name: name},
-    //       beforeSend: function () {
-    //         $('.find-status').addClass('icon-load');
-    //       },
-    //       success: function(date){
-    //         $('.find-status').removeClass('icon-load');
-    //         var result = $.parseJSON(date);
-    //         // Если ошибка
-    //         if (result.error_status == 1) {
-    //           $(submit).prop('disabled', true);
-    //           $('.item-error').css('display', 'block');
-    //           $(db).val(0);
-    //         } else {
-    //           // Выводим пришедшие данные на страницу
-    //           $(submit).prop('disabled', false);
-    //           $('.item-error').css('display', 'none');
-    //           $(db).val(1);
-    //         };
-    //       }
-    //     });
-    //   };
-    //   // Удаляем все значения, если символов меньше 3х
-    //   if (lenname <= 3) {
-    //     $(submit).prop('disabled', false);
-    //     $('.item-error').css('display', 'none');
-    //     $(db).val(0);
-    //   };
-    // };
-
-    // ---------------------------- Продукция -----------------------------------------------
 
     // ----------- Добавление -------------
     // Открываем модалку
     $(document).on('click', '[data-open="modal-create"]', function() {
-      $.ajax({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      url: '/admin/services/create',
-      type: "GET",
-      success: function(html){
-          $('#modal').html(html);
-          $('#modal-create').foundation();
-          $('#modal-create').foundation('open');
-      }
-  });
-  });
+        $.get('/admin/services/create', function(html){
+            $('#modal').html(html).foundation();
+            $('#modal-create').foundation('open');
+        });
+    });
 
-
-
-    // Проверка существования
-    // $(document).on('keyup', '#form-modal-create .name-field', function() {
-
-    //   // Получаем фрагмент текста
-    //   var name = $('#form-modal-create .name-field').val();
-
-    //   // Указываем название кнопки
-    //   var submit = '.modal-button';
-
-    //   // Значение поля с разрешением
-    //   var db = '#form-modal-create .first-item';
-
-    //   // Выполняем запрос
-    //   clearTimeout(timerId);
-    //   timerId = setTimeout(function() {
-    //     serviceCheck (name, submit, db)
-    //   }, time);
-    // });
-
+    // Закрываем модалку
     $(document).on('click', '.close-modal', function() {
-      // alert('lol');
-      $('.reveal-overlay').remove();
-  });
+        // alert('lol');
+        $('.reveal-overlay').remove();
+    });
 </script>
+
 @endsection

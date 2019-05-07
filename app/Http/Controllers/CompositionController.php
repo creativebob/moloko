@@ -84,7 +84,7 @@ class CompositionController extends Controller
         //
     }
 
-     // --------------------------------------------- Ajax -------------------------------------------------
+    // --------------------------------------------- Ajax -------------------------------------------------
 
     public function ajax_get_composition(Request $request)
     {
