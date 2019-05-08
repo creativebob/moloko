@@ -2,12 +2,11 @@
 
 namespace App\Policies;
 
-use App\Policies\Traits\PoliticTrait;
 use App\User;
-
-use App\ArticlesGroup;
+use App\ArticlesGroup as Model;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
+use App\Policies\Traits\PoliticTrait;
 
 class ArticlesGroupPolicy
 {
@@ -25,34 +24,33 @@ class ArticlesGroupPolicy
     protected $entity_name = 'articles_groups';
     protected $entity_dependence = false;
 
-    public function before($user)
-    {
-        // if (Auth::user()->god == 1) {return true;} else {return null;};
-        // return $result;
-    }
-
     public function index(User $user)
     {
-        return $this->getstatus($this->entity_name, null, 'index', $this->entity_dependence);
+        $result = $this->getstatus($this->entity_name, null, 'index', $this->entity_dependence);
+        return $result;
     }
 
-    public function view(User $user, ArticlesGroup $model)
+    public function view(User $user, Model $model)
     {
-        return $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
+        $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
+        return $result;
     }
 
     public function create(User $user)
     {
-        return $this->getstatus($this->entity_name, null, 'create', $this->entity_dependence);
+        $result = $this->getstatus($this->entity_name, null, 'create', $this->entity_dependence);
+        return $result;
     }
 
-    public function update(User $user, ArticlesGroup $model)
+    public function update(User $user, Model $model)
     {
-        return $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
+        $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
+        return $result;
     }
 
-    public function delete(User $user, ArticlesGroup $model)
+    public function delete(User $user, Model $model)
     {
+
         if ($model->articles->count() > 0) {
             return false;
         }
@@ -60,31 +58,35 @@ class ArticlesGroupPolicy
         if ($model->system_item == 1) {
             return false;
         }
-        return $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
     }
 
-    public function moderator(User $user, ArticlesGroup $model)
+    public function moderator(User $user, Model $model)
     {
-        return $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
+        $result = $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
+        return $result;
     }
 
-    public function automoderate(User $user, ArticlesGroup $model)
+    public function automoderate(User $user, Model $model)
     {
-        return $this->getstatus($this->entity_name, $model, 'automoderate', $this->entity_dependence);
+        $result = $this->getstatus($this->entity_name, $model, 'automoderate', $this->entity_dependence);
+        return $result;
     }
 
     public function display(User $user)
     {
-        return $this->getstatus($this->entity_name, null, 'display', $this->entity_dependence);
+        $result = $this->getstatus($this->entity_name, null, 'display', $this->entity_dependence);
+        return $result;
     }
 
-    public function system(User $user, ArticlesGroup $model)
+    public function system(User $user, Model $model)
     {
-        return $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
+        $result = $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
+        return $result;
     }
 
     public function god(User $user)
     {
-        return isset(Auth::user()->god);
+        $result = isset(Auth::user()->god);
+        return $result;
     }
 }

@@ -10,14 +10,15 @@ class CategoriesComposer
 {
 	public function compose(View $view)
 	{
+        $category_entity = $view->category_entity;
 
-        $entity = Entity::whereAlias($view->category_entity_alias)
+        $entity = Entity::whereAlias($category_entity)
         ->first(['model']);
         // dd($entity);
         $model = 'App\\'.$entity->model;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($view->category_entity_alias, false, 'index');
+        $answer = operator_right($category_entity, false, 'index');
 
         // Главный запрос
         $categories = $model::moderatorLimit($answer)
@@ -37,7 +38,7 @@ class CategoriesComposer
             $ajax_error = [];
             $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
             $ajax_error['text'] = "Для начала необходимо создать категории. А уже потом будем добавлять. Ок?";
-            $ajax_error['link'] = "/admin/" . $request->entity; // Ссылка на кнопке
+            $ajax_error['link'] = "/admin/" . $category_entity; // Ссылка на кнопке
             $ajax_error['title_link'] = "Идем в раздел категорий"; // Текст на кнопке
 
             return view('ajax_error', compact('ajax_error'));

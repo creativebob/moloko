@@ -45,7 +45,6 @@ class RawsCategory extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'company_id',
         'name',
         'description',
         'seo_description',
@@ -53,8 +52,6 @@ class RawsCategory extends Model
         'parent_id',
         'raws_mode_id',
         'category_id',
-        'author_id',
-        'editor_id',
     ];
 
     // Вложенные

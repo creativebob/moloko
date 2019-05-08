@@ -52,7 +52,6 @@ class CreateGoodsCategoriesTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 

@@ -4347,29 +4347,37 @@ a:hover {
 
                             // Оформление страницы ТОВАРЫ
 
-                            .composition-table{
-                              border-collapse: separate;
-                              border-spacing: 0px 5px !important;
-                          }
+                            .table-compositions {
+                                border-collapse: separate;
+                                border-spacing: 0px 5px !important;
 
-                          table.composition-table thead {
-                              background-color: transparent;
-                          }
+                                thead {
+                                    background-color: transparent;
 
-                          .composition-table tr th{
-                              background-color: transparent !important;
-                              border-bottom: 3px solid #000;
+                                    tr th{
+                                        background-color: transparent !important;
+                                        border-bottom: 3px solid #000;
                           }
+                                }
 
-                          .composition-table tr td{
+                                tr td{
                               background-color: #fff;
                               border-top: 2px solid #fff;
                               padding: 0.1rem 0.625rem 0.1rem;
                           }
 
-                          .composition-table tr:first-child td{
+                                    tr:first-child td{
                               background-color: #fff;
                           }
+                          }
+
+
+
+
+
+
+
+
 
 
 
@@ -4511,9 +4519,9 @@ a:hover {
                     }
                 }
 
-.draft {
+                .draft {
 
-    td{
-        background-color: grey;
-    }
-}
+                    td{
+                        background-color: grey;
+                    }
+                }

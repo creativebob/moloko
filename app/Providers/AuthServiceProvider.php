@@ -182,6 +182,7 @@ class AuthServiceProvider extends ServiceProvider
 
         // Артикулы
         'App\ArticlesGroup' => 'App\Policies\ArticlesGroupPolicy',
+        'App\ProcessesGroup' => 'App\Policies\ProcessesGroupPolicy',
 
         // Расчеты и заказы
         'App\Order' => 'App\Policies\OrderPolicy',
@@ -253,6 +254,9 @@ class AuthServiceProvider extends ServiceProvider
         ServicesProduct::class => ServicesProductPolicy::class,
         ServicesArticle::class => ServicesArticlePolicy::class,
 
+        'App\WorkflowsCategory' => 'App\Policies\WorkflowsCategoryPolicy',
+        'App\Workflow' => 'App\Policies\WorkflowPolicy',
+
         ExpendablesCategory::class => ExpendablesCategoryPolicy::class,
 
         Goods::class => GoodsPolicy::class,
@@ -261,6 +265,7 @@ class AuthServiceProvider extends ServiceProvider
         Raw::class => RawPolicy::class,
         RawsCategory::class => RawsCategoryPolicy::class,
         RawsProduct::class => RawsProductPolicy::class,
+
         Lead::class => LeadPolicy::class,
         Note::class => NotePolicy::class,
         Challenge::class => ChallengePolicy::class,

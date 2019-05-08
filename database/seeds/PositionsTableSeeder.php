@@ -14,7 +14,7 @@ class PositionsTableSeeder extends Seeder
         DB::table('positions')->insert([
         	[
 		        'name' => 'Директор',
-                'page_id' => 32,
+                'page_id' => 39,
 		        'direction_status' => 1,
 		        'company_id' => null,
                 'system_item' => null,
@@ -23,7 +23,7 @@ class PositionsTableSeeder extends Seeder
         	],
             [
                 'name' => 'Менеджер',
-                'page_id' => 38,
+                'page_id' => 39,
                 'direction_status' => null,
                 'company_id' => null,
                 'system_item' => null,
@@ -32,7 +32,7 @@ class PositionsTableSeeder extends Seeder
             ],
             [
                 'name' => 'Администратор',
-                'page_id' => 32,
+                'page_id' => 39,
                 'direction_status' => null,
                 'company_id' => null,
                 'system_item' => null,

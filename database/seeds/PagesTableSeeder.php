@@ -374,6 +374,18 @@ class PagesTableSeeder extends Seeder
                 'display' => 1,
             ],
 
+            [
+                'name' => 'Группы процессов',
+                'site_id' => 1,
+                'title' => 'Группы процессов',
+                'description' => 'Группы процессов',
+                'alias' => 'processes_groups',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
+
             // Товары
             [
                 'name' => 'Категории товаров',
@@ -392,30 +404,6 @@ class PagesTableSeeder extends Seeder
                 'title' => 'Товары',
                 'description' => 'Товары',
                 'alias' => 'goods',
-                'company_id' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'display' => 1,
-            ],
-
-            // Услуги
-            [
-                'name' => 'Категории услуг',
-                'site_id' => 1,
-                'title' => 'Категории услуг',
-                'description' => 'Категории услуг',
-                'alias' => 'services_categories',
-                'company_id' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'display' => 1,
-            ],
-            [
-                'name' => 'Услуги',
-                'site_id' => 1,
-                'title' => 'Услуги',
-                'description' => 'Услуги',
-                'alias' => 'services',
                 'company_id' => null,
                 'system_item' => 1,
                 'author_id' => 1,
@@ -446,18 +434,68 @@ class PagesTableSeeder extends Seeder
                 'display' => 1,
             ],
 
-            // Расходные материалы
+            // Услуги
             [
-                'name' => 'Категории расходных материалов',
+                'name' => 'Категории услуг',
                 'site_id' => 1,
-                'title' => 'Категории расходных материалов',
-                'description' => 'Категории расходных материалов',
-                'alias' => 'expendables_categories',
+                'title' => 'Категории услуг',
+                'description' => 'Категории услуг',
+                'alias' => 'services_categories',
                 'company_id' => null,
                 'system_item' => 1,
                 'author_id' => 1,
                 'display' => 1,
             ],
+            [
+                'name' => 'Услуги',
+                'site_id' => 1,
+                'title' => 'Услуги',
+                'description' => 'Услуги',
+                'alias' => 'services',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
+
+            // Рабочие процессы
+            [
+                'name' => 'Категории рабочих процессов',
+                'site_id' => 1,
+                'title' => 'Категории рабочих процессов',
+                'description' => 'Категории рабочих процессов',
+                'alias' => 'workflows_categories',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
+            [
+                'name' => 'Рабочие процессы',
+                'site_id' => 1,
+                'title' => 'Рабочие процессы',
+                'description' => 'Рабочие процессы',
+                'alias' => 'workflows',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
+
+
+
+            // Расходные материалы
+            // [
+            //     'name' => 'Категории расходных материалов',
+            //     'site_id' => 1,
+            //     'title' => 'Категории расходных материалов',
+            //     'description' => 'Категории расходных материалов',
+            //     'alias' => 'expendables_categories',
+            //     'company_id' => null,
+            //     'system_item' => 1,
+            //     'author_id' => 1,
+            //     'display' => 1,
+            // ],
 
 
 

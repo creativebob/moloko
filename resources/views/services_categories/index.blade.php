@@ -12,18 +12,18 @@
 
 @section('title-content')
 {{-- Меню --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\ServicesCategory::class, 'type' => 'menu'])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => App\GoodsCategory::class, 'type' => 'menu'])
 @endsection
 
 @section('content')
 {{-- Список --}}
 <div class="grid-x">
     <div class="small-12 cell">
-        <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="services_categories">
-            @if($services_categories)
+        <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="goods_categories">
+            @if($goods_categories)
 
             {{-- Шаблон вывода и динамического обновления --}}
-            @include('includes.menu-views.enter', ['grouped_items' => $services_categories, 'class' => 'App\ServicesCategory', 'entity' => $entity, 'type' => 'edit'])
+            @include('includes.menu-views.enter', ['grouped_items' => $goods_categories, 'class' => 'App\GoodsCategory', 'entity' => $entity, 'type' => 'edit'])
 
             @endif
         </ul>
@@ -73,7 +73,7 @@
 };
 
   // ------------------- Проверка на совпадение имени --------------------------------------
-  function servicesCategoryCheck (name, submit, db) {
+  function goodsCategoryCheck (name, submit, db) {
 
     // Блокируем аттрибут базы данных
     $(db).val(0);
@@ -92,7 +92,7 @@
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       },
-      url: "/admin/services_category_check",
+      url: "/admin/goods_category_check",
       type: "POST",
       data: {name: name},
       beforeSend: function () {
@@ -132,7 +132,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    url: '/admin/services_categories/create',
+    url: '/admin/goods_categories/create',
     type: "GET",
     success: function(html){
         // alert(html);
@@ -154,7 +154,7 @@
     // Выполняем запрос
     clearTimeout(timerId);
     timerId = setTimeout(function() {
-      servicesCategoryCheck (name, submit, db)
+      goodsCategoryCheck (name, submit, db)
   }, time);
 });
 
@@ -171,7 +171,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    url: '/admin/services_categories/create',
+    url: '/admin/goods_categories/create',
     type: "GET",
     data: {category_id: category, parent_id: parent},
     success: function(html){
@@ -193,7 +193,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    url: '/admin/services_categories',
+    url: '/admin/goods_categories',
     type: "POST",
     data: $(this).closest('form').serialize(),
     success:function(html) {
@@ -204,7 +204,7 @@
 });
 });
 
-  $(document).on('click', '.submit-services-product-add', function(event) {
+  $(document).on('click', '.submit-goods-product-add', function(event) {
     event.preventDefault();
 
     // alert($(this).closest('form').serialize());
@@ -213,7 +213,7 @@
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
-    url: '/admin/services_products',
+    url: '/admin/goods_products',
     type: "POST",
     data: $(this).closest('form').serialize(),
     success:function(html) {
@@ -226,7 +226,7 @@
 
 
   // ---------------------------------- Закрытие модалки -----------------------------------
-  $(document).on('click', '.icon-close-modal, .submit-edit, .submit-add, .submit-services-product-add', function() {
+  $(document).on('click', '.icon-close-modal, .submit-edit, .submit-add, .submit-goods-product-add', function() {
     $(this).closest('.reveal-overlay').remove();
 });
 });

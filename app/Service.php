@@ -15,11 +15,8 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use App\Scopes\Traits\SuppliersTraitScopes;
 
-// use Illuminate\Support\Facades\Auth;
-
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -29,7 +26,7 @@ class Service extends Model
 {
 
 	// Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use Notifiable;
     use SoftDeletes;
@@ -46,51 +43,40 @@ class Service extends Model
     // Фильтры
     use Filter;
     use BooklistFilter;
-    // use DateIntervalFilter;
 
-    public function services_article()
+    protected $fillable = [
+        'process_id',
+        'description',
+        'manually',
+        'external',
+        'manufacturer_id',
+        'cost',
+        'price',
+        'album_id',
+    ];
+
+    // Процесс
+    public function process()
     {
-        return $this->belongsTo('App\ServicesArticle');
+        return $this->belongsTo(Process::class);
     }
 
-    // Получаем компанию.
+    // Категория
+    public function category()
+    {
+        return $this->belongsTo(ServicesCategory::class);
+    }
+
+    // Компания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
-    // Получаем автора
+    // Автор
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo(User::class);
     }
-
-    // Получаем альбом
-    public function album()
-    {
-        return $this->belongsTo('App\Album');
-    }
-
-    public function photo()
-    {
-        return $this->belongsTo('App\Photo');
-    }
-
-    // Каталоги
-    public function catalogs()
-    {
-        return $this->morphToMany('App\Catalog', 'catalog_products');
-    }
-
-
-    // public function boot(DispatcherContract $events)
-    // {
-    //     parent::boot($events);
-
-    //     Service::created(function($service) {
-    //         event(new UserSignup($service));
-    //     });
-
-    // }
 
 }

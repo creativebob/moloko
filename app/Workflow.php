@@ -13,6 +13,7 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
+use App\Scopes\Traits\SuppliersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
@@ -20,49 +21,62 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
-// use App\Scopes\Filters\DateIntervalFilter;
 
 class Workflow extends Model
 {
-    // Включаем кеш
-	use Cachable;
 
-	// use SoftDeletes;
+	// Включаем кеш
+    use Cachable;
+
+    use Notifiable;
+    use SoftDeletes;
 
     // Включаем Scopes
-	use CompaniesLimitTraitScopes;
-	use AuthorsTraitScopes;
-	use SystemItemTraitScopes;
-	use FilialsTraitScopes;
-	use TemplateTraitScopes;
-	use ModeratorLimitTraitScopes;
+    use CompaniesLimitTraitScopes;
+    use AuthorsTraitScopes;
+    use SystemItemTraitScopes;
+    use FilialsTraitScopes;
+    use TemplateTraitScopes;
+    use ModeratorLimitTraitScopes;
+    use SuppliersTraitScopes;
 
     // Фильтры
-    // use Filter;
-    // use BooklistFilter;
-    // use DateIntervalFilter;
+    use Filter;
+    use BooklistFilter;
 
-	protected $dates = ['deleted_at'];
-	protected $fillable = [
-		'estimate_id',
-        'estimate_type',
-        'company_id',
-        'author_id'
-	];
+    protected $fillable = [
+        'process_id',
+        'description',
+        'manually',
+        'external',
+        'manufacturer_id',
+        'cost',
+        'price',
+        'album_id',
+    ];
 
-	public function estimate()
-	{
-		return $this->belongsTo('App\Estimate');
-	}
-
-	 // Получаем комментарии
-    public function notes()
+    // Процесс
+    public function process()
     {
-        return $this->morphMany('App\Note', 'notes');
+        return $this->belongsTo(Process::class);
     }
 
-	public function product()
-	{
-		return $this->morphTo();
-	}
+    // Категория
+    public function category()
+    {
+        return $this->belongsTo(WorkflowsCategory::class);
+    }
+
+    // Компания
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    // Автор
+    public function author()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

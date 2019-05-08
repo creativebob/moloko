@@ -48,8 +48,8 @@ class CreateArticlesTable extends Migration
             $table->string('portion_abbreviation')->nullable()->comment('Сокращение порции');
             $table->integer('portion_count')->nullable()->unsigned()->comment('Количество в порции');
 
-            $table->integer('metrics_count')->nullable()->unsigned()->index()->comment('Количество метрик у артикула');
-            $table->integer('compositions_count')->nullable()->unsigned()->index()->comment('Количество составов у артикула');
+            // $table->integer('metrics_count')->nullable()->unsigned()->index()->comment('Количество метрик у артикула');
+            // $table->integer('compositions_count')->nullable()->unsigned()->index()->comment('Количество составов у артикула');
 
             $table->boolean('draft')->default(0)->unsigned()->comment('Статус черновика');
 

@@ -15,8 +15,6 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use App\Scopes\Traits\SuppliersTraitScopes;
 
-// use Illuminate\Support\Facades\Auth;
-
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
@@ -45,27 +43,20 @@ class Raw extends Model
     // Фильтры
     use Filter;
     use BooklistFilter;
-    // use DateIntervalFilter;
 
     protected $fillable = [
-        'company_id',
-        'raws_article_id',
+        'article_id',
         'description',
         'manually',
         'external',
         'manufacturer_id',
         'cost',
         'price',
-        'album_id',
-        'photo_id',
 
         'portion_status',
         'portion_name',
         'portion_abbreviation',
         'portion_count',
-
-        'author_id',
-        'editor_id',
     ];
 
     // Артикул
@@ -97,5 +88,4 @@ class Raw extends Model
     {
         return $this->morphMany(Workflow::class, 'workflows');
     }
-
 }

@@ -16,14 +16,11 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-
 
 // Фильтры
-// use App\Scopes\Filters\Filter;
-// use App\Scopes\Filters\BooklistFilter;
-// use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\Filter;
+use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\DateIntervalFilter;
 
 class ServicesCategory extends Model
 {
@@ -31,6 +28,7 @@ class ServicesCategory extends Model
     // Включаем кеш
     use Cachable;
 
+    use Notifiable;
     use SoftDeletes;
 
     // Включаем Scopes
@@ -42,54 +40,75 @@ class ServicesCategory extends Model
     use ModeratorLimitTraitScopes;
 
     // Фильтры
-    // use Filter;
-    // use BooklistFilter;
-    // use DateIntervalFilter;
+    use Filter;
+    use BooklistFilter;
+    use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
-    'name',
-    'parent_id',
-    'category_status',
+        'name',
+        'description',
+        'seo_description',
+        'parent_id',
+        // 'goods_mode_id',
+        'category_id',
     ];
 
     // Вложенные
     public function childs()
     {
-        return $this->hasMany('App\ServicesCategory', 'parent_id');
+        return $this->hasMany(ServicesCategory::class, 'parent_id');
     }
 
-    // Получаем компании.
+    // Компания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
-    public function services_products()
+    // Услуги
+    public function services()
     {
-        return $this->hasMany('App\ServicesProduct');
+        return $this->hasMany(Service::class, 'category_id');
     }
 
-    public function services_mode()
-    {
-        return $this->belongsTo('App\ServicesMode');
-    }
+    // Режим
+    // public function mode()
+    // {
+    //     return $this->belongsTo(GoodsMode::class, 'goods_mode_id');
+    // }
 
+    // Аватар
     public function photo()
     {
-        return $this->belongsTo('App\Photo');
+        return $this->belongsTo(Photo::class);
     }
 
-    // Получаем метрики
-    public function metrics()
+
+    // Процессы
+    public function prcesses()
     {
-        return $this->morphToMany('App\Metric', 'metric_entity');
+        return $this->belongsToMany(Process::class, 'services')
+        ->where('draft', false)
+        ->where('services.archive', false);
     }
-    // Получаем состав
-    // public function compositions()
-    // {
-    //     return $this->belongsToMany('App\Product', 'compositions', 'products_category_id', 'composition_id');
-    // }
+
+    public function workflows()
+    {
+        return $this->belongsToMany(Workflow::class, 'preset_workflow');
+    }
+
+    // Производители
+    public function manufacturers()
+    {
+        return $this->morphToMany(Manufacturer::class, 'categories_manufacturer');
+    }
+
+    public function groups()
+    {
+        return $this->morphToMany(ProcessesGroup::class, 'processes_group_entity');
+        // ->where('archive', false);
+    }
 
 
     // --------------------------------------- Запросы -----------------------------------------

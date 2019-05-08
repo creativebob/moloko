@@ -78,9 +78,12 @@ use App\Http\ViewComposers\CatalogsComposer;
 use App\Http\ViewComposers\CatalogsTypesComposer;
 
 use App\Http\ViewComposers\ArticlesGroupsComposer;
-use App\Http\ViewComposers\CompositionsCategoriesComposer;
+use App\Http\ViewComposers\ProcessesGroupsComposer;
+
 use App\Http\ViewComposers\CompositionsComposer;
 use App\Http\ViewComposers\TmcComposer;
+
+use App\Http\ViewComposers\WorkflowsComposer;
 
 use App\Http\ViewComposers\LeftoverOperationsComposer;
 
@@ -105,7 +108,10 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.selects.loyalties', LoyaltiesComposer::class);
 
-        view()->composer(['includes.inputs.checker_contragents', 'includes.selects.contragents'], ContragentsComposer::class);
+        view()->composer([
+            'includes.inputs.checker_contragents',
+            'includes.selects.contragents'
+        ], ContragentsComposer::class);
 
         view()->composer(['includes.selects.units_categories'], UnitsCategoriesComposer::class);
         view()->composer(['includes.selects.units'], UnitsComposer::class);
@@ -117,7 +123,10 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer(['includes.selects.booklist_types'], BooklistTypesComposer::class);
 
-        view()->composer(['includes.selects.manufacturers', 'includes.lists.manufacturers'], ManufacturersComposer::class);
+        view()->composer([
+            'includes.selects.manufacturers',
+            'includes.lists.manufacturers'
+        ], ManufacturersComposer::class);
 
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);
 
@@ -133,7 +142,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.positions', PositionsComposer::class);
         view()->composer('goods_categories.metrics.properties_list', PropertiesComposer::class);
 
-        view()->composer(['includes.selects.catalogs_chosen', 'includes.selects.catalogs'], CatalogsSelectComposer::class);
+        view()->composer([
+            'includes.selects.catalogs_chosen',
+            'includes.selects.catalogs'
+        ], CatalogsSelectComposer::class);
 
         view()->composer('includes.lists.sites', SitesComposer::class);
         view()->composer('includes.lists.site_menus', SiteMenusComposer::class);
@@ -155,7 +167,11 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.lists.departments', DepartmentsComposer::class);
         // view()->composer('includes.selects.sectors', SectorsComposer::class);
 
-        view()->composer(['includes.selects.categories','tmc.create.categories_select'], CategoriesComposer::class);
+        view()->composer([
+            'includes.selects.categories',
+            'tmc.create.categories_select',
+            'processes.create.categories_select'
+        ], CategoriesComposer::class);
 
         view()->composer('includes.selects.goods_categories', GoodsCategoriesComposer::class);
         view()->composer('includes.selects.raws_categories', RawsCategoriesComposer::class);
@@ -177,9 +193,17 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.catalogs_types', CatalogsTypesComposer::class);
 
         view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
+        view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);
 
-        view()->composer('goods_categories.compositions.compositions_list', CompositionsCategoriesComposer::class);
-        view()->composer(['goods.compositions.compositions_list'], CompositionsComposer::class);
+        view()->composer([
+            'goods_categories.compositions.compositions_list',
+            'goods.compositions.compositions_list'
+        ], CompositionsComposer::class);
+
+        view()->composer([
+            'services_categories.workflows.workflows_list',
+            'services.workflows.workflows_list'
+        ], WorkflowsComposer::class);
 
         view()->composer('includes.selects.tmc', TmcComposer::class);
         view()->composer('goods.compositions.leftover_operations_select', LeftoverOperationsComposer::class);

@@ -44,16 +44,12 @@ class GoodsCategory extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'company_id',
         'name',
         'description',
         'seo_description',
-        'photo_id',
         'parent_id',
         'goods_mode_id',
         'category_id',
-        'author_id',
-        'editor_id',
     ];
 
     // Вложенные
@@ -149,5 +145,4 @@ class GoodsCategory extends Model
         return $this->morphToMany(ArticlesGroup::class, 'articles_group_entity');
         // ->where('archive', false);
     }
-
 }

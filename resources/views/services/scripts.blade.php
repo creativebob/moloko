@@ -1,97 +1,65 @@
 <script type="text/javascript">
 
-    // $(document).on('change', '#units-categories-list', function() {
-    //     var id = $(this).val();
-    //     // alert(id);
+    $(document).ready(function() {
+        // Мульти Select
+        $(".chosen-select").chosen({
+            width: "95%"
+        });
 
-    //     $.ajax({
-    //         headers: {
-    //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //         },
-    //         url: '/admin/get_units_list',
-    //         type: "POST",
-    //         data: {id: id, entity: 'services_categories'},
-    //         success: function(html){
-    //             $('#units-list').html(html);
-    //             $('#units-list').prop('disabled', false);
-    //         }
-    //     }); 
-    // });
+        $(function() {
+            $('.checkboxer-title .form-error').hide();
+        });
 
-    $(document).on('change', '.mode-default', function() {
+        // Валидация группы чекбоксов
+        $(document).on('click', '.checkbox-group :checkbox', function() {
+            let id = $(this).closest('.dropdown-pane').attr('id');
+            if ($(this).closest('.checkbox-group').find(":checked").length == 0) {
+                $('div[data-toggle=' + id + ']').find('.form-error').show();
+            } else {
+                $('div[data-toggle=' + id + ']').find('.form-error').hide();
+            };
+        });
 
-        // var id = $(this).val();
+        // Валидация при клике на кнопку
+        $(document).on('click', '#add-item', function(event) {
 
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_services_modes',
-            type: "POST",
-            data: {mode: 'mode-default', services_category_id: $('#services-categories-list').val()},
-            success: function(html){
-                // alert(html);
-                $('#mode').html(html);
-                Foundation.reInit($('#form-service-add'));
+            $('#form-edit').foundation('validateForm');
+
+            // Проверка выбора значения чекбокса списка метрик
+            let metricError = 0;
+            $(".checkbox-group").each(function(i) {
+                if ($(this).find("input:checkbox:checked").length == 0) {
+                    let id = $(this).closest('.dropdown-pane').attr('id');
+                    $('div[data-toggle=' + id + ']').find('.metric-list-error').show();
+                    metricError = metricError + 1;
+                };
+            });
+
+            if (metricError > 0) {
+                event.preventDefault();
+                // alert('метрики');
             }
-        }); 
-    });
 
-    $(document).on('change', '.mode-select', function() {
+            // Проверка заполнения составов
+            let compositionError = 0;
+            $("#table-compositions .composition_value").each(function(i) {
+                if ($(this).val() == '') {
+                    // $(this).siblings('.form-error').show();
+                    compositionError = compositionError + 1;
+                }
+            });
 
-        var id = $(this).val();
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_services_count',
-            type: "POST",
-            data: {id: id},
-            success: function(html){
-                // alert(html);
-                $('#mode').html(html);
-
+            if (compositionError > 0) {
+                event.preventDefault();
+                $('#composition-error').text('Заполните все значения состава').show();
+                // alert('состав');
+            } else {
+                $('#composition-error').hide();
             }
-        }); 
+
+            // $(this).trigger('click');
+        });
     });
-
-    $(document).on('click', '.modes', function(event) {
-        event.preventDefault();
-
-        var mode = $(this).attr('id');
-        // alert(id);
-
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_services_modes',
-            type: "POST",
-            data: {mode: mode, services_category_id: $('#services-categories-list').val()},
-            success: function(html){
-                $('#services-categories-list').removeAttr('class');
-                $('#services-categories-list').addClass(mode);
-                // alert(html);
-                $('#mode').html(html);
-                Foundation.reInit($('#form-service-add'));
-
-            }
-        }); 
-    });
-
-    $(document).on('keyup', 'input[name=service_product_name], input[name=name]', function(event) {
-        event.preventDefault();
-
-        if ($('input[name=service_product_name]').val() == $('input[name=name]').val()) {
-            $('.item-error').css('display', 'block');
-            $('.modal-button').attr('disabled', true);
-        } else {
-            $('.item-error').css('display', 'none');
-            $('.modal-button').attr('disabled', false);
-        }
-    });
-
 
 </script>
 

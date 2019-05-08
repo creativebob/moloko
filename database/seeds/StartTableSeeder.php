@@ -25,6 +25,9 @@ use App\CatalogsItem;
 use App\GoodsCategory;
 use App\RawsCategory;
 
+use App\ServicesCategory;
+use App\WorkflowsCategory;
+
 use Carbon\Carbon;
 
 class StartTableSeeder extends Seeder
@@ -244,7 +247,7 @@ class StartTableSeeder extends Seeder
 
         Catalog::insert([
             [
-                'name' => 'Первый каталог',
+                'name' => 'Первый каталог товаров',
                 'description' => 'Тест',
                 'catalogs_type_id' => $catalogs_type_id,
                 'company_id' => 1,
@@ -287,6 +290,53 @@ class StartTableSeeder extends Seeder
             ],
         ]);
 
+        $catalogs_type_id = CatalogsType::where('name', 'Услуги')->first(['id'])->id;
+
+        Catalog::insert([
+            [
+                'name' => 'Первый каталог услуг',
+                'description' => 'Тест',
+                'catalogs_type_id' => $catalogs_type_id,
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => 1,
+            ],
+        ]);
+
+        CatalogsItem::insert([
+            [
+                'catalog_id' => 2,
+                'name' => 'Первый',
+                'company_id' => 1,
+                'display' => 1,
+                'author_id' => 4
+
+            ],
+            [
+                'catalog_id' => 2,
+                'name' => 'Второй',
+                'company_id' => 1,
+                'display' => 1,
+                'author_id' => 4
+
+            ],
+            [
+                'catalog_id' => 2,
+                'name' => 'Третий',
+                'company_id' => 1,
+                'display' => 1,
+                'author_id' => 4
+
+            ],
+        ]);
+
+        DB::table('catalog_site')->insert([
+            [
+                'catalog_id' => 2,
+                'site_id' => 2,
+            ],
+        ]);
+
         GoodsCategory::insert([
             [
                 'name' => 'Первая категория товаров',
@@ -311,6 +361,36 @@ class StartTableSeeder extends Seeder
             ],
             [
                 'name' => 'Вторая категория сырья',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => 1,
+            ],
+        ]);
+
+        ServicesCategory::insert([
+            [
+                'name' => 'Первая категория услуг',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => 1,
+            ],
+            [
+                'name' => 'Вторая категория услуг',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => 1,
+            ],
+        ]);
+
+        WorkflowsCategory::insert([
+            [
+                'name' => 'Первая категория рабочих процессов',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => 1,
+            ],
+            [
+                'name' => 'Вторая категория рабочих процессов',
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => 1,
