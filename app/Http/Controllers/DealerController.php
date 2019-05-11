@@ -16,7 +16,7 @@ use App\Worktime;
 use App\Location;
 use App\ScheduleEntity;
 use App\Country;
-use App\ServicesType;
+use App\ProcessesType;
 use App\Phone;
 
 // Модели которые отвечают за работу с правами + политики

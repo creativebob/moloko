@@ -1,5 +1,10 @@
+{{-- Подключаем класс для работы --}}
+@include('services_categories.workflows.class')
+
 @if ($workflows_categories->isNotEmpty())
+
 @foreach($workflows_categories as $workflows_category)
+
 @if ($workflows_category->workflows->isNotEmpty())
 <li>
 	<span class="parent" data-open="workflow_category-{{ $workflows_category->id }}">{{ $workflows_category->name }}</span>
@@ -19,7 +24,9 @@
 	</div>
 </li>
 @endif
+
 @endforeach
+
 @else
 <li>Ничего нет...</li>
 @endif
@@ -53,4 +60,3 @@
         $('#' + $(this).data('open')).show();
     });
 </script>
-

@@ -80,7 +80,7 @@ use App\Http\ViewComposers\CatalogsTypesComposer;
 use App\Http\ViewComposers\ArticlesGroupsComposer;
 use App\Http\ViewComposers\ProcessesGroupsComposer;
 
-use App\Http\ViewComposers\CompositionsComposer;
+use App\Http\ViewComposers\RawsComposer;
 use App\Http\ViewComposers\TmcComposer;
 
 use App\Http\ViewComposers\WorkflowsComposer;
@@ -196,9 +196,9 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);
 
         view()->composer([
-            'goods_categories.compositions.compositions_list',
-            'goods.compositions.compositions_list'
-        ], CompositionsComposer::class);
+            'goods_categories.raws.raws_list',
+            'goods.raws.raws_list'
+        ], RawsComposer::class);
 
         view()->composer([
             'services_categories.workflows.workflows_list',
@@ -206,7 +206,7 @@ class ComposerServiceProvider extends ServiceProvider
         ], WorkflowsComposer::class);
 
         view()->composer('includes.selects.tmc', TmcComposer::class);
-        view()->composer('goods.compositions.leftover_operations_select', LeftoverOperationsComposer::class);
+        view()->composer('goods.raws.leftover_operations_select', LeftoverOperationsComposer::class);
 
 
     }

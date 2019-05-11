@@ -31,8 +31,8 @@
                 <a data-tabs-target="site" href="#site">Сайт</a>
             </li>
 
-            {{-- Подключаем табы для сущности --}}
-            @includeIf($category->getTable().'.tabs')
+            {{-- Табы для сущности --}}
+            @includeIf($entity . '.tabs')
 
             {{-- <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li> --}}
         </ul>
@@ -148,10 +148,8 @@
                 </div>
             </div>
 
-
-            {{-- Подключаем табы для сущности --}}
-            @includeIf($category->getTable().'.tabs_content')
-
+            {{-- Табы для сущности --}}
+            @includeIf($entity . '.tabs_content')
 
             {{ Form::close() }}
         </div>
@@ -162,115 +160,17 @@
 
 @section('modals')
 @include('includes.modals.modal-metric-delete')
-@include('includes.modals.modal-composition-delete')
+@include('includes.modals.modal_item_delete')
 @endsection
 
 @section('scripts')
 
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
-{{-- @include('goods_categories.scripts') --}}
 
 @include('includes.scripts.ckeditor')
 
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check', ['id' => $category->id])
-<script>
-
-    // Основные настройки
-    var category_id = '{{ $category->id }}';
-    var entity = '{{ $entity }}';
-
-    // При клике на фотку подствляем ее значения в блок редактирования
-    $(document).on('click', '#photos-list img', function(event) {
-        event.preventDefault();
-
-        // Удаляем всем фоткам активный класс
-        $('#photos-list img').removeClass('active');
-
-        // Наваливаем его текущей
-        $(this).addClass('active');
-        let id = $(this).data('id');
-
-        // Получаем инфу фотки
-        $.post('/admin/ajax_get_photo', {
-            id: id,
-            entity: 'products'
-        }, function(html){
-            // alert(html);
-            $('#form-photo-edit').html(html);
-            // $('#modal-create').foundation();
-            // $('#modal-create').foundation('open');
-        })
-    });
-
-    // При сохранении информации фотки
-    $(document).on('click', '#form-photo-edit .button', function(event) {
-        event.preventDefault();
-
-        var id = $(this).closest('#form-photo-edit').find('input[name=id]').val();
-        // alert(id);
-
-        // Записываем инфу и обновляем
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            url: '/admin/ajax_update_photo/' + id,
-            type: 'PATCH',
-            data: $(this).closest('#form-photo-edit').serialize(),
-            success: function(html){
-                // alert(html);
-                $('#form-photo-edit').html(html);
-                // $('#modal-create').foundation();
-                // $('#modal-create').foundation('open');
-            }
-        })
-    });
-
-
-    // Настройки dropzone
-    var minImageHeight = 795;
-    Dropzone.options.myDropzone = {
-        paramName: 'photo',
-        maxFilesize: {{ $settings['img_max_size'] }}, // MB
-        maxFiles: 20,
-        acceptedFiles: '{{ $settings['img_formats'] }}',
-        addRemoveLinks: true,
-        init: function() {
-            this.on("success", function(file, responseText) {
-                file.previewTemplate.setAttribute('id',responseText[0].id);
-
-                $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: '/product/photos',
-                    type: 'post',
-                    data: {goods_category_id: goods_category_id},
-                    success: function(html){
-                        // alert(html);
-                        $('#photos-list').html(html);
-
-                        // $('#modal-create').foundation();
-                        // $('#modal-create').foundation('open');
-                    }
-                })
-            });
-            this.on("thumbnail", function(file) {
-                if (file.width < {{ $settings['img_min_width'] }} || file.height < minImageHeight) {
-                    file.rejectDimensions();
-                } else {
-                    file.acceptDimensions();
-                }
-            });
-        },
-        accept: function(file, done) {
-            file.acceptDimensions = done;
-            file.rejectDimensions = function() { done("Размер фото мал, нужно минимум {{ $settings['img_min_width'] }} px в ширину"); };
-        }
-    };
-
-</script>
 
 @endsection

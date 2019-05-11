@@ -27,9 +27,6 @@ class CreateGoodsCategoriesTable extends Migration
             $table->integer('parent_id')->nullable()->unsigned()->comment('Id категории товара');
             $table->foreign('parent_id')->references('id')->on('goods_categories');
 
-            $table->integer('goods_mode_id')->nullable()->unsigned()->comment('Вид продукции');
-            $table->foreign('goods_mode_id')->references('id')->on('goods_modes');
-
             $table->integer('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
             $table->foreign('category_id')->references('id')->on('goods_categories');
 

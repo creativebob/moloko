@@ -68,16 +68,11 @@ class DatabaseSeeder extends Seeder
         $this->call(PhotoSettingsTableSeeder::class);
         $this->call(AlbumsCategoriesTableSeeder::class);
 
-        // Режимы
-        $this->call(ServicesModesTableSeeder::class);
-        $this->call(GoodsModesTableSeeder::class);
-        $this->call(RawsModesTableSeeder::class);
-
         // Свойства (для метрик)
         $this->call(PropertiesTableSeeder::class);
 
         // Сиды к новым миграциям
-        $this->call(ServicesTypesTableSeeder::class);
+        $this->call(ProcessesTypesTableSeeder::class);
 
         // Помещения
         $this->call(PlacesTypesTableSeeder::class);

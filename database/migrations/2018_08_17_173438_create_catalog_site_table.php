@@ -14,7 +14,6 @@ class CreateCatalogSiteTable extends Migration
     public function up()
     {
         Schema::create('catalog_site', function (Blueprint $table) {
-            $table->increments('id');
 
             $table->integer('catalog_id')->nullable()->unsigned()->comment('Id каталога');
             $table->foreign('catalog_id')->references('id')->on('catalogs');

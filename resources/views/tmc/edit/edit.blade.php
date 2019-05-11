@@ -4,8 +4,9 @@
 @include('includes.scripts.dropzone-inhead')
 @include('includes.scripts.fancybox-inhead')
 @include('includes.scripts.sortable-inhead')
-@if ($item->getTable() == 'goods')
-    @include('includes.scripts.chosen-inhead')
+
+@if ($entity == 'goods')
+@include('includes.scripts.chosen-inhead')
 @endif
 
 @endsection
@@ -25,7 +26,7 @@
 @endsection
 
 @php
-$disabled = $article->draft == false;
+$disabled = $article->draft == 0 ? true : null;
 @endphp
 
 @section('content')
@@ -41,8 +42,8 @@ $disabled = $article->draft == false;
                 <a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a>
             </li>
 
-            {{-- Подключаем табы для сущности --}}
-            @includeIf($item->getTable().'.tabs')
+            {{-- Табы для сущности --}}
+            @includeIf($entity . '.tabs')
 
             <li class="tabs-title">
                 <a data-tabs-target="photos" href="#photos">Фотографии</a>
@@ -174,7 +175,7 @@ $disabled = $article->draft == false;
                         </div>
 
                         {{-- Метрики --}}
-                        @includeIf($item->getTable().'.metrics.metrics')
+                        @includeIf($entity . '.metrics.metrics')
 
 
                         <div id="item-inputs"></div>
@@ -196,7 +197,7 @@ $disabled = $article->draft == false;
                     {{-- Чекбоксы управления --}}
                     @include('includes.control.checkboxes', ['item' => $item])
                     <div class="small-12 cell ">
-                    <span id="composition-error" class="form-error"></span>
+                        <span id="composition-error" class="form-error"></span>
                     </div>
 
                     {{-- Кнопка --}}
@@ -218,24 +219,24 @@ $disabled = $article->draft == false;
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Себестоимость
-                                        {{ Form::number('cost_default', $article->cost_default) }}
+                                        {{ Form::number('cost_default', null) }}
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
-                                    <label>Цена за (<span id="unit">{{ ($article->portion_status == null) ? $article->group->unit->abbreviation : 'порцию' }}</span>)
-                                        {{ Form::number('price_default', $article->price_default) }}
+                                    <label>Цена за (<span id="unit">{{ ($article->portion_status == false) ? $article->group->unit->abbreviation : 'порцию' }}</span>)
+                                        {{ Form::number('price_default', null) }}
                                     </label>
                                 </div>
                             </div>
                         </fieldset>
 
                         <fieldset class="fieldset portion-fieldset" id="portion-fieldset">
+
                             <legend class="checkbox">
                                 {{ Form::checkbox('portion_status', 1, $article->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) }}
                                 <label for="portion">
                                     <span id="portion-change">Принимать порциями</span>
                                 </label>
-
                             </legend>
 
                             <div class="grid-x grid-margin-x" id="portion-block">
@@ -260,11 +261,12 @@ $disabled = $article->draft == false;
                             </div>
                         </fieldset>
 
-
                     </div>
                 </div>
             </div>
-            @includeIf($item->getTable().'.tabs_content')
+
+            {{-- Табы для сущности --}}
+            @includeIf($entity . '.tabs_content')
 
             {{ Form::close() }}
 
@@ -294,7 +296,7 @@ $disabled = $article->draft == false;
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
                             @isset($article->album_id)
-                            @include('tmc.edit.photos', ['item' => $article])
+                            @include('photos.photos', ['item' => $article])
                             @endisset
 
                         </ul>
@@ -314,7 +316,7 @@ $disabled = $article->draft == false;
 @endsection
 
 @section('modals')
-@include('includes.modals.modal-composition-delete')
+@include('includes.modals.modal_item_delete')
 @endsection
 
 @section('scripts')
@@ -326,7 +328,10 @@ $disabled = $article->draft == false;
 </script>
 
 @include('tmc.edit.change_articles_groups_script')
-@include('tmc.edit.change_portions_script')
+@include('tmc.edit.change_portions_script', [
+    'portion_unit' => $article->group->unit->abbreviation
+]
+)
 
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
@@ -337,6 +342,7 @@ $disabled = $article->draft == false;
     'item_entity' => 'articles'
 ]
 )
+
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check', [
     'entity' => 'articles',
@@ -344,5 +350,5 @@ $disabled = $article->draft == false;
 ]
 )
 
-@includeIf($item->getTable().'.scripts')
+@includeIf($entity . '.scripts')
 @endsection

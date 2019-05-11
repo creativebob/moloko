@@ -79,4 +79,10 @@ class Service extends Model
         return $this->belongsTo(User::class);
     }
 
+    // Пункты каталога
+    public function catalogs_items()
+    {
+        return $this->belongsToMany(CatalogsItem::class, 'catalogs_item_service', 'service_id', 'catalogs_item_id');
+    }
+
 }

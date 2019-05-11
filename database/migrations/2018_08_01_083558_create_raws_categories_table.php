@@ -27,12 +27,8 @@ class CreateRawsCategoriesTable extends Migration
             $table->integer('parent_id')->nullable()->unsigned()->comment('Id категории сырья');
             $table->foreign('parent_id')->references('id')->on('raws_categories');
 
-            $table->integer('raws_mode_id')->nullable()->unsigned()->comment('Вид продукции');
-            $table->foreign('raws_mode_id')->references('id')->on('raws_modes');
-
             $table->integer('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
             $table->foreign('category_id')->references('id')->on('raws_categories');
-
 
             // Общие настройки
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');

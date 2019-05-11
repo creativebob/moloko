@@ -374,4 +374,30 @@ class RawController extends Controller
             abort(403, 'Сырьё не найдено');
         }
     }
+
+    // --------------------------------------------- Ajax -------------------------------------------------
+
+    public function ajax_get_raw(Request $request)
+    {
+        $raw = Raw::with([
+            'article.group.unit',
+            'category'
+        ])
+        ->find($request->id);
+
+        return view('goods.raws.raw_input', compact('raw'));
+    }
+
+    // Добавляем состав
+    public function ajax_get_category_raw(Request $request)
+    {
+
+        $raw = Raw::with([
+            'article.group.unit',
+            'category'
+        ])
+        ->findOrFail($request->id);
+
+        return view('goods_categories.raws.raw_tr', compact('raw'));
+    }
 }

@@ -1,1 +1,0 @@
-{{ Form::select('goods_product_id', $goods_products_list, $goods_product_id, ['id' => 'goods-products-list']) }}

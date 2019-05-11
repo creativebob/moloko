@@ -15,7 +15,7 @@ use App\Worktime;
 use App\Location;
 use App\ScheduleEntity;
 use App\Country;
-use App\ServicesType;
+use App\ProcessesType;
 use App\Phone;
 
 // Модели которые отвечают за работу с правами + политики
@@ -122,13 +122,13 @@ class BankController extends Controller
         $countries_list = Country::get()->pluck('name', 'id');
 
         // // Получаем список стран
-        // $services_types_list = ServicesType::get()->pluck('name', 'id');
+        // $services_types_list = ProcessesType::get()->pluck('name', 'id');
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
         // Запрос для чекбокса - список типов услуг
-        $services_types_query = ServicesType::get();
+        $services_types_query = ProcessesType::get();
 
         // Контейнер для checkbox'а - инициируем
         $checkboxer['status'] = null;
@@ -311,7 +311,7 @@ class BankController extends Controller
         $request[$column] = $services_types;
 
         // Запрос для чекбокса - список типов услуг
-        $services_types_query = ServicesType::get();
+        $services_types_query = ProcessesType::get();
 
         // Контейнер для checkbox'а - инициируем
         $checkboxer['status'] = null;

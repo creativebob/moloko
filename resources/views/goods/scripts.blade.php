@@ -42,7 +42,7 @@
 
             // Проверка заполнения составов
             let compositionError = 0;
-            $("#table-compositions .composition_value").each(function(i) {
+            $("#table-compositions .raw-value").each(function(i) {
                 if ($(this).val() == '') {
                     // $(this).siblings('.form-error').show();
                     compositionError = compositionError + 1;

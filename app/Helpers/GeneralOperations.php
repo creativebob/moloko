@@ -4,7 +4,7 @@ use App\Lead;
 use App\Claim;
 use Carbon\Carbon;
 use App\Location;
-use App\ServicesType;
+use App\ProcessesType;
 use App\Bank;
 use App\BankAccount;
 use App\Company;
@@ -350,7 +350,7 @@ function setSchedule($request, $company) {
 
 
 // Обновление
-function setServicesType($request, $company) {
+function setProcessesType($request, $company) {
 
             // Записываем тип услуги
     if(isset($request->services_types)){

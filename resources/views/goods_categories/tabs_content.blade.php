@@ -16,8 +16,8 @@
 
 
 
-<div class="tabs-panel" id="compositions">
+<div class="tabs-panel" id="raws">
 
-	@include('goods_categories.compositions.compositions', ['category' => $category])
+	@include('goods_categories.raws.raws', ['category' => $category])
 </div>
 

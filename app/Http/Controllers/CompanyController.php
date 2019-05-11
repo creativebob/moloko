@@ -19,7 +19,7 @@ use App\ScheduleEntity;
 use App\Supplier;
 use App\Manufacturer;
 use App\Country;
-use App\ServicesType;
+use App\ProcessesType;
 use App\Phone;
 
 // Транслитерация

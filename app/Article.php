@@ -50,13 +50,12 @@ class Article extends Model
         'name',
         'description',
 
+        'manufacturer_id',
         'articles_group_id',
 
         'internal',
         'manually',
         'external',
-
-        'manufacturer_id',
 
         'cost_default',
         'cost_mode',
@@ -85,10 +84,16 @@ class Article extends Model
     // }
 
     // Состав
-    public function compositions()
+    public function raws()
     {
-        return $this->belongsToMany(Raw::class, 'article_composition', 'article_id', 'raw_id')
-        ->withPivot(['value', 'use', 'waste', 'leftover', 'leftover_operation_id']);
+        return $this->belongsToMany(Raw::class, 'article_raw')
+        ->withPivot([
+            'value',
+            'use',
+            'waste',
+            'leftover',
+            'leftover_operation_id'
+        ]);
     }
 
     // Состав (набор)

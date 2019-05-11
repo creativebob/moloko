@@ -4,8 +4,9 @@
 @include('includes.scripts.dropzone-inhead')
 @include('includes.scripts.fancybox-inhead')
 @include('includes.scripts.sortable-inhead')
-@if ($item->getTable() == 'goods')
-    @include('includes.scripts.chosen-inhead')
+
+@if ($entity == 'services')
+@include('includes.scripts.chosen-inhead')
 @endif
 
 @endsection
@@ -25,7 +26,7 @@
 @endsection
 
 @php
-$disabled = $process->draft == false;
+$disabled = $process->draft == 0 ? true : null;
 @endphp
 
 @section('content')
@@ -37,8 +38,12 @@ $disabled = $process->draft == false;
                 <a href="#options" aria-selected="true">Общая информация</a>
             </li>
 
-            {{-- Подключаем табы для сущности --}}
-            @includeIf($item->getTable().'.tabs')
+            <li class="tabs-title">
+                <a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a>
+            </li>
+
+            {{-- Табы для сущности --}}
+            @includeIf($entity . '.tabs')
 
             <li class="tabs-title">
                 <a data-tabs-target="photos" href="#photos">Фотографии</a>
@@ -192,7 +197,7 @@ $disabled = $process->draft == false;
                     {{-- Чекбоксы управления --}}
                     @include('includes.control.checkboxes', ['item' => $item])
                     <div class="small-12 cell ">
-                    <span id="composition-error" class="form-error"></span>
+                        <span id="composition-error" class="form-error"></span>
                     </div>
 
                     {{-- Кнопка --}}
@@ -203,7 +208,33 @@ $disabled = $process->draft == false;
                 </div>
             </div>
 
-            @includeIf($item->getTable().'.tabs_content')
+            {{-- Ценообразование --}}
+            <div class="tabs-panel" id="price-rules">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-6 cell">
+
+                        <fieldset class="fieldset-access">
+                            <legend>Базовые настройки</legend>
+
+                            <div class="grid-x grid-margin-x">
+                                <div class="small-12 medium-6 cell">
+                                    <label>Себестоимость
+                                        {{ Form::number('cost_default', null) }}
+                                    </label>
+                                </div>
+                                <div class="small-12 medium-6 cell">
+                                    <label>Цена за (<span id="unit">{{ $process->group->unit->abbreviation }}</span>)
+                                        {{ Form::number('price_default', null) }}
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                    </div>
+                </div>
+            </div>
+
+            @includeIf($entity . '.tabs_content')
 
             {{ Form::close() }}
 
@@ -233,7 +264,7 @@ $disabled = $process->draft == false;
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
                             @isset($process->album_id)
-                            @include('processes.edit.photos', ['item' => $process])
+                            @include('photos.photos', ['item' => $process])
                             @endisset
 
                         </ul>
@@ -275,6 +306,7 @@ $disabled = $process->draft == false;
     'item_entity' => 'processes'
 ]
 )
+
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check', [
     'entity' => 'processes',
@@ -282,5 +314,5 @@ $disabled = $process->draft == false;
 ]
 )
 
-@includeIf($item->getTable().'.scripts')
+@includeIf($entity . '.scripts')
 @endsection

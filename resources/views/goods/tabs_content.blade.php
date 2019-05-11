@@ -18,5 +18,7 @@
 </div>
 
 {{-- Состав --}}
-@include('goods.compositions.compositions')
+<div class="tabs-panel" id="raws">
+@include('goods.raws.raws')
+</div>
 

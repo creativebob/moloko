@@ -98,9 +98,8 @@ trait ArticleTrait
 
                 // Обновляем составы только для товаров
                 if ($item->getTable() == 'goods') {
-                    $this->setCompositions($article);
+                    $this->setRaws($request, $article);
                 }
-
 
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $data['draft'] = request()->has('draft');
@@ -117,11 +116,11 @@ trait ArticleTrait
         }
     }
 
-    protected function setCompositions(Article $article)
+    protected function setRaws($request, $article)
     {
         // Запись состава только для черновика
         if ($article->draft) {
-            $article->compositions()->sync(request()->compositions);
+            $article->raws()->sync($request->raws);
         }
     }
 
@@ -151,35 +150,35 @@ trait ArticleTrait
             // Проверяем на наличие состава
 
             // Формируем массив пришедших составов артикула
-            if (isset($data['compositions'])) {
-                $article_compositions = [];
-                foreach ($data['compositions'] as $id => $composition) {
-                    $article_compositions[$id] = (int) $composition['value'];
+            if (isset($data['raws'])) {
+                $article_raws = [];
+                foreach ($data['raws'] as $id => $raw) {
+                    $article_raws[$id] = (int) $raw['value'];
                 }
-                // ksort($article_compositions);
-                // dd($article_compositions);
-                $articles = $articles->load('compositions');
+                // ksort($article_raws);
+                // dd($article_raws);
+                $articles = $articles->load('raws');
             }
 
             // Проверяем значения составов
             foreach ($articles as $compared_article) {
 
-                if (isset($data['compositions'])) {
-                    if ($compared_article->compositions->isNotEmpty()) {
+                if (isset($data['raws'])) {
+                    if ($compared_article->raws->isNotEmpty()) {
                         // Берем составы для первого найдденного артикула в группе
-                        $compared_article_compositions = [];
-                        foreach ($compared_article->compositions as $composition) {
-                            $compared_article_compositions[$composition->id] = $composition->pivot->value;
+                        $compared_article_raws = [];
+                        foreach ($compared_article->raws as $raw) {
+                            $compared_article_raws[$raw->id] = $raw->pivot->value;
                         }
-                        // ksort($compared_article_compositions);
-                        // dd($compared_article_compositions);
+                        // ksort($compared_article_raws);
+                        // dd($compared_article_raws);
                     }
                 }
 
                 // Если составы и их значения совпали, то так как один производитель, даем ошибку
-                if (isset($article_compositions) && isset($compared_article_compositions)) {
+                if (isset($article_raws) && isset($compared_article_raws)) {
                     // dd('lol1');
-                    if ($article_compositions == $compared_article_compositions) {
+                    if ($article_raws == $compared_article_raws) {
                         $result['msg'] = 'В данной групе существует артикул с таким составом и производителем.';
                         return $result;
                     } else {
@@ -199,7 +198,7 @@ trait ArticleTrait
                     }
 
                     // Убиваем массив, чтоб создать новый
-                    unset($compared_article_compositions);
+                    unset($compared_article_raws);
                 }
             }
             // dd('lol');
@@ -229,15 +228,15 @@ trait ArticleTrait
 
             // Если это товар и не шаблон, то вытаскиваем его состав для сравнения с артикулами из новой группы
             if ($item->getTable() == 'goods' && !$article->draft) {
-                $article = $article->load('compositions');
+                $article = $article->load('raws');
 
                 // ПРиводим массив к виду с шаблона
-                $compositions = [];
-                foreach ($article->compositions as $composition) {
-                    $compositions[$composition->pivot->raw_id]['value'] = $composition->pivot->value;
+                $raws = [];
+                foreach ($article->raws as $raw) {
+                    $raws[$raw->pivot->raw_id]['value'] = $raw->pivot->value;
                 }
-                // ksort($compositions);
-                $data['compositions'] = $compositions;
+                // ksort($raws);
+                $data['raws'] = $raws;
             }
 
             $result = $this->checkCoincidenceArticle($data);

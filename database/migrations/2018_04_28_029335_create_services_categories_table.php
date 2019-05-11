@@ -27,14 +27,11 @@ class CreateServicesCategoriesTable extends Migration
             $table->integer('parent_id')->nullable()->unsigned()->comment('Id категории товара');
             $table->foreign('parent_id')->references('id')->on('services_categories');
 
-            // $table->integer('goods_mode_id')->nullable()->unsigned()->comment('Вид продукции');
-            // $table->foreign('goods_mode_id')->references('id')->on('goods_modes');
-
             $table->integer('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
             $table->foreign('category_id')->references('id')->on('services_categories');
 
-            // $table->boolean('direction')->default(0)->comment('Направление');
-
+            $table->integer('processes_type_id')->nullable()->unsigned()->comment('Тип процесса');
+            $table->foreign('processes_type_id')->references('id')->on('processes_types');
 
             // Общие настройки
             $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');

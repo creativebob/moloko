@@ -1,6 +1,8 @@
+@if ($catalogs->isNotEmpty())
 @foreach ($catalogs as $catalog)
 <label>{{ $catalog->name }}</label>
 
-{!! Form::select('catalogs_items[]', $catalog->items->pluck('name', 'id'), $item->catalogs_items->pluck('id'), ['class' => 'chosen-select', 'multiple', 'data-placeholder' => 'Выберите пункты']) !!}
+{!! Form::select('catalogs_items[]', $catalog->items->pluck('name', 'id'), isset($item->catalogs_items) ? $item->catalogs_items->pluck('id') : null, ['class' => 'chosen-select', 'multiple', 'data-placeholder' => 'Выберите пункты']) !!}
 
 @endforeach
+@endif

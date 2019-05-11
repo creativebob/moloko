@@ -275,8 +275,6 @@ class GoodsController extends Controller
         // dd($goods_category->load('groups'));
         $article = $this->storeArticle($request, $goods_category);
 
-        $goods_category = $goods_category->load('metrics:id', 'compositions:id');
-
         if ($article) {
 
             // Получаем данные для авторизованного пользователя
@@ -297,12 +295,13 @@ class GoodsController extends Controller
 
             if ($cur_goods) {
 
+                $goods_category = $goods_category->load('metrics:id', 'raws:id');
+
                 $metrics = $goods_category->metrics->pluck('id')->toArray();
                 $cur_goods->metrics()->sync($metrics);
 
-
-                $compositions = $goods_category->compositions->pluck('id')->toArray();
-                $article->compositions()->sync($compositions);
+                $raws = $goods_category->raws->pluck('id')->toArray();
+                $article->raws()->sync($raws);
 
                 // Пишем куки состояния
                 // $mass = [
@@ -342,17 +341,21 @@ class GoodsController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
-        $cur_goods->load(['metrics.values', 'metrics.property', 'metrics.unit']);
-        // dd($cur_goods);
-        // dd($cur_goods->metrics->first()->pivot);
-        $article = $cur_goods->article->load('compositions.article.group.unit', 'compositions.category');
-        // dd($article->compositions);
+        $cur_goods->load([
+            'metrics.values',
+            'metrics.property',
+            'metrics.unit'
+        ]);
+
+        $article = $cur_goods->article->load([
+            'raws.article.group.unit',
+            'raws.category'
+        ]);
+
         $settings = getSettings($this->entity_alias);
-        // dd($settings);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
-        // dd($page_info);
 
         return view('tmc.edit.edit', [
             'title' => 'Редактировать товар',
@@ -411,7 +414,6 @@ class GoodsController extends Controller
                 }
                 $cur_goods->metrics()->sync($metrics_insert);
             }
-            $cur_goods->catalogs_items()->sync($request->catalogs_items);
 
             // Если ли есть
             if ($request->cookie('backlink') != null) {
@@ -463,7 +465,7 @@ class GoodsController extends Controller
     }
 
     // ----------------------------------- Ajax -----------------------------------------
-
+    
     // Отображение на сайте
     public function ajax_sync(Request $request)
     {
