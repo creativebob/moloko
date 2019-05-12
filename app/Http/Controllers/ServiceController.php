@@ -293,12 +293,15 @@ class ServiceController extends Controller
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
-            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-            $this->changeCategory($request, $service);
-
             $service->display = $request->display;
             $service->system_item = $request->system_item;
             $service->save();
+
+            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
+            $this->changeCategory($request, $service);
+
+            // Каталоги
+            $service->catalogs_items()->sync($request->catalogs_items);
 
 
             // Если ли есть

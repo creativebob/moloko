@@ -14,12 +14,10 @@ class CreateWidgetPositionTable extends Migration
     public function up()
     {
         Schema::create('widget_position', function (Blueprint $table) {
-            $table->increments('id');
-
-            $table->integer('widget_id')->unsigned()->comment('ID виджета');
+            $table->bigInteger('widget_id')->unsigned()->comment('ID виджета');
             $table->foreign('widget_id')->references('id')->on('widgets');
 
-            $table->integer('position_id')->unsigned()->comment('ID должности');
+            $table->bigInteger('position_id')->unsigned()->comment('ID должности');
             $table->foreign('position_id')->references('id')->on('positions');
         });
     }

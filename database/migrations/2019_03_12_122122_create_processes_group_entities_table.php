@@ -14,9 +14,9 @@ class CreateProcessesGroupEntitiesTable extends Migration
     public function up()
     {
         Schema::create('processes_group_entities', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
-            $table->integer('processes_group_id')->nullable()->unsigned()->comment('Id альбома');
+            $table->bigInteger('processes_group_id')->nullable()->unsigned()->comment('Id альбома');
             $table->foreign('processes_group_id')->references('id')->on('processes_groups');
 
             $table->morphs('processes_group_entity', 'pro_gr_entity');

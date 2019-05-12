@@ -104,9 +104,9 @@ class GoodsCategory extends Model
     //     return $this->belongsToMany(Article::class, 'preset_composition', 'category_id', 'composition_id');
     // }
 
-    public function compositions()
+    public function raws()
     {
-        return $this->belongsToMany(Raw::class, 'preset_composition');
+        return $this->belongsToMany(Raw::class, 'preset_raw');
     }
 
     // Один

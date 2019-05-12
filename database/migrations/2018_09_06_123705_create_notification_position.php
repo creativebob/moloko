@@ -14,12 +14,12 @@ class CreateNotificationPosition extends Migration
     public function up()
     {
         Schema::create('notification_position', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
-            $table->integer('notification_id')->nullable()->unsigned()->comment('ID оповещения');
+            $table->bigInteger('notification_id')->nullable()->unsigned()->comment('ID оповещения');
             $table->foreign('notification_id')->references('id')->on('notifications');
 
-            $table->integer('position_id')->nullable()->unsigned()->comment('ID должности');
+            $table->bigInteger('position_id')->nullable()->unsigned()->comment('ID должности');
             $table->foreign('position_id')->references('id')->on('positions');
         });
     }

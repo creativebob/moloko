@@ -14,9 +14,9 @@ class CreatePhoneEntitiesTable extends Migration
     public function up()
     {
         Schema::create('phone_entities', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
-            $table->integer('phone_id')->unsigned()->comment('Id телефона');
+            $table->bigInteger('phone_id')->unsigned()->comment('Id телефона');
             $table->foreign('phone_id')->references('id')->on('phones');
 
             $table->morphs('phone_entity');

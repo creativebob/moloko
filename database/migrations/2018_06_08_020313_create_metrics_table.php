@@ -10,18 +10,18 @@ class CreateMetricsTable extends Migration
     public function up()
     {
         Schema::create('metrics', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->string('name')->comment('Имя метрики');
             $table->text('description')->nullable()->comment('Описание метрики');
 
-            $table->integer('property_id')->nullable()->unsigned()->comment('ID свойства');
+            $table->bigInteger('property_id')->nullable()->unsigned()->comment('ID свойства');
             $table->foreign('property_id')->references('id')->on('properties');
 
             $table->decimal('min', 15, 8)->nullable()->comment('Минимум');
             $table->decimal('max', 15, 8)->nullable()->comment('Максимум');
 
-            $table->integer('unit_id')->nullable()->unsigned()->comment('Id единицы измерения');
+            $table->bigInteger('unit_id')->nullable()->unsigned()->comment('Id единицы измерения');
             $table->foreign('unit_id')->references('id')->on('units');
 
             $table->integer('decimal_place')->unsigned()->default(0)->comment('Знаков после запятой');
@@ -35,7 +35,7 @@ class CreateMetricsTable extends Migration
 
 
             // Общие настройки
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -43,7 +43,7 @@ class CreateMetricsTable extends Migration
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
 
-            $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+            $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');

@@ -351,7 +351,10 @@ class WorkflowController extends Controller
 
     public function ajax_get_workflow(Request $request)
     {
-        $workflow = Workflow::with(['process.group.unit', 'category'])
+        $workflow = Workflow::with([
+            'process.group.unit',
+            'category'
+        ])
         ->find($request->id);
 
         return view('services.workflows.workflow_input', compact('workflow'));
@@ -361,7 +364,10 @@ class WorkflowController extends Controller
     public function ajax_get_category_workflow(Request $request)
     {
 
-        $workflow = Workflow::with(['process.group.unit', 'category'])
+        $workflow = Workflow::with([
+            'process.group.unit',
+            'category'
+        ])
         ->findOrFail($request->id);
 
         return view('services_categories.workflows.workflow_tr', compact('workflow'));

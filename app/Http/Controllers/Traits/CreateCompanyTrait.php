@@ -30,7 +30,7 @@ trait CreateCompanyTrait
             add_phones($request, $company);
             addBankAccount($company, $request);
             setSchedule($company, $request);
-            setServicesType();
+            setProcessesType();
 
             // Если компания производит для себя, создадим ее связь с собой как с производителем
             if($request->manufacturer_self == 1){

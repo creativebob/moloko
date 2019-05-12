@@ -14,7 +14,7 @@ class CreateActionsTable extends Migration
     public function up()
     {
         Schema::create('actions', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->string('name')->index()->comment('Имя действия');
             $table->string('method')->index()->comment('Имя метода');

@@ -14,7 +14,7 @@ class CreateGoodsArticlesValuesTable extends Migration
     public function up()
     {
         Schema::create('goods_articles_values', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->integer('goods_article_id')->nullable()->unsigned()->comment('ID метрики');
             $table->foreign('goods_article_id')->references('id')->on('goods_articles');

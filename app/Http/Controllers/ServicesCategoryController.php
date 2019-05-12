@@ -113,8 +113,8 @@ class ServicesCategoryController extends Controller
         // Заполнение и проверка основных полей в трейте
         $services_category = $this->storeCategory($request);
 
-        // Режим товаров
-        // $services_category->services_mode_id = $request->services_mode_id;
+        // Тип услуг
+        $services_category->processes_type_id = $request->processes_type_id;
 
         $services_category->save();
 
@@ -144,7 +144,6 @@ class ServicesCategoryController extends Controller
         $services_category = ServicesCategory::with([
             'workflows.process.group.unit',
             'workflows.category',
-
             'manufacturers',
         ])
         ->moderatorLimit($answer)
@@ -183,6 +182,15 @@ class ServicesCategoryController extends Controller
         // Заполнение и проверка основных полей в трейте
         $services_category = $this->updateCategory($request, $services_category);
         // dd($request);
+
+
+        // Если сменили тип категории сырья, то меняем его и всем вложенным элементам
+        if (($services_category->parent_id == null) && ($services_category->processes_type_id != $request->processes_type_id)) {
+            $services_category->processes_type_id = $request->processes_type_id;
+
+            $services_categories = ServicesCategory::whereCategory_id($id)
+            ->update(['processes_type_id' => $request->processes_type_id]);
+        }
 
         $services_category->save();
 

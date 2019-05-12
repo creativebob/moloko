@@ -13,7 +13,7 @@ use App\Http\Requests\SectorRequest;
 use App\Http\Controllers\Traits\CategoryControllerTrait;
 
 // Транслитерация
-use Transliterate;
+use Illuminate\Support\Str;
 
 class SectorController extends Controller
 {
@@ -110,7 +110,7 @@ class SectorController extends Controller
         $sector = $this->storeCategory($request);
 
         // Тег
-        $sector->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
+        $sector->tag = empty($request->tag) ? Str::slug($request->name) : $request->tag;
 
         $sector->save();
 
@@ -163,7 +163,7 @@ class SectorController extends Controller
         // Заполнение и проверка основных полей в трейте
         $sector = $this->updateCategory($request, $sector);
 
-        $sector->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
+        $sector->tag = empty($request->tag) ? Str::slug($request->name) : $request->tag;
 
         $sector->save();
 

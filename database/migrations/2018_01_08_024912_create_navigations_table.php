@@ -14,23 +14,23 @@ class CreateNavigationsTable extends Migration
     public function up()
     {
         Schema::create('navigations', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->string('name')->nullable()->comment('Имя категории меню');
             $table->string('alias')->nullable()->comment('Алиас категории меню');
 
-            $table->integer('site_id')->unsigned()->nullable()->comment('Id сайта');
+            $table->bigInteger('site_id')->unsigned()->nullable()->comment('Id сайта');
             $table->foreign('site_id')->references('id')->on('sites');
 
-            $table->integer('navigations_category_id')->nullable()->unsigned()->comment('ID категории навигации');
+            $table->bigInteger('navigations_category_id')->nullable()->unsigned()->comment('ID категории навигации');
             $table->foreign('navigations_category_id')->references('id')->on('navigations_categories');
 
-            $table->integer('align_id')->unsigned()->nullable()->comment('Id сайта меню');
+            $table->bigInteger('align_id')->unsigned()->nullable()->comment('Id сайта меню');
             $table->foreign('align_id')->references('id')->on('aligns');
 
 
             // Общие настройки
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -38,7 +38,7 @@ class CreateNavigationsTable extends Migration
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
 
-            $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+            $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');

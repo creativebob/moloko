@@ -6,7 +6,7 @@ use App\Company;
 use App\Manufacturer;
 
 // Транслитерация
-// use Transliterate;
+// use Illuminate\Support\Str;
 use Illuminate\Support\Str;
 
 trait CompanyControllerTrait
@@ -66,7 +66,7 @@ trait CompanyControllerTrait
             add_phones($request, $company);
             addBankAccount($request, $company);
             setSchedule($request, $company);
-            setServicesType($request, $company);
+            setProcessesType($request, $company);
 
             // Если компания производит для себя, создадим ее связь с собой как с производителем
             if($request->manufacturer_self == 1){
@@ -142,7 +142,7 @@ trait CompanyControllerTrait
             add_phones($request, $company);
             addBankAccount($request, $company);
             setSchedule($request, $company);
-            setServicesType($request, $company);
+            setProcessesType($request, $company);
 
             $manufacturer = Manufacturer::where('company_id', $company->id)
             ->where('manufacturer_id', $company->id)

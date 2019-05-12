@@ -261,7 +261,13 @@
                     <div class="small-12 large-6 cell checkbox checkboxer">
 
                         @include('includes.scripts.class.checkboxer')
-                        @include('includes.inputs.checker', ['entity' => $company, 'model'=>'ServicesType', 'relation'=>'services_types', 'title'=>'Типы услуг'])
+                        @include('includes.inputs.checker', [
+                            'entity' => $company,
+                            'model' => 'ProcessesType',
+                            'relation'=>'processes_types',
+                            'title'=>'Типы услуг'
+                        ]
+                        )
                     </div>
 
                     <div class="small-12 cell checkbox">
@@ -271,100 +277,100 @@
 
 
                     {{-- Только для формы редактирования компании предлагаем указать связь с собой как с производителем
-                    Поле manufacturer_self приходит только с контроллера Company --}}
+                        Поле manufacturer_self приходит только с контроллера Company --}}
 
-                    @if(isset($company->manufacturer_self))
+                        @if(isset($company->manufacturer_self))
                         @if($company->manufacturer_self == false)
-                            <div class="small-12 cell checkbox">
-                                {{ Form::checkbox('manufacturer_self', 1, $company->manufacturer_self, ['id' => 'manufacturer_self']) }}
-                                <label for="manufacturer_self"><span>Производитель</span></label>
-                            </div>
+                        <div class="small-12 cell checkbox">
+                            {{ Form::checkbox('manufacturer_self', 1, $company->manufacturer_self, ['id' => 'manufacturer_self']) }}
+                            <label for="manufacturer_self"><span>Производитель</span></label>
+                        </div>
                         @endif
-                    @endif
+                        @endif
 
-                    {{-- Чекбоксы управления --}}
-                    @include('includes.control.checkboxes', ['item' => $company])
-                </div>
-            </div>
-            <!-- Конец настройки -->
-
-
-            <!-- График работы -->
-            <div class="tabs-panel" id="content-panel-4">
-                <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-6 cell">
-
-                        @include('includes.inputs.schedule', ['worktime'=>$company->worktime])
-
+                        {{-- Чекбоксы управления --}}
+                        @include('includes.control.checkboxes', ['item' => $company])
                     </div>
                 </div>
-            </div>
-            <!-- Конец график работы -->
-
-        </div>
-
-        <div class="small-12 medium-5 large-7 cell tabs-margin-top">
-        </div>
-
-        <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-            {{ Form::submit($submitButtonText, ['class'=>'button']) }}
-        </div>
-    </div>
-
-    <div class="small-12 medium-5 large-7 cell text-left tabs-margin-top">
-        <div class="grid-x grid-padding-x">
-
-            @if(!empty($dealer))
-            <!-- Блок дилера -->
-            <div class="small-12 medium-6 cell">
-
-            </div>
-            <!-- Конец блока дилера -->
-            @endif
+                <!-- Конец настройки -->
 
 
+                <!-- График работы -->
+                <div class="tabs-panel" id="content-panel-4">
+                    <div class="grid-x grid-padding-x">
+                        <div class="small-12 medium-6 cell">
 
-            @if(!empty($user))
-            <!-- Блок дилера -->
-            <div class="small-12 medium-6 cell">
-            </div>
-            <div class="small-12 medium-6 cell">
-                <div class="small-12 large-6 cell">
-                    <fieldset>
-                        <legend>Директор (руководитель)</legend>
-                        <div class="grid-x grid-padding-x">
-                            <div class="small-12 cell">
-                                <label>Фамилия
-                                    @include('includes.inputs.name', ['name'=>'second_name', 'value'=>$user->second_name, 'required' => true])
-                                </label>
-                            </div>
-                            <div class="small-12 cell">
-                                <label>Имя
-                                    @include('includes.inputs.name', ['name'=>'first_name', 'value'=>$user->first_name, 'required' => true])
-                                </label>
-                            </div>
-                            <div class="small-12 cell">
-                                <label>Отчество
-                                    @include('includes.inputs.name', ['name'=>'patronymic', 'value'=>$user->patronymic])
-                                </label>
-                            </div>
-                            <div class="small-12 medium-6 cell">
-                                <label>Телефон
-                                    @include('includes.inputs.phone', ['value' => isset($user->main_phone->phone) ? $user->main_phone->phone : null, 'name'=>'main_phone', 'required' => true, 'id' => 'main-phone'])
-                                </label>
-                            </div>
+                            @include('includes.inputs.schedule', ['worktime'=>$company->worktime])
+
                         </div>
-                    </fieldset>
+                    </div>
                 </div>
+                <!-- Конец график работы -->
+
             </div>
-            <!-- Конец блока дилера -->
-            @endif
 
+            <div class="small-12 medium-5 large-7 cell tabs-margin-top">
+            </div>
 
-
+            <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
+                {{ Form::submit($submitButtonText, ['class'=>'button']) }}
+            </div>
         </div>
+
+        <div class="small-12 medium-5 large-7 cell text-left tabs-margin-top">
+            <div class="grid-x grid-padding-x">
+
+                @if(!empty($dealer))
+                <!-- Блок дилера -->
+                <div class="small-12 medium-6 cell">
+
+                </div>
+                <!-- Конец блока дилера -->
+                @endif
+
+
+
+                @if(!empty($user))
+                <!-- Блок дилера -->
+                <div class="small-12 medium-6 cell">
+                </div>
+                <div class="small-12 medium-6 cell">
+                    <div class="small-12 large-6 cell">
+                        <fieldset>
+                            <legend>Директор (руководитель)</legend>
+                            <div class="grid-x grid-padding-x">
+                                <div class="small-12 cell">
+                                    <label>Фамилия
+                                        @include('includes.inputs.name', ['name'=>'second_name', 'value'=>$user->second_name, 'required' => true])
+                                    </label>
+                                </div>
+                                <div class="small-12 cell">
+                                    <label>Имя
+                                        @include('includes.inputs.name', ['name'=>'first_name', 'value'=>$user->first_name, 'required' => true])
+                                    </label>
+                                </div>
+                                <div class="small-12 cell">
+                                    <label>Отчество
+                                        @include('includes.inputs.name', ['name'=>'patronymic', 'value'=>$user->patronymic])
+                                    </label>
+                                </div>
+                                <div class="small-12 medium-6 cell">
+                                    <label>Телефон
+                                        @include('includes.inputs.phone', ['value' => isset($user->main_phone->phone) ? $user->main_phone->phone : null, 'name'=>'main_phone', 'required' => true, 'id' => 'main-phone'])
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <!-- Конец блока дилера -->
+                @endif
+
+
+
+            </div>
+        </div>
+
+
     </div>
-
-
-</div>
 

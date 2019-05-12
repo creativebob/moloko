@@ -87,7 +87,7 @@ class Goods extends Model
     // Пункты каталога
     public function catalogs_items()
     {
-        return $this->belongsToMany(CatalogsItem::class, 'catalogs_items_goods', 'goods_id', 'catalogs_item_id');
+        return $this->belongsToMany(CatalogsItem::class, 'catalogs_item_goods', 'goods_id', 'catalogs_item_id');
     }
 
     // Рабочие процессы

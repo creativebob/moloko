@@ -111,9 +111,6 @@ class RawsCategoryController extends Controller
         // Заполнение и проверка основных полей в трейте
         $raws_category = $this->storeCategory($request);
 
-        // Режим товаров
-        $raws_category->raws_mode_id = $request->raws_mode_id;
-
         $raws_category->save();
 
         if ($raws_category) {
@@ -186,14 +183,6 @@ class RawsCategoryController extends Controller
 
         // Заполнение и проверка основных полей в трейте
         $raws_category = $this->updateCategory($request, $raws_category);
-
-        // Если сменили тип категории сырья, то меняем его и всем вложенным элементам
-        if (($raws_category->parent_id == null) && ($raws_category->goods_mode_id != $request->goods_mode_id)) {
-            $raws_category->goods_mode_id = $request->goods_mode_id;
-
-            $raws_categories = RawsCategory::whereCategory_id($id)
-            ->update(['raws_mode_id' => $request->raws_mode_id]);
-        }
 
         $raws_category->save();
 

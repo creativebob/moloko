@@ -14,7 +14,7 @@ use App\Http\Requests\CatalogsItemRequest;
 use App\Http\Controllers\Traits\CategoryControllerTrait;
 
 // Транслитерация
-use Transliterate;
+use Illuminate\Support\Str;
 
 class CatalogsItemController extends Controller
 {
@@ -116,7 +116,7 @@ class CatalogsItemController extends Controller
 
         $catalogs_item->catalog_id = $catalog_id;
 
-        // $catalogs_item->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
+        // $catalogs_item->tag = empty($request->tag) ? Str::slug($request->name) : $request->tag;
 
         $catalogs_item->save();
 
@@ -179,7 +179,7 @@ class CatalogsItemController extends Controller
         // Заполнение и проверка основных полей в трейте
         $catalogs_item = $this->updateCategory($request, $catalogs_item);
 
-        // $catalogs_item->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
+        // $catalogs_item->tag = empty($request->tag) ? Str::slug($request->name) : $request->tag;
 
         $catalogs_item->save();
         // dd($catalogs_item);

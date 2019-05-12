@@ -4,5 +4,5 @@
 
 
 <li class="tabs-title">
-	<a data-tabs-target="compositions" href="#compositions">Состав</a>
+	<a data-tabs-target="raws" href="#raws">Сырье</a>
 </li>

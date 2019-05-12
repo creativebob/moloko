@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Storage;
 
 // Транслитерация
-use Transliterate;
+use Illuminate\Support\Str;
 
 class AlbumController extends Controller
 {
@@ -133,7 +133,7 @@ class AlbumController extends Controller
         $album->name = $request->name;
 
         // Алиас
-        $album->alias = empty($request->alias) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->alias;
+        $album->alias = empty($request->alias) ? Str::slug($request->name) : $request->alias;
 
         $album->albums_category_id = $request->albums_category_id;
         $album->description = $request->description;
@@ -242,7 +242,7 @@ class AlbumController extends Controller
 
         $album->name = $request->name;
 
-        $album->alias = empty($request->alias) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->alias;
+        $album->alias = empty($request->alias) ? Str::slug($request->name) : $request->alias;
 
         $album->albums_category_id = $request->albums_category_id;
         $album->description = $request->description;

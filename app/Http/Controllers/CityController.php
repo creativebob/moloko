@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\CityRequest;
 
 // Транслитерация
-use Transliterate;
+use Illuminate\Support\Str;
 
 // На удаление
 use Illuminate\Support\Facades\Auth;
@@ -168,7 +168,7 @@ class CityController extends Controller
                 $city_name .= $count;
             }
 
-            $city->alias = Transliterate::make($city_name, ['type' => 'url', 'lowercase' => true]);
+            $city->alias = Str::slug($city_name);
             $city->vk_external_id = $request->vk_external_id;
 
             $city->region_id = $region_id;

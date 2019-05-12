@@ -11,7 +11,7 @@ class CreateExtraRequisitesTable extends Migration
     {
         Schema::create('extra_requisites', function (Blueprint $table) {
 
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->string('name')->nullable()->index()->comment('Название дополнительного реквизита');
             $table->text('description')->nullable()->comment('Описание');
@@ -20,7 +20,7 @@ class CreateExtraRequisitesTable extends Migration
 
 
             // Общие настройки
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -28,7 +28,7 @@ class CreateExtraRequisitesTable extends Migration
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
 
-            $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+            $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');

@@ -14,9 +14,9 @@ class CreateCategoriesManufacturersTable extends Migration
     public function up()
     {
         Schema::create('categories_manufacturers', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
-            $table->integer('manufacturer_id')->unsigned()->comment('Id производителя');
+            $table->bigInteger('manufacturer_id')->unsigned()->comment('Id производителя');
             $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
 
             $table->morphs('categories_manufacturer', 'cat_manuf');

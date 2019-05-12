@@ -15,10 +15,10 @@ class CreateGoodsMetricTable extends Migration
     {
         Schema::create('goods_metric', function (Blueprint $table) {
 
-            $table->integer('goods_id')->nullable()->unsigned()->comment('Id товара');
+            $table->bigInteger('goods_id')->nullable()->unsigned()->comment('Id товара');
             $table->foreign('goods_id')->references('id')->on('goods');
 
-            $table->integer('metric_id')->nullable()->unsigned()->comment('Id метрики');
+            $table->bigInteger('metric_id')->nullable()->unsigned()->comment('Id метрики');
             $table->foreign('metric_id')->references('id')->on('metrics');
 
             $table->string('value')->nullable()->comment('Значение');

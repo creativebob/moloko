@@ -258,9 +258,9 @@ class Company extends Model
     }
 
     // Получаем типы услуг
-    public function services_types()
+    public function processes_types()
     {
-        return $this->belongsToMany('App\ServicesType', 'companies_services_types', 'company_id', 'services_type_id');
+        return $this->belongsToMany(ProcessesType::class, 'company_processes_type', 'company_id', 'processes_type_id');
     }
 
     // Телефоны

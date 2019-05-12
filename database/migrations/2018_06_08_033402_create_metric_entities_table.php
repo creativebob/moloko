@@ -14,9 +14,9 @@ class CreateMetricEntitiesTable extends Migration
     public function up()
     {
         Schema::create('metric_entities', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
-            $table->integer('metric_id')->nullable()->unsigned()->comment('Id альбома');
+            $table->bigInteger('metric_id')->nullable()->unsigned()->comment('Id альбома');
             $table->foreign('metric_id')->references('id')->on('metrics');
 
             $table->morphs('metric_entity');

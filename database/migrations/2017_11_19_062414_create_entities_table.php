@@ -10,7 +10,7 @@ class CreateEntitiesTable extends Migration
     public function up()
     {
         Schema::create('entities', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->string('name')->index()->comment('Название сущности');
 
@@ -21,7 +21,7 @@ class CreateEntitiesTable extends Migration
             $table->integer('validation_minus')->unsigned()->nullable()->comment('Исключает настройку дополнительной валидации страницы');
             $table->integer('feedback_minus')->unsigned()->nullable()->comment('Исключает добавление отзыва к сущности из под интерфейса');
 
-            $table->integer('ancestor_id')->unsigned()->nullable()->comment('Id предка сущности');
+            $table->bigInteger('ancestor_id')->unsigned()->nullable()->comment('Id предка сущности');
             $table->foreign('ancestor_id')->references('id')->on('entities');
 
             $table->boolean('statistic')->default(0)->comment('Сбор статистики по сущности для компании');
@@ -31,11 +31,11 @@ class CreateEntitiesTable extends Migration
 
             // Блок тмц
             $table->boolean('tmc')->default(0)->comment('ТМЦ');
-            $table->integer('consist_id')->unsigned()->nullable()->comment('Id сущности, из которой состоит сущность');
+            $table->bigInteger('consist_id')->unsigned()->nullable()->comment('Id сущности, из которой состоит сущность');
             $table->foreign('consist_id')->references('id')->on('entities');
 
             // Общие настройки
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -43,7 +43,7 @@ class CreateEntitiesTable extends Migration
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
 
-            $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+            $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');

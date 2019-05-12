@@ -30,7 +30,7 @@ use Carbon\Carbon;
 use Intervention\Image\ImageManagerStatic as Image;
 
 // Транслитерация
-use Transliterate;
+use Illuminate\Support\Str;
 
 // На удаление
 use App\Http\Controllers\Session;

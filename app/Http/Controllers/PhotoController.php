@@ -16,7 +16,7 @@ use App\Http\Requests\PhotoRequest;
 use Illuminate\Support\Facades\Storage;
 
 // Транслитерация
-use Transliterate;
+use Illuminate\Support\Str;
 
 // use Intervention\Image\Facades\Image as Image;
 
@@ -267,7 +267,7 @@ class PhotoController extends Controller
                         'company_id' => $user->company_id,
                     ], [
                         'description' => $request->name,
-                        'alias' => Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]),
+                        'alias' => Str::slug($request->name),
                         'author_id' => hideGod($user),
                     ]
                 );
@@ -282,7 +282,7 @@ class PhotoController extends Controller
             //     $album = new Album;
             //     $album->name = $request->name;
             //     $album->description = $request->name;
-            //     $album->alias = Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]);
+            //     $album->alias = Str::slug($request->name);
             //     $album->albums_category_id = 1;
 
             //     // Получаем пользователя

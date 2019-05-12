@@ -14,21 +14,21 @@ class CreateIndicatorsTable extends Migration
     public function up()
     {
         Schema::create('indicators', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->string('name')->nullable()->index()->comment('Название категории периодов');
             $table->text('description')->nullable()->comment('Описание');
 
-            $table->integer('indicators_category_id')->unsigned()->nullable()->comment('Id категории индикаторов');
+            $table->bigInteger('indicators_category_id')->unsigned()->nullable()->comment('Id категории индикаторов');
             $table->foreign('indicators_category_id')->references('id')->on('indicators_categories');
 
-            $table->integer('entity_id')->unsigned()->nullable()->comment('Id сущности');
+            $table->bigInteger('entity_id')->unsigned()->nullable()->comment('Id сущности');
             $table->foreign('entity_id')->references('id')->on('entities');
 
-            $table->integer('unit_id')->unsigned()->nullable()->comment('Id еденицы измерения');
+            $table->bigInteger('unit_id')->unsigned()->nullable()->comment('Id еденицы измерения');
             $table->foreign('unit_id')->references('id')->on('units');
 
-            $table->integer('period_id')->unsigned()->nullable()->comment('Id временного периода');
+            $table->bigInteger('period_id')->unsigned()->nullable()->comment('Id временного периода');
             $table->foreign('period_id')->references('id')->on('periods');
 
             $table->boolean('change_allowed')->default(0)->comment('Разрешение на изменение периода: true - разрешено, false - запрещено');
@@ -37,7 +37,7 @@ class CreateIndicatorsTable extends Migration
 
 
             // Общие настройки
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -45,7 +45,7 @@ class CreateIndicatorsTable extends Migration
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
 
-            $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+            $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');

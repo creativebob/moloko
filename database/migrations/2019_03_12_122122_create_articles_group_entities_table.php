@@ -14,9 +14,9 @@ class CreateArticlesGroupEntitiesTable extends Migration
     public function up()
     {
         Schema::create('articles_group_entities', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
-            $table->integer('articles_group_id')->nullable()->unsigned()->comment('Id альбома');
+            $table->bigInteger('articles_group_id')->nullable()->unsigned()->comment('Id альбома');
             $table->foreign('articles_group_id')->references('id')->on('articles_groups');
 
             $table->morphs('articles_group_entity', 'art_gr_entity');

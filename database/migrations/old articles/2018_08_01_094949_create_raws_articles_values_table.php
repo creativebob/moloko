@@ -14,7 +14,7 @@ class CreateRawsArticlesValuesTable extends Migration
     public function up()
     {
         Schema::create('raws_articles_values', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->integer('raws_article_id')->nullable()->unsigned()->comment('ID метрики');
             $table->foreign('raws_article_id')->references('id')->on('raws_articles');

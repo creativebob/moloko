@@ -14,13 +14,11 @@ class CreatePresetMetricTable extends Migration
     public function up()
     {
         Schema::create('preset_metric', function (Blueprint $table) {
-
-            $table->integer('category_id')->nullable()->unsigned()->comment('Id категории');
+            $table->bigInteger('category_id')->nullable()->unsigned()->comment('Id категории');
             $table->foreign('category_id')->references('id')->on('goods_Categories');
 
-            $table->integer('metric_id')->nullable()->unsigned()->comment('Id метрики');
+            $table->bigInteger('metric_id')->nullable()->unsigned()->comment('Id метрики');
             $table->foreign('metric_id')->references('id')->on('metrics');
-
         });
     }
 

@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\PageRequest;
 
 // Транслитерация
-use Transliterate;
+use Illuminate\Support\Str;
 
 
 class PageController extends Controller
@@ -81,7 +81,7 @@ class PageController extends Controller
         $page->name = $request->name;
         $page->title = $request->title;
 
-        $page->alias = empty($request->alias) ? Transliterate::make($request->title, ['type' => 'url', 'lowercase' => true]) : $request->alias;
+        $page->alias = empty($request->alias) ? Str::slug($request->title) : $request->alias;
 
         $page->description = $request->description;
         $page->content = $request->content;

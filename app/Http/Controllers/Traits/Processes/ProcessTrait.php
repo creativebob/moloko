@@ -81,7 +81,7 @@ trait ProcessTrait
         if (!request()->has('draft') && $data['old_draft'] == 1) {
             // Проверяем совпадение (отдаем пришедшие данные, т.к. мы не можем сейчас записать артикул, запись будет после проверки)
             // Придет либо массив с ошибками, либо null
-            $result = $this->checkCoincidenceArticle($data);
+            $result = $this->checkCoincidenceProcess($data);
             // dd($result);
         }
         // Проверки уже выведенного артикула
@@ -96,20 +96,19 @@ trait ProcessTrait
                 return $result;
             } else {
 
-                // Обновляем составы только для товаров
-                if ($item->getTable() == 'goods') {
-                    $this->setCompositions($article);
+                // Обновляем составы только для услуг
+                if ($item->getTable() == 'services') {
+                    $this->setWorkflows($request, $process);
                 }
-
 
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $data['draft'] = request()->has('draft');
-                $article->update($data);
+                $process->update($data);
 
                 // Cохраняем / обновляем фото
-                savePhoto($request, $article);
+                savePhoto($request, $process);
 
-                return $article;
+                return $process;
             }
         } else {
             // Если были ошибки, отдаем массив с ошибками
@@ -117,22 +116,21 @@ trait ProcessTrait
         }
     }
 
-    protected function setCompositions(Article $article)
+    protected function setWorkflows($request, $process)
     {
         // Запись состава только для черновика
-        if ($article->draft) {
-            $article->compositions()->sync(request()->compositions);
+        if ($process->draft) {
+            $process->workflows()->sync($request->workflows);
         }
     }
 
     // Проверяем артикул при выводе из черновика
-    protected function checkCoincidenceArticle($data)
+    protected function checkCoincidenceProcess($data)
     {
 
         // dd($data);
 
-
-        $articles = Article::where([
+        $processes = Process::where([
             'processes_group_id' => $data['processes_group_id'],
             'manufacturer_id' => $data['manufacturer_id'],
         ])
@@ -144,48 +142,50 @@ trait ProcessTrait
             'processes_group_id',
             'manufacturer_id',
         ]);
-        // dd($articles);
+        // dd($processes);
 
         // Если нашлись артикулы
-        if ($articles->isNotEmpty()) {
+        if ($processes->isNotEmpty()) {
             // Проверяем на наличие состава
 
+            
+
             // Формируем массив пришедших составов артикула
-            if (isset($data['compositions'])) {
-                $article_compositions = [];
-                foreach ($data['compositions'] as $id => $composition) {
-                    $article_compositions[$id] = (int) $composition['value'];
+            if (isset($data['workflows'])) {
+                $process_workflows = [];
+                foreach ($data['workflows'] as $id => $wokrflow) {
+                    $process_workflows[$id] = (int) $wokrflow['value'];
                 }
-                // ksort($article_compositions);
-                // dd($article_compositions);
-                $articles = $articles->load('compositions');
+                // ksort($process_workflows);
+                // dd($process_workflows);
+                $processes = $processes->load('workflows');
             }
 
             // Проверяем значения составов
-            foreach ($articles as $compared_article) {
+            foreach ($processes as $compared_process) {
 
-                if (isset($data['compositions'])) {
-                    if ($compared_article->compositions->isNotEmpty()) {
+                if (isset($data['workflows'])) {
+                    if ($compared_process->workflows->isNotEmpty()) {
                         // Берем составы для первого найдденного артикула в группе
-                        $compared_article_compositions = [];
-                        foreach ($compared_article->compositions as $composition) {
-                            $compared_article_compositions[$composition->id] = $composition->pivot->value;
+                        $compared_process_workflows = [];
+                        foreach ($compared_process->workflows as $wokrflow) {
+                            $compared_process_workflows[$wokrflow->id] = $wokrflow->pivot->value;
                         }
-                        // ksort($compared_article_compositions);
-                        // dd($compared_article_compositions);
+                        // ksort($compared_process_workflows);
+                        // dd($compared_process_workflows);
                     }
                 }
 
                 // Если составы и их значения совпали, то так как один производитель, даем ошибку
-                if (isset($article_compositions) && isset($compared_article_compositions)) {
+                if (isset($process_workflows) && isset($compared_process_workflows)) {
                     // dd('lol1');
-                    if ($article_compositions == $compared_article_compositions) {
-                        $result['msg'] = 'В данной групе существует артикул с таким составом и производителем.';
+                    if ($process_workflows == $compared_process_workflows) {
+                        $result['msg'] = 'В данной групе существует процесс с таким составом и производителем.';
                         return $result;
                     } else {
                         // Если имя совпало даем ошибку
-                        if ($data['name'] == $compared_article->name) {
-                            $result['msg'] = 'В данной групе существует артикул с таким именем.';
+                        if ($data['name'] == $compared_process->name) {
+                            $result['msg'] = 'В данной групе существует процесс с таким именем.';
                             return $result;
                         }
                     }
@@ -193,13 +193,13 @@ trait ProcessTrait
                     // Если составы разные, смотрим имя, так как производитель один
 
                     // Если имя совпало даем ошибку
-                    if ($data['name'] == $compared_article->name) {
-                        $result['msg'] = 'В данной групе существует артикул с таким именем.';
+                    if ($data['name'] == $compared_process->name) {
+                        $result['msg'] = 'В данной групе существует процесс с таким именем.';
                         return $result;
                     }
 
                     // Убиваем массив, чтоб создать новый
-                    unset($compared_article_compositions);
+                    unset($compared_process_workflows);
                 }
             }
             // dd('lol');
@@ -210,10 +210,10 @@ trait ProcessTrait
     protected function checks($request, $item)
     {
 
-        $article = $item->article;
+        $process = $item->process;
 
         // Проверка имени
-        if ($article->name != $request->name) {
+        if ($process->name != $request->name) {
 
             $result = $this->checkName($request, $item);
             if (is_array($result)) {
@@ -222,25 +222,25 @@ trait ProcessTrait
         }
 
         // Проверка смены группы
-        if ($article->processes_group_id != $request->processes_group_id) {
+        if ($process->processes_group_id != $request->processes_group_id) {
             $data = $request->input();
             // Так как производителя блокируем на шаблоне, то добавляем руками в массив
-            $data['manufacturer_id'] = $item->article->manufacturer_id;
+            $data['manufacturer_id'] = $item->process->manufacturer_id;
 
             // Если это товар и не шаблон, то вытаскиваем его состав для сравнения с артикулами из новой группы
-            if ($item->getTable() == 'goods' && !$article->draft) {
-                $article = $article->load('compositions');
+            if ($item->getTable() == 'goods' && !$process->draft) {
+                $process = $process->load('workflows');
 
                 // ПРиводим массив к виду с шаблона
-                $compositions = [];
-                foreach ($article->compositions as $composition) {
-                    $compositions[$composition->pivot->raw_id]['value'] = $composition->pivot->value;
+                $workflows = [];
+                foreach ($process->workflows as $wokrflow) {
+                    $workflows[$wokrflow->pivot->raw_id]['value'] = $wokrflow->pivot->value;
                 }
-                // ksort($compositions);
-                $data['compositions'] = $compositions;
+                // ksort($workflows);
+                $data['workflows'] = $workflows;
             }
 
-            $result = $this->checkCoincidenceArticle($data);
+            $result = $this->checkCoincidenceProcess($data);
 
             if (is_array($result)) {
                 return $result;
@@ -251,17 +251,17 @@ trait ProcessTrait
     // Проверяем на совпадение имя артикула (не черновика)
     protected function checkName($request, $item)
     {
-        if (!$item->article->draft) {
-            $article = $item->article;
-            $articles_count = Article::where([
+        if (!$item->process->draft) {
+            $process = $item->process;
+            $processes_count = Process::where([
                 'name' => $request->name,
-                'processes_group_id' => $article->processes_group_id,
-                'manufacturer_id' => $article->manufacturer_id,
+                'processes_group_id' => $process->processes_group_id,
+                'manufacturer_id' => $process->manufacturer_id,
             ])
             ->count();
 
-            if ($articles_count > 0) {
-                $result['msg'] = 'В данной групе существует артикул с таким именем.';
+            if ($processes_count > 0) {
+                $result['msg'] = 'В данной групе существует процесс с таким именем.';
                 return $result;
             }
         }
@@ -277,7 +277,7 @@ trait ProcessTrait
             // Смотрим: была ли она изменена
         if ($item->category_id != $category_id) {
 
-            $processes_group = $item->article->group;
+            $processes_group = $item->process->group;
             $category = $item->category;
 
                 // Была изменена! Переназначаем категорию товару и группе:
@@ -290,7 +290,7 @@ trait ProcessTrait
             ->first(['model']);
 
             $model = 'App\\'.$entity->model;
-            $items = $model::whereHas('article', function ($q) use ($processes_group) {
+            $items = $model::whereHas('process', function ($q) use ($processes_group) {
                 $q->where('processes_group_id', $processes_group->id);
             })
             ->update([

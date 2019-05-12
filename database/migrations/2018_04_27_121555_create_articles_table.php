@@ -14,19 +14,19 @@ class CreateArticlesTable extends Migration
     public function up()
     {
         Schema::create('articles', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->string('name')->nullable()->comment('Имя артикула');
             $table->text('description')->nullable()->comment('Описание артикула');
 
-            $table->integer('articles_group_id')->nullable()->unsigned()->comment('Id группы артикула');
+            $table->bigInteger('articles_group_id')->nullable()->unsigned()->comment('Id группы артикула');
             $table->foreign('articles_group_id')->references('id')->on('articles_groups');
 
             $table->string('internal')->nullable()->comment('Имя генерируемого артикула');
             $table->string('manually')->nullable()->comment('Имя для поиска (руками)');
             $table->string('external')->nullable()->comment('Имя внешнего артикула');
 
-            $table->integer('manufacturer_id')->nullable()->unsigned()->comment('Id производителя артикула');
+            $table->bigInteger('manufacturer_id')->nullable()->unsigned()->comment('Id производителя артикула');
             $table->foreign('manufacturer_id')->references('id')->on('companies');
 
             $table->integer('cost_default')->nullable()->comment('Фиксированная себестоимость (руками)');
@@ -34,13 +34,14 @@ class CreateArticlesTable extends Migration
 
             $table->integer('price_default')->nullable()->comment('Фиксированная цена (руками)');
             $table->integer('price_mode')->nullable()->unsigned()->comment('Режим определения цены');
-            $table->integer('price_rule_id')->nullable()->unsigned()->comment('ID ценовой политики');
+            
+            $table->bigInteger('price_rule_id')->nullable()->unsigned()->comment('ID ценовой политики');
             $table->foreign('price_rule_id')->references('id')->on('price_rules');
 
-            $table->integer('album_id')->nullable()->unsigned()->comment('ID альбома');
+            $table->bigInteger('album_id')->nullable()->unsigned()->comment('ID альбома');
             $table->foreign('album_id')->references('id')->on('albums');
 
-            $table->integer('photo_id')->nullable()->unsigned()->comment('ID аватара');
+            $table->bigInteger('photo_id')->nullable()->unsigned()->comment('ID аватара');
             $table->foreign('photo_id')->references('id')->on('photos');
 
             $table->boolean('portion_status')->default(0)->unsigned()->comment('Статус порции');
@@ -54,7 +55,7 @@ class CreateArticlesTable extends Migration
             $table->boolean('draft')->default(0)->unsigned()->comment('Статус черновика');
 
             // Общие настройки
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -62,7 +63,7 @@ class CreateArticlesTable extends Migration
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
 
-            $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+            $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');

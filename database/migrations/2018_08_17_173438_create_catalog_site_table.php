@@ -14,12 +14,11 @@ class CreateCatalogSiteTable extends Migration
     public function up()
     {
         Schema::create('catalog_site', function (Blueprint $table) {
-            $table->increments('id');
 
-            $table->integer('catalog_id')->nullable()->unsigned()->comment('Id каталога');
+            $table->bigInteger('catalog_id')->nullable()->unsigned()->comment('Id каталога');
             $table->foreign('catalog_id')->references('id')->on('catalogs');
 
-            $table->integer('site_id')->nullable()->unsigned()->comment('Id сайта');
+            $table->bigInteger('site_id')->nullable()->unsigned()->comment('Id сайта');
             $table->foreign('site_id')->references('id')->on('sites');
         });
     }

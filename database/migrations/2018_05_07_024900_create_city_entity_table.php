@@ -15,7 +15,7 @@ class CreateCityEntityTable extends Migration
     {
         Schema::create('city_entity', function (Blueprint $table) {
 
-            $table->integer('city_id')->nullable()->unsigned()->comment('Id альбома');
+            $table->bigInteger('city_id')->nullable()->unsigned()->comment('Id альбома');
             $table->foreign('city_id')->references('id')->on('cities');
 
             $table->morphs('city_entity');

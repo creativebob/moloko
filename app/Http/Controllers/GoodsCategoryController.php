@@ -120,9 +120,6 @@ class GoodsCategoryController extends Controller
         // Заполнение и проверка основных полей в трейте
         $goods_category = $this->storeCategory($request);
 
-        // Режим товаров
-        $goods_category->goods_mode_id = $request->goods_mode_id;
-
         $goods_category->save();
 
         if ($goods_category) {
@@ -159,8 +156,8 @@ class GoodsCategoryController extends Controller
             'metrics' => function ($q) {
                 $q->with('unit', 'values');
             },
-            'compositions.article.group.unit',
-            'compositions.category',
+            'raws.article.group.unit',
+            'raws.category',
             // 'compositions.product.unit',
             // 'compositions',
             'manufacturers',
@@ -218,21 +215,10 @@ class GoodsCategoryController extends Controller
         // Заполнение и проверка основных полей в трейте
         $goods_category = $this->updateCategory($request, $goods_category);
 
-        // Если сменили тип категории продукции, то меняем его и всем вложенным элементам
-        // if (($goods_category->parent_id == null) && ($goods_category->goods_mode_id != $request->goods_mode_id)) {
-        //     $goods_category->goods_mode_id = $request->goods_mode_id;
-
-        //     $goods_categories = GoodsCategory::whereCategory_id($id)
-        //     ->update(['goods_mode_id' => $request->goods_mode_id]);
-        // }
-
-        // dd($request);
-
         // Проверка на направление
         if ($goods_category->parent_id == null) {
             $this->checkDirection($request, $goods_category);
         }
-
 
         $goods_category->save();
 
@@ -241,12 +227,11 @@ class GoodsCategoryController extends Controller
             // Производители
             $goods_category->manufacturers()->sync($request->manufacturers);
 
-            // dd($request);
             // Метрики
             $goods_category->metrics()->sync($request->metrics);
 
             // Cостав
-            $goods_category->compositions()->sync($request->compositions);
+            $goods_category->raws()->sync($request->raws);
 
             // Переадресовываем на index
             return redirect()->route('goods_categories.index', ['id' => $goods_category->id]);

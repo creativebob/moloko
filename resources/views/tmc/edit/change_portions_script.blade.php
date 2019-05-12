@@ -1,4 +1,6 @@
 <script>
+
+	let unit = '{{ $portion_unit }}';
     // Порции
     $(document).on('click', '#portion', function() {
         $('#portion-block div').toggle();

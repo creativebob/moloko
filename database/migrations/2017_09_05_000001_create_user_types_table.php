@@ -14,13 +14,13 @@ class CreateUserTypesTable extends Migration
     public function up()
     {
         Schema::create('user_types', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->string('name')->index()->comment('Тип пользователя');
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
-            $table->timestamps();
-            $table->softDeletes();
+            // $table->timestamps();
+            // $table->softDeletes();
         });
     }
 

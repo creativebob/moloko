@@ -300,15 +300,11 @@ Route::post('/ajax_get_metric_value', 'MetricController@ajax_get_metric_value')-
 
 // ---------------------------------------- Состав -------------------------------------------------
 
-Route::post('/ajax_get_category_composition', 'CompositionController@ajax_get_category_composition')->middleware('auth');
-Route::post('/ajax_delete_relation_composition', 'CompositionController@ajax_delete_relation')->middleware('auth');
-
-Route::post('/ajax_get_tmc_composition', 'CompositionController@ajax_get_composition')->middleware('auth');
-
 Route::any('/get_units_list', 'UnitController@get_units_list')->middleware('auth');
 Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middleware('auth');
 
-
+Route::post('/ajax_get_category_raw', 'RawController@ajax_get_category_raw')->middleware('auth');
+Route::post('/ajax_get_raw', 'RawController@ajax_get_raw')->middleware('auth');
 
 Route::post('/ajax_get_category_workflow', 'WorkflowController@ajax_get_category_workflow')->middleware('auth');
 Route::post('/ajax_get_workflow', 'WorkflowController@ajax_get_workflow')->middleware('auth');

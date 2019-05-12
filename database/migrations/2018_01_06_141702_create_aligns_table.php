@@ -14,7 +14,7 @@ class CreateAlignsTable extends Migration
     public function up()
     {
         Schema::create('aligns', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->string('name')->nullable()->comment('Название');
             $table->string('tag')->nullable()->comment('Алиас');

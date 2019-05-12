@@ -19,11 +19,11 @@ use App\ScheduleEntity;
 use App\Supplier;
 use App\Manufacturer;
 use App\Country;
-use App\ServicesType;
+use App\ProcessesType;
 use App\Phone;
 
 // Транслитерация
-use Transliterate;
+use Illuminate\Support\Str;
 
 // Модели которые отвечают за работу с правами + политики
 use App\Policies\CompanyPolicy;
@@ -204,7 +204,7 @@ class CompanyController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $company = Company::with(
-            'extra_phones', 
+            'extra_phones',
             'bank_accounts.bank')
         ->moderatorLimit($answer)
         ->authors($answer)

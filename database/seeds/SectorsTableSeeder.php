@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 
 use App\Sector;
+use Illuminate\Support\Str;
 
 class SectorsTableSeeder extends Seeder
 {
@@ -258,7 +259,7 @@ class SectorsTableSeeder extends Seeder
         ]);
 
         foreach (Sector::get() as $sector) {
-            $tag = Transliterate::make($sector->name, ['type' => 'url', 'lowercase' => true]);
+            $tag = Str::slug($sector->name);
             Sector::where('id', $sector->id)->update(['author_id' => 1, 'tag' => $tag, 'category_id' => $sector->parent_id]);
         }
     }

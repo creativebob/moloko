@@ -14,7 +14,7 @@ class CreateLeftoverOperationsTable extends Migration
     public function up()
     {
         Schema::create('leftover_operations', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->string('name')->comment('Имя операции над остатком');
             $table->text('description')->nullable()->comment('Описание операции над остатком');

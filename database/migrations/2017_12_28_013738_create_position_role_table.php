@@ -15,10 +15,10 @@ class CreatePositionRoleTable extends Migration
     {
         Schema::create('position_role', function (Blueprint $table) {
 
-            $table->integer('position_id')->nullable()->unsigned()->comment('ID должности');
+            $table->bigInteger('position_id')->nullable()->unsigned()->comment('ID должности');
             $table->foreign('position_id')->references('id')->on('positions');
 
-            $table->integer('role_id')->nullable()->unsigned()->comment('ID категории пользователя');
+            $table->bigInteger('role_id')->nullable()->unsigned()->comment('ID категории пользователя');
             $table->foreign('role_id')->references('id')->on('roles');
 
         });

@@ -10,9 +10,9 @@ class CreateScheduleEntity extends Migration
     public function up()
     {
         Schema::create('schedule_entities', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
-            $table->integer('schedule_id')->nullable()->unsigned()->comment('Id графика работ (расписания)');
+            $table->bigInteger('schedule_id')->nullable()->unsigned()->comment('Id графика работ (расписания)');
             $table->foreign('schedule_id')->references('id')->on('schedules');
 
             $table->morphs('schedule_entities', 'sched_ent');
