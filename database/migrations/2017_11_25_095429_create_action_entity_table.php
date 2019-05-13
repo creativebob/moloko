@@ -14,12 +14,12 @@ class CreateActionEntityTable extends Migration
     public function up()
     {
         Schema::create('action_entity', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
-            $table->integer('entity_id')->nullable()->unsigned()->comment('ID сущности');
+            $table->bigInteger('entity_id')->nullable()->unsigned()->comment('ID сущности');
             $table->foreign('entity_id')->references('id')->on('entities');
 
-            $table->integer('action_id')->nullable()->unsigned()->comment('ID действия');
+            $table->bigInteger('action_id')->nullable()->unsigned()->comment('ID действия');
             $table->foreign('action_id')->references('id')->on('actions');
 
             $table->string('alias_action_entity')->index()->comment('Действие над сущностью');

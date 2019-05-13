@@ -11,12 +11,12 @@ class CreateRoomsTable extends Migration
     {
         Schema::create('rooms', function (Blueprint $table) {
 
-            $table->increments('id');
+            $table->bigIncrements('id');
 
-            $table->integer('place_id')->nullable()->unsigned()->comment('Id помещения');
+            $table->bigInteger('place_id')->nullable()->unsigned()->comment('Id помещения');
             $table->foreign('place_id')->references('id')->on('places');
             
-            $table->integer('places_type_id')->nullable()->unsigned()->comment('Id сущности связанной с метрикой');
+            $table->bigInteger('places_type_id')->nullable()->unsigned()->comment('Id сущности связанной с метрикой');
             $table->foreign('places_type_id')->references('id')->on('places_types');
 
         });

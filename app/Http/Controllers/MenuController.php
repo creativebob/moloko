@@ -13,7 +13,7 @@ use App\Http\Requests\MenuRequest;
 use App\Http\Controllers\Traits\CategoryControllerTrait;
 
 // Транслитерация
-use Transliterate;
+use Illuminate\Support\Str;
 
 
 class MenuController extends Controller
@@ -105,7 +105,7 @@ class MenuController extends Controller
         $menu->icon = $request->icon;
         $menu->alias = $request->alias;
 
-        $menu->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
+        $menu->tag = empty($request->tag) ? Str::slug($request->name) : $request->tag;
 
         $menu->new_blank = $request->has('new_blank');
 
@@ -177,7 +177,7 @@ class MenuController extends Controller
         $menu->icon = $request->icon;
         $menu->alias = $request->alias;
 
-        $menu->tag = empty($request->tag) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->tag;
+        $menu->tag = empty($request->tag) ? Str::slug($request->name) : $request->tag;
 
         $menu->new_blank = $request->has('new_blank');
 

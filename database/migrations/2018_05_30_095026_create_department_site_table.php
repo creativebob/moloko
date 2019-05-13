@@ -14,14 +14,11 @@ class CreateDepartmentSiteTable extends Migration
     public function up()
     {
         Schema::create('department_site', function (Blueprint $table) {
-            $table->increments('id');
-
-            $table->integer('department_id')->nullable()->unsigned()->comment('Id филиала/отдела');
+            $table->bigInteger('department_id')->nullable()->unsigned()->comment('Id филиала/отдела');
             $table->foreign('department_id')->references('id')->on('departments');
 
-            $table->integer('site_id')->nullable()->unsigned()->comment('Id сайта');
+            $table->bigInteger('site_id')->nullable()->unsigned()->comment('Id сайта');
             $table->foreign('site_id')->references('id')->on('sites');
-
         });
     }
 

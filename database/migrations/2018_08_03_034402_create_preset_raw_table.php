@@ -15,11 +15,11 @@ class CreatePresetRawTable extends Migration
     {
         Schema::create('preset_raw', function (Blueprint $table) {
 
-            $table->integer('goods_category_id')->nullable()->unsigned()->comment('Id категории');
+            $table->bigInteger('goods_category_id')->nullable()->unsigned()->comment('Id категории');
             $table->foreign('goods_category_id')->references('id')->on('goods_categories');
             // $table->morphs('preset_composition', 'pres_comp');
 
-            $table->integer('raw_id')->nullable()->unsigned()->comment('Id сырья');
+            $table->bigInteger('raw_id')->nullable()->unsigned()->comment('Id сырья');
             $table->foreign('raw_id')->references('id')->on('raws');
 
         });

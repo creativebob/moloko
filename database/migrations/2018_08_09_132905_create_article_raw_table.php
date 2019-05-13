@@ -15,12 +15,12 @@ class CreateArticleRawTable extends Migration
     {
         Schema::create('article_raw', function (Blueprint $table) {
 
-            $table->integer('article_id')->nullable()->unsigned()->comment('Id артикула');
+            $table->bigInteger('article_id')->nullable()->unsigned()->comment('Id артикула');
             $table->foreign('article_id')->references('id')->on('articles');
 
             // $table->morphs('composition');
 
-            $table->integer('raw_id')->nullable()->unsigned()->comment('Id сырья');
+            $table->bigInteger('raw_id')->nullable()->unsigned()->comment('Id сырья');
             $table->foreign('raw_id')->references('id')->on('raws');
 
             $table->integer('value')->nullable()->unsigned()->comment('Значение');
@@ -29,7 +29,7 @@ class CreateArticleRawTable extends Migration
             $table->integer('leftover')->nullable()->unsigned()->comment('Остаток');
             $table->integer('waste')->nullable()->unsigned()->comment('Отходы ');
 
-            $table->integer('leftover_operation_id')->nullable()->unsigned()->comment('Id операции над остатком');
+            $table->bigInteger('leftover_operation_id')->nullable()->unsigned()->comment('Id операции над остатком');
             $table->foreign('leftover_operation_id')->references('id')->on('leftover_operations');
         });
     }

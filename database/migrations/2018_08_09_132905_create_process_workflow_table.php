@@ -15,12 +15,12 @@ class CreateProcessWorkflowTable extends Migration
     {
         Schema::create('process_workflow', function (Blueprint $table) {
 
-            $table->integer('process_id')->nullable()->unsigned()->comment('Id процесса');
+            $table->bigInteger('process_id')->nullable()->unsigned()->comment('Id процесса');
             $table->foreign('process_id')->references('id')->on('processes');
 
             // $table->morphs('composition');
 
-            $table->integer('workflow_id')->nullable()->unsigned()->comment('Id рабочего процесса');
+            $table->bigInteger('workflow_id')->nullable()->unsigned()->comment('Id рабочего процесса');
             $table->foreign('workflow_id')->references('id')->on('workflows');
 
             $table->integer('value')->nullable()->unsigned()->comment('Значение');

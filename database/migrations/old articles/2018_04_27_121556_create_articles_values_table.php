@@ -14,7 +14,7 @@ class CreateArticlesValuesTable extends Migration
     public function up()
     {
         Schema::create('articles_values', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->timestamps();
         });
     }

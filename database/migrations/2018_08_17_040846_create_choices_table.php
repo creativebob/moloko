@@ -14,11 +14,11 @@ class CreateChoicesTable extends Migration
     public function up()
     {
         Schema::create('choices', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->morphs('choices');
 
-            $table->integer('lead_id')->nullable()->unsigned()->comment('Id лида');
+            $table->bigInteger('lead_id')->nullable()->unsigned()->comment('Id лида');
             $table->foreign('lead_id')->references('id')->on('leads');
 
         });

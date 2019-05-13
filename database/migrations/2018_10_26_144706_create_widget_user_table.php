@@ -14,12 +14,12 @@ class CreateWidgetUserTable extends Migration
     public function up()
     {
         Schema::create('widget_user', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
-            $table->integer('widget_id')->unsigned()->comment('ID виджета');
+            $table->bigInteger('widget_id')->unsigned()->comment('ID виджета');
             $table->foreign('widget_id')->references('id')->on('widgets');
 
-            $table->integer('user_id')->unsigned()->comment('ID пользователя');
+            $table->bigInteger('user_id')->unsigned()->comment('ID пользователя');
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->boolean('collapse')->default(0)->comment('Свернут');

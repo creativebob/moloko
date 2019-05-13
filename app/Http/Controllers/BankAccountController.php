@@ -19,7 +19,7 @@ use App\Policies\BankAccountPolicy;
 use Carbon\Carbon;
 
 // Транслитерация
-use Transliterate;
+use Illuminate\Support\Str;
 
 class BankAccountController extends Controller
 {
@@ -77,7 +77,7 @@ class BankAccountController extends Controller
                 $bank_account = new BankAccount;
 
                 // Создаем алиас для нового банка
-                $company_alias = Transliterate::make($request->bank_name, ['type' => 'url', 'lowercase' => true]);
+                $company_alias = Str::slug($request->bank_name);
 
                 // Создаем новую компанию которая будет банком
                 $company_bank = Company::firstOrCreate(['bic' => $request->bank_bic], ['name' => $request->bank_name, 'alias' => $company_alias]);
@@ -88,7 +88,7 @@ class BankAccountController extends Controller
                 $bank_account->bank_id = $company_bank->id;
                 $bank_account->holder_id = $request->company_id;
                 $bank_account->company_id = $user_company->id;
-                
+
                 $bank_account->account_settlement = $request->account_settlement;
                 $bank_account->account_correspondent = $request->account_correspondent;
                 $bank_account->author_id = $user->id;
@@ -151,20 +151,20 @@ class BankAccountController extends Controller
         if($request->bank_bic != $bank_account->bank->bic){
 
             // Создаем алиас для нового банка
-            $company_alias = Transliterate::make($request->bank_name, ['type' => 'url', 'lowercase' => true]);
+            $company_alias = Str::slug($request->bank_name);
 
             // Создаем новую компанию которая будет банком
             $company_bank = Company::firstOrCreate(['bic' => $request->bank_bic], ['name' => $request->bank_name, 'alias' => $company_alias]);
 
             // Меняем банк
-            $bank_account->bank_id = $company_bank->id;           
+            $bank_account->bank_id = $company_bank->id;
         }
 
         $bank_account->account_settlement = $request->account_settlement;
         $bank_account->account_correspondent = $request->account_correspondent;
         $bank_account->editor_id = $user->id;
         $bank_account->save();
-        $bank_account->load('bank');     
+        $bank_account->load('bank');
 
         if ($bank_account) {
             return view('includes.bank_accounts.item', compact('bank_account'));
@@ -196,7 +196,7 @@ class BankAccountController extends Controller
                 'error_status' => 1,
                 'error_message' => 'Ошибка при удалении банковского аккаунта!',
             ];
-        }   
+        }
 
         return json_encode($result, JSON_UNESCAPED_UNICODE);
     }

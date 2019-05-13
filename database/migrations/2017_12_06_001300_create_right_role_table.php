@@ -14,19 +14,19 @@ class CreateRightRoleTable extends Migration
     public function up()
     {
         Schema::create('right_role', function (Blueprint $table) {
-            $table->increments('id');
-            
-            $table->integer('right_id')->nullable()->unsigned()->comment('ID правила');
+            $table->bigIncrements('id');
+
+            $table->bigInteger('right_id')->nullable()->unsigned()->comment('ID правила');
             $table->foreign('right_id')->references('id')->on('rights');
 
-            $table->integer('role_id')->nullable()->unsigned()->comment('ID категории пользователя');
+            $table->bigInteger('role_id')->nullable()->unsigned()->comment('ID категории пользователя');
             $table->foreign('role_id')->references('id')->on('roles');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
-            $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+            $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');

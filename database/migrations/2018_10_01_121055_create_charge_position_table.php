@@ -14,12 +14,10 @@ class CreateChargePositionTable extends Migration
     public function up()
     {
         Schema::create('charge_position', function (Blueprint $table) {
-            $table->increments('id');
-
-            $table->integer('charge_id')->unsigned()->comment('ID обязанности');
+            $table->bigInteger('charge_id')->unsigned()->comment('ID обязанности');
             $table->foreign('charge_id')->references('id')->on('charges');
 
-            $table->integer('position_id')->unsigned()->comment('ID должности');
+            $table->bigInteger('position_id')->unsigned()->comment('ID должности');
             $table->foreign('position_id')->references('id')->on('positions');
         });
     }

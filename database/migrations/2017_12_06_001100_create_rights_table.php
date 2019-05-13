@@ -14,25 +14,25 @@ class CreateRightsTable extends Migration
     public function up()
     {
         Schema::create('rights', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('name')->index()->comment('Простое имя правила для вывода');
 
             $table->string('object_entity')->index()->comment('ID сущности (Полиморфно)');
 
-            $table->integer('category_right_id')->nullable()->unsigned()->comment('Категория правила');
+            $table->bigInteger('category_right_id')->nullable()->unsigned()->comment('Категория правила');
             $table->foreign('category_right_id')->references('id')->on('category_rights');
 
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
-            $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+            $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 
-            $table->integer('action_id')->nullable()->unsigned()->comment('Id действия');
+            $table->bigInteger('action_id')->nullable()->unsigned()->comment('Id действия');
             $table->foreign('action_id')->references('id')->on('actions');
 
             $table->string('directive')->index()->comment('Директива (allow/deny)');

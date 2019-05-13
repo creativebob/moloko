@@ -6,7 +6,7 @@ use App\Company;
 use App\Manufacturer;
 
 // Транслитерация
-// use Transliterate;
+// use Illuminate\Support\Str;
 use Illuminate\Support\Str;
 
 trait CompanyControllerTrait

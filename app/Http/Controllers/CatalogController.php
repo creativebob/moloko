@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\CatalogRequest;
 
 // Транслитерация
-use Transliterate;
+use Illuminate\Support\Str;
 
 class CatalogController extends Controller
 {
@@ -80,7 +80,7 @@ class CatalogController extends Controller
 
 
         // Алиас
-        $catalog->alias = empty($request->alias) ? Transliterate::make($request->name, ['type' => 'url', 'lowercase' => true]) : $request->alias;
+        $catalog->alias = empty($request->alias) ? Str::slug($request->name) : $request->alias;
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));

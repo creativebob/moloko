@@ -14,12 +14,10 @@ class CreateMessengerPhoneTable extends Migration
     public function up()
     {
         Schema::create('messenger_phone', function (Blueprint $table) {
-            $table->increments('id');
-
-            $table->integer('messenger_id')->unsigned()->comment('ID мессенджера');
+            $table->bigInteger('messenger_id')->unsigned()->comment('ID мессенджера');
             $table->foreign('messenger_id')->references('id')->on('messengers');
 
-            $table->integer('phone_id')->unsigned()->comment('ID телефона');
+            $table->bigInteger('phone_id')->unsigned()->comment('ID телефона');
             $table->foreign('phone_id')->references('id')->on('phones');
 
         });

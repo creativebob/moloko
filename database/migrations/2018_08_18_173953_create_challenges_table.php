@@ -14,27 +14,27 @@ class CreateChallengesTable extends Migration
     public function up()
     {
         Schema::create('challenges', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             // $table->string('name')->index()->comment('Название задачи');
 
             $table->text('description')->nullable()->comment('Описание задачи');
 
-            $table->integer('appointed_id')->nullable()->unsigned()->comment('ID пользователя, которому назначена задача');
+            $table->bigInteger('appointed_id')->nullable()->unsigned()->comment('ID пользователя, которому назначена задача');
             $table->foreign('appointed_id')->references('id')->on('users');
 
-            $table->integer('finisher_id')->nullable()->unsigned()->comment('ID пользователя, завершил задачу');
+            $table->bigInteger('finisher_id')->nullable()->unsigned()->comment('ID пользователя, завершил задачу');
             $table->foreign('finisher_id')->references('id')->on('users');
 
-            $table->integer('subject_id')->nullable()->unsigned()->comment('ID озадаченной сущности');
+            $table->bigInteger('subject_id')->nullable()->unsigned()->comment('ID озадаченной сущности');
             $table->string('subject_type')->nullable()->comment('Модель сущности');
 
-            $table->integer('challenges_type_id')->nullable()->unsigned()->comment('ID типа задачи');
+            $table->bigInteger('challenges_type_id')->nullable()->unsigned()->comment('ID типа задачи');
             $table->foreign('challenges_type_id')->references('id')->on('challenges_types');
 
             $table->integer('status')->nullable()->unsigned()->comment('Статус');
 
-            $table->integer('priority_id')->nullable()->unsigned()->comment('Приоритет');
+            $table->bigInteger('priority_id')->nullable()->unsigned()->comment('Приоритет');
             $table->foreign('priority_id')->references('id')->on('priorities');
 
             $table->integer('delegate_status')->nullable()->unsigned()->comment('Статус делигирования');
@@ -44,7 +44,7 @@ class CreateChallengesTable extends Migration
 
 
             // Общие настройки
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -52,7 +52,7 @@ class CreateChallengesTable extends Migration
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
 
-            $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+            $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');

@@ -14,9 +14,9 @@ class CreateWorktimesTable extends Migration
     public function up()
     {
         Schema::create('worktimes', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
-            $table->integer('schedule_id')->unsigned()->comment('Id графика работы');
+            $table->bigInteger('schedule_id')->unsigned()->comment('Id графика работы');
             $table->foreign('schedule_id')->references('id')->on('schedules');
 
             $table->integer('weekday')->unsigned()->nullable()->comment('День недели');
@@ -28,7 +28,7 @@ class CreateWorktimesTable extends Migration
 
 
            // Общие настройки
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             // $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -36,8 +36,8 @@ class CreateWorktimesTable extends Migration
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
 
-            $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-            // $table->foreign('author_id')->references('id')->on('users');
+            $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+            $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 

@@ -22,12 +22,12 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
 
 @endphp
 
-<!doctype html>
-<html class="no-js" lang="ru" dir="ltr">
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {{-- Add jQuery library --}}
     <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->

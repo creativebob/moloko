@@ -8,16 +8,18 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-        // Наполнение локализаций
-        $this->call(CountriesTableSeeder::class);
-        // $this->call(RegionsTableSeeder::class);
-        // $this->call(CitiesTableSeeder::class);
+
 
         // Локации
         // $this->call(LocationsTableSeeder::class);
 
         // Пользователи
         $this->call(UsersTableSeeder::class);
+
+        // Наполнение локализаций
+        $this->call(CountriesTableSeeder::class);
+        // $this->call(RegionsTableSeeder::class);
+        // $this->call(CitiesTableSeeder::class);
 
         // Единицы измерения
         $this->call(UnitsCategoriesTableSeeder::class);

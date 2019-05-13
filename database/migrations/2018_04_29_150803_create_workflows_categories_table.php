@@ -14,27 +14,27 @@ class CreateWorkflowsCategoriesTable extends Migration
     public function up()
     {
         Schema::create('workflows_categories', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
             $table->string('name')->index()->comment('Название категории рабочего процесса');
 
             $table->text('description')->nullable()->comment('Описание категории рабочего процесса');
             $table->text('seo_description')->nullable()->comment('Описание для сайта для категории рабочего процесса');
 
-            $table->integer('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
+            $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
             $table->foreign('photo_id')->references('id')->on('photos');
 
-            $table->integer('parent_id')->nullable()->unsigned()->comment('Id категории рабочего процесса');
+            $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id категории рабочего процесса');
             $table->foreign('parent_id')->references('id')->on('workflows_categories');
 
-            $table->integer('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
+            $table->bigInteger('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
             $table->foreign('category_id')->references('id')->on('workflows_categories');
 
-            $table->integer('processes_type_id')->nullable()->unsigned()->comment('Тип процесса');
+            $table->bigInteger('processes_type_id')->nullable()->unsigned()->comment('Тип процесса');
             $table->foreign('processes_type_id')->references('id')->on('processes_types');
 
             // Общие настройки
-            $table->integer('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
@@ -42,7 +42,7 @@ class CreateWorkflowsCategoriesTable extends Migration
             $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
             $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
 
-            $table->integer('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+            $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');

@@ -15,10 +15,10 @@ class CreateEntityPageTable extends Migration
     {
         Schema::create('entity_page', function (Blueprint $table) {
 
-            $table->integer('entity_id')->nullable()->unsigned()->comment('ID сущности');
+            $table->bigInteger('entity_id')->nullable()->unsigned()->comment('ID сущности');
             $table->foreign('entity_id')->references('id')->on('entities');
 
-            $table->integer('page_id')->nullable()->unsigned()->comment('ID страницы сайта');
+            $table->bigInteger('page_id')->nullable()->unsigned()->comment('ID страницы сайта');
             $table->foreign('page_id')->references('id')->on('pages');
 
         });

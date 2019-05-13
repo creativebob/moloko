@@ -12,6 +12,7 @@ yarn-error.log
 composer.lock
 .env
 .composer.lock
+.phpunit.result.cache
 
 /storage
 /public_html/storage

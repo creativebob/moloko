@@ -26,7 +26,7 @@ use Carbon\Carbon;
 use Intervention\Image\ImageManagerStatic as Image;
 
 // Транслитерация
-use Transliterate;
+use Illuminate\Support\Str;
 
 class NewsController extends Controller
 {
@@ -117,7 +117,7 @@ class NewsController extends Controller
             $cur_news->alias = $request->alias;
         } else {
             // Иначе переводим заголовок в транслитерацию
-            $cur_news->alias = Transliterate::make($request->title, ['type' => 'url', 'lowercase' => true]);
+            $cur_news->alias = Str::slug($request->title);
         }
 
         $cur_news->content = $request->content;

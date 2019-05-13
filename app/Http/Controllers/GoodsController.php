@@ -23,7 +23,7 @@ use App\Http\Requests\ArticleRequest;
 use Illuminate\Support\Facades\Cookie;
 
 // Транслитерация
-use Transliterate;
+use Illuminate\Support\Str;
 
 // Трейты
 use App\Http\Controllers\Traits\Tmc\ArticleTrait;

@@ -15,11 +15,11 @@ class CreatePresetWorkflowTable extends Migration
     {
         Schema::create('preset_workflow', function (Blueprint $table) {
 
-            $table->integer('services_category_id')->nullable()->unsigned()->comment('Id категории');
+            $table->bigInteger('services_category_id')->nullable()->unsigned()->comment('Id категории');
             $table->foreign('services_category_id')->references('id')->on('services_categories');
             // $table->morphs('preset_composition', 'pres_comp');
 
-            $table->integer('workflow_id')->nullable()->unsigned()->comment('Id рабочего процесса');
+            $table->bigInteger('workflow_id')->nullable()->unsigned()->comment('Id рабочего процесса');
             $table->foreign('workflow_id')->references('id')->on('workflows');
 
         });

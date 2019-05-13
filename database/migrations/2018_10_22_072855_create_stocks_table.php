@@ -11,12 +11,12 @@ class CreateStocksTable extends Migration
     {
         Schema::create('stocks', function (Blueprint $table) {
 
-            $table->increments('id');
+            $table->bigIncrements('id');
 
-            $table->integer('place_id')->nullable()->unsigned()->comment('Id помещения');
+            $table->bigInteger('place_id')->nullable()->unsigned()->comment('Id помещения');
             $table->foreign('place_id')->references('id')->on('places');
 
-            $table->integer('stored_id')->nullable()->unsigned()->comment('Id сущности которая хранится на складе');
+            $table->bigInteger('stored_id')->nullable()->unsigned()->comment('Id сущности которая хранится на складе');
             $table->string('stored_type')->nullable()->comment('Сущность');
 
             $table->integer('count')->nullable()->unsigned()->comment('Кол-во');
