@@ -87,6 +87,8 @@ use App\Http\ViewComposers\WorkflowsComposer;
 
 use App\Http\ViewComposers\LeftoverOperationsComposer;
 
+use App\Http\ViewComposers\ProcessesTypesComposer;
+
 class ComposerServiceProvider extends ServiceProvider
 {
 
@@ -207,6 +209,8 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.selects.tmc', TmcComposer::class);
         view()->composer('goods.raws.leftover_operations_select', LeftoverOperationsComposer::class);
+
+        view()->composer('includes.selects.processes_types', ProcessesTypesComposer::class);
 
 
     }

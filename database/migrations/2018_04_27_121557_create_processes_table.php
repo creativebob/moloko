@@ -22,6 +22,9 @@ class CreateProcessesTable extends Migration
             $table->bigInteger('processes_group_id')->nullable()->unsigned()->comment('Id группы процесса');
             $table->foreign('processes_group_id')->references('id')->on('processes_groups');
 
+            $table->bigInteger('processes_type_id')->nullable()->unsigned()->comment('Id типа процесса');
+            $table->foreign('processes_type_id')->references('id')->on('processes_types');
+
             $table->string('internal')->nullable()->comment('Имя генерируемого процесса');
             $table->string('manually')->nullable()->comment('Имя для поиска (руками)');
             $table->string('external')->nullable()->comment('Имя внешнего процесса');

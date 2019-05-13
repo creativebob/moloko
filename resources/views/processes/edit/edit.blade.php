@@ -116,6 +116,10 @@ $disabled = $process->draft == 0 ? true : null;
 
                                 </label>
 
+                                <label>Тип процесса
+                                    @include('includes.selects.processes_types')
+                                </label>
+
                                 {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 
                             </div>

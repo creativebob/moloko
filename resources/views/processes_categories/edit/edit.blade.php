@@ -75,6 +75,12 @@
                                     <div class="item-error">Такая категория уже существует!</div>
                                 </label>
                             </div>
+
+                            <div class="small-12 medium-6 cell">
+                                <label>Тип процесса
+                                    @include('includes.selects.processes_types')
+                                </label>
+                            </div>
                         </div>
 
                         <div class="grid-x grid-padding-x">

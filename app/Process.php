@@ -51,6 +51,7 @@ class Process extends Model
         'description',
 
         'processes_group_id',
+        'processes_type_id',
 
         'internal',
         'manually',

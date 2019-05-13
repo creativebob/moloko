@@ -59,6 +59,7 @@ trait ProcessTrait
 
         $data = $request->input();
         $data['processes_group_id'] = $processes_group->id;
+        $data['processes_type_id'] = $category->processes_type_id;
 
         $process = (new Process())->create($data);
 

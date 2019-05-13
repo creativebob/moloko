@@ -1407,16 +1407,16 @@
         },
         {
             "name": "genealabs/laravel-model-caching",
-            "version": "0.4.16",
+            "version": "0.4.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GeneaLabs/laravel-model-caching.git",
-                "reference": "1655e8f8ea3ac01c09849b6c904b5985ac845f2d"
+                "reference": "a9e119e7f355ec6cab44c2ab7db172fa9ceb92d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GeneaLabs/laravel-model-caching/zipball/1655e8f8ea3ac01c09849b6c904b5985ac845f2d",
-                "reference": "1655e8f8ea3ac01c09849b6c904b5985ac845f2d",
+                "url": "https://api.github.com/repos/GeneaLabs/laravel-model-caching/zipball/a9e119e7f355ec6cab44c2ab7db172fa9ceb92d5",
+                "reference": "a9e119e7f355ec6cab44c2ab7db172fa9ceb92d5",
                 "shasum": ""
             },
             "require": {
@@ -1465,7 +1465,7 @@
                 }
             ],
             "description": "Automatic caching for Eloquent models.",
-            "time": "2019-05-10T15:48:41+00:00"
+            "time": "2019-05-12T16:07:54+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -3606,7 +3606,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "BackEndTea@gmail.com"
+                    "email": "backendtea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",

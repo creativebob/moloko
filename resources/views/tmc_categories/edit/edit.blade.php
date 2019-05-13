@@ -62,12 +62,6 @@
                                 </label>
                             </div>
 
-                            @else
-
-                            {{-- <div class="small-12 medium-6 cell"> --}}
-                                {{-- @include('includes.selects.goods_modes') --}}
-                            {{-- </div> --}}
-
                             @endif
 
                             <div class="small-12 medium-6 cell">
@@ -76,6 +70,7 @@
                                     <div class="item-error">Такая категория уже существует!</div>
                                 </label>
                             </div>
+
                         </div>
 
                         <div class="grid-x grid-padding-x">

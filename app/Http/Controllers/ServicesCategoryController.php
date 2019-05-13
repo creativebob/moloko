@@ -183,14 +183,15 @@ class ServicesCategoryController extends Controller
         $services_category = $this->updateCategory($request, $services_category);
         // dd($request);
 
+        $services_category->processes_type_id = $request->processes_type_id;
 
-        // Если сменили тип категории сырья, то меняем его и всем вложенным элементам
-        if (($services_category->parent_id == null) && ($services_category->processes_type_id != $request->processes_type_id)) {
-            $services_category->processes_type_id = $request->processes_type_id;
+        // // Если сменили тип категории сырья, то меняем его и всем вложенным элементам
+        // if (($services_category->parent_id == null) && ($services_category->processes_type_id != $request->processes_type_id)) {
+        //     $services_category->processes_type_id = $request->processes_type_id;
 
-            $services_categories = ServicesCategory::whereCategory_id($id)
-            ->update(['processes_type_id' => $request->processes_type_id]);
-        }
+        //     $services_categories = ServicesCategory::whereCategory_id($id)
+        //     ->update(['processes_type_id' => $request->processes_type_id]);
+        // }
 
         $services_category->save();
 

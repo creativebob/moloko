@@ -179,6 +179,8 @@ class WorkflowsCategoryController extends Controller
         // Заполнение и проверка основных полей в трейте
         $workflows_category = $this->updateCategory($request, $workflows_category);
 
+        $workflows_category->processes_type_id = $request->processes_type_id;
+
         $workflows_category->save();
 
         if ($workflows_category) {
