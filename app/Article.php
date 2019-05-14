@@ -69,6 +69,7 @@ class Article extends Model
         'portion_count',
 
         'draft',
+        'weight',
     ];
 
     // Группа

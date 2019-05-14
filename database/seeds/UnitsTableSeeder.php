@@ -317,7 +317,7 @@ class UnitsTableSeeder extends Seeder
                 'author_id' => 1,
                 'moderation' => null,
             ],
-            
+
             // Проценты
             [
                 'name' => 'Процент',

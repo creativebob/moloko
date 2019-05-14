@@ -24,6 +24,9 @@ use App\Http\ViewComposers\LoyaltiesComposer;
 
 use App\Http\ViewComposers\UnitsCategoriesComposer;
 use App\Http\ViewComposers\UnitsComposer;
+use App\Http\ViewComposers\UnitsTmcComposer;
+use App\Http\ViewComposers\UnitsProcessesComposer;
+
 use App\Http\ViewComposers\SourceWithSourceServicesComposer;
 use App\Http\ViewComposers\SourceServicesComposer;
 use App\Http\ViewComposers\PeriodsComposer;
@@ -118,7 +121,13 @@ class ComposerServiceProvider extends ServiceProvider
         ], ContragentsComposer::class);
 
         view()->composer(['includes.selects.units_categories'], UnitsCategoriesComposer::class);
-        view()->composer(['includes.selects.units'], UnitsComposer::class);
+        view()->composer([
+            'includes.selects.units',
+            'includes.selects.units_extra',
+        ], UnitsComposer::class);
+
+        view()->composer('tmc.edit.select_units', UnitsTmcComposer::class);
+        view()->composer('processes.edit.select_units', UnitsProcessesComposer::class);
 
         view()->composer(['includes.selects.source_with_source_services'], SourceWithSourceServicesComposer::class);
         view()->composer(['includes.selects.source_services'], SourceServicesComposer::class);

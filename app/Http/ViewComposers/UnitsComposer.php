@@ -12,7 +12,8 @@ class UnitsComposer
 	{
 
         // Главный запрос
-        $units = Unit::where('units_category_id', $view->units_category_id)
+        $units = Unit::with('units_category')
+        ->where('units_category_id', $view->units_category_id)
         ->get();
 
         $units_attributes = $units->mapWithKeys(function ($item) {

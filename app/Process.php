@@ -66,6 +66,7 @@ class Process extends Model
         'price_rule_id',
 
         'draft',
+        'length',
     ];
 
     // Группа

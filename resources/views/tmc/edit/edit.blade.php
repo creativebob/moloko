@@ -116,6 +116,31 @@ $disabled = $article->draft == 0 ? true : null;
 
                                 </label>
 
+                                @if ($article->group->unit->units_category_id == 3)
+
+                                <label>Еденица измерения
+                                    @include('tmc.edit.select_units', [
+                                        'units_category_id' => 3,
+                                        'disabled' => true,
+                                    ]
+                                    )
+                                </label>
+
+                                @else
+
+                                <label>Еденица измерения
+                                    @include('tmc.edit.select_units', [
+                                        'units_category_id' => $article->group->unit->units_category_id,
+                                        'disabled' => ($article->draft == 1) ? null : true,
+                                    ]
+                                    )
+                                </label>
+                                <label>Вес единицы ({{ $article->group->unit->abbreviation }})
+                                    {!! Form::number('weight', null, []) !!}
+                                </label>
+
+                                @endif
+
                                 {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 
                             </div>

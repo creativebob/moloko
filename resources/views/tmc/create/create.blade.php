@@ -36,14 +36,27 @@
 				<div class="small-12 cell">
 					<div class="grid-x grid-margin-x" id="units-block">
 						<div class="small-12 medium-6 cell">
-							@include('includes.selects.units_categories', ['default' => 6])
+							@include('includes.selects.units_categories', ['default' => 6, 'type' => 'tmc'])
 						</div>
 
 						<div class="small-12 medium-6 cell">
 							@include('includes.selects.units', ['default' => 26, 'units_category_id' => 6])
 						</div>
 					</div>
+
+                    <div class="grid-x grid-margin-x" id="extra-units-block">
+                        <div class="small-12 medium-6 cell">
+                            <label>Введите вес
+                            {!! Form::number('weight', null, []) !!}
+                            </label>
+                        </div>
+
+                        <div class="small-12 medium-6 cell">
+                            @include('includes.selects.units_extra', ['default' => 8, 'units_category_id' => 2])
+                        </div>
+                    </div>
 				</div>
+
 
 				<div class="small-10 medium-4 cell">
 

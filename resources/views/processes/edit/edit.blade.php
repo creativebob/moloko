@@ -120,6 +120,31 @@ $disabled = $process->draft == 0 ? true : null;
                                     @include('includes.selects.processes_types')
                                 </label>
 
+                                @if ($process->group->unit->units_category_id == 3)
+
+                                <label>Еденица измерения
+                                    @include('processes.edit.select_units', [
+                                        'units_category_id' => 3,
+                                        'disabled' => true,
+                                    ]
+                                    )
+                                </label>
+
+                                @else
+
+                                <label>Еденица измерения
+                                    @include('processes.edit.select_units', [
+                                        'units_category_id' => $process->group->unit->units_category_id,
+                                        'disabled' => ($process->draft == 1) ? null : true,
+                                    ]
+                                    )
+                                </label>
+                                <label>Продолжительность единицы ({{ $process->group->unit->abbreviation }})
+                                    {!! Form::number('length', null, []) !!}
+                                </label>
+
+                                @endif
+
                                 {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 
                             </div>

@@ -49,6 +49,7 @@ class ArticleRequest extends FormRequest
             'portion_count' => 'integer|nullable',
 
             'draft' => 'integer|nullable',
+            'width' => 'integer|nullable',
 
         ];
     }

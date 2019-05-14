@@ -44,6 +44,7 @@ class ProcessRequest extends FormRequest
             'price_rule_id' => 'integer|nullable',
 
             'draft' => 'integer|nullable',
+            'length' => 'integer|nullable',
 
         ];
     }

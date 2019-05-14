@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Traits\Processes;
 use App\Process;
 use App\ProcessesGroup;
 use App\Entity;
+use App\Unit;
 
 // Валидация
 use App\Http\Requests\ProcessRequest;
@@ -60,6 +61,18 @@ trait ProcessTrait
         $data = $request->input();
         $data['processes_group_id'] = $processes_group->id;
         $data['processes_type_id'] = $category->processes_type_id;
+
+        // Смотрим статичную категорию id 3 (Время), если пришла она по переводим к выбранному коэффициенту
+        if ($data['units_category_id'] == 3) {
+            $unit = Unit::findOrFail($data['unit_id']);
+            $length = $unit->ratio;
+        } else {
+            // Если нет, то умножаем пришедший вес на количество чего либо
+            $extra_unit = Unit::findOrFail($data['unit_id']);
+            $length = $data['length'] * $extra_unit->ratio;
+        }
+        // dd($length);
+        $data['length'] = $length;
 
         $process = (new Process())->create($data);
 
@@ -149,7 +162,7 @@ trait ProcessTrait
         if ($processes->isNotEmpty()) {
             // Проверяем на наличие состава
 
-            
+
 
             // Формируем массив пришедших составов артикула
             if (isset($data['workflows'])) {

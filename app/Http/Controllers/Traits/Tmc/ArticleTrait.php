@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Traits\Tmc;
 use App\Article;
 use App\ArticlesGroup;
 use App\Entity;
+use App\Unit;
 
 // Валидация
 use App\Http\Requests\ArticleRequest;
@@ -58,7 +59,22 @@ trait ArticleTrait
         }
 
         $data = $request->input();
+        // dd($data);
         $data['articles_group_id'] = $articles_group->id;
+
+        $extra_unit = Unit::findOrFail($data['extra_unit_id']);
+        // dd($extra_unit);
+        // Смотрим статичную категорию id 2 (Масса), если пришла она по переводим к выбранному коэффициенту
+        if ($data['units_category_id'] == 2) {
+            $unit = Unit::findOrFail($data['unit_id']);
+            $weight = $unit->ratio;
+        } else {
+            // Если нет, то умножаем пришедший вес на количество чего либо
+            $extra_unit = Unit::findOrFail($data['unit_id']);
+            $weight = $data['weight'] * $extra_unit->ratio;
+        }
+        // dd($weight);
+        $data['weight'] = $weight;
 
         $article = (new Article())->create($data);
 
