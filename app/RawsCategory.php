@@ -50,7 +50,6 @@ class RawsCategory extends Model
         'seo_description',
         'photo_id',
         'parent_id',
-        'raws_mode_id',
         'category_id',
     ];
 
@@ -78,12 +77,6 @@ class RawsCategory extends Model
         return $this->belongsToMany(Article::class, 'raws')
         ->where('draft', false)
         ->where('raws.archive', false);
-    }
-
-    // Режим
-    public function mode()
-    {
-        return $this->belongsTo(RawsMode::class, 'raws_mode_id');
     }
 
     // Аватар

@@ -24,11 +24,9 @@ use App\Scopes\Filters\BooklistFilter;
 
 class Stock extends Model
 {
-
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
-    use Notifiable;
     use SoftDeletes;
 
     // Включаем Scopes
@@ -45,11 +43,52 @@ class Stock extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
-    protected $fillable = [
 
+    protected $fillable = [
+        'name',
+        'description',
+        'room_id',
     ];
 
 
+    // Помещение
+    public function room()
+    {
+        return $this->belongsTo(Site::class);
+    }
 
-    
+    // Компания
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    // Автор
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
+    // Товары
+    public function goods()
+    {
+        return $this->belongsToMany(Goods::class, 'stock_goods', 'stock_id', 'goods_id')
+        ->withPivot([
+            'count',
+            'weight',
+            'serial'
+        ]);
+    }
+
+    // Сырье
+    public function raws()
+    {
+        return $this->belongsToMany(Raw::class, 'stock_raw')
+        ->withPivot([
+            'count',
+            'weight',
+            'serial'
+        ]);
+    }
+
 }

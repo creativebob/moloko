@@ -2,25 +2,23 @@
 
 namespace App\Policies;
 
-use App\Policies\Traits\PoliticTrait;
 use App\User;
-use App\Place;
-
-use Illuminate\Support\Facades\Auth;
+use App\RoomsCategory as Model;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
+use App\Policies\Traits\PoliticTrait;
 
-class PlacePolicy
+class RoomsCategoryPolicy
 {
-    
     use HandlesAuthorization;
     use PoliticTrait;
 
-    protected $entity_name = 'places';
+    protected $entity_name = 'rooms_categories';
     protected $entity_dependence = false;
 
     public function before($user)
     {
-        // if (Auth::user()->god == 1) {$result = true;} else {$result = null;};
+        // if (Auth::user()->god == 1) {return true;} else {return null;};
         // return $result;
     }
 
@@ -30,7 +28,7 @@ class PlacePolicy
         return $result;
     }
 
-    public function view(User $user, Place $model)
+    public function view(User $user, Model $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
         return $result;
@@ -42,25 +40,46 @@ class PlacePolicy
         return $result;
     }
 
-    public function update(User $user, Place $model)
-    { 
+    public function update(User $user, Model $model)
+    {
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
 
-    public function delete(User $user, Place $model)
+    public function delete(User $user, Model $model)
     {
-        $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
-        return $result;
+        if ($model->system_item == 1) {
+            return false;
+        }
+
+        if ($model->rooms->count() > 0) {
+            return false;
+        }
+
+        if ($model->childs->count() > 0) {
+            return false;
+        }
+
+        if ($model->groups->count() > 0) {
+            return false;
+        }
+
+        // foreach ($model->getRelations() as $relation) {
+        //     if ($relation->count() > 0) {
+        //         return false;
+        //     }
+        // }
+
+        return $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
     }
 
-    public function moderator(User $user, Place $model)
+    public function moderator(User $user, Model $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
         return $result;
     }
 
-    public function automoderate(User $user, Place $model)
+    public function automoderate(User $user, Model $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'automoderate', $this->entity_dependence);
         return $result;
@@ -72,15 +91,15 @@ class PlacePolicy
         return $result;
     }
 
-    public function system(User $user, Place $model)
+    public function system(User $user, Model $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
         return $result;
     }
-    
+
     public function god(User $user)
     {
-        if(Auth::user()->god){return true;} else {return false;};
+        $result = isset(Auth::user()->god);
+        return $result;
     }
-      
 }

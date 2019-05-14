@@ -66,7 +66,7 @@
                         >
                         <label class="label-check" for="check-{{ $raw->id }}"></label>
                     </td>
-                    <td>
+                    <td class="td-photo">
                         <a href="/admin/raws/{{ $raw->id }}/edit">
                             <img src="{{ getPhotoPathPlugEntity($raw, 'small') }}" alt="{{ isset($raw->article->photo_id) ? $raw->article->name : 'Нет фото' }}">
                         </a>
@@ -74,7 +74,7 @@
                     <td class="td-name">
                         <a href="/admin/raws/{{ $raw->id }}/edit">{{ $raw->article->name }} @if ($raw->set_status == 1) (Набор) @endif</a>
                     </td>
-                    <td class="td-raws_category">
+                    <td class="td-category">
                         <a href="/admin/raws?category_id%5B%5D={{ $raw->category->id }}" class="filter_link" title="Фильтровать">{{ $raw->category->name }}</a>
 
                         <br>
@@ -83,7 +83,9 @@
                         @endif
                     </td>
                     <td class="td-description">{{ $raw->article->description }}</td>
+                    <td class="td-cost">{{ num_format($raw->article->cost_default, 0) }}</td>
                     <td class="td-price">{{ num_format($raw->article->price_default, 0) }}</td>
+                    <td class="td-catalog"></td>
 
                     <td class="td-author">@if(isset($raw->author->first_name)) {{ $raw->author->name }} @endif</td>
 

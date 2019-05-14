@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
         // $this->call(CitiesTableSeeder::class);
 
         // Единицы измерения
-        $this->call(UnitsCategoriesTableSeeder::class);
         $this->call(UnitsTableSeeder::class);
 
         // Сферы деятельности компаний и должностей

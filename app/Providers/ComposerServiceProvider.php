@@ -89,6 +89,8 @@ use App\Http\ViewComposers\LeftoverOperationsComposer;
 
 use App\Http\ViewComposers\ProcessesTypesComposer;
 
+use App\Http\ViewComposers\RoomsComposer;
+
 class ComposerServiceProvider extends ServiceProvider
 {
 
@@ -211,6 +213,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('goods.raws.leftover_operations_select', LeftoverOperationsComposer::class);
 
         view()->composer('includes.selects.processes_types', ProcessesTypesComposer::class);
+
+        view()->composer('includes.selects.rooms', RoomsComposer::class);
 
 
     }

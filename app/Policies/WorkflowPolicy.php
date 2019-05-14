@@ -55,6 +55,10 @@ class WorkflowPolicy
             return false;
         }
 
+        if ($model->compositions->isNotEmpty()) {
+            return false;
+        }
+
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
     }

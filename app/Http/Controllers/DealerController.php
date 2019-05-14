@@ -303,7 +303,7 @@ class DealerController extends Controller
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
 
-            $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types')
+            $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'processes_types')
             // ->moderatorLimit($answer_company)
             // ->authors($answer_company)
             // ->systemItem($answer_company)

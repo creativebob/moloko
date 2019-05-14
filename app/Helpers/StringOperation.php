@@ -5,7 +5,7 @@ use App\LegalForm;
 
 function num_format($number, $value) {
 
-    $result = number_format($number, $value, ',', '&nbsp;');
+    $result = number_format($number, $value, ',', ' ');
     return $result;
 }
 

@@ -34,7 +34,7 @@ class CreateArticlesTable extends Migration
 
             $table->integer('price_default')->nullable()->comment('Фиксированная цена (руками)');
             $table->integer('price_mode')->nullable()->unsigned()->comment('Режим определения цены');
-            
+
             $table->bigInteger('price_rule_id')->nullable()->unsigned()->comment('ID ценовой политики');
             $table->foreign('price_rule_id')->references('id')->on('price_rules');
 
@@ -48,6 +48,9 @@ class CreateArticlesTable extends Migration
             $table->string('portion_name')->nullable()->comment('Имя порции');
             $table->string('portion_abbreviation')->nullable()->comment('Сокращение порции');
             $table->integer('portion_count')->nullable()->unsigned()->comment('Количество в порции');
+
+
+            $table->decimal('weight', 15, 3)->nullable()->comment('Вес (кг)');
 
             // $table->integer('metrics_count')->nullable()->unsigned()->index()->comment('Количество метрик у артикула');
             // $table->integer('compositions_count')->nullable()->unsigned()->index()->comment('Количество составов у артикула');

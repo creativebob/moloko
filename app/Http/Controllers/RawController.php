@@ -70,6 +70,7 @@ class RawController extends Controller
         $raws = Raw::with([
             'author',
             'company',
+            'compositions.goods',
             'article' => function ($q) {
                 $q->with([
                     'group',
@@ -97,7 +98,6 @@ class RawController extends Controller
         ->orderBy('sort', 'asc')
         ->paginate(30);
         // dd($raws);
-
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -352,7 +352,11 @@ class RawController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $raw = Raw::moderatorLimit($answer)->findOrFail($id);
+        $raw = Raw::with([
+            'compositions.goods',
+        ])
+        ->moderatorLimit($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $raw);

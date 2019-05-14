@@ -206,7 +206,8 @@ function create_location($request, $country_id = null, $city_id = null, $address
         $user_id = hideGod($request->user());
 
         // Ищем или создаем локацию
-        $location = Location::with('city')->firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
+        $location = Location::with('city')
+        ->firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
 
         yandex_geocoder($location);
 
@@ -352,12 +353,12 @@ function setSchedule($request, $company) {
 // Обновление
 function setProcessesType($request, $company) {
 
-            // Записываем тип услуги
-    if(isset($request->services_types)){
-        $result = $company->services_types()->sync($request->services_types);
+    // Записываем тип услуги
+    if(isset($request->processes_types)){
+        $result = $company->processes_types()->sync($request->processes_types);
     } else {
-        $result = $company->services_types()->detach();
-    };
+        $result = $company->processes_types()->detach();
+    }
 
     return true;
 }
@@ -371,42 +372,42 @@ function setRoles($request, $user) {
     // Выполняем, только если данные пришли не из userfrofile!
     if(!isset($request->users_edit_mode)){
 
-		if (isset($request->access)) {
+      if (isset($request->access)) {
 
-			$delete = RoleUser::whereUser_id($user->id)->delete();
-			$mass = [];
-			foreach ($request->access as $string) {
+         $delete = RoleUser::whereUser_id($user->id)->delete();
+         $mass = [];
+         foreach ($request->access as $string) {
 
-				$item = explode(',', $string);
+            $item = explode(',', $string);
 
-				if ($item[2] == 'null') {
-					$position = null;
-				} else {
-					$position = $item[2];
-				}
+            if ($item[2] == 'null') {
+               $position = null;
+           } else {
+               $position = $item[2];
+           }
 
-				$mass[] = [
-					'role_id' => $item[0],
-					'department_id' => $item[1],
-					'user_id' => $user->id,
-					'position_id' => $position,
-				];
-			}
+           $mass[] = [
+               'role_id' => $item[0],
+               'department_id' => $item[1],
+               'user_id' => $user->id,
+               'position_id' => $position,
+           ];
+       }
 
-			DB::table('role_user')->insert($mass);
+       DB::table('role_user')->insert($mass);
 
 			// Успешно
-			return true;
+       return true;
 
-		} else {
+   } else {
 
 			// Если удалили последнюю роль для должности и пришел пустой массив
-			$delete = RoleUser::whereUser_id($user->id)->delete();
+     $delete = RoleUser::whereUser_id($user->id)->delete();
 
 			// Успешно
-			return true;
-		}
-	}
+     return true;
+ }
+}
 }
 
 ?>

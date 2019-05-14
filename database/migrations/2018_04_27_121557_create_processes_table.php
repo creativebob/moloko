@@ -37,7 +37,7 @@ class CreateProcessesTable extends Migration
 
             $table->integer('price_default')->nullable()->comment('Фиксированная цена (руками)');
             $table->integer('price_mode')->nullable()->unsigned()->comment('Режим определения цены');
-            
+
             $table->bigInteger('price_rule_id')->nullable()->unsigned()->comment('ID ценовой политики');
             $table->foreign('price_rule_id')->references('id')->on('price_rules');
 
@@ -46,6 +46,8 @@ class CreateProcessesTable extends Migration
 
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('ID аватара');
             $table->foreign('photo_id')->references('id')->on('photos');
+
+            $table->decimal('length', 20, 2)->nullable()->comment('Продолжительность (сек)');
 
             // $table->boolean('portion_status')->default(0)->unsigned()->comment('Статус порции');
             // $table->string('portion_name')->nullable()->comment('Имя порции');

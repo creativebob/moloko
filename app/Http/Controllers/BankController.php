@@ -122,28 +122,28 @@ class BankController extends Controller
         $countries_list = Country::get()->pluck('name', 'id');
 
         // // Получаем список стран
-        // $services_types_list = ProcessesType::get()->pluck('name', 'id');
+        // $processes_types_list = ProcessesType::get()->pluck('name', 'id');
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
         // Запрос для чекбокса - список типов услуг
-        $services_types_query = ProcessesType::get();
+        $processes_types_query = ProcessesType::get();
 
         // Контейнер для checkbox'а - инициируем
         $checkboxer['status'] = null;
         $checkboxer['entity_name'] = $this->entity_name;
 
         // Настраиваем checkboxer
-        $services_types_checkboxer = addFilter(
+        $processes_types_checkboxer = addFilter(
 
             $checkboxer,                // Контейнер для checkbox'а
-            $services_types_query,      // Коллекция которая будет взята
+            $processes_types_query,      // Коллекция которая будет взята
             $request,
             'Возможные типы услуг',     // Название чекбокса для пользователя в форме
-            'services_types',           // Имя checkboxa для системы
+            'processes_types',           // Имя checkboxa для системы
             'id',                       // Поле записи которую ищем
-            'services_types',
+            'processes_types',
             'internal-self-one',        // Режим выборки через связи
             'checkboxer'                // Режим: checkboxer или filter
 
@@ -153,7 +153,7 @@ class BankController extends Controller
         $worktime = [];
         for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
 
-        return view('banks.create', compact('company', 'bank', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
+        return view('banks.create', compact('company', 'bank', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'processes_types_checkboxer'));
     }
 
     public function store(CompanyRequest $request)
@@ -224,11 +224,11 @@ class BankController extends Controller
             $phones = add_phones($request, $bank);
 
             // Записываем связи: id-шники в таблицу Rooms
-            if(isset($request->services_types_id)){
+            if(isset($request->processes_types_id)){
 
-                $result = $bank->services_types()->sync($request->services_types_id);
+                $result = $bank->processes_types()->sync($request->processes_types_id);
             } else {
-                $result = $bank->services_types()->detach();
+                $result = $bank->processes_types()->detach();
             };
 
         } else {
@@ -284,7 +284,7 @@ class BankController extends Controller
 
         $company_id = $bank->company->id;
 
-        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types')
+        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'processes_types')
         ->findOrFail($company_id);
         // $this->authorize(getmethod(__FUNCTION__), $company);
 
@@ -301,32 +301,32 @@ class BankController extends Controller
         ->keyBy('id')
         ->toArray();
 
-        $services_types = [];
-        foreach ($company->services_types as $service_type){
-            $services_types[] = $service_type->id;
+        $processes_types = [];
+        foreach ($company->processes_types as $processes_type){
+            $processes_types[] = $processes_type->id;
         }
 
         // Имя столбца
-        $column = 'services_types_id';
-        $request[$column] = $services_types;
+        $column = 'processes_types_id';
+        $request[$column] = $processes_types;
 
         // Запрос для чекбокса - список типов услуг
-        $services_types_query = ProcessesType::get();
+        $processes_types_query = ProcessesType::get();
 
         // Контейнер для checkbox'а - инициируем
         $checkboxer['status'] = null;
         $checkboxer['entity_name'] = $this->entity_name;
 
         // Настраиваем checkboxer
-        $services_types_checkboxer = addFilter(
+        $processes_types_checkboxer = addFilter(
 
             $checkboxer,                // Контейнер для checkbox'а
-            $services_types_query,      // Коллекция которая будет взята
+            $processes_types_query,      // Коллекция которая будет взята
             $request,
             'Возможные типы услуг',     // Название чекбокса для пользователя в форме
-            'services_types',           // Имя checkboxa для системы
+            'processes_types',           // Имя checkboxa для системы
             'id',                       // Поле записи которую ищем
-            'services_types',
+            'processes_types',
             'internal-self-one',        // Режим выборки через связи
             'checkboxer'                // Режим: checkboxer или filter
 
@@ -377,7 +377,7 @@ class BankController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-        return view('banks.edit', compact('company', 'bank', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'services_types_checkboxer'));
+        return view('banks.edit', compact('company', 'bank', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'processes_types_checkboxer'));
     }
 
 
@@ -471,8 +471,8 @@ class BankController extends Controller
         // Вставляем новое время в расписание
         DB::table('worktimes')->insert($mass_time);
 
-        // Записываем связи: id-шники в таблицу companies_services_types
-        $result = $company->services_types()->sync($request->services_types_id);
+        // Записываем связи: id-шники в таблицу companies_processes_types
+        $result = $company->processes_types()->sync($request->processes_types_id);
 
         return redirect('/admin/banks');
     }

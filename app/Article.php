@@ -131,4 +131,10 @@ class Article extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    // Товар
+    public function goods()
+    {
+        return $this->hasOne(Goods::class);
+    }
 }

@@ -25,11 +25,11 @@ class RoleRequest extends FormRequest
     {
         return [
 
-            'name' => 'string|max:255', 
-            'description' => 'string|max:255|nullable', 
+            'name' => 'string|max:255',
+            'description' => 'string|max:255|nullable',
 
             'moderation' => 'integer|max:1|nullable',
-            'system_item' => 'integer|max:1|nullable', 
+            'system_item' => 'integer|max:1|nullable',
 
         ];
     }
