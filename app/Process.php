@@ -124,4 +124,10 @@ class Process extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    // Услуга
+    public function service()
+    {
+        return $this->hasOne(Service::class);
+    }
 }

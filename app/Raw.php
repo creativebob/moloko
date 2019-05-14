@@ -45,18 +45,9 @@ class Raw extends Model
     use BooklistFilter;
 
     protected $fillable = [
+        'category_id',
         'article_id',
-        'description',
-        'manually',
-        'external',
-        'manufacturer_id',
-        'cost',
-        'price',
 
-        'portion_status',
-        'portion_name',
-        'portion_abbreviation',
-        'portion_count',
     ];
 
     // Артикул
@@ -83,9 +74,13 @@ class Raw extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Рабочие процессы
-    public function workflows()
+    // Состоит в составе
+    public function compositions()
     {
-        return $this->morphMany(Workflow::class, 'workflows');
+        return $this->belongsToMany(Article::class, 'article_raw')
+        ->where('draft', false)
+        ->whereHas('goods', function($q) {
+            $q->where('archive', false);
+        });
     }
 }

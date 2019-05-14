@@ -434,6 +434,30 @@ class PagesTableSeeder extends Seeder
                 'display' => 1,
             ],
 
+            // Помещения
+            [
+                'name' => 'Категории помещений',
+                'site_id' => 1,
+                'title' => 'Категории помещений',
+                'description' => 'Категории помещений',
+                'alias' => 'rooms_categories',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
+            [
+                'name' => 'Помещения',
+                'site_id' => 1,
+                'title' => 'Помещения',
+                'description' => 'Помещения',
+                'alias' => 'rooms',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
+
             // Услуги
             [
                 'name' => 'Категории услуг',
@@ -500,17 +524,6 @@ class PagesTableSeeder extends Seeder
 
 
             // ----------------- Нераспределенные ---------------------------
-            [
-                'name' => 'Помещения',
-                'site_id' => 1,
-                'title' => 'Помещения',
-                'description' => 'Помещения',
-                'alias' => 'places',
-                'company_id' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'display' => 1,
-            ],
             [
                 'name' => 'Операционные расходы',
                 'site_id' => 1,
@@ -688,19 +701,6 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => 1,
             ],
-
-
-            // [
-            //     'name' => 'Типы помещений',
-            //     'site_id' => 1,
-            //     'title' => 'Типы помещений',
-            //     'description' => 'Типы помещений',
-            //     'alias' => 'places_types',
-            //     'company_id' => null,
-            //     'system_item' => 1,
-            //     'author_id' => 1,
-            //     'display' => 1,
-            // ],
         ]);
 }
 }

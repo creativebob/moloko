@@ -100,7 +100,7 @@ class ArticlesGroup extends Model
     // {
     //     return $this->morphedByMany(GoodsCategory::class, 'articles_group_entity');
     // }
-    
+
     // Товаров
     public function goods_categories()
     {
@@ -111,5 +111,11 @@ class ArticlesGroup extends Model
     public function raws_categories()
     {
         return $this->morphedByMany(RawsCategory::class, 'articles_group_entity');
+    }
+
+    // Помещенй
+    public function rooms_categories()
+    {
+        return $this->morphedByMany(RoomsCategory::class, 'articles_group_entity');
     }
 }

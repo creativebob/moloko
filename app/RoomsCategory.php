@@ -22,7 +22,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 // use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class RawsCategory extends Model
+class RoomsCategory extends Model
 {
     // Включаем кеш
     use Cachable;
@@ -56,7 +56,7 @@ class RawsCategory extends Model
     // Вложенные
     public function childs()
     {
-        return $this->hasMany(RawsCategory::class, 'parent_id');
+        return $this->hasMany(RoomsCategory::class, 'parent_id');
     }
 
     // Компания
@@ -65,18 +65,18 @@ class RawsCategory extends Model
         return $this->belongsTo(Company::class);
     }
 
-    // Сырье
-    public function raws()
+    // Помещения
+    public function rooms()
     {
-        return $this->hasMany(Raw::class, 'category_id');
+        return $this->hasMany(Room::class, 'category_id');
     }
 
     // Артикулы
     public function articles()
     {
-        return $this->belongsToMany(Article::class, 'raws')
+        return $this->belongsToMany(Article::class, 'places')
         ->where('draft', false)
-        ->where('raws.archive', false);
+        ->where('places.archive', false);
     }
 
     // Аватар
@@ -84,12 +84,6 @@ class RawsCategory extends Model
     {
         return $this->belongsTo(Photo::class);
     }
-
-    // Состав
-    // public function compositions()
-    // {
-    //     return $this->belongsToMany(Article::class, 'preset_composition', 'category_id', 'composition_id');
-    // }
 
     // Производители
     public function manufacturers()

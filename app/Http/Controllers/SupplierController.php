@@ -189,7 +189,7 @@ class SupplierController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_company = operator_right('company', false, getmethod(__FUNCTION__));
 
-        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types', 'manufacturers')
+        $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'processes_types', 'manufacturers')
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)

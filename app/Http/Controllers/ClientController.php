@@ -395,7 +395,7 @@ class ClientController extends Controller
 
         // Создание нового клиента =========================================================
 
-        // Компания 
+        // Компания
         $new_company = new Company;
 
         // Отдаем работу по созданию новой компании трейту
@@ -461,7 +461,7 @@ class ClientController extends Controller
             // Получаем из сессии необходимые данные (Функция находиться в Helpers)
             $answer_company = operator_right('companies', false, getmethod(__FUNCTION__));
 
-            $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'services_types')
+            $company = Company::with('location.city', 'schedules.worktimes', 'sector', 'processes_types')
             // ->moderatorLimit($answer_company)
             // ->authors($answer_company)
             // ->systemItem($answer_company)
@@ -547,7 +547,7 @@ class ClientController extends Controller
 
             // Отдаем работу по редактировнию юзера трейту
             $this->updateUser($request, $client->clientable);
-        
+
         }
 
         // Обновление информации по клиенту:

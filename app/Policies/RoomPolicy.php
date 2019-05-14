@@ -3,12 +3,12 @@
 namespace App\Policies;
 
 use App\User;
-use App\Workflow as Model;
+use App\Room as Model;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 use App\Policies\Traits\PoliticTrait;
 
-class WorkflowPolicy
+class RoomPolicy
 {
     use HandlesAuthorization;
     use PoliticTrait;
@@ -21,7 +21,7 @@ class WorkflowPolicy
      * @return mixed
      */
 
-    protected $entity_name = 'workflows';
+    protected $entity_name = 'rooms';
     protected $entity_dependence = false;
 
     public function index(User $user)
@@ -52,10 +52,6 @@ class WorkflowPolicy
     {
 
         if ($model->system_item == 1) {
-            return false;
-        }
-
-        if ($model->compositions->isNotEmpty()) {
             return false;
         }
 

@@ -14,8 +14,8 @@ class UpdateUnitsCategoriesTable extends Migration
     public function up()
     {
         Schema::table('units_categories', function (Blueprint $table) {
-            $table->bigInteger('unit_id')->unsigned()->nullable()->comment('Id юнита');
-            // $table->foreign('unit_id')->references('id')->on('units');
+            $table->bigInteger('unit_id')->unsigned()->nullable()->comment('Id юнита')->after('name');
+            $table->foreign('unit_id')->references('id')->on('units');
 
         });
     }
@@ -29,7 +29,7 @@ class UpdateUnitsCategoriesTable extends Migration
     {
          Schema::table('units_categories', function (Blueprint $table) {
             $table->dropColumn('unit_id');
-            // $table->dropForeign('units_categories_unit_id_foreign');
+            $table->dropForeign('units_categories_unit_id_foreign');
         });
     }
 }

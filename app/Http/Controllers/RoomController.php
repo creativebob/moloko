@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 // Модели
-use App\Raw;
+use App\Room;
 use App\Article;
-use App\RawsCategory;
+use App\RoomsCategory;
 use App\Manufacturer;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\RawRequest;
+use App\Http\Requests\RoomRequest;
 use App\Http\Requests\ArticleRequest;
 
 // Куки
@@ -19,16 +19,16 @@ use Illuminate\Support\Facades\Cookie;
 // Трейты
 use App\Http\Controllers\Traits\Tmc\ArticleTrait;
 
-class RawController extends Controller
+class RoomController extends Controller
 {
 
     // Настройки сконтроллера
-    public function __construct(Raw $raw)
+    public function __construct(Room $room)
     {
         $this->middleware('auth');
-        $this->raw = $raw;
-        $this->class = Raw::class;
-        $this->model = 'App\Raw';
+        $this->room = $room;
+        $this->class = Room::class;
+        $this->model = 'App\Room';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
     }
@@ -67,10 +67,9 @@ class RawController extends Controller
             'system_item'
         ];
 
-        $raws = Raw::with([
+        $rooms = Room::with([
             'author',
             'company',
-            'compositions.goods',
             'article' => function ($q) {
                 $q->with([
                     'group',
@@ -90,14 +89,14 @@ class RawController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->booklistFilter($request)
         ->filter($request, 'author_id')
-        // ->filter($request, 'raws_category_id', 'article.product')
-        // ->filter($request, 'raws_product_id', 'article')
+        // ->filter($request, 'rooms_category_id', 'article.product')
+        // ->filter($request, 'rooms_product_id', 'article')
         ->where('archive', false)
         ->select($columns)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
-        // dd($raws);
+        // dd($rooms);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -105,8 +104,8 @@ class RawController extends Controller
 
         $filter = setFilter($this->entity_alias, $request, [
             'author',               // Автор записи
-            'raws_category',    // Категория услуги
-            // 'raws_product',     // Группа услуги
+            // 'rooms_category',    // Категория услуги
+            // 'rooms_product',     // Группа услуги
             // 'date_interval',     // Дата обращения
             'booklist'              // Списки пользователя
         ]);
@@ -115,7 +114,7 @@ class RawController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('raws.index', compact('raws', 'page_info', 'filter'));
+        return view('rooms.index', compact('rooms', 'page_info', 'filter'));
     }
 
     public function create(Request $request)
@@ -125,10 +124,10 @@ class RawController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('raws_categories', false, 'index');
+        $answer = operator_right('rooms_categories', false, 'index');
 
         // Главный запрос
-        $raws_categories = RawsCategory::withCount('manufacturers')
+        $rooms_categories = RoomsCategory::withCount('manufacturers')
         ->with('manufacturers')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -137,13 +136,13 @@ class RawController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        if($raws_categories->count() == 0){
+        if($rooms_categories->count() == 0){
 
             // Описание ошибки
             $ajax_error = [];
             $ajax_error['title'] = "Обратите внимание!";
-            $ajax_error['text'] = "Для начала необходимо создать категории сырья. А уже потом будем добавлять сырье. Ок?";
-            $ajax_error['link'] = "/admin/raws_categories";
+            $ajax_error['text'] = "Для начала необходимо создать категории помещений. А уже потом будем добавлять помещения. Ок?";
+            $ajax_error['link'] = "/admin/rooms_categories";
             $ajax_error['title_link'] = "Идем в раздел категорий";
 
             return view('ajax_error', compact('ajax_error'));
@@ -170,39 +169,11 @@ class RawController extends Controller
             return view('ajax_error', compact('ajax_error'));
         }
 
-        // Если в категориях не добавлены производители
-        // if ($raws_categories->where('manufacturers_count', 0)->count() == $raws_categories->count()){
-
-        //     // Описание ошибки
-        //     // $ajax_error = [];
-        //     $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
-        //     $ajax_error['text'] = "Для начала необходимо добавить производителей в категории. А уже потом будем добавлять сырьё. Ок?";
-        //     $ajax_error['link'] = "/admin/raws_categories"; // Ссылка на кнопке
-        //     $ajax_error['title_link'] = "Идем в раздел категорий cырья"; // Текст на кнопке
-
-        //     return view('ajax_error', compact('ajax_error'));
-        // }
-
-        // $raws_products_count = $raws_categories->first()->raws_products_count;
-
-        // if ($request->cookie('conditions') != null) {
-
-        //     $condition = Cookie::get('conditions');
-        //     if(isset($condition['raws_category'])) {
-        //         $raws_category_id = $condition['raws_category'];
-        //         $raws_category = $raws_categories->find($raws_category_id);
-        //         // dd($raws_category);
-        //         $raws_products_count = $raws_category->raws_products_count;
-        //         $parent_id = $raws_category_id;
-        //         // dd($raws_products_count);
-        //     }
-        // }
-
         return view('tmc.create.create', [
             'item' => new $this->class,
-            'title' => 'Добавление сырья',
+            'title' => 'Добавление помещения',
             'entity' => $this->entity_alias,
-            'category_entity' => 'raws_categories',
+            'category_entity' => 'rooms_categories',
         ]);
     }
 
@@ -212,29 +183,29 @@ class RawController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $raws_category = RawsCategory::findOrFail($request->category_id);
+        $rooms_category = RoomsCategory::findOrFail($request->category_id);
         // dd($goods_category->load('groups'));
-        $article = $this->storeArticle($request, $raws_category);
+        $article = $this->storeArticle($request, $rooms_category);
 
         if ($article) {
 
             // Получаем данные для авторизованного пользователя
             $user = $request->user();
 
-            $raw = new Raw;
-            $raw->article_id = $article->id;
-            $raw->category_id = $request->category_id;
+            $room = new Room;
+            $room->article_id = $article->id;
+            $room->category_id = $request->category_id;
 
-            $raw->display = $request->display;
-            $raw->system_item = $request->system_item;
+            $room->display = $request->display;
+            $room->system_item = $request->system_item;
 
-            $raw->set_status = $request->has('set_status');
+            $room->set_status = $request->has('set_status');
 
-            $raw->company_id = $user->company_id;
-            $raw->author_id = hideGod($user);
-            $raw->save();
+            $room->company_id = $user->company_id;
+            $room->author_id = hideGod($user);
+            $room->save();
 
-            if ($raw) {
+            if ($room) {
 
                 // Пишем куки состояния
                 // $mass = [
@@ -244,9 +215,9 @@ class RawController extends Controller
 
                 // dd($request->quickly);
                 if ($request->quickly == 1) {
-                    return redirect()->route('raws.index');
+                    return redirect()->route('rooms.index');
                 } else {
-                    return redirect()->route('raws.edit', ['id' => $raw->id]);
+                    return redirect()->route('rooms.edit', ['id' => $room->id]);
                 }
             } else {
                 abort(403, 'Ошибка записи сырья');
@@ -268,14 +239,15 @@ class RawController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Главный запрос
-        $raw = Raw::moderatorLimit($answer)
+        $room = Room::moderatorLimit($answer)
         ->findOrFail($id);
-        // dd($raw);
+        // dd($room);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $raw);
+        $this->authorize(getmethod(__FUNCTION__), $room);
 
-        $article = $raw->article;
+        $room = $room->load(['article', 'location']);
+        $article = $room->article;
         // dd($article);
 
         // Получаем настройки по умолчанию
@@ -286,14 +258,14 @@ class RawController extends Controller
         // dd($page_info);
 
         return view('tmc.edit.edit', [
-            'title' => 'Редактировать сырье',
-            'item' => $raw,
+            'title' => 'Редактировать помещение',
+            'item' => $room,
             'article' => $article,
             'page_info' => $page_info,
             'settings' => $settings,
             'entity' => $this->entity_alias,
-            'category_entity' => 'raws_categories',
-            'categories_select_name' => 'raws_category_id',
+            'category_entity' => 'rooms_categories',
+            'categories_select_name' => 'rooms_category_id',
         ]);
     }
 
@@ -304,26 +276,33 @@ class RawController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $raw = Raw::moderatorLimit($answer)
+        $room = Room::moderatorLimit($answer)
         ->findOrFail($id);
-        // dd($raw);
+        // dd($room);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $raw);
+        $this->authorize(getmethod(__FUNCTION__), $room);
 
-        $article = $raw->article;
+        $article = $room->article;
         // dd($article);
 
-        $result = $this->updateArticle($request, $raw);
+        $result = $this->updateArticle($request, $room);
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-            $this->changeCategory($request, $raw);
+            $this->changeCategory($request, $room);
 
-            $raw->display = $request->display;
-            $raw->system_item = $request->system_item;
-            $raw->save();
+
+            $room->area = $request->area;
+            // dd($request);
+            $location_id = create_location($request);
+            // dd($location_id);
+            $room->location_id = $location_id;
+
+            $room->display = $request->display;
+            $room->system_item = $request->system_item;
+            $room->save();
 
 
             // Если ли есть
@@ -332,7 +311,7 @@ class RawController extends Controller
                 return Redirect($backlink);
             }
 
-            return redirect()->route('raws.index');
+            return redirect()->route('rooms.index');
         } else {
             return back()
             ->withErrors($result)
@@ -352,56 +331,27 @@ class RawController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $raw = Raw::with([
-            'compositions.goods',
-        ])
-        ->moderatorLimit($answer)
+        $room = Room::moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod('destroy'), $raw);
+        $this->authorize(getmethod('destroy'), $room);
 
-        if ($raw) {
+        if ($room) {
 
-            $raw->archive = true;
+            $room->archive = true;
 
             // Скрываем бога
-            $raw->editor_id = hideGod($request->user());
-            $raw->save();
+            $room->editor_id = hideGod($request->user());
+            $room->save();
 
-            if ($raw) {
-                return redirect()->route('raws.index');
+            if ($room) {
+                return redirect()->route('rooms.index');
             } else {
                 abort(403, 'Ошибка при архивации сырья');
             }
         } else {
             abort(403, 'Сырьё не найдено');
         }
-    }
-
-    // --------------------------------------------- Ajax -------------------------------------------------
-
-    public function ajax_get_raw(Request $request)
-    {
-        $raw = Raw::with([
-            'article.group.unit',
-            'category'
-        ])
-        ->find($request->id);
-
-        return view('goods.raws.raw_input', compact('raw'));
-    }
-
-    // Добавляем состав
-    public function ajax_get_category_raw(Request $request)
-    {
-
-        $raw = Raw::with([
-            'article.group.unit',
-            'category'
-        ])
-        ->findOrFail($request->id);
-
-        return view('goods_categories.raws.raw_tr', compact('raw'));
     }
 }

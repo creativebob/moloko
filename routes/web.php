@@ -349,6 +349,18 @@ Route::post('/raw/photos', 'RawController@photos')->middleware('auth');
 
 Route::any('/raws_create_mode', 'RawController@ajax_change_create_mode')->middleware('auth');
 
+// ---------------------------------- Помещения -------------------------------------------
+
+// Основные методы
+Route::resource('/rooms', 'RoomController');
+// Route::get('/rooms/search/{text_fragment}', 'RawController@search')->middleware('auth');
+Route::post('/rooms/search/{text_fragment}', 'RoomController@search')->middleware('auth');
+// Архивация
+Route::post('/rooms/archive/{id}', 'RoomController@archive')->middleware('auth');
+// Фото
+Route::any('/room/add_photo', 'RoomController@add_photo')->middleware('auth');
+Route::post('/room/photos', 'RoomController@photos')->middleware('auth');
+
 
 // -------------------------------- Категории товаров -------------------------------------------
 
@@ -360,6 +372,15 @@ Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('aut
 
 Route::any('/goods_category_metrics', 'GoodsCategoryController@ajax_get_metrics')->middleware('auth');
 Route::any('/goods_category_compositions', 'GoodsCategoryController@ajax_get_compositions')->middleware('auth');
+
+
+// ------------------------------------- Категории помещений -------------------------------------------
+
+// Текущая добавленная/удаленная категория
+Route::any('/rooms_categories', 'RoomsCategoryController@index')->middleware('auth');
+Route::match(['get', 'post'], '/rooms_categories/{id}/edit', 'RoomsCategoryController@edit')->middleware('auth');
+// Основные методы
+Route::resource('/rooms_categories', 'RoomsCategoryController')->middleware('auth');
 
 
 // --------------------------------- Группы товаров --------------------------------------------

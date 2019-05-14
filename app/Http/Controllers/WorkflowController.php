@@ -70,6 +70,7 @@ class WorkflowController extends Controller
         $workflows = Workflow::with([
             'author',
             'company',
+            'compositions.service',
             'process' => function ($q) {
                 $q->with([
                     'group',
@@ -324,7 +325,11 @@ class WorkflowController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $workflow = Workflow::moderatorLimit($answer)->findOrFail($id);
+        $workflow = Workflow::with([
+            'compositions.service',
+        ])
+        ->moderatorLimit($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $workflow);
@@ -340,10 +345,10 @@ class WorkflowController extends Controller
             if ($workflow) {
                 return redirect()->route('workflows.index');
             } else {
-                abort(403, 'Ошибка при архивации сырья');
+                abort(403, 'Ошибка при архивации рабочего процесса');
             }
         } else {
-            abort(403, 'Сырьё не найдено');
+            abort(403, 'Рабочий процесс не найден');
         }
     }
 

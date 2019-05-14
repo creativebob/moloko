@@ -17,9 +17,9 @@ use App\Bank;
 use App\BankAccount;
 
 use App\Role;
-use App\Place;
+// use App\Place;
 use App\Stock;
-use App\PlacesType;
+// use App\PlacesType;
 
 use App\Right;
 use App\Entity;
@@ -99,9 +99,9 @@ use App\Policies\BankPolicy;
 use App\Policies\BankAccountPolicy;
 
 use App\Policies\RolePolicy;
-use App\Policies\PlacePolicy;
+// use App\Policies\PlacePolicy;
 use App\Policies\StockPolicy;
-use App\Policies\PlacesTypePolicy;
+// use App\Policies\PlacesTypePolicy;
 
 use App\Policies\RightPolicy;
 use App\Policies\EntityPolicy;
@@ -163,6 +163,11 @@ use App\Policies\StagePolicy;
 
 use App\Policies\FeedbackPolicy;
 
+use App\RoomsCategory;
+use App\Policies\RoomsCategoryPolicy;
+use App\Room;
+use App\Policies\RoomPolicy;
+
 
 
 use Illuminate\Support\Facades\Gate as GateContract;
@@ -215,9 +220,10 @@ class AuthServiceProvider extends ServiceProvider
         Right::class => RightPolicy::class,
         Entity::class => EntityPolicy::class,
         Role::class => RolePolicy::class,
-        Place::class => PlacePolicy::class,
-        Stock::class => StockPolicy::class,
-        PlacesType::class => PlacesTypePolicy::class,
+
+
+        // Place::class => PlacePolicy::class,
+        // PlacesType::class => PlacesTypePolicy::class,
 
         Account::class => AccountPolicy::class,
         Post::class => PostPolicy::class,
@@ -265,6 +271,11 @@ class AuthServiceProvider extends ServiceProvider
         Raw::class => RawPolicy::class,
         RawsCategory::class => RawsCategoryPolicy::class,
         RawsProduct::class => RawsProductPolicy::class,
+
+        RoomCategory::class => RoomCategoryPolicy::class,
+        Room::class => RoomPolicy::class,
+
+        Stock::class => StockPolicy::class,
 
         Lead::class => LeadPolicy::class,
         Note::class => NotePolicy::class,

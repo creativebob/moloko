@@ -79,4 +79,14 @@ class Workflow extends Model
         return $this->belongsTo(User::class);
     }
 
+    // Состоит в составе
+    public function compositions()
+    {
+        return $this->belongsToMany(Process::class, 'process_workflow')
+        ->where('draft', false)
+        ->whereHas('service', function($q) {
+            $q->where('archive', false);
+        });
+    }
+
 }
