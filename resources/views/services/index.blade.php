@@ -74,7 +74,7 @@
                     </td>
                     <td>
                         <a href="/admin/services/{{ $service->id }}/edit">
-                            <img src="{{ getPhotoPath($service->process, 'small') }}" alt="{{ isset($service->process->photo_id) ? $service->process->name : 'Нет фото' }}">
+                            <img src="{{ getPhotoPathPlugEntity($service, 'small') }}" alt="{{ isset($service->process->photo_id) ? $service->process->name : 'Нет фото' }}">
                         </a>
                     </td>
                     <td class="td-name">

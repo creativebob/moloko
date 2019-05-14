@@ -65,7 +65,7 @@
                     </td>
                     <td>
                         <a href="/admin/workflows/{{ $workflow->id }}/edit">
-                            <img src="{{ getPhotoPath($workflow->process, 'small') }}" alt="{{ isset($workflow->process->photo_id) ? $workflow->process->name : 'Нет фото' }}">
+                            <img src="{{ getPhotoPathPlugEntity($workflow, 'small') }}" alt="{{ isset($workflow->process->photo_id) ? $workflow->process->name : 'Нет фото' }}">
                         </a>
                     </td>
                     <td class="td-name">

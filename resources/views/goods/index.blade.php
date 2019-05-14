@@ -74,7 +74,7 @@
                     </td>
                     <td>
                         <a href="/admin/goods/{{ $cur_goods->id }}/edit">
-                            <img src="{{ getPhotoPath($cur_goods->article, 'small') }}" alt="{{ isset($cur_goods->article->photo_id) ? $cur_goods->article->name : 'Нет фото' }}">
+                            <img src="{{ getPhotoPathPlugEntity($cur_goods, 'small') }}" alt="{{ isset($cur_goods->article->photo_id) ? $cur_goods->article->name : 'Нет фото' }}">
                         </a>
                     </td>
                     <td class="td-name">
