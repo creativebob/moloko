@@ -10,6 +10,9 @@ use App\Observers\ArticleObserver;
 use App\Process;
 use App\Observers\ProcessObserver;
 
+use App\Stock;
+use App\Observers\StockObserver;
+
 class ObserverServiceProvider extends ServiceProvider
 {
     /**
@@ -22,6 +25,8 @@ class ObserverServiceProvider extends ServiceProvider
         Article::observe(ArticleObserver::class);
 
         Process::observe(ProcessObserver::class);
+
+        Stock::observe(StockObserver::class);
     }
 
     /**

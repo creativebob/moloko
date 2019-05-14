@@ -636,10 +636,10 @@ class PagesTableSeeder extends Seeder
                 'display' => 1,
             ],
             [
-                'name' => 'Склад (Запасы продукции)',
+                'name' => 'Склад',
                 'site_id' => 1,
-                'title' => 'Склад (Запасы продукции)',
-                'description' => 'Склад (Запасы продукции)',
+                'title' => 'Склад',
+                'description' => 'Склад',
                 'alias' => 'stocks',
                 'company_id' => null,
                 'system_item' => 1,

@@ -631,6 +631,21 @@ Menu::insert([
         'sort' => null,
     ],
 
+    [
+        'name' => 'Склады',
+        'icon' => null,
+        'alias' => 'admin/stocks',
+        'tag' => 'stocks',
+        'parent_id' => $menus->where('tag', 'productions')->first()->id,
+        'page_id' => $pages->where('alias', 'menus')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => null,
+    ],
+
     // Маркетинг
     [
         'name' => 'Сайты',
@@ -911,20 +926,7 @@ Menu::insert([
     //     'sort' => 1,
     // ],
 
-    // [
-    //     'name' => 'Склад (Запасы продукции)',
-    //     'icon' => null,
-    //     'alias' => 'admin/stocks',
-    //     'tag' => 'stocks',
-    //     'parent_id' => 35,
-    //     'page_id' => 50,
-    //     'navigation_id' => 1,
-    //     'company_id' => null,
-    //     'system_item' => 1,
-    //     'author_id' => 1,
-    //     'display' => 1,
-    //     'sort' => null,
-    // ],
+
 
     // [
     //     'name' => 'Посты',

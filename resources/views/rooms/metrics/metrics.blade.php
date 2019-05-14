@@ -3,7 +3,7 @@
     <div id="metrics-list">
 
         <label>
-            <span data-tooltip tabindex="1" title="">Площадь (м2)</span>
+            <span data-tooltip tabindex="1" title="Площадь помещения">Площадь (м2)</span>
             {{ Form::number('area', isset($item->area) ? $item->area: null, ['required', $disabled ? 'disabled' : '']) }}
             <span class="form-error">Поле обязательно для заполнения!</span>
         </label>

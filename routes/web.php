@@ -280,7 +280,7 @@ Route::patch('/photo_update/{id}', 'PhotoController@ajax_update');
 Route::resource('/places', 'PlaceController')->middleware('auth');
 
 // --------------------------------------- Склады -----------------------------------------------
-// Route::resource('stocks', 'StockController')->middleware('auth');
+Route::resource('stocks', 'StockController')->middleware('auth');
 
 // --------------------------------------- Свойства -----------------------------------------------
 Route::post('/ajax_add_property', 'PropertyController@add_property')->middleware('auth');

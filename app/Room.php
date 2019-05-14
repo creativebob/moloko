@@ -51,16 +51,30 @@ class Room extends Model
 
     ];
 
+
+
+    // Категория
+    public function category()
+    {
+        return $this->belongsTo(RawsCategory::class);
+    }
+
+    // Локация
+    public function location()
+    {
+        return $this->belongsTo(Location::class);
+    }
+
     // Артикул
     public function article()
     {
         return $this->belongsTo(Article::class);
     }
 
-    // Категория
-    public function category()
+    // Склады
+    public function stocks()
     {
-        return $this->belongsTo(RawsCategory::class);
+        return $this->hasMany(Stock::class);
     }
 
     // Компания
@@ -75,9 +89,5 @@ class Room extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Локация
-    public function location()
-    {
-        return $this->belongsTo(Location::class);
-    }
+
 }

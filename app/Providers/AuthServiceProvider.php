@@ -18,7 +18,7 @@ use App\BankAccount;
 
 use App\Role;
 // use App\Place;
-use App\Stock;
+
 // use App\PlacesType;
 
 use App\Right;
@@ -100,7 +100,7 @@ use App\Policies\BankAccountPolicy;
 
 use App\Policies\RolePolicy;
 // use App\Policies\PlacePolicy;
-use App\Policies\StockPolicy;
+
 // use App\Policies\PlacesTypePolicy;
 
 use App\Policies\RightPolicy;
@@ -167,6 +167,9 @@ use App\RoomsCategory;
 use App\Policies\RoomsCategoryPolicy;
 use App\Room;
 use App\Policies\RoomPolicy;
+
+use App\Stock;
+use App\Policies\StockPolicy;
 
 
 

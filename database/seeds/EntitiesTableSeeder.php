@@ -447,7 +447,7 @@ class EntitiesTableSeeder extends Seeder
                 'site' => 0,
             ],
             [
-                'name' => 'Склад (Запасы продукции)',
+                'name' => 'Склады',
                 'alias' => 'stocks',
                 'model' => 'Stock',
                 'rights_minus' => null,
