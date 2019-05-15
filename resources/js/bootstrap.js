@@ -1,3 +1,4 @@
+
 window._ = require('lodash');
 
 /**
@@ -7,10 +8,10 @@ window._ = require('lodash');
  */
 
 try {
-    window.Popper = require('popper.js').default;
     window.$ = window.jQuery = require('jquery');
 
-    require('bootstrap');
+    require('foundation-sites/dist/js/foundation'); // 'foundation.min' can also be used if you like
+
 } catch (e) {}
 
 /**
@@ -49,7 +50,5 @@ if (token) {
 
 // window.Echo = new Echo({
 //     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     encrypted: true
+//     key: 'your-pusher-key'
 // });

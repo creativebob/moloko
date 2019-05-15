@@ -29,8 +29,11 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    {{-- Scripts --}}
+    <script src="{{ asset('js/app.js') }}" defer></script>
+
     {{-- Add jQuery library --}}
-    <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> -->
+    {{-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> --}}
     <script type="text/javascript" src="/crm/js/jquery.latest.min.js"></script>
 
     {{-- Дополнительные плагины / скрипты / стили для конкретной страницы --}}
@@ -44,31 +47,32 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
 
     {{-- Transition --}}
     <style type="text/css">
-    .title-bar {
-        display: none;
-    }
-</style>
-<title>@yield('title')</title>
+        .title-bar {
+            display: none;
+        }
+    </style>
+    <title>@yield('title')</title>
 </head>
+
 {{-- Блочим все подергивания в блоке  --}}
 <body id="body" class="block-refresh">
+    <div id="app">
 
-
-    {{-- Хедер --}}
-    <div class="top-bar-container header-z-index" id="header" data-sticky-container>
-        <div class="sticky sticky-topbar" data-sticky data-margin-top="0" data-options="stickyOn: small;" data-top-anchor="header:top">
-            <header class="grid-x header">
-                <div class="small-7 left-head cell">
-                    {{-- Кнопка сворачивания на мобилках --}}
-                    <div class="title-bar" data-responsive-toggle="sidebar" data-hide-for="medium" data-hide-for="large">
-                        <button class="menu-icon" type="button" data-toggle="sidebar"></button>
-                        {{-- <div class="title-bar-title"></div> --}}
+        {{-- Хедер --}}
+        <div class="top-bar-container header-z-index" id="header" data-sticky-container>
+            <div class="sticky sticky-topbar" data-sticky data-margin-top="0" data-options="stickyOn: small;" data-top-anchor="header:top">
+                <header class="grid-x header">
+                    <div class="small-7 left-head cell">
+                        {{-- Кнопка сворачивания на мобилках --}}
+                        <div class="title-bar" data-responsive-toggle="sidebar" data-hide-for="medium" data-hide-for="large">
+                            <button class="menu-icon" type="button" data-toggle="sidebar"></button>
+                            {{-- <div class="title-bar-title"></div> --}}
+                        </div>
+                        {{-- Логотип --}}
+                        <h1><span>CRM</span>System</h1>
                     </div>
-                    {{-- Логотип --}}
-                    <h1><span>CRM</span>System</h1>
-                </div>
-                <div class="small-5 right-head cell">
-                    <ul>
+                    <div class="small-5 right-head cell">
+                        <ul>
                         {{-- <li>
                             @if(isset($session_god))
                             {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }}
@@ -261,53 +265,19 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                 </div>
             </div>
         </footer>
-        {{-- Скрипты --}}
-        <script src="/crm/js/vendor/what-input.js"></script>
-        <script src="/crm/js/vendor/foundation.js"></script>
-        <script src="/crm/js/app.js"></script>
-        <!-- Наши скрипты -->
-        <script type="text/javascript">
-            $(function() {
-                console.log('Начало обработки страницы');
-            });
-            $(window).on('load', function () {
-                $("body").removeClass("block-refresh");
-                renderContent ();
-                setTimeout(function(){
-                    $('#wrapper').css({'transition': 'margin 0.3s ease'});
-                    $('#sidebar').css({'transition': 'width 0.3s ease'});
-                    $('#task-manager').css({'transition': 'margin-right 0.3s ease'});
-                    if ($("div").is("#head-content")) {
-                        $('.head-content').css({'transition': 'width 0.3s ease'});
-                    };
-                    if ($("table").is("#table")) {
-                // $('#thead-sticky').css({'transition': 'margin 0.1s ease'});
-                $('#thead-content').css({'transition': 'width 0.3s ease'});
-                $('#thead-content>th').css({'transition': 'width 0.3s ease'});
-            };
-            // $('#filters').css({'transition': 'height 1s ease'});
-            $('.td-drop').width(32);
-            $('.td-checkbox').width(32);
-            $('.td-delete').width(32);
-            getMassWidth ();
-            fixedThead ();
-            // alert('lol');
-        },1);
+    </div>
 
-        // get_challenges();
+    {{-- Скрипты --}}
+    <script type="application/javascript" src="/crm/js/vendor/what-input.js"></script>
+    <script type="application/javascript" src="/crm/js/vendor/foundation.js"></script>
+    <script type="application/javascript" src="/crm/js/app.js"></script>
 
-    });
-            $(window).resize(function() {
-                renderContent ();
-            });
-    // Иконка в футере при клике
-    // $('.icon-footer').bind('click', function() {
-    //   $('#foot-drop').toggleClass('active-foot-drop');
-    // });
-</script>
-{{-- Наши скрипты --}}
-@yield('scripts')
+    {{-- Наши скрипты --}}
+    <script type="application/javascript"src="/crm/js/main.js"></script>
+    {{-- Наши скрипты --}}
+    @stack('scripts')
 
-@stack('scripts')
+    @yield('scripts')
+
 </body>
 </html>

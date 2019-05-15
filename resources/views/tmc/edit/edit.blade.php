@@ -344,12 +344,10 @@ $disabled = $article->draft == 0 ? true : null;
 @include('includes.modals.modal_item_delete')
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
-
     // Основные настройки
     var category_entity = '{{ $category_entity }}';
-
 </script>
 
 @include('tmc.edit.change_articles_groups_script')
@@ -376,4 +374,4 @@ $disabled = $article->draft == 0 ? true : null;
 )
 
 @includeIf($entity . '.scripts')
-@endsection
+@endpush

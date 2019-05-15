@@ -25,5 +25,7 @@
     </div>
 </fieldset>
 
+<city-search></city-search>
+
 
 
