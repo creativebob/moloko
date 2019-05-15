@@ -61,6 +61,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Http\Controllers\Traits\LeadControllerTrait;
 
+
+use App\Exports\LeadsExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class LeadController extends Controller
 {
 
@@ -877,6 +881,11 @@ class LeadController extends Controller
         $data['lead_type_name'] = $lead->lead_type->name;
 
         return $data;
+    }
+
+    public function export() 
+    {
+        return Excel::download(new LeadsExport, 'Воротная компания "Марс".xlsx');
     }
 
 }

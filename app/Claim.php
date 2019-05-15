@@ -72,4 +72,10 @@ class Claim extends Model
     {
         return $this->belongsTo('App\User', 'manager_id');
     }
+
+    // Автор
+    public function author()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

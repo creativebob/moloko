@@ -532,6 +532,8 @@ Route::resource('statistics', 'StatisticsController')->middleware('auth');
 // Основные методы
 // Route::get('/lead/calls', 'LeadController@index')->middleware('auth');
 Route::resource('/leads', 'LeadController')->middleware('auth');
+
+Route::get('/leads_export', 'LeadController@export')->middleware('auth');
 // Route::resource('/leads_calls', 'LeadController@leads_calls')->middleware('auth');
 
 // Поиск
