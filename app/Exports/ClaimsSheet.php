@@ -35,7 +35,6 @@ class ClaimsSheet implements FromCollection, WithTitle, WithHeadings
         ;
         // dd($items);
 
-
         $claims = [];
         foreach ($items as $item) {
             $claim = [

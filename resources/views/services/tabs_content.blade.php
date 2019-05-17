@@ -5,7 +5,7 @@
 
 			<fieldset class="fieldset-access">
 				<legend>Каталоги</legend>
-				@include('includes.catalogs_with_items', ['type' => 'services'])
+				@include('services.catalogs_with_items')
 
 				{{-- Form::select('catalogs[]', $catalogs_list, $cur_goods->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
 				{{-- @include('includes.selects.catalogs_chosen', ['parent_id' => $cur_goods->catalogs->keyBy('id')->toArray()]) --}}

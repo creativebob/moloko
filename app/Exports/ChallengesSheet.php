@@ -44,7 +44,6 @@ class ChallengesSheet implements FromCollection, WithTitle, WithHeadings
         // )
         ->get()
         ;
-        // dd($items);
 
 
         $challenges = [];
@@ -55,7 +54,7 @@ class ChallengesSheet implements FromCollection, WithTitle, WithHeadings
                 'description' => $item->description,
                 'appointed' => $item->appointed->name,
                 'deadline_date' => $item->deadline_date,
-                'challenges_type' => $item->challenges_type->name ?? '',
+                'challenge_type' => $item->challenge_type->name ?? '',
                 'author' => $item->author->name,
                 'lead_id' => $item->subject_id,
             ];

@@ -114,7 +114,14 @@ class RoomController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('rooms.index', compact('rooms', 'page_info', 'filter'));
+        return view('tmc.index.index', [
+            'items' => $rooms,
+            'page_info' => $page_info,
+            'class' => $this->class,
+            'entity' => $this->entity_alias,
+            'category_entity' => 'rooms_categories',
+            'filter' => $filter,
+        ]);
     }
 
     public function create(Request $request)

@@ -30,7 +30,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {{-- Scripts --}}
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
 
     {{-- Add jQuery library --}}
     {{-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> --}}

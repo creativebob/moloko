@@ -66,10 +66,12 @@ trait ProcessTrait
         if ($data['units_category_id'] == 3) {
             $unit = Unit::findOrFail($data['unit_id']);
             $length = $unit->ratio;
+            $data['unit_id'] = null;
         } else {
-            // Если нет, то умножаем пришедший вес на количество чего либо
-            $extra_unit = Unit::findOrFail($data['unit_id']);
+            // Если нет, то умножаем пришедшую продолжительность на количество чего либо
+            $extra_unit = Unit::findOrFail($data['extra_unit_id']);
             $length = $data['length'] * $extra_unit->ratio;
+            $data['unit_id'] = $data['extra_unit_id'];
         }
         // dd($length);
         $data['length'] = $length;

@@ -52,6 +52,9 @@ class CreateArticlesTable extends Migration
 
             $table->decimal('weight', 15, 3)->nullable()->comment('Вес (кг)');
 
+            $table->bigInteger('unit_id')->nullable()->unsigned()->comment('Id единицы измерения');
+            $table->foreign('unit_id')->references('id')->on('units');
+
             // $table->integer('metrics_count')->nullable()->unsigned()->index()->comment('Количество метрик у артикула');
             // $table->integer('compositions_count')->nullable()->unsigned()->index()->comment('Количество составов у артикула');
 

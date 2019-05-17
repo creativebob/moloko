@@ -49,6 +49,9 @@ class CreateProcessesTable extends Migration
 
             $table->integer('length')->unsigned()->nullable()->comment('Продолжительность (сек)');
 
+            $table->bigInteger('unit_id')->nullable()->unsigned()->comment('Id единицы измерения');
+            $table->foreign('unit_id')->references('id')->on('units');
+
             // $table->boolean('portion_status')->default(0)->unsigned()->comment('Статус порции');
             // $table->string('portion_name')->nullable()->comment('Имя порции');
             // $table->string('portion_abbreviation')->nullable()->comment('Сокращение порции');

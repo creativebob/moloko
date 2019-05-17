@@ -5,6 +5,7 @@ $(document).on('click', '[data-open="item-sync"]', function(event) {
 
     // Блочим отправку формы
     event.preventDefault();
+    // var entity_alias = $('#content').data('entity-alias');
     var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
     var id = $(this).closest('.item').attr('id').split('-')[1];
     var item = $(this);
@@ -16,20 +17,12 @@ $(document).on('click', '[data-open="item-sync"]', function(event) {
     // }
 
     // Ajax
-    $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        url: '/admin/' + entity_alias + '_sync',
-        type: "POST",
-        // data: {id: id, action: action},
-        success: function (html) {
+    $.post('/admin/' + entity_alias + '_sync', function (html) {
 
         $('#modal').html(html);
         $('#modal-create').foundation();
         $('#modal-create').foundation('open');
 
-        }
     });
 });
 </script>

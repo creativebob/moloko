@@ -171,6 +171,16 @@ use App\Policies\RoomPolicy;
 use App\Stock;
 use App\Policies\StockPolicy;
 
+use App\CatalogsGoods;
+use App\Policies\CatalogsGoodsPolicy;
+use App\CatalogsGoodsItem;
+use App\Policies\CatalogsGoodsItemPolicy;
+
+use App\CatalogsService;
+use App\Policies\CatalogsServicePolicy;
+use App\CatalogsServiceItem;
+use App\Policies\CatalogsServiceItemPolicy;
+
 
 
 use Illuminate\Support\Facades\Gate as GateContract;
@@ -201,8 +211,11 @@ class AuthServiceProvider extends ServiceProvider
         'App\Indicator' => 'App\Policies\IndicatorPolicy',
 
         // Каталоги
-        'App\Catalog' => 'App\Policies\CatalogPolicy',
-        'App\CatalogsItem' => 'App\Policies\CatalogsItemPolicy',
+        CatalogGoods::class => CatalogGoodsPolicy::class,
+        CatalogGoodsItem::class => CatalogGoodsItemPolicy::class,
+
+        CatalogService::class => CatalogServicePolicy::class,
+        CatalogServiceItem::class => CatalogServiceItemPolicy::class,
 
 
         User::class => UserPolicy::class,

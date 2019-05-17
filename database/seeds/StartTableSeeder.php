@@ -18,9 +18,10 @@ use App\Page;
 use App\Navigation;
 use App\Menu;
 
-use App\CatalogsType;
-use App\Catalog;
-use App\CatalogsItem;
+use App\CatalogsGoods;
+use App\CatalogsGoodsItem;
+use App\CatalogsService;
+use App\CatalogsServicesItem;
 
 use App\GoodsCategory;
 use App\RawsCategory;
@@ -244,22 +245,20 @@ class StartTableSeeder extends Seeder
             ],
         ]);
 
-        $catalogs_type_id = CatalogsType::where('name', 'Товары')->first(['id'])->id;
 
-        Catalog::insert([
+        CatalogsGoods::insert([
             [
                 'name' => 'Первый каталог товаров',
                 'description' => 'Тест',
-                'catalogs_type_id' => $catalogs_type_id,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => 1,
             ],
         ]);
 
-        CatalogsItem::insert([
+        CatalogsGoodsItem::insert([
             [
-                'catalog_id' => 1,
+                'catalogs_goods_id' => 1,
                 'name' => 'Первый',
                 'company_id' => 1,
                 'display' => 1,
@@ -267,7 +266,7 @@ class StartTableSeeder extends Seeder
 
             ],
             [
-                'catalog_id' => 1,
+                'catalogs_goods_id' => 1,
                 'name' => 'Второй',
                 'company_id' => 1,
                 'display' => 1,
@@ -275,7 +274,7 @@ class StartTableSeeder extends Seeder
 
             ],
             [
-                'catalog_id' => 1,
+                'catalogs_goods_id' => 1,
                 'name' => 'Третий',
                 'company_id' => 1,
                 'display' => 1,
@@ -284,29 +283,26 @@ class StartTableSeeder extends Seeder
             ],
         ]);
 
-        DB::table('catalog_site')->insert([
+        DB::table('catalogs_goods_site')->insert([
             [
-                'catalog_id' => 1,
+                'catalogs_goods_id' => 1,
                 'site_id' => 2,
             ],
         ]);
 
-        $catalogs_type_id = CatalogsType::where('name', 'Услуги')->first(['id'])->id;
-
-        Catalog::insert([
+        CatalogsService::insert([
             [
                 'name' => 'Первый каталог услуг',
                 'description' => 'Тест',
-                'catalogs_type_id' => $catalogs_type_id,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => 1,
             ],
         ]);
 
-        CatalogsItem::insert([
+        CatalogsServicesItem::insert([
             [
-                'catalog_id' => 2,
+                'catalogs_service_id' => 1,
                 'name' => 'Первый',
                 'company_id' => 1,
                 'display' => 1,
@@ -314,7 +310,7 @@ class StartTableSeeder extends Seeder
 
             ],
             [
-                'catalog_id' => 2,
+                'catalogs_service_id' => 1,
                 'name' => 'Второй',
                 'company_id' => 1,
                 'display' => 1,
@@ -322,7 +318,7 @@ class StartTableSeeder extends Seeder
 
             ],
             [
-                'catalog_id' => 2,
+                'catalogs_service_id' => 1,
                 'name' => 'Третий',
                 'company_id' => 1,
                 'display' => 1,
@@ -331,9 +327,9 @@ class StartTableSeeder extends Seeder
             ],
         ]);
 
-        DB::table('catalog_site')->insert([
+        DB::table('catalogs_service_site')->insert([
             [
-                'catalog_id' => 2,
+                'catalogs_service_id' => 1,
                 'site_id' => 2,
             ],
         ]);
@@ -393,6 +389,19 @@ class StartTableSeeder extends Seeder
             [
                 'name' => 'Вторая категория услуг',
                 'company_id' => 1,
+                'author_id' => 4,
+                'display' => 1,
+            ],
+
+            [
+                'name' => 'Первая общая категория услуг',
+                'company_id' => null,
+                'author_id' => 4,
+                'display' => 1,
+            ],
+            [
+                'name' => 'Вторая общая категория услуг',
+                'company_id' => null,
                 'author_id' => 4,
                 'display' => 1,
             ],

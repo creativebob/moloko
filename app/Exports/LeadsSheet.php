@@ -45,7 +45,9 @@ class LeadsSheet implements FromCollection, WithTitle, WithHeadings
             'source_id',
             'utm_term',
             'author_id',
+            'draft',
         ])
+        ->whereNull('draft')
         ->get()
         ;
 

@@ -21,7 +21,7 @@ class LeadsExport implements WithMultipleSheets, ShouldAutoSize
 
     public function sheets(): array
     {
-        
+
         set_time_limit(0);
         $sheets = [];
 

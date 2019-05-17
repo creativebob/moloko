@@ -134,13 +134,13 @@ $disabled = $process->draft == 0 ? true : null;
 
                                 <label>Еденица измерения
                                     @include('processes.edit.select_units', [
-                                        'units_category_id' => $process->group->unit->units_category_id,
-                                        'disabled' => ($process->draft == 1) ? null : true,
+                                        'units_category_id' => isset($process->unit_id) ? $process->unit->units_category_id : $process->group->unit->units_category_id,
+                                        'disabled' => true,
                                     ]
                                     )
                                 </label>
                                 <label>Продолжительность единицы ({{ $process->group->unit->abbreviation }})
-                                    {!! Form::number('length', null, []) !!}
+                                    {!! Form::number('length', null, [($process->draft == 1) ? null : true]) !!}
                                 </label>
 
                                 @endif
