@@ -200,6 +200,14 @@ class CompanyController extends Controller
     public function edit(Request $request, $id)
     {
 
+        // Получаем данные для авторизованного пользователя
+        $user_auth = $request->user();
+
+        // Скрываем бога
+        $user_auth_id = hideGod($user_auth);
+        $company_id = $user_auth->company_id;
+
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -212,18 +220,6 @@ class CompanyController extends Controller
         ->findOrFail($id);
 
         $this->authorize(getmethod(__FUNCTION__), $company);
-
-        // Готовим информацию: является ли компания производителем для себя?
-        // Результат упаковываем в новосозданное поле: manufacturer_self в виде true или false
-
-        // Получаем связь компании с собой как производителя
-        $manufacturer = Manufacturer::where('company_id', $company->id)->where('manufacturer_id', $company->id)->where('archive', 0)->first();
-
-        if($manufacturer != null){
-            $company->manufacturer_self = true;
-        } else {
-            $company->manufacturer_self = false;
-        };
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

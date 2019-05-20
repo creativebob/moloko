@@ -66,7 +66,7 @@ class Consignment extends Model
     // Поставщик
     public function supplier()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo('App\Supplier');
     }
 
     // Склад

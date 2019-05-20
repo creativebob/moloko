@@ -37,8 +37,8 @@ class UpdateUsersTable extends Migration
 
             $table->string('passport_number')->nullable()->unique()->comment('Номер паспорта')->after('user_inn');
             $table->date('passport_date')->nullable()->comment('Дата выдачи паспорта')->after('passport_number');
-            $table->string('passport_released', 60)->nullable()->comment('Кем выдан паспорт')->after('passport_date');
-            $table->string('passport_address', 60)->nullable()->comment('Адрес прописки')->after('passport_released');
+            $table->string('passport_released', 200)->nullable()->comment('Кем выдан паспорт')->after('passport_date');
+            $table->string('passport_address', 250)->nullable()->comment('Адрес прописки')->after('passport_released');
 
             $table->text('about')->nullable()->comment('Информация о пользователе')->after('passport_address');
             $table->text('specialty')->nullable()->comment('Специальность')->after('about');

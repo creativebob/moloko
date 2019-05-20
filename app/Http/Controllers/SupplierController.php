@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 // Модели
 use App\User;
 use App\Supplier;
+use App\Manufacturer;
 use App\Company;
 use App\Page;
 use App\Sector;
@@ -75,7 +76,7 @@ class SupplierController extends Controller
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->filter($request, 'city_id', 'location')
-        ->filter($request, 'sector_id')
+        ->filter($request, 'sector_id', 'company')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
@@ -90,6 +91,8 @@ class SupplierController extends Controller
             'sector',               // Направление деятельности
             'booklist'              // Списки пользователя
         ]);
+
+        // dd($filter);
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
@@ -170,6 +173,14 @@ class SupplierController extends Controller
 
     public function edit(Request $request, $id)
     {
+
+
+        // Получаем данные для авторизованного пользователя
+        $user_auth = $request->user();
+
+        // Скрываем бога
+        $user_auth_id = hideGod($user_auth);
+        $auth_company_id = $user_auth->company_id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -253,7 +264,7 @@ class SupplierController extends Controller
         $this->updateCompany($request, $supplier->company);
 
         // Обновление информации по поставщику:
-        $supplier->description = $request->description;
+        $supplier->description_supplier = $request->description_supplier;
         $supplier->preorder = $request->preorder ?? 0;
         $supplier->save();
 

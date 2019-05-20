@@ -33,7 +33,7 @@
 		@if(!empty($filter[$name]['list_select']['item_list']))
 			@foreach ($filter[$name]['list_select']['item_list'] as $key => $value)
 				<li>
-					{{ Form::checkbox($filter[$name]['column'] . '[]', $key, $filter[$name]['mass_id'], ['id'=>$name.'-'.$key]) }}
+					{{ Form::checkbox($filter[$name]['column'] . '[]', $key, isset($filter[$name]['mass_id']) ? in_array($key, $filter[$name]['mass_id']) : false, ['id'=>$name.'-'.$key]) }}
 					<label for="{{$name}}-{{ $key }}"><span class="wrap-label-checkboxer">{{ $value }}</span></label>
 				</li>
 			@endforeach

@@ -352,14 +352,18 @@
 
         foreach ($filters as $filter_name) {
 
+            // Если фильтр не являеться спецефическим, то создаем его через общую функцию
             if(($filter_name != 'date_interval')&&($filter_name != 'booklist')){
                 $filter = addMyFilter($filter, $request, $filter_name);
             }
 
+
+            // Если фильтр специфичен: по дате
             if($filter_name == 'date_interval'){
                 $filter = addFilterInterval($filter, $entity_name, $request, 'date_start', 'date_end');
             }
 
+            // Если фильтр специфичен: буклист
             if($filter_name == 'booklist'){
                 $filter = addBooklist($filter, $request, $entity_name);
             }
@@ -804,6 +808,7 @@
         $sectors = App\Sector::orderBy('name', 'asc')->get()->pluck('name', 'id')->toArray();
         return $sectors;
     }
+
 
     function getFilterPlacesTypeList(){
 

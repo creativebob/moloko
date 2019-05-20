@@ -276,16 +276,30 @@
                     </div>
 
 
-                    {{-- Только для формы редактирования компании предлагаем указать связь с собой как с производителем
-                        Поле manufacturer_self приходит только с контроллера Company --}}
+                    {{-- Предлагаем добавить компанию в производители, если, конечно, создаем ее не из под страницы создания производителей --}}
 
-                        @if(isset($company->manufacturer_self))
-                        @if($company->manufacturer_self == false)
-                        <div class="small-12 cell checkbox">
-                            {{ Form::checkbox('manufacturer_self', 1, $company->manufacturer_self, ['id' => 'manufacturer_self']) }}
-                            <label for="manufacturer_self"><span>Производитель</span></label>
-                        </div>
+                        @if(empty($manufacturer))
+                            @if(isset($company->manufacturer_self))
+                                @if($company->manufacturer_self == false)
+                                <div class="small-12 cell checkbox">
+                                    {{ Form::checkbox('manufacturer_self', 1, $company->manufacturer_self, ['id' => 'manufacturer_self']) }}
+                                    <label for="manufacturer_self"><span>Производитель</span></label>
+                                </div>
+                                @endif
+                            @endif
                         @endif
+
+                    {{-- Предлагаем добавить компанию в поставщики, если, конечно, создаем ее не из под страницы создания поставщиков --}}
+                    
+                        @if(empty($supplier))
+                            @if(isset($company->supplier_self))
+                                @if($company->supplier_self == false)
+                                <div class="small-12 cell checkbox">
+                                    {{ Form::checkbox('supplier_self', 1, $company->supplier_self, ['id' => 'supplier_self']) }}
+                                    <label for="supplier_self"><span>Поставщик</span></label>
+                                </div>
+                                @endif
+                            @endif
                         @endif
 
                         {{-- Чекбоксы управления --}}
