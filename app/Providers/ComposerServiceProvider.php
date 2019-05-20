@@ -24,6 +24,9 @@ use App\Http\ViewComposers\LoyaltiesComposer;
 
 use App\Http\ViewComposers\UnitsCategoriesComposer;
 use App\Http\ViewComposers\UnitsComposer;
+use App\Http\ViewComposers\UnitsTmcComposer;
+use App\Http\ViewComposers\UnitsProcessesComposer;
+
 use App\Http\ViewComposers\SourceWithSourceServicesComposer;
 use App\Http\ViewComposers\SourceServicesComposer;
 use App\Http\ViewComposers\PeriodsComposer;
@@ -74,7 +77,8 @@ use App\Http\ViewComposers\CategoriesDrilldownComposer;
 
 use App\Http\ViewComposers\EntitiesStatisticsSelectComposer;
 
-use App\Http\ViewComposers\CatalogsComposer;
+use App\Http\ViewComposers\CatalogsGoodsComposer;
+use App\Http\ViewComposers\CatalogsServicesComposer;
 use App\Http\ViewComposers\CatalogsTypesComposer;
 
 use App\Http\ViewComposers\ArticlesGroupsComposer;
@@ -118,7 +122,13 @@ class ComposerServiceProvider extends ServiceProvider
         ], ContragentsComposer::class);
 
         view()->composer(['includes.selects.units_categories'], UnitsCategoriesComposer::class);
-        view()->composer(['includes.selects.units'], UnitsComposer::class);
+        view()->composer([
+            'includes.selects.units',
+            'includes.selects.units_extra',
+        ], UnitsComposer::class);
+
+        view()->composer('tmc.edit.select_units', UnitsTmcComposer::class);
+        view()->composer('processes.edit.select_units', UnitsProcessesComposer::class);
 
         view()->composer(['includes.selects.source_with_source_services'], SourceWithSourceServicesComposer::class);
         view()->composer(['includes.selects.source_services'], SourceServicesComposer::class);
@@ -193,8 +203,8 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.selects.entities_statistics', EntitiesStatisticsSelectComposer::class);
 
-        view()->composer('includes.catalogs_with_items', CatalogsComposer::class);
-        view()->composer('includes.selects.catalogs_types', CatalogsTypesComposer::class);
+        view()->composer('goods.catalogs_with_items', CatalogsGoodsComposer::class);
+        view()->composer('services.catalogs_with_items', CatalogsServicesComposer::class);
 
         view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
         view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);

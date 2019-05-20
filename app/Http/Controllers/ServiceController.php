@@ -87,6 +87,7 @@ class ServiceController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
+        ->template($answer)
         ->booklistFilter($request)
         ->filter($request, 'author_id')
         // ->filter($request, 'services_category_id', 'process.product')
@@ -115,7 +116,14 @@ class ServiceController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('services.index', compact('services', 'page_info', 'filter'));
+        return view('processes.index.index', [
+            'items' => $services,
+            'page_info' => $page_info,
+            'class' => $this->class,
+            'entity' => $this->entity_alias,
+            'category_entity' => 'services_categories',
+            'filter' => $filter,
+        ]);
     }
 
     public function create(Request $request)
@@ -134,6 +142,7 @@ class ServiceController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
+        ->template($answer)
         ->orderBy('sort', 'asc')
         ->get();
 

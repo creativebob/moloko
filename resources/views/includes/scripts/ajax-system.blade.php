@@ -6,6 +6,7 @@
 
         let item = $(this);
         let id = item.closest('.item').attr('id').split('-')[1];
+        // let entity_alias = $('#content').data('entity-alias');
         let entity_alias = item.closest('.item').attr('id').split('-')[0];
 
         // Oпределяем тип
@@ -22,7 +23,11 @@
         action = item.hasClass("icon-system-unlock") ? 'lock' : 'unlock';
 
         // Ajax
-        $.post('/admin/system_item', {id: id, action: action, entity_alias: entity_alias}, function (system) {
+        $.post('/admin/system_item', {
+            id: id,
+            action: action,
+            entity_alias: entity_alias
+        }, function (system) {
             // Если нет ошибки
             if (system == true) {
                 if (action == 'lock') {

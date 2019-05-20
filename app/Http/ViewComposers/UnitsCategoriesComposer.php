@@ -13,6 +13,7 @@ class UnitsCategoriesComposer
 
         // Главный запрос
         $units_categories = UnitsCategory::orderBy('sort', 'asc')
+        ->where($view->type, true)
         ->get();
 
         return $view->with('units_categories', $units_categories);

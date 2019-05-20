@@ -98,7 +98,6 @@ class DatabaseSeeder extends Seeder
         $this->call(WidgetsTableSeeder::class);
         $this->call(NotificationsTableSeeder::class);
 
-        $this->call(CatalogsTypesTableSeeder::class);
         $this->call(LeftoverOperationsTableSeeder::class);
 
         $this->call(StartTableSeeder::class);

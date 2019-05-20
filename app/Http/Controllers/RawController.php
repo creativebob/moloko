@@ -111,11 +111,17 @@ class RawController extends Controller
             'booklist'              // Списки пользователя
         ]);
 
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('raws.index', compact('raws', 'page_info', 'filter'));
+        return view('tmc.index.index', [
+            'items' => $raws,
+            'page_info' => $page_info,
+            'class' => $this->class,
+            'entity' => $this->entity_alias,
+            'category_entity' => 'raws_categories',
+            'filter' => $filter,
+        ]);
     }
 
     public function create(Request $request)

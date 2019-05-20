@@ -132,7 +132,14 @@ class GoodsController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('goods.index', compact('goods', 'page_info', 'filter'));
+        return view('tmc.index.index', [
+            'items' => $goods,
+            'page_info' => $page_info,
+            'class' => $this->class,
+            'entity' => $this->entity_alias,
+            'category_entity' => 'goods_categories',
+            'filter' => $filter,
+        ]);
     }
 
     public function search($text_fragment)
@@ -465,7 +472,7 @@ class GoodsController extends Controller
     }
 
     // ----------------------------------- Ajax -----------------------------------------
-    
+
     // Отображение на сайте
     public function ajax_sync(Request $request)
     {

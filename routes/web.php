@@ -532,6 +532,8 @@ Route::resource('statistics', 'StatisticsController')->middleware('auth');
 // Основные методы
 // Route::get('/lead/calls', 'LeadController@index')->middleware('auth');
 Route::resource('/leads', 'LeadController')->middleware('auth');
+
+Route::get('/leads_export', 'LeadController@export')->middleware('auth');
 // Route::resource('/leads_calls', 'LeadController@leads_calls')->middleware('auth');
 
 // Поиск
@@ -911,26 +913,43 @@ Route::prefix('/sites/{site_id}')->group(function () {
 Route::resource('/news', 'NewsController')->middleware('auth');
 
 
-// ----------------------------------------- Каталоги ------------------------------------------
-
+// ----------------------------------------- Каталоги товаров ------------------------------------------
 
 // Основные методы
-Route::resource('catalogs', 'CatalogController');
+Route::resource('catalogs_goods', 'CatalogsGoodsController');
 // Проверка на существование
 // Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
 
-// -------------------------------- Наполнение каталогов -------------------------------------
+// -------------------------------- Наполнение каталогов товаров -------------------------------------
 
-Route::prefix('catalogs/{catalog_id}')->group(function () {
+Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
 
 	// Текущий добавленный/удаленный пунк меню
-	Route::any('catalogs_items', 'CatalogsItemController@index');
+	Route::any('catalogs_goods_items', 'CatalogsGoodsItemController@index');
 
 	// Основные методы
-	Route::resource('catalogs_items', 'CatalogsItemController');
+	Route::resource('catalogs_goods_items', 'CatalogsGoodsItemController');
 });
 
 
+// ----------------------------------------- Каталоги услуг ------------------------------------------
+
+// Основные методы
+Route::resource('catalogs_services', 'CatalogsServiceController');
+Route::get('catalogs_services/{catalog_id}/services', 'CatalogsServiceController@services')->name('catalogs_services.services');
+// Проверка на существование
+// Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
+
+// -------------------------------- Наполнение каталогов услуг -------------------------------------
+
+Route::prefix('catalogs_services/{catalog_id}')->group(function () {
+
+    // Текущий добавленный/удаленный пунк меню
+    Route::any('catalogs_services_items', 'CatalogsServicesItemController@index');
+
+    // Основные методы
+    Route::resource('catalogs_services_items', 'CatalogsServicesItemController');
+});
 
 
 // ------------------------------------- Отображение сессии -----------------------------------------

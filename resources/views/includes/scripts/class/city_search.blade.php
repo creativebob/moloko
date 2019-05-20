@@ -52,7 +52,7 @@
                                 // Если нет городов, ставим иконку ошибки
                                 if ($('.table-over tr:first').hasClass('no-city')) {
                                     $('#' + id + ' .city-check').addClass('icon-find-no').addClass('sprite-16');
-                                    $('#' + id + ' .city-id-field').val('');
+                                    $('#' + id + ' .city_id-field').val('');
                                 }
                             }
                         });
@@ -70,16 +70,16 @@
 
             let cityId = $(elem).closest('tr').data('city-id');
             let cityName = $(elem).closest('tr').find('.city-name').text();
-            $('#' + this.id + ' .city-id-field').val(cityId);
-            $('#' + this.id + ' .city-check-field').val(cityName);
+            $('#' + this.id + ' .city_id-field').val(cityId);
+            $('#' + this.id + ' .city_check-field').val(cityName);
             $('#' + this.id + ' .table-over').remove();
             $('#' + this.id + ' .city-check').addClass('icon-find-ok').addClass('sprite-16').removeClass('icon-find-no');
         }
 
         clear(elem){
 
-            $(elem).closest('.city-input-parent').find('.city-check-field').val('');
-            $(elem).closest('.city-input-parent').find('.city-id-field').val('');
+            $(elem).closest('.city-input-parent').find('.city_check-field').val('');
+            $(elem).closest('.city-input-parent').find('.city_id-field').val('');
             $(elem).removeClass('icon-find-no').removeClass('sprite-16');
             $('#' + this.id + ' .table-over').remove();
         }

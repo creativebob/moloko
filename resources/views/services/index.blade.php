@@ -166,7 +166,7 @@
 @include('includes.scripts.modal-archive-script')
 
 @include('includes.scripts.inputs-mask')
-@include('tmc.create.scripts', ['entity' => 'services', 'category_entity' => 'services_categories'])
+@include('processes.create.scripts', ['entity' => 'services', 'category_entity' => 'services_categories'])
 
 {{-- Скрипт синхронизации товара с сайтом на сайте --}}
 @include('includes.scripts.ajax-sync')

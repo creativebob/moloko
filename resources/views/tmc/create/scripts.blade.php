@@ -13,6 +13,7 @@
         $.get('/admin/' + entity + '/create', function(html){
             $('#modal').html(html).foundation();
             $('#modal-create').foundation('open');
+            checkExtraUnits();
         });
     });
 
@@ -29,11 +30,22 @@
         // alert($('#' + list + ' :selected').data('abbreviation'));
     };
 
+    function checkExtraUnits () {
+        if ($('#select-units_categories :selected').text() == 'Масса') {
+            $('#extra-units-block').hide();
+        } else {
+            $('#extra-units-block').show();
+        }
+    }
+
+
+
     // При смене категории единиц измерения меняем список единиц измерения
     $(document).on('change', '#select-units_categories', function() {
         $.post('/admin/get_units_list', {units_category_id: $(this).val()}, function(html){
             $('#select-units').html(html);
             setUnitAbbrevation('select-units');
+            checkExtraUnits();
         });
     });
 
@@ -45,6 +57,9 @@
     $(document).on('change', '#select-units', function() {
         setUnitAbbrevation($(this).attr('id'));
     });
+
+
+
 
     // $(document).on('change', '#select-goods_categories', function() {
 

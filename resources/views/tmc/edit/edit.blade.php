@@ -116,6 +116,31 @@ $disabled = $article->draft == 0 ? true : null;
 
                                 </label>
 
+                                @if ($article->group->unit->units_category_id == 2)
+
+                                <label>Еденица измерения
+                                    @include('tmc.edit.select_units', [
+                                        'units_category_id' => 2,
+                                        'disabled' => true,
+                                    ]
+                                    )
+                                </label>
+
+                                @else
+
+                                <label>Еденица измерения
+                                    @include('tmc.edit.select_units', [
+                                        'units_category_id' => isset($article->unit_id) ? $article->unit->units_category_id : $article->group->unit->units_category_id,
+                                        'disabled' => true,
+                                    ]
+                                    )
+                                </label>
+                                <label>Вес единицы ({{ $article->group->unit->abbreviation }})
+                                    {!! Form::number('weight', null, ['disabled' => ($article->draft == 1) ? null : true]) !!}
+                                </label>
+
+                                @endif
+
                                 {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 
                             </div>
@@ -319,12 +344,10 @@ $disabled = $article->draft == 0 ? true : null;
 @include('includes.modals.modal_item_delete')
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
-
     // Основные настройки
     var category_entity = '{{ $category_entity }}';
-
 </script>
 
 @include('tmc.edit.change_articles_groups_script')
@@ -351,4 +374,4 @@ $disabled = $article->draft == 0 ? true : null;
 )
 
 @includeIf($entity . '.scripts')
-@endsection
+@endpush

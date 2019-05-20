@@ -75,9 +75,16 @@ class Site extends Model
     }
 
     // Каталоги
-    public function catalogs()
+    // Товаров
+    public function catalogs_goods()
     {
-        return $this->belongsToMany(Catalog::class, 'catalog_site');
+        return $this->belongsToMany(CatalogsGoods::class, 'catalogs_goods_site');
+    }
+
+    // Услуг
+    public function catalogs_services()
+    {
+        return $this->belongsToMany(CatalogsService::class, 'catalogs_service_site');
     }
 
 }

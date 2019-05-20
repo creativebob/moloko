@@ -26,6 +26,7 @@ class ProcessRequest extends FormRequest
         return [
             'category_id' => 'string|nullable',
             'unit_id' => 'string|nullable',
+            'extra_unit_id' => 'string|nullable',
 
             'name' => 'string|max:255|required',
             'description' => 'string|nullable',
@@ -44,6 +45,7 @@ class ProcessRequest extends FormRequest
             'price_rule_id' => 'integer|nullable',
 
             'draft' => 'integer|nullable',
+            'length' => 'integer|nullable',
 
         ];
     }

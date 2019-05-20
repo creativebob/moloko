@@ -66,6 +66,8 @@ class Process extends Model
         'price_rule_id',
 
         'draft',
+        'length',
+        'unit_id',
     ];
 
     // Группа
@@ -129,5 +131,11 @@ class Process extends Model
     public function service()
     {
         return $this->hasOne(Service::class);
+    }
+
+    // Еденица измерения
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 }

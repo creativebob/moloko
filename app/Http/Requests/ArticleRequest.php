@@ -26,6 +26,7 @@ class ArticleRequest extends FormRequest
         return [
             'category_id' => 'string|nullable',
             'unit_id' => 'string|nullable',
+            'extra_unit_id' => 'string|nullable',
 
             'name' => 'string|max:255|required',
             'description' => 'string|nullable',
@@ -49,6 +50,7 @@ class ArticleRequest extends FormRequest
             'portion_count' => 'integer|nullable',
 
             'draft' => 'integer|nullable',
+            'width' => 'integer|nullable',
 
         ];
     }

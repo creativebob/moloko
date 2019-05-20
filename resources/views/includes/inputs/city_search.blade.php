@@ -7,12 +7,19 @@ $city_id = isset($city) ? $city->id : null;
 <label id="{{ $id }}" class="city-input-parent">Город
 
 	{{-- Город --}}
-	{{ Form::text('city_name', $city_name, ['class'=>'varchar-field city-check-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}', (isset($required) ? 'required' : '')]) }}
-	<div class="sprite-input-right find-status city-check @isset ($city_name) icon-find-ok sprite-16 @endisset"></div>
-	<span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
+	{{ Form::text('city_name', $city_name, [
+        'class' => 'varchar-field city_check-field',
+        'maxlength' => '30',
+        'autocomplete' => 'off',
+        'pattern'=>'[А-Яа-яЁё0-9-_\s]{3,30}',
+        (isset($required) ? 'required' : '')
+    ]
+    ) }}
+    <div class="sprite-input-right find-status city-check @isset ($city_name) icon-find-ok sprite-16 @endisset"></div>
+    <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
 
-	{{-- Id города --}}
-	{{ Form::hidden('city_id', $city_id, ['class'=>'city-id-field', 'maxlength'=>'3', 'pattern'=>'[0-9]{3}']) }}
+    {{-- Id города --}}
+    {{ Form::hidden('city_id', $city_id, ['class'=>'city_id-field', 'maxlength'=>'3', 'pattern'=>'[0-9]{3}']) }}
 </label>
 
 <script type="text/javascript">
@@ -20,7 +27,7 @@ $city_id = isset($city) ? $city->id : null;
 	let {{ $id }} = new CitySearch("{{ $id }}");
 
 	// При добавлении филиала ищем город в нашей базе
-	$(document).on('keyup', '#{{ $id }} .city-check-field', function() {
+	$(document).on('keyup', '#{{ $id }} .city_check-field', function() {
 		{{ $id }}.find(this);
 	});
 

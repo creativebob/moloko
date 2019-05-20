@@ -24,6 +24,7 @@ class CategoriesComposer
         $categories = $model::moderatorLimit($answer)
         ->companiesLimit($answer)
         ->systemItem($answer)
+        ->template($answer)
         ->orderBy('sort', 'asc')
         ->get([
             'id',

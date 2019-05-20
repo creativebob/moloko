@@ -116,7 +116,14 @@ class WorkflowController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('workflows.index', compact('workflows', 'page_info', 'filter'));
+        return view('processes.index.index', [
+            'items' => $workflows,
+            'page_info' => $page_info,
+            'class' => $this->class,
+            'entity' => $this->entity_alias,
+            'category_entity' => 'workflows_categories',
+            'filter' => $filter,
+        ]);
     }
 
     public function create(Request $request)

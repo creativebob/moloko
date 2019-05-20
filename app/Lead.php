@@ -65,7 +65,6 @@ class Lead extends Model
         'name',
     ];
 
-
     // Получаем компанию.
     public function company()
     {

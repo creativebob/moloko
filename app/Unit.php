@@ -16,7 +16,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -28,7 +28,7 @@ class Unit extends Model
 
     // Включаем кеш
     // use Cachable;
-    
+
     use SoftDeletes;
 
     // Включаем Scopes
@@ -43,4 +43,10 @@ class Unit extends Model
     use Filter;
     use BooklistFilter;
     use DateIntervalFilter;
+
+    // Категория едениц измерения
+    public function units_category()
+    {
+        return $this->belongsTo(UnitsCategory::class);
+    }
 }

@@ -69,6 +69,8 @@ class Article extends Model
         'portion_count',
 
         'draft',
+        'weight',
+        'unit_id',
     ];
 
     // Группа
@@ -136,5 +138,11 @@ class Article extends Model
     public function goods()
     {
         return $this->hasOne(Goods::class);
+    }
+
+    // Еденица измерения
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
 }
