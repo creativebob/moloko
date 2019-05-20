@@ -2934,11 +2934,6 @@ a {
 // ------------------------------------- Таблица поиска в модалке ------------------------------
 .content-table-search {
 
-    // height: 200px;
-    // width: 100%;
-    // overflow: auto;
-    // display: block;
-
     caption {
         font-family: $PFDDPL;
         font-size: 0.875rem;
@@ -2951,19 +2946,9 @@ a {
 
     tbody {
 
-        display:block;
-        height:200px;
-        overflow:auto;
-
         // Убираем стандарнтый бордер и бекграунд фонды
         border: none;
         background: none;
-
-        // Убираем выделение каждой четной строки
-        // tr:nth-child(even) {
-        //     border-bottom: 0;
-        //     background-color: $table-bg-color;
-        // }
 
         td {
             font-family: $SUISL;
@@ -2986,6 +2971,12 @@ a {
         .icon-delete:hover {
             background-position: 0px -512px;
         }
+    }
+
+    #tbody-city-add {
+        display: block;
+        height: 200px;
+        overflow: auto;
     }
 }
 .table-over {

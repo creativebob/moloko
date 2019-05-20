@@ -2265,9 +2265,6 @@ a#task-toggle {
   margin-bottom: 1rem;
 }
 .content-table-search tbody {
-  display: block;
-  height: 200px;
-  overflow: auto;
   border: none;
   background: none;
 }
@@ -2286,6 +2283,11 @@ a#task-toggle {
 }
 .content-table-search tbody .icon-delete:hover {
   background-position: 0px -512px;
+}
+.content-table-search #tbody-city-add {
+  display: block;
+  height: 200px;
+  overflow: auto;
 }
 
 .table-over {

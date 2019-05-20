@@ -1,4 +1,4 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('inhead')
 <meta name="description" content="{{ $page_info->page_description }}" />

@@ -1,4 +1,3 @@
-@include('includes.scripts.class.city_search')
 <div class="reveal" id="modal-create" data-reveal data-close-on-click="false">
 	<div class="grid-x">
 		<div class="small-12 cell modal-title">
@@ -45,6 +44,7 @@
 					<div class="small-10 cell">
 
 						{{-- Добавление города --}}
+                        @include('includes.scripts.class.city_search')
 						@include('includes.inputs.city_search', ['city' => isset($department->location->city->name) ? $department->location->city : null, 'id' => 'cityForm', 'required' => isset($parent_id) ? null : true])
 
 						@isset($parent_id)
@@ -66,7 +66,7 @@
 						</label>
 
 						{{ Form::hidden('id', null, ['id' => 'item-id']) }}
-						{{ Form::hidden('filial_id', null, ['id' => 'filial-id']) }}
+						{{ Form::hidden('filial_id', $filial_id, ['id' => 'filial-id']) }}
 
 						@include('includes.control.checkboxes', ['item' => $department])
 
@@ -113,7 +113,7 @@
 
 						{{-- @include('includes.control.checkboxes', ['item' => $staffer]) --}}
 
-						{{ Form::hidden('filial_id', 0, ['class' => 'filial-id']) }}
+						{{ Form::hidden('filial_id', $filial_id, ['class' => 'filial-id']) }}
 
 						@include('includes.control.checkboxes', ['item' => new App\Staffer])
 					</div>

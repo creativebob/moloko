@@ -27,7 +27,7 @@ $city_id = isset($city) ? $city->id : null;
 	let {{ $id }} = new CitySearch("{{ $id }}");
 
 	// При добавлении филиала ищем город в нашей базе
-	$(document).on('keyup', '#{{ $id }} .city-check-field', function() {
+	$(document).on('keyup', '#{{ $id }} .city_check-field', function() {
 		{{ $id }}.find(this);
 	});
 

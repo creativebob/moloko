@@ -100,7 +100,7 @@ class CityController extends Controller
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
-        return view('cities.modal_create');
+        return view('cities.create');
     }
 
     public function store(CityRequest $request)
@@ -340,6 +340,6 @@ class CityController extends Controller
         ->get();
         // dd($cities);
 
-        return view('includes.cities.cities_table', compact('cities'));
+        return view('cities.cities_table', compact('cities'));
     }
 }

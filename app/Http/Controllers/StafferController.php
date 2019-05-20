@@ -93,11 +93,10 @@ class StafferController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
+        $staffer = new Staffer;
+
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
-
-        $staffer = new $this->class;
-
         $staffer->company_id = $user->company_id;
         $staffer->author_id = hideGod($user);
 
@@ -122,7 +121,10 @@ class StafferController extends Controller
         if ($staffer) {
 
         // Переадресовываем на index
-            return redirect()->route('departments.index', ['id' => $staffer->id, 'item' => $this->entity_alias]);
+            return redirect()->route('departments.index', [
+                'id' => $staffer->id,
+                'item' => $this->entity_alias
+            ]);
         } else {
             abort(403, 'Ошибка при записи штата!');
         }
