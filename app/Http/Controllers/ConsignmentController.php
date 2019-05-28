@@ -98,12 +98,14 @@ class ConsignmentController extends Controller
         // Дата приема
         $consignment->receipt_date = $request->has('draft') ? null : Carbon::parse($request->receipt_date)->format('Y-m-d');
 
-        $consignment->draft = $request->draft;
+        // $consignment->draft = $request->draft;
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
         $consignment->company_id = $user->company_id;
         $consignment->author_id = hideGod($user);
+
+        // dd($request);
 
         $consignment->save();
 

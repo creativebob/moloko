@@ -18,11 +18,11 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 // Фильтры
-use App\Scopes\Filters\Filter;
-use App\Scopes\Filters\BooklistFilter;
-use App\Scopes\Filters\DateIntervalFilter;
+// use App\Scopes\Filters\Filter;
+// use App\Scopes\Filters\BooklistFilter;
+// use App\Scopes\Filters\DateIntervalFilter;
 
-class Consignment extends Model
+class FirstName extends Model
 {
 
     // Включаем кеш
@@ -39,39 +39,20 @@ class Consignment extends Model
     use ModeratorLimitTraitScopes;
 
     // Фильтры
-    use Filter;
-    use BooklistFilter;
-    use DateIntervalFilter;
+    // use Filter;
+    // use BooklistFilter;
+    // use DateIntervalFilter;
 
-    protected $dates = ['deleted_at', 'receipt_date'];
+    protected $dates = ['deleted_at'];
     protected $fillable = [
-        'supplier_id',
-        'company_id',
-        'author_id',
-        'draft'
+        'name',
+        'patronymic_male',
+        'patronymic_female',
+        'gender',
     ];
+    
 
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo('App\User');
-    }
+    // ------------------------------------- Отношения -----------------------------------------
 
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo('App\Company');
-    }
 
-    // Поставщик
-    public function supplier()
-    {
-        return $this->belongsTo('App\Supplier');
-    }
-
-    // Склад
-    public function stock()
-    {
-        return $this->belongsTo('App\Stock');
-    }
 }

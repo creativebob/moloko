@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Traits;
 
 use App\Company;
 use App\Manufacturer;
+use App\Supplier;
 
 // Транслитерация
 // use Illuminate\Support\Str;
@@ -13,6 +14,18 @@ trait CompanyControllerTrait
 {
 	public function createCompany($request)
     {
+
+        // Подготовка: -------------------------------------------------------------------------------------
+
+        // Получаем данные для авторизованного пользователя
+        $user_auth = $request->user();
+
+        // Скрываем бога
+        $user_auth_id = hideGod($user_auth);
+        $auth_company_id = $user_auth->company_id;
+
+
+
 
         $company = Company::where('inn', $request->inn)->whereNotNull('inn')->first();
         if(empty($company)){
@@ -73,15 +86,30 @@ trait CompanyControllerTrait
 
                 // Создаем связь
                 $manufacturer = new Manufacturer;
-                $manufacturer->company_id = $company->id;
+                $manufacturer->company_id = $auth_company_id;
                 $manufacturer->manufacturer_id = $company->id;
 
                 // Запись информации по производителю если нужно:
                 // ...
 
                 $manufacturer->save();
-
             }
+
+            // Если компания производит для себя, создадим ее связь с собой как с производителем
+            if($request->supplier_self == 1){
+
+                // Создаем связь
+                $supplier = new Supplier;
+                $supplier->company_id = $auth_company_id;
+                $supplier->supplier_id = $company->id;
+
+                // Запись информации по производителю если нужно:
+                // ...
+
+                $supplier->save();
+            }
+
+
 
 
         } else {
@@ -89,12 +117,23 @@ trait CompanyControllerTrait
             abort(403, 'Ошибка записи компании');
         };
 
-        // dd($company);
+
         return $company;
     }
 
 
     public function updateCompany($request, $company){
+
+
+        // Подготовка: -------------------------------------------------------------------------------------
+
+        // Получаем данные для авторизованного пользователя
+        $user_auth = $request->user();
+
+        // Скрываем бога
+        $user_auth_id = hideGod($user_auth);
+        $auth_company_id = $user_auth->company_id;
+
 
         // Новые данные
         $company_name = $request->company_name ?? $request->name;
@@ -144,13 +183,16 @@ trait CompanyControllerTrait
             setSchedule($request, $company);
             setProcessesType($request, $company);
 
+
+
+
+            // Логика создания на компанию связи: производитель / поставщик / и т.д.
+
             $manufacturer = Manufacturer::where('company_id', $company->id)
             ->where('manufacturer_id', $company->id)
             ->first();
 
-
             if(($manufacturer != null) && ($request->manufacturer_self != null)){
-
 
                 if($manufacturer->archive == 1){
 
@@ -158,15 +200,13 @@ trait CompanyControllerTrait
                     $manufacturer->archive = 0;
                     $manufacturer->save();
                 }
-
             }
-
 
             if(($manufacturer == null) && ($request->manufacturer_self != null)){
 
                     // Создаем связь c нуля
                     $manufacturer = new Manufacturer;
-                    $manufacturer->company_id = $company->id;
+                    $manufacturer->company_id = $auth_company_id;
                     $manufacturer->manufacturer_id = $company->id;
 
                     // Запись информации по производителю если нужно:
@@ -174,7 +214,39 @@ trait CompanyControllerTrait
 
                     $manufacturer->save();
 
+                    // dd("Записали себя производителем!");
             }
+
+            $supplier = Supplier::where('company_id', $company->id)
+            ->where('supplier_id', $company->id)
+            ->first();
+
+            if(($supplier != null) && ($request->supplier_self != null)){
+
+                if($supplier->archive == 1){
+
+                    // Восстанавливаем связь из архива
+                    $supplier->archive = 0;
+                    $supplier->save();
+                }
+            }
+
+            if(($supplier == null) && ($request->supplier_self != null)){
+
+                    // Создаем связь c нуля
+                    $supplier = new Supplier;
+                    $supplier->company_id = $auth_company_id;
+                    $supplier->supplier_id = $company->id;
+
+                    // Запись информации по производителю если нужно:
+                    // ...
+
+                    $supplier->save();
+
+                    // dd("Записали себя поставщиком!");
+            }
+
+
 
 
         }

@@ -167,7 +167,6 @@ class Company extends Model
         return $this->belongsTo('App\Location');
     }
 
-
     // Получаем правовую форму
     public function legal_form()
     {
@@ -300,6 +299,18 @@ class Company extends Model
         return $this->morphMany('App\Feedback', 'feedback');
     }
 
+    public function getManufacturerSelfAttribute($value)
+    {
+        $ms = $this->hasOne('App\Manufacturer', 'manufacturer_id')->where('archive', 0)->first();
+        if($ms == null) {$value = false;} else {$value = true;};
+        return $value;
+    }
 
+    public function getSupplierSelfAttribute($value)
+    {
+        $ms = $this->hasOne('App\Supplier', 'supplier_id')->where('archive', 0)->first();
+        if($ms == null) {$value = false;} else {$value = true;};
+        return $value;
+    }
 
 }

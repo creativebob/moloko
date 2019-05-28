@@ -31,12 +31,12 @@
                 <tr id="thead-content">
                     <th class="td-drop"></th>
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-                    <th class="td-number">Номер заявки</th>
-                    <th class="td-receipt_date">Отправлена</th>
-                    <th class="td-description">Заявка</th>
+                    <th class="td-receipt_date">Дата</th>
+                    <th class="td-number">Номер</th>
                     <th class="td-supplier-name">Поставщик</th>
                     <th class="td-phone">Телефон</th>
                     <th class="td-amount">Сумма</th>
+                    <th class="td-description">Коментарий</th>
                     <th class="td-payment">Оплачено</th>
                     <th class="td-stage">Этап</th>
                     <th class="td-created_at">Создана</th>
@@ -66,54 +66,57 @@
 
                     </td>
 
+                    <td class="td-receipt_date">
+                        <a href="/admin/consignments/{{ $consignment->id }}/edit">
+                        <span>{{ isset($consignment->receipt_date) ? $consignment->receipt_date->format('d.m.Y') : null }}</span></a><br>
+                        <span class="tiny-text">{{ isset($consignment->receipt_date) ? $consignment->receipt_date->format('H:i') : null }}</span>
+                    </td>
+
+
                     <td class="td-number">
                         {{ $consignment->number ?? '' }}
                         <br><span class="tiny-text"></span>
                     </td>
 
-                    <td class="td-receipt_date">
-                        <span>{{ isset($consignment->receipt_date) ? $consignment->receipt_date->format('d.m.Y') : null }}</span><br>
-                        <span class="tiny-text">{{ isset($consignment->receipt_date) ? $consignment->receipt_date->format('H:i') : null }}</span>
-                    </td>
+                      <td class="td-supplier-name">
+
+                          <a href="/admin/consignments?supplier_id%5B%5D={{ $consignment->supplier->id }}" class="filter_link" title="Фильтровать">
+                            {{ $consignment->supplier->company->name }}
+                        </a>
+                        <br>
+                        <span class="tiny-text">
+                            {{ $consignment->supplier->company->location->city->name }}, {{ $consignment->supplier->company->location->address }}
+                        </span>
+                        <td class="td-phone">
+                            {{ isset($consignment->supplier->company->main_phone->phone) ? decorPhone($consignment->supplier->company->main_phone->phone) : 'Номер не указан' }}
+                            @if($consignment->supplier->email)<br><span class="tiny-text">{{ $consignment->supplier->company->email ?? '' }}</span>@endif
+                        </td>
+
+                        <td class="td-amount">{{ num_format($consignment->amount, 0) }}</td>
 
                     <td class="td-description">
 
                         @can('view', $consignment)
-                        <a href="/admin/consignments/{{ $consignment->id }}/edit">
-                            <span data-toggle="dropdown-{{ $consignment->id }}">{{ $consignment->name or '' }}</span></a>
+                        
+                            <span data-toggle="dropdown-{{ $consignment->id }}">{{ $consignment->name ?? '' }}</span>
                             <div class="dropdown-pane bottom right" id="dropdown-{{ $consignment->id }}" data-dropdown data-hover="true" data-hover-pane="true">
-                              {!! $consignment->description or '' !!}
+                              {!! $consignment->description ?? '' !!}
                           </div>
                           @else
                           {{ $consignment->name ?? '' }}
                           @endcan
 
-                      </td>
+                    </td>
 
-                      <td class="td-supplier-name">
-
-                          <a href="/admin/consignments?supplier_id%5B%5D={{ $consignment->supplier->id }}" class="filter_link" title="Фильтровать">
-                            {{ $consignment->supplier->name }}
-                        </a>
-                        <br>
-                        <span class="tiny-text">
-                            {{ $consignment->supplier->location->city->name }}, {{ $consignment->supplier->location->address }}
-                        </span>
-                        <td class="td-phone">
-                            {{ isset($consignment->supplier->main_phone->phone) ? decorPhone($consignment->supplier->main_phone->phone) : 'Номер не указан' }}
-                            @if($consignment->supplier->email)<br><span class="tiny-text">{{ $consignment->supplier->email or '' }}</span>@endif
-                        </td>
-
-                        <td class="td-amount">{{ num_format($consignment->amount, 0) }}</td>
                         <td class="td-payment">{{ num_format($consignment->payment, 0) }}
                           <br><span class="tiny-text">{{ num_format($consignment->amount - $consignment->payment, 0) }}</span>
                       </td>
-                      <td class="td-stage">{{ $consignment->stage->name or '' }}</td>
+                      <td class="td-stage">{{ $consignment->stage->name ?? '' }}</td>
                       <td class="td-created_at">
                         <span>{{ $consignment->created_at->format('d.m.Y') }}</span><br>
                         <span class="tiny-text">{{ $consignment->created_at->format('H:i') }}</span>
                     </td>
-                    <td class="td-author">{{ $consignment->author->name or '' }}</td>
+                    <td class="td-author">{{ $consignment->author->name ?? '' }}</td>
                     <td class="td-delete">
                       @if ($consignment->system_item !== 1)
                       @can('delete', $consignment)

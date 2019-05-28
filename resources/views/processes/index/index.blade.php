@@ -66,8 +66,8 @@
                         <label class="label-check" for="check-{{ $item->id }}"></label>
                     </td>
                     <td class="td-photo">
-                        <a href="/admin/{{ $entity }}/{{ $item->id }}/edit">
-                            <img src="{{ getPhotoPath($item->process, 'small') }}" alt="{{ isset($item->process->photo_id) ? $item->process->name : 'Нет фото' }}">
+                        <a href="/admin/raws/{{ $raw->id }}/edit">
+                            <img src="{{ getPhotoPathPlugEntity($item, 'small') }}" alt="{{ isset($item->process->photo_id) ? $item->process->name : 'Нет фото' }}">
                         </a>
                     </td>
                     <td class="td-name">

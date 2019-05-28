@@ -3,6 +3,9 @@
 use Carbon\Carbon;
 use App\LegalForm;
 
+use App\FirstName;
+use App\Surname;
+
 function num_format($number, $value) {
 
     $result = number_format($number, $value, ',', ' ');
@@ -524,6 +527,288 @@ function getDeadline ($schedule = null, $seconds) {
         return Carbon::createFromTimestamp(now()->timestamp + $seconds);
     }
 }
+
+
+
+// Функция которая принимает строчку текста, а отдает массив с именем, фамилией, отчеством и полом
+function getNameUser($string) {
+
+            $crop_name = explode(' ', $string);
+            Log::info('Пробуем разбить пришедшее имя на части');
+
+            // Подготовительный этап
+
+            $first_names = FirstName::get();
+            $surnames = Surname::get();
+
+
+            $result['gender'] = 1;
+
+            $count = count($crop_name);
+            Log::info('Кол-во элементов: ' . $count);
+
+            // Формируем массив
+            $parts = [];
+            foreach($crop_name as $key => $item){
+
+                $parts[$key]['value'] = Str::title($item);
+                Log::info($parts[$key]['value']);
+
+                $parts[$key]['opinion'] = false;
+                $parts[$key]['gender'] = false;
+
+                // Даем нулевые вероятности по каждому предположению
+                $parts[$key]['odds_first_name'] = 0;
+                $parts[$key]['odds_second_name'] = 0;
+                $parts[$key]['odds_patronymic'] = 0;
+
+            }
+
+            // dd($parts);
+
+            // ---------- СТАТИСТИЧЕСКИЙ МЕТОД ПРЕДПОЛОЖЕНИЯ
+
+            Log::info('СТАТИСТИЧЕСКИЙ МЕТОД!');
+            if($count == 1){
+
+                // Система предполагает, что это имя
+                $parts[0]['opinion'] = 'first_name';
+                $parts[0]['odds_first_name'] = $parts[0]['odds_first_name'] + 1;
+            };
+
+            if($count == 2){
+
+                // Система предполагает, что это имя и фамилия
+                $parts[0]['opinion'] = 'first_name';
+                $parts[0]['odds_first_name'] = $parts[0]['odds_first_name'] + 1;
+
+                $parts[1]['opinion'] = 'second_name';
+                $parts[1]['odds_second_name'] = $parts[0]['odds_second_name'] + 1;
+
+            };
+
+            if($count == 3){
+
+                // Система предполагает, что это фамилия, имя и отчество
+                $parts[0]['opinion'] = 'second_name';
+                $parts[0]['odds_second_name'] = $parts[0]['odds_second_name'] + 1;
+
+                $parts[1]['opinion'] = 'first_name';
+                $parts[1]['odds_first_name'] = $parts[1]['odds_first_name'] + 1;
+
+                $parts[2]['opinion'] = 'patronymic';
+                $parts[2]['odds_patronymic'] = $parts[2]['odds_patronymic'] + 1;
+            };
+
+            // dd($parts);
+
+
+            // ---------- СИНТАКСИЧЕСКИЙ МЕТОД ПРЕДПОЛОЖЕНИЯ
+
+            // Система анализирует окончание слова и создает новые синтаксические предположения
+
+            for($x = 0; $count > $x; $x = $x + 1){
+
+                Log::info('СИНТАКСИЧЕСКИЙ МЕТОД:');
+
+                if(Str::endsWith($parts[$x]['value'], array('ов', 'ко', 'ин', 'ский', 'чин', 'цкий'))){
+                    $parts[$x]['opinion'] = 'second_name';
+                    $parts[$x]['gender'] = 1;
+
+                    $parts[$x]['odds_second_name'] = $parts[$x]['odds_second_name'] + 10;
+                    Log::info('Обнаружены признаки мужской фамилии в ' . $parts[$x]['value']);
+                }
+
+                if(Str::endsWith($parts[$x]['value'], array('ова', 'ина', 'ская', 'чина', 'цкая'))){
+                    $parts[$x]['opinion'] = 'second_name';
+                    $parts[$x]['gender'] = 0;
+
+                    $parts[$x]['odds_second_name'] = $parts[$x]['odds_second_name'] + 10;
+                    Log::info('Обнаружены признаки женской фамилии в ' . $parts[$x]['value']);
+                }
+
+
+                if(Str::endsWith($parts[$x]['value'], array('вич'))){
+                    $parts[$x]['opinion'] = 'patronymic';
+                    $parts[$x]['gender'] = 1;
+
+                    $parts[$x]['odds_patronymic'] = $parts[$x]['odds_patronymic'] + 10;
+                    Log::info('Обнаружены признаки мужского отчества в ' . $parts[$x]['value']);
+                }
+
+                if(Str::endsWith($parts[$x]['value'], array('вна'))){
+                    $parts[$x]['opinion'] = 'patronymic';
+                    $parts[$x]['gender'] = 0;
+
+                    $parts[$x]['odds_patronymic'] = $parts[$x]['odds_patronymic'] + 10;
+                    Log::info('Обнаружены признаки женского отчества в ' . $parts[$x]['value']);
+                }
+
+
+
+                // ---------- ТОЧНЫЙ МЕТОД ПРЕДПОЛОЖЕНИЯ
+
+                // Система смотрит в базу имен
+                Log::info('ТОЧНЫЙ МЕТОД:');
+
+                Log::info('Смотрим в базу имен');
+                $first_name_base = $first_names->where('name', $parts[$x]['value']);
+                if($first_name_base->count() == 1){
+
+                    $parts[$x]['base'] = true;
+                    $parts[$x]['opinion'] = 'first_name';
+                    $parts[$x]['gender'] = $first_name_base->first()->gender;
+
+                    // $result['first_name'] = $parts[$x]['value'];
+
+                    $parts[$x]['odds_first_name'] = $parts[$x]['odds_first_name'] + 50;
+                    Log::info('Имя найдено!');
+
+                } else {
+                    Log::info('Имя НЕ найдено!');
+                };
+
+
+                Log::info('Смотрим в базу мужских отчеств');
+                $patronymic_male_base = $first_names->where('patronymic_male', $parts[$x]['value']);
+                if($patronymic_male_base->count() == 1){
+
+                    $parts[$x]['base'] = true;
+                    $parts[$x]['opinion'] = 'patronymic';
+                    $parts[$x]['gender'] = $patronymic_male_base->first()->gender;
+
+                    // $result['gender'] = $patronymic_male_base->first()->gender;
+                    // $result['patronymic'] = $parts[$x]['value'];
+
+                    $parts[$x]['odds_patronymic'] = $parts[$x]['odds_patronymic'] + 50;
+                    Log::info('Мужское отчество найдено!');
+
+                };
+
+                Log::info('Смотрим в базу женских отчеств');
+                $patronymic_female_base = $first_names->where('patronymic_female', $parts[$x]['value']);
+                if($patronymic_female_base->count() == 1){
+
+                    $parts[$x]['base'] = true;
+                    $parts[$x]['opinion'] = 'patronymic';
+                    $parts[$x]['gender'] = $patronymic_female_base->first()->gender;
+
+                    // $result['gender'] = $patronymic_female_base->first()->gender;
+                    // $result['patronymic'] = $parts[$x]['value'];
+
+                    $parts[$x]['odds_patronymic'] = $parts[$x]['odds_patronymic'] + 50;
+                    Log::info('Женское отчество найдено!');
+
+                };
+
+
+
+                    // Система продолжает поиск в базе фамилий
+                    // Смотрим в мужских фамилиях
+                    $surname_male_base = $surnames->where('surname_male', $parts[$x]['value']);
+                    Log::info('Результат поиска "' . $parts[$x]['value'] . '" в male: ' . $surname_male_base);
+
+                    if($surname_male_base->count() == 1){
+
+                        $parts[$x]['base'] = true;
+                        $parts[$x]['opinion'] = 'second_name';
+                        $parts[$x]['gender'] = 1;
+
+                        // $result['second_name'] = $parts[$x]['value'];
+                        // $result['gender'] = 1;
+
+                        $parts[$x]['odds_second_name'] = $parts[$x]['odds_second_name'] + 50;
+                        Log::info('Найдена мужская фамилия!');
+
+                    } else {
+                        Log::info('Фамилия в мужской базе фамилий не найдена!');
+                    }
+
+                    // Смотрим в женских фамилиях
+                    $surname_female_base = $surnames->where('surname_female', $parts[$x]['value']);
+                    Log::info('Результат поиска "' . $parts[$x]['value'] . '" в female: ' . $surname_female_base);
+
+                    if($surname_female_base->count() == 1){
+
+                        $parts[$x]['base'] = true;
+                        $parts[$x]['opinion'] = 'second_name';
+                        $parts[$x]['gender'] = 0;
+
+                        // $result['second_name'] = $parts[$x]['value'];
+                        // $result['gender'] = 0;
+
+                        $parts[$x]['odds_second_name'] = $parts[$x]['odds_second_name'] + 50;
+                        Log::info('Найдена женская фамилия!');
+
+                    } else {
+                        Log::info('Фамилия в женской базе фамилий не найдена!');
+                    }
+
+                    Log::info($parts);
+
+
+            } // Конец for
+
+            // Формируем массив по вероятностям
+            $odds = [];
+
+            // Ищем имя
+
+            $first_name_max = 0;
+            $second_name_max = 0;
+            $patronymic_max = 0;
+
+            for($x = 0; $count > $x; $x = $x + 1){
+
+                if($parts[$x]['odds_first_name'] > $first_name_max){
+                    $first_name_max = $parts[$x]['odds_first_name'];
+                    $result['first_name'] = $parts[$x]['value'];
+                    $result['gender'] = $parts[$x]['gender'];
+                }
+
+                if($parts[$x]['odds_second_name'] > $second_name_max){
+                    $second_name_max = $parts[$x]['odds_second_name'];
+                    $result['second_name'] = $parts[$x]['value'];
+                }
+
+                if($parts[$x]['odds_patronymic'] > $patronymic_max){
+                    $patronymic_max = $parts[$x]['odds_patronymic'];
+                    $result['patronymic'] = $parts[$x]['value'];
+                }
+
+            }
+
+
+
+            // dd($result);
+
+            // Подводим итоги:
+            // for($x = 0; $count > $x; $x = $x + 1){
+
+            //     if((!isset($result['first_name']))&&(!isset($parts[$x]['base']))){
+
+            //         $result['first_name'] = $odds['first_name'];
+            //         $result['gender'] = $parts[$x]['gender'];
+            //     }
+
+            //     if((!isset($result['second_name']))&&(!isset($parts[$x]['base']))){
+                    
+            //         $result['second_name'] = $odds['second_name'];
+            //         $result['gender'] = $parts[$x]['gender'];
+            //     }
+
+            //     if((!isset($result['patronymic']))&&(!isset($parts[$x]['base']))){
+                    
+            //         $result['patronymic'] = $odds['patronymic'];
+            //         $result['gender'] = $parts[$x]['gender']; 
+            //     }
+            // }
+
+            return $result;
+
+}
+
+
 
 
 ?>

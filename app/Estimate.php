@@ -77,9 +77,9 @@ class Estimate extends Model
     }
 
     // Состав
-    public function workflows()
-    {
-        return $this->hasMany('App\Workflow', 'estimate_id');
-    }
+    // public function workflows()
+    // {
+    //     return $this->hasMany('App\Workflow', 'estimate_id');
+    // }
 
 }

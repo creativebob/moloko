@@ -23,6 +23,8 @@ class CreateClientsTable extends Migration
             $table->bigInteger('loyalty_id')->nullable()->unsigned()->default(4)->comment('Id лояльности');
             $table->foreign('loyalty_id')->references('id')->on('loyalties');
 
+            $table->boolean('archive')->default(0)->comment('Статус архива');
+
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');

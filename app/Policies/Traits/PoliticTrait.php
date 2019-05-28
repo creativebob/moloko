@@ -84,7 +84,7 @@ trait PoliticTrait
                 ($entity_name == 'regions')||
                 ($entity_name == 'areas')||
                 // ($entity_name == 'positions')||
-                // ($entity_name == 'entities')
+                ($entity_name == 'entities')||
                 ($entity_name == 'sectors')
             ){
 

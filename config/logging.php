@@ -89,6 +89,13 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        'test' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/test.log'),
+            'level' => 'info',
+        ],
+
     ],
 
 ];

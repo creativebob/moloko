@@ -365,6 +365,36 @@ function getPhotoPath($item, $size = 'medium') {
     }
 }
 
+// Путь до картинки-заглушки экземпляра
+function getPhotoPathPlugEntity($item, $size = 'medium') {
+
+    if(isset($item->process)) {
+        if(isset($item->process->photo_id)) {
+
+            $path = "/storage/" . $item->process->company_id . "/media/" . $item->process->getTable() . "/" . $item->process->id . "/img/" . $size . "/" . $item->process->photo->name;
+            return $path;
+
+        } else {
+
+            return '/crm/img/plug/' . $item->getTable() . '_small_default_color.jpg';
+        }
+    }
+
+    if(isset($item->article)) {
+        if(isset($item->article->photo_id)) {
+
+            $path = "/storage/" . $item->article->company_id . "/media/" . $item->article->getTable() . "/" . $item->article->id . "/img/" . $size . "/" . $item->article->photo->name;
+            return $path;
+
+        } else {
+
+            return '/crm/img/plug/' . $item->getTable() . '_small_default_color.jpg';
+        }
+    }
+
+}
+
+
 // Путь до фотки в альбоме
 function getPhotoInAlbumPath($photo, $size = 'medium') {
 

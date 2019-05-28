@@ -55,7 +55,6 @@ use App\AlbumsCategory;
 use App\PhotoSetting;
 
 use App\Photo;
-use App\Folder;
 
 use App\ServicesArticle;
 use App\ServicesCategory;
@@ -136,7 +135,6 @@ use App\Policies\AlbumsCategoryPolicy;
 use App\Policies\PhotoSettingPolicy;
 
 use App\Policies\PhotoPolicy;
-use App\Policies\FolderPolicy;
 
 use App\Policies\ServicePolicy;
 use App\Policies\ServicesCategoryPolicy;
@@ -268,7 +266,6 @@ class AuthServiceProvider extends ServiceProvider
         AlbumsCategory::class => AlbumsCategoryPolicy::class,
         PhotoSetting::class => PhotoSettingPolicy::class,
         Photo::class => PhotoPolicy::class,
-        Folder::class => FolderPolicy::class,
 
         // Услуги
         Service::class => ServicePolicy::class,
