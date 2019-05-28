@@ -50,14 +50,14 @@ class EstimateController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
-        // dd($orders);
+        // dd($estimates);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
         $filter = setFilter($this->entity_alias, $request, [
-            'client',               // Клиенты
+            // 'client',               // Клиенты
             'booklist'              // Списки пользователя
         ]);
 
@@ -104,56 +104,56 @@ class EstimateController extends Controller
         //
     }
 
-    public function ajax_check(Request $request)
-    {
+    // public function ajax_check(Request $request)
+    // {
 
-        // Получаем авторизованного пользователя
-        $user = $request->user();
+    //     // Получаем авторизованного пользователя
+    //     $user = $request->user();
 
-        $user_id = hideGod($user);
-        $company_id = $user->company_id;
+    //     $user_id = hideGod($user);
+    //     $company_id = $user->company_id;
 
-        // Находим или создаем заказ для лида
-        $estimate = Estimate::firstOrCreate([
-            'lead_id' => $request->lead_id,
-            // 'draft' => 1,
-            'company_id' => $company_id
-        ], [
-            'author_id' => $user_id
-        ]);
-        // $order = Order::firstOrCreate(['lead_id' => 9443, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
+    //     // Находим или создаем заказ для лида
+    //     $estimate = Estimate::firstOrCreate([
+    //         'lead_id' => $request->lead_id,
+    //         // 'draft' => 1,
+    //         'company_id' => $company_id
+    //     ], [
+    //         'author_id' => $user_id
+    //     ]);
+    //     // $order = Order::firstOrCreate(['lead_id' => 9443, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
 
-        // Находим сущность
-        $entity = Entity::where('alias', $request->entity)->first();
-        // $entity = Entity::where('alias', 'goods')->first();
+    //     // Находим сущность
+    //     $entity = Entity::where('alias', $request->entity)->first();
+    //     // $entity = Entity::where('alias', 'goods')->first();
 
-        // Формируем позицию заказа
-        $workflow = new Workflow;
+    //     // Формируем позицию заказа
+    //     $workflow = new Workflow;
 
-        $workflow->product_id = $request->item_id;
-        // $composition->order_compositions_id = 1;
-        $workflow->product_type = 'App\\' . $entity->model;
+    //     $workflow->product_id = $request->item_id;
+    //     // $composition->order_compositions_id = 1;
+    //     $workflow->product_type = 'App\\' . $entity->model;
 
-        $workflow->estimate_id = $estimate->id;
-        $workflow->company_id = $company_id;
-        $workflow->author_id = $user_id;
-        $workflow->count = 1;
-        $workflow->save();
+    //     $workflow->estimate_id = $estimate->id;
+    //     $workflow->company_id = $company_id;
+    //     $workflow->author_id = $user_id;
+    //     $workflow->count = 1;
+    //     $workflow->save();
 
-        // dd($composition->product);
+    //     // dd($composition->product);
 
-        // $composition->notes()->save($note);
+    //     // $composition->notes()->save($note);
 
-        // $order->compositions()->associate($composition)->save();
+    //     // $order->compositions()->associate($composition)->save();
 
-        return view('leads.item_for_estimate', compact('workflow'));
+    //     return view('leads.item_for_estimate', compact('workflow'));
 
-    }
+    // }
 
-    public function ajax_destroy_composition(Request $request, $id)
-    {
+    // public function ajax_destroy_composition(Request $request, $id)
+    // {
 
-        return response()->json(Workflow::destroy($id));
+    //     return response()->json(Workflow::destroy($id));
 
-    }
+    // }
 }

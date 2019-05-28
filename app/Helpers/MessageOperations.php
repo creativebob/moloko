@@ -19,7 +19,32 @@ function lead_info($message, $lead){
 }
 
 
+// Формируем сообщения (логи) для тестов
+function response_status_info($status, $page = ''){
 
+	switch ($status) {
+
+		case 200:
+			$status_info = 'Страница ' . $page . ' доступна';
+		break;
+		case 302:
+			$status_info = 'Со страницы ' . $page . ' выполнен РЕДИРЕКТ на другую страницу';
+		break;
+		case 404:
+			$status_info = 'Страница ' . $page . ' НЕ доступна (404)';
+		break;
+		case 403:
+			$status_info = 'На странице ' . $page . ' Доступ закрыт! (403) -------------------------------- ';
+		break;
+		case 500:
+			$status_info = 'На странице ' . $page . ' ОШИБКА СЕРВЕРА (500) ================================== ';
+		break;
+		default:
+			$status_info = 'На странице ' . $page . ' ПРОИЗОШЛА НЕВЕДОМАЯ ХУЙНЯ С КОДОМ: ' . $status;
+	}
+
+	return $status_info;
+}
 
 
 

@@ -4,6 +4,9 @@
 use App\User;
 use App\Company;
 use App\Phone;
+use App\FirstName;
+use App\Surname;
+// use Carbon\Carbon;
 
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
@@ -19,43 +22,61 @@ use Faker\Generator as Faker;
 |
 */
 
-
 $companies_count = Company::count();
 
-$factory->define(User::class, function (Faker $faker) use ($companies_count) {
+// Получаем список справочных имен и отчеств
+$first_names = FirstName::get();
+
+// Получаем список справочных фамилий
+$surnames = Surname::get();
+
+$factory->define(User::class, function (Faker $faker) use ($companies_count, $first_names, $surnames) {
+
+    $first_names_male = $first_names->where('gender', 1);
+    $first_names_female = $first_names->where('gender', 0);
+
+    $first_names_random = $first_names->random();
 
 
+    if($first_names_random->gender == 1){
 
+        $first_name = $first_names_male->random()->name;
+        $patronymic = $first_names_male->random()->patronymic_male;
+        $second_name = $surnames->random()->surname_male;
 
+    } else {
 
+        $first_name = $first_names_female->random()->name;
+        $patronymic = $first_names_male->random()->patronymic_female;
+        $second_name = $surnames->random()->surname_female;
+
+    };
 	
-    return [
-        'login' => $faker->userName,
 
+    return [
+        'login' => $faker->unique()->userName,
         'company_id' => rand(1, $companies_count),
 
-        'first_name' => $faker->firstName,
-        'second_name' => $faker->lastName,
+        'first_name' => $first_name,
+        'second_name' => $second_name,
+        'patronymic' => $patronymic,
 
-        // 'first_name' => $faker->randomElement(array('Андрей', 'Илья', 'Сергей', 'Иван', 'Евгений', 'Александр', 'Николай', 'Василий', 'Роман', 'Юрий', 'Степан', 'Виктор')),
-
-        // 'second_name' => $faker->randomElement(array('Иванов', 'Петров', 'Сидоров', 'Хворин', 'Гудков', 'Гербудов', 'Веллер', 'Хаджикулов', 'Суриков', 'Чичваркин', 'Алибасов', 'Нордников', 'Лермонтов')),
-
-        'patronymic' => $faker->firstName,
         'nickname' => $faker->userName,
-        'sex' => $faker->boolean,
-        // 'birthday' => $faker->date($format = 'Y-m-d', $max = 'now'),
+        'sex' => $first_names_random->gender,
+        'birthday' => $faker->dateTimeBetween('-80 years', '-18 years')->format('d.m.Y'),
 
         'user_inn' => $faker->unique()->regexify("[0-9]{12}"),
         'passport_address' => $faker->address,
         'passport_number' => $faker->unique()->regexify("[0-9]{10}"),
-        'passport_released' => $faker->word(5),
-        // 'passport_date' => $faker->date($format = 'Y-m-d', $max = 'now'),
+
+        'passport_released' => $faker->randomElement($array = array('РОВД', 'ОМ-2', 'ОМ-1', 'МВД', 'Районный отдел внутренних дел')) . ' ' . $faker->randomElement($array = array('города ', 'г. ')) . $faker->randomElement($array = array('Урюпинска', 'Орел', 'Иркутска', 'Загорска')),
+
+        'passport_date' => $faker->dateTimeBetween('-80 years', 'now')->format('d.m.Y'),
 
         'about' => $faker->paragraph(),
-        'specialty' => $faker->word(10),
-        'degree' => $faker->word(8),
-        'quote' => $faker->text(5),
+        'specialty' => $faker->randomElement(array('Экономист', 'Стоматолог', 'Учитель русского языка', 'Врач травматолог', 'Продавец', 'Нарколог', 'Инжерер', 'Механик', 'Водитель', 'Воспитатель', 'Юрист', 'Сантехник', 'Эколог', 'Уфолог', 'Главный специалист', 'Ветеринар', 'Администратор', 'Бармен')),
+        'degree' => $faker->randomElement(array('Специаист', 'Доктор', 'Профессор', null)),
+        'quote' => $faker->text(30),
 
         'email' => $faker->unique()->safeEmail,
         'email_verified_at' => now(),

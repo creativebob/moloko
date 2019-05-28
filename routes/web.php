@@ -766,9 +766,6 @@ Route::resource('/roleuser', 'RoleUserController')->middleware('auth');
 // Основные методы
 Route::resource('/entities', 'EntityController')->middleware('auth');
 
-// Маршруты для папок (директорий)
-Route::resource('/folders', 'FolderController')->middleware('auth');
-
 // Авторизуемся под выбранной компанией
 Route::get('/getauthcompany/{company_id}', 'UserController@getauthcompany')->middleware('auth')->name('users.getauthcompany');
 

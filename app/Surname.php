@@ -14,13 +14,19 @@ use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
+// Подключаем кеш
+use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+
 // Фильтры
 // use App\Scopes\Filters\Filter;
 // use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class Folder extends Model
+class Surname extends Model
 {
+
+    // Включаем кеш
+    use Cachable;
 
     use SoftDeletes;
 
@@ -36,12 +42,15 @@ class Folder extends Model
     // use Filter;
     // use BooklistFilter;
     // use DateIntervalFilter;
-    
+
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'folder_name',
-        'folder_alias',
-        'folder_parent_id',
+        'surname_male',
+        'surname_female',
     ];
+    
+
+    // ------------------------------------- Отношения -----------------------------------------
+
 
 }

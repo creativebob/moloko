@@ -196,10 +196,13 @@ trait UserControllerTrait
 
         // Логин:
         if(!isset($request->login)){
+            
+            if($user->login == null){
 
-            // Если не указан логин, то генерируем
-            $user_number = User::all()->last()->id;
-            $user->login = 'user_'.$user_number;
+                // Если не указан логин, то генерируем
+                $user_number = User::all()->last()->id;
+                $user->login = 'user_'.$user_number;
+            }
 
         } else {
 

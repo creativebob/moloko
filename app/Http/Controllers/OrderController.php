@@ -57,7 +57,7 @@ class OrderController extends Controller
         // -----------------------------------------------------------------------------------------------------------
 
         $filter = setFilter($this->entity_alias, $request, [
-            'client',               // Клиенты
+            // 'client',               // Клиенты
             'booklist'              // Списки пользователя
         ]);
 

@@ -12,17 +12,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UserTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
+
     public function testExample()
     {
 
 
         // Генерируем пользователей
-        $user = factory(User::class, 1)->create();
+        $users_fakes = factory(User::class, 30)->create();
 
 
         // Определяем список пользователей под которыми будем тестировать
@@ -35,21 +31,45 @@ class UserTest extends TestCase
             $user = User::where('login', $user_login)->first();
             $response = $this->actingAs($user)->get('admin/getaccess');
 
+            $user_fake = $users_fakes->random();
 
-            Log::channel('test')->info('========================================= ТЕСТ USERS для ' . $user_login . ' ============================================');
-            $response = $this->call('GET', 'admin/users'); // Пример своего запроса
 
-            $response->assertSee('Пользователи');
+            Log::channel('test')->info('===================================== ТЕСТ USERS для ' . $user_login . ' ======================================');
 
-            Log::channel('test')->info('                                             === КОНЕЦ === ');
+                $entity = 'users';
+
+                $page = $entity;
+                $response = $this->call('GET', 'admin/'. $page); // Пример своего запроса
+                $status = $response->status();
+                Log::channel('test')->info(response_status_info($status, $page));
+
+
+                $page = $entity . '/create';
+                $response = $this->call('GET', 'admin/'. $page); // Пример своего запроса
+                $status = $response->status();
+                Log::channel('test')->info(response_status_info($status, $page));
+
+
+                $answer = operator_right('users', true, 'edit');
+                $user = User::moderatorLimit($answer)->get()->random();
+
+                // Подключение политики
+                // $this->authorize('edit', $user);
+
+                $page = $entity . '/' . $user->id . '/edit';
+                $response = $this->call('GET', 'admin/'. $page); // Пример своего запроса
+                $status = $response->status();
+                Log::channel('test')->info(response_status_info($status, $page));
+
+                // $response->assertStatus(200);
+                // $response->assertForbidden();
+
+            Log::channel('test')->info('
+
+                                                           ');
 
 
         }
-
-
-
-
-
 
 
 

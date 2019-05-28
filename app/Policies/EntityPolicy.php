@@ -60,7 +60,7 @@ class EntityPolicy
         return $result;
     }
 
-    public function system(User $user, City $model)
+    public function system(User $user, Entity $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
         return $result;

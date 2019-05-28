@@ -47,6 +47,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 // Подрубаем трейт записи и обновления компании
 use App\Http\Controllers\Traits\CompanyControllerTrait;
@@ -130,7 +131,6 @@ class ClientController extends Controller
         // $this->authorize(getmethod(__FUNCTION__), Company::class);
         // $this->authorize(getmethod(__FUNCTION__), User::class);
 
-        $new_user = new User;
         $new_company = new Company;
 
         $new_company->name = $request->company_name;
@@ -174,19 +174,7 @@ class ClientController extends Controller
         }
 
             // Обработка входящих данных ------------------------------------------
-
-            // Можно будет использовать машиное обучение
-
-
-            // $crop_name = explode(' ', $request->name);
-            // Log::info('Пробуем разбить пришедшее имя на части');
-
-            // if(isset($crop_name[0])){$first_name_gen = $crop_name[0];};
-            // if(isset($crop_name[1])){$second_name_gen = $crop_name[1];};
-            // if(isset($crop_name[2])){$patronymic_gen = $crop_name[2];};
-
-            // Конец обработки ------------------------------------------------------
-
+            $mass_names = getNameUser($request->name);
 
             $search_user = User::whereHas('phones', function($q) use ($main_phone){
                 $q->where('phone', $main_phone);
@@ -195,30 +183,44 @@ class ClientController extends Controller
             // Если не найден, то создаем
             if(!isset($search_user)){
 
+                $new_user = $this->createUserByPhone($request->main_phone);
 
                 // ПОДСТАНОВКА в случае отсутствия
 
-                $new_user->first_name = $first_name_gen ?? $request->name ?? 'Укажите фамилию';
-                $new_user->second_name = $second_name_gen ?? null;
-                $new_user->patronymic = $patronymic_gen ?? null;
+                $new_user->first_name = $mass_names['first_name'] ?? $request->name ?? 'Укажите фамилию';
+                $new_user->second_name = $mass_names['second_name'] ?? null;
+                $new_user->patronymic = $mass_names['patronymic'] ?? null;
+                $new_user->sex = $mass_names['gender'] ?? 1;
 
                 $new_user->email = $request->email;
+                $new_user->save();
 
             } else {
 
+                // Log::info('ПОДТВЕРЖДАЕМ ЗАПИСЬ ОТЧЕСТВА: ' . $new_user->patronymic);
                 $new_user = $search_user;
-                if(($new_user->first_name == null)&&($new_user->first_name == null)){
 
-                    // Если поля имя и отчество не заполнены
-                    if(isset($first_name_gen)){
-                        $new_user->first_name = $first_name_gen;
+                if($new_user->first_name == null){
+                    if(isset($mass_names['first_name'])){
+                        $new_user->first_name = $mass_names['first_name'];
+                        $new_user->sex = $mass_names['gender'];
                     }
-
-                    if(isset($second_name_gen)){
-                        $new_user->second_name = $second_name_gen;
-                    }
-
                 }
+
+                if($new_user->second_name == null){
+                    if(isset($mass_names['second_name'])){
+                        $new_user->second_name = $mass_names['second_name'];
+                    }
+                }
+
+                if($new_user->patronymic == null){
+                    if(isset($mass_names['patronymic'])){
+                        $new_user->patronymic = $mass_names['patronymic'];
+                    }
+                }
+
+                $new_user->save();
+
             };
 
 

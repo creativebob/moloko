@@ -221,8 +221,7 @@ class LeadController extends Controller
                 $query->with('challenge_type')
                 ->whereNull('status')
                 ->orderBy('deadline_date', 'asc');
-            },
-            'estimates.workflows.product'
+            } // Вырезан фрагмент: ,'estimates.workflows.product'
         ])
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null

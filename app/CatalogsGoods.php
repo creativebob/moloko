@@ -17,8 +17,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-чччччччччччччччччччччччччччччччччччччччч
-
 class CatalogsGoods extends Model
 {
     // Включаем кеш

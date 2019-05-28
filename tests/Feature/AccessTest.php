@@ -22,6 +22,7 @@ class AccessTest extends TestCase
     public function testExample()
     {
 
+
         $user_login_array = ['creativebob', 'testovik'];
         foreach($user_login_array as $user_login){
 
@@ -35,65 +36,20 @@ class AccessTest extends TestCase
 
             ');
 
+
             $entities = Entity::all();
             foreach($entities as $entity){
 
                 $page = $entity->alias;
-                $response = $this->call('GET', 'admin/'. $page . '/create'); // Пример своего запроса
-
-                // $response->assertStatus(200);
-                // $response->assertForbidden();
-
-
+                $response = $this->call('GET', 'admin/'. $page); // Пример своего запроса
                 $status = $response->status();
-                switch ($status) {
-                case 200:
-                    Log::channel('test')->info('Страница ' . $page . ' доступна');
-                    break;
-                case 302:
-                    Log::channel('test')->info('Со страницы ' . $page . ' выполнен РЕДИРЕКТ на другую страницу');
-                    break;
-                case 404:
-                    Log::channel('test')->info('Страница ' . $page . ' НЕ доступна (404)');
-                    break;
-                case 403:
-                    Log::channel('test')->info('На странице ' . $page . ' Доступ закрыт! (403) -------------------------------- ');
-                    break;
-                case 500:
-                    Log::channel('test')->info('На странице ' . $page . ' ОШИБКА СЕРВЕРА (500) ================================== ');
-                    break;
-                default:
-                    Log::channel('test')->info('На странице ' . $page . ' ПРОИЗОШЛА НЕВЕДОМАЯ ХУЙНЯ С КОДОМ: ' . $status);
-                }
+                Log::channel('test')->info(response_status_info($status, $page));
 
 
-
-                $response = $this->call('GET', 'admin/'. $page . '/create'); // Пример своего запроса
-
-                // $response->assertStatus(200);
-                // $response->assertForbidden();
-
-
+                $page = $entity->alias . '/create';
+                $response = $this->call('GET', 'admin/'. $page); // Пример своего запроса
                 $status = $response->status();
-                switch ($status) {
-                case 200:
-                    Log::channel('test')->info('Страница ' . $page . '/create доступна');
-                    break;
-                case 302:
-                    Log::channel('test')->info('Со страницы ' . $page . '/create выполнен РЕДИРЕКТ на другую страницу');
-                    break;
-                case 404:
-                    Log::channel('test')->info('Страница ' . $page . '/create НЕ доступна (404)');
-                    break;
-                case 403:
-                    Log::channel('test')->info('На странице ' . $page . '/create Доступ закрыт! (403) -------------------------------- ');
-                    break;
-                case 500:
-                    Log::channel('test')->info('На странице ' . $page . '/create ОШИБКА СЕРВЕРА (500) ================================== ');
-                    break;
-                default:
-                    Log::channel('test')->info('На странице ' . $page . '/create ПРОИЗОШЛА НЕВЕДОМАЯ ХУЙНЯ С КОДОМ: ' . $status);
-                }
+                Log::channel('test')->info(response_status_info($status, $page));
 
                 Log::channel('test')->info('     ');
 

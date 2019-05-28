@@ -4,29 +4,22 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDealersTable extends Migration
+class CreateFirstNamesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+
     public function up()
     {
-        Schema::create('dealers', function (Blueprint $table) {
+        Schema::create('first_names', function (Blueprint $table) {
+
             $table->bigIncrements('id');
 
-            $table->bigInteger('client_id')->nullable()->unsigned()->comment('ID клиента');
-            $table->foreign('client_id')->references('id')->on('clients');
+            $table->string('name', 40)->index()->comment('Полное имя');
+            $table->boolean('gender', 40)->default(0)->comment('Признак пола (0 - мужской, 1 - женский)');
 
-            $table->bigInteger('discount')->nullable()->unsigned()->comment('Скидка дилера');
-            $table->text('description_dealer')->nullable()->comment('Описание дилера');
-
-            $table->boolean('archive')->default(0)->comment('Статус архива');
+            $table->string('patronymic_male', 40)->nullable()->index()->comment('Отчество для мужчины');
+            $table->string('patronymic_female', 40)->nullable()->index()->comment('Отчество для женщины');
 
             // Общие настройки
-            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
-            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
@@ -40,17 +33,11 @@ class CreateDealersTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        Schema::dropIfExists('dealers');
+        Schema::dropIfExists('first_names');
     }
 }

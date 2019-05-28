@@ -121,6 +121,7 @@ trait LeadControllerTrait
         $user_for_lead = check_user_by_phones($request->main_phone);
         if($user_for_lead != null){
 
+
             // Если есть: записываем в лида ID найденного в системе пользователя
             $lead->user_id = $user_for_lead->id;
 
@@ -129,16 +130,27 @@ trait LeadControllerTrait
             // Если нет: создаем нового пользователя по номеру телефона
             // используя трейт экспресс создание пользователя
             $user_for_lead = $this->createUserByPhone($request->main_phone);
+
+            // Обработка входящих данных ------------------------------------------
+            $mass_names = getNameUser($request->name);
+
+            $user_for_lead->first_name = $mass_names['first_name'] ?? $request->name ?? 'Укажите фамилию';
+            $user_for_lead->second_name = $mass_names['second_name'] ?? null;
+            $user_for_lead->patronymic = $mass_names['patronymic'] ?? null;
+            $user_for_lead->sex = $mass_names['gender'] ?? 1;
+
             $user_for_lead->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
 
             // Если к пользователю нужно добавить инфы, тут можно апнуть юзера: ----------------------------------
 
-                $user_for_lead->nickname = $request->name;
+            $user_for_lead->nickname = $request->name;
 
-                // Компания и филиал ----------------------------------------------------------
-                $user_for_lead->company_id = $company_id;
-                $user_for_lead->filial_id = $filial_id;
-                $user_for_lead->save();
+            // Компания и филиал ----------------------------------------------------------
+            $user_for_lead->company_id = $company_id;
+            $user_for_lead->filial_id = $filial_id;
+            $user_for_lead->save();
+
+            // dd($user_for_lead);
 
             // Конец апдейта юзеара -------------------------------------------------
 
@@ -162,7 +174,7 @@ trait LeadControllerTrait
 
         $lead->save();
 
-        Event::fire(new onAddLeadEvent($lead, $user_auth));
+        // Event::fire(new onAddLeadEvent($lead, $user_auth)); Метод fire упал после апа на Laravel 5.8
 
         if ($lead) {
 

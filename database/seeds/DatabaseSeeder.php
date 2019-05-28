@@ -100,6 +100,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call(LeftoverOperationsTableSeeder::class);
 
+        // Справочные сиды: фамилии и имена
+        $this->call(FirstNamesTableSeeder::class);
+        $this->call(SurnamesTableSeeder::class);
+
         $this->call(StartTableSeeder::class);
 
 
