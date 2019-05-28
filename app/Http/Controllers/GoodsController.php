@@ -132,7 +132,7 @@ class GoodsController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('tmc.index.index', [
+        return view('products.articles.common.index.index', [
             'items' => $goods,
             'page_info' => $page_info,
             'class' => $this->class,
@@ -264,7 +264,7 @@ class GoodsController extends Controller
         // $backlink = url()->previous();
         // Cookie::queue('backlink', $backlink, 1440);
 
-        return view('tmc.create.create', [
+        return view('products.articles.common.create.create', [
             'item' => new $this->class,
             'title' => 'Добавление товара',
             'entity' => $this->entity_alias,
@@ -364,7 +364,7 @@ class GoodsController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('tmc.edit.edit', [
+        return view('products.articles.common.edit.edit', [
             'title' => 'Редактировать товар',
             'item' => $cur_goods,
             'article' => $article,

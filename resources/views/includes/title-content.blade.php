@@ -113,7 +113,7 @@
 					<div class="small-12 cell">
 						{{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
-						@include($page_info->alias.'.filters')
+						@includeIf($page_info->alias.'.filters')
 
 						<div class="small-12 cell text-center">
 							{{ Form::submit('Фильтрация', ['class'=>'button']) }}

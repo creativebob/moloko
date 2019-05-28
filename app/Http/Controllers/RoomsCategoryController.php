@@ -58,7 +58,7 @@ class RoomsCategoryController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('includes.menu_views.category_list',
+            return view('common.accordions.categories_list',
                 [
                     'items' => $rooms_categories,
                     'entity' => $this->entity_alias,
@@ -72,7 +72,7 @@ class RoomsCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('includes.menu_views.index',
+        return view('common.accordions.index',
             [
                 'items' => $rooms_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -94,7 +94,7 @@ class RoomsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('includes.menu_views.create', [
+        return view('common.accordions.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории помещений',
@@ -159,7 +159,7 @@ class RoomsCategoryController extends Controller
         $settings = getSettings($this->entity_alias);
 
         // dd($goods_category->direction);
-        return view('tmc_categories.edit.edit', [
+        return view('products.articles_categories.common.edit.edit', [
             'title' => 'Редактирование категории помещений',
             'category' => $rooms_category,
             'page_info' => $page_info,

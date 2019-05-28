@@ -35,7 +35,7 @@
             @if ($catalogs_goods_items->isNotEmpty())
 
             {{-- Шаблон вывода и динамического обновления --}}
-            @include('includes.menu_views.category_list', [
+            @include('common.accordions.category_list', [
                 'items' => $catalogs_goods_items,
                 'class' => App\CatalogsGoodsItem::class,
                 'entity' => 'catalogs_goods_items',

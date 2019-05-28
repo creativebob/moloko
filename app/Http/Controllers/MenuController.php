@@ -54,7 +54,7 @@ class MenuController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('includes.menu_views.category_list',
+            return view('common.accordions.categories_list',
                 [
                     'items' => $menus,
                     'entity' => $this->entity_alias,

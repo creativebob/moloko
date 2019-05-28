@@ -51,7 +51,7 @@ class AlbumsCategoryController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('includes.menu_views.category_list',
+            return view('common.accordions.categories_list',
                 [
                     'items' => $albums_categories,
                     'entity' => $this->entity_alias,
@@ -65,7 +65,7 @@ class AlbumsCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('includes.menu_views.index',
+        return view('common.accordions.index',
             [
                 'items' => $albums_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -87,7 +87,7 @@ class AlbumsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('includes.menu_views.create', [
+        return view('common.accordions.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории альбомов',
@@ -132,7 +132,7 @@ class AlbumsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);
 
-        return view('includes.menu_views.edit', [
+        return view('common.accordions.edit', [
             'item' => $albums_category,
             'entity' => $this->entity_alias,
             'title' => 'Редактирование категории альбомов',

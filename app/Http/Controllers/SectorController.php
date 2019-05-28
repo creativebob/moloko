@@ -55,7 +55,7 @@ class SectorController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('includes.menu_views.category_list',
+            return view('common.accordions.categories_list',
                 [
                     'items' => $sectors,
                     'entity' => $this->entity_alias,
@@ -69,7 +69,7 @@ class SectorController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('includes.menu_views.index',
+        return view('common.accordions.index',
             [
                 'items' => $sectors,
                 'page_info' => pageInfo($this->entity_alias),
@@ -91,7 +91,7 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('includes.menu_views.create', [
+        return view('common.accordions.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление сектора',
@@ -142,7 +142,7 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
 
-        return view('includes.menu_views.edit', [
+        return view('common.accordions.edit', [
             'item' => $sector,
             'entity' => $this->entity_alias,
             'title' => 'Редактирование сектора',

@@ -68,7 +68,7 @@ class CatalogsGoodsItemController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('includes.menu_views.category_list',
+            return view('common.accordions.categories_list',
                 [
                     'items' => $catalogs_goods_items,
                     'entity' => $this->entity_alias,
@@ -95,7 +95,7 @@ class CatalogsGoodsItemController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
         // dd('lol');
 
-        return view('includes.menu_views.create', [
+        return view('common.accordions.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление пункта каталога',
@@ -153,7 +153,7 @@ class CatalogsGoodsItemController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods_item);
 
-        return view('includes.menu_views.edit', [
+        return view('common.accordions.edit', [
             'item' => $catalogs_goods_item,
             'entity' => $this->entity_alias,
             'title' => 'Редактирование пункта каталога',

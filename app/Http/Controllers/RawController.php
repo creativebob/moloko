@@ -114,7 +114,7 @@ class RawController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('tmc.index.index', [
+        return view('products.articles.common.index.index', [
             'items' => $raws,
             'page_info' => $page_info,
             'class' => $this->class,
@@ -204,7 +204,7 @@ class RawController extends Controller
         //     }
         // }
 
-        return view('tmc.create.create', [
+        return view('products.articles.common.create.create', [
             'item' => new $this->class,
             'title' => 'Добавление сырья',
             'entity' => $this->entity_alias,
@@ -291,7 +291,7 @@ class RawController extends Controller
         $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
 
-        return view('tmc.edit.edit', [
+        return view('products.articles.common.edit.edit', [
             'title' => 'Редактировать сырье',
             'item' => $raw,
             'article' => $article,

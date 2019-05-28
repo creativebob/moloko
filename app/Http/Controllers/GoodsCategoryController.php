@@ -66,7 +66,7 @@ class GoodsCategoryController extends Controller
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('includes.menu_views.category_list',
+            return view('common.accordions.categories_list',
                 [
                     'items' => $goods_categories,
                     'entity' => $this->entity_alias,
@@ -80,7 +80,7 @@ class GoodsCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('includes.menu_views.index',
+        return view('common.accordions.index',
             [
                 'items' => $goods_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -102,7 +102,7 @@ class GoodsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('includes.menu_views.create', [
+        return view('common.accordions.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории товаров',
@@ -178,7 +178,7 @@ class GoodsCategoryController extends Controller
 
         // При добавлении метрики отдаем ajax новый список свойст и метрик
         if ($request->ajax()) {
-            return view('goods_categories.metrics.properties_list', [
+            return view('products.articles_categories.goods_categories.metrics.properties_list', [
                 'category' => $goods_category,
             ]);
         }
@@ -189,7 +189,7 @@ class GoodsCategoryController extends Controller
         $settings = getSettings($this->entity_alias);
 
         // dd($goods_category->direction);
-        return view('tmc_categories.edit.edit', [
+        return view('products.articles_categories.common.edit.edit', [
             'title' => 'Редактирование категории товаров',
             'category' => $goods_category,
             'page_info' => $page_info,

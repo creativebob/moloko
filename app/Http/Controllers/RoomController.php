@@ -114,7 +114,7 @@ class RoomController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('tmc.index.index', [
+        return view('products.articles.common.index.index', [
             'items' => $rooms,
             'page_info' => $page_info,
             'class' => $this->class,
@@ -176,7 +176,7 @@ class RoomController extends Controller
             return view('ajax_error', compact('ajax_error'));
         }
 
-        return view('tmc.create.create', [
+        return view('products.articles.common.create.create', [
             'item' => new $this->class,
             'title' => 'Добавление помещения',
             'entity' => $this->entity_alias,
@@ -264,7 +264,7 @@ class RoomController extends Controller
         $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
 
-        return view('tmc.edit.edit', [
+        return view('products.articles.common.edit.edit', [
             'title' => 'Редактировать помещение',
             'item' => $room,
             'article' => $article,

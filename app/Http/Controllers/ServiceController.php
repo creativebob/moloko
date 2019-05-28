@@ -116,7 +116,7 @@ class ServiceController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('processes.index.index', [
+        return view('products.processes.common.index.index', [
             'items' => $services,
             'page_info' => $page_info,
             'class' => $this->class,
@@ -179,7 +179,7 @@ class ServiceController extends Controller
             return view('ajax_error', compact('ajax_error'));
         }
 
-        return view('processes.create.create', [
+        return view('products.processes.common.create.create', [
             'item' => new $this->class,
             'title' => 'Добавление услуги',
             'entity' => $this->entity_alias,
@@ -269,7 +269,7 @@ class ServiceController extends Controller
         $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
 
-        return view('processes.edit.edit', [
+        return view('products.processes.common.edit.edit', [
             'title' => 'Редактировать услугу',
             'item' => $service,
             'process' => $process,

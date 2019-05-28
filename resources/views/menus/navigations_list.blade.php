@@ -58,7 +58,7 @@ $drop = 1;
 
         @isset($navigation->menus)
         @foreach ($navigation->menus as $menu)
-        @include('includes.menu_views.items_list', ['item' => $menu, 'class' => Menu::class, 'entity' => $menu->getTable(), 'nested' => null, 'type' => 'modal'])
+        @include('common.accordions.items_list', ['item' => $menu, 'class' => Menu::class, 'entity' => $menu->getTable(), 'nested' => null, 'type' => 'modal'])
         @endforeach
         @else
         <li class="empty-item"></li>
