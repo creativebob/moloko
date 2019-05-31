@@ -23,8 +23,8 @@ class CreateUnitsTable extends Migration
 
             $table->text('description')->nullable()->comment('Описание единицы измерения');
 
-            $table->bigInteger('units_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться юнит');
-            $table->foreign('units_category_id')->references('id')->on('units_categories');
+            $table->bigInteger('category_id')->nullable()->unsigned()->comment('Id категории юнитов');
+            $table->foreign('category_id')->references('id')->on('units_categories');
 
 
             // Общие настройки

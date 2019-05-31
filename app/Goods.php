@@ -48,9 +48,8 @@ class Goods extends Model
     // use DateIntervalFilter;
 
     protected $fillable = [
-        'company_id',
+        'category_id',
         'article_id',
-        'goods_category_id',
     ];
 
     // Артикул
@@ -87,7 +86,7 @@ class Goods extends Model
     // Пункты каталога
     public function catalogs_items()
     {
-        return $this->belongsToMany(CatalogsGoodsItem::class, 'price_goods', 'goods_id', 'catalogs_goods_item_id');
+        return $this->belongsToMany(CatalogsGoodsItem::class, 'prices_goods', 'goods_id', 'catalogs_goods_item_id');
     }
 
     // Рабочие процессы

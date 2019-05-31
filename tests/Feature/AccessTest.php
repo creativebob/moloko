@@ -58,7 +58,7 @@ class AccessTest extends TestCase
 
             Log::channel('test')->info('
 
-                                                                     === КОНЕЦ === 
+                                                                     === КОНЕЦ ===
 
             ');
 

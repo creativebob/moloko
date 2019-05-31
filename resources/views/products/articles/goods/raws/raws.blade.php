@@ -20,7 +20,7 @@
 
 				@if ($article->raws->isNotEmpty())
 				@foreach ($article->raws as $raw)
-				@include ('goods.raws.raw_input', $raw)
+				@include ('products.articles.goods.raws.raw_input', $raw)
 				@endforeach
 				@endif
 
@@ -38,7 +38,7 @@
 				<div class="dropdown-pane" id="dropdown-raws" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
 
 					<ul class="checker" id="categories-list">
-						@include('goods.raws.raws_list', ['article' => $article])
+						@include('products.articles.goods.raws.raws_list', ['article' => $article])
 					</ul>
 
 				</div>

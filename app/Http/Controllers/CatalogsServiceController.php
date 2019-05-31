@@ -43,6 +43,7 @@ class CatalogsServiceController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
+        ->template($answer)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
@@ -201,24 +202,7 @@ class CatalogsServiceController extends Controller
     }
 
 
-    public function services(Request $request, $id)
-    {
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $catalogs_service = CatalogsService::with(['items' => function ($q) {
-            $q->with('services')
-            ->whereHas('services');
-        }])
-        ->moderatorLimit($answer)
-        ->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $catalogs_service);
-
-
-        dd($catalogs_service);
-    }
 
     // ------------------------------------------------ Ajax -------------------------------------------------
 

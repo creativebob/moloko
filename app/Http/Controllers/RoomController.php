@@ -17,7 +17,9 @@ use App\Http\Requests\ArticleRequest;
 use Illuminate\Support\Facades\Cookie;
 
 // Трейты
-use App\Http\Controllers\Traits\Tmc\ArticleTrait;
+use App\Http\Controllers\Traits\Articles\ArticleTrait;
+
+use Illuminate\Support\Facades\Log;
 
 class RoomController extends Controller
 {
@@ -190,27 +192,18 @@ class RoomController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
+        Log::channel('operations')
+        ->info('========================================== НАЧИНАЕМ ЗАПИСЬ ПОМЕЩЕНИЯ ==============================================');
+
         $rooms_category = RoomsCategory::findOrFail($request->category_id);
         // dd($goods_category->load('groups'));
         $article = $this->storeArticle($request, $rooms_category);
 
         if ($article) {
 
-            // Получаем данные для авторизованного пользователя
-            $user = $request->user();
-
-            $room = new Room;
-            $room->article_id = $article->id;
-            $room->category_id = $request->category_id;
-
-            $room->display = $request->display;
-            $room->system_item = $request->system_item;
-
-            $room->set_status = $request->has('set_status');
-
-            $room->company_id = $user->company_id;
-            $room->author_id = hideGod($user);
-            $room->save();
+            $data = $request->input();
+            $data['article_id'] = $article->id;
+            $room = (new Room())->create($data);
 
             if ($room) {
 
@@ -219,6 +212,15 @@ class RoomController extends Controller
                 //     'goods_category' => $goods_category_id,
                 // ];
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
+
+                Log::channel('operations')
+                ->info('Записали помещение с id: ' . $room->id);
+                Log::channel('operations')
+                ->info('Автор: ' . $room->author->name . ' id: ' . $room->author_id .  ', компания: ' . $room->company->name . ', id: ' .$room->company_id);
+                Log::channel('operations')
+                ->info('========================================== КОНЕЦ ЗАПИСИ ТОВАРА ==============================================
+
+                    ');
 
                 // dd($request->quickly);
                 if ($request->quickly == 1) {

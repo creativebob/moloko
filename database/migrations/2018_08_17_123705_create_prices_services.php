@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePriceService extends Migration
+class CreatePricesServices extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreatePriceService extends Migration
      */
     public function up()
     {
-        Schema::create('price_service', function (Blueprint $table) {
+        Schema::create('prices_services', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->bigInteger('catalogs_services_item_id')->nullable()->unsigned()->comment('Id пункта каталога');
             $table->foreign('catalogs_services_item_id')->references('id')->on('catalogs_services_items');
+
+            $table->bigInteger('catalogs_service_id')->nullable()->unsigned()->comment('Id каталога услуг');
+            $table->foreign('catalogs_service_id')->references('id')->on('catalogs_services');
 
             $table->bigInteger('service_id')->nullable()->unsigned()->comment('Id услуги');
             $table->foreign('service_id')->references('id')->on('services');
@@ -50,6 +53,6 @@ class CreatePriceService extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('price_service');
+        Schema::dropIfExists('prices_services');
     }
 }

@@ -1,5 +1,5 @@
 {{-- Подключаем класс для работы с метриками --}}
-@include('goods_categories.metrics.class')
+@include('products.articles_categories.goods_categories.metrics.class')
 
 <div class="grid-x grid-padding-x">
 	<div class="small-12 medium-8 cell">
@@ -21,7 +21,7 @@
 
 				@if ($category->metrics->isNotEmpty())
 				@foreach ($category->metrics as $metric)
-				@include('goods_categories.metrics.metric', $metric)
+				@include('products.articles_categories.goods_categories.metrics.metric', $metric)
 				@endforeach
 				@endif
 
@@ -44,7 +44,7 @@
 		<div class="dropdown-pane properties-dropdown" id="properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
 
 			{{-- @include('includes.category_metrics.properties_form') --}}
-			@include('goods_categories.metrics.properties_list')
+			@include('products.articles_categories.goods_categories.metrics.properties_list')
 
 		</div>
 	</div>

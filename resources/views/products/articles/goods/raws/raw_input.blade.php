@@ -59,7 +59,7 @@
 		</div>
 	</td>
 	<td>
-		@include('goods.raws.leftover_operations_select', ['selected' => $raw->pivot ? $raw->pivot->leftover_operation_id : null])
+		@include('products.articles.goods.raws.leftover_operations_select', ['selected' => $raw->pivot ? $raw->pivot->leftover_operation_id : null])
 	</td>
 
 	<td class="td-delete">

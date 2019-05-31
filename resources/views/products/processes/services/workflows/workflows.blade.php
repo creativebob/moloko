@@ -14,7 +14,7 @@
 
 				@if ($process->workflows->isNotEmpty())
 				@foreach ($process->workflows as $workflow)
-				@include ('services.workflows.workflow_input', $workflow)
+				@include ('products.processes.services.workflows.workflow_input', $workflow)
 				@endforeach
 				@endif
 
@@ -32,7 +32,7 @@
 				<div class="dropdown-pane" id="dropdown-workflows" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
 
 					<ul class="checker" id="categories-list">
-						@include('services.workflows.workflows_list', ['process' => $process])
+						@include('products.processes.services.workflows.workflows_list', ['process' => $process])
 					</ul>
 
 				</div>

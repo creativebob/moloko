@@ -933,7 +933,7 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
 
 // Основные методы
 Route::resource('catalogs_services', 'CatalogsServiceController');
-Route::get('catalogs_services/{catalog_id}/services', 'CatalogsServiceController@services')->name('catalogs_services.services');
+
 // Проверка на существование
 // Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
 
@@ -946,6 +946,10 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
 
     // Основные методы
     Route::resource('catalogs_services_items', 'CatalogsServicesItemController');
+
+    Route::resource('prices_services', 'PricesServiceController');
+
+    Route::any('prices_services_sync', 'PricesServiceController@sync');
 });
 
 

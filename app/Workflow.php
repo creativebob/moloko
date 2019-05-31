@@ -45,14 +45,8 @@ class Workflow extends Model
     use BooklistFilter;
 
     protected $fillable = [
+        'category_id',
         'process_id',
-        'description',
-        'manually',
-        'external',
-        'manufacturer_id',
-        'cost',
-        'price',
-        'album_id',
     ];
 
     // Процесс

@@ -1,6 +1,6 @@
 {{-- Свойства --}}
 <div class="tabs-panel" id="properties">
-	@include('goods_categories.metrics.section')
+	@include('products.articles_categories.goods_categories.metrics.section')
 </div>
 
 {{-- Свойства для набора --}}
@@ -18,6 +18,6 @@
 
 <div class="tabs-panel" id="raws">
 
-	@include('goods_categories.raws.raws', ['category' => $category])
+	@include('products.articles_categories.goods_categories.raws.raws', ['category' => $category])
 </div>
 

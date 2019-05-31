@@ -71,36 +71,36 @@ class Page extends Model
     // Получаем сайт.
     public function site()
     {
-        return $this->belongsTo('App\Site');
+        return $this->belongsTo(Site::class);
     }
 
     // Получаем должность страницы.
     public function position()
     {
-        return $this->hasOne('App\Position');
+        return $this->hasOne(Position::class);
     }
 
     // Получаем пункты меню.
     public function menus()
     {
-        return $this->hasMany('App\Menu');
+        return $this->hasMany(Menu::class);
     }
 
     // Получаем автора
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo(User::class);
     }
 
-    // Получаем сущности.
-    public function entities()
+    // Сущность
+    public function entity()
     {
-        return $this->belongsToMany('App\Entity');
+        return $this->hasOne(Entity::class);
     }
 
     public function photo()
     {
-        return $this->belongsTo('App\Photo');
+        return $this->belongsTo(Photo::class);
     }
 
 }

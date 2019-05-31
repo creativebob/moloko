@@ -43,7 +43,7 @@ $disabled = $article->draft == 0 ? true : null;
             </li>
 
             {{-- Табы для сущности --}}
-            @includeIf($entity . '.tabs')
+            @includeIf($page_info->entity->view_path . '.tabs')
 
             <li class="tabs-title">
                 <a data-tabs-target="photos" href="#photos">Фотографии</a>
@@ -116,30 +116,21 @@ $disabled = $article->draft == 0 ? true : null;
 
                                 </label>
 
-                                @if ($article->group->unit->units_category_id == 2)
-
                                 <label>Еденица измерения
-                                    @include('tmc.edit.select_units', [
-                                        'units_category_id' => 2,
+                                    @include('products.articles.common.edit.select_units', [
+                                        'units_category_id' => $article->group->unit->category_id,
                                         'disabled' => true,
                                     ]
                                     )
                                 </label>
 
-                                @else
+                                @isset ($article->unit_id)
 
-                                <label>Еденица измерения
-                                    @include('tmc.edit.select_units', [
-                                        'units_category_id' => isset($article->unit_id) ? $article->unit->units_category_id : $article->group->unit->units_category_id,
-                                        'disabled' => true,
-                                    ]
-                                    )
-                                </label>
-                                <label>Вес единицы ({{ $article->group->unit->abbreviation }})
+                                <label>Вес единицы ({{ $article->unit->abbreviation }})
                                     {!! Form::number('weight', null, ['disabled' => ($article->draft == 1) ? null : true]) !!}
                                 </label>
 
-                                @endif
+                                @endisset
 
                                 {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 
@@ -291,7 +282,7 @@ $disabled = $article->draft == 0 ? true : null;
             </div>
 
             {{-- Табы для сущности --}}
-            @includeIf($entity . '.tabs_content')
+            @includeIf($page_info->entity->view_path . '.tabs_content')
 
             {{ Form::close() }}
 
@@ -350,8 +341,8 @@ $disabled = $article->draft == 0 ? true : null;
     var category_entity = '{{ $category_entity }}';
 </script>
 
-@include('tmc.edit.change_articles_groups_script')
-@include('tmc.edit.change_portions_script', [
+@include('products.articles.common.edit.change_articles_groups_script')
+@include('products.articles.common.edit.change_portions_script', [
     'portion_unit' => $article->group->unit->abbreviation
 ]
 )
@@ -373,5 +364,5 @@ $disabled = $article->draft == 0 ? true : null;
 ]
 )
 
-@includeIf($entity . '.scripts')
+@includeIf($page_info->entity->view_path . '.scripts')
 @endpush

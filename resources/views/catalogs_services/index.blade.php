@@ -140,7 +140,7 @@
                         {{ link_to_route('catalogs_services_items.index', 'Дерево', ['catalog_id' => $catalogs_service->id], ['class' => 'button']) }}
                     </td>
                     <td class="td-services">
-                        {{ link_to_route('catalogs_services.services', 'Услуги', ['catalog_id' => $catalogs_service->id], ['class' => 'button']) }}
+                        {{ link_to_route('prices_services.index', 'Услуги', ['catalog_id' => $catalogs_service->id], ['class' => 'button']) }}
                     </td>
                     <td class="td-author">{{ $catalogs_service->author->name}}</td>
 

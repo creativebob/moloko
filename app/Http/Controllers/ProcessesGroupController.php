@@ -206,7 +206,7 @@ class ProcessesGroupController extends Controller
         $processes_groups = $category->groups;
         // dd($processes_groups);
 
-        return view('processes.create.mode_select', compact('processes_groups'));
+        return view('procucts.processes.common.create.mode_select', compact('processes_groups'));
 
 
         // if ($category->groups_count > 0) {

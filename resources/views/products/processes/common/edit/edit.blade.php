@@ -43,7 +43,7 @@ $disabled = $process->draft == 0 ? true : null;
             </li>
 
             {{-- Табы для сущности --}}
-            @includeIf($entity . '.tabs')
+            @includeIf($page_info->entity->view_path . '.tabs')
 
             <li class="tabs-title">
                 <a data-tabs-target="photos" href="#photos">Фотографии</a>
@@ -120,30 +120,21 @@ $disabled = $process->draft == 0 ? true : null;
                                     @include('includes.selects.processes_types')
                                 </label>
 
-                                @if ($process->group->unit->units_category_id == 3)
-
                                 <label>Еденица измерения
-                                    @include('processes.edit.select_units', [
-                                        'units_category_id' => 3,
+                                    @include('products.processes.common.edit.select_units', [
+                                        'units_category_id' => $process->group->unit->category_id,
                                         'disabled' => true,
                                     ]
                                     )
                                 </label>
 
-                                @else
+                                @isset ($process->unit_id)
 
-                                <label>Еденица измерения
-                                    @include('processes.edit.select_units', [
-                                        'units_category_id' => isset($process->unit_id) ? $process->unit->units_category_id : $process->group->unit->units_category_id,
-                                        'disabled' => true,
-                                    ]
-                                    )
-                                </label>
-                                <label>Продолжительность единицы ({{ $process->group->unit->abbreviation }})
+                                <label>Продолжительность единицы ({{ $process->unit->abbreviation }})
                                     {!! Form::number('length', null, [($process->draft == 1) ? null : true]) !!}
                                 </label>
 
-                                @endif
+                                @endisset
 
                                 {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 
@@ -263,7 +254,7 @@ $disabled = $process->draft == 0 ? true : null;
                 </div>
             </div>
 
-            @includeIf($entity . '.tabs_content')
+            @includeIf($page_info->entity->view_path . '.tabs_content')
 
             {{ Form::close() }}
 
@@ -324,7 +315,7 @@ $disabled = $process->draft == 0 ? true : null;
 
 </script>
 
-@include('processes.edit.change_processes_groups_script')
+@include('products.processes.common.edit.change_processes_groups_script')
 
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
@@ -343,5 +334,5 @@ $disabled = $process->draft == 0 ? true : null;
 ]
 )
 
-@includeIf($entity . '.scripts')
+@includeIf($page_info->entity->view_path . '.scripts')
 @endsection

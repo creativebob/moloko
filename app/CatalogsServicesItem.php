@@ -52,7 +52,9 @@ class CatalogsServicesItem extends Model
         'slug',
 		'parent_id',
 		'category_id',
-		'catalog_id',
+		'catalogs_service_id',
+        'author_id',
+        'display',
 	];
 
 	// Каталог
@@ -66,6 +68,12 @@ class CatalogsServicesItem extends Model
 	{
 		return $this->hasMany(CatalogsServicesItem::class, 'parent_id');
 	}
+
+    // Главный
+    public function category()
+    {
+        return $this->belongsTo(CatalogsServicesItem::class);
+    }
 
 	// Автор
 	public function author()

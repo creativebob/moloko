@@ -55,19 +55,19 @@ class Album extends Model
     // Получаем компанию
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
     // Категорию
     public function category()
     {
-        return $this->belongsTo('App\AlbumsCategory', 'albums_category_id');
+        return $this->belongsTo(AlbumsCategory::class);
     }
 
     // Получаем фото
     public function photos()
     {
-        return $this->morphedByMany('App\Photo', 'album_entities');
+        return $this->morphedByMany(Photo::class, 'album_entities');
     }
 
     // Получаем продукцию
@@ -79,7 +79,7 @@ class Album extends Model
     // Получаем фото
     public function photo()
     {
-        return $this->belongsTo('App\Photo');
+        return $this->belongsTo(Photo::class);
     }
 
     // Получаем видео
@@ -91,14 +91,14 @@ class Album extends Model
     // Получаем автора
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo(User::class);
     }
 
 
     // Настройки фоток
     public function photo_settings()
     {
-        return $this->morphOne('App\PhotoSetting', 'photo_settings');
+        return $this->morphOne(PhotoSetting::class, 'photo_settings');
     }
 
 }

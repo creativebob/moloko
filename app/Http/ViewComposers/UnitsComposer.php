@@ -10,15 +10,16 @@ class UnitsComposer
 {
 	public function compose(View $view)
 	{
-
+        // dd($view->units_category_id);
         // Главный запрос
-        $units = Unit::with('units_category')
-        ->where('units_category_id', $view->units_category_id)
+        $units = Unit::with('category')
+        ->where('category_id', $view->units_category_id)
         ->get();
 
         $units_attributes = $units->mapWithKeys(function ($item) {
             return [$item->id => ['data-abbreviation' => $item->abbreviation]];
-        })->all();
+        })
+        ->all();
 
         return $view->with(compact('units', 'units_attributes'));
     }

@@ -254,6 +254,7 @@ class PhotoController extends Controller
             $model = 'App\\'.$entity->model;
             $item = $model::with('album')->findOrFail($request->id);
 
+
             if (isset($item->album)) {
                 $album = $item->album;
             } else {
@@ -263,7 +264,7 @@ class PhotoController extends Controller
                 $album = Album::firstOrCreate(
                     [
                         'name' => $request->name,
-                        'albums_category_id' => 1,
+                        'category_id' => 1,
                         'company_id' => $user->company_id,
                     ], [
                         'description' => $request->name,
@@ -275,25 +276,6 @@ class PhotoController extends Controller
                 $item->album_id = $album->id;
                 $item->save();
             }
-
-            // if (isset($request->album_id)) {
-            //     $album = Album::findOrFail($request->id);
-            // } else {
-            //     $album = new Album;
-            //     $album->name = $request->name;
-            //     $album->description = $request->name;
-            //     $album->alias = Str::slug($request->name);
-            //     $album->albums_category_id = 1;
-
-            //     // Получаем пользователя
-            //     $user = $request->user();
-            //     $album->company_id = $user->company_id;
-            //     $album->author_id = hideGod($user);
-
-            //     $album->save();
-            // }
-
-            // $model::where('id', $request->id)->update(['album_id' => $album->id]);
 
             // Cохраняем / обновляем фото
             $result = savePhotoInAlbum($request, $album);

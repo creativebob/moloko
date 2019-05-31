@@ -16,7 +16,7 @@
 
 				@if ($category->raws->isNotEmpty())
 				@foreach ($category->raws as $raw)
-				@include ('goods_categories.raws.raw_tr', $raw)
+				@include ('products.articles_categories.goods_categories.raws.raw_tr', $raw)
 				@endforeach
 				@endif
 
@@ -32,7 +32,7 @@
 
 					<ul class="checker" id="categories-list">
 
-						@include('goods_categories.raws.raws_list')
+						@include('products.articles_categories.goods_categories.raws.raws_list')
 					</ul>
 
 				</div>

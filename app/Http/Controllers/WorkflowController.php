@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Cookie;
 // Трейты
 use App\Http\Controllers\Traits\Processes\ProcessTrait;
 
+use Illuminate\Support\Facades\Log;
+
 class WorkflowController extends Controller
 {
 
@@ -192,27 +194,18 @@ class WorkflowController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
+        Log::channel('operations')
+        ->info('========================================== НАЧИНАЕМ ЗАПИСЬ РАБОЧЕГО ПРОЦЕССА ==============================================');
+
         $workflows_category = WorkflowsCategory::findOrFail($request->category_id);
         // dd($workflows_category->load('groups'));
         $process = $this->storeProcess($request, $workflows_category);
 
         if ($process) {
 
-            // Получаем данные для авторизованного пользователя
-            $user = $request->user();
-
-            $workflow = new Workflow;
-            $workflow->process_id = $process->id;
-            $workflow->category_id = $request->category_id;
-
-            $workflow->display = $request->display;
-            $workflow->system_item = $request->system_item;
-
-            $workflow->set_status = $request->has('set_status');
-
-            $workflow->company_id = $user->company_id;
-            $workflow->author_id = hideGod($user);
-            $workflow->save();
+            $data = $request->input();
+            $data['process_id'] = $process->id;
+            $workflow = (new Workflow())->create($data);
 
             if ($workflow) {
 
@@ -221,6 +214,15 @@ class WorkflowController extends Controller
                 //     'goods_category' => $goods_category_id,
                 // ];
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
+
+                Log::channel('operations')
+                ->info('Записали рабочий процесс');
+                Log::channel('operations')
+                ->info('Автор: ' . $workflow->author->name . ' id: ' . $workflow->author_id .  ', компания: ' . $workflow->company->name . ', id: ' .$workflow->company_id);
+                Log::channel('operations')
+                ->info('========================================== КОНЕЦ ЗАПИСИ РАБОЧЕГО ПРОЦЕССА ==============================================
+
+                    ');
 
                 // dd($request->quickly);
                 if ($request->quickly == 1) {
@@ -369,7 +371,7 @@ class WorkflowController extends Controller
         ])
         ->find($request->id);
 
-        return view('services.workflows.workflow_input', compact('workflow'));
+        return view('products.processes_categories.services.workflows.workflow_input', compact('workflow'));
     }
 
     // Добавляем состав
@@ -382,6 +384,6 @@ class WorkflowController extends Controller
         ])
         ->findOrFail($request->id);
 
-        return view('services_categories.workflows.workflow_tr', compact('workflow'));
+        return view('products.processes_categories.services_categories.workflows.workflow_tr', compact('workflow'));
     }
 }

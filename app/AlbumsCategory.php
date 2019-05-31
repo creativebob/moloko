@@ -69,7 +69,7 @@ class AlbumsCategory extends Model
     // Альбомы
     public function albums()
     {
-    	return $this->hasMany(Album::class);
+    	return $this->hasMany(Album::class, 'category_id');
     }
 
 }

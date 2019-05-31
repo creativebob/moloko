@@ -26,7 +26,9 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 
 // Трейты
-use App\Http\Controllers\Traits\Tmc\ArticleTrait;
+use App\Http\Controllers\Traits\Articles\ArticleTrait;
+
+use Illuminate\Support\Facades\Log;
 
 class GoodsController extends Controller
 {
@@ -278,27 +280,18 @@ class GoodsController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
+        Log::channel('operations')
+        ->info('========================================== НАЧИНАЕМ ЗАПИСЬ ТОВАРА ==============================================');
+
         $goods_category = GoodsCategory::findOrFail($request->category_id);
         // dd($goods_category->load('groups'));
         $article = $this->storeArticle($request, $goods_category);
 
         if ($article) {
 
-            // Получаем данные для авторизованного пользователя
-            $user = $request->user();
-
-            $cur_goods = new Goods;
-            $cur_goods->article_id = $article->id;
-            $cur_goods->category_id = $request->category_id;
-
-            $cur_goods->display = $request->display;
-            $cur_goods->system_item = $request->system_item;
-
-            $cur_goods->set_status = $request->has('set_status');
-
-            $cur_goods->company_id = $user->company_id;
-            $cur_goods->author_id = hideGod($user);
-            $cur_goods->save();
+            $data = $request->input();
+            $data['article_id'] = $article->id;
+            $cur_goods = (new Goods())->create($data);
 
             if ($cur_goods) {
 
@@ -315,6 +308,15 @@ class GoodsController extends Controller
                 //     'goods_category' => $goods_category_id,
                 // ];
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
+
+                Log::channel('operations')
+                ->info('Записали товар с id: ' . $cur_goods->id);
+                Log::channel('operations')
+                ->info('Автор: ' . $cur_goods->author->name . ' id: ' . $cur_goods->author_id .  ', компания: ' . $cur_goods->company->name . ', id: ' .$cur_goods->company_id);
+                Log::channel('operations')
+                ->info('========================================== КОНЕЦ ЗАПИСИ ТОВАРА ==============================================
+
+                    ');
 
                 // dd($request->quickly);
                 if ($request->quickly == 1) {
@@ -403,7 +405,19 @@ class GoodsController extends Controller
             $this->changeCategory($request, $cur_goods);
 
             // Каталоги
-            $cur_goods->catalogs_items()->sync($request->catalogs_items);
+            $data = [];
+            if (isset($request->catalogs_items)) {
+
+                foreach ($request->catalogs_items as $catalog_id => $items) {
+                    foreach ($items as $item_id) {
+                        $data[(int) $item_id] = [
+                            'catalogs_goods_id' => $catalog_id,
+                        ];
+                    }
+                }
+            }
+            // dd($data);
+            $cur_goods->catalogs_items()->sync($data);
 
             // Метрики
             if ($request->has('metrics')) {

@@ -294,7 +294,6 @@ class StartTableSeeder extends Seeder
             [
                 'name' => 'Первый каталог услуг',
                 'description' => 'Тест',
-                'company_id' => 1,
                 'author_id' => 4,
                 'display' => 1,
             ],
@@ -304,7 +303,6 @@ class StartTableSeeder extends Seeder
             [
                 'catalogs_service_id' => 1,
                 'name' => 'Первый',
-                'company_id' => 1,
                 'display' => 1,
                 'author_id' => 4
 
@@ -312,13 +310,48 @@ class StartTableSeeder extends Seeder
             [
                 'catalogs_service_id' => 1,
                 'name' => 'Второй',
-                'company_id' => 1,
                 'display' => 1,
                 'author_id' => 4
 
             ],
             [
                 'catalogs_service_id' => 1,
+                'name' => 'Третий',
+                'display' => 1,
+                'author_id' => 4
+
+            ],
+        ]);
+
+        CatalogsService::insert([
+            [
+                'name' => 'Лольный',
+                'description' => 'Тест',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => 1,
+            ],
+        ]);
+
+        CatalogsServicesItem::insert([
+            [
+                'catalogs_service_id' => 2,
+                'name' => 'Первый',
+                'company_id' => 1,
+                'display' => 1,
+                'author_id' => 4
+
+            ],
+            [
+                'catalogs_service_id' => 2,
+                'name' => 'Второй',
+                'company_id' => 1,
+                'display' => 1,
+                'author_id' => 4
+
+            ],
+            [
+                'catalogs_service_id' => 2,
                 'name' => 'Третий',
                 'company_id' => 1,
                 'display' => 1,

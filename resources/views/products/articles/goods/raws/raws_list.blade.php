@@ -1,5 +1,5 @@
 {{-- Подключаем класс для работы--}}
-@include('goods.raws.class')
+@include('products.articles.goods.raws.class')
 
 @if ($raws_categories->isNotEmpty())
 

@@ -45,14 +45,8 @@ class Service extends Model
     use BooklistFilter;
 
     protected $fillable = [
+        'category_id',
         'process_id',
-        'description',
-        'manually',
-        'external',
-        'manufacturer_id',
-        'cost',
-        'price',
-        'album_id',
     ];
 
     // Процесс
@@ -82,7 +76,7 @@ class Service extends Model
     // Пункты каталога
     public function catalogs_items()
     {
-        return $this->belongsToMany(CatalogsServicesItem::class, 'price_service', 'service_id', 'catalogs_services_item_id');
+        return $this->belongsToMany(CatalogsServicesItem::class, 'prices_services', 'service_id', 'catalogs_services_item_id');
     }
 
 }

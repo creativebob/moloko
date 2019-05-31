@@ -1,5 +1,5 @@
 {{-- Подключаем класс для работы с составами --}}
-@include('services.workflows.class')
+@include('products.processes.services.workflows.class')
 
 @if ($workflows_categories->isNotEmpty())
 

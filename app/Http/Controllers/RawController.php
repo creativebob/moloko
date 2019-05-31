@@ -17,7 +17,9 @@ use App\Http\Requests\ArticleRequest;
 use Illuminate\Support\Facades\Cookie;
 
 // Трейты
-use App\Http\Controllers\Traits\Tmc\ArticleTrait;
+use App\Http\Controllers\Traits\Articles\ArticleTrait;
+
+use Illuminate\Support\Facades\Log;
 
 class RawController extends Controller
 {
@@ -218,27 +220,18 @@ class RawController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
+        Log::channel('operations')
+        ->info('========================================== НАЧИНАЕМ ЗАПИСЬ СЫРЬЯ ==============================================');
+
         $raws_category = RawsCategory::findOrFail($request->category_id);
         // dd($goods_category->load('groups'));
         $article = $this->storeArticle($request, $raws_category);
 
         if ($article) {
 
-            // Получаем данные для авторизованного пользователя
-            $user = $request->user();
-
-            $raw = new Raw;
-            $raw->article_id = $article->id;
-            $raw->category_id = $request->category_id;
-
-            $raw->display = $request->display;
-            $raw->system_item = $request->system_item;
-
-            $raw->set_status = $request->has('set_status');
-
-            $raw->company_id = $user->company_id;
-            $raw->author_id = hideGod($user);
-            $raw->save();
+            $data = $request->input();
+            $data['article_id'] = $article->id;
+            $raw = (new Raw())->create($data);
 
             if ($raw) {
 
@@ -247,6 +240,15 @@ class RawController extends Controller
                 //     'goods_category' => $goods_category_id,
                 // ];
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
+
+                Log::channel('operations')
+                ->info('Записали сырье c id: ' . $raw->id);
+                Log::channel('operations')
+                ->info('Автор: ' . $raw->author->name . ' id: ' . $raw->author_id .  ', компания: ' . $raw->company->name . ', id: ' .$raw->company_id);
+                Log::channel('operations')
+                ->info('========================================== КОНЕЦ ЗАПИСИ СЫРЬЯ ==============================================
+
+                    ');
 
                 // dd($request->quickly);
                 if ($request->quickly == 1) {
@@ -395,7 +397,7 @@ class RawController extends Controller
         ])
         ->find($request->id);
 
-        return view('goods.raws.raw_input', compact('raw'));
+        return view('products.articles.goods.raws.raw_input', compact('raw'));
     }
 
     // Добавляем состав
@@ -408,6 +410,6 @@ class RawController extends Controller
         ])
         ->findOrFail($request->id);
 
-        return view('goods_categories.raws.raw_tr', compact('raw'));
+        return view('products.articles_categories.goods_categories.raws.raw_tr', compact('raw'));
     }
 }

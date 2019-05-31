@@ -138,4 +138,17 @@ class Process extends Model
     {
         return $this->belongsTo(Unit::class);
     }
+
+
+    // Продолжительность
+    public function getLengthAttribute($value)
+    {
+        if (isset($this->unit_id)) {
+            $length = $value / $this->unit->ratio;
+        } else {
+            $length = $value / $this->group->unit->ratio;
+        }
+
+        return $length;
+    }
 }

@@ -145,4 +145,16 @@ class Article extends Model
     {
         return $this->belongsTo(Unit::class);
     }
+
+    // Вес
+    public function getWeightAttribute($value)
+    {
+        if (isset($this->unit_id)) {
+            $weight = $value / $this->unit->ratio;
+        } else {
+            $weight = $value / $this->group->unit->ratio;
+        }
+
+        return $weight;
+    }
 }

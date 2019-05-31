@@ -17,8 +17,8 @@ class SidebarComposer
         // dd($entities_list);
 
         // Получаем меню (знаем что статика, поэтому указываем в таблице навигации id)
-		$menus = Menu::whereHas('page.entities', function ($q) use ($entities_list) {
-			$q->whereIn('entity_id', $entities_list);
+		$menus = Menu::whereHas('page.entity', function ($q) use ($entities_list) {
+			$q->whereIn('id', $entities_list);
 		})
 		->where('display', 1)
 		->orWhere(function ($q) {

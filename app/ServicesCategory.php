@@ -45,7 +45,7 @@ class ServicesCategory extends Model
     use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
-    
+
     protected $fillable = [
         'name',
         'description',

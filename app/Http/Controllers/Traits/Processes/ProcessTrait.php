@@ -10,6 +10,8 @@ use App\Unit;
 // Валидация
 use App\Http\Requests\ProcessRequest;
 
+use Illuminate\Support\Facades\Log;
+
 trait ProcessTrait
 {
 
@@ -36,6 +38,8 @@ trait ProcessTrait
 
             // Пишем к группе связь с категорией
             $category->groups()->syncWithoutDetaching($processes_group->id);
+
+
             break;
 
             case 'mode-add':
@@ -58,6 +62,9 @@ trait ProcessTrait
             break;
         }
 
+        Log::channel('operations')
+            ->info('Режим создания: ' . $request->mode . '. Записали или нашли группу процессов c id: ' . $processes_group->id . ', в зависимости от режима. Связали с категорией.');
+
         $data = $request->input();
         $data['processes_group_id'] = $processes_group->id;
         $data['processes_type_id'] = $category->processes_type_id;
@@ -77,6 +84,8 @@ trait ProcessTrait
         $data['length'] = $length;
 
         $process = (new Process())->create($data);
+        Log::channel('operations')
+            ->info('Записали процесс c id: ' . $process->id);
 
         return $process;
     }
@@ -117,8 +126,17 @@ trait ProcessTrait
                     $this->setWorkflows($request, $process);
                 }
 
+
+
+
+                if (isset($process->unit_id)) {
+                    $unit = Unit::findOrFail($process->unit_id);
+                    $length = $data['length'] * $unit->ratio;
+                    $data['length'] = $length;
+                }
+
+                $data['draft'] = $request->has('draft');
                 // Если ошибок и совпадений нет, то обновляем артикул
-                $data['draft'] = request()->has('draft');
                 $process->update($data);
 
                 // Cохраняем / обновляем фото
@@ -164,9 +182,7 @@ trait ProcessTrait
         if ($processes->isNotEmpty()) {
             // Проверяем на наличие состава
 
-
-
-            // Формируем массив пришедших составов артикула
+            // Формируем массив пришедших радочих процессов для процесса
             if (isset($data['workflows'])) {
                 $process_workflows = [];
                 foreach ($data['workflows'] as $id => $wokrflow) {
@@ -244,13 +260,13 @@ trait ProcessTrait
             $data['manufacturer_id'] = $item->process->manufacturer_id;
 
             // Если это товар и не шаблон, то вытаскиваем его состав для сравнения с артикулами из новой группы
-            if ($item->getTable() == 'goods' && !$process->draft) {
+            if ($item->getTable() == 'services' && !$process->draft) {
                 $process = $process->load('workflows');
 
                 // ПРиводим массив к виду с шаблона
                 $workflows = [];
                 foreach ($process->workflows as $wokrflow) {
-                    $workflows[$wokrflow->pivot->raw_id]['value'] = $wokrflow->pivot->value;
+                    $workflows[$wokrflow_id]['value'] = $wokrflow->pivot->value;
                 }
                 // ksort($workflows);
                 $data['workflows'] = $workflows;

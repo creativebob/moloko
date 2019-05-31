@@ -51,6 +51,8 @@ class CatalogsService extends Model
         'slug',
         'parent_id',
         'category_id',
+        'author_id',
+        'display',
     ];
 
     // Пункты

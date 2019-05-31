@@ -8,7 +8,6 @@
         <div class="icon-display-hide black sprite" data-open="item-display"></div>
         @enddisplay
         @endcan
-
         {{-- Системный статус --}}
         @can ('system', $item)
         @php

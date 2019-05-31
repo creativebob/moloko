@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Cookie;
 // Трейты
 use App\Http\Controllers\Traits\Processes\ProcessTrait;
 
+use Illuminate\Support\Facades\Log;
+
 class ServiceController extends Controller
 {
 
@@ -190,8 +192,13 @@ class ServiceController extends Controller
     public function store(ProcessRequest $request)
     {
 
+        // dd($request);
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
+
+        Log::channel('operations')
+        ->info('========================================== НАЧИНАЕМ ЗАПИСЬ УСЛУГИ ==============================================');
 
         $services_category = ServicesCategory::findOrFail($request->category_id);
         // dd($services_category->load('groups'));
@@ -199,21 +206,10 @@ class ServiceController extends Controller
 
         if ($process) {
 
-            // Получаем данные для авторизованного пользователя
-            $user = $request->user();
 
-            $service = new Service;
-            $service->process_id = $process->id;
-            $service->category_id = $request->category_id;
-
-            $service->display = $request->display;
-            $service->system_item = $request->system_item;
-
-            $service->set_status = $request->has('set_status');
-
-            $service->company_id = $user->company_id;
-            $service->author_id = hideGod($user);
-            $service->save();
+            $data = $request->input();
+            $data['process_id'] = $process->id;
+            $service = (new Service())->create($data);
 
             if ($service) {
 
@@ -225,7 +221,14 @@ class ServiceController extends Controller
                 //     'goods_category' => $goods_category_id,
                 // ];
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
+                Log::channel('operations')
+                ->info('Записали услугу');
+                Log::channel('operations')
+                ->info('Автор: ' . $service->author->name . ' id: ' . $service->author_id .  ', компания: ' . $service->company->name . ', id: ' .$service->company_id);
+                Log::channel('operations')
+                ->info('========================================== КОНЕЦ ЗАПИСИ УСЛУГИ ==============================================
 
+                    ');
                 // dd($request->quickly);
                 if ($request->quickly == 1) {
                     return redirect()->route('services.index');
@@ -298,6 +301,8 @@ class ServiceController extends Controller
         $process = $service->process;
         // dd($process);
 
+
+
         $result = $this->updateProcess($request, $service);
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
@@ -310,7 +315,19 @@ class ServiceController extends Controller
             $this->changeCategory($request, $service);
 
             // Каталоги
-            $service->catalogs_items()->sync($request->catalogs_items);
+            $data = [];
+            if (isset($request->catalogs_items)) {
+
+                foreach ($request->catalogs_items as $catalog_id => $items) {
+                    foreach ($items as $item_id) {
+                        $data[(int) $item_id] = [
+                            'catalogs_service_id' => $catalog_id,
+                        ];
+                    }
+                }
+            }
+            // dd($data);
+            $service->catalogs_items()->sync($data);
 
 
             // Если ли есть

@@ -32,7 +32,7 @@
             </li>
 
             {{-- Табы для сущности --}}
-            @includeIf('products.processes_categories.' . $entity . '.tabs')
+            @includeIf($page_info->entity->view_path . '.tabs')
 
         </ul>
     </div>
@@ -154,7 +154,7 @@
             </div>
 
             {{-- Табы для сущности --}}
-            @includeIf('products.processes_categories.' . $entity . '.tabs_content')
+            @includeIf($page_info->entity->view_path . '.tabs_content')
 
             {{ Form::close() }}
         </div>
@@ -168,7 +168,7 @@
 @include('includes.modals.modal_item_delete')
 @endsection
 
-@section('scripts')
+@push('scripts')
 
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
@@ -179,4 +179,4 @@
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check', ['id' => $category->id])
 
-@endsection
+@endpush

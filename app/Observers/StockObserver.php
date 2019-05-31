@@ -4,45 +4,26 @@ namespace App\Observers;
 
 use App\Stock;
 
+use App\Observers\Traits\CommonTrait;
+
 class StockObserver
 {
 
+    use CommonTrait;
+
     public function creating(Stock $stock)
     {
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        $answer = operator_right('stocks', false, getmethod(__FUNCTION__));
-        if($answer['automoderate'] == false){
-            $stock->moderation = 1;
-        }
-
-        $request = request();
-
-        $stock->system_item = $request->system_item;
-        $stock->display = $request->display;
-
-        $user = $request->user();
-        $stock->company_id = $user->company_id;
-        $stock->author_id = hideGod($user);
+        $this->store($stock);
     }
 
     public function updating(Stock $stock)
     {
-        $request = request();
-
-        $stock->system_item = $request->system_item;
-        $stock->display = $request->display;
-        $stock->moderation = $request->moderation;
-
-        $stock->editor_id = hideGod($request->user());
+        $this->update($stock);
     }
 
     public function deleting(Stock $stock)
     {
-        $request = request();
-
-        $stock->editor_id = hideGod($request->user());
-        $stock->save();
+        $this->destroy($stock);
         // dd($stock);
         // $stock->update([
         //     'editor_id' => hideGod($request->user()),

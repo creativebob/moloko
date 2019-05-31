@@ -17,9 +17,14 @@ class CreateEntitiesTable extends Migration
             $table->string('alias')->index()->comment('Название как в базе данных');
             $table->string('model')->index()->comment('Название модели');
 
+            $table->string('view_path')->nullable()->comment('Путь до шаблона отображения');
+
             $table->integer('rights_minus')->unsigned()->nullable()->comment('Исключает настройку прав на сущность при равной 1');
             $table->integer('validation_minus')->unsigned()->nullable()->comment('Исключает настройку дополнительной валидации страницы');
             $table->integer('feedback_minus')->unsigned()->nullable()->comment('Исключает добавление отзыва к сущности из под интерфейса');
+
+            $table->bigInteger('page_id')->unsigned()->nullable()->comment('Id страницы');
+            $table->foreign('page_id')->references('id')->on('pages');
 
             $table->bigInteger('ancestor_id')->unsigned()->nullable()->comment('Id предка сущности');
             $table->foreign('ancestor_id')->references('id')->on('entities');

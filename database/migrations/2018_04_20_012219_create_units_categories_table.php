@@ -19,11 +19,11 @@ class CreateUnitsCategoriesTable extends Migration
             $table->string('name')->index()->comment('Название категории единицы измерения');
             // $table->text('description')->nullable()->comment('Описание категории единицы измерения');
 
-            
+
             // $table->string('unit')->comment('Единица измерения');
             // $table->string('abbreviation')->comment('Сокращенное название категории');
 
-            $table->boolean('tmc')->default(0)->comment('Относится к ТМЦ');
+            $table->boolean('article')->default(0)->comment('Относится к артикулам');
             $table->boolean('process')->default(0)->comment('Относится к процессам');
 
             // Общие настройки

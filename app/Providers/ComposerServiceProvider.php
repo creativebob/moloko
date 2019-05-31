@@ -24,7 +24,7 @@ use App\Http\ViewComposers\LoyaltiesComposer;
 
 use App\Http\ViewComposers\UnitsCategoriesComposer;
 use App\Http\ViewComposers\UnitsComposer;
-use App\Http\ViewComposers\UnitsTmcComposer;
+use App\Http\ViewComposers\UnitsArticleComposer;
 use App\Http\ViewComposers\UnitsProcessesComposer;
 
 use App\Http\ViewComposers\SourceWithSourceServicesComposer;
@@ -43,6 +43,7 @@ use App\Http\ViewComposers\RawsModesComposer;
 
 use App\Http\ViewComposers\CatalogsSelectComposer;
 
+use App\Http\ViewComposers\AccordionsComposer;
 use App\Http\ViewComposers\MenuViewComposer;
 use App\Http\ViewComposers\DepartmentsComposer;
 use App\Http\ViewComposers\DepartmentsViewComposer;
@@ -127,8 +128,8 @@ class ComposerServiceProvider extends ServiceProvider
             'includes.selects.units_extra',
         ], UnitsComposer::class);
 
-        view()->composer('tmc.edit.select_units', UnitsTmcComposer::class);
-        view()->composer('processes.edit.select_units', UnitsProcessesComposer::class);
+        view()->composer('products.articles.common.edit.select_units', UnitsArticleComposer::class);
+        view()->composer('products.processes.common.edit.select_units', UnitsProcessesComposer::class);
 
         view()->composer(['includes.selects.source_with_source_services'], SourceWithSourceServicesComposer::class);
         view()->composer(['includes.selects.source_services'], SourceServicesComposer::class);
@@ -154,7 +155,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.staff', StaffComposer::class);
 
         view()->composer('includes.selects.positions', PositionsComposer::class);
-        view()->composer('goods_categories.metrics.properties_list', PropertiesComposer::class);
+        view()->composer('products.articles_categories.goods_categories.metrics.properties_list', PropertiesComposer::class);
 
         view()->composer([
             'includes.selects.catalogs_chosen',
@@ -176,6 +177,7 @@ class ComposerServiceProvider extends ServiceProvider
 
 
         // Стандартные шаблоны типа "меню"
+        view()->composer('common.accordions.categories_list', AccordionsComposer::class);
         view()->composer('includes.menu_views.category_list', MenuViewComposer::class);
         view()->composer('departments.filials_list', DepartmentsViewComposer::class);
         view()->composer('includes.lists.departments', DepartmentsComposer::class);
@@ -183,8 +185,8 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer([
             'includes.selects.categories',
-            'tmc.create.categories_select',
-            'processes.create.categories_select'
+            'products.articles.common.create.categories_select',
+            'products.processes.common.create.categories_select'
         ], CategoriesComposer::class);
 
         view()->composer('includes.selects.goods_categories', GoodsCategoriesComposer::class);
@@ -203,24 +205,24 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.selects.entities_statistics', EntitiesStatisticsSelectComposer::class);
 
-        view()->composer('goods.catalogs_with_items', CatalogsGoodsComposer::class);
-        view()->composer('services.catalogs_with_items', CatalogsServicesComposer::class);
+        view()->composer('products.articles.goods.catalogs_with_items', CatalogsGoodsComposer::class);
+        view()->composer('products.processes.services.catalogs_with_items', CatalogsServicesComposer::class);
 
         view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
         view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);
 
         view()->composer([
-            'goods_categories.raws.raws_list',
-            'goods.raws.raws_list'
+            'products.articles_categories.goods_categories.raws.raws_list',
+            'products.articles.goods.raws.raws_list'
         ], RawsComposer::class);
 
         view()->composer([
-            'services_categories.workflows.workflows_list',
-            'services.workflows.workflows_list'
+            'products.processes_categories.services_categories.workflows.workflows_list',
+            'products.processes.services.workflows.workflows_list'
         ], WorkflowsComposer::class);
 
         view()->composer('includes.selects.tmc', TmcComposer::class);
-        view()->composer('goods.raws.leftover_operations_select', LeftoverOperationsComposer::class);
+        view()->composer('products.articles.goods.raws.leftover_operations_select', LeftoverOperationsComposer::class);
 
         view()->composer('includes.selects.processes_types', ProcessesTypesComposer::class);
 

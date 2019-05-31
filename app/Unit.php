@@ -45,7 +45,7 @@ class Unit extends Model
     use DateIntervalFilter;
 
     // Категория едениц измерения
-    public function units_category()
+    public function category()
     {
         return $this->belongsTo(UnitsCategory::class);
     }

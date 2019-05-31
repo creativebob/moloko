@@ -48,7 +48,6 @@ class Room extends Model
         'article_id',
         'location_id',
         'area',
-
     ];
 
 

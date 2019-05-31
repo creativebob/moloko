@@ -6,7 +6,7 @@
 			<fieldset class="fieldset-access">
 				<legend>Каталоги</legend>
 
-				@include('goods.catalogs_with_items')
+				@include('products.articles.goods.catalogs_with_items')
 
 				{{-- Form::select('catalogs[]', $catalogs_list, $cur_goods->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
 				{{-- @include('includes.selects.catalogs_chosen', ['parent_id' => $cur_goods->catalogs->keyBy('id')->toArray()]) --}}
@@ -19,6 +19,6 @@
 
 {{-- Состав --}}
 <div class="tabs-panel" id="raws">
-@include('goods.raws.raws')
+@include('products.articles.goods.raws.raws')
 </div>
 

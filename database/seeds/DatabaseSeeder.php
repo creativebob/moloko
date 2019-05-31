@@ -28,15 +28,8 @@ class DatabaseSeeder extends Seeder
         $this->call(SectorsTableSeeder::class);
         $this->call(LegalFormsTableSeeder::class);
 
-        // Сущности
-        $this->call(EntitiesTableSeeder::class);
+
         $this->call(BooklistTypesTableSeeder::class);
-
-        // Действия над сущностями
-        $this->call(ActionsTableSeeder::class);
-
-        // Создаем связи между действиями и сущностями
-        $this->call(ActionEntityTableSeeder::class);
 
         // Сайты, страницы
         $this->call(SitesTableSeeder::class);
@@ -44,14 +37,20 @@ class DatabaseSeeder extends Seeder
 
         $this->call(AlignsTableSeeder::class);
 
+        // Сущности
+        $this->call(EntitiesTableSeeder::class);
+
+        // Действия над сущностями
+        $this->call(ActionsTableSeeder::class);
+
+        // Создаем связи между действиями и сущностями
+        $this->call(ActionEntityTableSeeder::class);
+
         // Меню
         // $this->call(NavigationsCategoriesTableSeeder::class);
         $this->call(NavigationsTableSeeder::class);
         $this->call(MenusTableSeeder::class);
         $this->call(MenuSiteTableSeeder::class);
-
-        // Связь страниц и сущностей
-        $this->call(EntityPageTableSeeder::class);
 
         // Должности
         $this->call(PositionsTableSeeder::class);

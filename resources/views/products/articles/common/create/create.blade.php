@@ -36,7 +36,7 @@
 				<div class="small-12 cell">
 					<div class="grid-x grid-margin-x" id="units-block">
 						<div class="small-12 medium-6 cell">
-							@include('includes.selects.units_categories', ['default' => 6, 'type' => 'tmc'])
+							@include('includes.selects.units_categories', ['default' => 6, 'type' => 'article'])
 						</div>
 
 						<div class="small-12 medium-6 cell">

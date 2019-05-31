@@ -3,12 +3,15 @@
 use Illuminate\Database\Seeder;
 
 use App\Entity;
+use App\Page;
 
 class EntitiesTableSeeder extends Seeder
 {
 
     public function run()
     {
+
+        $pages = Page::where('site_id', 1)->get(['id', 'alias']);
 
         // Первый уровень
         Entity::insert([
@@ -20,6 +23,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'companies',
+                'page_id' => $pages->firstWhere('alias', 'companies')->id,
             ],
             [
                 'name' => 'Сущности',
@@ -29,6 +34,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'entities',
+                'page_id' => $pages->firstWhere('alias', 'entities')->id,
             ],
             [
                 'name' => 'Роли',
@@ -38,6 +45,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'roles',
+                'page_id' => $pages->firstWhere('alias', 'roles')->id,
             ],
             [
                 'name' => 'Правила',
@@ -47,6 +56,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'rights',
+                'page_id' => $pages->firstWhere('alias', 'rights')->id,
             ],
             [
                 'name' => 'Сайты',
@@ -56,16 +67,20 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'sites',
+                'page_id' => $pages->firstWhere('alias', 'sites')->id,
             ],
-            [
-                'name' => 'Категории навигаци',
-                'alias' => 'navigations_categories',
-                'model' => 'NavigationsCategory',
-                'rights_minus' => 1,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
+            // [
+            //     'name' => 'Категории навигаци',
+            //     'alias' => 'navigations_categories',
+            //     'model' => 'NavigationsCategory',
+            //     'rights_minus' => 1,
+            //     'system_item' => 1,
+            //     'author_id' => 1,
+            //     'site' => 0,
+            //     'view_path' => 'navigations_categories',
+            //     'page_id' => $pages->firstWhere('alias', 'navigations_categories')->id,
+            // ],
             [
                 'name' => 'Новости',
                 'alias' => 'news',
@@ -74,6 +89,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 1,
+                'view_path' => 'news',
+                'page_id' => $pages->firstWhere('alias', 'news')->id,
             ],
             [
                 'name' => 'Категории альбомов',
@@ -83,6 +100,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'albums_categories',
+                'page_id' => $pages->firstWhere('alias', 'albums_categories')->id,
             ],
             [
                 'name' => 'Должности',
@@ -92,6 +111,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'positions',
+                'page_id' => $pages->firstWhere('alias', 'positions')->id,
             ],
             [
                 'name' => 'Списки',
@@ -101,6 +122,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'booklists',
+                'page_id' => $pages->firstWhere('alias', 'booklists')->id,
             ],
             [
                 'name' => 'Секторы',
@@ -110,15 +133,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
-            ],
-            [
-                'name' => 'Папки',
-                'alias' => 'folders',
-                'model' => 'Folder',
-                'rights_minus' => 1,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
+                'view_path' => 'sectors',
+                'page_id' => $pages->firstWhere('alias', 'sectors')->id,
             ],
             [
                 'name' => 'Категории товаров',
@@ -128,6 +144,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'products/articles_categories/goods_categories',
+                'page_id' => $pages->firstWhere('alias', 'goods_categories')->id,
             ],
             [
                 'name' => 'Категории сырья',
@@ -137,6 +155,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'products/articles_categories/raws_categories',
+                'page_id' => $pages->firstWhere('alias', 'raws_categories')->id,
             ],
             [
                 'name' => 'Категории помещений',
@@ -146,6 +166,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'products/articles_categories/rooms_categories',
+                'page_id' => $pages->firstWhere('alias', 'rooms_categories')->id,
             ],
             [
                 'name' => 'Категории расходных материалов',
@@ -155,6 +177,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'products/articles_categories/expendables_categories',
+                'page_id' => null,
             ],
             [
                 'name' => 'Категории услуг',
@@ -164,6 +188,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'products/processes_categories/services_categories',
+                'page_id' => $pages->firstWhere('alias', 'services_categories')->id,
             ],
             [
                 'name' => 'Категории рабочих процессов',
@@ -173,6 +199,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'products/processes_categories/workflows_categories',
+                'page_id' => $pages->firstWhere('alias', 'workflows_categories')->id,
             ],
             [
                 'name' => 'Страны',
@@ -182,6 +210,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'countries',
+                'page_id' => null,
             ],
             [
                 'name' => 'Области',
@@ -191,6 +221,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'regions',
+                'page_id' => null,
             ],
             [
                 'name' => 'Районы',
@@ -200,6 +232,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'areas',
+                'page_id' => null,
             ],
             [
                 'name' => 'Населенные пункты',
@@ -209,16 +243,20 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'cities',
+                'page_id' => $pages->firstWhere('alias', 'cities')->id,
             ],
-            [
-                'name' => 'Сущности связанные с городами',
-                'alias' => 'city_entity',
-                'model' => 'CityEntity',
-                'rights_minus' => 1,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
+            // [
+            //     'name' => 'Сущности связанные с городами',
+            //     'alias' => 'city_entity',
+            //     'model' => 'CityEntity',
+            //     'rights_minus' => 1,
+            //     'system_item' => 1,
+            //     'author_id' => 1,
+            //     'site' => 0,
+            //     'view_path' => 'rights',
+            //     'page_id' => $pages->firstWhere('alias', 'rights')->id,
+            // ],
             [
                 'name' => 'Категории правил',
                 'alias' => 'category_right',
@@ -227,6 +265,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'category_right',
+                'page_id' => null,
             ],
             [
                 'name' => 'Сущности с прикрепленными альбомами',
@@ -236,6 +276,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'album_entity',
+                'page_id' => null,
             ],
             [
                 'name' => 'Категории единицы измерения',
@@ -245,6 +287,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'units_categories',
+                'page_id' => null,
             ],
             [
                 'name' => 'Расписания',
@@ -254,6 +298,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'schedules',
+                'page_id' => null,
             ],
             [
                 'name' => 'Локации',
@@ -263,6 +309,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'locations',
+                'page_id' => null,
             ],
             [
                 'name' => 'Настройки',
@@ -272,6 +320,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'settings',
+                'page_id' => null,
             ],
             [
                 'name' => 'Метрики',
@@ -281,6 +331,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'metrics',
+                'page_id' => null,
             ],
             [
                 'name' => 'Состав',
@@ -290,6 +342,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'compositions',
+                'page_id' => null,
             ],
             [
                 'name' => 'Значения',
@@ -299,45 +353,53 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'values',
+                'page_id' => null,
             ],
-            [
-                'name' => 'Операционные расходы',
-                'alias' => 'expenses',
-                'model' => 'Expense',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Зарплаты',
-                'alias' => 'salaries',
-                'model' => 'Salary',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Рекламные кампании',
-                'alias' => 'campaigns',
-                'model' => 'Campaign',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-
-            ],
-            [
-                'name' => 'Социальные сети',
-                'alias' => 'social_networks',
-                'model' => 'SocialNetwork',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-
-            ],
+            // [
+            //     'name' => 'Операционные расходы',
+            //     'alias' => 'expenses',
+            //     'model' => 'Expense',
+            //     'rights_minus' => null,
+            //     'system_item' => 1,
+            //     'author_id' => 1,
+            //     'site' => 0,
+            //     'view_path' => 'expenses',
+            //     'page_id' => $pages->firstWhere('alias', 'expenses')->id,
+            // ],
+            // [
+            //     'name' => 'Зарплаты',
+            //     'alias' => 'salaries',
+            //     'model' => 'Salary',
+            //     'rights_minus' => null,
+            //     'system_item' => 1,
+            //     'author_id' => 1,
+            //     'site' => 0,
+            //     'view_path' => 'salaries',
+            //     'page_id' => $pages->firstWhere('alias', 'salaries')->id,
+            // ],
+            // [
+            //     'name' => 'Рекламные кампании',
+            //     'alias' => 'campaigns',
+            //     'model' => 'Campaign',
+            //     'rights_minus' => null,
+            //     'system_item' => 1,
+            //     'author_id' => 1,
+            //     'site' => 0,
+            //     'view_path' => 'campaigns',
+            //     'page_id' => $pages->firstWhere('alias', 'campaigns')->id,
+            // ],
+            // [
+            //     'name' => 'Социальные сети',
+            //     'alias' => 'social_networks',
+            //     'model' => 'SocialNetwork',
+            //     'rights_minus' => null,
+            //     'system_item' => 1,
+            //     'author_id' => 1,
+            //     'site' => 0,
+            //     'view_path' => 'social_networks',
+            //     'page_id' => $pages->firstWhere('alias', 'social_networks')->id,
+            // ],
             [
                 'name' => 'Лиды',
                 'alias' => 'leads',
@@ -346,6 +408,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'leads',
+                'page_id' => $pages->firstWhere('alias', 'leads')->id,
             ],
             [
                 'name' => 'Каталоги товаров',
@@ -355,6 +419,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 1,
+                'view_path' => 'catalogs_goods',
+                'page_id' => $pages->firstWhere('alias', 'catalogs_goods')->id,
             ],
             [
                 'name' => 'Каталоги услуг',
@@ -364,6 +430,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 1,
+                'view_path' => 'catalogs_services',
+                'page_id' => $pages->firstWhere('alias', 'catalogs_services')->id,
             ],
             [
                 'name' => 'Этапы',
@@ -373,6 +441,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'stages',
+                'page_id' => null,
             ],
             [
                 'name' => 'Внутренние комментарии',
@@ -382,6 +452,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'notes',
+                'page_id' => null,
             ],
             [
                 'name' => 'Задачи',
@@ -391,6 +463,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'challenges',
+                'page_id' => $pages->firstWhere('alias', 'challenges')->id,
             ],
             [
                 'name' => 'Рекламации',
@@ -400,6 +474,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'claims',
+                'page_id' => $pages->firstWhere('alias', 'claims')->id,
             ],
             [
                 'name' => 'Исходящие заказы',
@@ -409,6 +485,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'orders',
+                'page_id' => $pages->firstWhere('alias', 'orders')->id,
             ],
             [
                 'name' => 'Отзывы',
@@ -418,43 +496,53 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'feedbacks',
+                'page_id' => $pages->firstWhere('alias', 'feedbacks')->id,
             ],
-            [
-                'name' => 'Посты',
-                'alias' => 'posts',
-                'model' => 'Post',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Аккаунты',
-                'alias' => 'accounts',
-                'model' => 'Account',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Поля',
-                'alias' => 'fields',
-                'model' => 'Field',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
-            [
-                'name' => 'Правила',
-                'alias' => 'rules',
-                'model' => 'Rule',
-                'rights_minus' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 0,
-            ],
+            // [
+            //     'name' => 'Посты',
+            //     'alias' => 'posts',
+            //     'model' => 'Post',
+            //     'rights_minus' => null,
+            //     'system_item' => 1,
+            //     'author_id' => 1,
+            //     'site' => 0,
+            //     'view_path' => 'posts',
+            //     'page_id' => $pages->firstWhere('alias', 'posts')->id,
+            // ],
+            // [
+            //     'name' => 'Аккаунты',
+            //     'alias' => 'accounts',
+            //     'model' => 'Account',
+            //     'rights_minus' => null,
+            //     'system_item' => 1,
+            //     'author_id' => 1,
+            //     'site' => 0,
+            //     'view_path' => 'accounts',
+            //     'page_id' => $pages->firstWhere('alias', 'accounts')->id,
+            // ],
+            // [
+            //     'name' => 'Поля',
+            //     'alias' => 'fields',
+            //     'model' => 'Field',
+            //     'rights_minus' => null,
+            //     'system_item' => 1,
+            //     'author_id' => 1,
+            //     'site' => 0,
+            //     'view_path' => 'fields',
+            //     'page_id' => $pages->firstWhere('alias', 'fields')->id,
+            // ],
+            // [
+            //     'name' => 'Правила',
+            //     'alias' => 'rules',
+            //     'model' => 'Rule',
+            //     'rights_minus' => null,
+            //     'system_item' => 1,
+            //     'author_id' => 1,
+            //     'site' => 0,
+            //     'view_path' => 'rules',
+            //     'page_id' => $pages->firstWhere('alias', 'rules')->id,
+            // ],
             [
                 'name' => 'Склады',
                 'alias' => 'stocks',
@@ -463,6 +551,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'stocks',
+                'page_id' => $pages->firstWhere('alias', 'stocks')->id,
             ],
             [
                 'name' => 'Заявки поставщикам',
@@ -472,6 +562,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'applications',
+                'page_id' => $pages->firstWhere('alias', 'applications')->id,
             ],
             [
                 'name' => 'Товарные накладные',
@@ -481,6 +573,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'consignments',
+                'page_id' => $pages->firstWhere('alias', 'consignments')->id,
             ],
             [
                 'name' => 'Показатели',
@@ -490,6 +584,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'indicators',
+                'page_id' => $pages->firstWhere('alias', 'indicators')->id,
             ],
             [
                 'name' => 'Настройка фоток',
@@ -499,6 +595,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'photo_settings',
+                'page_id' => null,
             ],
             [
                 'name' => 'Клиентские заказы',
@@ -508,6 +606,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'estimates',
+                'page_id' => $pages->firstWhere('alias', 'estimates')->id,
             ],
             [
                 'name' => 'Группы артикулов',
@@ -517,6 +617,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'articles_groups',
+                'page_id' => $pages->firstWhere('alias', 'articles_groups')->id,
             ],
             [
                 'name' => 'Группы процессов',
@@ -526,6 +628,8 @@ class EntitiesTableSeeder extends Seeder
                 'system_item' => 1,
                 'author_id' => 1,
                 'site' => 0,
+                'view_path' => 'processes_groups',
+                'page_id' => $pages->firstWhere('alias', 'processes_groups')->id,
             ],
         ]);
 
@@ -541,6 +645,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+                'view_path' => 'suppliers',
+                'page_id' => $pages->firstWhere('alias', 'suppliers')->id,
             ],
             [
                 'name' => 'Клиенты',
@@ -551,6 +657,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+                'view_path' => 'clients',
+                'page_id' => $pages->firstWhere('alias', 'clients')->id,
             ],
             [
                 'name' => 'Производители',
@@ -561,6 +669,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+                'view_path' => 'manufacturers',
+                'page_id' => $pages->firstWhere('alias', 'manufacturers')->id,
             ],
             [
                 'name' => 'Дилеры',
@@ -571,6 +681,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+                'view_path' => 'dealers',
+                'page_id' => $pages->firstWhere('alias', 'dealers')->id,
             ],
             [
                 'name' => 'Пользователи',
@@ -581,6 +693,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+                'view_path' => 'users',
+                'page_id' => $pages->firstWhere('alias', 'users')->id,
             ],
             [
                 'name' => 'Отделы',
@@ -591,6 +705,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+                'view_path' => 'departments',
+                'page_id' => $pages->firstWhere('alias', 'departments')->id,
             ],
             [
                 'name' => 'Штат',
@@ -601,6 +717,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+                'view_path' => 'staff',
+                'page_id' => $pages->firstWhere('alias', 'staff')->id,
             ],
             [
                 'name' => 'Сотрудники',
@@ -611,6 +729,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+                'view_path' => 'employees',
+                'page_id' => $pages->firstWhere('alias', 'employees')->id,
             ],
             [
                 'name' => 'Страницы',
@@ -621,6 +741,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 1,
                 'ancestor_id' => Entity::whereAlias('sites')->first(['id'])->id,
+                'view_path' => 'pages',
+                'page_id' => $pages->firstWhere('alias', 'pages')->id,
             ],
             [
                 'name' => 'Навигации',
@@ -631,6 +753,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 1,
                 'ancestor_id' => Entity::whereAlias('sites')->first(['id'])->id,
+                'view_path' => 'navigations',
+                'page_id' => $pages->firstWhere('alias', 'navigations')->id,
             ],
 
             [
@@ -642,6 +766,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('albums_categories')->first(['id'])->id,
+                'view_path' => 'albums',
+                'page_id' => $pages->firstWhere('alias', 'albums')->id,
             ],
             [
                 'name' => 'Товары',
@@ -652,6 +778,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('goods_categories')->first(['id'])->id,
+                'view_path' => 'products/articles/goods',
+                'page_id' => $pages->firstWhere('alias', 'goods')->id,
             ],
             [
                 'name' => 'Сырьё',
@@ -662,6 +790,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('raws_categories')->first(['id'])->id,
+                'view_path' => 'products/articles/raws',
+                'page_id' => $pages->firstWhere('alias', 'raws')->id,
             ],
             [
                 'name' => 'Помещения',
@@ -672,6 +802,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('rooms_categories')->first(['id'])->id,
+                'view_path' => 'products/articles/rooms',
+                'page_id' => $pages->firstWhere('alias', 'rooms')->id,
             ],
             [
                 'name' => 'Услуги',
@@ -682,6 +814,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('services_categories')->first(['id'])->id,
+                'view_path' => 'products/processes/services',
+                'page_id' => $pages->firstWhere('alias', 'services')->id,
             ],
             [
                 'name' => 'Рабочие процессы',
@@ -692,6 +826,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('workflows_categories')->first(['id'])->id,
+                'view_path' => 'products/processes/workflows',
+                'page_id' => $pages->firstWhere('alias', 'workflows')->id,
             ],
             [
                 'name' => 'Единицы измерения',
@@ -702,6 +838,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('units_categories')->first(['id'])->id,
+                'view_path' => 'units',
+                'page_id' => null,
             ],
             [
                 'name' => 'Состав каталогов товаров',
@@ -712,6 +850,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('catalogs_goods')->first(['id'])->id,
+                'view_path' => 'catalogs_goods_items',
+                'page_id' => null,
             ],
             [
                 'name' => 'Состав каталогов услуг',
@@ -722,6 +862,20 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('catalogs_services')->first(['id'])->id,
+                'view_path' => 'catalogs_services_items',
+                'page_id' => null,
+            ],
+            [
+                'name' => 'Услуги каталога услуг',
+                'alias' => 'prices_services',
+                'model' => 'PricesService',
+                'rights_minus' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('catalogs_services')->first(['id'])->id,
+                'view_path' => 'prices_services',
+                'page_id' => $pages->firstWhere('alias', 'prices_services')->id,
             ],
             [
                 'name' => 'Артикулы',
@@ -732,6 +886,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('articles_groups')->first(['id'])->id,
+                'view_path' => 'articles',
+                'page_id' => null,
             ],
             [
                 'name' => 'Процессы',
@@ -742,6 +898,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('processes_groups')->first(['id'])->id,
+                'view_path' => 'processes',
+                'page_id' => null,
             ],
         ]);
 
@@ -756,6 +914,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('navigations')->first(['id'])->id,
+                'view_path' => 'menus',
+                'page_id' => $pages->firstWhere('alias', 'menus')->id,
             ],
             [
                 'name' => 'Фотографии',
@@ -766,6 +926,8 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('albums')->first(['id'])->id,
+                'view_path' => 'photos',
+                'page_id' => $pages->firstWhere('alias', 'photos')->id,
             ],
         ]);
 

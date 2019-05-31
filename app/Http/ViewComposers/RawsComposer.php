@@ -14,7 +14,8 @@ class RawsComposer
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('raws_categories', false, 'index');
 
-        $raws_categories = RawsCategory::whereHas('raws', function ($q) {
+        $raws_categories = RawsCategory::with(['raws.article'])
+        ->whereHas('raws', function ($q) {
             $q->where('archive', false)
             ->whereHas('article', function ($q) {
                 $q->where('draft', false);

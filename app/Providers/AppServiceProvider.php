@@ -78,12 +78,20 @@ class AppServiceProvider extends ServiceProvider
 
         // Display
         Blade::if('display', function ($item) {
-            return $item->display == 1;
+            $result = $item->display == 1;
+            return $result;
         });
 
         // Moderation
         Blade::if('moderation', function ($item) {
-            return $item->moderation == 1;
+            $result = $item->moderation == 1;
+            return $result;
+        });
+
+        // Шаблон
+        Blade::if('template', function ($item) {
+            $result = is_null($item->company_id) && is_null($item->system_item);
+            return $result;
         });
 
     }

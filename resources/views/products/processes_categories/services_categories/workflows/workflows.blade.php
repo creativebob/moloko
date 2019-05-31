@@ -16,7 +16,7 @@
 
 				@if ($category->workflows->isNotEmpty())
 				@foreach ($category->workflows as $workflow)
-				@include ('services_categories.workflows.workflow_tr', $workflow)
+				@include ('products.processes_categories.services_categories.workflows.workflow_tr', $workflow)
 				@endforeach
 				@endif
 
@@ -32,7 +32,7 @@
 
 					<ul class="checker" id="categories-list">
 
-						@include('services_categories.workflows.workflows_list')
+						@include('products.processes_categories.services_categories.workflows.workflows_list')
 					</ul>
 
 				</div>

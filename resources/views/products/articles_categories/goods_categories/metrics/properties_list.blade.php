@@ -3,7 +3,7 @@
 		<ul class="checker" id="properties-list">
 			@foreach ($properties as $property)
 			@if($property->metrics->isNotEmpty())
-			@include('goods_categories.metrics.property', ['property' => $property])
+			@include('products.articles_categories.goods_categories.metrics.property', ['property' => $property])
 			@endif
 			@endforeach
 

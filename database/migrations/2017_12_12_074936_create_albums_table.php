@@ -18,8 +18,8 @@ class CreateAlbumsTable extends Migration
 
             $table->string('name')->index()->comment('Название альбома');
 
-            $table->bigInteger('albums_category_id')->nullable()->unsigned()->comment('Id категории в которой находиться альбом');
-            $table->foreign('albums_category_id')->references('id')->on('albums_categories');
+            $table->bigInteger('category_id')->nullable()->unsigned()->comment('Id категории альбомов');
+            $table->foreign('category_id')->references('id')->on('albums_categories');
 
             $table->boolean('personal')->default(0)->comment('Личный');
 

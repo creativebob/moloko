@@ -15,7 +15,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -24,7 +24,7 @@ use App\Scopes\Filters\DateIntervalFilter;
 
 class UnitsCategory extends Model
 {
-    
+
 	// Включаем кеш
     // use Cachable;
 
@@ -44,6 +44,6 @@ class UnitsCategory extends Model
     // Категория едениц измерения
     public function units()
     {
-        return $this->hasMany('App\Unit');
+        return $this->hasMany(Unit::class, 'category_id');
     }
 }

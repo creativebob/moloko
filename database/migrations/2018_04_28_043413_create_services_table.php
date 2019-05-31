@@ -19,7 +19,7 @@ class CreateServicesTable extends Migration
             $table->bigInteger('process_id')->nullable()->unsigned()->comment('Id процесса');
             $table->foreign('process_id')->references('id')->on('processes');
 
-            $table->bigInteger('category_id')->nullable()->unsigned()->comment('Id категории товаров');
+            $table->bigInteger('category_id')->nullable()->unsigned()->comment('Id категории услуг');
             $table->foreign('category_id')->references('id')->on('services_categories');
 
             $table->boolean('set_status')->default(0)->unsigned()->comment('Статус набора');

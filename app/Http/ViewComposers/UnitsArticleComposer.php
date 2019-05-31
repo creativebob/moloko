@@ -6,13 +6,13 @@ use App\Unit;
 
 use Illuminate\View\View;
 
-class UnitsTmcComposer
+class UnitsArticleComposer
 {
 	public function compose(View $view)
 	{
 
         // Главный запрос
-        $units = Unit::where('units_category_id', 2)
+        $units = Unit::where('category_id', $view->units_category_id)
         ->get();
 
         return $view->with(compact('units'));

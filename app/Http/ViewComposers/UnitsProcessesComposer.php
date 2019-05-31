@@ -12,7 +12,7 @@ class UnitsProcessesComposer
 	{
 
         // Главный запрос
-        $units = Unit::where('units_category_id', $view->units_category_id)
+        $units = Unit::where('category_id', $view->units_category_id)
         ->get();
 
         return $view->with(compact('units'));

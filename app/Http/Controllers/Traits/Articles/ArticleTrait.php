@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Traits\Tmc;
+namespace App\Http\Controllers\Traits\Articles;
 
 use App\Article;
 use App\ArticlesGroup;
@@ -9,6 +9,8 @@ use App\Unit;
 
 // Валидация
 use App\Http\Requests\ArticleRequest;
+
+use Illuminate\Support\Facades\Log;
 
 trait ArticleTrait
 {
@@ -58,6 +60,9 @@ trait ArticleTrait
             break;
         }
 
+        Log::channel('operations')
+            ->info('Режим создания: ' . $request->mode . '. Записали или нашли группу артикулов c id: ' . $articles_group->id . ', в зависимости от режима. Связали с категорией.');
+
         $data = $request->input();
         // dd($data);
         $data['articles_group_id'] = $articles_group->id;
@@ -77,6 +82,8 @@ trait ArticleTrait
         $data['weight'] = $weight;
 
         $article = (new Article())->create($data);
+        Log::channel('operations')
+            ->info('Записали артикул с id: ' . $article->id);
 
         return $article;
     }
@@ -117,8 +124,15 @@ trait ArticleTrait
                     $this->setRaws($request, $article);
                 }
 
-                // Если ошибок и совпадений нет, то обновляем артикул
+                if (isset($article->unit_id)) {
+                    $unit = Unit::findOrFail($article->unit_id);
+                    $weight = $data['weight'] * $unit->ratio;
+                    $data['weight'] = $weight;
+                }
+
                 $data['draft'] = request()->has('draft');
+
+                // Если ошибок и совпадений нет, то обновляем артикул
                 $article->update($data);
 
                 // Cохраняем / обновляем фото
