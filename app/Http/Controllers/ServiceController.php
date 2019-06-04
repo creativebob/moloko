@@ -222,9 +222,9 @@ class ServiceController extends Controller
                 // ];
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
                 Log::channel('operations')
-                ->info('Записали услугу');
+                ->info('Записали услугу с id: ' . $service->id);
                 Log::channel('operations')
-                ->info('Автор: ' . $service->author->name . ' id: ' . $service->author_id .  ', компания: ' . $service->company->name . ', id: ' .$service->company_id);
+                ->info('Автор: ' . $service->author->name . ' id: ' . $service->author_id .  ', компания: ' . is_null($service->company) ? 'шаблон' : $service->company->name . ', id: ' . $service->company_id);
                 Log::channel('operations')
                 ->info('========================================== КОНЕЦ ЗАПИСИ УСЛУГИ ==============================================
 

@@ -221,7 +221,7 @@ class PricesServiceController extends Controller
                     // dd($catalog_item_id);
                 }
             } else {
-                dd('lol');
+                // dd('lol');
                 $catalog_item_id = $category->id;
             }
         } else {

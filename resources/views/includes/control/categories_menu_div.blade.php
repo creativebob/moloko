@@ -9,16 +9,17 @@
 </div>
 
 <div class="system-menu">
-    {{-- Системный статус --}}
-    @can ('system', $item)
 
     @php
     if (isset($nested)) {
-        $nested_count = ($item->$nested > 0) || isset($item->childrens) ? 1 : 0;
+        $nested_count = ($item->$nested > 0) || isset($item->childs) ? 1 : 0;
     } else {
         $nested_count = 0;
     }
     @endphp
+
+    {{-- Системный статус --}}
+    @can ('system', $item)
 
     @switch($item)
 

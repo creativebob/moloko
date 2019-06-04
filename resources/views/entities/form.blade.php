@@ -2,7 +2,7 @@
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active"><a href="#settings" aria-selected="true">Информация</a></li>
-            <li class="tabs-title"><a data-tabs-target="tmc" href="#tmc">ТМЦ</a></li>
+            
             <li class="tabs-title"><a data-tabs-target="photos_settings" href="#photos_settings">Настройка фотографий</a></li>
         </ul>
     </div>
@@ -34,10 +34,10 @@
                     </div>
                     <div class="small-6 cell radiobutton">Генерировать права?<br>
 
-                        {{ Form::radio('rights_minus', 0, true, ['id'=>'Yes']) }}
+                        {{ Form::radio('rights', 1, true, ['id' => 'Yes']) }}
                         <label for="Yes"><span>Да</span></label>
 
-                        {{ Form::radio('rights_minus', 1, false, ['id'=>'No']) }}
+                        {{ Form::radio('rights', 0, false, ['id' => 'No']) }}
                         <label for="No"><span>Нет</span></label>
 
                     </div>
@@ -50,7 +50,8 @@
         </div>
 
         {{-- Настройки тмц --}}
-        <div class="tabs-panel" id="tmc">
+        {{-- <li class="tabs-title"><a data-tabs-target="tmc" href="#tmc">ТМЦ</a></li> --}}
+        {{-- <div class="tabs-panel" id="tmc">
             <div class="small-12 medium-7 large-5 cell tabs-margin-top">
 
                 <div class="grid-x grid-padding-x">
@@ -69,7 +70,7 @@
                 </div>
 
             </div>
-        </div>
+        </div> --}}
 
         {{-- Настройки фотографий --}}
         <div class="tabs-panel" id="photos_settings">

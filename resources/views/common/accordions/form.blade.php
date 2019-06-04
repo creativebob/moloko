@@ -12,7 +12,7 @@
             <div class="item-error">Такое название уже существует!</div>
         </label>
 
-        @includeIf($entity.'.form')
+        {{-- @includeIf($page_info->entity->view_path . '.form') --}}
 
         {{ Form::hidden('id', null, ['id' => 'item-id']) }}
         {{ Form::hidden('category_id', null, ['id' => 'category-id']) }}

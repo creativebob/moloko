@@ -80,6 +80,12 @@ trait PoliticTrait
                 // ($entity_name == 'menus')||
                 // ($entity_name == 'roles')||
 
+                ($entity_name == 'services_categories')||
+                ($entity_name == 'services')||
+                ($entity_name == 'catalogs_services')||
+                ($entity_name == 'catalogs_services_items')||
+                ($entity_name == 'prices_services')||
+
                 ($entity_name == 'cities')||
                 ($entity_name == 'regions')||
                 ($entity_name == 'areas')||

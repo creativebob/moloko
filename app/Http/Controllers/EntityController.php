@@ -104,7 +104,6 @@ class EntityController extends Controller
 
     public function store(Request $request)
     {
-
         // Проверяем право на создание сущности
         $this->authorize(getmethod(__FUNCTION__), Entity::class);
 
@@ -120,10 +119,7 @@ class EntityController extends Controller
         $entity->alias = $request->alias;
         $entity->model = $request->model;
 
-        if($request->rights_minus == 0){
-            $entity->rights_minus = Null;} else {
-                $entity->rights_minus = $rights_minus;
-            };
+        $entity->rights = $request->rights;
 
         // Вносим общие данные
         $entity->author_id = 1;
@@ -148,7 +144,7 @@ class EntityController extends Controller
         // $entity->filial_id = $filial_id;
 
         //  Тмц
-        $this->tmc($request, $entity);
+        // $this->tmc($request, $entity);
 
         $entity->save();
 
@@ -172,9 +168,9 @@ class EntityController extends Controller
 
         foreach($actionentities as $actionentity){
 
-                $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+            $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
 
-                $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+            $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
         };
 
         DB::table('rights')->insert($mass);
@@ -259,11 +255,13 @@ class EntityController extends Controller
         $entity->name = $request->name;
         $entity->alias = $request->alias;
 
+        $entity->rights = $request->has('rights');
+
         $entity->statistic = $request->has('statistic');
         $entity->dependence = $request->has('dependence');
 
         //  Тмц
-        $this->tmc($request, $entity);
+        // $this->tmc($request, $entity);
 
         $entity->save();
 
@@ -290,34 +288,34 @@ class EntityController extends Controller
 
         if ($entity) {
           return redirect('/admin/entities');
-        } else {
+      } else {
           echo 'Произошла ошибка';
-        };
+      };
 
-        Log::info('Удалили запись из таблица Сущности. ID: ' . $id);
-    }
+      Log::info('Удалили запись из таблица Сущности. ID: ' . $id);
+  }
 
     // Сортировка
-    public function ajax_sort(Request $request)
-    {
+  public function ajax_sort(Request $request)
+  {
 
-        $i = 1;
+    $i = 1;
 
-        foreach ($request->entities as $item) {
-            Entity::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
+    foreach ($request->entities as $item) {
+        Entity::where('id', $item)->update(['sort' => $i]);
+        $i++;
     }
+}
 
 
     // ------------------------------------------------ Общие методы ---------------------------------
-    public function tmc($request, $entity)
-    {
-        if ($request->has('tmc')) {
-            $entity->tmc = 1;
-            $entity->consist_id = $request->consist_id;
-        }
+// public function tmc($request, $entity)
+// {
+//     if ($request->has('tmc')) {
+//         $entity->tmc = 1;
+//         $entity->consist_id = $request->consist_id;
+//     }
 
-        return $entity;
-    }
+//     return $entity;
+// }
 }

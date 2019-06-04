@@ -45,6 +45,7 @@ class Entity extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+    
     protected $fillable = [
         'name',
         'alias',

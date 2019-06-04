@@ -67,7 +67,7 @@ class ServicesCategoryController extends Controller
                     'type' => $this->type,
                     'count' => $services_categories->count(),
                     'id' => $request->id,
-                    // 'nested' => 'services_products_count',
+                    'nested' => 'childs_count',
                 ]
             );
         }
@@ -100,7 +100,8 @@ class ServicesCategoryController extends Controller
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории услуг',
             'parent_id' => $request->parent_id,
-            'category_id' => $request->category_id
+            'category_id' => $request->category_id,
+            'page_info' => pageInfo($this->entity_alias),
         ]);
     }
 

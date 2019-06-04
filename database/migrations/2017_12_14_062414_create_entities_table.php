@@ -19,9 +19,9 @@ class CreateEntitiesTable extends Migration
 
             $table->string('view_path')->nullable()->comment('Путь до шаблона отображения');
 
-            $table->integer('rights_minus')->unsigned()->nullable()->comment('Исключает настройку прав на сущность при равной 1');
-            $table->integer('validation_minus')->unsigned()->nullable()->comment('Исключает настройку дополнительной валидации страницы');
-            $table->integer('feedback_minus')->unsigned()->nullable()->comment('Исключает добавление отзыва к сущности из под интерфейса');
+            $table->boolean('rights')->default(0)->comment('Права на сущность');
+            $table->boolean('validation')->default(0)->comment('Дополнительная валидация страницы');
+            $table->boolean('feedback')->default(0)->comment('Добавление отзыва');
 
             $table->bigInteger('page_id')->unsigned()->nullable()->comment('Id страницы');
             $table->foreign('page_id')->references('id')->on('pages');
@@ -35,9 +35,9 @@ class CreateEntitiesTable extends Migration
             $table->boolean('site')->default(0)->comment('Раздел сайта');
 
             // Блок тмц
-            $table->boolean('tmc')->default(0)->comment('ТМЦ');
-            $table->bigInteger('consist_id')->unsigned()->nullable()->comment('Id сущности, из которой состоит сущность');
-            $table->foreign('consist_id')->references('id')->on('entities');
+            // $table->boolean('tmc')->default(0)->comment('ТМЦ');
+            // $table->bigInteger('consist_id')->unsigned()->nullable()->comment('Id сущности, из которой состоит сущность');
+            // $table->foreign('consist_id')->references('id')->on('entities');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

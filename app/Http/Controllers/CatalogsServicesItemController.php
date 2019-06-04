@@ -57,10 +57,11 @@ class CatalogsServicesItemController extends Controller
         ];
 
         $catalogs_services_items = CatalogsServicesItem::with('childs')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
+        // ->moderatorLimit($answer)
+        // ->companiesLimit($answer)
         ->authors($answer)
-        ->systemItem($answer)
+        // ->systemItem($answer)
+        ->template($answer)
         ->where('catalogs_service_id', $catalog_id)
         ->get($columns);
         // dd($catalogs_services_items);
@@ -101,6 +102,7 @@ class CatalogsServicesItemController extends Controller
             'parent_id' => $request->parent_id,
             'category_id' => $request->category_id,
             'catalog_id' => $catalog_id,
+            'page_info' => pageInfo($this->entity_alias),
         ]);
     }
 

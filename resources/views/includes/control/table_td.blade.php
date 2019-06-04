@@ -8,8 +8,7 @@
         <div class="icon-display-hide black sprite" data-open="item-display"></div>
         @enddisplay
         @endcan
-        {{-- Системный статус --}}
-        @can ('system', $item)
+
         @php
             if (isset($nested)) {
                 $nested_count = ($item->$nested > 0) ? 1 : 0;
@@ -18,6 +17,9 @@
             }
         @endphp
 
+        {{-- Системный статус --}}
+        @can ('system', $item)
+        
         @switch($item)
 
         @case($item->system_item == 1 && $item->company_id == null)
