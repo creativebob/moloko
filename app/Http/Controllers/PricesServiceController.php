@@ -34,7 +34,7 @@ class PricesServiceController extends Controller
     {
 
         // Подключение политики
-        // $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -154,93 +154,19 @@ class PricesServiceController extends Controller
     public function sync(Request $request, $catalog_id)
     {
 
-        // dd($request);
-        $prices_service = PricesService::with(['catalog', 'catalogs_item.category', 'catalogs_item.childs'])
-        ->findOrFail($request->id);
-
+        $prices_service_common = PricesService::findOrFail($request->id);
 
         $user = $request->user();
 
-        $catalog = CatalogsService::firstOrCreate([
-            'name' => $prices_service->catalog->name,
-            'company_id' => $user->company_id,
-        ], [
-            'display' => 1,
-            'author_id' => hideGod($user),
-        ]);
-        // dd($catalog);
-
-        if (isset($prices_service->catalogs_item->category_id)) {
-
-            $category = $prices_service->catalogs_item->category;
-
-            $category = CatalogsServicesItem::firstOrCreate([
-                'catalogs_service_id' => $catalog->id,
-                'name' => $category->name,
-                'company_id' => $user->company_id,
-                'category_id' => null,
-                'parent_id' => null,
-            ], [
-                'display' => 1,
-                'author_id' => hideGod($user),
-            ]);
-
-            $prices_service->catalogs_item->category->load('childs');
-
-            function getChilds($item, $category, $user, $catalog, $parent_id) {
-
-                $catalogs_services_item = CatalogsServicesItem::firstOrCreate([
-                    'catalogs_service_id' => $catalog->id,
-                    'name' => $item->name,
-                    'company_id' => $user->company_id,
-                    'category_id' => $category->id,
-                    'parent_id' => $parent_id,
-                ], [
-                    'display' => 1,
-                    'author_id' => hideGod($user),
-                ]);
-
-                $catalogs_services_item->load('childs');
-
-                if ($item->childs->isNotEmpty()) {
-                    foreach ($item->childs as $item) {
-                        $catalog_item_id = getChilds($item, $category, $user, $catalog, $catalogs_services_item->id);
-                        // dd($catalog_item_id);
-                        return $catalog_item_id;
-                    }
-                } else {
-                    $catalog_item_id = $catalogs_services_item->id;
-                    // dd($catalog_item_id);
-                    return $catalog_item_id;
-                }
-            }
-
-            if ($prices_service->catalogs_item->category->childs->isNotEmpty()) {
-                foreach ($prices_service->catalogs_item->category->childs as $item) {
-                    $catalog_item_id = getChilds($item, $category, $user, $catalog, $category->id);
-                    // dd($catalog_item_id);
-                }
-            } else {
-                // dd('lol');
-                $catalog_item_id = $category->id;
-            }
-        } else {
-            $catalog_item_id = $prices_service->catalogs_item->id;
-        }
-
-        $service_id = $prices_service->service_id;
-
         $prices_service = PricesService::firstOrCreate([
-            'catalogs_services_item_id' => $catalog_item_id,
-            'catalogs_service_id' => $catalog->id,
-            'service_id' => $service_id,
-        ], [
-            'display' => 1,
-            'price' => $request->price,
-            'author_id' => hideGod($user),
+            'catalogs_services_item_id' => $prices_service_common->catalogs_services_item_id,
+            'catalogs_service_id' => $prices_service_common->catalogs_service_id,
+            'service_id' => $prices_service_common->service_id,
             'company_id' => $user->company_id,
+        ], [
+            'author_id' => $user->id,
+            'price' => $request->price,
         ]);
-        // dd($prices_service);
 
         return view('prices_services.sync', compact('prices_service'));
     }

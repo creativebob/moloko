@@ -46,8 +46,6 @@ class CatalogsGoods extends Model
         'name',
         'alias',
         'slug',
-        'parent_id',
-        'category_id',
     ];
 
     // Пункты

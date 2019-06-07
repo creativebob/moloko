@@ -25,6 +25,11 @@ use App\Observers\ServiceObserver;
 use App\Workflow;
 use App\Observers\WorkflowObserver;
 
+// Новости
+use App\Rubricator;
+use App\Observers\RubricatorObserver;
+use App\RubricatorsItem;
+use App\Observers\RubricatorsItemObserver;
 
 use App\Stock;
 use App\Observers\StockObserver;
@@ -50,6 +55,9 @@ class ObserverServiceProvider extends ServiceProvider
         Service::observe(ServiceObserver::class);
         Workflow::observe(WorkflowObserver::class);
 
+        // Новости
+        Rubricator::observe(RubricatorObserver::class);
+        RubricatorsItem::observe(RubricatorsItemObserver::class);
 
         Stock::observe(StockObserver::class);
     }

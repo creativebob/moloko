@@ -21,8 +21,8 @@
                     @include('includes.inputs.date', [
                         'name' => 'publish_end_date',
                         'value' => isset($cur_news->publish_end_date) ? $cur_news->publish_end_date->format('d.m.Y') : ''
-                        ]
-                        )
+                    ]
+                    )
                 </label>
             </div>
         </div>
@@ -32,8 +32,21 @@
         </label>
 
         <label>Превью новости
-            @include('includes.inputs.textarea', ['name'=>'preview', 'value'=>$cur_news->preview])
+            @include('includes.inputs.textarea', ['name' => 'preview', 'value'=>$cur_news->preview])
         </label>
+
+        <div class="grid-x grid-padding-x">
+            <div class="small-6 cell">
+                <label>Рубрика
+                    @include('news.rubricators.select_rubricators')
+                </label>
+            </div>
+            <div class="small-6 cell">
+                <label>Пункт рубрики
+                    @include('news.rubricators.select_rubricators_items', ['rubricator_id' => $cur_news->rubricator_id, 'rubricators_item_id' => $cur_news->rubricators_item_id])
+                </label>
+            </div>
+        </div>
 
         <label>Выберите фото для превью
             {{ Form::file('photo') }}

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCityEntityTable extends Migration
+class CreateCityEntitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCityEntityTable extends Migration
      */
     public function up()
     {
-        Schema::create('city_entity', function (Blueprint $table) {
+        Schema::create('city_entities', function (Blueprint $table) {
 
             $table->bigInteger('city_id')->nullable()->unsigned()->comment('Id альбома');
             $table->foreign('city_id')->references('id')->on('cities');
@@ -30,6 +30,6 @@ class CreateCityEntityTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('city_entity');
+        Schema::dropIfExists('city_entities');
     }
 }

@@ -62,40 +62,40 @@ class News extends Model
         'company_id',
     ];
 
-    // Cайт
-    public function site()
-    {
-        return $this->belongsTo('App\Site');
-    }
+    // // Cайт
+    // public function site()
+    // {
+    //     return $this->belongsTo('App\Site');
+    // }
 
     // Rомпания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
     // Превью
     public function photo()
     {
-        return $this->belongsTo('App\Photo');
+        return $this->belongsTo(Photo::class);
     }
 
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo(User::class);
     }
 
     // Альбом
     public function albums()
     {
-        return $this->morphToMany('App\Album', 'album_entity');
+        return $this->morphToMany(Album::class, 'album_entity');
     }
 
     // Города
     public function cities()
     {
-        return $this->morphToMany('App\City', 'city_entities');
+        return $this->morphToMany(City::class, 'city_entity');
     }
 
 }

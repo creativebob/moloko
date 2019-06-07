@@ -33,6 +33,9 @@ use App\Site;
 use App\Page;
 use App\Navigation;
 use App\Menu;
+
+use App\Rubricator;
+use App\RubricatorsItem;
 use App\News;
 
 use App\Account;
@@ -60,6 +63,7 @@ use App\ServicesArticle;
 use App\ServicesCategory;
 use App\ServicesProduct;
 use App\Service;
+use App\PricesService;
 
 use App\ExpendablesCategory;
 
@@ -115,6 +119,9 @@ use App\Policies\SitePolicy;
 use App\Policies\PagePolicy;
 use App\Policies\NavigationPolicy;
 use App\Policies\MenuPolicy;
+
+use App\Policies\RubricatorPolicy;
+use App\Policies\RubricatorsItemPolicy;
 use App\Policies\NewsPolicy;
 
 use App\Policies\AccountPolicy;
@@ -140,6 +147,8 @@ use App\Policies\ServicePolicy;
 use App\Policies\ServicesCategoryPolicy;
 use App\Policies\ServicesProductPolicy;
 use App\Policies\ServicesArticlePolicy;
+use App\Policies\PricesServicePolicy;
+
 use App\Policies\ExpendablesCategoryPolicy;
 
 use App\Policies\GoodsPolicy;
@@ -257,6 +266,11 @@ class AuthServiceProvider extends ServiceProvider
         Navigation::class => NavigationPolicy::class,
         Page::class => PagePolicy::class,
         Site::class => SitePolicy::class,
+
+
+
+        Rubricator::class => RubricatorPolicy::class,
+        RubricatorsItem::class => RubricatorsItemPolicy::class,
         News::class => NewsPolicy::class,
 
         Staffer::class => StafferPolicy::class,
@@ -272,6 +286,8 @@ class AuthServiceProvider extends ServiceProvider
         ServicesCategory::class => ServicesCategoryPolicy::class,
         ServicesProduct::class => ServicesProductPolicy::class,
         ServicesArticle::class => ServicesArticlePolicy::class,
+
+        PricesService::class => PricesServicePolicy::class,
 
         'App\WorkflowsCategory' => 'App\Policies\WorkflowsCategoryPolicy',
         'App\Workflow' => 'App\Policies\WorkflowPolicy',

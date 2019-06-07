@@ -19,11 +19,11 @@
             <div class="top-bar-left">
                 <h2 class="header-content">{{ $page_info->title }}
                     <span class="content-count" title="Общее количество">
-                        {{ $catalogs_services->isNotEmpty() ? num_format($catalogs_services->total(), 0) : 0 }}
+                        {{ $rubricators->isNotEmpty() ? num_format($rubricators->total(), 0) : 0 }}
                     </span>
                 </h2>
 
-                @can('create', App\CatalogsService::class)
+                @can('create', App\Rubricator::class)
 
                 {{ link_to_route($page_info->alias.'.create', '', $parameters = [], $attributes = ['class' => 'icon-add sprite']) }}
 
@@ -90,7 +90,7 @@
 <div class="grid-x">
     <div class="small-12 cell">
 
-        <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="catalogs_services">
+        <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="rubricators">
 
             <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
                 <tr id="thead-content">
@@ -102,15 +102,7 @@
                     <th class="td-name">Название</th>
                     <th class="td-alias">Алиас</th>
                     <th class="td-description">Описание</th>
-
-                    @can('index', App\CatalogsServicesItem::class)
                     <th class="td-tree">Дерево</th>
-                    @endcan
-
-                    @can('index', App\PricesService::class)
-                    <th class="td-services">Услуги</th>
-                    @endcan
-
                     <th class="td-author">Автор</th>
                     <th class="td-control"></th>
                     <th class="td-delete"></th>
@@ -119,49 +111,40 @@
 
             <tbody data-tbodyId="1" class="tbody-width">
 
-                @if($catalogs_services->isNotEmpty())
-                @foreach($catalogs_services as $catalogs_service)
+                @if($rubricators->isNotEmpty())
+                @foreach($rubricators as $rubricator)
 
-                <tr class="item @if($catalogs_service->moderation == 1)no-moderation @endif" id="catalogs_services-{{ $catalogs_service->id }}" data-name="{{ $catalogs_service->name }}">
+                <tr class="item @if($rubricator->moderation == 1)no-moderation @endif" id="rubricators-{{ $rubricator->id }}" data-name="{{ $rubricator->name }}">
                     <td class="td-drop">
                         <div class="sprite icon-drop"></div>
                     </td>
                     <td class="td-checkbox checkbox">
-                        <input type="checkbox" class="table-check" name="" id="check-{{ $catalogs_service->id }}">
-                        <label class="label-check" for="check-{{ $catalogs_service->id }}"></label>
+                        <input type="checkbox" class="table-check" name="" id="check-{{ $rubricator->id }}">
+                        <label class="label-check" for="check-{{ $rubricator->id }}"></label>
                     </td>
                     <td class="td-name">
 
-                        @can('update', $catalogs_service)
-                        {{ link_to_route($page_info->alias.'.edit', $catalogs_service->name, $parameters = ['id' => $catalogs_service->id], $attributes = []) }}
+                        @can('update', $rubricator)
+                        {{ link_to_route($page_info->alias.'.edit', $rubricator->name, $parameters = ['id' => $rubricator->id], $attributes = []) }}
                         @endcan
 
-                        @cannot('update', $catalogs_service)
+                        @cannot('update', $rubricator)
                         {{ $page->name }}
                         @endcannot
 
                     </td>
-                    <td class="td-alias">{{ $catalogs_service->alias }}</td>
-                    <td class="td-description">{{ $catalogs_service->description }}</td>
-
-                    @can('index', App\CatalogsServicesItem::class)
+                    <td class="td-alias">{{ $rubricator->alias }}</td>
+                    <td class="td-description">{{ $rubricator->description }}</td>
                     <td class="td-tree">
-                        {{ link_to_route('catalogs_services_items.index', 'Дерево', ['catalog_id' => $catalogs_service->id], ['class' => 'button']) }}
+                        {{ link_to_route('rubricators_items.index', 'Дерево', $parameters = ['catalog_id' => $rubricator->id], $attributes = ['class' => 'button']) }}
                     </td>
-                    @endcan
-
-                    @can('index', App\PricesService::class)
-                    <td class="td-services">
-                        {{ link_to_route('prices_services.index', 'Услуги', ['catalog_id' => $catalogs_service->id], ['class' => 'button']) }}
-                    </td>
-                    @endcan
-                    <td class="td-author">{{ $catalogs_service->author->name}}</td>
+                    <td class="td-author">{{ $rubricator->author->name}}</td>
 
                     {{-- Элементы управления --}}
-                    @include('includes.control.table-td', ['item' => $catalogs_service])
+                    @include('includes.control.table-td', ['item' => $rubricator])
 
                     <td class="td-delete">
-                        @can('delete', $catalogs_service)
+                        @can('delete', $rubricator)
                         <a class="icon-delete sprite" data-open="item-delete"></a>
                         @endcan
                     </td>
@@ -176,8 +159,8 @@
 {{-- Pagination --}}
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
-    <span class="pagination-title">Кол-во записей: {{ $catalogs_services->count() }}</span>
-    {{ $catalogs_services->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
+    <span class="pagination-title">Кол-во записей: {{ $rubricators->count() }}</span>
+    {{ $rubricators->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
 </div>
 </div>
 @endsection

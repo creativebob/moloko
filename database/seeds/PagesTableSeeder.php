@@ -613,6 +613,41 @@ class PagesTableSeeder extends Seeder
                 'display' => 1,
             ],
 
+
+            [
+                'name' => 'Рубрики',
+                'site_id' => 1,
+                'title' => 'Рубрики',
+                'description' => 'Рубрики',
+                'alias' => 'rubricators',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
+            [
+                'name' => 'Пункты рубрик',
+                'site_id' => 1,
+                'title' => 'Пункты рубрик',
+                'description' => 'Пункты рубрик',
+                'alias' => 'rubricators_items',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
+            [
+                'name' => 'Новости',
+                'site_id' => 1,
+                'title' => 'Новости',
+                'description' => 'Новости',
+                'alias' => 'news',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
+
             // [
             //     'name' => 'Продукция на сайте',
             //     'site_id' => 1,
@@ -723,17 +758,7 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => 1,
             ],
-            [
-                'name' => 'Новости',
-                'site_id' => 1,
-                'title' => 'Новости',
-                'description' => 'Новости',
-                'alias' => 'news',
-                'company_id' => null,
-                'system_item' => 1,
-                'author_id' => 1,
-                'display' => 1,
-            ],
+
         ]);
 }
 }

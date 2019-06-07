@@ -10,61 +10,60 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
 use App\Scopes\Traits\AuthorsTraitScopes;
 use App\Scopes\Traits\SystemItemTraitScopes;
-use App\Scopes\Traits\FilialsTraitScopes;
+// use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\SuppliersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 // Фильтры
-use App\Scopes\Filters\Filter;
-use App\Scopes\Filters\BooklistFilter;
+// use App\Scopes\Filters\Filter;
+// use App\Scopes\Filters\BooklistFilter;
+// use App\Scopes\Filters\DateIntervalFilter;
 
-class Service extends Model
+class RubricatorsItem extends Model
 {
-
-	// Включаем кеш
+    // Включаем кеш
     use Cachable;
 
-    use Notifiable;
     use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
     use SystemItemTraitScopes;
-    use FilialsTraitScopes;
+    // use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
-    use SuppliersTraitScopes;
 
     // Фильтры
-    use Filter;
-    use BooklistFilter;
+    // use Filter;
+    // use BooklistFilter;
+    // use DateIntervalFilter;
+
+    protected $dates = ['deleted_at'];
 
     protected $fillable = [
+        'company_id',
+        'name',
+        'alias',
+        'slug',
+        'parent_id',
         'category_id',
-        'process_id',
+        'catalog_id',
     ];
 
-    // Процесс
-    public function process()
+    // Каталог
+    public function rubricator()
     {
-        return $this->belongsTo(Process::class);
+        return $this->belongsTo(Rubricator::class);
     }
 
-    // Категория
-    public function category()
+    // Вложенные
+    public function childs()
     {
-        return $this->belongsTo(ServicesCategory::class);
-    }
-
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
+        return $this->hasMany(RubricatorsItem::class, 'parent_id');
     }
 
     // Автор
@@ -73,10 +72,9 @@ class Service extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Пункты каталога
-    public function prices()
+    // Новости
+    public function news()
     {
-        return $this->belongsToMany(CatalogsServicesItem::class, 'prices_services', 'service_id', 'catalogs_services_item_id');
+        return $this->hasMany(News::class);
     }
-
 }

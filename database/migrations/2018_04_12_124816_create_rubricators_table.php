@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNewsTable extends Migration
+class CreateRubricatorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,29 +13,19 @@ class CreateNewsTable extends Migration
      */
     public function up()
     {
-        Schema::create('news', function (Blueprint $table) {
+        Schema::create('rubricators', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('name')->index()->comment('Название новости');
-            // $table->integer('site_id')->unsigned()->nullable()->comment('Id сайта');
-            // $table->foreign('site_id')->references('id')->on('sites');
-            $table->string('title')->comment('Title для новости');
-            $table->text('preview')->nullable()->comment('Превью для новости');
+            $table->string('name')->index()->comment('Название рубрики');
+            $table->string('alias')->index()->nullable()->comment('Алиас');
+            $table->string('slug')->index()->nullable()->comment('Слаг');
 
-            $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (превью)');
+            $table->text('description')->nullable()->comment('Описание рубрики');
+            $table->text('seo_description')->nullable()->comment('Описание для сайта для рубрики');
+
+            $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
             $table->foreign('photo_id')->references('id')->on('photos');
 
-            $table->text('content')->nullable()->comment('Контент новости');
-            $table->string('alias')->index()->nullable()->comment('Алиас');
-
-            $table->date('publish_begin_date')->index()->comment('Дата начала публикации');
-            $table->date('publish_end_date')->nullable()->index()->comment('Дата окончания публикации');
-
-            $table->bigInteger('rubricator_id')->unsigned()->nullable()->comment('Id рубрики');
-            $table->foreign('rubricator_id')->references('id')->on('rubricators');
-
-            $table->bigInteger('rubricators_item_id')->unsigned()->nullable()->comment('Id пункта рубрики');
-            $table->foreign('rubricators_item_id')->references('id')->on('rubricators_items');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
@@ -53,7 +43,6 @@ class CreateNewsTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 
@@ -64,6 +53,6 @@ class CreateNewsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('news');
+        Schema::dropIfExists('rubricators');
     }
 }

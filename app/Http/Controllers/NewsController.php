@@ -122,6 +122,9 @@ class NewsController extends Controller
 
         $cur_news->content = $request->content;
 
+        $cur_news->rubricator_id = $request->rubricator_id;
+        $cur_news->rubricators_item_id = $request->rubricators_item_id;
+
         $cur_news->publish_begin_date = Carbon::parse($request->publish_begin_date)->format('Y-m-d');
 
         if (isset($request->publish_end_date)) {
@@ -153,14 +156,7 @@ class NewsController extends Controller
             savePhoto($request, $cur_news);
 
             // Когда новость записалась, смотрим пришедние для нее альбомы и пишем, т.к. это первая запись новости
-            if (isset($request->albums)) {
-                $cur_news->albums()->attach($request->albums);
-            }
-
-            // Когда новость записалась, смотрим пришедние для нее города и пишем, т.к. это первая запись новости
-            // if (isset($request->cities)) {
-            //     $cur_news->cities()->attach($request->cities);
-            // }
+            $cur_news->albums()->sync($request->albums);
 
             return redirect()->route('news.index');
         } else {
@@ -220,6 +216,9 @@ class NewsController extends Controller
 
         $cur_news->preview = $request->preview;
         $cur_news->content = $request->content;
+
+        $cur_news->rubricator_id = $request->rubricator_id;
+        $cur_news->rubricators_item_id = $request->rubricators_item_id;
 
         $cur_news->publish_begin_date = Carbon::parse($request->publish_begin_date)->format('Y-m-d');
 

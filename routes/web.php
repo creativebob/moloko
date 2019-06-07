@@ -902,6 +902,27 @@ Route::prefix('/sites/{site_id}')->group(function () {
 // Route::any('/catalog_product/add_product', 'CatalogProductController@add_product')->middleware('auth');
 
 
+// ----------------------------------------- Рубрики ------------------------------------------
+
+// Основные методы
+Route::resource('rubricators', 'RubricatorController');
+
+// Проверка на существование
+// Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
+
+// -------------------------------- Наполнение каталогов услуг -------------------------------------
+
+Route::prefix('rubricators/{rubricator_id}')->group(function () {
+
+    // Текущий добавленный/удаленный пункт
+    Route::any('rubricators_items', 'RubricatorsItemController@index');
+
+    // Основные методы
+    Route::resource('rubricators_items', 'RubricatorsItemController');
+
+    //
+    Route::any('get_rubricators_items', 'RubricatorsItemController@get_rubricators_items');
+});
 
 
 // ---------------------------------------- Новости -------------------------------------------

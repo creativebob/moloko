@@ -322,13 +322,13 @@ class ServiceController extends Controller
                     foreach ($items as $item_id) {
                         $data[(int) $item_id] = [
                             'catalogs_service_id' => $catalog_id,
+                            'price' => $process->price_default,
                         ];
                     }
                 }
             }
             // dd($data);
-            $service->catalogs_items()->sync($data);
-
+            $service->prices()->sync($data);
 
             // Если ли есть
             if ($request->cookie('backlink') != null) {

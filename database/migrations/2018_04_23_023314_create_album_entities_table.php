@@ -14,7 +14,7 @@ class CreateAlbumEntitiesTable extends Migration
             $table->bigInteger('album_id')->nullable()->unsigned()->comment('Id альбома');
             $table->foreign('album_id')->references('id')->on('albums');
 
-            $table->morphs('album_entities');
+            $table->morphs('album_entity');
 
             // $table->bigInteger('album_entities_id')->nullable()->unsigned()->comment('Id сущности связанной с альбомом');
             // $table->string('album_entities_type')->index()->comment('Сущность обьекта');

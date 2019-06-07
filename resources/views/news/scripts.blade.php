@@ -1,5 +1,15 @@
 <script>
 
+
+    // Смена рубрики
+    $(document).on('change', '#select-rubricators', function(event) {
+        event.preventDefault();
+        /* Act on the event */
+        $.post("/admin/rubricators/" + $(this).val() + "/get_rubricators_items", function(html){
+            $('#select-rubricators_items').html(html);
+        });
+    });
+
     // Добавление альбомов
     $(document).on('click', '[data-open="album-add"]', function(event) {
         event.preventDefault();

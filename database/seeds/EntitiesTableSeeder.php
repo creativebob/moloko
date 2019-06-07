@@ -73,18 +73,7 @@ class EntitiesTableSeeder extends Seeder
                 'view_path' => null,
                 'page_id' => null,
             ],
-           
-            [
-                'name' => 'Новости',
-                'alias' => 'news',
-                'model' => 'News',
-                'rights' => true,
-                'system_item' => 1,
-                'author_id' => 1,
-                'site' => 1,
-                'view_path' => 'news',
-                'page_id' => $pages->firstWhere('alias', 'news')->id,
-            ],
+
             [
                 'name' => 'Категории альбомов',
                 'alias' => 'albums_categories',
@@ -206,7 +195,7 @@ class EntitiesTableSeeder extends Seeder
                 'view_path' => null,
                 'page_id' => null,
             ],
-            
+
             [
                 'name' => 'Населенные пункты',
                 'alias' => 'cities',
@@ -272,6 +261,17 @@ class EntitiesTableSeeder extends Seeder
                 'site' => 1,
                 'view_path' => 'catalogs_services',
                 'page_id' => $pages->firstWhere('alias', 'catalogs_services')->id,
+            ],
+            [
+                'name' => 'Рубрики',
+                'alias' => 'rubricators',
+                'model' => 'Rubricator',
+                'rights' => true,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 1,
+                'view_path' => 'rubricators',
+                'page_id' => $pages->firstWhere('alias', 'rubricators')->id,
             ],
             [
                 'name' => 'Этапы',
@@ -803,7 +803,7 @@ class EntitiesTableSeeder extends Seeder
                 'view_path' => 'products/processes/workflows',
                 'page_id' => $pages->firstWhere('alias', 'workflows')->id,
             ],
-            
+
             [
                 'name' => 'Пункты каталогов товаров',
                 'alias' => 'catalogs_goods_items',
@@ -826,6 +826,18 @@ class EntitiesTableSeeder extends Seeder
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('catalogs_services')->first(['id'])->id,
                 'view_path' => 'catalogs_services_items',
+                'page_id' => null,
+            ],
+            [
+                'name' => 'Пункты рубрик',
+                'alias' => 'rubricators_items',
+                'model' => 'RubricatorsItem',
+                'rights' => true,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('rubricators')->first(['id'])->id,
+                'view_path' => 'rubricators_items',
                 'page_id' => null,
             ],
             [
@@ -903,6 +915,18 @@ class EntitiesTableSeeder extends Seeder
                 'ancestor_id' => Entity::whereAlias('staff')->first(['id'])->id,
                 'view_path' => 'employees',
                 'page_id' => $pages->firstWhere('alias', 'employees')->id,
+            ],
+            [
+                'name' => 'Новости',
+                'alias' => 'news',
+                'model' => 'News',
+                'rights' => true,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 1,
+                'ancestor_id' => Entity::whereAlias('rubricators_items')->first(['id'])->id,
+                'view_path' => 'news',
+                'page_id' => $pages->firstWhere('alias', 'news')->id,
             ],
         ]);
 

@@ -96,6 +96,9 @@ use App\Http\ViewComposers\ProcessesTypesComposer;
 
 use App\Http\ViewComposers\RoomsComposer;
 
+use App\Http\ViewComposers\RubricatorsComposer;
+use App\Http\ViewComposers\RubricatorsItemsComposer;
+
 class ComposerServiceProvider extends ServiceProvider
 {
 
@@ -227,6 +230,9 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.processes_types', ProcessesTypesComposer::class);
 
         view()->composer('includes.selects.rooms', RoomsComposer::class);
+
+        view()->composer('news.rubricators.select_rubricators', RubricatorsComposer::class);
+        view()->composer('news.rubricators.select_rubricators_items', RubricatorsItemsComposer::class);
 
 
     }

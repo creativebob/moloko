@@ -2,6 +2,9 @@
 
 namespace App\Observers\Traits;
 
+// Транслитерация
+use Illuminate\Support\Str;
+
 trait CommonTrait
 {
 
@@ -50,6 +53,15 @@ trait CommonTrait
 
         return $item;
 
+    }
+
+    protected function setSlug($item)
+    {
+
+        if (empty($item->alias)) {
+            $item->alias = Str::slug($item->name);
+            $item->slug = Str::slug($item->name);
+        }
     }
 
 }

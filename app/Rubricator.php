@@ -13,22 +13,15 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\SuppliersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-// Фильтры
-use App\Scopes\Filters\Filter;
-use App\Scopes\Filters\BooklistFilter;
-
-class Service extends Model
+class Rubricator extends Model
 {
-
-	// Включаем кеш
+    // Включаем кеш
     use Cachable;
 
-    use Notifiable;
     use SoftDeletes;
 
     // Включаем Scopes
@@ -38,45 +31,43 @@ class Service extends Model
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
-    use SuppliersTraitScopes;
 
     // Фильтры
-    use Filter;
-    use BooklistFilter;
+    // use Filter;
+    // use BooklistFilter;
+    // use DateIntervalFilter;
+
+    protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'category_id',
-        'process_id',
+        'name',
+        'alias',
+        'slug',
+        'description',
     ];
 
-    // Процесс
-    public function process()
+    // Пункты
+    public function items()
     {
-        return $this->belongsTo(Process::class);
+        return $this->hasMany(RubricatorsItem::class);
     }
 
-    // Категория
-    public function category()
+
+    // Сайты
+    public function sites()
     {
-        return $this->belongsTo(ServicesCategory::class);
+        return $this->belongsToMany(Site::class, 'rubricator_site');
     }
 
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-
-    // Автор
+    // Аавтор
     public function author()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Пункты каталога
-    public function prices()
+    // Аватар
+    public function photo()
     {
-        return $this->belongsToMany(CatalogsServicesItem::class, 'prices_services', 'service_id', 'catalogs_services_item_id');
+        return $this->belongsTo(Photo::class);
     }
-
 }
