@@ -22,6 +22,7 @@ class ProcessesGroupsComposer
         $processes_groups = ProcessesGroup::moderatorLimit($answer)
         ->systemItem($answer)
         ->companiesLimit($answer)
+        ->template($answer)
         ->whereHas($relation, function ($q) use ($relation, $category_id) {
             $q->where($relation.'.id', $category_id);
         })
