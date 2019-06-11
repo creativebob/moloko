@@ -104,13 +104,30 @@ $disabled = $process->draft == 0 ? true : null;
 
                                 <label>Производитель
 
+
                                     @if ($item->category->manufacturers->isNotEmpty())
 
+                                    @template ($process)
+
+                                    {!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $process->manufacturer_id, [$disabled ? 'disabled' : '', 'placeholder' => 'Нет производителя']) !!}
+
+                                    @else
+
                                     {!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $process->manufacturer_id, [$disabled ? 'disabled' : '']) !!}
+
+                                    @endtemplate
+
+                                    @else
+
+                                    @template ($process)
+
+                                    @include('includes.selects.manufacturers_with_placeholder', ['manufacturer_id' => $process->manufacturer_id, 'item' => $item])
 
                                     @else
 
                                     @include('includes.selects.manufacturers', ['manufacturer_id' => $process->manufacturer_id, 'item' => $item])
+
+                                    @endtemplate
 
                                     @endif
 

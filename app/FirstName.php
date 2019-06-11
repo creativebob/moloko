@@ -28,7 +28,7 @@ class FirstName extends Model
     // Включаем кеш
     use Cachable;
 
-    use SoftDeletes;
+    // use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -44,6 +44,7 @@ class FirstName extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+
     protected $fillable = [
         'name',
         'patronymic_male',

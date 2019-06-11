@@ -57,11 +57,16 @@ class CatalogsServicesItemController extends Controller
         ];
 
         $catalogs_services_items = CatalogsServicesItem::with('childs')
-        // ->moderatorLimit($answer)
-        // ->companiesLimit($answer)
+        // ->where(function($q) use ($catalog_id, $answer) {
+        //     $q->where('catalogs_service_id', $catalog_id)
+        //     ->template($answer);
+        // })
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
         ->authors($answer)
-        // ->systemItem($answer)
-        ->template($answer)
+        ->systemItem($answer)
+        // ->where('catalogs_service_id', $catalog_id)
+        // ->template($answer)
         ->where('catalogs_service_id', $catalog_id)
         ->get($columns);
         // dd($catalogs_services_items);

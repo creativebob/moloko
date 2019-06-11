@@ -25,20 +25,20 @@ trait DepartmentControllerTrait
             // $user_auth_id = hideGod($user_auth);
             // $company_auth_id = $user_auth->company_id;
 
-            $department = new Department;
-            $department->name = 'Филиал в городе ' . $company->location->city->name;
-            $department->company_id = $company->id;
-            $department->location_id = $company->location_id;
+        $department = new Department;
+        $department->name = 'Филиал в городе ' . $company->location->city->name;
+        $department->company_id = $company->id;
+        $department->location_id = $company->location_id;
             $department->author_id = 1; // Робот
             $department->save();
             Log::info('Сохраняем первый филиал');
 
             return $department;
 
-    }
+        }
 
-    public function createDirector($company, $department, $user, $request = null)
-    {
+        public function createDirector($company, $department, $user, $request = null)
+        {
 
             // Подготовка: -------------------------------------------------------------------------------------
 
@@ -68,6 +68,21 @@ trait DepartmentControllerTrait
             $employee->save();
             Log::info('Сохраняем должность. Устраиваем юзера.');
 
+            $position = $user->staff->first()->position;
+            $position_id = $position->id;
+
+            $position->load('roles');
+
+            $insert_array = [];
+            foreach ($position->roles as $role) {
+                $insert_array[$role->id] = [
+                    'department_id' => $department->id,
+                    'position_id' => $position_id
+                ];
+            }
+
+            $user->roles()->attach($insert_array);
+            Log::info('Записали роли для юзера.');
             return $employee;
+        }
     }
-}

@@ -44,7 +44,7 @@
 					<div class="small-10 cell">
 
 						{{-- Добавление города --}}
-                        @include('includes.scripts.class.city_search')
+						@include('includes.scripts.class.city_search')
 						@include('includes.inputs.city_search', ['city' => isset($department->location->city->name) ? $department->location->city : null, 'id' => 'cityForm', 'required' => isset($parent_id) ? null : true])
 
 						@isset($parent_id)
@@ -115,7 +115,35 @@
 
 						{{ Form::hidden('filial_id', $filial_id, ['class' => 'filial-id']) }}
 
-						@include('includes.control.checkboxes', ['item' => new App\Staffer])
+						@php
+							$staffer = new App\Staffer;
+						@endphp
+						{{-- Чекбокс отображения на сайте --}}
+						@can ('display', $staffer)
+						<div class="small-12 cell checkbox">
+							{{ Form::checkbox('display', 1, $staffer->display, ['id' => 'display-checkbox-staff']) }}
+							<label for="display-checkbox-staff"><span>Отображать на сайте</span></label>
+						</div>
+						@endcan
+
+						{{-- Чекбокс модерации --}}
+						@can ('moderator', $staffer)
+						@moderation ($staffer)
+						<div class="small-12 cell checkbox">
+							{{ Form::checkbox('moderation', 1, $staffer->moderation, ['id'=>'moderation-checkbox-staff']) }}
+							<label for="moderation-checkbox-staff"><span>Временная запись.</span></label>
+						</div>
+						@endmoderation
+						@endcan
+
+						{{-- Чекбокс системной записи --}}
+						@can ('system', $staffer)
+						<div class="small-12 cell checkbox">
+							{{ Form::checkbox('system_item', 1, $staffer->system_item, ['id'=>'system-item-checkbox-staff']) }}
+							<label for="system-item-checkbox-staff"><span>Сделать запись системной.</span></label>
+						</div>
+						@endcan
+
 					</div>
 				</div>
 
@@ -135,8 +163,8 @@
 </div>
 
 <script type="text/javascript">
-    $.getScript("/crm/js/jquery.maskedinput.js");
-    $.getScript("/crm/js/inputs_mask.js");
+	$.getScript("/crm/js/jquery.maskedinput.js");
+	$.getScript("/crm/js/inputs_mask.js");
 </script>
 
 
