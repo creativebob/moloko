@@ -20,7 +20,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => null, 'type' => 'table'])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Employee::class, 'type' => 'table'])
 @endsection
 
 @section('content')
