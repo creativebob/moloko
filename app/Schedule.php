@@ -30,7 +30,7 @@ class Schedule extends Model
 {
 
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use Notifiable;
     use SoftDeletes;
@@ -61,7 +61,7 @@ class Schedule extends Model
 
   public function worktimes()
   {
-    return $this->hasMany('App\Worktime');
+    return $this->hasMany(Worktime::class);
   }
 
 

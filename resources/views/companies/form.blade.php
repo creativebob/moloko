@@ -50,6 +50,11 @@
                             @include('includes.inputs.name', ['value'=>$company->name, 'required' => true])
                         </label>
                     </div>
+                    <div class="small-10 medium-4 cell">
+                        <label>Статус компании
+                            @include('includes.inputs.name', ['name' => 'prename'])
+                        </label>
+                    </div>
                     <div class="small-12 medium-6 cell">
                         {{-- Селект с секторами (Вид деятельности компании) --}}
                         <label>Вид деятельности компании

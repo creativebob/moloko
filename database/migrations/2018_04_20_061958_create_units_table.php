@@ -19,7 +19,7 @@ class CreateUnitsTable extends Migration
             $table->string('name')->index()->comment('Название единицы измерения');
             $table->string('abbreviation')->comment('Сокращенное название');
 
-            $table->decimal('ratio', 15, 8)->nullable()->comment('Коэффициент умножения');
+            $table->decimal('ratio', 16, 8)->nullable()->comment('Коэффициент умножения');
 
             $table->text('description')->nullable()->comment('Описание единицы измерения');
 

@@ -400,22 +400,22 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td>Источник: </td><td>{{ $lead->source->name or ''}}</td><td></td>
+                                        <td>Источник: </td><td>{{ $lead->source->name ?? ''}}</td><td></td>
                                     </tr>
                                     <tr>
-                                        <td>Сайт: </td><td>{{ $lead->site->name or ''}}</td><td></td>
+                                        <td>Сайт: </td><td>{{ $lead->site->name ?? ''}}</td><td></td>
                                     </tr>
                                     <tr>
-                                        <td>Тип трафика: </td><td>{{ $lead->medium->name or ''}}</td><td></td>
+                                        <td>Тип трафика: </td><td>{{ $lead->medium->name ?? ''}}</td><td></td>
                                     </tr>
                                     <tr>
-                                        <td>Рекламная кампания: </td><td>{{ $lead->campaign_id or ''}}</td><td></td>
+                                        <td>Рекламная кампания: </td><td>{{ $lead->campaign_id ?? ''}}</td><td></td>
                                     </tr>
                                     <tr>
-                                        <td>Объявление: </td><td>{{ $lead->utm_content or ''}}</td><td></td>
+                                        <td>Объявление: </td><td>{{ $lead->utm_content ?? ''}}</td><td></td>
                                     </tr>
                                     <tr>
-                                        <td>Ключевая фраза: </td><td>{{ $lead->utm_term or ''}}</td><td></td>
+                                        <td>Ключевая фраза: </td><td>{{ $lead->utm_term ?? ''}}</td><td></td>
                                     </tr>
                                     <tr>
                                         <td>Менеджер: </td><td>{{ $lead->manager->name }}</td>

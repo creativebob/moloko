@@ -140,6 +140,7 @@ class CompanyController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+        // dd($request);
         // Отдаем работу по созданию новой компании трейту
         $new_company = $this->createCompany($request);
 
@@ -160,6 +161,10 @@ class CompanyController extends Controller
         if(!isset($new_user)){
 
             $new_user = $this->createUserByPhone($main_phone, $request);
+
+            $new_company->load('location');
+            $new_user->location_id = create_location($request, $new_company->location->country_id, $new_company->location->city_id, null);
+            $new_user->save();
             Log::info('Создали юзера');
 
             // Дописываем юзеру недостающие данные

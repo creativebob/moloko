@@ -8,7 +8,12 @@ use App\Entity;
 use App\Page;
 use App\Location;
 
+use App\Align;
+use App\Company;
+use App\FirstName;
+
 use App\RawsArticle;
+use App\Position;
 
 use Carbon\Carbon;
 
@@ -26,6 +31,12 @@ use Fomvasss\Dadata\Facades\DadataSuggest;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// Route::get('test', function () {
+// 	$positions = Position::get();
+
+//         dd($positions->take(2));
+// });
 
 Auth::routes();
 

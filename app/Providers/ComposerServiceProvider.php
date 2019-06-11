@@ -143,6 +143,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer([
             'includes.selects.manufacturers',
+            'includes.selects.manufacturers_with_placeholder',
             'includes.lists.manufacturers'
         ], ManufacturersComposer::class);
 

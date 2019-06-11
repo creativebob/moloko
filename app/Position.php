@@ -46,6 +46,7 @@ class Position extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+    
     protected $fillable = [
         'name',
         'page_id',
@@ -57,59 +58,59 @@ class Position extends Model
 
     public function page()
     {
-        return $this->belongsTo('App\Page');
+        return $this->belongsTo(Page::class);
     }
 
     public function employees()
     {
-        return $this->hasMany('App\Employee');
+        return $this->hasMany(App::class);
     }
 
     // Получаем должность.
     public function staff()
     {
-        return $this->hasMany('App\Staffer');
+        return $this->hasMany(Staffer::class);
     }
 
     // Получаем роли.
     public function roles()
     {
-        return $this->belongsToMany('App\Role');
+        return $this->belongsToMany(Role::class);
     }
 
     // Получаем автора
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo(User::class);
     }
 
     // Получаем компанию
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
     // Получаем сектор должности
     public function sector()
     {
-        return $this->belongsTo('App\Sector');
+        return $this->belongsTo(Sector::class);
     }
 
     // Оповещения
     public function notifications()
     {
-        return $this->belongsToMany('App\Notification');
+        return $this->belongsToMany(Notification::class);
     }
 
     // Обязанности
     public function charges()
     {
-        return $this->belongsToMany('App\Charge');
+        return $this->belongsToMany(Charge::class);
     }
 
     // Виджеты
     public function widgets()
     {
-        return $this->belongsToMany('App\Widget', 'widget_position');
+        return $this->belongsToMany(Widget::class, 'widget_position');
     }
 }

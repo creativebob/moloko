@@ -13,6 +13,8 @@ class CreateCompaniesTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name')->nullable()->index()->comment('Имя компании');
+            $table->string('prename')->nullable()->index()->comment('Статус компании');
+
             $table->string('alias', 40)->unique()->nullable()->index()->comment('Алиас компании');
 
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
@@ -39,6 +41,8 @@ class CreateCompaniesTable extends Migration
 
             $table->text('about')->nullable()->comment('Информация о компании');
             $table->text('seo_description')->nullable()->comment('Описание для сайта');
+
+            $table->bigInteger('external_id')->nullable()->unsigned()->comment('Внешний id компании');
 
             // Общие настройки
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
