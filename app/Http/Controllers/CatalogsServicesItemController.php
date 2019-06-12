@@ -348,4 +348,13 @@ class CatalogsServicesItemController extends Controller
 
         return view('catalog_products.content_core', compact('catalog'));
     }
+
+    public function get_prices(Request $request)
+    {
+        $catalogs_services_item = CatalogsServicesItem::with(['services'])
+        ->findOrFail($request->id);
+        // dd($catalogs_services_item);
+
+        return view('leads.prices_services', compact('catalogs_services_item'));
+    }
 }

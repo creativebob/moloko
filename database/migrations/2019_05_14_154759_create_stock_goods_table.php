@@ -24,7 +24,7 @@ class CreateStockGoodsTable extends Migration
 
             $table->decimal('weight', 15, 2)->nullable()->comment('Вес (кг)');
 
-            $table->string('Serial')->comment('Серийный номер');
+            $table->string('serial')->comment('Серийный номер');
         });
     }
 

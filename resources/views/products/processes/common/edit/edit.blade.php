@@ -231,6 +231,12 @@ $disabled = $process->draft == 0 ? true : null;
                     </div>
                     @endif
 
+                    {{-- Серийный номер --}}
+                    <div class="small-12 cell checkbox">
+                        {{ Form::checkbox('serial', 1, $item->serial, ['id' => 'serial']) }}
+                        <label for="serial"><span>Серийный номер</span></label>
+                    </div>
+
                     {{-- Чекбоксы управления --}}
                     @include('includes.control.checkboxes', ['item' => $item])
                     <div class="small-12 cell ">

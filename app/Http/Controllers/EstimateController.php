@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Estimate;
-use App\Workflow;
+use App\EstimatesItem;
 use App\Entity;
 
 use Illuminate\Http\Request;
@@ -104,51 +104,119 @@ class EstimateController extends Controller
         //
     }
 
-    // public function ajax_check(Request $request)
-    // {
+    public function ajax_create(Request $request)
+    {
 
-    //     // Получаем авторизованного пользователя
-    //     $user = $request->user();
+        // Получаем авторизованного пользователя
+        $user = $request->user();
 
-    //     $user_id = hideGod($user);
-    //     $company_id = $user->company_id;
+        $user_id = hideGod($user);
+        $company_id = $user->company_id;
 
-    //     // Находим или создаем заказ для лида
-    //     $estimate = Estimate::firstOrCreate([
-    //         'lead_id' => $request->lead_id,
-    //         // 'draft' => 1,
-    //         'company_id' => $company_id
-    //     ], [
-    //         'author_id' => $user_id
-    //     ]);
-    //     // $order = Order::firstOrCreate(['lead_id' => 9443, 'draft' => null, 'company_id' => $company_id], ['author_id' => $user_id]);
+        // Находим или создаем заказ для лида
+        $estimate = Estimate::firstOrCreate([
+            'lead_id' => $request->lead_id,
+            'company_id' => $company_id
+        ], [
+            'author_id' => $user_id
+        ]);
+        // dd($estimate);
 
-    //     // Находим сущность
-    //     $entity = Entity::where('alias', $request->entity)->first();
-    //     // $entity = Entity::where('alias', 'goods')->first();
+        // Находим сущность
+        $entity = Entity::where('alias', $request->entity)->first();
+        // dd($entity);
 
-    //     // Формируем позицию заказа
-    //     $workflow = new Workflow;
+        $estimates_item = new EstimatesItem;
+        $estimates_item->price_id = $request->id;
+        $estimates_item->price_type = 'App\\' . $entity->model;
+        $estimates_item->estimate_id = $estimate->id;
+        $estimates_item->company_id = $company_id;
+        $estimates_item->author_id = $user_id;
+        $estimates_item->count = 1;
+        $estimates_item->save();
 
-    //     $workflow->product_id = $request->item_id;
-    //     // $composition->order_compositions_id = 1;
-    //     $workflow->product_type = 'App\\' . $entity->model;
+        if ($entity->model == 'PricesService') {
+            $estimates_item->load('price.service.process');
+            return view('leads.estimates_item_service', compact('estimates_item'));
+        } else {
+            $estimates_item->load('price.goods.article');
+            return view('leads.estimates_item_goods', compact('estimates_item'));
+        }
+    }
 
-    //     $workflow->estimate_id = $estimate->id;
-    //     $workflow->company_id = $company_id;
-    //     $workflow->author_id = $user_id;
-    //     $workflow->count = 1;
-    //     $workflow->save();
+    public function ajax_update(Request $request)
+    {
 
-    //     // dd($composition->product);
+        // Получаем авторизованного пользователя
+        $user = $request->user();
 
-    //     // $composition->notes()->save($note);
+        $user_id = hideGod($user);
+        $company_id = $user->company_id;
 
-    //     // $order->compositions()->associate($composition)->save();
+        // Находим или создаем заказ для лида
+        $estimate = Estimate::firstOrCreate([
+            'lead_id' => $request->lead_id,
+            'company_id' => $company_id
+        ], [
+            'author_id' => $user_id
+        ]);
+        // dd($estimate);
 
-    //     return view('leads.item_for_estimate', compact('workflow'));
+        // Находим сущность
+        $entity = Entity::where('alias', $request->entity)->first();
+        // dd($entity);
 
-    // }
+        $estimates_item = EstimatesItem::firstOrNew([
+            'estimate_id' => $estimate->id,
+            'price_id' => $request->id,
+            'price_type' => 'App\\' . $entity->model,
+            'company_id' => $company_id,
+        ], [
+            'author_id' => $user_id,
+        ]);
+
+        $estimates_item->count = $estimates_item->count + 1;
+
+        // dd($estimates_item);
+
+        if (isset($estimates_item->id)) {
+            $estimates_item->save();
+            // dd('число');
+
+            $estimates_item->load('price.service.process');
+            return view('leads.estimates_item_service', compact('estimates_item'));
+        } else {
+            $estimates_item->save();
+            // dd('html');
+            if ($entity->model == 'PricesService') {
+                $estimates_item->load('price.service.process');
+                return view('leads.estimates_item_service', compact('estimates_item'));
+            } else {
+                $estimates_item->load('price.goods.article');
+                return view('leads.estimates_item_goods', compact('estimates_item'));
+            }
+
+        }
+        
+        // $estimates_item->count->increment(1);
+
+        
+    }
+
+    public function ajax_delete(Request $request)
+    {
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        $user_id = hideGod($user);
+        $company_id = $user->company_id;
+
+        // $estimates_item = EstimatesItem::findOrFail($request->id);
+
+        return response()->json(EstimatesItem::destroy($request->id));
+        
+    }
 
     // public function ajax_destroy_composition(Request $request, $id)
     // {
@@ -156,4 +224,11 @@ class EstimateController extends Controller
     //     return response()->json(Workflow::destroy($id));
 
     // }
+
+    public function ajax_add(Request $request)
+    {
+
+        return response()->json(Workflow::destroy($id));
+
+    }
 }

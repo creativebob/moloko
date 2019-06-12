@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Новая рубрика')
+@section('title', 'Новый рубрикатор')
 
 @section('breadcrumbs', Breadcrumbs::render('create', $page_info))
 
 @section('title-content')
 <div class="top-bar head-content">
 	<div class="top-bar-left">
-		<h2 class="header-content">ДОБАВЛЕНИЕ НОВой рубрики</h2>
+		<h2 class="header-content">ДОБАВЛЕНИЕ НОВого рубрикатора</h2>
 	</div>
 	<div class="top-bar-right">
 	</div>

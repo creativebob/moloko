@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Редактировать рубрику')
+@section('title', 'Редактировать рубрикатор')
 
 @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $rubricator->name))
 
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ рубрику "{{ $rubricator->name }}"</h2>
+        <h2 class="header-content">РЕДАКТИРОВАТЬ рубрикатор "{{ $rubricator->name }}"</h2>
     </div>
     <div class="top-bar-right">
     </div>

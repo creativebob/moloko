@@ -3,17 +3,17 @@
 namespace App\Policies;
 
 use App\User;
-use App\Estimate as Model;
+use App\EstimatesItem as Model;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 use App\Policies\Traits\PoliticTrait;
 
-class EstimatePolicy
+class EstimatesItemPolicy
 {
     use HandlesAuthorization;
     use PoliticTrait;
 
-    protected $entity_name = 'estimates';
+    protected $entity_name = 'estimates_items';
     protected $entity_dependence = false;
 
     public function index(User $user)
@@ -47,10 +47,6 @@ class EstimatePolicy
     public function delete(User $user, Model $model)
     {
         if ($model->system_item == 1) {
-            return false;
-        }
-
-        if ($model->positions->count() > 0) {
             return false;
         }
 

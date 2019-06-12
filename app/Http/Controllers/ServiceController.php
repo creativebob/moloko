@@ -148,7 +148,7 @@ class ServiceController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        if($services_categories->count() == 0){
+        if ($services_categories->count() == 0){
 
             // Описание ошибки
             $ajax_error = [];
@@ -171,215 +171,218 @@ class ServiceController extends Controller
             ->count();
 
             // Если нет производителей
-            if ($manufacturers_count == 0){
+            if ($manufacturers_count == 0) {
 
-            // Описание ошибки
-            // $ajax_error = [];
-            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
-            $ajax_error['text'] = "Для начала необходимо добавить производителей. А уже потом будем добавлять рабочие процессы. Ок?";
-            $ajax_error['link'] = "/admin/manufacturers/create"; // Ссылка на кнопке
-            $ajax_error['title_link'] = "Идем в раздел производителей"; // Текст на кнопке
+                // Описание ошибки
+                // $ajax_error = [];
+                $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+                $ajax_error['text'] = "Для начала необходимо добавить производителей. А уже потом будем добавлять рабочие процессы. Ок?";
+                $ajax_error['link'] = "/admin/manufacturers/create"; // Ссылка на кнопке
+                $ajax_error['title_link'] = "Идем в раздел производителей"; // Текст на кнопке
 
-            return view('ajax_error', compact('ajax_error'));
+                return view('ajax_error', compact('ajax_error'));
+            }
         }
 
+        return view('products.processes.common.create.create', [
+            'item' => new $this->class,
+            'title' => 'Добавление услуги',
+            'entity' => $this->entity_alias,
+            'category_entity' => 'services_categories',
+        ]);
     }
 
-    return view('products.processes.common.create.create', [
-        'item' => new $this->class,
-        'title' => 'Добавление услуги',
-        'entity' => $this->entity_alias,
-        'category_entity' => 'services_categories',
-    ]);
-}
-
-public function store(ProcessRequest $request)
-{
+    public function store(ProcessRequest $request)
+    {
 
         // dd($request);
 
         // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-    Log::channel('operations')
-    ->info('========================================== НАЧИНАЕМ ЗАПИСЬ УСЛУГИ ==============================================');
+        Log::channel('operations')
+        ->info('========================================== НАЧИНАЕМ ЗАПИСЬ УСЛУГИ ==============================================');
 
-    $services_category = ServicesCategory::findOrFail($request->category_id);
+        $services_category = ServicesCategory::findOrFail($request->category_id);
         // dd($services_category->load('groups'));
-    $process = $this->storeProcess($request, $services_category);
+        $process = $this->storeProcess($request, $services_category);
 
-    if ($process) {
+        if ($process) {
 
+            $data = $request->input();
+            $data['process_id'] = $process->id;
+            $service = (new Service())->create($data);
 
-        $data = $request->input();
-        $data['process_id'] = $process->id;
-        $service = (new Service())->create($data);
+            if ($service) {
 
-        if ($service) {
-
-            $workflows = $services_category->workflows->pluck('id')->toArray();
-            $process->workflows()->sync($workflows);
+                $workflows = $services_category->workflows->pluck('id')->toArray();
+                $process->workflows()->sync($workflows);
 
                 // Пишем куки состояния
                 // $mass = [
                 //     'goods_category' => $goods_category_id,
                 // ];
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
-            Log::channel('operations')
-            ->info('Записали услугу с id: ' . $service->id);
-            Log::channel('operations')
-            ->info('Автор: ' . $service->author->name . ' id: ' . $service->author_id .  ', компания: ' . is_null($service->company) ? 'шаблон' : $service->company->name . ', id: ' . $service->company_id);
-            Log::channel('operations')
-            ->info('========================================== КОНЕЦ ЗАПИСИ УСЛУГИ ==============================================
+                Log::channel('operations')
+                ->info('Записали услугу с id: ' . $service->id);
+                Log::channel('operations')
+                ->info('Автор: ' . $service->author->name . ' id: ' . $service->author_id .  ', компания: ' . is_null($service->company) ? 'шаблон' : $service->company->name . ', id: ' . $service->company_id);
+                Log::channel('operations')
+                ->info('========================================== КОНЕЦ ЗАПИСИ УСЛУГИ ==============================================
 
-                ');
+                    ');
                 // dd($request->quickly);
-            if ($request->quickly == 1) {
-                return redirect()->route('services.index');
+                if ($request->quickly == 1) {
+                    return redirect()->route('services.index');
+                } else {
+                    return redirect()->route('services.edit', ['id' => $service->id]);
+                }
             } else {
-                return redirect()->route('services.edit', ['id' => $service->id]);
+                abort(403, 'Ошибка записи услуги');
             }
         } else {
-            abort(403, 'Ошибка записи услуги');
+            abort(403, 'Ошибка записи информации услуги');
         }
-    } else {
-        abort(403, 'Ошибка записи информации услуги');
     }
-}
 
-public function show($id)
-{
+    public function show($id)
+    {
         //
-}
+    }
 
-public function edit(Request $request, $id)
-{
+    public function edit(Request $request, $id)
+    {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Главный запрос
-    $service = Service::moderatorLimit($answer)
-    ->findOrFail($id);
+        $service = Service::moderatorLimit($answer)
+        ->findOrFail($id);
         // dd($service);
 
         // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), $service);
+        $this->authorize(getmethod(__FUNCTION__), $service);
 
-    $process = $service->process;
+        $process = $service->process;
         // dd($process);
 
         // Получаем настройки по умолчанию
-    $settings = getSettings($this->entity_alias);
+        $settings = getSettings($this->entity_alias);
 
         // Инфо о странице
-    $page_info = pageInfo($this->entity_alias);
+        $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
 
-    return view('products.processes.common.edit.edit', [
-        'title' => 'Редактировать услугу',
-        'item' => $service,
-        'process' => $process,
-        'page_info' => $page_info,
-        'settings' => $settings,
-        'entity' => $this->entity_alias,
-        'category_entity' => 'services_categories',
-        'categories_select_name' => 'services_category_id',
-    ]);
-}
+        return view('products.processes.common.edit.edit', [
+            'title' => 'Редактировать услугу',
+            'item' => $service,
+            'process' => $process,
+            'page_info' => $page_info,
+            'settings' => $settings,
+            'entity' => $this->entity_alias,
+            'category_entity' => 'services_categories',
+            'categories_select_name' => 'services_category_id',
+        ]);
+    }
 
-public function update(ProcessRequest $request, $id)
-{
+    public function update(ProcessRequest $request, $id)
+    {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
-    $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-    $service = Service::moderatorLimit($answer)
-    ->findOrFail($id);
+        $service = Service::moderatorLimit($answer)
+        ->findOrFail($id);
         // dd($service);
 
         // Подключение политики
-    $this->authorize(getmethod(__FUNCTION__), $service);
+        $this->authorize(getmethod(__FUNCTION__), $service);
 
-    $process = $service->process;
+        $process = $service->process;
         // dd($process);
 
 
-
-    $result = $this->updateProcess($request, $service);
+        $result = $this->updateProcess($request, $service);
         // Если результат не массив с ошибками, значит все прошло удачно
-    if (!is_array($result)) {
+        if (!is_array($result)) {
 
-        $service->display = $request->display;
-        $service->system_item = $request->system_item;
-        $service->save();
+            $service->serial = $request->has('serial');
+            $service->display = $request->display;
+            $service->system_item = $request->system_item;
+            $service->save();
 
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-        $this->changeCategory($request, $service);
+            $this->changeCategory($request, $service);
 
             // Каталоги
-        $data = [];
-        if (isset($request->catalogs_items)) {
+            $data = [];
+            if (isset($request->catalogs_items)) {
 
-            foreach ($request->catalogs_items as $catalog_id => $items) {
-                foreach ($items as $item_id) {
-                    $data[(int) $item_id] = [
-                        'catalogs_service_id' => $catalog_id,
-                        'price' => $process->price_default,
-                    ];
+                $user = $request->user();
+
+                foreach ($request->catalogs_items as $catalog_id => $items) {
+                    foreach ($items as $item_id) {
+                        $data[(int) $item_id] = [
+                            'catalogs_service_id' => $catalog_id,
+                            'price' => $process->price_default,
+                            'company_id' => $user->company_id,
+                            'filial_id' => $user->filial_id,
+                            'author_id' => hideGod($user),
+                        ];
+                    }
                 }
             }
-        }
             // dd($data);
-        $service->prices()->sync($data);
+            $service->prices()->sync($data);
 
             // Если ли есть
-        if ($request->cookie('backlink') != null) {
-            $backlink = Cookie::get('backlink');
-            return Redirect($backlink);
-        }
+            if ($request->cookie('backlink') != null) {
+                $backlink = Cookie::get('backlink');
+                return Redirect($backlink);
+            }
 
-        return redirect()->route('services.index');
-    } else {
-        return back()
-        ->withErrors($result)
-        ->withInput();
-    }
-}
-
-public function destroy($id)
-{
-        //
-}
-
-public function archive(Request $request, $id)
-{
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-    $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
-
-        // ГЛАВНЫЙ ЗАПРОС:
-    $service = Service::moderatorLimit($answer)->findOrFail($id);
-
-        // Подключение политики
-    $this->authorize(getmethod('destroy'), $service);
-
-    if ($service) {
-
-        $service->archive = true;
-
-            // Скрываем бога
-        $service->editor_id = hideGod($request->user());
-        $service->save();
-
-        if ($service) {
             return redirect()->route('services.index');
         } else {
-            abort(403, 'Ошибка при архивации сырья');
+            return back()
+            ->withErrors($result)
+            ->withInput();
         }
-    } else {
-        abort(403, 'Сырьё не найдено');
     }
-}
+
+    public function destroy($id)
+    {
+        //
+    }
+
+    public function archive(Request $request, $id)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $service = Service::moderatorLimit($answer)->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod('destroy'), $service);
+
+        if ($service) {
+
+            $service->archive = true;
+
+            // Скрываем бога
+            $service->editor_id = hideGod($request->user());
+            $service->save();
+
+            if ($service) {
+                return redirect()->route('services.index');
+            } else {
+                abort(403, 'Ошибка при архивации сырья');
+            }
+        } else {
+            abort(403, 'Сырьё не найдено');
+        }
+    }
 }

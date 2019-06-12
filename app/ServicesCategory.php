@@ -111,6 +111,13 @@ class ServicesCategory extends Model
         // ->where('archive', false);
     }
 
+    // Направление
+    public function directions()
+    {
+        return $this->morphOne(Direction::class, 'category');
+        // ->where('archive', false);
+    }
+
 
     // --------------------------------------- Запросы -----------------------------------------
     public function getIndex($request, $answer)

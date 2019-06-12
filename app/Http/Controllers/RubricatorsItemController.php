@@ -100,7 +100,7 @@ class RubricatorsItemController extends Controller
         return view('common.accordions.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
-            'title' => 'Добавление пункта рубрики',
+            'title' => 'Добавление рубрики',
             'parent_id' => $request->parent_id,
             'category_id' => $request->category_id,
             'rubricator_id' => $rubricator_id,
@@ -157,7 +157,7 @@ class RubricatorsItemController extends Controller
         return view('common.accordions.edit', [
             'item' => $rubricators_item,
             'entity' => $this->entity_alias,
-            'title' => 'Редактирование пункта каталога',
+            'title' => 'Редактирование рубрики',
             'parent_id' => $rubricators_item->parent_id,
             'category_id' => $rubricators_item->category_id,
             'rubricator_id' => $rubricator_id,

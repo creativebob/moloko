@@ -27,6 +27,8 @@ class CreateServicesTable extends Migration
 
             $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
 
+            $table->boolean('serial')->default(0)->unsigned()->comment('Серийный номер');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

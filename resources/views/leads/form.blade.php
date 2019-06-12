@@ -33,15 +33,15 @@
                     </div>
 
                     <div class="small-6 medium-6 large-6 cell">
-                            @include('includes.inputs.city_search', ['city' => isset($lead->location->city->name) ? $lead->location->city : null, 'id' => 'cityForm', 'required' => true])
+                        @include('includes.inputs.city_search', ['city' => isset($lead->location->city->name) ? $lead->location->city : null, 'id' => 'cityForm', 'required' => true])
                     </div>
                     <div class="small-6 medium-6 cell">
                         <label>Адрес
                             @php
-                                $address = null;
-                                if (isset($lead->location->address)) {
-                                    $address = $lead->location->address;
-                                }
+                            $address = null;
+                            if (isset($lead->location->address)) {
+                                $address = $lead->location->address;
+                            }
                             @endphp
                             @include('includes.inputs.address', ['value'=>$address, 'name'=>'address'])
                         </label>
@@ -111,11 +111,11 @@
                                             <th></th>
                                         </tr>
                                     </thead>
-                                    <tbody id="goods-section">
+                                    <tbody id="prices_services-section">
 
                                         @if (isset($lead->estimate))
-                                        @foreach ($lead->estimate->workflows as $workflow)
-                                        @include('leads.item_for_estimate', ['workflow' => $workflow])
+                                        @foreach ($lead->estimate->items as $estimates_item)
+                                        @include('leads.estimates_item_service', ['estimates_item' => $estimates_item])
                                         @endforeach
                                         @endif
 
@@ -151,14 +151,14 @@
                                 </div>
 
                                 @if($lead->client)
-                                    <span>Клиент: <a href="/admin/clients/{{$lead->client->id}}/edit">{{ $lead->client->clientable->name or '' }}</a></span><br>
+                                <span>Клиент: <a href="/admin/clients/{{$lead->client->id}}/edit">{{ $lead->client->clientable->name or '' }}</a></span><br>
 
-                                    <span>Лояльность: {{ $lead->client->loyalty->name or '' }}</span>
+                                <span>Лояльность: {{ $lead->client->loyalty->name or '' }}</span>
 
                                 @else
 
-                                    {{-- Подключаем клиентов --}}
-                                    @include('includes.contragents.fieldset', ['item' => $lead])
+                                {{-- Подключаем клиентов --}}
+                                @include('includes.contragents.fieldset', ['item' => $lead])
 
                                 @endif
 
@@ -175,55 +175,55 @@
                     <div class="tabs-panel" id="content-panel-address">
                         <div class="grid-x grid-padding-x">
                         <!-- <div id="port-address" class="small-12 cell">
-                            </div>  -->
-                        </div>
+                        </div>  -->
                     </div>
-                    {{-- КОНЕЦ АДРЕСА --}}
-
-
-
-                    {{-- ИСТОРИЯ --}}
-                    <div class="tabs-panel" id="content-panel-history">
-                        <div class="grid-x grid-padding-x">
-                            <div id="port-history" class="small-12 cell">
-                            </div>
-                        </div>
-                    </div>
-                    {{-- КОНЕЦ ИСТОРИЯ --}}
-
-
-
-                    {{-- Конец контента доп таба --}}
                 </div>
+                {{-- КОНЕЦ АДРЕСА --}}
 
+
+
+                {{-- ИСТОРИЯ --}}
+                <div class="tabs-panel" id="content-panel-history">
+                    <div class="grid-x grid-padding-x">
+                        <div id="port-history" class="small-12 cell">
+                        </div>
+                    </div>
+                </div>
+                {{-- КОНЕЦ ИСТОРИЯ --}}
+
+
+
+                {{-- Конец контента доп таба --}}
             </div>
+
         </div>
     </div>
+</div>
 
-    <!-- Правый блок -->
-    <div class="small-12 medium-7 large-5 cell">
-        <div class="grid-x tabs-right">
-            <div class="small-12 cell">
-                <ul class="tabs-list" data-tabs id="tabs-leads">
-                    <li class="tabs-title is-active"><a href="#content-panel-notes" aria-selected="true">События</a></li>
-                    <li class="tabs-title"><a href="#content-panel-catalog" aria-selected="true">Продукты</a></li>
-                    {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
+<!-- Правый блок -->
+<div class="small-12 medium-7 large-5 cell">
+    <div class="grid-x tabs-right">
+        <div class="small-12 cell">
+            <ul class="tabs-list" data-tabs id="tabs-leads">
+                <li class="tabs-title is-active"><a href="#content-panel-notes" aria-selected="true">События</a></li>
+                <li class="tabs-title"><a href="#content-panel-catalog-services" aria-selected="true">Услуги</a></li>
+                {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
 
-                    @can ('index', App\Claim::class)
-                    <li class="tabs-title"><a href="#content-panel-claims" aria-selected="true">Рекламации</a></li>
-                    @endcan
-                    {{-- <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li> --}}
-                    <li class="tabs-title" id="tab-attribution"><a href="#content-panel-attribution" aria-selected="true">Аттрибуция</a></li>
-                </ul>
-            </div>
+                @can ('index', App\Claim::class)
+                <li class="tabs-title"><a href="#content-panel-claims" aria-selected="true">Рекламации</a></li>
+                @endcan
+                {{-- <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li> --}}
+                <li class="tabs-title" id="tab-attribution"><a href="#content-panel-attribution" aria-selected="true">Аттрибуция</a></li>
+            </ul>
+        </div>
 
-            <div class="small-12 cell">
+        <div class="small-12 cell">
 
-                <div class="tabs-content tabs-leads" data-tabs-content="tabs-leads">
-                    {{-- Взаимодействия: задачи и события --}}
-                    <div class="tabs-panel is-active" id="content-panel-notes">
-                        <div class="grid-x grid-padding-x">
-                            <div class="small-12 large-12 cell">
+            <div class="tabs-content tabs-leads" data-tabs-content="tabs-leads">
+                {{-- Взаимодействия: задачи и события --}}
+                <div class="tabs-panel is-active" id="content-panel-notes">
+                    <div class="grid-x grid-padding-x">
+                        <div class="small-12 large-12 cell">
 
 
                             <fieldset class="fieldset-challenge">
@@ -239,60 +239,67 @@
                                 </div>
                             </fieldset>
 
-                                {{-- Подключаем задачи --}}
-                                @include('includes.challenges.fieldset', ['item' => $lead])
+                            {{-- Подключаем задачи --}}
+                            @include('includes.challenges.fieldset', ['item' => $lead])
 
-                                {{-- Подключаем комментарии --}}
-                                @include('includes.notes.fieldset', ['item' => $lead])
-                            </div>
+                            {{-- Подключаем комментарии --}}
+                            @include('includes.notes.fieldset', ['item' => $lead])
                         </div>
                     </div>
+                </div>
 
-                    {{-- КАТАЛОГ ПРОДУКЦИИ --}}
-                    <div class="tabs-panel" id="content-panel-catalog">
-                        <div class="grid-x grid-padding-x">
+                {{-- КАТАЛОГ ПРОДУКЦИИ --}}
+                <div class="tabs-panel" id="content-panel-catalog-services">
+                    <div class="grid-x grid-padding-x">
 
-                            {{-- ВЫВОД КАТЕГОРИЙ --}}
-                            <div class="shrink cell catalog-bar">
-                                <div class="grid-x grid-padding-x">
+                        {{-- ВЫВОД ПУНКТОВ КАТАЛОГА --}}
+                        <div class="shrink cell catalog-bar">
+                            <div class="grid-x grid-padding-x">
 
-                                    {{-- ПОИСК ПО ТОВАРАМ --}}
-                                    <div class="small-12 cell search-in-catalog-panel">
-                                        <label class="input-icon">
-                                            <input type="text" name="search" placeholder="Поиск" maxlength="25" autocomplete="off">
-                                            <div class="sprite-input-left icon-search"></div>
-                                            <span class="form-error">Обязательно нужно логиниться!</span>
-                                        </label>
-                                    </div>
-
-                                    {{-- СПИСОК КАТЕГРИЙ --}}
-{{--                                     <div class="small-12 cell search-in-catalog-panel">
-                                        @include('includes.drilldowns.categories', ['entity' => 'goods_categories'])
-                                    </div> --}}
+                                {{-- ПОИСК ПО УСЛУГАМ --}}
+                                <div class="small-12 cell search-in-catalog-panel">
+                                    <label class="input-icon">
+                                        <input type="text" name="search" placeholder="Поиск" maxlength="25" autocomplete="off">
+                                        <div class="sprite-input-left icon-search"></div>
+                                        <span class="form-error">Обязательно нужно логиниться!</span>
+                                    </label>
                                 </div>
-                            </div>
 
-                            {{-- ВЫВОД АРТИКУЛОВ (ТОВАРОВ) --}}
-                            <div class="auto cell">
-                                <div class="grid-x grid-padding-x">
+                                {{-- СПИСОК ПУНКТОВ КАТАЛОГА --}}
 
-                                    {{-- ПАНЕЛЬ УПРАВЛЕНИЯ ОТОБРАЖЕНИЕМ --}}
-                                    <div class="small-12 cell view-settings-panel">
-                                        <div class="one-icon-16 icon-view-list icon-button active" id="toggler-view-list"></div>
-                                        <div class="one-icon-16 icon-view-block icon-button" id="toggler-view-block"></div>
-                                        <div class="one-icon-16 icon-view-card icon-button" id="toggler-view-card"></div>
-                                        <div class="one-icon-16 icon-view-setting icon-button" id="open-setting-view"></div>
-                                    </div>
+                                <div class="small-12 cell search-in-catalog-panel">
 
-                                    {{-- ВЫВОД ТОВАРОВ --}}
-                                    <ul class="small-12 cell products-list view-list" id="items-list-products">
+                                    @isset ($catalog_service)
+                                    @include('leads.catalogs_items', ['catalog' => $catalog_service])
+                                    @endisset
 
-                                    </ul>
                                 </div>
                             </div>
                         </div>
+
+                        {{-- ВЫВОД ПРОЦЕССОВ (УСЛУГ) --}}
+                        <div class="auto cell">
+                            <div class="grid-x grid-padding-x">
+
+                                {{-- ПАНЕЛЬ УПРАВЛЕНИЯ ОТОБРАЖЕНИЕМ --}}
+                                <div class="small-12 cell view-settings-panel">
+                                    <div class="one-icon-16 icon-view-list icon-button active" id="toggler-view-list"></div>
+                                    <div class="one-icon-16 icon-view-block icon-button" id="toggler-view-block"></div>
+                                    <div class="one-icon-16 icon-view-card icon-button" id="toggler-view-card"></div>
+                                    <div class="one-icon-16 icon-view-setting icon-button" id="open-setting-view"></div>
+                                </div>
+
+                                {{-- ВЫВОД УСЛУГ --}}
+                                <ul class="small-12 cell products-list view-list" id="list-prices_services">
+
+
+
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    {{-- КОНЕЦ КАТАЛОГ ПРОДУКЦИИ --}}
+                </div>
+                {{-- КОНЕЦ КАТАЛОГ ПРОДУКЦИИ --}}
 
 
                     {{-- ДОКУМЕНТЫ
@@ -395,69 +402,68 @@
                                         </tr>
                                         <td>Интерес: </td>
                                         <td>
-                                        @php if($lead->lead_method_id == 2){$choice_disabled = 'disabled';} else {$choice_disabled = '';}   @endphp
-                                        {{ Form::select('choice_tag', $choices, genChoiceTag($lead), [$choice_disabled]) }}</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Источник: </td><td>{{ $lead->source->name ?? ''}}</td><td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Сайт: </td><td>{{ $lead->site->name ?? ''}}</td><td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Тип трафика: </td><td>{{ $lead->medium->name ?? ''}}</td><td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Рекламная кампания: </td><td>{{ $lead->campaign_id ?? ''}}</td><td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Объявление: </td><td>{{ $lead->utm_content ?? ''}}</td><td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Ключевая фраза: </td><td>{{ $lead->utm_term ?? ''}}</td><td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Менеджер: </td><td>{{ $lead->manager->name }}</td>
-                                        <td>
-                                            @if (extra_right('lead-appointment') || (extra_right('lead-appointment-self') && ($lead->manager_id == Auth::user()->id)) || ($lead->manager_id == Auth::user()->id))
-                                            <a id="lead-free" class="button tiny">Освободить</a>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Активных задач: </td><td>{{ $lead->challenges_active_count or ''}}</td><td></td>
-                                    </tr>
-                                </table>
+                                            {{ Form::select('choice_tag', $choices, genChoiceTag($lead), ['disabled' => ($lead->lead_method_id == 2)]) }}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Источник: </td><td>{{ $lead->source->name ?? ''}}</td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Сайт: </td><td>{{ $lead->site->name ?? ''}}</td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Тип трафика: </td><td>{{ $lead->medium->name ?? ''}}</td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Рекламная кампания: </td><td>{{ $lead->campaign_id ?? ''}}</td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Объявление: </td><td>{{ $lead->utm_content ?? ''}}</td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ключевая фраза: </td><td>{{ $lead->utm_term ?? ''}}</td><td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Менеджер: </td><td>{{ $lead->manager->name }}</td>
+                                            <td>
+                                                @if (extra_right('lead-appointment') || (extra_right('lead-appointment-self') && ($lead->manager_id == Auth::user()->id)) || ($lead->manager_id == Auth::user()->id))
+                                                <a id="lead-free" class="button tiny">Освободить</a>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Активных задач: </td><td>{{ $lead->challenges_active_count or ''}}</td><td></td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    {{-- КОНЕЦ АТТРИБУЦИИ --}}
+                        {{-- КОНЕЦ АТТРИБУЦИИ --}}
 
+
+                    </div>
 
                 </div>
 
             </div>
 
         </div>
-
-    </div>
-    {{-- КОНЕЦ ПРАВОГО БЛОКА --}}
+        {{-- КОНЕЦ ПРАВОГО БЛОКА --}}
 
 
-    <!-- Кнопка сохранить -->
-    <div class="small-12 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-        @can('update', $lead)
+        <!-- Кнопка сохранить -->
+        <div class="small-12 small-text-center medium-text-left cell tabs-button tabs-margin-top">
+            @can('update', $lead)
             {{ Form::submit($submitButtonText, ['class'=>'button']) }}
-        @else
+            @else
             {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }}
-        @endcan
+            @endcan
+        </div>
     </div>
-</div>
 
-{{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}
-@include('leads.autofind-lead-script')
-@include('includes.scripts.product-to-estimate-script')
+    {{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}
+    @include('leads.autofind-lead-script')
+    @include('includes.scripts.product-to-estimate-script')
 
 
 

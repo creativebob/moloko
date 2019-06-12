@@ -30,6 +30,8 @@ use App\GoodsCategory;
 use App\ServicesCategory;
 use App\RawsCategory;
 
+use App\CatalogsService;
+
 use App\PhotoSetting;
 
 // Валидация
@@ -241,7 +243,16 @@ class LeadController extends Controller
             return ['goods-' . $item->id => $item->name];
         })->toArray();
 
-        $services_categories_list = ServicesCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_sc = operator_right('services_category', false, getmethod('index'));
+
+        $services_categories_list = ServicesCategory::moderatorLimit($answer_sc)
+        ->companiesLimit($answer_sc)
+        ->authors($answer_sc)
+        ->where('direction', true)
+        ->get()
+        ->mapWithKeys(function ($item) {
             return ['service-' . $item->id => $item->name];
         })->toArray();
 
@@ -261,7 +272,22 @@ class LeadController extends Controller
         // Задачи пользователя
         $list_challenges = challenges($request);
 
-        return view('leads.edit', compact('lead', 'page_info', 'list_challenges', 'lead_methods_list', 'choices'));
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_cs = operator_right('catalogs_services', false, getmethod('index'));
+
+        $catalogs_services = CatalogsService::with('items.childs')
+        ->moderatorLimit($answer_cs)
+        ->companiesLimit($answer_cs)
+        ->authors($answer_cs)
+        ->whereHas('sites', function ($q) {
+            $q->whereId(1);
+        })
+        ->get();
+        // dd($catalogs_services);
+
+        $catalog_service = $catalogs_services->first();
+
+        return view('leads.edit', compact('lead', 'page_info', 'list_challenges', 'lead_methods_list', 'choices', 'catalog_service'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)

@@ -19,7 +19,7 @@ class CreateEstimatesTable extends Migration
             $table->bigInteger('lead_id')->unsigned()->nullable()->comment('Id лида');
             $table->foreign('lead_id')->references('id')->on('leads');
 
-            $table->bigInteger('client_id')->unsigned()->nullable()->comment('Id пользователя');
+            $table->bigInteger('client_id')->unsigned()->nullable()->comment('Id клиента');
             $table->foreign('client_id')->references('id')->on('users');
 
             $table->text('description')->nullable()->comment('Описание');

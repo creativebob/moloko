@@ -83,6 +83,7 @@ trait DepartmentControllerTrait
 
             $user->roles()->attach($insert_array);
             Log::info('Записали роли для юзера.');
+            
             return $employee;
         }
     }

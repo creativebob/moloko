@@ -13,7 +13,7 @@ use App\Company;
 use App\FirstName;
 
 use App\RawsArticle;
-use App\Position;
+use App\Estimate;
 
 use Carbon\Carbon;
 
@@ -33,9 +33,9 @@ use Fomvasss\Dadata\Facades\DadataSuggest;
 */
 
 // Route::get('test', function () {
-// 	$positions = Position::get();
+// 	$estimate = Estimate::first();
 
-//         dd($positions->take(2));
+//         dd($estimate->items->first()->price->product->process);
 // });
 
 Auth::routes();
@@ -574,10 +574,12 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->mi
 Route::resource('estimates', 'EstimateController')->middleware('auth');
 
 // Отображение на сайте
-Route::any('/estimates_check', 'EstimateController@ajax_check')->middleware('auth');
+Route::any('/create_estimates_item', 'EstimateController@ajax_create')->middleware('auth');
+Route::any('/update_estimates_item', 'EstimateController@ajax_update')->middleware('auth');
+Route::delete('/destroy_estimates_item', 'EstimateController@ajax_delete')->middleware('auth');
 
-Route::delete('/workflows/{id}', 'EstimateController@ajax_destroy_composition')->middleware('auth');
-Route::any('/workflows/{id}/edit', 'WorkflowController@ajax_edit')->middleware('auth');
+// Route::delete('/workflows/{id}', 'EstimateController@ajax_destroy_composition')->middleware('auth');
+// Route::any('/estimates_items/add', 'EstimateController@ajax_add')->middleware('auth');
 
 // --------------------------------------- Заказы -----------------------------------------------
 
@@ -983,6 +985,8 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
 
     Route::any('prices_services_sync', 'PricesServiceController@sync');
 });
+
+Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');
 
 
 // ------------------------------------- Отображение сессии -----------------------------------------

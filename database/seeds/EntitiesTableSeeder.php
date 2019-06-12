@@ -263,7 +263,7 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => $pages->firstWhere('alias', 'catalogs_services')->id,
             ],
             [
-                'name' => 'Рубрики',
+                'name' => 'Рубрикаторы',
                 'alias' => 'rubricators',
                 'model' => 'Rubricator',
                 'rights' => true,
@@ -417,7 +417,7 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => null,
             ],
             [
-                'name' => 'Клиентские заказы',
+                'name' => 'Сметы',
                 'alias' => 'estimates',
                 'model' => 'Estimate',
                 'rights' => true,
@@ -829,7 +829,7 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => null,
             ],
             [
-                'name' => 'Пункты рубрик',
+                'name' => 'Рубрики',
                 'alias' => 'rubricators_items',
                 'model' => 'RubricatorsItem',
                 'rights' => true,
@@ -841,7 +841,7 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => null,
             ],
             [
-                'name' => 'Позиция услуги в прайсе',
+                'name' => 'Прайс услуги',
                 'alias' => 'prices_services',
                 'model' => 'PricesService',
                 'rights' => true,

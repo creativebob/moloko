@@ -84,7 +84,7 @@ class CatalogsServicesItem extends Model
 	// Услуги каталога
     public function services()
     {
-        return $this->belongsToMany(Service::class, 'price_service', 'catalogs_services_item_id', 'service_id')
+        return $this->belongsToMany(Service::class, 'prices_services', 'catalogs_services_item_id', 'service_id')
         ->withPivot([
             'price'
         ]);

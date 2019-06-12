@@ -13,7 +13,6 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\SuppliersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
@@ -21,14 +20,14 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\DateIntervalFilter;
 
-class PricesService extends Model
+class EstimatesItem extends Model
 {
     // Включаем кеш
     use Cachable;
 
-    use Notifiable;
-    use SoftDeletes;
+    // use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -37,45 +36,43 @@ class PricesService extends Model
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
-    use SuppliersTraitScopes;
 
     // Фильтры
     use Filter;
     use BooklistFilter;
+    use DateIntervalFilter;
 
+    protected $dates = ['deleted_at'];
     protected $fillable = [
-        'catalogs_services_item_id',
-        'catalogs_service_id',
-        'service_id',
-        'display',
-        'price',
-        'author_id',
+        'estimate_id',
+        'price_id',
+        'price_type',
         'company_id',
-        'filial_id',
+        'author_id',
+        'count'
     ];
 
-
-    // Каталог
-    public function catalog()
+    // Автор
+    public function author()
     {
-        return $this->belongsTo(CatalogsService::class, 'catalogs_service_id');
+        return $this->belongsTo(User::class);
     }
 
-    // Пункты каталога
-    public function catalogs_item()
+    // Компания
+    public function company()
     {
-        return $this->belongsTo(CatalogsServicesItem::class, 'catalogs_services_item_id');
+        return $this->belongsTo(Company::class);
     }
 
-    // Услуга
-    public function service()
+    // Смета
+    public function estimate()
     {
-        return $this->belongsTo(Service::class);
+        return $this->belongsTo(Estimate::class);
     }
 
-    // Общее отношение для товаров и услуг
-    public function product()
+    // Состав
+    public function price()
     {
-        return $this->belongsTo(Service::class, 'service_id');
+        return $this->morphTo();
     }
 }
