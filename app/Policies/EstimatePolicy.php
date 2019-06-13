@@ -50,7 +50,7 @@ class EstimatePolicy
             return false;
         }
 
-        if ($model->positions->count() > 0) {
+        if ($model->items->count() > 0) {
             return false;
         }
 

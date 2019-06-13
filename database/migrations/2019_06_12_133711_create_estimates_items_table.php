@@ -19,11 +19,17 @@ class CreateEstimatesItemsTable extends Migration
             $table->bigInteger('estimate_id')->nullable()->unsigned()->comment('Id сметы');
             $table->foreign('estimate_id')->references('id')->on('estimates');
 
+            $table->bigInteger('service_id')->nullable()->unsigned()->comment('Id услуги');
+            $table->foreign('service_id')->references('id')->on('services');
+
+            $table->morphs('product');
+
             $table->morphs('price');
 
             $table->integer('cost')->nullable()->comment('Себестоимость');
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим мебестоимости');
 
+            $table->integer('price')->default(0)->comment('Цена');
             $table->integer('count')->default(0)->comment('Количество');
 
             $table->decimal('margin_percent', 10, 2)->nullable()->comment('Процент маржи');

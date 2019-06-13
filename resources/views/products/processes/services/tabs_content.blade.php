@@ -1,16 +1,30 @@
 {{-- Каталоги --}}
 <div class="tabs-panel" id="catalogs">
     <div class="grid-x grid-padding-x">
+
         <div class="small-12 medium-6 cell">
+            @include('products.processes.services.prices.catalogs')
 
-            <fieldset class="fieldset-access">
-                <legend>Каталоги</legend>
-                @include('products.processes.services.catalogs_with_items')
+            <table class="table-compositions">
+                <thead>
+                    <tr>
+                        <th>Каталог:</th>
+                        <th>Пункт:</th>
+                        <th>Филиал:</th>
+                        <th>Цена:</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="table-prices">
 
-                {{-- Form::select('catalogs[]', $catalogs_list, $cur_goods->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
-                {{-- @include('includes.selects.catalogs_chosen', ['parent_id' => $cur_goods->catalogs->keyBy('id')->toArray()]) --}}
+                    @if ($item->prices->isNotEmpty())
+                    @foreach ($item->prices as $price)
+                    @include('products.processes.services.prices.price', ['prices_service' => $price])
+                    @endforeach
+                    @endif
 
-            </fieldset>
+                </tbody>
+            </table>
 
         </div>
     </div>
@@ -18,8 +32,8 @@
 
 <div class="tabs-panel" id="workflows">
 
-{{-- Состав --}}
-@include('products.processes.services.workflows.workflows')
+    {{-- Состав --}}
+    @include('products.processes.services.workflows.workflows')
 
 </div>
 

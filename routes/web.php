@@ -988,6 +988,9 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
 
 Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');
 
+Route::post('prices_service', 'PricesServiceController@ajax_store');
+Route::delete('prices_service', 'PricesServiceController@ajax_destroy');
+
 
 // ------------------------------------- Отображение сессии -----------------------------------------
 Route::get('/show_session', 'HelpController@show_session')->middleware('auth')->name('help.show_session');

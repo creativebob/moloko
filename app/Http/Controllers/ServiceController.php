@@ -267,6 +267,8 @@ class ServiceController extends Controller
         $process = $service->process;
         // dd($process);
 
+        $service->load('prices');
+
         // Получаем настройки по умолчанию
         $settings = getSettings($this->entity_alias);
 
@@ -316,26 +318,26 @@ class ServiceController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $service);
 
-            // Каталоги
-            $data = [];
-            if (isset($request->catalogs_items)) {
+            // // Каталоги
+            // $data = [];
+            // if (isset($request->catalogs_items)) {
 
-                $user = $request->user();
+            //     $user = $request->user();
 
-                foreach ($request->catalogs_items as $catalog_id => $items) {
-                    foreach ($items as $item_id) {
-                        $data[(int) $item_id] = [
-                            'catalogs_service_id' => $catalog_id,
-                            'price' => $process->price_default,
-                            'company_id' => $user->company_id,
-                            'filial_id' => $user->filial_id,
-                            'author_id' => hideGod($user),
-                        ];
-                    }
-                }
-            }
-            // dd($data);
-            $service->prices()->sync($data);
+            //     foreach ($request->catalogs_items as $catalog_id => $items) {
+            //         foreach ($items as $item_id) {
+            //             $data[(int) $item_id] = [
+            //                 'catalogs_service_id' => $catalog_id,
+            //                 'price' => $process->price_default,
+            //                 'company_id' => $user->company_id,
+            //                 'filial_id' => $user->filial_id,
+            //                 'author_id' => hideGod($user),
+            //             ];
+            //         }
+            //     }
+            // }
+            // // dd($data);
+            // $service->prices()->sync($data);
 
             // Если ли есть
             if ($request->cookie('backlink') != null) {

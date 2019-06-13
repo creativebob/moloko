@@ -47,11 +47,8 @@ class PricesService extends Model
         'catalogs_services_item_id',
         'catalogs_service_id',
         'service_id',
-        'display',
-        'price',
-        'author_id',
-        'company_id',
         'filial_id',
+        'price',
     ];
 
 
@@ -65,6 +62,12 @@ class PricesService extends Model
     public function catalogs_item()
     {
         return $this->belongsTo(CatalogsServicesItem::class, 'catalogs_services_item_id');
+    }
+
+    // Филиал
+    public function filial()
+    {
+        return $this->belongsTo(Department::class);
     }
 
     // Услуга

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 // Модели
 use App\Estimate;
 use App\EstimatesItem;
+
+use App\Lead;
 use App\Entity;
 
 use Illuminate\Http\Request;
@@ -38,13 +40,18 @@ class EstimateController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
 
-        $estimates = Estimate::with('author')
+        $estimates = Estimate::with([
+            'client.clientable',
+            'items',
+            'author'
+        ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        ->whereNull('draft')
+        ->where('draft', false)
+        ->whereNotNull('client_id')
         ->booklistFilter($request)  // Фильтр по спискам
         ->filter($request, 'client_id')
         ->orderBy('moderation', 'desc')
@@ -113,11 +120,14 @@ class EstimateController extends Controller
         $user_id = hideGod($user);
         $company_id = $user->company_id;
 
+        $lead = Lead::findOrFail($request->lead_id);
+
         // Находим или создаем заказ для лида
         $estimate = Estimate::firstOrCreate([
-            'lead_id' => $request->lead_id,
+            'lead_id' => $lead->id,
             'company_id' => $company_id
         ], [
+            'client_id' => $lead->client_id,
             'author_id' => $user_id
         ]);
         // dd($estimate);

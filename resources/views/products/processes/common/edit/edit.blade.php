@@ -1,13 +1,10 @@
 @extends('layouts.app')
 
 @section('inhead')
+
 @include('includes.scripts.dropzone-inhead')
 @include('includes.scripts.fancybox-inhead')
 @include('includes.scripts.sortable-inhead')
-
-@if ($entity == 'services')
-@include('includes.scripts.chosen-inhead')
-@endif
 
 @endsection
 
@@ -330,7 +327,7 @@ $disabled = $process->draft == 0 ? true : null;
 @include('includes.modals.modal_item_delete')
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
 
     // Основные настройки
@@ -358,4 +355,4 @@ $disabled = $process->draft == 0 ? true : null;
 )
 
 @includeIf($page_info->entity->view_path . '.scripts')
-@endsection
+@endpush

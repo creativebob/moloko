@@ -275,27 +275,27 @@ class Lead extends Model
     // }
 
     // Заказы
-    public function estimates()
+    public function estimate()
     {
-        return $this->hasMany('App\Estimate');
+        return $this->hasOne(Estimate::class);
     }
 
     // Основной заказ
-    public function main_estimates()
-    {
-        return $this->hasMany('App\Estimate')->whereNull('draft');
-    }
+    // public function main_estimates()
+    // {
+    //     return $this->hasMany('App\Estimate')->whereNull('draft');
+    // }
 
     // Текущий заказ
-    public function getEstimateAttribute()
-    {
-        if(!empty($this->main_estimates->first()))
-        {
-            $value = $this->main_estimates->first();
-        } else {
-            $value = null;
-        }
-        return $value;
-    }
+    // public function getEstimateAttribute()
+    // {
+    //     if(!empty($this->main_estimates->first()))
+    //     {
+    //         $value = $this->main_estimates->first();
+    //     } else {
+    //         $value = null;
+    //     }
+    //     return $value;
+    // }
 
 }

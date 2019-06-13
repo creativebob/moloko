@@ -12,6 +12,8 @@ use App\CatalogsServicesItem;
 use Illuminate\Http\Request;
 // use App\Http\Requests\CatalogsServiceRequest;
 
+use Illuminate\Support\Facades\Log;
+
 class PricesServiceController extends Controller
 {
     // Настройки сконтроллера
@@ -150,6 +152,21 @@ class PricesServiceController extends Controller
 
 
     // --------------------------------- Ajax ----------------------------------------
+
+    public function ajax_store(Request $request)
+    {
+
+        $data = $request->input();
+        $prices_service = (new PricesService())->create($data);
+
+        return view('products.processes.services.prices.price', compact('prices_service'));
+    }
+
+    public function ajax_destroy(Request $request)
+    {
+
+        return response()->json(PricesService::destroy($request->id));
+    }
 
     public function sync(Request $request, $catalog_id)
     {

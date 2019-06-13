@@ -1,10 +1,10 @@
 <script type="text/javascript">
 
-    $(document).ready(function() {
+    $(function() {
         // Мульти Select
-        $(".chosen-select").chosen({
-            width: "95%"
-        });
+        // $(".chosen-select").chosen({
+        //     width: "95%"
+        // });
 
         $(function() {
             $('.checkboxer-title .form-error').hide();
@@ -59,6 +59,62 @@
 
             // $(this).trigger('click');
         });
+
+        // Добавление в прайс
+        $(document).on('click', '#button-store-prices_service', function(event) {
+            event.preventDefault();
+            $.post('/admin/prices_service', $('#form-prices_service :input').serialize(), function(html) {
+                $('#table-prices').append(html);
+            });
+        });
+
+        // Мягкое удаление с refresh
+        $(document).on('click', '[data-open="delete-item"]', function() {
+
+            // находим описание сущности, id и название удаляемого элемента в родителе
+            var parent = $(this).closest('.item');
+            var entity = parent.attr('id').split('-')[0];
+            var id = parent.attr('id').split('-')[1];
+            var name = parent.data('name');
+            $('.title-item').text(name);
+            $('.item-delete-button').attr('id', entity + '-' + id);
+
+        });
+
+        $(document).on('click', '.item-delete-button', function(event) {
+            event.preventDefault();
+
+            var buttons = $('.button');
+            var entity = $(this).attr('id').split('-')[0];
+            var id = $(this).attr('id').split('-')[1];
+            
+            $.ajax({
+                // headers: {
+                //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                // },
+                url: '/admin/' + entity,
+                type: 'DELETE',
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data == true) {
+
+                        $('#' + entity + '-' + id).remove();
+                        // $('#item-delete-ajax').foundation('close');
+                        $('.delete-button').removeAttr('id');
+                        buttons.prop('disabled', false);
+                    } else {
+                        // Выводим ошибку на страницу
+                        alert(data);
+                    };
+
+
+                }
+            });
+            
+        });
+
     });
 
 </script>
