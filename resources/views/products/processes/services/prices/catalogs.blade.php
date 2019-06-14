@@ -20,11 +20,12 @@
 	</div>
 	<div class="medium-3 cell">
 		<label>Цена
-			{!! Form::number('price', null, null, []) !!}
+			{!! Form::number('price', null, null, ['required']) !!}
 		</label>
+		<span class="form-error">Введите цену!</span>
 	</div>
 	<div class="medium-3 cell">
-		<a class="button" id="button-store-prices_service">Добавить</a>
+		<button class="button" id="button-store-prices_service">Добавить</button>
 	</div>
 </div>
 

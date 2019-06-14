@@ -81,6 +81,12 @@ class CatalogsServicesItem extends Model
 		return $this->belongsTo(User::class);
 	}
 
+	// Прайс
+	public function prices_services()
+	{
+		return $this->hasMany(PricesService::class);
+	}
+
 	// Услуги каталога
     public function services()
     {

@@ -49,6 +49,8 @@ class PricesService extends Model
         'service_id',
         'filial_id',
         'price',
+        'archive',
+        'editor_id',
     ];
 
 

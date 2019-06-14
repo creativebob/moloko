@@ -325,6 +325,7 @@ $disabled = $process->draft == 0 ? true : null;
 
 @section('modals')
 @include('includes.modals.modal_item_delete')
+@include('includes.modals.modal_price_delete')
 @endsection
 
 @push('scripts')

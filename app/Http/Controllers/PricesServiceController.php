@@ -53,6 +53,7 @@ class PricesServiceController extends Controller
         // ->companiesLimit($answer)
         // ->authors($answer)
         // ->systemItem($answer)
+        ->where('archive', false)
         ->where('catalogs_service_id', $catalog_id)
         ->paginate(30);
 
@@ -162,11 +163,7 @@ class PricesServiceController extends Controller
         return view('products.processes.services.prices.price', compact('prices_service'));
     }
 
-    public function ajax_destroy(Request $request)
-    {
-
-        return response()->json(PricesService::destroy($request->id));
-    }
+    
 
     public function sync(Request $request, $catalog_id)
     {
@@ -186,5 +183,47 @@ class PricesServiceController extends Controller
         ]);
 
         return view('prices_services.sync', compact('prices_service'));
+    }
+
+    public function ajax_edit(Request $request, $catalog_id)
+    {   
+        $price = PricesService::findOrFail($request->id);
+        // dd($price);
+        return view('products.processes.services.prices.catalogs_item_edit', compact('price'));
+    }
+
+    public function ajax_update(Request $request, $catalog_id)
+    {   
+
+        $user = $request->user();
+
+        $price = PricesService::findOrFail($request->id);
+
+        $new_price = $price->replicate();
+
+        $price->update([
+            'archive' => true,
+            'editor_id' => hideGod($user)
+        ]);
+
+        // dd($new_price);
+
+        $new_price->price = $request->price;
+        $new_price->save();
+
+
+        // dd($price);
+        return view('products.processes.services.prices.catalogs_item_price', ['price' => $new_price->price]);
+    }
+
+    public function ajax_archive(Request $request)
+    {
+        $user = $request->user();
+
+        $result = PricesService::where('id', $request->id)->update([
+            'archive' => true,
+            'editor_id' => hideGod($user)
+        ]);
+        return response()->json($result);
     }
 }
