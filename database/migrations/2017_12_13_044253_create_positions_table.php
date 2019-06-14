@@ -21,7 +21,7 @@ class CreatePositionsTable extends Migration
             $table->bigInteger('page_id')->unsigned()->nullable()->comment('Id страницы приземления');
             $table->foreign('page_id')->references('id')->on('pages');
             
-            $table->integer('direction_status')->unsigned()->nullable()->comment('Руководящая должность или нет');
+            $table->boolean('direction')->default(0)->unsigned()->comment('Руководящая должность');
 
             $table->bigInteger('sector_id')->nullable()->unsigned()->comment('Id сектора');
             $table->foreign('sector_id')->references('id')->on('sectors');

@@ -2,6 +2,9 @@
 
 use Illuminate\Database\Seeder;
 
+
+use App\Charge;
+use App\Position;
 class ChargesTableSeeder extends Seeder
 {
     /**
@@ -11,7 +14,7 @@ class ChargesTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('charges')->insert([
+        Charge::insert([
         	[
 		        'name' => 'Назначение лида',
 		        'description' => 'Назначение лида кому либо',
@@ -70,5 +73,19 @@ class ChargesTableSeeder extends Seeder
 
 
         ]);
+
+        
+        // Наваливаем права на лидов директору и менеджеру
+        
+        $charges = Charge::get(['id']);
+        $charges_array = [];
+        foreach ($charges as $charge) {
+            $charges_array[] = $charge->id;
+        }
+
+        $positions = Position::get();
+        foreach ($positions->take(2) as $position) {
+            $position->charges()->attach($charges_array);
+        }
     }
 }

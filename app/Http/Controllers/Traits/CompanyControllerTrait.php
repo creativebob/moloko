@@ -53,6 +53,7 @@ trait CompanyControllerTrait
                 // $company->alias = Transliterate::make($company->name .'_'. $number_id_company, ['type' => 'filename', 'lowercase' => true]);
             }
 
+            $company->prename = $request->prename;
             $company->email = $request->email;
             $company->inn = $request->inn;
             $company->kpp = $request->kpp;
@@ -167,6 +168,7 @@ trait CompanyControllerTrait
             $company->alias = $request->alias;
         }
 
+        $company->prename = $request->prename;
         $company->email = $request->email;
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;

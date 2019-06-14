@@ -373,6 +373,14 @@ class ClientController extends Controller
 
         $lead->save();
 
+        $lead->load('estimate');
+        // dd($lead);
+        Log::info('Проверяем смету у лида');
+        if (isset($lead->estimate)) {
+            $lead->estimate->update(['client_id' => $lead->client_id]);
+            Log::info('Если есть смета у лида, то обновляем клиента в смете');
+        }
+
         return 'Ок';
     }
 

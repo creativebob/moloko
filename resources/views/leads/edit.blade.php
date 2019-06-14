@@ -13,52 +13,52 @@
 
 @section('title-content')
 
-<!-- 	<div class="top-bar head-content">
+{{-- <div class="top-bar head-content">
 		<div class="top-bar-left">
 			<h2 class="header-content">ЛИД №: <input id="show-case-number" name="show_case_number" readonly class="case_number_field" value="{{ $lead->case_number }}"> </h2>
-		</div>
-		<div class="top-bar-right wrap_lead_badget">
+	</div>
+	<div class="top-bar-right wrap_lead_badget">
 			@include('includes.inputs.digit', ['name' => 'badget', 'value' => $lead->badget, 'decimal_place'=>2])
-		</div>
-	</div> -->
+	</div>
+</div> --}}
 
 @endsection
 
 
 @section('content')
 
-	{{ Form::model($lead, ['url' => '/admin/leads/'.$lead->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'id' => 'form-lead', 'files'=>'true']) }}
+{{ Form::model($lead, ['url' => '/admin/leads/'.$lead->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'id' => 'form-lead', 'files'=>'true']) }}
 
-	{{ method_field('PATCH') }}
+{{ method_field('PATCH') }}
 
-	@php
+@php
 
+$readonly = '';
+$autofocus = 'autofocus';
+
+if(isset($lead->main_phone)){
+
+	if($lead->main_phone->phone != null){
+		$readonly = 'readonly';
+		$autofocus = '';
+	} else {
 		$readonly = '';
 		$autofocus = 'autofocus';
+	}
+}
 
-		if(isset($lead->main_phone)){
-
-			if($lead->main_phone->phone != null){
-				$readonly = 'readonly';
-				$autofocus = '';
-			} else {
-				$readonly = '';
-				$autofocus = 'autofocus';
-			}
-		}
-
-		if($lead->manager_id == 1){
-			$disabled_leadbot = 'disabled';
-		} else {
-			$disabled_leadbot = '';
-		}
+if($lead->manager_id == 1){
+	$disabled_leadbot = 'disabled';
+} else {
+	$disabled_leadbot = '';
+}
 
 
-	@endphp
+@endphp
 
-	@include('leads.form', ['submitButtonText' => 'Сохранить', 'param'=>'', $readonly, $autofocus])
+@include('leads.form', ['submitButtonText' => 'Сохранить', 'param'=>'', $readonly, $autofocus])
 
-	{{ Form::close() }}
+{{ Form::close() }}
 
 @endsection
 
@@ -141,19 +141,11 @@
 	$(document).on('click', '#submit-add-claim', function(event) {
 		event.preventDefault();
 
-		$.ajax({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
-			url: "/admin/claim_add",
-			type: "POST",
-			data: $('#form-claim-add').serialize(),
-			success: function(html){
-				$('#add-claim').foundation('close')
-				$('#claims-list').html(html);
-				$('#form-claim-add textarea[name=body]').val('');
+		$.post("/admin/claim_add", $('#form-claim-add').serialize(), function(html){
+			$('#add-claim').foundation('close')
+			$('#claims-list').html(html);
+			$('#form-claim-add textarea[name=body]').val('');
 
-			}
 		});
 	});
 
@@ -165,79 +157,55 @@
 		var id = parent.attr('id').split('-')[1];
 		var name = parent.data('name');
 
-		$.ajax({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
-			url: "/admin/claim_finish",
-			type: "POST",
-			data: {id: id},
-			success: function(data){
-				var result = $.parseJSON(data);
+		$.post("/admin/claim_finish", {
+			id: id
+		}, function(data){
+			var result = $.parseJSON(data);
 
-				if (result['error_status'] == 0) {
-					$('#claims-' + id + ' .action a').remove();
-				} else {
-					alert(result['error_message']);
-				};
-			}
+			if (result['error_status'] == 0) {
+				$('#claims-' + id + ' .action a').remove();
+			} else {
+				alert(result['error_message']);
+			};
 		});
 	});
 
 	$(document).on('click', '#change-lead-type', function(event) {
 		event.preventDefault();
 
-		$.ajax({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
-			url: "/admin/open_change_lead_type",
-			type: "POST",
-			data: {lead_type_id: lead_type_id, lead_id: lead_id},
-			success: function(html){
-				$('#modal').html(html);
-				$('#modal-change-lead-type').foundation();
-				$('#modal-change-lead-type').foundation('open');
-			}
+		$.post("/admin/open_change_lead_type", {
+			lead_type_id: lead_type_id,
+			lead_id: lead_id
+		}, function(html){
+			$('#modal').html(html);
+			$('#modal-change-lead-type').foundation();
+			$('#modal-change-lead-type').foundation('open');
 		});
 	});
 
 	$(document).on('click', '#submit-change-lead-type', function(event) {
 		event.preventDefault();
 
-		$.ajax({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
-			url: "/admin/change_lead_type",
-			type: "POST",
-			data: $(this).closest('form').serialize(),
-			success: function(data){
-				$('#modal-change-lead-type').foundation('close');
-				$('#lead-type-name').html(data['lead_type_name']);
-				$('#show-case-number').val(data['case_number']);
-			}
+		$.post("/admin/change_lead_type", $(this).closest('form').serialize(), function(data){
+			$('#modal-change-lead-type').foundation('close');
+			$('#lead-type-name').html(data['lead_type_name']);
+			$('#show-case-number').val(data['case_number']);
 		});
 	});
 
-	$(document).on('click', '.get-products', function(event) {
-		event.preventDefault();
+	$(document).on('click', '.get-prices', function(event) {
+		// event.preventDefault();
 
 		var entity = $(this).attr('id').split('-')[0];
 		var id = $(this).attr('id').split('-')[1];
 
 		// alert(entity + ' ' + id);
 
-		$.ajax({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
-			url: "/admin/" + entity + "_get_products",
-			type: "POST",
-			data: {id: id},
-			success: function(html){
-				$('#items-list-products').html(html);
-			}
+		$.post("/admin/" + entity + "/prices", {
+			id: id
+		}, function(html){
+			// alert(html);
+			$('#list-prices_services').html(html);
 		});
 	});
 
@@ -246,23 +214,68 @@
 
 		var entity = $(this).attr('id').split('-')[0];
 		var id = $(this).attr('id').split('-')[1];
+		var serial = $(this).data('serial');
 
-		// alert(entity + ' ' + id);
+		// alert(entity + ', id: ' + id + ', serial: ' + serial);
 
+		if (serial == 1) {
+			$.post("/admin/create_estimates_item", {
+				lead_id: lead_id,
+				id: id,
+				entity: entity
+			}, function(html){
+				$('#' + entity + '-section').append(html);
+
+				//$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
+			});
+		} else {
+
+			$.post("/admin/update_estimates_item", {
+				lead_id: lead_id,
+				id: id,
+				entity: entity
+			}, function(html) {
+				// alert(html);
+				// alert($('#prices_services-section [data-price=' + id +']').length);
+				if ($('#prices_services-section [data-price=' + id +']').length == 1) {
+					$('#prices_services-section [data-price="' + id +'"]').replaceWith(html);
+				} else {
+					$('#' + entity + '-section').append(html);
+				}
+			});
+		}
+	});
+
+	$(document).on('click', '.delete-button-ajax', function(event) {
+		event.preventDefault();
+
+		var entity = $(this).attr('id').split('-')[0];
+		var id = $(this).attr('id').split('-')[1];
+
+		var buttons = $('.button');
+		
 		$.ajax({
 			headers: {
 				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 			},
-			url: "/admin/estimates_check",
-			type: "POST",
-			data: {lead_id: lead_id, item_id: id, entity: entity},
-			success: function(html){
-				$('#' + entity + '-section').append(html);
-
-				//$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
-			}
-		});
+			url: '/admin/destroy_' + entity,
+			type: 'DELETE',
+			data: {
+				id: id
+			},
+			success: function (data) {
+                // alert(html);
+                
+                $('#' + entity + '-' + id).remove();
+                $('#item-delete-ajax').foundation('close');
+                $('.delete-button-ajax').removeAttr('id');
+                buttons.prop('disabled', false);
+            }
+        });
+		
 	});
+
+
 </script>
 
 @include('includes.scripts.notes', ['id' => $lead->id, 'model' => 'Lead'])

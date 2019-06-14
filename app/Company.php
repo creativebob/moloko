@@ -88,7 +88,7 @@ class Company extends Model
         return $this->hasOne('App\Staffer')->whereHas('department', function($q){
             $q->whereNull('parent_id');
         })->whereHas('position', function($q){
-            $q->where('direction_status', 1);
+            $q->where('direction', true);
         })->withDefault('Не найден');
     }
 

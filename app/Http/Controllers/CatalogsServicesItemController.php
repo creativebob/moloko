@@ -57,11 +57,16 @@ class CatalogsServicesItemController extends Controller
         ];
 
         $catalogs_services_items = CatalogsServicesItem::with('childs')
-        // ->moderatorLimit($answer)
-        // ->companiesLimit($answer)
+        // ->where(function($q) use ($catalog_id, $answer) {
+        //     $q->where('catalogs_service_id', $catalog_id)
+        //     ->template($answer);
+        // })
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
         ->authors($answer)
-        // ->systemItem($answer)
-        ->template($answer)
+        ->systemItem($answer)
+        // ->where('catalogs_service_id', $catalog_id)
+        // ->template($answer)
         ->where('catalogs_service_id', $catalog_id)
         ->get($columns);
         // dd($catalogs_services_items);
@@ -342,5 +347,19 @@ class CatalogsServicesItemController extends Controller
         ->findOrFail($catalog_id);
 
         return view('catalog_products.content_core', compact('catalog'));
+    }
+
+    public function get_prices(Request $request)
+    {
+        $catalogs_services_item = CatalogsServicesItem::with(['services'])
+        ->findOrFail($request->id);
+        // dd($catalogs_services_item);
+
+        return view('leads.prices_services', compact('catalogs_services_item'));
+    }
+
+    public function ajax_get(Request $request, $catalog_id)
+    {
+        return view('products.processes.services.prices.catalogs_items', compact('catalog_id'));
     }
 }

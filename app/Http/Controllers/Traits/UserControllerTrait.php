@@ -155,6 +155,7 @@ trait UserControllerTrait
             $user->patronymic = $request->patronymic;
         }
 
+        
         $user->access_block = 1;
         $user->user_type = 0;
         $user->save();

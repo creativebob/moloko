@@ -615,10 +615,10 @@ class PagesTableSeeder extends Seeder
 
 
             [
-                'name' => 'Рубрики',
+                'name' => 'Рубрикатор',
                 'site_id' => 1,
-                'title' => 'Рубрики',
-                'description' => 'Рубрики',
+                'title' => 'Рубрикатор',
+                'description' => 'Рубрикатор',
                 'alias' => 'rubricators',
                 'company_id' => null,
                 'system_item' => 1,
@@ -626,10 +626,10 @@ class PagesTableSeeder extends Seeder
                 'display' => 1,
             ],
             [
-                'name' => 'Пункты рубрик',
+                'name' => 'Рубрика',
                 'site_id' => 1,
-                'title' => 'Пункты рубрик',
-                'description' => 'Пункты рубрик',
+                'title' => 'Рубрика',
+                'description' => 'Рубрика',
                 'alias' => 'rubricators_items',
                 'company_id' => null,
                 'system_item' => 1,
@@ -748,10 +748,10 @@ class PagesTableSeeder extends Seeder
                 'display' => 1,
             ],
             [
-                'name' => 'Расчеты',
+                'name' => 'Сметы',
                 'site_id' => 1,
-                'title' => 'Расчеты',
-                'description' => 'Расчеты',
+                'title' => 'Сметы',
+                'description' => 'Сметы',
                 'alias' => 'estimates',
                 'company_id' => null,
                 'system_item' => 1,

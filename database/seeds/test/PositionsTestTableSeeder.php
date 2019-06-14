@@ -15,7 +15,7 @@ class PositionsTestTableSeeder extends Seeder
         	[
 		        'name' => 'Web-разработчик',
                 'page_id' => 32,
-		        'direction_status' => null,
+		        'direction' => null,
 		        'company_id' => 1,
                 'system_item' => null,
                 'author_id' => 1,
@@ -24,7 +24,7 @@ class PositionsTestTableSeeder extends Seeder
             [
                 'name' => 'Технический специалист',
                 'page_id' => 32,
-                'direction_status' => 1,
+                'direction' => 1,
                 'company_id' => 1,
                 'system_item' => null,
                 'author_id' => 1,

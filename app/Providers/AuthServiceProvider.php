@@ -188,6 +188,11 @@ use App\Policies\CatalogsServicePolicy;
 use App\CatalogsServiceItem;
 use App\Policies\CatalogsServiceItemPolicy;
 
+use App\Estimate;
+use App\Policies\EstimatePolicy;
+// use App\EstimatesItem;
+// use App\Policies\EstimatesItemPolicy;
+
 
 
 use Illuminate\Support\Facades\Gate as GateContract;
@@ -211,7 +216,8 @@ class AuthServiceProvider extends ServiceProvider
 
         // Расчеты и заказы
         'App\Order' => 'App\Policies\OrderPolicy',
-        'App\Estimate' => 'App\Policies\EstimatePolicy',
+        Estimate::class => EstimatePolicy::class,
+        // EstimatesItem::class => EstimatesItemPolicy::class,
 
 
         // Показатели

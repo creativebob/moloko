@@ -79,4 +79,11 @@ class CatalogsService extends Model
     {
         return $this->belongsTo(Photo::class);
     }
+
+    // Главные
+    public function categories()
+    {
+        return $this->hasMany(CatalogsServicesItem::class)
+        ->whereNull('parent_id');
+    }
 }

@@ -80,7 +80,10 @@ use App\Http\ViewComposers\CategoriesDrilldownComposer;
 use App\Http\ViewComposers\EntitiesStatisticsSelectComposer;
 
 use App\Http\ViewComposers\CatalogsGoodsComposer;
+
 use App\Http\ViewComposers\CatalogsServicesComposer;
+use App\Http\ViewComposers\CatalogsServicesItemsComposer;
+
 use App\Http\ViewComposers\CatalogsTypesComposer;
 
 use App\Http\ViewComposers\ArticlesGroupsComposer;
@@ -144,6 +147,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer([
             'includes.selects.manufacturers',
+            'includes.selects.manufacturers_with_placeholder',
             'includes.lists.manufacturers'
         ], ManufacturersComposer::class);
 
@@ -211,7 +215,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.entities_statistics', EntitiesStatisticsSelectComposer::class);
 
         view()->composer('products.articles.goods.catalogs_with_items', CatalogsGoodsComposer::class);
-        view()->composer('products.processes.services.catalogs_with_items', CatalogsServicesComposer::class);
+        view()->composer('products.processes.services.prices.catalogs', CatalogsServicesComposer::class);
+        view()->composer('products.processes.services.prices.catalogs_items', CatalogsServicesItemsComposer::class);
 
         view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
         view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);

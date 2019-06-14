@@ -11,7 +11,7 @@ use App\Http\Requests\ServicesCategoryRequest;
 
 // Подключаем трейт записи и обновления категорий
 use App\Http\Controllers\Traits\CategoryControllerTrait;
-// use App\Http\Controllers\Traits\DirectionTrait;
+use App\Http\Controllers\Traits\DirectionTrait;
 
 class ServicesCategoryController extends Controller
 {
@@ -30,6 +30,7 @@ class ServicesCategoryController extends Controller
 
     // Используем трейт записи и обновления категорий
     use CategoryControllerTrait;
+    use DirectionTrait;
 
     public function index(Request $request)
     {
@@ -146,6 +147,7 @@ class ServicesCategoryController extends Controller
             'workflows.process.group.unit',
             'workflows.category',
             'manufacturers',
+            'directions',
         ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
@@ -193,6 +195,11 @@ class ServicesCategoryController extends Controller
         //     $services_categories = ServicesCategory::whereCategory_id($id)
         //     ->update(['processes_type_id' => $request->processes_type_id]);
         // }
+
+        // Проверка на направление
+        if (is_null($services_category->parent_id)) {
+            $this->checkDirection($request, $services_category);
+        }
 
         $services_category->save();
 

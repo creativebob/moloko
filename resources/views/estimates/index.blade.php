@@ -16,7 +16,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Estimate::class, 'type' => 'table'])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => null, 'type' => 'table'])
 @endsection
 
 @section('content')
@@ -63,18 +63,18 @@
                 <td class="td-name">
 
                   <a href="/admin/estimates?client_id%5B%5D={{ $estimate->client->id }}" class="filter_link" title="Фильтровать">
-                    {{ $estimate->client->client->name }}
+                    {{ $estimate->client->clientable->name }}
                 </a>
                 <br>
                 <span class="tiny-text">
-                    {{ $estimate->client->client->location->city->name }}, {{ $estimate->client->client->location->address }}
+                    {{ $estimate->client->clientable->location->city->name }}, {{ $estimate->client->clientable->location->address }}
                 </span>
                 <td class="td-phone">
-                    {{ isset($estimate->client->client->main_phone->phone) ? decorPhone($estimate->client->client->main_phone->phone) : 'Номер не указан' }}
-                    @if($estimate->client->client->email)<br><span class="tiny-text">{{ $estimate->client->client->email or '' }}</span>@endif
+                    {{ isset($estimate->client->clientable->main_phone->phone) ? decorPhone($estimate->client->clientable->main_phone->phone) : 'Номер не указан' }}
+                    @if($estimate->client->clientable->email)<br><span class="tiny-text">{{ $estimate->client->clientable->email ?? '' }}</span>@endif
                 </td>
-                <td class="td-number">{{ $estimate->number or '' }}
-                    <br><span class="tiny-text">{{ $estimate->lead->choice->name or '' }}</span>
+                <td class="td-number"><a href="/admin/leads/{{ $estimate->lead_id }}/edit">{{ $estimate->id }}</a>
+                    <br><span class="tiny-text">{{ $estimate->lead->choice->name ?? '' }}</span>
                 </td>
 
 
@@ -89,11 +89,11 @@
               <td class="td-stage">{{ $estimate->lead->stage->name }}</td>
               <td class="td-loyalty">{{ $estimate->client->loyalty->name }}</td>
               <td class="td-delete">
-                  @if ($estimate->system_item !== 1)
+                  {{-- @if ($estimate->system_item !== 1)
                   @can('delete', $estimate)
                   <a class="icon-delete sprite" data-open="item-delete"></a>
                   @endcan
-                  @endif
+                  @endif --}}
               </td>
           </tr>
           @endforeach

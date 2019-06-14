@@ -194,25 +194,18 @@ class PositionController extends Controller
         // Если должность записалась
         if($position) {
 
-            // Когда должность записалась, смотрим пришедшие для нее роли
-            if (isset($request->roles)) {
-                $position->roles()->attach($request->roles);
-            }
+            // Роли
+            $position->roles()->sync($request->roles);
 
-            // Смотрим оповещения
-            if (isset($request->notifications)) {
-                $position->notifications()->attach($request->notifications);
-            }
+            // Оповещения
+            $position->notifications()->sync($request->notifications);
 
-            // Смотрим обязанности
-            if (isset($request->charges)) {
-                $position->charges()->attach($request->charges);
-            }
+            // Обязанности
+            $position->charges()->sync($request->charges);
 
-            // Смотрим виджеты
-            if (isset($request->widgets)) {
-                $position->widgets()->attach($request->widgets);
-            }
+            // Виджеты
+            $position->widgets()->sync($request->widgets);
+
 
             return redirect()->route('positions.index');
         } else {
@@ -333,13 +326,13 @@ class PositionController extends Controller
         if ($position) {
 
             // Когда должность обновилась, обновляем пришедшие для нее роли
-            if (isset($request->roles)) {
-                $position->roles()->sync($request->roles);
-            } else {
-
-                // Если удалили последнюю роль для должности и пришел пустой массив
-                $position->roles()->detach();
-            }
+            $position->roles()->sync($request->roles);
+            // if (isset($request->roles)) {
+            //     $position->roles()->sync($request->roles);
+            // } else {
+            //     // Если удалили последнюю роль для должности и пришел пустой массив
+            //     $position->roles()->detach();
+            // }
 
             // Смотрим оповещения
             if (isset($request->notifications)) {
@@ -408,24 +401,11 @@ class PositionController extends Controller
                 }
             }
 
+            // Обязанности
+            $position->charges()->sync($request->charges);
 
-            // Смотрим обязанности
-            if (isset($request->charges)) {
-                $position->charges()->sync($request->charges);
-            } else {
-
-                // Если удалили последнюю обязанность для должности и пришел пустой массив
-                $position->charges()->detach();
-            }
-
-            // Смотрим виджеты
-            if (isset($request->widgets)) {
-                $position->widgets()->sync($request->widgets);
-            } else {
-
-                // Если удалили последний виджет для должности и пришел пустой массив
-                $position->widgets()->detach();
-            }
+            // Виджеты
+            $position->widgets()->sync($request->widgets);
 
             // $users = User::whereHas('staff', function ($q) {
             //     $q->whereHas('position', function ($q) {

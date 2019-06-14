@@ -55,31 +55,30 @@ class Estimate extends Model
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo(User::class);
     }
 
     // Компания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
     // Лид
     public function lead()
     {
-        return $this->belongsTo('App\Lead', 'lead_id');
+        return $this->belongsTo(Lead::class);
     }
 
-    // Получаем клиента
+    // Клиент
     public function client()
     {
-        return $this->belongsTo('App\Client', 'client_id');
+        return $this->belongsTo(Client::class);
     }
 
-    // Состав
-    // public function workflows()
-    // {
-    //     return $this->hasMany('App\Workflow', 'estimate_id');
-    // }
-
+    // Позиции
+    public function items()
+    {
+        return $this->hasMany(EstimatesItem::class);
+    }
 }

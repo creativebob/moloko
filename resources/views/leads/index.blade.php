@@ -94,7 +94,7 @@
             @endcan
 
             <br>
-            <span class="tiny-text">{{ $lead->company_name or '' }}</span>
+            <span class="tiny-text">{{ $lead->company_name ?? '' }}</span>
 
           </td>
           <td class="td-action">
@@ -117,10 +117,10 @@
 
           <td class="td-phone">
             {{ isset($lead->main_phone->phone) ? decorPhone($lead->main_phone->phone) : 'Номер не указан' }}
-            @if($lead->email)<br><span class="tiny-text">{{ $lead->email or '' }}</span>@endif
+            @if($lead->email)<br><span class="tiny-text">{{ $lead->email ?? '' }}</span>@endif
           </td>
           <td class="td-choice">
-            {{ $lead->choice->name or '' }}
+            {{ $lead->choice->name ?? '' }}
           </td>
 
           <td class="td-badget">{{ num_format($lead->badget, 0) }}</td>
@@ -128,7 +128,7 @@
           <td class="td-challenge">
                     {{-- $lead->first_challenge->challenge_type->name or '' }}<br>
                     <span class="tiny-text">{{ $lead->first_challenge->appointed->second_name or ''}}</span> --}}
-                    <span class="tiny-text">{{ $lead->challenges_active_count or ''}}</span>
+                    <span class="tiny-text">{{ $lead->challenges_active_count ?? ''}}</span>
 
                   </td>
                 {{-- <td>

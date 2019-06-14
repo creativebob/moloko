@@ -148,7 +148,7 @@ class ServiceController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        if($services_categories->count() == 0){
+        if ($services_categories->count() == 0){
 
             // Описание ошибки
             $ajax_error = [];
@@ -160,25 +160,28 @@ class ServiceController extends Controller
             return view('ajax_error', compact('ajax_error'));
         }
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('manufacturers', false, 'index');
+        if ($request->user()->company_id != null) {
 
-        $manufacturers_count = Manufacturer::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->systemItem($answer)
-        ->count();
+            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+            $answer = operator_right('manufacturers', false, 'index');
 
-        // Если нет производителей
-        if ($manufacturers_count == 0){
+            $manufacturers_count = Manufacturer::moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->systemItem($answer)
+            ->count();
 
-            // Описание ошибки
-            // $ajax_error = [];
-            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
-            $ajax_error['text'] = "Для начала необходимо добавить производителей. А уже потом будем добавлять рабочие процессы. Ок?";
-            $ajax_error['link'] = "/admin/manufacturers/create"; // Ссылка на кнопке
-            $ajax_error['title_link'] = "Идем в раздел производителей"; // Текст на кнопке
+            // Если нет производителей
+            if ($manufacturers_count == 0) {
 
-            return view('ajax_error', compact('ajax_error'));
+                // Описание ошибки
+                // $ajax_error = [];
+                $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+                $ajax_error['text'] = "Для начала необходимо добавить производителей. А уже потом будем добавлять рабочие процессы. Ок?";
+                $ajax_error['link'] = "/admin/manufacturers/create"; // Ссылка на кнопке
+                $ajax_error['title_link'] = "Идем в раздел производителей"; // Текст на кнопке
+
+                return view('ajax_error', compact('ajax_error'));
+            }
         }
 
         return view('products.processes.common.create.create', [
@@ -205,7 +208,6 @@ class ServiceController extends Controller
         $process = $this->storeProcess($request, $services_category);
 
         if ($process) {
-
 
             $data = $request->input();
             $data['process_id'] = $process->id;
@@ -265,6 +267,8 @@ class ServiceController extends Controller
         $process = $service->process;
         // dd($process);
 
+        $service->load('prices');
+
         // Получаем настройки по умолчанию
         $settings = getSettings($this->entity_alias);
 
@@ -302,11 +306,11 @@ class ServiceController extends Controller
         // dd($process);
 
 
-
         $result = $this->updateProcess($request, $service);
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
+            $service->serial = $request->has('serial');
             $service->display = $request->display;
             $service->system_item = $request->system_item;
             $service->save();
@@ -314,21 +318,26 @@ class ServiceController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $service);
 
-            // Каталоги
-            $data = [];
-            if (isset($request->catalogs_items)) {
+            // // Каталоги
+            // $data = [];
+            // if (isset($request->catalogs_items)) {
 
-                foreach ($request->catalogs_items as $catalog_id => $items) {
-                    foreach ($items as $item_id) {
-                        $data[(int) $item_id] = [
-                            'catalogs_service_id' => $catalog_id,
-                            'price' => $process->price_default,
-                        ];
-                    }
-                }
-            }
-            // dd($data);
-            $service->prices()->sync($data);
+            //     $user = $request->user();
+
+            //     foreach ($request->catalogs_items as $catalog_id => $items) {
+            //         foreach ($items as $item_id) {
+            //             $data[(int) $item_id] = [
+            //                 'catalogs_service_id' => $catalog_id,
+            //                 'price' => $process->price_default,
+            //                 'company_id' => $user->company_id,
+            //                 'filial_id' => $user->filial_id,
+            //                 'author_id' => hideGod($user),
+            //             ];
+            //         }
+            //     }
+            // }
+            // // dd($data);
+            // $service->prices()->sync($data);
 
             // Если ли есть
             if ($request->cookie('backlink') != null) {

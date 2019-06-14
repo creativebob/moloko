@@ -23,13 +23,15 @@ trait DirectionTrait
             $direction->archive = false;
             $direction->save();
 
+            $category->direction = true;
+
         } else {
 
-            if (isset($category->direction)) {
-               $direction = $category->direction;
-               $direction->archive = true;
-               $direction->save();
-            }
+            $direction = $category->directions;
+            $direction->archive = true;
+            $direction->save();
+
+            $category->direction = false;
         }
     }
 

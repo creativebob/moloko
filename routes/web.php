@@ -8,7 +8,12 @@ use App\Entity;
 use App\Page;
 use App\Location;
 
+use App\Align;
+use App\Company;
+use App\FirstName;
+
 use App\RawsArticle;
+use App\Estimate;
 
 use Carbon\Carbon;
 
@@ -26,6 +31,12 @@ use Fomvasss\Dadata\Facades\DadataSuggest;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// Route::get('test', function () {
+// 	$estimate = Estimate::first();
+
+//         dd($estimate->items->first()->price->product->process);
+// });
 
 Auth::routes();
 
@@ -563,10 +574,12 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->mi
 Route::resource('estimates', 'EstimateController')->middleware('auth');
 
 // Отображение на сайте
-Route::any('/estimates_check', 'EstimateController@ajax_check')->middleware('auth');
+Route::any('/create_estimates_item', 'EstimateController@ajax_create')->middleware('auth');
+Route::any('/update_estimates_item', 'EstimateController@ajax_update')->middleware('auth');
+Route::delete('/destroy_estimates_item', 'EstimateController@ajax_delete')->middleware('auth');
 
-Route::delete('/workflows/{id}', 'EstimateController@ajax_destroy_composition')->middleware('auth');
-Route::any('/workflows/{id}/edit', 'WorkflowController@ajax_edit')->middleware('auth');
+// Route::delete('/workflows/{id}', 'EstimateController@ajax_destroy_composition')->middleware('auth');
+// Route::any('/estimates_items/add', 'EstimateController@ajax_add')->middleware('auth');
 
 // --------------------------------------- Заказы -----------------------------------------------
 
@@ -968,10 +981,17 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
     // Основные методы
     Route::resource('catalogs_services_items', 'CatalogsServicesItemController');
 
+    Route::any('get_catalogs_services_items', 'CatalogsServicesItemController@ajax_get');
+
     Route::resource('prices_services', 'PricesServiceController');
 
     Route::any('prices_services_sync', 'PricesServiceController@sync');
 });
+
+Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');
+
+Route::post('prices_service', 'PricesServiceController@ajax_store');
+Route::delete('prices_service', 'PricesServiceController@ajax_destroy');
 
 
 // ------------------------------------- Отображение сессии -----------------------------------------

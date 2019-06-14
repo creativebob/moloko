@@ -1,13 +1,10 @@
 @extends('layouts.app')
 
 @section('inhead')
+
 @include('includes.scripts.dropzone-inhead')
 @include('includes.scripts.fancybox-inhead')
 @include('includes.scripts.sortable-inhead')
-
-@if ($entity == 'services')
-@include('includes.scripts.chosen-inhead')
-@endif
 
 @endsection
 
@@ -104,13 +101,30 @@ $disabled = $process->draft == 0 ? true : null;
 
                                 <label>Производитель
 
+
                                     @if ($item->category->manufacturers->isNotEmpty())
 
+                                    @template ($process)
+
+                                    {!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $process->manufacturer_id, [$disabled ? 'disabled' : '', 'placeholder' => 'Нет производителя']) !!}
+
+                                    @else
+
                                     {!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $process->manufacturer_id, [$disabled ? 'disabled' : '']) !!}
+
+                                    @endtemplate
+
+                                    @else
+
+                                    @template ($process)
+
+                                    @include('includes.selects.manufacturers_with_placeholder', ['manufacturer_id' => $process->manufacturer_id, 'item' => $item])
 
                                     @else
 
                                     @include('includes.selects.manufacturers', ['manufacturer_id' => $process->manufacturer_id, 'item' => $item])
+
+                                    @endtemplate
 
                                     @endif
 
@@ -214,6 +228,12 @@ $disabled = $process->draft == 0 ? true : null;
                     </div>
                     @endif
 
+                    {{-- Серийный номер --}}
+                    <div class="small-12 cell checkbox">
+                        {{ Form::checkbox('serial', 1, $item->serial, ['id' => 'serial']) }}
+                        <label for="serial"><span>Серийный номер</span></label>
+                    </div>
+
                     {{-- Чекбоксы управления --}}
                     @include('includes.control.checkboxes', ['item' => $item])
                     <div class="small-12 cell ">
@@ -307,7 +327,7 @@ $disabled = $process->draft == 0 ? true : null;
 @include('includes.modals.modal_item_delete')
 @endsection
 
-@section('scripts')
+@push('scripts')
 <script>
 
     // Основные настройки
@@ -335,4 +355,4 @@ $disabled = $process->draft == 0 ? true : null;
 )
 
 @includeIf($page_info->entity->view_path . '.scripts')
-@endsection
+@endpush

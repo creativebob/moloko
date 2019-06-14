@@ -33,6 +33,8 @@ class CreateServicesCategoriesTable extends Migration
             $table->bigInteger('processes_type_id')->nullable()->unsigned()->comment('Тип процесса');
             $table->foreign('processes_type_id')->references('id')->on('processes_types');
 
+            $table->boolean('direction')->default(0)->comment('Направление');
+
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
