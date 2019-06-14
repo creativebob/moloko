@@ -981,6 +981,8 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
     // Основные методы
     Route::resource('catalogs_services_items', 'CatalogsServicesItemController');
 
+    Route::any('get_catalogs_services_items', 'CatalogsServicesItemController@ajax_get');
+
     Route::resource('prices_services', 'PricesServiceController');
 
     Route::any('prices_services_sync', 'PricesServiceController@sync');

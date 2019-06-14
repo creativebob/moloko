@@ -357,4 +357,9 @@ class CatalogsServicesItemController extends Controller
 
         return view('leads.prices_services', compact('catalogs_services_item'));
     }
+
+    public function ajax_get(Request $request, $catalog_id)
+    {
+        return view('products.processes.services.prices.catalogs_items', compact('catalog_id'));
+    }
 }

@@ -214,7 +214,7 @@ class LeadController extends Controller
             'source',
             'site',
             'claims',
-            'estimate.items',
+            'estimate.items.product',
             'lead_method',
             'choice' => function ($query) {
                 $query->orderBy('created_at', 'asc');
@@ -234,7 +234,6 @@ class LeadController extends Controller
         ->moderatorLimit($answer)
         ->findOrFail($id);
         // dd($lead);
-        // dd($lead->has('estimate'));
 
         // Подключение политики
         // $this->authorize(getmethod(__FUNCTION__), $lead);

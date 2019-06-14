@@ -45,11 +45,14 @@ class EstimatesItem extends Model
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'estimate_id',
-        'price_id',
-        'price_type',
+        'price_product_id',
+        'price_product_type',
+        'product_id',
+        'product_type',
         'company_id',
         'author_id',
-        'count'
+        'count',
+        'price'
     ];
 
     // Автор
@@ -70,8 +73,14 @@ class EstimatesItem extends Model
         return $this->belongsTo(Estimate::class);
     }
 
-    // Состав
-    public function price()
+    // Прайс
+    public function price_product()
+    {
+        return $this->morphTo();
+    }
+
+    // Продукт
+    public function product()
     {
         return $this->morphTo();
     }

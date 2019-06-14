@@ -5,7 +5,7 @@
 
 	<div class="medium-3 cell">
 		<label>Каталог
-			{!! Form::select('catalogs_service_id', $catalogs_services->pluck('name', 'id'), null, []) !!}
+			{!! Form::select('catalogs_service_id', $catalogs_services->pluck('name', 'id'), null, ['id' => 'select-catalogs']) !!}
 		</label>
 	</div>
 	<div class="medium-3 cell">
@@ -15,7 +15,7 @@
 	</div>
 	<div class="medium-3 cell">
 		<label>Филиал
-			{!! Form::select('filial_id', $filials->pluck('name', 'id'), null, []) !!}
+			{!! Form::select('filial_id', $filials->pluck('name', 'id'), null, ['id' => 'select-filials']) !!}
 		</label>
 	</div>
 	<div class="medium-3 cell">

@@ -1,4 +1,4 @@
-<tr class="item" id="prices_service-{{ $prices_service->id }}" data-name="{{ $prices_service->catalogs_item->name }}">
+<tr class="item" id="prices_service-{{ $prices_service->id }}" data-name="{{ $prices_service->catalogs_item->name }}" data-filial_id="{{ $prices_service->filial_id }}" data-catalogs_item_id="{{ $prices_service->catalogs_services_item_id }}">
 
 	<td>{{ $prices_service->catalog->name }}</td>
 	<td>{{ $prices_service->catalogs_item->name }}</td>

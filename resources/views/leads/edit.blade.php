@@ -216,9 +216,9 @@ if($lead->manager_id == 1){
 		var id = $(this).attr('id').split('-')[1];
 		var serial = $(this).data('serial');
 
-		// alert(entity + ' ' + id);
+		// alert(entity + ', id: ' + id + ', serial: ' + serial);
 
-		if (serial == 0) {
+		if (serial == 1) {
 			$.post("/admin/create_estimates_item", {
 				lead_id: lead_id,
 				id: id,
@@ -226,9 +226,8 @@ if($lead->manager_id == 1){
 			}, function(html){
 				$('#' + entity + '-section').append(html);
 
-			//$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
-		});
-
+				//$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
+			});
 		} else {
 
 			$.post("/admin/update_estimates_item", {

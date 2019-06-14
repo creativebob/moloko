@@ -134,22 +134,44 @@ class EstimateController extends Controller
 
         // Находим сущность
         $entity = Entity::where('alias', $request->entity)->first();
+        $price_model = 'App\\' . $entity->model;
         // dd($entity);
 
+        $price = $price_model::findOrFail($request->id);
+        $price->load('product');
+
+        $entity = Entity::where('alias', $price->product->getTable())->first();
+        $product_model = 'App\\' . $entity->model;
+
+        // dd($price_model);
+
         $estimates_item = new EstimatesItem;
-        $estimates_item->price_id = $request->id;
-        $estimates_item->price_type = 'App\\' . $entity->model;
+
+        $estimates_item->product_id = $price->product->id;
+        $estimates_item->product_type = $product_model;
+
+        $estimates_item->price_product_id = $price->id;
+        $estimates_item->price_product_type = $price_model;
+
         $estimates_item->estimate_id = $estimate->id;
+
         $estimates_item->company_id = $company_id;
         $estimates_item->author_id = $user_id;
+
+        $estimates_item->price = $price->price;
         $estimates_item->count = 1;
+
+        $estimates_item->sum = $estimates_item->count * $price->price;
+
         $estimates_item->save();
 
-        if ($entity->model == 'PricesService') {
-            $estimates_item->load('price.service.process');
+        $estimates_item->load('product');
+
+        if ($price_model == 'App\PricesService') {
+            $estimates_item->load('product.process');
             return view('leads.estimates_item_service', compact('estimates_item'));
         } else {
-            $estimates_item->load('price.goods.article');
+            $estimates_item->load('product.article');
             return view('leads.estimates_item_goods', compact('estimates_item'));
         }
     }
@@ -174,39 +196,46 @@ class EstimateController extends Controller
 
         // Находим сущность
         $entity = Entity::where('alias', $request->entity)->first();
+        $price_model = 'App\\' . $entity->model;
+
         // dd($entity);
+
+        $price = $price_model::findOrFail($request->id);
+        $price->load('product');
+
+        $entity = Entity::where('alias', $price->product->getTable())->first();
+        $product_model = 'App\\' . $entity->model;
+        // dd($product_model);
 
         $estimates_item = EstimatesItem::firstOrNew([
             'estimate_id' => $estimate->id,
-            'price_id' => $request->id,
-            'price_type' => 'App\\' . $entity->model,
+            'product_id' => $price->product->id,
+            'product_type' => $product_model,
+            'price_product_id' => $price->id,
+            'price_product_type' => $price_model,
+            'price' => $price->price,
             'company_id' => $company_id,
         ], [
             'author_id' => $user_id,
         ]);
+        // dd($estimates_item);
 
         $estimates_item->count = $estimates_item->count + 1;
+        $estimates_item->sum = $estimates_item->count * $price->price;
 
         // dd($estimates_item);
 
-        if (isset($estimates_item->id)) {
-            $estimates_item->save();
-            // dd('число');
+        $estimates_item->save();
 
-            $estimates_item->load('price.service.process');
+        if ($price_model == 'App\PricesService') {
+            $estimates_item->load('product.process');
             return view('leads.estimates_item_service', compact('estimates_item'));
         } else {
-            $estimates_item->save();
-            // dd('html');
-            if ($entity->model == 'PricesService') {
-                $estimates_item->load('price.service.process');
-                return view('leads.estimates_item_service', compact('estimates_item'));
-            } else {
-                $estimates_item->load('price.goods.article');
-                return view('leads.estimates_item_goods', compact('estimates_item'));
-            }
-
+            $estimates_item->load('product.article');
+            return view('leads.estimates_item_goods', compact('estimates_item'));
         }
+
+        
         
         // $estimates_item->count->increment(1);
 
@@ -226,19 +255,5 @@ class EstimateController extends Controller
 
         return response()->json(EstimatesItem::destroy($request->id));
         
-    }
-
-    // public function ajax_destroy_composition(Request $request, $id)
-    // {
-
-    //     return response()->json(Workflow::destroy($id));
-
-    // }
-
-    public function ajax_add(Request $request)
-    {
-
-        return response()->json(Workflow::destroy($id));
-
     }
 }
