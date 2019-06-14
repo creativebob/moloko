@@ -82,7 +82,8 @@ class Service extends Model
     // Пункты каталога
     public function prices()
     {
-        return $this->hasMany(PricesService::class);
+        return $this->hasMany(PricesService::class)
+        ->where('archive', false);
     }
 
 }

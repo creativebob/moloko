@@ -288,7 +288,7 @@ Route::patch('/photo_update/{id}', 'PhotoController@ajax_update');
 
 
 // --------------------------------------- Помещения -----------------------------------------------
-Route::resource('/places', 'PlaceController')->middleware('auth');
+// Route::resource('/places', 'PlaceController')->middleware('auth');
 
 // --------------------------------------- Склады -----------------------------------------------
 Route::resource('stocks', 'StockController')->middleware('auth');
@@ -535,7 +535,7 @@ Route::get('plans/{alias}', 'PlanController@show')->name('plans.show');
 // ------------------------------------------------ Статистика ---------------------------------------
 
 // Основные методы
-Route::resource('statistics', 'StatisticsController')->middleware('auth');
+// Route::resource('statistics', 'StatisticsController')->middleware('auth');
 
 
 // ---------------------------------------------- Лиды -----------------------------------------------
@@ -981,7 +981,11 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
     // Основные методы
     Route::resource('catalogs_services_items', 'CatalogsServicesItemController');
 
-    Route::any('get_catalogs_services_items', 'CatalogsServicesItemController@ajax_get');
+    Route::post('get_catalogs_services_items', 'CatalogsServicesItemController@ajax_get');
+
+    Route::any('edit_prices_service', 'PricesServiceController@ajax_edit');
+    Route::any('update_prices_service', 'PricesServiceController@ajax_update');
+
 
     Route::resource('prices_services', 'PricesServiceController');
 
@@ -991,7 +995,8 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
 Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');
 
 Route::post('prices_service', 'PricesServiceController@ajax_store');
-Route::delete('prices_service', 'PricesServiceController@ajax_destroy');
+Route::any('archive_prices_service', 'PricesServiceController@ajax_archive');
+// Route::delete('prices_service', 'PricesServiceController@ajax_destroy');
 
 
 // ------------------------------------- Отображение сессии -----------------------------------------

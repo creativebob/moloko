@@ -351,7 +351,7 @@ class CatalogsServicesItemController extends Controller
 
     public function get_prices(Request $request)
     {
-        $catalogs_services_item = CatalogsServicesItem::with(['services'])
+        $catalogs_services_item = CatalogsServicesItem::with(['prices_services.service'])
         ->findOrFail($request->id);
         // dd($catalogs_services_item);
 
@@ -362,4 +362,5 @@ class CatalogsServicesItemController extends Controller
     {
         return view('products.processes.services.prices.catalogs_items', compact('catalog_id'));
     }
+
 }
