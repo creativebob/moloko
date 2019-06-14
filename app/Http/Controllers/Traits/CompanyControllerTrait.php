@@ -86,7 +86,18 @@ trait CompanyControllerTrait
 
                 // Создаем связь
                 $manufacturer = new Manufacturer;
-                $manufacturer->company_id = $auth_company_id;
+
+
+                // Если компанию создает бог (без компании) и указывает, что она являеться производителем, 
+                if($auth_company_id == null){
+                    // то она будет производителем сама для себя
+                    $manufacturer->company_id = $company->id;
+                } else {
+                    // в противном случае она будет производителем для компании под которой ее создают!
+                    $manufacturer->company_id = $auth_company_id;
+                }
+
+
                 $manufacturer->manufacturer_id = $company->id;
 
                 // Запись информации по производителю если нужно:

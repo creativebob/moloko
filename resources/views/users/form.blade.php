@@ -4,11 +4,19 @@
 			<li class="tabs-title is-active"><a href="#content-panel-1" aria-selected="true">Учетные данные</a></li>
 
             {{-- Подключаемые специфические разделы --}}
+
+            @if(!empty($employee))
+            <li class="tabs-title">
+                <a data-tabs-target="content-panel-employee" href="#content-panel-employee">Должность</a>
+            </li>
+            @endif
+
             @if(!empty($client))
             <li class="tabs-title">
                 <a data-tabs-target="content-panel-client" href="#content-panel-client">О клиенте</a>
             </li>
             @endif
+
             @if(!empty($dealer))
             <li class="tabs-title">
                 <a data-tabs-target="content-panel-dealer" href="#content-panel-dealer">Информация о дилере</a>
@@ -16,7 +24,7 @@
             @endif
 
 			<li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Персональные данные</a></li>
-			<li class="tabs-title"><a data-tabs-target="content-panel-3" href="#content-panel-3">Представитель компании</a></li>
+			{{-- <li class="tabs-title"><a data-tabs-target="content-panel-3" href="#content-panel-3">Представитель компании</a></li> --}}
 			<li class="tabs-title"><a data-tabs-target="content-panel-4" href="#content-panel-4">Образование и опыт</a></li>
 		</ul>
 	</div>
@@ -95,7 +103,8 @@
 						</label>
 					</div>
 					<div class="small-12 medium-6 cell">
-						@include('includes.inputs.city_search', ['city' => isset($user->location->city->name) ? $user->location->city : null, 'id' => 'cityForm', 'required' => true])
+						@php isset(Auth::user()->location->city->name) ? $city_default = Auth::user()->location->city : $city_default = null; @endphp
+						@include('includes.inputs.city_search', ['city' => isset($user->location->city->name) ? $user->location->city : $city_default, 'id' => 'cityForm', 'required' => true])
 					</div>
 					<div class="small-12 medium-6 cell">
 						<label>Адрес
@@ -127,6 +136,50 @@
 					</div>
 				</div>
 			</div>
+
+		    <!-- Блок сотрудника -->
+            @if(!empty($employee))
+            <div class="tabs-panel" id="content-panel-employee">
+                <div class="grid-x grid-padding-x inputs">
+    				<div class="small-12 medium-12 large-12 cell">
+				        <label>Должность:
+
+				        	@if($employee->staffer == null)
+				            	@include('includes.selects.empty_staff', ['disabled' => true, 'mode' => 'default'])
+				            @else
+								<p>{{ $employee->staffer->position->name }}</p>
+				            @endif
+				        </label>
+					</div>
+
+		            <div class="small-12 medium-5 cell">
+		                <label>Дата приема
+		                    @include('includes.inputs.date', ['value'=>$employee->employment_date == null ? null : $employee->employment_date->format('d.m.Y'), 'name'=>'employment_date', 'required' => true])
+		                </label>
+		            </div>
+		            <div class="small-12 medium-5 medium-offset-1 cell">
+						@if($employee->dismissal_date == null)
+			                <label>Дата увольнения
+			                    @include('includes.inputs.date', ['value'=>null, 'name'=>'dismissal_date'])
+			                </label>
+			            @else
+			                <label>Дата увольнения
+			                    @include('includes.inputs.date', ['value'=>$employee->dismissal_date->format('d.m.Y'), 'name'=>'dismissal_date', 'disabled'=>true])
+			                </label>
+		                @endif
+		            </div>
+    				<div class="small-12 medium-12 large-12 cell">
+				        <label>Причина увольнения
+				            @include('includes.inputs.name', ['value'=>$employee->dismissal_description, 'name'=>'dismissal_description'])
+				        </label>
+					</div>
+
+				</div>
+			</div>
+
+            <!-- Конец блока сотрудника -->
+            @endif
+
 
             @if(!empty($client))
 
@@ -215,7 +268,7 @@
 			</div>
 
 			<!-- Представитель компании -->
-			<div class="tabs-panel" id="content-panel-3">
+			{{-- <div class="tabs-panel" id="content-panel-3">
 				<div class="grid-x grid-padding-x">
 					<div class="small-12 cell checkbox">
 						{{ Form::checkbox('orgform_status', 1, $user->orgform_status==1, ['id'=>'orgform-status-checkbox']) }}
@@ -260,7 +313,7 @@
 						</label>
 					</div>
 				</div>
-			</div>
+			</div> --}}
 
 			<!-- Образование и опыт -->
 			<div class="tabs-panel" id="content-panel-4">
@@ -297,23 +350,31 @@
 	<div class="small-12 medium-5 medium-offset-1 large-5 large-offset-2 cell">
 		<fieldset class="fieldset-access">
 			<legend>Настройка доступа</legend>
-			<div class="grid-x grid-padding-x">
-				<div class="small-12 cell">
-					<label>Статус пользователя
-						{{ Form::select('user_type', [ '0' => 'Чужой', '1' => 'Свой']) }}
-					</label>
-				</div>
 
-				<div class="small-12 cell">
-					<label>
-						@include('includes.selects.filials_for_user', ['value'=>$user->filial_id])
-					</label>
+			@if(isset($employee))
+
+				<input name="user_type" type="hidden" value='1'>
+
+			@else
+				<div class="grid-x grid-padding-x">
+					<div class="small-12 cell">
+						<label>Статус пользователя
+							{{ Form::select('user_type', [ '0' => 'Чужой', '1' => 'Свой']) }}
+						</label>
+					</div>
+
+					<div class="small-12 cell tabs-margin-bottom">
+						<label>
+							@include('includes.selects.filials_for_user', ['value'=>$user->filial_id])
+						</label>
+					</div>
 				</div>
-			</div>
+			@endif
+
 			<div class="grid-x grid-padding-x">
-				<div class="small-12 cell tabs-margin-top">
+				<div class="small-12 cell">
 					<label>Логин
-						{{ Form::text('login', $user->login, ['class'=>'login-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'required', 'pattern'=>'[A-Za-z0-9._-]{6,30}']) }}
+						{{ Form::text('login', $user->login, ['class'=>'login-field', 'maxlength'=>'30', 'autocomplete'=>'off', 'pattern'=>'[A-Za-z0-9._-]{6,30}']) }}
 						<span class="form-error">Обязательно нужно логиниться!</span>
 					</label>
 					<label>Пароль

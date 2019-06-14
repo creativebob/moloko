@@ -5,29 +5,25 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 
-class UserRequest extends FormRequest
+class UserStoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+
     public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
+
         return [
 
-            'login' => 'required|string|max:255', 
+            'login' => 'sometimes|required|string|max:255',
+            'login' => 'required_without:access_block',
+
             'email' => 'nullable|string|email|max:255', 
+
+
             // 'password' => 'required|string|min:6|confirmed',
 
             'nickname' => 'alpha|string|max:255|nullable', 
@@ -81,6 +77,7 @@ class UserRequest extends FormRequest
     {
         return [
             'first_name.required' => 'Напишите имя пользователя',
+            'login.required_without' => 'Вы открываете доступ - укажите логин пользователя!',
         ];
     }
 

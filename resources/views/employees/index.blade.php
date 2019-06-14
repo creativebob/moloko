@@ -14,13 +14,13 @@
 @section('content-count')
 {{-- Количество элементов --}}
 @if(!empty($employees))
-{{ num_format($employees->total(), 0) }}
+{{ num_format($employees->where('dismissal_date', null)->count(), 0) }}
 @endif
 @endsection
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => null, 'type' => 'table'])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Employee::class, 'type' => 'table'])
 @endsection
 
 @section('content')
@@ -35,17 +35,18 @@
                     <th class="td-drop"></th>
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
                     <th class="td-name">Имя сотрудника</th>
+                    <th class="td-phone">Телефон</th>
                     <th class="td-position">Название должности</th>
 
-                    @if ($employees->isNotEmpty() && $employees->first()->company->filials->count() > 1)
+                    @if (($employees->isNotEmpty() && $employees->first()->company->filials->count() > 1) || (Auth::user()->god == 1))
                     <th class="td-filial">Филиал</th>
                     @endif
 
-                    <th class="td-department">Отдел</th>
                     <th class="td-employment-date">Дата приема</th>
                     <th class="td-dismissal-date">Дата увольнения</th>
 
                     <th class="td-status">Статус</th>
+                    <th class="td-access-block">Доступ</th>
                     <th class="td-dismissal-desc">Причина увольнения</th>
                     <th class="td-control"></th>
                     <!-- <th class="td-delete"></th> -->
@@ -75,23 +76,32 @@
                         <td class="td-name">
 
                             @can('update', $employee)
-                            <a href="/admin/{{ ($employee->dismissal_date == null) ? 'staff/'.$employee->staffer->id : 'employees/'.$employee->id }}/edit">{{ $employee->user->name }}</a>
+                                <a href="/admin/{{ 'employees/'.$employee->id }}/edit">{{ $employee->user->name }}</a>
+                            @else
+                                {{ $employee->user->name }}
                             @endcan
 
                         </td>
+
+                        <td class="td-phone">{{ isset($employee->user->main_phone->phone) ? decorPhone($employee->user->main_phone->phone) : 'Телефон не указан' }}
+                            <br>
+                            <span class="tiny-text">
+                                {{ $employee->user->location->city->name ?? '' }} @if(isset($employee->user->location->address)), {{ $employee->user->location->address}}@endif
+                            </span>
+                        </td>
+
                         <td class="td-position">
                             {{ $employee->staffer->position->name }}
-                        </td>
-
-                        @if ($employee->company->filials->count() > 1)
-                        <td class="td-filial">{{ $employee->staffer->filial->name }}</td>
-                        @endif
-
-                        <td class="td-department">
-                            @if ($employee->staffer->filial->name !== $employee->staffer->department->name)
-                            {{ $employee->staffer->department->name }}
+                            @if (($employee->company->filials->count() > 1)&&($employee->staffer->department->parent_id != null))
+                                <br>
+                                <span class="tiny-text">{{ $employee->staffer->department->name }}</span>
                             @endif
                         </td>
+
+                        @if (($employee->company->filials->count() > 1) || (Auth::user()->god == 1))
+                            <td class="td-filial">{{ $employee->staffer->filial->name }}</td>
+                        @endif
+
                         <td class="td-employment-date">{{ $employee->employment_date->format('d.m.Y') }}</td>
                         <td class="td-dismissal-date">{{ isset($employee->dismissal_date) ? $employee->dismissal_date->format('d.m.Y') : '' }}</td>
                         <td class="td-status">
@@ -102,6 +112,9 @@
                             Работает
                             @endif
 
+                        </td>
+                        <td class="td-access-block">
+                            {{ decor_access_block($employee->user->access_block) }}
                         </td>
                         <td class="td-dismissal-description">{{ $employee->dismissal_description }}</td>
 

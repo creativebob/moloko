@@ -16,7 +16,7 @@ use App\Country;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 
 // Политики
@@ -120,7 +120,7 @@ class UserController extends Controller
         return view('users.create', compact('user', 'page_info'));
     }
 
-    public function store(UserRequest $request)
+    public function store(UserStoreRequest $request)
     {
 
         // Подключение политики

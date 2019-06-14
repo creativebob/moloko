@@ -13,12 +13,21 @@ use App\Company;
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\EmployeeRequest;
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 
 // Общие классы
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Log;
+
+// Подрубаем трейт записи и обновления пользоватля
+use App\Http\Controllers\Traits\UserControllerTrait;
 
 class EmployeeController extends Controller
 {
+
+    // Подключаем трейт записи и обновления компании
+    use UserControllerTrait;
 
     // Настройки сконтроллера
     public function __construct(Employee $employee)
@@ -64,13 +73,19 @@ class EmployeeController extends Controller
             });
         })
 
-        // ->authors($answer)
+        ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->booklistFilter($request)
         ->filter($request, 'position_id', 'staffer')
         ->filter($request, 'department_id', 'staffer')
         ->dateIntervalFilter($request, 'date_employment')
+
+        ->whereHas('user', function($q) use ($request){
+            $q->booleanArrayFilter($request, 'access_block');
+        })
+
         ->orderBy('moderation', 'desc')
+        ->orderBy('dismissal_date', 'asc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
 
@@ -82,6 +97,7 @@ class EmployeeController extends Controller
             'position',             // Должность
             'department',           // Отдел
             'date_interval',        // Дата
+            'access_block',         // Доступ
             'booklist'              // Списки пользователя
         ]);
 
@@ -95,12 +111,107 @@ class EmployeeController extends Controller
 
     public function create()
     {
-        //
+        //Подключение политики
+        $this->authorize(getmethod('create'), Employee::class);
+        $this->authorize(getmethod('create'), User::class);
+
+        // Создаем новый экземляр дилера
+        $employee = new Employee;
+
+        // Создаем новый экземляр пользователя
+        $user = new User;
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_alias);
+
+        return view('employees.create', compact('user', 'employee', 'page_info'));
     }
 
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        //
+        // Подключение политики
+        $this->authorize(getmethod('create'), Employee::class);
+        $this->authorize(getmethod('create'), User::class);
+        $this->authorize(getmethod('create'), Staffer::class);
+
+        Log::info('Будем создавать сотрудника: все необходимые права есть');
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Получаем данные для авторизованного пользователя
+        $user_auth = $request->user();
+
+        // Скрываем бога
+        $user_id = hideGod($user_auth);
+
+
+        // Проверяем: свободна ли ставка  =====================================================
+        Log::info('Проверяем: свободна ли ставка?');
+
+        $staff = Staffer::with('position.roles')->findOrFail($request->staff_id);
+        // dd($staff);
+
+        if($staff->user_id != null){
+            abort(403, "Ставка не свободна!");
+        } else {
+            Log::info('Ставка свободна!');
+        };
+
+        // Создание нового сотрудника =========================================================
+
+        $employee = new Employee;
+        $new_user = new User;
+
+        Log::info('Подготовили новых user и employee');
+
+        // Отдаем работу по созданию нового юзера трейту
+        $user = $this->createUser($request, $new_user);
+
+        // Запись информации по сотруднику:
+        $employee->company_id = $request->user()->company->id;
+        $employee->staffer_id = $request->staff_id;
+        $employee->user_id = $user->id;
+        $employee->author_id = $user_auth->id;
+
+        $employee->employment_date = outPickMeUp($request->employment_date);
+        $employee->dismissal_date = $request->dismissal_date == null ? null : outPickMeUp($request->dismissal_date);
+        $employee->dismissal_description = $request->dismissal_description;
+
+        $employee->display = $request->display;
+        $employee->system_item = $request->system_item;
+        $employee->save();
+
+        // Если сотрудник удачно создан - занимем ставку
+        if($employee){
+
+            Log::info('Сотрудник создан - будем занимать ставку!');
+            $staff->user_id = $user->id;
+            $staff->save();
+
+
+            // Прописываем права
+            $position = $staff->position;
+            $position->load('roles');
+
+            $insert_array = [];
+            foreach ($position->roles as $role) {
+                $insert_array[$role->id] = [
+                    'department_id' => $staff->department_id,
+                    'position_id' => $staff->position_id
+                ];
+            }
+
+            $user->roles()->attach($insert_array);
+            Log::info('Записали роли для юзера (сотрудника)');
+
+
+        } else {
+
+            Log::info('Сотрудник не был создан!');
+        };
+
+        return redirect('/admin/employees');
     }
 
     public function show($id)
@@ -127,26 +238,44 @@ class EmployeeController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias,  $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         // ГЛАВНЫЙ ЗАПРОС:
-        $employee = Employee::moderatorLimit(operator_right($this->entity_alias,  $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
+        $employee = Employee::moderatorLimit($answer)
+        ->with('user', 'staffer')
+        ->findOrFail($id);
+
+        $user = $employee->user;
+        $staffer = $employee->staffer;
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $employee);
+        $this->authorize(getmethod('update'), $employee);
+        $this->authorize(getmethod('update'), $staffer);
+        $this->authorize(getmethod('update'), $user);
 
-        // Перезаписываем данные
-        $employee->employment_date = outPickMeUp($request->employment_date);
-        $employee->dismissal_date = outPickMeUp($request->dismissal_date);
-        $employee->dismissal_description = $request->dismissal_description;
-        $employee->editor_id = $request->user()->id;
+        Log::info('Будем редактировать сотрудника: все необходимые права есть');
 
-        $employee->display = $request->display;
-        $employee->system_item = $request->system_item;
+        // Отдаем работу по редактированию нового юзера трейту
+        $user = $this->updateUser($request, $user);
 
-        $employee->save();
+        if($request->staff_id != null){
+
+            // Перезаписываем данные
+            $employee->employment_date = outPickMeUp($request->employment_date);
+            $employee->dismissal_date = $request->dismissal_date == null ? null : outPickMeUp($request->dismissal_date);
+            $employee->dismissal_description = $request->dismissal_description;
+            $employee->editor_id = $request->user()->id;
+
+            $employee->display = $request->display;
+            $employee->system_item = $request->system_item;
+
+            $employee->save();
+        }
 
         // Если записалось
         if ($employee) {
@@ -154,6 +283,7 @@ class EmployeeController extends Controller
         } else {
             abort(403, 'Ошибка редактирования сотрудника');
         }
+
     }
 
     public function destroy($id)

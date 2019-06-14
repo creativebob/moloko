@@ -53,8 +53,8 @@ trait UserControllerTrait
         // Блокировка доступа
         if($request->access_block == 1){$user->access_block = 1;} else {$user->access_block = 0;};
 
-        // Тип пользователя (Видимо, требует переработки. Идея устарела.)
-        $user->user_type = $request->has('user_type');
+        // Тип пользователя (Возможно, требует переработки. Идея устарела.)
+        $user->user_type = $request->user_type;
 
 
         // Компания и филиал ----------------------------------------------------------
@@ -222,8 +222,7 @@ trait UserControllerTrait
         if($request->access_block == 1){$user->access_block = 1;} else {$user->access_block = 0;};
 
         // Тип пользователя (Видимо, требует переработки. Идея устарела.)
-        $user->user_type = $request->has('user_type');
-
+        $user->user_type = $request->user_type;
 
         // Компания и филиал ----------------------------------------------------------
         $user->company_id = $request->user()->company->id;

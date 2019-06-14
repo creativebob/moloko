@@ -146,7 +146,6 @@ class CompanyController extends Controller
         // Следом автоматически создаем первый филиал у компании
         $new_department = $this->createFirstDepartment($new_company);
 
-
         // Чистка номера
         $main_phone = cleanPhone($request->main_phone);
 

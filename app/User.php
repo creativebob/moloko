@@ -44,37 +44,37 @@ class User extends Authenticatable
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    // Фильтрация по городу
-    public function scopeUserFilter($query, $request)
-    {
+    // // Фильтрация по городу
+    // public function scopeUserFilter($query, $request)
+    // {
 
-        //Фильтруем по городу
-        if($request->city_id){
-            $query = $query->where('city_id', $request->city_id);
-        }
+    //     //Фильтруем по городу
+    //     if($request->city_id){
+    //         $query = $query->where('city_id', $request->city_id);
+    //     }
 
-        return $query;
-    }
+    //     return $query;
+    // }
 
-    // Фильтрация по статусу пользователя: клиент или сотрудник
-    public function scopeUserType($query, $user_type)
-    {
-        if(isset($user_type)){
-            if($user_type != "all"){
-                return $query->where('user_type', '=', $user_type);
-            }
-        }
-    }
+    // // Фильтрация по статусу пользователя: клиент или сотрудник
+    // public function scopeUserType($query, $user_type)
+    // {
+    //     if(isset($user_type)){
+    //         if($user_type != "all"){
+    //             return $query->where('user_type', '=', $user_type);
+    //         }
+    //     }
+    // }
 
-    // Фильтрация по блокировке доступа:
-    public function scopeAccessBlock($query, $access_block)
-    {
-        if(isset($access_block)){
-            if($access_block != "all"){
-                return $query->where('access_block', '=', $access_block);
-            }
-        }
-    }
+    // // Фильтрация по блокировке доступа:
+    // public function scopeAccessBlock($query, $access_block)
+    // {
+    //     if(isset($access_block)){
+    //         if($access_block != "all"){
+    //             return $query->where('access_block', '=', $access_block);
+    //         }
+    //     }
+    // }
 
     // КОНЕЦ БЛОКА ОПИСАНИЯ ФИЛЬТРОВ
     public function setBirthdayAttribute($value) {

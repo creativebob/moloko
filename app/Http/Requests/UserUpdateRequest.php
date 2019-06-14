@@ -26,7 +26,9 @@ class UserUpdateRequest extends FormRequest
     {
         return [
 
-            'login' => 'required|string|max:255', 
+            'login' => 'sometimes|required|string|max:255',
+            'login' => 'required_without:access_block',
+
             'email' => 'nullable|string|email|max:255', 
             // 'password' => 'required|string|min:6|confirmed',
 
@@ -81,6 +83,7 @@ class UserUpdateRequest extends FormRequest
     {
         return [
             'first_name.required' => 'Напишите имя пользователя',
+            'login.required_without' => 'Вы открываете доступ - укажите логин пользователя!',
         ];
     }
 

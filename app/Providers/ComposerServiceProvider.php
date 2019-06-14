@@ -67,6 +67,7 @@ use App\Http\ViewComposers\DirectionsComposer;
 
 use App\Http\ViewComposers\UsersComposer;
 use App\Http\ViewComposers\StaffComposer;
+use App\Http\ViewComposers\EmptyStaffComposer;
 use App\Http\ViewComposers\PositionsComposer;
 use App\Http\ViewComposers\PropertiesComposer;
 
@@ -156,6 +157,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.selects.users', UsersComposer::class);
         view()->composer('includes.selects.staff', StaffComposer::class);
+        view()->composer('includes.selects.empty_staff', EmptyStaffComposer::class);
 
         view()->composer('includes.selects.positions', PositionsComposer::class);
         view()->composer('products.articles_categories.goods_categories.metrics.properties_list', PropertiesComposer::class);

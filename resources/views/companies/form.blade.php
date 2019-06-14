@@ -292,7 +292,7 @@
                     {{-- Предлагаем добавить компанию в поставщики, если, конечно, создаем ее не из под страницы создания поставщиков --}}
                     
                         @if(empty($supplier))
-                            @if(isset($company->supplier_self))
+                            @if(isset($company->supplier_self) && (Auth::user()->company_id != null))
                                 @if($company->supplier_self == false)
                                 <div class="small-12 cell checkbox">
                                     {{ Form::checkbox('supplier_self', 1, $company->supplier_self, ['id' => 'supplier_self']) }}

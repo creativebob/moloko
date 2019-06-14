@@ -41,8 +41,6 @@
           <th class="td-staffer">Должность</th>
 
           <th class="td-access-block">Доступ</th>
-          {{--           <th class="td-group-users-id">Уровень доступа</th>
-          <th class="td-group-users-id">Локализация</th> --}}
           <th class="td-control"></th>
           <th class="td-delete"></th>
         </tr>
@@ -104,8 +102,6 @@
           <td class="td-contragent-status">{{ decor_user_type($user->user_type) }}</td>
           <td class="td-staffer">@if(!empty($user->staff->first()->position->name)) {{ $user->staff->first()->position->name }} @endif</td>
           <td class="td-access-block">{{ decor_access_block($user->access_block) }}</td>
-          {{--           <td class="td-group_action_id">{{ $user->group_action->access_group_name }}</td>
-          <td class="td-group_locality_id">{{ $user->group_locality->access_group_name }}</td> --}}
 
           {{-- Элементы управления --}}
           @include('includes.control.table-td', ['item' => $user])
