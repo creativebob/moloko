@@ -854,7 +854,12 @@ Route::resource('/staff', 'StafferController')->middleware('auth');
 // --------------------------------------- Сотрудники ---------------------------------------------
 
 // Основные методы
+Route::get('/employees/dismissal', 'EmployeeController@dismissal')->middleware('auth');
+
 Route::resource('/employees', 'EmployeeController')->middleware('auth');
+Route::post('/employee_dismiss_modal', 'EmployeeController@ajax_employee_dismiss_modal')->middleware('auth');
+Route::post('/employee_dismiss', 'EmployeeController@ajax_employee_dismiss')->middleware('auth');
+
 
 
 // ------------------------------------------ Списки -----------------------------------------------

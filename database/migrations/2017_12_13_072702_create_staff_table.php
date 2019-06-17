@@ -28,6 +28,8 @@ class CreateStaffTable extends Migration
             $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id отдела');
             $table->foreign('filial_id')->references('id')->on('departments');
 
+            $table->decimal('rate', 10, 2)->nullable()->default(1)->comment('Ставка');
+
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');

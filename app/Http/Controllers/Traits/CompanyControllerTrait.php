@@ -54,6 +54,7 @@ trait CompanyControllerTrait
             }
 
             $company->prename = $request->prename;
+            $company->designation = $request->designation;
             $company->email = $request->email;
             $company->inn = $request->inn;
             $company->kpp = $request->kpp;
@@ -169,6 +170,7 @@ trait CompanyControllerTrait
         }
 
         $company->prename = $request->prename;
+        $company->designation = $request->designation;
         $company->email = $request->email;
         $company->inn = $request->inn;
         $company->kpp = $request->kpp;

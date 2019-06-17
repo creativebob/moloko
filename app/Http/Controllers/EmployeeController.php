@@ -41,7 +41,7 @@ class EmployeeController extends Controller
         $this->type = 'modal';
     }
 
-    public function index(Request $request)
+    public function index(Request $request, $dismissal = false)
     {
 
         // Подключение политики
@@ -71,6 +71,13 @@ class EmployeeController extends Controller
             return $query->whereHas('staffer', function($q) use ($user){
                 $q->where('filial_id', $user->filial_id);
             });
+        })
+
+        ->when($dismissal == true, function ($query){
+            return $query->whereNotNull('dismissal_date');
+        })
+        ->when($dismissal == false, function ($query){
+            return $query->whereNull('dismissal_date');
         })
 
         ->authors($answer)
@@ -109,6 +116,13 @@ class EmployeeController extends Controller
         return view('employees.index', compact('employees', 'page_info', 'filter'));
     }
 
+    // Отдельный метод на базе index для того чтобы показывать только уволенных
+    public function dismissal(Request $request)
+    {
+        return $this->index($request, $dismissal = true);
+    }
+
+
     public function create()
     {
         //Подключение политики
@@ -121,10 +135,22 @@ class EmployeeController extends Controller
         // Создаем новый экземляр пользователя
         $user = new User;
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $list_empty_staff = Staffer::moderatorLimit($answer)
+        ->whereNull('user_id')
+        ->get();
+
+        $list_user_employees = Employee::with('user')
+        ->moderatorLimit($answer)
+        ->where('user_id', $employee->user_id)
+        ->get();
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('employees.create', compact('user', 'employee', 'page_info'));
+        return view('employees.create', compact('user', 'employee', 'page_info', 'list_empty_staff', 'list_user_employees'));
     }
 
     public function store(UserStoreRequest $request)
@@ -149,7 +175,7 @@ class EmployeeController extends Controller
         // Проверяем: свободна ли ставка  =====================================================
         Log::info('Проверяем: свободна ли ставка?');
 
-        $staff = Staffer::with('position.roles')->findOrFail($request->staff_id);
+        $staff = Staffer::with('position', 'department')->findOrFail($request->staff_id);
         // dd($staff);
 
         if($staff->user_id != null){
@@ -189,22 +215,11 @@ class EmployeeController extends Controller
             $staff->user_id = $user->id;
             $staff->save();
 
-
             // Прописываем права
             $position = $staff->position;
-            $position->load('roles');
+            $department = $staff->department;
 
-            $insert_array = [];
-            foreach ($position->roles as $role) {
-                $insert_array[$role->id] = [
-                    'department_id' => $staff->department_id,
-                    'position_id' => $staff->position_id
-                ];
-            }
-
-            $user->roles()->attach($insert_array);
-            Log::info('Записали роли для юзера (сотрудника)');
-
+            setRolesFromPosition($position, $department, $user);
 
         } else {
 
@@ -226,7 +241,16 @@ class EmployeeController extends Controller
         $answer = operator_right($this->entity_alias,  $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $employee = Employee::with('user')->moderatorLimit($answer)->findOrFail($id);
+        $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->findOrFail($id);
+
+        $list_user_employees = Employee::with('user')
+        ->moderatorLimit($answer)
+        ->where('user_id', $employee->user_id)
+        ->get();
+
+        $list_empty_staff = Staffer::moderatorLimit($answer)
+        ->whereNull('user_id')
+        ->get();
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $employee);
@@ -234,7 +258,8 @@ class EmployeeController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('employees.edit', compact('employee', 'page_info'));
+
+        return view('employees.edit', compact('employee', 'page_info', 'list_user_employees', 'list_empty_staff', 'rate'));
     }
 
 
@@ -265,6 +290,17 @@ class EmployeeController extends Controller
 
         if($request->staff_id != null){
 
+            if($employee->staffer->id == $request->staff_id){
+
+            } else {
+
+                // Будем увольнять с текущей должности и устраивать на новую
+
+
+
+
+            }
+
             // Перезаписываем данные
             $employee->employment_date = outPickMeUp($request->employment_date);
             $employee->dismissal_date = $request->dismissal_date == null ? null : outPickMeUp($request->dismissal_date);
@@ -275,7 +311,53 @@ class EmployeeController extends Controller
             $employee->system_item = $request->system_item;
 
             $employee->save();
+
+
+            // Если сотрудник удачно отредактирован - занимем ставку
+            if($employee){
+
+                // Проверяем: свободна ли ставка  =====================================================
+                Log::info('Проверяем: свободна ли ставка?');
+
+                $staff = Staffer::with('position.roles')->findOrFail($request->staff_id);
+                // dd($staff);
+
+                if($staff->user_id != null){
+                    abort(403, "Ставка не свободна!");
+                } else {
+                    Log::info('Ставка свободна!');
+                };
+
+
+                Log::info('Сотрудник создан - будем занимать ставку!');
+                $staff->user_id = $user->id;
+                $staff->save();
+
+                // Прописываем права
+                $position = $staff->position;
+                $position->load('roles');
+
+                $insert_array = [];
+                foreach ($position->roles as $role) {
+                    $insert_array[$role->id] = [
+                        'department_id' => $staff->department_id,
+                        'position_id' => $staff->position_id
+                    ];
+                }
+
+                $user->roles()->attach($insert_array);
+                Log::info('Записали роли для юзера (сотрудника)');
+
+
+            } else {
+
+                Log::info('Сотрудник не был создан!');
+            };
+
+
+
         }
+
 
         // Если записалось
         if ($employee) {
@@ -290,4 +372,87 @@ class EmployeeController extends Controller
     {
         //
     }
+
+    public function ajax_employee_dismiss_modal(Request $request)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias,  $this->entity_dependence, 'update');
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->findOrFail($request->employee_id);
+
+        return view('employees.modals.dismiss', compact('employee'));
+    }
+
+    public function ajax_employee_dismiss(Request $request)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias,  $this->entity_dependence, 'update');
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->findOrFail($request->employee_id);
+
+        $this->dismiss($employee, $request->dismissal_date, $request->dismissal_description);
+
+        // $employee->dismissal_date = $request->dismissal_date == null ? null : outPickMeUp($request->dismissal_date);
+        // $employee->dismissal_description = $request->dismissal_description;
+        // $employee->save();
+
+        // Log::info('Освобождаем должность');
+        // $staff = $employee->staffer;
+        // $staff->user_id = null;
+        // $staff->save();
+
+        // $user = $employee->user;
+        // if($request->access_block == 1){
+        //     Log::info('Блокируем доступ пользователя');
+        //     $user->access_block = 1;
+        // } else {
+        //     $user->access_block = 0;};
+        // $user->save();
+        // $user->roles()->detach();
+
+        return $employee;
+
+    }
+
+    public function dismiss($employee, $dismissal_date, $dismissal_description)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias,  $this->entity_dependence, 'update');
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->findOrFail($employee->id);
+
+        $employee->dismissal_date = outPickMeUp($dismissal_date);
+        $employee->dismissal_description = $dismissal_description;
+        $employee->save();
+
+        Log::info('Освобождаем должность');
+        $staff = $employee->staffer;
+        $staff->user_id = null;
+        $staff->save();
+
+        Log::info('Блокируем пользователя');
+        $user = $employee->user;
+        $user->access_block = 1;
+        $user->save();
+
+        Log::info('Удаляем все его роли');
+        $user->roles()->detach();
+
+        return true;
+
+    }
+
+
+
+
+
+
+
+
 }

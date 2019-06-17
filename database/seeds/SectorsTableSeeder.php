@@ -256,6 +256,37 @@ class SectorsTableSeeder extends Seeder
                 'name' => 'Банк',
                 'parent_id' => 39,
             ],
+            // 41
+            [
+                'name' => 'Услуги связи и интернет',
+                'parent_id' => null,
+            ],
+            // 42
+            [
+                'name' => 'Разработка веб-сайтов',
+                'parent_id' => 41,
+            ],
+            // 43
+            [
+                'name' => 'Красота и здоровье',
+                'parent_id' => null,
+            ],
+            // 44
+            [
+                'name' => 'Салоны красоты',
+                'parent_id' => 43,
+            ],
+            // 45
+            [
+                'name' => 'Санаторно-оздоровительные центры',
+                'parent_id' => 43,
+            ],
+            // 46
+            [
+                'name' => 'Фитнес-центр',
+                'parent_id' => 43,
+            ],
+
         ]);
 
         foreach (Sector::get() as $sector) {

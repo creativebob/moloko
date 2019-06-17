@@ -25,6 +25,9 @@ class CreateCitiesTable extends Migration
             $table->bigInteger('region_id')->unsigned()->nullable()->comment('Область населенного пункта');
             $table->foreign('region_id')->references('id')->on('regions');
             
+            $table->bigInteger('country_id')->nullable()->unsigned()->comment('Id страны');
+            $table->foreign('country_id')->references('id')->on('countries');
+            
             $table->integer('code')->unsigned()->nullable()->comment('Код населенного пункта');
             $table->integer('vk_external_id')->unique()->unsigned()->nullable()->comment('Внешний Id (из базы vk)');
 

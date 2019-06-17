@@ -2,6 +2,7 @@
 $id = isset($id) ? $id : '';
 $city_name = isset($city) ? $city->name : null;
 $city_id = isset($city) ? $city->id : null;
+$field_name = isset($field_name) ? $field_name : 'city_id';
 @endphp
 
 <label id="{{ $id }}" class="city-input-parent">Город
@@ -19,7 +20,8 @@ $city_id = isset($city) ? $city->id : null;
     <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
 
     {{-- Id города --}}
-    {{ Form::hidden('city_id', $city_id, ['class'=>'city_id-field', 'maxlength'=>'3', 'pattern'=>'[0-9]{3}']) }}
+    {{ Form::hidden($field_name, $city_id, ['class'=>'city_id-field', 'maxlength'=>'3', 'pattern'=>'[0-9]{3}']) }}
+    {{ Form::hidden('country_id_default', $city->country_id ?? 1) }}
 </label>
 
 <script type="text/javascript">
@@ -35,7 +37,6 @@ $city_id = isset($city) ? $city->id : null;
 	$(document).on('click', '#{{ $id }} .city-add', function() {
 		{{ $id }}.fill(this);
 	});
-
 
 	$(document).on('click', '#{{ $id }} .icon-find-no', function() {
 		{{ $id }}.clear(this);

@@ -136,6 +136,10 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   margin-top: 0.8rem;
 }
 
+label[for='access-block-checkbox'] {
+  margin-top: 7px !important;
+}
+
 fieldset {
   border: 1px solid #d6d6d6;
   padding: 0.4rem 2rem 1rem;
@@ -147,7 +151,7 @@ fieldset {
 }
 fieldset legend {
   font-family: "PFDinDisplayPro-Med";
-  padding: 0 1rem;
+  padding: 0 1rem 0.2rem 0;
   margin-left: -1rem;
 }
 
@@ -1537,6 +1541,10 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 }
 .sidebar thumb[orient="vertical"] {
   max-width: 10px !important;
+}
+
+table.list-employees {
+  margin-bottom: 1rem;
 }
 
 .view-settings-panel {
@@ -3192,7 +3200,8 @@ a#task-toggle {
 }
 .table-compositions thead tr th {
   background-color: transparent !important;
-  border-bottom: 3px solid #000;
+  border-bottom: 1px solid #000;
+  font-size: 0.9rem;
 }
 .table-compositions tr td {
   background-color: #fff;

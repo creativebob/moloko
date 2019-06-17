@@ -14,7 +14,8 @@
 @section('content-count')
 {{-- Количество элементов --}}
 @if(!empty($employees))
-{{ num_format($employees->where('dismissal_date', null)->count(), 0) }}
+{{ num_format($employees->count(), 0) }}
+{{-- num_format($employees->where('dismissal_date', null)->count(), 0) --}}
 @endif
 @endsection
 

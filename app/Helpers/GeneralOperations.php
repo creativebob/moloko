@@ -406,8 +406,25 @@ function setRoles($request, $user) {
 
 			// Успешно
      return true;
- }
+        }
+    }
 }
+
+
+// Вписывание пользователю ролей из должности
+function setRolesFromPosition($position, $department, $user) {
+
+            $position->load('roles');
+            $insert_array = [];
+            foreach ($position->roles as $role) {
+                $insert_array[$role->id] = [
+                    'department_id' => $department->id,
+                    'position_id' => $position->id,
+                ];
+            }
+
+            $user->roles()->attach($insert_array);
+            Log::info('Записали роли для юзера.');
 }
 
 ?>

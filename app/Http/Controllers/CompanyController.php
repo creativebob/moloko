@@ -159,10 +159,10 @@ class CompanyController extends Controller
         // Если не найден, то создаем
         if(!isset($new_user)){
 
-            $new_user = $this->createUserByPhone($main_phone, $request);
+            $new_user = $this->createUserByPhone($request->user_phone, $request);
 
-            $new_company->load('location');
-            $new_user->location_id = create_location($request, $new_company->location->country_id, $new_company->location->city_id, null);
+            $new_user->location_id = create_location($request, $request->country_id_default, $request->user_city_id, $request->user_address);
+            $new_user->user_type = 1; // Делаем его внутренним пользователем системы
             $new_user->save();
             Log::info('Создали юзера');
 

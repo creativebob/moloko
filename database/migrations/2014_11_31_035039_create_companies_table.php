@@ -14,6 +14,7 @@ class CreateCompaniesTable extends Migration
 
             $table->string('name')->nullable()->index()->comment('Имя компании');
             $table->string('prename')->nullable()->index()->comment('Статус компании');
+            $table->string('designation')->nullable()->index()->comment('Коммерческое обозначение');
 
             $table->string('alias', 40)->unique()->nullable()->index()->comment('Алиас компании');
 
@@ -31,11 +32,12 @@ class CreateCompaniesTable extends Migration
 
             $table->integer('bic') -> length (9)->nullable()->unsigned()->comment('Банковский идентификационный код');
 
-            $table->bigInteger('director_user_id')->nullable()->unsigned()->comment('Директор компании');
-            $table->foreign('director_user_id')->references('id')->on('users');
+            // Видимо устарело - на удаление!
+            // $table->bigInteger('director_user_id')->nullable()->unsigned()->comment('Директор компании');
+            // $table->foreign('director_user_id')->references('id')->on('users');
 
-            $table->bigInteger('admin_user_id')->nullable()->unsigned()->comment('Администратор компании');
-            $table->foreign('admin_user_id')->references('id')->on('users');
+            // $table->bigInteger('admin_user_id')->nullable()->unsigned()->comment('Администратор компании');
+            // $table->foreign('admin_user_id')->references('id')->on('users');
 
             $table->boolean('external_control')->default(0)->comment('Внешнее управление');
 

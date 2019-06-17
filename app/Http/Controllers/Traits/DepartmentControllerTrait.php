@@ -71,18 +71,8 @@ trait DepartmentControllerTrait
             $position = $user->staff->first()->position;
             $position_id = $position->id;
 
-            $position->load('roles');
-
-            $insert_array = [];
-            foreach ($position->roles as $role) {
-                $insert_array[$role->id] = [
-                    'department_id' => $department->id,
-                    'position_id' => $position_id
-                ];
-            }
-
-            $user->roles()->attach($insert_array);
-            Log::info('Записали роли для юзера.');
+            // Прописываем роли из должности для юзера
+            setRolesFromPosition($position, $department, $user);
             
             return $employee;
         }

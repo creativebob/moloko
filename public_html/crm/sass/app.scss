@@ -233,6 +233,10 @@ $dropdown-width: 14rem;
 
 
 // Базовые корректировки
+label[for='access-block-checkbox']{
+    margin-top: 7px !important;
+}
+
 fieldset {
     border: 1px solid  $tabs-fieldset-border-color;
     padding: 0.4rem 2rem 1rem;
@@ -246,7 +250,7 @@ fieldset {
 
     legend {
         font-family: $PFDDPM;
-        padding: 0 1rem;
+        padding: 0 1rem 0.2rem 0;
         margin-left: -1rem;
     }
 }
@@ -1924,6 +1928,14 @@ thumb[orient="vertical"] {
     max-width:10px !important;
 }
 }
+
+// СТРАНИЦА СОТРУДНИКИ
+
+table.list-employees {
+    margin-bottom: 1rem;
+}
+
+
 
 
 // СТРАНИЦА ЛИДЫ ======================================================================
@@ -4351,7 +4363,8 @@ a:hover {
 
                                     tr th{
                                         background-color: transparent !important;
-                                        border-bottom: 3px solid #000;
+                                        border-bottom: 1px solid #000;
+                                        font-size: 0.9rem;
                           }
                                 }
 

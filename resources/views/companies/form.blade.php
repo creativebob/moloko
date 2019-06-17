@@ -26,10 +26,8 @@
             @endif
 
             <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Реквизиты</a></li>
-            <li class="tabs-title"><a data-tabs-target="content-panel-4" href="#content-panel-4">График работы</a></li>
-
             <li class="tabs-title"><a data-tabs-target="content-panel-about" href="#content-panel-about">Описание</a></li>
-
+            <li class="tabs-title"><a data-tabs-target="content-panel-4" href="#content-panel-4">График работы</a></li>
             <li class="tabs-title"><a data-tabs-target="content-panel-5" href="#content-panel-5">Настройка</a></li>
         </ul>
     </div>
@@ -50,11 +48,7 @@
                             @include('includes.inputs.name', ['value'=>$company->name, 'required' => true])
                         </label>
                     </div>
-                    <div class="small-10 medium-4 cell">
-                        <label>Статус компании
-                            @include('includes.inputs.name', ['name' => 'prename'])
-                        </label>
-                    </div>
+
                     <div class="small-12 medium-6 cell">
                         {{-- Селект с секторами (Вид деятельности компании) --}}
                         <label>Вид деятельности компании
@@ -82,13 +76,15 @@
                         <label>Почта
                             @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email'])
                         </label>
-                        @include('includes.selects.countries', ['value'=>$company->location ? $company->location->country_id : null])
+                        {{-- Город --}}
+                        @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => true])
+                        
+
                     </div>
 
 
                     <div class="small-12 medium-6 cell">
-                        {{-- Город --}}
-                        @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => true])
+                        @include('includes.selects.countries', ['value'=>$company->location ? $company->location->country_id : null])
 
                         <label>Адрес
                             @include('includes.inputs.address', ['value' => isset($company->location->address) ? $company->location->address : null, 'name'=>'address'])
@@ -141,10 +137,7 @@
             <div class="tabs-panel" id="content-panel-supplier">
                 <div class="grid-x grid-padding-x">
 
-                    <div class="small-12 medium-6 cell checkbox checkboxer">
-
-
-
+                    <div class="small-12 medium-12 cell checkbox checkboxer">
                         {{-- Подключаем класс Checkboxer --}}
                         @include('includes.scripts.class.checkboxer')
 
@@ -154,8 +147,8 @@
                             'name' => 'manufacturers',
                         ]
                         )
-
                     </div>
+
                     <div class="small-12 medium-6 cell checkbox">
                         {{ Form::checkbox('preorder', 1, $supplier->preorder, ['id' => 'preorder-checkbox']) }}
                         <label for="preorder-checkbox"><span>Предзаказ</span></label>
@@ -197,6 +190,7 @@
             <!-- Реквизиты -->
             <div class="tabs-panel" id="content-panel-2">
                 <div class="grid-x grid-padding-x">
+
                     <div class="small-12 medium-6 cell">
                         <label>ИНН
                             @include('includes.inputs.inn', ['value'=>$company->inn, 'name'=>'inn'])
@@ -235,6 +229,26 @@
             <!-- Описание компании -->
             <div class="tabs-panel" id="content-panel-about">
                 <div class="grid-x grid-padding-x">
+
+                    {{--
+
+                    @include('includes.scripts.class.checkboxer')
+
+                    <div class="small-12 large-6 cell checkbox checkboxer">
+
+                        @include('includes.scripts.class.checkboxer')
+                        @include('includes.inputs.checker', [
+                            'entity' => $company,
+                            'model' => 'ProcessesType',
+                            'relation'=>'processes_types',
+                            'title'=>'Типы услуг'
+                        ]
+                        )
+                    </div>
+
+                    --}}
+
+
                     <div class="small-12 medium-12 cell">
                         <label>Информация о компании:
                             {{ Form::textarea('about', $company->about, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
@@ -253,26 +267,24 @@
             <!-- Настройки -->
             <div class="tabs-panel" id="content-panel-5">
                 <div class="grid-x grid-padding-x">
+
+                    <div class="small-6 medium-6 cell">
+                        <label>Коммерческое обозначение
+                            @include('includes.inputs.name', ['name' => 'designation'])
+                        </label>
+                    </div>
+                    <div class="small-6 medium-6 cell">
+                        <label>Статус по виду деятельности
+                            @include('includes.inputs.name', ['name' => 'prename'])
+                        </label>
+                    </div>
+
                     <div class="small-12 large-6 cell">
                         <label>Алиас
                             @include('includes.inputs.alias', ['value'=>$company->alias, 'name'=>'alias'])
                         </label>
                     </div>
                     <div class="small-12 large-6 cell">
-                    </div>
-
-                    @include('includes.scripts.class.checkboxer')
-
-                    <div class="small-12 large-6 cell checkbox checkboxer">
-
-                        @include('includes.scripts.class.checkboxer')
-                        @include('includes.inputs.checker', [
-                            'entity' => $company,
-                            'model' => 'ProcessesType',
-                            'relation'=>'processes_types',
-                            'title'=>'Типы услуг'
-                        ]
-                        )
                     </div>
 
                     <div class="small-12 cell checkbox">
@@ -375,9 +387,29 @@
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Телефон
-                                        @include('includes.inputs.phone', ['value' => isset($user->main_phone->phone) ? $user->main_phone->phone : null, 'name'=>'main_phone', 'required' => true, 'id' => 'main-phone'])
+                                        @include('includes.inputs.phone', ['value' => isset($user->main_phone->phone) ? $user->main_phone->phone : null, 'name'=>'user_phone', 'required' => true, 'id' => 'main-phone'])
                                     </label>
                                 </div>
+
+                                <input type="hidden" name="user_country_id" value="1">
+
+                                <div class="small-12 medium-6 cell">
+                                    @php isset(Auth::user()->location->city->name) ? $city_default = Auth::user()->location->city : $city_default = null; @endphp
+                                    @include('includes.inputs.city_search', ['city' => isset($user->location->city->name) ? $user->location->city : $city_default, 'id' => 'cityForm2', 'required' => true, 'field_name' => 'user_city_id'])
+                                </div>
+
+                                <div class="small-12 medium-12 cell">
+                                    <label>Адрес
+                                        @php
+                                            $address = null;
+                                            if (isset($user->location->address)) {
+                                                $address = $user->location->address;
+                                            }
+                                        @endphp
+                                        @include('includes.inputs.address', ['value'=>$address, 'name'=>'user_address'])
+                                    </label>
+                                </div>
+
                             </div>
                         </fieldset>
                     </div>
