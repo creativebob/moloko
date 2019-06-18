@@ -70,7 +70,7 @@
             @if($edit == 1)
             <a href="companies/{{ $company->id }}/edit">
               @endif
-              {{ $company->name }} ({{ $company->legal_form->name or '' }})
+              {{ $company->name }} ({{ $company->legal_form->name ?? '' }})
               @if($edit == 1)
             </a>
             @endif
@@ -84,7 +84,7 @@
           <td class="td-phone">{{ isset($company->main_phone->phone) ? decorPhone($company->main_phone->phone) : 'Номер не указан' }}</td>
 
           @if(isset($company->director))
-            <td class="td-user_id">{{ $company->director->first_name or ' ... ' }} {{ $company->director->second_name or ' ... ' }}</td>
+            <td class="td-user_id">{{ $company->director->user->name_reverse ?? ' ... ' }}</td>
           @endif
 
           {{-- Элементы управления --}}

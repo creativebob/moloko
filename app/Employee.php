@@ -17,7 +17,6 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
@@ -27,7 +26,7 @@ class Employee extends Model
 {
 
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use SoftDeletes;
 
@@ -49,6 +48,7 @@ class Employee extends Model
         'employment_date',
         'dismissal_date'
     ];
+
     protected $fillable = [
         'company_id',
         'staffer_id',

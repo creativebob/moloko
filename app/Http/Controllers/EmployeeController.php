@@ -80,10 +80,16 @@ class EmployeeController extends Controller
         ->booklistFilter($request)
         ->filter($request, 'position_id', 'staffer')
         ->filter($request, 'department_id', 'staffer')
-        ->dateIntervalFilter($request, 'date_employment')
+        ->dateIntervalFilter($request, 'employment_date')
 
         ->whereHas('user', function($q) use ($request){
             $q->booleanArrayFilter($request, 'access_block');
+        })
+
+        ->whereHas('user', function($q) use ($request){
+            $q->whereHas('location', function($q) use ($request){
+                $q->filter($request, 'city_id');
+            });
         })
 
         ->orderBy('moderation', 'desc')
@@ -100,6 +106,7 @@ class EmployeeController extends Controller
             'department',           // Отдел
             'date_interval',        // Дата
             'access_block',         // Доступ
+            'city',                 // Город
             'booklist'              // Списки пользователя
         ]);
 
@@ -116,6 +123,10 @@ class EmployeeController extends Controller
         $add_buttons[0]['href'] = '../admin/employees/dismissal';
         $add_buttons[0]['class'] = 'dismissed';
         $add_buttons[0]['text'] = 'Уволенные сотрудники: ' . $dismissed_count;
+
+        $add_buttons[1]['href'] = '../admin/departments';
+        $add_buttons[1]['class'] = 'alert';
+        $add_buttons[1]['text'] = 'Структура';
 
         $add_buttons = collect($add_buttons);
         // -----------------------------------------------------------
@@ -143,6 +154,20 @@ class EmployeeController extends Controller
         // Смотрим сколько филиалов в компании
         $user = $request->user();
 
+
+        // // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer = operator_right('staff', true, getmethod('index'));
+
+        // $staff = Staffer::moderatorLimit($answer)
+        // ->companiesLimit($answer)
+        // ->filials($answer)
+        // ->authors($answer)
+        // ->systemItem($answer)
+        // ->get();
+
+        // $staff_id_mass = $staff->pluck('id')->toArray();
+
+
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
@@ -151,14 +176,15 @@ class EmployeeController extends Controller
         }, 'user.main_phones'])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
+        // ->whereIn('user_id', $staff_id_mass)
 
         // Так как сущность не филиала зависимая, но по факту
         // все таки зависимая через staff, то делаем нестандартную фильтрацию (прямо в запросе)
-        ->when($answer['dependence'] == true, function ($query) use ($user) {
-            return $query->whereHas('staffer', function($q) use ($user){
-                $q->where('filial_id', $user->filial_id);
-            });
-        })
+        // ->when($answer['dependence'] == true, function ($query) use ($user) {
+        //     return $query->whereHas('staffer', function($q) use ($user){
+        //         $q->where('filial_id', $user->filial_id);
+        //     });
+        // })
 
         // Получаем только уволенных
         ->whereNotNull('dismissal_date')
@@ -248,9 +274,7 @@ class EmployeeController extends Controller
     public function store(UserStoreRequest $request)
     {
         // Подключение политики
-        $this->authorize(getmethod('create'), Employee::class);
         $this->authorize(getmethod('create'), User::class);
-        $this->authorize(getmethod('create'), Staffer::class);
 
         Log::info('Будем создавать сотрудника: все необходимые права есть');
 
@@ -263,60 +287,14 @@ class EmployeeController extends Controller
         // Скрываем бога
         $user_id = hideGod($user_auth);
 
-
-        // Проверяем: свободна ли ставка  =====================================================
-        Log::info('Проверяем: свободна ли ставка?');
-
         $staff = Staffer::with('position', 'department')->findOrFail($request->staff_id);
-        // dd($staff);
-
-        if($staff->user_id != null){
-            abort(403, "Ставка не свободна!");
-        } else {
-            Log::info('Ставка свободна!');
-        };
-
-        // Создание нового сотрудника =========================================================
-
-        $employee = new Employee;
-        $new_user = new User;
-
-        Log::info('Подготовили новых user и employee');
 
         // Отдаем работу по созданию нового юзера трейту
+        $new_user = new User;
         $user = $this->createUser($request, $new_user);
+        $employment_date = $request->employment_date;
 
-        // Запись информации по сотруднику:
-        $employee->company_id = $request->user()->company->id;
-        $employee->staffer_id = $request->staff_id;
-        $employee->user_id = $user->id;
-        $employee->author_id = $user_auth->id;
-
-        $employee->employment_date = outPickMeUp($request->employment_date);
-        $employee->dismissal_date = $request->dismissal_date == null ? null : outPickMeUp($request->dismissal_date);
-        $employee->dismissal_description = $request->dismissal_description;
-
-        $employee->display = $request->display;
-        $employee->system_item = $request->system_item;
-        $employee->save();
-
-        // Если сотрудник удачно создан - занимем ставку
-        if($employee){
-
-            Log::info('Сотрудник создан - будем занимать ставку!');
-            $staff->user_id = $user->id;
-            $staff->save();
-
-            // Прописываем права
-            $position = $staff->position;
-            $department = $staff->department;
-
-            setRolesFromPosition($position, $department, $user);
-
-        } else {
-
-            Log::info('Сотрудник не был создан!');
-        };
+        $this->employment($user, $employment_date, $staff);
 
         return redirect('/admin/employees');
     }
@@ -389,8 +367,6 @@ class EmployeeController extends Controller
             } else {
 
                 // Будем увольнять с текущей должности и устраивать на новую
-
-
 
 
             }
@@ -599,6 +575,12 @@ class EmployeeController extends Controller
         $employee->save();
 
         Log::info('Занимаем должность');
+
+        // Проверяем: свободна ли ставка  =====================================================
+        Log::info('Проверяем: свободна ли ставка?');
+
+        if($staff->user_id != null){abort(403, "Ставка не свободна!");} else {Log::info('Ставка свободна!');};
+
         $staff->user_id = $employee->user_id;
         $staff->save();
 

@@ -73,9 +73,9 @@
                         <td class="td-name">
 
                             @can('update', $employee)
-                                <a href="/admin/{{ 'employees/'.$employee->id }}/edit">{{ $employee->user->name }}</a>
+                                <a href="/admin/{{ 'employees/'.$employee->id }}/edit">{{ $employee->user->name_reverse }}</a>
                             @else
-                                {{ $employee->user->name }}
+                                {{ $employee->user->name_reverse }}
                             @endcan
 
                         </td>

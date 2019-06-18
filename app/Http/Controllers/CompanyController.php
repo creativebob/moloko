@@ -104,6 +104,9 @@ class CompanyController extends Controller
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
+
+        // dd($companies->get(3)->director->user->name_reverse);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
         return view('companies.index', compact('companies', 'page_info', 'filter', 'user'));

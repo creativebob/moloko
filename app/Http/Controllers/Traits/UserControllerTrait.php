@@ -8,6 +8,8 @@ use App\Phone;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\Auth;
+
 trait UserControllerTrait
 {
 
@@ -59,7 +61,7 @@ trait UserControllerTrait
 
         // Компания и филиал ----------------------------------------------------------
         $user->company_id = $request->user()->company->id;
-        $user->filial_id = $request->filial_id ?? $request->user()->filial_id;
+        $user->filial_id = $request->filial_id ?? $user_auth->filial_id;
 
 
         // Данные человека ------------------------------------------------------------
@@ -141,6 +143,11 @@ trait UserControllerTrait
 
         Log::info('Сработал трейт создания пользователя по номеру телефона');
 
+        // Подготовка: -------------------------------------------------------------------------------------
+
+        // Получаем данные для авторизованного пользователя
+        $user_auth = Auth::user();
+
         $user_number = User::all()->last()->id;
         $user_number = $user_number + 1;
 
@@ -158,6 +165,11 @@ trait UserControllerTrait
         
         $user->access_block = 1;
         $user->user_type = 0;
+
+        // Компания и филиал ----------------------------------------------------------
+        $user->company_id = $request->company_id ?? $user_auth->company->id;
+        $user->filial_id = $request->filial_id ?? $user_auth->filial_id;
+
         $user->save();
 
         if($user) {
@@ -227,7 +239,7 @@ trait UserControllerTrait
 
         // Компания и филиал ----------------------------------------------------------
         $user->company_id = $request->user()->company->id;
-        $user->filial_id = $request->filial_id ?? $request->user()->filial_id;
+        $user->filial_id = $request->filial_id ?? $user_auth->filial_id;
 
 
         // Данные человека ------------------------------------------------------------

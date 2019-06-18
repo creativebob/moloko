@@ -151,9 +151,9 @@
                                 </div>
 
                                 @if($lead->client)
-                                <span>Клиент: <a href="/admin/clients/{{$lead->client->id}}/edit">{{ $lead->client->clientable->name or '' }}</a></span><br>
+                                <span>Клиент: <a href="/admin/clients/{{$lead->client->id}}/edit">{{ $lead->client->clientable->name ?? '' }}</a></span><br>
 
-                                <span>Лояльность: {{ $lead->client->loyalty->name or '' }}</span>
+                                <span>Лояльность: {{ $lead->client->loyalty->name ?? '' }}</span>
 
                                 @else
 
@@ -374,7 +374,7 @@
                                     <tr>
                                         <tr>
                                             <td>Тип обращения: </td>
-                                            <td id="lead-type-name">{{ $lead->lead_type->name or ''}}</td>
+                                            <td id="lead-type-name">{{ $lead->lead_type->name ?? ''}}</td>
                                             <td>
 
                                                 @if (($lead->manager_id == Auth::user()->id) || (Auth::user()->staff[0]->position_id == 4))
@@ -432,7 +432,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Активных задач: </td><td>{{ $lead->challenges_active_count or ''}}</td><td></td>
+                                            <td>Активных задач: </td><td>{{ $lead->challenges_active_count ?? ''}}</td><td></td>
                                         </tr>
                                     </table>
                                 </div>
