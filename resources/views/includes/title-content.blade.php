@@ -78,6 +78,9 @@
 
                 @endswitch
                 @endcan
+
+
+
             </div>
             <div class="top-bar-right">
                 @if (isset($filter))
@@ -89,7 +92,10 @@
                 <button type="button" class="icon-search sprite button"></button>
             </div>
 
+
         </div>
+
+
 
         <div id="port-result-search">
         </div>
@@ -128,6 +134,17 @@
                     </a>
                 </div>
             </div>
+
+            {{-- Дополнительные кнопки приходящие с контроллера --}}
+            <div class="black-button-group small-12 cell">
+                @if(isset($add_buttons))
+                    @foreach($add_buttons as $add_button)
+                        <a class="button tiny hollow right {{ $add_button['class'] }}" href="{{ $add_button['href'] }}">{{ $add_button['text'] }}</a>
+                    @endforeach
+                @endif
+            </div>
+
+
         </div>
 
         @endif

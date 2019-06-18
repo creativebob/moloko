@@ -59,7 +59,7 @@ trait UserControllerTrait
 
         // Компания и филиал ----------------------------------------------------------
         $user->company_id = $request->user()->company->id;
-        $user->filial_id = $request->filial_id;
+        $user->filial_id = $request->filial_id ?? $request->user()->filial_id;
 
 
         // Данные человека ------------------------------------------------------------
@@ -227,7 +227,7 @@ trait UserControllerTrait
 
         // Компания и филиал ----------------------------------------------------------
         $user->company_id = $request->user()->company->id;
-        $user->filial_id = $request->filial_id;
+        $user->filial_id = $request->filial_id ?? $request->user()->filial_id;
 
 
         // Данные человека ------------------------------------------------------------

@@ -217,19 +217,21 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
             </div>
 
 
+            <div class="grid-x">
+                <main class="content small-12">
 
-            <main class="content">
+                    {{-- Прилипающий заголовок --}}
+                    @yield('title-content')
 
-                {{-- Прилипающий заголовок --}}
-                @yield('title-content')
+                    {{-- Функционал --}}
+                    @yield('control-content')
 
-                {{-- Функционал --}}
-                @yield('control-content')
+                    {{-- Основой контент --}}
+                    @yield('content')
 
-                {{-- Основой контент --}}
-                @yield('content')
+                </main>
+            </div>
 
-            </main>
             {{-- Модальные окна --}}
             @yield('modals')
         </div>

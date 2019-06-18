@@ -41,7 +41,7 @@ class EmployeeController extends Controller
         $this->type = 'modal';
     }
 
-    public function index(Request $request, $dismissal = false)
+    public function index(Request $request)
     {
 
         // Подключение политики
@@ -61,7 +61,7 @@ class EmployeeController extends Controller
         // -------------------------------------------------------------------------------------------
         $employees = Employee::with(['company.filials', 'staffer' => function($q) {
             $q->with('position', 'filial', 'department');
-        }, 'user'])
+        }, 'user.main_phones'])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
 
@@ -73,12 +73,95 @@ class EmployeeController extends Controller
             });
         })
 
-        ->when($dismissal == true, function ($query){
-            return $query->whereNotNull('dismissal_date');
+        // Получаем только устроенных
+        ->whereNull('dismissal_date')
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->booklistFilter($request)
+        ->filter($request, 'position_id', 'staffer')
+        ->filter($request, 'department_id', 'staffer')
+        ->dateIntervalFilter($request, 'date_employment')
+
+        ->whereHas('user', function($q) use ($request){
+            $q->booleanArrayFilter($request, 'access_block');
         })
-        ->when($dismissal == false, function ($query){
-            return $query->whereNull('dismissal_date');
+
+        ->orderBy('moderation', 'desc')
+        ->orderBy('dismissal_date', 'asc')
+        ->orderBy('sort', 'asc')
+        ->paginate(30);
+
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+
+        $filter = setFilter($this->entity_alias, $request, [
+            'position',             // Должность
+            'department',           // Отдел
+            'date_interval',        // Дата
+            'access_block',         // Доступ
+            'booklist'              // Списки пользователя
+        ]);
+
+        // Окончание фильтра -----------------------------------------------------------------------------------------
+
+        // Дополнительные кнопки ------------------------------------
+        $add_buttons = [];
+
+        $dismissed_count = Employee::moderatorLimit($answer)->companiesLimit($answer)->whereNotNull('dismissal_date')
+        ->authors($answer)
+        ->systemItem($answer)
+        ->count();
+
+        $add_buttons[0]['href'] = '../admin/employees/dismissal';
+        $add_buttons[0]['class'] = 'dismissed';
+        $add_buttons[0]['text'] = 'Уволенные сотрудники: ' . $dismissed_count;
+
+        $add_buttons = collect($add_buttons);
+        // -----------------------------------------------------------
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_alias);
+
+        return view('employees.index', compact('employees', 'page_info', 'filter', 'add_buttons'));
+    }
+
+    // Отдельный метод на базе index для того чтобы показывать только уволенных
+    public function dismissal(Request $request)
+    {
+
+        // Подключение политики
+        $this->authorize(getmethod('index'), $this->class);
+
+        // Включение контроля активного фильтра
+        $filter_url = autoFilter($request, $this->entity_alias);
+        if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
+
+        // Смотрим сколько филиалов в компании
+        $user = $request->user();
+
+        // -------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // -------------------------------------------------------------------------------------------
+        $employees = Employee::with(['company.filials', 'staffer' => function($q) {
+            $q->with('position', 'filial', 'department');
+        }, 'user.main_phones'])
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+
+        // Так как сущность не филиала зависимая, но по факту
+        // все таки зависимая через staff, то делаем нестандартную фильтрацию (прямо в запросе)
+        ->when($answer['dependence'] == true, function ($query) use ($user) {
+            return $query->whereHas('staffer', function($q) use ($user){
+                $q->where('filial_id', $user->filial_id);
+            });
         })
+
+        // Получаем только уволенных
+        ->whereNotNull('dismissal_date')
 
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
@@ -110,16 +193,22 @@ class EmployeeController extends Controller
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
+        // Дополнительные кнопки ------------------------------------
+        $add_buttons = [];
+
+        $add_buttons[0]['href'] = '/admin/employees';
+        $add_buttons[0]['class'] = 'dismissed';
+        $add_buttons[0]['text'] = 'Действующие сотрудники';
+
+        $add_buttons = collect($add_buttons);
+        // -----------------------------------------------------------
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('employees.index', compact('employees', 'page_info', 'filter'));
-    }
-
-    // Отдельный метод на базе index для того чтобы показывать только уволенных
-    public function dismissal(Request $request)
-    {
-        return $this->index($request, $dismissal = true);
+        $page_info->title = 'Уволенные сотрудники';
+        $page_info->name = 'Уволенные сотрудники';
+        return view('employees.dismissal', compact('employees', 'page_info', 'filter', 'add_buttons'));
     }
 
 
@@ -139,6 +228,9 @@ class EmployeeController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $list_empty_staff = Staffer::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
         ->whereNull('user_id')
         ->get();
 
@@ -259,7 +351,7 @@ class EmployeeController extends Controller
         $page_info = pageInfo($this->entity_alias);
 
 
-        return view('employees.edit', compact('employee', 'page_info', 'list_user_employees', 'list_empty_staff', 'rate'));
+        return view('employees.edit', compact('employee', 'page_info', 'list_user_employees', 'list_empty_staff'));
     }
 
 
@@ -269,9 +361,11 @@ class EmployeeController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias,  $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         // ГЛАВНЫЙ ЗАПРОС:
         $employee = Employee::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
         ->with('user', 'staffer')
         ->findOrFail($id);
 
@@ -358,7 +452,6 @@ class EmployeeController extends Controller
 
         }
 
-
         // Если записалось
         if ($employee) {
             return redirect()->route('employees.index');
@@ -382,8 +475,12 @@ class EmployeeController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->findOrFail($request->employee_id);
 
+        // Подключение политики
+        $this->authorize(getmethod('update'), $employee);
+
         return view('employees.modals.dismiss', compact('employee'));
     }
+
 
     public function ajax_employee_dismiss(Request $request)
     {
@@ -396,48 +493,74 @@ class EmployeeController extends Controller
 
         $this->dismiss($employee, $request->dismissal_date, $request->dismissal_description);
 
-        // $employee->dismissal_date = $request->dismissal_date == null ? null : outPickMeUp($request->dismissal_date);
-        // $employee->dismissal_description = $request->dismissal_description;
-        // $employee->save();
-
-        // Log::info('Освобождаем должность');
-        // $staff = $employee->staffer;
-        // $staff->user_id = null;
-        // $staff->save();
-
-        // $user = $employee->user;
-        // if($request->access_block == 1){
-        //     Log::info('Блокируем доступ пользователя');
-        //     $user->access_block = 1;
-        // } else {
-        //     $user->access_block = 0;};
-        // $user->save();
-        // $user->roles()->detach();
-
         return $employee;
 
     }
 
+
+    public function ajax_employee_employment_modal(Request $request)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_user = operator_right('users',  true, 'index');
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_staff = operator_right('staff',  true, 'index');
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $user = User::moderatorLimit($answer_user)->findOrFail($request->user_id);
+
+        $list_empty_staff = Staffer::moderatorLimit($answer_staff)->whereNull('user_id')->get();
+
+        return view('employees.modals.employment', compact('user', 'list_empty_staff'));
+    }
+
+    public function ajax_employee_employment(Request $request)
+    {
+
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_user = operator_right('users',  true, 'index');
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        // $answer_staff = operator_right('staff',  true, 'index');
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $user = User::moderatorLimit($answer_user)->findOrFail($request->user_id);
+        $staff = Staffer::with('position', 'department')->findOrFail($request->staff_id);
+
+        $new_employee = $this->employment($user, $request->employment_date, $staff);
+        Log::info('Устроили нового сотрудника');
+
+        return $new_employee;
+
+    }
+
+
+    // Функция увольнения сотрудника
     public function dismiss($employee, $dismissal_date, $dismissal_description)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias,  $this->entity_dependence, 'update');
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->findOrFail($employee->id);
+        $staff = $employee->staffer;
+        $user = $employee->user;
+
+        // Подключение политики
+        $this->authorize(getmethod('update'), $employee);
+        $this->authorize(getmethod('update'), $staff);
+        $this->authorize(getmethod('update'), $user);
 
         $employee->dismissal_date = outPickMeUp($dismissal_date);
         $employee->dismissal_description = $dismissal_description;
         $employee->save();
 
         Log::info('Освобождаем должность');
-        $staff = $employee->staffer;
         $staff->user_id = null;
         $staff->save();
 
         Log::info('Блокируем пользователя');
-        $user = $employee->user;
         $user->access_block = 1;
         $user->save();
 
@@ -449,10 +572,46 @@ class EmployeeController extends Controller
     }
 
 
+    // Функция трудоустройства пользователя
+    public function employment($user, $employment_date, $staff)
+    {
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias,  $this->entity_dependence, 'create');
 
+        // Подключение политики
+        $this->authorize(getmethod('create'), Employee::class);
+        $this->authorize(getmethod('update'), $staff);
+        $this->authorize(getmethod('update'), $user);
 
+        $employee = new Employee;
 
+        $employee->employment_date = outPickMeUp($employment_date);
+        $employee->user_id = $user->id;
+        $employee->staffer_id = $staff->id;
+
+        $employee->company_id = $user->company->id;
+        $employee->author_id = $user->id;
+
+        $employee->display = 1;
+        $employee->system_item = 0;
+
+        $employee->save();
+
+        Log::info('Занимаем должность');
+        $staff->user_id = $employee->user_id;
+        $staff->save();
+
+        Log::info('Открываем доступ для пользователя');
+        $user->access_block = 0;
+        $user->save();
+
+        Log::info('Формируем права');
+        setRolesFromPosition($staff->position, $staff->department, $user);
+
+        return $employee;
+
+    }
 
 
 }

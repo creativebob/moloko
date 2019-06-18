@@ -21,7 +21,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Employee::class, 'type' => 'table'])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => null, 'type' => 'table'])
 @endsection
 
 @section('content')
@@ -42,9 +42,13 @@
                     @if (($employees->isNotEmpty() && $employees->first()->company->filials->count() > 1) || (Auth::user()->god == 1))
                     <th class="td-filial">Филиал</th>
                     @endif
+
                     <th class="td-employment-date">Дата приема</th>
+                    <th class="td-dismissal-date">Дата увольнения</th>
+
                     <th class="td-status">Статус</th>
                     <th class="td-access-block">Доступ</th>
+                    <th class="td-dismissal-desc">Причина увольнения</th>
                     <th class="td-control"></th>
                     <!-- <th class="td-delete"></th> -->
                 </tr>
@@ -100,6 +104,7 @@
                         @endif
 
                         <td class="td-employment-date">{{ $employee->employment_date->format('d.m.Y') }}</td>
+                        <td class="td-dismissal-date">{{ isset($employee->dismissal_date) ? $employee->dismissal_date->format('d.m.Y') : '' }}</td>
                         <td class="td-status">
 
                             @if (isset($employee->dismissal_date))
@@ -112,6 +117,7 @@
                         <td class="td-access-block">
                             {{ decor_access_block($employee->user->access_block) }}
                         </td>
+                        <td class="td-dismissal-description">{{ $employee->dismissal_description }}</td>
 
                         {{-- Элементы управления --}}
                         @include('includes.control.table-td', ['item' => $employee])
