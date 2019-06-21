@@ -4,6 +4,8 @@ namespace App\Policies;
 
 use App\User;
 use App\Employee;
+use App\Staffer;
+
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 use App\Policies\Traits\PoliticTrait;
@@ -31,6 +33,16 @@ class EmployeePolicy
     public function create(User $user)
     {
         $result = $this->getstatus($this->entity_name, null, 'create', $this->entity_dependence);
+
+        $answer = operator_right('employees', true, 'create');
+        $list_empty_staff_count = Staffer::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->whereNull('user_id')
+        ->count();
+        if($list_empty_staff_count == null) {$result = false;};
+
         return $result;
     }
 

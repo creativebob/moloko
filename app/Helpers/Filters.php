@@ -792,13 +792,29 @@
 
     function getFilterPositionList(){
 
-        $positions = App\Position::orderBy('name', 'asc')->get()->pluck('name', 'id')->toArray();
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('positions', false, 'index');
+
+        $positions = App\Position::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->template($answer)
+        ->orderBy('name', 'asc')->get()->pluck('name', 'id')->toArray();
         return $positions;
     }
 
     function getFilterDepartmentList(){
 
-        $departments = App\Department::orderBy('name', 'asc')->get()->pluck('name', 'id')->toArray();
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('departments', true, 'index');
+
+        $departments = App\Department::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->template($answer)
+        ->orderBy('name', 'asc')->get()->pluck('name', 'id')->toArray();
         return $departments;
     }
 

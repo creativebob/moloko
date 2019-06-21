@@ -44,6 +44,10 @@ class GetAccessController extends Controller
         // Получаем пользователя в user
         $user = $request->user();
 
+        if($user->access_block == 1){
+            abort(403, "Сорян, вам сюда нельзя! Блокировочка!");
+        };
+
         // Собираем данные о компании
         if($user->company_id != null){
 

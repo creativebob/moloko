@@ -186,7 +186,7 @@
 														@if($employee_item->dismissal_date == null)
 															<a class="button alert tiny" id="employee-dismiss" data-id="{{ $employee_item->id }}">Уволить</a>
 														@else
-															<a class="button tiny">Изменить</a>
+															{{-- <a class="button tiny">Изменить</a> --}}
 														@endif
 												</td>
 											<tr>
@@ -200,20 +200,26 @@
 
 					
 					@if(($list_user_employees->where('dismissal_date', null)->sum('staffer.rate') < 1)&&($list_empty_staff->count() > 0))
-		    			<div class="small-12 medium-12 large-12 cell">
-		                	<div class="grid-x grid-padding-x inputs">
-					            <div class="small-12 medium-8 cell">
-							        <label>Вакантная должность:
-							            @include('includes.selects.empty_staff', ['disabled' => true, 'mode' => 'default'])
-							        </label>
-								</div>
-					            <div class="small-12 medium-4 cell">
-					                <label>Дата приема
-					                    @include('includes.inputs.date', ['name'=>'employment_date', 'required' => true])
-					                </label>
-					            </div>
-					        </div>
-						</div>
+						@if(isset($employee->id))
+			    			<div class="small-12 cell">
+								<a class="button green-button" id="employee-employment" data-user-id="{{ $employee->user->id }}">Трудоустроить</a>
+							</div>
+						@else
+			    			<div class="small-12 cell">
+			                	<div class="grid-x grid-padding-x inputs">
+						            <div class="small-12 medium-8 cell">
+								        <label>Вакантная должность:
+								            @include('includes.selects.empty_staff', ['disabled' => true, 'mode' => 'default'])
+								        </label>
+									</div>
+						            <div class="small-12 medium-4 cell">
+						                <label>Дата приема
+						                    @include('includes.inputs.date', ['name'=>'employment_date', 'required' => true])
+						                </label>
+						            </div>
+						        </div>
+							</div>
+						@endif
 				    @endif
 
 				</div>

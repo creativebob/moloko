@@ -72,6 +72,38 @@
     });
 
 
+
+    // Открываем модалку для трудоустройства сотрудника
+    $(document).on('click', '#employee-employment', function(event) {
+
+          var user_id = $(this).attr('data-user-id');
+
+          $.post("/admin/employee_employment_modal", {user_id: user_id}, function(html){
+            $('#modal').html(html);
+            $('#open-employment').foundation();
+            $('#open-employment').foundation('open');
+          });
+
+      });
+
+
+    // Отправляем запрос на трудоустройство сотрудника
+    $(document).on('click', '#submit-employment', function(event) {
+      event.preventDefault();
+
+      $(this).prop('disabled', true);
+
+      $.post("/admin/employee_employment", $(this).closest('form').serialize(), function(date){
+
+        let url = '{{ url("admin/employees") }}/';
+        window.location.replace(url);
+      });
+
+    });
+
+
+
+
   </script>
 
 @endsection

@@ -67,7 +67,7 @@
               </a>
             @else
               <a href="clients/{{ $client->id }}/edit">
-                {{ $client->clientable->name }} ({{ $client->clientable->legal_form->name or '' }})
+                {{ $client->clientable->name }} ({{ $client->clientable->legal_form->name ?? '' }})
               </a>
             @endif
 
@@ -78,10 +78,10 @@
 
 
           <td class="td-count-orders">@if(!empty($client->orders)){{ $client->orders->count() }} @endif </td>
-          <td class="td-badget">{{-- $client->badget_count or ' ... ' --}} </td>
-          <td class="td-time-frame">{{ $client->time_frame or ' ... ' }}</td>
-          <td class="td-loyalty">{{ $client->loyalty->name or ' ... ' }}</td>
-          <td class="td-access">{{-- $client->access or ' ... ' --}} </td>
+          <td class="td-badget">{{-- $client->badget_count ?? ' ... ' --}} </td>
+          <td class="td-time-frame">{{ $client->time_frame ?? ' ... ' }}</td>
+          <td class="td-loyalty">{{ $client->loyalty->name ?? ' ... ' }}</td>
+          <td class="td-access">{{-- $client->access ?? ' ... ' --}} </td>
 
 
           {{-- Элементы управления --}}

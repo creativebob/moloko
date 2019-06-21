@@ -1935,8 +1935,17 @@ table.list-employees {
     margin-bottom: 1rem;
 }
 
+.black-button-group{
+    text-align: right;
+    position: relative;
+    top: 9px;
+    padding: 0px 30px;
 
+    a.button{
+        letter-spacing: 1px;
+    }
 
+}
 
 // СТРАНИЦА ЛИДЫ ======================================================================
 

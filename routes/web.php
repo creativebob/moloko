@@ -883,9 +883,14 @@ Route::resource('/staff', 'StafferController')->middleware('auth');
 Route::get('/employees/dismissal', 'EmployeeController@dismissal')->middleware('auth');
 
 Route::resource('/employees', 'EmployeeController')->middleware('auth');
+
+// Увольнение
 Route::post('/employee_dismiss_modal', 'EmployeeController@ajax_employee_dismiss_modal')->middleware('auth');
 Route::post('/employee_dismiss', 'EmployeeController@ajax_employee_dismiss')->middleware('auth');
 
+// Трудоустройство
+Route::post('/employee_employment_modal', 'EmployeeController@ajax_employee_employment_modal')->middleware('auth');
+Route::post('/employee_employment', 'EmployeeController@ajax_employee_employment')->middleware('auth');
 
 
 // ------------------------------------------ Списки -----------------------------------------------
