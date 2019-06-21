@@ -29,5 +29,9 @@ class ProcessObserver
         // }
 
         $process->editor_id = hideGod($request->user());
+
+        // Cохраняем / обновляем фото
+        $photo_id = savePhoto($request, $process);
+        $process->photo_id = $photo_id;
     }
 }

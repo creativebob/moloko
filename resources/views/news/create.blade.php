@@ -29,24 +29,3 @@
 @include('news.form', ['submit_text' => 'Добавить'])
 {{ Form::close() }}
 @endsection
-
-@section('modals')
-<section id="modal"></section>
-{{-- Модалка удаления с ajax --}}
-@include('includes.modals.modal-delete-ajax')
-@endsection
-
-@section('scripts')
-@include('includes.scripts.ckeditor')
-@include('includes.scripts.inputs-mask')
-@include('news.scripts')
-@include('includes.scripts.pickmeup-script')
-@include('includes.scripts.upload-file')
-@include('includes.scripts.delete-from-page-script')
-@endsection
-
-
-
-
-
-

@@ -25,18 +25,18 @@ class NewsRequest extends FormRequest
     {
       return [
         'name' => 'string|max:255',
-        'title' => 'string|max:255',
-        'preview' => 'string',
+        'preview' => 'string|nullable',
         'content' => 'string|nullable',
         'alias' => 'string|nullable',
+        'slug' => 'string|nullable',
 
-        'publish_begin_date' => 'date|after:01.01.2018|nullable',
+        'publish_begin_date' => 'date|after:01.01.2018',
         'publish_end_date' => 'date|after:01.01.2018|nullable',
 
         'rubricator_id' => 'integer|nullable',
         'rubricators_item_id' => 'integer|nullable',
 
-        'display' => 'integer|nullable',
+        'display' => 'integer|max:1|nullable',
         'moderation' => 'integer|max:1|nullable',
         'system_item' => 'integer|max:1|nullable',
       ];

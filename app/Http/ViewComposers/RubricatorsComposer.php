@@ -15,6 +15,11 @@ class RubricatorsComposer
 
         // Главный запрос
         $rubricators = Rubricator::with('items')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->template($answer)
         ->get();
 
         return $view->with(compact('rubricators'));

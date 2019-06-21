@@ -203,10 +203,10 @@ class ArticlesGroupController extends Controller
         ->findOrFail($request->category_id);
         // dd($category);
 
-        $articles_groups = $category->groups;
+        $groups = $category->groups;
         // dd($articles_groups);
 
-        return view('tmc.create.mode_select', compact('articles_groups'));
+        return view('products.common.create.create_modes.mode_select', compact('groups'));
 
 
         // if ($category->groups_count > 0) {

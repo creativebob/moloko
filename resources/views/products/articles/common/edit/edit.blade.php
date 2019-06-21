@@ -143,7 +143,7 @@ $disabled = $article->draft == 0 ? true : null;
                                         {{ Form::file('photo') }}
                                     </label>
                                     <div class="text-center">
-                                        <img id="photo" src="{{ getPhotoPath($article) }}">
+                                        <img id="photo" src="{{ getPhotoPathPlugEntity($item) }}">
                                     </div>
                                 </div>
                             </div>

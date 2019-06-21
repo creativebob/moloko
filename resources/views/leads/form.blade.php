@@ -115,7 +115,7 @@
 
                                         @if (isset($lead->estimate))
                                         @foreach ($lead->estimate->items as $estimates_item)
-                                        @include('leads.estimates_item_service', ['estimates_item' => $estimates_item])
+                                        @include('leads.estimate.estimates_item_service', ['estimates_item' => $estimates_item])
                                         @endforeach
                                         @endif
 
@@ -270,7 +270,7 @@
                                 <div class="small-12 cell search-in-catalog-panel">
 
                                     @isset ($catalog_service)
-                                    @include('leads.catalogs_items', ['catalog' => $catalog_service])
+                                    @include('leads.catalogs.catalogs_items', ['catalog' => $catalog_service])
                                     @endisset
 
                                 </div>

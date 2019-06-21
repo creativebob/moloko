@@ -17,16 +17,18 @@ class CreateNewsTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name')->index()->comment('Название новости');
-            // $table->integer('site_id')->unsigned()->nullable()->comment('Id сайта');
-            // $table->foreign('site_id')->references('id')->on('sites');
-            $table->string('title')->comment('Title для новости');
+            // $table->string('title')->comment('Название новости для новости');
+
+            $table->string('alias')->index()->nullable()->comment('Алиас');
+            $table->string('slug')->index()->nullable()->comment('Слаг');
+
+
             $table->text('preview')->nullable()->comment('Превью для новости');
 
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (превью)');
             $table->foreign('photo_id')->references('id')->on('photos');
 
             $table->text('content')->nullable()->comment('Контент новости');
-            $table->string('alias')->index()->nullable()->comment('Алиас');
 
             $table->date('publish_begin_date')->index()->comment('Дата начала публикации');
             $table->date('publish_end_date')->nullable()->index()->comment('Дата окончания публикации');

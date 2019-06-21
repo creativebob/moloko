@@ -20,7 +20,7 @@ class CreateModeController extends Controller
 
 			case 'mode-default':
 
-			return view('tmc.create.mode_default');
+			return view('products.common.create.create_modes.mode_default');
 
 			break;
 
@@ -34,15 +34,15 @@ class CreateModeController extends Controller
 			}])
 			->find($request->category_id);
 
-			$articles_groups = $category->groups;
+			$groups = $category->groups;
 
-			return view('tmc.create.mode_select', compact('articles_groups'));
+			return view('products.common.create.create_modes.mode_select', compact('groups'));
 
 			break;
 
 			case 'mode-add':
 
-			return view('tmc.create.mode_add');
+			return view('products.common.create.create_modes.mode_add');
 
 			break;
 

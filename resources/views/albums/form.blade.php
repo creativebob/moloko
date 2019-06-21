@@ -19,14 +19,14 @@
 
                     <div class="small-12 medium-6 cell">
 
-                        <label>Название альбома
+                        <label>Название
                             @include('includes.inputs.name', ['required' => true, 'check' => true])
                             <div class="sprite-input-right find-status" id="alias-check"></div>
                             <div class="item-error">Такой альбом уже существует!</div>
                         </label>
 
-                        <label class="alias">Алиас альбома
-                            @include('includes.inputs.name', ['name' => 'alias', 'check' => true])
+                        <label class="alias">Слаг
+                            @include('includes.inputs.name', ['name' => 'slug', 'check' => true])
                             <div class="sprite-input-right find-status" id="alias-check"></div>
                             <div class="item-error">Альбом с таким алиасом уже существует!</div>
                         </label>
@@ -35,8 +35,8 @@
 
                     <div class="small-12 medium-6 cell">
 
-                        <label>Категория альбома
-                            @include('includes.selects.albums_categories', ['albums_category_id' => $album->albums_category_id])
+                        <label>Категория
+                            @include('albums.select_albums_categories', ['parent_id' => $album->category_id])
                         </label>
 
                         <label>Задержка времени (для слайдера), сек
@@ -48,8 +48,8 @@
                     </div>
 
                     <div class="small-12 cell">
-                        <label>Описание альбома
-                            @include('includes.inputs.textarea', ['name'=>'description'])
+                        <label>Описание
+                            @include('includes.inputs.textarea', ['name' => 'description'])
                         </label>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
             </div>
 
             <div class="small-12 small-text-center cell checkbox">
-                {{ Form::checkbox('personal', true, null, ['id'=>'personal-checkbox']) }}
+                {{ Form::checkbox('personal', 1, null, ['id' => 'personal-checkbox']) }}
                 <label for="personal-checkbox"><span>Личный альбом</span></label>
             </div>
 
@@ -72,16 +72,15 @@
             @include('includes.control.checkboxes', ['item' => $album])
 
             <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-                {{ Form::submit($submit_text, ['class'=>'button']) }}
+                {{ Form::submit($submit_text, ['class' => 'button']) }}
             </div>
         </div>
         {{-- Конец первого таба --}}
 
         {{-- Настройки фотографий --}}
         <div class="tabs-panel" id="photos_settings">
-            @include('includes.photos_settings.tab', ['item' => $album])
+            @include('albums.photo_settings', ['item' => $album])
         </div>
-
 
     </div>
 </div>

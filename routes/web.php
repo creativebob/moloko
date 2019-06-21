@@ -240,32 +240,32 @@ Route::patch('/updatemyprofile', 'UserController@updatemyprofile')->middleware('
 // ---------------------------------- Категории альбомов -------------------------------------------
 
 // Текущая добавленная/удаленная категория альбомов
-Route::any('/albums_categories', 'AlbumsCategoryController@index')->middleware('auth');
+Route::any('/albums_categories', 'AlbumsCategoryController@index');
 // Основные методы
-Route::resource('/albums_categories', 'AlbumsCategoryController')->middleware('auth');
+Route::resource('/albums_categories', 'AlbumsCategoryController');
 
 
 // --------------------------------------- Альбомы -----------------------------------------------
 
-// Route::resource('/albums', 'AlbumController')->middleware('auth');
-Route::get('/albums', 'AlbumController@index')->middleware('auth')->name('albums.index');
-Route::get('/albums/create', 'AlbumController@create')->middleware('auth')->name('albums.create');
-Route::get('/albums/{alias}', 'AlbumController@sections')->middleware('auth')->name('albums.sections');
-Route::post('/albums', 'AlbumController@store')->middleware('auth')->name('albums.store');
-Route::get('/albums/{alias}/edit', 'AlbumController@edit')->middleware('auth')->name('albums.edit');
-Route::patch('/albums/{id}', 'AlbumController@update')->middleware('auth')->name('albums.update');
-Route::delete('/albums/{id}', 'AlbumController@destroy')->middleware('auth')->name('albums.destroy');
+Route::resource('/albums', 'AlbumController');
+// Route::get('/albums', 'AlbumController@index')->middleware('auth')->name('albums.index');
+// Route::get('/albums/create', 'AlbumController@create')->middleware('auth')->name('albums.create');
+// Route::get('/albums/{alias}', 'AlbumController@sections')->middleware('auth')->name('albums.sections');
+// Route::post('/albums', 'AlbumController@store')->middleware('auth')->name('albums.store');
+// Route::get('/albums/{alias}/edit', 'AlbumController@edit')->middleware('auth')->name('albums.edit');
+// Route::patch('/albums/{id}', 'AlbumController@update')->middleware('auth')->name('albums.update');
+// Route::delete('/albums/{id}', 'AlbumController@destroy')->middleware('auth')->name('albums.destroy');
 
 
 // Проверка на существование
-Route::post('/albums_check', 'AlbumController@ajax_check')->middleware('auth');
+Route::post('/albums_check', 'AlbumController@ajax_check');
 
 // Открытие модалки прикрепления альбома
-Route::post('/album_add', 'AlbumController@album_add')->middleware('auth')->name('album.add');
+Route::post('/album_add', 'AlbumController@ajax_add')->name('album.add');
 // Получение альбомов по категории
-Route::post('/albums_select', 'AlbumController@albums_select')->middleware('auth');
+Route::any('/albums_select', 'AlbumController@ajax_get_select');
 // Получение альбома
-Route::any('/album_get', 'AlbumController@album_get')->middleware('auth');
+Route::any('/album_get', 'AlbumController@ajax_get');
 
 
 // Группа с префиксом
@@ -335,6 +335,7 @@ Route::match(['get', 'post'], '/raws_categories/{id}/edit', 'RawsCategoryControl
 Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth');
 
 
+
 // --------------------------------- Продукция сырья --------------------------------------------
 
 // Основные методы
@@ -359,6 +360,27 @@ Route::any('/raw/add_photo', 'RawController@add_photo')->middleware('auth');
 Route::post('/raw/photos', 'RawController@photos')->middleware('auth');
 
 Route::any('/raws_create_mode', 'RawController@ajax_change_create_mode')->middleware('auth');
+
+// ------------------------------------- Категории оборудования -------------------------------------------
+
+// Текущая добавленная/удаленная категория
+Route::any('/equipments_categories', 'EquipmentsCategoryController@index')->middleware('auth');
+Route::match(['get', 'post'], '/equipments_categories/{id}/edit', 'EquipmentsCategoryController@edit')->middleware('auth');
+// Основные методы
+Route::resource('/equipments_categories', 'EquipmentsCategoryController')->middleware('auth');
+
+// ---------------------------------- Оборудование-------------------------------------------
+
+// Основные методы
+Route::resource('/equipments', 'EquipmentController');
+
+// Архивация
+Route::post('/equipments/archive/{id}', 'EquipmentController@archive')->middleware('auth');
+// Фото
+Route::any('/equipment/add_photo', 'EquipmentController@add_photo')->middleware('auth');
+Route::post('/equipment/photos', 'EquipmentController@photos')->middleware('auth');
+
+Route::any('/equipments_create_mode', 'EquipmentController@ajax_change_create_mode')->middleware('auth');
 
 // ---------------------------------- Помещения -------------------------------------------
 
@@ -431,11 +453,11 @@ Route::any('/goods_categories_get_products', 'GoodsController@ajax_get_products'
 Route::any('/create_mode', 'CreateModeController@ajax_change_create_mode')->middleware('auth');
 
 Route::any('/ajax_articles_groups_count', 'ArticlesGroupController@ajax_count');
-
 Route::any('/ajax_articles_groups_set_status', 'ArticlesGroupController@ajax_set_status');
-
 Route::any('/articles_groups_list', 'ArticlesGroupController@ajax_articles_groups_list');
 
+Route::any('/ajax_processes_groups_count', 'ProcessesGroupController@ajax_count');
+Route::any('/ajax_processes_groups_set_status', 'ProcessesGroupController@ajax_set_status');
 Route::any('/processes_groups_list', 'ProcessesGroupController@ajax_processes_groups_list');
 
 
@@ -837,6 +859,10 @@ Route::post('/departments_list', 'DepartmentController@departments_list')->middl
 Route::any('/department_check', 'DepartmentController@ajax_check')->middleware('auth');
 
 
+Route::any('/ajax_get_filials_for_catalogs_service', 'DepartmentController@ajax_get_filials_for_catalogs_service')->middleware('auth');
+
+
+
 // ----------------------------------------- Должности --------------------------------------------
 
 // Основные методы
@@ -946,7 +972,7 @@ Route::prefix('rubricators/{rubricator_id}')->group(function () {
 // ---------------------------------------- Новости -------------------------------------------
 
 // Основные методы
-Route::resource('/news', 'NewsController')->middleware('auth');
+Route::resource('/news', 'NewsController');
 
 
 // ----------------------------------------- Каталоги товаров ------------------------------------------
@@ -978,6 +1004,7 @@ Route::resource('catalogs_services', 'CatalogsServiceController');
 
 // -------------------------------- Наполнение каталогов услуг -------------------------------------
 
+
 Route::prefix('catalogs_services/{catalog_id}')->group(function () {
 
     // Текущий добавленный/удаленный пунк меню
@@ -993,14 +1020,19 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
 
 
     Route::resource('prices_services', 'PricesServiceController');
+    Route::any('prices_services/{id}/archive', 'PricesServiceController@ajax_archive');
 
-    Route::any('prices_services_sync', 'PricesServiceController@sync');
+    Route::any('prices_services/ajax_store', 'PricesServiceController@ajax_store');
+
+    Route::any('prices_services_sync', 'PricesServiceController@sync')->name('prices_services.sync');
 });
+
+
 
 Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');
 
-Route::post('prices_service', 'PricesServiceController@ajax_store');
-Route::any('archive_prices_service', 'PricesServiceController@ajax_archive');
+
+// Route::any('archive_prices_service', 'PricesServiceController@ajax_archive');
 // Route::delete('prices_service', 'PricesServiceController@ajax_destroy');
 
 

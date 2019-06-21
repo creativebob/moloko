@@ -19,7 +19,7 @@ class RubricatorsItemsComposer
 
 
         // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: записи, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображение самого элемента в списке (его Id))
-        $rubricators_items_select = getSelectTree($rubricators_items, ($view->rubricators_item_id ?? null));
+        $rubricators_items_select = getSelectTree($rubricators_items, $view->rubricators_item_id);
         // dd($rubricators_items_select);
 
         return $view->with(compact('rubricators_items_select'));

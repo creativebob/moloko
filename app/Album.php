@@ -43,31 +43,47 @@ class Album extends Model
     // use DateIntervalFilter;
 
     protected $fillable = [
-        'company_id',
         'name',
-        'albums_category_id',
-        'access',
-        'alias',
+        'category_id',
+        'personal',
+        'slug',
         'description',
-        'author_id',
     ];
 
-    // Получаем компанию
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-
-    // Категорию
+    // Категория
     public function category()
     {
         return $this->belongsTo(AlbumsCategory::class);
     }
 
-    // Получаем фото
+    // Фото
+    public function photo()
+    {
+        return $this->belongsTo(Photo::class);
+    }
+
+    // Фотки
     public function photos()
     {
-        return $this->morphedByMany(Photo::class, 'album_entities');
+        return $this->morphedByMany(Photo::class, 'album_entity');
+    }
+
+    // Настройки фоток
+    public function photo_settings()
+    {
+        return $this->morphOne(PhotoSetting::class, 'photo_settings');
+    }
+
+    // Компания
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    // Автор
+    public function author()
+    {
+        return $this->belongsTo(User::class);
     }
 
     // Получаем продукцию
@@ -76,29 +92,9 @@ class Album extends Model
     //   return $this->belongsToMany('App\Photo', 'album_entity', 'album_id', 'entity_id')->where('entity', 'photo');
     // }
 
-    // Получаем фото
-    public function photo()
-    {
-        return $this->belongsTo(Photo::class);
-    }
-
     // Получаем видео
     // public function videos()
     // {
     //     return $this->belongsToMany('App\Video', 'album_media', 'media_id')->where('entity', 'video');
     // }
-
-    // Получаем автора
-    public function author()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-
-    // Настройки фоток
-    public function photo_settings()
-    {
-        return $this->morphOne(PhotoSetting::class, 'photo_settings');
-    }
-
 }

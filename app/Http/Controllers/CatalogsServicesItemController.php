@@ -28,7 +28,7 @@ class CatalogsServicesItemController extends Controller
         $this->model = 'App\CatalogsServicesItem';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-        $this->type = 'modal';
+        $this->type = 'edit';
     }
 
     // Используем трейт записи и обновления категорий
@@ -149,23 +149,20 @@ class CatalogsServicesItemController extends Controller
 
     public function edit(Request $request, $catalog_id, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $catalogs_services_item = CatalogsServicesItem::moderatorLimit($answer)
         ->findOrFail($id);
+        // dd($catalogs_services_item);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_services_item);
 
-        return view('common.accordions.edit', [
-            'item' => $catalogs_services_item,
-            'entity' => $this->entity_alias,
-            'title' => 'Редактирование пункта каталога',
-            'parent_id' => $catalogs_services_item->parent_id,
-            'category_id' => $catalogs_services_item->category_id,
+        return view('catalogs_services_items.edit', [
+            'catalogs_services_item' => $catalogs_services_item,
             'catalog_id' => $catalog_id,
+            'page_info' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -355,7 +352,7 @@ class CatalogsServicesItemController extends Controller
         ->findOrFail($request->id);
         // dd($catalogs_services_item);
 
-        return view('leads.prices_services', compact('catalogs_services_item'));
+        return view('leads.catalogs.prices_services', compact('catalogs_services_item'));
     }
 
     public function ajax_get(Request $request, $catalog_id)

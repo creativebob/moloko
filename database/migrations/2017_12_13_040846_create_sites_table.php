@@ -17,7 +17,9 @@ class CreateSitesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name')->nullable()->index()->comment('Название сайта');
             $table->string('domain')->nullable()->index()->comment('Домен сайта');
-            $table->string('alias')->nullable()->index()->comment('Алиас сайта');
+
+            $table->string('alias')->nullable()->comment('Алиас сайта');
+            $table->string('slug')->nullable()->comment('Слаг сайта');
 
             $table->string('api_token', 60)->unique()->nullable()->comment('Токен');
 

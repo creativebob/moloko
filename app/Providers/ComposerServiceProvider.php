@@ -15,6 +15,9 @@ use App\Http\ViewComposers\CountriesComposer;
 use App\Http\ViewComposers\FilialsForUserComposer;
 use App\Http\ViewComposers\DepartmentsForUserComposer;
 
+use App\Http\ViewComposers\UserFilialsComposer;
+use App\Http\ViewComposers\CatalogsServicesItemsForFilialComposer;
+
 use App\Http\ViewComposers\RolesComposer;
 
 use App\Http\ViewComposers\LegalFormsSelectComposer;
@@ -47,6 +50,7 @@ use App\Http\ViewComposers\AccordionsComposer;
 use App\Http\ViewComposers\MenuViewComposer;
 use App\Http\ViewComposers\DepartmentsComposer;
 use App\Http\ViewComposers\DepartmentsViewComposer;
+use App\Http\ViewComposers\FilialsComposer;
 // use App\Http\ViewComposers\SectorsComposer;
 
 use App\Http\ViewComposers\CategoriesComposer;
@@ -83,6 +87,7 @@ use App\Http\ViewComposers\CatalogsGoodsComposer;
 
 use App\Http\ViewComposers\CatalogsServicesComposer;
 use App\Http\ViewComposers\CatalogsServicesItemsComposer;
+use App\Http\ViewComposers\FilialsForCatalogsServicesComposer;
 
 use App\Http\ViewComposers\CatalogsTypesComposer;
 
@@ -116,6 +121,9 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.selects.filials_for_user', FilialsForUserComposer::class);
         view()->composer('includes.selects.departments_for_user', DepartmentsForUserComposer::class);
+
+        view()->composer('prices_services.select_user_filials', UserFilialsComposer::class);
+        view()->composer('prices_services.sync.modal', CatalogsServicesItemsForFilialComposer::class);
 
         view()->composer('includes.selects.roles', RolesComposer::class);
 
@@ -190,6 +198,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.menu_views.category_list', MenuViewComposer::class);
         view()->composer('departments.filials_list', DepartmentsViewComposer::class);
         view()->composer('includes.lists.departments', DepartmentsComposer::class);
+
+        view()->composer([
+            'sites.filials_list'
+        ], FilialsComposer::class);
         // view()->composer('includes.selects.sectors', SectorsComposer::class);
 
         view()->composer([
@@ -202,8 +214,15 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.raws_categories', RawsCategoriesComposer::class);
         view()->composer('includes.selects.goods_products', GoodsProductsComposer::class);
         view()->composer('includes.selects.raws_products', RawsProductsComposer::class);
-        view()->composer('includes.selects.albums_categories', AlbumsCategoriesSelectComposer::class);
-        view()->composer('includes.selects.albums', AlbumsComposer::class);
+        view()->composer([
+            'includes.selects.albums_categories',
+            'albums.select_albums_categories',
+            'news.albums.modal_albums',
+        ] , AlbumsCategoriesSelectComposer::class);
+        view()->composer([
+            'includes.selects.albums',
+            'news.albums.select_albums',
+        ], AlbumsComposer::class);
 
         view()->composer('includes.selects.aligns', AlignsComposer::class);
         view()->composer('includes.selects.navigations_categories', NavigationsCategoriesSelectComposer::class);
@@ -215,8 +234,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.entities_statistics', EntitiesStatisticsSelectComposer::class);
 
         view()->composer('products.articles.goods.catalogs_with_items', CatalogsGoodsComposer::class);
+
         view()->composer('products.processes.services.prices.catalogs', CatalogsServicesComposer::class);
         view()->composer('products.processes.services.prices.catalogs_items', CatalogsServicesItemsComposer::class);
+        view()->composer('products.processes.services.prices.filials', FilialsForCatalogsServicesComposer::class);
 
         view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
         view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);
@@ -238,7 +259,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.selects.rooms', RoomsComposer::class);
 
-        view()->composer('news.rubricators.select_rubricators', RubricatorsComposer::class);
+        view()->composer('news.rubricators.rubricators', RubricatorsComposer::class);
         view()->composer('news.rubricators.select_rubricators_items', RubricatorsItemsComposer::class);
 
 

@@ -49,12 +49,9 @@ class RawsCategoryController extends Controller
         ->authors($answer)
         ->systemItem($answer)
         ->template($answer)
-        // ->withCount('products')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
-        // ->paginate(30)
-        ->get()
-        ;
+        ->get();
 
         // Отдаем Ajax
         if ($request->ajax()) {
@@ -85,7 +82,6 @@ class RawsCategoryController extends Controller
                 'filter' => setFilter($this->entity_alias, $request, [
                     'booklist',
                 ]),
-                'filter_path' => 'procducts.articles_categories.raws_categories'
             ]
         );
     }
@@ -140,27 +136,20 @@ class RawsCategoryController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $raws_category = RawsCategory::with([
-            // 'mode',
-            // 'one_metrics' => function ($q) {
-            //     $q->with('unit', 'values');
-            // },
             'manufacturers',
         ])
-        // ->withCount('one_metrics')
         ->moderatorLimit($answer)
         ->findOrFail($id);
         // dd($raws_category);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_category);
-        // dd($raws_category_metrics);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
         $settings = getSettings($this->entity_alias);
 
-        // dd($goods_category->direction);
         return view('products.articles_categories.common.edit.edit', [
             'title' => 'Редактирование категории сырья',
             'category' => $raws_category,
@@ -220,10 +209,6 @@ class RawsCategoryController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_category);
-
-        // Скрываем бога
-        $raws_category->editor_id = hideGod($request->user());
-        $raws_category->save();
 
         $parent_id = $raws_category->parent_id;
 

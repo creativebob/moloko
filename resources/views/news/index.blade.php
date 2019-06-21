@@ -75,7 +75,7 @@
                     <td class="td-name">
 
                         @can('update', $cur_news)
-                        {{ link_to_route('news.edit', $cur_news->name, $parameters = ['news' => $cur_news->alias], $attributes = []) }}
+                        {{ link_to_route('news.edit', $cur_news->name, ['news' => $cur_news->id], []) }}
                         @endcan
 
                         @cannot('update',  $cur_news)
@@ -91,7 +91,7 @@
                     <br><br> --}}
                     {{-- <span>Домен:&nbsp;{{ $cur_news->site->domen or ' ... ' }}</span><br> --}}
 
-                    <span>Алиас:&nbsp;<a>{{ $cur_news->alias }}</a></span>
+                    <span>Слаг:&nbsp;<a>{{ $cur_news->slug }}</a></span>
 
                     <br>
                     <td class="td-date-publish">
@@ -136,7 +136,7 @@
 @include('includes.modals.modal-delete')
 @endsection
 
-@section('scripts')
+@push('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
 @include('includes.scripts.sortable-table-script')
@@ -152,27 +152,7 @@
 
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-delete-script')
-
-{{-- <script type="text/javascript">
-
-    $(function() {
-        // Берем алиас сайта
-        var alias = '{{ $site->alias }}';
-        // Мягкое удаление с refresh
-        $(document).on('click', '[data-open="item-delete"]', function() {
-            // находим описание сущности, id и название удаляемого элемента в родителе
-            var parent = $(this).closest('.item');
-            var type = parent.attr('id').split('-')[0];
-            var id = parent.attr('id').split('-')[1];
-            var name = parent.data('name');
-            $('.title-delete').text(name);
-            $('.delete-button').attr('id', 'del-' + type + '-' + id);
-            $('#form-item-del').attr('action', '/admin/sites/'+ alias + '/' + type + '/' + id);
-        });
-    });
-
-</script> --}}
-@endsection
+@endpush
 
 
 

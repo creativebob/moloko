@@ -288,6 +288,7 @@ class LeadController extends Controller
         // dd($catalogs_services);
 
         $catalog_service = $catalogs_services->first();
+        // dd($catalog_service);
 
         return view('leads.edit', compact('lead', 'page_info', 'list_challenges', 'lead_methods_list', 'choices', 'catalog_service'));
     }
@@ -910,7 +911,7 @@ class LeadController extends Controller
         return $data;
     }
 
-    public function export() 
+    public function export()
     {
         return Excel::download(new LeadsExport, 'Воротная компания "Марс".xlsx');
     }

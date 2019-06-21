@@ -23,7 +23,9 @@ class CreateAlbumsTable extends Migration
 
             $table->boolean('personal')->default(0)->comment('Личный');
 
-            $table->string('alias')->index()->comment('Алиас альбома');
+            $table->string('alias')->nullable()->index()->comment('Алиас альбома');
+            $table->string('slug')->nullable()->index()->comment('Слаг альбома');
+
             $table->integer('delay')->nullable()->unsigned()->comment('Задержка во времени, сек');
 
             $table->string('photo_id')->index()->nullable()->comment('Обложка альбома');

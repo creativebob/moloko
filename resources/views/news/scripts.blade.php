@@ -1,56 +1,6 @@
 <script>
 
 
-    // Смена рубрики
-    $(document).on('change', '#select-rubricators', function(event) {
-        event.preventDefault();
-        /* Act on the event */
-        $.post("/admin/rubricators/" + $(this).val() + "/get_rubricators_items", function(html){
-            $('#select-rubricators_items').html(html);
-        });
-    });
-
-    // Добавление альбомов
-    $(document).on('click', '[data-open="album-add"]', function(event) {
-        event.preventDefault();
-        /* Act on the event */
-        $.post("/admin/album_add", function(html){
-            $('#modal').html(html).foundation();
-            $('#album-add').foundation('open');
-        });
-    });
-
-    $(document).on('change', '#select-albums_categories', function() {
-        var id = $(this).val();
-        // alert(id);
-
-        if (id == 0) {
-            $('#select-albums').html('');
-            $('#select-albums').prop('disabled', true);
-        } else {
-            $.post("/admin/albums_select", {albums_category_id: id}, function(html){
-                $('#select-albums').replaceWith(html);
-            });
-        }
-    });
-
-    // Добавление альбома
-    $(document).on('click', '#submit-album-add', function(event) {
-        // Блочим отправку формы
-        event.preventDefault();
-        $(this).prop('disabled', true);
-        var form = $(this).closest('form');
-
-        $.post('/admin/album_get', form.serialize(), function(html){
-            $('#table-albums').append(html);
-            form.closest('.reveal-overlay').remove();
-        });
-    });
-
-    // Удаление альбома
-    $(document).on('click', '.delete-button-ajax', function() {
-        $('#item-delete-ajax').foundation('close');
-    });
 
     // ------------------- Проверка на совпадение имени --------------------------------------
 

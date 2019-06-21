@@ -34,11 +34,9 @@
             @break
 
             @case($type == 'edit')
-            @if (isset($alias))
-            {{ link_to_route($entity.'.edit', '', $parameters = ['alias' => $alias, 'id' => $item->id], $attributes = ['class' => 'icon-list-edit sprite']) }}
-            @else
-            {{ link_to_route($entity.'.edit', '', $parameters = ['id' => $item->id], $attributes = ['class' => 'icon-list-edit sprite']) }}
-            @endif
+            <a href="{{ $entity }}/{{ $item->id }}/edit" class="icon-list-edit sprite"></a>
+            {{-- {{ link_to_route($entity.'.edit', '', ['id' => $item->id], $attributes = ['class' => 'icon-list-edit sprite']) }} --}}
+
             @break
 
             @endswitch

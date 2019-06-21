@@ -37,6 +37,8 @@ class DepartmentRequest extends FormRequest
             'department_id' => 'integer|nullable',
             'parent_id' => 'integer|nullable',
 
+            'code_map' => 'string|nullable',
+
             'city_id' => 'integer|nullable',
 
             'moderation' => 'integer|max:1|nullable',

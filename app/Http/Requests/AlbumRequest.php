@@ -25,10 +25,11 @@ class AlbumRequest extends FormRequest
     {
       return [
         'name' => 'string|max:255|required',
-        'albums_category_id' => 'integer',
+        'category_id' => 'integer|required',
 
         'personal' => 'integer|max:1|nullable',
-        'alias' => 'string|max:255|nullable',
+        'slug' => 'string|max:255|nullable',
+
         'description' => 'string|max:255|nullable',
         'delay' => 'integer|max:60|nullable',
 

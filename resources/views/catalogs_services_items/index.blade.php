@@ -39,7 +39,7 @@
                 'items' => $catalogs_services_items,
                 'class' => App\CatalogsServicesItem::class,
                 'entity' => 'catalogs_services_items',
-                'type' => 'modal'
+                'type' => 'edit'
             ]
             )
 

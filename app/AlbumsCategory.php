@@ -44,14 +44,13 @@ class AlbumsCategory extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+
     protected $fillable = [
         'name',
         'parent_id',
         'category_id',
         'author_id',
-        'display',
-        'system_item',
-        'mooderation'
+
     ];
 
     // Вложенные

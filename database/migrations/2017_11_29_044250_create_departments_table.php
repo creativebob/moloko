@@ -21,12 +21,14 @@ class CreateDepartmentsTable extends Migration
 
             $table->string('name', 60)->index()->comment('Название отдела');
             $table->bigInteger('phone')->nullable()->comment('Телефон отдела');
-            
+
             $table->bigInteger('parent_id')->unsigned()->nullable()->comment('Id отдела, в котором находится отдел');
             $table->foreign('parent_id')->references('id')->on('departments');
 
             $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id филиала, пишется каждому отделу');
             $table->foreign('filial_id')->references('id')->on('departments');
+
+            $table->text('code_map')->nullable()->comment('Код карты');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

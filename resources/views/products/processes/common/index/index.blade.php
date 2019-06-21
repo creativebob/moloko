@@ -125,7 +125,7 @@
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
 @include('includes.scripts.sortable-table-script')
@@ -143,6 +143,11 @@
 @include('includes.scripts.modal-archive-script')
 
 @include('includes.scripts.inputs-mask')
-@include('processes.create.scripts', ['entity' => $entity, 'category_entity' => $category_entity])
+@include('products.common.create.scripts', [
+    'entity' => $entity,
+    'category_entity' => $category_entity,
+    'group_entity' => 'processes_groups'
+]
+)
 
-@endsection
+@endpush

@@ -22,6 +22,12 @@ class CreateCatalogsServicesItemsTable extends Migration
             $table->string('name')->index()->comment('Название');
             $table->string('slug')->index()->nullable()->comment('Слаг');
 
+            $table->text('description')->nullable()->comment('Описание ');
+            $table->text('seo_description')->nullable()->comment('Описание для сайта');
+
+            $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
+            $table->foreign('photo_id')->references('id')->on('photos');
+
             $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id категории товара');
             $table->foreign('parent_id')->references('id')->on('catalogs_services_items');
 

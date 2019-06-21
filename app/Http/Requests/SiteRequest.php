@@ -27,8 +27,8 @@ class SiteRequest extends FormRequest
             'name' => 'string|max:255|required',
             'domain' => 'string|max:255|required',
 
-            'menus.*'  => 'integer|distinct',
-            'departments.*'  => 'integer|distinct',
+            // 'menus.*'  => 'integer|distinct',
+            'filials.*'  => 'integer|distinct',
 
             'moderation' => 'integer|max:1|nullable',
             'system_item' => 'integer|max:1|nullable',
