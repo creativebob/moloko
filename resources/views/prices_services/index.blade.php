@@ -257,7 +257,7 @@
     };
 
     $(document).on('click', '.item-catalog', function(event) {
-        alert('kek');
+        // alert('kek');
 
         hidePrices();
         let id = $(this).attr('id');

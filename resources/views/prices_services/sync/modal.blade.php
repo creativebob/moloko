@@ -11,14 +11,25 @@
     <div class="grid-x modal-content inputs">
 
         <div class="small-4 cell">
+            <ul class="vertical menu">
+                @forelse ($catalogs_items as $catalogs_item)
 
-            @if ($catalogs_items->isNotEmpty())
+                <li class="item-catalog" id="catalogs_services_items-{{ $catalogs_item->id }}">
+                    <a class="get-prices">{{ $catalogs_item->name }}</a>
+                </li>
+
+                @empty
+                {{-- empty expr --}}
+                @endforelse
+            </ul>
+
+            {{-- @if ($catalogs_items->isNotEmpty())
             <ul class="vertical menu drilldown" data-drilldown data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'>
 
                 @foreach ($catalogs_items as $catalogs_item)
                 @if(is_null($catalogs_item->parent_id))
 
-                {{-- Если категория --}}
+                {{-- Если категория
                 <li class="item-catalog" id="catalogs_services_items-{{ $catalogs_item->id }}">
                     <a class="get-prices">{{ $catalogs_item->name }}</a>
 
@@ -34,35 +45,39 @@
                 @endforeach
 
             </ul>
-            @endif
+            @endif --}}
 
         </div>
 
 
         <div class="small-8 cell">
             <table id="table-prices" class="table-compositions">
+
                 <thead>
                     <tr>
                         <th>Название</th>
                         <th>Цена</th>
                     </tr>
                 </thead>
-            @foreach ($grouped_prices_services as $catalogs_item_id => $prices_services)
 
-            <tbody class="catalogs_services_items-{{ $catalogs_item_id }}">
-                @foreach ($prices_services as $prices_service)
+                @forelse ($grouped_prices_services as $catalogs_item_id => $prices_services)
+
+                <tbody class="catalogs_services_items-{{ $catalogs_item_id }}">
+                    @foreach ($prices_services as $prices_service)
                     <tr>
                         <td>{{ $prices_service->service->process->name }}</td>
-                        <td>{!! Form::number('price', $prices_service->price, []) !!}</td>
+                        <td>{!! Form::number('prices['.$prices_service->id.']price', $prices_service->price, []) !!}</td>
                     </tr>
-                @endforeach
-            </tbody>
+                    @endforeach
+                </tbody>
 
+                @empty
+                {{-- empty expr --}}
+                @endforelse
 
-            @endforeach
             </table>
         </div>
-
+        {!! Form::hidden('filial_id', $filial_id, []) !!}
     </div>
 
     <div class="grid-x align-center">

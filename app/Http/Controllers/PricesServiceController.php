@@ -44,7 +44,11 @@ class PricesServiceController extends Controller
         if (isset($request->filial_id)) {
             $filial_id = $request->filial_id;
         } else {
-            $filial_id = key($user_filials);
+            if (!is_null($user_filials)) {
+                $filial_id = key($user_filials);
+            } else {
+                $filial_id = null;
+            }
         }
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -204,25 +208,42 @@ class PricesServiceController extends Controller
 
 
 
-    // public function sync(Request $request, $catalog_id)
-    // {
+    public function sync(Request $request, $catalog_id)
+    {
 
-    //     $prices_service_common = PricesService::findOrFail($request->id);
+        $prices_ids = array_keys($request->prices);
 
-    //     $user = $request->user();
+        $prices_services = PricesService::find($prices_ids)->keyBy('id');
+        // dd($request->prices);
 
-    //     $prices_service = PricesService::firstOrCreate([
-    //         'catalogs_services_item_id' => $prices_service_common->catalogs_services_item_id,
-    //         'catalogs_service_id' => $prices_service_common->catalogs_service_id,
-    //         'service_id' => $prices_service_common->service_id,
-    //         'company_id' => $user->company_id,
-    //     ], [
-    //         'author_id' => $user->id,
-    //         'price' => $request->price,
-    //     ]);
+        $data = [];
+        foreach ($request->prices as $id => $price) {
+            $prices_service = $prices_services[$id];
 
-    //     return view('prices_services.sync', compact('prices_service'));
-    // }
+            if (is_null($price)) {
+                $prices_service->update([
+                    'archive' => true,
+                ]);
+            } else {
+                if ($prices_service->price != $price) {
+                    $new_prices_service = $prices_service->replicate();
+
+                    $prices_service->update([
+                        'archive' => true,
+                    ]);
+
+                    $new_prices_service->price = $price;
+                    $new_prices_service->save();
+                }
+            }
+        }
+
+        // Переадресовываем на index
+        return redirect()->route('prices_services.index', [
+            'catalog_id' => $catalog_id,
+            'filial_id' => $request->filial_id
+        ]);
+    }
 
     public function ajax_edit(Request $request, $catalog_id)
     {
