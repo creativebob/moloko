@@ -99,7 +99,6 @@ trait CompanyControllerTrait
                     $manufacturer->company_id = $auth_company_id;
                 }
 
-
                 $manufacturer->manufacturer_id = $company->id;
 
                 // Запись информации по производителю если нужно:

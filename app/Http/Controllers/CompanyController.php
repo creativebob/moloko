@@ -104,7 +104,6 @@ class CompanyController extends Controller
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
-
         // dd($companies->get(3)->director->user->name_reverse);
 
         // Инфо о странице

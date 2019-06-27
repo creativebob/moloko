@@ -229,7 +229,7 @@ class ClientController extends Controller
         $user = $request->user();
         $user_id = $user->id;
 
-        return view('includes.modals.modal-add-client', compact('new_user', 'user_id', 'lead', 'new_company'));
+        return view('clients.modals.add-client', compact('new_user', 'user_id', 'lead', 'new_company'));
     }
 
     public function ajax_store(Request $request)

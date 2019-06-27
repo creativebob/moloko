@@ -183,7 +183,7 @@ class UserController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::with('location', 'company', 'photo')->moderatorLimit($answer)->findOrFail($id);
 
-        $filial_id = $request->filial_id;
+        // $filial_id = $request->filial_id;
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);
