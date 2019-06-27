@@ -92,7 +92,6 @@ class AccountController extends Controller
 
         $account = new Account;
 
-        $account->name = $request->name;
         $account->source_service_id = $request->source_service_id;
         $account->description = $request->description;
         $account->alias = $request->alias;
@@ -185,7 +184,6 @@ class AccountController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $account);
 
-        $account->name = $request->name;
         $account->description = $request->description;
         $account->alias = $request->alias;
         $account->source_service_id = $request->source_service_id;

@@ -94,47 +94,24 @@ class SiteController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Наполняем сущность данными
-        $site = new Site;
-
-        $site->name = $request->name;
-        $site->domain = $request->domain;
-
-        // Пока отсекаем по точке
-        $site_alias = explode('.', $request->domain);
-        $site->alias = $site_alias[0];
-
-        $site->api_token = str_random(60);
-
-        // Cистемная запись
-        $site->system_item = $request->system_item;
-        $site->display = $request->display;
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-        if($answer['automoderate'] == false){
-            $site->moderation = 1;
-        }
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-        $site->company_id = $user->company_id;
-        $site->author_id = hideGod($user);
-
-        $site->save();
+        $data = $request->input();
+        $site = (new Site())->create($data);
 
         if ($site) {
-
-            // // Пришем список пришедших разделов сайта
-            // $site->menus()->attach($request->menus);
-
-            // // Пришем список пришедших филиалов сайта
-            // $site->departments()->attach($request->departments);
-
-            return redirect()->route('sites.index');
+            return redirect()
+                ->route('sites.edit', [$site->id])
+                ->with(['success' => 'Успешно сохранено']);
         } else {
-            abort(403, 'Ошибка записи сайта');
+            return back()
+                ->withErrors(['msg' => 'Ошибка сохранения'])
+                ->withInput();
         }
+
+//        if ($site) {
+//            return redirect()->route('sites.index');
+//        } else {
+//            abort(403, 'Ошибка записи сайта');
+//        }
     }
 
     public function show(Request $request, $id)
@@ -157,7 +134,7 @@ class SiteController extends Controller
         ]);
     }
 
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -169,6 +146,8 @@ class SiteController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $site);
+
+        $site->load('plugins');
 
         return view('sites.edit', [
             'site' => $site,
@@ -188,66 +167,41 @@ class SiteController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $site);
 
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
+        $data = $request->input();
+        $result = $site->update($data);
 
-        // Скрываем бога
-        $user_id = hideGod($user);
-
-        $site->name = $request->name;
-
-        if ($site->domain != $request->domain) {
-            $site_alias = explode('.', $request->domain);
-            $site->alias = $site_alias[0];
-
-            $site->domain = $request->domain;
-        }
-
-        // Модерация и системная запись
-        $site->system_item = $request->system_item;
-        $site->display = $request->display;
-
-        $site->moderation = $request->moderation;
-
-        $site->editor_id = $user_id;
-        $site->save();
-
-        if ($site) {
-
-            // Смотрим пришедние для сайта разделы и синхронизируем с существующими
-            // if (isset($request->menus)) {
-            //     $site->menus()->sync($request->menus);
-            // } else {
-            //     $site->menus()->detach();
-            // }
-
-            // Смотрим пришедние для сайта филиалы и синхронизируем с существующими
-            // if (isset($request->menus)) {
-            //     $site->departments()->sync($request->departments);
-            // } else {
-            //     $site->departments()->detach();
-            // }
-
-            return redirect()->route('sites.index');
+        if ($result) {
+            return redirect()
+                ->route('sites.edit', $site->id)
+                ->with(['success' => 'Успешно сохранено']);
         } else {
-            abort(403, 'Ошибка обновления сайта');
+            return back()
+                ->withErrors(['msg' => 'Ошибка сохранения'])
+                ->withInput();
         }
+
+//        if ($result) {
+//            return redirect()->route('sites.index');
+//        } else {
+//            abort(403, 'Ошибка обновления сайта');
+//        }
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $site = Site::moderatorLimit($answer)
+        $site = Site::with([
+            'pages',
+            'navigations',
+        ])
+        ->moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $site);
-
-        $site->editor_id = hideGod($request->user());
-        $site->save();
 
         $site->delete();
 

@@ -46,5 +46,9 @@ class ArticleObserver
         }
 
         $article->editor_id = hideGod($request->user());
+
+        // Cохраняем / обновляем фото
+        $photo_id = savePhoto($request, $article);
+        $article->photo_id = $photo_id;
     }
 }

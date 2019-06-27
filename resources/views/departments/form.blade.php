@@ -8,6 +8,12 @@
             <li class="tabs-title">
                 <a data-tabs-target="worktime" href="#worktime">График работы</a>
             </li>
+
+            @empty($parent_id)
+            <li class="tabs-title">
+                <a data-tabs-target="site" href="#site">Сайт</a>
+            </li>
+            @endempty
         </ul>
 
     </div>
@@ -52,7 +58,7 @@
             </div>
         </div>
 
-        <!-- Схема работы -->
+        {{-- Схема работы --}}
         <div class="tabs-panel" id="worktime">
             <div class="grid-x grid-padding-x align-center">
                 <div class="small-8 cell">
@@ -60,6 +66,19 @@
                 </div>
             </div>
         </div>
+
+        @empty($parent_id)
+        {{-- Сайт --}}
+        <div class="tabs-panel" id="site">
+            <div class="grid-x grid-padding-x align-center">
+                <div class="small-8 cell">
+                    <label>Код для карты
+                    {!! Form::textarea('code_map', null, []) !!}
+                    </label>
+                </div>
+            </div>
+        </div>
+        @endempty
 
     </div>
 </div>

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Album;
-use App\Photo;
 use App\AlbumMedia;
+use App\Photo;
 use App\User;
 use App\List_item;
 use App\Booklist;
@@ -43,6 +43,7 @@ class AlbumController extends Controller
     public function index(Request $request)
     {
 
+        $storage = Str::slug('ker');
         // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_alias);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
@@ -65,6 +66,7 @@ class AlbumController extends Controller
         ])
         ->withCount('photos')
 
+        // Старый метод показа с шаблонными
         ->whereHas('category', function ($query) {
             $query->whereNotNull('company_id')
             ->where(function ($query) {
@@ -127,50 +129,11 @@ class AlbumController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // Наполняем сущность данными
-        $album = new Album;
-
-        $album->name = $request->name;
-
-        // Алиас
-        $album->alias = empty($request->alias) ? Str::slug($request->name) : $request->alias;
-
-        $album->albums_category_id = $request->albums_category_id;
-        $album->description = $request->description;
-        $album->delay = $request->delay;
-
-        $album->personal = $request->has('personal');
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-        if($answer['automoderate'] == false){
-            $album->moderation = 1;
-        }
-
-        // Системная запись
-        $album->system_item = $request->system_item;
-        $album->display = $request->display;
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-        $album->company_id = $user->company_id;
-        $album->author_id = hideGod($user);
-
-        $album->save();
-
-        // Настройки фотографий
-        setSettings($request, $album);
+        $data = $request->input();
+        $album = (new Album())->create($data);
 
         if ($album) {
-
-            // Создаем папку в файловой системе
-            $storage = Storage::disk('public')->makeDirectory($album->company->id.'/media/albums/'.$album->id);
-
-            if ($storage) {
-                return redirect()->route('albums.index');
-            } else {
-                abort(403, 'Ошибка создания папки альбома');
-            }
+            return redirect()->route('albums.index');
 
         } else {
             abort(403, 'Ошибка записи альбома');
@@ -178,7 +141,7 @@ class AlbumController extends Controller
     }
 
 
-    public function show(Request $request, $alias)
+    public function show(Request $request, $id)
     {
 
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -208,14 +171,14 @@ class AlbumController extends Controller
     }
 
 
-    public function edit(Request $request, $alias)
+    public function edit(Request $request, $id)
     {
 
-        $album = Album::with('photo_settings')
+        $album = Album::with([
+            'photo_settings',
+        ])
         ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
-        ->where('company_id', $request->user()->company_id)
-        ->whereAlias($alias)
-        ->first();
+        ->findOrFail($id);
         // dd($album);
 
         // Подключение политики
@@ -240,27 +203,8 @@ class AlbumController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $album);
 
-        $album->name = $request->name;
-
-        $album->alias = empty($request->alias) ? Str::slug($request->name) : $request->alias;
-
-        $album->albums_category_id = $request->albums_category_id;
-        $album->description = $request->description;
-        $album->delay = $request->delay;
-
-        $album->personal = $request->has('personal');
-
-        // Модерация и системная запись
-        $album->system_item = $request->system_item;
-        $album->display = $request->display;
-
-        $album->moderation = $request->moderation;
-
-        $album->editor_id = hideGod($request->user());
-        $album->save();
-
-        // Настройки фотографий
-        setSettings($request, $album);
+        $data = $request->input();
+        $album->update($data);
 
         if ($album) {
             return redirect()->route('albums.index');
@@ -277,19 +221,8 @@ class AlbumController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $album);
 
-        $album->editor_id = hideGod($request->user());
-        $album->save();
-
-        // Удаляем папку альбома
-        $directory = $album->company_id.'/media/albums/'.$album->id;
-        $del_dir = Storage::disk('public')->deleteDirectory($directory);
-
-        // Удаляем фотки
-        $album->photos()->delete();
-        $album->photo_settings()->delete();
-
         // Удаляем альбом с обновлением
-        $album = Album::destroy($id);
+        $album->delete();
 
         if ($album) {
             return redirect()->route('albums.index');
@@ -330,24 +263,27 @@ class AlbumController extends Controller
     // ------------------------------------------- Ajax ---------------------------------------------
 
     // Модалка прикрепления альбома
-    public function album_add(Request $request)
+    public function ajax_add(Request $request)
     {
-        return view('includes.modals.album_add');
+        return view('news.albums.modal_albums');
     }
 
     // Список албомов
-    public function albums_select(Request $request)
+    public function ajax_get_select(Request $request)
     {
-        return view('includes.selects.albums', ['albums_category_id' => $request->albums_category_id]);
+        return view('news.albums.select_albums', ['albums_category_id' => $request->albums_category_id]);
     }
 
     // Список получаем альбом
-    public function album_get(Request $request)
+    public function ajax_get(Request $request)
     {
-        $album = Album::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, 'index'))
+
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
+
+        $album = Album::moderatorLimit($answer )
         ->findOrFail($request->album_id);
 
-        return view('news.album', compact('album'));
+        return view('news.albums.album', compact('album'));
     }
 
 }

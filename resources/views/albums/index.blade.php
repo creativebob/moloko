@@ -61,7 +61,7 @@
                     @endif
                     ><label class="label-check" for="check-{{ $album->id }}"></label></td>
                     <td>
-                      <a href="/admin/albums/{{ $album->alias }}">
+                      <a href="/admin/albums/{{ $album->id }}">
                         <img src="{{ getPhotoPath($album, 'small') }}" alt="{{ isset($album->photo_id) ? $album->name : 'Нет фото' }}">
                     </a>
                 </td>
@@ -69,7 +69,7 @@
                 <td class="td-name">
 
                     @can('update', $album)
-                    {{ link_to_route('albums.edit', $album->name, ['alias' => $album->alias], []) }}
+                    {{ link_to_route('albums.edit', $album->name, ['id' => $album->id], []) }}
                     @endcan
 
                     @cannot('update', $album)
@@ -81,7 +81,7 @@
                 <td class="td-description">{{ $album->description }}</td>
                 <td class="td-extra-info">
                     <ul>
-                        <li>Доступ: {{ $album->access == 1 ? 'Личный' : 'Общий' }}</li>
+                        <li>Доступ: {{ $album->personal == 1 ? 'Личный' : 'Общий' }}</li>
                         <li>Кол-во фотографий: {{ $album->photos_count }}</li>
                         <li>Дата создания: {{ $album->created_at->format('d.m.Y') }}</li>
                         <li>Размер, Мб: {{ $album->photos->sum('size')/1024 }}</li>

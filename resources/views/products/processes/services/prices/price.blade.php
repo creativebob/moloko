@@ -8,6 +8,8 @@
 	</td>
 
 	<td class="td-delete">
-		<a class="icon-delete sprite" data-open="delete-price"></a>
-	</td>
+        @can('delete', $prices_service)
+        <a class="icon-delete sprite" data-open="delete-price"></a>
+        @endcan
+    </td>
 </tr>

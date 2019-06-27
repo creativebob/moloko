@@ -91,7 +91,7 @@
 
                     </div>
 
-                    @if ($category->parent_id == null)
+                    @if (is_null($category->parent_id) && $category->getTable() == 'goods_categories')
                     <div class="small-12 cell checkbox">
                         @if ($category->direction != null)
                         {{ Form::checkbox('direction', 1, ($category->direction->archive == false) ? 1 : 0, ['id' => 'direction-checkbox']) }}

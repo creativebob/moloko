@@ -11,6 +11,8 @@ use App\AlbumsCategory;
 use App\AlbumEntity;
 use App\CityEntity;
 
+use App\RubricatorsItem;
+
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\NewsRequest;
@@ -54,21 +56,21 @@ class NewsController extends Controller
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
-        $news = News::with('author', 'albums', 'company.location.city')
+        $news = News::with([
+            'author',
+            'albums',
+            'company.location.city'
+        ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
-        // ->orderBy('sort', 'asc')
-        // ->filter($request, 'author_id') // Фильтр по авторам
-        // ->filter($request, 'id', 'cities') // Фильтр по городам публикации
         ->booklistFilter($request)  // Фильтр по спискам
         ->dateIntervalFilter($request, 'publish_begin_date') // Интервальный фильтр по дате публикации
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->orderBy('publish_begin_date', 'desc')
         ->paginate(30);
-
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -94,6 +96,30 @@ class NewsController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('rubricators_items', false, 'index');
+
+        // Главный запрос
+        $rubricators_items = RubricatorsItem::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->template($answer)
+        ->orderBy('sort', 'asc')
+        ->get();
+
+        if ($rubricators_items->count() == 0){
+
+            // Описание ошибки
+            $ajax_error = [];
+            $ajax_error['title'] = "Обратите внимание!";
+            $ajax_error['text'] = "Для начала необходимо создать рубрикатор и наполнить его рубриками. А уже потом будем добавлять новости. Ок?";
+            $ajax_error['link'] = "/admin/rubricators";
+            $ajax_error['title_link'] = "Идем в рубрикаторы";
+
+            return view('ajax_error', compact('ajax_error'));
+        }
+
         return view('news.create', [
             'cur_news' => new $this->class,
             'page_info' => pageInfo($this->entity_alias),
@@ -106,57 +132,10 @@ class NewsController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $cur_news = new News;
-
-        $cur_news->name = $request->name;
-        $cur_news->title = $request->title;
-        $cur_news->preview = $request->preview;
-
-        // Если ввели алиас руками
-        if (isset($request->alias)) {
-            $cur_news->alias = $request->alias;
-        } else {
-            // Иначе переводим заголовок в транслитерацию
-            $cur_news->alias = Str::slug($request->title);
-        }
-
-        $cur_news->content = $request->content;
-
-        $cur_news->rubricator_id = $request->rubricator_id;
-        $cur_news->rubricators_item_id = $request->rubricators_item_id;
-
-        $cur_news->publish_begin_date = Carbon::parse($request->publish_begin_date)->format('Y-m-d');
-
-        if (isset($request->publish_end_date)) {
-            $cur_news->publish_end_date = Carbon::parse($request->publish_end_date)->format('Y-m-d');
-        }
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        if($answer['automoderate'] == false){
-            $cur_news->moderation = 1;
-        }
-
-        // Cистемная запись
-        $cur_news->system_item = $request->system_item;
-        $cur_news->display = $request->display;
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        $cur_news->company_id = $user->company_id;
-        $cur_news->author_id = hideGod($user);
-
-        $cur_news->save();
+        $data = $request->input();
+        $cur_news = (new News())->create($data);
 
         if ($cur_news) {
-
-            // Cохраняем / обновляем фото
-            savePhoto($request, $cur_news);
-
-            // Когда новость записалась, смотрим пришедние для нее альбомы и пишем, т.к. это первая запись новости
-            $cur_news->albums()->sync($request->albums);
 
             return redirect()->route('news.index');
         } else {
@@ -169,7 +148,7 @@ class NewsController extends Controller
         //
     }
 
-    public function edit(Request $request, $alias)
+    public function edit(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -180,8 +159,7 @@ class NewsController extends Controller
             // 'cities',
         ])
         ->moderatorLimit($answer)
-        ->whereAlias($alias)
-        ->first();
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_news);
@@ -205,48 +183,10 @@ class NewsController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_news);
 
-        $cur_news->name = $request->name;
-        $cur_news->title = $request->title;
-
-        if ($cur_news->alias != $request->alias) {
-
-            $cur_news->alias = $request->alias;
-
-        }
-
-        $cur_news->preview = $request->preview;
-        $cur_news->content = $request->content;
-
-        $cur_news->rubricator_id = $request->rubricator_id;
-        $cur_news->rubricators_item_id = $request->rubricators_item_id;
-
-        $cur_news->publish_begin_date = Carbon::parse($request->publish_begin_date)->format('Y-m-d');
-
-        if (isset($request->publish_end_date)) {
-            $cur_news->publish_end_date = Carbon::parse($request->publish_end_date)->format('Y-m-d');
-        }
-
-        // Модерация и системная запись
-        $cur_news->system_item = $request->system_item;
-        $cur_news->moderation = $request->moderation;
-        $cur_news->display = $request->display;
-
-        $cur_news->editor_id = hideGod($request->user());
-
-        $cur_news->save();
+        $data = $request->input();
+        $cur_news->update($data);
 
         if ($cur_news) {
-
-            // Cохраняем / обновляем фото
-            savePhoto($request, $cur_news);
-
-            // Когда новость обновилась, смотрим пришедние для нее альбомы и сравниваем с существующими
-            if (isset($request->albums)) {
-                $cur_news->albums()->sync($request->albums);
-            } else {
-                // Если удалили последний альбом для новости и пришел пустой массив
-                $cur_news->albums()->detach();
-            }
 
             // Когда новость обновилась, смотрим пришедние для нее города и сравниваем с существующими
             // if (isset($request->cities)) {

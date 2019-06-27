@@ -19,47 +19,39 @@ class AlbumsCategoryPolicy
     public function index(User $user)
     {
         $result = $this->getstatus($this->entity_name, null, 'index', $this->entity_dependence);
-
         return $result;
     }
 
     public function view(User $user, Model $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'view', $this->entity_dependence);
-
         return $result;
     }
 
     public function create(User $user)
     {
         $result = $this->getstatus($this->entity_name, null, 'create', $this->entity_dependence);
-
         return $result;
     }
 
     public function update(User $user, Model $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
-
         return $result;
     }
 
     public function delete(User $user, Model $model)
     {
         if ($model->system_item == 1) {
-            $result = false;
+            return false;
         }
 
-        // if ($model->company_id == null) {
-        //     $result = false;
-        // }
-
         if ($model->albums->count() > 0) {
-            $result = false;
+            return false;
         }
 
         if ($model->childs->count() > 0) {
-            $result = false;
+            return false;
         }
 
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);

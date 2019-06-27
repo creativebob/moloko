@@ -22,6 +22,8 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
 
+use Carbon\Carbon;
+
 class News extends Model
 {
 
@@ -52,15 +54,27 @@ class News extends Model
     protected $fillable = [
         'name',
         'alias',
-        'title',
+        'slug',
         'preview',
         'publish_begin_date',
         'publish_end_date',
         'content',
-        'site_id',
-        'photo_id',
-        'company_id',
+        'rubricator_id',
+        'rubricators_item_id',
     ];
+
+    public function setPublishBeginDateAttribute($value)
+    {
+        $this->attributes['publish_begin_date'] = Carbon::createFromFormat('d.m.Y', $value);
+    }
+
+    public function setPublishEndDateAttribute($value)
+    {
+        if (isset($value)) {
+            $this->attributes['publish_end_date'] = Carbon::createFromFormat('d.m.Y', $value);
+        }
+    }
+
 
     // // Cайт
     // public function site()
@@ -92,10 +106,10 @@ class News extends Model
         return $this->morphToMany(Album::class, 'album_entity');
     }
 
-    // Города
-    public function cities()
-    {
-        return $this->morphToMany(City::class, 'city_entity');
-    }
+    // // Города
+    // public function cities()
+    // {
+    //     return $this->morphToMany(City::class, 'city_entity');
+    // }
 
 }

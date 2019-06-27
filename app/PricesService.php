@@ -50,7 +50,6 @@ class PricesService extends Model
         'filial_id',
         'price',
         'archive',
-        'editor_id',
     ];
 
 
@@ -76,6 +75,19 @@ class PricesService extends Model
     public function service()
     {
         return $this->belongsTo(Service::class);
+    }
+
+    // Предок
+    public function ancestor()
+    {
+        return $this->belongsTo(PricesService::class);
+    }
+
+    // Последователь
+    public function follower()
+    {
+        return $this->hasOne(PricesService::class, 'ancestor_id')
+            ->where('archive', false);
     }
 
     // Общее отношение для товаров и услуг

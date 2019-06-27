@@ -168,6 +168,8 @@ class DepartmentController extends Controller
             $status = 'филиала';
         }
 
+        $department->code_map = $request->code_map;
+
         // Отображение на сайте
         $department->display = $request->display;
         $department->system_item = $request->system_item;
@@ -242,6 +244,8 @@ class DepartmentController extends Controller
 
         $status = isset($request->parent_id) ? 'отдела' : 'филиала';
         $department->parent_id = $request->parent_id;
+
+        $department->code_map = $request->code_map;
 
         // Отображение на сайте
         $department->display = $request->display;
@@ -329,5 +333,11 @@ class DepartmentController extends Controller
         ->pluck('name', 'id');
 
         echo json_encode($departments_list, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function ajax_get_filials_for_catalogs_service(Request $request)
+    {
+        $catalog_id = $request->catalog_id;
+        return view('products.processes.services.prices.filials', compact('catalog_id'));
     }
 }

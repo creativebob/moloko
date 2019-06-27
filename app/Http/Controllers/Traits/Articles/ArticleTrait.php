@@ -42,7 +42,7 @@ trait ArticleTrait
 
             case 'mode-add':
             $articles_group = ArticlesGroup::firstOrCreate([
-                'name' => $request->articles_group_name,
+                'name' => $request->group_name,
                 'unit_id' => $request->unit_id,
             ], [
                 'system_item' => $request->system_item ?? null,
@@ -56,34 +56,39 @@ trait ArticleTrait
             break;
 
             case 'mode-select':
-            $articles_group = ArticlesGroup::findOrFail($request->articles_group_id);
+            $articles_group = ArticlesGroup::findOrFail($request->group_id);
             break;
         }
 
         Log::channel('operations')
-            ->info('Режим создания: ' . $request->mode . '. Записали или нашли группу артикулов c id: ' . $articles_group->id . ', в зависимости от режима. Связали с категорией.');
+        ->info('Режим создания: ' . $request->mode . '. Записали или нашли группу артикулов c id: ' . $articles_group->id . ', в зависимости от режима. Связали с категорией.');
 
         $data = $request->input();
         // dd($data);
         $data['articles_group_id'] = $articles_group->id;
 
-        // Смотрим статичную категорию id 2 (Масса), если пришла она по переводим к выбранному коэффициенту
-        if ($data['units_category_id'] == 2) {
-            $unit = Unit::findOrFail($data['unit_id']);
-            $weight = $unit->ratio;
-            $data['unit_id'] = null;
-        } else {
-            // Если нет, то умножаем пришедший вес на количество чего либо
-            $extra_unit = Unit::findOrFail($data['extra_unit_id']);
-            $weight = $data['weight'] * $extra_unit->ratio;
-            $data['unit_id'] = $data['extra_unit_id'];
+        if (isset($data['units_category_id'])) {
+
+            // Смотрим статичную категорию id 2 (Масса), если пришла она по переводим к выбранному коэффициенту
+            if ( $data['units_category_id'] == 2) {
+                $unit = Unit::findOrFail($data['unit_id']);
+                $weight = $unit->ratio;
+                $data['unit_id'] = null;
+                $data['weight'] = $weight;
+            } else {
+                // Если нет, то умножаем пришедший вес на количество чего либо
+                $extra_unit = Unit::findOrFail($data['extra_unit_id']);
+                $weight = $data['weight'] * $extra_unit->ratio;
+                $data['unit_id'] = $data['extra_unit_id'];
+            }
+            // dd($weight);
+            $data['weight'] = $weight;
         }
-        // dd($weight);
-        $data['weight'] = $weight;
+
 
         $article = (new Article())->create($data);
         Log::channel('operations')
-            ->info('Записали артикул с id: ' . $article->id);
+        ->info('Записали артикул с id: ' . $article->id);
 
         return $article;
     }
@@ -135,8 +140,7 @@ trait ArticleTrait
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $article->update($data);
 
-                // Cохраняем / обновляем фото
-                savePhoto($request, $article);
+
 
                 return $article;
             }

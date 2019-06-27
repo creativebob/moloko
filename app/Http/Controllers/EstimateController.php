@@ -169,10 +169,10 @@ class EstimateController extends Controller
 
         if ($price_model == 'App\PricesService') {
             $estimates_item->load('product.process');
-            return view('leads.estimates_item_service', compact('estimates_item'));
+            return view('leads.estimate.estimates_item_service', compact('estimates_item'));
         } else {
             $estimates_item->load('product.article');
-            return view('leads.estimates_item_goods', compact('estimates_item'));
+            return view('leads.estimate.estimates_item_goods', compact('estimates_item'));
         }
     }
 
@@ -229,17 +229,17 @@ class EstimateController extends Controller
 
         if ($price_model == 'App\PricesService') {
             $estimates_item->load('product.process');
-            return view('leads.estimates_item_service', compact('estimates_item'));
+            return view('leads.estimate.estimates_item_service', compact('estimates_item'));
         } else {
             $estimates_item->load('product.article');
-            return view('leads.estimates_item_goods', compact('estimates_item'));
+            return view('leads.estimate.estimates_item_goods', compact('estimates_item'));
         }
 
-        
-        
+
+
         // $estimates_item->count->increment(1);
 
-        
+
     }
 
     public function ajax_delete(Request $request)
@@ -254,6 +254,6 @@ class EstimateController extends Controller
         // $estimates_item = EstimatesItem::findOrFail($request->id);
 
         return response()->json(EstimatesItem::destroy($request->id));
-        
+
     }
 }

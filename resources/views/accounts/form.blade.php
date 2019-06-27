@@ -25,12 +25,12 @@
                 <div class="small-12 medium-12 cell">
                     <div class="grid-x grid-padding-x">
 
+                        <div class="small-12 cell">
 
-                        <div class="small-12 medium-12 cell">
-                            <label>Рабочее название аккаунта
-                                @include('includes.inputs.string', ['name'=>'name', 'value'=>$account->name, 'required' => true])
-                            </label>
+                            @include('includes.selects.source_with_source_services', ['source_service' => $account->source_service])
+
                         </div>
+
                         <div class="small-12 medium-12 cell">
 
                             <label>Описание
@@ -38,14 +38,6 @@
                           </label>
 
                       </div>
-
-                      <div class="small-12 cell">
-
-                        @include('includes.selects.source_with_source_services', ['source_service' => $account->source_service])
-
-                    </div>
-
-
 
 
                     <div class="small-12 medium-6 cell">

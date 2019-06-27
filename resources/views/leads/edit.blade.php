@@ -67,6 +67,7 @@ if($lead->manager_id == 1){
 {{-- Модалка удаления с ajax --}}
 @include('includes.modals.modal-delete-ajax')
 @include('includes.modals.modal-add-claim', ['lead' => $lead])
+@include('leads.estimate.modal_estimate_item_delete')
 @endsection
 
 @section('scripts')
@@ -193,87 +194,11 @@ if($lead->manager_id == 1){
 		});
 	});
 
-	$(document).on('click', '.get-prices', function(event) {
-		// event.preventDefault();
 
-		var entity = $(this).attr('id').split('-')[0];
-		var id = $(this).attr('id').split('-')[1];
 
-		// alert(entity + ' ' + id);
 
-		$.post("/admin/" + entity + "/prices", {
-			id: id
-		}, function(html){
-			// alert(html);
-			$('#list-prices_services').html(html);
-		});
-	});
 
-	$(document).on('click', '.add-to-estimate', function(event) {
-		event.preventDefault();
 
-		var entity = $(this).attr('id').split('-')[0];
-		var id = $(this).attr('id').split('-')[1];
-		var serial = $(this).data('serial');
-
-		// alert(entity + ', id: ' + id + ', serial: ' + serial);
-
-		if (serial == 1) {
-			$.post("/admin/create_estimates_item", {
-				lead_id: lead_id,
-				id: id,
-				entity: entity
-			}, function(html){
-				$('#' + entity + '-section').append(html);
-
-				//$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
-			});
-		} else {
-
-			$.post("/admin/update_estimates_item", {
-				lead_id: lead_id,
-				id: id,
-				entity: entity
-			}, function(html) {
-				// alert(html);
-				// alert($('#prices_services-section [data-price=' + id +']').length);
-				if ($('#prices_services-section [data-price=' + id +']').length == 1) {
-					$('#prices_services-section [data-price="' + id +'"]').replaceWith(html);
-				} else {
-					$('#' + entity + '-section').append(html);
-				}
-			});
-		}
-	});
-
-	$(document).on('click', '.delete-button-ajax', function(event) {
-		event.preventDefault();
-
-		var entity = $(this).attr('id').split('-')[0];
-		var id = $(this).attr('id').split('-')[1];
-
-		var buttons = $('.button');
-		
-		$.ajax({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
-			url: '/admin/destroy_' + entity,
-			type: 'DELETE',
-			data: {
-				id: id
-			},
-			success: function (data) {
-                // alert(html);
-                
-                $('#' + entity + '-' + id).remove();
-                $('#item-delete-ajax').foundation('close');
-                $('.delete-button-ajax').removeAttr('id');
-                buttons.prop('disabled', false);
-            }
-        });
-		
-	});
 
 
 </script>

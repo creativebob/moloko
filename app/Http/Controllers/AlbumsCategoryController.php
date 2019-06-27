@@ -59,7 +59,7 @@ class AlbumsCategoryController extends Controller
                     'type' => $this->type,
                     'count' => $albums_categories->count(),
                     'id' => $request->id,
-                    'nested' => 'albums_count',
+                    // 'nested' => 'albums_count',
                 ]
             );
         }
@@ -73,7 +73,7 @@ class AlbumsCategoryController extends Controller
                 'class' => $this->model,
                 'type' => $this->type,
                 'id' => $request->id,
-                'nested' => 'albums_count',
+                // 'nested' => 'albums_count',
                 'filter' => setFilter($this->entity_alias, $request, [
                     'booklist'
                 ]),
@@ -172,18 +172,19 @@ class AlbumsCategoryController extends Controller
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $albums_category = $albums_categories_count = AlbumsCategory::with('childs', 'albums')->moderatorLimit($answer)->findOrFail($id);
+        $albums_category = $albums_categories_count = AlbumsCategory::with([
+            'childs',
+            'albums'
+        ])
+            ->moderatorLimit($answer)
+            ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);
 
-        // Скрываем бога
-        $albums_category->editor_id = hideGod($request->user());
-        $albums_category->save();
-
         $parent_id = $albums_category->parent_id;
 
-        $albums_category = AlbumsCategory::destroy($id);
+        $albums_category->delete();
 
         if ($albums_category) {
             // Переадресовываем на index
@@ -194,29 +195,5 @@ class AlbumsCategoryController extends Controller
                 'error_message' => 'Ошибка при удалении категории альбомов!'
             ];
         }
-    }
-
-    // Список категорий альбомов
-    public function albums_category_list(Request $request)
-    {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
-
-        // Главный запрос
-        $albums_categories = AlbumsCategory::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->get(['id','name','parent_id'])
-        ->keyBy('id')
-        ->toArray();
-
-        // Функция отрисовки списка со вложенностью и выбранным родителем (Отдаем: МАССИВ записей, Id родителя записи, параметр блокировки категорий (1 или null), запрет на отображенеи самого элемента в списке (его Id))
-        $albums_categories_list = get_select_tree($albums_categories, $request->parent, null, $request->id);
-
-        // Отдаем ajax
-        echo json_encode($albums_categories_list, JSON_UNESCAPED_UNICODE);
-        // dd($albums_categories_list);
     }
 }

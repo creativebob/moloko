@@ -23,7 +23,7 @@
 				</div>
 
 				<div id="mode" class="small-12 cell relative">
-					@include('tmc.create.mode_default')
+					@include('products.common.create.create_modes.mode_default')
 				</div>
 
 				<div class="small-12 cell">

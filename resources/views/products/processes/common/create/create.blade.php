@@ -1,5 +1,3 @@
-
-
 <div class="reveal" id="modal-create" data-reveal data-close-on-click="false">
 	<div class="grid-x">
 		<div class="small-12 cell modal-title">
@@ -23,7 +21,7 @@
 				</div>
 
 				<div id="mode" class="small-12 cell relative">
-					@include('processes.create.mode_default')
+					@include('products.common.create.create_modes.mode_default')
 				</div>
 
 				<div class="small-12 cell">

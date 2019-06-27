@@ -71,7 +71,7 @@
             var buttons = $('.button');
             var entity = $(this).attr('id').split('-')[0];
             var id = $(this).attr('id').split('-')[1];
-            
+
             $.post('/admin/archive_prices_service', {
                 id: id
             }, function (data) {
@@ -88,15 +88,18 @@
                     alert(data);
                 };
             });
-        });  
+        });
 
 
         // Получение пунктов выбранного каталога
         $(document).on('change', '#select-catalogs', function() {
+            getFilials();
+
             $.post('/admin/catalogs_services/' + $(this).val() + '/get_catalogs_services_items', function(html) {
                 $('#select-catalogs_items').html(html);
-                checkPrice();
             });
+
+            checkPrice();
         });
 
         $(document).on('change', '#select-catalogs_items', function() {
@@ -105,10 +108,23 @@
 
         checkPrice();
 
+        // Проверка блокировки кнопки добавленя прайса, если все филиалы в селекте заблокированы
+        function getFilials() {
+            var catalog_id = $('#select-catalogs').val();
+
+            $.post('/admin/ajax_get_filials_for_catalogs_service', {
+                catalog_id: catalog_id
+            }, function(html) {
+                $('#select-filials').html(html);
+            });
+        };
+
         // Блокировка филиалов в select
         function checkPrice() {
             var catalogs_item_id = $('#select-catalogs_items').val();
             var filial_id = $('#select-filials').val();
+
+            // alert(filial_id);
 
             // Снимаем всем филиалам блокировку
             $("#select-filials option").each(function(index) {
@@ -117,7 +133,12 @@
 
             // Ставим ее нужным
             $("#table-prices tr[data-catalogs_item_id=" + catalogs_item_id + "]").each(function(index) {
-                $('#select-filials option[value=' + $(this).data('filial_id') + ']').prop('disabled', true);
+                if (filial_id == '' || filial_id == null) {
+                    $('#select-filials option').prop('disabled', true);
+                } else {
+                    $('#select-filials option[value=' + $(this).data('filial_id') + ']').prop('disabled', true);
+                }
+
             });
 
             // Выделяем первый не заблокированный
@@ -133,6 +154,9 @@
 
             if (options_count > 0 && options_count == disabled_options_count) {
                 $('#button-store-prices_service').prop('disabled', true);
+
+            // } else if (options_count == 1 && $("#select-filials > option:first").val() == '') {
+
             } else {
                 $('#button-store-prices_service').prop('disabled', false);
             }
@@ -146,10 +170,12 @@
         $(document).on('click', '#button-store-prices_service', function(event) {
             event.preventDefault();
 
+            let catalog_id = $('#select-catalogs').val();
+
             if ($('#form-prices_service input[name=price]').val() == '') {
                 $('#form-prices_service .form-error').show();
             } else {
-                $.post('/admin/prices_service', $('#form-prices_service :input').serialize(), function(html) {
+                $.post('/admin/catalogs_services/' + catalog_id + ' /prices_services/ajax_store', $('#form-prices_service :input').serialize(), function(html) {
                     $('#table-prices').append(html);
                     checkPrice();
                 });
@@ -166,7 +192,7 @@
             $.get('/admin/catalogs_services/' + parent.data('catalog_id') + '/edit_prices_service', {
                 id: id,
             }, function(html) {
-                $('#table-prices .price').html(html);
+                $('#prices_service-' + id + ' .price').html(html);
             });
         });
 
@@ -193,6 +219,18 @@
                     }
                 });
             };
+        });
+
+        // При потере фокуса при редактировании возвращаем обратно
+        $(document).on('focusout', '#table-prices .price input[name=price]', function(event) {
+            event.preventDefault();
+
+            var parent = $(this).closest('.item');
+            var id = parent.attr('id').split('-')[1];
+
+            $.get('/admin/catalogs_services/' + parent.data('catalog_id')+ '/get_prices_service/' + id, function(html) {
+                 $('#prices_service-' + id + ' .price').html(html);
+            });
         });
     });
 

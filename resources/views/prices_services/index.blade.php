@@ -29,15 +29,18 @@
                 </h2>
 
                 @can('create', App\PricesService::class)
-
-                {{ link_to_route($page_info->alias.'.create', '', $parameters = ['catalog_id' => $catalog_id], $attributes = ['class' => 'icon-add sprite']) }}
-
+                <a class="icon-add sprite"></a>
                 @endcan
+
             </div>
             <div class="top-bar-right">
-                @if (isset($filter))
+                @isset($filter))
                 <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
-                @endif
+                @endisset
+
+                <label>Филиалы
+                    @include('prices_services.select_user_filials')
+                </label>
 
                 <input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />
 
@@ -52,7 +55,7 @@
         @include('includes.scripts.search-script')
 
         {{-- Блок фильтров --}}
-        @if (isset($filter))
+        @isset($filter))
 
         {{-- Подключаем класс Checkboxer --}}
         @include('includes.scripts.class.checkboxer')
@@ -85,7 +88,7 @@
             </div>
         </div>
 
-        @endif
+        @endisset
     </div>
 </div>
 @endsection
@@ -103,7 +106,7 @@
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
                     <th class="td-name" data-serversort="name">Название</th>
                     <th class="td-catalogs_item">Пункт каталога</th>
-                    <th class="td-sync">Синхронизация</th>
+                    <th class="td-price">Цена</th>
                     <th class="td-control"></th>
                     <th class="td-delete"></th>
                 </tr>
@@ -114,7 +117,7 @@
                 @if(isset($prices_services) && $prices_services->isNotEmpty())
                 @foreach($prices_services as $prices_service)
 
-                <tr class="item @if($prices_service->moderation == 1)no-moderation @endif" id="prices_services-{{ $prices_service->id }}" data-name="{{ $prices_service->name }}">
+                <tr class="item @if($prices_service->moderation == 1)no-moderation @endif" id="prices_services-{{ $prices_service->id }}" data-name="{{ $prices_service->catalogs_item->name }}">
                     <td class="td-drop">
                         <div class="sprite icon-drop"></div>
                     </td>
@@ -146,8 +149,12 @@
 
                     </td>
                     <td class="td-catalogs_item">{{ $prices_service->catalogs_item->name }}</td>
-                    <td class="td-sync">
-                        <div class="grid-x" id="sync-{{ $prices_service->id }}">
+                    <td class="td-price">
+                        @include('prices_services.price', ['some' => 'data'])
+
+
+
+                        {{-- <div class="grid-x" id="sync-{{ $prices_service->id }}">
 
                             @template ($prices_service)
 
@@ -166,7 +173,7 @@
 
                             @endtemplate
 
-                        </div>
+                        </div> --}}
 
 
                     </td>
@@ -176,7 +183,9 @@
 
                     <td class="td-delete">
 
-                        @include('includes.control.item_delete_table', ['item' => $prices_service])
+                        @can('delete', $prices_service)
+                        <a class="icon-delete sprite" data-open="delete-price"></a>
+                        @endcan
 
                     </td>
                 </tr>
@@ -197,11 +206,12 @@
         {{ $prices_services->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
     </div>
 </div>
+
+<div id="modals"></div>
 @endsection
 
 @section('modals')
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete')
+@include('includes.modals.modal_price_delete')
 @endsection
 
 @push('scripts')
@@ -218,28 +228,104 @@
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox-control')
 
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-script')
-
 <script>
 
-    $(document).on('click', '.button-sync', function(event) {
-        event.preventDefault();
+    var catalog_id = '{{ $catalog_id }}';
 
-        let item = $(this);
-        let id = item.closest('.item').attr('id').split('-')[1];
-        let price = item.closest('.item').find('.sync-price [name=price]').val();
-        // let entity_alias = item.closest('.item').attr('id').split('-')[0];
+    // При клике на создание открываем модалку синхронизации
+    $(document).on('click', '.icon-add', function(event) {
 
-        $.post('/admin/catalogs_services/{{ $catalog_id }}/prices_services_sync', {
-            id: id,
-            price: price
+        $.get('/admin/catalogs_services/' + catalog_id + '/prices_services/create', {
+            filial_id: $('#select-user_filials').val()
         }, function(html) {
-            // alert(html);
-            $('#sync-' + id).html(html);
-
+            $('#modals').html(html);
+            hidePrices();
+            $('#modal-sync-price').foundation().foundation('open');
         });
     });
+
+    function hidePrices() {
+        $('#table-prices tbody').each(function(index, el) {
+            $(this).hide();
+        });
+    };
+
+    $(document).on('click', '.item-catalog', function(event) {
+        // alert('kek');
+
+        hidePrices();
+        let id = $(this).attr('id');
+        $('#table-prices .' + id).show();
+    });
+
+    // Перезагружаем страницу при смене select'a филиалов для пользователя
+    $(document).on('change', '#select-user_filials', function(event) {
+        event.preventDefault();
+
+        let fillial_id = $('#select-user_filials').val();
+        let url = "prices_services?filial_id=" + fillial_id;
+        $(location).attr('href',url);
+    });
+
+    // При клике на цену подставляем инпут
+    $(document).on('click', '#content .td-price span', function(event) {
+        event.preventDefault();
+
+        var parent = $(this).closest('.item');
+        var id = parent.attr('id').split('-')[1];
+
+        $.get('/admin/catalogs_services/' + catalog_id + '/prices_services/' + id + '/edit', function(html) {
+            $('#prices_services-' + id + ' .td-price').html(html);
+        });
+    });
+
+    // При изменении цены ловим enter
+    $(document).on('keydown', '#content .td-price [name=price]', function(event) {
+
+        var parent = $(this).closest('.item');
+        var id = parent.attr('id').split('-')[1];
+
+        // если нажали Enter, то true
+        if ((event.keyCode == 13) && (event.shiftKey == false)) {
+            event.preventDefault();
+            // event.stopPropagation();
+            $.ajax({
+                url: '/admin/catalogs_services/' + catalog_id + '/prices_services/' + id,
+                type: "PATCH",
+                data: {
+                    price: $(this).val()
+                },
+                success: function(html){
+                    $('#prices_services-' + id + ' .td-price').html(html);
+                }
+            });
+        };
+    });
+
+    // При потере фокуса при редактировании возвращаем обратно
+    $(document).on('focusout', '.td-price input[name=price]', function(event) {
+        event.preventDefault();
+
+        var parent = $(this).closest('.item');
+        var id = parent.attr('id').split('-')[1];
+
+        $.get('/admin/catalogs_services/' + catalog_id + '/get_prices_service/' + id, function(html) {
+            $('#prices_services-' + id + ' .td-price').html(html);
+        });
+    });
+
+    // Удаление ajax
+    $(document).on('click', '[data-open="delete-price"]', function() {
+
+        // находим описание сущности, id и название удаляемого элемента в родителе
+        var parent = $(this).closest('.item');
+        var id = parent.attr('id').split('-')[1];
+        var name = parent.data('name');
+
+        $('.title-price').text(name);
+        $('#form-delete-price').attr('action', '/admin/catalogs_services/' + catalog_id + '/prices_services/' + id);
+    });
+
 
 </script>
 @endpush

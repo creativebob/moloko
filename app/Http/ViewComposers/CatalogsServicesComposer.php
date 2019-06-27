@@ -3,7 +3,6 @@
 namespace App\Http\ViewComposers;
 
 use App\CatalogsService;
-use App\Department;
 
 use Illuminate\View\View;
 
@@ -18,19 +17,11 @@ class CatalogsServicesComposer
         // Главный запрос
         $catalogs_services = CatalogsService::moderatorLimit($answer)
         ->companiesLimit($answer)
+        ->toBase()
         ->get();
         // dd($catalogs_services);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('departments', true, 'index');
-
-        // Главный запрос
-        $filials = Department::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->whereNull('parent_id')
-        ->get();
-
-        return $view->with(compact('catalogs_services', 'filials'));
+        return $view->with(compact('catalogs_services'));
     }
 
 }

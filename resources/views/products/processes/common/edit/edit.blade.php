@@ -161,7 +161,7 @@ $disabled = $process->draft == 0 ? true : null;
                                         {{ Form::file('photo') }}
                                     </label>
                                     <div class="text-center">
-                                        <img id="photo" src="{{ getPhotoPath($process) }}">
+                                        <img id="photo" src="{{ getPhotoPathPlugEntity($item) }}">
                                     </div>
                                 </div>
                             </div>
@@ -325,7 +325,8 @@ $disabled = $process->draft == 0 ? true : null;
 
 @section('modals')
 @include('includes.modals.modal_item_delete')
-@include('includes.modals.modal_price_delete')
+
+@includeIf($page_info->entity->view_path . '.modals')
 @endsection
 
 @push('scripts')

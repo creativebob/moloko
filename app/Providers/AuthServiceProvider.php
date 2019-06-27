@@ -59,21 +59,59 @@ use App\PhotoSetting;
 
 use App\Photo;
 
-use App\ServicesArticle;
+// Услуги
 use App\ServicesCategory;
-use App\ServicesProduct;
+use App\Policies\ServicesCategoryPolicy;
 use App\Service;
+use App\Policies\ServicePolicy;
+
 use App\PricesService;
+use App\Policies\PricesServicePolicy;
 
+// Рабочие процессы
+use App\WorkflowsCategory;
+use App\Policies\WorkflowsCategoryPolicy;
+use App\Workflow;
+use App\Policies\WorkflowPolicy;
+
+// use App\ServicesArticle;
+// use App\Policies\ServicesArticlePolicy;
+// use App\ServicesProduct;
+// use App\Policies\ServicesProductPolicy;
+
+
+// Расходные материалы
 use App\ExpendablesCategory;
+use App\Policies\ExpendablesCategoryPolicy;
 
-use App\Goods;
+
+// Товары
 use App\GoodsCategory;
-use App\GoodsProduct;
+use App\Policies\GoodsCategoryPolicy;
+use App\Goods;
+use App\Policies\GoodsPolicy;
 
-use App\Raw;
+// use App\GoodsProduct;
+// use App\Policies\GoodsProductPolicy;
+
+// Сырье
 use App\RawsCategory;
-use App\RawsProduct;
+use App\Policies\RawsCategoryPolicy;
+use App\Raw;
+use App\Policies\RawPolicy;
+
+// use App\RawsProduct;
+// use App\Policies\RawsProductPolicy;
+
+// Оборудование
+use App\EquipmentsCategory;
+use App\Policies\EquipmentsCategoryPolicy;
+use App\Equipment;
+use App\Policies\EquipmentPolicy;
+
+
+
+
 
 use App\Lead;
 use App\Note;
@@ -143,21 +181,9 @@ use App\Policies\PhotoSettingPolicy;
 
 use App\Policies\PhotoPolicy;
 
-use App\Policies\ServicePolicy;
-use App\Policies\ServicesCategoryPolicy;
-use App\Policies\ServicesProductPolicy;
-use App\Policies\ServicesArticlePolicy;
-use App\Policies\PricesServicePolicy;
 
-use App\Policies\ExpendablesCategoryPolicy;
 
-use App\Policies\GoodsPolicy;
-use App\Policies\GoodsCategoryPolicy;
-use App\Policies\GoodsProductPolicy;
 
-use App\Policies\RawPolicy;
-use App\Policies\RawsCategoryPolicy;
-use App\Policies\RawsProductPolicy;
 
 use App\Policies\LeadPolicy;
 use App\Policies\NotePolicy;
@@ -290,25 +316,33 @@ class AuthServiceProvider extends ServiceProvider
         // Услуги
         Service::class => ServicePolicy::class,
         ServicesCategory::class => ServicesCategoryPolicy::class,
-        ServicesProduct::class => ServicesProductPolicy::class,
-        ServicesArticle::class => ServicesArticlePolicy::class,
 
         PricesService::class => PricesServicePolicy::class,
 
-        'App\WorkflowsCategory' => 'App\Policies\WorkflowsCategoryPolicy',
-        'App\Workflow' => 'App\Policies\WorkflowPolicy',
+        // Рабочие процессы
+        WorkflowsCategory::class => WorkflowsCategoryPolicy::class,
+        Workflow::class => WorkflowPolicy::class,
 
-        ExpendablesCategory::class => ExpendablesCategoryPolicy::class,
 
+
+        // Товары
         Goods::class => GoodsPolicy::class,
         GoodsCategory::class => GoodsCategoryPolicy::class,
-        GoodsProduct::class => GoodsProductPolicy::class,
+
+        // Сырье
         Raw::class => RawPolicy::class,
         RawsCategory::class => RawsCategoryPolicy::class,
-        RawsProduct::class => RawsProductPolicy::class,
 
+        // Оборудование
+        Equipment::class => EquipmentPolicy::class,
+        EquipmentsCategory::class => EquipmentsCategoryPolicy::class,
+
+        // Помещения
         RoomCategory::class => RoomCategoryPolicy::class,
         Room::class => RoomPolicy::class,
+
+        // Расходные материалы
+        ExpendablesCategory::class => ExpendablesCategoryPolicy::class,
 
         Stock::class => StockPolicy::class,
 

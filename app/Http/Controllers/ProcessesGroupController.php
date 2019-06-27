@@ -203,10 +203,10 @@ class ProcessesGroupController extends Controller
         ->findOrFail($request->category_id);
         // dd($category);
 
-        $processes_groups = $category->groups;
-        // dd($processes_groups);
+        $groups = $category->groups;
+        // dd($groups);
 
-        return view('procucts.processes.common.create.mode_select', compact('processes_groups'));
+        return view('products.common.create.create_modes.mode_select', compact('groups'));
 
 
         // if ($category->groups_count > 0) {

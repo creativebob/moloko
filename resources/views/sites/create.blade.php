@@ -22,11 +22,7 @@
 
 @endsection
 
-@section('scripts')
-@include('includes.scripts.inputs-mask')
-@include('includes.scripts.check')
-@include('sites.scripts')
-@endsection
+
 
 
 

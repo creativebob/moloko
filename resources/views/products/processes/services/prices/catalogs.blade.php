@@ -15,7 +15,8 @@
 	</div>
 	<div class="medium-3 cell">
 		<label>Филиал
-			{!! Form::select('filial_id', $filials->pluck('name', 'id'), null, ['id' => 'select-filials']) !!}
+            @include ('products.processes.services.prices.filials', ['catalog_id' => $catalogs_services->first()->id])
+			{{-- {!! Form::select('filial_id', $filials->pluck('name', 'id'), null, ['id' => 'select-filials']) !!} --}}
 		</label>
 	</div>
 	<div class="medium-3 cell">

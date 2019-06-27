@@ -1,5 +1,7 @@
 <?php
 
+use Unisharp\Ckeditor\ServiceProvider;
+
 return [
 
     /*
@@ -170,11 +172,10 @@ return [
 
         // Те, что подключаем сами, ручками )))
         Collective\Html\HtmlServiceProvider::class,
+        Unisharp\Ckeditor\ServiceProvider::class,
 
         // Intervention\Image\ImageServiceProvider::class,
         // ElForastero\Transliterate\TransliterationServiceProvider::class,
-
-
 
         /*
          * Package Service Providers...
@@ -188,9 +189,6 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Unisharp\Ckeditor\ServiceProvider::class,
-        // Maatwebsite\Excel\ExcelServiceProvider::class,
-        Telegram\Bot\Laravel\TelegramServiceProvider::class,
 
         App\Providers\ComposerServiceProvider::class,
         App\Providers\ObserverServiceProvider::class,

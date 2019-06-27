@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->page_description }}" />
+<meta name="description" content="{{ $page_info->description }}" />
 {{-- Скрипты таблиц в шапке --}}
 @include('includes.scripts.tablesorter-inhead')
 @endsection
@@ -67,7 +67,7 @@
                     </td>
                     <td class="td-photo">
                         <a href="/admin/{{ $entity }}/{{ $item->id }}/edit">
-                            <img src="{{ getPhotoPath($item->article, 'small') }}" alt="{{ isset($item->article->photo_id) ? $item->article->name : 'Нет фото' }}">
+                            <img src="{{ getPhotoPathPlugEntity($item, 'small') }}" alt="{{ isset($item->article->photo_id) ? $item->article->name : 'Нет фото' }}">
                         </a>
                     </td>
                     <td class="td-name">
@@ -143,6 +143,11 @@
 @include('includes.scripts.modal-archive-script')
 
 @include('includes.scripts.inputs-mask')
-@include('tmc.create.scripts', ['entity' => $entity, 'category_entity' => $category_entity])
+@include('products.common.create.scripts', [
+    'entity' => $entity,
+    'category_entity' => $category_entity,
+    'group_entity' => 'articles_groups'
+]
+)
 
 @endsection

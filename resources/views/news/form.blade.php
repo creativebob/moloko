@@ -3,8 +3,9 @@
 
         <!-- Страница -->
         <label>Название новости
-            @include('includes.inputs.string', ['name'=>'name', 'value' => $cur_news->name, 'required' => true])
+            @include('includes.inputs.name')
         </label>
+
         <div class="grid-x grid-padding-x">
             <div class="small-6 cell">
                 <label>Начало публикации
@@ -27,26 +28,12 @@
             </div>
         </div>
 
-        <label>Заголовок новости
-            @include('includes.inputs.string', ['name' => 'title', 'value'=>$cur_news->title, 'required' => true])
-        </label>
 
         <label>Превью новости
             @include('includes.inputs.textarea', ['name' => 'preview', 'value'=>$cur_news->preview])
         </label>
 
-        <div class="grid-x grid-padding-x">
-            <div class="small-6 cell">
-                <label>Рубрика
-                    @include('news.rubricators.select_rubricators')
-                </label>
-            </div>
-            <div class="small-6 cell">
-                <label>Пункт рубрики
-                    @include('news.rubricators.select_rubricators_items', ['rubricator_id' => $cur_news->rubricator_id, 'rubricators_item_id' => $cur_news->rubricators_item_id])
-                </label>
-            </div>
-        </div>
+        @include('news.rubricators.rubricators')
 
         <label>Выберите фото для превью
             {{ Form::file('photo') }}
@@ -56,11 +43,11 @@
             <img id="photo" src="{{ getPhotoPath($cur_news) }}">
         </div>
 
-        <label>Алиас новости
-            @include('includes.inputs.varchar', ['name'=>'alias', 'value'=>$cur_news->alias])
+        {{--<label>Слаг
+            @include('includes.inputs.varchar', ['name' => 'slug'])
             <div class="sprite-input-right find-status" id="name-check"></div>
             <div class="item-error">Такая новость уже существует!</div>
-        </label>
+        </label>--}}
 
         {{-- @isset($cur_news->alias)
         <a class="button" href="https://{{ $cur_news->site->domain }}/news/{{ $cur_news->alias }}" target="_blank">Просмотр новости</a>
@@ -72,31 +59,12 @@
     <div class="small-12 medium-5 large-7 cell">
 
         <label>Контент:
-            {{ Form::textarea('content', $cur_news->сontent, ['id'=>'content-ckeditor']) }}
+            {{ Form::textarea('content', null, ['id' => 'content-ckeditor']) }}
         </label>
 
-        <table class="content-table tabs-margin-top">
-            <caption>Прикрепленные альбомы</caption>
-            <thead>
-                <tr>
-                    <th>Альбом</th>
-                    <th>Категория</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="table-albums">
-                @if (isset($cur_news->albums))
-                @foreach ($cur_news->albums as $album)
-                @include('news.album', $album)
-                @endforeach
-                @endif
-            </tbody>
-        </table>
+        @include('news.albums.table_albums')
 
-        <div class="text-center">
-            <a class="button tabs-margin-top" data-open="album-add">Прикрепить альбом</a>
-        </div>
-
+        {{-- Привязка к городам через сайт --}}
         @isset ($site->departments)
         <div class="grid-x">
             <div class="small-12 medium-6 cell">
@@ -113,8 +81,6 @@
                 <div class="dropdown-pane checkboxer-pane hover" data-position="bottom" data-alignment="left" id="dropdown-city" data-dropdown data-auto-focus="true" data-close-on-click="true" data-h-offset="-17" data-v-offset="2">
 
                     <ul class="checkbox">
-
-
 
                         @foreach ($site->departments as $department)
                         <li>
@@ -140,5 +106,19 @@
 </div>
 
 
+@section('modals')
+<section id="modal"></section>
+{{-- Модалка удаления с ajax --}}
+@include('includes.modals.modal-delete-ajax')
+@endsection
 
+@push('scripts')
+@include('includes.scripts.ckeditor')
+@include('includes.scripts.inputs-mask')
+@include('includes.scripts.pickmeup-script')
+@include('includes.scripts.upload-file')
 
+@include('news.scripts')
+
+@include('includes.scripts.delete-from-page-script')
+@endpush

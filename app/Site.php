@@ -53,25 +53,37 @@ class Site extends Model
     // Компания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
 
     // Страницы
     public function pages()
     {
-        return $this->hasMany('App\Page');
+        return $this->hasMany(Page::class);
     }
 
     // Навигации
     public function navigations()
     {
-        return $this->hasMany('App\Navigation');
+        return $this->hasMany(Navigation::class);
+    }
+
+    // Плагины
+    public function plugins()
+    {
+        return $this->hasMany(Plugin::class);
+    }
+
+    // Филиалы
+    public function filials()
+    {
+        return $this->belongsToMany(Department::class, 'filial_site', 'site_id', 'filial_id');
     }
 
     // Каталоги

@@ -58,9 +58,9 @@
     // Значение поля с разрешением
     var db = '#check';
     // Выполняем запрос
-    clearTimeout(timerId);   
+    clearTimeout(timerId);
     timerId = setTimeout(function() {
       dbCheck (domen, submit, db);
-    }, time); 
+    }, time);
   });
 </script>

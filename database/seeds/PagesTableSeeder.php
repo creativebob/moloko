@@ -434,6 +434,30 @@ class PagesTableSeeder extends Seeder
                 'display' => 1,
             ],
 
+            // Оборудование
+            [
+                'name' => 'Категории оборудования',
+                'site_id' => 1,
+                'title' => 'Категории оборудования',
+                'description' => 'Категории оборудования',
+                'alias' => 'equipments_categories',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
+            [
+                'name' => 'Оборудование',
+                'site_id' => 1,
+                'title' => 'Оборудование',
+                'description' => 'Оборудование',
+                'alias' => 'equipments',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
+
             // Помещения
             [
                 'name' => 'Категории помещений',

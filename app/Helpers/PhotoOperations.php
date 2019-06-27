@@ -93,6 +93,13 @@ function save_photo($request, $directory, $name, $album_id = null, $id = null, $
 
     return $result;
 }
+/**
+ * Define an inverse one-to-one or many relationship.
+ *
+ * @param  $request
+ * @param  $item
+ * @return variable
+ */
 
 // Сохраняем / обновляем фотографию
 function savePhoto($request, $item) {
@@ -124,7 +131,7 @@ function savePhoto($request, $item) {
 
         $directory = $item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
 
-        if ($item->photo_id) {
+        if (isset($item->photo_id)) {
             $photo = Photo::findOrFail($item->photo_id);
 
             if ($photo) {
@@ -170,8 +177,9 @@ function savePhoto($request, $item) {
             $folder->save(storage_path('app/public/'.$directory.'/'.$value.'/'.$image_name));
         }
 
-        $item->photo_id = $photo->id;
-        $item->save();
+        // $item->photo_id = $photo->id;
+        // $item->save();
+        return $photo->id;
     }
 }
 

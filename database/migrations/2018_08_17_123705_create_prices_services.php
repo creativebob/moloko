@@ -25,10 +25,13 @@ class CreatePricesServices extends Migration
             $table->bigInteger('service_id')->nullable()->unsigned()->comment('Id услуги');
             $table->foreign('service_id')->references('id')->on('services');
 
-            $table->integer('price')->nullable()->comment('Цена');
-
             $table->bigInteger('filial_id')->nullable()->unsigned()->comment('Id филиала');
             $table->foreign('filial_id')->references('id')->on('departments');
+
+            $table->bigInteger('ancestor_id')->nullable()->unsigned()->comment('Предок');
+            $table->foreign('ancestor_id')->references('id')->on('prices_services');
+
+            $table->integer('price')->nullable()->comment('Цена');
 
             $table->boolean('archive')->default(0)->unsigned()->comment('Архив');
 

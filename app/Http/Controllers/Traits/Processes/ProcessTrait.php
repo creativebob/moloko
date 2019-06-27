@@ -44,7 +44,7 @@ trait ProcessTrait
 
             case 'mode-add':
             $processes_group = ProcessesGroup::firstOrCreate([
-                'name' => $request->processes_group_name,
+                'name' => $request->group_name,
                 'unit_id' => $request->unit_id,
             ], [
                 'system_item' => $request->system_item ?? null,
@@ -58,7 +58,7 @@ trait ProcessTrait
             break;
 
             case 'mode-select':
-            $processes_group = ProcessesGroup::findOrFail($request->processes_group_id);
+            $processes_group = ProcessesGroup::findOrFail($request->group_id);
             break;
         }
 
@@ -139,8 +139,6 @@ trait ProcessTrait
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $process->update($data);
 
-                // Cохраняем / обновляем фото
-                savePhoto($request, $process);
 
                 return $process;
             }
