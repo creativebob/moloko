@@ -901,12 +901,14 @@ Route::get('/updatebooklist', 'BooklistController@setbooklist')->middleware('aut
 
 Route::any('(:any)', 'SiteController@kek');
 // ----------------------------------------- Сайты ----------------------------------------------
-Route::resource('/sites', 'SiteController')->middleware('auth');
+Route::resource('/sites', 'SiteController');
 // Route::get('/sites/{id}/sections', 'SiteController@sections')->middleware('auth')->name('sites.sections');
 // Проверка на существование домена сайта
-Route::post('/site_check', 'SiteController@ajax_check')->middleware('auth');
+Route::post('/site_check', 'SiteController@ajax_check');
 
-
+// ----------------------------------------- Плагины ----------------------------------------------
+Route::resource('/plugins', 'PluginController');
+Route::delete('/plugins/{id}/ajax_delete', 'PluginController@ajax_destroy');
 
 
 // Разделы сайта
@@ -1017,9 +1019,11 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
 
     // Основные методы
     Route::resource('catalogs_services_items', 'CatalogsServicesItemController');
+    Route::delete('prices_services/{id}', 'PricesServiceController@archive');
 
     Route::post('get_catalogs_services_items', 'CatalogsServicesItemController@ajax_get');
 
+    Route::any('get_prices_service/{id}', 'PricesServiceController@ajax_get');
     Route::any('edit_prices_service', 'PricesServiceController@ajax_edit');
     Route::any('update_prices_service', 'PricesServiceController@ajax_update');
 

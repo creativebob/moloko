@@ -98,11 +98,20 @@ class SiteController extends Controller
         $site = (new Site())->create($data);
 
         if ($site) {
-
-            return redirect()->route('sites.index');
+            return redirect()
+                ->route('sites.edit', [$site->id])
+                ->with(['success' => 'Успешно сохранено']);
         } else {
-            abort(403, 'Ошибка записи сайта');
+            return back()
+                ->withErrors(['msg' => 'Ошибка сохранения'])
+                ->withInput();
         }
+
+//        if ($site) {
+//            return redirect()->route('sites.index');
+//        } else {
+//            abort(403, 'Ошибка записи сайта');
+//        }
     }
 
     public function show(Request $request, $id)
@@ -125,7 +134,7 @@ class SiteController extends Controller
         ]);
     }
 
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -137,6 +146,8 @@ class SiteController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $site);
+
+        $site->load('plugins');
 
         return view('sites.edit', [
             'site' => $site,
@@ -159,15 +170,24 @@ class SiteController extends Controller
         $data = $request->input();
         $result = $site->update($data);
 
-        if ($site) {
-
-            return redirect()->route('sites.index');
+        if ($result) {
+            return redirect()
+                ->route('sites.edit', $site->id)
+                ->with(['success' => 'Успешно сохранено']);
         } else {
-            abort(403, 'Ошибка обновления сайта');
+            return back()
+                ->withErrors(['msg' => 'Ошибка сохранения'])
+                ->withInput();
         }
+
+//        if ($result) {
+//            return redirect()->route('sites.index');
+//        } else {
+//            abort(403, 'Ошибка обновления сайта');
+//        }
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)

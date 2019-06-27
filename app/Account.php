@@ -53,22 +53,28 @@ class Account extends Model
         'appends',
     ];
 
+    // Склеиваем имя
+    public function getNameAttribute($value) {
+        $value = $this->source_service->source->name . '-' . $value = $this->source_service->name;
+        return $value;
+    }
+
     // Получаем компанию.
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
     // Получаем автора
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo(User::class);
     }
 
     // Получаем источник (сервис)
     public function source_service()
     {
-        return $this->belongsTo('App\SourceService');
+        return $this->belongsTo(SourceService::class);
     }
 
 }

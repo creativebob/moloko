@@ -74,6 +74,12 @@ class Site extends Model
         return $this->hasMany(Navigation::class);
     }
 
+    // Плагины
+    public function plugins()
+    {
+        return $this->hasMany(Plugin::class);
+    }
+
     // Филиалы
     public function filials()
     {

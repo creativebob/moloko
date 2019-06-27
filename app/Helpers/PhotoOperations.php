@@ -93,6 +93,13 @@ function save_photo($request, $directory, $name, $album_id = null, $id = null, $
 
     return $result;
 }
+/**
+ * Define an inverse one-to-one or many relationship.
+ *
+ * @param  $request
+ * @param  $item
+ * @return variable
+ */
 
 // Сохраняем / обновляем фотографию
 function savePhoto($request, $item) {

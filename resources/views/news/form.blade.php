@@ -43,11 +43,11 @@
             <img id="photo" src="{{ getPhotoPath($cur_news) }}">
         </div>
 
-        <label>Слаг
+        {{--<label>Слаг
             @include('includes.inputs.varchar', ['name' => 'slug'])
             <div class="sprite-input-right find-status" id="name-check"></div>
             <div class="item-error">Такая новость уже существует!</div>
-        </label>
+        </label>--}}
 
         {{-- @isset($cur_news->alias)
         <a class="button" href="https://{{ $cur_news->site->domain }}/news/{{ $cur_news->alias }}" target="_blank">Просмотр новости</a>

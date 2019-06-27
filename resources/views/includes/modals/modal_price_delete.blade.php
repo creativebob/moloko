@@ -12,7 +12,10 @@
     </div>
     <div class="grid-x align-center grid-padding-x">
         <div class="small-6 medium-4 cell">
+            {{ Form::open(['id' => 'form-delete-price']) }}
+            @method('DELETE')
             <button data-close class="button modal-button price-delete-button" type="submit">Удалить</button>
+            {{ Form::close() }}
         </div>
         <div class="small-6 medium-4 cell">
             <button data-close class="button modal-button" id="save-button" type="submit">Отменить</button>

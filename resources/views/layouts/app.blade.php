@@ -182,8 +182,44 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
 
         {{-- Основной контент --}}
         <div id="wrapper">
+
+            <div class="grid-x breadcrumbs block-refresh">
+                <div class="small-12 medium-9 cell">
+                    {{-- Breadcrumbs --}}
+                    @yield('breadcrumbs')
+                </div>
+                <div class="small-12 medium-3 cell text-right" id="extra-panel">
+
+                    {{-- Planfact --}}
+                    @yield('planfact')
+
+                    {{-- Exсel --}}
+                    @yield('exсel')
+
+                </div>
+            </div>
+
             <div class="grid-x">
+
+
+
+                <div class="small-12 cell">
+                @if (session('success'))
+
+                            <div class="alert alert-success" role="alert">
+                                <div class="alert callout" data-closable>
+                                {{ session()->get('success') }}
+                                <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                            </div>
+
+                @endif
+                </div>
+
                 <div class="small-12 cell errors">
+
                     {{-- Блок ошибок --}}
                     @if ($errors->any())
                     <div class="alert callout" data-closable>
@@ -200,21 +236,8 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                     @endif
                 </div>
             </div>
-            <div class="grid-x breadcrumbs block-refresh">
-                <div class="small-12 medium-9 cell">
-                    {{-- Breadcrumbs --}}
-                    @yield('breadcrumbs')
-                </div>
-                <div class="small-12 medium-3 cell text-right" id="extra-panel">
 
-                    {{-- Planfact --}}
-                    @yield('planfact')
 
-                    {{-- Exсel --}}
-                    @yield('exсel')
-
-                </div>
-            </div>
 
 
             <div class="grid-x">

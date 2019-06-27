@@ -220,6 +220,18 @@
                 });
             };
         });
+
+        // При потере фокуса при редактировании возвращаем обратно
+        $(document).on('focusout', '#table-prices .price input[name=price]', function(event) {
+            event.preventDefault();
+
+            var parent = $(this).closest('.item');
+            var id = parent.attr('id').split('-')[1];
+
+            $.get('/admin/catalogs_services/' + parent.data('catalog_id')+ '/get_prices_service/' + id, function(html) {
+                 $('#prices_service-' + id + ' .price').html(html);
+            });
+        });
     });
 
 

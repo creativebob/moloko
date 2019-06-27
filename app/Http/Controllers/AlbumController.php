@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Album;
-use App\Photo;
 use App\AlbumMedia;
+use App\Photo;
 use App\User;
 use App\List_item;
 use App\Booklist;
@@ -43,6 +43,7 @@ class AlbumController extends Controller
     public function index(Request $request)
     {
 
+        $storage = Str::slug('ker');
         // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_alias);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};

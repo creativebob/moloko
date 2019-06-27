@@ -4,12 +4,12 @@
             <li class="tabs-title is-active">
                 <a href="#options" aria-selected="true">Общая информация</a>
             </li>
+
+            @if($site->exists)
             <li class="tabs-title">
                 <a data-tabs-target="plugins" href="#plugins">Плагины</a>
             </li>
-
-            {{-- Табы для сущности --}}
-            @includeIf($page_info->entity->view_path . '.tabs')
+@endif
 
         </ul>
     </div>
@@ -58,15 +58,32 @@
                 </div>
             </div>
 
+            @if($site->exists)
             <div class="tabs-panel" id="plugins">
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-5 cell">
-                        кек
+                        <a class="button" id="button-create-plugin">Добавить плагин</a>
+
+                        <table id="table-plugins">
+                            <thead>
+                            <tr>
+                                <th>Аккаунт</th>
+                                <th>Действия</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            @forelse($site->plugins as $plugin)
+                            @include('sites.plugins.plugin')
+                                @empty
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-
+            @endif
         </div>
     </div>
 </div>
@@ -77,6 +94,5 @@
 @include('includes.scripts.check', ['entity' => 'sites'])
 
 @include('sites.scripts')
-{{-- <script type="text/javascript" src="/crm/js/vendor/what-input.js"></script> --}}
 @endpush
 

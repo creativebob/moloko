@@ -211,9 +211,6 @@
 @endsection
 
 @section('modals')
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete')
-
 @include('includes.modals.modal_price_delete')
 @endsection
 
@@ -230,9 +227,6 @@
 
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox-control')
-
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-script')
 
 <script>
 
@@ -262,11 +256,6 @@
         hidePrices();
         let id = $(this).attr('id');
         $('#table-prices .' + id).show();
-    });
-
-    // Закрытие модалки
-    $(document).on('click', '.icon-close-modal', function(event) {
-        $(this).closest('.reveal-overlay').remove();
     });
 
     // Перезагружаем страницу при смене select'a филиалов для пользователя
@@ -313,65 +302,30 @@
         };
     });
 
-    // МУдаление ajax
+    // При потере фокуса при редактировании возвращаем обратно
+    $(document).on('focusout', '.td-price input[name=price]', function(event) {
+        event.preventDefault();
+
+        var parent = $(this).closest('.item');
+        var id = parent.attr('id').split('-')[1];
+
+        $.get('/admin/catalogs_services/' + catalog_id + '/get_prices_service/' + id, function(html) {
+            $('#prices_services-' + id + ' .td-price').html(html);
+        });
+    });
+
+    // Удаление ajax
     $(document).on('click', '[data-open="delete-price"]', function() {
 
         // находим описание сущности, id и название удаляемого элемента в родителе
         var parent = $(this).closest('.item');
-        var entity = parent.attr('id').split('-')[0];
         var id = parent.attr('id').split('-')[1];
         var name = parent.data('name');
+
         $('.title-price').text(name);
-        $('.price-delete-button').attr('id', entity + '-' + id);
+        $('#form-delete-price').attr('action', '/admin/catalogs_services/' + catalog_id + '/prices_services/' + id);
     });
 
-    // Клик по кнопке удаления
-    $(document).on('click', '.price-delete-button', function(event) {
-        event.preventDefault();
-
-        var buttons = $('.button');
-        var entity = $(this).attr('id').split('-')[0];
-        var id = $(this).attr('id').split('-')[1];
-
-        $.post('/admin/catalogs_services/' + catalog_id + '/prices_services/' + id + '/archive', {
-            id: id
-        }, function (data) {
-            if (data == true) {
-
-                $('#prices_services-' + id).remove();
-                // $('#item-delete-ajax').foundation('close');
-                $('.delete-button').removeAttr('id');
-                buttons.prop('disabled', false);
-
-            } else {
-                // Выводим ошибку на страницу
-                alert(data);
-            };
-        });
-
-        // let count = $('#content tbody tr').length;
-        // alert(count);
-        // $('.content-count').text(count);
-    });
-
-
-    // $(document).on('click', '.button-sync', function(event) {
-    //     event.preventDefault();
-
-    //     let item = $(this);
-    //     let id = item.closest('.item').attr('id').split('-')[1];
-    //     let price = item.closest('.item').find('.sync-price [name=price]').val();
-    //     // let entity_alias = item.closest('.item').attr('id').split('-')[0];
-
-    //     $.post('/admin/catalogs_services/{{ $catalog_id }}/prices_services_sync', {
-    //         id: id,
-    //         price: price
-    //     }, function(html) {
-    //         // alert(html);
-    //         $('#sync-' + id).html(html);
-
-    //     });
-    // });
 
 </script>
 @endpush

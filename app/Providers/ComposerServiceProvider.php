@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\ViewComposers\AccountsComposer;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -181,6 +182,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.lists.sites', SitesComposer::class);
         view()->composer('includes.lists.site_menus', SiteMenusComposer::class);
+        view()->composer('sites.plugins.modal', AccountsComposer::class);
 
 
         // Страницы сайта
