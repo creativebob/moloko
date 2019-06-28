@@ -7,24 +7,8 @@ use App\User;
 use App\Lead;
 use App\LeadMethod;
 use App\LeadType;
-use App\Stage;
-use App\Choice;
-use App\Position;
-use App\Staffer;
-use App\RoleUser;
-use App\List_item;
-use App\Photo;
-use App\Location;
-use App\Booklist;
-use App\Role;
-use App\Country;
-use App\Source;
-use App\Medium;
-use App\Campaign;
 use App\Note;
 use App\Challenge;
-use App\Staff;
-use App\Phone;
 
 use App\GoodsCategory;
 use App\ServicesCategory;
@@ -32,32 +16,18 @@ use App\RawsCategory;
 
 use App\CatalogsService;
 
-use App\PhotoSetting;
-
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\LeadRequest;
 use App\Http\Requests\MyStageRequest;
 
-// Политики
-use App\Policies\LeadPolicy;
-
-// Общие классы
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cookie;
 
 // Специфические классы
-use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManagerStatic as Image;
-use Carbon\Carbon;
 
-// use App\Events\onAddLeadEvent;
-// use Event;
+use Carbon\Carbon;
 
 // На удаление
 use App\Http\Controllers\Session;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
 // Подрубаем трейт записи и обновления компании
 use App\Http\Controllers\Traits\UserControllerTrait;
@@ -290,7 +260,9 @@ class LeadController extends Controller
         $catalog_service = $catalogs_services->first();
         // dd($catalog_service);
 
-        return view('leads.edit', compact('lead', 'page_info', 'list_challenges', 'lead_methods_list', 'choices', 'catalog_service'));
+        $filial_id = $request->user()->filial_id;
+
+        return view('leads.edit', compact('lead', 'page_info', 'list_challenges', 'lead_methods_list', 'choices', 'catalog_service', 'filial_id'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
