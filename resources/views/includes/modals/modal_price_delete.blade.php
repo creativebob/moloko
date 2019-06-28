@@ -14,7 +14,7 @@
         <div class="small-6 medium-4 cell">
             {{ Form::open(['id' => 'form-delete-price']) }}
             @method('DELETE')
-            <button data-close class="button modal-button price-delete-button" type="submit">Удалить</button>
+            <button data-close class="button modal-button button-delete-price" type="submit">Удалить</button>
             {{ Form::close() }}
         </div>
         <div class="small-6 medium-4 cell">

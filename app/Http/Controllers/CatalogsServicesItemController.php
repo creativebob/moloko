@@ -348,7 +348,17 @@ class CatalogsServicesItemController extends Controller
 
     public function get_prices(Request $request)
     {
-        $catalogs_services_item = CatalogsServicesItem::with(['prices_services.service'])
+        $catalogs_services_item = CatalogsServicesItem::with([
+            'prices_services' => function ($q) {
+                $q->where('archive', false)
+                ->whereHas('service', function ($q) {
+                    $q->where('archive', false)
+                        ->whereHas('process', function ($q) {
+                            $q->where('draft', false);
+                        });
+                    });
+                }
+            ])
         ->findOrFail($request->id);
         // dd($catalogs_services_item);
 

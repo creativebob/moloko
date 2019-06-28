@@ -311,23 +311,23 @@ class PricesServiceController extends Controller
     public function ajax_update(Request $request, $catalog_id)
     {
 
-        $price = PricesService::findOrFail($request->id);
+        $prices_service = PricesService::findOrFail($request->id);
 
-        if ($price->price == $request->price) {
-            return view('products.processes.services.prices.catalogs_item_price', ['price' => $price->price]);
+        if ($prices_service->price == $request->price) {
+            return view('products.processes.services.prices.price', ['prices_service' => $prices_service]);
         } else {
-            $new_price = $price->replicate();
+            $new_prices_service = $prices_service->replicate();
 
-            $price->update([
+            $prices_service->update([
                 'archive' => true,
             ]);
             // dd($new_price);
 
-            $new_price->price = $request->price;
-            $new_price->save();
+            $new_prices_service->price = $request->price;
+            $new_prices_service->save();
 
             // dd($price);
-            return view('products.processes.services.prices.catalogs_item_price', ['price' => $new_price->price]);
+            return view('products.processes.services.prices.price', ['prices_service' => $new_prices_service]);
         }
     }
 
