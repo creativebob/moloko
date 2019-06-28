@@ -163,23 +163,24 @@ class PricesServiceController extends Controller
      */
     public function update(Request $request, $catalog_id, $id)
     {
-        $price = PricesService::findOrFail($id);
+        $prices_service = PricesService::findOrFail($id);
+        $price = $request->price;
 
-        if ($price->price == $request->price) {
-            return view('prices_services.price', ['prices_service' => $price]);
+        if ($prices_service->price == $price) {
+            return view('prices_services.price', ['prices_service' => $prices_service]);
         } else {
-            $new_price = $price->replicate();
+            $new_prices_service = $prices_service->replicate();
 
-            $price->update([
+            $prices_service->update([
                 'archive' => true,
             ]);
             // dd($new_price);
 
-            $new_price->price = $request->price;
-            $new_price->save();
+            $new_prices_service->price = $price;
+            $new_prices_service->save();
 
             // dd($price);
-            return view('prices_services.price', ['prices_service' => $new_price]);
+            return view('prices_services.price', ['prices_service' => $new_prices_service]);
         }
     }
 
