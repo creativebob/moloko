@@ -141,7 +141,7 @@ class EquipmentController extends Controller
             // Описание ошибки
             $ajax_error = [];
             $ajax_error['title'] = "Обратите внимание!";
-            $ajax_error['text'] = "Для начала необходимо создать категории сырья. А уже потом будем добавлять сырье. Ок?";
+            $ajax_error['text'] = "Для начала необходимо создать категории оборудования. А уже потом будем добавлять оборудование. Ок?";
             $ajax_error['link'] = "/admin/equipments_categories";
             $ajax_error['title_link'] = "Идем в раздел категорий";
 
