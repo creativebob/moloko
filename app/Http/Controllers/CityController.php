@@ -333,13 +333,16 @@ class CityController extends Controller
         // Подключение политики
         $this->authorize('index', $this->class);
 
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
+
         // Проверка города в нашей базе данных
         $cities = City::with('area', 'region')
-        ->moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, 'index'))
-        ->where('name', 'like', $request->city_name.'%')
+        ->moderatorLimit($answer)
+        ->where('name', 'like', $request->name.'%')
         ->get();
-        // dd($cities);
+//         dd($cities);
 
-        return view('cities.cities_table', compact('cities'));
+        return response()->json($cities);
+//        return view('cities.cities_table', compact('cities'));
     }
 }
