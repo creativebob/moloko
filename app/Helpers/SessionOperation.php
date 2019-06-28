@@ -130,62 +130,61 @@
 
 
     // Функция которая получает список разрешенных правами департаментов на указанное право
-    function getLS($entity_name, $method, $type_list) {
+    // function getLS($entity_name, $method, $type_list) {
 
-            // Получаем сессию
-            $session  = session('access');
-            if(!isset($session)){abort(403, 'Нет сессии!');};
+    //         // Получаем сессию
+    //         $session  = session('access');
+    //         if(!isset($session)){abort(403, 'Нет сессии!');};
 
-            if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'][$type_list])) {
-
-
-
-                if((isset($session['all_rights']['nolimit-' . $entity_name . '-allow']))&&(!isset($session['all_rights']['nolimit-' . $entity_name . '-deny']))) {
-
-                    // Получаем список всех отделов компании
-                    $departments = $session['company_info']['filials'];
-
-
-                } else {
-
-                    // Получаем список доступных отделов
-                    $departments = $session['all_rights'][$method . '-'. $entity_name .'-allow'][$type_list];
-                    // dd($departments);
-                };
+    //         if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'][$type_list])) {
 
 
 
-                // Нет ли блокировки этого права?
-                if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny'][$type_list])) {
+    //             if((isset($session['all_rights']['nolimit-' . $entity_name . '-allow']))&&(!isset($session['all_rights']['nolimit-' . $entity_name . '-deny']))) {
 
-                    $departments = collect($departments);
+    //                 // Получаем список всех отделов компании
+    //                 $departments = $session['company_info']['filials'];
 
-                    // Блокировка найдена
-                    $minus_departments = collect($session['all_rights'][$method . '-'. $entity_name .'-deny'][$type_list])->keys();
+    //             } else {
 
-                    // Вычетаем из списка департаментов - департаменты для которых есть запрет
-                    $departments = $departments->except($minus_departments);
-                };
-            };
+    //                 // Получаем список доступных отделов
+    //                 $departments = $session['all_rights'][$method . '-'. $entity_name .'-allow'][$type_list];
+    //                 // dd($departments);
+    //             };
 
 
-        if($session['user_info']['user_status'] == 1){
 
-            if($session['user_info']['company_id'] == null){
+    //             // Нет ли блокировки этого права?
+    //             if(isset($session['all_rights'][$method . '-'. $entity_name .'-deny'][$type_list])) {
 
-                $departments = null;
-            } else {
+    //                 $departments = collect($departments);
 
-                // Получаем список отделов для бога
-                // dd($session['company_info'][$type_list]);
-                if(!isset($session['company_info'][$type_list])){abort(403, 'Необходимо создать филиал');};
-                $departments = $session['company_info'][$type_list];
-            };
-        };
+    //                 // Блокировка найдена
+    //                 $minus_departments = collect($session['all_rights'][$method . '-'. $entity_name .'-deny'][$type_list])->keys();
 
-        if(!isset($departments)){$departments = null;};
-        return $departments;
-    }
+    //                 // Вычетаем из списка департаментов - департаменты для которых есть запрет
+    //                 $departments = $departments->except($minus_departments);
+    //             };
+    //         };
+
+
+    //     if($session['user_info']['user_status'] == 1){
+
+    //         if($session['user_info']['company_id'] == null){
+
+    //             $departments = null;
+    //         } else {
+
+    //             // Получаем список отделов для бога
+    //             // dd($session['company_info'][$type_list]);
+    //             if(!isset($session['company_info'][$type_list])){abort(403, 'Необходимо создать филиал');};
+    //             $departments = $session['company_info'][$type_list];
+    //         };
+    //     };
+
+    //     if(!isset($departments)){$departments = null;};
+    //     return $departments;
+    // }
 
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------

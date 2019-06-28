@@ -123,7 +123,7 @@ class GetAccessController extends Controller
                 if($user->company_id == null){abort(403, "Пользователь не имеет связи с компанией");};
 
                 // Получаем данные на пользователя
-                $user = User::with(['staff', 'staff.position.page', 'roles', 'roles.rights', 'roles.rights.actionentity', 'booklists', 'booklists.list_items', 'company'])->findOrFail($user->id);
+                $user = User::with(['staff', 'staff.position.page', 'roles', 'roles.rights', 'roles.rights.actionentity.entity', 'booklists', 'booklists.list_items', 'company'])->findOrFail($user->id);
 
                 // Проверяем, устроен ли пользователь в компании
                 $user_department = $user->staff->first();
@@ -174,6 +174,10 @@ class GetAccessController extends Controller
 
                     // -------------------------------------------------------------------------------------------------------
 
+                    // Получаем все филиалы компании (Будут использоваться при снятии филиалозависимости)
+                    $all_filials_user = Department::whereCompany_id($user->company_id)->whereNull('filial_id')->pluck('name', 'id')->toArray();
+
+                    // Формируеться список филиалов и отделов доступных на каждую сущность
                     foreach($user->roles as $role) {
                         foreach($role->rights as $right){
 
@@ -182,16 +186,33 @@ class GetAccessController extends Controller
                                 // Собираем из всех ролей отделы и формируем их список к текущему праву
                                 $all_rights[$right->alias_right]['departments'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->name;
 
-                                // Собираем из всех ролей филиалы и формируем их список к текущему праву
-                                if($departments->where('id', $role->pivot->department_id)->first()->parent_id == null){
-                                $all_rights[$right->alias_right]['filials'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->name;};
 
                                 // При обработке права на просмотр чужих записей добавляем список авторов к праву
                                 if($right->alias_right == 'authors-users-allow'){$all_rights[$right->alias_right]['authors'] = $list_authors;};
 
+                                $nl = $role->rights->where('alias_right', 'nolimit-' . $right->actionentity->entity->alias . '-allow')->count();
+
+                                if($nl != 0){
+
+                                    // Если существует безлимит на филиалы
+                                    $all_rights[$right->alias_right]['filials'] = $all_filials_user;
+
+                                } else {
+
+                                    // Собираем из всех ролей филиалы и формируем их список к текущему праву
+                                    if($departments->where('id', $role->pivot->department_id)->first()->parent_id == null){
+                                    $all_rights[$right->alias_right]['filials'][$role->pivot->department_id] = $departments->where('id', $role->pivot->department_id)->first()->name;};
+                                }
+
+                                // // При обработке права на просмотр чужих записей добавляем список авторов к праву
+                                // if($right->alias_right == $right->entity->alias . 'nolimit-allow'){$all_rights[$right->alias_right]['authors'] = $list_authors;};          
+
                         }
+
+
                     }
 
+                    // dd($all_rights);
 
 
                     if(!isset($all_rights)){
