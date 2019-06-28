@@ -161,7 +161,7 @@ class CompanyController extends Controller
         // Если не найден, то создаем
         if(!isset($new_user)){
 
-            $new_user = $this->createUserByPhone($request->user_phone, $request);
+            $new_user = $this->createUserByPhone($request->user_phone, $request, $new_company);
 
             $new_user->location_id = create_location($request, $request->country_id_default, $request->user_city_id, $request->user_address);
             $new_user->user_type = 1; // Делаем его внутренним пользователем системы
