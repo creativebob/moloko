@@ -66,7 +66,9 @@
                     @foreach ($prices_services as $prices_service)
                     <tr>
                         <td>{{ $prices_service->service->process->name }}</td>
-                        <td>{!! Form::number('prices['.$prices_service->id.']price', $prices_service->price, []) !!}</td>
+                        <td>{!! Form::number('prices['.$prices_service->id.'][price]', null, ['placeholder' => $prices_service->price]) !!}
+                            {!! Form::hidden('prices['.$prices_service->id.'][price]', null, []) !!}
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>

@@ -16,7 +16,7 @@ class CatalogsServicesItemsForFilialComposer
         $catalogs_items = CatalogsServicesItem::where('catalogs_service_id', $view->catalog_id)
         ->whereHas('prices_services', function ($q) use ($filial_id) {
             $q->where([
-                'filial_id' => $filial_id,
+//                'filial_id' => $filial_id,
                 'archive' => false
             ]);
         })
@@ -28,7 +28,7 @@ class CatalogsServicesItemsForFilialComposer
 
         $grouped_prices_services = PricesService::with('service.process')
         ->where([
-            'filial_id' => $filial_id,
+//            'filial_id' => $filial_id,
             'archive' => false
         ])
         ->whereIn('catalogs_services_item_id', $catalogs_items_ids)
