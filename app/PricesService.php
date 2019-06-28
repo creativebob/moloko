@@ -77,6 +77,19 @@ class PricesService extends Model
         return $this->belongsTo(Service::class);
     }
 
+    // Предок
+    public function ancestor()
+    {
+        return $this->belongsTo(PricesService::class);
+    }
+
+    // Последователь
+    public function follower()
+    {
+        return $this->hasOne(PricesService::class, 'ancestor_id')
+            ->where('archive', false);
+    }
+
     // Общее отношение для товаров и услуг
     public function product()
     {

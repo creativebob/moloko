@@ -172,7 +172,12 @@ class AlbumsCategoryController extends Controller
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $albums_category = $albums_categories_count = AlbumsCategory::with('childs', 'albums')->moderatorLimit($answer)->findOrFail($id);
+        $albums_category = $albums_categories_count = AlbumsCategory::with([
+            'childs',
+            'albums'
+        ])
+            ->moderatorLimit($answer)
+            ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);

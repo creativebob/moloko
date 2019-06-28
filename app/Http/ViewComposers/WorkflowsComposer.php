@@ -20,7 +20,17 @@ class WorkflowsComposer
         //     'parent_id'
         // ];
 
-        $workflows_categories = WorkflowsCategory::whereHas('workflows', function ($q) {
+        $workflows_categories = WorkflowsCategory::with([
+            'workflows' => function ($q) {
+                $q->with([
+                    'process' => function ($q) {
+                        $q->where('draft', false);
+                    }
+                ])
+                    ->where('archive', false);
+            }
+        ])
+        ->whereHas('workflows', function ($q) {
             $q->where('archive', false)
             ->whereHas('process', function ($q) {
                 $q->where('draft', false);
@@ -29,7 +39,6 @@ class WorkflowsComposer
         ->moderatorLimit($answer)
         ->systemItem($answer)
         ->companiesLimit($answer)
-        ->systemItem($answer)
         ->orderBy('sort', 'asc')
         ->get();
         // dd($workflows_categories);

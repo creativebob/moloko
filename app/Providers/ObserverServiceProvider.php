@@ -2,18 +2,16 @@
 
 namespace App\Providers;
 
+use App\Observers\PluginObserver;
+use App\Plugin;
 use Illuminate\Support\ServiceProvider;
 
-// Категории артикулов
 use App\RawsCategory;
 use App\Observers\RawsCategoryObserver;
 use App\EquipmentsCategory;
 use App\Observers\EquipmentsCategoryObserver;
-
-// Артикулы
 use App\Article;
 use App\Observers\ArticleObserver;
-
 use App\Goods;
 use App\Observers\GoodsObserver;
 use App\Raw;
@@ -22,41 +20,26 @@ use App\Equipment;
 use App\Observers\EquipmentObserver;
 use App\Room;
 use App\Observers\RoomObserver;
-
-// Процессы
 use App\Process;
 use App\Observers\ProcessObserver;
-
 use App\Service;
 use App\Observers\ServiceObserver;
 use App\Workflow;
 use App\Observers\WorkflowObserver;
-
-
-
-// Новости
 use App\Rubricator;
 use App\Observers\RubricatorObserver;
 use App\RubricatorsItem;
 use App\Observers\RubricatorsItemObserver;
 use App\News;
 use App\Observers\NewsObserver;
-
 use App\Stock;
 use App\Observers\StockObserver;
-
-
-// Сайт
 use App\Site;
 use App\Observers\SiteObserver;
-
-// Каталоги
 use App\CatalogsServicesItem;
 use App\Observers\CatalogsServicesItemObserver;
 use App\PricesService;
 use App\Observers\PricesServiceObserver;
-
-// Альбомы
 use App\AlbumsCategory;
 use App\Observers\AlbumsCategoryObserver;
 use App\Album;
@@ -101,6 +84,9 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Сайты
         Site::observe(SiteObserver::class);
+
+        // Плагины
+        Plugin::observe(PluginObserver::class);
 
         // Каталоги
         CatalogsServicesItem::observe(CatalogsServicesItemObserver::class);

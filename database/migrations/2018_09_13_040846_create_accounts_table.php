@@ -12,7 +12,7 @@ class CreateAccountsTable extends Migration
         Schema::create('accounts', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('name')->index()->comment('Рабочее имя аккаунта');
+//            $table->string('name')->index()->comment('Рабочее имя аккаунта');
             $table->text('description')->nullable()->comment('Комментарий к аккаунту');
 
             $table->string('login')->comment('Логин');

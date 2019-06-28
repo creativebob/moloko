@@ -28,9 +28,9 @@
                     </span>
                 </h2>
 
-                @can('create', App\PricesService::class)
+{{--                @can('create', App\PricesService::class)--}}
                 <a class="icon-add sprite"></a>
-                @endcan
+{{--                @endcan--}}
 
             </div>
             <div class="top-bar-right">
@@ -117,78 +117,7 @@
                 @if(isset($prices_services) && $prices_services->isNotEmpty())
                 @foreach($prices_services as $prices_service)
 
-                <tr class="item @if($prices_service->moderation == 1)no-moderation @endif" id="prices_services-{{ $prices_service->id }}" data-name="{{ $prices_service->catalogs_item->name }}">
-                    <td class="td-drop">
-                        <div class="sprite icon-drop"></div>
-                    </td>
-
-                    <td class="td-checkbox checkbox">
-                        <input type="checkbox" class="table-check" name="prices_service_id" id="check-{{ $prices_service->id }}"
-
-                        {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
-                        @if(!empty($filter['booklist']['booklists']['default']))
-                        Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked
-                        @if (in_array($prices_service->id, $filter['booklist']['booklists']['default'])) checked
-                        @endif
-                        @endif
-                        ><label class="label-check" for="check-{{ $prices_service->id }}"></label>
-                    </td>
-
-                    <td class="td-name">
-                        {{ $prices_service->service->process->name }}
-                        {{-- @can('update', $prices_service)
-                        {{ link_to_route('prices_services.edit', $prices_service->name, $parameters = ['id' => $prices_service->id], $attributes = []) }}
-                        @endcan
-
-                        @cannot('update', $prices_service)
-                        {{ $prices_service->name }}
-                        @endcannot
-
-                        %5B%5D
-                        ({{ link_to_route('goods.index', $prices_service->articles_count, $parameters = ['prices_service_id' => $prices_service->id], $attributes = ['class' => 'filter_link light-text', 'title' => 'Перейти на список артикулов']) }}) --}}
-
-                    </td>
-                    <td class="td-catalogs_item">{{ $prices_service->catalogs_item->name }}</td>
-                    <td class="td-price">
-                        @include('prices_services.price', ['some' => 'data'])
-
-
-
-                        {{-- <div class="grid-x" id="sync-{{ $prices_service->id }}">
-
-                            @template ($prices_service)
-
-                            <div class="small-6 cell sync-price">
-                                <label>Цена
-                                    {!! Form::number('price', $prices_service->price, []) !!}
-                                </label>
-                            </div>
-                            <div class="small-6 cell sync-button">
-                                <button class="button button-sync">Синхронизировать</button>
-                            </div>
-
-                            @else
-
-                            @include('prices_services.sync')
-
-                            @endtemplate
-
-                        </div> --}}
-
-
-                    </td>
-
-                    {{-- Элементы управления --}}
-                    {{-- @include('includes.control.table_td', ['item' => $prices_service]) --}}
-
-                    <td class="td-delete">
-
-                        @can('delete', $prices_service)
-                        <a class="icon-delete sprite" data-open="delete-price"></a>
-                        @endcan
-
-                    </td>
-                </tr>
+                @include('prices_services.price')
 
                 @endforeach
                 @endif
@@ -211,9 +140,6 @@
 @endsection
 
 @section('modals')
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete')
-
 @include('includes.modals.modal_price_delete')
 @endsection
 
@@ -230,9 +156,6 @@
 
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox-control')
-
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-script')
 
 <script>
 
@@ -251,7 +174,7 @@
     });
 
     function hidePrices() {
-        $('#table-prices tbody').each(function(index, el) {
+        $('#table-prices tbody').each(function(index) {
             $(this).hide();
         });
     };
@@ -262,11 +185,6 @@
         hidePrices();
         let id = $(this).attr('id');
         $('#table-prices .' + id).show();
-    });
-
-    // Закрытие модалки
-    $(document).on('click', '.icon-close-modal', function(event) {
-        $(this).closest('.reveal-overlay').remove();
     });
 
     // Перезагружаем страницу при смене select'a филиалов для пользователя
@@ -307,71 +225,36 @@
                     price: $(this).val()
                 },
                 success: function(html){
-                    $('#prices_services-' + id + ' .td-price').html(html);
+                    $('#prices_services-' + id).replaceWith(html);
                 }
             });
         };
     });
 
-    // МУдаление ajax
+    // При потере фокуса при редактировании возвращаем обратно
+    $(document).on('focusout', '.td-price input[name=price]', function(event) {
+        event.preventDefault();
+
+        var parent = $(this).closest('.item');
+        var id = parent.attr('id').split('-')[1];
+
+        $.get('/admin/catalogs_services/' + catalog_id + '/get_prices_service/' + id, function(html) {
+            $('#prices_services-' + id + ' .td-price').html(html);
+        });
+    });
+
+    // Удаление ajax
     $(document).on('click', '[data-open="delete-price"]', function() {
 
         // находим описание сущности, id и название удаляемого элемента в родителе
         var parent = $(this).closest('.item');
-        var entity = parent.attr('id').split('-')[0];
         var id = parent.attr('id').split('-')[1];
         var name = parent.data('name');
+
         $('.title-price').text(name);
-        $('.price-delete-button').attr('id', entity + '-' + id);
+        $('#form-delete-price').attr('action', '/admin/catalogs_services/' + catalog_id + '/prices_services/' + id);
     });
 
-    // Клик по кнопке удаления
-    $(document).on('click', '.price-delete-button', function(event) {
-        event.preventDefault();
-
-        var buttons = $('.button');
-        var entity = $(this).attr('id').split('-')[0];
-        var id = $(this).attr('id').split('-')[1];
-
-        $.post('/admin/catalogs_services/' + catalog_id + '/prices_services/' + id + '/archive', {
-            id: id
-        }, function (data) {
-            if (data == true) {
-
-                $('#prices_services-' + id).remove();
-                // $('#item-delete-ajax').foundation('close');
-                $('.delete-button').removeAttr('id');
-                buttons.prop('disabled', false);
-
-            } else {
-                // Выводим ошибку на страницу
-                alert(data);
-            };
-        });
-
-        // let count = $('#content tbody tr').length;
-        // alert(count);
-        // $('.content-count').text(count);
-    });
-
-
-    // $(document).on('click', '.button-sync', function(event) {
-    //     event.preventDefault();
-
-    //     let item = $(this);
-    //     let id = item.closest('.item').attr('id').split('-')[1];
-    //     let price = item.closest('.item').find('.sync-price [name=price]').val();
-    //     // let entity_alias = item.closest('.item').attr('id').split('-')[0];
-
-    //     $.post('/admin/catalogs_services/{{ $catalog_id }}/prices_services_sync', {
-    //         id: id,
-    //         price: price
-    //     }, function(html) {
-    //         // alert(html);
-    //         $('#sync-' + id).html(html);
-
-    //     });
-    // });
 
 </script>
 @endpush

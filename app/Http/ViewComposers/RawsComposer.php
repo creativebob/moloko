@@ -14,7 +14,16 @@ class RawsComposer
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('raws_categories', false, 'index');
 
-        $raws_categories = RawsCategory::with(['raws.article'])
+        $raws_categories = RawsCategory::with([
+            'raws' => function ($q) {
+                $q->with([
+                    'article' => function ($q) {
+                        $q->where('draft', false);
+                    }
+                ])
+                    ->where('archive', false);
+            }
+        ])
         ->whereHas('raws', function ($q) {
             $q->where('archive', false)
             ->whereHas('article', function ($q) {
@@ -24,10 +33,9 @@ class RawsComposer
         ->moderatorLimit($answer)
         ->systemItem($answer)
         ->companiesLimit($answer)
-        ->systemItem($answer)
         ->orderBy('sort', 'asc')
         ->get();
-        // dd($raws_categories);
+//        dd($raws_categories);
 
         return $view->with(compact('raws_categories'));
     }

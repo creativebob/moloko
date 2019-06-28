@@ -17,7 +17,7 @@ class SiteObserver
         $site->alias = $site_alias[0];
         // $site->slug = $site_alias[0];
 
-        $site->api_token = str_random(60);
+        $site->api_token = \Str::random(60);
 
         $this->store($site);
     }

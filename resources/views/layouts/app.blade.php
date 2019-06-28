@@ -63,21 +63,21 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
             <div class="sticky sticky-topbar" data-sticky data-margin-top="0" data-options="stickyOn: small;" data-top-anchor="header:top">
                 <header class="grid-x header">
                     <div class="small-7 left-head cell">
-                        {{-- Кнопка сворачивания на мобилках --}}
+{{--                         Кнопка сворачивания на мобилках--}}
                         <div class="title-bar" data-responsive-toggle="sidebar" data-hide-for="medium" data-hide-for="large">
                             <button class="menu-icon" type="button" data-toggle="sidebar"></button>
-                            {{-- <div class="title-bar-title"></div> --}}
+                             <div class="title-bar-title"></div>
                         </div>
-                        {{-- Логотип --}}
+{{--                         Логотип--}}
                         <h1><span>CRM</span>System</h1>
                     </div>
                     <div class="small-5 right-head cell">
                         <ul>
-                        {{-- <li>
+                         <li>
                             @if(isset($session_god))
                             {{ link_to_route('users.returngod', 'Вернуться к богу', $value = Null) }}
                             @endif
-                        </li> --}}
+                        </li>
 
                         <li>
                             <a id="task-toggle"><img src="/crm/img/header/alert.png">
@@ -95,16 +95,16 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                                         {{ isset(Auth::user()->login) ? Auth::user()->login : 'Чужак' }} {{ $count_authors }}
                                     </span>
 
-                                    <img src="{{ getPhotoPath(Auth::user(), 'small') }}" alt="Аватар" class="avatar">
+{{--                                    <img src="{{ getPhotoPath(Auth::user(), 'small') }}" alt="Аватар" class="avatar">--}}
                                 </a>
                             </li>
                         </ul>
                         <div class="dropdown-pane profile-head" id="profile" data-dropdown data-position="bottom" data-alignment="right" data-v-offset="10" data-h-offset="-30" data-close-on-click="true">
                             <ul class="menu vertical">
                                 <li>{{ link_to_route('users.myprofile', 'Мой профиль', $value = Null) }} </li>
-                                {{-- <li><a href="">Настройки</a></li> --}}
+                                 <li><a href="">Настройки</a></li>
                                 <li><hr></li>
-                                {{-- <li><a href="">Нужна помощь?</a></li> --}}
+                                 <li><a href="">Нужна помощь?</a></li>
                                 <li>
                                     @if(isset($company_id)&&($user_status == 1))
                                     {{ link_to_route('users.getgod', 'Выйти из компании', $value = Null) }}
@@ -120,7 +120,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                                     {{ link_to_route('help.show_session', 'Смотреть сессию', $value = Null, ['target' => '_blank']) }}
                                 @endif</li>
 
-                                {{-- Кнопка выхода --}}
+{{--                                 Кнопка выхода--}}
                                 <li><a href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                     document.getElementById('logout-form').submit();">Выход</a>
@@ -168,23 +168,55 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
             $task = '';
         }
 
-
-
         @endphp
 
-        {{-- Основной сайдбар, весь функционал --}}
+{{--         Основной сайдбар, весь функционал--}}
         @include('layouts.sidebar', ['open' => $sidebar])
 
 
-        {{-- Менеджер задач --}}
+{{--         Менеджер задач--}}
         @include('layouts.task-manager', ['open' => $task])
 
 
         {{-- Основной контент --}}
         <div id="wrapper">
+
+            <div class="grid-x breadcrumbs block-refresh">
+                <div class="small-12 medium-9 cell">
+{{--                     Breadcrumbs--}}
+                    @yield('breadcrumbs')
+                </div>
+                <div class="small-12 medium-3 cell text-right" id="extra-panel">
+
+{{--                     Planfact--}}
+                    @yield('planfact')
+
+{{--                     Exсel--}}
+                    @yield('exсel')
+
+                </div>
+            </div>
+
             <div class="grid-x">
+
+                <div class="small-12 cell">
+                @if (session('success'))
+
+                            <div class="alert alert-success" role="alert">
+                                <div class="alert callout" data-closable>
+                                {{ session()->get('success') }}
+                                <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                            </div>
+
+                @endif
+                </div>
+
                 <div class="small-12 cell errors">
-                    {{-- Блок ошибок --}}
+
+{{--                     Блок ошибок--}}
                     @if ($errors->any())
                     <div class="alert callout" data-closable>
                         <h5>Ошибки ввода данных:</h5>
@@ -200,22 +232,6 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                     @endif
                 </div>
             </div>
-            <div class="grid-x breadcrumbs block-refresh">
-                <div class="small-12 medium-9 cell">
-                    {{-- Breadcrumbs --}}
-                    @yield('breadcrumbs')
-                </div>
-                <div class="small-12 medium-3 cell text-right" id="extra-panel">
-
-                    {{-- Planfact --}}
-                    @yield('planfact')
-
-                    {{-- Exсel --}}
-                    @yield('exсel')
-
-                </div>
-            </div>
-
 
             <div class="grid-x">
                 <main class="content small-12">
@@ -223,7 +239,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                     {{-- Прилипающий заголовок --}}
                     @yield('title-content')
 
-                    {{-- Функционал --}}
+{{--                    --}}{{-- Функционал --}}
                     @yield('control-content')
 
                     {{-- Основой контент --}}
@@ -273,6 +289,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
     <script type="application/javascript" src="/crm/js/vendor/what-input.js"></script>
     <script type="application/javascript" src="/crm/js/vendor/foundation.js"></script>
     <script type="application/javascript" src="/crm/js/app.js"></script>
+    <script type="application/javascript" src="/crm/js/sidebar.js"></script>
 
     {{-- Наши скрипты --}}
     <script type="application/javascript"src="/crm/js/main.js"></script>

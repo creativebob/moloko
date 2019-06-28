@@ -67,4 +67,5 @@ class Right extends Model
         return $this->hasOne('App\ActionEntity', 'id', 'object_entity');
     }
 
+
 }

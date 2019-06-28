@@ -162,8 +162,6 @@ class RawsCategoryController extends Controller
     public function update(RawsCategoryRequest $request, $id)
     {
 
-        // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 

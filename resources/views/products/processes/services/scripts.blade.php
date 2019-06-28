@@ -62,19 +62,19 @@
             var id = parent.attr('id').split('-')[1];
             var name = parent.data('name');
             $('.title-price').text(name);
-            $('.price-delete-button').attr('id', entity + '-' + id);
+            $('.button-delete-price').attr('id', entity + '-' + id);
         });
 
-        $(document).on('click', '.price-delete-button', function(event) {
+        $(document).on('click', '.button-delete-price', function(event) {
             event.preventDefault();
 
             var buttons = $('.button');
             var entity = $(this).attr('id').split('-')[0];
             var id = $(this).attr('id').split('-')[1];
 
-            $.post('/admin/archive_prices_service', {
-                id: id
-            }, function (data) {
+            var catalog_id = $('#' + entity + '-' + id).data('catalog_id');
+
+            $.post('/admin/catalogs_services/' + catalog_id + '/prices_services/' + id + '/archive', function (data) {
                 if (data == true) {
 
                     $('#' + entity + '-' + id).remove();
@@ -214,11 +214,23 @@
                         price: $(this).val()
                     },
                     success: function(html){
-                        $('#table-prices .price').html(html);
+                        $('#table-prices #prices_service-' + id).replaceWith(html);
 
                     }
                 });
             };
+        });
+
+        // При потере фокуса при редактировании возвращаем обратно
+        $(document).on('focusout', '#table-prices .price input[name=price]', function(event) {
+            event.preventDefault();
+
+            var parent = $(this).closest('.item');
+            var id = parent.attr('id').split('-')[1];
+
+            $.get('/admin/catalogs_services/' + parent.data('catalog_id')+ '/get_prices_service/' + id, function(html) {
+                 $('#prices_service-' + id + ' .price').html(html);
+            });
         });
     });
 
