@@ -2,8 +2,6 @@
 
 namespace App\Http\ViewComposers;
 
-use App\Department;
-
 use Illuminate\View\View;
 
 class UserFilialsComposer
@@ -13,7 +11,5 @@ class UserFilialsComposer
         $user_filials  = session('access.all_rights.index-prices_services-allow.filials');
 
 		return $view->with(compact('user_filials'));
-
 	}
-
 }
