@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\Goods;
 use App\PricesService;
 
 use App\CatalogsService;
@@ -22,7 +23,7 @@ class PricesServiceController extends Controller
         $this->middleware('auth');
         $this->prices_service = $prices_service;
         $this->entity_alias = with(new PricesService)->getTable();;
-        $this->entity_dependence = false;
+        $this->entity_dependence = true;
         $this->class = PricesService::class;
         $this->model = 'App\PricesService';
     }
@@ -39,6 +40,8 @@ class PricesServiceController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $user_filials = session('access.all_rights.index-prices_services-allow.filials');
+//        $user_filials = session('access.all_rights.index-leads-allow');
+
         // dd($request);
 
         if (isset($request->filial_id)) {
@@ -59,14 +62,15 @@ class PricesServiceController extends Controller
             'catalog',
             'catalogs_item'
         ])
-        ->whereHas('service', function ($q) {
-            $q->whereHas('process', function ($q) {
-                $q->where('draft', false);
-            })
-            ->where('archive', false);
-        })
+//        ->whereHas('service', function ($q) {
+//            $q->whereHas('process', function ($q) {
+//                $q->where('draft', false);
+//            })
+//            ->where('archive', false);
+//        })
         // ->moderatorLimit($answer)
-        // ->companiesLimit($answer)
+         ->companiesLimit($answer)
+//            ->filials($answer)
         // ->authors($answer)
         // ->systemItem($answer)
         ->where([
@@ -75,7 +79,7 @@ class PricesServiceController extends Controller
             'filial_id' => $filial_id,
         ])
         ->paginate(30);
-        // dd($prices_services);
+//         dd($prices_services);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
