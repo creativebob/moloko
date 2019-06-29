@@ -336,10 +336,18 @@ class CityController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
 
         // Проверка города в нашей базе данных
-        $cities = City::with('area', 'region')
+        $cities = City::with([
+            'area:id,name,region_id',
+            'region:id,name'
+        ])
         ->moderatorLimit($answer)
         ->where('name', 'like', $request->name.'%')
-        ->get();
+        ->get([
+            'id',
+            'name',
+            'area_id',
+            'region_id'
+        ]);
 //         dd($cities);
 
         return response()->json($cities);

@@ -1,11 +1,12 @@
 <template>
     <div>
+        <b>{{ results.length }}</b>
         <label id="" class="city-input-parent">Город
 
                 <input
                     type="text"
                     v-model.lazy="name"
-                     name="city_name"
+                    name="city_name"
                     class="varchar-field city_check-field"
                     maxlength="30"
                     autocomplete="off"
@@ -15,13 +16,11 @@
             <div class="sprite-input-right find-status city-check"></div>
             <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
 
-
             <input
                     type="hidden"
                     name="city_id"
-                    class="city_id-field"
+                    v-model="id"
                     maxlength="3"
-                    autocomplete="off"
                     pattern="[0-9]{3}"
             >
             <input
@@ -31,60 +30,80 @@
 
         </label>
 
-        <table class="content-table-search table-over" v-if="results.length > 0">
+        <table v-show="!check" class="content-table-search table-over">
             <tbody>
 
-             <tr  v-for="result in results" data-tr="result.id" data-city-id="result.id">
-                <td>
-                    <a class="city-add city-name">{{ result.name }}</a>
-                </td>
+            <template v-if="results.length > 0">
+                <tr  v-for="result in results">
+                    <td>
+                        <a @click="add(result.id, result.name)" class="city-add city-name">{{ result.name }}</a>
+                    </td>
+                    <td>
+                        <a @click="add(result.id, result.name)">{{ result.region.name }}</a>
+                    </td>
+                </tr>
+            </template>
 
-            </tr>
-
-
+            <template v-else>
+                <tr v-show="check" class="no-city">
+                    <td>Населенный пункт не найден в базе данных, <a href="/admin/cities" target="_blank">добавьте его!</a></td>
+                </tr>
+            </template>
 
             </tbody>
         </table>
-<!--    <ul class="menu vertical" v-if="results.length > 0">-->
-<!--        <li v-for="result in results" :key="result.id">{{ result.name }}</li>-->
-<!--    </ul>-->
-    </div>
+     </div>
+
+
 
 </template>
 
 <script>
-
-    var debounce = require('lodash.debounce');
-
-
     export default {
         mounted() {
-            console.log('CitySearchComponent mounted.')
+            console.log('CitySearchComponent mounted.');
         },
+        // props: [
+        //     this.id => 'id',
+        //     this.name => 'name'
+        // ],
         data() {
             return {
-                name: '',
-                results: []
+                id: null,
+                name: null,
+                results: [],
+                check: true
             };
         },
         watch: {
             name(after, before) {
-                this.check();
+                this.fetch();
             }
         },
         methods: {
-            check: _.debounce(function () {
-                alert(this.name);
-                    axios.post('/admin/cities_list', { params: {
-                        name: this.name
-                    } })
-                        .then(response => this.results = response.data)
-                        .catch(error => {})
-                    ;
-                    // alert(this.results);
-
-            }, 300)
+            fetch() {
+                if (this.name.length > 2 && this.check == true) {
+                      axios.get('/admin/cities_list', {
+                        params: {
+                            name: this.name
+                        }
+                    })
+                    .then(response => this.results = response.data)
+                          .then(this.check = false)
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    this.id = null;
+                    this.check = true
+                }
+            },
+            add(id, name) {
+                this.id = id;
+                this.name = name;
+                this.results = [];
+                this.check = false;
+            }
         }
     }
-
 </script>

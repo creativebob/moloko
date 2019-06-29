@@ -2,8 +2,6 @@
 
 @section('inhead')
 <meta name="description" content="{{ $page_info->page_description }}" />
-{{-- Скрипты меню в шапке --}}
-@include('includes.scripts.sortable-inhead')
 @endsection
 
 @section('title', $page_info->name)
@@ -42,7 +40,9 @@
 @include('includes.modals.modal-delete-ajax')
 @endsection
 
-@section('scripts')
+@push('scripts')
+
+    @include('includes.scripts.sortable-inhead')
 
 @include('includes.scripts.units-scripts')
 
@@ -64,7 +64,7 @@
 {{-- Скрипт системной записи --}}
 @include('includes.scripts.ajax-system')
 
-<script type="text/javascript">
+<script type="application/javascript">
     $(function() {
 
         // ------------------------ Проверка на совпадение названия --------------------
@@ -198,4 +198,4 @@
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox-control')
 
-@endsection
+@endpush

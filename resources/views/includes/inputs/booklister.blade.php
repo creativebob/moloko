@@ -96,7 +96,7 @@
 
 </div>
 
-<script type="text/javascript">
+<script type="application/javascript">
 
 	let {{$name}} = new CheckBoxer("{{$name}}", {{$checkboxer_mass[$name]['count_mass']}});
 
