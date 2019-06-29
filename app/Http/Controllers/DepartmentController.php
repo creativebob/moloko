@@ -210,6 +210,10 @@ class DepartmentController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $department);
 
+        \JavaScript::put([
+            'city' => $department->location->city,
+        ]);
+
         return view('departments.edit', [
             'department' => $department,
             'entity' => $this->entity_alias,

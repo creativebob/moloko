@@ -3,7 +3,7 @@
 @section('content')
 <div class="grid-x">
     <div class="small-4 cell">
-        <citysearch></citysearch>
+        <citysearch :id="'4'" :name="'кека'"></citysearch>
     </div>
 
 </div>
