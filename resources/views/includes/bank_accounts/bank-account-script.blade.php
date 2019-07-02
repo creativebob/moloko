@@ -24,7 +24,7 @@
 	// -------------------------- Новая запись ----------------------------------
 	$(document).on('click', '#submit-add-bank-account', function(event) {
 
-		if(submitAjax('#form-add-bank-account')){
+		if(submitAjax('form-add-bank-account')){
 			$.ajax({
 				headers: {
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -74,7 +74,7 @@
 	$(document).on('click', '#submit-edit-bank-account', function(event) {
 
 		// Валидация формы
-		if(submitAjax('#form-add-bank-account')){
+		if(submitAjax('form-add-bank-account')){
 
 			$.ajax({
 				headers: {

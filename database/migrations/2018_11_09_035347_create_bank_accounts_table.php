@@ -16,16 +16,12 @@ class CreateBankAccountsTable extends Migration
             $table->foreign('holder_id')->references('id')->on('companies');
 
             $table->bigInteger('bank_id')->nullable()->unsigned()->comment('Id банка');
-            $table->foreign('bank_id')->references('id')->on('banks');
+            $table->foreign('bank_id')->references('id')->on('companies');
 
             $table->integer('archive')->nullable()->unsigned()->comment('Статус архива');
 
-            // $table->string('name')->index()->comment('Имя банковского аккаунта');
-            // $table->text('description')->comment('Описание');
-
             $table->string('account_settlement', 20)->nullable()->comment('Расчетный счет');
             $table->string('account_correspondent', 20)->nullable()->comment('Корреспондентский счет');
-
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

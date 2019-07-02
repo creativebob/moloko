@@ -154,8 +154,12 @@ class UserController extends Controller
             'location.city',
             'photo',
             'main_phones',
-            'extra_phones'
-        )->moderatorLimit($answer)
+            'extra_phones')
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
         ->findOrFail($id);
         // dd($user);
 
@@ -181,7 +185,13 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with('location', 'company', 'photo')->moderatorLimit($answer)->findOrFail($id);
+        $user = User::with('location', 'company', 'photo')
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->moderatorLimit($answer)
+        ->findOrFail($id);
 
         // $filial_id = $request->filial_id;
 
@@ -208,7 +218,13 @@ class UserController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::moderatorLimit($answer)->findOrFail($id);
+        $user = User::moderatorLimit($answer)
+        ->moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $user);

@@ -225,12 +225,15 @@ class CompanyController extends Controller
         ->systemItem($answer)
         ->findOrFail($id);
 
+        $user = $company->director->user;
+        // dd($user);
+
         $this->authorize(getmethod(__FUNCTION__), $company);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('companies.edit', compact('company', 'page_info'));
+        return view('companies.edit', compact('company', 'page_info', 'user'));
     }
 
     public function update(CompanyRequest $request, $id)

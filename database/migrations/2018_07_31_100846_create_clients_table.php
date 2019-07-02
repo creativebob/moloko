@@ -18,7 +18,7 @@ class CreateClientsTable extends Migration
 
             $table->morphs('clientable');
 
-            $table->text('description_client')->nullable()->comment('Описание клиента');
+            $table->text('description')->nullable()->comment('Описание клиента');
 
             $table->bigInteger('loyalty_id')->nullable()->unsigned()->default(4)->comment('Id лояльности');
             $table->foreign('loyalty_id')->references('id')->on('loyalties');

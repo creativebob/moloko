@@ -11470,8 +11470,8 @@ window.Vue = __webpack_require__(36);
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('example-component', __webpack_require__(39).default);
-Vue.component('city-search', __webpack_require__(42).default);
+Vue.component('example-component', __webpack_require__(39));
+Vue.component('city-search', __webpack_require__(42));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

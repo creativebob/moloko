@@ -48,6 +48,7 @@ class SiteController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
+        ->template($answer)
         ->booklistFilter($request)
         // ->filter($request, 'author_id')
         ->orderBy('moderation', 'desc')
