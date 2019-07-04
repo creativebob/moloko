@@ -1,51 +1,55 @@
 <template>
     <div>
-        <b>{{ results.length }}</b>
-        <label id="" class="city-input-parent">Город
-
-                <input
-                    type="text"
-                    v-model.lazy="name"
-                    name="city_name"
-                    class="varchar-field city_check-field"
-                    maxlength="30"
-                    autocomplete="off"
-                    pattern="[А-Яа-яЁё0-9-_\s]{3,30}"
-                >
-
-            <div class="sprite-input-right find-status city-check"></div>
-            <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
-
+        <label id="" class="city-input-parent input-icon">Город
             <input
-                    type="hidden"
-                    name="city_id"
-                    v-model="id"
-                    maxlength="3"
-                    pattern="[0-9]{3}"
+                type="text"
+                name="city_name"
+                v-model="name"
+                maxlength="30"
+                autocomplete="off"
+                pattern="[А-Яа-яЁё0-9-_\s]{3,30}"
+                required
             >
-            <input
-                    type="hidden"
-                    name="country_id_default"
-            >
-
         </label>
 
-        <table v-show="!check" class="content-table-search table-over">
+        <div
+                class="sprite-input-right find-status city-check"
+                :class="{ 'icon-find-ok sprite-16' : findOk, 'icon-find-no sprite-16' : findNo, 'icon-load' : load}"
+                @click="clear"
+        >
+        </div>
+
+        <span class="form-error">Уж постарайтесь, введите город!</span>
+        <input
+                type="hidden"
+                name="city_id"
+                v-model="id"
+                maxlength="3"
+                pattern="[0-9]{3}"
+        >
+
+        <table v-show="this.id == null && this.name.length > 2" class="content-table-search table-over">
             <tbody>
 
             <template v-if="results.length > 0">
-                <tr  v-for="result in results">
+                <tr v-for="result in results">
                     <td>
-                        <a @click="add(result.id, result.name)" class="city-add city-name">{{ result.name }}</a>
+                        <a @click="add(result.id, result.name)">{{ result.name }}</a>
+                    </td>
+                    <td>
+                        <a v-if="(result.area != null)" @click="add(result.id, result.name)">{{ result.area.name }}</a>
                     </td>
                     <td>
                         <a @click="add(result.id, result.name)">{{ result.region.name }}</a>
+                    </td>
+                    <td>
+                        <a @click="add(result.id, result.name)">{{ result.country.name }}</a>
                     </td>
                 </tr>
             </template>
 
             <template v-else>
-                <tr v-show="check" class="no-city">
+                <tr class="no-city">
                     <td>Населенный пункт не найден в базе данных, <a href="/admin/cities" target="_blank">добавьте его!</a></td>
                 </tr>
             </template>
@@ -54,55 +58,62 @@
         </table>
      </div>
 
-
-
 </template>
 
 <script>
     export default {
         mounted() {
-            console.log('CitySearchComponent mounted.');
+            console.log('CitySearchComponent mounted.')
         },
-        // props: [
-        //     this.id => 'id',
-        //     this.name => 'name'
-        // ],
+        props: [
+            'city'
+        ],
         data() {
             return {
-                id: null,
-                name: null,
+                id: this.city.id,
+                name: this.city.name,
                 results: [],
-                check: true
+                findOk: (this.city.id != null) ? true : false,
+                findNo: false,
+                load: false
             };
         },
         watch: {
             name(after, before) {
-                this.fetch();
+                this.check();
             }
         },
         methods: {
-            fetch() {
-                if (this.name.length > 2 && this.check == true) {
-                      axios.get('/admin/cities_list', {
-                        params: {
-                            name: this.name
-                        }
+            check() {
+                if (this.name.length > 2) {
+                    this.findNo = false;
+                    this.load = true;
+                        axios.get('/api/v1/cities_list', {
+                            params: {
+                                name: this.name
+                            }
                     })
                     .then(response => this.results = response.data)
-                          .then(this.check = false)
+                            .then(this.load = false)
                     .catch(function (error) {
                         console.log(error);
                     });
                 } else {
                     this.id = null;
-                    this.check = true
+                    this.findNo = false;
                 }
             },
             add(id, name) {
                 this.id = id;
                 this.name = name;
                 this.results = [];
-                this.check = false;
+                this.findOk = true;
+            },
+            clear() {
+                this.id = null;
+                this.name = '';
+                this.findOk = false;
+                this.findNo = false;
             }
         }
     }

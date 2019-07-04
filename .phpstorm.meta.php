@@ -5,7 +5,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2019-06-26 13:31:52.
+    * Generated on 2019-07-03 16:12:03.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -34,6 +34,7 @@ namespace PHPSTORM_META {
         'Illuminate\Notifications\ChannelManager' => \Illuminate\Notifications\ChannelManager::class,
         'Illuminate\Routing\Contracts\ControllerDispatcher' => \Illuminate\Routing\ControllerDispatcher::class,
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
+        'JavaScript' => \Laracasts\Utilities\JavaScript\Transformers\Transformer::class,
         'LaravelDoctrine\ORM\Configuration\Cache\CacheManager' => \LaravelDoctrine\ORM\Configuration\Cache\CacheManager::class,
         'LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager' => \LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager::class,
         'LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager' => \LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager::class,
@@ -198,6 +199,7 @@ namespace PHPSTORM_META {
         'Illuminate\Notifications\ChannelManager' => \Illuminate\Notifications\ChannelManager::class,
         'Illuminate\Routing\Contracts\ControllerDispatcher' => \Illuminate\Routing\ControllerDispatcher::class,
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
+        'JavaScript' => \Laracasts\Utilities\JavaScript\Transformers\Transformer::class,
         'LaravelDoctrine\ORM\Configuration\Cache\CacheManager' => \LaravelDoctrine\ORM\Configuration\Cache\CacheManager::class,
         'LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager' => \LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager::class,
         'LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager' => \LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager::class,
@@ -362,6 +364,7 @@ namespace PHPSTORM_META {
         'Illuminate\Notifications\ChannelManager' => \Illuminate\Notifications\ChannelManager::class,
         'Illuminate\Routing\Contracts\ControllerDispatcher' => \Illuminate\Routing\ControllerDispatcher::class,
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
+        'JavaScript' => \Laracasts\Utilities\JavaScript\Transformers\Transformer::class,
         'LaravelDoctrine\ORM\Configuration\Cache\CacheManager' => \LaravelDoctrine\ORM\Configuration\Cache\CacheManager::class,
         'LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager' => \LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager::class,
         'LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager' => \LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager::class,
@@ -526,6 +529,7 @@ namespace PHPSTORM_META {
         'Illuminate\Notifications\ChannelManager' => \Illuminate\Notifications\ChannelManager::class,
         'Illuminate\Routing\Contracts\ControllerDispatcher' => \Illuminate\Routing\ControllerDispatcher::class,
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
+        'JavaScript' => \Laracasts\Utilities\JavaScript\Transformers\Transformer::class,
         'LaravelDoctrine\ORM\Configuration\Cache\CacheManager' => \LaravelDoctrine\ORM\Configuration\Cache\CacheManager::class,
         'LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager' => \LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager::class,
         'LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager' => \LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager::class,
@@ -690,6 +694,7 @@ namespace PHPSTORM_META {
         'Illuminate\Notifications\ChannelManager' => \Illuminate\Notifications\ChannelManager::class,
         'Illuminate\Routing\Contracts\ControllerDispatcher' => \Illuminate\Routing\ControllerDispatcher::class,
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
+        'JavaScript' => \Laracasts\Utilities\JavaScript\Transformers\Transformer::class,
         'LaravelDoctrine\ORM\Configuration\Cache\CacheManager' => \LaravelDoctrine\ORM\Configuration\Cache\CacheManager::class,
         'LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager' => \LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager::class,
         'LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager' => \LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager::class,
@@ -854,6 +859,7 @@ namespace PHPSTORM_META {
         'Illuminate\Notifications\ChannelManager' => \Illuminate\Notifications\ChannelManager::class,
         'Illuminate\Routing\Contracts\ControllerDispatcher' => \Illuminate\Routing\ControllerDispatcher::class,
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
+        'JavaScript' => \Laracasts\Utilities\JavaScript\Transformers\Transformer::class,
         'LaravelDoctrine\ORM\Configuration\Cache\CacheManager' => \LaravelDoctrine\ORM\Configuration\Cache\CacheManager::class,
         'LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager' => \LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager::class,
         'LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager' => \LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager::class,
@@ -1018,6 +1024,7 @@ namespace PHPSTORM_META {
         'Illuminate\Notifications\ChannelManager' => \Illuminate\Notifications\ChannelManager::class,
         'Illuminate\Routing\Contracts\ControllerDispatcher' => \Illuminate\Routing\ControllerDispatcher::class,
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
+        'JavaScript' => \Laracasts\Utilities\JavaScript\Transformers\Transformer::class,
         'LaravelDoctrine\ORM\Configuration\Cache\CacheManager' => \LaravelDoctrine\ORM\Configuration\Cache\CacheManager::class,
         'LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager' => \LaravelDoctrine\ORM\Configuration\Connections\ConnectionManager::class,
         'LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager' => \LaravelDoctrine\ORM\Configuration\MetaData\MetaDataManager::class,

@@ -2,6 +2,18 @@
 
 namespace App\Providers;
 
+use App\ArticlesGroup;
+use App\Consignment;
+use App\Indicator;
+use App\Order;
+use App\Policies\ArticlesGroupPolicy;
+use App\Policies\ConsignmentPolicy;
+use App\Policies\IndicatorPolicy;
+use App\Policies\OrderPolicy;
+use App\Policies\PricesGoodsPolicy;
+use App\Policies\ProcessesGroupPolicy;
+use App\PricesGoods;
+use App\ProcessesGroup;
 use App\User;
 use App\RightsRole;
 use App\Company;
@@ -211,8 +223,8 @@ use App\Policies\CatalogsGoodsItemPolicy;
 
 use App\CatalogsService;
 use App\Policies\CatalogsServicePolicy;
-use App\CatalogsServiceItem;
-use App\Policies\CatalogsServiceItemPolicy;
+use App\CatalogsServicesItem;
+use App\Policies\CatalogsServicesItemPolicy;
 
 use App\Estimate;
 use App\Policies\EstimatePolicy;
@@ -237,24 +249,24 @@ class AuthServiceProvider extends ServiceProvider
 
 
         // Артикулы
-        'App\ArticlesGroup' => 'App\Policies\ArticlesGroupPolicy',
-        'App\ProcessesGroup' => 'App\Policies\ProcessesGroupPolicy',
+        ArticlesGroup::class => ArticlesGroupPolicy::class,
+        ProcessesGroup::class => ProcessesGroupPolicy::class,
 
         // Расчеты и заказы
-        'App\Order' => 'App\Policies\OrderPolicy',
+        Order::class => OrderPolicy::class,
         Estimate::class => EstimatePolicy::class,
         // EstimatesItem::class => EstimatesItemPolicy::class,
 
 
         // Показатели
-        'App\Indicator' => 'App\Policies\IndicatorPolicy',
+        Indicator::class => IndicatorPolicy::class,
 
         // Каталоги
-        CatalogGoods::class => CatalogGoodsPolicy::class,
-        CatalogGoodsItem::class => CatalogGoodsItemPolicy::class,
+        CatalogsGoods::class => CatalogsGoodsPolicy::class,
+        CatalogsGoodsItem::class => CatalogsGoodsItemPolicy::class,
 
-        CatalogService::class => CatalogServicePolicy::class,
-        CatalogServiceItem::class => CatalogServiceItemPolicy::class,
+        CatalogsService::class => CatalogsServicePolicy::class,
+        CatalogsServicesItem::class => CatalogsServicesItemPolicy::class,
 
 
         User::class => UserPolicy::class,
@@ -264,7 +276,7 @@ class AuthServiceProvider extends ServiceProvider
 
         Supplier::class => SupplierPolicy::class,
         Application::class => ApplicationPolicy::class,
-        'App\Consignment' => 'App\Policies\ConsignmentPolicy',
+        Consignment::class => ConsignmentPolicy::class,
 
         Manufacturer::class => ManufacturerPolicy::class,
         Dealer::class => DealerPolicy::class,
@@ -300,7 +312,6 @@ class AuthServiceProvider extends ServiceProvider
         Site::class => SitePolicy::class,
 
 
-
         Rubricator::class => RubricatorPolicy::class,
         RubricatorsItem::class => RubricatorsItemPolicy::class,
         News::class => NewsPolicy::class,
@@ -324,10 +335,11 @@ class AuthServiceProvider extends ServiceProvider
         Workflow::class => WorkflowPolicy::class,
 
 
-
         // Товары
         Goods::class => GoodsPolicy::class,
         GoodsCategory::class => GoodsCategoryPolicy::class,
+
+        PricesGoods::class => PricesGoodsPolicy::class,
 
         // Сырье
         Raw::class => RawPolicy::class,
@@ -338,7 +350,7 @@ class AuthServiceProvider extends ServiceProvider
         EquipmentsCategory::class => EquipmentsCategoryPolicy::class,
 
         // Помещения
-        RoomCategory::class => RoomCategoryPolicy::class,
+        RoomsCategory::class => RoomsCategoryPolicy::class,
         Room::class => RoomPolicy::class,
 
         // Расходные материалы

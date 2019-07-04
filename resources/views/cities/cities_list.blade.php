@@ -96,8 +96,8 @@ $drop = 1;
         @endforeach
         @endif
 
-        @if($region->cities->isNotEmpty())
-        @foreach ($region->cities as $city)
+        @if($region->cities_without_area->isNotEmpty())
+        @foreach ($region->cities_without_area as $city)
 
         <li class="medium-as-last item" id="cities-{{ $city->id }}" data-name="{{ $city->name }}">
 

@@ -134,11 +134,10 @@
 
                         @can('update', $catalogs_service)
                         {{ link_to_route($page_info->alias.'.edit', $catalogs_service->name, $parameters = ['id' => $catalogs_service->id], $attributes = []) }}
+                            @else
+                            {{ $page->name }}
                         @endcan
 
-                        @cannot('update', $catalogs_service)
-                        {{ $page->name }}
-                        @endcannot
 
                     </td>
                     <td class="td-alias">{{ $catalogs_service->alias }}</td>

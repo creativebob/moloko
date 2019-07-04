@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Goods;
 use App\Article;
 use App\GoodsCategory;
+use App\Raw;
 use App\RawsArticle;
 use App\Manufacturer;
 use App\Album;
@@ -71,7 +72,6 @@ class GoodsController extends Controller
             'id',
             'article_id',
             'category_id',
-            'set_status',
             'author_id',
             'company_id',
             'display',
@@ -353,7 +353,8 @@ class GoodsController extends Controller
         $cur_goods->load([
             'metrics.values',
             'metrics.property',
-            'metrics.unit'
+            'metrics.unit',
+            'prices'
         ]);
 
         $article = $cur_goods->article->load([
@@ -485,57 +486,17 @@ class GoodsController extends Controller
         }
     }
 
-    // ----------------------------------- Ajax -----------------------------------------
+    // --------------------------------------------- Ajax -------------------------------------------------
 
-    // Отображение на сайте
-    public function ajax_sync(Request $request)
+    public function ajax_get_goods(Request $request)
     {
+        $cur_goods = Goods::with([
+            'article.group.unit',
+            'category'
+        ])
+            ->find($request->id);
 
-        // Описание ошибки
-        $ajax_error = [];
-        $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
-        $ajax_error['text'] = "Для начала необходимо создать категории товаров. А уже потом будем добавлять товары. Ок?";
-        $ajax_error['link'] = "/admin/goods_categories"; // Ссылка на кнопке
-        $ajax_error['title_link'] = "Идем в раздел категорий"; // Текст на кнопке
-
-        return view('ajax_error', compact('ajax_error'));
-    }
-
-    // Проверка совпадения артикула
-    public function ajax_check(Request $request)
-    {
-
-        $goods_count = Goods::where(['manually' => $request->value, 'company_id' => $request->user()->company_id])
-        ->where('id', '!=', $request->id)
-        ->count();
-
-        return response()->json($goods_count);
-    }
-
-    // Для заказа
-    public function ajax_get_products(Request $request)
-    {
-
-        $id = $request->id;
-        // $id = 3;
-
-        $goods_list = Goods::with('article', 'photo')
-        ->whereHas('article', function ($query) use ($id) {
-            $query->whereNull('draft')
-            ->whereNull('archive')
-            ->whereHas('product', function ($query) use ($id) {
-                $query->whereHas('category', function ($query) use ($id) {
-                    $query->where('id', $id);
-                });
-            });
-        })
-        ->get();
-        // dd($goods_list);
-
-        return view('leads.items_for_category', [
-            'items_list' => $goods_list,
-            'entity' => $this->entity_alias
-        ]);
+        return view('products.articles.goods.goods.goods_input', compact('cur_goods'));
     }
 
 }

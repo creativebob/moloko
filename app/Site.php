@@ -50,6 +50,11 @@ class Site extends Model
         'domain',
     ];
 
+    public function scopeFilter(Builder $builder, QueryFilter $filters)
+    {
+        return $filters->apply($builder);
+    }
+
     // Компания
     public function company()
     {

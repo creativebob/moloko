@@ -46,6 +46,7 @@ class ProcessRequest extends FormRequest
 
             'draft' => 'integer|nullable',
             'length' => 'integer|nullable',
+            'set' => 'integer|nullable',
 
         ];
     }

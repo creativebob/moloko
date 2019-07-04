@@ -62,7 +62,6 @@ class ServiceController extends Controller
             'id',
             'process_id',
             'category_id',
-            'set_status',
             'author_id',
             'company_id',
             'display',
@@ -195,7 +194,7 @@ class ServiceController extends Controller
     public function store(ProcessRequest $request)
     {
 
-        // dd($request);
+//         dd($request);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
@@ -386,5 +385,18 @@ class ServiceController extends Controller
         } else {
             abort(403, 'Сырьё не найдено');
         }
+    }
+
+    // --------------------------------------------- Ajax -------------------------------------------------
+
+    public function ajax_get_service(Request $request)
+    {
+        $service = Service::with([
+            'process.group.unit',
+            'category'
+        ])
+            ->find($request->id);
+
+        return view('products.processes.services.services.service_input', compact('service'));
     }
 }

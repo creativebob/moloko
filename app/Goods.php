@@ -101,4 +101,11 @@ class Goods extends Model
         return $this->morphMany(OrderComposition::class, 'order_compositions');
     }
 
+    // Пункты каталога
+    public function prices()
+    {
+        return $this->hasMany(PricesGoods::class)
+            ->where('archive', false);
+    }
+
 }

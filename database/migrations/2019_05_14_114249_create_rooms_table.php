@@ -22,8 +22,6 @@ class CreateRoomsTable extends Migration
             $table->bigInteger('category_id')->nullable()->unsigned()->comment('Id категории помещения');
             $table->foreign('category_id')->references('id')->on('rooms_categories');
 
-            $table->boolean('set_status')->default(0)->unsigned()->comment('Статус набора');
-
             $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
 
             $table->decimal('area', 15, 2)->nullable()->comment('Площадь (м2)');

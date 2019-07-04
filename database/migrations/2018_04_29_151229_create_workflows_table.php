@@ -22,8 +22,6 @@ class CreateWorkflowsTable extends Migration
             $table->bigInteger('category_id')->nullable()->unsigned()->comment('Id категории рабочего процесса');
             $table->foreign('category_id')->references('id')->on('workflows_categories');
 
-            $table->boolean('set_status')->default(0)->unsigned()->comment('Статус набора');
-
             $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
 
             $table->boolean('serial')->default(0)->unsigned()->comment('Серийный номер');

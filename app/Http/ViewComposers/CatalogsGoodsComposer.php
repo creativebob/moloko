@@ -14,13 +14,12 @@ class CatalogsGoodsComposer
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('catalogs_goods', false, 'index');
 
-        $catalogs_type = $view->type;
-
         // Главный запрос
-        $catalogs_goods = CatalogsGoods::with('items')
-        ->moderatorLimit($answer)
+        $catalogs_goods = CatalogsGoods::moderatorLimit($answer)
         ->companiesLimit($answer)
+        ->toBase()
         ->get();
+        // dd($catalogs_goods);
 
         return $view->with(compact('catalogs_goods'));
     }

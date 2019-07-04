@@ -68,6 +68,9 @@ class Process extends Model
         'draft',
         'length',
         'unit_id',
+
+        'set',
+        'video_url',
     ];
 
     // Группа
@@ -89,6 +92,15 @@ class Process extends Model
         ->withPivot([
             'value',
          ]);
+    }
+
+    // Услуги
+    public function services()
+    {
+        return $this->belongsToMany(Service::class, 'process_service')
+            ->withPivot([
+                'value',
+            ]);
     }
 
     // Состав (набор)
