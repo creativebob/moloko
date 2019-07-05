@@ -84,11 +84,13 @@ use App\Http\ViewComposers\CategoriesDrilldownComposer;
 
 use App\Http\ViewComposers\EntitiesStatisticsSelectComposer;
 
-use App\Http\ViewComposers\CatalogsGoodsComposer;
-
 use App\Http\ViewComposers\CatalogsServicesComposer;
 use App\Http\ViewComposers\CatalogsServicesItemsComposer;
 use App\Http\ViewComposers\FilialsForCatalogsServicesComposer;
+
+use App\Http\ViewComposers\CatalogsGoodsComposer;
+use App\Http\ViewComposers\CatalogsGoodsItemsComposer;
+use App\Http\ViewComposers\FilialsForCatalogsGoodsComposer;
 
 use App\Http\ViewComposers\CatalogsTypesComposer;
 
@@ -96,9 +98,11 @@ use App\Http\ViewComposers\ArticlesGroupsComposer;
 use App\Http\ViewComposers\ProcessesGroupsComposer;
 
 use App\Http\ViewComposers\RawsComposer;
+use App\Http\ViewComposers\GoodsComposer;
 use App\Http\ViewComposers\TmcComposer;
 
 use App\Http\ViewComposers\WorkflowsComposer;
+use App\Http\ViewComposers\ServicesComposer;
 
 use App\Http\ViewComposers\LeftoverOperationsComposer;
 
@@ -123,7 +127,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.filials_for_user', FilialsForUserComposer::class);
         view()->composer('includes.selects.departments_for_user', DepartmentsForUserComposer::class);
 
-        view()->composer('prices_services.select_user_filials', UserFilialsComposer::class);
+        view()->composer([
+            'prices_services.select_user_filials',
+            'prices_goods.select_user_filials',
+        ], UserFilialsComposer::class);
         view()->composer('prices_services.sync.modal', CatalogsServicesItemsForFilialComposer::class);
 
         view()->composer('includes.selects.roles', RolesComposer::class);
@@ -235,11 +242,13 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.selects.entities_statistics', EntitiesStatisticsSelectComposer::class);
 
-        view()->composer('products.articles.goods.catalogs_with_items', CatalogsGoodsComposer::class);
-
         view()->composer('products.processes.services.prices.catalogs', CatalogsServicesComposer::class);
         view()->composer('products.processes.services.prices.catalogs_items', CatalogsServicesItemsComposer::class);
         view()->composer('products.processes.services.prices.filials', FilialsForCatalogsServicesComposer::class);
+
+        view()->composer('products.articles.goods.prices.catalogs', CatalogsGoodsComposer::class);
+        view()->composer('products.articles.goods.prices.catalogs_items', CatalogsGoodsItemsComposer::class);
+        view()->composer('products.articles.goods.prices.filials', FilialsForCatalogsGoodsComposer::class);
 
         view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
         view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);
@@ -250,9 +259,17 @@ class ComposerServiceProvider extends ServiceProvider
         ], RawsComposer::class);
 
         view()->composer([
+            'products.articles.goods.goods.goods_list'
+        ], GoodsComposer::class);
+
+        view()->composer([
             'products.processes_categories.services_categories.workflows.workflows_list',
             'products.processes.services.workflows.workflows_list'
         ], WorkflowsComposer::class);
+
+        view()->composer([
+            'products.processes.services.services.services_list'
+        ], ServicesComposer::class);
 
         view()->composer('includes.selects.tmc', TmcComposer::class);
         view()->composer('products.articles.goods.raws.leftover_operations_select', LeftoverOperationsComposer::class);

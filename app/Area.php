@@ -49,6 +49,7 @@ class Area extends Model
     protected $fillable = [
         'name',
         'region_id',
+        'country_id',
         'display',
         'system_item',
         'author_id'

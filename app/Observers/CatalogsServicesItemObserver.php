@@ -18,6 +18,7 @@ class CatalogsServicesItemObserver
     public function updating(CatalogsServicesItem $catalogs_services_item)
     {
         $this->update($catalogs_services_item);
+        $catalogs_services_item->photo_id = savePhoto($request, $catalogs_services_item);
     }
 
     public function deleting(CatalogsServicesItem $catalogs_services_item)
@@ -25,11 +26,4 @@ class CatalogsServicesItemObserver
         $this->destroy($catalogs_services_item);
     }
 
-    public function created(CatalogsServicesItem $catalogs_services_item)
-    {
-        $request = request();
-        // dd($request);
-        // Cохраняем / обновляем фото
-        savePhoto($request, $catalogs_services_item);
-    }
 }

@@ -153,13 +153,10 @@ class CatalogsGoodsItemController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods_item);
 
-        return view('common.accordions.edit', [
-            'item' => $catalogs_goods_item,
-            'entity' => $this->entity_alias,
-            'title' => 'Редактирование пункта каталога',
-            'parent_id' => $catalogs_goods_item->parent_id,
-            'category_id' => $catalogs_goods_item->category_id,
+        return view('catalogs_goods_items.edit', [
+            'catalogs_goods_item' => $catalogs_goods_item,
             'catalog_id' => $catalog_id,
+            'page_info' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -233,113 +230,31 @@ class CatalogsGoodsItemController extends Controller
 
     // ------------------------------------------------ Ajax -------------------------------------------------
 
-    public function search_add_product(Request $request)
+    public function get_prices(Request $request)
     {
 
-        // Подключение политики
-        // $this->authorize('index', Goods::class);
+        $filial_id = $request->user()->filial_id;
 
-        // $text_fragment = 'тест';
-        // $catalog_id = 1;
-
-        $text_fragment = $request->text_fragment;
-        $catalog_id = $request->catalog_id;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_goods = operator_right('goods', false, 'index');
-        $answer_services = operator_right('services', false, 'index');
-        $answer_raws = operator_right('raws', false, 'index');
-
-        // --------------------------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // --------------------------------------------------------------------------------------------------------------
-        $catalog = CatalogsGoods::with('goods', 'raws', 'services')->findOrFail($catalog_id);
-        // dd($catalog->goods->keyBy('id')->toArray());
-
-        $result_search_goods = Goods::with('goods_article')
-        ->moderatorLimit($answer_goods)
-        ->companiesLimit($answer_goods)
-        ->authors($answer_goods)
-        ->systemItem($answer_goods) // Фильтр по системным записям
-        ->whereHas('goods_article', function ($query) use ($text_fragment){
-            $query->whereNull('archive')
-            ->where('name', 'LIKE', '%'.$text_fragment.'%');
-        })
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
-
-        $result_search_goods = $result_search_goods->diff($catalog->goods);
-        // dd($result_search_goods);
-
-        $result_search_services = Service::with('services_article')
-        ->moderatorLimit($answer_services)
-        ->companiesLimit($answer_services)
-        ->authors($answer_services)
-        ->systemItem($answer_services) // Фильтр по системным записям
-        ->whereHas('services_article', function ($query) use ($text_fragment){
-            $query->whereNull('archive')
-            ->where('name', 'LIKE', '%'.$text_fragment.'%');
-        })
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
-
-        $result_search_services = $result_search_services->diff($catalog->services);
-
-        $result_search_raws = Raw::with('raws_article')
-        ->moderatorLimit($answer_raws)
-        ->companiesLimit($answer_raws)
-        ->authors($answer_raws)
-        ->systemItem($answer_raws) // Фильтр по системным записям
-        ->whereHas('raws_article', function ($query) use ($text_fragment){
-            $query->whereNull('archive')
-            ->where('name', 'LIKE', '%'.$text_fragment.'%');
-        })
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
-
-        $result_search_raws = $result_search_raws->diff($catalog->raws);
-
-        if(
-            ($result_search_goods->count())||
-            ($result_search_services->count())||
-            ($result_search_raws->count())
-        ){
-
-            return view('catalog_products.search-add-product', compact('result_search_goods', 'result_search_services', 'result_search_raws'));
-        } else {
-
-            return view('catalog_products.search-add-product');
-        }
-    }
-
-    public function add_product(Request $request)
-    {
-
-        $product_id = $request->product_id;
-        $product_type = $request->product_type;
-        $catalog_id = $request->catalog_id;
-
-        // $product_id = 1;
-        // $product_type = 'services';
-        // $catalog_id = 1;
-
-        // Добавление связи
-        $catalog = CatalogsGoods::with('goods', 'raws', 'services')
-        ->findOrFail($catalog_id);
-        // return $catalog->count();
-
-        $catalog->$product_type()->attach($product_id, ['display' => 1]);
-
-        $catalog = CatalogsGoods::with([
-            $product_type => function ($query) {
-                $query->orderBy('catalog_products.sort', 'asc');
+        $catalogs_goods_item = CatalogsGoodsItem::with([
+            'prices_goods' => function ($q) use ($filial_id) {
+                $q->where('archive', false)
+                    ->where('filial_id', $filial_id)
+                    ->whereHas('goods', function ($q) {
+                        $q->where('archive', false)
+                            ->whereHas('article', function ($q) {
+                                $q->where('draft', false);
+                            });
+                    });
             }
         ])
-        ->findOrFail($catalog_id);
+            ->findOrFail($request->id);
+        // dd($catalogs_goods_item);
 
-        return view('catalog_products.content_core', compact('catalog'));
+        return view('leads.catalogs.prices_goods', compact('catalogs_goods_item'));
+    }
+
+    public function ajax_get(Request $request, $catalog_id)
+    {
+        return view('products.articles.goods.prices.catalogs_items', compact('catalog_id'));
     }
 }

@@ -30,10 +30,19 @@
     </div>
 </div>
 
+@if($process->set)
+<div class="tabs-panel" id="services">
+
+    {{-- Состав --}}
+    @include('products.processes.services.services.services')
+
+</div>
+@else
 <div class="tabs-panel" id="workflows">
 
     {{-- Состав --}}
     @include('products.processes.services.workflows.workflows')
 
 </div>
+    @endif
 

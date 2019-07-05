@@ -134,6 +134,8 @@ $disabled = $article->draft == 0 ? true : null;
 
                                 {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 
+
+
                             </div>
 
                             <div class="small-12 medium-6 cell">
@@ -145,6 +147,11 @@ $disabled = $article->draft == 0 ? true : null;
                                     <div class="text-center">
                                         <img id="photo" src="{{ getPhotoPathPlugEntity($item) }}">
                                     </div>
+
+                                    <label>Видео
+                                        {{ Form::text('video_url', $article->video_url, []) }}
+                                    </label>
+
                                 </div>
                             </div>
                         </div>
@@ -332,7 +339,9 @@ $disabled = $article->draft == 0 ? true : null;
 @endsection
 
 @section('modals')
-@include('includes.modals.modal_item_delete')
+    @include('includes.modals.modal_item_delete')
+
+    @includeIf($page_info->entity->view_path . '.modals')
 @endsection
 
 @push('scripts')

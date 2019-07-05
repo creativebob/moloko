@@ -49,6 +49,7 @@ class Page extends Model
         'name',
         'site_id ',
         'title',
+        'subtitle',
         'description',
         'alias',
     ];

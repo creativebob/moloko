@@ -102,7 +102,15 @@
                     <th class="td-name">Название</th>
                     <th class="td-alias">Алиас</th>
                     <th class="td-description">Описание</th>
-                    <th class="td-tree">Дерево</th>
+
+                    @can('index', App\CatalogsGoodsItem::class)
+                        <th class="td-tree">Дерево</th>
+                    @endcan
+
+                    @can('index', App\PricesGoods::class)
+                        <th class="td-goods">Товары</th>
+                    @endcan
+
                     <th class="td-author">Автор</th>
                     <th class="td-control"></th>
                     <th class="td-delete"></th>
@@ -111,8 +119,8 @@
 
             <tbody data-tbodyId="1" class="tbody-width">
 
-                @if($catalogs_goods->isNotEmpty())
-                @foreach($catalogs_goods as $cur_catalogs_goods)
+
+                @forelse($catalogs_goods as $cur_catalogs_goods)
 
                 <tr class="item @if($cur_catalogs_goods->moderation == 1)no-moderation @endif" id="catalogs_goods-{{ $cur_catalogs_goods->id }}" data-name="{{ $cur_catalogs_goods->name }}">
                     <td class="td-drop">
@@ -126,18 +134,25 @@
 
                         @can('update', $cur_catalogs_goods)
                         {{ link_to_route($page_info->alias.'.edit', $cur_catalogs_goods->name, $parameters = ['id' => $cur_catalogs_goods->id], $attributes = []) }}
+                            @else
+                            {{ $page->name }}
                         @endcan
 
-                        @cannot('update', $cur_catalogs_goods)
-                        {{ $page->name }}
-                        @endcannot
 
                     </td>
                     <td class="td-alias">{{ $cur_catalogs_goods->alias }}</td>
                     <td class="td-description">{{ $cur_catalogs_goods->description }}</td>
-                    <td class="td-tree">
-                        {{ link_to_route('catalogs_goods_items.index', 'Дерево', $parameters = ['catalog_id' => $cur_catalogs_goods->id], $attributes = ['class' => 'button']) }}
-                    </td>
+                    @can('index', App\CatalogsGoodsItem::class)
+                        <td class="td-tree">
+                            {{ link_to_route('catalogs_goods_items.index', 'Дерево', ['catalog_id' => $cur_catalogs_goods->id], ['class' => 'button']) }}
+                        </td>
+                    @endcan
+
+                    @can('index', App\PricesGoods::class)
+                        <td class="td-services">
+                            {{ link_to_route('prices_goods.index', 'Товары', ['catalog_id' => $cur_catalogs_goods->id], ['class' => 'button']) }}
+                        </td>
+                    @endcan
                     <td class="td-author">{{ $cur_catalogs_goods->author->name}}</td>
 
                     {{-- Элементы управления --}}
@@ -149,8 +164,9 @@
                         @endcan
                     </td>
                 </tr>
-                @endforeach
-                @endif
+                @empty
+                @endforelse
+
             </tbody>
         </table>
     </div>

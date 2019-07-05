@@ -2,8 +2,14 @@
 
 namespace App\Providers;
 
+use App\CatalogsGoodsItem;
+use App\Observers\CatalogsGoodsItemObserver;
+use App\Observers\PageObserver;
 use App\Observers\PluginObserver;
+use App\Observers\PricesGoodsObserver;
+use App\Page;
 use App\Plugin;
+use App\PricesGoods;
 use Illuminate\Support\ServiceProvider;
 
 use App\RawsCategory;
@@ -84,6 +90,7 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Сайты
         Site::observe(SiteObserver::class);
+        Page::observe(PageObserver::class);
 
         // Плагины
         Plugin::observe(PluginObserver::class);
@@ -91,6 +98,9 @@ class ObserverServiceProvider extends ServiceProvider
         // Каталоги
         CatalogsServicesItem::observe(CatalogsServicesItemObserver::class);
         PricesService::observe(PricesServiceObserver::class);
+
+        CatalogsGoodsItem::observe(CatalogsGoodsItemObserver::class);
+        PricesGoods::observe(PricesGoodsObserver::class);
 
         // Альбомы
         AlbumsCategory::observe(AlbumsCategoryObserver::class);

@@ -876,6 +876,18 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => $pages->firstWhere('alias', 'prices_services')->id,
             ],
             [
+                'name' => 'Прайс товара',
+                'alias' => 'prices_goods',
+                'model' => 'PricesGoods',
+                'rights' => true,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('catalogs_goods')->first(['id'])->id,
+                'view_path' => 'prices_services',
+                'page_id' => $pages->firstWhere('alias', 'prices_goods')->id,
+            ],
+            [
                 'name' => 'Артикулы',
                 'alias' => 'articles',
                 'model' => 'Article',

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePricesGoods extends Migration
+class CreatePricesServicesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,27 @@ class CreatePricesGoods extends Migration
      */
     public function up()
     {
-        Schema::create('prices_goods', function (Blueprint $table) {
+        Schema::create('prices_services', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->bigInteger('catalogs_goods_item_id')->nullable()->unsigned()->comment('Id пункта каталога');
-            $table->foreign('catalogs_goods_item_id')->references('id')->on('catalogs_goods_items');
+            $table->bigInteger('catalogs_services_item_id')->nullable()->unsigned()->comment('Id пункта каталога');
+            $table->foreign('catalogs_services_item_id')->references('id')->on('catalogs_services_items');
 
-            $table->bigInteger('catalogs_goods_id')->nullable()->unsigned()->comment('Id каталога товаров');
-            $table->foreign('catalogs_goods_id')->references('id')->on('catalogs_goods');
+            $table->bigInteger('catalogs_service_id')->nullable()->unsigned()->comment('Id каталога услуг');
+            $table->foreign('catalogs_service_id')->references('id')->on('catalogs_services');
 
-            $table->bigInteger('goods_id')->nullable()->unsigned()->comment('Id товара');
-            $table->foreign('goods_id')->references('id')->on('goods');
+            $table->bigInteger('service_id')->nullable()->unsigned()->comment('Id услуги');
+            $table->foreign('service_id')->references('id')->on('services');
+
+            $table->bigInteger('filial_id')->nullable()->unsigned()->comment('Id филиала');
+            $table->foreign('filial_id')->references('id')->on('departments');
+
+            $table->bigInteger('ancestor_id')->nullable()->unsigned()->comment('Предок');
+            $table->foreign('ancestor_id')->references('id')->on('prices_services');
 
             $table->integer('price')->nullable()->comment('Цена');
+
+            $table->boolean('archive')->default(0)->unsigned()->comment('Архив');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
@@ -53,6 +61,6 @@ class CreatePricesGoods extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('prices_goods');
+        Schema::dropIfExists('prices_services');
     }
 }

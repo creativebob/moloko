@@ -29,7 +29,6 @@ class CatalogsServiceController extends Controller
     public function index(Request $request)
     {
 
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 

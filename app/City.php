@@ -52,6 +52,7 @@ class City extends Model
         'name',
         'region_id',
         'area_id',
+        'country_id',
         'code',
         'vk_external_id',
         'display',
@@ -62,18 +63,24 @@ class City extends Model
     // Район
     public function area()
     {
-        return $this->belongsTo('App\Area');
+        return $this->belongsTo(Area::class);
     }
 
     // Область
     public function region()
     {
-        return $this->belongsTo('App\Region');
+        return $this->belongsTo(Region::class);
+    }
+
+    // Страна
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
     }
 
     // Локации
     public function locations()
     {
-        return $this->hasMany('App\Location');
+        return $this->hasMany(Location::class);
     }
 }

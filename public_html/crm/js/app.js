@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 13);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -70,7 +70,7 @@
 "use strict";
 
 
-var bind = __webpack_require__(5);
+var bind = __webpack_require__(6);
 var isBuffer = __webpack_require__(19);
 
 /*global toString:true*/
@@ -424,10 +424,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(7);
+    adapter = __webpack_require__(8);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(7);
+    adapter = __webpack_require__(8);
   }
   return adapter;
 }
@@ -498,7 +498,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
 /* 3 */
@@ -17613,7 +17613,7 @@ module.exports = defaults;
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(15)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(16)(module)))
 
 /***/ }),
 /* 4 */
@@ -27990,6 +27990,12 @@ return jQuery;
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__(18);
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
 
@@ -28005,7 +28011,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -28195,7 +28201,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28206,7 +28212,7 @@ var settle = __webpack_require__(22);
 var buildURL = __webpack_require__(24);
 var parseHeaders = __webpack_require__(25);
 var isURLSameOrigin = __webpack_require__(26);
-var createError = __webpack_require__(8);
+var createError = __webpack_require__(9);
 var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(27);
 
 module.exports = function xhrAdapter(config) {
@@ -28382,7 +28388,7 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28407,7 +28413,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28419,7 +28425,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -28445,7 +28451,7 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 /* globals __VUE_SSR_CONTEXT__ */
@@ -28554,14 +28560,14 @@ module.exports = function normalizeComponent (
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(13);
+module.exports = __webpack_require__(14);
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -28570,7 +28576,7 @@ module.exports = __webpack_require__(13);
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(14);
+__webpack_require__(15);
 
 window.Vue = __webpack_require__(36);
 
@@ -28587,7 +28593,7 @@ window.Vue = __webpack_require__(36);
 
 
 Vue.component('example-component', __webpack_require__(39));
-Vue.component('citysearch', __webpack_require__(42));
+Vue.component('citysearch-component', __webpack_require__(42));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -28606,6 +28612,14 @@ var _ = __webpack_require__(3);
 // Подключаем foundation
 $(document).foundation();
 
+// Csrf для axios
+window.axios = __webpack_require__(5);
+
+window.axios.defaults.headers.common = {
+    'X-Requested-With': 'XMLHttpRequest',
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+};
+
 // Ajax ошибка
 $.ajaxSetup({
     headers: {
@@ -28618,7 +28632,7 @@ $.ajaxSetup({
 });
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -28633,7 +28647,7 @@ window._ = __webpack_require__(3);
 try {
   window.$ = window.jQuery = __webpack_require__(4);
 
-  __webpack_require__(16); // 'foundation.min' can also be used if you like
+  __webpack_require__(17); // 'foundation.min' can also be used if you like
 } catch (e) {}
 
 /**
@@ -28642,7 +28656,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(17);
+window.axios = __webpack_require__(5);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -28676,7 +28690,7 @@ if (token) {
 // });
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -28704,7 +28718,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -41923,12 +41937,6 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_jquery__;
 //# sourceMappingURL=foundation.js.map
 
 /***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(18);
-
-/***/ }),
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -41936,7 +41944,7 @@ module.exports = __webpack_require__(18);
 
 
 var utils = __webpack_require__(0);
-var bind = __webpack_require__(5);
+var bind = __webpack_require__(6);
 var Axios = __webpack_require__(20);
 var defaults = __webpack_require__(2);
 
@@ -41971,9 +41979,9 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(10);
+axios.Cancel = __webpack_require__(11);
 axios.CancelToken = __webpack_require__(34);
-axios.isCancel = __webpack_require__(9);
+axios.isCancel = __webpack_require__(10);
 
 // Expose all/spread
 axios.all = function all(promises) {
@@ -42133,7 +42141,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 "use strict";
 
 
-var createError = __webpack_require__(8);
+var createError = __webpack_require__(9);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -42552,7 +42560,7 @@ module.exports = InterceptorManager;
 
 var utils = __webpack_require__(0);
 var transformData = __webpack_require__(31);
-var isCancel = __webpack_require__(9);
+var isCancel = __webpack_require__(10);
 var defaults = __webpack_require__(2);
 
 /**
@@ -42705,7 +42713,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 "use strict";
 
 
-var Cancel = __webpack_require__(10);
+var Cancel = __webpack_require__(11);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -54147,14 +54155,14 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(7)))
 
 /***/ }),
 /* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(11)
+var normalizeComponent = __webpack_require__(12)
 /* script */
 var __vue_script__ = __webpack_require__(40)
 /* template */
@@ -54273,7 +54281,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(11)
+var normalizeComponent = __webpack_require__(12)
 /* script */
 var __vue_script__ = __webpack_require__(43)
 /* template */
@@ -54381,54 +54389,63 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
         console.log('CitySearchComponent mounted.');
     },
 
-    // props: [
-    //     this.id => 'id',
-    //     this.name => 'name'
-    // ],
+    props: ['city'],
     data: function data() {
         return {
-            id: null,
-            name: null,
+            id: this.city.id,
+            name: this.city.name,
             results: [],
-            check: true
+            findOk: this.city.id != null ? true : false,
+            findNo: false,
+            load: false
         };
     },
 
     watch: {
         name: function name(after, before) {
-            this.fetch();
+            this.check();
         }
     },
     methods: {
-        fetch: function fetch() {
+        check: function check() {
             var _this = this;
 
-            if (this.name.length > 2 && this.check == true) {
-                axios.get('/admin/cities_list', {
+            if (this.name.length > 2) {
+                this.findNo = false;
+                this.load = true;
+                axios.get('/api/v1/cities_list', {
                     params: {
                         name: this.name
                     }
                 }).then(function (response) {
                     return _this.results = response.data;
-                }).then(this.check = false).catch(function (error) {
+                }).then(this.load = false).catch(function (error) {
                     console.log(error);
                 });
             } else {
                 this.id = null;
-                this.check = true;
+                this.findNo = false;
             }
         },
         add: function add(id, name) {
             this.id = id;
             this.name = name;
             this.results = [];
-            this.check = false;
+            this.findOk = true;
+        },
+        clear: function clear() {
+            this.id = null;
+            this.name = '';
+            this.findOk = false;
+            this.findNo = false;
         }
     }
 });
@@ -54442,65 +54459,75 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("b", [_vm._v(_vm._s(_vm.results.length))]),
-    _vm._v(" "),
-    _c("label", { staticClass: "city-input-parent", attrs: { id: "" } }, [
-      _vm._v("Город\n\n            "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model.lazy",
-            value: _vm.name,
-            expression: "name",
-            modifiers: { lazy: true }
-          }
-        ],
-        staticClass: "varchar-field city_check-field",
-        attrs: {
-          type: "text",
-          name: "city_name",
-          maxlength: "30",
-          autocomplete: "off",
-          pattern: "[А-Яа-яЁё0-9-_\\s]{3,30}"
-        },
-        domProps: { value: _vm.name },
-        on: {
-          change: function($event) {
-            _vm.name = $event.target.value
-          }
-        }
-      }),
-      _vm._v(" "),
-      _c("div", { staticClass: "sprite-input-right find-status city-check" }),
-      _vm._v(" "),
-      _c("span", { staticClass: "form-error" }, [
-        _vm._v("Уж постарайтесь, введите хотя бы 3 символа!")
-      ]),
-      _vm._v(" "),
-      _c("input", {
-        directives: [
-          { name: "model", rawName: "v-model", value: _vm.id, expression: "id" }
-        ],
-        attrs: {
-          type: "hidden",
-          name: "city_id",
-          maxlength: "3",
-          pattern: "[0-9]{3}"
-        },
-        domProps: { value: _vm.id },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
+    _c(
+      "label",
+      { staticClass: "city-input-parent input-icon", attrs: { id: "" } },
+      [
+        _vm._v("Город\n        "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.name,
+              expression: "name"
             }
-            _vm.id = $event.target.value
+          ],
+          attrs: {
+            type: "text",
+            name: "city_name",
+            maxlength: "30",
+            autocomplete: "off",
+            pattern: "[А-Яа-яЁё0-9-_\\s]{3,30}",
+            required: ""
+          },
+          domProps: { value: _vm.name },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.name = $event.target.value
+            }
           }
-        }
-      }),
-      _vm._v(" "),
-      _c("input", { attrs: { type: "hidden", name: "country_id_default" } })
+        })
+      ]
+    ),
+    _vm._v(" "),
+    _c("div", {
+      staticClass: "sprite-input-right find-status city-check",
+      class: {
+        "icon-find-ok sprite-16": _vm.findOk,
+        "icon-find-no sprite-16": _vm.findNo,
+        "icon-load": _vm.load
+      },
+      on: { click: _vm.clear }
+    }),
+    _vm._v(" "),
+    _c("span", { staticClass: "form-error" }, [
+      _vm._v("Уж постарайтесь, введите город!")
     ]),
+    _vm._v(" "),
+    _c("input", {
+      directives: [
+        { name: "model", rawName: "v-model", value: _vm.id, expression: "id" }
+      ],
+      attrs: {
+        type: "hidden",
+        name: "city_id",
+        maxlength: "3",
+        pattern: "[0-9]{3}"
+      },
+      domProps: { value: _vm.id },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.id = $event.target.value
+        }
+      }
+    }),
     _vm._v(" "),
     _c(
       "table",
@@ -54509,8 +54536,8 @@ var render = function() {
           {
             name: "show",
             rawName: "v-show",
-            value: !_vm.check,
-            expression: "!check"
+            value: this.id == null && this.name.length > 2,
+            expression: "this.id == null && this.name.length > 2"
           }
         ],
         staticClass: "content-table-search table-over"
@@ -54526,7 +54553,6 @@ var render = function() {
                       _c(
                         "a",
                         {
-                          staticClass: "city-add city-name",
                           on: {
                             click: function($event) {
                               _vm.add(result.id, result.name)
@@ -54535,6 +54561,22 @@ var render = function() {
                         },
                         [_vm._v(_vm._s(result.name))]
                       )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      result.area != null
+                        ? _c(
+                            "a",
+                            {
+                              on: {
+                                click: function($event) {
+                                  _vm.add(result.id, result.name)
+                                }
+                              }
+                            },
+                            [_vm._v(_vm._s(result.area.name))]
+                          )
+                        : _vm._e()
                     ]),
                     _vm._v(" "),
                     _c("td", [
@@ -54549,26 +54591,24 @@ var render = function() {
                         },
                         [_vm._v(_vm._s(result.region.name))]
                       )
+                    ]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c(
+                        "a",
+                        {
+                          on: {
+                            click: function($event) {
+                              _vm.add(result.id, result.name)
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(result.country.name))]
+                      )
                     ])
                   ])
                 })
-              : [
-                  _c(
-                    "tr",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.check,
-                          expression: "check"
-                        }
-                      ],
-                      staticClass: "no-city"
-                    },
-                    [_vm._m(0)]
-                  )
-                ]
+              : [_vm._m(0)]
           ],
           2
         )
@@ -54581,10 +54621,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", [
-      _vm._v("Населенный пункт не найден в базе данных, "),
-      _c("a", { attrs: { href: "/admin/cities", target: "_blank" } }, [
-        _vm._v("добавьте его!")
+    return _c("tr", { staticClass: "no-city" }, [
+      _c("td", [
+        _vm._v("Населенный пункт не найден в базе данных, "),
+        _c("a", { attrs: { href: "/admin/cities", target: "_blank" } }, [
+          _vm._v("добавьте его!")
+        ])
       ])
     ])
   }

@@ -51,6 +51,7 @@ class Region extends Model
         'code',
         'vk_external_id',
         'display',
+        'country_id',
         'system_item',
         'author_id'
     ];
@@ -58,12 +59,19 @@ class Region extends Model
     // Районы
     public function areas()
     {
-        return $this->hasMany('App\Area');
+        return $this->hasMany(Area::class);
     }
 
     // Города
     public function cities()
     {
-        return $this->hasMany('App\City');
+        return $this->hasMany(City::class);
+    }
+
+    // Города без района
+    public function cities_without_area()
+    {
+        return $this->hasMany(City::class)
+            ->whereNull('area_id');
     }
 }

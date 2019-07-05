@@ -20,6 +20,9 @@ class CreateAreasTable extends Migration
             $table->bigInteger('region_id')->unsigned()->comment('Id области, в которой находится район');
             $table->foreign('region_id')->references('id')->on('regions');
 
+            $table->bigInteger('country_id')->unsigned()->nullable()->comment('Id страны');
+            $table->foreign('country_id')->references('id')->on('countries');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

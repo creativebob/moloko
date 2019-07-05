@@ -3,21 +3,15 @@
 namespace App\Http\Controllers;
 
 // Модели
-use App\Goods;
 use App\PricesService;
-
-use App\CatalogsService;
-use App\CatalogsServicesItem;
 
 // Валидация
 use Illuminate\Http\Request;
-// use App\Http\Requests\CatalogsServiceRequest;
 
-use Illuminate\Support\Facades\Log;
 
 class PricesServiceController extends Controller
 {
-    // Настройки сконтроллера
+    // Настройки контроллера
     public function __construct(PricesService $prices_service)
     {
         $this->middleware('auth');

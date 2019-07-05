@@ -1,24 +1,44 @@
 {{-- Каталоги --}}
 <div class="tabs-panel" id="catalogs">
 	<div class="grid-x grid-padding-x">
+
 		<div class="small-12 medium-6 cell">
+			@include('products.articles.goods.prices.catalogs')
 
-			<fieldset class="fieldset-access">
-				<legend>Каталоги</legend>
+			<table class="table-compositions">
+				<thead>
+				<tr>
+					<th>Каталог:</th>
+					<th>Пункт:</th>
+					<th>Филиал:</th>
+					<th>Цена:</th>
+					<th></th>
+				</tr>
+				</thead>
+				<tbody id="table-prices">
 
-				@include('products.articles.goods.catalogs_with_items')
+				@if ($item->prices->isNotEmpty())
+					@foreach ($item->prices as $price)
+						@include('products.articles.goods.prices.price', ['cur_price_goods' => $price])
+					@endforeach
+				@endif
 
-				{{-- Form::select('catalogs[]', $catalogs_list, $cur_goods->catalogs, ['class' => 'chosen-select', 'multiple']) --}}
-				{{-- @include('includes.selects.catalogs_chosen', ['parent_id' => $cur_goods->catalogs->keyBy('id')->toArray()]) --}}
-
-			</fieldset>
+				</tbody>
+			</table>
 
 		</div>
 	</div>
 </div>
 
+
+@if($article->set)
+	<div class="tabs-panel" id="goods">
+		@include('products.articles.goods.goods.goods')
+	</div>
+	@else
 {{-- Состав --}}
 <div class="tabs-panel" id="raws">
 @include('products.articles.goods.raws.raws')
 </div>
+	@endif
 

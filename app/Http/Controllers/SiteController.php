@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use App\Site;
 use App\Entity;
 
+use App\Filters\SiteFilter;
+
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\SiteRequest;
@@ -24,7 +26,7 @@ class SiteController extends Controller
         $this->entity_dependence = false;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, SiteFilter $filters)
     {
 
         // Подключение политики
@@ -50,6 +52,7 @@ class SiteController extends Controller
         ->systemItem($answer)
         ->template($answer)
         ->booklistFilter($request)
+            ->filter($filters)
         // ->filter($request, 'author_id')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
