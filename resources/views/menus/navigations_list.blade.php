@@ -83,7 +83,7 @@ $drop = 1;
 @include('includes.scripts.sortable-menu-script')
 
 @if(!empty($id))
-<script type="text/javascript">
+<script type="application/javascript">
   if ('{{ $item }}' == 'navigation') {
     // Если первый элемент
     if ($('#navigations-{{ $id }}').hasClass('first-item')) {

@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 // Мягкое удаление с ajax
 $(document).on('click', '[data-open="item-delete-ajax"]', function() {
 

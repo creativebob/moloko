@@ -48,7 +48,7 @@
 @endsection
 
 @section('scripts')
-<script type="text/javascript">
+<script type="application/javascript">
 
 	$(document).on('click', '.myfeedback', function(event) {
 		event.preventDefault();

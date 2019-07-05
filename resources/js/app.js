@@ -19,8 +19,11 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
+
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
-Vue.component('city-search', require('./components/CitySearchComponent.vue'));
+Vue.component('citysearch', require('./components/CitySearchComponent.vue'));
+
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -30,4 +33,22 @@ Vue.component('city-search', require('./components/CitySearchComponent.vue'));
 
 const app = new Vue({
     el: '#app',
+});
+
+var _ = require('lodash');
+// const debounce = require('lodash.debounce');
+
+
+// Подключаем foundation
+$(document).foundation();
+
+// Ajax ошибка
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    error: function(date) {
+        // alert(date);
+        alert('К сожалению, произошла ошибка. Попробуйте перезагрузить страницу!');
+    },
 });

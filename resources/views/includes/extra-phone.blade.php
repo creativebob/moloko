@@ -5,7 +5,7 @@
 </label>
 
 
-<script type="text/javascript">
+<script type="application/javascript">
     // Телефон
     // $('.phone-field').mask('8 (999) 999-99-99',{placeholder:"_"});
 </script>

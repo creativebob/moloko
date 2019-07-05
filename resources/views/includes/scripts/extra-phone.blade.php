@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 
 var entity = '{{ $page_info->alias }}';
 // alert(entity);

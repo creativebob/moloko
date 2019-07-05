@@ -1,5 +1,5 @@
-<!-- <script type="text/javascript" src="/js/jquery.latest.min.js"></script> -->
-<script type="text/javascript">
+<script src="/crm/js/plugins/jquery-ui/jquery-ui.js"></script>
+<script type="application/javascript">
     $(function() {
 
         // Оставляем ширину у вырванного из потока элемента

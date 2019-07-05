@@ -1,7 +1,7 @@
 <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
 
 
-<script type="text/javascript">
+<script type="application/javascript">
 
 CKEDITOR.replace('content-ckeditor');
 

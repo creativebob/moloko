@@ -84,7 +84,7 @@ $drop = 1;
 @include('includes.scripts.sortable-menu-script')
 
 @if(isset($id))
-<script type="text/javascript">
+<script type="application/javascript">
 
 // Если первый элемент
 if ($('#{{ $entity }}-{{ $id }}').hasClass('first-item')) {

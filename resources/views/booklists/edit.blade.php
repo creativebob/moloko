@@ -65,7 +65,7 @@
 @section('scripts')
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
-<script type="text/javascript">
+<script type="application/javascript">
 
 
   $(document).on('click', '#submit-role-add', function(event) {

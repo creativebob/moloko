@@ -130,7 +130,7 @@ $drop = 1;
 @include('includes.scripts.sortable-menu-script')
 
 @isset($id)
-<script type="text/javascript">
+<script type="application/javascript">
 
   if ('{{ $item }}' == 'departments') {
 
@@ -193,7 +193,7 @@ if ('{{ $item }}' == 'staff') {
 @endisset
 
 @isset ($count)
-<script type="text/javascript">
+<script type="application/javascript">
     $('.content-count').text('{{ $count }}');
 </script>
 @endisset

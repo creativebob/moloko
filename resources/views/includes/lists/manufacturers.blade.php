@@ -35,9 +35,9 @@
 
 </div>
 
-<script type="text/javascript">
+<script type="application/javascript">
 
-	let {{$name}} = new CheckBoxer("{{$name}}", {{ $entity->$name ? $entity->$name->count() : 0 }});
+	{{$name}} = new CheckBoxer("{{$name}}", {{ $entity->$name ? $entity->$name->count() : 0 }});
 
 	$(".checkboxer-menu.{{$name}} :checkbox").click(function() {
 		{{$name}}.CheckBoxerAddDel(this);

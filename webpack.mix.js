@@ -13,11 +13,10 @@ const mix = require('laravel-mix');
 
 mix.setPublicPath('public_html');
 
-mix.js('resources/js/app.js', 'public_html/js');
+mix.js('resources/js/app.js', 'public_html/crm/js');
 // .sass('resources/sass/app.scss', 'public_html/css')
 
-
-// mix.browserSync('crmsystem.local/admin/');
+// mix.browserSync('crmsystem.local/admin/test');
 
 if (mix.inProduction()) {
 	mix.version();

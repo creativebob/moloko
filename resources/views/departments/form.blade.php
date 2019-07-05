@@ -28,6 +28,7 @@
                 <div class="small-10 cell">
 
                     {{-- Добавление города --}}
+{{--                    <citysearch></citysearch>--}}
                     @include('includes.inputs.city_search', ['city' => isset($department->location->city->name) ? $department->location->city : null, 'id' => 'cityForm', 'required' => isset($parent_id) ? null : true])
 
                     @isset($parent_id)
@@ -89,7 +90,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script type="application/javascript">
     $.getScript("/crm/js/jquery.maskedinput.js");
     $.getScript("/crm/js/inputs_mask.js");
 </script>

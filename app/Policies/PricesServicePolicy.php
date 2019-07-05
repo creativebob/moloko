@@ -22,7 +22,7 @@ class PricesServicePolicy
      */
 
     protected $entity_name = 'prices_services';
-    protected $entity_dependence = false;
+    protected $entity_dependence = true;
 
     public function index(User $user)
     {

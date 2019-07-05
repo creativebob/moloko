@@ -106,8 +106,6 @@
         {{-- Блок фильтров --}}
         @if (isset($filter))
 
-        {{-- Подключаем класс Checkboxer --}}
-        @include('includes.scripts.class.checkboxer')
 
         <div class="grid-x">
             <div class="small-12 cell filters fieldset-filters" id="filters">

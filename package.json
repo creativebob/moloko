@@ -18,10 +18,12 @@
         "jquery": "^3.2",
         "laravel-mix": "^1.0",
         "lodash": "^4.17.4",
-        "vue": "^2.1.10"
+        "vue": "^2.5.17",
+        "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
         "ajv": "^6.7.0",
+        "lodash.debounce": "^4.0.8",
         "what-input": "^5.1.3"
     }
 }

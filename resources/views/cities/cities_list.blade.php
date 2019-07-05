@@ -140,7 +140,7 @@ $drop = 1;
 @include('includes.scripts.sortable-menu-script')
 
 @if(isset($id))
-<script type="text/javascript">
+<script type="application/javascript">
 
     // Если средний элемент
     if ($('#cities-{{ $id }}').hasClass('medium-item')) {
@@ -181,7 +181,7 @@ $drop = 1;
 @endif
 
 @isset ($count)
-<script type="text/javascript">
+<script type="application/javascript">
     $('.content-count').text('{{ $count }}');
 </script>
 @endisset

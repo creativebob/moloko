@@ -141,7 +141,7 @@
 @include('includes.scripts.inputs-mask')
 @include('tmc.create.scripts', ['entity' => 'workflows', 'category_entity' => 'workflows_categories'])
 
-<script type="text/javascript">
+<script type="application/javascript">
 
 
 </script>

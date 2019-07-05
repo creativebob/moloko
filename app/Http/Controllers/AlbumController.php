@@ -23,8 +23,6 @@ use Illuminate\Support\Facades\Cookie;
 // Специфические классы
 use Illuminate\Support\Facades\Storage;
 
-// Транслитерация
-use Illuminate\Support\Str;
 
 class AlbumController extends Controller
 {

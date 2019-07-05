@@ -142,7 +142,6 @@ class CompanyController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // dd($request);
         // Отдаем работу по созданию новой компании трейту
         $new_company = $this->createCompany($request);
 

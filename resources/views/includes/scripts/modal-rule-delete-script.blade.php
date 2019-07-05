@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 
 // Мягкое удаление
 $(document).on('click', '[data-open="delete-rule"]', function() {

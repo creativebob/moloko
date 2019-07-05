@@ -193,7 +193,16 @@ function yandex_geocoder ($location) {
     }
 }
 
-// Добавление
+/**
+ * Define an inverse one-to-one or many relationship.
+ *
+ * @param  $request
+ * @param  integer  $country_id
+ * @param  integer  $city_id
+ * @param  string  $address
+ * @return variable;
+ */
+
 function create_location($request, $country_id = null, $city_id = null, $address = null) {
 
         // Значения по умолчанию
@@ -214,7 +223,8 @@ function create_location($request, $country_id = null, $city_id = null, $address
 
         yandex_geocoder($location);
 
-        return $location->id;
+        $location_id = $location->id;
+        return $location_id;
     }
 
 // Обновление

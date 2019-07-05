@@ -1,24 +1,5 @@
 <?php
 
-use App\Lead;
-use App\User;
-use App\Claim;
-
-use App\Entity;
-use App\Page;
-use App\Location;
-
-use App\Align;
-use App\Company;
-use App\FirstName;
-
-use App\RawsArticle;
-use App\Estimate;
-
-use Carbon\Carbon;
-
-use Fomvasss\Dadata\Facades\DadataSuggest;
-
 // use GuzzleHttp\Client;
 
 /*
@@ -32,11 +13,9 @@ use Fomvasss\Dadata\Facades\DadataSuggest;
 |
 */
 
-// Route::get('test', function () {
-// 	$estimate = Estimate::first();
-
-//         dd($estimate->items->first()->price->product->process);
-// });
+ Route::get('test', function () {
+  return view('test');
+ });
 
 Auth::routes();
 

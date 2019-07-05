@@ -43,9 +43,9 @@
 
 </div>
 
-<script type="text/javascript">
+<script type="application/javascript">
 
-	let {{$name}} = new CheckBoxer("{{$name}}", {{$filter[$name]['count_mass']}});
+	{{$name}} = new CheckBoxer("{{$name}}", {{$filter[$name]['count_mass']}});
 
   	$(".checkboxer-menu.{{$name}} :checkbox").click(function() {
 		{{$name}}.CheckBoxerAddDel(this);

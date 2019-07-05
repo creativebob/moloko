@@ -190,7 +190,7 @@
 
         @section('scripts')
 
-        <script type="text/javascript">
+        <script type="application/javascript">
 
           $(document).on('click', '.take-lead', function(event) {
             event.preventDefault();

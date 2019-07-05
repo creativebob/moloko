@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 
     // Получения списка значений при смене категории едениц измерения
     $(document).on('change', '#units-categories-list', function() {

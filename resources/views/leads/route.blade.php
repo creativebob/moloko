@@ -8,7 +8,7 @@
     <div id="map" style="width: 1024; height: 840px"></div>
 
 
-    <script type="text/javascript">
+    <script type="application/javascript">
 
         var longitude = '{{ Auth::user()->staff->first()->company->location->longitude }}';
         var latitude = '{{ Auth::user()->staff->first()->company->location->latitude }}';

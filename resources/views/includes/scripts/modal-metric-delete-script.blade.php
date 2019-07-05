@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 
 // При клике на удаление метрики со страницы
 $(document).on('click', '.metric-delete-button', function() {
