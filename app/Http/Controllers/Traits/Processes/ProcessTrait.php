@@ -120,27 +120,27 @@ trait ProcessTrait
                 return $result;
             } else {
 
-                // Обновляем составы только для услуг
-                if ($item->getTable() == 'services') {
+                if ($process->draft) {
+                    // Обновляем составы только для услуг в черноике
+                    if ($item->getTable() == 'services') {
 
-                    if($process->set == true) {
-                        $this->setServices($request, $process);
-                    } else {
-                        $this->setWorkflows($request, $process);
+                        if($process->kit) {
+                            $this->setServices($request, $process);
+                        } else {
+                            $this->setWorkflows($request, $process);
+                        }
                     }
-                }
 
-
-                if (isset($process->unit_id)) {
-                    $unit = Unit::findOrFail($process->unit_id);
-                    $length = $data['length'] * $unit->ratio;
-                    $data['length'] = $length;
+                    if (isset($process->unit_id)) {
+                        $unit = Unit::findOrFail($process->unit_id);
+                        $length = $data['length'] * $unit->ratio;
+                        $data['length'] = $length;
+                    }
                 }
 
                 $data['draft'] = $request->has('draft');
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $process->update($data);
-
 
                 return $process;
             }

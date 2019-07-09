@@ -367,6 +367,8 @@ class GoodsController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
+//        dd($cur_goods);
+
         return view('products.articles.common.edit.edit', [
             'title' => 'Редактировать товар',
             'item' => $cur_goods,
@@ -418,13 +420,12 @@ class GoodsController extends Controller
                 }
             }
             // dd($data);
-            $cur_goods->catalogs_items()->sync($data);
+//            $cur_goods->catalogs_items()->sync($data);
 
             // Метрики
             if ($request->has('metrics')) {
                 // dd($request);
 
-                $cur_goods->metrics()->detach();
 
                 $metrics_insert = [];
                 foreach ($request->metrics as $metric_id => $value) {

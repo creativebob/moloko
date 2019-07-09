@@ -27,11 +27,11 @@
     </div>
 </div>
 
-
-
-<script type="application/javascript">
+@push('scripts')
+<script>
     $.getScript("/crm/js/jquery.maskedinput.js");
     $.getScript("/crm/js/inputs_mask.js");
 </script>
+@endpush
 
 

@@ -62,7 +62,6 @@ class WorkflowController extends Controller
             'id',
             'process_id',
             'category_id',
-            'set_status',
             'author_id',
             'company_id',
             'display',

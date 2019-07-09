@@ -32,7 +32,7 @@ class CreateProcessesTable extends Migration
             $table->bigInteger('manufacturer_id')->nullable()->unsigned()->comment('Id производителя процесса');
             $table->foreign('manufacturer_id')->references('id')->on('companies');
 
-            $table->boolean('set')->default(0)->unsigned()->comment('Статус набора');
+            $table->boolean('kit')->default(0)->unsigned()->comment('Статус набора');
 
             $table->integer('cost_default')->nullable()->comment('Фиксированная себестоимость (руками)');
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим определения себестоимости');

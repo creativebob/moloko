@@ -50,7 +50,7 @@ class GoodsCategoryController extends Controller
             'goods',
             'childs',
             'groups',
-            'direction'
+            'directions'
         ])
         ->withCount('childs')
         ->moderatorLimit($answer)
@@ -161,7 +161,7 @@ class GoodsCategoryController extends Controller
             // 'compositions.product.unit',
             // 'compositions',
             'manufacturers',
-            'direction'
+            'directions'
         ])
         ->withCount([
             // 'one_metrics',

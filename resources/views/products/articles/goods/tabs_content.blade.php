@@ -31,7 +31,7 @@
 </div>
 
 
-@if($article->set)
+@if($article->kit)
 	<div class="tabs-panel" id="goods">
 		@include('products.articles.goods.goods.goods')
 	</div>

@@ -124,23 +124,28 @@ trait ArticleTrait
                 return $result;
             } else {
 
-                // Обновляем составы только для товаров
-                if ($item->getTable() == 'goods') {
-                    $this->setRaws($request, $article);
-                }
+                if ($article->draft) {
+                    // Обновляем составы только для товаров в черновике
+                    if ($item->getTable() == 'goods') {
 
-                if (isset($article->unit_id)) {
-                    $unit = Unit::findOrFail($article->unit_id);
-                    $weight = $data['weight'] * $unit->ratio;
-                    $data['weight'] = $weight;
+                        if ($article->kit) {
+                            $this->setGoods($request, $article);
+                        } else {
+                            $this->setRaws($request, $article);
+                        }
+                    }
+
+                    if (isset($article->unit_id)) {
+                        $unit = Unit::findOrFail($article->unit_id);
+                        $weight = $data['weight'] * $unit->ratio;
+                        $data['weight'] = $weight;
+                    }
                 }
 
                 $data['draft'] = request()->has('draft');
 
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $article->update($data);
-
-
 
                 return $article;
             }
@@ -155,6 +160,14 @@ trait ArticleTrait
         // Запись состава только для черновика
         if ($article->draft) {
             $article->raws()->sync($request->raws);
+        }
+    }
+
+    protected function setGoods($request, $article)
+    {
+        // Запись состава только для черновика
+        if ($article->draft) {
+            $article->goods()->sync($request->goods);
         }
     }
 

@@ -71,8 +71,7 @@ class Article extends Model
         'draft',
         'weight',
         'unit_id',
-
-        'set_status',
+        'kit',
         'video_url',
     ];
 
