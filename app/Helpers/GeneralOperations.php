@@ -13,6 +13,9 @@ use App\Worktime;
 use App\Sector;
 use App\RoleUser;
 
+// Транслитерация
+use Illuminate\Support\Str;
+
 use GuzzleHttp\Client;
 
 
@@ -258,8 +261,9 @@ function create_location($request, $country_id = null, $city_id = null, $address
     }
 
 
-// Обновление
+    // Обновление
     function addBankAccount($request, $company) {
+
 
     // Пришли ли с запросом имя банка, его БИК и рассчетный счет клиента,
     // которые так необходимы для создания нового аккаунта?
@@ -267,10 +271,10 @@ function create_location($request, $country_id = null, $city_id = null, $address
 
         // Сохраняем в переменную наш БИК
             $bic = $request->bank_bic;
-            $country_id = 3;
-            $city_id = 2;
-            $address = 'Партизанская, 8';
-        $legal_form_id = 4; // ПАО
+            $country_id = 1; // Россия
+            $city_id = null; // 
+            $address = null;
+            $legal_form_id = 4; // ПАО
 
         // Проверяем существуют ли у пользователя такие счета в указанном банке
         $cur_bank_account = BankAccount::whereNull('archive')
@@ -282,21 +286,21 @@ function create_location($request, $country_id = null, $city_id = null, $address
         // Если такого счета нет, то:
         if($cur_bank_account == 0){
 
-            // Создаем новый банковский счёт
-            $bank_account = new BankAccount;
-
             // Создаем алиас для нового банка
-            $company_alias = Transliterate::make($request->bank_name, ['type' => 'filename', 'lowercase' => true]);
-
+            $company_alias = Str::slug($request->bank_name);
             $sector_bank_id = Sector::where('tag', 'bank')->firstOrFail()->id;
             $location_bank_id = create_location($request, $country_id, $city_id, $address);
 
             // Создаем новую компанию которая будет банком
+
             $company_bank = Company::firstOrCreate(['bic' => $request->bank_bic], ['name' => $request->bank_name, 'alias' => $company_alias, 'sector_id' => $sector_bank_id, 'location_id' => $location_bank_id, 'legal_form_id'=> $legal_form_id]);
 
             // Создаем банк, а если он уже есть - берем его ID
-            $bank = Bank::firstOrCreate(['company_id' => $request->company_id, 'bank_id' => $company_bank->id]);
+            $company_id = $request->user()->company_id ?? $company_bank->id;
+            $bank = Bank::firstOrCreate(['company_id' => $company_id, 'bank_id' => $company_bank->id]);
 
+            // Создаем новый банковский счёт
+            $bank_account = new BankAccount;
             $bank_account->bank_id = $company_bank->id;
             $bank_account->holder_id = $company->id;
             $bank_account->company_id = $request->user()->company ? $request->user()->company->id : $company->id;
@@ -437,4 +441,15 @@ function setRolesFromPosition($position, $department, $user) {
             Log::info('Записали роли для юзера.');
 }
 
-?>
+// Отправка почты
+function sendEmail($to_name, $to_email, $data) {
+
+        // $to_name = 'Лехе Солтысяку';
+        // $to_email = 'creativebob@yandex.ru';
+        // $data = array('name'=>"Алексей", "body" => "Выполнен вхыод на страницу Компании");
+        Mail::send('template_mails.simple', $data, function($message) use ($to_name, $to_email) {
+            $message->to($to_email, $to_name)->subject('Тестирование отправки почты');
+            $message->from('creativebobtwo@gmail.com','Artisans Web');
+        });
+
+}

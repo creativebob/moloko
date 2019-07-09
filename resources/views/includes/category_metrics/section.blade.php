@@ -50,7 +50,7 @@
 	</div>
 </div>
 
-<script type="text/javascript">
+<script type="application/javascript">
 
 	let metrics = new Metrics("{{ $category->getTable() }}", "{{ $category->id }}");
 

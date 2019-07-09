@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 // Мягкое удаление с ajax
 $(document).on('dblclick', '[data-serversort]', function() {
 

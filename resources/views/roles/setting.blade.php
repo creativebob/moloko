@@ -126,7 +126,7 @@
 @endsection
 
 @section('scripts')
-<script type="text/javascript">
+<script type="application/javascript">
   // Оставляем ширину у вырванного из потока элемента
   var fixHelper = function(e, ui) {
     ui.children().each(function() {

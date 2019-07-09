@@ -27,7 +27,6 @@
     </div>
 </div>
 
-
 @push('scripts')
 <script>
     $.getScript("/crm/js/jquery.maskedinput.js");

@@ -171,7 +171,7 @@
 {{-- Скрипт синхронизации товара с сайтом на сайте --}}
 @include('includes.scripts.ajax-sync')
 
-<script type="text/javascript">
+<script type="application/javascript">
 
     // ----------- Добавление -------------
     // Открываем модалку

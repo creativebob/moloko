@@ -90,7 +90,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<script type="application/javascript">
     $.getScript("/crm/js/jquery.maskedinput.js");
     $.getScript("/crm/js/inputs_mask.js");
 </script>

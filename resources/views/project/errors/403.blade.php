@@ -237,7 +237,7 @@ $alias = 'company';
     <noscript><div><img src="https://mc.yandex.ru/watch/38734350" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
 
-    <script type="text/javascript">(window.Image ? (new Image()) : document.createElement('img')).src = location.protocol + '//vk.com/rtrg?r=QdoMe2vdMxv*3ZRc*dICU/Uyl2zuDc*2NXt0rNyHgSo0IDoL2GQU24WH6rkz*7uZR/Pi7bbpp16Tp9KTsOvI8YePyQ4Fbqf7ltdOHpTJnVVDlv*LfyVvrKGYjZ2al2XHaatuBq6IfYpKVwOibAhy8kulto45iHujX8ctMQ6at14-';</script>
+    <script type="application/javascript">(window.Image ? (new Image()) : document.createElement('img')).src = location.protocol + '//vk.com/rtrg?r=QdoMe2vdMxv*3ZRc*dICU/Uyl2zuDc*2NXt0rNyHgSo0IDoL2GQU24WH6rkz*7uZR/Pi7bbpp16Tp9KTsOvI8YePyQ4Fbqf7ltdOHpTJnVVDlv*LfyVvrKGYjZ2al2XHaatuBq6IfYpKVwOibAhy8kulto45iHujX8ctMQ6at14-';</script>
   </footer>
 </body>
 </html>

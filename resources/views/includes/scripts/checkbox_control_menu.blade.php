@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 
 	// Счетчики для контроля изменений (Для booklister)
 	counter_checkbox = 0;

@@ -311,7 +311,13 @@ class EmployeeController extends Controller
         $answer = operator_right($this->entity_alias,  $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $employee = Employee::with('user', 'staffer')->moderatorLimit($answer)->findOrFail($id);
+        $employee = Employee::with('user', 'staffer')
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->moderatorLimit($answer)
+        ->findOrFail($id);
 
         $list_user_employees = Employee::with('user')
         ->moderatorLimit($answer)
@@ -324,6 +330,7 @@ class EmployeeController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $employee);
+        $this->authorize(getmethod(__FUNCTION__), $employee->user);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);

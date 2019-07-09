@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 
 // Меняем режим отображения
 $(document).on('click', '[data-open="item-sync"]', function(event) {

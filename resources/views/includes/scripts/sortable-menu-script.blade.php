@@ -1,4 +1,3 @@
-<!-- <script type="text/javascript" src="/js/jquery.latest.min.js"></script> -->
 <script type="application/javascript">
     $(function() {
 

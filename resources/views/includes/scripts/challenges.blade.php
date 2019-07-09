@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 
 	var id = '{{ $id }}';
 	var model = 'App\\{{ $model }}';

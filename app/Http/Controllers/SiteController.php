@@ -50,6 +50,7 @@ class SiteController extends Controller
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
+        ->template($answer)
         ->booklistFilter($request)
             ->filter($filters)
         // ->filter($request, 'author_id')

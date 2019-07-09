@@ -33,8 +33,8 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
     {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
 
     {{-- Add jQuery library --}}
-    {{-- <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> --}}
-    <script type="text/javascript" src="/crm/js/jquery.latest.min.js"></script>
+    {{-- <script type="application/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> --}}
+    <script type="application/javascript" src="/crm/js/jquery.latest.min.js"></script>
 
     {{-- Дополнительные плагины / скрипты / стили для конкретной страницы --}}
     @yield('inhead')
@@ -52,6 +52,10 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
         }
     </style>
     <title>@yield('title')</title>
+
+    {{-- Подключаем класс Checkboxer --}}
+    @include('includes.scripts.class.checkboxer')
+
 </head>
 
 {{-- Блочим все подергивания в блоке  --}}

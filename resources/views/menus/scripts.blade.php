@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 
     var site_id = '{{ $site_id }}';
     var navigation_id = '{{ $navigation_id }}';

@@ -63,7 +63,7 @@
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox_control_menu')
 
-<script type="text/javascript">
+<script type="application/javascript">
     $(function() {
 
         // Обозначаем таймер для проверки

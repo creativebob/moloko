@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 
     // При клике на фотку подствляем ее значения в блок редактирования
     $(document).on('click', '#photos-list .edit', function(event) {

@@ -963,6 +963,18 @@ class EntitiesTableSeeder extends Seeder
                 'view_path' => 'news',
                 'page_id' => $pages->firstWhere('alias', 'news')->id,
             ],
+            [
+                'name' => 'Банковские счета',
+                'alias' => 'bank_accounts',
+                'model' => 'BankAccount',
+                'rights' => true,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 1,
+                'ancestor_id' => Entity::whereAlias('rubricators_items')->first(['id'])->id,
+                'view_path' => 'bank_accounts',
+                'page_id' => null,
+            ],
         ]);
 
         // Обновляем тмц

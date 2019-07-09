@@ -561,7 +561,7 @@ class ClientController extends Controller
         }
 
         // Обновление информации по клиенту:
-        $client->description = $request->description;
+        $client->description = $request->description_client;
         $client->loyalty_id = $request->loyalty_id;
 
         $client->save();

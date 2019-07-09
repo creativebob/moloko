@@ -27,7 +27,7 @@
 
 <script>
 
-let {{ $name }} = new DigitField('{{ $name }}', {{ $limit }}, {{ $decimal_place }});
+{{ $name }} = new DigitField('{{ $name }}', {{ $limit }}, {{ $decimal_place }});
 
 
 $("#digitfield-{{$name}}").keydown(function(event) {

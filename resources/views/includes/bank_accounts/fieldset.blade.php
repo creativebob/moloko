@@ -4,6 +4,7 @@
 
 			 <!-- Если банковских аккаунтов 0 или 1, то отображаем поля для ввода -->
 			@if($company->bank_accounts->count() == 0)
+
 			    <div class="small-12 medium-3 cell">
 			        <label>БИК
 			            @include('includes.inputs.bic', ['value'=>($company->bank_accounts->first() != null) ? $company->bank_accounts->first()->bank->bic : null, 'name'=>'bank_bic'])
@@ -31,14 +32,11 @@
 					<fieldset>
 						<legend>Банковские счета:</legend>
 						<div class="grid-x grid-padding-x" id="listing-bank-account">
+					        @foreach($company->bank_accounts as $bank_account)
 
-								@can ('index', App\BankAccount::class)
-							        @foreach($company->bank_accounts as $bank_account)
+					        		@include('includes.bank_accounts.item', ['bank_account' => $bank_account])
 
-							        		@include('includes.bank_accounts.item', ['bank_account' => $bank_account])
-
-							        @endforeach
-								@endcan
+					        @endforeach
 
 						</div>
 

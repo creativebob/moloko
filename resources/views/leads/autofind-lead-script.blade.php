@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
     // Обозначаем таймер для проверки
     var timerId;
     var time = 400;
