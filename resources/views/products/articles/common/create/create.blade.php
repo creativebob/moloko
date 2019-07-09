@@ -71,7 +71,7 @@
 			@includeIf($entity.'.create')
 
 			<div class="small-12 cell checkbox set-status">
-				{{ Form::checkbox('set', 1, null, ['id' => 'set-status']) }}
+				{{ Form::checkbox('set_status', 1, null, ['id' => 'set-status']) }}
 				<label for="set-status"><span>Набор</span></label>
 			</div>
 

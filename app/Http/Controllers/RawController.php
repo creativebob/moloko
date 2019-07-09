@@ -40,6 +40,8 @@ class RawController extends Controller
     public function index(Request $request)
     {
 
+
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -62,12 +64,14 @@ class RawController extends Controller
             'id',
             'article_id',
             'category_id',
-            'set_status',
+            // 'set_status',
             'author_id',
             'company_id',
             'display',
             'system_item'
         ];
+
+
 
         $raws = Raw::with([
             'author',
