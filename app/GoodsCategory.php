@@ -135,7 +135,7 @@ class GoodsCategory extends Model
     }
 
     // Направление
-    public function direction()
+    public function directions()
     {
         return $this->morphOne(Direction::class, 'category');
         // ->where('archive', false);

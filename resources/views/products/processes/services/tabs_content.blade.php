@@ -30,7 +30,7 @@
     </div>
 </div>
 
-@if($process->set)
+@if($process->kit)
 <div class="tabs-panel" id="services">
 
     {{-- Состав --}}

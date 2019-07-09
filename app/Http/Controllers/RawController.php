@@ -62,7 +62,6 @@ class RawController extends Controller
             'id',
             'article_id',
             'category_id',
-            'set_status',
             'author_id',
             'company_id',
             'display',

@@ -9,7 +9,7 @@
 		<div class="small-8 cell">
 			<ul class="tabs-list" data-tabs id="tabs">
 
-				@isset($parent_id))
+				@isset($parent_id)
 
 				<li class="tabs-title is-active">
 					<a href="#department" aria-selected="true">Отдел</a>

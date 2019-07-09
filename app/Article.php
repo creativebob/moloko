@@ -72,7 +72,7 @@ class Article extends Model
         'weight',
         'unit_id',
 
-        'set',
+        'kit',
         'video_url',
     ];
 

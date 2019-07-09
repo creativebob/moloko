@@ -69,7 +69,7 @@ class Process extends Model
         'length',
         'unit_id',
 
-        'set',
+        'kit',
         'video_url',
     ];
 

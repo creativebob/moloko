@@ -198,7 +198,7 @@ $disabled = $article->draft == 0 ? true : null;
                         </div>
 
                         {{-- Метрики --}}
-                        @includeIf($entity . '.metrics.metrics')
+                        @includeIf($page_info->entity->view_path . '.metrics.metrics')
 
 
                         <div id="item-inputs"></div>
