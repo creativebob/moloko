@@ -24,9 +24,9 @@ $field_name = isset($field_name) ? $field_name : 'city_id';
     {{ Form::hidden('country_id_default', $city->country_id ?? 1) }}
 </label>
 
-<script type="text/javascript">
+<script type="application/javascript">
 
-	let {{ $id }} = new CitySearch("{{ $id }}");
+	{{ $id }} = new CitySearch("{{ $id }}");
 
 	// При добавлении филиала ищем город в нашей базе
 	$(document).on('keyup', '#{{ $id }} .city_check-field', function() {

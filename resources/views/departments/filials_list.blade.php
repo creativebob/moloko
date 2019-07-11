@@ -193,7 +193,7 @@ if ('{{ $item }}' == 'staff') {
 @endisset
 
 @isset ($count)
-<script type="text/javascript">
+<script type="application/javascript">
     $('.content-count').text('{{ $count }}');
 </script>
 @endisset

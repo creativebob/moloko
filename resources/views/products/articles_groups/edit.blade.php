@@ -26,7 +26,7 @@
 @section('scripts')
 @include('includes.scripts.inputs-mask')
 
-<script type="text/javascript">
+<script type="application/javascript">
 	// При смене категории единиц измерения меняем список единиц измерения
     $(document).on('change', '#select-units_categories', function() {
         $.post('/admin/get_units_list', {units_category_id: $(this).val()}, function(html){

@@ -7,7 +7,6 @@ use App\Manufacturer;
 use App\Supplier;
 
 // Транслитерация
-// use Illuminate\Support\Str;
 use Illuminate\Support\Str;
 
 trait CompanyControllerTrait
@@ -48,9 +47,6 @@ trait CompanyControllerTrait
                 }
 
                 $company->alias = Str::slug($company->name) .'-'. $number_id_company;
-
-                // Если использовать нижнеее подчеркивание, то:
-                // $company->alias = Transliterate::make($company->name .'_'. $number_id_company, ['type' => 'filename', 'lowercase' => true]);
             }
 
             $company->prename = $request->prename;

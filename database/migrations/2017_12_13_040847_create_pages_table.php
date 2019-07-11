@@ -21,6 +21,7 @@ class CreatePagesTable extends Migration
 
             $table->string('name')->index()->comment('Название страницы');
             $table->string('title')->index()->comment('Title для страницы');
+            $table->string('subtitle')->nullable()->comment('Подзаголовок для страницы');
             $table->string('alias')->index()->comment('Алиас');
 
             $table->text('description')->nullable()->comment('Description для страницы');

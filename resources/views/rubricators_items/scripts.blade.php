@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 
     var catalog_id = '{{ $rubricator_id }}';
 

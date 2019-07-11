@@ -176,7 +176,7 @@
 {{-- Скрипт системной записи --}}
 @include('includes.scripts.ajax-system')
 
-<script type="text/javascript">
+<script type="application/javascript">
     $(function() {
         // Берем алиас сайта
         var alias = '{{ $album->alias }}';

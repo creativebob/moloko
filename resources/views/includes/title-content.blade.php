@@ -54,9 +54,9 @@
                 @else
 
                     @if (isset($page_alias))
-                    <a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
+                    <a href="/admin/{{ $page_alias }}/create" class="icon-add sprite" data-tooltip class="top" tabindex="2" title="Добавить позицию"></a>
                     @else
-                    <a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite"></a>
+                    <a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite" data-tooltip class="top" tabindex="2" title="Добавить позицию"></a>
                     @endif
 
                 @endif
@@ -68,7 +68,8 @@
                 @break
 
                 @case('menu')
-                <a class="icon-add sprite" data-open="modal-create"></a>
+                <a class="icon-add sprite" data-open="modal-create" data-tooltip class="top" tabindex="2" title="Добавить позицию"></a>
+                <a href="/admin/{{ $page_info->alias}}_categories" class="icon-category sprite" data-tooltip class="top" tabindex="2" title="Настройка категорий"></a>
                 @break
 
                 @case('sections-menu')
@@ -105,8 +106,6 @@
         {{-- Блок фильтров --}}
         @if (isset($filter))
 
-        {{-- Подключаем класс Checkboxer --}}
-        @include('includes.scripts.class.checkboxer')
 
         <div class="grid-x">
             <div class="small-12 cell filters fieldset-filters" id="filters">

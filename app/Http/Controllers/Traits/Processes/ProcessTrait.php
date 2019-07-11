@@ -116,29 +116,31 @@ trait ProcessTrait
 
             $result = $this->checks($request, $item);
 
-
             if (is_array($result)) {
                 return $result;
             } else {
 
-                // Обновляем составы только для услуг
-                if ($item->getTable() == 'services') {
-                    $this->setWorkflows($request, $process);
-                }
+                if ($process->draft) {
+                    // Обновляем составы только для услуг в черноике
+                    if ($item->getTable() == 'services') {
 
+                        if($process->kit) {
+                            $this->setServices($request, $process);
+                        } else {
+                            $this->setWorkflows($request, $process);
+                        }
+                    }
 
-
-
-                if (isset($process->unit_id)) {
-                    $unit = Unit::findOrFail($process->unit_id);
-                    $length = $data['length'] * $unit->ratio;
-                    $data['length'] = $length;
+                    if (isset($process->unit_id)) {
+                        $unit = Unit::findOrFail($process->unit_id);
+                        $length = $data['length'] * $unit->ratio;
+                        $data['length'] = $length;
+                    }
                 }
 
                 $data['draft'] = $request->has('draft');
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $process->update($data);
-
 
                 return $process;
             }
@@ -153,6 +155,14 @@ trait ProcessTrait
         // Запись состава только для черновика
         if ($process->draft) {
             $process->workflows()->sync($request->workflows);
+        }
+    }
+
+    protected function setServices($request, $process)
+    {
+        // Запись состава только для черновика
+        if ($process->draft) {
+            $process->services()->sync($request->services);
         }
     }
 

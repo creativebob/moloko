@@ -93,8 +93,8 @@
 
                     @if (is_null($category->parent_id) && $category->getTable() == 'goods_categories')
                     <div class="small-12 cell checkbox">
-                        @if ($category->direction != null)
-                        {{ Form::checkbox('direction', 1, ($category->direction->archive == false) ? 1 : 0, ['id' => 'direction-checkbox']) }}
+                        @if ($category->directions != null)
+                        {{ Form::checkbox('direction', 1, ($category->directions->archive == false) ? 1 : 0, ['id' => 'direction-checkbox']) }}
                         @else
                         {{ Form::checkbox('direction', 1, null, ['id' => 'direction-checkbox']) }}
                         @endif
@@ -158,7 +158,7 @@
 @include('includes.modals.modal_item_delete')
 @endsection
 
-@section('scripts')
+@push('scripts')
 
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
@@ -168,4 +168,4 @@
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check', ['id' => $category->id])
 
-@endsection
+@endpush

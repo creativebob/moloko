@@ -98,7 +98,7 @@
 
 <script type="application/javascript">
 
-	let {{$name}} = new CheckBoxer("{{$name}}", {{$checkboxer_mass[$name]['count_mass']}});
+	{{$name}} = new CheckBoxer("{{$name}}", {{$checkboxer_mass[$name]['count_mass']}});
 
   	$(".checkboxer-menu.{{$name}} :checkbox").click(function() {
 		{{$name}}.CheckBoxerAddDel(this);
@@ -116,10 +116,8 @@
  	// Удаление элемента из Буклиста
   	$(".booklist .booklist_delete").click(function() {
 
-  			// var booklist_id = $('.booklist_delete').data('booklist_id');
-  			var entity_alias = $('#content').data('entity-alias');
 
-			// var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
+  			var entity_alias = $('#content').data('entity-alias');
 			var booklist_id = $(this).closest('.item').attr('id').split('-')[1];
 
   			$.ajax({

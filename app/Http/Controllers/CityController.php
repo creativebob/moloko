@@ -14,9 +14,6 @@ use App\Http\Requests\CityRequest;
 // Транслитерация
 use Illuminate\Support\Str;
 
-// На удаление
-use Illuminate\Support\Facades\Auth;
-
 class CityController extends Controller
 {
 
@@ -54,7 +51,7 @@ class CityController extends Controller
                 $query->orderBy('moderation', 'desc')
                 ->orderBy('sort', 'asc');
             },
-            'cities' => function ($query) use ($answer_cities) {
+            'cities_without_area' => function ($query) use ($answer_cities) {
                 $query->moderatorLimit($answer_cities)
                 // ->authors($answer_cities)
                 // ->systemItem($answer_cities) // Фильтр по системным записям
@@ -68,8 +65,8 @@ class CityController extends Controller
         $count = 0;
         if ($regions->isNotEmpty()) {
             foreach ($regions as $region) {
-                if ($region->cities->isNotEmpty()) {
-                    $count += $region->cities->count();
+                if ($region->cities_without_area->isNotEmpty()) {
+                    $count += $region->cities_without_area->count();
                 }
                 if ($region->areas->isNotEmpty()) {
                     foreach ($region->areas as $area) {
@@ -109,6 +106,8 @@ class CityController extends Controller
         // dd($request);
         if ($request->city_db == 1) {
 
+            $country_id = 1;
+
             // Подключение политики
             $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -117,7 +116,8 @@ class CityController extends Controller
 
                 // Смотрим область
                 $region = Region::firstOrCreate([
-                    'name' => $request->region_name
+                    'name' => $request->region_name,
+                    'country_id' => $country_id
                 ], [
                     'system_item' => 1,
                     'author_id' => 1
@@ -127,7 +127,8 @@ class CityController extends Controller
                 // Если пришел город без области (Москва, Питер)
                 // Смотрим область
                 $region = Region::firstOrCreate([
-                    'name' => 'Города Федерального значения'
+                    'name' => 'Города Федерального значения',
+                    'country_id' => $country_id
                 ], [
                     'system_item' => 1,
                     'author_id' => 1
@@ -141,13 +142,13 @@ class CityController extends Controller
                 // Смотрим район
                 $area = Area::firstOrCreate([
                     'name' => $request->area_name,
-                    'region_id' => $region_id
+                    'region_id' => $region_id,
+                    'country_id' => $country_id
                 ], [
                     'system_item' => 1,
                     'author_id' => 1
                 ]);
                 // Берем id записанного района
-                $region_id = null;
                 $area_id = $area->id;
             } else {
                 $area_id = null;
@@ -173,6 +174,7 @@ class CityController extends Controller
 
             $city->region_id = $region_id;
             $city->area_id = $area_id;
+            $city->country_id = $country_id;
 
             $city->author_id = 1;
             $city->system_item = 1;
@@ -220,11 +222,11 @@ class CityController extends Controller
         // dd($request);
 
         $request_params = [
-            'country_id' => '1',
+            'country_id' => 1,
             'q' => $city,
-            'need_all' => '0',
-            'count' => '250',
-            'v' => '5.92',
+            'need_all' => 0,
+            'count' => 250,
+            'v' => 5.92,
             'access_token' => env('VK_API_TOKEN')
         ];
         $get_params = http_build_query($request_params);
@@ -337,8 +339,9 @@ class CityController extends Controller
 
         // Проверка города в нашей базе данных
         $cities = City::with([
-            'area:id,name,region_id',
-            'region:id,name'
+            'area:id,name',
+            'region:id,name',
+            'country:id,name'
         ])
         ->moderatorLimit($answer)
         ->where('name', 'like', $request->name.'%')
@@ -346,11 +349,20 @@ class CityController extends Controller
             'id',
             'name',
             'area_id',
-            'region_id'
+            'region_id',
+            'country_id'
         ]);
 //         dd($cities);
 
-        return response()->json($cities);
-//        return view('cities.cities_table', compact('cities'));
+//        return response()->json($cities);
+        return view('cities.cities_table', compact('cities'));
+    }
+
+    public function test()
+    {
+        $city = City::first();
+//        dd(json_encode($city));
+
+        return view('test', compact('city'));
     }
 }

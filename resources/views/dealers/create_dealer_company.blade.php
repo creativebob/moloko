@@ -29,7 +29,7 @@
 @section('scripts')
   @include('includes.scripts.inputs-mask')
 
-  <script type="text/javascript">
+  <script type="application/javascript">
   // Проверка существования компании
   $(document).on('keyup', '.company_inn-field', function() {
     var company_inn = document.getElementById('company_inn-field').value;

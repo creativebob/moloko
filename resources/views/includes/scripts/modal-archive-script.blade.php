@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 // Мягкое удаление с refresh
 $(document).on('click', '[data-open="item-archive"]', function() {
   // находим описание сущности, id и название удаляемого элемента в родителе

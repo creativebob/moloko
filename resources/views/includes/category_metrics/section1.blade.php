@@ -50,7 +50,7 @@ $metrics = ($set_status == 'one') ? 'one_metrics' : 'set_metrics';
 	</div>
 </div>
 
-<script type="text/javascript">
+<script type="application/javascript">
 
 	let {{ $metrics }} = new Metrics("{{ $set_status }}", "{{ $category->getTable() }}", "{{ $category->id }}");
 

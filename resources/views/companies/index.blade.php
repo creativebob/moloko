@@ -84,7 +84,13 @@
           <td class="td-phone">{{ isset($company->main_phone->phone) ? decorPhone($company->main_phone->phone) : 'Номер не указан' }}</td>
 
           @if(isset($company->director))
-            <td class="td-user_id">{{ $company->director->user->name_reverse ?? ' ... ' }}</td>
+            <td class="td-user_id">
+              @if(!empty($company->director->user))
+                  <a href="users/{{ $company->director->user->id }}/edit">{{ $company->director->user->name_reverse ?? ' ... ' }}</a>
+              @else
+                  ...
+              @endif 
+            </td>
           @endif
 
           {{-- Элементы управления --}}

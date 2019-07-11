@@ -71,6 +71,8 @@ class Article extends Model
         'draft',
         'weight',
         'unit_id',
+        'kit',
+        'video_url',
     ];
 
     // Группа
@@ -89,13 +91,22 @@ class Article extends Model
     public function raws()
     {
         return $this->belongsToMany(Raw::class, 'article_raw')
-        ->withPivot([
-            'value',
-            'use',
-            'waste',
-            'leftover',
-            'leftover_operation_id'
-        ]);
+            ->withPivot([
+                'value',
+                'use',
+                'waste',
+                'leftover',
+                'leftover_operation_id'
+            ]);
+    }
+
+    // Товары
+    public function goods()
+    {
+        return $this->belongsToMany(Goods::class, 'article_goods')
+            ->withPivot([
+                'value'
+            ]);
     }
 
     // Состав (набор)
@@ -135,7 +146,7 @@ class Article extends Model
     }
 
     // Товар
-    public function goods()
+    public function cur_goods()
     {
         return $this->hasOne(Goods::class);
     }

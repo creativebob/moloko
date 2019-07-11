@@ -151,11 +151,21 @@ $task-manager-tabs-set-color: #888888;
 $task-manager_tabs-name-lead-color: #74b1f5;
 $task-manager-tabs-button-bg-color: #ae4747;
 
+// Костомизация has-tip
+a.has-tip {
+    position: relative;
+    display: inline-block;
+    border-bottom: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
 // Хлебные крошки
 $breadcrumbs-bg-color: #ffffff;
 $breadcrumbs-color: #888888;
 $breadcrumbs-a-color: #5190ff;
 $breadcrumbs-border-color: #dcdcdc;
+
 
 // Подсветка лидов по этапам
 // Готов
@@ -831,9 +841,11 @@ $sprite-32: 32;
     cursor: pointer;
     z-index: 50;
 }
+
 .icon-search {
     background: url(img/search.svg) no-repeat;
     // background-position: 0px 0px;
+    background-position: 0px -448px;
 }
 
 
@@ -1045,14 +1057,25 @@ tr:hover {
 // Иконка общего добавления
 .icon-add {
     background-position: 0px -384px;
-    opacity: 0.2;
-    margin-left: 1rem;
+    opacity: 0.3;
     // z-index: 10;
 
     &:hover {
         opacity: 1;
     }
 }
+
+// Иконка общего добавления
+.icon-category {
+    background-position: 0px -1185px;
+    opacity: 0.3;
+    // z-index: 10;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
 
 // Иконка фильтра
 .icon-filter {
@@ -1837,8 +1860,12 @@ a:hover {
 .icon-setting {
     background-position:  -96px -224px;
 }
-.icon-product {
+.icon-goods {
     background-position:  -96px -1024px;
+}
+
+.icon-service {
+    background-position:  -96px -1217px;
 }
 
 .icon-personal {
@@ -1884,8 +1911,11 @@ a:hover {
   .icon-setting {
       background-position: -160px -224px;
   }
-  .icon-product {
+  .icon-goods {
       background-position: -160px -1024px;
+  }
+  .icon-service {
+      background-position: -160px -1217px;
   }
   .icon-personal {
       background-position: -160px -1056px;
@@ -1938,12 +1968,25 @@ table.list-employees {
 .black-button-group{
     text-align: right;
     position: relative;
-    top: 9px;
-    padding: 0px 30px;
+    top: 0px;
+    padding: 0px 42px 0px 0px;
+
 
     a.button{
         letter-spacing: 1px;
     }
+
+    a.button.black{
+        font-size: 0.7rem;
+        background-color: #333;
+        color: #fff;
+        border: none;
+    } 
+
+    a.button.black:hover{
+        background-color: #000;
+        border: none;
+    } 
 
 }
 
@@ -3190,9 +3233,11 @@ a {
       font-family: $PFDDPT;
       padding: 0 0.8rem;
   }
+
   .icon-search {
       background-position: 0px -448px;
   }
+
   .icon-search:hover {
       background-position: -32px -448px;
       background-color: $content-bg-color;

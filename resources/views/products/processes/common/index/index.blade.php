@@ -71,7 +71,7 @@
                         </a>
                     </td>
                     <td class="td-name">
-                        <a href="/admin/{{ $entity }}/{{ $item->id }}/edit">{{ $item->process->name }} @if ($item->set_status == 1) (Набор) @endif</a>
+                        <a href="/admin/{{ $entity }}/{{ $item->id }}/edit">{{ $item->process->name }} @if ($item->process->set == 1) (Набор) @endif</a>
                     </td>
                     <td class="td-category">
                         <a href="/admin/{{ $entity }}?category_id%5B%5D={{ $item->category->id }}" class="filter_link" title="Фильтровать">{{ $item->category->name }}</a>

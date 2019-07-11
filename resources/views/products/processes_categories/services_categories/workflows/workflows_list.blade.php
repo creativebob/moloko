@@ -31,7 +31,7 @@
 <li>Ничего нет...</li>
 @endif
 
-<script type="text/javascript">
+<script type="application/javascript">
 
 	let workflows = new Workflows();
 

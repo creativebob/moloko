@@ -29,7 +29,6 @@ class CatalogsGoodsController extends Controller
     public function index(Request $request)
     {
 
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -46,7 +45,7 @@ class CatalogsGoodsController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
-        // dd($catalogs_goods);
+//         dd($catalogs_goods);
 
         return view('catalogs_goods.index',[
             'catalogs_goods' => $catalogs_goods,
@@ -101,9 +100,7 @@ class CatalogsGoodsController extends Controller
         if ($catalogs_goods) {
 
             // Сайты
-            if (isset($request->sites)) {
-                $catalogs_goods->sites()->attach($request->sites);
-            }
+            $catalogs_goods->sites()->attach($request->sites);
 
             return redirect()->route('catalogs_goods.index');
 

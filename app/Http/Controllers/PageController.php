@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Подключаем модели
 use App\Page;
+use App\Process;
 use App\Site;
 
 use App\PhotoSetting;
@@ -76,39 +77,17 @@ class PageController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $page = new Page;
+        $data = $request->input();
+        $data['site_id'] = $site_id;
+        $page = (new Page())->create($data);
 
-        $page->name = $request->name;
-        $page->title = $request->title;
 
         $page->alias = empty($request->alias) ? Str::slug($request->title) : $request->alias;
 
-        $page->description = $request->description;
-        $page->content = $request->content;
-
-        $page->site_id = $site_id;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false){
-            $page->moderation = 1;
-        }
-
-        // Системная запись
-        $page->system_item = $request->system_item;
-        $page->display = $request->display;
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-        $page->company_id = $user->company_id;
-        $page->author_id = hideGod($user);
-
-        $page->save();
-
         // Cохраняем / обновляем фото
-        savePhoto($request, $page);
+        $photo_id = savePhoto($request, $page);
+        $page->photo_id = $photo_id;
+        $page->save();
 
         if ($page) {
 
@@ -157,27 +136,9 @@ class PageController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $page);
 
-        $page->name = $request->name;
-        $page->title = $request->title;
-        $page->alias = $request->alias;
+        $data = $request->input();
+        $page->update($data);
 
-        $page->description = $request->description;
-        $page->content = $request->content;
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false){
-            $page->moderation = 1;
-        }
-
-        // Системная запись
-        $page->system_item = $request->system_item;
-        $page->display = $request->display;
-
-        $page->editor_id = hideGod($request->user());
-        $page->save();
-
-        // Cохраняем / обновляем фото
-        savePhoto($request, $page);
 
         if ($page) {
 

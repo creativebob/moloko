@@ -20,6 +20,9 @@ class CreateRegionsTable extends Migration
             $table->integer('code')->unsigned()->nullable()->comment('Код области');
             $table->integer('vk_external_id')->unique()->unsigned()->nullable()->comment('Внешний Id (из базы vk)');
 
+            $table->bigInteger('country_id')->unsigned()->nullable()->comment('Id страны');
+            $table->foreign('country_id')->references('id')->on('countries');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

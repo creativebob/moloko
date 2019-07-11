@@ -162,8 +162,7 @@ trait UserControllerTrait
             $user->patronymic = $request->patronymic;
         }
 
-        
-        $user->access_block = 1;
+        $user->access_block = 0;
         $user->user_type = 0;
 
         // Компания и филиал ----------------------------------------------------------

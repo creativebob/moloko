@@ -21,7 +21,7 @@
 
 
 @push('scripts')
-	<script type="text/javascript">
+	<script type="application/javascript">
 
 		function get_challenges(){
 

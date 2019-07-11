@@ -142,7 +142,6 @@ class CompanyController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // dd($request);
         // Отдаем работу по созданию новой компании трейту
         $new_company = $this->createCompany($request);
 
@@ -225,12 +224,15 @@ class CompanyController extends Controller
         ->systemItem($answer)
         ->findOrFail($id);
 
+        $user = $company->director->user;
+        // dd($user);
+
         $this->authorize(getmethod(__FUNCTION__), $company);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('companies.edit', compact('company', 'page_info'));
+        return view('companies.edit', compact('company', 'page_info', 'user'));
     }
 
     public function update(CompanyRequest $request, $id)

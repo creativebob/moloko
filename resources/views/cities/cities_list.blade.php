@@ -96,8 +96,8 @@ $drop = 1;
         @endforeach
         @endif
 
-        @if($region->cities->isNotEmpty())
-        @foreach ($region->cities as $city)
+        @if($region->cities_without_area->isNotEmpty())
+        @foreach ($region->cities_without_area as $city)
 
         <li class="medium-as-last item" id="cities-{{ $city->id }}" data-name="{{ $city->name }}">
 
@@ -140,7 +140,7 @@ $drop = 1;
 @include('includes.scripts.sortable-menu-script')
 
 @if(isset($id))
-<script type="text/javascript">
+<script type="application/javascript">
 
     // Если средний элемент
     if ($('#cities-{{ $id }}').hasClass('medium-item')) {
@@ -181,7 +181,7 @@ $drop = 1;
 @endif
 
 @isset ($count)
-<script type="text/javascript">
+<script type="application/javascript">
     $('.content-count').text('{{ $count }}');
 </script>
 @endisset

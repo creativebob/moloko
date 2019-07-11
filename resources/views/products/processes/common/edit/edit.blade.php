@@ -142,10 +142,10 @@ $disabled = $process->draft == 0 ? true : null;
                                     )
                                 </label>
 
-                                @isset ($process->unit_id)
+                                @isset($process->unit_id)
 
                                 <label>Продолжительность единицы ({{ $process->unit->abbreviation }})
-                                    {!! Form::number('length', null, [($process->draft == 1) ? null : true]) !!}
+                                    {!! Form::number('length', null, ['disabled' => ($process->draft == 1) ? null : true]) !!}
                                 </label>
 
                                 @endisset
@@ -163,6 +163,11 @@ $disabled = $process->draft == 0 ? true : null;
                                     <div class="text-center">
                                         <img id="photo" src="{{ getPhotoPathPlugEntity($item) }}">
                                     </div>
+
+                                    <label>Видео
+                                        {{ Form::text('video_url', $process->video_url, []) }}
+                                    </label>
+
                                 </div>
                             </div>
                         </div>

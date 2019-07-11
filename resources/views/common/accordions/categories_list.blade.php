@@ -88,10 +88,10 @@ $drop = 1;
 @endforeach
 
 {{-- Скрипт чекбоксов и перетаскивания для меню --}}
-@include('includes.scripts.sortable-menu-script')
+{{--@include('includes.scripts.sortable-menu-script')--}}
 
 @isset($id)
-<script type="text/javascript">
+<script type="application/javascript">
 
     // Если первый элемент
     if ($('#{{ $entity }}-{{ $id }}').hasClass('first-item')) {
@@ -139,7 +139,7 @@ $drop = 1;
 @endisset
 
 @isset ($count)
-<script type="text/javascript">
+<script type="application/javascript">
     $('.content-count').text('{{ num_format($count, 0) }}');
 </script>
 @endisset

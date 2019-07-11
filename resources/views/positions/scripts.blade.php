@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 $(function() {
   // Смотрим при загрузке количество выделенных чекбоксов
   if ($('.access-checkbox:checked').length >= 1) {

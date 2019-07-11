@@ -13,9 +13,7 @@
 |
 */
 
- Route::get('test', function () {
-  return view('test');
- });
+Route::get('/cities-test', 'CityController@test');
 
 Auth::routes();
 
@@ -296,8 +294,12 @@ Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middlew
 Route::post('/ajax_get_category_raw', 'RawController@ajax_get_category_raw')->middleware('auth');
 Route::post('/ajax_get_raw', 'RawController@ajax_get_raw')->middleware('auth');
 
+Route::any('/ajax_get_goods', 'GoodsController@ajax_get_goods')->middleware('auth');
+
 Route::post('/ajax_get_category_workflow', 'WorkflowController@ajax_get_category_workflow')->middleware('auth');
 Route::post('/ajax_get_workflow', 'WorkflowController@ajax_get_workflow')->middleware('auth');
+
+Route::post('/ajax_get_service', 'ServiceController@ajax_get_service')->middleware('auth');
 
 
 // ---------------------------------- Артикулы -------------------------------------------
@@ -839,6 +841,7 @@ Route::any('/department_check', 'DepartmentController@ajax_check')->middleware('
 
 
 Route::any('/ajax_get_filials_for_catalogs_service', 'DepartmentController@ajax_get_filials_for_catalogs_service')->middleware('auth');
+Route::any('/ajax_get_filials_for_catalogs_goods', 'DepartmentController@ajax_get_filials_for_catalogs_goods')->middleware('auth');
 
 
 
@@ -977,6 +980,23 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
 
 	// Основные методы
 	Route::resource('catalogs_goods_items', 'CatalogsGoodsItemController');
+
+
+    Route::delete('/prices_goods/{id}', 'PricesGoodsController@archive');
+
+    Route::post('get_catalogs_goods_items', 'CatalogsGoodsItemController@ajax_get');
+
+    Route::any('get_prices_goods/{id}', 'PricesGoodsController@ajax_get');
+    Route::any('edit_prices_goods', 'PricesGoodsController@ajax_edit');
+    Route::any('update_prices_goods', 'PricesGoodsController@ajax_update');
+
+
+    Route::resource('prices_goods', 'PricesGoodsController');
+    Route::any('prices_goods/{id}/archive', 'PricesGoodsController@ajax_archive');
+
+    Route::any('prices_goods/ajax_store', 'PricesGoodsController@ajax_store');
+
+    Route::any('prices_goods_sync', 'PricesGoodsController@sync')->name('prices_goods.sync');
 });
 
 

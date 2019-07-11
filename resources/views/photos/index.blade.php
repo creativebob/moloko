@@ -137,7 +137,7 @@
 @include('includes.scripts.modal-delete-script')
 @include('includes.scripts.delete-ajax-script')
 
-<script type="text/javascript">
+<script type="application/javascript">
     $(function() {
     // Берем алиас сайта
     var alias = '{{ $album->alias }}';

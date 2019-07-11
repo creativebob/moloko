@@ -1,8 +1,8 @@
-<script type="text/javascript">
+<script type="application/javascript">
 
 	'use strict';
 
-	class CheckBoxer {
+	class CheckBoxer2 {
 
 		constructor(name, count_mass) {
 			this.name = name;

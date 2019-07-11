@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 
     'use strict';
 
@@ -35,7 +35,7 @@
                             },
                             url: "/admin/cities_list",
                             type: "POST",
-                            data: {city_name: city},
+                            data: {name: city},
                             beforeSend: function () {
                                 $('#' + id +  ' .city-check').addClass('icon-load');
                             },

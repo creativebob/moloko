@@ -1,4 +1,4 @@
-<script type="text/javascript">
+<script type="application/javascript">
 
     // Определяем сущность для работы
     var entity = $('#content').data('entity-alias');

@@ -103,7 +103,7 @@ class DatabaseSeeder extends Seeder
         $this->call(FirstNamesTableSeeder::class);
         $this->call(SurnamesTableSeeder::class);
 
-        // $this->call(StartTableSeeder::class);
+//         $this->call(StartTableSeeder::class);
 
 
     }

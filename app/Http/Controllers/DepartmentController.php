@@ -344,4 +344,10 @@ class DepartmentController extends Controller
         $catalog_id = $request->catalog_id;
         return view('products.processes.services.prices.filials', compact('catalog_id'));
     }
+
+    public function ajax_get_filials_for_catalogs_goods(Request $request)
+    {
+        $catalog_id = $request->catalog_id;
+        return view('products.articles.goods.prices.filials', compact('catalog_id'));
+    }
 }

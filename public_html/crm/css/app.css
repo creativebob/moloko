@@ -112,6 +112,14 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   src: url(/crm/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot);
   src: url(/crm/css/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot?#iefix) format('embedded-opentype'), url(/crm/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff) format('woff'), url(/crm/css/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf) format('truetype');
 }
+a.has-tip {
+  position: relative;
+  display: inline-block;
+  border-bottom: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 .stage-12 td:first-child {
   border-left: 8px solid #afefb9;
 }
@@ -623,6 +631,7 @@ span.wrap-label-checkboxer {
 
 .icon-search {
   background: url(img/search.svg) no-repeat;
+  background-position: 0px -448px;
 }
 
 .one-icon-16 {
@@ -787,10 +796,17 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 
 .icon-add {
   background-position: 0px -384px;
-  opacity: 0.2;
-  margin-left: 1rem;
+  opacity: 0.3;
 }
 .icon-add:hover {
+  opacity: 1;
+}
+
+.icon-category {
+  background-position: 0px -1185px;
+  opacity: 0.3;
+}
+.icon-category:hover {
   opacity: 1;
 }
 
@@ -1462,8 +1478,11 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 .sidebar .icon-setting {
   background-position: -96px -224px;
 }
-.sidebar .icon-product {
+.sidebar .icon-goods {
   background-position: -96px -1024px;
+}
+.sidebar .icon-service {
+  background-position: -96px -1217px;
 }
 .sidebar .icon-personal {
   background-position: -96px -1056px;
@@ -1504,8 +1523,11 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 .sidebar .nav > ul > li > .active .icon-setting, .sidebar .gen-menu-bot > li > .active .icon-setting {
   background-position: -160px -224px;
 }
-.sidebar .nav > ul > li > .active .icon-product, .sidebar .gen-menu-bot > li > .active .icon-product {
+.sidebar .nav > ul > li > .active .icon-goods, .sidebar .gen-menu-bot > li > .active .icon-goods {
   background-position: -160px -1024px;
+}
+.sidebar .nav > ul > li > .active .icon-service, .sidebar .gen-menu-bot > li > .active .icon-service {
+  background-position: -160px -1217px;
 }
 .sidebar .nav > ul > li > .active .icon-personal, .sidebar .gen-menu-bot > li > .active .icon-personal {
   background-position: -160px -1056px;
@@ -1550,11 +1572,21 @@ table.list-employees {
 .black-button-group {
   text-align: right;
   position: relative;
-  top: 9px;
-  padding: 0px 30px;
+  top: 0px;
+  padding: 0px 42px 0px 0px;
 }
 .black-button-group a.button {
   letter-spacing: 1px;
+}
+.black-button-group a.button.black {
+  font-size: 0.7rem;
+  background-color: #333;
+  color: #fff;
+  border: none;
+}
+.black-button-group a.button.black:hover {
+  background-color: #000;
+  border: none;
 }
 
 .view-settings-panel {

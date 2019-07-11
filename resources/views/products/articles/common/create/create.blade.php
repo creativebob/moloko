@@ -59,20 +59,20 @@
 
 
 				<div class="small-10 medium-4 cell">
-
-					<label>Себестоимость за (<span id="unit-change" class="unit-change"></span>)
-						{{-- @include('includes.scripts.class.digitfield')
-						@include('includes.inputs.digit', ['name' => 'price_default', 'value' => null, 'decimal_place' => 2]) --}}
-						{{ Form::number('price_default') }}
-					</label>
+					Измеряется в (<span id="unit-change" class="unit-change"></span>)
+{{--					<label>Себестоимость за (<span id="unit-change" class="unit-change"></span>)--}}
+{{--						--}}{{-- @include('includes.scripts.class.digitfield')--}}
+{{--						@include('includes.inputs.digit', ['name' => 'price_default', 'value' => null, 'decimal_place' => 2]) --}}
+{{--						{{ Form::number('price_default') }}--}}
+{{--					</label>--}}
 				</div>
 			</div>
 
 			@includeIf($entity.'.create')
 
 			<div class="small-12 cell checkbox set-status">
-				{{ Form::checkbox('set_status', 1, null, ['id' => 'set-status']) }}
-				<label for="set-status"><span>Набор</span></label>
+				{{ Form::checkbox('kit', 1, null, ['id' => 'kit']) }}
+				<label for="kit"><span>Набор</span></label>
 			</div>
 
 			<div class="small-12 cell checkbox">

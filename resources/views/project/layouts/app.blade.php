@@ -15,7 +15,7 @@
 
     <link  href="{{ asset('/project/js/plugins/fancybox/dist/jquery.fancybox.min.css') }}" rel="stylesheet">
     <script src="{{ asset('/project/js/plugins/fancybox/dist/jquery.fancybox.min.js') }}"></script>
-    <script type="text/javascript">
+    <script type="application/javascript">
 
 </script>
 
@@ -280,7 +280,7 @@
       return false;
   });
 </script>
-<!-- <script type="text/javascript">(window.Image ? (new Image()) : document.createElement('img')).src = location.protocol + '//vk.com/rtrg?r=QdoMe2vdMxv*3ZRc*dICU/Uyl2zuDc*2NXt0rNyHgSo0IDoL2GQU24WH6rkz*7uZR/Pi7bbpp16Tp9KTsOvI8YePyQ4Fbqf7ltdOHpTJnVVDlv*LfyVvrKGYjZ2al2XHaatuBq6IfYpKVwOibAhy8kulto45iHujX8ctMQ6at14-';</script> -->
+<!-- <script type="application/javascript">(window.Image ? (new Image()) : document.createElement('img')).src = location.protocol + '//vk.com/rtrg?r=QdoMe2vdMxv*3ZRc*dICU/Uyl2zuDc*2NXt0rNyHgSo0IDoL2GQU24WH6rkz*7uZR/Pi7bbpp16Tp9KTsOvI8YePyQ4Fbqf7ltdOHpTJnVVDlv*LfyVvrKGYjZ2al2XHaatuBq6IfYpKVwOibAhy8kulto45iHujX8ctMQ6at14-';</script> -->
 
 <!-- BEGIN JIVOSITE CODE {literal} -->
 <script type='text/javascript'>

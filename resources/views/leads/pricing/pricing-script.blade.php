@@ -1,5 +1,5 @@
 
-<script type="text/javascript">
+<script type="application/javascript">
 // Подключается на странице редактирования лидов
 
 	var id = '{{ $id }}';

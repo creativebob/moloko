@@ -1,9 +1,7 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->page_description }}" />
-{{-- Скрипты меню в шапке --}}
-@include('includes.scripts.sortable-inhead')
+<meta name="description" content="{{ $page_info->description }}" />
 @endsection
 
 @section('title', $page_info->name)
@@ -55,7 +53,9 @@
 @include('includes.modals.modal-delete-ajax')
 @endsection
 
-@section('scripts')
+@push('scripts')
+
+    @include('includes.scripts.sortable-inhead')
 
 {{-- Скрипты --}}
 @include('common.accordions.scripts')
@@ -66,8 +66,15 @@
 {{-- Маска ввода --}}
 @include('includes.scripts.inputs-mask')
 
+{{-- Скрипт чекбоксов и перетаскивания для меню --}}
+@include('includes.scripts.sortable-menu-script')
+
 {{-- Скрипт подсветки многоуровневого меню --}}
-@include('includes.scripts.multilevel-menu-active-scripts')
+<script type="application/javascript">
+
+
+
+</script>
 
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox-control')
@@ -80,4 +87,4 @@
 
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox_control_menu')
-@endsection
+@endpush

@@ -6,7 +6,7 @@
 	{{ Form::number('metrics['.$metric->id.'][]', $metrics_values[$metric->id] ? number_format($metrics_values[$metric->id], $metric->decimal_place) : null, ['required', 'id' => 'metric-'.$metric->id.'-field', 'min' => number_format($metric->min, $metric->decimal_place), 'max' => number_format($metric->max, $metric->decimal_place), 'step' => 'any', $disabled ? 'disabled' : '']) }}
 	<span class="form-error">Поле обязательно для заполнения!</span>
 </label>
-<script type="text/javascript">
+<script type="application/javascript">
 
 	let metric_object_{{ $metric->id }} = new MetricNumeric({{ $metric->decimal_place }});
 
@@ -24,7 +24,7 @@
 	{{ Form::number('metrics['.$metric->id.'][]', $metrics_values[$metric->id] ? number_format($metrics_values[$metric->id], $metric->decimal_place) : null, ['required', 'id' => 'metric-'.$metric->id.'-field', 'min' => number_format($metric->min, $metric->decimal_place), 'max' => number_format($metric->max, $metric->decimal_place), 'step' => 'any', $disabled ? 'disabled' : '']) }}
 	<span class="form-error">Поле обязательно для заполнения!</span>
 </label>
-<script type="text/javascript">
+<script type="application/javascript">
 
 	let metric_object_{{ $metric->id }} = new MetricNumeric({{ $metric->decimal_place }});
 
@@ -76,7 +76,7 @@
 		@endforeach
 	</ul>
 </div>
-<script type="text/javascript">
+<script type="application/javascript">
 
 	let metric_object_{{ $metric->id }} = new MetricList({{ $metric->id }});
 

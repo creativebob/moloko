@@ -9,7 +9,7 @@
 		<div class="small-8 cell">
 			<ul class="tabs-list" data-tabs id="tabs">
 
-				@isset($parent_id))
+				@isset($parent_id)
 
 				<li class="tabs-title is-active">
 					<a href="#department" aria-selected="true">Отдел</a>
@@ -179,7 +179,7 @@
 </div>
 </div>
 
-<script type="text/javascript">
+<script type="application/javascript">
 	$.getScript("/crm/js/jquery.maskedinput.js");
 	$.getScript("/crm/js/inputs_mask.js");
 </script>
