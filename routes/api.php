@@ -23,6 +23,8 @@ Route::group(['prefix' => '/v1',
     'as' => 'api.'], function () {
     Route::get('cities_list', 'CityController@cities_list');
     Route::resource('cities', 'CityController');
+
+    Route::post('dropzone', 'PhotoController@store');
 });
 
 // Route::any('/lol', function(Request $request) {

@@ -64,7 +64,6 @@ class RawController extends Controller
             'id',
             'article_id',
             'category_id',
-            'kit',
             'author_id',
             'company_id',
             'display',
@@ -210,7 +209,7 @@ class RawController extends Controller
         //     }
         // }
 
-        return view('products.articles.common.create.create', [
+        return view('products.articles.raws.create', [
             'item' => new $this->class,
             'title' => 'Добавление сырья',
             'entity' => $this->entity_alias,

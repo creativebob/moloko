@@ -362,19 +362,24 @@ class GoodsController extends Controller
             'raws.category'
         ]);
 
-        $settings = getSettings($this->entity_alias);
+        $dropzone = getSettings($this->entity_alias);
+//        dd($settings);
+
+        $dropzone['id'] = $article->id;
+        $dropzone['entity'] = $article->getTable();
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
 //        dd($cur_goods);
 
+
         return view('products.articles.common.edit.edit', [
             'title' => 'Редактировать товар',
             'item' => $cur_goods,
             'article' => $article,
             'page_info' => $page_info,
-            'settings' => $settings,
+            'dropzone' => json_encode($dropzone),
             'entity' => $this->entity_alias,
             'category_entity' => 'goods_categories',
             'categories_select_name' => 'goods_category_id',

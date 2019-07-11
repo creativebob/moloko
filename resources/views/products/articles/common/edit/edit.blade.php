@@ -1,12 +1,19 @@
 @extends('layouts.app')
 
 @section('inhead')
-@include('includes.scripts.dropzone-inhead')
+{{--@include('includes.scripts.dropzone-inhead')--}}
 @include('includes.scripts.fancybox-inhead')
 @include('includes.scripts.sortable-inhead')
 
 @if ($entity == 'goods')
 @include('includes.scripts.chosen-inhead')
+
+    @if($article->kit)
+        @include('products.articles.goods.goods.class')
+        @else
+    @include('products.articles.goods.raws.class')
+        @endif
+
 @endif
 
 @endsection
@@ -299,22 +306,23 @@ $disabled = $article->draft == 0 ? true : null;
 
                     <div class="small-12 medium-7 cell">
 
-                        {!!  Form::open([
-                            'route' => 'photos.ajax_store',
-                            'data-abide',
-                            'novalidate',
-                            'files' => 'true',
-                            'class' => 'dropzone',
-                            'id' => 'my-dropzone'
-                        ]
-                        ) !!}
+                        <dropzone-component :dropzone="{{ $dropzone }}"></dropzone-component>
 
-                        {!! Form::hidden('name', $article->name) !!}
-                        {!! Form::hidden('id', $article->id) !!}
-                        {!! Form::hidden('entity', 'articles') !!}
-                        {{-- {!! Form::hidden('album_id', $cur_goods->album_id) !!} --}}
+{{--                        {!!  Form::open([--}}
+{{--                            'route' => 'photos.ajax_store',--}}
+{{--                            'data-abide',--}}
+{{--                            'novalidate',--}}
+{{--                            'files' => 'true',--}}
+{{--                            'class' => 'dropzone',--}}
+{{--                            'id' => 'my-dropzone'--}}
+{{--                        ]--}}
+{{--                        ) !!}--}}
 
-                        {!! Form::close() !!}
+{{--                        {!! Form::hidden('name', $article->name) !!}--}}
+{{--                        {!! Form::hidden('id', $article->id) !!}--}}
+{{--                        {!! Form::hidden('entity', 'articles') !!}--}}
+
+{{--                        {!! Form::close() !!}--}}
 
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
@@ -359,12 +367,12 @@ $disabled = $article->draft == 0 ? true : null;
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.upload-file')
 
-@include('includes.scripts.dropzone', [
-    'settings' => $settings,
-    'item_id' => $article->id,
-    'item_entity' => 'articles'
-]
-)
+{{--@include('includes.scripts.dropzone', [--}}
+{{--    'settings' => $settings,--}}
+{{--    'item_id' => $article->id,--}}
+{{--    'item_entity' => 'articles'--}}
+{{--]--}}
+{{--)--}}
 
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check', [

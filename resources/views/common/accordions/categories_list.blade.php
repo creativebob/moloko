@@ -88,7 +88,7 @@ $drop = 1;
 @endforeach
 
 {{-- Скрипт чекбоксов и перетаскивания для меню --}}
-@include('includes.scripts.sortable-menu-script')
+{{--@include('includes.scripts.sortable-menu-script')--}}
 
 @isset($id)
 <script type="application/javascript">
