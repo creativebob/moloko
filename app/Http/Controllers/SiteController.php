@@ -52,7 +52,7 @@ class SiteController extends Controller
         ->systemItem($answer)
         ->template($answer)
         ->booklistFilter($request)
-            ->filter($filters)
+//            ->filter($filters)
         // ->filter($request, 'author_id')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')

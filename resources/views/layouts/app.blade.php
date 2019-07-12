@@ -292,7 +292,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
     {{-- Скрипты --}}
     <script type="application/javascript" src="/crm/js/vendor/what-input.js"></script>
     <script type="application/javascript" src="/crm/js/vendor/foundation.js"></script>
-    <script type="application/javascript" src="/crm/js/app.js"></script>
+    <script type="application/javascript" src="/js/system/app.js"></script>
     <script type="application/javascript" src="/crm/js/sidebar.js"></script>
 
     {{-- Наши скрипты --}}
