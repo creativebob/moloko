@@ -51,6 +51,7 @@ class Page extends Model
         'title',
         'subtitle',
         'description',
+        'content',
         'alias',
     ];
 
