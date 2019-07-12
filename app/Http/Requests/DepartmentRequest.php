@@ -29,6 +29,7 @@ class DepartmentRequest extends FormRequest
         return [
             'name' => 'string|max:255',
             'address' => 'string|nullable',
+            'email' => 'nullable|string|email|max:255',
 
             'main_phone' => 'string|max:17|nullable',
             'extra_phones.*' => 'string|max:17|nullable',
