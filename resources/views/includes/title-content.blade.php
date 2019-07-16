@@ -78,19 +78,18 @@
                 @break
 
                 @endswitch
-                @endcan
-
-
+                @endcan  
 
             </div>
-            <div class="top-bar-right">
+            <div class="top-bar-right">   
+
                 @if (isset($filter))
                 <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
                 @endif
 
                 <input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />
+                {{-- <button type="button" class="icon-search sprite button"></button> --}}
 
-                <button type="button" class="icon-search sprite button"></button>
             </div>
 
 

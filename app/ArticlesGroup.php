@@ -53,6 +53,7 @@ class ArticlesGroup extends Model
         'stauts',
         'description',
         'unit_id',
+        'units_category_id',
         'rule_id',
         'album_id',
         'author_id',
@@ -81,6 +82,12 @@ class ArticlesGroup extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    // Еденица измерения
+    public function units_category()
+    {
+        return $this->belongsTo(UnitsCategory::class);
     }
 
     // Автора

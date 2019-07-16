@@ -47,7 +47,9 @@ class Raw extends Model
     protected $fillable = [
         'category_id',
         'article_id',
-
+        'unit_for_composition_id',
+        'price_unit_id',
+        'price_unit_category_id',
     ];
 
     // Артикул
@@ -83,4 +85,11 @@ class Raw extends Model
             $q->where('archive', false);
         });
     }
+
+    // Еденица измерения
+    public function unit_for_composition()
+    {
+        return $this->belongsTo(Unit::class, 'unit_for_composition_id');
+    }
+
 }

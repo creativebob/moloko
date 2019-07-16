@@ -14,9 +14,11 @@
 			@foreach($raws_category->raws as $raw)
 			<li class="checkbox">
 				{{ Form::checkbox('raws[]', $raw->id, null, ['class' => 'change-raw', 'id' => 'raw-'.$raw->id]) }}
-				<label for="raw-{{ $raw->id }}">
-					<span>{{ $raw->article->name }}</span>
-				</label>
+				@if(isset($raw->article))
+					<label for="raw-{{ $raw->id }}">
+						<span>{{ $raw->article->name }}</span>
+					</label>
+				@endif
 			</li>
 			@endforeach
 

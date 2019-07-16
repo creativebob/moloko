@@ -226,7 +226,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 1,
     ],
     [
         'name' => 'Штат',
@@ -240,7 +240,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 3,
     ],
     [
         'name' => 'Сотрудники',
@@ -254,7 +254,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 2,
     ],
     [
         'name' => 'Должности',
@@ -268,7 +268,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 4,
     ],
 
     // Продажи
@@ -326,7 +326,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 5,
     ],
     [
         'name' => 'Клиенты',
@@ -345,7 +345,7 @@ Menu::insert([
 
     // Товары
     [
-        'name' => 'Каталоги товаров',
+        'name' => 'Прайсы товаров',
         'icon' => null,
         'alias' => 'admin/catalogs_goods',
         'tag' => 'catalogs_goods',
@@ -356,7 +356,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 2,
     ],
     [
         'name' => 'Категории товаров',
@@ -370,7 +370,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 3,
     ],
     [
         'name' => 'Товары',
@@ -384,7 +384,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 1,
     ],
     [
         'name' => 'Группы артикулов',
@@ -398,12 +398,12 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 4,
     ],
 
     // Услуги
     [
-        'name' => 'Каталоги услуг',
+        'name' => 'Прайсы услуг',
         'icon' => null,
         'alias' => 'admin/catalogs_services',
         'tag' => 'catalogs_services',
@@ -414,7 +414,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 2,
     ],
     [
         'name' => 'Категории услуг',
@@ -428,7 +428,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 3,
     ],
     [
         'name' => 'Услуги',
@@ -442,7 +442,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 1,
     ],
     [
         'name' => 'Группы процессов',
@@ -456,7 +456,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 4,
     ],
 
     // [
@@ -712,7 +712,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 5,
     ],
     [
         'name' => 'Реклама',
@@ -729,7 +729,7 @@ Menu::insert([
         'sort' => null,
     ],
     [
-        'name' => 'Рубрики',
+        'name' => 'Рубрикаторы новостей',
         'icon' => null,
         'alias' => 'admin/rubricators',
         'tag' => 'rubricators',
@@ -740,7 +740,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 2,
     ],
     [
         'name' => 'Новости',
@@ -754,7 +754,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 1,
     ],
     [
         'name' => 'Отзывы',
@@ -782,7 +782,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 4,
     ],
     [
         'name' => 'Альбомы',
@@ -796,7 +796,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 3,
     ],
 
 

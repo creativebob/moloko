@@ -49,6 +49,13 @@ class Service extends Model
         'process_id',
     ];
 
+
+    // Артикул
+    public function article()
+    {
+        return $this->belongsTo(Article::class);
+    }
+
     // Процесс
     public function process()
     {

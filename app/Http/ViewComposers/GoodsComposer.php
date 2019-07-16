@@ -27,7 +27,7 @@ class GoodsComposer
                     'article' => function ($q) {
                         $q->where([
                             'draft' => false,
-                            'set' => false
+                            'kit' => false
                         ]);
                     }
                 ])
@@ -39,7 +39,7 @@ class GoodsComposer
             $q->whereHas('article', function ($q) {
                 $q->where([
                     'draft' => false,
-                    'set' => false
+                    'kit' => false
                 ]);
             })
                 ->where('archive', false);

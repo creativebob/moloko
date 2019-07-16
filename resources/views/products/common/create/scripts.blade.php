@@ -11,6 +11,14 @@
             $('#modal').html(html).foundation();
             $('#modal-create').foundation('open');
             checkExtraUnits();
+
+            $select_value = $('#select-units_categories').val();
+            if(($select_value == 2)||($select_value == 6)){
+                $('#extra-units-block').hide();
+            } else {
+                $('#extra-units-block').show();
+            };
+            
         });
     });
 
@@ -21,11 +29,13 @@
     });
 
     // --------------- Единицы измерения -------------------
+
     function setUnitAbbrevation(list) {
         $('#unit-change').text($('#' + list + ' :selected').data('abbreviation'));
     };
 
     function checkExtraUnits () {
+
         if ($('#select-units_categories :selected').text() == 'Время') {
             $('#extra-units-block').hide();
         } else {
@@ -41,6 +51,14 @@
             $('#select-units').html(html);
             setUnitAbbrevation('select-units');
             checkExtraUnits();
+
+            $select_value = $('#select-units_categories').val();
+            if(($select_value == 2)||($select_value == 6)){
+                $('#extra-units-block').hide();
+            } else {
+                $('#extra-units-block').show();
+            };
+
         });
     });
 

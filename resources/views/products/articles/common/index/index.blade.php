@@ -37,11 +37,19 @@
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
                     <th class="td-photo">Фото</th>
                     <th class="td-name">Название</th>
+                    <th class="td-unit">Ед. измерения</th>
+                    <th class="td-weight">Параметры</th>
+                    <th class="td-portion">Порция</th>  
                     <th class="td-category">Категория</th>
-                    <th class="td-description">Описание</th>
+                    {{-- <th class="td-description">Описание</th> --}}
                     <th class="td-cost">Себестоимость</th>
-                    <th class="td-price">Цена</th>
-                    <th class="td-author">Автор</th>
+                    {{-- <th class="td-author">Автор</th> --}}
+
+                    @if($page_info->alias == 'goods')
+                        <th class="td-catalog">Прайсы</th>
+                    @endif
+
+                    <th class="mark"></th>
                     <th class="td-control"></th>
                     <th class="td-archive"></th>
                 </tr>
@@ -71,31 +79,87 @@
                         </a>
                     </td>
                     <td class="td-name">
-                        <a href="/admin/{{ $entity }}/{{ $item->id }}/edit">{{ $item->article->name }} @if ($item->article->set_status == 1) (Набор) @endif</a>
+                        <a href="/admin/{{ $entity }}/{{ $item->id }}/edit">{{ $item->article->name }} @if ($item->article->kit == 1)</a><span class="tiny-text"> - Набор: @endif
+                        @if(isset($item->article->goods))
+                            @if($item->article->goods->count() != 0)
+                                {{ $item->article->goods->count() }}</span>
+                            @endif
+                        @endif
+                        
+                        <br><span class="tiny-text">{{ $item->article->manufacturer->name ?? '' }}</span>
+                    </td>
+                    <td class="td-unit">
+                        {{ $item->article->unit->abbreviation }}
+                    </td>
+                    <td class="td-weight">
+                        @if(isset($item->article->weight))
+                            {{ $item->article->weight }} {{ $item->article->unit_weight->abbreviation }}
+                            <br>
+                        @endif
+
+                        @if(isset($item->article->volume))
+                            {{ $item->article->volume }} {{ $item->article->unit_volume->abbreviation }}
+                        @endif
+                    </td>
+                    <td class="td-portion">
+                        @if($item->article->portion_status == 1)
+                            <span>{{ $item->article->portion_name }}</span><br>
+                            <span>{{ $item->article->portion_count * $item->article->unit->ratio }} {{ $item->article->unit->abbreviation }}</span>
+                            
+                        @endif
                     </td>
                     <td class="td-category">
                         <a href="/admin/{{ $entity }}?category_id%5B%5D={{ $item->category->id }}" class="filter_link" title="Фильтровать">{{ $item->category->name }}</a>
 
                         <br>
                         @if($item->article->group->name != $item->article->name)
-                        <a href="/admin/{{ $entity }}?product_id%5B%5D={{ $item->article->id }}" class="filter_link light-text">{{ $item->article->group->name }}</a>
+                        <a href="/admin/{{ $entity }}?articles_group_id%5B%5D={{ $item->article->articles_group_id }}" class="filter_link light-text">{{ $item->article->group->name }}</a>
                         @endif
                     </td>
-                    <td class="td-description">{{ $item->article->description }}</td>
-                    <td class="td-cost">{{ num_format($item->article->cost_default, 0) }}</td>
-                    <td class="td-price">{{ num_format($item->article->price_default, 0) }}</td>
-                    <td class="td-catalog"></td>
 
-                    <td class="td-author">@if(isset($item->author->first_name)) {{ $item->author->name }} @endif</td>
+                    {{-- <td class="td-description">{{ $item->article->description }}</td> --}}
+
+                    <td class="td-cost">
+                        {{-- Средняя: {{ num_format($item->article->cost_default, 0) }}<br>
+                        Последняя: {{ num_format($item->article->cost_default, 0) }} --}}
+
+                        {{ num_format($item->article->cost_default, 0) }}
+                    </td>
+
+                    {{-- <td class="td-author">@if(isset($item->author->first_name)) {{ $item->author->name }} @endif</td> --}}
+                    
+                    @if($page_info->alias == 'goods')
+                        <td class="td-catalog">
+                            @foreach($item->prices as $price)
+                                <span>{{ $price->catalog->name }}: </span><span  data-tooltip class="top" tabindex="2" title="Действует с {{ $price->created_at->format('d.m.Y') }}">{{ $price->price }}
+
+                                    @if($item->article->unit_id == 32)
+                                        @if($item->price_unit_id != 32)
+                                            <span class='tiny-text'>за {{ $item->price_unit->abbreviation }}</span>
+                                        @endif
+                                    @endif
+
+                                </span><br>
+                            @endforeach
+                        </td>
+                    @endif
+
+                    <td class="mark">
+                        
+                        @if($item->moderation == 1)<span class="hollow button warning mark-no-moderate tiny">На модерации</span>@endif
+
+                        @if($item->article->draft) <span class="mark-draft">Черновик</span> @endif
+
+                    </td>
 
                     {{-- Элементы управления --}}
-                    @include('includes.control.table_td', ['item' => $item])
+                    @include('includes.control.table_td', ['item' => $item]) 
 
                     <td class="td-archive">
                         @if ($item->system_item != 1)
-                        @can('delete', $item)
-                        <a class="icon-delete sprite" data-open="item-archive"></a>
-                        @endcan
+                            @can('delete', $item)
+                                <a class="icon-delete sprite" data-open="item-archive"></a>
+                            @endcan
                         @endif
                     </td>
                 </tr>

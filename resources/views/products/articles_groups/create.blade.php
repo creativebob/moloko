@@ -17,7 +17,7 @@
 @section('content')
 
 {{ Form::open(['route' => 'articles_groups.store', 'data-abide', 'novalidate']) }}
-@include('articles_groups.form', ['submit_text' => 'Добавить'])
+@include('products.articles_groups.form', ['submit_text' => 'Добавить'])
 {{ Form::close() }}
 
 @endsection

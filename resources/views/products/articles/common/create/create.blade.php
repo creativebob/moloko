@@ -13,6 +13,14 @@
 			<div class="grid-x grid-margin-x">
 
 				<div class="small-12 cell">
+					<label>Название
+						@include('includes.inputs.string', ['value' => null, 'name' => 'name', 'required' => true, 'data' => 'autofocus-target'])
+						<div class="item-error">Названия артикула и группы артикулов не должны совпадать!</div>
+						<script>$('input[autofocus-target]').focus();</script>
+					</label>
+				</div>
+
+				<div class="small-12 cell">
 
 					<label>Категория
 						@include('includes.selects.categories', [
@@ -27,24 +35,24 @@
 				</div>
 
 				<div class="small-12 cell">
-					<label>Название
-						@include('includes.inputs.string', ['value' => null, 'name' => 'name', 'required' => true])
-						<div class="item-error">Названия артикула и группы артикулов не должны совпадать!</div>
-					</label>
-				</div>
+					Измеряется в (<span id="unit-change" class="unit-change"></span>)
+				</div><br><br>
 
 				<div class="small-12 cell">
 					<div class="grid-x grid-margin-x" id="units-block">
 						<div class="small-12 medium-6 cell">
-							@include('includes.selects.units_categories', ['default' => 6, 'type' => 'article'])
+							@include('includes.selects.units_categories', ['default' => $unit_category_default, 'type' => 'article'])
 						</div>
 
 						<div class="small-12 medium-6 cell">
-							@include('includes.selects.units', ['default' => 26, 'units_category_id' => 6])
+							@include('includes.selects.units', ['default' => $unit_default, 'units_category_id' => $unit_category_default])
 						</div>
 					</div>
 
+					
                     <div class="grid-x grid-margin-x" id="extra-units-block">
+                    	{{--
+
                         <div class="small-12 medium-6 cell">
                             <label>Введите вес
                             {!! Form::number('weight', null, []) !!}
@@ -52,20 +60,36 @@
                         </div>
 
                         <div class="small-12 medium-6 cell">
-                            @include('includes.selects.units_extra', ['default' => 8, 'units_category_id' => 2])
+                            @include('includes.selects.units', [
+
+	                            'default' => 8, 
+	                            'units_category_id' => 2, 
+	                            'name' => 'weight_unit_id', 
+	                            'id' => 'select_weight_units'
+                            ])
                         </div>
+
+                        <div class="small-12 medium-6 cell">
+                            <label>Введите объем
+                            {!! Form::number('volume', null, []) !!}
+                            </label>
+                        </div>
+
+                        <div class="small-12 medium-6 cell">
+                            @include('includes.selects.units', [
+                            
+	                            'default' => 30, 
+	                            'units_category_id' => 5, 
+	                            'name' => 'volume_unit_id', 
+	                            'id' => 'select_volume_units'
+                            ])
+                        </div>
+						--}}
+
                     </div>
+
 				</div>
 
-
-				<div class="small-10 medium-4 cell">
-					Измеряется в (<span id="unit-change" class="unit-change"></span>)
-{{--					<label>Себестоимость за (<span id="unit-change" class="unit-change"></span>)--}}
-{{--						--}}{{-- @include('includes.scripts.class.digitfield')--}}
-{{--						@include('includes.inputs.digit', ['name' => 'price_default', 'value' => null, 'decimal_place' => 2]) --}}
-{{--						{{ Form::number('price_default') }}--}}
-{{--					</label>--}}
-				</div>
 			</div>
 
 			@includeIf($entity.'.create')
@@ -80,7 +104,7 @@
 				<label for="quickly"><span>Быстрое добавление</span></label>
 			</div>
 
-			@include('includes.control.checkboxes', ['item' => $item])
+			{{-- @include('includes.control.checkboxes', ['item' => $item]) --}}
 
 		</div>
 	</div>

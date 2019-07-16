@@ -18,7 +18,7 @@
 
 {{ Form::model($articles_group, ['route' => ['articles_groups.update', $articles_group->id], 'data-abide', 'novalidate']) }}
 {{ method_field('PATCH') }}
-@include('articles_groups.form', ['submit_text' => 'Редактировать'])
+@include('products.articles_groups.form', ['submit_text' => 'Редактировать'])
 {{ Form::close() }}
 
 @endsection

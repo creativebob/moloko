@@ -1,88 +1,28 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->description }}" />
-{{-- Скрипты таблиц в шапке --}}
-@include('includes.scripts.tablesorter-inhead')
+    <meta name="description" content="{{ $page_info->page_description }}" />
+
+    {{-- Скрипты таблиц в шапке --}}
+    @include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', $page_info->name)
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
+@section('content-count')
+
+    {{-- Количество элементов --}}
+    @if(!empty($catalogs_services))
+        {{ num_format($catalogs_services->total(), 0) }}
+    @endif
+@endsection
+
 @section('title-content')
-{{-- Таблица --}}
-{{-- Заголовок и фильтры --}}
-<div data-sticky-container id="head-content">
-    <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
-        <div class="top-bar head-content">
-            <div class="top-bar-left">
-                <h2 class="header-content">{{ $page_info->title }}
-                    <span class="content-count" title="Общее количество">
-                        {{ $catalogs_services->isNotEmpty() ? num_format($catalogs_services->total(), 0) : 0 }}
-                    </span>
-                </h2>
 
-                @can('create', App\CatalogsService::class)
-
-                {{ link_to_route($page_info->alias.'.create', '', $parameters = [], $attributes = ['class' => 'icon-add sprite']) }}
-
-                @endcan
-            </div>
-            <div class="top-bar-right">
-                @if (isset($filter))
-                <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
-                @endif
-
-                <input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />
-
-                <button type="button" class="icon-search sprite button"></button>
-            </div>
-
-        </div>
-
-        <div id="port-result-search">
-        </div>
-        {{-- Подключаем стандартный ПОИСК --}}
-        @include('includes.scripts.search-script')
-
-        {{-- Блок фильтров --}}
-        @if (isset($filter))
-
-        {{-- Подключаем класс Checkboxer --}}
-        @include('includes.scripts.class.checkboxer')
-
-        <div class="grid-x">
-            <div class="small-12 cell filters fieldset-filters" id="filters">
-                <div class="grid-padding-x">
-                    <div class="small-12 cell text-right">
-                        {{ link_to(Request::url() . '?filter=disable', 'Сбросить', ['class' => 'small-link']) }}
-                    </div>
-                </div>
-                <div class="grid-padding-x">
-                    <div class="small-12 cell">
-                        {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
-
-                        @include($page_info->alias.'.filters')
-
-                        <div class="small-12 cell text-center">
-                            {{ Form::submit('Фильтрация', ['class'=>'button']) }}
-                            <input hidden name="filter" value="active">
-                        </div>
-                        {{ Form::close() }}
-                    </div>
-                </div>
-                <div class="grid-x">
-                    <a class="small-12 cell text-center filter-close">
-                        <button type="button" class="icon-moveup sprite"></button>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        @endif
-    </div>
-</div>
+    {{-- Таблица --}}
+    @include('includes.title-content', ['page_info' => $page_info, 'class' => App\CatalogsService::class, 'type' => 'table'])
 @endsection
 
 @section('content')
@@ -119,54 +59,54 @@
 
             <tbody data-tbodyId="1" class="tbody-width">
 
-                @if($catalogs_services->isNotEmpty())
-                @foreach($catalogs_services as $catalogs_service)
+               @forelse($catalogs_services as $cur_catalogs_service)
 
-                <tr class="item @if($catalogs_service->moderation == 1)no-moderation @endif" id="catalogs_services-{{ $catalogs_service->id }}" data-name="{{ $catalogs_service->name }}">
-                    <td class="td-drop">
-                        <div class="sprite icon-drop"></div>
-                    </td>
-                    <td class="td-checkbox checkbox">
-                        <input type="checkbox" class="table-check" name="" id="check-{{ $catalogs_service->id }}">
-                        <label class="label-check" for="check-{{ $catalogs_service->id }}"></label>
-                    </td>
-                    <td class="td-name">
+                    <tr class="item @if($cur_catalogs_service->moderation == 1)no-moderation @endif" id="catalogs_services-{{ $cur_catalogs_service->id }}" data-name="{{ $cur_catalogs_service->name }}">
+                        <td class="td-drop">
+                            <div class="sprite icon-drop"></div>
+                        </td>
+                        <td class="td-checkbox checkbox">
+                            <input type="checkbox" class="table-check" name="" id="check-{{ $cur_catalogs_service->id }}">
+                            <label class="label-check" for="check-{{ $cur_catalogs_service->id }}"></label>
+                        </td>
+                        <td class="td-name">
 
-                        @can('update', $catalogs_service)
-                        {{ link_to_route($page_info->alias.'.edit', $catalogs_service->name, $parameters = ['id' => $catalogs_service->id], $attributes = []) }}
-                            @else
-                            {{ $page->name }}
+                            @can('update', $cur_catalogs_service)
+                                {{ link_to_route('prices_services.index', $cur_catalogs_service->name, $parameters = ['id' => $cur_catalogs_service->id], $attributes = []) }} <span class="tiny-text">({{ $cur_catalogs_service->price_services->where('archive', 0)->where('service.article.draft', 0)->count() }})</span>
+
+                                @else
+                                {{ $page->name }}
+                            @endcan
+
+
+                        </td>
+                        <td class="td-alias">{{ $cur_catalogs_service->alias }}</td>
+                        <td class="td-description">{{ $cur_catalogs_service->description }}</td>
+                        @can('index', App\CatalogsGoodsItem::class)
+                            <td class="td-tree">
+                                {{ link_to_route('catalogs_goods_items.index', '', ['catalog_id' => $cur_catalogs_service->id], ['class' => 'icon-category sprite']) }}
+                            </td>
                         @endcan
 
+                        @can('index', App\PricesGoods::class)
+                            <td class="td-services">
 
-                    </td>
-                    <td class="td-alias">{{ $catalogs_service->alias }}</td>
-                    <td class="td-description">{{ $catalogs_service->description }}</td>
-
-                    @can('index', App\CatalogsServicesItem::class)
-                    <td class="td-tree">
-                        {{ link_to_route('catalogs_services_items.index', 'Дерево', ['catalog_id' => $catalogs_service->id], ['class' => 'button']) }}
-                    </td>
-                    @endcan
-
-                    @can('index', App\PricesService::class)
-                    <td class="td-services">
-                        {{ link_to_route('prices_services.index', 'Услуги', ['catalog_id' => $catalogs_service->id], ['class' => 'button']) }}
-                    </td>
-                    @endcan
-                    <td class="td-author">{{ $catalogs_service->author->name}}</td>
-
-                    {{-- Элементы управления --}}
-                    @include('includes.control.table-td', ['item' => $catalogs_service])
-
-                    <td class="td-delete">
-                        @can('delete', $catalogs_service)
-                        <a class="icon-delete sprite" data-open="item-delete"></a>
+                                {{ link_to_route($page_info->alias.'.edit', 'Настройка', ['catalog_id' => $cur_catalogs_service->id], ['class' => 'button tiny']) }}
+                            </td>
                         @endcan
-                    </td>
-                </tr>
-                @endforeach
-                @endif
+                        <td class="td-author">{{ $cur_catalogs_service->author->name}}</td>
+
+                        {{-- Элементы управления --}}
+                        @include('includes.control.table-td', ['item' => $cur_catalogs_service])
+
+                        <td class="td-delete">
+                            @can('delete', $cur_catalogs_service)
+                            <a class="icon-delete sprite" data-open="item-delete"></a>
+                            @endcan
+                        </td>
+                    </tr>
+                    @empty
+                    @endforelse
             </tbody>
         </table>
     </div>

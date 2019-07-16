@@ -221,6 +221,10 @@ $footer-num-color: #ffffff;
 // Выпадающий список
 $dropdown-width: 14rem;
 
+.has-tip{
+    font-weight: normal;
+}
+
 .relative{
     position: relative;
 }
@@ -263,6 +267,22 @@ fieldset {
         padding: 0 1rem 0.2rem 0;
         margin-left: -1rem;
     }
+}
+
+.minimal-fieldset{
+    padding: 0.4rem 0rem 1rem;
+
+    legend {
+        font-family: $PFDDPM;
+        padding: 0 1rem 0.6rem 0;
+        margin-left: 0rem;
+        font-weight: normal;
+        font-size: 0.9rem;
+    }
+}
+
+.block-price-unit{
+    margin-top: 1rem;
 }
 
 .alt-switch .switch-paddle{
@@ -1988,6 +2008,17 @@ table.list-employees {
         border: none;
     } 
 
+}
+
+.extra-content{
+    padding: 0rem 10px 0rem 10px;
+
+    select{
+        font-size: 0.8rem;
+        background-color: transparent;
+        color: #000;
+        border: 1px solid #000;
+    }
 }
 
 // СТРАНИЦА ЛИДЫ ======================================================================
@@ -3731,6 +3762,10 @@ a {
                                   cursor: default;
                               }
 
+                                td.td-unit, th.td-unit{
+                                    max-width: 70px;
+                                }
+
                               .is-stuck {
                                background-color: $body-bg-color;
 
@@ -3742,6 +3777,7 @@ a {
                                       //     float: left;
                                       //   }
                                       //
+
 
                                   }
                               }
@@ -4413,25 +4449,29 @@ a:hover {
                                 border-spacing: 0px 5px !important;
 
                                 thead {
-                                    background-color: transparent;
 
+                                    background-color: transparent;
                                     tr th{
                                         background-color: transparent !important;
                                         border-bottom: 1px solid #000;
                                         font-size: 0.9rem;
-                          }
+                                    }
                                 }
 
                                 tr td{
-                              background-color: #fff;
-                              border-top: 2px solid #fff;
-                              padding: 0.1rem 0.625rem 0.1rem;
-                          }
+                                    background-color: #fff;
+                                    border-top: 2px solid #fff;
+                                    padding: 0.1rem 0.625rem 0.1rem;
+                                }
 
-                                    tr:first-child td{
-                              background-color: #fff;
-                          }
-                          }
+                                td.td-delete, th.td-delete{
+                                    width: 52px;
+                                }
+
+                                tr:first-child td{
+                                    background-color: #fff;
+                                }
+                            }
 
 
 
@@ -4583,7 +4623,20 @@ a:hover {
 
                 .draft {
 
-                    td{
-                        background-color: grey;
+                    td:last-child{
+                        border-right: 4px solid #000;
                     }
+
+                    td{
+                        background-color: #f3f3f3;
+                    }
+
+                }
+
+                .mark-draft{
+                    border: 1px solid #000000;
+                    color: #000000;
+                    background-color: transparent;
+                    font-size: 0.6rem;
+                    padding: 4px 10px;
                 }

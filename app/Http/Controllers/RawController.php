@@ -64,13 +64,12 @@ class RawController extends Controller
             'id',
             'article_id',
             'category_id',
-            'kit',
             'author_id',
             'company_id',
             'display',
-            'system_item'
+            'system_item',
+            'unit_for_composition_id'
         ];
-
 
 
         $raws = Raw::with([
@@ -101,7 +100,7 @@ class RawController extends Controller
         ->where('archive', false)
         ->select($columns)
         ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
+        ->orderBy('id', 'desc')
         ->paginate(30);
         // dd($raws);
 
@@ -215,6 +214,8 @@ class RawController extends Controller
             'title' => 'Добавление сырья',
             'entity' => $this->entity_alias,
             'category_entity' => 'raws_categories',
+            'unit_category_default' => '2', // Масса
+            'unit_default' => '8', // Масса
         ]);
     }
 
@@ -306,6 +307,7 @@ class RawController extends Controller
             'entity' => $this->entity_alias,
             'category_entity' => 'raws_categories',
             'categories_select_name' => 'raws_category_id',
+            'raw' => $raw,
         ]);
     }
 
@@ -328,11 +330,13 @@ class RawController extends Controller
 
         $result = $this->updateArticle($request, $raw);
         // Если результат не массив с ошибками, значит все прошло удачно
+
         if (!is_array($result)) {
 
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $raw);
 
+            $raw->unit_for_composition_id = $request->unit_for_composition_id;
             $raw->display = $request->display;
             $raw->system_item = $request->system_item;
             $raw->save();
@@ -346,6 +350,7 @@ class RawController extends Controller
 
             return redirect()->route('raws.index');
         } else {
+
             return back()
             ->withErrors($result)
             ->withInput();

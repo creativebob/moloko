@@ -28,7 +28,19 @@
         %5B%5D
         ({{ link_to_route('goods.index', $cur_prices_goods->articles_count, $parameters = ['prices_service_id' => $cur_prices_goods->id], $attributes = ['class' => 'filter_link light-text', 'title' => 'Перейти на список артикулов']) }}) --}}
 
+        <br><span class="tiny-text">{{ $cur_prices_goods->goods->category->name }}</span>
+
     </td>
+    
+    <td class="td-unit">
+        {{ $cur_prices_goods->goods->article->group->unit->abbreviation }}
+    </td>
+    <td class="td-weight">
+        @if($cur_prices_goods->goods->article->group->unit_id != 8)
+            {{ $cur_prices_goods->goods->article->weight * $cur_prices_goods->goods->article->unit->ratio }} кг
+        @endif
+    </td>
+
     <td class="td-catalogs_item">{{ $cur_prices_goods->catalogs_item->name }}</td>
     <td class="td-price">
         @include('prices_goods.price_span')
@@ -60,7 +72,7 @@
     </td>
 
     {{-- Элементы управления --}}
-    {{-- @include('includes.control.table_td', ['item' => $cur_prices_goods]) --}}
+    @include('includes.control.table_td', ['item' => $cur_prices_goods])
 
     <td class="td-delete">
 

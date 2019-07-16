@@ -36,6 +36,7 @@ class CatalogsServiceController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $catalogs_services = CatalogsService::with([
+            'price_services.service.article',
             'author',
         ])
         ->moderatorLimit($answer)

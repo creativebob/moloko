@@ -128,6 +128,10 @@ a.has-tip {
   border-left: 8px solid #ffc2c2;
 }
 
+.has-tip {
+  font-weight: normal;
+}
+
 .relative {
   position: relative;
 }
@@ -161,6 +165,21 @@ fieldset legend {
   font-family: "PFDinDisplayPro-Med";
   padding: 0 1rem 0.2rem 0;
   margin-left: -1rem;
+}
+
+.minimal-fieldset {
+  padding: 0.4rem 0rem 1rem;
+}
+.minimal-fieldset legend {
+  font-family: "PFDinDisplayPro-Med";
+  padding: 0 1rem 0.6rem 0;
+  margin-left: 0rem;
+  font-weight: normal;
+  font-size: 0.9rem;
+}
+
+.block-price-unit {
+  margin-top: 1rem;
 }
 
 .alt-switch .switch-paddle {
@@ -1589,6 +1608,16 @@ table.list-employees {
   border: none;
 }
 
+.extra-content {
+  padding: 0rem 10px 0rem 10px;
+}
+.extra-content select {
+  font-size: 0.8rem;
+  background-color: transparent;
+  color: #000;
+  border: 1px solid #000;
+}
+
 .view-settings-panel {
   padding: 8px 0px;
   margin-bottom: 10px;
@@ -2796,6 +2825,9 @@ a#task-toggle {
 .content .content-table th:first-child:hover {
   cursor: default;
 }
+.content .content-table td.td-unit, .content .content-table th.td-unit {
+  max-width: 70px;
+}
 .content .content-table .is-stuck {
   background-color: #eeeeee;
 }
@@ -3250,6 +3282,9 @@ a#task-toggle {
   border-top: 2px solid #fff;
   padding: 0.1rem 0.625rem 0.1rem;
 }
+.table-compositions td.td-delete, .table-compositions th.td-delete {
+  width: 52px;
+}
 .table-compositions tr:first-child td {
   background-color: #fff;
 }
@@ -3331,6 +3366,17 @@ a#task-toggle {
   }
 }
 
+.draft td:last-child {
+  border-right: 4px solid #000;
+}
 .draft td {
-  background-color: grey;
+  background-color: #f3f3f3;
+}
+
+.mark-draft {
+  border: 1px solid #000000;
+  color: #000000;
+  background-color: transparent;
+  font-size: 0.6rem;
+  padding: 4px 10px;
 }
