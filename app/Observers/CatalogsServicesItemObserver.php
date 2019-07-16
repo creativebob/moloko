@@ -13,17 +13,24 @@ class CatalogsServicesItemObserver
     public function creating(CatalogsServicesItem $catalogs_services_item)
     {
         $this->store($catalogs_services_item);
+        $this->setSlug($catalogs_services_item);
     }
 
     public function updating(CatalogsServicesItem $catalogs_services_item)
     {
         $this->update($catalogs_services_item);
         $catalogs_services_item->photo_id = savePhoto($request, $catalogs_services_item);
+        $this->setSlug($catalogs_services_item);
     }
 
     public function deleting(CatalogsServicesItem $catalogs_services_item)
     {
         $this->destroy($catalogs_services_item);
+    }
+
+    protected function setSlug(CatalogsServicesItem $catalogs_services_item)
+    {
+        $catalogs_services_item->slug = \Str::slug($catalogs_services_item->name);
     }
 
 }

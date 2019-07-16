@@ -47,10 +47,11 @@ class Page extends Model
 
     protected $fillable = [
         'name',
-        'site_id ',
+        'site_id',
         'title',
         'subtitle',
         'description',
+        'content',
         'alias',
     ];
 

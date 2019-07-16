@@ -67,6 +67,9 @@
        <label>Телефон
            @include('includes.inputs.phone', ['value' => isset($department->main_phone->phone) ? $department->main_phone->phone : null, 'name' => 'main_phone', 'required' => isset($parent_id) ? null : true])
        </label>
+             <label>Почта
+                 @include('includes.inputs.email', ['value' => $department->email, 'name' => 'email'])
+             </label>
 
        {{ Form::hidden('id', null, ['id' => 'item-id']) }}
        {{ Form::hidden('filial_id', $filial_id, ['id' => 'filial-id']) }}

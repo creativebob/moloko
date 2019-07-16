@@ -93,6 +93,7 @@ class Department extends Model
         'author_id',
         'display',
         'system-item',
+        'email',
     ];
 
     // Вложенные

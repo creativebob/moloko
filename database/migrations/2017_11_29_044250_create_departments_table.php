@@ -22,6 +22,8 @@ class CreateDepartmentsTable extends Migration
             $table->string('name', 60)->index()->comment('Название отдела');
             $table->bigInteger('phone')->nullable()->comment('Телефон отдела');
 
+            $table->string('email')->nullable()->unique();
+
             $table->bigInteger('parent_id')->unsigned()->nullable()->comment('Id отдела, в котором находится отдел');
             $table->foreign('parent_id')->references('id')->on('departments');
 

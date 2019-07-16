@@ -183,11 +183,15 @@ class EquipmentController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         Log::channel('operations')
-        ->info('========================================== НАЧИНАЕМ ЗАПИСЬ СЫРЬЯ ==============================================');
+        ->info('========================================== НАЧИНАЕМ ЗАПИСЬ ОБОРУДОВАНИЯ ==============================================');
 
         $equipments_category = EquipmentsCategory::findOrFail($request->category_id);
         // dd($goods_category->load('groups'));
         $article = $this->storeArticle($request, $equipments_category);
+
+//        Выводим артикул из черновика для оборудования
+        $article->draft = false;
+        $article->save();
 
         if ($article) {
 
@@ -204,11 +208,11 @@ class EquipmentController extends Controller
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
 
                 Log::channel('operations')
-                ->info('Записали сырье c id: ' . $equipment->id);
+                ->info('Записали оборудование c id: ' . $equipment->id);
                 Log::channel('operations')
                 ->info('Автор: ' . $equipment->author->name . ' id: ' . $equipment->author_id .  ', компания: ' . $equipment->company->name . ', id: ' .$equipment->company_id);
                 Log::channel('operations')
-                ->info('========================================== КОНЕЦ ЗАПИСИ СЫРЬЯ ==============================================
+                ->info('========================================== КОНЕЦ ЗАПИСИ ОБОРУДОВАНИЯ ==============================================
 
                     ');
 

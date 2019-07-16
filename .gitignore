@@ -11,8 +11,8 @@ npm-debug.log
 yarn-error.log
 composer.lock
 .env
-composer.lock
 .phpunit.result.cache
+
 _ide_helper.php
 .phpstorm.meta.php
 

@@ -169,6 +169,7 @@ class DepartmentController extends Controller
         }
 
         $department->code_map = $request->code_map;
+        $department->email = $request->email;
 
         // Отображение на сайте
         $department->display = $request->display;
@@ -250,6 +251,7 @@ class DepartmentController extends Controller
         $department->parent_id = $request->parent_id;
 
         $department->code_map = $request->code_map;
+        $department->email = $request->email;
 
         // Отображение на сайте
         $department->display = $request->display;
