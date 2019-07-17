@@ -13,8 +13,8 @@ const mix = require('laravel-mix');
 
 mix.setPublicPath('public_html');
 
-mix.js('resources/js/app.js', 'public_html/js/system');
-// .sass('resources/sass/app.scss', 'public_html/css')
+mix.js('resources/js/system/app.js', 'public_html/js/system');
+// mix.sass('resources/scss/system/app.scss', 'public_html/css/system');
 
 // mix.browserSync('crmsystem.local/admin/test');
 

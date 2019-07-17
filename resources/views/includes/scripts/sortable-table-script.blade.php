@@ -1,4 +1,4 @@
-<script src="/crm/js/plugins/jquery-ui/jquery-ui.js"></script>
+<script src="/js/plugins/jquery-ui/jquery-ui.js"></script>
 <script type="application/javascript">
     $(function() {
 

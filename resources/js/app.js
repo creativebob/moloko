@@ -21,8 +21,8 @@ window.Vue = require('vue');
 
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
-Vue.component('citysearch-component', require('./components/CitySearchComponent.vue'));
-Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
+Vue.component('citysearch-component', require('./components/system/CitySearchComponent.vue'));
+Vue.component('dropzone-component', require('./components/system/DropzoneComponent.vue'));
 
 
 
