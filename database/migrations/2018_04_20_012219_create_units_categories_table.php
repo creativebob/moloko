@@ -25,7 +25,7 @@ class CreateUnitsCategoriesTable extends Migration
             $table->boolean('article')->default(0)->comment('Относится к артикулам');
             $table->boolean('process')->default(0)->comment('Относится к процессам');
 
-            $table->string('alias')->index()->nullable()->comment('Алиса категории');
+            $table->string('alias')->index()->nullable()->comment('Алиас категории');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

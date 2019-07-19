@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 	@extends('layouts.app')
 
 	@section('inhead')
@@ -473,25 +472,22 @@
 	@include('products.articles.common.edit.change_articles_groups_script')
 	@include('products.articles.common.edit.change_portions_script', [
 	    'portion_unit' => $article->group->unit->abbreviation
-	]
-	)
+	])
 
 	@include('includes.scripts.inputs-mask')
 	@include('includes.scripts.upload-file')
 
-	@include('includes.scripts.dropzone', [
+	{{-- @include('includes.scripts.dropzone', [
 	    'settings' => $settings,
 	    'item_id' => $article->id,
 	    'item_entity' => 'articles'
-	]
-	)
+	]) --}}
 
 	{{-- Проверка поля на существование --}}
 	@include('includes.scripts.check', [
 	    'entity' => 'articles',
 	    'id' => $article->id
-	]
-	)
+	])
 
 	@includeIf($page_info->entity->view_path . '.scripts')
 	@endpush

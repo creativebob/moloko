@@ -292,7 +292,7 @@ class GoodsController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         Log::channel('operations')
-        ->info('========================================== НАЧИНАЕМ ЗАПИСЬ ТОВАРА ==============================================');
+        ->info('============================== НАЧИНАЕМ ЗАПИСЬ ТОВАРА ==============================');
 
         $goods_category = GoodsCategory::findOrFail($request->category_id);
         // dd($goods_category->load('groups'));
@@ -420,6 +420,7 @@ class GoodsController extends Controller
             $cur_goods->display = $request->display;
             $cur_goods->system_item = $request->system_item;
             $cur_goods->price_unit_id = $request->price_unit_id;
+            $cur_goods->price_unit_category_id = $request->price_unit_category_id;
 
             $cur_goods->save();
 

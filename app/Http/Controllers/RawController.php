@@ -337,8 +337,13 @@ class RawController extends Controller
             $this->changeCategory($request, $raw);
 
             $raw->unit_for_composition_id = $request->unit_for_composition_id;
+
+            $raw->price_unit_id = $request->price_unit_id;
+            $raw->price_unit_category_id = $request->price_unit_category_id;
+            
             $raw->display = $request->display;
             $raw->system_item = $request->system_item;
+
             $raw->save();
 
 
