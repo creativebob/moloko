@@ -1,4 +1,4 @@
-<script type="application/javascript">
+<script>
 
     'use strict';
 
@@ -6,7 +6,7 @@
 
         change(elem) {
 
-            let id = $(elem).val();
+            id = $(elem).val();
 
             if ($(elem).prop('checked') == true) {
                 
@@ -26,9 +26,9 @@
 
         openModal(elem){
             // находим описание сущности, id и название удаляемого элемента в родителе
-            let parent = $(elem).closest('.item');
-            let id = parent.attr('id').split('-')[2];
-            let name = parent.data('name');
+            parent = $(elem).closest('.item');
+            id = parent.attr('id').split('-')[2];
+            name = parent.data('name');
             // alert(type + ' ' + id + ' ' + name);
             $('.title-item').text(name)
             $('.item-delete-button').attr('id', 'delete_raw-' + id);

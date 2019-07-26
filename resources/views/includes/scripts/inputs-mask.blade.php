@@ -1,4 +1,4 @@
-<script type="application/javascript" src="/js/jquery.maskedinput.js"></script>
+<script type="application/javascript" src="/crm/js/jquery.maskedinput.js"></script>
 <script type="application/javascript">
 
   jQuery(function($) {

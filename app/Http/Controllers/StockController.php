@@ -27,6 +27,9 @@ class StockController extends Controller
     public function index(Request $request)
     {
 
+
+        // dd($request->session()->get('access')['settings']);
+
         // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_alias);
         if (($filter_url != null)&&($request->filter != 'active')) {

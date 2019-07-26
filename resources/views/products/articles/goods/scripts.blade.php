@@ -1,4 +1,4 @@
-<script type="application/javascript">
+<script>
 
     $(document).ready(function() {
 
@@ -16,6 +16,17 @@
                 $('div[data-toggle=' + id + ']').find('.form-error').hide();
             };
         });
+
+
+        // При смене категории единиц измерения меняем список единиц измерения (блок: единица для опрееления цены)
+        $(document).on('change', '#select-price-units_categories', function() {
+            $.post('/admin/get_units_list', {
+                units_category_id: $(this).val()
+            }, function(html) {
+                $('#select-price-units').html(html);
+            });
+        });
+
 
         // Валидация при клике на кнопку
         $(document).on('click', '#add-item', function(event) {
@@ -237,6 +248,7 @@
             });
         });
     });
+
 
 </script>
 

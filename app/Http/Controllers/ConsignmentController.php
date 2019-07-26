@@ -23,7 +23,7 @@ class ConsignmentController extends Controller
         $this->class = Consignment::class;
         $this->model = 'App\Consignment';
         $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entity_dependence = true;
     }
 
     public function index(Request $request)

@@ -44,9 +44,9 @@
 				<tbody id="table-raws">
 
 					@if ($article->raws->isNotEmpty())
-					@foreach ($article->raws as $raw)
-					@include ('products.articles.goods.raws.raw_input', $raw)
-					@endforeach
+						@foreach ($article->raws as $raw)
+							@include ('products.articles.goods.raws.raw_input', $raw)
+						@endforeach
 					@endif
 
 				</tbody>
@@ -56,8 +56,8 @@
 <div class="small-12 medium-3 cell">
 
 
-
-	</div>
 </div>
 
-
+@section('scripts')
+	@include('products.articles.goods.raws.scripts')
+@endsection

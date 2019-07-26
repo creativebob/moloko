@@ -14,7 +14,7 @@ class ConsignmentPolicy
     use PoliticTrait;
 
     protected $entity_name = 'consignments';
-    protected $entity_dependence = false;
+    protected $entity_dependence = true;
 
     public function index(User $user)
     {

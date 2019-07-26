@@ -16,27 +16,29 @@ class CreateConsignmentsTable extends Migration
         Schema::create('consignments', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->bigInteger('supplier_id')->unsigned()->nullable()->comment('Id поставщика');
-            $table->foreign('supplier_id')->references('id')->on('suppliers');
+            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
+
+            $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id отдела');
+            $table->foreign('filial_id')->references('id')->on('departments');
 
             $table->string('name')->nullable()->comment('Короткое название накладной');
             $table->text('description')->nullable()->comment('Описание');
 
             $table->timestamp('receipt_date')->nullable()->comment('Дата приема');
-
             $table->string('number')->index()->nullable()->comment('Номер накладной');
 
-            $table->bigInteger('stock_id')->nullable()->unsigned()->comment('ID склада');
+            $table->bigInteger('supplier_id')->unsigned()->nullable()->comment('Id поставщика');
+            $table->foreign('supplier_id')->references('id')->on('suppliers');
+
+            $table->bigInteger('stock_id')->nullable()->unsigned()->comment('ID склада по умолчанию');
             $table->foreign('stock_id')->references('id')->on('stocks');
 
             $table->integer('amount')->nullable()->comment('Сумма');
-
             $table->integer('draft')->unsigned()->nullable()->comment('Черновик');
 
 
             // Общие настройки
-            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
-            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');

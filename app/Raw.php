@@ -50,6 +50,13 @@ class Raw extends Model
         'unit_for_composition_id',
         'price_unit_id',
         'price_unit_category_id',
+
+        'portion_goods_status',
+        'portion_goods_name',
+        'portion_goods_abbreviation',
+        'unit_portion_goods_id',
+        'portion_goods_count',                
+
     ];
 
     // Артикул

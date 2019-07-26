@@ -103,7 +103,7 @@
                     </td>
                     <td class="td-portion">
                         @if($item->article->portion_status == 1)
-                            <span>{{ $item->article->portion_name }}</span><br>
+                            <span>{{ $item->article->portion_abbreviation }}</span><br>
                             <span>{{ $item->article->portion_count * $item->article->unit->ratio }} {{ $item->article->unit->abbreviation }}</span>
                             
                         @endif
@@ -206,7 +206,9 @@
 {{-- Скрипт модалки удаления --}}
 @include('includes.scripts.modal-archive-script')
 
-@include('includes.scripts.inputs-mask')
+{{-- @include('includes.scripts.inputs-mask') --}}
+
+
 @include('products.common.create.scripts', [
     'entity' => $entity,
     'category_entity' => $category_entity,

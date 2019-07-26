@@ -80,16 +80,16 @@
 
                       <td class="td-supplier-name">
 
-                          <a href="/admin/consignments?supplier_id%5B%5D={{ $consignment->supplier->id }}" class="filter_link" title="Фильтровать">
-                            {{ $consignment->supplier->company->name }}
+                          <a href="/admin/consignments?supplier_id%5B%5D={{ $consignment->supplier->id ?? '' }}" class="filter_link" title="Фильтровать">
+                            {{ $consignment->supplier->company->name ?? '' }}
                         </a>
                         <br>
                         <span class="tiny-text">
-                            {{ $consignment->supplier->company->location->city->name }}, {{ $consignment->supplier->company->location->address }}
+                            {{ $consignment->supplier->company->location->city->name ?? '' }}, {{ $consignment->supplier->company->location->address ?? '' }}
                         </span>
                         <td class="td-phone">
                             {{ isset($consignment->supplier->company->main_phone->phone) ? decorPhone($consignment->supplier->company->main_phone->phone) : 'Номер не указан' }}
-                            @if($consignment->supplier->email)<br><span class="tiny-text">{{ $consignment->supplier->company->email ?? '' }}</span>@endif
+                            @if($consignment->supplier->email ?? '' )<br><span class="tiny-text">{{ $consignment->supplier->company->email ?? '' }}</span>@endif
                         </td>
 
                         <td class="td-amount">{{ num_format($consignment->amount, 0) }}</td>

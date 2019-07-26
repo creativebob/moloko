@@ -523,7 +523,7 @@
         if($name_filter == 'raws_category'){
 
             $filter[$name_filter]['title'] = 'Категория:';                                       // Назавние фильтра
-            $column = 'raws_category_id';                                                        // Имя переменной в request
+            $column = 'category_id';                                                              // Имя переменной в request
             $filter[$name_filter]['list_select']['item_list'] = getFilterRawsCategoryList();     // Функция с запросом
         }
         // ----------------------------------------------------------------------------

@@ -1726,6 +1726,17 @@ input:focus + .sprite-input-left {
 }
 }
 }
+
+// --------------------- Склад index -----------
+.content .content-table tbody td.td-stock-count{
+    font-family: "PFDinTextCondPro-Regular";
+    font-size: 2rem;
+}
+
+.content .content-table td.td-photo, .content .content-table th.td-photo {
+    width: 180px;
+}
+
 // ------------------------------------------- Сайдбар ----------------------------------------
 .sidebar {
   font-family: $PFDDPR;
@@ -1885,7 +1896,11 @@ a:hover {
 }
 
 .icon-service {
-    background-position:  -96px -1217px;
+    background-position:  -96px -1216px;
+}
+
+.icon-raw {
+    background-position:  -96px -1248px;
 }
 
 .icon-personal {
@@ -1935,8 +1950,11 @@ a:hover {
       background-position: -160px -1024px;
   }
   .icon-service {
-      background-position: -160px -1217px;
+      background-position: -160px -1216px;
   }
+  .icon-raw {
+      background-position: -160px -1248px;
+  } 
   .icon-personal {
       background-position: -160px -1056px;
   }

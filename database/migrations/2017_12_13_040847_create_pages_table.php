@@ -23,7 +23,7 @@ class CreatePagesTable extends Migration
             $table->string('title')->index()->comment('Title для страницы');
             $table->string('subtitle')->nullable()->comment('Подзаголовок для страницы');
             $table->string('alias')->index()->comment('Алиас');
-            $table->string('slug')->index()->comment('Слаг');
+            $table->string('slug')->index()->nullable()->comment('Слаг');
 
             $table->text('description')->nullable()->comment('Description для страницы');
             $table->text('content')->nullable()->comment('Контент страницы');

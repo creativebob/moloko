@@ -2,17 +2,12 @@
 	<legend>Фильтры:</legend>
 	<div class="grid-x">
  		<div class="small-12 medium-6 cell">
-			@include('includes.inputs.checkboxer', ['name'=>'raws_category', 'value'=>$filter]) 			
+			@include('includes.inputs.checkboxer', ['name'=>'raws_category', 'value'=>$filter])
  		</div>
  	</div>
 	<div class="grid-x">
  		<div class="small-12 medium-6 cell">
-			@include('includes.inputs.checkboxer', ['name'=>'raws_product', 'value'=>$filter]) 			
- 		</div>
- 	</div>
-	<div class="grid-x">
- 		<div class="small-12 medium-6 cell">
-			@include('includes.inputs.checkboxer', ['name'=>'author', 'value'=>$filter])			
+			@include('includes.inputs.checkboxer', ['name'=>'author', 'value'=>$filter])
  		</div>
  	</div>
 </div>
@@ -22,6 +17,3 @@
 		@include('includes.inputs.booklister', ['name'=>'booklist', 'value'=>$filter])
 	</div>
 </div>
-
-
-

@@ -409,6 +409,17 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => 1,
             ],
+            [
+                'name' => 'Склад товаров',
+                'site_id' => 1,
+                'title' => 'Склад товаров',
+                'description' => 'Склад товаров',
+                'alias' => 'stock_goods',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
 
             // Сырье
             [
@@ -433,7 +444,17 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => 1,
             ],
-
+            [
+                'name' => 'Склад сырья',
+                'site_id' => 1,
+                'title' => 'Склад сырья',
+                'description' => 'Склад сырья',
+                'alias' => 'stock_raws',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
             // Оборудование
             [
                 'name' => 'Категории оборудования',

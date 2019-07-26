@@ -1363,6 +1363,15 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   display: block !important;
 }
 
+.content .content-table tbody td.td-stock-count {
+  font-family: "PFDinTextCondPro-Regular";
+  font-size: 2rem;
+}
+
+.content .content-table td.td-photo, .content .content-table th.td-photo {
+  width: 180px;
+}
+
 .sidebar {
   font-family: "PFDinDisplayPro-Reg";
   text-align: left;
@@ -1501,7 +1510,10 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   background-position: -96px -1024px;
 }
 .sidebar .icon-service {
-  background-position: -96px -1217px;
+  background-position: -96px -1216px;
+}
+.sidebar .icon-raw {
+  background-position: -96px -1248px;
 }
 .sidebar .icon-personal {
   background-position: -96px -1056px;
@@ -1546,7 +1558,10 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   background-position: -160px -1024px;
 }
 .sidebar .nav > ul > li > .active .icon-service, .sidebar .gen-menu-bot > li > .active .icon-service {
-  background-position: -160px -1217px;
+  background-position: -160px -1216px;
+}
+.sidebar .nav > ul > li > .active .icon-raw, .sidebar .gen-menu-bot > li > .active .icon-raw {
+  background-position: -160px -1248px;
 }
 .sidebar .nav > ul > li > .active .icon-personal, .sidebar .gen-menu-bot > li > .active .icon-personal {
   background-position: -160px -1056px;
