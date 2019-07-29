@@ -586,6 +586,9 @@ Route::any('/create_estimates_item', 'EstimateController@ajax_create')->middlewa
 Route::any('/update_estimates_item', 'EstimateController@ajax_update')->middleware('auth');
 Route::delete('/destroy_estimates_item', 'EstimateController@ajax_delete')->middleware('auth');
 
+Route::any('/estimate_items_edit/{id}', 'EstimatesItemController@ajax_edit')->middleware('auth');
+
+
 // Route::delete('/workflows/{id}', 'EstimateController@ajax_destroy_composition')->middleware('auth');
 // Route::any('/estimates_items/add', 'EstimateController@ajax_add')->middleware('auth');
 

@@ -42,6 +42,17 @@
 				<td><span> {{ (count_item * price) + (count_item * price * vat_rate / 100) | roundtotwo }} </span></td>
 				<td><a class="button tiny">{{ mes }}</a></td>
 			</tr>
+			<tr v-for="item in consignment.items">
+				<td>{{ item.id }}</td>
+				<td>{{ item.smv.aricle.name }}</td>
+				<td>{{ item.count }}</td>
+				<td>{{ item.price }}</td>
+				<td>{{ item.amount }}</td>
+				<td>{{ item.vat_rate }}</td>
+				<td>{{ item.amount_vat }}</td>
+				<td>{{ item.total }}</td>
+				<td></td>
+			</tr>
 		</tbody>
 	</table>
 </template>
@@ -57,8 +68,15 @@
 				vat_rate: 20,
 				vat_rate_price: 0,
 				total: 0, 
-				point_status: false
+				point_status: false,
+				display: false
 			}
+		},
+
+		props: ['consignment'],
+
+		created: function(){
+
 		},
 
 		methods: {

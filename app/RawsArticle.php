@@ -82,7 +82,7 @@ class RawsArticle extends Model
     // Производитель
     public function manufacturer()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo('App\Manufacturer');
     }
 
     // Альбом

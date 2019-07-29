@@ -22,7 +22,7 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
 
-class Consignment extends Model
+class ConsignmentsItem extends Model
 {
 
     // Включаем кеш
@@ -43,53 +43,47 @@ class Consignment extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    protected $dates = ['deleted_at', 'receipt_date'];
+    protected $dates = ['deleted_at'];
     protected $fillable = [
-        'supplier_id',
-        'company_id',
-        // 'filial_id',
-        'name',
+        'consignment_id',
+        'cmv_id',
+        'count',
+        'price',
+        'vat_rate',
         'description',
+        'total',
         'amount',
-        'receipt_date',
-        'number',
-        'stock_id',
-        'author_id',
-        'draft'
+        'stock_id'
     ];
 
     // Компания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
-
-    // public function filials()
-    // {
-    //     return $this->hasMany('App\Department')->where('filial_status', 1);
-    // }
 
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
 
-    // Поставщик
-    public function supplier()
+    // Родительская смета
+    public function consignment()
     {
-        return $this->belongsTo('App\Supplier');
+        return $this->belongsTo(Consignment::class);
     }
 
     // Склад
     public function stock()
     {
-        return $this->belongsTo('App\Stock');
+        return $this->belongsTo(Stock::class);
     }
 
-    // Позиции в смете
-    public function items()
+    // 
+    public function smv()
     {
-        return $this->hasMany(ConsignmentsItem::class);
+        return $this->morphTo();
     }
+
 }

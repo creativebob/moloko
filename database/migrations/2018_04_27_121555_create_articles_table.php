@@ -27,7 +27,7 @@ class CreateArticlesTable extends Migration
             $table->string('external')->nullable()->comment('Имя внешнего артикула');
 
             $table->bigInteger('manufacturer_id')->nullable()->unsigned()->comment('Id производителя артикула');
-            $table->foreign('manufacturer_id')->references('id')->on('companies');
+            $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
 
             $table->boolean('kit')->default(0)->unsigned()->comment('Статус набора');
 
