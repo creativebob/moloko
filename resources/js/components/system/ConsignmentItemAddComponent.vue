@@ -23,13 +23,13 @@
 					</div>
 				</td>
 				<td>
-					<input @keydown="alarm($event, 'count')" type="text" v-model="count" name="count" class="digit">
+					<input-digit-component name="count_item" rate="2" :value="855" v-on:countchanged="changeCount"></input-digit-component>
 				</td>
 				<td>
-					<input type="text" v-model.number="price" name="price" class="digit">
+					<input-digit-component name="price" v-on:countchanged="changePrice"></input-digit-component>
 				</td>
 				<td>
-					<span>{{ count * price }}</span>
+					<span>{{ count_item * price | roundtotwo }}</span>
 				</td>
 				<td>
 					<select v-model="vat_rate" name="vat_rate">
@@ -38,9 +38,9 @@
 						<option value="20">20</option>
 					</select>
 				</td>
-				<td><span> {{ price * count * vat_rate / 100 }} </span></td>
-				<td><span> {{ (count * price) + (count * price * vat_rate / 100) }} </span></td>
-				<td><a class="button tiny">{{ mes | capitalize }}</a></td>
+				<td><span> {{ price * count_item * vat_rate / 100 | roundtotwo }} </span></td>
+				<td><span> {{ (count_item * price) + (count_item * price * vat_rate / 100) | roundtotwo }} </span></td>
+				<td><a class="button tiny">{{ mes }}</a></td>
 			</tr>
 		</tbody>
 	</table>
@@ -51,31 +51,30 @@
 		data() {
 			return {
 				mes: 'Добавить',
-				count: 0,
+				count_item: 123,
 				price: 0,
 				count_price: 0,
 				vat_rate: 20,
 				vat_rate_price: 0,
-				total: 0
+				total: 0, 
+				point_status: false
 			}
 		},
+
 		methods: {
-			alarm (event, name){
-		       if ( !/[0-9\x25\x24\x23\x2e]/.test( event.key ) ) {
-		           event.preventDefault();
-		       }
+			changeCount: function(value) {
+				this.count_item = value;
 			},
-			digit(value) {
-				exp = /[0-9]/;
-				return exp.test(value);
+			changePrice: function(value) {
+				this.price = value;
 			}
 		},
+
 		filters: {
-		  capitalize: function (value) {
-		    if (!value) return ''
-		    value = value.toString()
-		    return value.charAt(0).toUpperCase() + value.slice(1)
-		  }
+			roundtotwo: function (value) {
+				return Math.trunc(parseFloat(value.toFixed(2)) * 100) / 100;
+			}
 		}
+
 	}
 </script>

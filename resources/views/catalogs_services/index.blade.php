@@ -44,11 +44,11 @@
                     <th class="td-description">Описание</th>
 
                     @can('index', App\CatalogsServicesItem::class)
-                    <th class="td-tree">Дерево</th>
+                        <th class="td-tree">Дерево</th>
                     @endcan
 
                     @can('index', App\PricesService::class)
-                    <th class="td-services">Услуги</th>
+                        <th class="td-services">Услуги</th>
                     @endcan
 
                     <th class="td-author">Автор</th>
@@ -59,20 +59,20 @@
 
             <tbody data-tbodyId="1" class="tbody-width">
 
-               @forelse($catalogs_services as $cur_catalogs_service)
+               @forelse($catalogs_services as $catalogs_service)
 
-                    <tr class="item @if($cur_catalogs_service->moderation == 1)no-moderation @endif" id="catalogs_services-{{ $cur_catalogs_service->id }}" data-name="{{ $cur_catalogs_service->name }}">
+                    <tr class="item @if($catalogs_service->moderation == 1)no-moderation @endif" id="catalogs_services-{{ $catalogs_service->id }}" data-name="{{ $catalogs_service->name }}">
                         <td class="td-drop">
                             <div class="sprite icon-drop"></div>
                         </td>
                         <td class="td-checkbox checkbox">
-                            <input type="checkbox" class="table-check" name="" id="check-{{ $cur_catalogs_service->id }}">
-                            <label class="label-check" for="check-{{ $cur_catalogs_service->id }}"></label>
+                            <input type="checkbox" class="table-check" name="" id="check-{{ $catalogs_service->id }}">
+                            <label class="label-check" for="check-{{ $catalogs_service->id }}"></label>
                         </td>
                         <td class="td-name">
 
-                            @can('update', $cur_catalogs_service)
-                                {{ link_to_route('prices_services.index', $cur_catalogs_service->name, $parameters = ['id' => $cur_catalogs_service->id], $attributes = []) }} <span class="tiny-text">({{ $cur_catalogs_service->price_services->where('archive', 0)->where('service.article.draft', 0)->count() }})</span>
+                            @can('update', $catalogs_service)
+                                {{ link_to_route('prices_services.index', $catalogs_service->name, $parameters = ['id' => $catalogs_service->id], $attributes = []) }} <span class="tiny-text">({{ $catalogs_service->price_services->where('archive', 0)->where('service.article.draft', 0)->count() }})</span>
 
                                 @else
                                 {{ $page->name }}
@@ -80,27 +80,27 @@
 
 
                         </td>
-                        <td class="td-alias">{{ $cur_catalogs_service->alias }}</td>
-                        <td class="td-description">{{ $cur_catalogs_service->description }}</td>
-                        @can('index', App\CatalogsGoodsItem::class)
+                        <td class="td-alias">{{ $catalogs_service->alias }}</td>
+                        <td class="td-description">{{ $catalogs_service->description }}</td>
+                        @can('index', App\CatalogsServicesItem::class)
                             <td class="td-tree">
-                                {{ link_to_route('catalogs_goods_items.index', '', ['catalog_id' => $cur_catalogs_service->id], ['class' => 'icon-category sprite']) }}
+                                {{ link_to_route('catalogs_services_items.index', '', ['catalog_id' => $catalogs_service->id], ['class' => 'icon-category sprite']) }}
                             </td>
                         @endcan
 
-                        @can('index', App\PricesGoods::class)
+                        @can('index', App\PricesService::class)
                             <td class="td-services">
 
-                                {{ link_to_route($page_info->alias.'.edit', 'Настройка', ['catalog_id' => $cur_catalogs_service->id], ['class' => 'button tiny']) }}
+                                {{ link_to_route($page_info->alias.'.edit', 'Настройка', ['catalog_id' => $catalogs_service->id], ['class' => 'button tiny']) }}
                             </td>
                         @endcan
-                        <td class="td-author">{{ $cur_catalogs_service->author->name}}</td>
+                        <td class="td-author">{{ $catalogs_service->author->name}}</td>
 
                         {{-- Элементы управления --}}
-                        @include('includes.control.table-td', ['item' => $cur_catalogs_service])
+                        @include('includes.control.table-td', ['item' => $catalogs_service])
 
                         <td class="td-delete">
-                            @can('delete', $cur_catalogs_service)
+                            @can('delete', $catalogs_service)
                             <a class="icon-delete sprite" data-open="item-delete"></a>
                             @endcan
                         </td>

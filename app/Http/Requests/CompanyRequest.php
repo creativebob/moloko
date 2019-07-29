@@ -43,6 +43,8 @@ class CompanyRequest extends FormRequest
             'inn' => 'max:12|nullable', 
             'kpp' => 'max:255|nullable',
 
+            'birthday_company' => 'date|nullable', 
+
             'moderation' => 'integer|max:1|nullable',
             'system_item' => 'integer|max:1|nullable',
 

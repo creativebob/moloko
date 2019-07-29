@@ -58,7 +58,8 @@ class Company extends Model
         'bic',
         'location_id',
         'sector_id',
-        'legal_form_id'
+        'legal_form_id',
+        'birthday_company'
     ];
 
     // Фильтрация по городу

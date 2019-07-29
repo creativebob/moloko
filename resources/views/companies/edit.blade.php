@@ -2,6 +2,7 @@
 
 @section('inhead')
     @include('includes.scripts.class.city_search')
+    @include('includes.scripts.pickmeup-inhead')
 @endsection
 
 @section('title', 'Редактировать компанию')
@@ -34,6 +35,7 @@
 @section('scripts')
     @include('companies.scripts')
     @include('includes.scripts.inputs-mask')
+    @include('includes.scripts.pickmeup-script')
     @include('includes.scripts.modal-delete-script')
     @include('includes.scripts.extra-phone')
     @include('includes.bank_accounts.bank-account-script', ['id' => $company->id])

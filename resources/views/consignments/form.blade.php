@@ -26,13 +26,14 @@
 
                     <div class="small-12 medium-6 cell">
                         <label>Сумма
-                            @include('includes.inputs.digit', 
+                            <input-digit-component name="amount" rate="2" :value="{{ $consignment->amount }}"></input-digit-component>
+                            {{-- @include('includes.inputs.digit', 
                                 [
                                 'name' => 'amount', 
                                 'value'=>$consignment->amount, 
                                 'decimal_place'=> 2,                         
                                 'required' => true
-                            ])
+                            ]) --}}
                         </label>
                     </div>
 
@@ -67,6 +68,8 @@
     <div class="small-12 cell tabs-margin-top">
         <consignmentitemadd-component></consignmentitemadd-component>
     </div>
+
+
 
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
         {{ Form::submit($submit_text, ['class' => 'button']) }}

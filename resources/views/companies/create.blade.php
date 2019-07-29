@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('inhead')
-@include('includes.scripts.class.city_search')
+  @include('includes.scripts.class.city_search')
+  @include('includes.scripts.pickmeup-inhead')
 @endsection
 
 @section('title', 'Новая компания')
@@ -28,6 +29,7 @@
 
 @section('scripts')
   @include('includes.scripts.inputs-mask')
+  @include('includes.scripts.pickmeup-script')
   @include('companies.scripts')
 
   <script type="application/javascript">

@@ -41,7 +41,12 @@
                     <th class="td-description">Описание</th>
                     <th class="td-cost">Себестоимость</th>
                     <th class="td-price">Цена</th>
-                    <th class="td-author">Автор</th>
+
+                    @if($page_info->alias == 'services')
+                        <th class="td-catalog">Прайсы</th>
+                    @endif
+
+                    <th class="mark"></th>
                     <th class="td-control"></th>
                     <th class="td-archive"></th>
                 </tr>
@@ -84,9 +89,32 @@
                     <td class="td-description">{{ $item->process->description }}</td>
                     <td class="td-cost">{{ num_format($item->process->cost_default, 0) }}</td>
                     <td class="td-price">{{ num_format($item->process->price_default, 0) }}</td>
-                    <td class="td-catalog"></td>
 
-                    <td class="td-author">@if(isset($item->author->first_name)) {{ $item->author->name }} @endif</td>
+                    @if($page_info->alias == 'services')
+                        <td class="td-catalog">
+                            @foreach($item->prices as $price)
+                                <span>{{ $price->catalog->name }}: </span><span  data-tooltip class="top" tabindex="2" title="Действует с {{ $price->created_at->format('d.m.Y') }}">{{ $price->price }}
+
+                                    @if($item->process->unit_id == 32)
+                                        @if($item->price_unit_id != 32)
+                                            <span class='tiny-text'>за {{ $item->price_unit->abbreviation }}</span>
+                                        @endif
+                                    @endif
+
+                                </span><br>
+                            @endforeach
+                        </td>
+                    @endif
+
+                    {{-- <td class="td-author">@if(isset($item->author->first_name)) {{ $item->author->name }} @endif</td> --}}
+
+                    <td class="mark">
+                        
+                        @if($item->moderation == 1)<span class="hollow button warning mark-no-moderate tiny">На модерации</span>@endif
+
+                        @if($item->process->draft) <span class="mark-draft">Черновик</span> @endif
+
+                    </td>
 
                     {{-- Элементы управления --}}
                     @include('includes.control.table_td', ['item' => $item])
