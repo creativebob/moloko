@@ -6,15 +6,29 @@
 
     import vue2Dropzone from 'vue2-dropzone'
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+
     export default {
         mounted() {
             console.log('DropzoneComponent mounted.');
             // alert(this.dropzone.img_max_size);
+            // alert(this.$refs.myVueDropzone);
+            // setTimeout(() => {
+            //     this.$refs.myVueDropzone.dropzone.options.maxFilesize = this.dropzone.img_max_size
+            // }, 0);
         },
         props: [
             'dropzone'
         ],
-        name: 'app',
+        methods: {
+            // sendingEvent (file, xhr, formData) {
+            //     formData.append('maxFilesize', this.dropzone.img_max_size);
+            // },
+
+            // someMethod: {
+            //     this.$refs.myVueDropzone.setOption('maxFilesize', this.dropzone.img_max_size)
+            // }
+        },
+        name: 'vue2Dropzone',
         components: {
             vueDropzone: vue2Dropzone
         },

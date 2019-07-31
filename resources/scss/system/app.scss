@@ -1,107 +1,46 @@
-/* Welcome to Compass.
-* In this file you should write your main styles. (or centralize your imports)
-* Import this file using the following HTML or equivalent:
-* <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/crm/css" /> */
+@charset "UTF-8";
 
-@import "compass/reset";
-@import "compass/css3";
-@import "compass/layout";
-@import "compass/typography";
-@import "compass/utilities";
-// @import "breakpoint";
+//@import "compass/reset";
+//@import "compass/css3";
+//@import "compass/layout";
+//@import "compass/typography";
+//@import "compass/utilities";
+//@import "compass";
+//@import "compass/functions";
+//@import "compass-mixins";
 
-// ------------------------------ Медиа ширины -------------------------------
+// Fonts
+//@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+
+// ------------------------- Foundation -------------------------------------
+// Variables
+@import "partials/foundation/settings";
+
+// Bootstrap
+@import "partials/foundation/foundation";
+
+// Сброс настроек compass
+@import "../reset";
+
+// Медиа
+@import "breakpoint-sass";
+
+// ----------------------- Подключаем шрифты ----------------------------------------
+@import "partials/fonts";
+
+// ----------------------- Иконки ----------------------------------------------
+@import "partials/icons";
+
+// ------------------------ Сайдбар -------------------------------------
+@import "partials/sidebar";
+
+// -------------------------Медиа ширины -------------------------------
 $small: 640px;
 $medium: 1024px;
 // $fence-sm: $small $medium;
 
-// ----------------------- Подключаем шрифты ----------------------------------------
 
-// PFDinDisplayPro
-@include font-face("PFDinDisplayPro-Light", font-files(
-    "/css/system/fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf"
-    )
-);
-@include font-face("PFDinDisplayPro-Med", font-files(
-  "/css/system/fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf"
-  )
-);
-@include font-face("PFDinDisplayPro-Reg", font-files(
-  "/css/system/fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf"
-  )
-);
-@include font-face("PFDinDisplayPro-Thin", font-files(
-  "/css/system/fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf"
-  )
-);
-
-$PFDDPL: "PFDinDisplayPro-Light";
-$PFDDPM: "PFDinDisplayPro-Med";
-$PFDDPR: "PFDinDisplayPro-Reg";
-$PFDDPT: "PFDinDisplayPro-Thin";
-
-// PFDinTextPro
-@include font-face("PFDinTextPro-Regular", font-files(
-  "/css/system/fonts/DinTextPro/PFDinTextPro-Regular.ttf"
-  )
-);
-
-$PFDTPR: "PFDinTextPro-Regular";
-
-// DinTextCondensedPro
-@include font-face("PFDinTextCondPro-Regular", font-files(
-  "/css/system/fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf"
-  )
-);
-
-$PFDTCPR: "PFDinTextCondPro-Regular";
-
-// SegoeUI
-@include font-face("SegoeUIBold", font-files(
-  "/css/system/fonts/SegoeUI/SegoeUIBold/SegoeUIBold.woff",
-  "/css/system/fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf"
-  ),
-"/css/system/fonts/SegoeUI/SegoeUIBold//SegoeUIBold.eot" /* относительный путь к .eot файлу для IE */
-);
-@include font-face("SegoeUIItalic", font-files(
-  "/css/system/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.woff",
-  "/css/system/fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf"
-  ),
-"/css/system/fonts/SegoeUI/SegoeUIItalic//SegoeUIItalic.eot" /* относительный путь к .eot файлу для IE */
-);
-@include font-face("SegoeUILight", font-files(
-  "/css/system/fonts/SegoeUI/SegoeUILight/SegoeUILight.woff",
-  "/css/system/fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf"
-  ),
-"/css/system/fonts/SegoeUI/SegoeUILight//SegoeUILight.eot" /* относительный путь к .eot файлу для IE */
-);
-@include font-face("SegoeUISemiLight", font-files(
-  "/css/system/fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf"
-  )
-);
-@include font-face("SegoeUIRegular", font-files(
-  "/css/system/fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.woff",
-  "/css/system/fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf"
-  ),
-"/css/system/fonts/SegoeUI/SegoeUIRegular//SegoeUIRegular.eot" /* относительный путь к .eot файлу для IE */
-);
-@include font-face("SegoeUISemiBold", font-files(
-  "/css/system/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff",
-  "/css/system/fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf"
-  ),
-"/css/system/fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot" /* относительный путь к .eot файлу для IE */
-);
-
-$SUIB: "SegoeUIBold";
-$SUII: "SegoeUIItalic";
-$SUIL: "SegoeUILight";
-$SUISL: "SegoeUISemiLight";
-$SUIR: "SegoeUIRegular";
-$SUISB: "SegoeUISemiBold";
-
-$calibri: "calibri";
-
-// ----------------------------------- Переменные --------------------------------------
+// -------------------------Переменные --------------------------------------
 
 // Цвета
 $mars-red: #ff0000;
@@ -130,14 +69,7 @@ $header-profile-color: #444444;
 $header-profile-hover-bg-color: #eee;
 $header-profile-border-color: #d0d0d0;
 
-// Сайдбар
-$sidebar-bg-color: #333333; // Основной бекграунд элементов
-$sidebar-font-color: #bdbdbd;
-$sidebar-hover-color: #ffffff;
-$sidebar-active-color: #ff5454;
-$sidebar-bot-menu-bg-color: #242424;
-$sidebar-li-border-top: #2b2b2b;
-$sidebar-li-border-bot: #3f3f3f;
+
 
 // Менеджер задач
 $task-manager-tabs-bg-color: #333333;
@@ -558,16 +490,7 @@ p {
         display: none;
     }
 }
-// Ширина развернутого сайдбара
-.sidebar {
-    width: 64px;
 
-
-}
-
-.sidebar-open {
-    width: 240px;
-}
 // Меняем выпадающий список профиля
 .dropdown-pane {
     width: 222px;
@@ -598,7 +521,7 @@ input[type=checkbox], input[type=radio] {
             vertical-align: middle;
             width: 32px;
             height: 32px;
-            background: url(sprites/sprite_menu.png) no-repeat;
+            background: url(./sprites/sprite_menu.png) no-repeat;
             background-position: 0px -480px;
             content: '';
         }
@@ -836,286 +759,8 @@ $sprite-32: 32;
         outline: none;
     }
 }
-// ----------------------------------------- Иконки ----------------------------------------------
-// Страница входа
-.icon-login {
-    background: url(img/login.svg) no-repeat;
-    // background-position: 0px 0px;
-}
-.icon-password {
-    background: url(img/password.svg) no-repeat;
-    // background-position: 0px -16px;
-}
-// Поиск города
-.icon-load {
-    background: url(img/loading.svg) no-repeat;
-    opacity: 0.5;
-}
-.icon-find-ok {
-    background-position: -16px -80px;
-    opacity: 1;
-}
-.icon-find-no {
-    background-position: -32px -80px;
-    opacity: 1;
-    cursor: pointer;
-    z-index: 50;
-}
-
-.icon-search {
-    background: url(img/search.svg) no-repeat;
-    // background-position: 0px 0px;
-    background-position: 0px -448px;
-}
 
 
-// Расположение иконки в инпуте
-.one-icon-16 {
-    display: inline-block;
-    vertical-align: middle;
-    width: 16px;
-    height: 16px;
-}
-
-.icon-button{
-    cursor: pointer;
-    margin: 0px 3px;
-    opacity: 0.3;
-}
-
-.icon-button:hover, .icon-button.active{
-    opacity: 1;
-}
-
-.icon-view-card {
-  background: url(img/view-card.svg) no-repeat;
-}
-
-.icon-view-block {
-  background: url(img/view-block.svg) no-repeat;
-}
-
-.icon-view-list {
-  background: url(img/view-list.svg) no-repeat;
-}
-
-.icon-view-setting {
-  background: url(img/view-setting.svg) no-repeat;
-}
-
-// Иконки в строке таблицы
-.icon-list-add {
-    background-position: -128px -768px;
-}
-.icon-list-add:hover {
-    background-position: -96px -768px;
-}
-.icon-list-edit {
-    background-position: -96px -800px;
-}
-
-a.icon-list-edit {
-    display: inline-block;
-}
-
-.icon-list-edit:hover {
-    background-position: -128px -800px;
-}
-.icon-list-delete {
-    background-position: -96px -512px;
-}
-.icon-list-delete:hover {
-    background-position: -128px -512px;
-}
-
-
-// Иконка отображения на сайте
-.icon-display-hide {
-
-    &.black {
-        background-position: -64px -992px;
-    }
-
-    &.white {
-        background-position: -160px -992px;
-    }
-    opacity: 0.2;
-
-    &:hover {
-        opacity: 1;
-    }
-}
-
-.icon-display-show {
-
-    &.black {
-        background-position: -32px -992px;
-    }
-
-    &.white {
-        background-position: -96px -992px;
-    }
-
-    opacity: 0;
-    transition: opacity ease 0.3s;
-
-    &:hover {
-        opacity: 1;
-    }
-}
-
-// Иконка отображения системного значка
-.icon-system-lock {
-    opacity: 0.2;
-    transition: opacity ease 0.3s;
-
-    &.black {
-        background-position: -32px -960px;
-    }
-
-    &.white {
-        background-position: -3*32px -960px;
-    }
-
-    &:hover {
-        opacity: 1;
-    }
-}
-
-.icon-system-unlock {
-
-    opacity: 0;
-    transition: opacity ease 0.3s;
-
-    &.black {
-        background-position: -64px -960px;
-    }
-
-    &.white {
-        background-position: -5*32px -960px;
-    }
-
-    &:hover {
-        opacity: 1;
-    }
-}
-
-tr:hover {
-
-    .icon-display-show, .icon-system-unlock {
-
-        opacity: 0.2;
-
-        &:hover {
-            opacity: 1;
-        }
-    }
-
-    .icon-display-show, .icon-display-hide, .icon-system-unlock, .icon-system-lock {
-        cursor: pointer;
-    }
-    // background-position: -32px -992px;
-
-}
-
-// Иконка отображения системного значка
-.icon-system-template {
-
-    opacity: 0.2;
-    // margin-left: 1rem;
-    // z-index: 10;
-
-    &.black {
-        background-position: -32px -928px;
-    }
-
-    &.white {
-        background-position: -4*32px -928px;
-    }
-
-    // &:hover {
-        //     opacity: 1;
-        // }
-    }
-
-    .icon-system-programm {
-        background-position: -64px -896px;
-        opacity: 0.2;
-    // margin-left: 1rem;
-    // z-index: 10;
-
-    // &:hover {
-        //     opacity: 1;
-        //     // z-index: 10;
-        // }
-    }
-
-
-    .icon-sync {
-        background-position: 0px -1088px;
-        float: left;
-        margin-right: 0.6rem;
-        opacity: 0.4;
-        transition: opacity 0.5s ease;
-
-        &:hover {
-            opacity: 1;
-        }
-    }
-
-
-    .active-filter {
-        background-position: -32px -352px !important;
-
-        &:hover {
-            background-position: -32px -352px;
-            opacity: 0.7;
-        }
-    }
-
-
-// Иконка общего добавления
-.icon-add {
-    background-position: 0px -384px;
-    opacity: 0.3;
-    // z-index: 10;
-
-    &:hover {
-        opacity: 1;
-    }
-}
-
-// Иконка общего добавления
-.icon-category {
-    background-position: 0px -1185px;
-    opacity: 0.3;
-    // z-index: 10;
-
-    &:hover {
-        opacity: 1;
-    }
-}
-
-
-// Иконка фильтра
-.icon-filter {
-    background-position: 0px -352px;
-    float: left;
-    margin-right: 0.4rem;
-
-    &:hover {
-        background-position: -32px -352px;
-        opacity: 0.7;
-    }
-}
-
-.active-filter {
-    background-position: -32px -352px !important;
-}
-
-.filtration-active {
-    background-position: -64px -352px;
-}
 .show-elem
 {
     display: inline-block !important;
@@ -1680,7 +1325,7 @@ input:focus + .sprite-input-left {
         }
 
         .avatar {
-            @include border-radius(100%);
+            border-radius: 100%;
         }
     }
 }
@@ -1727,257 +1372,7 @@ input:focus + .sprite-input-left {
 }
 }
 // ------------------------------------------- Сайдбар ----------------------------------------
-.sidebar {
-  font-family: $PFDDPR;
-  text-align: left;
-  background-color: $sidebar-bg-color;
-  position: fixed;
-  height: 100%;
-  color: $sidebar-font-color;
-  box-shadow: 0 0 5px 0 rgba(0,0,0,.35);
-  z-index: 97;
 
-  a {
-    color: #eeeeee;
-    font-weight: light;
-    font-size: 1rem;
-}
-// Убираем настройки фонды для ссылки в меню по умолчанию
-.menu a {
-    display: inline;
-    padding: 0;
-}
-// Создаем наш стиль элементов списка в главной навигации, и в меню внизу
-.nav>ul>li  {
-    border-top: 1px solid $sidebar-li-border-bot;
-    border-bottom: 1px solid $sidebar-li-border-top;
-    padding: 0.4rem 0.5rem;
-    text-transform: uppercase;
-    width: 100%;
-
-    a {
-      color: #eeeeee;
-      font-weight: light;
-      font-size: 0.75rem;
-      display: block;
-      box-sizing: border-box;
-      width: 210px;
-
-      span {
-        display: inline-block;
-        vertical-align: middle;
-    }
-}
-.active, .active:hover {
-  color: $sidebar-active-color !important;
-
-  span {
-    color: $white;
-}
-}
-.active::after {
-  display: block;
-  border-color: $sidebar-active-color transparent transparent !important;
-  right: 0rem;
-}
-a:hover {
-  color: $sidebar-hover-color;
-}
-}
-
-// Главная навигация
-.nav {
-    height: auto;
-    overflow: hidden;
-    overflow-y: scroll;
-    margin-left: 0.5rem;
-    margin-top: 40px;
-    margin-bottom: 82px;
-
-    >ul>li {
-
-      >ul {
-        margin-left: 3rem;
-
-        li {
-          border-bottom: none;
-          text-transform: none;
-          font-family: $SUIL;
-
-          a {
-            padding: 0.4rem 1rem 0.4rem 0;
-            font-size: 0.7rem;
-            line-height: 1;
-        }
-        a:after {
-            display: block;
-        }
-    }
-}
-}
-// Убираем стандартные стрелочки аккордеонов Foundation
-.accordion-menu>li a::after {
-  display: none;
-}
-.accordion-menu li>ul li a::after {
-  display: block;
-  border-color: $sidebar-font-color transparent transparent;
-  right: 0rem;
-}
-}
-// Меню внизу (кнопка)
-.gen-menu-bot {
-    position: absolute;
-    bottom: 38px;
-    height: 44px;
-    width: 100%;
-
-    #sidebar-button {
-      display: block;
-      height: 100%;
-
-
-      background-color: $sidebar-bot-menu-bg-color;
-      border-top: 1px solid $sidebar-li-border-bot;
-      border-bottom: 1px solid $sidebar-li-border-top;
-      cursor: pointer;
-
-      #cursor {
-        display: block;
-        width: 32px;
-        height: 32px;
-        margin: 5px auto 0 auto;
-    }
-}
-}
-.sprite {
-    margin-right: 1rem;
-}
-.icon-mcc {
-    background-position: -96px 0px;
-}
-.icon-sale {
-    background-position: -96px -32px;
-}
-.icon-finance {
-    background-position: -96px -64px;
-}
-.icon-production {
-    background-position: -96px -96px;
-}
-.icon-marketing {
-    background-position:  -96px -128px;
-}
-.icon-study {
-    background-position:  -96px -160px;
-}
-.icon-guide {
-    background-position:  -96px -192px;
-}
-.icon-chatbot {
-    background-position:  -96px -256px;
-}
-.icon-setting {
-    background-position:  -96px -224px;
-}
-.icon-goods {
-    background-position:  -96px -1024px;
-}
-
-.icon-service {
-    background-position:  -96px -1217px;
-}
-
-.icon-personal {
-    background-position: -96px -1056px;
-}
-
-.icon-process {
-    background-position:  -96px -1120px;
-}
-
-.icon-arrow-forward {
-    background-position: -160px -288px;
-}
-.icon-arrow-back {
-    background-position: -96px -288px;
-}
-// Спрайты на сайдбар в активном состоянии
-.nav > ul > li > .active , .gen-menu-bot > li > .active {
-    .icon-mcc {
-      background-position: -160px 0px;
-  }
-  .icon-sale {
-      background-position: -160px -32px;
-  }
-  .icon-finance {
-      background-position: -160px -64px;
-  }
-  .icon-production {
-      background-position: -160px -96px;
-  }
-  .icon-marketing {
-      background-position: -160px -128px;
-  }
-  .icon-study {
-      background-position: -160px -160px;
-  }
-  .icon-guide {
-      background-position: -160px -192px;
-  }
-  .icon-chatbot {
-      background-position: -160px -256px;
-  }
-  .icon-setting {
-      background-position: -160px -224px;
-  }
-  .icon-goods {
-      background-position: -160px -1024px;
-  }
-  .icon-service {
-      background-position: -160px -1217px;
-  }
-  .icon-personal {
-      background-position: -160px -1056px;
-  }
-  .icon-process {
-      background-position: -160px -1120px;
-  }
-
-}
-// Скролл в сайбаре по умолчанию
-.nav::-webkit-scrollbar {
-    width:0.5rem;
-}
-// Скролл в сайбаре при наведении
-.nav:hover {
-    overflow-y: scroll;
-}
-.nav:hover::-webkit-scrollbar {
-    width:0.5rem;
-}
-.nav:hover::-webkit-scrollbar-thumb {
-    border-width:1px 1px 1px 2px;
-    border-color: #777;
-    background-color: #aaa;
-    border-radius: 0.2rem;
-}
-.nav:hover::-webkit-scrollbar-thumb:hover {
-    border-width: 1px 1px 1px 2px;
-    border-color: #555;
-    background-color: #777;
-}
-// Скрол для мозилы вроде
-scrollbar[orient="vertical"] {
-    max-width:10px !important;
-}
-scrollbar[orient="vertical"] > scrollbarbutton {
-    max-height:10px !important;
-}
-thumb[orient="vertical"] {
-    max-width:10px !important;
-}
-}
 
 // СТРАНИЦА СОТРУДНИКИ
 
@@ -3803,11 +3198,11 @@ a {
                             }
 
                             td.details-control {
-                              background: url('../resources/details_open.png') no-repeat center center;
+                              //background: url('../resources/details_open.png') no-repeat center center;
                               cursor: pointer;
                           }
                           tr.shown td.details-control {
-                              background: url('../resources/details_close.png') no-repeat center center;
+                              //background: url('../resources/details_close.png') no-repeat center center;
                           }
 
 
@@ -4314,7 +3709,7 @@ a:hover {
     border-radius: 0;
     background-color: #fefefe;
     font-size: 1rem;
-    @include box-sizing(border-box);
+    box-sizing: border-box;
 
     li {
 

@@ -13,8 +13,8 @@
         </label>
 
         <div
-                class="sprite-input-right find-status city-check"
-                :class="{ 'icon-find-ok sprite-16' : findOk, 'icon-find-no sprite-16' : findNo, 'icon-load' : load}"
+                class="sprite-input-right find-status city-check sprite-16"
+                :class="{ 'icon-find-ok' : find, 'icon-find-no' : error, 'icon-load' : load}"
                 @click="clear"
         >
         </div>
@@ -61,59 +61,77 @@
 </template>
 
 <script>
+    import _ from 'lodash'
+
     export default {
         mounted() {
             console.log('CitySearchComponent mounted.')
         },
-        props: [
-            'city'
-        ],
+        props: {
+            city: {
+                type: Object,
+                default: function(){
+                    return  {
+                        id: null,
+                        name: null
+                    }
+                }
+            }
+        },
         data() {
             return {
                 id: this.city.id,
                 name: this.city.name,
                 results: [],
-                findOk: (this.city.id != null) ? true : false,
-                findNo: false,
+                find: (this.city.id != null) ? true : false,
+                error: false,
                 load: false
             };
         },
         watch: {
-            name(after, before) {
-                this.check();
-            }
-        },
-        methods: {
-            check() {
+            name: _.debounce(function () {
                 if (this.name.length > 2) {
-                    this.findNo = false;
+                    // this.results = [];
+                    // this.findNo = false;
+                    // this.findOk = false;
+                    // this.id = null;
                     this.load = true;
-                        axios.get('/api/v1/cities_list', {
-                            params: {
-                                name: this.name
-                            }
-                    })
-                    .then(response => this.results = response.data)
-                            .then(this.load = false)
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+                    this.check();
                 } else {
                     this.id = null;
-                    this.findNo = false;
+                    this.results = [];
+                    // this.findNo = false;
+                    // this.findOk = false;
                 }
+            }, 300)
+        },
+
+        methods: {
+
+            check() {
+                axios.get('/api/v1/cities_list', {
+                    params: {
+                        name: this.name
+                    }
+                })
+                .then(response => this.results = response.data)
+                    .then(this.load = false)
+                .catch(function (error) {
+                    console.log(error);
+                });
+
             },
             add(id, name) {
                 this.id = id;
                 this.name = name;
                 this.results = [];
-                this.findOk = true;
+                this.find = true;
             },
             clear() {
                 this.id = null;
                 this.name = '';
-                this.findOk = false;
-                this.findNo = false;
+                this.find = false;
+                this.error = false;
             }
         }
     }

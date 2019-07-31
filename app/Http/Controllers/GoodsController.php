@@ -378,10 +378,10 @@ class GoodsController extends Controller
         ]);
 
         $dropzone = getSettings($this->entity_alias);
-//        dd($settings);
-
         $dropzone['id'] = $article->id;
         $dropzone['entity'] = $article->getTable();
+
+//        dd($dropzone);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);

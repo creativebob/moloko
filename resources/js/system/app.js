@@ -24,8 +24,7 @@ Vue.component('example-component', require('../components/ExampleComponent.vue')
 Vue.component('citysearch-component', require('../components/system/CitySearchComponent.vue'));
 Vue.component('consignmentitemadd-component', require('../components/system/ConsignmentItemAddComponent.vue'));
 Vue.component('input-digit-component', require('../components/system/InputDigitComponent.vue'));
-
-// Vue.component('dropzone-component', require('../components/system/DropzoneComponent.vue'));
+Vue.component('dropzone-component', require('../components/system/DropzoneComponent.vue'));
 
 
 
@@ -39,7 +38,7 @@ const app = new Vue({
     el: '#app',
 });
 
-var _ = require('lodash');
+// var _ = require('lodash');
 // const debounce = require('lodash.debounce');
 
 
@@ -64,3 +63,5 @@ $.ajaxSetup({
         alert('К сожалению, произошла ошибка. Попробуйте перезагрузить страницу!');
     },
 });
+
+require('./partials/sidebar');

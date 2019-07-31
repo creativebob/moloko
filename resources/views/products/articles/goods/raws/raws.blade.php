@@ -53,11 +53,12 @@
 			</table>
 		</div>
 	</div>
+</div>
 <div class="small-12 medium-3 cell">
 
 
 </div>
 
-@section('scripts')
+@push('scripts')
 	@include('products.articles.goods.raws.scripts')
-@endsection
+@endpush

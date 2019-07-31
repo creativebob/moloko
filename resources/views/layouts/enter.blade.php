@@ -4,16 +4,19 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/crm/css/foundation.css">
-    <link rel="stylesheet" href="/crm/css/app.css">
-    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <link rel="stylesheet" href="{{ mix('/css/system/app.css') }}">
+{{--    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>--}}
+
+    {{-- CSRF Token --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     </style>
     <title>CRM System</title>
   </head>
   <body class="enter-page">
+    <div id="app">
     <div class="grid-x">
       <div class="small-10 cell enter">
-        <img class="logo" src="/crm/img/logo-creativebob.svg">
+        <img class="logo" src="/img/system/logo-creativebob.svg">
         <form action="{{ route('login') }}" method="POST" data-abide novalidate>
           {{ csrf_field() }}
           <label class="input-icon">
@@ -35,9 +38,8 @@
         <a href="" class="forgot">Кажется пароль забыл...</a>
       </div>
     </div>
-    <script src="/crm/js/vendor/what-input.js"></script>
-    <script src="/crm/js/vendor/foundation.js"></script>
-    <script src="/crm/js/app.js"></script>
+    </div>
+    <script src="{{ mix('/js/system/app.js') }}"></script>
   </body>
 </html>
    
