@@ -72,8 +72,22 @@ class ConsignmentController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
+                // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('consignments', false, 'index');
+
+        // Главный запрос
+        $consignment = Consignment::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->authors($answer)
+        ->systemItem($answer)
+        ->template($answer)
+        ->orderBy('sort', 'asc')
+        ->get();
+
+        // dd($consignments);
+
         return view('consignments.create', [
-            'consignment' => new $this->class,
+            'consignment',
             'page_info' => pageInfo($this->entity_alias),
         ]);
     }
@@ -123,12 +137,15 @@ class ConsignmentController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $consignment = Consignment::moderatorLimit($answer)
+        $consignment = Consignment::with('items.smv')
+        ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->findOrFail($id);
 
         $this->authorize(getmethod(__FUNCTION__), $consignment);
+
+        // dd($consignment->items);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);

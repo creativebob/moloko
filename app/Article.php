@@ -124,7 +124,7 @@ class Article extends Model
     // Производитель
     public function manufacturer()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Manufacturer::class);
     }
 
     // Альбом

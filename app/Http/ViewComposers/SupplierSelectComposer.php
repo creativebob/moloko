@@ -16,12 +16,15 @@ class SupplierSelectComposer
 
         // Главный запрос
         $suppliers = Supplier::with('company')
+        ->companiesLimit($answer)
         ->moderatorLimit($answer)
         // ->authors($answer)
         ->systemItem($answer)
-        ->template($answer)
+        // ->template($answer)
         ->orderBy('sort', 'asc')
         ->get();
+
+        // dd($suppliers);
 
         return $view->with('suppliers', $suppliers);
 

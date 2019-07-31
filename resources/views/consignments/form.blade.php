@@ -20,13 +20,13 @@
 
                     <div class="small-12 medium-6 cell">
                         <label>Поставщик
-                            @include('includes.selects.suppliers', ['supplier_id' => $consignment->supplier_id])
+                            @include('includes.selects.suppliers', ['supplier_id' => $consignment->supplier_id ?? null])
                         </label>
                     </div>
 
                     <div class="small-12 medium-6 cell">
                         <label>Сумма
-                            <input-digit-component name="amount" rate="2" :value="{{ $consignment->amount }}"></input-digit-component>
+                            <input-digit-component name="amount" rate="2" :value="{{ $consignment->amount ?? 0 }}"></input-digit-component>
                             {{-- @include('includes.inputs.digit', 
                                 [
                                 'name' => 'amount', 
@@ -55,7 +55,7 @@
 
                     <div class="small-12 cell">
                         <label>Комментарий:
-                            {{ Form::textarea('description', $consignment->description, []) }}
+                            {{ Form::textarea('description', $consignment->description ?? null, []) }}
                         </label>
                     </div>
 
@@ -66,9 +66,10 @@
     </div>
 
     <div class="small-12 cell tabs-margin-top">
-        <consignmentitemadd-component></consignmentitemadd-component>
-    </div>
+        {{-- @if(!empty($consignment)) <consignmentitemadd-component :consignment="{{ $consignment }}"></consignmentitemadd-component> @endif --}}
 
+        <consignmentitemadd-component :consignment="{{ $consignment ?? 0 }}"></consignmentitemadd-component> 
+    </div>
 
 
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
