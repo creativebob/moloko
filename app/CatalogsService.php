@@ -55,6 +55,11 @@ class CatalogsService extends Model
         'display',
     ];
 
+    public function price_services()
+    {
+        return $this->hasMany(PricesService::class);
+    }
+
     // Пункты
     public function items()
     {

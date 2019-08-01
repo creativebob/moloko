@@ -54,7 +54,7 @@ class ArticlesGroupController extends Controller
         ->paginate(30);
 
 
-        return view('articles_groups.index',[
+        return view('products.articles_groups.index',[
             'articles_groups' => $articles_groups,
             'page_info' => pageInfo($this->entity_alias),
             // 'filter' => $filter,
@@ -68,7 +68,7 @@ class ArticlesGroupController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('articles_groups.create', [
+        return view('products.articles_groups.create', [
             'articles_group' => new $this->class,
             'page_info' => pageInfo($this->entity_alias),
         ]);
@@ -108,7 +108,7 @@ class ArticlesGroupController extends Controller
 
         $articles_group->save();
 
-        return redirect()->route('articles_groups.index');
+        return redirect()->route('products.articles_groups.index');
     }
 
     public function show(ArticlesGroup $articlesGroup)
@@ -127,7 +127,7 @@ class ArticlesGroupController extends Controller
 
         $articles_group->load('unit');
 
-        return view('articles_groups.edit', [
+        return view('products.articles_groups.edit', [
             'articles_group' => $articles_group,
             'page_info' => pageInfo($this->entity_alias),
         ]);
@@ -161,7 +161,7 @@ class ArticlesGroupController extends Controller
         $articles_group->save();
 
         if ($articles_group) {
-            return redirect()->route('articles_groups.index');
+            return redirect()->route('products.articles_groups.index');
         } else {
             abort(403, 'Ошибка обновления группы артикулов');
         }
@@ -183,7 +183,7 @@ class ArticlesGroupController extends Controller
         $articles_group->delete();
 
         if ($articles_group) {
-            return redirect()->route('articles_groups.index');
+            return redirect()->route('products.articles_groups.index');
         } else {
             abort(403, 'Ошибка удаления группы артикулов');
         }

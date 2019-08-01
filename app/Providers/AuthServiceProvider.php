@@ -3,11 +3,14 @@
 namespace App\Providers;
 
 use App\ArticlesGroup;
+
 use App\Consignment;
+use App\Policies\ConsignmentPolicy;
+
 use App\Indicator;
 use App\Order;
 use App\Policies\ArticlesGroupPolicy;
-use App\Policies\ConsignmentPolicy;
+
 use App\Policies\IndicatorPolicy;
 use App\Policies\OrderPolicy;
 use App\Policies\PricesGoodsPolicy;

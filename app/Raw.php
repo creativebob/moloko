@@ -47,6 +47,15 @@ class Raw extends Model
     protected $fillable = [
         'category_id',
         'article_id',
+        'unit_for_composition_id',
+        'price_unit_id',
+        'price_unit_category_id',
+
+        'portion_goods_status',
+        'portion_goods_name',
+        'portion_goods_abbreviation',
+        'unit_portion_goods_id',
+        'portion_goods_count',                
 
     ];
 
@@ -83,4 +92,11 @@ class Raw extends Model
             $q->where('archive', false);
         });
     }
+
+    // Еденица измерения
+    public function unit_for_composition()
+    {
+        return $this->belongsTo(Unit::class, 'unit_for_composition_id');
+    }
+
 }

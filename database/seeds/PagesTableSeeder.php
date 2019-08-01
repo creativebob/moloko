@@ -409,6 +409,17 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => 1,
             ],
+            [
+                'name' => 'Склад товаров',
+                'site_id' => 1,
+                'title' => 'Склад товаров',
+                'description' => 'Склад товаров',
+                'alias' => 'stock_goods',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
 
             // Сырье
             [
@@ -433,7 +444,17 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => 1,
             ],
-
+            [
+                'name' => 'Склад сырья',
+                'site_id' => 1,
+                'title' => 'Склад сырья',
+                'description' => 'Склад сырья',
+                'alias' => 'stock_raws',
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+            ],
             // Оборудование
             [
                 'name' => 'Категории оборудования',
@@ -582,10 +603,10 @@ class PagesTableSeeder extends Seeder
                 'display' => 1,
             ],
             [
-                'name' => 'Каталоги товаров',
+                'name' => 'Прайсы товаров',
                 'site_id' => 1,
-                'title' => 'Каталоги товаров',
-                'description' => 'Каталоги товаров',
+                'title' => 'Прайсы товаров',
+                'description' => 'Прайсы товаров',
                 'alias' => 'catalogs_goods',
                 'company_id' => null,
                 'system_item' => 1,
@@ -593,10 +614,10 @@ class PagesTableSeeder extends Seeder
                 'display' => 1,
             ],
             [
-                'name' => 'Пункты каталога товаров',
+                'name' => 'Пункты прайса товаров',
                 'site_id' => 1,
-                'title' => 'Пункты каталога товаров',
-                'description' => 'Пункты каталога товаров',
+                'title' => 'Пункты прайса товаров',
+                'description' => 'Пункты прайса товаров',
                 'alias' => 'catalogs_goods_items',
                 'company_id' => null,
                 'system_item' => 1,
@@ -615,10 +636,10 @@ class PagesTableSeeder extends Seeder
                 'display' => 1,
             ],
             [
-                'name' => 'Каталоги услуг',
+                'name' => 'Прайсы услуг',
                 'site_id' => 1,
-                'title' => 'Каталоги услуг',
-                'description' => 'Каталоги услуг',
+                'title' => 'Прайсы услуг',
+                'description' => 'Прайсы услуг',
                 'alias' => 'catalogs_services',
                 'company_id' => null,
                 'system_item' => 1,
@@ -626,10 +647,10 @@ class PagesTableSeeder extends Seeder
                 'display' => 1,
             ],
             [
-                'name' => 'Пункты каталога услуг',
+                'name' => 'Пункты прайса услуг',
                 'site_id' => 1,
-                'title' => 'Пункты каталога услуг',
-                'description' => 'Пункты каталога услуг',
+                'title' => 'Пункты прайса услуг',
+                'description' => 'Пункты прайса услуг',
                 'alias' => 'catalogs_services_items',
                 'company_id' => null,
                 'system_item' => 1,

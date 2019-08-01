@@ -30,13 +30,13 @@
 	</div>
 </div>
 
-
+{{--Состав--}}
 @if($article->kit)
 	<div class="tabs-panel" id="goods">
 		@include('products.articles.goods.goods.goods')
 	</div>
 	@else
-{{-- Состав --}}
+
 <div class="tabs-panel" id="raws">
 @include('products.articles.goods.raws.raws')
 </div>

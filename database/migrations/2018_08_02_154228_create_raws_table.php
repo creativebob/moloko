@@ -22,8 +22,25 @@ class CreateRawsTable extends Migration
             $table->bigInteger('category_id')->nullable()->unsigned()->comment('Id категории сырья');
             $table->foreign('category_id')->references('id')->on('raws_categories');
 
-            $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
+            $table->bigInteger('unit_for_composition_id')->nullable()->unsigned()->comment('Id единицы измерения для составов');
+            $table->foreign('unit_for_composition_id')->references('id')->on('units');
 
+            $table->bigInteger('price_unit_category_id')->nullable()->unsigned()->comment('Категория единицы измерения для определения цены');
+            $table->foreign('price_unit_category_id')->references('id')->on('units_categories');
+
+            $table->bigInteger('price_unit_id')->nullable()->unsigned()->comment('Единица измерения для определения цены');
+            $table->foreign('price_unit_id')->references('id')->on('units');
+
+            $table->boolean('portion_goods_status')->default(0)->unsigned()->comment('Статус порции');
+            $table->string('portion_goods_name')->nullable()->comment('Имя порции');
+            $table->string('portion_goods_abbreviation')->nullable()->comment('Сокращение порции');
+
+            $table->bigInteger('unit_portion_goods_id')->nullable()->unsigned()->comment('Id единицы измерения для порции');
+            $table->foreign('unit_portion_goods_id')->references('id')->on('units');
+
+            $table->integer('portion_goods_count')->nullable()->unsigned()->comment('Количество в порции');
+
+            $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
             $table->boolean('serial')->default(0)->unsigned()->comment('Серийный номер');
 
 

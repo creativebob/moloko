@@ -36,6 +36,7 @@ class CatalogsGoodsController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $catalogs_goods = CatalogsGoods::with([
+            'price_goods.goods.article',
             'author',
         ])
         ->moderatorLimit($answer)

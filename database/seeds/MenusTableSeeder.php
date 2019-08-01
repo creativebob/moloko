@@ -94,6 +94,22 @@ class MenusTableSeeder extends Seeder
                 'sort' => null,
             ],
 
+            //  Сырье
+            [
+                'name' => 'Сырье',
+                'icon' => 'icon-raw',
+                'alias' => null,
+                'tag' => 'raws',
+                'parent_id' => null,
+                'page_id' => null,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system_item' => 1,
+                'author_id' => 1,
+                'display' => 1,
+                'sort' => null,
+            ],
+
             //  Услуги
             [
                 'name' => 'Услуги',
@@ -226,7 +242,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 1,
     ],
     [
         'name' => 'Штат',
@@ -240,7 +256,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 3,
     ],
     [
         'name' => 'Сотрудники',
@@ -254,7 +270,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 2,
     ],
     [
         'name' => 'Должности',
@@ -268,7 +284,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 4,
     ],
 
     // Продажи
@@ -326,7 +342,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 5,
     ],
     [
         'name' => 'Клиенты',
@@ -345,7 +361,7 @@ Menu::insert([
 
     // Товары
     [
-        'name' => 'Каталоги товаров',
+        'name' => 'Прайсы товаров',
         'icon' => null,
         'alias' => 'admin/catalogs_goods',
         'tag' => 'catalogs_goods',
@@ -356,7 +372,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 2,
     ],
     [
         'name' => 'Категории товаров',
@@ -370,7 +386,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 4,
     ],
     [
         'name' => 'Товары',
@@ -384,7 +400,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 1,
     ],
     [
         'name' => 'Группы артикулов',
@@ -398,12 +414,26 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 5,
+    ],
+    [
+        'name' => 'Склад товаров',
+        'icon' => null,
+        'alias' => 'admin/stock_goods',
+        'tag' => 'stock_goods',
+        'parent_id' => $menus->where('tag', 'goods')->first()->id,
+        'page_id' => $pages->where('alias', 'stock_goods')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => 3,
     ],
 
     // Услуги
     [
-        'name' => 'Каталоги услуг',
+        'name' => 'Прайсы услуг',
         'icon' => null,
         'alias' => 'admin/catalogs_services',
         'tag' => 'catalogs_services',
@@ -414,7 +444,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 2,
     ],
     [
         'name' => 'Категории услуг',
@@ -428,7 +458,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 3,
     ],
     [
         'name' => 'Услуги',
@@ -442,7 +472,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 1,
     ],
     [
         'name' => 'Группы процессов',
@@ -456,8 +486,9 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 4,
     ],
+
 
     // [
     //     'name' => 'Категории расходных материалов',
@@ -473,8 +504,6 @@ Menu::insert([
     //     'display' => 1,
     //     'sort' => null,
     // ],
-
-
 
 
     // Финансы
@@ -565,33 +594,46 @@ Menu::insert([
         'sort' => null,
     ],
     [
-        'name' => 'Категории сырья',
-        'icon' => null,
-        'alias' => 'admin/raws_categories',
-        'tag' => 'raws_categories',
-        'parent_id' => $menus->where('tag', 'productions')->first()->id,
-        'page_id' => $pages->where('alias', 'raws_categories')->first()->id,
-        'navigation_id' => 1,
-        'company_id' => null,
-        'system_item' => 1,
-        'author_id' => 1,
-        'display' => 1,
-        'sort' => null,
-    ],
-
-    [
         'name' => 'Сырьё',
         'icon' => null,
         'alias' => 'admin/raws',
         'tag' => 'raws',
-        'parent_id' => $menus->where('tag', 'productions')->first()->id,
+        'parent_id' => $menus->where('tag', 'raws')->first()->id,
         'page_id' => $pages->where('alias', 'raws')->first()->id,
         'navigation_id' => 1,
         'company_id' => null,
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 1,
+    ],
+    [
+        'name' => 'Категории сырья',
+        'icon' => null,
+        'alias' => 'admin/raws_categories',
+        'tag' => 'raws_categories',
+        'parent_id' => $menus->where('tag', 'raws')->first()->id,
+        'page_id' => $pages->where('alias', 'raws_categories')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => 2,
+    ],
+    [
+        'name' => 'Склад сырья',
+        'icon' => null,
+        'alias' => 'admin/stock_raws',
+        'tag' => 'stock_raws',
+        'parent_id' => $menus->where('tag', 'raws')->first()->id,
+        'page_id' => $pages->where('alias', 'stock_raws')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system_item' => 1,
+        'author_id' => 1,
+        'display' => 1,
+        'sort' => 3,
     ],
     [
         'name' => 'Категории помещений',
@@ -680,10 +722,6 @@ Menu::insert([
         'sort' => null,
     ],
 
-
-
-
-
     [
         'name' => 'Категории рабочих процессов',
         'icon' => null,
@@ -712,7 +750,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 5,
     ],
     [
         'name' => 'Реклама',
@@ -729,7 +767,7 @@ Menu::insert([
         'sort' => null,
     ],
     [
-        'name' => 'Рубрики',
+        'name' => 'Рубрикаторы новостей',
         'icon' => null,
         'alias' => 'admin/rubricators',
         'tag' => 'rubricators',
@@ -740,7 +778,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 2,
     ],
     [
         'name' => 'Новости',
@@ -754,7 +792,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 1,
     ],
     [
         'name' => 'Отзывы',
@@ -782,7 +820,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 4,
     ],
     [
         'name' => 'Альбомы',
@@ -796,7 +834,7 @@ Menu::insert([
         'system_item' => 1,
         'author_id' => 1,
         'display' => 1,
-        'sort' => null,
+        'sort' => 3,
     ],
 
 

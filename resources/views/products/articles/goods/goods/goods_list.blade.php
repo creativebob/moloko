@@ -33,9 +33,9 @@
 <li>Ничего нет...</li>
 @endif
 
-<script type="text/javascript">
+<script>
 
-	let goods = new Goods();
+	goods = new Goods();
 
 	// Чекбоксы
 	$(document).on('click', "#dropdown-goods :checkbox", function() {

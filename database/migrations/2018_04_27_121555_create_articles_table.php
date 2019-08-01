@@ -27,7 +27,7 @@ class CreateArticlesTable extends Migration
             $table->string('external')->nullable()->comment('Имя внешнего артикула');
 
             $table->bigInteger('manufacturer_id')->nullable()->unsigned()->comment('Id производителя артикула');
-            $table->foreign('manufacturer_id')->references('id')->on('companies');
+            $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
 
             $table->boolean('kit')->default(0)->unsigned()->comment('Статус набора');
 
@@ -53,8 +53,15 @@ class CreateArticlesTable extends Migration
             $table->string('portion_abbreviation')->nullable()->comment('Сокращение порции');
             $table->integer('portion_count')->nullable()->unsigned()->comment('Количество в порции');
 
+            $table->decimal('weight', 15, 8)->nullable()->comment('Вес (кг)');
 
-            $table->decimal('weight', 15, 3)->nullable()->comment('Вес (кг)');
+            $table->bigInteger('unit_weight_id')->nullable()->unsigned()->comment('Id единицы измерения для веса');
+            $table->foreign('unit_weight_id')->references('id')->on('units');
+
+            $table->decimal('volume', 15, 8)->nullable()->comment('Объем (к.м.)');
+
+            $table->bigInteger('unit_volume_id')->nullable()->unsigned()->comment('Id единицы измерения для объема');
+            $table->foreign('unit_volume_id')->references('id')->on('units');
 
             $table->bigInteger('unit_id')->nullable()->unsigned()->comment('Id единицы измерения');
             $table->foreign('unit_id')->references('id')->on('units');

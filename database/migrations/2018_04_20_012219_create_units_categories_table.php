@@ -19,12 +19,13 @@ class CreateUnitsCategoriesTable extends Migration
             $table->string('name')->index()->comment('Название категории единицы измерения');
             // $table->text('description')->nullable()->comment('Описание категории единицы измерения');
 
-
             // $table->string('unit')->comment('Единица измерения');
             // $table->string('abbreviation')->comment('Сокращенное название категории');
 
             $table->boolean('article')->default(0)->comment('Относится к артикулам');
             $table->boolean('process')->default(0)->comment('Относится к процессам');
+
+            $table->string('alias')->index()->nullable()->comment('Алиас категории');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

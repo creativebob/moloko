@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->description }}" />
-{{-- Скрипты таблиц в шапке --}}
-@include('includes.scripts.tablesorter-inhead')
+    <meta name="description" content="{{ $page_info->description }}" />
+    {{-- Скрипты таблиц в шапке --}}
+    @include('includes.scripts.tablesorter-inhead')
 @endsection
 
 @section('title', $page_info->name)
@@ -11,86 +11,15 @@
 {{-- @section('breadcrumbs', Breadcrumbs::render('index', $page_info)) --}}
 
 @section('content-count')
-{{-- Количество элементов --}}
-{{ $prices_services->isNotEmpty() ? num_format($prices_services->total(), 0) : 0 }}
+    {{-- Количество элементов --}}
+    {{ $prices_services->isNotEmpty() ? num_format($prices_services->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')
-{{-- Таблица --}}
-{{-- Заголовок и фильтры --}}
-<div data-sticky-container id="head-content">
-    <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
-        <div class="top-bar head-content">
-            <div class="top-bar-left">
-                <h2 class="header-content">{{ $page_info->title }}
-                    <span class="content-count" title="Общее количество">
-                        {{ $prices_services->isNotEmpty() ? num_format($prices_services->total(), 0) : 0 }}
-                    </span>
-                </h2>
 
-{{--                @can('create', App\PricesService::class)--}}
-                <a class="icon-add sprite"></a>
-{{--                @endcan--}}
+    {{-- Таблица --}}
+    @include('includes.title-content', ['page_info' => $page_info, 'class' => App\PricesService::class, 'type' => 'table'])
 
-            </div>
-            <div class="top-bar-right">
-                @isset($filter))
-                <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
-                @endisset
-
-                <label>Филиалы
-                    @include('prices_services.select_user_filials')
-                </label>
-
-                <input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />
-
-                <button type="button" class="icon-search sprite button"></button>
-            </div>
-
-        </div>
-
-        <div id="port-result-search">
-        </div>
-        {{-- Подключаем стандартный ПОИСК --}}
-        @include('includes.scripts.search-script')
-
-        {{-- Блок фильтров --}}
-        @isset($filter))
-
-        {{-- Подключаем класс Checkboxer --}}
-        @include('includes.scripts.class.checkboxer')
-
-        <div class="grid-x">
-            <div class="small-12 cell filters fieldset-filters" id="filters">
-                <div class="grid-padding-x">
-                    <div class="small-12 cell text-right">
-                        {{ link_to(Request::url() . '?filter=disable', 'Сбросить', ['class' => 'small-link']) }}
-                    </div>
-                </div>
-                <div class="grid-padding-x">
-                    <div class="small-12 cell">
-                        {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
-
-                        @include($page_info->alias.'.filters')
-
-                        <div class="small-12 cell text-center">
-                            {{ Form::submit('Фильтрация', ['class'=>'button']) }}
-                            <input hidden name="filter" value="active">
-                        </div>
-                        {{ Form::close() }}
-                    </div>
-                </div>
-                <div class="grid-x">
-                    <a class="small-12 cell text-center filter-close">
-                        <button type="button" class="icon-moveup sprite"></button>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        @endisset
-    </div>
-</div>
 @endsection
 
 @section('content')

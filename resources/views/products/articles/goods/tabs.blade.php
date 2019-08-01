@@ -1,13 +1,13 @@
 <li class="tabs-title">
-	<a data-tabs-target="catalogs" href="#catalogs">Каталоги</a>
+	<a data-tabs-target="catalogs" href="#catalogs">Расположение в прайсах</a>
 </li>
 
-@if($article->set)
+@if($article->kit)
 	<li class="tabs-title">
-		<a data-tabs-target="goods" href="#goods">Товары</a>
+		<a data-tabs-target="goods" href="#goods">Набор товаров</a>
 	</li>
-	@else
-<li class="tabs-title">
-	<a data-tabs-target="raws" href="#raws">Сырье</a>
-</li>
-	@endif
+@else
+	<li class="tabs-title">
+		<a data-tabs-target="raws" href="#raws">Состав</a>
+	</li>
+@endif

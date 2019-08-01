@@ -482,19 +482,19 @@
         // ФИЛЬТР ПО КАТЕГОРИИ ТОВАРА -------------------------------------------------
         if($name_filter == 'goods_category'){
 
-            $filter[$name_filter]['title'] = 'Категория:';                                  // Назавние фильтра
-            $column = 'goods_category_id';                                                  // Имя переменной в request
-            $filter[$name_filter]['list_select']['item_list'] = getFilterGoodsCategoryList(); // Функция с запросом
+            $filter[$name_filter]['title'] = 'Категория:';                                      // Назавние фильтра
+            $column = 'category_id';                                                            // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterGoodsCategoryList();   // Функция с запросом
         }
         // ----------------------------------------------------------------------------
 
 
         // ФИЛЬТР ПО ГРУППЕ ТОВАРА ----------------------------------------------------
-        if($name_filter == 'goods_product'){
+        if($name_filter == 'articles_group'){
 
-            $filter[$name_filter]['title'] = 'Группа товара:';                               // Назавние фильтра
-            $column = 'goods_product_id';                                                    // Имя переменной в request
-            $filter[$name_filter]['list_select']['item_list'] = getFilterGoodsProductList(); // Функция с запросом
+            $filter[$name_filter]['title'] = 'Группа артикула:';                                // Назавние фильтра
+            $column = 'articles_group_id';                                                      // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterArticlesGroupList();   // Функция с запросом
         }
         // ----------------------------------------------------------------------------
 
@@ -523,7 +523,7 @@
         if($name_filter == 'raws_category'){
 
             $filter[$name_filter]['title'] = 'Категория:';                                       // Назавние фильтра
-            $column = 'raws_category_id';                                                        // Имя переменной в request
+            $column = 'category_id';                                                              // Имя переменной в request
             $filter[$name_filter]['list_select']['item_list'] = getFilterRawsCategoryList();     // Функция с запросом
         }
         // ----------------------------------------------------------------------------
@@ -742,11 +742,11 @@
         return $goods_categories;
     }
 
-    function getFilterGoodsProductList(){
+    function getFilterArticlesGroupList(){
 
-        $goods_products = App\GoodsProduct::orderBy('name', 'asc')
+        $articles_group = App\ArticlesGroup::orderBy('name', 'asc')
         ->get()->pluck('name', 'id')->toArray();
-        return $goods_products;
+        return $articles_group;
     }
 
     function getFilterServicesCategoryList(){

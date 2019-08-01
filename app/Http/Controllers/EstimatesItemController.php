@@ -82,4 +82,20 @@ class EstimatesItemController extends Controller
     {
         //
     }
+
+
+    public function ajax_edit(Request $request)
+    {
+
+        // Получаем авторизованного пользователя
+        $user = $request->user();
+
+        $user_id = hideGod($user);
+        $company_id = $user->company_id;
+
+        $estimate_item = EstimatesItem::findOrFail($request->id);
+
+        return view('leads.pricing.pricing-modal', compact('estimate_item'));
+
+    }
 }

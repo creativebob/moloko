@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
 
         // Наполнение локализаций
         $this->call(CountriesTableSeeder::class);
-        // $this->call(RegionsTableSeeder::class);
-        // $this->call(CitiesTableSeeder::class);
+        $this->call(RegionsTableSeeder::class);
+        $this->call(CitiesTableSeeder::class);
 
         // Единицы измерения
         $this->call(UnitsTableSeeder::class);

@@ -41,12 +41,12 @@ class RawController extends Controller
     {
 
 
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_alias);
+
         if (($filter_url != null)&&($request->filter != 'active')) {
             Cookie::queue(Cookie::forget('filter_' . $this->entity_alias));
             return Redirect($filter_url);
@@ -64,12 +64,21 @@ class RawController extends Controller
             'id',
             'article_id',
             'category_id',
+            'price_unit_id',
+            'price_unit_category_id',
+
+            'portion_goods_status',
+            'portion_goods_name',
+            'portion_goods_abbreviation',
+            'unit_portion_goods_id',
+            'portion_goods_count',   
+
             'author_id',
             'company_id',
             'display',
-            'system_item'
+            'system_item',
+            'unit_for_composition_id'
         ];
-
 
 
         $raws = Raw::with([
@@ -95,12 +104,17 @@ class RawController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->booklistFilter($request)
         ->filter($request, 'author_id')
-        // ->filter($request, 'raws_category_id', 'article.product')
-        // ->filter($request, 'raws_product_id', 'article')
+
+        ->whereHas('article', function($q) use ($request){
+            $q->filter($request, 'articles_group_id');
+        })
+
+        ->filter($request, 'category_id')
+
         ->where('archive', false)
         ->select($columns)
         ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
+        ->orderBy('id', 'desc')
         ->paginate(30);
         // dd($raws);
 
@@ -110,9 +124,8 @@ class RawController extends Controller
 
         $filter = setFilter($this->entity_alias, $request, [
             'author',               // Автор записи
-            'raws_category',    // Категория услуги
-            // 'raws_product',     // Группа услуги
-            // 'date_interval',     // Дата обращения
+            'raws_category',        // Категория услуги
+            'articles_group',       // Группа артикула
             'booklist'              // Списки пользователя
         ]);
 
@@ -214,6 +227,8 @@ class RawController extends Controller
             'title' => 'Добавление сырья',
             'entity' => $this->entity_alias,
             'category_entity' => 'raws_categories',
+            'unit_category_default' => '2', // Масса
+            'unit_default' => '8', // Масса
         ]);
     }
 
@@ -234,6 +249,9 @@ class RawController extends Controller
 
             $data = $request->input();
             $data['article_id'] = $article->id;
+            $data['price_unit_category_id'] = $data['units_category_id'];
+            $data['price_unit_id'] = $data['unit_id'];
+
             $raw = (new Raw())->create($data);
 
             if ($raw) {
@@ -305,6 +323,7 @@ class RawController extends Controller
             'entity' => $this->entity_alias,
             'category_entity' => 'raws_categories',
             'categories_select_name' => 'raws_category_id',
+            'raw' => $raw,
         ]);
     }
 
@@ -327,13 +346,26 @@ class RawController extends Controller
 
         $result = $this->updateArticle($request, $raw);
         // Если результат не массив с ошибками, значит все прошло удачно
+
         if (!is_array($result)) {
 
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $raw);
 
+            $raw->unit_for_composition_id = $request->unit_for_composition_id;
+
+            $raw->portion_goods_status = $request->portion_goods_status ?? 0;
+            $raw->portion_goods_abbreviation = $request->portion_goods_abbreviation;
+            // $raw->portion_goods_name = $request->portion_goods_name;
+            $raw->unit_portion_goods_id = $request->unit_portion_goods_id;
+            $raw->portion_goods_count = $request->portion_goods_count;                       
+
+            $raw->price_unit_id = $request->price_unit_id;
+            $raw->price_unit_category_id = $request->price_unit_category_id;
+            
             $raw->display = $request->display;
             $raw->system_item = $request->system_item;
+
             $raw->save();
 
 
@@ -345,6 +377,7 @@ class RawController extends Controller
 
             return redirect()->route('raws.index');
         } else {
+
             return back()
             ->withErrors($result)
             ->withInput();

@@ -397,7 +397,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Товарные накладные',
                 'alias' => 'consignments',
-                'model' => 'Сonsignment',
+                'model' => 'Consignment', 
                 'rights' => true,
                 'system_item' => 1,
                 'author_id' => 1,
@@ -975,6 +975,31 @@ class EntitiesTableSeeder extends Seeder
                 'view_path' => 'bank_accounts',
                 'page_id' => null,
             ],
+            [
+                'name' => 'Склад товаров',
+                'alias' => 'stock_goods',
+                'model' => 'StockGoods',
+                'rights' => true,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 1,
+                'ancestor_id' => Entity::whereAlias('goods')->first(['id'])->id,
+                'view_path' => 'stock_goods',
+                'page_id' => $pages->firstWhere('alias', 'stock_goods')->id,
+            ],
+            [
+                'name' => 'Склад сырья',
+                'alias' => 'stock_raws',
+                'model' => 'StockRaw',
+                'rights' => true,
+                'system_item' => 1,
+                'author_id' => 1,
+                'site' => 1,
+                'ancestor_id' => Entity::whereAlias('raws')->first(['id'])->id,
+                'view_path' => 'stock_raws',
+                'page_id' => $pages->firstWhere('alias', 'stock_raws')->id,
+            ],
+
         ]);
 
         // Обновляем тмц

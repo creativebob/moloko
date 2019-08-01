@@ -50,6 +50,8 @@ class Goods extends Model
     protected $fillable = [
         'category_id',
         'article_id',
+        'price_unit_id',
+        'price_unit_category_id',
     ];
 
     // Артикул
@@ -107,5 +109,12 @@ class Goods extends Model
         return $this->hasMany(PricesGoods::class)
             ->where('archive', false);
     }
+
+    // 
+    public function price_unit()
+    {
+        return $this->belongsTo(Unit::class, 'price_unit_id');
+    }
+
 
 }

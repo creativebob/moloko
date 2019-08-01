@@ -47,20 +47,32 @@ class Consignment extends Model
     protected $fillable = [
         'supplier_id',
         'company_id',
+        // 'filial_id',
+        'name',
+        'description',
+        'amount',
+        'receipt_date',
+        'number',
+        'stock_id',
         'author_id',
         'draft'
     ];
-
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo('App\User');
-    }
 
     // Компания
     public function company()
     {
         return $this->belongsTo('App\Company');
+    }
+
+    // public function filials()
+    // {
+    //     return $this->hasMany('App\Department')->where('filial_status', 1);
+    // }
+
+    // Автор
+    public function author()
+    {
+        return $this->belongsTo('App\User');
     }
 
     // Поставщик
@@ -73,5 +85,11 @@ class Consignment extends Model
     public function stock()
     {
         return $this->belongsTo('App\Stock');
+    }
+
+    // Позиции в смете
+    public function items()
+    {
+        return $this->hasMany(ConsignmentsItem::class);
     }
 }

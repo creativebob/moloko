@@ -68,9 +68,15 @@ class Article extends Model
         'portion_abbreviation',
         'portion_count',
 
-        'draft',
+        'unit_weight_id',
         'weight',
+
+        'unit_volume_id',
+        'volume',
+
         'unit_id',
+
+        'draft',
         'kit',
         'video_url',
     ];
@@ -118,7 +124,7 @@ class Article extends Model
     // Производитель
     public function manufacturer()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Manufacturer::class);
     }
 
     // Альбом
@@ -151,8 +157,20 @@ class Article extends Model
         return $this->hasOne(Goods::class);
     }
 
-    // Еденица измерения
+    // Единица измерения
     public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
+    // Еденица измерения
+    public function unit_weight()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
+    // Еденица измерения
+    public function unit_volume()
     {
         return $this->belongsTo(Unit::class);
     }
@@ -160,12 +178,31 @@ class Article extends Model
     // Вес
     public function getWeightAttribute($value)
     {
+        $weight = null;
         if (isset($this->unit_id)) {
-            $weight = $value / $this->unit->ratio;
+            if(isset($this->unit_weight)){
+                $weight = $value / $this->unit_weight->ratio;
+            }
         } else {
             $weight = $value / $this->group->unit->ratio;
         }
 
-        return $weight;
+        return $weight == 0 ? null : $weight;
     }
+
+    // Объем
+    public function getVolumeAttribute($value)
+    {
+        $volume = null;
+        if (isset($this->unit_id)) {
+            if(isset($this->unit_volume)){
+                $volume = $value / $this->unit_volume->ratio;
+            }
+        } else {
+            $volume = $value / $this->group->unit->ratio;
+        }
+
+        return $volume == 0 ? null : $volume;
+    }
+
 }

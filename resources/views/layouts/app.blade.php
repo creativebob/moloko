@@ -34,13 +34,13 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
 
     {{-- Add jQuery library --}}
     {{-- <script type="application/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> --}}
-    <script type="application/javascript" src="/crm/js/jquery.latest.min.js"></script>
+    <script type="application/javascript" src="/js/system/jquery.latest.min.js"></script>
 
     {{-- Дополнительные плагины / скрипты / стили для конкретной страницы --}}
     @yield('inhead')
 
-    <link rel="stylesheet" href="/crm/css/foundation.css">
-    <link rel="stylesheet" href="/crm/css/app.css">
+{{--    <link rel="stylesheet" href="/css/system/foundation.css">--}}
+    <link rel="stylesheet" href="{{ mix('/css/system/app.css') }}">
 
     {{-- CSRF Token --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -84,7 +84,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                         </li>
 
                         <li>
-                            <a id="task-toggle"><img src="/crm/img/header/alert.png">
+                            <a id="task-toggle"><img src="/img/system/header/alert.png">
                                 @if(!empty($list_challenges['for_me']))
                                 <span class="challenges_count" id="challenges-count">{{ $list_challenges['for_me']->flatten()->count() }}</span>
                                 @endif
@@ -290,13 +290,13 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
     </div>
 
     {{-- Скрипты --}}
-    <script type="application/javascript" src="/crm/js/vendor/what-input.js"></script>
-    <script type="application/javascript" src="/crm/js/vendor/foundation.js"></script>
-    <script type="application/javascript" src="/crm/js/app.js"></script>
-    <script type="application/javascript" src="/crm/js/sidebar.js"></script>
+{{--    <script type="application/javascript" src="/js/system/vendor/what-input.js"></script>--}}
+{{--    <script type="application/javascript" src="/js/system/vendor/foundation.js"></script>--}}
+    <script type="application/javascript" src="{{ mix('/js/system/app.js') }}"></script>
+{{--    <script type="application/javascript" src="/js/system/sidebar.js"></script>--}}
 
     {{-- Наши скрипты --}}
-    <script type="application/javascript"src="/crm/js/main.js"></script>
+{{--    <script type="application/javascript"src="/js/system/main.js"></script>--}}
     {{-- Наши скрипты --}}
     @stack('scripts')
 

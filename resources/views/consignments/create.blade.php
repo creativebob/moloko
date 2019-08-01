@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('inhead')
-@include('includes.scripts.pickmeup-inhead')
+	@include('includes.scripts.pickmeup-inhead')
+	@include('includes.scripts.class.digitfield')
 @endsection
 
 @section('title', 'Новая товарная накладная')
@@ -29,8 +30,8 @@
 @endsection
 
 @section('scripts')
-@include('includes.scripts.inputs-mask')
-@include('includes.scripts.pickmeup-script')
+	@include('includes.scripts.inputs-mask')
+	@include('includes.scripts.pickmeup-script')
 @endsection
 
 

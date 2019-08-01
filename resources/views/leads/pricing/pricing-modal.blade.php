@@ -2,6 +2,7 @@
     <div class="grid-x">
         <div class="small-12 cell modal-title">
             <h5>ЦЕНООБРАЗОВАНИЕ</h5>
+            <input-digit-component name="count_item" rate="2" :value="855" v-on:countchanged="changeCount"></input-digit-component>
         </div>
     </div>
     {{ Form::open(['id'=>'form-pricing', 'data-abide', 'novalidate']) }}
@@ -12,7 +13,7 @@
 
                     <div class="small-12 cell">
                         <label>Закупочная цена единицы, руб
-                            @include('includes.inputs.digit', ['name'=>'cost', 'value'=>$workflow->cost ?? $workflow->product->cost, 'decimal_place'=>2])
+                            @include('includes.inputs.digit', ['name'=>'cost', 'value'=>$estimate_item->cost ?? $estimate_item->product->cost, 'decimal_place'=>2])
                         </label>
                     </div>
 
@@ -22,12 +23,12 @@
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Наценка, %
-                                        @include('includes.inputs.digit', ['name'=>'margin_percent', 'value'=>$workflow->margin_percent, 'decimal_place'=>4])
+                                        @include('includes.inputs.digit', ['name'=>'margin_percent', 'value'=>$estimate_item->margin_percent, 'decimal_place'=>4])
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Наценка, руб
-                                        @include('includes.inputs.digit', ['name'=>'margin_currency', 'value'=>$workflow->margin_currency, 'decimal_place'=>2])
+                                        @include('includes.inputs.digit', ['name'=>'margin_currency', 'value'=>$estimate_item->margin_currency, 'decimal_place'=>2])
                                     </label>
                                 </div>
 
@@ -35,12 +36,12 @@
 
                                 <div class="small-12 medium-6 cell">
                                     <label>Допфикс наценка, %
-                                        @include('includes.inputs.digit', ['name'=>'extra_margin_percent', 'value'=>$workflow->extra_margin_percent, 'decimal_place'=>4])
+                                        @include('includes.inputs.digit', ['name'=>'extra_margin_percent', 'value'=>$estimate_item->extra_margin_percent, 'decimal_place'=>4])
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Допфикс наценка, руб
-                                        @include('includes.inputs.digit', ['name'=>'extra_margin_currency', 'value'=>$workflow->extra_margin_currency, 'decimal_place'=>2])
+                                        @include('includes.inputs.digit', ['name'=>'extra_margin_currency', 'value'=>$estimate_item->extra_margin_currency, 'decimal_place'=>2])
                                     </label>
                                 </div>
                             </div>
@@ -54,23 +55,23 @@
                             <div class="grid-x grid-margin-x">
                                 <div class="small-12 medium-6 cell">
                                     <label>Скидка, %
-                                        @include('includes.inputs.digit', ['name'=>'discount_percent', 'value'=>$workflow->discount_percent, 'decimal_place'=>4])
+                                        @include('includes.inputs.digit', ['name'=>'discount_percent', 'value'=>$estimate_item->discount_percent, 'decimal_place'=>4])
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Скидка, руб
-                                        @include('includes.inputs.digit', ['name'=>'discount_currency', 'value'=>$workflow->discount_currency, 'decimal_place'=>2])
+                                        @include('includes.inputs.digit', ['name'=>'discount_currency', 'value'=>$estimate_item->discount_currency, 'decimal_place'=>2])
                                     </label>
                                 </div>
 
                                 <div class="small-12 medium-6 cell">
                                     <label>Допфикс скидка, %
-                                        @include('includes.inputs.digit', ['name'=>'extra_discount_percent', 'value'=>$workflow->extra_discount_percent, 'decimal_place'=>4])
+                                        @include('includes.inputs.digit', ['name'=>'extra_discount_percent', 'value'=>$estimate_item->extra_discount_percent, 'decimal_place'=>4])
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Допфикс скидка, руб
-                                        @include('includes.inputs.digit', ['name'=>'extra_discount_currency', 'value'=>$workflow->extra_discount_currency, 'decimal_place'=>2])
+                                        @include('includes.inputs.digit', ['name'=>'extra_discount_currency', 'value'=>$estimate_item->extra_discount_currency, 'decimal_place'=>2])
                                     </label>
                                 </div>
                             </div>
@@ -80,18 +81,18 @@
 
                     <div class="small-12 medium-6 cell">
                         <label>Цена единицы, руб
-                            @include('includes.inputs.digit', ['name'=>'sum', 'value'=>$workflow->sum, 'decimal_place'=>2])
+                            @include('includes.inputs.digit', ['name'=>'sum', 'value'=>$estimate_item->sum, 'decimal_place'=>2])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>Количество, единиц
-                            @include('includes.inputs.digit', ['name'=>'count', 'value'=>$workflow->count])
+                            @include('includes.inputs.digit', ['name'=>'count', 'value'=>$estimate_item->count])
                         </label>
                     </div>
 
                     <div class="small-12 cell">
                         <label>Итоговая стоимость по позиции, руб
-                            @include('includes.inputs.digit', ['name'=>'total', 'value'=>$workflow->total ?? $workflow->product->price, 'decimal_place'=>2])
+                            @include('includes.inputs.digit', ['name'=>'total', 'value'=>$estimate_item->total ?? $estimate_item->product->price, 'decimal_place'=>2])
                         </label>
                     </div>
 

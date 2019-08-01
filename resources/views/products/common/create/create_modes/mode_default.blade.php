@@ -1,4 +1,4 @@
-<div class="small-12 cell up-input-button text-center">
+<div class="small-12 cell up-input-button text-right">
 	{{-- @if ($raws_products_count > 0) --}}
 	<a id="mode-select" class="modes">Добавить в группу</a> <span>|</span>
 	{{-- @endif --}}

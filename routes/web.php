@@ -443,6 +443,11 @@ Route::any('/processes_groups_list', 'ProcessesGroupController@ajax_processes_gr
 
 
 
+// -------------------------------- Склад товаров -------------------------------------------
+Route::resource('/stock_goods', 'StockGoodsController');
+
+
+
 // -------------------------------- Категории услуг -------------------------------------------
 
 // Текущая добавленная/удаленная категория
@@ -580,6 +585,9 @@ Route::resource('estimates', 'EstimateController')->middleware('auth');
 Route::any('/create_estimates_item', 'EstimateController@ajax_create')->middleware('auth');
 Route::any('/update_estimates_item', 'EstimateController@ajax_update')->middleware('auth');
 Route::delete('/destroy_estimates_item', 'EstimateController@ajax_delete')->middleware('auth');
+
+Route::any('/estimate_items_edit/{id}', 'EstimatesItemController@ajax_edit')->middleware('auth');
+
 
 // Route::delete('/workflows/{id}', 'EstimateController@ajax_destroy_composition')->middleware('auth');
 // Route::any('/estimates_items/add', 'EstimateController@ajax_add')->middleware('auth');

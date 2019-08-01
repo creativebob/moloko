@@ -19,10 +19,10 @@ use App\Http\Requests\AlbumRequest;
 
 // Общие классы
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Str;
 
 // Специфические классы
 use Illuminate\Support\Facades\Storage;
-
 
 class AlbumController extends Controller
 {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\PricesGoods;
+use App\CatalogsGoods;
 use Illuminate\Http\Request;
 
 class PricesGoodsController extends Controller
@@ -47,7 +48,8 @@ class PricesGoodsController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $prices_goods = PricesGoods::with([
-            'goods.article',
+            'goods.article.group.unit',
+            'goods.article.unit',
             'catalog',
             'catalogs_item'
         ])
@@ -86,6 +88,11 @@ class PricesGoodsController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
+        $catalog = CatalogsGoods::findOrFail($catalog_id);
+        $page_info->title = 'Прайс: ' . $catalog->name;
+        $page_info->name = 'Прайс: ' . $catalog->name;
+
+
         return view('prices_goods.index', [
             'prices_goods' => $prices_goods,
             'page_info' => $page_info,
@@ -94,6 +101,7 @@ class PricesGoodsController extends Controller
             // 'filter' => $filter,
             'nested' => null,
             'catalog_id' => $catalog_id,
+            'catalog' => $catalog,
             'filial_id' => $filial_id
         ]);
     }

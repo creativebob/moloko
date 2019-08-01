@@ -77,7 +77,6 @@ class Photo extends Model
     public function albums()
     {
         return $this->morphToMany('App\Album', 'album_entity');
-
     }
 
     // Получаем автора

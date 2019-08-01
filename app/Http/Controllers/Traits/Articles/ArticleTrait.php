@@ -22,6 +22,9 @@ trait ArticleTrait
         $user_id = $user->id;
         $company_id = $user->company_id;
 
+
+        // dd($request->input());
+
         // Смотрим пришедший режим группы товаров
         switch ($request->mode) {
 
@@ -29,6 +32,7 @@ trait ArticleTrait
             $articles_group = ArticlesGroup::firstOrCreate([
                 'name' => $request->name,
                 'unit_id' => $request->unit_id,
+                'units_category_id' => $request->units_category_id,
             ], [
                 'system_item' => $request->system_item ?? null,
                 'display' => 1,
@@ -44,6 +48,7 @@ trait ArticleTrait
             $articles_group = ArticlesGroup::firstOrCreate([
                 'name' => $request->group_name,
                 'unit_id' => $request->unit_id,
+                'units_category_id' => $request->units_category_id,
             ], [
                 'system_item' => $request->system_item ?? null,
                 'display' => 1,
@@ -64,25 +69,49 @@ trait ArticleTrait
         ->info('Режим создания: ' . $request->mode . '. Записали или нашли группу артикулов c id: ' . $articles_group->id . ', в зависимости от режима. Связали с категорией.');
 
         $data = $request->input();
-        // dd($data);
+
         $data['articles_group_id'] = $articles_group->id;
 
         if (isset($data['units_category_id'])) {
 
             // Смотрим статичную категорию id 2 (Масса), если пришла она по переводим к выбранному коэффициенту
-            if ( $data['units_category_id'] == 2) {
+            if($data['units_category_id'] == 2) {
+
                 $unit = Unit::findOrFail($data['unit_id']);
                 $weight = $unit->ratio;
-                $data['unit_id'] = null;
                 $data['weight'] = $weight;
+
+            } elseif ($data['units_category_id'] == 5) {
+
+                $unit = Unit::findOrFail($data['unit_id']);
+                $volume = $unit->ratio;
+                $data['volume'] = $volume;
+
             } else {
+
                 // Если нет, то умножаем пришедший вес на количество чего либо
-                $extra_unit = Unit::findOrFail($data['extra_unit_id']);
-                $weight = $data['weight'] * $extra_unit->ratio;
-                $data['unit_id'] = $data['extra_unit_id'];
+                // $extra_unit = Unit::findOrFail($data['extra_unit_id']);
+
+
+                // Если не пришло кол-во веса, значит у пользователя его не запросили, так как планируеться измерять
+                // в единицах веса. Установим единицу!
+
+                if(isset($data['weight'])){
+                    $weight_unit = Unit::findOrFail($data['unit_weight_id']);
+                    $weight = $data['weight'] * $weight_unit->ratio;
+                    $data['weight'] = $weight;
+                };
+
+
+                if(isset($data['volume'])){
+                    $volume_unit = Unit::findOrFail($data['unit_volume_id']);
+                    $volume = $data['volume'] * $volume_unit->ratio;
+                    $data['volume'] = $volume;
+                };
+
+
             }
-            // dd($weight);
-            $data['weight'] = $weight;
+
         }
 
 
@@ -110,7 +139,6 @@ trait ArticleTrait
             // Проверяем совпадение (отдаем пришедшие данные, т.к. мы не можем сейчас записать артикул, запись будет после проверки)
             // Придет либо массив с ошибками, либо null
             $result = $this->checkCoincidenceArticle($data);
-            // dd($result);
         }
         // Проверки уже выведенного артикула
 
@@ -124,6 +152,29 @@ trait ArticleTrait
                 return $result;
             } else {
 
+
+            $units_category_id = $article->group->units_category_id;
+            if($units_category_id == 6){
+
+                // dd($data['volume_unit_id']);
+
+
+                if(isset($data['weight'])){
+                    $weight_unit = Unit::findOrFail($data['unit_weight_id']);
+                    $weight = $data['weight'] * $weight_unit->ratio;
+                    $data['weight'] = $weight;
+                };
+
+
+                if(isset($data['volume'])){
+                    $volume_unit = Unit::findOrFail($data['unit_volume_id']);
+                    $volume = $data['volume'] * $volume_unit->ratio;
+                    $data['volume'] = $volume;
+                };
+
+            }
+
+
                 if ($article->draft) {
                     // Обновляем составы только для товаров в черновике
                     if ($item->getTable() == 'goods') {
@@ -135,11 +186,29 @@ trait ArticleTrait
                         }
                     }
 
-                    if (isset($article->unit_id)) {
-                        $unit = Unit::findOrFail($article->unit_id);
-                        $weight = $data['weight'] * $unit->ratio;
-                        $data['weight'] = $weight;
+                    // Устаревший код
+                    // if (isset($article->unit_id)) {
+                    //     $unit = Unit::findOrFail($article->unit_id);
+                    //     $weight = $data['weight'] * $unit->ratio;
+                    //     $data['weight'] = $weight;
+                    // }
+
+
+
+
+                    // Смена значения единицы измерения в рамках выбранной меры (категории ед. измерения) без смены 
+                    if (isset($data['unit_id'])) {
+
+                        // Если пришедшая единица измерения отличаеться от той, что устновлена на арикуле
+                        if($data['unit_id'] != $article->unit_id){
+                            $cur_weight = $article->weight;
+                            $unit_new = Unit::findOrFail($data['unit_id']);
+                            $weight = $cur_weight * $unit_new->ratio;
+                            $data['weight'] = $weight;
+                        }
                     }
+
+
                 }
 
                 $data['draft'] = request()->has('draft');

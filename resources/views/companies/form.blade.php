@@ -248,6 +248,14 @@
 
                     --}}
 
+                    <div class="small-6 medium-3 cell">
+                        <label>Дата рождения компании
+                            @include('includes.inputs.date', ['name'=>'birthday_company', 'value'=>$company->birthday_company])
+                        </label>
+                    </div>
+                    <div class="small-6 cell">
+
+                    </div>
 
                     <div class="small-12 medium-12 cell">
                         <label>Информация о компании:

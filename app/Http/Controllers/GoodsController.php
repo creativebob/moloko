@@ -72,6 +72,7 @@ class GoodsController extends Controller
             'id',
             'article_id',
             'category_id',
+            'price_unit_id',
             'author_id',
             'company_id',
             'display',
@@ -80,11 +81,14 @@ class GoodsController extends Controller
 
         $goods = Goods::with([
             'author',
+            'price_unit',
             'company',
             'article' => function ($q) {
                 $q->with([
-                    'group',
-                    'photo'
+                    'group.unit',
+                    'photo',
+                    'unit',
+                    'goods'
                 ]);
                 // ->select([
                 //     'id',
@@ -100,6 +104,7 @@ class GoodsController extends Controller
                     'name'
                 ]);
             },
+            'prices.catalog'
             // 'catalogs.site'
         ])
         ->moderatorLimit($answer)
@@ -108,12 +113,17 @@ class GoodsController extends Controller
         ->systemItem($answer)
         ->booklistFilter($request)
         ->filter($request, 'author_id')
-        // ->filter($request, 'goods_category_id', 'article.product')
+
+        ->whereHas('article', function($q) use ($request){
+            $q->filter($request, 'articles_group_id');
+        })
+
+        ->filter($request, 'category_id')
         // ->filter($request, 'goods_product_id', 'article')
         ->where('archive', false)
         ->select($columns)
         ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
+        ->orderBy('id', 'desc')
         ->paginate(30);
         // dd($goods);
 
@@ -124,8 +134,7 @@ class GoodsController extends Controller
         $filter = setFilter($this->entity_alias, $request, [
             'author',               // Автор записи
             'goods_category',       // Категория товара
-            // 'goods_product',     // Группа продукта
-            // 'date_interval',     // Дата обращения
+            'articles_group',    // Группа артикула
             'booklist'              // Списки пользователя
         ]);
 
@@ -271,6 +280,8 @@ class GoodsController extends Controller
             'title' => 'Добавление товара',
             'entity' => $this->entity_alias,
             'category_entity' => 'goods_categories',
+            'unit_category_default' => '6', // Масса
+            'unit_default' => '32', // Кг
         ]);
     }
 
@@ -281,7 +292,7 @@ class GoodsController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         Log::channel('operations')
-        ->info('========================================== НАЧИНАЕМ ЗАПИСЬ ТОВАРА ==============================================');
+        ->info('============================== НАЧИНАЕМ ЗАПИСЬ ТОВАРА ==============================');
 
         $goods_category = GoodsCategory::findOrFail($request->category_id);
         // dd($goods_category->load('groups'));
@@ -290,7 +301,11 @@ class GoodsController extends Controller
         if ($article) {
 
             $data = $request->input();
+
             $data['article_id'] = $article->id;
+            $data['price_unit_category_id'] = $data['units_category_id'];
+            $data['price_unit_id'] = $data['unit_id'];
+
             $cur_goods = (new Goods())->create($data);
 
             if ($cur_goods) {
@@ -363,16 +378,13 @@ class GoodsController extends Controller
         ]);
 
         $dropzone = getSettings($this->entity_alias);
-//        dd($settings);
-
         $dropzone['id'] = $article->id;
         $dropzone['entity'] = $article->getTable();
 
+//        dd($dropzone);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
-
-//        dd($cur_goods);
-
 
         return view('products.articles.common.edit.edit', [
             'title' => 'Редактировать товар',
@@ -407,6 +419,9 @@ class GoodsController extends Controller
 
             $cur_goods->display = $request->display;
             $cur_goods->system_item = $request->system_item;
+            $cur_goods->price_unit_id = $request->price_unit_id;
+            $cur_goods->price_unit_category_id = $request->price_unit_category_id;
+
             $cur_goods->save();
 
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
