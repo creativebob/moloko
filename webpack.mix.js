@@ -15,9 +15,9 @@ mix.setPublicPath('public_html');
 
 mix.js('resources/js/system/app.js', 'public_html/js/system');
 
-// mix.copyDirectory('resources/scss/system/fonts', 'public_html/css/system/fonts');
-// mix.copyDirectory('resources/scss/system/img', 'public_html/css/system/img');
-// mix.copyDirectory('resources/scss/system/sprites', 'public_html/css/system/sprites');
+mix.copyDirectory('resources/scss/system/fonts', 'public_html/css/system/fonts');
+mix.copyDirectory('resources/scss/system/img', 'public_html/css/system/img');
+mix.copyDirectory('resources/scss/system/sprites', 'public_html/css/system/sprites');
 
 mix
 	// .copy('resources/scss/system/', 'public_html/css/system')

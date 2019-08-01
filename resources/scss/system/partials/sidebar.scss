@@ -8,17 +8,26 @@ $sidebar-li-border-top: #2b2b2b;
 $sidebar-li-border-bot: #3f3f3f;
 
 // Ширина развернутого сайдбара
+.sidebar {
+  width: 64px;
+}
+
 .sidebar-open {
   width: 240px;
 }
 
+// Меняем выпадающий список профиля
+.dropdown-pane {
+  width: 222px;
+}
+
+// ------------------------------------------- Сайдбар ----------------------------------------
 .sidebar {
   font-family: $PFDDPR;
   text-align: left;
   background-color: $sidebar-bg-color;
   position: fixed;
   height: 100%;
-  width: 64px;
   color: $sidebar-font-color;
   box-shadow: 0 0 5px 0 rgba(0,0,0,.35);
   z-index: 97;
@@ -171,7 +180,11 @@ $sidebar-li-border-bot: #3f3f3f;
   }
 
   .icon-service {
-    background-position:  -96px -1217px;
+    background-position:  -96px -1216px;
+  }
+
+  .icon-raw {
+    background-position:  -96px -1248px;
   }
 
   .icon-personal {
@@ -221,7 +234,10 @@ $sidebar-li-border-bot: #3f3f3f;
       background-position: -160px -1024px;
     }
     .icon-service {
-      background-position: -160px -1217px;
+      background-position: -160px -1216px;
+    }
+    .icon-raw {
+      background-position: -160px -1248px;
     }
     .icon-personal {
       background-position: -160px -1056px;
@@ -262,5 +278,21 @@ $sidebar-li-border-bot: #3f3f3f;
   }
   thumb[orient="vertical"] {
     max-width:10px !important;
+  }
+}
+
+// -------------------------Раздвигаем мобильный сайдбар на всю ширину ------------------------
+.sidebar {
+  position: fixed;
+  width: 100%;
+  display: block;
+
+  .nav {
+    margin-top: 0;
+    height: 100%;
+    padding-bottom: 3rem;
+  }
+  .gen-menu-bot {
+    display: none;
   }
 }
