@@ -32,7 +32,10 @@
         "sass-loader": "^7.1.0",
         "sass-resources-loader": "^2.0.1",
         "style-loader": "^0.23.1",
-        "yarn": "^1.17.3"
+        "yarn": "^1.17.3",
+        "autoprefixer": "^9.1.5",
+        "gulp-load-plugins": "^1.1.0",
+        "gulp-postcss": "^8.0.0"
     },
     "dependencies": {
         "ajv": "^6.7.0",
@@ -43,6 +46,7 @@
         "foundation-sites": "^6.5.0",
         "jquery": "^3.2",
         "vue": "^2.5.17",
-        "vue-template-compiler": "^2.6.10"
+        "vue-template-compiler": "^2.6.10",
+        "motion-ui": "~2.0.0"
     }
 }

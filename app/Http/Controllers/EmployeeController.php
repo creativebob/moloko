@@ -311,7 +311,7 @@ class EmployeeController extends Controller
         $answer = operator_right($this->entity_alias,  $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $employee = Employee::with('user', 'staffer')
+        $employee = Employee::with('user.photo', 'staffer')
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
@@ -335,8 +335,10 @@ class EmployeeController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
+        $user = $employee->user;
 
-        return view('employees.edit', compact('employee', 'page_info', 'list_user_employees', 'list_empty_staff'));
+
+        return view('employees.edit', compact('employee', 'page_info', 'list_user_employees', 'list_empty_staff', 'photo'));
     }
 
 
@@ -366,6 +368,10 @@ class EmployeeController extends Controller
 
         // Отдаем работу по редактированию нового юзера трейту
         $user = $this->updateUser($request, $user);
+
+        $photo_id = savePhoto($request, $user);
+        $user->photo_id = $photo_id;
+        $user->save();
 
         if($request->staff_id != null){
 

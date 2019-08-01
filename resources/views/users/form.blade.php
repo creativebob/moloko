@@ -61,10 +61,7 @@
 						</label>
 
 						<div class="text-center">
-							@php
-								$path = getPhotoPath($user);
-							@endphp
-							<img id="photo" src="{{ $path }}">
+							<img id="photo" src="{{ getPhotoPath($user) }}">
 						</div>
 					</div>
 				</div>

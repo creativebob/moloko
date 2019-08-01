@@ -29,8 +29,7 @@ class UpdateUsersTable extends Migration
 
             $table->bigInteger('location_id')->nullable()->unsigned()->comment('Адрес пользователя')->after('telegram');
 
-            $table->string('photo')->nullable()->comment('Фото')->after('location_id');
-            $table->integer('photo_id')->nullable()->unsigned()->comment('Id аватарки')->after('photo');
+            $table->integer('photo_id')->nullable()->unsigned()->comment('Id аватарки')->after('location_id');
 
             $table->integer('orgform_status')->nullable()->comment('Представляет компанию 1 или частное лицо 0')->after('photo_id');
             $table->bigInteger('user_inn')->nullable()->unsigned()->comment('ИНН')->after('orgform_status');
