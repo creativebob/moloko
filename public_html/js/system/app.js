@@ -11683,7 +11683,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(13);
-module.exports = __webpack_require__(62);
+module.exports = __webpack_require__(64);
 
 
 /***/ }),
@@ -11754,7 +11754,11 @@ $.ajaxSetup({
     }
 });
 
+// window.imports-loader = require('imports-loader');
+
 __webpack_require__(61);
+__webpack_require__(62);
+__webpack_require__(63);
 
 /***/ }),
 /* 14 */
@@ -57170,6 +57174,57 @@ if (false) {
 /* 61 */
 /***/ (function(module, exports) {
 
+// Валидируем кнопку при клике
+window.submitAjax = function (id) {
+    this.event.preventDefault();
+    $('#' + id).foundation('validateForm');
+    var valid = $('#' + id + ' .is-invalid-input').length;
+    var result = valid == 0;
+    return result;
+};
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports) {
+
+function checkFilter() {
+
+    // var marginTop = '6.2em';
+    // if ($('#thead-sticky').hasClass('is-stuck')) {
+    // 	var string = $('#thead-sticky').css('marginTop');
+    if ($('.icon-filter').hasClass('active-filter')) {
+        $('#filters').css('display', 'block');
+
+        $('#thead-sticky').css('marginTop', '15em');
+        $('#thead-sticky').attr('data-margin-top', 15);
+    } else {
+        $('#filters').css('display', 'none');
+        $('#thead-sticky').attr('data-margin-top', 6.2);
+        $('#thead-sticky').css('marginTop', '6.2em');
+    };
+    // };
+};
+
+// Блок фильтра
+$(document).on('click', '.icon-filter', function () {
+    $(this).toggleClass("active-filter");
+    checkFilter();
+});
+// $('.icon-filter').click(function() {
+
+// });
+
+$(document).on('click', '.filter-close', function () {
+    $('.icon-filter').removeClass("active-filter");
+    $('#filters').css('display', 'none');
+    $('#thead-sticky').attr('data-margin-top', 6.2);
+    $('#thead-sticky').css('marginTop', '6.2em');
+});
+
+/***/ }),
+/* 63 */
+/***/ (function(module, exports) {
+
 // Умолчания глобальные
 // Время применения изменений
 var transitionTime = 200;
@@ -57626,48 +57681,6 @@ $('#task-toggle').click(function () {
     renderContent();
 });
 
-// Валидируем кнопку при клике
-function submitAjax(id) {
-    this.event.preventDefault();
-    $('#' + id).foundation('validateForm');
-    var valid = $('#' + id + ' .is-invalid-input').length;
-    return valid == 0;
-};
-
-function checkFilter() {
-
-    // var marginTop = '6.2em';
-    // if ($('#thead-sticky').hasClass('is-stuck')) {
-    // 	var string = $('#thead-sticky').css('marginTop');
-    if ($('.icon-filter').hasClass('active-filter')) {
-        $('#filters').css('display', 'block');
-
-        $('#thead-sticky').css('marginTop', '15em');
-        $('#thead-sticky').attr('data-margin-top', 15);
-    } else {
-        $('#filters').css('display', 'none');
-        $('#thead-sticky').attr('data-margin-top', 6.2);
-        $('#thead-sticky').css('marginTop', '6.2em');
-    };
-    // };
-};
-
-// Блок фильтра
-$(document).on('click', '.icon-filter', function () {
-    $(this).toggleClass("active-filter");
-    checkFilter();
-});
-// $('.icon-filter').click(function() {
-
-// });
-
-$(document).on('click', '.filter-close', function () {
-    $('.icon-filter').removeClass("active-filter");
-    $('#filters').css('display', 'none');
-    $('#thead-sticky').attr('data-margin-top', 6.2);
-    $('#thead-sticky').css('marginTop', '6.2em');
-});
-
 // $(window).scroll(function () {
 //    checkFilter ();
 // });
@@ -57723,10 +57736,10 @@ $(window).resize(function () {
 // });
 
 /***/ }),
-/* 62 */
+/* 64 */
 /***/ (function(module, exports) {
 
-throw new Error("Module build failed: ModuleBuildError: Module build failed: \r\n@import \"foundation\";\r\n^\r\n      File to import not found or unreadable: foundation.\r\n      in D:\\OSPanel\\domains\\crmsystem.local\\resources\\scss\\system\\app.scss (line 20, column 1)\n    at runLoaders (D:\\OSPanel\\domains\\crmsystem.local\\node_modules\\webpack\\lib\\NormalModule.js:195:19)\n    at D:\\OSPanel\\domains\\crmsystem.local\\node_modules\\loader-runner\\lib\\LoaderRunner.js:364:11\n    at D:\\OSPanel\\domains\\crmsystem.local\\node_modules\\loader-runner\\lib\\LoaderRunner.js:230:18\n    at context.callback (D:\\OSPanel\\domains\\crmsystem.local\\node_modules\\loader-runner\\lib\\LoaderRunner.js:111:13)\n    at Object.render [as callback] (D:\\OSPanel\\domains\\crmsystem.local\\node_modules\\sass-loader\\lib\\loader.js:52:13)\n    at Object.done [as callback] (D:\\OSPanel\\domains\\crmsystem.local\\node_modules\\neo-async\\async.js:8077:18)\n    at options.error (D:\\OSPanel\\domains\\crmsystem.local\\node_modules\\node-sass\\lib\\index.js:294:32)");
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

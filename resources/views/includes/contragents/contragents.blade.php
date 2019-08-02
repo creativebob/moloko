@@ -35,7 +35,7 @@
 	// При нажатии на кнопку пишем в базу и отображаем
 	$(document).on('click', '#submit-add-client', function(event) {
 
-		if(submitAjax('form-client-add')){
+		if(window.submitAjax('form-client-add')){
 
 			$.ajax({
 				headers: {

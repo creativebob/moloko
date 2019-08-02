@@ -20,7 +20,7 @@
         $(document).on('click', '.submit-create', function(event) {
             var form = $(this).closest('form');
 
-            if (submitAjax(form.attr('id'))) {
+            if (window.submitAjax(form.attr('id'))) {
                 $(this).prop('disabled', true);
                 $.post('/admin/rubricators/' + catalog_id + '/rubricators_items', form.serialize(), function(html) {
                     form.closest('.reveal-overlay').remove();
@@ -43,7 +43,7 @@
         // ----------- Кнопка обновления ---------------------------------------
         $(document).on('click', '.submit-edit', function(event) {
             var form = $(this).closest('form');
-            if (submitAjax(form.attr('id'))) {
+            if (window.submitAjax(form.attr('id'))) {
                 $(this).prop('disabled', true);
 
                 // Ajax запрос

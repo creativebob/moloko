@@ -64,4 +64,8 @@ $.ajaxSetup({
     },
 });
 
+// window.imports-loader = require('imports-loader');
+
+require('./partials/main');
+require('./partials/filter');
 require('./partials/sidebar');

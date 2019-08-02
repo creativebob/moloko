@@ -146,8 +146,9 @@
 
         // ------------------------ Кнопка добавления ---------------------------------------
         $(document).on('click', '.submit-create', function(event) {
+
             var form = $(this).closest('form');
-            if (submitAjax(form.attr('id'))) {
+            if (window.submitAjax(form.attr('id'))) {
                 $(this).prop('disabled', true);
                 $.post('/admin/departments', form.serialize(), function(html) {
                     form.closest('.reveal-overlay').remove();
@@ -159,6 +160,7 @@
 
         // ------------------------ Кнопка добавления ---------------------------------------
         $(document).on('click', '#submit-staffer-create', function(event) {
+
             var form = $(this).closest('form');
             $(this).prop('disabled', true);
             $.post('/admin/staff', form.serialize(), function(html) {
@@ -171,8 +173,11 @@
 
         // ------------------------ Кнопка обновления ---------------------------------------
         $(document).on('click', '.submit-edit', function(event) {
+            // Блокируем отправку формы по кнопке
+            event.preventDefault();
+
             var form = $(this).closest('form');
-            if (submitAjax(form.attr('id'))) {
+            if (window.submitAjax(form.attr('id'))) {
                 $(this).prop('disabled', true);
                 $.ajax({
                     url: '/admin/departments/' + form.find('#item-id').val(),
