@@ -155,7 +155,7 @@ class CatalogsGoodsController extends Controller
         }
 
         $catalogs_goods->system = $request->has('system');
-        $catalogs_goods->moderation = $request->moderation;
+        $catalogs_goods->moderation = $request->has('moderation');
         $catalogs_goods->display = $request->has('display');
 
         $catalogs_goods->save();

@@ -160,7 +160,7 @@ class NavigationController extends Controller
 
         // Модерация и системная запись
         $navigation->system = $request->has('system');
-        $navigation->moderation = $request->moderation;
+        $navigation->moderation = $request->has('moderation');
         $navigation->display = $request->has('display');
 
         $navigation->editor_id = hideGod($request->user());

@@ -171,7 +171,7 @@ class IndicatorController extends Controller
         // Системная запись
         $indicator->system = $request->has('system');
         $indicator->display = $request->has('display');
-        $indicator->moderation = $request->moderation;
+        $indicator->moderation = $request->has('moderation');
 
         $indicator->editor_id = hideGod($request->user());
 

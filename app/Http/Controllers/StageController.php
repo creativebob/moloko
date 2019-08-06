@@ -208,7 +208,7 @@ class StageController extends Controller
 
         // Модерация и системная запись
         $stage->system = $request->has('system');
-        $stage->moderation = $request->moderation;
+        $stage->moderation = $request->has('moderation');
         $stage->display = $request->has('display');
 
         $stage->editor_id = $user_id;

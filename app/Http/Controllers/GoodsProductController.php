@@ -189,7 +189,7 @@ class GoodsProductController extends Controller
         $goods_product->system = $request->has('system');
         $goods_product->display = $request->has('display');
 
-        $goods_product->moderation = $request->moderation;
+        $goods_product->moderation = $request->has('moderation');
 
         $goods_product->editor_id = hideGod($request->user());
         $goods_product->save();

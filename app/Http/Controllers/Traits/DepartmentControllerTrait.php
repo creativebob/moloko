@@ -30,7 +30,7 @@ trait DepartmentControllerTrait
         $department->company_id = $company->id;
         $department->location_id = $company->location_id;
             $department->author_id = 1; // Робот
-
+        $department->display = true;
         $department->email = $company->email;
 
         $department->company_id = $company->id;

@@ -173,7 +173,7 @@ class RawsProductController extends Controller
         $raws_product->system = $request->has('system');
         $raws_product->display = $request->has('display');
 
-        $raws_product->moderation = $request->moderation;
+        $raws_product->moderation = $request->has('moderation');
 
         $raws_product->editor_id = hideGod($request->user());
         $raws_product->save();

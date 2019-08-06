@@ -50,7 +50,7 @@ trait CategoryControllerTrait
 
         // Модерация и системная запись
         $category->system = $request->has('system');
-        $category->moderation = $request->moderation;
+        $category->moderation = $request->has('moderation');
         $category->display = $request->has('display');
 
         if (isset($request->parent_id)) {

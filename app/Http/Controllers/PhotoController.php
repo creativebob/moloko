@@ -174,7 +174,7 @@ class PhotoController extends Controller
 
         // Модерация и системная запись
         $photo->system = $request->has('system');
-        $photo->moderation = $request->moderation;
+        $photo->moderation = $request->has('moderation');
         $photo->display = $request->has('display');
 
         $photo->editor_id = hideGod($request->user());
@@ -323,7 +323,7 @@ class PhotoController extends Controller
 
         // Модерация и системная запись
         $photo->system = $request->has('system');
-        $photo->moderation = $request->moderation;
+        $photo->moderation = $request->has('moderation');
         $photo->display = $request->has('display');
 
         $photo->editor_id = hideGod($request->user());

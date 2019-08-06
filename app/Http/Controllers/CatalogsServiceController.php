@@ -156,7 +156,7 @@ class CatalogsServiceController extends Controller
         }
 
         $catalogs_service->system = $request->has('system');
-        $catalogs_service->moderation = $request->moderation;
+        $catalogs_service->moderation = $request->has('moderation');
         $catalogs_service->display = $request->has('display');
 
         $catalogs_service->save();

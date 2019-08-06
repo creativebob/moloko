@@ -155,7 +155,7 @@ class ArticlesGroupController extends Controller
         $articles_group->system = $request->has('system');
         $articles_group->display = $request->has('display');
 
-        $articles_group->moderation = $request->moderation;
+        $articles_group->moderation = $request->has('moderation');
 
         $articles_group->editor_id = hideGod($request->user());
         $articles_group->save();

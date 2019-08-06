@@ -386,7 +386,7 @@ class PostController extends Controller
 
         // Модерация и системная запись
         $post->system = $request->has('system');
-        $post->moderation = $request->moderation;
+        $post->moderation = $request->has('moderation');
 
         $post->name = $request->name;
         $post->title = $request->title;

@@ -37,7 +37,7 @@ trait CommonTrait
 
         $item->system = $request->has('system');
         $item->display = $request->has('display');
-        $item->moderation = $request->moderation;
+        $item->moderation = $request->has('moderation');
 
         $item->editor_id = hideGod($request->user());
 

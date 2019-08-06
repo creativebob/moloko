@@ -247,7 +247,7 @@ class ServicesProductController extends Controller
 
         // Модерация и системная запись
         $services_product->system = $request->has('system');
-        $services_product->moderation = $request->moderation;
+        $services_product->moderation = $request->has('moderation');
 
         // Отображение на сайте
         $services_product->display = $request->has('display');

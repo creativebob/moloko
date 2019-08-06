@@ -73,7 +73,6 @@ class PageController extends Controller
 
     public function store(PageRequest $request, $site_id)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
