@@ -55,7 +55,7 @@ class ProcessesGroupPolicy
             return false;
         }
 
-        if ($model->system_item == 1) {
+        if ($model->system == 1) {
             return false;
         }
     }

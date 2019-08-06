@@ -24,7 +24,7 @@ $id = null;
         <span class="no-moderation">Не отмодерированная запись!</span>
         @endif
 
-        @if ($navigation->system_item)
+        @if ($navigation->system)
         <span class="system-item">Системная запись!</span>
         @endif
 
@@ -61,7 +61,7 @@ $id = null;
 
             <div class="del">
                 @can('delete', $navigation)
-                @if(($navigation->system_item != 1) && (empty($navigation->menus)))
+                @if(($navigation->system != 1) && (empty($navigation->menus)))
                 <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
                 @endif
                 @endcan

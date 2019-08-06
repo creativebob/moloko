@@ -154,7 +154,7 @@
                   @include('includes.control.table-td', ['item' => $lead])
 
                   <td class="td-delete">
-                    @if (($lead->system_item != 1) && ($lead->god != 1))
+                    @if (($lead->system != 1) && ($lead->god != 1))
                     @can('delete', $lead)
                     <a class="icon-delete sprite" data-open="item-delete"></a>
                     @endcan

@@ -50,7 +50,7 @@
           <td class="td-name">{{ $booklist->name }} </td>
           <td class="td-description">{{ $booklist->description }}</td>
           <td class="td-entity-name">{{ $booklist->entity->name }}</td>
-          <td class="td-company-id">@if(!empty($booklist->company->name)) {{ $booklist->company->name }} @else @if($booklist->system_item == null) Шаблон @else Системная @endif @endif</td>
+          <td class="td-company-id">@if(!empty($booklist->company->name)) {{ $booklist->company->name }} @else @if($booklist->system == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-author">@if(isset($booklist->author->first_name)) {{ $booklist->author->name }} @endif</td>
 
           {{-- Элементы управления --}}

@@ -38,7 +38,7 @@ class DepartmentPolicy
 
     public function delete(User $user, Department $model)
     {
-        if ($model->system_item == 1) {
+        if ($model->system == 1) {
             return false;
         }
 

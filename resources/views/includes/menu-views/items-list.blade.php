@@ -44,7 +44,7 @@
 
             <div class="del">
                 @can('delete', $item)
-                @if(empty($grouped_items[$item->id]) && ($item->system_item != 1))
+                @if(empty($grouped_items[$item->id]) && ($item->system != 1))
                 <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
                 @endif
                 @endcan
@@ -109,7 +109,7 @@
 
             <div class="del">
                 @can('delete', $item)
-                @if($item->system_item != 1)
+                @if($item->system != 1)
                 <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
                 @endif
                 @endcan

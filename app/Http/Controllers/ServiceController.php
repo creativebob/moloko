@@ -65,7 +65,7 @@ class ServiceController extends Controller
             'author_id',
             'company_id',
             'display',
-            'system_item'
+            'system'
         ];
 
         $services = Service::with([
@@ -310,8 +310,8 @@ class ServiceController extends Controller
         if (!is_array($result)) {
 
             $service->serial = $request->has('serial');
-            $service->display = $request->display;
-            $service->system_item = $request->system_item;
+            $service->display = $request->has('display');
+            $service->system = $request->has('system');
             $service->save();
 
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ

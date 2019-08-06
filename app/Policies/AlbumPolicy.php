@@ -53,7 +53,7 @@ class AlbumPolicy
 
     public function delete(User $user, Album $model)
     {
-        if ($model->system_item == 1) {
+        if ($model->system == 1) {
             return false;
         }
 

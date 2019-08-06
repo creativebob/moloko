@@ -49,7 +49,12 @@ class Company extends Model
     // use DateIntervalFilter;
 
     protected $model_name = ['company'];
-    protected $dates = ['deleted_at'];
+
+    protected $dates = [
+        'deleted_at',
+        'birthday_company'
+    ];
+
     protected $fillable = [
         'name',
         'alias',
@@ -312,6 +317,15 @@ class Company extends Model
         $ms = $this->hasOne('App\Supplier', 'supplier_id')->where('archive', 0)->first();
         if($ms == null) {$value = false;} else {$value = true;};
         return $value;
+    }
+
+    public function setBirthdayCompanyAttribute($value) {
+        if($value == Null){
+            return $value;
+        } else {
+            $date_parts = explode('.', $value);
+            $this->attributes['birthday_company'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+        }
     }
 
 }

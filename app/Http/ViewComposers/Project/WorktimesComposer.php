@@ -17,7 +17,7 @@ class WorktimesComposer
                 'location.city',
                 'schedules.worktimes'
             ])
-        	->where('display', 1)
+        	->where('display', true)
         	->whereHas('location', function ($q) {
         		$q->where('city_id', Cookie::get('city_id'));
         	});

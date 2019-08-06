@@ -66,7 +66,7 @@ class RoomController extends Controller
             'author_id',
             'company_id',
             'display',
-            'system_item'
+            'system'
         ];
 
         $rooms = Room::with([
@@ -309,8 +309,8 @@ class RoomController extends Controller
             // dd($location_id);
             $room->location_id = $location_id;
 
-            $room->display = $request->display;
-            $room->system_item = $request->system_item;
+            $room->display = $request->has('display');
+            $room->system = $request->has('system');
             $room->save();
 
 

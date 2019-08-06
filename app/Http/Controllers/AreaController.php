@@ -119,7 +119,7 @@ class AreaController extends Controller
     }
 
     // Системная запись
-    public function ajax_system_item(Request $request)
+    public function ajax_system(Request $request)
     {
 
         if ($request->action == 'lock') {
@@ -128,7 +128,7 @@ class AreaController extends Controller
             $system = null;
         }
 
-        $page = Area::where('id', $request->id)->update(['system_item' => $system]);
+        $page = Area::where('id', $request->id)->update(['system' => $system]);
 
         if ($page) {
 

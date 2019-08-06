@@ -15,9 +15,9 @@ class SchedulesTestTableSeeder extends Seeder
 			[
 				'name' => 'График работы для ВК Марс', 
 				'company_id' => 1, 
-				'system_item' => null, 
+				'system' => false,
 				'author_id' => 1, 
-				'moderation' => null, 
+				'moderation' => false,
 			],
 
 		]);

@@ -83,12 +83,12 @@ class CatalogsGoodsController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         if($answer['automoderate'] == false){
-            $catalogs_goods->moderation = 1;
+            $catalogs_goods->moderation = true;
         }
 
         // Cистемная запись
-        $catalogs_goods->system_item = $request->system_item;
-        $catalogs_goods->display = $request->display;
+        $catalogs_goods->system = $request->has('system');
+        $catalogs_goods->display = $request->has('display');
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -154,9 +154,9 @@ class CatalogsGoodsController extends Controller
             $catalogs_goods->alias = $request->alias;
         }
 
-        $catalogs_goods->system_item = $request->system_item;
+        $catalogs_goods->system = $request->has('system');
         $catalogs_goods->moderation = $request->moderation;
-        $catalogs_goods->display = $request->display;
+        $catalogs_goods->display = $request->has('display');
 
         $catalogs_goods->save();
 

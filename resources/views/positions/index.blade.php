@@ -69,14 +69,14 @@
             @endcan
           </td>
           <td class="td-page">{{ $position->page->alias }}</td>
-          <td class="td-company-id">@if(!empty($position->company->name)) {{ $position->company->name }} @else @if($position->system_item == null) Шаблон @else Системная @endif @endif</td>
+          <td class="td-company-id">@if(!empty($position->company->name)) {{ $position->company->name }} @else @if($position->system == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-author">@if(isset($position->author->first_name)) {{ $position->author->first_name . ' ' . $position->author->second_name }} @endif</td>
 
           {{-- Элементы управления --}}
           @include('includes.control.table-td', ['item' => $position])
 
           <td class="td-delete">
-            @if (($position->system_item !== 1) && ($position->company_id !== null))
+            @if (($position->system !== 1) && ($position->company_id !== null))
               @can('delete', $position)
               <a class="icon-delete sprite" data-open="item-delete"></a>
               @endcan

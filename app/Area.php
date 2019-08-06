@@ -51,7 +51,7 @@ class Area extends Model
         'region_id',
         'country_id',
         'display',
-        'system_item',
+        'system',
         'author_id'
     ];
 

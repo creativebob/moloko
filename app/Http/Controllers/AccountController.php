@@ -104,11 +104,11 @@ class AccountController extends Controller
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
-            $account->moderation = 1;
+            $account->moderation = true;
         }
 
-        $account->system_item = $request->system_item;
-        $account->display = $request->display;
+        $account->system = $request->has('system');
+        $account->display = $request->has('display');
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -198,8 +198,8 @@ class AccountController extends Controller
         $account->api_token = $request->api_token;
         $account->secret = $request->secret;
 
-        $account->system_item = $request->system_item;
-        $account->display = $request->display;
+        $account->system = $request->has('system');
+        $account->display = $request->has('display');
 
         $account->editor_id = hideGod($request->user());
 

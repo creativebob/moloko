@@ -81,7 +81,7 @@
           @include('includes.control.table-td', ['item' => $supplier])
 
           <td class="td-delete">
-            @if ($supplier->system_item != 1)
+            @if ($supplier->system != 1)
             @can('delete', $supplier)
             <a class="icon-delete sprite" data-open="item-delete"></a>
             @endcan

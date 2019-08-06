@@ -30,8 +30,14 @@ trait DepartmentControllerTrait
         $department->company_id = $company->id;
         $department->location_id = $company->location_id;
             $department->author_id = 1; // Робот
+
+        $department->email = $company->email;
+
+        $department->company_id = $company->id;
             $department->save();
             Log::info('Сохраняем первый филиал');
+
+        add_phones($request, $department);
 
             return $department;
 

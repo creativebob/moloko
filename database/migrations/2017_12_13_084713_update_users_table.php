@@ -53,13 +53,13 @@ class UpdateUsersTable extends Migration
             $table->bigInteger('filial_id')->nullable()->unsigned()->comment('ID филиала компании')->after('company_id');
 
             $table->integer('god')->nullable()->unsigned()->comment('Божественное право')->default(null)->after('company_id');
-            $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
+            $table->boolean('moderation')->default(0)->comment('Модерация');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
             $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
-            $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
+            $table->boolean('system')->default(0)->comment('Системная запись');
             $table->softDeletes();
 
             $table->foreign('location_id')->references('id')->on('locations');

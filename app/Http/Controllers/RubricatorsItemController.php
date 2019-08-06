@@ -51,7 +51,7 @@ class RubricatorsItemController extends Controller
             'company_id',
             'sort',
             'display',
-            'system_item',
+            'system',
             'moderation',
             'author_id'
         ];

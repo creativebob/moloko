@@ -68,9 +68,9 @@ class AlbumController extends Controller
         ->whereHas('category', function ($query) {
             $query->whereNotNull('company_id')
             ->where(function ($query) {
-                $query->where('system_item', 1)->orWhere('system_item', null);
+                $query->orWhere('system', false)->orWhere('system', false);
             })->orWhere('company_id', null)->where(function ($query) {
-                $query->whereNull('system_item');
+                $query->where('system', false);
             });
         })
 

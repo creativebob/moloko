@@ -42,21 +42,21 @@ $drop = 1;
                 @can ('system', $department)
                 @switch($department)
 
-                @case($department->system_item == 1 && $department->company_id == null)
+                @case($department->system == 1 && $department->company_id == null)
                 <div class="icon-system-programm white sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
                 @break
 
-                @case($department->system_item == null && $department->company_id == 1)
+                @case($department->system == null && $department->company_id == 1)
                 <div class="icon-system-unlock white sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
                 @break
 
-                @case($department->system_item == 1 && $department->company_id == 1)
+                @case($department->system == 1 && $department->company_id == 1)
                 <div class="icon-system-lock {{ $color }} sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
                 @break
                 @endswitch
                 @endcan
 
-                @if ($department->system_item == null && $department->company_id == null)
+                @if ($department->system == null && $department->company_id == null)
                 <div class="icon-system-template white sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
                 @endif
             </div>
@@ -74,7 +74,7 @@ $drop = 1;
 
             <div class="del">
                 @can('delete', $department)
-                @if(empty($department->childrens) && ($department->system_item == null) && ($department->company_id != null) && ($department->staff_count == 0))
+                @if(empty($department->childrens) && ($department->system == null) && ($department->company_id != null) && ($department->staff_count == 0))
                 <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
                 @endif
                 @endcan

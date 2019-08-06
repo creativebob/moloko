@@ -57,7 +57,7 @@ class GoodsProductPolicy
             return false;
         }
 
-        if ($model->system_item == 1) {
+        if ($model->system == 1) {
             return false;
         }
         return $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);

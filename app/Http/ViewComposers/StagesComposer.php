@@ -18,7 +18,7 @@ class StagesComposer
         // ->authors($answer_stages)
         // ->template($answer_stages)
         // ->systemItem($answer_stages) // Фильтр по системным записям
-        ->where('display', 1)
+        ->where('display', true)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get()->pluck('name', 'id');

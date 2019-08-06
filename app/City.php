@@ -56,7 +56,7 @@ class City extends Model
         'code',
         'vk_external_id',
         'display',
-        'system_item',
+        'system',
         'author_id'
     ];
 

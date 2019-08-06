@@ -17,8 +17,8 @@ class NavigationsTableSeeder extends Seeder
                 'alias' => 'left-sidebar',
                 'align_id' => 2,
                 'site_id' => 1,
-                'system_item' => 1,
-                'display' => 1,
+                'system' => true,
+                'display' => true,
             ],
 
 

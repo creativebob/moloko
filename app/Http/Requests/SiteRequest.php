@@ -31,7 +31,7 @@ class SiteRequest extends FormRequest
             'filials.*'  => 'integer|distinct',
 
             'moderation' => 'integer|max:1|nullable',
-            'system_item' => 'integer|max:1|nullable',
+            'system' => 'integer|max:1|nullable',
             'display' => 'integer|max:1|nullable',
         ];
     }

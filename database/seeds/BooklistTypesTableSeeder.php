@@ -20,8 +20,8 @@ class BooklistTypesTableSeeder extends Seeder
                 'change_allowed' => 1,
 		        'company_id' => null,
                 'author_id' => 1,
-                'system_item' => 1,
-                'moderation' => null,
+                'system' => true,
+                'moderation' => false,
         	],
             [
                 'name' => 'Территориии спроса',
@@ -31,8 +31,8 @@ class BooklistTypesTableSeeder extends Seeder
                 'change_allowed' => 0,
                 'company_id' => null,
                 'author_id' => 1,
-                'system_item' => 1,
-                'moderation' => null,
+                'system' => true,
+                'moderation' => false,
             ],
             [
                 'name' => 'Список авторов для доступа',
@@ -42,8 +42,8 @@ class BooklistTypesTableSeeder extends Seeder
                 'change_allowed' => 1,
                 'company_id' => null,
                 'author_id' => 1,
-                'system_item' => 1,
-                'moderation' => null,
+                'system' => true,
+                'moderation' => false,
             ],
         ]);
     }

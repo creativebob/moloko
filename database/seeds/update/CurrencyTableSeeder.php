@@ -13,9 +13,9 @@ class CurrencyTableSeeder extends Seeder
     			'name' => 'Валюта',
     			'unit' => 'рубль',
     			'abbreviation' => 'руб',
-    			'system_item' => null,
+    			'system' => false,
     			'author_id' => 1,
-    			'moderation' => null,
+    			'moderation' => false,
     		],
     	]);
 
@@ -27,9 +27,9 @@ class CurrencyTableSeeder extends Seeder
                 'abbreviation' => 'руб',
                 'ratio' => 1,
                 'units_category_id' => $units_category->id,
-                'system_item' => 1,
+                'system' => true,
                 'author_id' => 1,
-                'moderation' => null,
+                'moderation' => false,
             ],
         ]);
     }

@@ -11,8 +11,8 @@ trait TemplateTraitScopes
 
         return $query
         ->orWhere(function ($query) {$query
-        ->Where('company_id', null)            
-        ->Where('system_item', null)
+        ->whereNull('company_id')
+        ->where('system', false)
         ;});
         
     }

@@ -57,23 +57,26 @@ class DepartmentController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------
 
-        $departments = Department::with(['staff' => function ($query) use ($answer_staff) {
-            $query->moderatorLimit($answer_staff)
+        $departments = Department::with(['staff' => function ($query) use ($answer_staff, $answer_positions) {
+            $query->with([
+                'user',
+                'position' => function ($q) use ($answer_positions) {
+                $q->moderatorLimit($answer_positions)
+                    ->companiesLimit($answer_positions)
+                    ->authors($answer_positions)
+                    ->systemItem($answer_positions) // Фильтр по системным записям
+                    ->template($answer_positions) // Выводим шаблоны альбомов
+                    ->orderBy('moderation', 'desc')
+                    ->orderBy('sort', 'asc');
+            }])
+            ->moderatorLimit($answer_staff)
             ->companiesLimit($answer_staff)
             ->filials($answer_staff) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
             ->authors($answer_staff)
             ->systemItem($answer_staff) // Фильтр по системным записям
             ->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc');
-        }, 'staff.position' => function ($query) use ($answer_positions) {
-            $query->moderatorLimit($answer_positions)
-            ->companiesLimit($answer_positions)
-            ->authors($answer_positions)
-            ->systemItem($answer_positions) // Фильтр по системным записям
-            ->template($answer_positions) // Выводим шаблоны альбомов
-            ->orderBy('moderation', 'desc')
-            ->orderBy('sort', 'asc');
-        }, 'staff.user'])
+        }])
         ->withCount('staff')
         ->moderatorLimit($answer_departments)
         ->companiesLimit($answer_departments)
@@ -83,7 +86,7 @@ class DepartmentController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
-        // dd($departments);
+//         dd($departments);
         // ->groupBy('parent_id');
 
         // Создаем масив где ключ массива является ID меню
@@ -172,8 +175,8 @@ class DepartmentController extends Controller
         $department->email = $request->email;
 
         // Отображение на сайте
-        $department->display = $request->display;
-        $department->system_item = $request->system_item;
+        $department->display = $request->has('display');
+        $department->system = $request->has('system');
 
         $department->author_id = hideGod($user);
 
@@ -254,8 +257,8 @@ class DepartmentController extends Controller
         $department->email = $request->email;
 
         // Отображение на сайте
-        $department->display = $request->display;
-        $department->system_item = $request->system_item;
+        $department->display = $request->has('display');
+        $department->system = $request->has('system');
 
         $department->save();
 

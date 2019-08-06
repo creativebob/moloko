@@ -110,7 +110,7 @@
           </td>
           <td class="td-author">{{ $application->author->name or '' }}</td>
           <td class="td-delete">
-          @if ($application->system_item !== 1)
+          @if ($application->system !== 1)
             @can('delete', $application)
             <a class="icon-delete sprite" data-open="item-delete"></a>
             @endcan

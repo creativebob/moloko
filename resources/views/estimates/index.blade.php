@@ -89,7 +89,7 @@
               <td class="td-stage">{{ $estimate->lead->stage->name }}</td>
               <td class="td-loyalty">{{ $estimate->client->loyalty->name }}</td>
               <td class="td-delete">
-                  {{-- @if ($estimate->system_item !== 1)
+                  {{-- @if ($estimate->system !== 1)
                   @can('delete', $estimate)
                   <a class="icon-delete sprite" data-open="item-delete"></a>
                   @endcan

@@ -88,12 +88,12 @@ class IndicatorController extends Controller
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
         if($answer['automoderate'] == false){
-            $indicator->moderation = 1;
+            $indicator->moderation = true;
         }
 
         // Системная запись
-        $indicator->system_item = $request->system_item;
-        $indicator->display = $request->display;
+        $indicator->system = $request->has('system');
+        $indicator->display = $request->has('display');
 
         if (isset($request->direction_id)) {
 
@@ -169,8 +169,8 @@ class IndicatorController extends Controller
         // $indicator->period_id = $request->period_id;
 
         // Системная запись
-        $indicator->system_item = $request->system_item;
-        $indicator->display = $request->display;
+        $indicator->system = $request->has('system');
+        $indicator->display = $request->has('display');
         $indicator->moderation = $request->moderation;
 
         $indicator->editor_id = hideGod($request->user());

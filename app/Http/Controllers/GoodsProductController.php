@@ -121,15 +121,15 @@ class GoodsProductController extends Controller
             $goods_product->set_status = $request->set_status;
         }
 
-        $goods_product->system_item = $request->system_item;
-        $goods_product->display = $request->display;
+        $goods_product->system = $request->has('system');
+        $goods_product->display = $request->has('display');
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
-            $goods_product->moderation = 1;
+            $goods_product->moderation = true;
         }
 
         // Получаем данные для авторизованного пользователя
@@ -186,8 +186,8 @@ class GoodsProductController extends Controller
         }
 
         // Модерация и системная запись
-        $goods_product->system_item = $request->system_item;
-        $goods_product->display = $request->display;
+        $goods_product->system = $request->has('system');
+        $goods_product->display = $request->has('display');
 
         $goods_product->moderation = $request->moderation;
 

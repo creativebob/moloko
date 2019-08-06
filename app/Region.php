@@ -52,7 +52,7 @@ class Region extends Model
         'vk_external_id',
         'display',
         'country_id',
-        'system_item',
+        'system',
         'author_id'
     ];
 

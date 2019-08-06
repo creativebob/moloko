@@ -37,10 +37,10 @@ mix
 // Project
 mix.js('resources/js/project/app.js', 'public_html/js/project');
 
-mix.copyDirectory('resources/scss/project/fonts', 'public_html/css/project/fonts');
-mix.copyDirectory('resources/scss/project/img', 'public_html/css/project/img');
-mix.copyDirectory('resources/scss/project/sprites', 'public_html/css/project/sprites');
-//
+// mix.copyDirectory('resources/scss/project/fonts', 'public_html/css/project/fonts');
+// mix.copyDirectory('resources/scss/project/img', 'public_html/css/project/img');
+// mix.copyDirectory('resources/scss/project/sprites', 'public_html/css/project/sprites');
+
 mix
 	.sass('resources/scss/project/app.scss', 'public_html/css/project', {
 

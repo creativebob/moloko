@@ -69,14 +69,14 @@
             @endcan
           </td>
           <td class="td-description">{{ $stage->description }}</td>
-          <td class="td-company-id">@if(!empty($stage->company->name)) {{ $stage->company->name }} @else @if($stage->system_item == null) Шаблон @else Системная @endif @endif</td>
+          <td class="td-company-id">@if(!empty($stage->company->name)) {{ $stage->company->name }} @else @if($stage->system == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-author">@if(isset($stage->author->first_name)) {{ $stage->author->first_name . ' ' . $stage->author->second_name }} @endif</td>
 
           {{-- Элементы управления --}}
           @include('includes.control.table-td', ['item' => $stage])
 
           <td class="td-delete">
-            @if (($stage->system_item !== 1) && ($stage->company_id !== null))
+            @if (($stage->system !== 1) && ($stage->company_id !== null))
               @can('delete', $stage)
               <a class="icon-delete sprite" data-open="item-delete"></a>
               @endcan

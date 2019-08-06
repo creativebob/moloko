@@ -150,12 +150,12 @@ class PostController extends Controller
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
-            $post->moderation = 1;
+            $post->moderation = true;
         }
 
         // Cистемная запись
-        $post->system_item = $request->system_item;
-        $post->display = $request->display;
+        $post->system = $request->has('system');
+        $post->display = $request->has('display');
 
         $post->company_id = $user->company_id;
         $post->author_id = $user_id;
@@ -385,7 +385,7 @@ class PostController extends Controller
         }
 
         // Модерация и системная запись
-        $post->system_item = $request->system_item;
+        $post->system = $request->has('system');
         $post->moderation = $request->moderation;
 
         $post->name = $request->name;
@@ -397,7 +397,7 @@ class PostController extends Controller
         $post->publish_begin_date = $request->publish_begin_date;
         $post->publish_end_date = $request->publish_end_date;
 
-        $post->display = $request->display;
+        $post->display = $request->has('display');
         $post->editor_id = $user_id;
         $post->save();
 
@@ -529,7 +529,7 @@ class PostController extends Controller
     }
 
     // Системная запись
-    public function ajax_system_item(Request $request)
+    public function ajax_system(Request $request)
     {
 
         if ($request->action == 'lock') {
@@ -538,7 +538,7 @@ class PostController extends Controller
             $system = null;
         }
 
-        $item = Post::where('id', $request->id)->update(['system_item' => $system]);
+        $item = Post::where('id', $request->id)->update(['system' => $system]);
 
         if ($item) {
 
@@ -591,8 +591,8 @@ class PostController extends Controller
     //     // Cache::forget($domen.'-news');
 
     //     $site = Site::with(['news' => function ($query) {
-    //         $query->where('display', 1)
-    //         ->whereNull('moderation')
+    //         $query->where('display', true)
+    //         ->where('moderation', false)
     //         ->where('publish_begin_date', '<', Carbon::now())
     //         ->where('publish_end_date', '>', Carbon::now());
     //     }, 'news.cities' => function($query) use ($city) {
@@ -631,7 +631,7 @@ class PostController extends Controller
 
     //     $site = Site::with(['news.author', 'news' => function ($query) use ($link) {
     //         $query->where(['alias' => $link, 'display' => 1])
-    //         ->whereNull('moderation');
+    //         ->where('moderation', false);
     //     }])->where('api_token', $request->token)->first();
     //     if ($site) {
     //         // return Cache::remember('staff', 1, function() use ($domen) {

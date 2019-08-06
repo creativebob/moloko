@@ -14,11 +14,11 @@ class NavigationsComposer
         		'align',
         		'menus' => function ($q) {
         			$q->with('page')
-                    ->where('display', 1)
+                    ->where('display', true)
                     ->orderBy('sort');
         		}
         	])
-        	->where('display', 1)
+        	->where('display', true)
         	->orderBy('sort');
         }]);
 

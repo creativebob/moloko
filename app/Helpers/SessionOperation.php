@@ -89,7 +89,7 @@
 
             $dependence = false;
             $moderator = true;
-            $system_item = true;
+            $system = true;
             $filials = null;
             $departments = null;
             $authors_status = true;
@@ -106,7 +106,7 @@
 
         $answer['entity_name'] = $entity_name;
         $answer['dependence'] = $dependence;
-        $answer['system_item'] = getRight('system', $entity_name, $session);
+        $answer['system'] = getRight('system', $entity_name, $session);
         $answer['moderator'] = getRight('moderator', $entity_name, $session);
         $answer['automoderate'] = getRight('automoderate', $entity_name, $session);
         $answer['filials'] = $mass_right['filials'];

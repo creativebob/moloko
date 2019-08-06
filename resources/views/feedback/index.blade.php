@@ -82,7 +82,7 @@
   @include('includes.control.table-td', ['item' => $cur_feedback])
 
   <td class="td-delete">
-    @if ($cur_feedback->system_item != 1)
+    @if ($cur_feedback->system != 1)
     @can('delete', $cur_feedback)
     <a class="icon-delete sprite" data-open="item-delete"></a>
     @endcan

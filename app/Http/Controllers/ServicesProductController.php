@@ -149,12 +149,12 @@ class ServicesProductController extends Controller
         $services_product->services_category_id = $request->services_category_id;
 
         // Автоматически отправляем запись на модерацию
-        // $product->moderation = 1;
+        // $product->moderation = true;
 
         // Модерация и системная запись
-        $services_product->system_item = $request->system_item;
+        $services_product->system = $request->has('system');
 
-        $services_product->display = $request->display;
+        $services_product->display = $request->has('display');
 
         $services_product->company_id = $company_id;
         $services_product->author_id = $user_id;
@@ -246,11 +246,11 @@ class ServicesProductController extends Controller
         $services_product->description = $request->description;
 
         // Модерация и системная запись
-        $services_product->system_item = $request->system_item;
+        $services_product->system = $request->has('system');
         $services_product->moderation = $request->moderation;
 
         // Отображение на сайте
-        $services_product->display = $request->display;
+        $services_product->display = $request->has('display');
 
         $services_product->editor_id = $user_id;
         $services_product->save();
@@ -335,7 +335,7 @@ class ServicesProductController extends Controller
     }
 
     // Системная запись
-    public function ajax_system_item(Request $request)
+    public function ajax_system(Request $request)
     {
 
         if ($request->action == 'lock') {
@@ -344,7 +344,7 @@ class ServicesProductController extends Controller
             $system = null;
         }
 
-        $item = ServicesProduct::where('id', $request->id)->update(['system_item' => $system]);
+        $item = ServicesProduct::where('id', $request->id)->update(['system' => $system]);
 
         if ($item) {
 

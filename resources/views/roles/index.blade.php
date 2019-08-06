@@ -73,7 +73,7 @@
             @endif
             @endif
           </td>
-          <td class="td-company-id">@if($role->company_id != null) {{ $role->company->name }} @else @if($role->system_item == null) Шаблон @else Системная @endif @endif</td>
+          <td class="td-company-id">@if($role->company_id != null) {{ $role->company->name }} @else @if($role->system == null) Шаблон @else Системная @endif @endif</td>
           <td class="td-count"><span class="allow">{{ $counts_directive_array[$role->id]['count_allow'] }}</span> / <span class="deny"> {{ $counts_directive_array[$role->id]['count_deny'] }}</span></td>
           <td class="td-description">{{ $role->description }}</td>
           <td class="td-author">@if(!empty($role->author->first_name)) {{ $role->author->first_name . ' ' . $role->author->second_name }} @endif</td>
@@ -82,7 +82,7 @@
           @include('includes.control.table-td', ['item' => $role])
 
           <td class="td-delete">
-            @if (($role->system_item !== 1) && ($role->company_id !== null))
+            @if (($role->system !== 1) && ($role->company_id !== null))
             @can('delete', $role)
             <a class="icon-delete sprite" data-open="item-delete"></a>
             @endcan

@@ -45,7 +45,7 @@ class ExpendablesCategory extends Model
         'category_id',
         'author_id',
         'display',
-        'system_item',
+        'system',
         'mooderation'
     ];
 

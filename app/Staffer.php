@@ -55,60 +55,60 @@ class Staffer extends Model
     // Отдел должности.
     public function department()
     {
-        return $this->belongsTo('App\Department');
+        return $this->belongsTo(Department::class);
     }
 
     // Филиал должности.
     public function filial()
     {
-        return $this->belongsTo('App\Department', 'filial_id');
+        return $this->belongsTo(Department::class);
     }
 
     // Должность
     public function position()
     {
-        return $this->belongsTo('App\Position');
+        return $this->belongsTo(Position::class);
     }
 
     // Пользователь
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
 
     // Сотрудники
     public function employees()
     {
-        return $this->hasMany('App\Employee');
+        return $this->hasMany(Employee::class);
     }
 
     // Текущий сотрудник
     public function employee()
     {
-        return $this->hasOne('App\Employee')->whereNull('dismissal_date');
+        return $this->hasOne(Employee::class)->whereNull('dismissal_date');
     }
 
     // Компания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo(User::class);
     }
 
     // Получаем все графики на сотрудника
     public function schedules()
     {
-        return $this->morphToMany('App\Schedule', 'schedule_entities')->withPivot('mode');
+        return $this->morphToMany(Schedule::class, 'schedule_entities')->withPivot('mode');
     }
 
     // Получаем график компании в адаптированном под шаблон виде
     public function getMainScheduleAttribute($value) {
-        $main_schedule = $this->morphToMany('App\Schedule', 'schedule_entities')->with('worktimes')->wherePivot('mode', 'main')->first();
+        $main_schedule = $this->morphToMany(Schedule::class, 'schedule_entities')->with('worktimes')->wherePivot('mode', 'main')->first();
         if($main_schedule != null){
             return $main_schedule;
         } else {
@@ -118,7 +118,7 @@ class Staffer extends Model
 
     // Получаем график компании в адаптированном под шаблон виде
     public function getWorktimeAttribute($value) {
-        $worktime = $this->morphToMany('App\Schedule', 'schedule_entities')->wherePivot('mode', 'main')->first();
+        $worktime = $this->morphToMany(Schedule::class, 'schedule_entities')->wherePivot('mode', 'main')->first();
         if($worktime != null){
             $worktime = $worktime->worktimes;
             return worktime_to_format($worktime->keyBy('weekday'));
@@ -130,7 +130,7 @@ class Staffer extends Model
     // Получаем
     public function worktime()
     {
-        return $this->hasMany('App\Worktime');
+        return $this->hasMany(Worktime::class);
     }
 
     // --------------------------------------- Запросы -----------------------------------------

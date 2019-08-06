@@ -19,15 +19,15 @@ trait CategoryControllerTrait
         $category->author_id = hideGod($user);
 
         // Системная запись
-        $category->system_item = $request->system_item;
-        $category->display = $request->display;
+        $category->system = $request->has('system');
+        $category->display = $request->has('display');
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, 'store');
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
-            $category->moderation = 1;
+            $category->moderation = true;
         }
 
         if (isset($request->parent_id)) {
@@ -49,9 +49,9 @@ trait CategoryControllerTrait
     {
 
         // Модерация и системная запись
-        $category->system_item = $request->system_item;
+        $category->system = $request->has('system');
         $category->moderation = $request->moderation;
-        $category->display = $request->display;
+        $category->display = $request->has('display');
 
         if (isset($request->parent_id)) {
 

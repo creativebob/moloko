@@ -36,6 +36,9 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
     {{-- CSRF Token --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    {{-- Add jQuery library --}}
+    <script type="application/javascript" src="/js/system/jquery.latest.min.js"></script>
+
     {{-- Transition --}}
     <style type="text/css">
         .title-bar {

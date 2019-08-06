@@ -390,8 +390,8 @@ class EmployeeController extends Controller
             $employee->dismissal_description = $request->dismissal_description;
             $employee->editor_id = $request->user()->id;
 
-            $employee->display = $request->display;
-            $employee->system_item = $request->system_item;
+            $employee->display = $request->has('display');
+            $employee->system = $request->has('system');
 
             $employee->save();
 
@@ -583,7 +583,7 @@ class EmployeeController extends Controller
         $employee->author_id = $user->id;
 
         $employee->display = 1;
-        $employee->system_item = 0;
+        $employee->system = 0;
 
         $employee->save();
 

@@ -46,7 +46,7 @@ Route::post('/goods_check', 'Api\GoodsController@checkArticle');
 // Сортировка
 Route::post('/sort/{entity_alias}', 'Api\AppController@ajax_sort');
 // Системная запись
-Route::post('/system_item', 'Api\AppController@ajax_system_item');
+Route::post('/system', 'Api\AppController@ajax_system');
 // Отображение на сайте
 Route::post('/display', 'Api\AppController@ajax_display');
 

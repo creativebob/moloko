@@ -20,7 +20,7 @@ class SidebarComposer
 		$menus = Menu::whereHas('page.entity', function ($q) use ($entities_list) {
 			$q->whereIn('id', $entities_list);
 		})
-		->where('display', 1)
+		->where('display', true)
 		->orWhere(function ($q) {
 			$q->whereNull('page_id')->where(['navigation_id' => 1, 'display' => 1]);
 		})

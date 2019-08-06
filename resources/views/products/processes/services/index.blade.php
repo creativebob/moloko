@@ -102,7 +102,7 @@
                     {{-- <td class="td-services">{{ $service->product->name }}</td> --}}
 
                     @if(Auth::user()->god == 1)
-                    <td class="td-company-id">@if(!empty($service->company->name)) {{ $service->company->name }} @else @if($service->system_item == null) Шаблон @else Системная @endif @endif</td>
+                    <td class="td-company-id">@if(!empty($service->company->name)) {{ $service->company->name }} @else @if($service->system == null) Шаблон @else Системная @endif @endif</td>
                     @endif
 
                     {{-- <td class="td-sync-id"><a class="icon-sync sprite" data-open="item-sync"></a></td> --}}
@@ -113,7 +113,7 @@
                     @include('includes.control.table-td', ['item' => $service])
 
                     <td class="td-archive">
-                        @if ($service->system_item != 1)
+                        @if ($service->system != 1)
                         @can('delete', $service)
                         <a class="icon-delete sprite" data-open="item-archive"></a>
                         @endcan

@@ -118,7 +118,7 @@
                     </td>
                     <td class="td-author">{{ $consignment->author->name ?? '' }}</td>
                     <td class="td-delete">
-                      @if ($consignment->system_item !== 1)
+                      @if ($consignment->system !== 1)
                       @can('delete', $consignment)
                       <a class="icon-delete sprite" data-open="item-delete"></a>
                       @endcan

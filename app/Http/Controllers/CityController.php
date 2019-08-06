@@ -119,7 +119,7 @@ class CityController extends Controller
                     'name' => $request->region_name,
                     'country_id' => $country_id
                 ], [
-                    'system_item' => 1,
+                    'system' => true,
                     'author_id' => 1
                 ]);
                 $region_id = $region->id;
@@ -130,7 +130,7 @@ class CityController extends Controller
                     'name' => 'Города Федерального значения',
                     'country_id' => $country_id
                 ], [
-                    'system_item' => 1,
+                    'system' => true,
                     'author_id' => 1
                 ]);
                 $region_id = $region->id;
@@ -145,7 +145,7 @@ class CityController extends Controller
                     'region_id' => $region_id,
                     'country_id' => $country_id
                 ], [
-                    'system_item' => 1,
+                    'system' => true,
                     'author_id' => 1
                 ]);
                 // Берем id записанного района
@@ -177,7 +177,7 @@ class CityController extends Controller
             $city->country_id = $country_id;
 
             $city->author_id = 1;
-            $city->system_item = 1;
+            $city->system = 1;
             $city->save();
 
             if ($city) {

@@ -18,7 +18,7 @@ class CatalogsComposer
                 'catalogs.id',
                 'name',
             ])
-        	->where('display', 1)
+        	->where('display', true)
         	->orderBy('sort');
         }]);
         // dd($site);

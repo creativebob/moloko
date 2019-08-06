@@ -14,13 +14,13 @@ trait CommonTrait
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         $answer = operator_right($item->getTable(), false, getmethod(__FUNCTION__));
         if($answer['automoderate'] == false){
-            $item->moderation = 1;
+            $item->moderation = true;
         }
 
         $request = request();
 
-        $item->system_item = $request->system_item;
-        $item->display = $request->display;
+        $item->system = $request->has('system');
+        $item->display = $request->has('display');
 
         $user = $request->user();
         $item->company_id = $user->company_id;
@@ -35,8 +35,8 @@ trait CommonTrait
     {
         $request = request();
 
-        $item->system_item = $request->system_item;
-        $item->display = $request->display;
+        $item->system = $request->has('system');
+        $item->display = $request->has('display');
         $item->moderation = $request->moderation;
 
         $item->editor_id = hideGod($request->user());

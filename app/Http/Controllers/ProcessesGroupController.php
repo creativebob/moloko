@@ -94,11 +94,11 @@ class ProcessesGroupController extends Controller
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
-            $articles_group->moderation = 1;
+            $articles_group->moderation = true;
         }
 
-        $articles_group->system_item = $request->system_item;
-        $articles_group->display = $request->display;
+        $articles_group->system = $request->has('system');
+        $articles_group->display = $request->has('display');
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -152,8 +152,8 @@ class ProcessesGroupController extends Controller
 
 
         // Модерация и системная запись
-        $articles_group->system_item = $request->system_item;
-        $articles_group->display = $request->display;
+        $articles_group->system = $request->has('system');
+        $articles_group->display = $request->has('display');
 
         $articles_group->moderation = $request->moderation;
 

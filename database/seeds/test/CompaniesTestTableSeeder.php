@@ -26,7 +26,7 @@ class CompaniesTestTableSeeder extends Seeder
                 // 'bank' => '',
                 'director_user_id' => 4,  
                 // 'admin_user_id' => '1', 
-                'moderation' => null,
+                'moderation' => false,
                 'sector_id' => 24,
                 'author_id' => 1,
             ],

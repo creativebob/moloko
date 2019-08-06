@@ -28,7 +28,7 @@ class AlbumsCategoryRequest extends FormRequest
         'parent_id' => 'integer|nullable',
         'category_id' => 'integer|nullable',
         'moderation' => 'integer|max:1|nullable',
-        'system_item' => 'integer|max:1|nullable',
+        'system' => 'integer|max:1|nullable',
         'display' => 'integer|max:1|nullable',
         // 'albums_category_id' => 'integer|nullable',
       ];

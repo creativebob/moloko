@@ -15,22 +15,22 @@ class NavigationsCategoriesTableSeeder extends Seeder
         [
             'name' => 'Навигация по сайту',
             'tag' => 'main',
-            'system_item' => 1,
+            'system' => true,
         ],
         [
             'name' => 'Главное меню',
             'tag' => 'general',
-            'system_item' => 1,
+            'system' => true,
         ],
         [
             'name' => 'Соц. сети',
             'tag' => 'social',
-            'system_item' => 1,
+            'system' => true,
         ],
         [
             'name' => 'Футер',
             'tag' => 'footer',
-            'system_item' => 1,
+            'system' => true,
         ],
 
     ]);

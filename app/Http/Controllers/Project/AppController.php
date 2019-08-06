@@ -16,12 +16,10 @@ class AppController extends Controller
         $domain = $request->getHost();
 //        dd($domain);
 
-        // Убираем последнее расширение после точки в домене, и чистим от лишних символов, чтоб получить алиас
-        $str = preg_replace("/\.\w+$/","", $domain);
-        $alias = str_replace([' ', '-', '_'], '', $str);
-//        dd($alias);
+        $site = Site::where('domain', $domain)->first();
+//        dd($site);
 
-        $this->site = Site::where('domain', $alias)->first();
+        $this->site = $site;
     }
 
     public function start(Request $request)

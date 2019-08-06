@@ -19,7 +19,7 @@ class CitiesTableSeeder extends Seeder
 		        'region_id' => 1,
 		        'code' => 83952,
 		        'vk_external_id' => 57,
-                'system_item' => 1,
+                'system' => true,
         	],
             [
                 'name' => 'Ангарск',
@@ -28,7 +28,7 @@ class CitiesTableSeeder extends Seeder
                 'region_id' => 1,
                 'code' => 83952,
                 'vk_external_id' => 19,
-                'system_item' => 1,
+                'system' => true,
             ],
             [
                 'name' => 'Братск',
@@ -37,7 +37,7 @@ class CitiesTableSeeder extends Seeder
                 'region_id' => 1,
                 'code' => 83952,
                 'vk_external_id' => 32,
-                'system_item' => 1,
+                'system' => true,
             ],    
         ]);
     }

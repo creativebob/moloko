@@ -33,7 +33,7 @@ class AccountRequest extends FormRequest
             'password[]' => 'sometimes|string|min:6|confirmed|nullable',
 
             'moderation' => 'integer|max:1|nullable',
-            'system_item' => 'integer|max:1|nullable', 
+            'system' => 'integer|max:1|nullable', 
 
         ];
     }

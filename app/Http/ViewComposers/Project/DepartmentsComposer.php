@@ -14,7 +14,7 @@ class DepartmentsComposer
 
         $site = $view->site->load(['company.filials' => function ($q) {
         	$q->with('location.city')
-        	->where('display', 1)
+        	->where('display', true)
         	->whereHas('location', function ($q) {
         		$q->where('city_id', Cookie::get('city_id'));
         	});

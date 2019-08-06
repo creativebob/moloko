@@ -129,7 +129,7 @@ class RoleController extends Controller
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
-            $role->moderation = 1;
+            $role->moderation = true;
         };
 
         $role->save();
@@ -227,7 +227,7 @@ class RoleController extends Controller
     }
 
     // Системная запись
-    public function ajax_system_item(Request $request)
+    public function ajax_system(Request $request)
     {
 
         if ($request->action == 'lock') {
@@ -236,7 +236,7 @@ class RoleController extends Controller
             $system = null;
         }
 
-        $item = Role::where('id', $request->id)->update(['system_item' => $system]);
+        $item = Role::where('id', $request->id)->update(['system' => $system]);
 
         if ($item) {
 
@@ -393,7 +393,7 @@ class RoleController extends Controller
                 }
 
                 // dd($user->user_status);
-                if(($role->system_item == null)&&($role->company_id == null)&&($user->god == null)){$disabled = 'disabled';};
+                if(($role->system == null)&&($role->company_id == null)&&($user->god == null)){$disabled = 'disabled';};
 
                 // Формируем строку с данными для чекбоксов на одну сущность
                 $boxes[] = [
@@ -431,7 +431,7 @@ class RoleController extends Controller
                     }
                 }
 
-                if(($role->system_item == null)&&($role->company_id == null)){$disabled = 'disabled';};
+                if(($role->system == null)&&($role->company_id == null)){$disabled = 'disabled';};
 
                 // Формируем строку с данными для чекбоксов на одну сущность
                 $boxes_deny[] = [
@@ -484,8 +484,8 @@ class RoleController extends Controller
         $role_id = $request->role_id;
 
         if(
-            (($role->system_item == null)&&($role->company_id != null)&&($user->god == null))|| // ОБЫЧНАЯ ДЛЯ ПОЛЬЗОВАТЕЛЯ
-            (($role->system_item == null)&&($user->god == 1))
+            (($role->system == null)&&($role->company_id != null)&&($user->god == null))|| // ОБЫЧНАЯ ДЛЯ ПОЛЬЗОВАТЕЛЯ
+            (($role->system == null)&&($user->god == 1))
         ){  
 
             // СОЗДАНИЕ СВЯЗИ - НАЗНАЧЕНИЕ ПРАВА НА РОЛЬ:
@@ -498,7 +498,7 @@ class RoleController extends Controller
                 // -----------------------------------------------------------------------------------------------------------------------------
 
                 // если пришел массив правил, удаляем все что найдем
-                $delete_rights = RightRole::where(['role_id' => $role_id, 'system_item' => null])->whereIn('right_id', $request->rights)->delete();
+                $delete_rights = RightRole::where(['role_id' => $role_id, 'system' => null])->whereIn('right_id', $request->rights)->delete();
 
                 // echo $request->checkbox;
                 if ($request->checkbox == false) {
@@ -547,7 +547,7 @@ class RoleController extends Controller
 
 
                     // Если запись права в роли не являеться системной, то удаляем ее.
-                    if($rightrole->system_item == 1){
+                    if($rightrole->system == 1){
 
                         $rightrole = RightRole::destroy($rightrole->id);
                         echo "Хуй ты тут что нибудь изменишь! Запись системная!";
@@ -555,7 +555,7 @@ class RoleController extends Controller
                     };
 
                     // Если запись права в роли не являеться системной, то удаляем ее.
-                    if($rightrole->system_item == null){
+                    if($rightrole->system == null){
 
                         $rightrole = RightRole::destroy($rightrole->id);
                         echo "Есть такая запись! Наебнули к хуям!";

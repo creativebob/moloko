@@ -181,7 +181,7 @@ class PositionController extends Controller
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
-            $position->moderation = 1;
+            $position->moderation = true;
         };
 
         // Пишем ID компании авторизованного пользователя
@@ -466,7 +466,7 @@ class PositionController extends Controller
     }
 
     // Системная запись
-    public function ajax_system_item(Request $request)
+    public function ajax_system(Request $request)
     {
 
         if ($request->action == 'lock') {
@@ -475,7 +475,7 @@ class PositionController extends Controller
             $system = null;
         }
 
-        $item = Position::where('id', $request->id)->update(['system_item' => $system]);
+        $item = Position::where('id', $request->id)->update(['system' => $system]);
 
         if ($item) {
 

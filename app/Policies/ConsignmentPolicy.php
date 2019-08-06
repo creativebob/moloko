@@ -58,7 +58,7 @@ class ConsignmentPolicy
 
     public function system(User $user, Consignment $model)
     {
-        if ($model->system_item == 1) {
+        if ($model->system == 1) {
             return false;
         }
 

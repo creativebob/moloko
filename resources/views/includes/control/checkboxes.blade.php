@@ -19,7 +19,7 @@
 {{-- Чекбокс системной записи --}}
 @can ('system', $item)
 <div class="small-12 cell checkbox">
-	{{ Form::checkbox('system_item', 1, $item->system_item, ['id'=>'system-item-checkbox']) }}
+	{{ Form::checkbox('system', 1, $item->system, ['id'=>'system-item-checkbox']) }}
 	<label for="system-item-checkbox"><span>Сделать запись системной.</span></label>
 </div>
 @endcan

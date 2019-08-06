@@ -34,8 +34,8 @@ trait ArticleTrait
                 'unit_id' => $request->unit_id,
                 'units_category_id' => $request->units_category_id,
             ], [
-                'system_item' => $request->system_item ?? null,
-                'display' => 1,
+                'system' => $request->system ?? null,
+                'display' => true,
                 'company_id' => $company_id,
                 'author_id' => $user_id
             ]);
@@ -50,8 +50,8 @@ trait ArticleTrait
                 'unit_id' => $request->unit_id,
                 'units_category_id' => $request->units_category_id,
             ], [
-                'system_item' => $request->system_item ?? null,
-                'display' => 1,
+                'system' => $request->system ?? null,
+                'display' => true,
                 'company_id' => $company_id,
                 'author_id' => $user_id
             ]);

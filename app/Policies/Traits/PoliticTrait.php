@@ -265,12 +265,12 @@ trait PoliticTrait
 
 
             // Гасим любую операцию над системной записью без компании
-            if(($model->system_item == 1)&&($model->company_id == null)&&($user_status == null)){
+            if(($model->system == 1)&&($model->company_id == null)&&($user_status == null)){
                 return false;
             };
 
             // Проверка на возможность операций с системной записью
-            if(($model->system_item == 1)&&($system_status == false)){
+            if(($model->system == 1)&&($system_status == false)){
 
                 return false;
             };
@@ -278,13 +278,13 @@ trait PoliticTrait
         };
 
         // Получаем статус наличия права в связке с филиалом (Есть или нет)
-        if(($method == 'delete')&&($model->system_item == 1)){
+        if(($method == 'delete')&&($model->system == 1)){
             return false;
             // abort(403, 'Удаление системных записей запрещено законом');
         };
 
 
-        if(($method == 'update')&&($model->system_item == 1)&&($user_status != 1)){
+        if(($method == 'update')&&($model->system == 1)&&($user_status != 1)){
             // abort(403, 'Удаление системных записей запрещено законом');
             return true;
             // abort(403, 'Удаление системных записей запрещено законом');

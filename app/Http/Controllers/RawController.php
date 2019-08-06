@@ -76,7 +76,7 @@ class RawController extends Controller
             'author_id',
             'company_id',
             'display',
-            'system_item',
+            'system',
             'unit_for_composition_id'
         ];
 
@@ -363,8 +363,8 @@ class RawController extends Controller
             $raw->price_unit_id = $request->price_unit_id;
             $raw->price_unit_category_id = $request->price_unit_category_id;
             
-            $raw->display = $request->display;
-            $raw->system_item = $request->system_item;
+            $raw->display = $request->has('display');
+            $raw->system = $request->has('system');
 
             $raw->save();
 
