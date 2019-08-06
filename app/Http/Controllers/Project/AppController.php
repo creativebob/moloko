@@ -9,14 +9,19 @@ use App\Http\Controllers\Controller;
 class AppController extends Controller
 {
 
-    // Настройки сконтроллера
+    // Настройки контроллера
     public function __construct(Request $request)
     {
 //        $domain = $request->getHttpHost();
         $domain = $request->getHost();
 //        dd($domain);
 
-        $this->site = Site::where('domain', $domain)->first();
+        // Убираем последнее расширение после точки в домене, и чистим от лишних символов, чтоб получить алиас
+        $str = preg_replace("/\.\w+$/","", $domain);
+        $alias = str_replace([' ', '-', '_'], '', $str);
+//        dd($alias);
+
+        $this->site = Site::where('domain', $alias)->first();
     }
 
     public function start(Request $request)

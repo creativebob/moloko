@@ -12,10 +12,10 @@ class SiteObserver
 
     public function creating(Site $site)
     {
-        // Пока отсекаем по точке
-        $site_alias = explode('.', $site->domain);
-        $site->alias = $site_alias[0];
-        // $site->slug = $site_alias[0];
+        // Убираем последнее расширение после точки в домене, и чистим от лишних символов, чтоб получить алиас
+        $str = preg_replace("/\.\w+$/","", $site->domain);
+        $alias = str_replace([' ', '-', '_'], '', $str);
+        $site->alias = $alias;
 
         $site->api_token = \Str::random(60);
 
@@ -24,10 +24,6 @@ class SiteObserver
 
     public function updating(Site $site)
     {
-        $site_alias = explode('.', $site->domain);
-        $site->alias = $site_alias[0];
-        // $site->slug = $site_alias[0];
-
         $this->update($site);
     }
 
