@@ -21,11 +21,6 @@ window.Vue = require('vue');
 
 
 Vue.component('example-component', require('../components/ExampleComponent.vue'));
-Vue.component('citysearch-component', require('../components/system/CitySearchComponent.vue'));
-Vue.component('consignmentitemadd-component', require('../components/system/ConsignmentItemAddComponent.vue'));
-Vue.component('input-digit-component', require('../components/system/InputDigitComponent.vue'));
-Vue.component('dropzone-component', require('../components/system/DropzoneComponent.vue'));
-
 
 
 /**
@@ -40,8 +35,3 @@ const app = new Vue({
 
 // Основные настройки
 require('../main');
-
-// Наши скрипты
-require('./partials/main');
-require('./partials/filter');
-require('./partials/sidebar');

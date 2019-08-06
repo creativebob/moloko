@@ -19,10 +19,3 @@ _ide_helper.php
 
 /storage
 /public_html/storage
-
-/app/Http/Controllers/Project
-/app/Providers/ComposerProjectServiceProvider.php
-/app/Http/ViewComposers/Project
-/public_html/project
-/resources/views/project
-/routes/project.php
