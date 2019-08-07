@@ -5,12 +5,16 @@ namespace App\Providers;
 use App\ArticlesGroup;
 
 use App\Consignment;
+use App\Container;
+use App\ContainersCategory;
 use App\Policies\ConsignmentPolicy;
 
 use App\Indicator;
 use App\Order;
 use App\Policies\ArticlesGroupPolicy;
 
+use App\Policies\ContainerPolicy;
+use App\Policies\ContainersCategoryPolicy;
 use App\Policies\IndicatorPolicy;
 use App\Policies\OrderPolicy;
 use App\Policies\PricesGoodsPolicy;
@@ -347,6 +351,10 @@ class AuthServiceProvider extends ServiceProvider
         // Сырье
         Raw::class => RawPolicy::class,
         RawsCategory::class => RawsCategoryPolicy::class,
+
+        // Упаковка
+        Container::class => ContainerPolicy::class,
+        ContainersCategory::class => ContainersCategoryPolicy::class,
 
         // Оборудование
         Equipment::class => EquipmentPolicy::class,

@@ -5,6 +5,7 @@
 	@include('includes.scripts.fancybox-inhead')
 	@include('includes.scripts.sortable-inhead')
 	@include('products.articles.goods.raws.class')
+@include('products.articles.goods.containers.class')
 
 	@if ($entity == 'goods')
 	@include('includes.scripts.chosen-inhead')

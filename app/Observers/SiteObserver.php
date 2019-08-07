@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Site;
-
 use App\Observers\Traits\CommonTrait;
 
 class SiteObserver
@@ -15,7 +14,8 @@ class SiteObserver
         // Убираем последнее расширение после точки в домене, и чистим от лишних символов, чтоб получить алиас
         $str = preg_replace("/\.\w+$/","", $site->domain);
         $alias = str_replace([' ', '-', '_'], '', $str);
-        $site->alias = $alias;
+        $slug = \Str::slug($alias);
+        $site->alias = $slug;
 
         $site->api_token = \Str::random(60);
 

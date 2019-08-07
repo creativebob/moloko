@@ -455,6 +455,31 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
+
+            // Упаковка
+            [
+                'name' => 'Категории упаковок',
+                'site_id' => 1,
+                'title' => 'Категории упаковок',
+                'description' => 'Категории упаковок',
+                'alias' => 'containers_categories',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Упаковка',
+                'site_id' => 1,
+                'title' => 'Упаковка',
+                'description' => 'Упаковка',
+                'alias' => 'containers',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+
             // Оборудование
             [
                 'name' => 'Категории оборудования',

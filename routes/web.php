@@ -342,6 +342,28 @@ Route::post('/raw/photos', 'RawController@photos')->middleware('auth');
 
 Route::any('/raws_create_mode', 'RawController@ajax_change_create_mode')->middleware('auth');
 
+// ------------------------------------- Категории упаковок -------------------------------------------
+
+// Текущая добавленная/удаленная категория
+Route::any('/containers_categories', 'ContainersCategoryController@index')->middleware('auth');
+Route::match(['get', 'post'], '/containers_categories/{id}/edit', 'ContainersCategoryController@edit')->middleware('auth');
+// Основные методы
+Route::resource('/containers_categories', 'ContainersCategoryController')->middleware('auth');
+
+// ---------------------------------- Упаковки (Артикулы) -------------------------------------------
+
+// Основные методы
+Route::resource('/containers', 'ContainerController');
+// Route::get('/containers/search/{text_fragment}', 'СontainerController@search')->middleware('auth');
+Route::post('/containers/search/{text_fragment}', 'СontainerController@search')->middleware('auth');
+// Архивация
+Route::post('/containers/archive/{id}', 'СontainerController@archive')->middleware('auth');
+// Фото
+Route::any('/container/add_photo', 'СontainerController@add_photo')->middleware('auth');
+Route::post('/container/photos', 'СontainerController@photos')->middleware('auth');
+
+Route::any('/containers_create_mode', 'СontainerController@ajax_change_create_mode')->middleware('auth');
+
 // ------------------------------------- Категории оборудования -------------------------------------------
 
 // Текущая добавленная/удаленная категория

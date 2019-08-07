@@ -377,10 +377,10 @@ class GoodsController extends Controller
             'raws.category'
         ]);
 
+        // Получаем настройки по умолчанию
         $dropzone = getSettings($this->entity_alias);
         $dropzone['id'] = $article->id;
         $dropzone['entity'] = $article->getTable();
-
 //        dd($dropzone);
 
         // Инфо о странице

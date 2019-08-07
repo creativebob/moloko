@@ -42,3 +42,7 @@
 </div>
 	@endif
 
+<div class="tabs-panel" id="containers">
+	@include('products.articles.goods.containers.containers')
+</div>
+

@@ -25,6 +25,7 @@ use App\CatalogsServicesItem;
 
 use App\GoodsCategory;
 use App\RawsCategory;
+use App\ContainersCategory;
 use App\RoomsCategory;
 
 use App\ServicesCategory;
@@ -357,6 +358,21 @@ class StartTableSeeder extends Seeder
             ],
             [
                 'name' => 'Вторая категория сырья',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => true,
+            ],
+        ]);
+
+        ContainersCategory::insert([
+            [
+                'name' => 'Первая категория упаковок',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => true,
+            ],
+            [
+                'name' => 'Вторая категория упаковок',
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,

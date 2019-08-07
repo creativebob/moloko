@@ -110,6 +110,22 @@ class MenusTableSeeder extends Seeder
                 'sort' => null,
             ],
 
+            //  Упаковка
+            [
+                'name' => 'Упаковка',
+                'icon' => 'icon-container',
+                'alias' => null,
+                'tag' => 'containers',
+                'parent_id' => null,
+                'page_id' => null,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => null,
+            ],
+
             //  Услуги
             [
                 'name' => 'Услуги',
@@ -634,6 +650,34 @@ Menu::insert([
         'author_id' => 1,
         'display' => true,
         'sort' => 3,
+    ],
+    [
+        'name' => 'Упаковка',
+        'icon' => null,
+        'alias' => 'admin/containers',
+        'tag' => 'containers',
+        'parent_id' => $menus->where('tag', 'containers')->first()->id,
+        'page_id' => $pages->where('alias', 'containers')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 1,
+    ],
+    [
+        'name' => 'Категории упаковок',
+        'icon' => null,
+        'alias' => 'admin/containers_categories',
+        'tag' => 'containers_categories',
+        'parent_id' => $menus->where('tag', 'containers')->first()->id,
+        'page_id' => $pages->where('alias', 'containers_categories')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 2,
     ],
     [
         'name' => 'Категории помещений',

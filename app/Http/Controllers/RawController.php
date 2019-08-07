@@ -308,7 +308,10 @@ class RawController extends Controller
         // dd($article);
 
         // Получаем настройки по умолчанию
-        $settings = getSettings($this->entity_alias);
+        $dropzone = getSettings($this->entity_alias);
+        $dropzone['id'] = $article->id;
+        $dropzone['entity'] = $article->getTable();
+//        dd($dropzone);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
@@ -319,7 +322,7 @@ class RawController extends Controller
             'item' => $raw,
             'article' => $article,
             'page_info' => $page_info,
-            'settings' => $settings,
+            'dropzone' => json_encode($dropzone),
             'entity' => $this->entity_alias,
             'category_entity' => 'raws_categories',
             'categories_select_name' => 'raws_category_id',
