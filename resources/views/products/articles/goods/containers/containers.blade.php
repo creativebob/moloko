@@ -9,7 +9,7 @@
 				@if ($article->draft)
 				<ul class="menu vertical">
 					<li>
-						<a class="button" data-toggle="dropdown-containers">Добавить сырье</a>
+						<a class="button" data-toggle="dropdown-containers">Добавить упаковку</a>
 						<div class="dropdown-pane" id="dropdown-containers" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
 
 							<ul class="checker" id="categories-list">

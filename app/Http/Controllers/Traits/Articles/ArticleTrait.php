@@ -184,6 +184,8 @@ trait ArticleTrait
                         } else {
                             $this->setRaws($request, $article);
                         }
+
+                        $this->setContainers($request, $article);
                     }
 
                     // Устаревший код
@@ -226,7 +228,7 @@ trait ArticleTrait
 
     protected function setRaws($request, $article)
     {
-        // Запись состава только для черновика
+        // Запись состава сырья только для черновика
         if ($article->draft) {
             $article->raws()->sync($request->raws);
         }
@@ -234,9 +236,17 @@ trait ArticleTrait
 
     protected function setGoods($request, $article)
     {
-        // Запись состава только для черновика
+        // Запись состава товаров только для черновика
         if ($article->draft) {
             $article->goods()->sync($request->goods);
+        }
+    }
+
+    protected function setContainers($request, $article)
+    {
+        // Запись состава упаковок только для черновика
+        if ($article->draft) {
+            $article->containers()->sync($request->containers);
         }
     }
 

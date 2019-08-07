@@ -11,14 +11,16 @@
 		<ul class="checker">
 
 			@foreach($containers_category->containers as $container)
-			<li class="checkbox">
-				{{ Form::checkbox(null, $container->id, in_array($container->id, $article->containers->pluck('id')->toArray()), ['class' => 'add-container', 'id' => 'container-' . $container->id]) }}
 				@if(isset($container->article))
-					<label for="container-{{ $container->id }}">
-						<span>{{ $container->article->name }}</span>
-					</label>
+					<li class="checkbox">
+						{{ Form::checkbox(null, $container->id, in_array($container->id, $article->containers->pluck('id')->toArray()), ['class' => 'add-container', 'id' => 'container-' . $container->id]) }}
+
+							<label for="container-{{ $container->id }}">
+								<span>{{ $container->article->name }}</span>
+							</label>
+
+					</li>
 				@endif
-			</li>
 			@endforeach
 
 		</ul>

@@ -286,6 +286,10 @@ class StartTableSeeder extends Seeder
         DB::table('catalogs_goods_site')->insert([
             [
                 'catalogs_goods_id' => 1,
+                'site_id' => 1,
+            ],
+            [
+                'catalogs_goods_id' => 1,
                 'site_id' => 2,
             ],
         ]);
@@ -328,6 +332,10 @@ class StartTableSeeder extends Seeder
         ]);
 
         DB::table('catalogs_service_site')->insert([
+            [
+                'catalogs_service_id' => 1,
+                'site_id' => 1,
+            ],
             [
                 'catalogs_service_id' => 1,
                 'site_id' => 2,

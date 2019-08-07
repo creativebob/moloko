@@ -26,6 +26,9 @@
 
 @push('scripts')
 <script>
+
+    var type = '{{ $type }}';
+
     $(document).on('click', '.get-prices', function(event) {
         // event.preventDefault();
 
@@ -38,7 +41,7 @@
             id: id
         }, function(html){
             // alert(html);
-            $('#list-prices_services').html(html);
+            $('#list-prices_' + type).html(html);
         });
     });
 
@@ -70,8 +73,8 @@
             }, function(html) {
                 // alert(html);
                 // alert($('#prices_services-section [data-price=' + id +']').length);
-                if ($('#prices_services-section [data-price=' + id +']').length == 1) {
-                    $('#prices_services-section [data-price="' + id +'"]').replaceWith(html);
+                if ($('#prices_' + type + '-section [data-price=' + id +']').length == 1) {
+                    $('#prices_' + type + '-section [data-price="' + id +'"]').replaceWith(html);
                 } else {
                     $('#' + entity + '-section').append(html);
                 }

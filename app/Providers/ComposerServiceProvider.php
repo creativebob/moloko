@@ -279,7 +279,10 @@ class ComposerServiceProvider extends ServiceProvider
         ], ServicesComposer::class);
 
         view()->composer('includes.selects.tmc', TmcComposer::class);
-        view()->composer('products.articles.goods.raws.leftover_operations_select', LeftoverOperationsComposer::class);
+        view()->composer([
+            'products.articles.goods.raws.leftover_operations_select',
+            'products.articles.goods.containers.leftover_operations_select',
+        ], LeftoverOperationsComposer::class);
 
         view()->composer('includes.selects.processes_types', ProcessesTypesComposer::class);
 

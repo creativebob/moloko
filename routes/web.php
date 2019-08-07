@@ -294,6 +294,8 @@ Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middlew
 Route::post('/ajax_get_category_raw', 'RawController@ajax_get_category_raw')->middleware('auth');
 Route::post('/ajax_get_raw', 'RawController@ajax_get_raw')->middleware('auth');
 
+Route::any('/ajax_get_container', 'ContainerController@ajax_get_container')->middleware('auth');
+
 Route::any('/ajax_get_goods', 'GoodsController@ajax_get_goods')->middleware('auth');
 
 Route::post('/ajax_get_category_workflow', 'WorkflowController@ajax_get_category_workflow')->middleware('auth');
@@ -1068,6 +1070,7 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
 
 
 Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');
+Route::any('catalogs_goods_items/prices', 'CatalogsGoodsItemController@get_prices');
 
 
 // Route::any('archive_prices_service', 'PricesServiceController@ajax_archive');

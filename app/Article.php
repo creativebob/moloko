@@ -109,7 +109,7 @@ class Article extends Model
     // Упаковка
     public function containers()
     {
-        return $this->belongsToMany(Сontainer::class, 'article_container')
+        return $this->belongsToMany(Container::class, 'article_container')
             ->withPivot([
                 'value',
                 'use',

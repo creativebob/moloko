@@ -178,29 +178,19 @@ class PageController extends Controller
     // ------------------------------------------- Ajax ---------------------------------------------
 
     // Проверка наличия в базе
-    public function ajax_check (Request $request, $alias)
+    public function ajax_check (Request $request, $site_id)
     {
 
         // Проверка навигации по сайту в нашей базе данных
-        $page_alias = $request->alias;
-        $site = Site::withCount(['pages' => function($query) use ($page_alias) {
-            $query->whereAlias($page_alias);
-        }])->whereAlias($alias)->first();
+        $alias = $request->alias;
 
-        // Если такая навигация есть
-        if ($site->pages_count > 0) {
-            $result = [
-                'error_status' => 1,
-            ];
+        $pages_count = Page::where([
+            'site_id' => $site_id,
+            'alias' => $alias
+        ])
+            ->count();
 
-        // Если нет
-        } else {
-            $result = [
-                'error_status' => 0,
-            ];
-        }
-
-        return json_encode($result, JSON_UNESCAPED_UNICODE);
+        return response()->json($pages_count);
     }
 
 }

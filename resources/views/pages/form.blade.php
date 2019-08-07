@@ -19,7 +19,7 @@
 
         <label>Алиас страницы
             @include('includes.inputs.text-en', ['name' => 'alias'])
-            <div class="sprite-input-right find-status" id="name-check"></div>
+            <div class="sprite-input-right find-status" id="alias-check"></div>
             <div class="item-error">Такая страница уже существует!</div>
         </label>
 

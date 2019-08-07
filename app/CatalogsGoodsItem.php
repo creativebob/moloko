@@ -67,11 +67,29 @@ class CatalogsGoodsItem extends Model
 		return $this->hasMany(CatalogsGoodsItem::class, 'parent_id');
 	}
 
-	// Автор
-	public function author()
-	{
-		return $this->belongsTo(User::class);
-	}
+    // Главный
+    public function category()
+    {
+        return $this->belongsTo(CatalogsGoodsItem::class);
+    }
+
+    // Аватар
+    public function photo()
+    {
+        return $this->belongsTo(Photo::class);
+    }
+
+    // Автор
+    public function author()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // Прайс
+    public function prices_goods()
+    {
+        return $this->hasMany(PricesGoods::class);
+    }
 
 	// Товары каталога
     public function goods()

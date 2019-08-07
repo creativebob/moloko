@@ -401,7 +401,7 @@ class ContainerController extends Controller
 
     public function ajax_get_container(Request $request)
     {
-        $container = Сontainer::with([
+        $container = Container::with([
             'article.group.unit',
             'category'
         ])

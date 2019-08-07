@@ -248,7 +248,7 @@ class CatalogsGoodsItemController extends Controller
             }
         ])
             ->findOrFail($request->id);
-        // dd($catalogs_goods_item);
+//         dd($catalogs_goods_item);
 
         return view('leads.catalogs.prices_goods', compact('catalogs_goods_item'));
     }
