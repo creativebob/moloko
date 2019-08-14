@@ -51,9 +51,17 @@ class ServicesCategory extends Model
         'description',
         'seo_description',
         'parent_id',
-        // 'goods_mode_id',
-        'category_id',
+
+        'processes_type_id',
+
+        'direction'
     ];
+
+    // Родитель
+    public function parent()
+    {
+        return $this->belongsTo(ServicesCategory::class);
+    }
 
     // Вложенные
     public function childs()
@@ -73,18 +81,11 @@ class ServicesCategory extends Model
         return $this->hasMany(Service::class, 'category_id');
     }
 
-    // Режим
-    // public function mode()
-    // {
-    //     return $this->belongsTo(GoodsMode::class, 'goods_mode_id');
-    // }
-
     // Аватар
     public function photo()
     {
         return $this->belongsTo(Photo::class);
     }
-
 
     // Процессы
     public function prcesses()
@@ -116,24 +117,5 @@ class ServicesCategory extends Model
     {
         return $this->morphOne(Direction::class, 'category');
         // ->where('archive', false);
-    }
-
-
-    // --------------------------------------- Запросы -----------------------------------------
-    public function getIndex($request, $answer)
-    {
-        return $this->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->template($answer) // Выводим шаблоны альбомов
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
-    }
-
-    public function getItem($id, $answer)
-    {
-        return $this->moderatorLimit($answer)->findOrFail($id);
     }
 }

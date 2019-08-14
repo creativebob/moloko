@@ -2,19 +2,9 @@
 
 namespace App\Http\Controllers;
 
-// Модели
 use App\RubricatorsItem;
-use App\Rubricator;
-
-// Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\RubricatorsItemRequest;
-
-// Подключаем трейт записи и обновления категорий
-use App\Http\Controllers\Traits\CategoryControllerTrait;
-
-// Транслитерация
-use Illuminate\Support\Str;
 
 class RubricatorsItemController extends Controller
 {
@@ -30,9 +20,6 @@ class RubricatorsItemController extends Controller
         $this->entity_dependence = false;
         $this->type = 'modal';
     }
-
-    // Используем трейт записи и обновления категорий
-    use CategoryControllerTrait;
 
     public function index(Request $request, $rubricator_id)
     {
@@ -110,16 +97,12 @@ class RubricatorsItemController extends Controller
 
     public function store(RubricatorsItemRequest $request, $rubricator_id)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Заполнение и проверка основных полей в трейте
-        $rubricators_item = $this->storeCategory($request);
-
-        $rubricators_item->rubricator_id = $rubricator_id;
-
-        $rubricators_item->save();
+        $data = $request->input();
+        $data['rubricator_id'] = $rubricator_id;
+        $rubricators_item = (new $this->class())->create($data);
 
         if ($rubricators_item) {
 
@@ -132,7 +115,6 @@ class RubricatorsItemController extends Controller
                 'error_status' => 1,
                 'error_message' => 'Ошибка при записи пункта каталога!'
             ];
-
         }
     }
 
@@ -177,15 +159,10 @@ class RubricatorsItemController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $rubricators_item);
 
-        // Заполнение и проверка основных полей в трейте
-        $rubricators_item = $this->updateCategory($request, $rubricators_item);
+        $data = $request->input();
+        $result = $rubricators_item->update($data);
 
-        // $rubricators_item->tag = empty($request->tag) ? Str::slug($request->name) : $request->tag;
-
-        $rubricators_item->save();
-        // dd($rubricators_item);
-
-        if ($rubricators_item) {
+        if ($result) {
 
             // Переадресовываем на index
             return redirect()->route('rubricators_items.index', ['rubricator_id' => $rubricator_id, 'id' => $rubricators_item->id]);

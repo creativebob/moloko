@@ -17,6 +17,8 @@ class CreateRoomsCategoriesTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name')->index()->comment('Название категории помещений');
+            $table->string('slug')->index()->nullable()->comment('Слаг');
+            $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
 
             $table->text('description')->nullable()->comment('Описание категории помещений');
             $table->text('seo_description')->nullable()->comment('Описание для сайта для категории помещений');

@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Http\Requests\WorkflowsCategoryUpdateRequest;
+use App\Http\Requests\WorkflowsCategoryStoreRequest;
 use App\WorkflowsCategory;
-
-// Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\WorkflowsCategoryRequest;
-
-// Подключаем трейт записи и обновления категорий
-use App\Http\Controllers\Traits\CategoryControllerTrait;
 
 class WorkflowsCategoryController extends Controller
 {
@@ -26,9 +21,6 @@ class WorkflowsCategoryController extends Controller
         $this->entity_dependence = false;
         $this->type = 'edit';
     }
-
-    // Используем трейт записи и обновления категорий
-    use CategoryControllerTrait;
 
     public function index(Request $request)
     {
@@ -102,19 +94,14 @@ class WorkflowsCategoryController extends Controller
         ]);
     }
 
-    public function store(WorkflowsCategoryRequest $request)
+    public function store(WorkflowsCategoryStoreRequest $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Заполнение и проверка основных полей в трейте
-        $workflows_category = $this->storeCategory($request);
-
-        // Режим товаров
-        // $workflows_category->workflows_mode_id = $request->workflows_mode_id;
-
-        $workflows_category->save();
+        $data = $request->input();
+        $workflows_category = (new $this->class())->create($data);
 
         if ($workflows_category) {
             // Переадресовываем на index
@@ -164,7 +151,7 @@ class WorkflowsCategoryController extends Controller
         ]);
     }
 
-    public function update(WorkflowsCategoryRequest $request, $id)
+    public function update(WorkflowsCategoryUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -176,14 +163,10 @@ class WorkflowsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $workflows_category);
 
-        // Заполнение и проверка основных полей в трейте
-        $workflows_category = $this->updateCategory($request, $workflows_category);
+        $data = $request->input();
+        $result = $workflows_category->update($data);
 
-        $workflows_category->processes_type_id = $request->processes_type_id;
-
-        $workflows_category->save();
-
-        if ($workflows_category) {
+        if ($result) {
 
             // Производители
             $workflows_category->manufacturers()->sync($request->manufacturers);

@@ -46,13 +46,12 @@ class CatalogsServicesItem extends Model
 	protected $dates = ['deleted_at'];
 
 	protected $fillable = [
-		'name',
-        'slug',
-		'parent_id',
-		'category_id',
-		'catalogs_service_id',
+        'name',
         'description',
         'seo_description',
+        'parent_id',
+
+		'catalogs_service_id',
 	];
 
 	// Каталог
@@ -60,6 +59,12 @@ class CatalogsServicesItem extends Model
 	{
 		return $this->belongsTo(CatalogsService::class);
 	}
+
+    // Родитель
+    public function parent()
+    {
+        return $this->belongsTo(CatalogsServicesItem::class);
+    }
 
     // Вложенные
 	public function childs()

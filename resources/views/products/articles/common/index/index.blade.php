@@ -130,6 +130,7 @@
                     
                     @if($page_info->alias == 'goods')
                         <td class="td-catalog">
+                            @php // dd($item); @endphp
                             @foreach($item->prices as $price)
                                 <span>{{ $price->catalog->name }}: </span><span  data-tooltip class="top" tabindex="2" title="Действует с {{ $price->created_at->format('d.m.Y') }}">{{ $price->price }}
 

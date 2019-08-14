@@ -5,15 +5,27 @@ namespace App\Providers;
 use App\CatalogsGoodsItem;
 use App\Container;
 use App\ContainersCategory;
+use App\GoodsCategory;
+use App\Menu;
 use App\Observers\CatalogsGoodsItemObserver;
 use App\Observers\ContainerObserver;
 use App\Observers\ContainersCategoryObserver;
+use App\Observers\GoodsCategoryObserver;
+use App\Observers\MenuObserver;
 use App\Observers\PageObserver;
 use App\Observers\PluginObserver;
 use App\Observers\PricesGoodsObserver;
+use App\Observers\RoomsCategoryObserver;
+use App\Observers\SectorObserver;
+use App\Observers\ServicesCategoryObserver;
+use App\Observers\WorkflowsCategoryObserver;
 use App\Page;
 use App\Plugin;
 use App\PricesGoods;
+use App\RoomsCategory;
+use App\Sector;
+use App\ServicesCategory;
+use App\WorkflowsCategory;
 use Illuminate\Support\ServiceProvider;
 
 use App\RawsCategory;
@@ -67,9 +79,11 @@ class ObserverServiceProvider extends ServiceProvider
     {
 
         // Категории артикулов
+        GoodsCategory::observe(GoodsCategoryObserver::class);
         RawsCategory::observe(RawsCategoryObserver::class);
         ContainersCategory::observe(ContainersCategoryObserver::class);
         EquipmentsCategory::observe(EquipmentsCategoryObserver::class);
+        RoomsCategory::observe(RoomsCategoryObserver::class);
 
         // Артикулы
         Article::observe(ArticleObserver::class);
@@ -79,11 +93,15 @@ class ObserverServiceProvider extends ServiceProvider
         Equipment::observe(EquipmentObserver::class);
         Room::observe(RoomObserver::class);
 
+
+        // Категории процессов
+        ServicesCategory::observe(ServicesCategoryObserver::class);
+        WorkflowsCategory::observe(WorkflowsCategoryObserver::class);
+
         // Процессы
         Process::observe(ProcessObserver::class);
         Service::observe(ServiceObserver::class);
         Workflow::observe(WorkflowObserver::class);
-
 
 
         // Склады
@@ -94,23 +112,29 @@ class ObserverServiceProvider extends ServiceProvider
         RubricatorsItem::observe(RubricatorsItemObserver::class);
         News::observe(NewsObserver::class);
 
+
         // Сайты
         Site::observe(SiteObserver::class);
         Page::observe(PageObserver::class);
+        Menu::observe(MenuObserver::class);
 
         // Плагины
         Plugin::observe(PluginObserver::class);
 
-        // Каталоги
+        // Каталоги услуг
         CatalogsServicesItem::observe(CatalogsServicesItemObserver::class);
         PricesService::observe(PricesServiceObserver::class);
 
+        // Каталоги товаров
         CatalogsGoodsItem::observe(CatalogsGoodsItemObserver::class);
         PricesGoods::observe(PricesGoodsObserver::class);
 
         // Альбомы
         AlbumsCategory::observe(AlbumsCategoryObserver::class);
         Album::observe(AlbumObserver::class);
+
+        // Сектора
+        Sector::observe(SectorObserver::class);
     }
 
     /**

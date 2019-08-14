@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Http\Requests\ServicesCategoryUpdateRequest;
+use App\Http\Requests\ServicesCategoryStoreRequest;
 use App\ServicesCategory;
-
-// Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\ServicesCategoryRequest;
-
-// Подключаем трейт записи и обновления категорий
-use App\Http\Controllers\Traits\CategoryControllerTrait;
 use App\Http\Controllers\Traits\DirectionTrait;
 
 class ServicesCategoryController extends Controller
@@ -28,8 +23,6 @@ class ServicesCategoryController extends Controller
         $this->type = 'edit';
     }
 
-    // Используем трейт записи и обновления категорий
-    use CategoryControllerTrait;
     use DirectionTrait;
 
     public function index(Request $request)
@@ -106,19 +99,14 @@ class ServicesCategoryController extends Controller
         ]);
     }
 
-    public function store(ServicesCategoryRequest $request)
+    public function store(ServicesCategoryStoreRequest $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Заполнение и проверка основных полей в трейте
-        $services_category = $this->storeCategory($request);
-
-        // Тип услуг
-        $services_category->processes_type_id = $request->processes_type_id;
-
-        $services_category->save();
+        $data = $request->input();
+        $services_category = (new $this->class())->create($data);
 
         if ($services_category) {
             // Переадресовываем на index
@@ -170,7 +158,7 @@ class ServicesCategoryController extends Controller
         ]);
     }
 
-    public function update(ServicesCategoryRequest $request, $id)
+    public function update(ServicesCategoryUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -182,28 +170,16 @@ class ServicesCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $services_category);
 
-        // Заполнение и проверка основных полей в трейте
-        $services_category = $this->updateCategory($request, $services_category);
-        // dd($request);
+        $data = $request->input();
+        $result = $services_category->update($data);
 
-        $services_category->processes_type_id = $request->processes_type_id;
+        if ($result) {
 
-        // // Если сменили тип категории сырья, то меняем его и всем вложенным элементам
-        // if (($services_category->parent_id == null) && ($services_category->processes_type_id != $request->processes_type_id)) {
-        //     $services_category->processes_type_id = $request->processes_type_id;
+            // Проверка на направление
+            if (is_null($services_category->parent_id)) {
+                $this->checkDirection($request, $services_category);
+            }
 
-        //     $services_categories = ServicesCategory::whereCategory_id($id)
-        //     ->update(['processes_type_id' => $request->processes_type_id]);
-        // }
-
-        // Проверка на направление
-        if (is_null($services_category->parent_id)) {
-            $this->checkDirection($request, $services_category);
-        }
-
-        $services_category->save();
-
-        if ($services_category) {
 
             // Производители
             $services_category->manufacturers()->sync($request->manufacturers);

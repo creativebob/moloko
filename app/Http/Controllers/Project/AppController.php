@@ -26,7 +26,13 @@ class AppController extends Controller
     {
 
         if (is_null($this->site)) {
+            
             return view('project.layouts.app');
+        } else {
+            $site = $this->site;
+            $page = $site->pages->where('alias', 'main')->where('display', 1)->first();
+
+            return view($site->alias.'.pages.mains.index', compact('site','page'));
         }
 
     }

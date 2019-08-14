@@ -17,6 +17,8 @@ class CreateNavigationsCategoriesTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name')->nullable()->comment('Имя категории навигации');
+            $table->string('slug')->index()->nullable()->comment('Слаг');
+            $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
             $table->string('tag')->nullable()->comment('Тег категории навигации');
 
             $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id родителя');

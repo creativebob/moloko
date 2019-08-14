@@ -26,11 +26,15 @@ $drop = 1;
         <div class="controls-list">
             <div class="display-menu">
                 @can ('display', $department)
+
+                <div class="
                 @display ($department)
-                <div class="icon-display-show white sprite" data-open="item-display"></div>
+                icon-display-show
                 @else
-                <div class="icon-display-hide white sprite" data-open="item-display"></div>
-                @enddisplay
+                        icon-display-hide
+                        @enddisplay
+                        white sprite" data-open="item-display"></div>
+
                 @endcan
             </div>
 
@@ -51,7 +55,7 @@ $drop = 1;
                 @break
 
                 @case($department->system == 1 && $department->company_id == 1)
-                <div class="icon-system-lock {{ $color }} sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
+                <div class="icon-system-lock white sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
                 @break
                 @endswitch
                 @endcan

@@ -2,27 +2,37 @@
 
 namespace App\Observers;
 
-use App\RawsCategory;
-
+use App\Observers\Traits\CategoriesTrait;
 use App\Observers\Traits\CommonTrait;
+use App\RawsCategory as Category;
 
 class RawsCategoryObserver
 {
 
     use CommonTrait;
+    use CategoriesTrait;
 
-    public function creating(RawsCategory $raws_category)
+    public function creating(Category $category)
     {
-        $this->store($raws_category);
+        $this->store($category);
+        $this->storeCategory($category);
     }
 
-    public function updating(RawsCategory $raws_category)
+    public function updating(Category $category)
     {
-        $this->update($raws_category);
+        $this->update($category);
+        $this->updateCategory($category);
     }
 
-    public function deleting(RawsCategory $raws_category)
+    public function updated(Category $category)
     {
-        $this->destroy($raws_category);
+        $this->updateCategoryChildsSlug($category);
+        $this->updateCategoryChildsLevel($category);
+        $this->updateCategoryChildsCategoryId($category);
+    }
+
+    public function deleting(Category $category)
+    {
+        $this->destroy($category);
     }
 }

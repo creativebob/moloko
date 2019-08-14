@@ -44,63 +44,34 @@ class Sector extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+
     protected $fillable = [
-        'company_id',
         'name',
-        'tag',
+        'description',
+        'seo_description',
         'parent_id',
-        'category_id',
     ];
 
-    // ------------------------------------- Отношения -----------------------------------------
+    // Родитель
+    public function parent()
+    {
+        return $this->belongsTo(Sector::class);
+    }
 
     // Вложенные
     public function childs()
     {
-        return $this->hasMany('App\Sector', 'parent_id');
+        return $this->hasMany(Sector::class, 'parent_id');
     }
     // Компания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
     // Компании
     public function companies()
     {
-        return $this->hasMany('App\Company');
+        return $this->hasMany(Company::class);
     }
-
-    // --------------------------------------- Запросы -----------------------------------------
-    // public function getIndex($request, $answer)
-    // {
-    //     return $this->moderatorLimit($answer)
-    //     ->companiesLimit($answer)
-    //     ->authors($answer)
-    //     ->systemItem($answer)
-    //     ->template($answer)
-    //     ->booklistFilter($request)
-    //     ->withCount('companies')
-    //     ->orderBy('moderation', 'desc')
-    //     ->orderBy('sort', 'asc')
-    //     ->get();
-    // }
-
-    // public function getItem($id, $answer)
-    // {
-    //     return $this->moderatorLimit($answer)->findOrFail($id);
-    // }
-
-    // public function getIndexCount($answer, $request)
-    // {
-    //     return $this->moderatorLimit($answer)
-    //     ->companiesLimit($answer)
-    //     ->authors($answer)
-    //     ->systemItem($answer)
-    //     ->template($answer)
-    //     // ->booklistFilter($request)
-    //     ->count();
-    // }
-
-
 }

@@ -190,8 +190,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         App\Providers\ComposerServiceProvider::class,
+        App\Providers\ComposerProjectServiceProvider::class,
         App\Providers\ObserverServiceProvider::class,
-
 
     ],
 

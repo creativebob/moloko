@@ -2,18 +2,9 @@
 
 namespace App\Http\Controllers;
 
-// Модели
 use App\Sector;
-
-// Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\SectorRequest;
-
-// Подключаем трейт записи и обновления категорий
-use App\Http\Controllers\Traits\CategoryControllerTrait;
-
-// Транслитерация
-use Illuminate\Support\Str;
 
 class SectorController extends Controller
 {
@@ -30,8 +21,7 @@ class SectorController extends Controller
         $this->type = 'modal';
     }
 
-    // Используем трейт записи и обновления категорий
-    use CategoryControllerTrait;
+
 
     public function index(Request $request)
     {
@@ -106,13 +96,8 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Заполнение и проверка основных полей в трейте
-        $sector = $this->storeCategory($request);
-
-        // Тег
-        $sector->tag = empty($request->tag) ? Str::slug($request->name) : $request->tag;
-
-        $sector->save();
+        $data = $request->input();
+        $sector = (new $this->class())->create($data);
 
         if ($sector) {
             // Переадресовываем на index
@@ -160,14 +145,10 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
 
-        // Заполнение и проверка основных полей в трейте
-        $sector = $this->updateCategory($request, $sector);
+        $data = $request->input();
+        $result = $sector->update($data);
 
-        $sector->tag = empty($request->tag) ? Str::slug($request->name) : $request->tag;
-
-        $sector->save();
-
-        if ($sector) {
+        if ($result) {
             // Переадресовываем на index
             return redirect()->route('sectors.index', ['id' => $sector->id]);
         } else {

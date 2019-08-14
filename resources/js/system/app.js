@@ -20,6 +20,7 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 
+Vue.component('example-component', require('../components/ExampleComponent.vue'));
 Vue.component('citysearch-component', require('../components/system/CitySearchComponent.vue'));
 Vue.component('consignmentitemadd-component', require('../components/system/ConsignmentItemAddComponent.vue'));
 Vue.component('input-digit-component', require('../components/system/InputDigitComponent.vue'));

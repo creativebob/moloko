@@ -2,35 +2,37 @@
 
 namespace App\Observers;
 
-use App\CatalogsGoodsItem;
-
+use App\Observers\Traits\CategoriesTrait;
 use App\Observers\Traits\CommonTrait;
+use App\CatalogsGoodsItem as Category;
 
 class CatalogsGoodsItemObserver
 {
+
     use CommonTrait;
+    use CategoriesTrait;
 
-    public function creating(CatalogsGoodsItem $catalogs_goods_item)
+    public function creating(Category $category)
     {
-        $this->store($catalogs_goods_item);
-        $this->setSlug($catalogs_goods_item);
+        $this->store($category);
+        $this->storeCategory($category);
     }
 
-    public function updating(CatalogsGoodsItem $catalogs_goods_item)
+    public function updating(Category $category)
     {
-        $this->update($catalogs_goods_item);
-        $catalogs_goods_item->photo_id = savePhoto($request, $catalogs_goods_item);
-        $this->setSlug($catalogs_goods_item);
+        $this->update($category);
+        $this->updateCategory($category);
     }
 
-    public function deleting(CatalogsGoodsItem $catalogs_goods_item)
+    public function updated(Category $category)
     {
-        $this->destroy($catalogs_goods_item);
+        $this->updateCategoryChildsSlug($category);
+        $this->updateCategoryChildsLevel($category);
+        $this->updateCategoryChildsCategoryId($category);
     }
 
-    protected function setSlug(CatalogsGoodsItem $catalogs_goods_item)
+    public function deleting(Category $category)
     {
-        $catalogs_goods_item->slug = \Str::slug($catalogs_goods_item->name);
+        $this->destroy($category);
     }
-
 }

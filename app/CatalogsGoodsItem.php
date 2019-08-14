@@ -46,13 +46,12 @@ class CatalogsGoodsItem extends Model
 	protected $dates = ['deleted_at'];
 
 	protected $fillable = [
-		'company_id',
-		'name',
-		'alias',
-        'slug',
-		'parent_id',
-		'category_id',
-		'catalog_id',
+        'name',
+        'description',
+        'seo_description',
+        'parent_id',
+
+        'catalogs_goods_id'
 	];
 
 	// Каталог
@@ -60,6 +59,12 @@ class CatalogsGoodsItem extends Model
 	{
 		return $this->belongsTo(CatalogsGoods::class);
 	}
+
+    // Родитель
+    public function parent()
+    {
+        return $this->belongsTo(CatalogsGoodsItem::class);
+    }
 
     // Вложенные
 	public function childs()

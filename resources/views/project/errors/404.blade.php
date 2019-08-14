@@ -1,4 +1,4 @@
-@extends('project.layouts.app')
+@extends('vkusnyashka.layouts.app')
 
 @section('title')
 <title>Ошибка | Воротная компания "Марс"</title>

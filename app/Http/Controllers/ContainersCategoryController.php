@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ContainersCategoryUpdateRequest;
+use App\Http\Requests\ContainersCategoryStoreRequest;
 use App\ContainersCategory;
-
-// Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\ContainersCategoryRequest;
-
-// Подключаем трейт записи и обновления категорий
-use App\Http\Controllers\Traits\CategoryControllerTrait;
 
 class ContainersCategoryController extends Controller
 {
@@ -25,9 +21,6 @@ class ContainersCategoryController extends Controller
         $this->entity_dependence = false;
         $this->type = 'edit';
     }
-
-    // Используем трейт записи и обновления категорий
-    use CategoryControllerTrait;
 
     public function index(Request $request)
     {
@@ -100,16 +93,14 @@ class ContainersCategoryController extends Controller
         ]);
     }
 
-    public function store(ContainersCategoryRequest $request)
+    public function store(ContainersCategoryStoreRequest $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Заполнение и проверка основных полей в трейте
-        $containers_category = $this->storeCategory($request);
-
-        $containers_category->save();
+        $data = $request->input();
+        $containers_category = (new $this->class())->create($data);
 
         if ($containers_category) {
             // Переадресовываем на index
@@ -158,7 +149,7 @@ class ContainersCategoryController extends Controller
         ]);
     }
 
-    public function update(ContainersCategoryRequest $request, $id)
+    public function update(ContainersCategoryUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -170,12 +161,10 @@ class ContainersCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $containers_category);
 
-        // Заполнение и проверка основных полей в трейте
-        $containers_category = $this->updateCategory($request, $containers_category);
+        $data = $request->input();
+        $result = $containers_category->update($data);
 
-        $containers_category->save();
-
-        if ($containers_category) {
+        if ($result) {
 
             // Производители
             $containers_category->manufacturers()->sync($request->manufacturers);

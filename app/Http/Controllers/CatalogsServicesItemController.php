@@ -2,19 +2,10 @@
 
 namespace App\Http\Controllers;
 
-// Модели
 use App\CatalogsServicesItem;
 use App\CatalogsService;
-
-// Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\CatalogsServicesItemRequest;
-
-// Подключаем трейт записи и обновления категорий
-use App\Http\Controllers\Traits\CategoryControllerTrait;
-
-// Транслитерация
-use Illuminate\Support\Str;
+use App\Http\Requests\CatalogsServicesItemStoreRequest;
 
 class CatalogsServicesItemController extends Controller
 {
@@ -30,9 +21,6 @@ class CatalogsServicesItemController extends Controller
         $this->entity_dependence = false;
         $this->type = 'edit';
     }
-
-    // Используем трейт записи и обновления категорий
-    use CategoryControllerTrait;
 
     public function index(Request $request, $catalog_id)
     {
@@ -111,20 +99,15 @@ class CatalogsServicesItemController extends Controller
         ]);
     }
 
-    public function store(CatalogsServicesItemRequest $request, $catalog_id)
+    public function store(CatalogsServicesItemStoreRequest $request, $catalog_id)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Заполнение и проверка основных полей в трейте
-        $catalogs_services_item = $this->storeCategory($request);
-
-        $catalogs_services_item->catalogs_service_id = $catalog_id;
-
-        // $catalogs_services_item->tag = empty($request->tag) ? Str::slug($request->name) : $request->tag;
-
-        $catalogs_services_item->save();
+        $data = $request->input();
+        $data['catalog_services_id'] = $catalog_id;
+        $catalogs_services_item = (new $this->class())->create($data);
 
         if ($catalogs_services_item) {
 
@@ -166,7 +149,7 @@ class CatalogsServicesItemController extends Controller
         ]);
     }
 
-    public function update(CatalogsServicesItemRequest $request, $catalog_id, $id)
+    public function update(CatalogsServicesItemStoreRequest $request, $catalog_id, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -179,15 +162,10 @@ class CatalogsServicesItemController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_services_item);
 
-        // Заполнение и проверка основных полей в трейте
-        $catalogs_services_item = $this->updateCategory($request, $catalogs_services_item);
+        $data = $request->input();
+        $result = $catalogs_services_item->update($data);
 
-        // $catalogs_services_item->tag = empty($request->tag) ? Str::slug($request->name) : $request->tag;
-
-        $catalogs_services_item->save();
-        // dd($catalogs_services_item);
-
-        if ($catalogs_services_item) {
+        if ($result) {
 
             // Переадресовываем на index
             return redirect()->route('catalogs_services_items.index', ['catalog_id' => $catalog_id, 'id' => $catalogs_services_item->id]);

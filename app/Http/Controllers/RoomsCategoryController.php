@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Http\Requests\RoomsCategoryUpdateRequest;
+use App\Http\Requests\RoomsCategoryStoreRequest;
 use App\RoomsCategory;
-
-// Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\RoomsCategoryRequest;
 
-// Подключаем трейт записи и обновления категорий
-use App\Http\Controllers\Traits\CategoryControllerTrait;
 
 class RoomsCategoryController extends Controller
 {
@@ -26,9 +22,6 @@ class RoomsCategoryController extends Controller
         $this->entity_dependence = false;
         $this->type = 'edit';
     }
-
-    // Используем трейт записи и обновления категорий
-    use CategoryControllerTrait;
 
     public function index(Request $request)
     {
@@ -103,16 +96,14 @@ class RoomsCategoryController extends Controller
         ]);
     }
 
-    public function store(RoomsCategoryRequest $request)
+    public function store(RoomsCategoryStoreRequest $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Заполнение и проверка основных полей в трейте
-        $rooms_category = $this->storeCategory($request);
-
-        $rooms_category->save();
+        $data = $request->input();
+        $rooms_category = (new $this->class())->create($data);
 
         if ($rooms_category) {
             // Переадресовываем на index
@@ -168,7 +159,7 @@ class RoomsCategoryController extends Controller
         ]);
     }
 
-    public function update(RoomsCategoryRequest $request, $id)
+    public function update(RoomsCategoryUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -180,12 +171,10 @@ class RoomsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $rooms_category);
 
-        // Заполнение и проверка основных полей в трейте
-        $rooms_category = $this->updateCategory($request, $rooms_category);
+        $data = $request->input();
+        $result = $rooms_category->update($data);
 
-        $rooms_category->save();
-
-        if ($rooms_category) {
+        if ($result) {
 
             // Производители
             $rooms_category->manufacturers()->sync($request->manufacturers);
