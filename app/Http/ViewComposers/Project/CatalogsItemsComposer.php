@@ -9,7 +9,7 @@ class CatalogsItemsComposer
 	public function compose(View $view)
 	{
 
-        $catalogs_items = $view->catalogs_items->where('display', 1);
+        $catalogs_items = $view->catalogs_items->where('display', true);
         // dd($catalogs_items);
 
         $catalogs_items = buildTree($catalogs_items);

@@ -12,7 +12,7 @@ trait SystemItemTraitScopes
         // $dependence = $answer['dependence'];
         // $filials = $answer['filials'];
 
-        $system_item = $answer['system_item']['result'];
+        $system = $answer['system']['result'];
         $user_status = $answer['user_status'];
         $company_id = $answer['company_id'];
         $entity_name = $answer['entity_name'];
@@ -29,9 +29,9 @@ trait SystemItemTraitScopes
 
                     // Если бог смотрит на список сайтов, то показываем только системные сайт CRM System
                     if($entity_name == 'sites'){
-                        return $query->Where('id', 1);
+                        return $query->where('id', 1);
                     } else {
-                        return $query->WhereNull('system_item')->orWhere('system_item', 1);
+                        return $query->where('system', false)->orWhere('system', true);
                     };
 
 
@@ -41,8 +41,8 @@ trait SystemItemTraitScopes
                     return $query
                     ->Where(function ($query) {$query
                     ->Where('company_id', null)            
-                    ->orWhere('system_item', 1)
-                    ->orWhereNull('system_item')
+                    ->orWhere('system', true)
+                    ->orWhere('system', false)
                     ;});
 
                 };
@@ -58,7 +58,7 @@ trait SystemItemTraitScopes
             };
 
 
-            if(($user_status == null)&&($system_item == true)){
+            if(($user_status == null)&&($system == true)){
 
 
 
@@ -66,22 +66,22 @@ trait SystemItemTraitScopes
                 return $query
                 ->Where(function ($query) use ($company_id) {$query
                 ->Where('company_id', $company_id)  
-                ->orWhere('system_item', 1)
-                ->orWhereNull('system_item')
+                ->orWhere('system', true)
+                ->orWhere('system', false)
                 ;});
 
             };
 
 
 
-            if(($user_status == null)&&($system_item == false)){
+            if(($user_status == null)&&($system == false)){
 
 
                 // Если нет права смотреть системные
                 return $query
                 ->Where(function ($query) use ($company_id) {$query
                 ->Where('company_id', $company_id)   
-                ->Where('system_item', null)
+                ->where('system', false)
                 ;});
 
             };

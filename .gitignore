@@ -10,6 +10,7 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 composer.lock
+package-lock.json
 .env
 .phpunit.result.cache
 
@@ -18,10 +19,3 @@ _ide_helper.php
 
 /storage
 /public_html/storage
-
-/app/Http/Controllers/Project
-/app/Providers/ComposerProjectServiceProvider.php
-/app/Http/ViewComposers/Project
-/public_html/project
-/resources/views/project
-/routes/project.php

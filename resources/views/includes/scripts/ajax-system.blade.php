@@ -23,7 +23,7 @@
         action = item.hasClass("icon-system-unlock") ? 'lock' : 'unlock';
 
         // Ajax
-        $.post('/admin/system_item', {
+        $.post('/admin/system', {
             id: id,
             action: action,
             entity_alias: entity_alias

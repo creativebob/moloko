@@ -23,21 +23,21 @@
 
     @switch($item)
 
-    @case($item->system_item == 1 && $item->company_id == null)
+    @case($item->system == 1 && $item->company_id == null)
     <div class="icon-system-programm {{ $color }} sprite" data-open="item-system" data-nested="{{ $nested_count }}"></div>
     @break
 
-    @case($item->system_item == null && $item->company_id == 1)
+    @case($item->system == null && $item->company_id == 1)
     <div class="icon-system-unlock {{ $color }} sprite" data-open="item-system" data-nested="{{ $nested_count }}"></div>
     @break
 
-    @case($item->system_item == 1 && $item->company_id == 1)
+    @case($item->system == 1 && $item->company_id == 1)
     <div class="icon-system-lock {{ $color }} sprite" data-open="item-system" data-nested="{{ $nested_count }}"></div>
     @break
     @endswitch
     @endcan
 
-    @if ($item->system_item == null && $item->company_id == null)
+    @if ($item->system == null && $item->company_id == null)
     <div class="icon-system-template {{ $color }} sprite" data-open="item-system" data-nested="{{ $nested_count }}"></div>
     @endif
 </div>

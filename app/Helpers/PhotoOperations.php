@@ -366,9 +366,9 @@ function getPhotoPath($item, $size = 'medium') {
                 $sex = 'man';
             }
 
-            return '/crm/img/plug/avatar_small_' . $sex . '.png';
+            return '/img/system/plug/avatar_small_' . $sex . '.png';
         } else {
-            return '/crm/img/plug/' . $item->getTable() . '_small_default_color.jpg';
+            return '/img/system/plug/' . $item->getTable() . '_small_default_color.jpg';
         }
     }
 }
@@ -384,7 +384,7 @@ function getPhotoPathPlugEntity($item, $size = 'medium') {
 
         } else {
 
-            return '/crm/img/plug/' . $item->getTable() . '_small_default_color.jpg';
+            return '/img/system/plug/' . $item->getTable() . '_small_default_color.jpg';
         }
     }
 
@@ -396,7 +396,7 @@ function getPhotoPathPlugEntity($item, $size = 'medium') {
 
         } else {
 
-            return '/crm/img/plug/' . $item->getTable() . '_small_default_color.jpg';
+            return '/img/system/plug/' . $item->getTable() . '_small_default_color.jpg';
         }
     }
 

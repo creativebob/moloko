@@ -68,7 +68,7 @@
           @include('includes.control.table-td', ['item' => $challenge])
 
           <td class="td-delete">
-            @if (($challenge->system_item !== 1) && ($challenge->company_id !== null))
+            @if (($challenge->system !== 1) && ($challenge->company_id !== null))
             @can('delete', $challenge)
             <a class="icon-delete sprite" data-open="item-delete"></a>
             @endcan

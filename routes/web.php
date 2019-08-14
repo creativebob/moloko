@@ -188,7 +188,7 @@ Route::get('/vk', 'VkController@market')->middleware('auth');
 // Сортировка
 Route::post('/sort/{entity_alias}', 'AppController@ajax_sort')->middleware('auth');
 // Системная запись
-Route::post('/system_item', 'AppController@ajax_system_item')->middleware('auth');
+Route::post('/system', 'AppController@ajax_system')->middleware('auth');
 // Отображение на сайте
 Route::post('/display', 'AppController@ajax_display')->middleware('auth');
 // Отображение на сайте
@@ -294,6 +294,8 @@ Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middlew
 Route::post('/ajax_get_category_raw', 'RawController@ajax_get_category_raw')->middleware('auth');
 Route::post('/ajax_get_raw', 'RawController@ajax_get_raw')->middleware('auth');
 
+Route::any('/ajax_get_container', 'ContainerController@ajax_get_container')->middleware('auth');
+
 Route::any('/ajax_get_goods', 'GoodsController@ajax_get_goods')->middleware('auth');
 
 Route::post('/ajax_get_category_workflow', 'WorkflowController@ajax_get_category_workflow')->middleware('auth');
@@ -341,6 +343,28 @@ Route::any('/raw/add_photo', 'RawController@add_photo')->middleware('auth');
 Route::post('/raw/photos', 'RawController@photos')->middleware('auth');
 
 Route::any('/raws_create_mode', 'RawController@ajax_change_create_mode')->middleware('auth');
+
+// ------------------------------------- Категории упаковок -------------------------------------------
+
+// Текущая добавленная/удаленная категория
+Route::any('/containers_categories', 'ContainersCategoryController@index')->middleware('auth');
+Route::match(['get', 'post'], '/containers_categories/{id}/edit', 'ContainersCategoryController@edit')->middleware('auth');
+// Основные методы
+Route::resource('/containers_categories', 'ContainersCategoryController')->middleware('auth');
+
+// ---------------------------------- Упаковки (Артикулы) -------------------------------------------
+
+// Основные методы
+Route::resource('/containers', 'ContainerController');
+// Route::get('/containers/search/{text_fragment}', 'СontainerController@search')->middleware('auth');
+Route::post('/containers/search/{text_fragment}', 'СontainerController@search')->middleware('auth');
+// Архивация
+Route::post('/containers/archive/{id}', 'СontainerController@archive')->middleware('auth');
+// Фото
+Route::any('/container/add_photo', 'СontainerController@add_photo')->middleware('auth');
+Route::post('/container/photos', 'СontainerController@photos')->middleware('auth');
+
+Route::any('/containers_create_mode', 'СontainerController@ajax_change_create_mode')->middleware('auth');
 
 // ------------------------------------- Категории оборудования -------------------------------------------
 
@@ -1046,6 +1070,7 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
 
 
 Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');
+Route::any('catalogs_goods_items/prices', 'CatalogsGoodsItemController@get_prices');
 
 
 // Route::any('archive_prices_service', 'PricesServiceController@ajax_archive');

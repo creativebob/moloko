@@ -15,7 +15,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     protected $namespace = 'App\Http\Controllers';
-    protected $site_namespace = 'App\Http\Controllers\Project';
+    protected $project_namespace = 'App\Http\Controllers\Project';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -40,7 +40,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapWebRoutes();
 
-        $this->mapWebSiteRoutes();
+        $this->mapWebProjectRoutes();
 
         //
     }
@@ -55,9 +55,9 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes()
     {
         Route::prefix('admin')
-             ->middleware('web')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/web.php'));
+            ->middleware('web')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/web.php'));
     }
 
 
@@ -68,13 +68,12 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function mapWebSiteRoutes()
+    protected function mapWebProjectRoutes()
     {
         Route::middleware('web')
-             ->namespace($this->site_namespace)
-             ->group(base_path('routes/project.php'));
+            ->namespace($this->project_namespace)
+            ->group(base_path('routes/project.php'));
     }
-
 
     /**
      * Define the "api" routes for the application.
@@ -86,8 +85,8 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::prefix('api')
-             ->middleware('api')
-             ->namespace($this->namespace)
-             ->group(base_path('routes/api.php'));
+            ->middleware('api')
+            ->namespace($this->namespace)
+            ->group(base_path('routes/api.php'));
     }
 }

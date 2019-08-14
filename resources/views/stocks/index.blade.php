@@ -83,7 +83,7 @@
                         {{ $stock->company->name }}
                         @else
 
-                        @if($stock->system_item == null)
+                        @if($stock->system == null)
                         Шаблон
                         @else
                         Системная
@@ -98,7 +98,7 @@
                     @include('includes.control.table-td', ['item' => $stock])
 
                     <td class="td-delete">
-                        @if (($stock->system_item != 1) && ($stock->photos_count == 0))
+                        @if (($stock->system != 1) && ($stock->photos_count == 0))
                         @can('delete', $stock)
                         <a class="icon-delete sprite" data-open="item-delete"></a>
                         @endcan

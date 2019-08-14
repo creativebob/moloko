@@ -205,15 +205,28 @@
     <div class="grid-x tabs-right">
         <div class="small-12 cell">
             <ul class="tabs-list" data-tabs id="tabs-leads">
-                <li class="tabs-title is-active"><a href="#content-panel-notes" aria-selected="true">События</a></li>
-                <li class="tabs-title"><a href="#content-panel-catalog-services" aria-selected="true">Услуги</a></li>
+                <li class="tabs-title is-active">
+                    <a href="#content-panel-notes" aria-selected="true">События</a>
+                </li>
+
+                <li class="tabs-title">
+                    <a data-tabs-target="content-panel-catalog-goods" href="#content-panel-catalog-goods">Товары</a>
+                </li>
+                <li class="tabs-title">
+                    <a data-tabs-target="content-panel-catalog-services" href="#content-panel-catalog-services">Услуги</a>
+                </li>
+
                 {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
 
                 @can ('index', App\Claim::class)
-                <li class="tabs-title"><a href="#content-panel-claims" aria-selected="true">Рекламации</a></li>
+                <li class="tabs-title">
+                    <a data-tabs-target="content-panel-claims" href="#content-panel-claims">Рекламации</a>
+                </li>
                 @endcan
                 {{-- <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li> --}}
-                <li class="tabs-title" id="tab-attribution"><a href="#content-panel-attribution" aria-selected="true">Аттрибуция</a></li>
+                <li class="tabs-title" id="tab-attribution">
+                    <a data-tabs-target="content-panel-attribution" href="#content-panel-attribution">Аттрибуция</a>
+                </li>
             </ul>
         </div>
 
@@ -248,7 +261,60 @@
                     </div>
                 </div>
 
-                {{-- КАТАЛОГ ПРОДУКЦИИ --}}
+                {{-- КАТАЛОГ ТОВАРОВ --}}
+                <div class="tabs-panel" id="content-panel-catalog-goods">
+                    <div class="grid-x grid-padding-x">
+
+                        {{-- ВЫВОД ПУНКТОВ КАТАЛОГА --}}
+                        <div class="shrink cell catalog-bar">
+                            <div class="grid-x grid-padding-x">
+
+                                {{-- ПОИСК ПО ТОВАРАМ --}}
+                                <div class="small-12 cell search-in-catalog-panel">
+                                    <label class="input-icon">
+                                        <input type="text" name="search" placeholder="Поиск" maxlength="25" autocomplete="off">
+                                        <div class="sprite-input-left icon-search"></div>
+                                        <span class="form-error">Обязательно нужно логиниться!</span>
+                                    </label>
+                                </div>
+
+                                {{-- СПИСОК ПУНКТОВ КАТАЛОГА --}}
+
+                                <div class="small-12 cell search-in-catalog-panel">
+
+                                    @isset ($cur_catalog_goods)
+                                        @include('leads.catalogs.catalogs_items', ['catalog' => $cur_catalog_goods, 'type' => 'goods'])
+                                    @endisset
+
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- ВЫВОД ПРОЦЕССОВ (ТОВАРОВ) --}}
+                        <div class="auto cell">
+                            <div class="grid-x grid-padding-x">
+
+                                {{-- ПАНЕЛЬ УПРАВЛЕНИЯ ОТОБРАЖЕНИЕМ --}}
+                                <div class="small-12 cell view-settings-panel">
+                                    <div class="one-icon-16 icon-view-list icon-button active" id="toggler-view-list"></div>
+                                    <div class="one-icon-16 icon-view-block icon-button" id="toggler-view-block"></div>
+                                    <div class="one-icon-16 icon-view-card icon-button" id="toggler-view-card"></div>
+                                    <div class="one-icon-16 icon-view-setting icon-button" id="open-setting-view"></div>
+                                </div>
+
+                                {{-- ВЫВОД ТОВАРОВ --}}
+                                <ul class="small-12 cell products-list view-list" id="list-prices_goods">
+
+
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{-- КОНЕЦ КАТАЛОГ ТОВАРОВ --}}
+
+                {{-- КАТАЛОГ УСЛУГ --}}
                 <div class="tabs-panel" id="content-panel-catalog-services">
                     <div class="grid-x grid-padding-x">
 
@@ -270,7 +336,7 @@
                                 <div class="small-12 cell search-in-catalog-panel">
 
                                     @isset ($catalog_service)
-                                    @include('leads.catalogs.catalogs_items', ['catalog' => $catalog_service])
+                                    @include('leads.catalogs.catalogs_items', ['catalog' => $catalog_service, 'type' => 'services'])
                                     @endisset
 
                                 </div>
@@ -299,7 +365,7 @@
                         </div>
                     </div>
                 </div>
-                {{-- КОНЕЦ КАТАЛОГ ПРОДУКЦИИ --}}
+                {{-- КОНЕЦ КАТАЛОГ УСЛУГ --}}
 
 
                     {{-- ДОКУМЕНТЫ

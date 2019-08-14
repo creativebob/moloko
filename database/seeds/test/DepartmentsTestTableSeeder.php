@@ -20,7 +20,7 @@ class DepartmentsTestTableSeeder extends Seeder
 		        'filial_status' => 1,
                 'location_id' => 3,
 		        'company_id' => 1,
-                'display' => 1,
+                'display' => true,
         	],
             [
                 'name' => 'Отдел продаж',
@@ -30,7 +30,7 @@ class DepartmentsTestTableSeeder extends Seeder
                 'filial_status' => null,
                 'location_id' => null,
                 'company_id' => 1,
-                'display' => null,
+                'display' => false,
             ],
             [
                 'name' => 'Отдел маркетинга и автоматизации',
@@ -40,7 +40,7 @@ class DepartmentsTestTableSeeder extends Seeder
                 'filial_status' => null,
                 'location_id' => null,
                 'company_id' => 1,
-                'display' => null,
+                'display' => false,
             ],
             [
                 'name' => 'Улан-Удэнский филиал',
@@ -50,7 +50,7 @@ class DepartmentsTestTableSeeder extends Seeder
                 'filial_status' => 1,
                 'location_id' => 4,
                 'company_id' => 1,
-                'display' => 1,
+                'display' => true,
             ],
             [
                 'name' => 'Отдел продаж',
@@ -60,7 +60,7 @@ class DepartmentsTestTableSeeder extends Seeder
                 'filial_status' => null,
                 'location_id' => null,
                 'company_id' => 1,
-                'display' => null,
+                'display' => false,
             ],
         ]);
     }

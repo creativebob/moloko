@@ -1,0 +1,11 @@
+@charset 'utf-8';
+
+// Сброс настроек compass
+@import "../reset";
+
+// ------------------------- Foundation -------------------------------------
+// Variables
+@import 'foundation/settings';
+
+// Bootstrap
+@import 'foundation/foundation';

@@ -18,7 +18,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => null, 
                 'category_status' => 1,               
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
             // 2
@@ -30,7 +30,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => null,
                 'category_status' => 1,    
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
             // 3
@@ -42,7 +42,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => null,
                 'category_status' => 1,                 
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
             // 4
@@ -54,7 +54,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => null,
                 'category_status' => 1,                
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
             // 5
@@ -66,7 +66,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => null, 
                 'category_status' => 1,               
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
             // 6
@@ -78,7 +78,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => null, 
                 'category_status' => 1,                
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
             // 7
@@ -90,7 +90,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => null,
                 'category_status' => 1,                 
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
             // 8
@@ -102,7 +102,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => null, 
                 'category_status' => 1,               
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
             // 9
@@ -114,7 +114,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => 5, 
                 'category_status' => null,                 
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
             // 10
@@ -126,7 +126,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => 5,   
                 'category_status' => null,             
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
             // 11
@@ -138,7 +138,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => 5,    
                 'category_status' => null,     
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
             // 12
@@ -150,7 +150,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => 5,     
                 'category_status' => null,      
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
             // 13
@@ -162,7 +162,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => 5,   
                 'category_status' => null,            
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
             // 14
@@ -174,7 +174,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => 3,   
                 'category_status' => null,            
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
             // 15
@@ -186,7 +186,7 @@ class ServicesCategoriesTestTableSeeder extends Seeder
                 'category_id' => 3,   
                 'category_status' => null,            
                 'author_id' => 1, 
-                'display' => 1, 
+                'display' => true,
             ],
 
         ]);

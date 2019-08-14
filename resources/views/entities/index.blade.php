@@ -54,7 +54,7 @@
           <td class="td-model">{{ $entity->model }}</td>
           <td class="td-alias">{{ $entity->alias }}</td>
           <td class="td-delete">
-          @if ($entity->system_item !== 1)
+          @if ($entity->system !== 1)
             @can('delete', $entity)
             <a class="icon-delete sprite" data-open="item-delete"></a>
             @endcan

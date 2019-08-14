@@ -29,7 +29,7 @@ class StafferRequest extends FormRequest
             'filial_id' => 'integer', 
 
             'moderation' => 'integer|max:1|nullable',
-            'system_item' => 'integer|max:1|nullable', 
+            'system' => 'integer|max:1|nullable', 
         ];
     }
 }

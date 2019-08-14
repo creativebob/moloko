@@ -15,6 +15,7 @@ use App\ServicesCategory;
 use App\RawsCategory;
 
 use App\CatalogsService;
+use App\CatalogsGoods;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -260,9 +261,25 @@ class LeadController extends Controller
         $catalog_service = $catalogs_services->first();
         // dd($catalog_service);
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_cg = operator_right('catalogs_goods', false, getmethod('index'));
+
+        $catalogs_goods = CatalogsGoods::with('items.childs')
+            ->moderatorLimit($answer_cg)
+            ->companiesLimit($answer_cg)
+            ->authors($answer_cg)
+            ->whereHas('sites', function ($q) {
+                $q->whereId(1);
+            })
+            ->get();
+//         dd($catalogs_goods);
+
+        $cur_catalog_goods = $catalogs_goods->first();
+//         dd($cur_catalog_goods);
+
         $filial_id = $request->user()->filial_id;
 
-        return view('leads.edit', compact('lead', 'page_info', 'list_challenges', 'lead_methods_list', 'choices', 'catalog_service', 'filial_id'));
+        return view('leads.edit', compact('lead', 'page_info', 'list_challenges', 'lead_methods_list', 'choices', 'catalog_service', 'cur_catalog_goods', 'filial_id'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)

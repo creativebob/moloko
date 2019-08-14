@@ -34,8 +34,8 @@ trait ArticleTrait
                 'unit_id' => $request->unit_id,
                 'units_category_id' => $request->units_category_id,
             ], [
-                'system_item' => $request->system_item ?? null,
-                'display' => 1,
+                'system' => $request->system ?? null,
+                'display' => true,
                 'company_id' => $company_id,
                 'author_id' => $user_id
             ]);
@@ -50,8 +50,8 @@ trait ArticleTrait
                 'unit_id' => $request->unit_id,
                 'units_category_id' => $request->units_category_id,
             ], [
-                'system_item' => $request->system_item ?? null,
-                'display' => 1,
+                'system' => $request->system ?? null,
+                'display' => true,
                 'company_id' => $company_id,
                 'author_id' => $user_id
             ]);
@@ -184,6 +184,8 @@ trait ArticleTrait
                         } else {
                             $this->setRaws($request, $article);
                         }
+
+                        $this->setContainers($request, $article);
                     }
 
                     // Устаревший код
@@ -226,7 +228,7 @@ trait ArticleTrait
 
     protected function setRaws($request, $article)
     {
-        // Запись состава только для черновика
+        // Запись состава сырья только для черновика
         if ($article->draft) {
             $article->raws()->sync($request->raws);
         }
@@ -234,9 +236,17 @@ trait ArticleTrait
 
     protected function setGoods($request, $article)
     {
-        // Запись состава только для черновика
+        // Запись состава товаров только для черновика
         if ($article->draft) {
             $article->goods()->sync($request->goods);
+        }
+    }
+
+    protected function setContainers($request, $article)
+    {
+        // Запись состава упаковок только для черновика
+        if ($article->draft) {
+            $article->containers()->sync($request->containers);
         }
     }
 

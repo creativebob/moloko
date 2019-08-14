@@ -21,7 +21,7 @@ class CreateRolesTable extends Migration
             $table->bigInteger('company_id')->nullable()->unsigned()->comment('ID компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->integer('display')->nullable()->unsigned()->comment('Отображение на сайте');
+            $table->boolean('display')->default(0)->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 
@@ -29,9 +29,9 @@ class CreateRolesTable extends Migration
             $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
-            $table->integer('system_item')->nullable()->unsigned()->comment('Флаг системной записи: 1 или null');
+            $table->boolean('system')->default(0)->comment('Системная запись');
             $table->timestamps();
-            $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
+            $table->boolean('moderation')->default(0)->comment('Модерация');
             $table->softDeletes();
         });
     }

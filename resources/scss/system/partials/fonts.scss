@@ -1,0 +1,190 @@
+// PFDinDisplayPro
+//@include font-face("PFDinDisplayPro-Light", font-files(
+//    "./fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf"
+//    )
+//);
+@font-face{
+  font-family: 'PFDinDisplayPro-Light';
+  src: url('./fonts/DinDisplayPro/PFDinDisplayPro-Light.ttf') format('truetype');
+
+  //font-style: normal;
+  //font-weight: 500;
+};
+
+//@include font-face("PFDinDisplayPro-Med", font-files(
+//  "./fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf"
+//  )
+//);
+@font-face{
+  font-family: 'PFDinDisplayPro-Med';
+  src: url('./fonts/DinDisplayPro/PFDinDisplayPro-Med.ttf') format('truetype');
+
+  //font-style: normal;
+  //font-weight: 500;
+};
+
+//@include font-face("PFDinDisplayPro-Reg", font-files(
+//  "./fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf"
+//  )
+//);
+@font-face{
+  font-family: 'PFDinDisplayPro-Reg';
+  src: url('./fonts/DinDisplayPro/PFDinDisplayPro-Reg.ttf') format('truetype');
+
+  //font-style: normal;
+  //font-weight: 500;
+};
+
+//@include font-face("PFDinDisplayPro-Thin", font-files(
+//  "./fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf"
+//  )
+//);
+@font-face{
+  font-family: 'PFDinDisplayPro-Thin';
+  src: url('./fonts/DinDisplayPro/PFDinDisplayPro-Thin.ttf') format('truetype');
+
+  //font-style: normal;
+  //font-weight: 500;
+};
+
+
+$PFDDPL: "PFDinDisplayPro-Light";
+$PFDDPM: "PFDinDisplayPro-Med";
+$PFDDPR: "PFDinDisplayPro-Reg";
+$PFDDPT: "PFDinDisplayPro-Thin";
+
+// PFDinTextPro
+//@include font-face("PFDinTextPro-Regular", font-files(
+//  "./fonts/DinTextPro/PFDinTextPro-Regular.ttf"
+//  )
+//);
+@font-face{
+  font-family: 'PFDinTextPro-Regular';
+  src: url('./fonts/DinTextPro/PFDinTextPro-Regular.ttf') format('truetype');
+
+  //font-style: normal;
+  //font-weight: 500;
+};
+
+$PFDTPR: "PFDinTextPro-Regular";
+
+// DinTextCondensedPro
+//@include font-face("PFDinTextCondPro-Regular", font-files(
+//  "./fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf"
+//  )
+//);
+@font-face{
+  font-family: 'PFDinTextCondPro-Regular';
+  src: url('./fonts/DinTextCondensedPro/PFDinTextCondPro-Regular.ttf') format('truetype');
+
+  //font-style: normal;
+  //font-weight: 500;
+};
+
+$PFDTCPR: "PFDinTextCondPro-Regular";
+
+// SegoeUI
+//@include font-face("SegoeUILight", font-files(
+//                "./fonts/SegoeUI/SegoeUILight/SegoeUILight.woff",
+//                "./fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf"
+//),
+//        "./fonts/SegoeUI/SegoeUILight//SegoeUILight.eot" /* относительный путь к .eot файлу для IE */
+//);
+@font-face{
+  font-family: 'SegoeUILight';
+  src: url('./fonts/SegoeUI/SegoeUILight/SegoeUILight.eot');
+  src: url('./fonts/SegoeUI/SegoeUILight/SegoeUILight.eot?#iefix') format('embedded-opentype'),
+  url('./fonts/SegoeUI/SegoeUILight/SegoeUILight.woff') format('woff'),
+  url('./fonts/SegoeUI/SegoeUILight/SegoeUILight.ttf') format('truetype');
+
+  //font-style: normal;
+  //font-weight: 200;
+};
+
+//@include font-face("SegoeUIRegular", font-files(
+//                "./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.woff",
+//                "./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf"
+//),
+//        "./fonts/SegoeUI/SegoeUIRegular//SegoeUIRegular.eot" /* относительный путь к .eot файлу для IE */
+//);
+@font-face{
+  font-family: 'SegoeUIRegular';
+  src: url('./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.eot');
+  src: url('./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.eot?#iefix') format('embedded-opentype'),
+  url('./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.woff') format('woff'),
+  url('./fonts/SegoeUI/SegoeUIRegular/SegoeUIRegular.ttf') format('truetype');
+
+  //font-style: normal;
+  //font-weight: 400;
+};
+
+//@include font-face("SegoeUISemiBold", font-files(
+//                "./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff",
+//                "./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf"
+//),
+//        "./fonts/SegoeUI/SegoeUISemiBold//SegoeUISemiBold.eot" /* относительный путь к .eot файлу для IE */
+//);
+@font-face{
+  font-family: 'SegoeUISemiBold';
+  src: url('./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.eot?#iefix') format('embedded-opentype'),
+  url('./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.woff') format('woff'),
+  url('./fonts/SegoeUI/SegoeUISemiBold/SegoeUISemiBold.ttf') format('truetype');
+
+  //font-style: normal;
+  //font-weight: 500;
+};
+
+//@include font-face("SegoeUIBold", font-files(
+//  "./fonts/SegoeUI/SegoeUIBold/SegoeUIBold.woff",
+//  "./fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf"
+//  ),
+//"./fonts/SegoeUI/SegoeUIBold//SegoeUIBold.eot" /* относительный путь к .eot файлу для IE */
+//);
+@font-face{
+  font-family: 'SegoeUIBold';
+  src: url('./fonts/SegoeUI/SegoeUIBold/SegoeUIBold.eot?#iefix') format('embedded-opentype'),
+  url('./fonts/SegoeUI/SegoeUIBold/SegoeUIBold.woff') format('woff'),
+  url('./fonts/SegoeUI/SegoeUIBold/SegoeUIBold.ttf') format('truetype');
+
+  //font-style: normal;
+  //font-weight: 500;
+};
+
+//@include font-face("SegoeUIItalic", font-files(
+//  "./fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.woff",
+//  "./fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf"
+//  ),
+//"./fonts/SegoeUI/SegoeUIItalic//SegoeUIItalic.eot" /* относительный путь к .eot файлу для IE */
+//);
+@font-face{
+  font-family: 'SegoeUIItalic';
+  src: url('./fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.eot?#iefix') format('embedded-opentype'),
+  url('./fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.woff') format('woff'),
+  url('./fonts/SegoeUI/SegoeUIItalic/SegoeUIItalic.ttf') format('truetype');
+
+  //font-style: normal;
+  //font-weight: 500;
+};
+
+//@include font-face("SegoeUISemiLight", font-files(
+//  "./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf"
+//  )
+//);
+@font-face{
+  font-family: 'SegoeUISemiLight';
+  src: url('./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf') format('truetype');
+
+  //font-style: normal;
+  //font-weight: 500;
+};
+
+
+
+$SUIB: "SegoeUIBold";
+$SUII: "SegoeUIItalic";
+$SUIL: "SegoeUILight";
+$SUISL: "SegoeUISemiLight";
+$SUIR: "SegoeUIRegular";
+$SUISB: "SegoeUISemiBold";
+
+$calibri: "calibri";

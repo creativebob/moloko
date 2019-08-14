@@ -65,7 +65,7 @@ class EquipmentController extends Controller
             'author_id',
             'company_id',
             'display',
-            'system_item'
+            'system'
         ];
 
         $equipments = Equipment::with([
@@ -295,8 +295,8 @@ class EquipmentController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $equipment);
 
-            $equipment->display = $request->display;
-            $equipment->system_item = $request->system_item;
+            $equipment->display = $request->has('display');
+            $equipment->system = $request->has('system');
             $equipment->save();
 
 

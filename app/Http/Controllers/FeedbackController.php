@@ -99,7 +99,7 @@ class FeedbackController extends Controller
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if($answer['automoderate'] == false){
-            $feedback->moderation = 1;
+            $feedback->moderation = true;
         };
 
         $feedback->save();
@@ -171,7 +171,7 @@ class FeedbackController extends Controller
         $feedback->job = $request->job;
         $feedback->body = $request->body;
 
-        $feedback->display = $request->display;
+        $feedback->display = $request->has('display');
 
         $feedback->call_date = outPickMeUp($request->call_date);
 
@@ -222,7 +222,7 @@ class FeedbackController extends Controller
     }
 
     // Системная запись
-    public function ajax_system_item(Request $request)
+    public function ajax_system(Request $request)
     {
 
         if ($request->action == 'lock') {
@@ -231,7 +231,7 @@ class FeedbackController extends Controller
             $system = null;
         }
 
-        $item = Feedback::where('id', $request->id)->update(['system_item' => $system]);
+        $item = Feedback::where('id', $request->id)->update(['system' => $system]);
 
         if ($item) {
 

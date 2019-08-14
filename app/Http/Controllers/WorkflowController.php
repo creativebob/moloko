@@ -65,7 +65,7 @@ class WorkflowController extends Controller
             'author_id',
             'company_id',
             'display',
-            'system_item'
+            'system'
         ];
 
         $workflows = Workflow::with([
@@ -302,8 +302,8 @@ class WorkflowController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $workflow);
 
-            $workflow->display = $request->display;
-            $workflow->system_item = $request->system_item;
+            $workflow->display = $request->has('display');
+            $workflow->system = $request->has('system');
             $workflow->save();
 
 

@@ -25,6 +25,7 @@ use App\CatalogsServicesItem;
 
 use App\GoodsCategory;
 use App\RawsCategory;
+use App\ContainersCategory;
 use App\RoomsCategory;
 
 use App\ServicesCategory;
@@ -42,7 +43,7 @@ class StartTableSeeder extends Seeder
     	Region::insert([
         	[
         		'name' => 'Тестовая область',
-        		'system_item' => 1,
+        		'system' => true,
         		'author_id' => 1,
         	]
         ]);
@@ -52,7 +53,7 @@ class StartTableSeeder extends Seeder
         		'name' => 'Тестовый',
         		'alias' => 'test',
         		'region_id' => 1,
-        		'system_item' => 1,
+        		'system' => true,
         		'author_id' => 1,
         	]
         ]);
@@ -89,7 +90,7 @@ class StartTableSeeder extends Seeder
         		'name' => 'Иркутский',
         		'company_id' => 1,
         		'location_id' => 1,
-                'display' => 1,
+                'display' => true,
         		'author_id' => 3
         	]
         ]);
@@ -108,13 +109,12 @@ class StartTableSeeder extends Seeder
                 'location_id' => 1,
                 'user_type' => 1,
                 'access_block' => 0,
-                'company_id' => null,
                 'filial_id' => 1,
                 'company_id' => 1,
                 'god' => null,
-                'system_item' => null,
+                'system' => false,
                 'author_id' => null,
-                'moderation' => null,
+                'moderation' => false,
                 'sex' => 1,
         	]
         ]);
@@ -162,8 +162,8 @@ class StartTableSeeder extends Seeder
                 'alias' => 'site',
 		        'company_id' => 1,
                 'author_id' => 4,
-                'system_item' => null,
-                'moderation' => null,
+                'system' => false,
+                'moderation' => false,
                 'api_token' => str_random(60),
         	],
         ]);
@@ -176,9 +176,9 @@ class StartTableSeeder extends Seeder
                 'description' => 'Первая',
                 'alias' => 'first',
                 'company_id' => 1,
-                'system_item' => null,
+                'system' => false,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
             [
                 'name' => 'Вторая',
@@ -187,9 +187,9 @@ class StartTableSeeder extends Seeder
                 'description' => 'Вторая',
                 'alias' => 'second',
                 'company_id' => 1,
-                'system_item' => null,
+                'system' => false,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
             [
                 'name' => 'Третья',
@@ -198,9 +198,9 @@ class StartTableSeeder extends Seeder
                 'description' => 'Третья',
                 'alias' => 'third',
                 'company_id' => 1,
-                'system_item' => null,
+                'system' => false,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
         ]);
 
@@ -210,7 +210,7 @@ class StartTableSeeder extends Seeder
                 'site_id' => 2,
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
                 'align_id' => 1
             ],
         ]);
@@ -221,7 +221,7 @@ class StartTableSeeder extends Seeder
                 'navigation_id' => 2,
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
                 'tag' => 'punkt-1',
                 'page_id' => Page::where(['site_id' => 2, 'alias' => 'first'])->first()->id,
             ],
@@ -230,7 +230,7 @@ class StartTableSeeder extends Seeder
                 'navigation_id' => 2,
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
                 'tag' => 'punkt-1',
                 'page_id' => Page::where(['site_id' => 2, 'alias' => 'second'])->first()->id,
             ],
@@ -239,7 +239,7 @@ class StartTableSeeder extends Seeder
                 'navigation_id' => 2,
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
                 'tag' => 'punkt-1',
                 'page_id' => Page::where(['site_id' => 2, 'alias' => 'third'])->first()->id,
             ],
@@ -252,7 +252,7 @@ class StartTableSeeder extends Seeder
                 'description' => 'Тест',
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
         ]);
 
@@ -261,7 +261,7 @@ class StartTableSeeder extends Seeder
                 'catalogs_goods_id' => 1,
                 'name' => 'Первый',
                 'company_id' => 1,
-                'display' => 1,
+                'display' => true,
                 'author_id' => 4
 
             ],
@@ -269,7 +269,7 @@ class StartTableSeeder extends Seeder
                 'catalogs_goods_id' => 1,
                 'name' => 'Второй',
                 'company_id' => 1,
-                'display' => 1,
+                'display' => true,
                 'author_id' => 4
 
             ],
@@ -277,13 +277,17 @@ class StartTableSeeder extends Seeder
                 'catalogs_goods_id' => 1,
                 'name' => 'Третий',
                 'company_id' => 1,
-                'display' => 1,
+                'display' => true,
                 'author_id' => 4
 
             ],
         ]);
 
         DB::table('catalogs_goods_site')->insert([
+            [
+                'catalogs_goods_id' => 1,
+                'site_id' => 1,
+            ],
             [
                 'catalogs_goods_id' => 1,
                 'site_id' => 2,
@@ -296,7 +300,7 @@ class StartTableSeeder extends Seeder
                 'description' => 'Тест',
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
         ]);
 
@@ -305,7 +309,7 @@ class StartTableSeeder extends Seeder
                 'catalogs_service_id' => 1,
                 'name' => 'Первый',
                 'company_id' => 1,
-                'display' => 1,
+                'display' => true,
                 'author_id' => 4
 
             ],
@@ -313,7 +317,7 @@ class StartTableSeeder extends Seeder
                 'catalogs_service_id' => 1,
                 'name' => 'Второй',
                 'company_id' => 1,
-                'display' => 1,
+                'display' => true,
                 'author_id' => 4
 
             ],
@@ -321,13 +325,17 @@ class StartTableSeeder extends Seeder
                 'catalogs_service_id' => 1,
                 'name' => 'Третий',
                 'company_id' => 1,
-                'display' => 1,
+                'display' => true,
                 'author_id' => 4
 
             ],
         ]);
 
         DB::table('catalogs_service_site')->insert([
+            [
+                'catalogs_service_id' => 1,
+                'site_id' => 1,
+            ],
             [
                 'catalogs_service_id' => 1,
                 'site_id' => 2,
@@ -339,13 +347,13 @@ class StartTableSeeder extends Seeder
                 'name' => 'Первая категория товаров',
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
             [
                 'name' => 'Вторая категория товаров',
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
         ]);
 
@@ -354,13 +362,28 @@ class StartTableSeeder extends Seeder
                 'name' => 'Первая категория сырья',
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
             [
                 'name' => 'Вторая категория сырья',
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
+            ],
+        ]);
+
+        ContainersCategory::insert([
+            [
+                'name' => 'Первая категория упаковок',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => true,
+            ],
+            [
+                'name' => 'Вторая категория упаковок',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => true,
             ],
         ]);
 
@@ -369,13 +392,13 @@ class StartTableSeeder extends Seeder
                 'name' => 'Первая категория помещений',
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
             [
                 'name' => 'Вторая категория помещений',
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
         ]);
 
@@ -384,26 +407,26 @@ class StartTableSeeder extends Seeder
                 'name' => 'Первая категория услуг',
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
             [
                 'name' => 'Вторая категория услуг',
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
 
             [
                 'name' => 'Первая общая категория услуг',
                 'company_id' => null,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
             [
                 'name' => 'Вторая общая категория услуг',
                 'company_id' => null,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
         ]);
 
@@ -412,13 +435,13 @@ class StartTableSeeder extends Seeder
                 'name' => 'Первая категория рабочих процессов',
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
             [
                 'name' => 'Вторая категория рабочих процессов',
                 'company_id' => 1,
                 'author_id' => 4,
-                'display' => 1,
+                'display' => true,
             ],
         ]);
 

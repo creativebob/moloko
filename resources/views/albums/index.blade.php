@@ -93,7 +93,7 @@
                     {{ $album->company->name }}
                     @else
 
-                    @if($album->system_item == null)
+                    @if($album->system == null)
                     Шаблон
                     @else
                     Системная
@@ -107,7 +107,7 @@
                 @include('includes.control.table-td', ['item' => $album])
 
                 <td class="td-delete">
-                    @if (($album->system_item != 1) && ($album->photos_count == 0))
+                    @if (($album->system != 1) && ($album->photos_count == 0))
                     @can('delete', $album)
                     <a class="icon-delete sprite" data-open="item-delete"></a>
                     @endcan

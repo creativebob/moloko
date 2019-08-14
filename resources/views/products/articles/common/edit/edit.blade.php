@@ -1,10 +1,11 @@
 	@extends('layouts.app')
 
 	@section('inhead')
-	@include('includes.scripts.dropzone-inhead')
+{{--	@include('includes.scripts.dropzone-inhead')--}}
 	@include('includes.scripts.fancybox-inhead')
 	@include('includes.scripts.sortable-inhead')
 	@include('products.articles.goods.raws.class')
+@include('products.articles.goods.containers.class')
 
 	@if ($entity == 'goods')
 	@include('includes.scripts.chosen-inhead')
@@ -153,7 +154,7 @@
 	                        						<div class="grid-x grid-margin-x">
 														<div class="small-12 medium-6 cell">
 															@include('includes.selects.units_categories', [
-																'default' => 6, 
+																'default' => 6,
 																'data' => $item->price_unit_category_id,
 																'type' => 'article',
 																'name' => 'price_unit_category_id',
@@ -314,7 +315,7 @@
 	                                </div>
 	                            </div>
 	                        </fieldset>
-							
+
 							@if(isset($raw))
 		                        <fieldset class="fieldset-access">
 		                            <legend>Умолчания для сырья</legend>
@@ -450,22 +451,23 @@
 
 	                    <div class="small-12 medium-7 cell">
 
-	                        {!!  Form::open([
-	                            'route' => 'photos.ajax_store',
-	                            'data-abide',
-	                            'novalidate',
-	                            'files' => 'true',
-	                            'class' => 'dropzone',
-	                            'id' => 'my-dropzone'
-	                        ]
-	                        ) !!}
+{{--	                        {!!  Form::open([--}}
+{{--	                            'route' => 'photos.ajax_store',--}}
+{{--	                            'data-abide',--}}
+{{--	                            'novalidate',--}}
+{{--	                            'files' => 'true',--}}
+{{--	                            'class' => 'dropzone',--}}
+{{--	                            'id' => 'my-dropzone'--}}
+{{--	                        ]--}}
+{{--	                        ) !!}--}}
 
-	                        {!! Form::hidden('name', $article->name) !!}
-	                        {!! Form::hidden('id', $article->id) !!}
-	                        {!! Form::hidden('entity', 'articles') !!}
-	                        {{-- {!! Form::hidden('album_id', $cur_goods->album_id) !!} --}}
+{{--	                        {!! Form::hidden('name', $article->name) !!}--}}
+{{--	                        {!! Form::hidden('id', $article->id) !!}--}}
+{{--	                        {!! Form::hidden('entity', 'articles') !!}--}}
+{{--	                        --}}{{-- {!! Form::hidden('album_id', $cur_goods->album_id) !!} --}}
 
-	                        {!! Form::close() !!}
+{{--	                        {!! Form::close() !!}--}}
+							<dropzone-component :dropzone="{{ $dropzone }}"></dropzone-component>
 
 	                        <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 

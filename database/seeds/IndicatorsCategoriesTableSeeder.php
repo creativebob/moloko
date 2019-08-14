@@ -15,17 +15,17 @@ class IndicatorsCategoriesTableSeeder extends Seeder
     		[
     			'name' => 'Маркетинг',
     			'author_id' => 1,
-    			'display' => 1,
+    			'display' => true,
     		],
             [
                 'name' => 'Финансы',
                 'author_id' => 1,
-                'display' => 1,
+                'display' => true,
             ],
             [
                 'name' => 'Производство',
                 'author_id' => 1,
-                'display' => 1,
+                'display' => true,
             ],
     	]);
     }

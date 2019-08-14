@@ -24,7 +24,7 @@ class CreateActionEntityTable extends Migration
 
             $table->string('alias_action_entity')->index()->comment('Действие над сущностью');
             
-            $table->integer('moderation')->nullable()->unsigned()->comment('На модерации');
+            $table->boolean('moderation')->default(0)->comment('Модерация');
             $table->timestamps();
         });
     }

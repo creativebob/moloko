@@ -83,7 +83,7 @@
 
 
                   <td class="td-delete">
-                      @if ($order->system_item !== 1)
+                      @if ($order->system !== 1)
                       @can('delete', $order)
                       <a class="icon-delete sprite" data-open="item-delete"></a>
                       @endcan

@@ -71,7 +71,7 @@ if ($region_database == 1) {
   $region->region_code = $request->region_code;
   $region->region_vk_external_id = $request->region_vk_external_id;
   $region->author_id = $user_id;
-  $region->system_item = 1;
+  $region->system = 1;
   $region->save();
 
   if ($region) {
@@ -169,7 +169,7 @@ public function ajax_sort(Request $request)
 }
 
 // Системная запись
-    public function ajax_system_item(Request $request)
+    public function ajax_system(Request $request)
     {
 
         if ($request->action == 'lock') {
@@ -178,7 +178,7 @@ public function ajax_sort(Request $request)
             $system = null;
         }
 
-        $item = Region::where('id', $request->id)->update(['system_item' => $system]);
+        $item = Region::where('id', $request->id)->update(['system' => $system]);
 
         if ($item) {
 

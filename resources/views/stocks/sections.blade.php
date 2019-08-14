@@ -130,7 +130,7 @@
                 @endcan
 
                 <td class="td-delete">
-                    @if ($photo->system_item != 1)
+                    @if ($photo->system != 1)
                     @can('delete', $photo)
                     <a class="icon-delete sprite" data-open="item-delete"></a>
                     @endcan

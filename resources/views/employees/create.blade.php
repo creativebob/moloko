@@ -21,7 +21,7 @@
 
 @section('content')
 
-{{ Form::open(['url' => '/admin/employees', 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
+{{ Form::open(['url' => '/admin/employees', 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files' => 'true']) }}
 @include('users.form', ['submitButtonText' => 'Добавить сотрудника', 'param' => ''])
 {{ Form::close() }}
 

@@ -26,9 +26,8 @@ class UsersTableSeeder extends Seeder
                 'company_id' => null,
                 'filial_id' => null,
                 'god' => null,
-                'system_item' => 1,
+                'system' => true,
                 'author_id' => null,
-                'moderation' => null,
                 'sex' => 1,
             ],
             [
@@ -45,9 +44,8 @@ class UsersTableSeeder extends Seeder
                 'company_id' => null,
                 'filial_id' => null,
                 'god' => 1,
-                'system_item' => null,
+                'system' => false,
                 'author_id' => 1,
-                'moderation' => null,
                 'sex' => 1,
             ],
             [
@@ -64,9 +62,8 @@ class UsersTableSeeder extends Seeder
                 'company_id' => null,
                 'filial_id' => null,
                 'god' => 1,
-                'system_item' => null,
+                'system' => false,
                 'author_id' => 1,
-                'moderation' => null,
                 'sex' => 1,
             ],
         ]);

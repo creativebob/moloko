@@ -29,21 +29,15 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {{-- Scripts --}}
-    {{-- <script src="{{ asset('js/app.js') }}" defer></script> --}}
+    <link rel="shortcut icon" href="{{ asset('/favicon.ico') }}" type="image/x-icon">
 
-    {{-- Add jQuery library --}}
-    {{-- <script type="application/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script> --}}
-    <script type="application/javascript" src="/js/system/jquery.latest.min.js"></script>
-
-    {{-- Дополнительные плагины / скрипты / стили для конкретной страницы --}}
-    @yield('inhead')
-
-    <link rel="stylesheet" href="/css/system/foundation.css">
-    <link rel="stylesheet" href="/css/system/app.css">
+    <link rel="stylesheet" href="{{ mix('/css/system/app.css') }}">
 
     {{-- CSRF Token --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    {{-- Add jQuery library --}}
+    <script type="application/javascript" src="/js/system/jquery.latest.min.js"></script>
 
     {{-- Transition --}}
     <style type="text/css">
@@ -52,6 +46,9 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
         }
     </style>
     <title>@yield('title')</title>
+
+    {{-- Дополнительные плагины / скрипты / стили для конкретной страницы --}}
+    @yield('inhead')
 
     {{-- Подключаем класс Checkboxer --}}
     @include('includes.scripts.class.checkboxer')
@@ -84,7 +81,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                         </li>
 
                         <li>
-                            <a id="task-toggle"><img src="/crm/img/header/alert.png">
+                            <a id="task-toggle"><img src="/img/system/header/alert.png">
                                 @if(!empty($list_challenges['for_me']))
                                 <span class="challenges_count" id="challenges-count">{{ $list_challenges['for_me']->flatten()->count() }}</span>
                                 @endif
@@ -290,13 +287,8 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
     </div>
 
     {{-- Скрипты --}}
-    <script type="application/javascript" src="/js/system/vendor/what-input.js"></script>
-    <script type="application/javascript" src="/js/system/vendor/foundation.js"></script>
-    <script type="application/javascript" src="/js/system/app.js"></script>
-    <script type="application/javascript" src="/js/system/sidebar.js"></script>
+    <script type="application/javascript" src="{{ mix('/js/system/app.js') }}"></script>
 
-    {{-- Наши скрипты --}}
-    <script type="application/javascript"src="/js/system/main.js"></script>
     {{-- Наши скрипты --}}
     @stack('scripts')
 

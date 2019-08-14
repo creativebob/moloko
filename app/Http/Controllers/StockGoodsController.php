@@ -288,8 +288,8 @@ class StockGoodsController extends Controller
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
-            $cur_goods->display = $request->display;
-            $cur_goods->system_item = $request->system_item;
+            $cur_goods->display = $request->has('display');
+            $cur_goods->system = $request->has('system');
             $cur_goods->price_unit_id = $request->price_unit_id;
             $cur_goods->price_unit_category_id = $request->price_unit_category_id;
 

@@ -47,7 +47,7 @@
           <td class="td-alias">{{ $folder->folder_alias }} </td>
           <td class="td-url">{{ $folder->folder_url }} </td>
           <td class="td-delete">
-          @if ($folder->system_item !== 1)
+          @if ($folder->system !== 1)
             @can('delete', $folder)
             <a class="icon-delete sprite" data-open="item-delete"></a>
             @endcan

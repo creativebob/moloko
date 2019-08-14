@@ -19,7 +19,7 @@ class StaffTestTableSeeder extends Seeder
 		        'department_id' => 1,
                 'filial_id' => 1,
                 'author_id' => 1,
-                'display' => 1,
+                'display' => true,
         	],
             [   
                 'company_id' => 1,
@@ -28,7 +28,7 @@ class StaffTestTableSeeder extends Seeder
                 'department_id' => 2,
                 'filial_id' => 1,
                 'author_id' => 1,
-                'display' => null,
+                'display' => false,
             ],
             [   
                 'company_id' => 1,
@@ -37,7 +37,7 @@ class StaffTestTableSeeder extends Seeder
                 'department_id' => 2,
                 'filial_id' => 1,
                 'author_id' => 1,
-                'display' => null,
+                'display' => false,
             ],
             [   
                 'company_id' => 1,
@@ -46,7 +46,7 @@ class StaffTestTableSeeder extends Seeder
                 'department_id' => 3,
                 'filial_id' => 1,
                 'author_id' => 1,
-                'display' => null,
+                'display' => false,
             ],
             [   
                 'company_id' => 1,
@@ -55,7 +55,7 @@ class StaffTestTableSeeder extends Seeder
                 'department_id' => 4,
                 'filial_id' => 4,
                 'author_id' => 1,
-                'display' => null,
+                'display' => false,
             ],
             [   
                 'company_id' => 1,
@@ -64,7 +64,7 @@ class StaffTestTableSeeder extends Seeder
                 'department_id' => 5,
                 'filial_id' => 4,
                 'author_id' => 1,
-                'display' => null,
+                'display' => false,
             ],
             [   
                 'company_id' => 1,
@@ -73,7 +73,7 @@ class StaffTestTableSeeder extends Seeder
                 'department_id' => 5,
                 'filial_id' => 4,
                 'author_id' => 1,
-                'display' => null,
+                'display' => false,
             ],
             [   
                 'company_id' => 1,
@@ -82,7 +82,7 @@ class StaffTestTableSeeder extends Seeder
                 'department_id' => 1,
                 'filial_id' => 2,
                 'author_id' => 1,
-                'display' => null,
+                'display' => false,
             ],
         ]);
     }

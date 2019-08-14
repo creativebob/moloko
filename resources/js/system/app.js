@@ -20,14 +20,10 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 
-Vue.component('example-component', require('../components/ExampleComponent.vue'));
 Vue.component('citysearch-component', require('../components/system/CitySearchComponent.vue'));
 Vue.component('consignmentitemadd-component', require('../components/system/ConsignmentItemAddComponent.vue'));
 Vue.component('input-digit-component', require('../components/system/InputDigitComponent.vue'));
-// Vue.component('new-test-component', require('../components/system/NewTestComponent.vue'));
-
-// Vue.component('dropzone-component', require('../components/system/DropzoneComponent.vue'));
-
+Vue.component('dropzone-component', require('../components/system/DropzoneComponent.vue'));
 
 
 /**
@@ -40,28 +36,10 @@ const app = new Vue({
     el: '#app',
 });
 
-var _ = require('lodash');
-// const debounce = require('lodash.debounce');
+// Основные настройки
+require('../main');
 
-
-// Подключаем foundation
-$(document).foundation();
-
-// Csrf для axios
-window.axios = require('axios');
-
-window.axios.defaults.headers.common = {
-    'X-Requested-With': 'XMLHttpRequest',
-    'X-CSRF-TOKEN' : document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-};
-
-// Ajax ошибка
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    error: function(date) {
-        // alert(date);
-        alert('К сожалению, произошла ошибка. Попробуйте перезагрузить страницу!');
-    },
-});
+// Наши скрипты
+require('./partials/main');
+require('./partials/filter');
+require('./partials/sidebar');

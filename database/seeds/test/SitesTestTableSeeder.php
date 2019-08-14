@@ -18,8 +18,8 @@ class SitesTestTableSeeder extends Seeder
                 'alias' => 'vorotamars',
                 'company_id' => 1,
                 'author_id' => 7,
-                'system_item' => null,
-                'moderation' => null,
+                'system' => false,
+                'moderation' => false,
                 'api_token' => 'rqjl8HY4vh4EpU211BBaxT1zjooIv5k3s6uzaU0nE6xpeUtpe2n6ioBtpriu',
             ],
         ]);

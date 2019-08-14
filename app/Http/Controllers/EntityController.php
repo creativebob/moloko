@@ -88,9 +88,9 @@ class EntityController extends Controller
 
         // foreach($actionentities as $actionentity){
 
-        //         $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+        //         $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
 
-        //         $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+        //         $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
         // };
 
         // DB::table('rights')->insert($mass);
@@ -123,7 +123,7 @@ class EntityController extends Controller
 
         // Вносим общие данные
         $entity->author_id = 1;
-        $entity->system_item = 1;
+        $entity->system = 1;
         $entity->moderation = NULL;
 
 
@@ -131,7 +131,7 @@ class EntityController extends Controller
         $entity->dependence = $request->has('dependence');
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if($answer['automoderate'] == false){$entity->moderation = 1;};
+        if($answer['automoderate'] == false){$entity->moderation = true;};
 
         // Пишем ID компании авторизованного пользователя
         // if($user->company_id == null){
@@ -168,9 +168,9 @@ class EntityController extends Controller
 
         foreach($actionentities as $actionentity){
 
-            $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+            $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
 
-            $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+            $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
         };
 
         DB::table('rights')->insert($mass);
@@ -183,7 +183,7 @@ class EntityController extends Controller
         $mass = [];
         // Генерируем права на полный доступ
         foreach($rights as $right){
-            $mass[] = ['right_id' => $right->id, 'role_id' => 1, 'system_item' => 1];
+            $mass[] = ['right_id' => $right->id, 'role_id' => 1, 'system' => 1];
         };
 
         DB::table('right_role')->insert($mass);

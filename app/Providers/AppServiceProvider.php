@@ -90,7 +90,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Шаблон
         Blade::if('template', function ($item) {
-            $result = is_null($item->company_id) && is_null($item->system_item);
+            $result = is_null($item->company_id) && is_null($item->system);
             return $result;
         });
 

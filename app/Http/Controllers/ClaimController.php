@@ -106,11 +106,11 @@ class ClaimController extends Controller
 
         // Вносим общие данные
         $claim->author_id = $user->id;
-        $claim->system_item = $request->system_item;
-        $claim->moderation = $request->moderation;
+        $claim->system = $request->has('system');
+        $claim->moderation = $request->has('moderation');
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        // if($answer['automoderate'] == false){$entity->moderation = 1;};
+        // if($answer['automoderate'] == false){$entity->moderation = true;};
 
         // Раскомментировать если требуется запись ID филиала авторизованного пользователя
         // if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};

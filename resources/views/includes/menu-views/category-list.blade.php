@@ -51,7 +51,7 @@ $drop = 1;
 
             <div class="del">
                 @can('delete', $category)
-                @if(empty($grouped_items[$category->id]) && ($category->system_item != 1) && ($category->company_id != null))
+                @if(empty($grouped_items[$category->id]) && ($category->system != 1) && ($category->company_id != null))
                 <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
                 @endif
                 @endcan

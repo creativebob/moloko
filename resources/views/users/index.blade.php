@@ -107,7 +107,7 @@
           @include('includes.control.table-td', ['item' => $user])
 
           <td class="td-delete">
-            @if (($user->system_item != 1) && ($user->god != 1))
+            @if (($user->system != 1) && ($user->god != 1))
             @can('delete', $user)
             <a class="icon-delete sprite" data-open="item-delete"></a>
             @endcan

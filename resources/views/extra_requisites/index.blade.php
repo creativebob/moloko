@@ -76,7 +76,7 @@
   @include('includes.control.table-td', ['item' => $extra_requisite])
 
   <td class="td-delete">
-    @if ($extra_requisite->system_item != 1)
+    @if ($extra_requisite->system != 1)
     @can('delete', $extra_requisite)
     <a class="icon-delete sprite" data-open="item-delete"></a>
     @endcan

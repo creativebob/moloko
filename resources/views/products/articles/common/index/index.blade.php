@@ -156,7 +156,7 @@
                     @include('includes.control.table_td', ['item' => $item]) 
 
                     <td class="td-archive">
-                        @if ($item->system_item != 1)
+                        @if ($item->system != 1)
                             @can('delete', $item)
                                 <a class="icon-delete sprite" data-open="item-archive"></a>
                             @endcan

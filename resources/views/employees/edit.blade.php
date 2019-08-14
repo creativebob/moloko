@@ -2,6 +2,7 @@
 
 @section('inhead')
   @include('includes.scripts.pickmeup-inhead')
+  @include('includes.scripts.class.city_search')
 @endsection
 
 @section('title', 'Редактировать сотрудника')
@@ -20,7 +21,7 @@
 
 @section('content')
 
-  {{ Form::model($employee->user, ['url' => '/admin/employees/'.$employee->id, 'data-abide', 'novalidate']) }}
+  {{ Form::model($employee->user, ['url' => '/admin/employees/'.$employee->id, 'data-abide', 'novalidate', 'files' => 'true']) }}
   {{ method_field('PATCH') }}
 
     @include('users.form', ['submitButtonText' => 'Редактировать сотрудника', 'param'=>'', 'user'=>$employee->user])
@@ -39,6 +40,7 @@
 @section('scripts')
   @include('includes.scripts.inputs-mask')
   @include('includes.scripts.pickmeup-script')
+  @include('includes.scripts.upload-file')
 
   <script>
 

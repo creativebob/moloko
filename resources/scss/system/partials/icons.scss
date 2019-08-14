@@ -1,0 +1,280 @@
+// ----------------------------------------- Иконки ----------------------------------------------
+// Страница входа
+.icon-login {
+    background: url(img/login.svg) no-repeat;
+    // background-position: 0px 0px;
+}
+.icon-password {
+    background: url(img/password.svg) no-repeat;
+    // background-position: 0px -16px;
+}
+// Поиск города
+.icon-load {
+    background: url(img/loading.svg) no-repeat;
+    opacity: 0.5;
+}
+.icon-find-ok {
+    background-position: -16px -80px;
+    opacity: 1;
+}
+.icon-find-no {
+    background-position: -32px -80px;
+    opacity: 1;
+    cursor: pointer;
+    z-index: 50;
+}
+
+.icon-search {
+    background: url(img/search.svg) no-repeat;
+    // background-position: 0px 0px;
+    background-position: 0px -448px;
+}
+
+
+// Расположение иконки в инпуте
+.one-icon-16 {
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+}
+
+.icon-button{
+    cursor: pointer;
+    margin: 0px 3px;
+    opacity: 0.3;
+}
+
+.icon-button:hover, .icon-button.active{
+    opacity: 1;
+}
+
+.icon-view-card {
+    background: url(img/view-card.svg) no-repeat;
+}
+
+.icon-view-block {
+    background: url(img/view-block.svg) no-repeat;
+}
+
+.icon-view-list {
+    background: url(img/view-list.svg) no-repeat;
+}
+
+.icon-view-setting {
+    background: url(img/view-setting.svg) no-repeat;
+}
+
+// Иконки в строке таблицы
+.icon-list-add {
+    background-position: -128px -768px;
+}
+.icon-list-add:hover {
+    background-position: -96px -768px;
+}
+.icon-list-edit {
+    background-position: -96px -800px;
+}
+
+a.icon-list-edit {
+    display: inline-block;
+}
+
+.icon-list-edit:hover {
+    background-position: -128px -800px;
+}
+.icon-list-delete {
+    background-position: -96px -512px;
+}
+.icon-list-delete:hover {
+    background-position: -128px -512px;
+}
+
+
+// Иконка отображения на сайте
+.icon-display-hide {
+
+    &.black {
+        background-position: -64px -992px;
+    }
+
+    &.white {
+        background-position: -160px -992px;
+    }
+    opacity: 0.2;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.icon-display-show {
+
+    &.black {
+        background-position: -32px -992px;
+    }
+
+    &.white {
+        background-position: -96px -992px;
+    }
+
+    opacity: 0;
+    transition: opacity ease 0.3s;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+// Иконка отображения системного значка
+.icon-system-lock {
+    opacity: 0.2;
+    transition: opacity ease 0.3s;
+
+    &.black {
+        background-position: -32px -960px;
+    }
+
+    &.white {
+        background-position: -3*32px -960px;
+    }
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.icon-system-unlock {
+
+    opacity: 0;
+    transition: opacity ease 0.3s;
+
+    &.black {
+        background-position: -64px -960px;
+    }
+
+    &.white {
+        background-position: -5*32px -960px;
+    }
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+tr:hover {
+
+    .icon-display-show, .icon-system-unlock {
+
+        opacity: 0.2;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    .icon-display-show, .icon-display-hide, .icon-system-unlock, .icon-system-lock {
+        cursor: pointer;
+    }
+    // background-position: -32px -992px;
+
+}
+
+// Иконка отображения системного значка
+.icon-system-template {
+
+    opacity: 0.2;
+    // margin-left: 1rem;
+    // z-index: 10;
+
+    &.black {
+        background-position: -32px -928px;
+    }
+
+    &.white {
+        background-position: -4*32px -928px;
+    }
+
+    // &:hover {
+    //     opacity: 1;
+    // }
+}
+
+.icon-system-programm {
+    background-position: -64px -896px;
+    opacity: 0.2;
+    // margin-left: 1rem;
+    // z-index: 10;
+
+    // &:hover {
+    //     opacity: 1;
+    //     // z-index: 10;
+    // }
+}
+
+
+.icon-sync {
+    background-position: 0px -1088px;
+    float: left;
+    margin-right: 0.6rem;
+    opacity: 0.4;
+    transition: opacity 0.5s ease;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+
+.active-filter {
+    background-position: -32px -352px !important;
+
+    &:hover {
+        background-position: -32px -352px;
+        opacity: 0.7;
+    }
+}
+
+
+// Иконка общего добавления
+.icon-add {
+    background-position: 0px -384px;
+    opacity: 0.3;
+    // z-index: 10;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+// Иконка общего добавления
+.icon-category {
+    background-position: 0px -1185px;
+    opacity: 0.3;
+    // z-index: 10;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+
+// Иконка фильтра
+.icon-filter {
+    background-position: 0px -352px;
+    float: left;
+    margin-right: 0.4rem;
+
+    &:hover {
+        background-position: -32px -352px;
+        opacity: 0.7;
+    }
+}
+
+.active-filter {
+    background-position: -32px -352px !important;
+}
+
+.filtration-active {
+    background-position: -64px -352px;
+}

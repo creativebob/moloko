@@ -101,15 +101,15 @@ class StafferController extends Controller
         $staffer->author_id = hideGod($user);
 
         // Системная запись
-        $staffer->system_item = $request->system_item;
-        $staffer->display = $request->display;
+        $staffer->system = $request->has('system');
+        $staffer->display = $request->has('display');
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
-            $staffer->moderation = 1;
+            $staffer->moderation = true;
         }
 
         $staffer->position_id = $request->position_id;
@@ -235,7 +235,7 @@ class StafferController extends Controller
         // Расписание для штата
         setSchedule($request, $staffer);
 
-        $staffer->display = $request->display;
+        $staffer->display = $request->has('display');
         $staffer->editor_id = $user_id;
         $staffer->save();
 

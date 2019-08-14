@@ -15,7 +15,7 @@
 		<span class="no-moderation">Не отмодерированная запись!</span>
 		@endif
 
-		@if ($menu['system_item'])
+		@if ($menu['system'])
 		<span class="system-item">Системная запись!</span>
 		@endif
 
@@ -57,7 +57,7 @@
 			@endif
 		</div>
 		<div class="del">
-			@if(($menu['system_item'] != 1) && ($menu['delete'] == 1))
+			@if(($menu['system'] != 1) && ($menu['delete'] == 1))
 			<div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
 			@endif
 		</div>
@@ -80,7 +80,7 @@
 		@if ($menu['moderation'])
 		<span class="no-moderation">Не отмодерированная запись!</span>
 		@endif
-		@if ($menu['system_item'])
+		@if ($menu['system'])
 		<span class="system-item">Системная запись!</span>
 		@endif
 	</a>
@@ -107,7 +107,7 @@
 			{{-- @endif --}}
 		</div>
 		<div class="del">
-			@if(($menu['system_item'] != 1) && ($menu['delete'] == 1))
+			@if(($menu['system'] != 1) && ($menu['delete'] == 1))
 			<div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
 			@endif
 		</div>

@@ -46,7 +46,7 @@ class CompanyRequest extends FormRequest
             'birthday_company' => 'date|nullable', 
 
             'moderation' => 'integer|max:1|nullable',
-            'system_item' => 'integer|max:1|nullable',
+            'system' => 'integer|max:1|nullable',
 
 
             // Валидация полей времени в расписании

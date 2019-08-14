@@ -123,12 +123,12 @@ class ExtraRequisiteController extends Controller
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
-            $stage->moderation = 1;
+            $stage->moderation = true;
         }
 
         // Системная запись
-        $stage->system_item = $request->system_item;
-        $stage->display = $request->display;
+        $stage->system = $request->has('system');
+        $stage->display = $request->has('display');
 
         $stage->save();
 
@@ -203,9 +203,9 @@ class ExtraRequisiteController extends Controller
         $stage->description = $request->description;
 
         // Модерация и системная запись
-        $stage->system_item = $request->system_item;
-        $stage->moderation = $request->moderation;
-        $stage->display = $request->display;
+        $stage->system = $request->has('system');
+        $stage->moderation = $request->has('moderation');
+        $stage->display = $request->has('display');
 
         $stage->editor_id = $user_id;
         $stage->save();
@@ -269,7 +269,7 @@ class ExtraRequisiteController extends Controller
     }
 
     // Системная запись
-    public function ajax_system_item(Request $request)
+    public function ajax_system(Request $request)
     {
 
         if ($request->action == 'lock') {
@@ -278,7 +278,7 @@ class ExtraRequisiteController extends Controller
             $system = null;
         }
 
-        $item = Stage::where('id', $request->id)->update(['system_item' => $system]);
+        $item = Stage::where('id', $request->id)->update(['system' => $system]);
 
         if ($item) {
 

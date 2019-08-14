@@ -88,12 +88,12 @@ class NavigationController extends Controller
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         if ($answer['automoderate'] == false){
-            $navigation->moderation = 1;
+            $navigation->moderation = true;
         }
 
         // Системная запись
-        $navigation->system_item = $request->system_item;
-        $navigation->display = $request->display;
+        $navigation->system = $request->has('system');
+        $navigation->display = $request->has('display');
 
 
         // Получаем данные для авторизованного пользователя
@@ -159,9 +159,9 @@ class NavigationController extends Controller
         // $navigation->navigations_category_id = $request->navigations_category_id;
 
         // Модерация и системная запись
-        $navigation->system_item = $request->system_item;
-        $navigation->moderation = $request->moderation;
-        $navigation->display = $request->display;
+        $navigation->system = $request->has('system');
+        $navigation->moderation = $request->has('moderation');
+        $navigation->display = $request->has('display');
 
         $navigation->editor_id = hideGod($request->user());
         $navigation->save();

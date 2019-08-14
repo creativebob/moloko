@@ -30,7 +30,7 @@ class PositionRequest extends FormRequest
             'roles.*.role' => 'integer',  
 
             'moderation' => 'integer|max:1|nullable',
-            'system_item' => 'integer|max:1|nullable',       
+            'system' => 'integer|max:1|nullable',
         ];
     }
 }

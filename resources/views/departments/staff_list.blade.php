@@ -29,21 +29,21 @@
                 @can ('system', $staffer)
                 @switch($staffer)
 
-                @case($staffer->system_item == 1 && $staffer->company_id == null)
+                @case($staffer->system == 1 && $staffer->company_id == null)
                 <div class="icon-system-programm black sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
                 @break
 
-                @case($staffer->system_item == null && $staffer->company_id == 1)
+                @case($staffer->system == null && $staffer->company_id == 1)
                 <div class="icon-system-unlock black sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
                 @break
 
-                @case($staffer->system_item == 1 && $staffer->company_id == 1)
+                @case($staffer->system == 1 && $staffer->company_id == 1)
                 <div class="icon-system-lock black sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
                 @break
                 @endswitch
                 @endcan
 
-                @if ($staffer->system_item == null && $staffer->company_id == null)
+                @if ($staffer->system == null && $staffer->company_id == null)
                 <div class="icon-system-template black sprite" data-open="item-system" data-nested="{{ $nested }}"></div>
                 @endif
             </div>
@@ -59,7 +59,7 @@
 
             <div class="del">
                 @can('delete', $staffer)
-                @if (empty($staffer->user) && empty($staffer->system_item) && isset($staffer->company_id))
+                @if (empty($staffer->user) && empty($staffer->system) && isset($staffer->company_id))
                 <div class="icon-list-delete sprite" data-open="item-delete-ajax"></div>
                 @endif
                 @endcan

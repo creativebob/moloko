@@ -18,8 +18,8 @@ class SitesTableSeeder extends Seeder
                 'alias' => 'crmsystem',
 		        'company_id' => null,
                 'author_id' => 1,
-                'system_item' => 1,
-                'moderation' => null,
+                'system' => true,
+                'moderation' => false,
                 'api_token' => str_random(60),
         	],
 
@@ -29,8 +29,8 @@ class SitesTableSeeder extends Seeder
             //     'alias' => 'vtoroy',
             //     'company_id' => null,
             //     'author_id' => 1,
-            //     'system_item' => 1,
-            //     'moderation' => null,
+            //     'system' => true,
+            //     'moderation' => false,
             //     'api_token' => str_random(60),
             // ],
 

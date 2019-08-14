@@ -30,7 +30,7 @@ class FeedbackRequest extends FormRequest
       'call_date' => 'date|after:01.01.2010|nullable', 
 
       'moderation' => 'integer|max:1|nullable',
-      'system_item' => 'integer|max:1|nullable',   
+      'system' => 'integer|max:1|nullable',   
     ];
   }
 }

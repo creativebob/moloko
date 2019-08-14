@@ -173,9 +173,9 @@ class PhotoController extends Controller
         $photo->color = $request->color;
 
         // Модерация и системная запись
-        $photo->system_item = $request->system_item;
-        $photo->moderation = $request->moderation;
-        $photo->display = $request->display;
+        $photo->system = $request->has('system');
+        $photo->moderation = $request->has('moderation');
+        $photo->display = $request->has('display');
 
         $photo->editor_id = hideGod($request->user());
 
@@ -322,9 +322,9 @@ class PhotoController extends Controller
         $photo->description = $request->description;
 
         // Модерация и системная запись
-        $photo->system_item = $request->system_item;
-        $photo->moderation = $request->moderation;
-        $photo->display = $request->display;
+        $photo->system = $request->has('system');
+        $photo->moderation = $request->has('moderation');
+        $photo->display = $request->has('display');
 
         $photo->editor_id = hideGod($request->user());
         $photo->save();

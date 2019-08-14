@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 use App\CatalogsGoodsItem;
+use App\Container;
+use App\ContainersCategory;
 use App\Observers\CatalogsGoodsItemObserver;
+use App\Observers\ContainerObserver;
+use App\Observers\ContainersCategoryObserver;
 use App\Observers\PageObserver;
 use App\Observers\PluginObserver;
 use App\Observers\PricesGoodsObserver;
@@ -64,12 +68,14 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Категории артикулов
         RawsCategory::observe(RawsCategoryObserver::class);
+        ContainersCategory::observe(ContainersCategoryObserver::class);
         EquipmentsCategory::observe(EquipmentsCategoryObserver::class);
 
         // Артикулы
         Article::observe(ArticleObserver::class);
         Goods::observe(GoodsObserver::class);
         Raw::observe(RawObserver::class);
+        Container::observe(ContainerObserver::class);
         Equipment::observe(EquipmentObserver::class);
         Room::observe(RoomObserver::class);
 

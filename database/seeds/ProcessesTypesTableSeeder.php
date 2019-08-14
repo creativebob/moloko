@@ -16,25 +16,25 @@ class ProcessesTypesTableSeeder extends Seeder
 		        'name' => 'Воздействие на тело человека',
 		        'description' => 'Услуги, направленные на тело человека',
                 'author_id' => 1,
-                'system_item' => 1,
+                'system' => true,
         	],
         	[
 		        'name' => 'Воздействие на материальный объект',
 		        'description' => 'Услуги, направленные на физические объекты, находящиеся в собственности человека',
                 'author_id' => 1,
-                'system_item' => 1,
+                'system' => true,
         	],
         	[
 		        'name' => 'Воздействие на сознание человека',
 		        'description' => 'Услуги, направленные на сознание человека',
                 'author_id' => 1,
-                'system_item' => 1,
+                'system' => true,
         	],
         	[
 		        'name' => 'Нематериальный актив',
 		        'description' => 'Услуги, направленные на нематериальные актив',
                 'author_id' => 1,
-                'system_item' => 1,
+                'system' => true,
         	],
         ]);
     }

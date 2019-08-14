@@ -24,8 +24,8 @@ class PlansTableSeeder extends Seeder
                 'alias' => 'plans',
                 'site_id' => 1,
                 'company_id' => null,
-                'display' => 1,
-                'system_item' => 1,
+                'display' => true,
+                'system' => true,
                 'author_id' => 1,
             ],
             [
@@ -47,7 +47,7 @@ class PlansTableSeeder extends Seeder
             $entity->alias = 'plans';
             $entity->model = 'Plan';
             $entity->rights_minus = null;
-            $entity->system_item = 1;
+            $entity->system = 1;
             $entity->author_id = 1;
             $entity->save();
 
@@ -65,9 +65,9 @@ class PlansTableSeeder extends Seeder
 
             foreach($actionentities as $actionentity){
 
-               $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+               $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
 
-               $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system_item' => 1, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+               $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
            };
 
            DB::table('rights')->insert($mass);
@@ -80,7 +80,7 @@ class PlansTableSeeder extends Seeder
            $mass = [];
         	// Генерируем права на полный доступ
            foreach($rights as $right){
-               $mass[] = ['right_id' => $right->id, 'role_id' => 1, 'system_item' => 1];
+               $mass[] = ['right_id' => $right->id, 'role_id' => 1, 'system' => 1];
            };
 
            DB::table('right_role')->insert($mass);
@@ -105,7 +105,7 @@ class PlansTableSeeder extends Seeder
        $menu->parent_id = $parent_menu_id;
        $menu->page_id = $page_id;
        $menu->navigation_id = $navigation_id;
-       $menu->system_item = 1;
+       $menu->system = 1;
        $menu->author_id = 1;
        $menu->display = 1;
        $menu->save();

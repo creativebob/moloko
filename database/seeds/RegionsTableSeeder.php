@@ -16,7 +16,7 @@ class RegionsTableSeeder extends Seeder
 		        'name' => 'Иркутская область',
 		        'code' => 38,
 		        'vk_external_id' => 1127513,
-                'system_item' => 1,
+                'system' => true,
      	    ],
         ]);
     }

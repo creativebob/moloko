@@ -83,12 +83,12 @@
                     <td class="td-api-token">{{ $site->api_token }}</td>
                     <td class="td-company-id">
 
-                        {{-- {{ isset($site->company->name) ? $site->company->name : $site->system_item == null ? 'Шаблон' : 'Системная' }} --}}
+                        {{-- {{ isset($site->company->name) ? $site->company->name : $site->system == null ? 'Шаблон' : 'Системная' }} --}}
                         @if(isset($site->company->name))
                         {{ $site->company->name }}
                         @else
 
-                        @if($site->system_item == null)
+                        @if($site->system == null)
                         Шаблон
                         @else Системная
                         @endif

@@ -11,3 +11,7 @@
 		<a data-tabs-target="raws" href="#raws">Состав</a>
 	</li>
 @endif
+
+<li class="tabs-title">
+	<a data-tabs-target="containers" href="#containers">Упаковка</a>
+</li>

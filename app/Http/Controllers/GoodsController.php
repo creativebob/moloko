@@ -76,7 +76,7 @@ class GoodsController extends Controller
             'author_id',
             'company_id',
             'display',
-            'system_item'
+            'system'
         ];
 
         $goods = Goods::with([
@@ -377,11 +377,11 @@ class GoodsController extends Controller
             'raws.category'
         ]);
 
+        // Получаем настройки по умолчанию
         $dropzone = getSettings($this->entity_alias);
-//        dd($settings);
-
         $dropzone['id'] = $article->id;
         $dropzone['entity'] = $article->getTable();
+//        dd($dropzone);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
@@ -417,8 +417,8 @@ class GoodsController extends Controller
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
-            $cur_goods->display = $request->display;
-            $cur_goods->system_item = $request->system_item;
+            $cur_goods->display = $request->has('display');
+            $cur_goods->system = $request->has('system');
             $cur_goods->price_unit_id = $request->price_unit_id;
             $cur_goods->price_unit_category_id = $request->price_unit_category_id;
 

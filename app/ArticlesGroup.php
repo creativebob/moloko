@@ -120,6 +120,12 @@ class ArticlesGroup extends Model
         return $this->morphedByMany(RawsCategory::class, 'articles_group_entity');
     }
 
+    // Упаковок
+    public function containers_categories()
+    {
+        return $this->morphedByMany(ContainersCategory::class, 'articles_group_entity');
+    }
+
     // Оборудования
     public function equipments_categories()
     {

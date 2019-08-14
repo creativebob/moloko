@@ -31,14 +31,14 @@ class AppController extends Controller
     }
 
     // Системная запись
-    public function ajax_system_item(Request $request)
+    public function ajax_system(Request $request)
     {
 
     	$entity = Entity::whereAlias($request->entity_alias)->first(['model']);
     	$model = 'App\\'.$entity->model;
 
         // $item = $model::findOrFail($request->id);
-        // $item->system_item = ($request->action == 'lock') ? 1 : null;
+        // $item->system = ($request->action == 'lock') ? 1 : null;
         // $item->save();
 
         // if (isset($request->entity)) {
@@ -51,7 +51,7 @@ class AppController extends Controller
         //     }
         // }
 
-        $item = $model::where('id', $request->id)->update(['system_item' => ($request->action == 'lock') ? 1 : null]);
+        $item = $model::where('id', $request->id)->update(['system' => ($request->action == 'lock') ? true : false]);
 
         return response()->json(isset($item) ?? 'Ошибка при обновлении статуса системной записи!');
     }
@@ -62,7 +62,7 @@ class AppController extends Controller
 
     	$entity = Entity::whereAlias($request->entity_alias)->first(['model']);
     	$model = 'App\\'.$entity->model;
-        $item = $model::where('id', $request->id)->update(['display' => ($request->action == 'show') ? 1 : null]);
+        $item = $model::where('id', $request->id)->update(['display' => ($request->action == 'show') ? true : false]);
 
         return response()->json(isset($item) ?? 'Ошибка при обновлении отображения на сайте!');
     }

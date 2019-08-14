@@ -14,7 +14,7 @@ class CitiesComposer
 
         $site = $view->site->load('company.filials.location.city');
 
-        $filials = $site->company->filials->where('display', 1)->unique('location.city_id');
+        $filials = $site->company->filials->where('display', true)->unique('location.city_id');
         // dd($filials);
 
         $cities_list = [];

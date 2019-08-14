@@ -31,7 +31,7 @@
         // ------------------------ Кнопка добавления ---------------------------------------
         $(document).on('click', '.submit-create', function(event) {
             var form = $(this).closest('form');
-            if (submitAjax(form.attr('id'))) {
+            if (window.submitAjax(form.attr('id'))) {
                 $(this).prop('disabled', true);
                 $.post('/admin/' + ancestor_entity + '/' + ancestor_id + '/' + entity, form.serialize(), function(html) {
                     form.closest('.reveal-overlay').remove();
@@ -44,7 +44,7 @@
         // ------------------------ Кнопка обновления ---------------------------------------
         $(document).on('click', '.submit-edit', function(event) {
             var form = $(this).closest('form');
-            if (submitAjax(form.attr('id'))) {
+            if (window.submitAjax(form.attr('id'))) {
                 $(this).prop('disabled', true);
 
                 // Ajax запрос

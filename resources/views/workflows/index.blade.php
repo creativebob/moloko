@@ -88,7 +88,7 @@
                     @include('includes.control.table_td', ['item' => $workflow])
 
                     <td class="td-archive">
-                        @if ($workflow->system_item != 1)
+                        @if ($workflow->system != 1)
                         @can('delete', $workflow)
                         <a class="icon-delete sprite" data-open="item-archive"></a>
                         @endcan

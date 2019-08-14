@@ -18,9 +18,12 @@
 
         // ----------- Кнопка добавления ---------------------------------------
         $(document).on('click', '.submit-create', function(event) {
+            // Блокируем отправку формы по кнопке
+            event.preventDefault();
+
             var form = $(this).closest('form');
 
-            if (submitAjax(form.attr('id'))) {
+            if (window.submitAjax(form.attr('id'))) {
                 $(this).prop('disabled', true);
                 $.post('/admin/catalogs_goods/' + catalog_id + '/catalogs_goods_items', form.serialize(), function(html) {
                     form.closest('.reveal-overlay').remove();
@@ -42,8 +45,11 @@
 
         // ----------- Кнопка обновления ---------------------------------------
         $(document).on('click', '.submit-edit', function(event) {
+            // Блокируем отправку формы по кнопке
+            event.preventDefault();
+
             var form = $(this).closest('form');
-            if (submitAjax(form.attr('id'))) {
+            if (window.submitAjax(form.attr('id'))) {
                 $(this).prop('disabled', true);
 
                 // Ajax запрос

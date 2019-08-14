@@ -76,8 +76,8 @@ class ApiController extends Controller
             // return Cache::remember('staff', 1, function() use ($domen) {
             $services_category = ServicesCategory::with(['photo', 'services_products' => function ($query) {
                 $query->with([ 'services' => function ($query) {
-                    $query->where('display', 1);
-                }])->where('display', 1);
+                    $query->where('display', true);
+                }])->where('display', true);
             }])->findOrFail($id);
             return $services_category;
             // });
