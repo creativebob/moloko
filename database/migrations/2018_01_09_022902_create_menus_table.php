@@ -16,6 +16,7 @@ class CreateMenusTable extends Migration
             $table->foreign('navigation_id')->references('id')->on('navigations');
 
             $table->string('name')->nullable()->comment('Имя категории меню');
+            $table->string('slug')->nullable()->index()->comment('Слаг');
             $table->string('icon')->nullable()->comment('Имя иконки меню');
             $table->string('alias')->nullable()->comment('Ссылка на страницу');
             $table->string('tag')->nullable()->comment('Ключ для поиска');

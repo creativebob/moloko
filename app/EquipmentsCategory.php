@@ -49,10 +49,14 @@ class EquipmentsCategory extends Model
         'name',
         'description',
         'seo_description',
-        'photo_id',
         'parent_id',
-        'category_id',
     ];
+
+    // Родитель
+    public function parent()
+    {
+        return $this->belongsTo(EquipmentsCategory::class);
+    }
 
     // Вложенные
     public function childs()
@@ -85,12 +89,6 @@ class EquipmentsCategory extends Model
     {
         return $this->belongsTo(Photo::class);
     }
-
-    // Состав
-    // public function compositions()
-    // {
-    //     return $this->belongsToMany(Article::class, 'preset_composition', 'category_id', 'composition_id');
-    // }
 
     // Производители
     public function manufacturers()

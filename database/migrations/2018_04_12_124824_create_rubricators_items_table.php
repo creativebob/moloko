@@ -21,6 +21,7 @@ class CreateRubricatorsItemsTable extends Migration
 
             $table->string('name')->index()->comment('Название');
             $table->string('slug')->index()->nullable()->comment('Слаг');
+            $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
 
             $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id категории товара');
             $table->foreign('parent_id')->references('id')->on('rubricators_items');

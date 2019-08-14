@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Http\Requests\RawsCategoryUpdateRequest;
+use App\Http\Requests\RawsCategoryStoreRequest;
 use App\RawsCategory;
-
-// Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\RawsCategoryRequest;
-
-// Подключаем трейт записи и обновления категорий
-use App\Http\Controllers\Traits\CategoryControllerTrait;
 
 class RawsCategoryController extends Controller
 {
@@ -26,9 +21,6 @@ class RawsCategoryController extends Controller
         $this->entity_dependence = false;
         $this->type = 'edit';
     }
-
-    // Используем трейт записи и обновления категорий
-    use CategoryControllerTrait;
 
     public function index(Request $request)
     {
@@ -101,16 +93,14 @@ class RawsCategoryController extends Controller
         ]);
     }
 
-    public function store(RawsCategoryRequest $request)
+    public function store(RawsCategoryStoreRequest $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Заполнение и проверка основных полей в трейте
-        $raws_category = $this->storeCategory($request);
-
-        $raws_category->save();
+        $data = $request->input();
+        $raws_category = (new $this->class())->create($data);
 
         if ($raws_category) {
             // Переадресовываем на index
@@ -159,7 +149,7 @@ class RawsCategoryController extends Controller
         ]);
     }
 
-    public function update(RawsCategoryRequest $request, $id)
+    public function update(RawsCategoryUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -171,12 +161,10 @@ class RawsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_category);
 
-        // Заполнение и проверка основных полей в трейте
-        $raws_category = $this->updateCategory($request, $raws_category);
+        $data = $request->input();
+        $result = $raws_category->update($data);
 
-        $raws_category->save();
-
-        if ($raws_category) {
+        if ($result) {
 
             // Производители
             $raws_category->manufacturers()->sync($request->manufacturers);

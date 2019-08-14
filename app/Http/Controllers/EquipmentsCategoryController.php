@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Http\Requests\EquipmentsCategoryUpdateRequest;
+use App\Http\Requests\EquipmentsCategoryStoreRequest;
 use App\EquipmentsCategory;
-
-// Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\EquipmentsCategoryRequest;
 
-// Подключаем трейт записи и обновления категорий
-use App\Http\Controllers\Traits\CategoryControllerTrait;
 
 class EquipmentsCategoryController extends Controller
 {
@@ -26,9 +22,6 @@ class EquipmentsCategoryController extends Controller
         $this->entity_dependence = false;
         $this->type = 'edit';
     }
-
-    // Используем трейт записи и обновления категорий
-    use CategoryControllerTrait;
 
     public function index(Request $request)
     {
@@ -101,16 +94,14 @@ class EquipmentsCategoryController extends Controller
         ]);
     }
 
-    public function store(EquipmentsCategoryRequest $request)
+    public function store(EquipmentsCategoryStoreRequest $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Заполнение и проверка основных полей в трейте
-        $equipments_category = $this->storeCategory($request);
-
-        $equipments_category->save();
+        $data = $request->input();
+        $equipments_category = (new $this->class())->create($data);
 
         if ($equipments_category) {
             // Переадресовываем на index
@@ -160,7 +151,7 @@ class EquipmentsCategoryController extends Controller
         ]);
     }
 
-    public function update(EquipmentsCategoryRequest $request, $id)
+    public function update(EquipmentsCategoryUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -173,11 +164,10 @@ class EquipmentsCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $equipments_category);
 
         // Заполнение и проверка основных полей в трейте
-        $equipments_category = $this->updateCategory($request, $equipments_category);
+        $data = $request->input();
+        $result = $equipments_category->update($data);
 
-        $equipments_category->save();
-
-        if ($equipments_category) {
+        if ($result) {
 
             // Производители
             $equipments_category->manufacturers()->sync($request->manufacturers);

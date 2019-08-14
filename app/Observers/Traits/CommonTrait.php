@@ -2,15 +2,11 @@
 
 namespace App\Observers\Traits;
 
-// Транслитерация
-use Illuminate\Support\Str;
-
 trait CommonTrait
 {
 
 	public function store($item)
     {
-
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         $answer = operator_right($item->getTable(), false, getmethod(__FUNCTION__));
         if($answer['automoderate'] == false){
@@ -27,9 +23,7 @@ trait CommonTrait
         $item->author_id = hideGod($user);
 
         return $item;
-
     }
-
 
     public function update($item)
     {
@@ -42,26 +36,21 @@ trait CommonTrait
         $item->editor_id = hideGod($request->user());
 
         return $item;
-
     }
 
     public function destroy($item)
     {
-
         $item->editor_id = hideGod(request()->user());
         $item->save();
 
         return $item;
-
     }
 
     protected function setSlug($item)
     {
-
         if (empty($item->alias)) {
-            $item->alias = Str::slug($item->name);
-            $item->slug = Str::slug($item->name);
+            $item->alias = \Str::slug($item->name);
+            $item->slug = \Str::slug($item->name);
         }
     }
-
 }

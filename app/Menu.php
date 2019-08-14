@@ -48,38 +48,39 @@ class Menu extends Model
 
     protected $fillable = [
         'name',
+        'description',
+        'seo_description',
         'parent_id',
+
+        'icon',
+        'alias',
+        'tag',
+
+        'navigation_id',
         'page_id',
     ];
+
+    // Родитель
+    public function parent()
+    {
+        return $this->belongsTo(Navigation::class);
+    }
 
     // Навигации
     public function navigation()
     {
-        return $this->belongsTo('App\Navigation');
+        return $this->belongsTo(Navigation::class);
     }
 
     // Страница
     public function page()
     {
-        return $this->belongsTo('App\Page');
+        return $this->belongsTo(Page::class);
     }
 
     // Предок
     public function ancestor()
     {
-        return $this->belongsTo('App\Navigation', 'navigation_id');
+        return $this->belongsTo(Navigation::class, 'navigation_id');
     }
-
-    // Получаем сайты
-    // public function sites()
-    // {
-    //     return $this->belongsToMany('App\Site');
-    // }
-
-    // Сущность
-    // public function entity()
-    // {
-    //     return $this->belongsTo('App\Navigation')->where('alias', 'menus');
-    // }
-
 }

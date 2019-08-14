@@ -17,6 +17,8 @@ class CreateSectorsTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name')->index()->comment('Название области');
+            $table->string('slug')->index()->nullable()->comment('Слаг');
+            $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
             $table->string('tag')->nullable()->comment('Тэг');
 
             $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id отдела, в котором находится отдел');

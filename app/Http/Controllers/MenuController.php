@@ -2,19 +2,9 @@
 
 namespace App\Http\Controllers;
 
-// Модели
 use App\Menu;
-
-// Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\MenuRequest;
-
-// Подключаем трейт записи и обновления категорий
-use App\Http\Controllers\Traits\CategoryControllerTrait;
-
-// Транслитерация
-use Illuminate\Support\Str;
-
 
 class MenuController extends Controller
 {
@@ -31,8 +21,7 @@ class MenuController extends Controller
         $this->type = 'modal';
     }
 
-    // Используем трейт записи и обновления категорий
-    use CategoryControllerTrait;
+
 
     public function index(Request $request, $site_id, $navigation_id)
     {
@@ -96,20 +85,8 @@ class MenuController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Заполнение и проверка основных полей в трейте
-        $menu = $this->storeCategory($request);
-
-        $menu->navigation_id = $navigation_id;
-        $menu->page_id = $request->page_id;
-
-        $menu->icon = $request->icon;
-        $menu->alias = $request->alias;
-
-        $menu->tag = empty($request->tag) ? Str::slug($request->name) : $request->tag;
-
-        $menu->new_blank = $request->has('new_blank');
-
-        $menu->save();
+        $data = $request->input();
+        $menu = (new $this->class())->create($data);
 
         // Если к пункту меню привязана страница и мы выключаем/вкючаем его отображение на сайте, то и меняем отображение и у страницы
         // if (isset($menu->page_id)) {
@@ -169,27 +146,10 @@ class MenuController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $menu);
 
-        // Заполнение и проверка основных полей в трейте
-        $menu = $this->updateCategory($request, $menu);
+        $data = $request->input();
+        $result = $menu->update($data);
 
-        $menu->page_id = $request->page_id;
-
-        $menu->icon = $request->icon;
-        $menu->alias = $request->alias;
-
-        $menu->tag = empty($request->tag) ? Str::slug($request->name) : $request->tag;
-
-        $menu->new_blank = $request->has('new_blank');
-
-        $menu->save();
-
-        // Если к пункту меню привязана страница и мы выключаем/вкючаем его отображение на сайте, то и меняем отображение и у страницы
-        // if (isset($menu->page_id)) {
-        //     $menu->page()->save(['display' => $request->display]);
-        // }
-
-        // dd($menu);
-        if ($menu) {
+        if ($result) {
 
             // Переадресовываем на index
             return redirect()->route('menus.index', ['site_id' => $site_id, 'navigation_id' => $navigation_id, 'id' => $menu->id]);

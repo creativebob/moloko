@@ -45,14 +45,21 @@ class WorkflowsCategory extends Model
     use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+
     protected $fillable = [
         'name',
         'description',
         'seo_description',
         'parent_id',
-        // 'raws_mode_id',
-        'category_id',
+
+        'processes_type_id'
     ];
+
+    // Родитель
+    public function parent()
+    {
+        return $this->belongsTo(WorkflowsCategory::class);
+    }
 
     // Вложенные
     public function childs()
@@ -79,12 +86,6 @@ class WorkflowsCategory extends Model
         ->where('draft', false)
         ->where('workflows.archive', false);
     }
-
-    // Режим
-    // public function mode()
-    // {
-    //     return $this->belongsTo(RawsMode::class, 'raws_mode_id');
-    // }
 
     // Аватар
     public function photo()

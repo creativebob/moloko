@@ -17,6 +17,8 @@ class CreateAlbumsCategoriesTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name')->index()->comment('Название категории альбомов');
+            $table->string('slug')->index()->nullable()->comment('Слаг');
+            $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
 
             $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id категории альбома');
             $table->foreign('parent_id')->references('id')->on('albums_categories');

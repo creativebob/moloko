@@ -2,21 +2,10 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Http\Requests\GoodsCategoryStoreRequest;
 use App\GoodsCategory;
-use App\RawsArticle;
-
-use App\Goods;
-
-// Валидация
+use App\Http\Requests\GoodsCategoryUpdateRequest;
 use Illuminate\Http\Request;
-use App\Http\Requests\GoodsCategoryRequest;
-
-// Специфические классы
-use Illuminate\Support\Facades\Storage;
-
-// Подключаем трейт записи и обновления категорий
-use App\Http\Controllers\Traits\CategoryControllerTrait;
 use App\Http\Controllers\Traits\DirectionTrait;
 
 class GoodsCategoryController extends Controller
@@ -34,8 +23,6 @@ class GoodsCategoryController extends Controller
         $this->type = 'edit';
     }
 
-    // Используем трейт записи и обновления категорий
-    use CategoryControllerTrait;
     use DirectionTrait;
 
     public function index(Request $request)
@@ -111,16 +98,14 @@ class GoodsCategoryController extends Controller
         ]);
     }
 
-    public function store(GoodsCategoryRequest $request)
+    public function store(GoodsCategoryStoreRequest $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Заполнение и проверка основных полей в трейте
-        $goods_category = $this->storeCategory($request);
-
-        $goods_category->save();
+        $data = $request->input();
+        $goods_category = (new $this->class())->create($data);
 
         if ($goods_category) {
             // Переадресовываем на index
@@ -198,9 +183,8 @@ class GoodsCategoryController extends Controller
         ]);
     }
 
-    public function update(GoodsCategoryRequest $request, $id)
+    public function update(GoodsCategoryUpdateRequest $request, $id)
     {
-        // dd($request);
         // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -212,17 +196,17 @@ class GoodsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_category);
 
-        // Заполнение и проверка основных полей в трейте
-        $goods_category = $this->updateCategory($request, $goods_category);
+        $data = $request->input();
+        $result = $goods_category->update($data);
 
-        // Проверка на направление
-        if (is_null($goods_category->parent_id)) {
-            $this->checkDirection($request, $goods_category);
-        }
+        if ($result) {
 
-        $goods_category->save();
 
-        if ($goods_category) {
+            // Проверка на направление
+//        if (is_null($goods_category->parent_id)) {
+//            $this->checkDirection($request, $goods_category);
+//        }
+
 
             // Производители
             $goods_category->manufacturers()->sync($request->manufacturers);

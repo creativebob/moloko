@@ -9,8 +9,7 @@ use App\ExpendablesCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests\ExpendablesCategoryRequest;
 
-// Подключаем трейт записи и обновления категорий
-use App\Http\Controllers\Traits\CategoryControllerTrait;
+
 
 class ExpendablesCategoryController extends Controller
 {
@@ -27,8 +26,7 @@ class ExpendablesCategoryController extends Controller
         $this->type = 'modal';
     }
 
-    // Используем трейт записи и обновления категорий
-    use CategoryControllerTrait;
+
 
     public function index(Request $request)
     {
@@ -157,7 +155,7 @@ class ExpendablesCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $expendables_category);
 
         // Заполнение и проверка основных полей в трейте
-        $expendables_category = $this->updateCategory($request, $expendables_category);
+        $expendables_category = $this->updateCategory($expendables_category);
 
         $expendables_category->save();
 

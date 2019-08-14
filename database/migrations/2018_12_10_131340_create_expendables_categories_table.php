@@ -17,6 +17,8 @@ class CreateExpendablesCategoriesTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name')->index()->comment('Название категории расходных материалов');
+            $table->string('slug')->index()->nullable()->comment('Слаг');
+            $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
 
             $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id родителя');
             $table->foreign('parent_id')->references('id')->on('expendables_categories');

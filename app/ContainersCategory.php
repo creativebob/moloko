@@ -49,10 +49,14 @@ class ContainersCategory extends Model
         'name',
         'description',
         'seo_description',
-        'photo_id',
         'parent_id',
-        'category_id',
     ];
+
+    // Родитель
+    public function parent()
+    {
+        return $this->belongsTo(ContainersCategory::class);
+    }
 
     // Вложенные
     public function childs()

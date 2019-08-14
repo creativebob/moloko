@@ -44,14 +44,19 @@ class RoomsCategory extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+
     protected $fillable = [
         'name',
         'description',
         'seo_description',
-        'photo_id',
         'parent_id',
-        'category_id',
     ];
+
+    // Родитель
+    public function parent()
+    {
+        return $this->belongsTo(RoomsCategory::class);
+    }
 
     // Вложенные
     public function childs()

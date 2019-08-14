@@ -45,25 +45,30 @@ class RubricatorsItem extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'company_id',
         'name',
-        'alias',
-        'slug',
+        'description',
+        'seo_description',
         'parent_id',
-        'category_id',
-        'catalog_id',
+
+        'rubricator_id',
     ];
 
-    // Каталог
-    public function rubricator()
+    // Родитель
+    public function parent()
     {
-        return $this->belongsTo(Rubricator::class);
+        return $this->belongsTo(RubricatorsItem::class);
     }
 
     // Вложенные
     public function childs()
     {
         return $this->hasMany(RubricatorsItem::class, 'parent_id');
+    }
+
+    // Каталог
+    public function rubricator()
+    {
+        return $this->belongsTo(Rubricator::class);
     }
 
     // Автор

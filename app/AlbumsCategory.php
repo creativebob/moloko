@@ -47,11 +47,16 @@ class AlbumsCategory extends Model
 
     protected $fillable = [
         'name',
+        'description',
+        'seo_description',
         'parent_id',
-        'category_id',
-        'author_id',
-
     ];
+
+    // Родитель
+    public function parent()
+    {
+        return $this->belongsTo(AlbumsCategory::class);
+    }
 
     // Вложенные
     public function childs()

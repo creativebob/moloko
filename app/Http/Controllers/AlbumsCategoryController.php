@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Http\Requests\AlbumsCategoryUpdateRequest;
+use App\Http\Requests\AlbumsCategoryStoreRequest;
 use App\AlbumsCategory;
-
-// Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\AlbumsCategoryRequest;
-
-// Подключаем трейт записи и обновления категорий
-use App\Http\Controllers\Traits\CategoryControllerTrait;
 
 class AlbumsCategoryController extends Controller
 {
@@ -26,9 +21,6 @@ class AlbumsCategoryController extends Controller
         $this->model = 'App\AlbumsCategory';
         $this->type = 'modal';
     }
-
-    // Используем трейт записи и обновления категорий
-    use CategoryControllerTrait;
 
     public function index(Request $request)
     {
@@ -96,16 +88,14 @@ class AlbumsCategoryController extends Controller
         ]);
     }
 
-    public function store(AlbumsCategoryRequest $request)
+    public function store(AlbumsCategoryStoreRequest $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Заполнение и проверка основных полей в трейте
-        $albums_category = $this->storeCategory($request);
-
-        $albums_category->save();
+        $data = $request->input();
+        $albums_category = (new $this->class())->create($data);
 
         if ($albums_category) {
 
@@ -141,20 +131,21 @@ class AlbumsCategoryController extends Controller
         ]);
     }
 
-    public function update(AlbumsCategoryRequest $request, $id)
+    public function update(AlbumsCategoryUpdateRequest $request, $id)
     {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $albums_category = AlbumsCategory::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
+        $albums_category = AlbumsCategory::moderatorLimit($answer)
+            ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);
 
-        // Заполнение и проверка основных полей в трейте
-        $albums_category = $this->updateCategory($request, $albums_category);
+        $data = $request->input();
+        $result = $albums_category->update($data);
 
-        $albums_category->save();
-
-        if ($albums_category) {
+        if ($result) {
 
             // Переадресовываем на index
             return redirect()->route('albums_categories.index', ['id' => $albums_category->id]);

@@ -2,26 +2,37 @@
 
 namespace App\Observers;
 
-use App\RubricatorsItem;
-
+use App\Observers\Traits\CategoriesTrait;
 use App\Observers\Traits\CommonTrait;
+use App\RubricatorsItem as Category;
 
 class RubricatorsItemObserver
 {
+
     use CommonTrait;
+    use CategoriesTrait;
 
-    public function creating(RubricatorsItem $rubricators_item)
+    public function creating(Category $category)
     {
-        // $this->store($rubricators_item);
+        $this->store($category);
+        $this->storeCategory($category);
     }
 
-    public function updating(RubricatorsItem $rubricators_item)
+    public function updating(Category $category)
     {
-        // $this->update($rubricators_item);
+        $this->update($category);
+        $this->updateCategory($category);
     }
 
-    public function deleting(RubricatorsItem $rubricators_item)
+    public function updated(Category $category)
     {
-        $this->destroy($rubricators_item);
+        $this->updateCategoryChildsSlug($category);
+        $this->updateCategoryChildsLevel($category);
+        $this->updateCategoryChildsCategoryId($category);
+    }
+
+    public function deleting(Category $category)
+    {
+        $this->destroy($category);
     }
 }
