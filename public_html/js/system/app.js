@@ -28596,6 +28596,7 @@ Vue.component('example-component', __webpack_require__(39));
 Vue.component('citysearch-component', __webpack_require__(42));
 Vue.component('consignmentitemadd-component', __webpack_require__(45));
 Vue.component('input-digit-component', __webpack_require__(48));
+// Vue.component('new-test-component', require('../components/system/NewTestComponent.vue'));
 
 // Vue.component('dropzone-component', require('../components/system/DropzoneComponent.vue'));
 
@@ -54739,29 +54740,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
-			mes: 'Добавить',
 			count_item: 123,
 			price: 0,
 			count_price: 0,
@@ -54784,7 +54767,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		changePrice: function changePrice(value) {
 			this.price = value;
+		},
+		delItem: function delItem() {
+			alert('Удаляем...');
 		}
+
 	},
 
 	filters: {
@@ -54803,194 +54790,151 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("table", { staticClass: "table-compositions" }, [
-    _vm._m(0),
-    _vm._v(" "),
-    _c(
-      "tbody",
-      { attrs: { id: "table-raws" } },
-      [
-        _c("tr", [
-          _c("td", [_vm._v("1")]),
-          _vm._v(" "),
-          _c("td", [
-            _c("div", { staticClass: "wrap-input-table" }, [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.mes,
-                    expression: "mes"
-                  }
-                ],
-                staticClass: "name-field padding-to-placeholder",
-                attrs: { type: "text" },
-                domProps: { value: _vm.mes },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.mes = $event.target.value
-                  }
-                }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "td",
-            [
-              _c("input-digit-component", {
-                attrs: { name: "count_item", rate: "2", value: 855 },
-                on: { countchanged: _vm.changeCount }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "td",
-            [
-              _c("input-digit-component", {
-                attrs: { name: "price" },
-                on: { countchanged: _vm.changePrice }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("td", [
-            _c("span", [
-              _vm._v(_vm._s(_vm._f("roundtotwo")(_vm.count_item * _vm.price)))
-            ])
-          ]),
-          _vm._v(" "),
-          _c("td", [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.vat_rate,
-                    expression: "vat_rate"
-                  }
-                ],
-                attrs: { name: "vat_rate" },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.vat_rate = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
-                  }
-                }
-              },
-              [
-                _c("option", { attrs: { value: "0" } }, [_vm._v("Без НДС")]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "10" } }, [_vm._v("10")]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "20" } }, [_vm._v("20")])
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("td", [
-            _c("span", [
-              _vm._v(
-                " " +
-                  _vm._s(
-                    _vm._f("roundtotwo")(
-                      (_vm.price * _vm.count_item * _vm.vat_rate) / 100
-                    )
-                  ) +
-                  " "
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("td", [
-            _c("span", [
-              _vm._v(
-                " " +
-                  _vm._s(
-                    _vm._f("roundtotwo")(
-                      _vm.count_item * _vm.price +
-                        (_vm.count_item * _vm.price * _vm.vat_rate) / 100
-                    )
-                  ) +
-                  " "
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("td", [
-            _c("a", { staticClass: "button tiny" }, [_vm._v(_vm._s(_vm.mes))])
+  return _c(
+    "tbody",
+    [
+      _c("tr", [
+        _c("td", [_vm._v("1")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("\n\t\t\t" + _vm._s(_vm.info) + "\n\t\t")]),
+        _vm._v(" "),
+        _c(
+          "td",
+          [
+            _c("input-digit-component", {
+              attrs: { name: "count_item", rate: "2", value: 855 },
+              on: { countchanged: _vm.changeCount }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "td",
+          [
+            _c("input-digit-component", {
+              attrs: { name: "price" },
+              on: { countchanged: _vm.changePrice }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("td", [
+          _c("span", [
+            _vm._v(_vm._s(_vm._f("roundtotwo")(_vm.count_item * _vm.price)))
           ])
         ]),
         _vm._v(" "),
-        _vm._l(_vm.consignment.items, function(item) {
-          return _c("tr", [
-            _c("td", [_vm._v(_vm._s(item.id))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(item.smv.aricle.name))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(item.count))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(item.price))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(item.amount))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(item.vat_rate))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(item.amount_vat))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(item.total))]),
-            _vm._v(" "),
-            _c("td")
+        _c("td", [
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.vat_rate,
+                  expression: "vat_rate"
+                }
+              ],
+              attrs: { name: "vat_rate" },
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.vat_rate = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            [
+              _c("option", { attrs: { value: "0" } }, [_vm._v("Без НДС")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "10" } }, [_vm._v("10")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "20" } }, [_vm._v("20")])
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("td", [
+          _c("span", [
+            _vm._v(
+              " " +
+                _vm._s(
+                  _vm._f("roundtotwo")(
+                    (_vm.price * _vm.count_item * _vm.vat_rate) / 100
+                  )
+                ) +
+                " "
+            )
           ])
-        })
-      ],
-      2
-    )
-  ])
+        ]),
+        _vm._v(" "),
+        _c("td", [
+          _c("span", [
+            _vm._v(
+              " " +
+                _vm._s(
+                  _vm._f("roundtotwo")(
+                    _vm.count_item * _vm.price +
+                      (_vm.count_item * _vm.price * _vm.vat_rate) / 100
+                  )
+                ) +
+                " "
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _vm._m(0)
+      ]),
+      _vm._v(" "),
+      _vm._l(_vm.consignment.items, function(item) {
+        return _c("tr", [
+          _c("td", [_vm._v(_vm._s(item.id))]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(item.cmv.article.name))]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(item.count))]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(item.price))]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(item.amount))]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(item.vat_rate))]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(item.amount_vat))]),
+          _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(item.total))]),
+          _vm._v(" "),
+          _c("td", [
+            _c(
+              "a",
+              { staticClass: "button tiny", on: { click: _vm.delItem } },
+              [_vm._v("Удалить")]
+            )
+          ])
+        ])
+      })
+    ],
+    2
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", { pre: true }, [
-      _c("tr", [
-        _c("th", [_vm._v("№")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Наименование позиции:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Кол-во:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Цена:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Сумма:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("% НДС:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("НДС:")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Всего:")]),
-        _vm._v(" "),
-        _c("th")
-      ])
+    return _c("td", [
+      _c("a", { staticClass: "button tiny" }, [_vm._v("Добавить")])
     ])
   }
 ]

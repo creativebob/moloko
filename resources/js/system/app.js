@@ -24,6 +24,7 @@ Vue.component('example-component', require('../components/ExampleComponent.vue')
 Vue.component('citysearch-component', require('../components/system/CitySearchComponent.vue'));
 Vue.component('consignmentitemadd-component', require('../components/system/ConsignmentItemAddComponent.vue'));
 Vue.component('input-digit-component', require('../components/system/InputDigitComponent.vue'));
+// Vue.component('new-test-component', require('../components/system/NewTestComponent.vue'));
 
 // Vue.component('dropzone-component', require('../components/system/DropzoneComponent.vue'));
 

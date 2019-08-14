@@ -137,7 +137,7 @@ class ConsignmentController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $consignment = Consignment::with('items.smv')
+        $consignment = Consignment::with('items.cmv.article')
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
@@ -214,4 +214,7 @@ class ConsignmentController extends Controller
         }
 
     }
+
+
+
 }
