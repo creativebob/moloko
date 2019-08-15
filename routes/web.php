@@ -30,7 +30,7 @@ Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('ge
 
 // ----------------------------- Рабочий стол -------------------------------------
 
-Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
+Route::get('/dashboard', 'DashboardController@index')->name('dashboard.index');
 
 // -------------------------------------- Директории ---------------------------------------------------
 Route::get('directories', 'DirectoryController@index')->middleware('auth')->name('directories.index');

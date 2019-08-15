@@ -4,7 +4,7 @@
 					@if(is_null($catalogs_goods_item->parent_id))
 						<li><a href="#"><h3>{{ $catalogs_goods_item->name }}</h3></a>
 							@isset ($catalogs_goods_item->childrens)
-								@include($site->alias.'.includes.catalogs_goods.sidebar_item', ['items' => $catalogs_goods_item->childrens])
+								@include('project.includes.catalogs_goods.sidebar_item', ['items' => $catalogs_goods_item->childrens])
 							@endisset
 						</li>
 					@endif

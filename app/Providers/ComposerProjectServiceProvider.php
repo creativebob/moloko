@@ -26,12 +26,12 @@ class ComposerProjectServiceProvider extends ServiceProvider
 
         view()->composer([
             $host. '.layouts.navigations.nav', 
-            $host. '.includes.menus.menu'
+            'project.includes.menus.menu'
         ], NavigationsComposer::class);
 
         view()->composer([
-            $host. '.includes.catalogs_services.accordion',
-            $host. '.includes.catalogs_services.menu_one_level',
+            'project.includes.catalogs_services.accordion',
+            'project.includes.catalogs_services.menu_one_level',
             ], CatalogsServiceComposer::class);
 
         view()->composer($host. '.includes.catalogs_goods.accordion', CatalogsGoodsComposer::class);
