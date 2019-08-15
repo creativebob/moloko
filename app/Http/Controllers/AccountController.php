@@ -107,8 +107,8 @@ class AccountController extends Controller
             $account->moderation = true;
         }
 
-        $account->system = $request->has('system');
-        $account->display = $request->has('display');
+        $account->system = $request->system;
+        $account->display = $request->display;
 
         // Получаем авторизованного пользователя
         $user = $request->user();
@@ -198,8 +198,8 @@ class AccountController extends Controller
         $account->api_token = $request->api_token;
         $account->secret = $request->secret;
 
-        $account->system = $request->has('system');
-        $account->display = $request->has('display');
+        $account->system = $request->system;
+        $account->display = $request->display;
 
         $account->editor_id = hideGod($request->user());
 

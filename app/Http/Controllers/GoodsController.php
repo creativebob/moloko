@@ -4,21 +4,13 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Goods;
-use App\Article;
 use App\GoodsCategory;
-use App\Raw;
-use App\RawsArticle;
 use App\Manufacturer;
-use App\Album;
-use App\Metric;
-use App\Entity;
-
-use App\Catalog;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\GoodsRequest;
-use App\Http\Requests\ArticleRequest;
+use App\Http\Requests\GoodsStoreRequest;
+use App\Http\Requests\ArticleStoreRequest;
 
 // Куки
 use Illuminate\Support\Facades\Cookie;
@@ -285,7 +277,7 @@ class GoodsController extends Controller
         ]);
     }
 
-    public function store(ArticleRequest $request)
+    public function store(ArticleStoreRequest $request)
     {
 
         // Подключение политики
@@ -398,7 +390,7 @@ class GoodsController extends Controller
         ]);
     }
 
-    public function update(ArticleRequest $request, $id)
+    public function update(ArticleStoreRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
@@ -417,8 +409,8 @@ class GoodsController extends Controller
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
-            $cur_goods->display = $request->has('display');
-            $cur_goods->system = $request->has('system');
+            $cur_goods->display = $request->display;
+            $cur_goods->system = $request->system;
 
             if($article->draft){
                 $cur_goods->price_unit_id = $request->price_unit_id;

@@ -154,8 +154,8 @@ class PostController extends Controller
         }
 
         // Cистемная запись
-        $post->system = $request->has('system');
-        $post->display = $request->has('display');
+        $post->system = $request->system;
+        $post->display = $request->display;
 
         $post->company_id = $user->company_id;
         $post->author_id = $user_id;
@@ -385,8 +385,8 @@ class PostController extends Controller
         }
 
         // Модерация и системная запись
-        $post->system = $request->has('system');
-        $post->moderation = $request->has('moderation');
+        $post->system = $request->system;
+        $post->moderation = $request->moderation;
 
         $post->name = $request->name;
         $post->title = $request->title;
@@ -397,7 +397,7 @@ class PostController extends Controller
         $post->publish_begin_date = $request->publish_begin_date;
         $post->publish_end_date = $request->publish_end_date;
 
-        $post->display = $request->has('display');
+        $post->display = $request->display;
         $post->editor_id = $user_id;
         $post->save();
 

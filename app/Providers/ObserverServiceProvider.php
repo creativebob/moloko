@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
+use App\CatalogsService;
 use App\Container;
 use App\ContainersCategory;
 use App\Direction;
@@ -10,6 +12,8 @@ use App\ExpendablesCategory;
 use App\GoodsCategory;
 use App\Menu;
 use App\Observers\CatalogsGoodsItemObserver;
+use App\Observers\CatalogsGoodsObserver;
+use App\Observers\CatalogsServiceObserver;
 use App\Observers\ContainerObserver;
 use App\Observers\ContainersCategoryObserver;
 use App\Observers\DirectionObserver;
@@ -18,6 +22,7 @@ use App\Observers\GoodsCategoryObserver;
 use App\Observers\MenuObserver;
 use App\Observers\PageObserver;
 use App\Observers\PluginObserver;
+use App\Observers\PricesGoodsHistoryObserver;
 use App\Observers\PricesGoodsObserver;
 use App\Observers\RoomsCategoryObserver;
 use App\Observers\SectorObserver;
@@ -26,6 +31,7 @@ use App\Observers\WorkflowsCategoryObserver;
 use App\Page;
 use App\Plugin;
 use App\PricesGoods;
+use App\PricesGoodsHistory;
 use App\RoomsCategory;
 use App\Sector;
 use App\ServicesCategory;
@@ -129,12 +135,15 @@ class ObserverServiceProvider extends ServiceProvider
         Plugin::observe(PluginObserver::class);
 
         // Каталоги услуг
+        CatalogsGoods::observe(CatalogsGoodsObserver::class);
         CatalogsServicesItem::observe(CatalogsServicesItemObserver::class);
         PricesService::observe(PricesServiceObserver::class);
 
         // Каталоги товаров
+        CatalogsService::observe(CatalogsServiceObserver::class);
         CatalogsGoodsItem::observe(CatalogsGoodsItemObserver::class);
         PricesGoods::observe(PricesGoodsObserver::class);
+        PricesGoodsHistory::observe(PricesGoodsHistoryObserver::class);
 
         // Альбомы
         AlbumsCategory::observe(AlbumsCategoryObserver::class);

@@ -97,8 +97,8 @@ class ArticlesGroupController extends Controller
             $articles_group->moderation = true;
         }
 
-        $articles_group->system = $request->has('system');
-        $articles_group->display = $request->has('display');
+        $articles_group->system = $request->system;
+        $articles_group->display = $request->display;
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -152,10 +152,10 @@ class ArticlesGroupController extends Controller
 
 
         // Модерация и системная запись
-        $articles_group->system = $request->has('system');
-        $articles_group->display = $request->has('display');
+        $articles_group->system = $request->system;
+        $articles_group->display = $request->display;
 
-        $articles_group->moderation = $request->has('moderation');
+        $articles_group->moderation = $request->moderation;
 
         $articles_group->editor_id = hideGod($request->user());
         $articles_group->save();

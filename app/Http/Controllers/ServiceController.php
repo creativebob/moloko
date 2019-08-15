@@ -310,8 +310,8 @@ class ServiceController extends Controller
         if (!is_array($result)) {
 
             $service->serial = $request->has('serial');
-            $service->display = $request->has('display');
-            $service->system = $request->has('system');
+            $service->display = $request->display;
+            $service->system = $request->system;
             $service->save();
 
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ

@@ -16,6 +16,13 @@ class PricesGoodsObserver
         $this->store($prices_goods);
     }
 
+    public function created(PricesGoods $prices_goods)
+    {
+        $prices_goods->history()->create([
+            'price' => $prices_goods->price,
+        ]);
+    }
+
     public function updating(PricesGoods $prices_goods)
     {
         $this->update($prices_goods);

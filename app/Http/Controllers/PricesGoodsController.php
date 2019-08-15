@@ -214,17 +214,6 @@ class PricesGoodsController extends Controller
 
     // --------------------------------- Ajax ----------------------------------------
 
-    public function ajax_store(Request $request)
-    {
-
-        $data = $request->input();
-        $cur_price_goods = (new PricesGoods())->create($data);
-
-        return view('products.articles.goods.prices.price', compact('cur_price_goods'));
-    }
-
-
-
     public function sync(Request $request, $catalog_id)
     {
 
@@ -291,6 +280,15 @@ class PricesGoodsController extends Controller
         $price = $cur_price_goods->price;
         // dd($price);
         return view('products.articles.goods.prices.catalogs_item_price', compact('price'));
+    }
+
+    public function ajax_store(Request $request)
+    {
+        dd($request);
+        $data = $request->input();
+        $cur_price_goods = (new PricesGoods())->create($data);
+
+        return view('products.articles.goods.prices.price', compact('cur_price_goods'));
     }
 
     public function ajax_edit(Request $request, $catalog_id)

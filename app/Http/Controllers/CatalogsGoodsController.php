@@ -72,36 +72,10 @@ class CatalogsGoodsController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $catalogs_goods = new CatalogsGoods;
-        $catalogs_goods->name = $request->name;
-        $catalogs_goods->description = $request->description;
-
-        // Алиас
-        $catalogs_goods->alias = empty($request->alias) ? Str::slug($request->name) : $request->alias;
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        if($answer['automoderate'] == false){
-            $catalogs_goods->moderation = true;
-        }
-
-        // Cистемная запись
-        $catalogs_goods->system = $request->has('system');
-        $catalogs_goods->display = $request->has('display');
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        $catalogs_goods->company_id = $user->company_id;
-        $catalogs_goods->author_id = hideGod($user);
-
-        $catalogs_goods->save();
+        $data = $request->input();
+        $catalogs_goods = (new $this->class())->create($data);
 
         if ($catalogs_goods) {
-
-            // Сайты
-            $catalogs_goods->sites()->attach($request->sites);
 
             return redirect()->route('catalogs_goods.index');
 
@@ -146,24 +120,10 @@ class CatalogsGoodsController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods);
 
-        $catalogs_goods->name = $request->name;
-        $catalogs_goods->description = $request->description;
+        $data = $request->input();
+        $result = $catalogs_goods->update($data);
 
-        // Если ввели алиас руками
-        if (isset($request->alias) && ($catalogs_goods->alias != $request->alias)) {
-            $catalogs_goods->alias = $request->alias;
-        }
-
-        $catalogs_goods->system = $request->has('system');
-        $catalogs_goods->moderation = $request->has('moderation');
-        $catalogs_goods->display = $request->has('display');
-
-        $catalogs_goods->save();
-
-        if ($catalogs_goods) {
-
-            // Обновляем сайты
-            $catalogs_goods->sites()->sync($request->sites);
+        if ($result) {
 
             return redirect()->route('catalogs_goods.index');
 

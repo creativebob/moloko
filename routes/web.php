@@ -1022,11 +1022,11 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
     Route::any('edit_prices_goods', 'PricesGoodsController@ajax_edit');
     Route::any('update_prices_goods', 'PricesGoodsController@ajax_update');
 
-
+    Route::any('prices_goods/ajax_store', 'PricesGoodsController@ajax_store');
     Route::resource('prices_goods', 'PricesGoodsController');
     Route::any('prices_goods/{id}/archive', 'PricesGoodsController@ajax_archive');
 
-    Route::any('prices_goods/ajax_store', 'PricesGoodsController@ajax_store');
+
 
     Route::any('prices_goods_sync', 'PricesGoodsController@sync')->name('prices_goods.sync');
 });

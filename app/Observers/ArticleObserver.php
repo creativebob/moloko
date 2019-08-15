@@ -35,7 +35,7 @@ class ArticleObserver
             // $article->compositions_count = $compositions_count;
 
             // Порции
-            if ($request->has('portion_status')) {
+            if ($request->portion_status == 1) {
                 $article->portion_status = $request->portion_status;
                 $article->portion_name = $request->portion_name;
                 $article->portion_abbreviation = $request->portion_abbreviation;

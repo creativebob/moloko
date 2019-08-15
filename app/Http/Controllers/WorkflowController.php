@@ -302,8 +302,8 @@ class WorkflowController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $workflow);
 
-            $workflow->display = $request->has('display');
-            $workflow->system = $request->has('system');
+            $workflow->display = $request->display;
+            $workflow->system = $request->system;
             $workflow->save();
 
 

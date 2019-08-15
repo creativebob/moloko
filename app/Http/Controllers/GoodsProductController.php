@@ -121,8 +121,8 @@ class GoodsProductController extends Controller
             $goods_product->set_status = $request->set_status;
         }
 
-        $goods_product->system = $request->has('system');
-        $goods_product->display = $request->has('display');
+        $goods_product->system = $request->system;
+        $goods_product->display = $request->display;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -186,10 +186,10 @@ class GoodsProductController extends Controller
         }
 
         // Модерация и системная запись
-        $goods_product->system = $request->has('system');
-        $goods_product->display = $request->has('display');
+        $goods_product->system = $request->system;
+        $goods_product->display = $request->display;
 
-        $goods_product->moderation = $request->has('moderation');
+        $goods_product->moderation = $request->moderation;
 
         $goods_product->editor_id = hideGod($request->user());
         $goods_product->save();

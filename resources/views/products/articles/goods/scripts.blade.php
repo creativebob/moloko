@@ -190,7 +190,7 @@
             if ($('#form-prices_goods input[name=price]').val() == '') {
                 $('#form-prices_goods .form-error').show();
             } else {
-                $.post('/admin/catalogs_goods/' + catalog_id + ' /prices_goods/ajax_store', $('#form-prices_goods :input').serialize(), function(html) {
+                $.post('/admin/catalogs_goods/' + catalog_id + '/prices_goods/ajax_store', $('#form-prices_goods :input').serialize(), function(html) {
                     $('#table-prices').append(html);
                     checkPrice();
                 });

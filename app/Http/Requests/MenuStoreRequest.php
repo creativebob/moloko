@@ -30,7 +30,7 @@ class MenuStoreRequest extends FormRequest
             'icon' => 'string|max:255|nullable',
             'alias' => 'string|max:255|nullable',
 
-            'page_id' => 'integer|nullable|exists:pages,id',
+            'page_id' => 'integer|nullable',
 
             'new_blank' => 'integer|max:1|nullable',
 

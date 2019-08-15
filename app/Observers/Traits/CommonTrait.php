@@ -41,9 +41,14 @@ trait CommonTrait
 
     protected function setSlug($item)
     {
-        if (empty($item->alias)) {
-            $item->alias = \Str::slug($item->name);
-            $item->slug = \Str::slug($item->name);
-        }
+        $item->slug = \Str::slug($item->name);
     }
+
+//    protected function setSlug($item)
+//    {
+//        if (empty($item->alias)) {
+//            $item->alias = \Str::slug($item->name);
+//            $item->slug = \Str::slug($item->name);
+//        }
+//    }
 }
