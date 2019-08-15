@@ -7,7 +7,6 @@
                         </div>
 
                         <div class="cell small-12 medium-4 large-3 block-header-2">
-                            @include($site->alias.'.includes.catalogs_services.menu_one_level')
                         </div>
 
                         <div class="cell small-12 medium-4 large-3 block-header-3">
