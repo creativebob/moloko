@@ -51,6 +51,10 @@ class RubricatorsItem extends Model
         'parent_id',
 
         'rubricator_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Родитель

@@ -15,13 +15,21 @@ class CreateMenusTable extends Migration
             $table->bigInteger('navigation_id')->unsigned()->nullable()->comment('Id навигации');
             $table->foreign('navigation_id')->references('id')->on('navigations');
 
-            $table->string('name')->nullable()->comment('Имя категории меню');
+            $table->string('name')->nullable()->comment('Название');
             $table->string('slug')->nullable()->index()->comment('Слаг');
+            $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
+
             $table->string('icon')->nullable()->comment('Имя иконки меню');
             $table->string('alias')->nullable()->comment('Ссылка на страницу');
             $table->string('tag')->nullable()->comment('Ключ для поиска');
 
-            $table->bigInteger('page_id')->unsigned()->nullable()->comment('Id страницы пункта меню');
+            $table->text('description')->nullable()->comment('Описание');
+            $table->text('seo_description')->nullable()->comment('Описание для сайта');
+
+            $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
+            $table->foreign('photo_id')->references('id')->on('photos');
+
+            $table->bigInteger('page_id')->unsigned()->nullable()->comment('Id страницы');
             $table->foreign('page_id')->references('id')->on('pages');
 
             $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id родителя');

@@ -48,7 +48,11 @@ class Application extends Model
         'supplier_id',
         'company_id',
         'author_id',
-        'draft'
+        'draft',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Автор

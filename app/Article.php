@@ -79,6 +79,10 @@ class Article extends Model
         'draft',
         'kit',
         'video_url',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Группа

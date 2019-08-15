@@ -52,6 +52,10 @@ class CatalogsServicesItem extends Model
         'parent_id',
 
 		'catalogs_service_id',
+
+        'display',
+        'system',
+        'moderation'
 	];
 
 	// Каталог

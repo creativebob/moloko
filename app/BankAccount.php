@@ -51,6 +51,10 @@ class BankAccount extends Model
         'company_id',
         'holder_id',
         'bank_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем компанию.

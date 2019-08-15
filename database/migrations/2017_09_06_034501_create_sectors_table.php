@@ -16,12 +16,15 @@ class CreateSectorsTable extends Migration
         Schema::create('sectors', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('name')->index()->comment('Название области');
+            $table->string('name')->index()->comment('Название');
             $table->string('slug')->index()->nullable()->comment('Слаг');
             $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
             $table->string('tag')->nullable()->comment('Тэг');
 
-            $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id отдела, в котором находится отдел');
+            $table->text('description')->nullable()->comment('Описание');
+            $table->text('seo_description')->nullable()->comment('Описание для сайта');
+
+            $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id родителя');
             $table->foreign('parent_id')->references('id')->on('sectors');
 
             $table->bigInteger('category_id')->unsigned()->nullable()->comment('Id категории');

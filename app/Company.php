@@ -64,7 +64,11 @@ class Company extends Model
         'location_id',
         'sector_id',
         'legal_form_id',
-        'birthday_company'
+        'birthday_company',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Фильтрация по городу

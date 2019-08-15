@@ -50,6 +50,10 @@ class Client extends Model
     protected $fillable = [
         'company_id',
         'client_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем автора

@@ -13,13 +13,13 @@ class PageObserver
     public function creating(Page $page)
     {
         $this->store($page);
-        $this->setSlug($page);
+        $this->setPageSlug($page);
     }
 
     public function updating(Page $page)
     {
         $this->update($page);
-        $this->setSlug($page);
+        $this->setPageSlug($page);
     }
 
     public function deleting(Page $page)
@@ -27,7 +27,7 @@ class PageObserver
         $this->destroy($page);
     }
 
-    protected function setSlug(Page $page)
+    protected function setPageSlug(Page $page)
     {
         $page->slug = \Str::slug($page->title);
     }

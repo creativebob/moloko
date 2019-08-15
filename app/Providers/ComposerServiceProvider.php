@@ -205,7 +205,7 @@ class ComposerServiceProvider extends ServiceProvider
 
 
         // Стандартные шаблоны типа "меню"
-        view()->composer('common.accordions.categories_list', AccordionsComposer::class);
+        view()->composer('system.common.accordions.categories_list', AccordionsComposer::class);
         view()->composer('includes.menu_views.category_list', MenuViewComposer::class);
         view()->composer('departments.filials_list', DepartmentsViewComposer::class);
         view()->composer('includes.lists.departments', DepartmentsComposer::class);

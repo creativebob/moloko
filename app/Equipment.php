@@ -49,6 +49,10 @@ class Equipment extends Model
         'category_id',
         'article_id',
 
+        'display',
+        'system',
+        'moderation'
+
     ];
 
     // Артикул

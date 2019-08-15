@@ -47,7 +47,6 @@ class ArticlesGroup extends Model
     // use DateIntervalFilter;
 
     protected $fillable = [
-        'company_id',
         'name',
         'photo_id',
         'stauts',
@@ -56,8 +55,10 @@ class ArticlesGroup extends Model
         'units_category_id',
         'rule_id',
         'album_id',
-        'author_id',
-        'editor_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Артикулы

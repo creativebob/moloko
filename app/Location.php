@@ -51,6 +51,10 @@ class Location extends Model
         'author_id',
         'latitude',
         'longitude',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем город.

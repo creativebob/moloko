@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Observers\Traits\CategoriesTrait;
 use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\ProductsCategoriesTrait;
 use App\RoomsCategory as Category;
 
 class RoomsCategoryObserver
@@ -11,6 +12,7 @@ class RoomsCategoryObserver
 
     use CommonTrait;
     use CategoriesTrait;
+    use ProductsCategoriesTrait;
 
     public function creating(Category $category)
     {
@@ -29,6 +31,8 @@ class RoomsCategoryObserver
         $this->updateCategoryChildsSlug($category);
         $this->updateCategoryChildsLevel($category);
         $this->updateCategoryChildsCategoryId($category);
+
+        $this->syncManufacturers($category);
     }
 
     public function deleting(Category $category)

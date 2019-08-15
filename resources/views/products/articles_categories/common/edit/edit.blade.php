@@ -91,17 +91,12 @@
 
                     </div>
 
-                    @if (is_null($category->parent_id) && $category->getTable() == 'goods_categories')
-                    <div class="small-12 cell checkbox">
-                        @if ($category->directions != null)
-                        {{ Form::checkbox('direction', 1, ($category->directions->archive == false) ? 1 : 0, ['id' => 'direction-checkbox']) }}
-                        @else
-                        {{ Form::checkbox('direction', 1, null, ['id' => 'direction-checkbox']) }}
-                        @endif
-
-                        <label for="direction-checkbox"><span>Направление</span></label>
-                        {{-- @include('includes.control.direction', ['direction' => isset($goods_category->direction) ]) --}}
-                    </div>
+                    @if (is_null($category->parent_id) && ($category->getTable() == 'goods_categories'))
+                        <div class="small-12 cell checkbox">
+                            {{ Form::hidden('is_direction', 0) }}
+                            {{ Form::checkbox('is_direction', 1, null, ['id' => 'direction-checkbox']) }}
+                            <label for="direction-checkbox"><span>Направление</span></label>
+                        </div>
                     @endif
 
                     @include('includes.control.checkboxes', ['item' => $category])

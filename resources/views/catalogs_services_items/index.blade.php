@@ -35,7 +35,7 @@
             @if ($catalogs_services_items->isNotEmpty())
 
             {{-- Шаблон вывода и динамического обновления --}}
-            @include('common.accordions.categories_list', [
+            @include('system.common.accordions.categories_list', [
                 'items' => $catalogs_services_items,
                 'class' => App\CatalogsServicesItem::class,
                 'entity' => 'catalogs_services_items',

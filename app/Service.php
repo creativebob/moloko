@@ -47,6 +47,10 @@ class Service extends Model
     protected $fillable = [
         'category_id',
         'process_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
 

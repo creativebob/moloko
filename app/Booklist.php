@@ -46,9 +46,14 @@ class Booklist extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+
     protected $fillable = [
         'booklist_name', 
-        'booklist_description', 
+        'booklist_description',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     public function list_items()

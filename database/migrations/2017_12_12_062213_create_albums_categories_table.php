@@ -16,11 +16,14 @@ class CreateAlbumsCategoriesTable extends Migration
         Schema::create('albums_categories', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('name')->index()->comment('Название категории альбомов');
+            $table->string('name')->index()->comment('Название');
             $table->string('slug')->index()->nullable()->comment('Слаг');
             $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
 
-            $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id категории альбома');
+            $table->text('description')->nullable()->comment('Описание');
+            $table->text('seo_description')->nullable()->comment('Описание для сайта');
+
+            $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id родителя');
             $table->foreign('parent_id')->references('id')->on('albums_categories');
 
             $table->bigInteger('category_id')->unsigned()->nullable()->comment('Id категории');

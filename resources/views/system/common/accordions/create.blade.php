@@ -7,7 +7,7 @@
 
 	{{ Form::open(['id' => 'form-create', 'data-abide', 'novalidate']) }}
 
-	@include('common.accordions.form', ['submit_text' => 'Добавить', 'class' => 'submit-create'])
+	@include('system.common.accordions.form', ['submit_text' => 'Добавить', 'class' => 'submit-create'])
 
 	{{ Form::close() }}
 

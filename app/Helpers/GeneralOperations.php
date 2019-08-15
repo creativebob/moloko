@@ -152,45 +152,68 @@ function getClaimNumbers($user) {
 
 
 // Функция получения широты и долготы в Яндекс Картах
-function yandex_geocoder ($location) {
+function yandexGeocoder ($location) {
 
-    // Если у локация не определялась, т.е. у нее не вписано количество ответов
-    if ($location->answer_count == null) {
+    if (isDomainAvailible('https://geocode-maps.yandex.ru')){
 
-        // Формируем запрос в Яндекс Карты
-        $request_params = [
-            'geocode' => $location->city->name . ', ' .$location->address,
-            'format' => 'json',
-        ];
-        // Преобразуем его в GET строку
-        $params = http_build_query($request_params);
-        // dd($get_params);
-        // Отправляем
-        $result = (file_get_contents('https://geocode-maps.yandex.ru/1.x/?' . $params));
-        // dd($get_params);
+        // Если у локация не определялась, т.е. у нее не вписано количество ответов
+        if ($location->answer_count == null) {
 
-        //     $client = new \GuzzleHttp\Client();
-        // $res = $client->request('GET', 'https://geocode-maps.yandex.ru/1.x/?');
-        // echo $res->getStatusCode();
+            // Формируем запрос в Яндекс Карты
+            $request_params = [
+                'geocode' => $location->city->name . ', ' .$location->address,
+                'format' => 'json',
+            ];
+            // Преобразуем его в GET строку
+            $params = http_build_query($request_params);
+            // dd($get_params);
+            // Отправляем
+            $result = (file_get_contents('https://geocode-maps.yandex.ru/1.x/?' . $params));
+            // dd($get_params);
 
-        // $client = new Client(['base_uri' => 'https://geocode-maps.yandex.ru/1.x/']);
-        // $request = $client->createRequest();
-        // $request->getQuery()
-        // ->set('geocode', $location->city->name . ', ' .$location->address)
-        // ->set('format', 'json');
+            //     $client = new \GuzzleHttp\Client();
+            // $res = $client->request('GET', 'https://geocode-maps.yandex.ru/1.x/?');
+            // echo $res->getStatusCode();
 
-        // $result = $request->send();
+            // $client = new Client(['base_uri' => 'https://geocode-maps.yandex.ru/1.x/']);
+            // $request = $client->createRequest();
+            // $request->getQuery()
+            // ->set('geocode', $location->city->name . ', ' .$location->address)
+            // ->set('format', 'json');
 
-        $res = json_decode($result);
-        if (count($res->response->GeoObjectCollection->featureMember) == 1) {
+            // $result = $request->send();
 
-            $string = $res->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
-            $coords = explode(' ', $string);
-            $update_location = Location::whereId($location->id)->update(['longitude' => $coords[0], 'latitude' => $coords[1], 'parse_count' => 1, 'answer_count' => 1]);
-        } else {
-            $update_location = Location::whereId($location->id)->update(['answer_count' => count($res->response->GeoObjectCollection->featureMember)]);
+            $res = json_decode($result);
+            if (count($res->response->GeoObjectCollection->featureMember) == 1) {
+
+                $string = $res->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
+                $coords = explode(' ', $string);
+                $update_location = Location::whereId($location->id)->update(['longitude' => $coords[0], 'latitude' => $coords[1], 'parse_count' => 1, 'answer_count' => 1]);
+            } else {
+                $update_location = Location::whereId($location->id)->update(['answer_count' => count($res->response->GeoObjectCollection->featureMember)]);
+            }
         }
     }
+}
+
+//возвращает true, если домен доступен, false если нет
+function isDomainAvailible($domain)
+{
+    //проверка на валидность урла
+    if(!filter_var($domain, FILTER_VALIDATE_URL)){
+        return false;
+    }
+    //инициализация curl
+    $curlInit = curl_init($domain);
+    curl_setopt($curlInit,CURLOPT_CONNECTTIMEOUT,10);
+    curl_setopt($curlInit,CURLOPT_HEADER,true);
+    curl_setopt($curlInit,CURLOPT_NOBODY,true);
+    curl_setopt($curlInit,CURLOPT_RETURNTRANSFER,true);
+    //получение ответа
+    $response = curl_exec($curlInit);
+    curl_close($curlInit);
+    if ($response) return true;
+    return false;
 }
 
 /**
@@ -219,9 +242,15 @@ function create_location($request, $country_id = null, $city_id = null, $address
 
         // Ищем или создаем локацию
         $location = Location::with('city')
-        ->firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
+        ->firstOrCreate(compact(
+            'country_id',
+            'city_id',
+            'address'
+        ), [
+            'author_id' => $user_id
+        ]);
 
-        yandex_geocoder($location);
+        yandexGeocoder($location);
 
         $location_id = $location->id;
         return $location_id;
@@ -253,7 +282,7 @@ function create_location($request, $country_id = null, $city_id = null, $address
         if ($item->location_id != $location->id) {
             $item->location_id = $location->id;
 
-            yandex_geocoder($location);
+            yandexGeocoder($location);
         }
 
         return $item;

@@ -15,9 +15,6 @@ trait CommonTrait
 
         $request = request();
 
-        $item->system = $request->has('system');
-        $item->display = $request->has('display');
-
         $user = $request->user();
         $item->company_id = $user->company_id;
         $item->author_id = hideGod($user);
@@ -28,10 +25,6 @@ trait CommonTrait
     public function update($item)
     {
         $request = request();
-
-        $item->system = $request->has('system');
-        $item->display = $request->has('display');
-        $item->moderation = $request->has('moderation');
 
         $item->editor_id = hideGod($request->user());
 

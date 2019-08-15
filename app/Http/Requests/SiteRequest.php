@@ -24,7 +24,7 @@ class SiteRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string|max:255|required',
+            'name' => 'required|string|max:255',
             'domain' => 'string|max:255|required',
 
             // 'menus.*'  => 'integer|distinct',

@@ -45,14 +45,13 @@ class CatalogsService extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'company_id',
         'name',
         'alias',
         'slug',
-        'parent_id',
-        'category_id',
-        'author_id',
+
         'display',
+        'system',
+        'moderation'
     ];
 
     public function price_services()

@@ -24,7 +24,7 @@ class CatalogsServiceRequest extends FormRequest
     public function rules()
     {
       return [
-        'name' => 'string|max:255|required',
+        'name' => 'required|string|max:255',
         'alias' => 'string|max:255|nullable',
         'slug' => 'string|max:255|nullable',
 

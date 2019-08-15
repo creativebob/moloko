@@ -24,10 +24,8 @@ class CatalogsGoodsItemStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string|max:255|required',
+            'name' => 'required|string|max:255',
             'parent_id' => 'integer|nullable',
-
-            'catalogs_goods_id' => 'integer|exists:catalogs_goods',
 
             'display' => 'integer|max:1|nullable',
             'system' => 'integer|max:1|nullable',

@@ -57,7 +57,11 @@ class City extends Model
         'vk_external_id',
         'display',
         'system',
-        'author_id'
+        'author_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Район

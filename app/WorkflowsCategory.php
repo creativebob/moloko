@@ -52,7 +52,11 @@ class WorkflowsCategory extends Model
         'seo_description',
         'parent_id',
 
-        'processes_type_id'
+        'processes_type_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Родитель

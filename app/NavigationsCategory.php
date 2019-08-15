@@ -52,6 +52,10 @@ class NavigationsCategory extends Model
         'name',
         'parent_id',
         'category_status',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем компании.

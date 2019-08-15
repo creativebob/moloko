@@ -44,6 +44,20 @@ class Department extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
+    protected $dates = ['deleted_at'];
+
+    protected $fillable = [
+        'location_id',
+        'name',
+        'parent_id',
+        'filial_id',
+        'email',
+
+        'display',
+        'system',
+        'moderation'
+    ];
+
     // Фильтрация для показа системных записей
     public function scopeOnlyFilial($query)
     {
@@ -83,18 +97,7 @@ class Department extends Model
         return $result;
     }
 
-    protected $dates = ['deleted_at'];
-    protected $fillable = [
-        'company_id',
-        'location_id',
-        'name',
-        'parent_id',
-        'filial_id',
-        'author_id',
-        'display',
-        'system-item',
-        'email',
-    ];
+
 
     // Вложенные
     public function childs()

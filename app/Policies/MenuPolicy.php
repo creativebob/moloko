@@ -42,6 +42,13 @@ class MenuPolicy
 
     public function delete(User $user, Menu $model)
     {
+        if ($model->system == 1) {
+            return false;
+        }
+        if ($model->childs->count() > 0) {
+            return false;
+        }
+
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
     }

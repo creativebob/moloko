@@ -25,7 +25,7 @@ class ArticlesGroupRequest extends FormRequest
     {
         return [
 
-            'name' => 'string|max:255|required',
+            'name' => 'required|string|max:255',
             'description' => 'string|nullable',
             'set_status' => 'integer|max:1|nullable',
             'unit_id' => 'integer|nullable',

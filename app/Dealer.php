@@ -50,6 +50,10 @@ class Dealer extends Model
     protected $fillable = [
         'company_id',
         'dealer_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем клиента

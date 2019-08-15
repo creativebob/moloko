@@ -39,26 +39,54 @@ class ExpendablesCategory extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+
     protected $fillable = [
         'name',
+        'description',
+        'seo_description',
         'parent_id',
-        'category_id',
-        'author_id',
-        'display',
-        'system',
-        'mooderation'
     ];
+
+    // Родитель
+    public function parent()
+    {
+        return $this->belongsTo(RawsCategory::class);
+    }
 
     // Вложенные
     public function childs()
     {
-        return $this->hasMany('App\ExpendablesCategory', 'parent_id');
+        return $this->hasMany(ExpendablesCategory::class, 'parent_id');
     }
 
     // Компании
     public function company()
     {
-    	return $this->belongsTo('App\Company');
+    	return $this->belongsTo(Company::class);
+    }
+
+    // Аавтор
+    public function author()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // Аватар
+    public function photo()
+    {
+        return $this->belongsTo(Photo::class);
+    }
+
+    // Производители
+    public function manufacturers()
+    {
+        return $this->morphToMany(Manufacturer::class, 'categories_manufacturer');
+    }
+
+    public function groups()
+    {
+        return $this->morphToMany(ArticlesGroup::class, 'articles_group_entity');
+        // ->where('archive', false);
     }
 
 }

@@ -48,6 +48,10 @@ class Site extends Model
     protected $fillable = [
         'name',
         'domain',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     public function scopeFilter(Builder $builder, QueryFilter $filters)

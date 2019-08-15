@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MenuUpdateRequest;
+use App\Http\Requests\MenuStoreRequest;
 use App\Menu;
 use Illuminate\Http\Request;
-use App\Http\Requests\MenuRequest;
 
 class MenuController extends Controller
 {
@@ -20,8 +21,6 @@ class MenuController extends Controller
         $this->entity_dependence = false;
         $this->type = 'modal';
     }
-
-
 
     public function index(Request $request, $site_id, $navigation_id)
     {
@@ -43,7 +42,7 @@ class MenuController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('common.accordions.categories_list',
+            return view('system.common.accordions.categories_list',
                 [
                     'items' => $menus,
                     'entity' => $this->entity_alias,
@@ -79,13 +78,14 @@ class MenuController extends Controller
         ]);
     }
 
-    public function store(MenuRequest $request, $site_id, $navigation_id)
+    public function store(MenuStoreRequest $request, $site_id, $navigation_id)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $data = $request->input();
+        $data['navigation_id'] = $navigation_id;
         $menu = (new $this->class())->create($data);
 
         // Если к пункту меню привязана страница и мы выключаем/вкючаем его отображение на сайте, то и меняем отображение и у страницы
@@ -104,7 +104,6 @@ class MenuController extends Controller
                 'error_status' => 1,
                 'error_message' => 'Ошибка при записи пункта меню!'
             ];
-
         }
     }
 
@@ -134,7 +133,7 @@ class MenuController extends Controller
         ]);
     }
 
-    public function update(MenuRequest $request, $site_id, $navigation_id, $id)
+    public function update(MenuUpdateRequest $request, $site_id, $navigation_id, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -168,15 +167,14 @@ class MenuController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $menu = Menu::moderatorLimit($answer)
+        $menu = Menu::with([
+            'childs'
+        ])
+        ->moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $menu);
-
-        // Скрываем бога
-        $menu->editor_id = hideGod($request->user());
-        $menu->save();
 
         $parent_id = $menu->parent_id;
 

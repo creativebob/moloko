@@ -28,7 +28,7 @@ class ProcessRequest extends FormRequest
             'unit_id' => 'string|nullable',
             'extra_unit_id' => 'string|nullable',
 
-            'name' => 'string|max:255|required',
+            'name' => 'required|string|max:255',
             'description' => 'string|nullable',
 
             'internal' => 'string|nullable',

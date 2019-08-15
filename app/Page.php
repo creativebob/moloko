@@ -53,6 +53,10 @@ class Page extends Model
         'description',
         'content',
         'alias',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     public function setMydateAttribute($value){

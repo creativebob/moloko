@@ -17,7 +17,7 @@
 
     <div class="icon-list">
         <div class="controls-list">
-            @include ('includes.control.categories_menu_div', ['item' => $item, 'class' => $class, 'color' => 'black'])
+            @include ('system.common.accordions.control.categories_menu_div', ['item' => $item, 'class' => $class, 'color' => 'black'])
         </div>
 
         <div class="actions-list">
@@ -43,7 +43,7 @@
             @endcan
 
             <div class="del">
-                @include('includes.control.item_delete_menu', ['item' => $item])
+                @include('system.common.accordions.control.item_delete_menu', ['item' => $item])
             </div>
         </div>
     </div>
@@ -63,7 +63,7 @@
     <ul class="menu vertical medium-list nested" data-accordion-menu data-multi-open="false">
         @isset($item->childrens)
         @foreach ($item->childrens as $children)
-        @include('common.accordions.items_list', ['item' => $children])
+        @include('system.common.accordions.items_list', ['item' => $children])
         @endforeach
         @else
         <li class="empty-item"></li>

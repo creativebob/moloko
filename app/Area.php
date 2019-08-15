@@ -50,9 +50,6 @@ class Area extends Model
         'name',
         'region_id',
         'country_id',
-        'display',
-        'system',
-        'author_id'
     ];
 
     // Область

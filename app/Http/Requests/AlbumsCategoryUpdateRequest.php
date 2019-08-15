@@ -26,7 +26,7 @@ class AlbumsCategoryUpdateRequest extends FormRequest
         $settings = getSettings('raws_categories');
 
         return [
-            'name' => 'string|max:255|required',
+            'name' => 'required|string|max:255',
             'description' => 'string|nullable',
             'seo_description' => 'string|nullable',
             'parent_id' => 'integer|nullable',

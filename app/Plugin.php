@@ -48,6 +48,10 @@ class Plugin extends Model
         'site_id',
         'account_id',
         'code',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Компания

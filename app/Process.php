@@ -71,6 +71,10 @@ class Process extends Model
 
         'kit',
         'video_url',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Группа

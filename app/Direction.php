@@ -48,10 +48,13 @@ class Direction extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'company_id',
+        'archive',
         'category_id',
         'category_type',
-        'author_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Категории

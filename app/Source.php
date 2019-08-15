@@ -47,6 +47,9 @@ class Source extends Model
     protected $dates = ['deleted_at'];
     protected $fillable = [
 
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем компании

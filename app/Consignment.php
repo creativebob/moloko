@@ -55,7 +55,11 @@ class Consignment extends Model
         'number',
         'stock_id',
         'author_id',
-        'draft'
+        'draft',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Компания

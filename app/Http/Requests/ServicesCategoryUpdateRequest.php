@@ -26,13 +26,17 @@ class ServicesCategoryUpdateRequest extends FormRequest
         $settings = getSettings('raws_categories');
 
         return [
-            'name' => 'string|max:255|required',
+            'name' => 'required|string|max:255',
             'description' => 'string|nullable',
             'seo_description' => 'string|nullable',
             'parent_id' => 'integer|nullable',
 
+            'processes_type_id' => 'required|integer|max:1',
+
             'file' => 'max:'.$settings['img_max_size'].'|mimes:'.$settings['img_formats'].'|nullable',
+
             'manufacturers.*' => 'integer|nullable',
+            'workflows.*' => 'integer|nullable',
 
             'display' => 'integer|max:1|nullable',
             'moderation' => 'integer|max:1|nullable',

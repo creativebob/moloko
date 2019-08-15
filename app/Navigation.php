@@ -51,6 +51,10 @@ class Navigation extends Model
         'site_id',
         'company_id',
         'navigations_category_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Пункты навигации

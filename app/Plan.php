@@ -48,5 +48,9 @@ class Plan extends Model
     protected $fillable = [
         'name',
         'company_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 }

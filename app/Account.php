@@ -51,6 +51,10 @@ class Account extends Model
         'domain',
         'company_id',
         'appends',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Склеиваем имя

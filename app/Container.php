@@ -56,6 +56,9 @@ class Container extends Model
         'unit_portion_goods_id',
         'portion_goods_count',
 
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Артикул

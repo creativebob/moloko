@@ -54,7 +54,11 @@ class ConsignmentsItem extends Model
         'description',
         'total',
         'amount',
-        'stock_id'
+        'stock_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Компания

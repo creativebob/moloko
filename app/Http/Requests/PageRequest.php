@@ -24,7 +24,7 @@ class PageRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string|max:255|required',
+            'name' => 'required|string|max:255',
             'title' => 'string|max:255|required',
             'alias' => 'string|max:255|nullable',
 

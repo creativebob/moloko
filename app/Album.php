@@ -44,10 +44,13 @@ class Album extends Model
 
     protected $fillable = [
         'name',
-        'category_id',
         'personal',
         'slug',
         'description',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Категория

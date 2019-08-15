@@ -49,7 +49,11 @@ class Manufacturer extends Model
     // protected $dates = ['deleted_at'];
     protected $fillable = [
         'company_id', 
-        'manufacturer_id', 
+        'manufacturer_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем компанию.

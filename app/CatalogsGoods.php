@@ -42,10 +42,13 @@ class CatalogsGoods extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'company_id',
         'name',
         'alias',
         'slug',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Пункты

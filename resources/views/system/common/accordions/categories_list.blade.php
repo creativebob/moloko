@@ -23,7 +23,7 @@ $drop = 1;
 
         <div class="controls-list">
 
-            @include ('includes.control.categories_menu_div', [
+            @include ('system.common.accordions.control.categories_menu_div', [
                 'item' => $category,
                 'class' => $class,
                 'color' => 'white'
@@ -54,7 +54,7 @@ $drop = 1;
             @endcan
 
             <div class="del">
-                @include('includes.control.item_delete_menu', ['item' => $category])
+                @include('system.common.accordions.control.item_delete_menu', ['item' => $category])
             </div>
         </div>
 
@@ -76,7 +76,7 @@ $drop = 1;
     <ul class="menu vertical medium-list" data-accordion-menu data-multi-open="false">
         @isset($category->childrens)
         @foreach ($category->childrens as $children)
-        @include('common.accordions.items_list', ['item' => $children])
+        @include('system.common.accordions.items_list', ['item' => $children])
         @endforeach
         @else
         <li class="empty-item"></li>

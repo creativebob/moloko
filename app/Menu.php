@@ -58,12 +58,22 @@ class Menu extends Model
 
         'navigation_id',
         'page_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Родитель
     public function parent()
     {
-        return $this->belongsTo(Navigation::class);
+        return $this->belongsTo(GoodsCategory::class);
+    }
+
+    // Вложенные
+    public function childs()
+    {
+        return $this->hasMany(GoodsCategory::class, 'parent_id');
     }
 
     // Навигации

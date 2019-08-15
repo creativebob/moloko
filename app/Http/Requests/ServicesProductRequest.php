@@ -25,7 +25,7 @@ class ServicesProductRequest extends FormRequest
     {
         return [
             'company_id' => 'integer|nullable', 
-            'name' => 'string|max:255|required', 
+            'name' => 'required|string|max:255',
             // 'article' => 'string|max:255', 
             // 'cost' => 'integer|nullable',
             // 'avatar' => 'integer|nullable',

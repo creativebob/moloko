@@ -4,35 +4,39 @@ namespace App\Observers;
 
 use App\Observers\Traits\CategoriesTrait;
 use App\Observers\Traits\CommonTrait;
-use App\EquipmentsCategory;
+use App\Observers\Traits\ProductsCategoriesTrait;
+use App\EquipmentsCategory as Category;
 
 class EquipmentsCategoryObserver
 {
 
     use CommonTrait;
     use CategoriesTrait;
+    use ProductsCategoriesTrait;
 
-    public function creating(EquipmentsCategory $equipments_category)
+    public function creating(Category $category)
     {
-        $this->store($equipments_category);
-        $this->storeCategory($equipments_category);
+        $this->store($category);
+        $this->storeCategory($category);
     }
 
-    public function updating(EquipmentsCategory $equipments_category)
+    public function updating(Category $category)
     {
-        $this->update($equipments_category);
-        $this->updateCategory($equipments_category);
+        $this->update($category);
+        $this->updateCategory($category);
     }
 
-    public function updated(EquipmentsCategory $equipments_category)
+    public function updated(Category $category)
     {
-        $this->updateCategoryChildsSlug($equipments_category);
-        $this->updateCategoryChildsLevel($equipments_category);
-        $this->updateCategoryChildsCategoryId($equipments_category);
+        $this->updateCategoryChildsSlug($category);
+        $this->updateCategoryChildsLevel($category);
+        $this->updateCategoryChildsCategoryId($category);
+
+        $this->syncManufacturers($category);
     }
 
-    public function deleting(EquipmentsCategory $equipments_category)
+    public function deleting(Category $category)
     {
-        $this->destroy($equipments_category);
+        $this->destroy($category);
     }
 }

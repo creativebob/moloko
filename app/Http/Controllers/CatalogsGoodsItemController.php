@@ -57,7 +57,7 @@ class CatalogsGoodsItemController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('common.accordions.categories_list',
+            return view('system.common.accordions.categories_list',
                 [
                     'items' => $catalogs_goods_items,
                     'entity' => $this->entity_alias,
@@ -84,7 +84,7 @@ class CatalogsGoodsItemController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
         // dd('lol');
 
-        return view('common.accordions.create', [
+        return view('system.common.accordions.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление пункта каталога',
@@ -101,7 +101,7 @@ class CatalogsGoodsItemController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $data = $request->input();
-        $data['catalog_goods_id'] = $catalog_id;
+        $data['catalogs_goods_id'] = $catalog_id;
         $catalogs_goods_item = (new $this->class())->create($data);
 
         if ($catalogs_goods_item) {

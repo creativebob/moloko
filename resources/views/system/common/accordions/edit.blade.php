@@ -8,7 +8,7 @@
 	{{ Form::model($item, ['id' => 'form-edit', 'data-abide', 'novalidate']) }}
 	{{-- {{ method_field('PATCH') }} --}}
 
-	@include('common.accordions.form', ['submit_text' => 'Редактировать', 'class' => 'submit-edit'])
+	@include('system.common.accordions.form', ['submit_text' => 'Редактировать', 'class' => 'submit-edit'])
 
 	{{ Form::close() }}
 

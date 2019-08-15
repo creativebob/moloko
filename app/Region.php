@@ -53,7 +53,11 @@ class Region extends Model
         'display',
         'country_id',
         'system',
-        'author_id'
+        'author_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Районы

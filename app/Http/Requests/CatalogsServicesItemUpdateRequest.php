@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CatalogsServicesItemStoreRequest extends FormRequest
+class CatalogsServicesItemUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,15 +23,13 @@ class CatalogsServicesItemStoreRequest extends FormRequest
      */
     public function rules()
     {
-        $settings = getSettings('raws_categories');
+        $settings = getSettings('catalogs_services_items');
 
         return [
-            'name' => 'string|max:255|required',
+            'name' => 'required|string|max:255',
             'description' => 'string|nullable',
             'seo_description' => 'string|nullable',
             'parent_id' => 'integer|nullable',
-
-            'catalogs_service_id' => 'integer|exists:catalogs_services',
 
             'file' => 'max:'.$settings['img_max_size'].'|mimes:'.$settings['img_formats'].'|nullable',
             'manufacturers.*' => 'integer|nullable',

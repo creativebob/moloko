@@ -54,7 +54,11 @@ class Note extends Model
         'body',
         'author_id',
         'created_at',
-        'company_id'
+        'company_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Фильтрация по городу

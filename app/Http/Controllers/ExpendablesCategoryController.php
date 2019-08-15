@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Http\Requests\ExpendablesCategoryUpdateRequest;
+use App\Http\Requests\ExpendablesCategoryStoreRequest;
 use App\ExpendablesCategory;
-
-// Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\ExpendablesCategoryRequest;
-
-
 
 class ExpendablesCategoryController extends Controller
 {
@@ -25,8 +21,6 @@ class ExpendablesCategoryController extends Controller
         $this->entity_dependence = false;
         $this->type = 'modal';
     }
-
-
 
     public function index(Request $request)
     {
@@ -51,7 +45,7 @@ class ExpendablesCategoryController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('common.accordions.categories_list',
+            return view('system.common.accordions.categories_list',
                 [
                     'items' => $expendables_categories,
                     'entity' => $this->entity_alias,
@@ -65,7 +59,7 @@ class ExpendablesCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('common.accordions.index',
+        return view('system.common.accordions.index',
             [
                 'items' => $expendables_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -87,7 +81,7 @@ class ExpendablesCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('common.accordions.create', [
+        return view('system.common.accordions.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории расходников',
@@ -102,10 +96,8 @@ class ExpendablesCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        // Заполнение и проверка основных полей в трейте
-        $expendables_category = $this->storeCategory($request);
-
-        $expendables_category->save();
+        $data = $request->input();
+        $expendables_category = (new $this->class())->create($data);
 
         if ($expendables_category) {
             // Переадресовываем на index
@@ -129,37 +121,40 @@ class ExpendablesCategoryController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $expendables_category = ExpendablesCategory::moderatorLimit($answer)->findOrFail($id);
+        $expendables_category = ExpendablesCategory::with([
+            'manufacturers',
+        ])
+            ->moderatorLimit($answer)
+            ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $expendables_category);
 
-        return view('common.accordions.edit', [
+        return view('system.common.accordions.edit', [
             'item' => $expendables_category,
             'entity' => $this->entity_alias,
-            'title' => 'Редактирование сектора',
+            'title' => 'Редактирование категории расходников',
             'parent_id' => $expendables_category->parent_id,
             'category_id' => $expendables_category->category_id
         ]);
     }
 
-    public function update(ExpendablesCategoryRequest $request, $id)
+    public function update(ExpendablesCategoryUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $expendables_category = ExpendablesCategory::moderatorLimit($answer)->findOrFail($id);
+        $expendables_category = ExpendablesCategory::moderatorLimit($answer)
+            ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $expendables_category);
 
-        // Заполнение и проверка основных полей в трейте
-        $expendables_category = $this->updateCategory($expendables_category);
+        $data = $request->input();
+        $result = $expendables_category->update($data);
 
-        $expendables_category->save();
-
-        if ($expendables_category) {
+        if ($result) {
             // Переадресовываем на index
             return redirect()->route('expendables_categories.index', ['id' => $expendables_category->id]);
         } else {
@@ -176,18 +171,17 @@ class ExpendablesCategoryController extends Controller
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $expendables_category = ExpendablesCategory::with('childs')->moderatorLimit($answer)->findOrFail($id);
+        $expendables_category = ExpendablesCategory::with([
+            'childs'
+        ])
+            ->moderatorLimit($answer)->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $expendables_category);
 
-        // Скрываем бога
-        $expendables_category->editor_id = hideGod($request->user());
-        $expendables_category->save();
-
         $parent_id = $expendables_category->parent_id;
 
-        $expendables_category = ExpendablesCategory::destroy($id);
+        $expendables_category->delete();
 
         if ($expendables_category) {
             // Переадресовываем на index
