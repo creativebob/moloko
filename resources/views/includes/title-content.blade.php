@@ -70,6 +70,7 @@
                 @case('menu')
                 <a class="icon-add sprite" data-open="modal-create" data-tooltip class="top" tabindex="2" title="Добавить позицию"></a>
                 <a href="/admin/{{ $page_info->alias}}_categories" class="icon-category sprite" data-tooltip class="top" tabindex="2" title="Настройка категорий"></a>
+
                 @break
 
                 @case('sections-menu')

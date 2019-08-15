@@ -23,6 +23,7 @@ class CreateConsignmentsItemsTable extends Migration
             $table->foreign('consignment_id')->references('id')->on('consignments');
 
             $table->morphs('cmv');
+
             $table->integer('count')->nullable()->comment('Кол-во');
             $table->integer('price')->nullable()->comment('Цена за единицу');
             $table->integer('amount')->nullable()->comment('Сумма до налога');

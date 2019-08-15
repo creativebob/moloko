@@ -419,8 +419,11 @@ class GoodsController extends Controller
 
             $cur_goods->display = $request->has('display');
             $cur_goods->system = $request->has('system');
-            $cur_goods->price_unit_id = $request->price_unit_id;
-            $cur_goods->price_unit_category_id = $request->price_unit_category_id;
+
+            if($article->draft){
+                $cur_goods->price_unit_id = $request->price_unit_id;
+                $cur_goods->price_unit_category_id = $request->price_unit_category_id;               
+            }
 
             $cur_goods->save();
 

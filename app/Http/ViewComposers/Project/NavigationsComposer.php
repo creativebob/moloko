@@ -8,7 +8,6 @@ class NavigationsComposer
 {
 	public function compose(View $view)
 	{
-
         $site = $view->site->load(['navigations' => function ($q) {
         	$q->with([
         		'align',
@@ -22,6 +21,7 @@ class NavigationsComposer
         	->orderBy('sort');
         }]);
 
+        // dd($site->navigations->where('alias', 'super'));
         return $view->with('navigations', $site->navigations->groupBy('align.tag'));
     }
 

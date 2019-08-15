@@ -32,7 +32,6 @@
 
     </div>
     <div class="small-12 medium-5 large-7 cell tabs-margin-top">
-
         <div class="grid-x tabs-wrap align-center tabs-margin-top">
 
             <div class="small-12 cell">
@@ -43,7 +42,7 @@
                     <li class="tabs-title"><a data-tabs-target="widgets" href="#widgets">Виджеты</a></li>
                 </ul>
             </div>
-            <div class=small-12 cell">
+            <div class="small-12 cell">
                 <div class="tabs-content" data-tabs-content="tabs">
 
                     <!-- Роли -->
@@ -148,11 +147,6 @@
 
         </div>
     </div>
-
-
-
-
-
 
 </div>
 

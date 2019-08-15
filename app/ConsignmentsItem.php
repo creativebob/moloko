@@ -47,6 +47,7 @@ class ConsignmentsItem extends Model
     protected $fillable = [
         'consignment_id',
         'cmv_id',
+        'cmv_type',
         'count',
         'price',
         'vat_rate',
@@ -85,9 +86,15 @@ class ConsignmentsItem extends Model
     }
 
     // 
-    public function smv()
+    public function cmv()
     {
         return $this->morphTo();
+    }
+
+    // Артикул
+    public function article()
+    {
+        return $this->belongsTo(Article::class, 'cmv');
     }
 
 }

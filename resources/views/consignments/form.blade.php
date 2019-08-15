@@ -65,11 +65,26 @@
         </div>
     </div>
 
-    <div class="small-12 cell tabs-margin-top">
-        {{-- @if(!empty($consignment)) <consignmentitemadd-component :consignment="{{ $consignment }}"></consignmentitemadd-component> @endif --}}
+    <table class="table-compositions">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Наименование позиции:</th>
+                <th>Кол-во:</th>
+                <th>Цена:</th>
+                <th>Сумма:</th>
+                <th>% НДС:</th>
+                <th>НДС:</th>
+                <th>Всего:</th>
+                <th></th>
+            </tr>
+        </thead>
 
-        <consignmentitemadd-component :consignment="{{ $consignment ?? 0 }}"></consignmentitemadd-component> 
-    </div>
+        <tbody id="table-raws" is="consignmentitemadd-component" :consignment="{{ $consignment ?? 0 }}">
+        </tbody>
+        
+    </table>
+
 
 
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">

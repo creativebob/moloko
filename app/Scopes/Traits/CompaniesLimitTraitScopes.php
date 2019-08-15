@@ -21,7 +21,7 @@ trait CompaniesLimitTraitScopes
         } else {
 
             // Показываем записи выбранной компании
-            return $query->Where('company_id', $companies);
+            return $query->Where('company_id', $companies)->orWhere('id', $companies);
         };
     }
 

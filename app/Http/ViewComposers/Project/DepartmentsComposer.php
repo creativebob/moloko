@@ -18,12 +18,12 @@ class DepartmentsComposer
         	->whereHas('location', function ($q) {
         		$q->where('city_id', Cookie::get('city_id'));
         	});
-        }]);
 
-        // dd($site);
+        }, 'filials']);
+
 
         // 22.01.19 - Решили пока вытаскивать первый филиал, при развитии будем углубляться и перерабатывать
-        $filial = $site->company->filials->first();
+        $filial = $site->filials->first();
         // dd($filial);
 
         return $view->with('filial', $filial);

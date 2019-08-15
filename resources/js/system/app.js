@@ -27,7 +27,6 @@ Vue.component('input-digit-component', require('../components/system/InputDigitC
 Vue.component('dropzone-component', require('../components/system/DropzoneComponent.vue'));
 
 
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

@@ -69,7 +69,7 @@
             @if($edit == 1)
             <a href="dealers/{{ $dealer->id }}/edit">
               @endif
-              {{ $dealer->client->clientable->name or '' }} ({{ $dealer->client->clientable->legal_form->name or '' }})
+              {{ $dealer->client->clientable->name ?? '' }} ({{ $dealer->client->clientable->legal_form->name ?? '' }})
               @if($edit == 1)
             </a>
             <br>
@@ -88,9 +88,9 @@
 
           <td class="td-user_id">
             @if(isset($dealer->client->clientable->director))
-              {{ $dealer->client->clientable->director->user->name or ' ... ' }}
+              {{ $dealer->client->clientable->director->user->name ?? ' ... ' }}
             @else
-              {{ $dealer->client->clientable->name or ' ... ' }}
+              {{ $dealer->client->clientable->name ?? ' ... ' }}
             @endif
           </td>
 
