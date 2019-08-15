@@ -24,7 +24,7 @@ class AlbumRequest extends FormRequest
     public function rules()
     {
       return [
-        'name' => 'string|max:255|required',
+        'name' => 'required|string|max:255',
         'category_id' => 'integer|required',
 
         'personal' => 'integer|max:1|nullable',

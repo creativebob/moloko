@@ -52,6 +52,10 @@ class StockRaw extends Model
         'count',
         'weight',
         'serial',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем компанию.

@@ -48,6 +48,10 @@ class Stock extends Model
         'name',
         'description',
         'room_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
 

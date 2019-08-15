@@ -23,15 +23,13 @@ class CatalogsGoodsItemUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $settings = getSettings('raws_categories');
+        $settings = getSettings('catalogs_goods_items');
 
         return [
-            'name' => 'string|max:255|required',
+            'name' => 'required|string|max:255',
             'description' => 'string|nullable',
             'seo_description' => 'string|nullable',
             'parent_id' => 'integer|nullable',
-
-            'catalogs_goods_id' => 'integer|exists:catalogs_goods',
 
             'file' => 'max:'.$settings['img_max_size'].'|mimes:'.$settings['img_formats'].'|nullable',
             'manufacturers.*' => 'integer|nullable',

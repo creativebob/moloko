@@ -52,6 +52,10 @@ class Feedback extends Model
         'body',
         'author_id',
         'created_at',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Автор

@@ -50,6 +50,10 @@ class Supplier extends Model
     protected $fillable = [
         'company_id',
         'supplier_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем компанию.

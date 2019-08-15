@@ -12,5 +12,9 @@ class LeftoverOperation extends Model
     protected $fillable = [
         'name',
         'description',
+
+        'display',
+        'system',
+        'moderation'
     ];
 }

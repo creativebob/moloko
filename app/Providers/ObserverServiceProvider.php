@@ -5,11 +5,15 @@ namespace App\Providers;
 use App\CatalogsGoodsItem;
 use App\Container;
 use App\ContainersCategory;
+use App\Direction;
+use App\ExpendablesCategory;
 use App\GoodsCategory;
 use App\Menu;
 use App\Observers\CatalogsGoodsItemObserver;
 use App\Observers\ContainerObserver;
 use App\Observers\ContainersCategoryObserver;
+use App\Observers\DirectionObserver;
+use App\Observers\ExpendablesCategoryObserver;
 use App\Observers\GoodsCategoryObserver;
 use App\Observers\MenuObserver;
 use App\Observers\PageObserver;
@@ -84,6 +88,7 @@ class ObserverServiceProvider extends ServiceProvider
         ContainersCategory::observe(ContainersCategoryObserver::class);
         EquipmentsCategory::observe(EquipmentsCategoryObserver::class);
         RoomsCategory::observe(RoomsCategoryObserver::class);
+        ExpendablesCategory::observe(ExpendablesCategoryObserver::class);
 
         // Артикулы
         Article::observe(ArticleObserver::class);
@@ -103,6 +108,8 @@ class ObserverServiceProvider extends ServiceProvider
         Service::observe(ServiceObserver::class);
         Workflow::observe(WorkflowObserver::class);
 
+        // Направления
+        Direction::observe(DirectionObserver::class);
 
         // Склады
         Stock::observe(StockObserver::class);

@@ -24,7 +24,7 @@ class RawRequest extends FormRequest
     public function rules()
     {
       return [
-        'name' => 'string|max:255|required',
+        'name' => 'required|string|max:255',
         'mode' => 'string|nullable',
         'set_status' => 'string|nullable',
         'raws_product_name' => 'string|nullable',

@@ -26,12 +26,13 @@ class EquipmentsCategoryUpdateRequest extends FormRequest
         $settings = getSettings('equipments_categories');
 
         return [
-            'name' => 'string|max:255|required',
+            'name' => 'required|string|max:255',
             'description' => 'string|nullable',
             'seo_description' => 'string|nullable',
             'parent_id' => 'integer|nullable',
 
             'file' => 'max:'.$settings['img_max_size'].'|mimes:'.$settings['img_formats'].'|nullable',
+
             'manufacturers.*' => 'integer|nullable',
 
             'display' => 'integer|max:1|nullable',

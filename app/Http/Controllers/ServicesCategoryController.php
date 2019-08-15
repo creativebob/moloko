@@ -6,7 +6,6 @@ use App\Http\Requests\ServicesCategoryUpdateRequest;
 use App\Http\Requests\ServicesCategoryStoreRequest;
 use App\ServicesCategory;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Traits\DirectionTrait;
 
 class ServicesCategoryController extends Controller
 {
@@ -22,8 +21,6 @@ class ServicesCategoryController extends Controller
         $this->entity_dependence = false;
         $this->type = 'edit';
     }
-
-    use DirectionTrait;
 
     public function index(Request $request)
     {
@@ -53,7 +50,7 @@ class ServicesCategoryController extends Controller
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('common.accordions.categories_list',
+            return view('system.common.accordions.categories_list',
                 [
                     'items' => $services_categories,
                     'entity' => $this->entity_alias,
@@ -67,7 +64,7 @@ class ServicesCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('common.accordions.index',
+        return view('system.common.accordions.index',
             [
                 'items' => $services_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -89,7 +86,7 @@ class ServicesCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('common.accordions.create', [
+        return view('system.common.accordions.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории услуг',
@@ -135,11 +132,11 @@ class ServicesCategoryController extends Controller
             'workflows.process.group.unit',
             'workflows.category',
             'manufacturers',
-            'directions',
+            'direction',
         ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
-        // dd($services_category);
+//         dd(isset($services_category->direction));
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $services_category);
@@ -160,7 +157,7 @@ class ServicesCategoryController extends Controller
 
     public function update(ServicesCategoryUpdateRequest $request, $id)
     {
-
+//        dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -174,18 +171,6 @@ class ServicesCategoryController extends Controller
         $result = $services_category->update($data);
 
         if ($result) {
-
-            // Проверка на направление
-            if (is_null($services_category->parent_id)) {
-                $this->checkDirection($request, $services_category);
-            }
-
-
-            // Производители
-            $services_category->manufacturers()->sync($request->manufacturers);
-
-            // Cостав
-            $services_category->workflows()->sync($request->workflows);
 
             // Переадресовываем на index
             return redirect()->route('services_categories.index', ['id' => $services_category->id]);

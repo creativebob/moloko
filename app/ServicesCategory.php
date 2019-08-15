@@ -53,8 +53,11 @@ class ServicesCategory extends Model
         'parent_id',
 
         'processes_type_id',
+        'is_direction',
 
-        'direction'
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Родитель
@@ -113,9 +116,9 @@ class ServicesCategory extends Model
     }
 
     // Направление
-    public function directions()
+    public function direction()
     {
         return $this->morphOne(Direction::class, 'category');
-        // ->where('archive', false);
     }
+
 }

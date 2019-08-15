@@ -51,7 +51,11 @@ class Role extends Model
         'id', 
         'role_name', 
         'role_description', 
-        'category_right_id', 
+        'category_right_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     public function users()   

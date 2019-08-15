@@ -49,6 +49,10 @@ class Entity extends Model
     protected $fillable = [
         'name',
         'alias',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     public function actions()

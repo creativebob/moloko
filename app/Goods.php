@@ -52,6 +52,10 @@ class Goods extends Model
         'article_id',
         'price_unit_id',
         'price_unit_category_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Артикул

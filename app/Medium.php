@@ -50,6 +50,10 @@ class Medium extends Model
         'name',
         'description',
         'utm',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
 }

@@ -49,6 +49,10 @@ class Photo extends Model
     protected $fillable = [
         'name',
         'company_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем компанию

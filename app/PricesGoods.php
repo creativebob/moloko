@@ -52,6 +52,10 @@ class PricesGoods extends Model
         'filial_id',
         'price',
         'archive',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
 

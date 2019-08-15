@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MenuRequest extends FormRequest
+class SectorStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,15 +23,12 @@ class MenuRequest extends FormRequest
      */
     public function rules()
     {
-      return [
-        'name' => 'string|max:255',
-        'icon' => 'string|max:255|nullable',
-        'alias' => 'string|max:255|nullable',
-        'parent_id' => 'integer|nullable',
-        'page_id' => 'integer|nullable',
+        return [
+            'name' => 'required|string|max:255',
+            'parent_id' => 'integer|nullable',
 
-        'moderation' => 'integer|max:1|nullable',
-        'system' => 'integer|max:1|nullable',
-      ];
+            'display' => 'integer|max:1|nullable',
+            'system' => 'integer|max:1|nullable',
+        ];
     }
-  }
+}

@@ -52,6 +52,10 @@ class Position extends Model
         'page_id',
         'direct_status',
         'company_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем районы и города области.

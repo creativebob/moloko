@@ -24,7 +24,7 @@ class RoomRequest extends FormRequest
     public function rules()
     {
       return [
-        'name' => 'string|max:255|required',
+        'name' => 'required|string|max:255',
         'set_status' => 'string|nullable',
 
         'quickly' => 'integer|nullable',

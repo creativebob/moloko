@@ -63,6 +63,10 @@ class Lead extends Model
     protected $dates = ['deleted_at', 'created_at'];
     protected $fillable = [
         'name',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем компанию.

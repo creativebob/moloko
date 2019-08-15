@@ -51,12 +51,13 @@ class Schedule extends Model
     protected $dates = ['deleted_at', 'created_at'];
 
     protected $fillable = [
-
         'name', 
         'description', 
-        'company_id', 
-        'moderation', 
+        'company_id',
 
+        'display',
+        'system',
+        'moderation'
     ];
 
   public function worktimes()

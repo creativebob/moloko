@@ -16,23 +16,23 @@ class CreateGoodsCategoriesTable extends Migration
         Schema::create('goods_categories', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('name')->index()->comment('Название категории товаров');
+            $table->string('name')->index()->comment('Название');
             $table->string('slug')->index()->nullable()->comment('Слаг');
             $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
 
-            $table->text('description')->nullable()->comment('Описание категории товаров');
-            $table->text('seo_description')->nullable()->comment('Описание для сайта для категории товаров');
+            $table->text('description')->nullable()->comment('Описание');
+            $table->text('seo_description')->nullable()->comment('Описание для сайта');
 
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
             $table->foreign('photo_id')->references('id')->on('photos');
 
-            $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id категории товара');
+            $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id родителя');
             $table->foreign('parent_id')->references('id')->on('goods_categories');
 
             $table->bigInteger('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
             $table->foreign('category_id')->references('id')->on('goods_categories');
 
-            $table->boolean('direction')->default(0)->comment('Направление');
+            $table->boolean('is_direction')->default(0)->comment('Направление');
 
 
             // Общие настройки

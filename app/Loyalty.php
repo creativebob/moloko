@@ -47,6 +47,10 @@ class Loyalty extends Model
     protected $fillable = [
         'name',
         'description',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
 

@@ -50,6 +50,10 @@ class RawsCategory extends Model
         'description',
         'seo_description',
         'parent_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Родитель
@@ -68,6 +72,12 @@ class RawsCategory extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    // Аавтор
+    public function author()
+    {
+        return $this->belongsTo(User::class);
     }
 
     // Сырье

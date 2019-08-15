@@ -51,7 +51,11 @@ class CatalogsGoodsItem extends Model
         'seo_description',
         'parent_id',
 
-        'catalogs_goods_id'
+        'catalogs_goods_id',
+
+        'display',
+        'system',
+        'moderation'
 	];
 
 	// Каталог

@@ -49,6 +49,12 @@ class GoodsCategory extends Model
         'description',
         'seo_description',
         'parent_id',
+
+        'is_direction',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Родитель
@@ -67,6 +73,12 @@ class GoodsCategory extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    // Аавтор
+    public function author()
+    {
+        return $this->belongsTo(User::class);
     }
 
     // Товары
@@ -107,10 +119,10 @@ class GoodsCategory extends Model
     }
 
     // Направление
-    public function directions()
+    public function direction()
     {
-        return $this->morphOne(Direction::class, 'category');
-        // ->where('archive', false);
+        return $this->morphOne(Direction::class, 'category')
+         ->where('archive', false);
     }
 
     public function groups()

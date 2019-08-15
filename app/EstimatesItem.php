@@ -52,7 +52,11 @@ class EstimatesItem extends Model
         'company_id',
         'author_id',
         'count',
-        'price'
+        'price',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Автор

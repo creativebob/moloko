@@ -36,6 +36,9 @@ class Indicator extends Model
 
     protected $fillable = [
 
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Компания

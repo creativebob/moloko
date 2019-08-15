@@ -49,7 +49,11 @@ class Order extends Model
         'client_id',
         'company_id',
         'author_id',
-        'draft'
+        'draft',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Автор

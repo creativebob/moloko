@@ -32,7 +32,7 @@
             @if (isset($items) && $items->isNotEmpty())
 
             {{-- Шаблон вывода и динамического обновления --}}
-            @include('common.accordions.categories_list', [
+            @include('system.common.accordions.categories_list', [
                 'items' => $items,
                 'class' => $class,
                 'entity' => $entity,
@@ -58,7 +58,7 @@
     @include('includes.scripts.sortable-inhead')
 
 {{-- Скрипты --}}
-@include('common.accordions.scripts')
+@include('system.common.accordions.scripts')
 
 {{-- Скрипт модалки удаления ajax --}}
 @include('includes.scripts.delete-ajax-script')

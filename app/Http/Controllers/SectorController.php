@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SectorUpdateRequest;
+use App\Http\Requests\SectorStoreRequest;
 use App\Sector;
 use Illuminate\Http\Request;
-use App\Http\Requests\SectorRequest;
 
 class SectorController extends Controller
 {
@@ -20,8 +21,6 @@ class SectorController extends Controller
         $this->entity_dependence = false;
         $this->type = 'modal';
     }
-
-
 
     public function index(Request $request)
     {
@@ -45,7 +44,7 @@ class SectorController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('common.accordions.categories_list',
+            return view('system.common.accordions.categories_list',
                 [
                     'items' => $sectors,
                     'entity' => $this->entity_alias,
@@ -59,7 +58,7 @@ class SectorController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('common.accordions.index',
+        return view('system.common.accordions.index',
             [
                 'items' => $sectors,
                 'page_info' => pageInfo($this->entity_alias),
@@ -81,7 +80,7 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('common.accordions.create', [
+        return view('system.common.accordions.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление сектора',
@@ -90,7 +89,7 @@ class SectorController extends Controller
         ]);
     }
 
-    public function store(SectorRequest $request)
+    public function store(SectorStoreRequest $request)
     {
 
         // Подключение политики
@@ -127,7 +126,7 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
 
-        return view('common.accordions.edit', [
+        return view('system.common.accordions.edit', [
             'item' => $sector,
             'entity' => $this->entity_alias,
             'title' => 'Редактирование сектора',
@@ -136,10 +135,12 @@ class SectorController extends Controller
         ]);
     }
 
-    public function update(SectorRequest $request, $id)
+    public function update(SectorUpdateRequest $request, $id)
     {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $sector = Sector::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))
+        $sector = Sector::moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики

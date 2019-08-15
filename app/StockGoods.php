@@ -52,6 +52,10 @@ class StockGoods extends Model
         'count',
         'weight',
         'serial',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем компанию.

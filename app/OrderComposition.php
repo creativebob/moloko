@@ -49,7 +49,11 @@ class OrderComposition extends Model
         'order_id',
         'count',
         'company_id',
-        'author_id'
+        'author_id',
+
+        'display',
+        'system',
+        'moderation'
 	];
 
 	public function order()

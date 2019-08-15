@@ -74,7 +74,7 @@ class ClientRequest extends FormRequest
             'system' => 'integer|max:1|nullable', 
 
 
-            'name' => 'string|max:255|required', 
+            'name' => 'required|string|max:255',
             // 'alias' => 'string|max:255|alpha|unique:companies', 
              'alias' => 'string|max:255|alpha',
 
@@ -95,7 +95,7 @@ class ClientRequest extends FormRequest
                 'max:5',
                 'nullable',
                 'regex:/([0-1][0-9]|[2][0-3]):([0-5][0-9])/u'
-            ), 
+            ),
 
             'mon_end' => 
             array(

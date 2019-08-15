@@ -61,6 +61,10 @@ class News extends Model
         'content',
         'rubricator_id',
         'rubricators_item_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     public function setPublishBeginDateAttribute($value)

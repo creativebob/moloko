@@ -57,6 +57,10 @@ class ProcessesGroup extends Model
         'album_id',
         'author_id',
         'editor_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Артикулы

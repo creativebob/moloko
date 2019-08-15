@@ -47,6 +47,10 @@ class Campaign extends Model
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'name',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
 }

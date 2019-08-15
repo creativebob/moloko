@@ -5,12 +5,14 @@ namespace App\Observers;
 use App\Observers\Traits\CategoriesTrait;
 use App\Observers\Traits\CommonTrait;
 use App\ContainersCategory as Category;
+use App\Observers\Traits\ProductsCategoriesTrait;
 
 class ContainersCategoryObserver
 {
 
     use CommonTrait;
     use CategoriesTrait;
+    use ProductsCategoriesTrait;
 
     public function creating(Category $category)
     {
@@ -29,6 +31,8 @@ class ContainersCategoryObserver
         $this->updateCategoryChildsSlug($category);
         $this->updateCategoryChildsLevel($category);
         $this->updateCategoryChildsCategoryId($category);
+
+        $this->syncManufacturers($category);
     }
 
     public function deleting(Category $category)

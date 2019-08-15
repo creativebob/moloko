@@ -24,7 +24,7 @@ class GoodsCategoryStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string|max:255|required',
+            'name' => 'required|string|max:255',
             'parent_id' => 'integer|nullable',
 
             'display' => 'integer|max:1|nullable',

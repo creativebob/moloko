@@ -44,6 +44,10 @@ class Rubricator extends Model
         'alias',
         'slug',
         'description',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Пункты

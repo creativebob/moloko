@@ -6,7 +6,6 @@ use App\Http\Requests\GoodsCategoryStoreRequest;
 use App\GoodsCategory;
 use App\Http\Requests\GoodsCategoryUpdateRequest;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Traits\DirectionTrait;
 
 class GoodsCategoryController extends Controller
 {
@@ -23,8 +22,6 @@ class GoodsCategoryController extends Controller
         $this->type = 'edit';
     }
 
-    use DirectionTrait;
-
     public function index(Request $request)
     {
 
@@ -37,7 +34,7 @@ class GoodsCategoryController extends Controller
             'goods',
             'childs',
             'groups',
-            'directions'
+            'direction'
         ])
         ->withCount('childs')
         ->moderatorLimit($answer)
@@ -53,7 +50,7 @@ class GoodsCategoryController extends Controller
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('common.accordions.categories_list',
+            return view('system.common.accordions.categories_list',
                 [
                     'items' => $goods_categories,
                     'entity' => $this->entity_alias,
@@ -67,7 +64,7 @@ class GoodsCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('common.accordions.index',
+        return view('system.common.accordions.index',
             [
                 'items' => $goods_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -89,7 +86,7 @@ class GoodsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('common.accordions.create', [
+        return view('system.common.accordions.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории товаров',
@@ -146,7 +143,7 @@ class GoodsCategoryController extends Controller
             // 'compositions.product.unit',
             // 'compositions',
             'manufacturers',
-            'directions'
+            'direction'
         ])
         ->withCount([
             // 'one_metrics',
@@ -201,12 +198,10 @@ class GoodsCategoryController extends Controller
 
         if ($result) {
 
-
             // Проверка на направление
 //        if (is_null($goods_category->parent_id)) {
 //            $this->checkDirection($request, $goods_category);
 //        }
-
 
             // Производители
             $goods_category->manufacturers()->sync($request->manufacturers);

@@ -24,7 +24,7 @@ class NavigationRequest extends FormRequest
     public function rules()
     {
       return [
-        'name' => 'string|max:255|required',
+        'name' => 'required|string|max:255',
         'align_id' => 'integer',
 
         // 'alias' => 'string|max:255|nullable',

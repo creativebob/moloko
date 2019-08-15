@@ -49,6 +49,10 @@ class Post extends Model
         'name',
         'alias',
         'company_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     public function setPublishBeginDateAttribute($value) {

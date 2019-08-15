@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CatalogsServicesItemUpdateRequest;
+use App\Http\Requests\CatalogsServicesItemStoreRequest;
 use App\CatalogsServicesItem;
 use App\CatalogsService;
 use Illuminate\Http\Request;
-use App\Http\Requests\CatalogsServicesItemStoreRequest;
+
 
 class CatalogsServicesItemController extends Controller
 {
@@ -62,7 +64,7 @@ class CatalogsServicesItemController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('common.accordions.categories_list',
+            return view('system.common.accordions.categories_list',
                 [
                     'items' => $catalogs_services_items,
                     'entity' => $this->entity_alias,
@@ -88,7 +90,7 @@ class CatalogsServicesItemController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('common.accordions.create', [
+        return view('system.common.accordions.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление пункта каталога',
@@ -106,7 +108,7 @@ class CatalogsServicesItemController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $data = $request->input();
-        $data['catalog_services_id'] = $catalog_id;
+        $data['catalogs_service_id'] = $catalog_id;
         $catalogs_services_item = (new $this->class())->create($data);
 
         if ($catalogs_services_item) {
@@ -149,7 +151,7 @@ class CatalogsServicesItemController extends Controller
         ]);
     }
 
-    public function update(CatalogsServicesItemStoreRequest $request, $catalog_id, $id)
+    public function update(CatalogsServicesItemUpdateRequest $request, $catalog_id, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)

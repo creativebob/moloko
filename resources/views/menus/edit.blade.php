@@ -5,8 +5,8 @@
         </div>
     </div>
 
-    {{ Form::model($menu, ['id' => 'form-edit', 'data-abide', 'novalidate']) }}
-
+    {{ Form::model($menu, ['url' => '/admin/sites/'.$site_id.'/navigations/'.$navigation_id.'/menus/'.$menu->id, 'id' => 'form-edit', 'data-abide', 'novalidate']) }}
+    @method('PATCH')
     @include('menus.form', ['submit_text' => 'Редактировать', 'class' => 'submit-edit'])
 
     {{ Form::close() }}

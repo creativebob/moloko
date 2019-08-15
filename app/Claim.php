@@ -51,7 +51,14 @@ class Claim extends Model
 
     protected $dates = ['deleted_at', 'created_at'];
     protected $fillable = [
-        'company_id', 'body', 'lead_id', 'old_claim_id', 'author_id'
+        'company_id',
+        'body', 'lead_id',
+        'old_claim_id',
+        'author_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
 

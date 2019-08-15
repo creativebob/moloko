@@ -50,13 +50,15 @@ class Employee extends Model
     ];
 
     protected $fillable = [
-        'company_id',
         'staffer_id',
         'user_id',
         'employment_date',
         'dismissal_date',
         'dismissal_description',
-        'author_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем вакансию для сотрудников.

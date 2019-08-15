@@ -50,6 +50,10 @@ class PricesService extends Model
         'filial_id',
         'price',
         'archive',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
 

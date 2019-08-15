@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Observers\Traits\CategoriesTrait;
 use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\ProductsCategoriesTrait;
 use App\WorkflowsCategory as Category;
 
 class WorkflowsCategoryObserver
@@ -11,6 +12,7 @@ class WorkflowsCategoryObserver
 
     use CommonTrait;
     use CategoriesTrait;
+    use ProductsCategoriesTrait;
 
     public function creating(Category $category)
     {
@@ -29,6 +31,8 @@ class WorkflowsCategoryObserver
         $this->updateCategoryChildsSlug($category);
         $this->updateCategoryChildsLevel($category);
         $this->updateCategoryChildsCategoryId($category);
+
+        $this->syncManufacturers($category);
     }
 
     public function deleting(Category $category)

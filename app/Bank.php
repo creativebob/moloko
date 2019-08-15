@@ -49,7 +49,11 @@ class Bank extends Model
     // protected $dates = ['deleted_at'];
     protected $fillable = [
         'company_id', 
-        'bank_id', 
+        'bank_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Получаем компании которые работают с банком

@@ -24,7 +24,7 @@ class StockRequest extends FormRequest
     public function rules()
     {
       return [
-        'name' => 'string|max:255|required',
+        'name' => 'required|string|max:255',
         'description' => 'string|max:255|nullable',
         'room_id' => 'integer',
 
