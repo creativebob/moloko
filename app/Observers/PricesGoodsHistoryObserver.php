@@ -16,10 +16,6 @@ class PricesGoodsHistoryObserver
     {
         $this->store($prices_goods_history);
         $this->setBeginDate($prices_goods_history);
-
-        $prices_goods_history->display = true;
-        $prices_goods_history->system = false;
-        $prices_goods_history->moderation = false;
     }
 
     public function updating(PricesGoodsHistory $prices_goods_history)

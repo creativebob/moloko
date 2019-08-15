@@ -81,6 +81,19 @@ class PricesService extends Model
         return $this->belongsTo(Service::class);
     }
 
+    // История
+    public function history()
+    {
+        return $this->hasMany(PricesServicesHistory::class, 'prices_service_id');
+    }
+
+    // Актуальная цена
+    public function actual_price()
+    {
+        return $this->hasOne(PricesServicesHistory::class, 'prices_service_id')
+            ->whereNull('end_date');
+    }
+
     // Предок
     public function ancestor()
     {

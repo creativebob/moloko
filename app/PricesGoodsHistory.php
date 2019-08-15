@@ -42,8 +42,6 @@ class PricesGoodsHistory extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    protected $table = 'prices_goods_history';
-
     protected $dates = [
         'deleted_at',
         'begin_date',

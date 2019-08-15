@@ -19,10 +19,10 @@ class CreatePricesGoodsHistoriesTable extends Migration
             $table->bigInteger('prices_goods_id')->unsigned()->nullable()->comment('Id прайса');
             $table->foreign('prices_goods_id')->references('id')->on('prices_goods');
 
-            $table->decimal('price', 12, 4)->nullable()->comment('Цена');
+            $table->decimal('price', 12, 4)->comment('Цена');
 
-            $table->timestamp('begin_date')->index()->comment('Дата и время начала');
-            $table->timestamp('end_date')->nullable()->index()->comment('Дата и время окончания');
+            $table->timestamp('begin_date')->comment('Дата и время начала');
+            $table->timestamp('end_date')->nullable()->comment('Дата и время окончания');
 
 
             // Общие настройки

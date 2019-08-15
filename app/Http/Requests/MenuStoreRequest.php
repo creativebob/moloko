@@ -25,7 +25,7 @@ class MenuStoreRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'parent_id' => 'integer|nullable|exists:menus,id',
+            'parent_id' => 'integer|nullable',
 
             'icon' => 'string|max:255|nullable',
             'alias' => 'string|max:255|nullable',

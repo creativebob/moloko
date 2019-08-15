@@ -24,6 +24,7 @@ use App\Observers\PageObserver;
 use App\Observers\PluginObserver;
 use App\Observers\PricesGoodsHistoryObserver;
 use App\Observers\PricesGoodsObserver;
+use App\Observers\PricesServicesHistoryObserver;
 use App\Observers\RoomsCategoryObserver;
 use App\Observers\SectorObserver;
 use App\Observers\ServicesCategoryObserver;
@@ -32,6 +33,7 @@ use App\Page;
 use App\Plugin;
 use App\PricesGoods;
 use App\PricesGoodsHistory;
+use App\PricesServicesHistory;
 use App\RoomsCategory;
 use App\Sector;
 use App\ServicesCategory;
@@ -138,6 +140,7 @@ class ObserverServiceProvider extends ServiceProvider
         CatalogsGoods::observe(CatalogsGoodsObserver::class);
         CatalogsServicesItem::observe(CatalogsServicesItemObserver::class);
         PricesService::observe(PricesServiceObserver::class);
+        PricesServicesHistory::observe(PricesServicesHistoryObserver::class);
 
         // Каталоги товаров
         CatalogsService::observe(CatalogsServiceObserver::class);

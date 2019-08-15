@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\PricesGoods;
 use App\CatalogsGoods;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PricesGoodsController extends Controller
@@ -284,7 +285,6 @@ class PricesGoodsController extends Controller
 
     public function ajax_store(Request $request)
     {
-        dd($request);
         $data = $request->input();
         $cur_price_goods = (new PricesGoods())->create($data);
 
@@ -300,24 +300,24 @@ class PricesGoodsController extends Controller
 
     public function ajax_update(Request $request, $catalog_id)
     {
-
         $cur_price_goods = PricesGoods::findOrFail($request->id);
 
         if ($cur_price_goods->price == $request->price) {
             return view('products.articles.goods.prices.price', ['cur_price_goods' => $cur_price_goods]);
         } else {
-            $new_cur_price_goods = $cur_price_goods->replicate();
+            $cur_price_goods->actual_price->update([
+                'end_date' => Carbon::now(),
+            ]);
+
+            $cur_price_goods->history()->create([
+                'price' => $request->price,
+            ]);
 
             $cur_price_goods->update([
-                'archive' => true,
+                'price' => $request->price,
             ]);
-            // dd($new_price);
 
-            $new_cur_price_goods->price = $request->price;
-            $new_cur_price_goods->save();
-
-            // dd($price);
-            return view('products.articles.goods.prices.price', ['cur_price_goods' => $new_cur_price_goods]);
+            return view('products.articles.goods.prices.price', compact('cur_price_goods'));
         }
     }
 
@@ -325,7 +325,8 @@ class PricesGoodsController extends Controller
     {
         $user = $request->user();
 
-        $result = PricesGoods::where('id', $request->id)->update([
+        $result = PricesGoods::findOrFail($request->id)
+            ->update([
             'archive' => true,
             'editor_id' => hideGod($user)
         ]);

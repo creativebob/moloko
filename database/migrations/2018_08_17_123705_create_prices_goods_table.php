@@ -31,7 +31,7 @@ class CreatePricesGoodsTable extends Migration
             $table->bigInteger('ancestor_id')->nullable()->unsigned()->comment('Предок');
             $table->foreign('ancestor_id')->references('id')->on('prices_goods');
 
-            $table->integer('price')->nullable()->comment('Цена');
+            $table->decimal('price', 12, 4)->comment('Цена');
 
             $table->boolean('archive')->default(0)->unsigned()->comment('Архив');
 
