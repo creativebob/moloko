@@ -23,6 +23,7 @@ class CreateCatalogsServicesItemsTable extends Migration
             $table->string('slug')->index()->nullable()->comment('Слаг');
             $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
 
+            $table->string('title')->nullable()->comment('Заголовок');
             $table->text('description')->nullable()->comment('Описание');
             $table->text('seo_description')->nullable()->comment('Описание для сайта');
 
