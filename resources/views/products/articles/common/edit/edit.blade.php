@@ -341,7 +341,8 @@
 	                        <fieldset class="fieldset portion-fieldset" id="portion-fieldset">
 
 	                            <legend class="checkbox">
-	                                {{ Form::checkbox('portion_status', 1, $article->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) }}
+									{!! Form::hidden('portion_status', 0) !!}
+									{!! Form::checkbox('portion_status', 1, $article->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) !!}
 	                                <label for="portion">
 	                                    <span id="portion-change">Принимать порциями</span>
 	                                </label>
@@ -416,7 +417,8 @@
 				                    {{-- Чекбокс черновика --}}
 				                    @if ($article->draft == 1)
 				                    <div class="small-12 cell checkbox">
-				                        {{ Form::checkbox('draft', 1, $article->draft, ['id' => 'draft']) }}
+										{!! Form::hidden('draft', 0) !!}
+				                        {!! Form::checkbox('draft', 1, $article->draft, ['id' => 'draft']) !!}
 				                        <label for="draft"><span>Черновик</span></label>
 				                    </div>
 				                    @endif

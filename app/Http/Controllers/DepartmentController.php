@@ -175,8 +175,8 @@ class DepartmentController extends Controller
         $department->email = $request->email;
 
         // Отображение на сайте
-        $department->display = $request->has('display');
-        $department->system = $request->has('system');
+        $department->display = $request->display;
+        $department->system = $request->system;
 
         $department->author_id = hideGod($user);
 
@@ -257,8 +257,8 @@ class DepartmentController extends Controller
         $department->email = $request->email;
 
         // Отображение на сайте
-        $department->display = $request->has('display');
-        $department->system = $request->has('system');
+        $department->display = $request->display;
+        $department->system = $request->system;
 
         $department->save();
 

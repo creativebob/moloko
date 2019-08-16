@@ -73,36 +73,10 @@ class CatalogsServiceController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $catalogs_service = new CatalogsService;
-        $catalogs_service->name = $request->name;
-        $catalogs_service->description = $request->description;
-
-        // Алиас
-        $catalogs_service->alias = empty($request->alias) ? Str::slug($request->name) : $request->alias;
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        if($answer['automoderate'] == false){
-            $catalogs_service->moderation = true;
-        }
-
-        // Cистемная запись
-        $catalogs_service->system = $request->has('system');
-        $catalogs_service->display = $request->has('display');
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        $catalogs_service->company_id = $user->company_id;
-        $catalogs_service->author_id = hideGod($user);
-
-        $catalogs_service->save();
+        $data = $request->input();
+        $catalogs_service = (new $this->class())->create($data);
 
         if ($catalogs_service) {
-
-            // Сайты
-            $catalogs_service->sites()->attach($request->sites);
 
             return redirect()->route('catalogs_services.index');
 
@@ -147,24 +121,10 @@ class CatalogsServiceController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_service);
 
-        $catalogs_service->name = $request->name;
-        $catalogs_service->description = $request->description;
+        $data = $request->input();
+        $result = $catalogs_service->update($data);
 
-        // Если ввели алиас руками
-        if (isset($request->alias) && ($catalogs_service->alias != $request->alias)) {
-            $catalogs_service->alias = $request->alias;
-        }
-
-        $catalogs_service->system = $request->has('system');
-        $catalogs_service->moderation = $request->has('moderation');
-        $catalogs_service->display = $request->has('display');
-
-        $catalogs_service->save();
-
-        if ($catalogs_service) {
-
-            // Обновляем сайты
-            $catalogs_service->sites()->sync($request->sites);
+        if ($result) {
 
             return redirect()->route('catalogs_services.index');
 

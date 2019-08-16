@@ -101,8 +101,8 @@ class StafferController extends Controller
         $staffer->author_id = hideGod($user);
 
         // Системная запись
-        $staffer->system = $request->has('system');
-        $staffer->display = $request->has('display');
+        $staffer->system = $request->system;
+        $staffer->display = $request->display;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -235,7 +235,7 @@ class StafferController extends Controller
         // Расписание для штата
         setSchedule($request, $staffer);
 
-        $staffer->display = $request->has('display');
+        $staffer->display = $request->display;
         $staffer->editor_id = $user_id;
         $staffer->save();
 

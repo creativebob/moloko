@@ -83,6 +83,19 @@ class PricesGoods extends Model
         return $this->belongsTo(Goods::class);
     }
 
+    // История
+    public function history()
+    {
+        return $this->hasMany(PricesGoodsHistory::class, 'prices_goods_id');
+    }
+
+    // Актуальная цена
+    public function actual_price()
+    {
+        return $this->hasOne(PricesGoodsHistory::class, 'prices_goods_id')
+            ->whereNull('end_date');
+    }
+
     // Предок
     public function ancestor()
     {

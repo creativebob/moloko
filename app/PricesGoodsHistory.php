@@ -18,11 +18,11 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 // Фильтры
-// use App\Scopes\Filters\Filter;
-// use App\Scopes\Filters\BooklistFilter;
-// use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\Filter;
+use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\DateIntervalFilter;
 
-class CatalogsService extends Model
+class PricesGoodsHistory extends Model
 {
     // Включаем кеш
     use Cachable;
@@ -38,58 +38,43 @@ class CatalogsService extends Model
     use ModeratorLimitTraitScopes;
 
     // Фильтры
-    // use Filter;
-    // use BooklistFilter;
-    // use DateIntervalFilter;
+    use Filter;
+    use BooklistFilter;
+    use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at',
+        'begin_date',
+        'end_date'
+    ];
 
     protected $fillable = [
-        'name',
-        'alias',
-        'slug',
+        'price',
+        'prices_goods_id',
 
-        'description',
-        'seo_description',
+        'begin_date',
+        'end_date',
 
         'display',
         'system',
         'moderation'
     ];
 
-    // Пункты
-    public function items()
+    // Прайс
+    public function prices_goods()
     {
-        return $this->hasMany(CatalogsServicesItem::class);
+        return $this->belongsTo(PricesGoods::class);
     }
 
-    public function price_services()
+    // Компания
+    public function company()
     {
-        return $this->hasMany(PricesService::class);
+        return $this->belongsTo(Company::class);
     }
 
-    // Сайты
-    public function sites()
-    {
-        return $this->belongsToMany(Site::class, 'catalogs_service_site');
-    }
-
-    // Аавтор
+    // Автор
     public function author()
     {
         return $this->belongsTo(User::class);
-    }
-
-    // Аватар
-    public function photo()
-    {
-        return $this->belongsTo(Photo::class);
-    }
-
-    // Главные
-    public function categories()
-    {
-        return $this->hasMany(CatalogsServicesItem::class)
-        ->whereNull('parent_id');
     }
 }

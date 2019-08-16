@@ -56,7 +56,6 @@ class ArticlesGroup extends Model
         'rule_id',
         'album_id',
 
-        'display',
         'system',
         'moderation'
     ];

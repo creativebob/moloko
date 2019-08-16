@@ -106,8 +106,8 @@ class ClaimController extends Controller
 
         // Вносим общие данные
         $claim->author_id = $user->id;
-        $claim->system = $request->has('system');
-        $claim->moderation = $request->has('moderation');
+        $claim->system = $request->system;
+        $claim->moderation = $request->moderation;
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
         // if($answer['automoderate'] == false){$entity->moderation = true;};

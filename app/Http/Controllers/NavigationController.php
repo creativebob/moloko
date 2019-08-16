@@ -92,8 +92,8 @@ class NavigationController extends Controller
         }
 
         // Системная запись
-        $navigation->system = $request->has('system');
-        $navigation->display = $request->has('display');
+        $navigation->system = $request->system;
+        $navigation->display = $request->display;
 
 
         // Получаем данные для авторизованного пользователя
@@ -159,9 +159,9 @@ class NavigationController extends Controller
         // $navigation->navigations_category_id = $request->navigations_category_id;
 
         // Модерация и системная запись
-        $navigation->system = $request->has('system');
-        $navigation->moderation = $request->has('moderation');
-        $navigation->display = $request->has('display');
+        $navigation->system = $request->system;
+        $navigation->moderation = $request->moderation;
+        $navigation->display = $request->display;
 
         $navigation->editor_id = hideGod($request->user());
         $navigation->save();

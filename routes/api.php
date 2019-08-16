@@ -25,6 +25,8 @@ Route::group(['prefix' => '/v1',
     Route::resource('cities', 'CityController');
 
     Route::post('dropzone', 'PhotoController@store');
+
+//    Route::apiResource('prices_goods', 'PricesGoodsController');
 });
 
 // Route::any('/lol', function(Request $request) {

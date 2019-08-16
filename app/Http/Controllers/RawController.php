@@ -11,7 +11,7 @@ use App\Manufacturer;
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\RawRequest;
-use App\Http\Requests\ArticleRequest;
+use App\Http\Requests\ArticleStoreRequest;
 
 // Куки
 use Illuminate\Support\Facades\Cookie;
@@ -232,7 +232,7 @@ class RawController extends Controller
         ]);
     }
 
-    public function store(ArticleRequest $request)
+    public function store(ArticleStoreRequest $request)
     {
 
         // Подключение политики
@@ -330,7 +330,7 @@ class RawController extends Controller
         ]);
     }
 
-    public function update(ArticleRequest $request, $id)
+    public function update(ArticleStoreRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
@@ -366,8 +366,8 @@ class RawController extends Controller
             $raw->price_unit_id = $request->price_unit_id;
             $raw->price_unit_category_id = $request->price_unit_category_id;
             
-            $raw->display = $request->has('display');
-            $raw->system = $request->has('system');
+            $raw->display = $request->display;
+            $raw->system = $request->system;
 
             $raw->save();
 

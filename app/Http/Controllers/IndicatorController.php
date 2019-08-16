@@ -92,8 +92,8 @@ class IndicatorController extends Controller
         }
 
         // Системная запись
-        $indicator->system = $request->has('system');
-        $indicator->display = $request->has('display');
+        $indicator->system = $request->system;
+        $indicator->display = $request->display;
 
         if (isset($request->direction_id)) {
 
@@ -169,9 +169,9 @@ class IndicatorController extends Controller
         // $indicator->period_id = $request->period_id;
 
         // Системная запись
-        $indicator->system = $request->has('system');
-        $indicator->display = $request->has('display');
-        $indicator->moderation = $request->has('moderation');
+        $indicator->system = $request->system;
+        $indicator->display = $request->display;
+        $indicator->moderation = $request->moderation;
 
         $indicator->editor_id = hideGod($request->user());
 

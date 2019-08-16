@@ -46,6 +46,9 @@ class CatalogsGoods extends Model
         'alias',
         'slug',
 
+        'description',
+        'seo_description',
+
         'display',
         'system',
         'moderation'

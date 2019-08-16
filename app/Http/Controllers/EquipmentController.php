@@ -11,7 +11,7 @@ use App\Manufacturer;
 // Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\EquipmentRequest;
-use App\Http\Requests\ArticleRequest;
+use App\Http\Requests\ArticleStoreRequest;
 
 // Куки
 use Illuminate\Support\Facades\Cookie;
@@ -176,7 +176,7 @@ class EquipmentController extends Controller
         ]);
     }
 
-    public function store(ArticleRequest $request)
+    public function store(ArticleStoreRequest $request)
     {
 
         // Подключение политики
@@ -271,7 +271,7 @@ class EquipmentController extends Controller
         ]);
     }
 
-    public function update(ArticleRequest $request, $id)
+    public function update(ArticleStoreRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
@@ -295,8 +295,8 @@ class EquipmentController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $equipment);
 
-            $equipment->display = $request->has('display');
-            $equipment->system = $request->has('system');
+            $equipment->display = $request->display;
+            $equipment->system = $request->system;
             $equipment->save();
 
 

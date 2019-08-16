@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\PricesService;
+use Carbon\Carbon;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -221,17 +222,6 @@ class PricesServiceController extends Controller
 
     // --------------------------------- Ajax ----------------------------------------
 
-    public function ajax_store(Request $request)
-    {
-
-        $data = $request->input();
-        $prices_service = (new PricesService())->create($data);
-
-        return view('products.processes.services.prices.price', compact('prices_service'));
-    }
-
-
-
     public function sync(Request $request, $catalog_id)
     {
 
@@ -300,6 +290,15 @@ class PricesServiceController extends Controller
         return view('products.processes.services.prices.catalogs_item_price', compact('price'));
     }
 
+    public function ajax_store(Request $request)
+    {
+
+        $data = $request->input();
+        $prices_service = (new PricesService())->create($data);
+
+        return view('products.processes.services.prices.price', compact('prices_service'));
+    }
+
     public function ajax_edit(Request $request, $catalog_id)
     {
         $price = PricesService::findOrFail($request->id);
@@ -315,18 +314,19 @@ class PricesServiceController extends Controller
         if ($prices_service->price == $request->price) {
             return view('products.processes.services.prices.price', ['prices_service' => $prices_service]);
         } else {
-            $new_prices_service = $prices_service->replicate();
+            $prices_service->actual_price->update([
+                'end_date' => Carbon::now(),
+            ]);
+
+            $prices_service->history()->create([
+                'price' => $request->price,
+            ]);
 
             $prices_service->update([
-                'archive' => true,
+                'price' => $request->price,
             ]);
-            // dd($new_price);
 
-            $new_prices_service->price = $request->price;
-            $new_prices_service->save();
-
-            // dd($price);
-            return view('products.processes.services.prices.price', ['prices_service' => $new_prices_service]);
+            return view('products.processes.services.prices.price', compact('prices_service'));
         }
     }
 
@@ -334,7 +334,8 @@ class PricesServiceController extends Controller
     {
         $user = $request->user();
 
-        $result = PricesService::where('id', $request->id)->update([
+        $result = PricesService::findOrFail($request->id)
+            ->update([
             'archive' => true,
             'editor_id' => hideGod($user)
         ]);

@@ -171,7 +171,7 @@ class FeedbackController extends Controller
         $feedback->job = $request->job;
         $feedback->body = $request->body;
 
-        $feedback->display = $request->has('display');
+        $feedback->display = $request->display;
 
         $feedback->call_date = outPickMeUp($request->call_date);
 

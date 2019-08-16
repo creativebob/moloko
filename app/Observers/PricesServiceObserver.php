@@ -16,6 +16,13 @@ class PricesServiceObserver
         $this->store($prices_service);
     }
 
+    public function created(PricesService $prices_service)
+    {
+        $prices_service->history()->create([
+            'price' => $prices_service->price,
+        ]);
+    }
+
     public function updating(PricesService $prices_service)
     {
         $this->update($prices_service);

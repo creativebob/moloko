@@ -50,12 +50,15 @@ class Article extends Model
         'name',
         'description',
 
-        'manufacturer_id',
         'articles_group_id',
 
         'internal',
         'manually',
         'external',
+
+        'manufacturer_id',
+
+        'kit',
 
         'cost_default',
         'cost_mode',
@@ -63,24 +66,21 @@ class Article extends Model
         'price_mode',
         'price_rule_id',
 
+        'video_url',
+
         'portion_status',
         'portion_name',
         'portion_abbreviation',
         'portion_count',
 
-        'unit_weight_id',
         'weight',
-
-        'unit_volume_id',
+        'unit_weight_id',
         'volume',
+        'unit_volume_id',
 
         'unit_id',
-
         'draft',
-        'kit',
-        'video_url',
 
-        'display',
         'system',
         'moderation'
     ];

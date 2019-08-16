@@ -113,8 +113,8 @@ class RawsProductController extends Controller
         $raws_product->raws_category_id = $request->raws_category_id;
         $raws_product->unit_id = $request->unit_id;
 
-        $raws_product->system = $request->has('system');
-        $raws_product->display = $request->has('display');
+        $raws_product->system = $request->system;
+        $raws_product->display = $request->display;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -170,10 +170,10 @@ class RawsProductController extends Controller
         $raws_product->unit_id = $request->unit_id;
 
         // Модерация и системная запись
-        $raws_product->system = $request->has('system');
-        $raws_product->display = $request->has('display');
+        $raws_product->system = $request->system;
+        $raws_product->display = $request->display;
 
-        $raws_product->moderation = $request->has('moderation');
+        $raws_product->moderation = $request->moderation;
 
         $raws_product->editor_id = hideGod($request->user());
         $raws_product->save();

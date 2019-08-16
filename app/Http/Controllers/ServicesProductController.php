@@ -152,9 +152,9 @@ class ServicesProductController extends Controller
         // $product->moderation = true;
 
         // Модерация и системная запись
-        $services_product->system = $request->has('system');
+        $services_product->system = $request->system;
 
-        $services_product->display = $request->has('display');
+        $services_product->display = $request->display;
 
         $services_product->company_id = $company_id;
         $services_product->author_id = $user_id;
@@ -246,11 +246,11 @@ class ServicesProductController extends Controller
         $services_product->description = $request->description;
 
         // Модерация и системная запись
-        $services_product->system = $request->has('system');
-        $services_product->moderation = $request->has('moderation');
+        $services_product->system = $request->system;
+        $services_product->moderation = $request->moderation;
 
         // Отображение на сайте
-        $services_product->display = $request->has('display');
+        $services_product->display = $request->display;
 
         $services_product->editor_id = $user_id;
         $services_product->save();

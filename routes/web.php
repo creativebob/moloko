@@ -1013,7 +1013,6 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
 	// Основные методы
 	Route::resource('catalogs_goods_items', 'CatalogsGoodsItemController');
 
-
     Route::delete('/prices_goods/{id}', 'PricesGoodsController@archive');
 
     Route::post('get_catalogs_goods_items', 'CatalogsGoodsItemController@ajax_get');
@@ -1021,14 +1020,13 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
     Route::any('get_prices_goods/{id}', 'PricesGoodsController@ajax_get');
     Route::any('edit_prices_goods', 'PricesGoodsController@ajax_edit');
     Route::any('update_prices_goods', 'PricesGoodsController@ajax_update');
-
-
-    Route::resource('prices_goods', 'PricesGoodsController');
     Route::any('prices_goods/{id}/archive', 'PricesGoodsController@ajax_archive');
 
     Route::any('prices_goods/ajax_store', 'PricesGoodsController@ajax_store');
 
     Route::any('prices_goods_sync', 'PricesGoodsController@sync')->name('prices_goods.sync');
+
+    Route::resource('prices_goods', 'PricesGoodsController');
 });
 
 
@@ -1057,14 +1055,13 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
     Route::any('get_prices_service/{id}', 'PricesServiceController@ajax_get');
     Route::any('edit_prices_service', 'PricesServiceController@ajax_edit');
     Route::any('update_prices_service', 'PricesServiceController@ajax_update');
-
-
-    Route::resource('prices_services', 'PricesServiceController');
     Route::any('prices_services/{id}/archive', 'PricesServiceController@ajax_archive');
 
     Route::any('prices_services/ajax_store', 'PricesServiceController@ajax_store');
 
     Route::any('prices_services_sync', 'PricesServiceController@sync')->name('prices_services.sync');
+
+    Route::resource('prices_services', 'PricesServiceController');
 });
 
 

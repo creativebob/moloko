@@ -48,10 +48,13 @@ class Goods extends Model
     // use DateIntervalFilter;
 
     protected $fillable = [
-        'category_id',
         'article_id',
-        'price_unit_id',
+        'category_id',
         'price_unit_category_id',
+        'price_unit_id',
+
+        'archive',
+        'serial',
 
         'display',
         'system',

@@ -95,14 +95,18 @@
 			@includeIf($entity.'.create')
 
 			<div class="small-12 cell checkbox set-status">
+				{{ Form::hidden('kit', 0) }}
 				{{ Form::checkbox('kit', 1, null, ['id' => 'kit']) }}
 				<label for="kit"><span>Набор</span></label>
 			</div>
 
 			<div class="small-12 cell checkbox">
+				{{ Form::hidden('quickly', 0) }}
 				{{ Form::checkbox('quickly', 1, null, ['id' => 'quickly', 'checked']) }}
 				<label for="quickly"><span>Быстрое добавление</span></label>
 			</div>
+
+			{{ Form::hidden('system', 0) }}
 
 			{{-- @include('includes.control.checkboxes', ['item' => $item]) --}}
 

@@ -86,7 +86,7 @@ class News extends Model
     //     return $this->belongsTo('App\Site');
     // }
 
-    // Rомпания
+    // Компания
     public function company()
     {
         return $this->belongsTo(Company::class);

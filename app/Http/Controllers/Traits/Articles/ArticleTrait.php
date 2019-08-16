@@ -8,14 +8,14 @@ use App\Entity;
 use App\Unit;
 
 // Валидация
-use App\Http\Requests\ArticleRequest;
+use App\Http\Requests\ArticleStoreRequest;
 
 use Illuminate\Support\Facades\Log;
 
 trait ArticleTrait
 {
 
-    public function storeArticle(ArticleRequest $request, $category)
+    public function storeArticle(ArticleStoreRequest $request, $category)
     {
 
         $user = $request->user();
@@ -35,7 +35,6 @@ trait ArticleTrait
                 'units_category_id' => $request->units_category_id,
             ], [
                 'system' => $request->system ?? null,
-                'display' => true,
                 'company_id' => $company_id,
                 'author_id' => $user_id
             ]);
@@ -51,7 +50,6 @@ trait ArticleTrait
                 'units_category_id' => $request->units_category_id,
             ], [
                 'system' => $request->system ?? null,
-                'display' => true,
                 'company_id' => $company_id,
                 'author_id' => $user_id
             ]);
@@ -102,18 +100,13 @@ trait ArticleTrait
                     $data['weight'] = $weight;
                 };
 
-
                 if(isset($data['volume'])){
                     $volume_unit = Unit::findOrFail($data['unit_volume_id']);
                     $volume = $data['volume'] * $volume_unit->ratio;
                     $data['volume'] = $volume;
                 };
-
-
             }
-
         }
-
 
         $article = (new Article())->create($data);
         Log::channel('operations')
@@ -123,7 +116,7 @@ trait ArticleTrait
     }
 
 
-    public function updateArticle(ArticleRequest $request, $item)
+    public function updateArticle(ArticleStoreRequest $request, $item)
     {
 
         $article = $item->article;
@@ -158,22 +151,18 @@ trait ArticleTrait
 
                 // dd($data['volume_unit_id']);
 
-
                 if(isset($data['weight'])){
                     $weight_unit = Unit::findOrFail($data['unit_weight_id']);
                     $weight = $data['weight'] * $weight_unit->ratio;
                     $data['weight'] = $weight;
                 };
 
-
                 if(isset($data['volume'])){
                     $volume_unit = Unit::findOrFail($data['unit_volume_id']);
                     $volume = $data['volume'] * $volume_unit->ratio;
                     $data['volume'] = $volume;
                 };
-
             }
-
 
                 if ($article->draft) {
                     // Обновляем составы только для товаров в черновике
@@ -196,12 +185,10 @@ trait ArticleTrait
                     // }
 
 
-
-
                     // Смена значения единицы измерения в рамках выбранной меры (категории ед. измерения) без смены 
                     if (isset($data['unit_id'])) {
 
-                        // Если пришедшая единица измерения отличаеться от той, что устновлена на арикуле
+                        // Если пришедшая единица измерения отличается от той, что устновлена на артикуле
                         if($data['unit_id'] != $article->unit_id){
                             $cur_weight = $article->weight;
                             $unit_new = Unit::findOrFail($data['unit_id']);

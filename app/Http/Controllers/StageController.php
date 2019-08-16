@@ -131,8 +131,8 @@ class StageController extends Controller
         }
 
         // Системная запись
-        $stage->system = $request->has('system');
-        $stage->display = $request->has('display');
+        $stage->system = $request->system;
+        $stage->display = $request->display;
 
         $stage->save();
 
@@ -207,9 +207,9 @@ class StageController extends Controller
         $stage->description = $request->description;
 
         // Модерация и системная запись
-        $stage->system = $request->has('system');
-        $stage->moderation = $request->has('moderation');
-        $stage->display = $request->has('display');
+        $stage->system = $request->system;
+        $stage->moderation = $request->moderation;
+        $stage->display = $request->display;
 
         $stage->editor_id = $user_id;
         $stage->save();

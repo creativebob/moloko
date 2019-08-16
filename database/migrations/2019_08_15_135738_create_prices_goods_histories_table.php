@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePricesGoodsTable extends Migration
+class CreatePricesGoodsHistoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,27 +13,17 @@ class CreatePricesGoodsTable extends Migration
      */
     public function up()
     {
-        Schema::create('prices_goods', function (Blueprint $table) {
+        Schema::create('prices_goods_histories', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->bigInteger('catalogs_goods_item_id')->nullable()->unsigned()->comment('Id пункта каталога');
-            $table->foreign('catalogs_goods_item_id')->references('id')->on('catalogs_goods_items');
-
-            $table->bigInteger('catalogs_goods_id')->nullable()->unsigned()->comment('Id каталога товаров');
-            $table->foreign('catalogs_goods_id')->references('id')->on('catalogs_goods');
-
-            $table->bigInteger('goods_id')->nullable()->unsigned()->comment('Id товара');
-            $table->foreign('goods_id')->references('id')->on('goods');
-
-            $table->bigInteger('filial_id')->nullable()->unsigned()->comment('Id филиала');
-            $table->foreign('filial_id')->references('id')->on('departments');
-
-            $table->bigInteger('ancestor_id')->nullable()->unsigned()->comment('Предок');
-            $table->foreign('ancestor_id')->references('id')->on('prices_goods');
+            $table->bigInteger('prices_goods_id')->unsigned()->nullable()->comment('Id прайса');
+            $table->foreign('prices_goods_id')->references('id')->on('prices_goods');
 
             $table->decimal('price', 12, 4)->comment('Цена');
 
-            $table->boolean('archive')->default(0)->unsigned()->comment('Архив');
+            $table->timestamp('begin_date')->comment('Дата и время начала');
+            $table->timestamp('end_date')->nullable()->comment('Дата и время окончания');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
@@ -61,6 +51,6 @@ class CreatePricesGoodsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('prices_goods');
+        Schema::dropIfExists('prices_goods_histories');
     }
 }
