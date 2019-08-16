@@ -48,6 +48,7 @@ class CatalogsGoodsItem extends Model
 	protected $fillable = [
         'name',
         'description',
+        'title',
         'seo_description',
         'parent_id',
 
