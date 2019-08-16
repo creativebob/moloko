@@ -14,6 +14,7 @@ class PricesGoodsObserver
     public function creating(PricesGoods $prices_goods)
     {
         $this->store($prices_goods);
+        $prices_goods->display = true;
     }
 
     public function created(PricesGoods $prices_goods)

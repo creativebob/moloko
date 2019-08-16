@@ -1,5 +1,5 @@
 {{-- Подключаем класс для работы с метриками --}}
-@include('products.articles_categories.goods_categories.metrics.class')
+@include('products.common.metrics.class')
 
 <div class="grid-x grid-padding-x">
 	<div class="small-12 medium-8 cell">
@@ -21,7 +21,7 @@
 
 				@if ($category->metrics->isNotEmpty())
 				@foreach ($category->metrics as $metric)
-				@include('products.articles_categories.goods_categories.metrics.metric', $metric)
+				@include('products.common.metrics.metric', $metric)
 				@endforeach
 				@endif
 
@@ -32,11 +32,15 @@
 
 		{{-- {{ Form::open(['url' => '/add_category_metric', 'id' => 'properties-form', 'data-abide', 'novalidate']) }} --}}
 		<div id="properties-form">
-		<fieldset>
-			<legend><a data-toggle="properties-dropdown">Добавить метрику</a></legend>
-			<div class="grid-x grid-padding-x" id="property-form"></div>
-		</fieldset>
-		{{ Form::hidden('entity_id', $category->id) }}
+			<fieldset>
+				<legend><a data-toggle="properties-dropdown">Добавить метрику</a></legend>
+				<div class="grid-x grid-padding-x" id="property-form"></div>
+			</fieldset>
+
+			{!! Form::hidden('category_id', $category->id) !!}
+			{!! Form::hidden('category_entity', $category->getTable()) !!}
+			{!! Form::hidden('entity_id', $page_info->entity->id) !!}
+
 		</div>
 		{{-- {{ Form::close() }} --}}
 
@@ -44,7 +48,7 @@
 		<div class="dropdown-pane properties-dropdown" id="properties-dropdown" data-dropdown data-position="bottom" data-alignment="center" data-close-on-click="true">
 
 			{{-- @include('includes.category_metrics.properties_form') --}}
-			@include('products.articles_categories.goods_categories.metrics.properties_list')
+			@include('products.common.metrics.properties_list')
 
 		</div>
 	</div>
@@ -99,7 +103,5 @@
         // Показываем нужную
         $('#' + $(this).data('open')).show();
     });
-
-
 
 </script>

@@ -33,7 +33,10 @@ class Metric extends Model
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
 
-
+    public function entities()
+    {
+        return $this->belongsToMany(Entity::class, 'entity_metric');
+    }
 
     public function goods_categories()
     {

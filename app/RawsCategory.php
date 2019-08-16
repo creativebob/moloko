@@ -94,6 +94,12 @@ class RawsCategory extends Model
         ->where('raws.archive', false);
     }
 
+    // Метрики
+    public function metrics()
+    {
+        return $this->belongsToMany(Metric::class, 'preset_metric', 'category_id', 'metric_id');
+    }
+
     // Аватар
     public function photo()
     {

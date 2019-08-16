@@ -100,6 +100,11 @@ class CatalogsGoodsItem extends Model
         return $this->hasMany(PricesGoods::class);
     }
 
+    public function prices()
+    {
+        return $this->hasMany(PricesGoods::class);
+    }
+
 	// Товары каталога
     public function goods()
     {

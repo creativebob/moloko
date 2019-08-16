@@ -2,14 +2,10 @@
 
 namespace App\Http\Controllers;
 
-// Модели
-use App\Metric;
-use App\MetricValue;
-use App\MetricEntity;
+use App\Http\Requests\MetricStoreRequest;
 use App\Entity;
-
-use DB;
-
+use App\MetricValue;
+use App\Metric;
 use Illuminate\Http\Request;
 
 class MetricController extends Controller
@@ -39,7 +35,7 @@ class MetricController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MetricStoreRequest $request)
     {
         // echo $request->values;
         // $values = '';
@@ -92,7 +88,10 @@ class MetricController extends Controller
         }
 
         if ($metric) {
-            return view('products.articles_categories.goods_categories.metrics.metric', [
+
+            $metric->entities()->attach($request->entity_id);
+
+            return view('products.common.metrics.metric', [
                 'metric' => $metric,
             ]);
 
@@ -166,7 +165,7 @@ class MetricController extends Controller
         $metric = Metric::findOrFail($request->id);
 
         if ($metric) {
-            return view('products.articles_categories.goods_categories.metrics.metric', [
+            return view('products.common.metrics.metric', [
                 'metric' => $metric,
             ]);
         } else {
@@ -180,7 +179,7 @@ class MetricController extends Controller
     public function ajax_get_metric_value(Request $request)
     {
         // Переадресовываем на получение метрики
-        return view('products.articles_categories.goods_categories.metrics.value', ['value' => $request->value]);
+        return view('products.common.metrics.value', ['value' => $request->value]);
     }
 
 }

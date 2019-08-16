@@ -100,6 +100,11 @@ class CatalogsServicesItem extends Model
 		return $this->hasMany(PricesService::class);
 	}
 
+    public function prices()
+    {
+        return $this->hasMany(PricesService::class);
+    }
+
 	// Услуги каталога
     public function services()
     {

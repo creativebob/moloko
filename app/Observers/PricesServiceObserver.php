@@ -14,6 +14,7 @@ class PricesServiceObserver
     public function creating(PricesService $prices_service)
     {
         $this->store($prices_service);
+        $prices_service->display = true;
     }
 
     public function created(PricesService $prices_service)

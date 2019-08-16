@@ -160,7 +160,7 @@ class GoodsCategoryController extends Controller
 
         // При добавлении метрики отдаем ajax новый список свойст и метрик
         if ($request->ajax()) {
-            return view('products.articles_categories.goods_categories.metrics.properties_list', [
+            return view('products.common.metrics.properties_list', [
                 'category' => $goods_category,
             ]);
         }

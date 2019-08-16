@@ -77,7 +77,7 @@ class PricesGoods extends Model
         return $this->belongsTo(Department::class);
     }
 
-    // Услуга
+    // Товар
     public function goods()
     {
         return $this->belongsTo(Goods::class);

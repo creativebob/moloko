@@ -77,9 +77,9 @@
             let entity = this.entity;
             let entity_id = this.entity_id;
 
-            // alert($('#property-form :input').serialize());
+            // alert($('#properties-form :input').serialize());
 
-            $.post('/admin/metrics', $('#property-form :input').serialize(), function(html){
+            $.post('/admin/metrics', $('#properties-form :input').serialize(), function(html){
                 // alert(html);
                 $('#table-metrics').append(html);
                 $('#property-form').html('');

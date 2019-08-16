@@ -101,7 +101,6 @@
 @endswitch
 
 {{ Form::hidden('property_id', $property_id) }}
-{{ Form::hidden('entity', $entity) }}
 
 <div class="small-12 cell text-center">
 	<a class="button green-button" id="add-metric">Создать метрику</a>

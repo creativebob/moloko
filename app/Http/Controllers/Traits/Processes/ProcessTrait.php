@@ -103,7 +103,7 @@ trait ProcessTrait
         // dd($data);
 
         // Проверка только если статус черновика не пришел, а сам артикул находится в черновике
-        if (!request()->has('draft') && $data['old_draft'] == 1) {
+        if ((request()->draft == 0) && $data['old_draft'] == 1) {
             // Проверяем совпадение (отдаем пришедшие данные, т.к. мы не можем сейчас записать артикул, запись будет после проверки)
             // Придет либо массив с ошибками, либо null
             $result = $this->checkCoincidenceProcess($data);
@@ -138,7 +138,7 @@ trait ProcessTrait
                     }
                 }
 
-                $data['draft'] = $request->has('draft');
+                $data['draft'] = $request->draft;
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $process->update($data);
 
