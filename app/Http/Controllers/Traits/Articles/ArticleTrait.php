@@ -408,6 +408,8 @@ trait ArticleTrait
             ->update([
                 'category_id' => $category_id,
             ]);
+
+            $item->metrics()->detach();
         }
 
     }

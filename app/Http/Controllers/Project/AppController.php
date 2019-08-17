@@ -16,7 +16,8 @@ class AppController extends Controller
         $domain = $request->getHost();
 //        dd($domain);
 
-        $site = Site::where('domain', $domain)
+        $site = Site::with('pages_display')
+        ->where('domain', $domain)
             ->first();
 //        dd($site);
 
@@ -30,10 +31,7 @@ class AppController extends Controller
         } else {
             $site = $this->site;
             $page = $site->pages
-                ->where([
-                    'alias' => 'main',
-                    'display' => true
-                    ])
+                ->where('alias', 'main')
                 ->first();
 
             return view($site->alias.'.pages.mains.index', compact('site','page'));
@@ -67,7 +65,8 @@ class AppController extends Controller
                                     'display' => true,
                                     'archive' => false
                                 ]);
-                        }
+                        },
+                        'catalog'
                     ])
                         ->where([
                             'slug' => $catalog_item_slug,
@@ -80,7 +79,7 @@ class AppController extends Controller
                     'display' => true,
                     ]);
         }]);
-        dd($site->catalogs_goods->first());
+        dd($site->catalogs_goods->first()->items->first());
     }
 
     public function catalogs_services(Request $request, $catalog_slug, $catalog_item_slug)

@@ -275,7 +275,7 @@ Route::post('/ajax_add_property', 'PropertyController@add_property')->middleware
 
 
 // ---------------------------------------- Метрики -------------------------------------------------
-Route::get('/metrics', 'MetricController@store')->middleware('auth');
+Route::get('/metrics', 'MetricController@store');
 // Основные методы
 Route::resource('/metrics', 'MetricController')->middleware('auth');
 

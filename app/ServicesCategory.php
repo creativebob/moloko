@@ -98,6 +98,12 @@ class ServicesCategory extends Model
         ->where('services.archive', false);
     }
 
+    // Метрики
+    public function metrics()
+    {
+        return $this->morphToMany(Metric::class, 'entity', 'preset_metric');
+    }
+
     public function workflows()
     {
         return $this->belongsToMany(Workflow::class, 'preset_workflow');

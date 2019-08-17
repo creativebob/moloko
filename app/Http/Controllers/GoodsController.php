@@ -302,10 +302,7 @@ class GoodsController extends Controller
 
             if ($cur_goods) {
 
-                $goods_category = $goods_category->load('metrics:id', 'raws:id');
-
-                $metrics = $goods_category->metrics->pluck('id')->toArray();
-                $cur_goods->metrics()->sync($metrics);
+                $goods_category = $goods_category->load('raws:id');
 
                 $raws = $goods_category->raws->pluck('id')->toArray();
                 $article->raws()->sync($raws);
@@ -358,9 +355,7 @@ class GoodsController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
         $cur_goods->load([
-            'metrics.values',
-            'metrics.property',
-            'metrics.unit',
+            'metrics',
             'prices'
         ]);
 
@@ -422,32 +417,18 @@ class GoodsController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $cur_goods);
 
-            // Каталоги
-            $data = [];
-            if (isset($request->catalogs_items)) {
-
-                foreach ($request->catalogs_items as $catalog_id => $items) {
-                    foreach ($items as $item_id) {
-                        $data[(int) $item_id] = [
-                            'catalogs_goods_id' => $catalog_id,
-                        ];
-                    }
-                }
-            }
-            // dd($data);
-//            $cur_goods->catalogs_items()->sync($data);
-
             // Метрики
             if ($request->has('metrics')) {
                 // dd($request);
-
 
                 $metrics_insert = [];
                 foreach ($request->metrics as $metric_id => $value) {
                     if (is_array($value)) {
                         $metrics_insert[$metric_id]['value'] = implode(',', $value);
                     } else {
-                        $metrics_insert[$metric_id]['value'] = $value;
+                        if (!is_null($value)) {
+                            $metrics_insert[$metric_id]['value'] = $value;
+                        }
                     }
                 }
                 $cur_goods->metrics()->sync($metrics_insert);

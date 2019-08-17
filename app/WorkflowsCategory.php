@@ -91,6 +91,12 @@ class WorkflowsCategory extends Model
         ->where('workflows.archive', false);
     }
 
+    // Метрики
+    public function metrics()
+    {
+        return $this->morphToMany(Metric::class, 'entity', 'preset_metric');
+    }
+
     // Аватар
     public function photo()
     {

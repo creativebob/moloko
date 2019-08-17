@@ -6,6 +6,7 @@ use App\Observers\Traits\CategoriesTrait;
 use App\Observers\Traits\CommonTrait;
 use App\GoodsCategory as Category;
 use App\Observers\Traits\DirectionTrait;
+use App\Observers\Traits\MetricTrait;
 use App\Observers\Traits\ProductsCategoriesTrait;
 
 class GoodsCategoryObserver
@@ -20,6 +21,7 @@ class GoodsCategoryObserver
     use CategoriesTrait;
     use ProductsCategoriesTrait;
     use DirectionTrait;
+    use MetricTrait;
 
     public function creating(Category $category)
     {
@@ -31,6 +33,13 @@ class GoodsCategoryObserver
     {
         $this->update($category);
         $this->updateCategory($category);
+
+        $this->syncManufacturers($category);
+        $this->syncRaws($category);
+
+        $this->syncMetrics($category);
+
+        $this->checkDirection($category);
     }
 
     public function updated(Category $category)
@@ -38,11 +47,6 @@ class GoodsCategoryObserver
         $this->updateCategoryChildsSlug($category);
         $this->updateCategoryChildsLevel($category);
         $this->updateCategoryChildsCategoryId($category);
-
-        $this->syncManufacturers($category);
-        $this->syncRaws($category);
-
-        $this->checkDirection($category);
     }
 
     public function deleting(Category $category)

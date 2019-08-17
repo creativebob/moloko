@@ -104,7 +104,7 @@ class GoodsCategory extends Model
     // Метрики
     public function metrics()
     {
-        return $this->belongsToMany(Metric::class, 'preset_metric', 'category_id', 'metric_id');
+        return $this->morphToMany(Metric::class, 'entity', 'preset_metric');
     }
 
     public function raws()

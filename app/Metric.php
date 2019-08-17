@@ -33,15 +33,24 @@ class Metric extends Model
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
 
+    protected $fillable = [
+        'name',
+        'description',
+
+        'property_id',
+
+        'is_required',
+    ];
+
     public function entities()
     {
         return $this->belongsToMany(Entity::class, 'entity_metric');
     }
 
-    public function goods_categories()
-    {
-        return $this->belongsToMany(GoodsCategory::class, 'preset_metric', 'metric_id', 'category_id');
-    }
+//    public function goods_categories()
+//    {
+//        return $this->belongsToMany(GoodsCategory::class, 'preset_metric', 'metric_id', 'category_id');
+//    }
 
     // public function goods_categories()
     // {

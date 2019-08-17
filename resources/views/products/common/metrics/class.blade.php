@@ -95,7 +95,6 @@
                         $('#metric-' + id).prop('checked', true);
 
                     });
-
                 });
             })
         }

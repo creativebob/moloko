@@ -62,7 +62,7 @@ class CatalogsGoodsItem extends Model
 	// Каталог
 	public function catalog()
 	{
-		return $this->belongsTo(CatalogsGoods::class);
+		return $this->belongsTo(CatalogsGoods::class, 'catalogs_goods_id');
 	}
 
     // Родитель

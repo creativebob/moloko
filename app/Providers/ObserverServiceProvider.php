@@ -11,6 +11,7 @@ use App\Direction;
 use App\ExpendablesCategory;
 use App\GoodsCategory;
 use App\Menu;
+use App\Metric;
 use App\Observers\CatalogsGoodsItemObserver;
 use App\Observers\CatalogsGoodsObserver;
 use App\Observers\CatalogsServiceObserver;
@@ -20,6 +21,7 @@ use App\Observers\DirectionObserver;
 use App\Observers\ExpendablesCategoryObserver;
 use App\Observers\GoodsCategoryObserver;
 use App\Observers\MenuObserver;
+use App\Observers\MetricObserver;
 use App\Observers\PageObserver;
 use App\Observers\PluginObserver;
 use App\Observers\PricesGoodsHistoryObserver;
@@ -89,6 +91,9 @@ class ObserverServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        // Метрики
+        Metric::observe(MetricObserver::class);
 
         // Категории артикулов
         GoodsCategory::observe(GoodsCategoryObserver::class);

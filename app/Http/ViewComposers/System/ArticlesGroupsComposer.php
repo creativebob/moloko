@@ -28,7 +28,7 @@ class ArticlesGroupsComposer
         ->orderBy('sort', 'asc')
         ->toBase()
         ->get(['id','name']);
-        // dd($articles_groups);
+//         dd($articles_groups);
 
         return $view->with('articles_groups', $articles_groups);
     }

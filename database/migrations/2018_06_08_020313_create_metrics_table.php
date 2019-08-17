@@ -33,6 +33,8 @@ class CreateMetricsTable extends Migration
 
              $table->string('list_type')->nullable()->comment('Тип списка');
 
+            $table->boolean('is_required')->default(0)->comment('Обязательна для заполнения');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

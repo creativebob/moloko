@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePresetMetricTable extends Migration
+class CreateEntityMetricValueTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreatePresetMetricTable extends Migration
      */
     public function up()
     {
-        Schema::create('preset_metric', function (Blueprint $table) {
+        Schema::create('entity_metric_value', function (Blueprint $table) {
             $table->morphs('entity');
 
             $table->bigInteger('metric_id')->nullable()->unsigned()->comment('Id метрики');
             $table->foreign('metric_id')->references('id')->on('metrics');
+
+            $table->string('value')->nullable()->comment('Значение');
+
         });
     }
 
@@ -28,6 +31,6 @@ class CreatePresetMetricTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('preset_metric');
+        Schema::dropIfExists('entity_metric_value');
     }
 }
