@@ -146,6 +146,14 @@ class ServicesCategoryController extends Controller
 
         $settings = getSettings($this->entity_alias);
 
+        // При добавлении метрики отдаем ajax новый список свойст и метрик
+        if ($request->ajax()) {
+            return view('products.common.metrics.properties_list', [
+                'category' => $services_category,
+                'page_info' => $page_info,
+            ]);
+        }
+
         return view('products.processes_categories.common.edit.edit', [
             'title' => 'Редактирование категории услуг',
             'category' => $services_category,
