@@ -172,6 +172,10 @@ class ServicesCategoryController extends Controller
 
         if ($result) {
 
+            $services_category->manufacturers()->sync($request->manufacturers);
+            $services_category->metrics()->sync($request->metrics);
+            $services_category->workflows()->sync($request->workflows);
+
             // Переадресовываем на index
             return redirect()->route('services_categories.index', ['id' => $services_category->id]);
         } else {

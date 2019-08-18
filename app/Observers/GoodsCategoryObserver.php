@@ -11,10 +11,9 @@ use App\Observers\Traits\ProductsCategoriesTrait;
 
 class GoodsCategoryObserver
 {
-
     public function __construct()
     {
-        $this->model ='App\GoodsCategory';
+        $this->model ='App\GoodsТCategory';
     }
 
     use CommonTrait;
@@ -34,10 +33,10 @@ class GoodsCategoryObserver
         $this->update($category);
         $this->updateCategory($category);
 
-        $this->syncManufacturers($category);
-        $this->syncRaws($category);
-
-        $this->syncMetrics($category);
+//        $this->syncManufacturers($category);
+//        $this->syncRaws($category);
+//
+//        $this->syncMetrics($category);
 
         $this->checkDirection($category);
     }
@@ -53,11 +52,11 @@ class GoodsCategoryObserver
     {
         $this->destroy($category);
     }
-
-    protected function syncRaws($category)
-    {
-        $request = request();
-        $category->raws()->sync($request->raws);
-    }
+//
+//    protected function syncRaws($category)
+//    {
+//        $request = request();
+//        $category->raws()->sync($request->raws);
+//    }
 
 }

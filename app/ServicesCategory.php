@@ -117,8 +117,7 @@ class ServicesCategory extends Model
 
     public function groups()
     {
-        return $this->morphToMany(ProcessesGroup::class, 'processes_group_entity');
-        // ->where('archive', false);
+        return $this->morphToMany(ProcessesGroup::class, 'entity', 'processes_group_entity');
     }
 
     // Направление

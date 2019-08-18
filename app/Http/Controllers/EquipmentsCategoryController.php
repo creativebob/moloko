@@ -170,8 +170,8 @@ class EquipmentsCategoryController extends Controller
 
         if ($result) {
 
-            // Производители
             $equipments_category->manufacturers()->sync($request->manufacturers);
+            $equipments_category->metrics()->sync($request->metrics);
 
            // Переадресовываем на index
             return redirect()->route('equipments_categories.index', ['id' => $equipments_category->id]);

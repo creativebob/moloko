@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\ArticlesGroup;
 use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\CatalogsService;
@@ -12,6 +13,7 @@ use App\ExpendablesCategory;
 use App\GoodsCategory;
 use App\Menu;
 use App\Metric;
+use App\Observers\ArticlesGroupObserver;
 use App\Observers\CatalogsGoodsItemObserver;
 use App\Observers\CatalogsGoodsObserver;
 use App\Observers\CatalogsServiceObserver;
@@ -27,6 +29,7 @@ use App\Observers\PluginObserver;
 use App\Observers\PricesGoodsHistoryObserver;
 use App\Observers\PricesGoodsObserver;
 use App\Observers\PricesServicesHistoryObserver;
+use App\Observers\ProcessesGroupObserver;
 use App\Observers\RoomsCategoryObserver;
 use App\Observers\SectorObserver;
 use App\Observers\ServicesCategoryObserver;
@@ -36,6 +39,7 @@ use App\Plugin;
 use App\PricesGoods;
 use App\PricesGoodsHistory;
 use App\PricesServicesHistory;
+use App\ProcessesGroup;
 use App\RoomsCategory;
 use App\Sector;
 use App\ServicesCategory;
@@ -105,6 +109,7 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Артикулы
         Article::observe(ArticleObserver::class);
+        ArticlesGroup::observe(ArticlesGroupObserver::class);
         Goods::observe(GoodsObserver::class);
         Raw::observe(RawObserver::class);
         Container::observe(ContainerObserver::class);
@@ -118,6 +123,7 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Процессы
         Process::observe(ProcessObserver::class);
+        ProcessesGroup::observe(ProcessesGroupObserver::class);
         Service::observe(ServiceObserver::class);
         Workflow::observe(WorkflowObserver::class);
 

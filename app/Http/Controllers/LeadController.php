@@ -223,7 +223,7 @@ class LeadController extends Controller
         $services_categories_list = ServicesCategory::moderatorLimit($answer_sc)
         ->companiesLimit($answer_sc)
         ->authors($answer_sc)
-        ->where('direction', true)
+        ->where('is_direction', true)
         ->get()
         ->mapWithKeys(function ($item) {
             return ['service-' . $item->id => $item->name];
@@ -245,10 +245,21 @@ class LeadController extends Controller
         // Задачи пользователя
         $list_challenges = challenges($request);
 
+        $filial_id = $request->user()->filial_id;
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_cs = operator_right('catalogs_services', false, getmethod('index'));
 
-        $catalogs_services = CatalogsService::with('items.childs')
+        $catalogs_services = CatalogsService::with([
+            'items' => function ($q) use ($filial_id) {
+            $q->with([
+                'prices' => function ($q) use ($filial_id) {
+                    $q->where('filial_id', $filial_id);
+                },
+                'childs'
+            ]);
+            }
+        ])
         ->moderatorLimit($answer_cs)
         ->companiesLimit($answer_cs)
         ->authors($answer_cs)
@@ -256,15 +267,24 @@ class LeadController extends Controller
             $q->whereId(1);
         })
         ->get();
-        // dd($catalogs_services);
+//         dd($catalogs_services);
 
-        $catalog_service = $catalogs_services->first();
+        $catalog_services = $catalogs_services->first();
         // dd($catalog_service);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_cg = operator_right('catalogs_goods', false, getmethod('index'));
 
-        $catalogs_goods = CatalogsGoods::with('items.childs')
+        $catalogs_goods = CatalogsGoods::with([
+            'items' => function ($q) use ($filial_id) {
+                $q->with([
+                    'prices' => function ($q) use ($filial_id) {
+                        $q->where('filial_id', $filial_id);
+                    },
+                    'childs'
+                ]);
+            }
+        ])
             ->moderatorLimit($answer_cg)
             ->companiesLimit($answer_cg)
             ->authors($answer_cg)
@@ -274,12 +294,12 @@ class LeadController extends Controller
             ->get();
 //         dd($catalogs_goods);
 
-        $cur_catalog_goods = $catalogs_goods->first();
-//         dd($cur_catalog_goods);
+        $сatalog_goods = $catalogs_goods->first();
+//         dd($atalog_goods);
 
-        $filial_id = $request->user()->filial_id;
 
-        return view('leads.edit', compact('lead', 'page_info', 'list_challenges', 'lead_methods_list', 'choices', 'catalog_service', 'cur_catalog_goods', 'filial_id'));
+
+        return view('leads.edit', compact('lead', 'page_info', 'list_challenges', 'lead_methods_list', 'choices', 'catalog_services', 'сatalog_goods'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)

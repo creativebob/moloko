@@ -27,9 +27,9 @@ class RawsCategoryObserver
         $this->update($category);
         $this->updateCategory($category);
 
-        $this->syncManufacturers($category);
-
-        $this->syncMetrics($category);
+//        $this->syncManufacturers($category);
+//
+//        $this->syncMetrics($category);
     }
 
     public function updated(Category $category)

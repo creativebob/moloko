@@ -133,7 +133,7 @@ class RawsCategoryController extends Controller
         ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
-        // dd($raws_category);
+//         dd($raws_category);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_category);
@@ -176,6 +176,9 @@ class RawsCategoryController extends Controller
         $result = $raws_category->update($data);
 
         if ($result) {
+
+            $raws_category->manufacturers()->sync($request->manufacturers);
+            $raws_category->metrics()->sync($request->metrics);
 
            // Переадресовываем на index
             return redirect()->route('raws_categories.index', ['id' => $raws_category->id]);

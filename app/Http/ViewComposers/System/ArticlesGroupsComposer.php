@@ -19,7 +19,8 @@ class ArticlesGroupsComposer
         // dd($relation, $category_id);
 
         // Главный запрос
-        $articles_groups = ArticlesGroup::moderatorLimit($answer)
+        $articles_groups = ArticlesGroup::
+        moderatorLimit($answer)
         ->systemItem($answer)
         ->companiesLimit($answer)
         ->whereHas($relation, function ($q) use ($relation, $category_id) {

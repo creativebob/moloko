@@ -1,5 +1,3 @@
-
-
 @if ($raws_categories->isNotEmpty())
 
 @foreach($raws_categories as $raws_category)

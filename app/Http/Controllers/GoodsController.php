@@ -426,12 +426,12 @@ class GoodsController extends Controller
                     if (is_array($value)) {
                         $metrics_insert[$metric_id]['value'] = implode(',', $value);
                     } else {
-                        if (!is_null($value)) {
+//                        if (!is_null($value)) {
                             $metrics_insert[$metric_id]['value'] = $value;
-                        }
+//                        }
                     }
                 }
-                $cur_goods->metrics()->sync($metrics_insert);
+                $cur_goods->metrics()->syncWithoutDetaching($metrics_insert);
             }
 
             // Если ли есть

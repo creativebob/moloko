@@ -1,8 +1,9 @@
 {{-- Если вложенный --}}
 @foreach ($items as $item)
+
 <li class="item-catalog">
 
-	<a class="get-prices" id="{{ $item->getTable() }}-{{ $item->id }}">{{ $item->name }}</a>
+	<a class="get-prices" id="{{ $item->getTable() }}-{{ $item->id }}" data-type="{{ $type }}">{{ $item->name }}</a>
 
 	@if ($item->childs->isNotEmpty())
 

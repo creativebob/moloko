@@ -166,8 +166,8 @@ class ContainersCategoryController extends Controller
 
         if ($result) {
 
-            // Производители
             $containers_category->manufacturers()->sync($request->manufacturers);
+            $containers_category->metrics()->sync($request->metrics);
 
             // Переадресовываем на index
             return redirect()->route('containers_categories.index', ['id' => $containers_category->id]);

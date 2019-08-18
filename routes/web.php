@@ -1066,8 +1066,8 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
 
 
 
-Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');
-Route::any('catalogs_goods_items/prices', 'CatalogsGoodsItemController@get_prices');
+//Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');
+//Route::any('catalogs_goods_items/prices', 'CatalogsGoodsItemController@get_prices');
 
 
 // Route::any('archive_prices_service', 'PricesServiceController@ajax_archive');

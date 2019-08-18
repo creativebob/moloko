@@ -55,8 +55,8 @@ class ProcessesGroup extends Model
         'unit_id',
         'rule_id',
         'album_id',
-        'author_id',
-        'editor_id',
+
+        'company_id',
 
         'display',
         'system',
@@ -108,12 +108,12 @@ class ProcessesGroup extends Model
     // Услуг
     public function services_categories()
     {
-        return $this->morphedByMany(ServicesCategory::class, 'processes_group_entity');
+        return $this->morphedByMany(ServicesCategory::class, 'entity', 'processes_group_entity');
     }
 
     // рабочих процессов
     public function workflows_categories()
     {
-        return $this->morphedByMany(WorkflowsCategory::class, 'processes_group_entity');
+        return $this->morphedByMany(WorkflowsCategory::class, 'entity', 'processes_group_entity');
     }
 }

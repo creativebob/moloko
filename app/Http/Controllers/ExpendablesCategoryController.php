@@ -155,6 +155,10 @@ class ExpendablesCategoryController extends Controller
         $result = $expendables_category->update($data);
 
         if ($result) {
+
+            $expendables_category->manufacturers()->sync($request->manufacturers);
+            $expendables_category->metrics()->sync($request->metrics);
+
             // Переадресовываем на index
             return redirect()->route('expendables_categories.index', ['id' => $expendables_category->id]);
         } else {

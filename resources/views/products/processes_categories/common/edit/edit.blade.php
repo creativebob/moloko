@@ -27,6 +27,13 @@
             <li class="tabs-title is-active">
                 <a href="#options" aria-selected="true">Общая информация</a>
             </li>
+
+            @if($page_info->entity->metric)
+                <li class="tabs-title">
+                    <a data-tabs-target="metrics" href="#metrics">Свойства</a>
+                </li>
+            @endif
+
             <li class="tabs-title">
                 <a data-tabs-target="site" href="#site">Сайт</a>
             </li>
@@ -147,6 +154,13 @@
                     </div>
                 </div>
             </div>
+
+            @if($page_info->entity->metric)
+                {{-- Свойства --}}
+                <div class="tabs-panel" id="metrics">
+                    @include('products.common.metrics.section')
+                </div>
+            @endif
 
             {{-- Табы для сущности --}}
             @includeIf($page_info->entity->view_path . '.tabs_content')

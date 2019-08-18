@@ -35,9 +35,11 @@ class GoodsCategoryUpdateRequest extends FormRequest
 
             'manufacturers.*' => 'integer|nullable',
 
+            'metrics.*' => 'integer|nullable',
+
             'display' => 'integer|max:1|nullable',
             'moderation' => 'integer|max:1|nullable',
             'system' => 'integer|max:1|nullable',
         ];
     }
-  }
+}

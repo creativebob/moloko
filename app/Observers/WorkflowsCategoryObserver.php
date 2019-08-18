@@ -31,8 +31,6 @@ class WorkflowsCategoryObserver
         $this->updateCategoryChildsSlug($category);
         $this->updateCategoryChildsLevel($category);
         $this->updateCategoryChildsCategoryId($category);
-
-        $this->syncManufacturers($category);
     }
 
     public function deleting(Category $category)

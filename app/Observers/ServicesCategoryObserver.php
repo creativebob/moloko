@@ -39,9 +39,6 @@ class ServicesCategoryObserver
         $this->updateCategoryChildsLevel($category);
         $this->updateCategoryChildsCategoryId($category);
 
-        $this->syncManufacturers($category);
-        $this->syncWorkflows($category);
-
         $this->checkDirection($category);
     }
 

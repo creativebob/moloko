@@ -194,13 +194,6 @@ if($lead->manager_id == 1){
 		});
 	});
 
-
-
-
-
-
-
-
 </script>
 
 @include('includes.scripts.notes', ['id' => $lead->id, 'model' => 'Lead'])

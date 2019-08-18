@@ -176,8 +176,8 @@ class RoomsCategoryController extends Controller
 
         if ($result) {
 
-            // Производители
             $rooms_category->manufacturers()->sync($request->manufacturers);
+            $rooms_category->metrics()->sync($request->metrics);
 
            // Переадресовываем на index
             return redirect()->route('rooms_categories.index', ['id' => $rooms_category->id]);

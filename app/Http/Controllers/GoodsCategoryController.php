@@ -158,8 +158,6 @@ class GoodsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_category);
 
-
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
@@ -201,8 +199,9 @@ class GoodsCategoryController extends Controller
 
         if ($result) {
 
-            // Метрики
+            $goods_category->manufacturers()->sync($request->manufacturers);
             $goods_category->metrics()->sync($request->metrics);
+            $goods_category->raws()->sync($request->raws);
 
             // Переадресовываем на index
             return redirect()->route('goods_categories.index', ['id' => $goods_category->id]);

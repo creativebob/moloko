@@ -168,8 +168,8 @@ class WorkflowsCategoryController extends Controller
 
         if ($result) {
 
-            // Производители
             $workflows_category->manufacturers()->sync($request->manufacturers);
+            $workflows_category->metrics()->sync($request->metrics);
 
            // Переадресовываем на index
             return redirect()->route('workflows_categories.index', ['id' => $workflows_category->id]);
