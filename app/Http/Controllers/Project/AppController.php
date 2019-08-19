@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Project;
 
+use App\CatalogsGoodsItem;
+use App\PricesGoods;
 use App\Site;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -17,7 +19,10 @@ class AppController extends Controller
 //        dd($domain);
 
         $site = Site::where('domain', $domain)
-
+        ->with([
+            'pages_public',
+            'filials'
+            ])
             ->first();
 //        dd($site);
 
@@ -30,13 +35,8 @@ class AppController extends Controller
             return view('project.pages.mains.main');
         } else {
             $site = $this->site;
-            $page = $site->pages
-
-                ->where([
-                    'alias' => 'main',
-                    'display' => true
-                    ])
-
+            $page = $site->pages_public
+                ->where('alias'. 'main')
                 ->first();
 
             return view($site->alias.'.pages.mains.index', compact('site','page'));
@@ -47,55 +47,36 @@ class AppController extends Controller
     {
         $site = $this->site;
 
-
-        $page = $site->pages->where('alias', 'catalogs_goods')->where('display', true)->first();
+        $page = $site->pages_public->where('alias', 'catalogs_goods')->first();
         $page->title = "Подарки в текстильной упаковки";
 
+        $catalog_goods_item = CatalogsGoodsItem::whereHas('catalog_public', function ($q) use ($site, $catalog_slug) {
+            $q->whereHas('sites', function ($q) use ($site) {
+                $q->where('id', $site->id);
+            })
+                ->where('slug', $catalog_slug);
+        })
+        ->where([
+            'slug' => $catalog_item_slug,
+            'display' => true
 
-        // Вытаскивает через сайт каталог и его пункт с прайсами (не архивными), товаром и артикулом
-        $site->load(['catalogs_goods' => function ($q) use ($catalog_slug, $catalog_item_slug) {
-            $q->with([
-                'items' => function($q) use ($catalog_item_slug) {
-                    $q->with([
-                        'prices_goods' => function ($q) {
-                            $q->with([
-                                'goods' => function ($q) {
-                                    $q->with(['article' => function ($q) {
-                                        $q->where([
-                                            'draft' => false
-                                        ]);
-                                    }])
-                                        ->where([
-                                            'display' => true,
-                                            'archive' => false
-                                        ]);
-                                }
-                            ])
-                                ->where([
-                                    'display' => true,
-                                    'archive' => false
-                                ]);
+        ])
+            ->first();
+//        dd($catalog_goods_item);
 
-                        }
-
-                    ])
-                        ->where([
-                            'slug' => $catalog_item_slug,
-                            'display' => true,
-                            ]);
-                }
+        $prices_goods = PricesGoods::with([
+            'goods_public'
+        ])
+            ->has('goods_public')
+            ->where([
+                'display' => true,
+                'archive' => false
             ])
-                ->where([
-                    'slug' => $catalog_slug,
-                    'display' => true,
-                    ]);
-        }]);
+            ->get();
+//        dd($prices_goods);
 
 
-        // $price_goods = PriceGoods::where()
-
-
-        return view($site->alias.'.pages.catalogs_goods.index', compact('site','page'));
+        return view($site->alias.'.pages.catalogs_goods.index', compact('site','page', 'catalog_goods_item', 'prices_goods'));
 
 
     }
