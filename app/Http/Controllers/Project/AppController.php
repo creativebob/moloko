@@ -19,9 +19,9 @@ class AppController extends Controller
 //        dd($domain);
 
         $site = Site::where('domain', $domain)
-        ->with([
-            'pages_public',
-            'filials'
+            ->with([
+                'pages_public',
+                'filials'
             ])
             ->first();
 //        dd($site);
@@ -48,7 +48,7 @@ class AppController extends Controller
         $site = $this->site;
 
         $page = $site->pages_public->where('alias', 'catalogs_goods')->first();
-        $page->title = "Подарки в текстильной упаковки";
+
 
         $catalog_goods_item = CatalogsGoodsItem::whereHas('catalog_public', function ($q) use ($site, $catalog_slug) {
             $q->whereHas('sites', function ($q) use ($site) {
@@ -56,17 +56,29 @@ class AppController extends Controller
             })
                 ->where('slug', $catalog_slug);
         })
-        ->where([
-            'slug' => $catalog_item_slug,
-            'display' => true
+            ->where([
+                'slug' => $catalog_item_slug,
+                'display' => true
 
-        ])
+            ])
             ->first();
 //        dd($catalog_goods_item);
+
+        $page->title = $catalog_goods_item->title;
 
         $prices_goods = PricesGoods::with([
             'goods_public'
         ])
+            ->whereHas('catalogs_item_public', function ($q) use ($site, $catalog_slug, $catalog_item_slug) {
+                $q->whereHas('catalog_public', function ($q) use ($site, $catalog_slug) {
+                    $q->whereHas('sites', function ($q) use ($site) {
+                        $q->where('id', $site->id);
+                    })
+                        ->where('slug', $catalog_slug);
+                })
+                    ->where('slug', $catalog_item_slug);
+
+            })
             ->has('goods_public')
             ->where([
                 'display' => true,
@@ -75,10 +87,7 @@ class AppController extends Controller
             ->get();
 //        dd($prices_goods);
 
-
         return view($site->alias.'.pages.catalogs_goods.index', compact('site','page', 'catalog_goods_item', 'prices_goods'));
-
-
     }
 
     public function catalogs_services(Request $request, $catalog_slug, $catalog_item_slug)
@@ -124,46 +133,16 @@ class AppController extends Controller
         dd($site->catalogs_services->first()->items->first());
     }
 
-    public function price_goods(Request $request, $id)
+    public function prices_goods(Request $request, $id)
     {
-        $site = $this->site;
+        $pice_goods = PricesGoods::with([
+            'goods_public'
+        ])
+        ->where([
+            'id' => $id,
+            'display' => true
+        ])->first();
 
-        // Вытаскивает через сайт каталог и его пункт с прайсами (не архивными), товаром и артикулом
-        $site->load(['catalogs_services' => function ($q) use ($catalog_slug, $catalog_item_slug) {
-            $q->with([
-                'items' => function($q) use ($catalog_item_slug) {
-                    $q->with([
-                        'prices_services' => function ($q) {
-                            $q->with([
-                                'service' => function ($q) {
-                                    $q->with(['process' => function ($q) {
-                                        $q->where([
-                                            'draft' => false
-                                        ]);
-                                    }])
-                                        ->where([
-                                            'display' => true,
-                                            'archive' => false
-                                        ]);
-                                }
-                            ])
-                                ->where([
-                                    'display' => true,
-                                    'archive' => false
-                                ]);
-                        }
-                    ])
-                        ->where([
-                            'slug' => $catalog_item_slug,
-                            'display' => true,
-                        ]);
-                }
-            ])
-                ->where([
-                    'slug' => $catalog_slug,
-                    'display' => true,
-                ]);
-        }]);
-        dd($site->catalogs_services->first()->items->first());
+        dd($pice_goods);
     }
 }

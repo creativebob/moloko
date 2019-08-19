@@ -71,6 +71,12 @@ class PricesGoods extends Model
         return $this->belongsTo(CatalogsGoodsItem::class, 'catalogs_goods_item_id');
     }
 
+    public function catalogs_item_public()
+    {
+        return $this->belongsTo(CatalogsGoodsItem::class, 'catalogs_goods_item_id')
+            ->where('display', true);
+    }
+
     // Филиал
     public function filial()
     {
@@ -88,9 +94,12 @@ class PricesGoods extends Model
         return $this->belongsTo(Goods::class, 'goods_id')
             ->with('article')
             ->whereHas('article', function ($q) {
-                $q->where([
-                    'draft' => false
-                ]);
+                $q->with([
+                    'raws'
+                ])
+                    ->where([
+                        'draft' => false
+                    ]);
             })
             ->where([
                 'display' => true,
