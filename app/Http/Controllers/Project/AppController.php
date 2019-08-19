@@ -16,8 +16,8 @@ class AppController extends Controller
         $domain = $request->getHost();
 //        dd($domain);
 
-        $site = Site::with('pages_display')
-        ->where('domain', $domain)
+        $site = Site::where('domain', $domain)
+
             ->first();
 //        dd($site);
 
@@ -31,7 +31,12 @@ class AppController extends Controller
         } else {
             $site = $this->site;
             $page = $site->pages
-                ->where('alias', 'main')
+
+                ->where([
+                    'alias' => 'main',
+                    'display' => true
+                    ])
+
                 ->first();
 
             return view($site->alias.'.pages.mains.index', compact('site','page'));
@@ -41,6 +46,11 @@ class AppController extends Controller
     public function catalogs_goods(Request $request, $catalog_slug, $catalog_item_slug)
     {
         $site = $this->site;
+
+
+        $page = $site->pages->where('alias', 'catalogs_goods')->where('display', true)->first();
+        $page->title = "Подарки в текстильной упаковки";
+
 
         // Вытаскивает через сайт каталог и его пункт с прайсами (не архивными), товаром и артикулом
         $site->load(['catalogs_goods' => function ($q) use ($catalog_slug, $catalog_item_slug) {
@@ -65,8 +75,9 @@ class AppController extends Controller
                                     'display' => true,
                                     'archive' => false
                                 ]);
-                        },
-                        'catalog'
+
+                        }
+
                     ])
                         ->where([
                             'slug' => $catalog_item_slug,
@@ -79,7 +90,14 @@ class AppController extends Controller
                     'display' => true,
                     ]);
         }]);
-        dd($site->catalogs_goods->first()->items->first());
+
+
+        // $price_goods = PriceGoods::where()
+
+
+        return view($site->alias.'.pages.catalogs_goods.index', compact('site','page'));
+
+
     }
 
     public function catalogs_services(Request $request, $catalog_slug, $catalog_item_slug)
