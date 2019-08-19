@@ -22,6 +22,7 @@ class CreateLocationsTable extends Migration
             $table->bigInteger('country_id')->nullable()->unsigned()->comment('Id страны');
             $table->foreign('country_id')->references('id')->on('countries');
 
+            $table->integer('zip_code')->nullable()->comment('Почтовый индекс');
             $table->string('address')->nullable()->index()->comment('Адрес');
 
             $table->decimal('latitude', 11, 6)->nullable()->comment('Широта');

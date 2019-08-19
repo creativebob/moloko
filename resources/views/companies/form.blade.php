@@ -90,7 +90,11 @@
                             @include('includes.inputs.address', ['value' => isset($company->location->address) ? $company->location->address : null, 'name'=>'address'])
                         </label>
                     </div>
-
+                    <div class="small-12 medium-3 cell">
+                        <label>Почтовый индекс
+                            @include('includes.inputs.zip_code', ['value'=>isset($company->location->zip_code) ? $company->location->zip_code : null, 'name'=>'zip_code'])
+                        </label>
+                    </div>
 
                     {{-- $manufacturer->getTable() --}}
 

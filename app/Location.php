@@ -48,6 +48,7 @@ class Location extends Model
         'country_id',
         'city_id',
         'address',
+        'zip_code',
         'author_id',
         'latitude',
         'longitude',

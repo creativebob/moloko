@@ -232,10 +232,12 @@ function create_location($request, $country_id = null, $city_id = null, $address
         $country_id_default = 1; // Страна: Россия
         $city_id_default = 1; // Город: Иркутск
         $address_default = null; // Адрес: не указываем
+        $zip_code_default = null; // Адрес: не указываем
 
         $country_id = $country_id ?? $request->country_id ?? $country_id_default;
         $city_id = $city_id ?? $request->city_id ??  $city_id_default;
         $address = $address ?? $request->address ?? $address_default;
+        $zip_code = $request->zip_code ?? $zip_code_default;
 
         // Скрываем бога
         $user_id = hideGod($request->user());
@@ -245,7 +247,8 @@ function create_location($request, $country_id = null, $city_id = null, $address
         ->firstOrCreate(compact(
             'country_id',
             'city_id',
-            'address'
+            'address',
+            'zip_code'
         ), [
             'author_id' => $user_id
         ]);
@@ -272,11 +275,13 @@ function create_location($request, $country_id = null, $city_id = null, $address
         $city_id = ($item_location->city_id != $request->city_id) ? $city_id = $request->city_id : $item_location->city_id;
         $address = ($item_location->address != $request->address) ? $address = $request->address : $item_location->address;
 
+        $zip_code = ($item_location->zip_code != $request->zip_code) ? $zip_code = $request->zip_code : $item_location->zip_code;
+
     // Скрываем бога
         $user_id = hideGod($request->user());
 
     // Ищем или создаем локацию
-        $location = Location::with('city')->firstOrCreate(compact('country_id', 'city_id', 'address'), ['author_id' => $user_id]);
+        $location = Location::with('city')->firstOrCreate(compact('country_id', 'city_id', 'address', 'zip_code'), ['author_id' => $user_id]);
 
     // Если пришла другая локация, то переписываем
         if ($item->location_id != $location->id) {
