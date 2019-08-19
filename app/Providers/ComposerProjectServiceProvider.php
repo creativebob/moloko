@@ -8,7 +8,6 @@ use App\Http\ViewComposers\Project\CatalogsGoodsComposer;
 use App\Http\ViewComposers\Project\NavigationsComposer;
 use App\Http\ViewComposers\Project\StaffComposer;
 
-use App\Site;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -19,35 +18,29 @@ class ComposerProjectServiceProvider extends ServiceProvider
 
     public function boot()
     {
-    	$domain = request()->getHost();
+        $host = request()->getHost();
+        view()->composer([
+            $host. '.layouts.headers.header', 
+            $host. '.layouts.footers.footer', 
+        ], DepartmentsComposer::class);
 
-        $site = Site::where('domain', $domain)
-            ->first([
-                'alias'
-            ]);
+        view()->composer([
+            $host. '.layouts.navigations.nav', 
+            'project.includes.menus.menu'
+        ], NavigationsComposer::class);
 
-        if(!is_null($site)) {
-            $alias = $site->alias;
+        view()->composer([
+            'project.includes.catalogs_services.accordion',
+            'project.includes.catalogs_services.menu_one_level',
+            ], CatalogsServiceComposer::class);
 
+        view()->composer([
+            'project.includes.catalogs_goods.accordion', 
+            'project.includes.catalogs_goods.menu',
+            $host. '.layouts.navigations.nav_catalogs_goods', 
+        ], CatalogsGoodsComposer::class);
 
-            view()->composer([
-                $alias. '.layouts.headers.header',
-                $alias. '.layouts.footers.footer',
-            ], DepartmentsComposer::class);
-
-            view()->composer([
-                $alias. '.layouts.navigations.nav',
-                'project.includes.menus.menu'
-            ], NavigationsComposer::class);
-
-            view()->composer([
-                'project.includes.catalogs_services.accordion',
-                'project.includes.catalogs_services.menu_one_level',
-                ], CatalogsServiceComposer::class);
-
-            view()->composer($alias. '.includes.catalogs_goods.accordion', CatalogsGoodsComposer::class);
-            view()->composer($alias. '.includes.staff.list', StaffComposer::class);
-        }
+        view()->composer('project.includes.staff.list', StaffComposer::class);
 
     }
 
