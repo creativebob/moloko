@@ -65,6 +65,12 @@ class CatalogsGoodsItem extends Model
 		return $this->belongsTo(CatalogsGoods::class, 'catalogs_goods_id');
 	}
 
+    public function catalog_public()
+    {
+        return $this->belongsTo(CatalogsGoods::class, 'catalogs_goods_id')
+        ->where('display', true);
+    }
+
     // Родитель
     public function parent()
     {

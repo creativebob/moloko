@@ -77,6 +77,12 @@ class Site extends Model
         return $this->hasMany(Page::class);
     }
 
+    public function pages_public()
+    {
+        return $this->hasMany(Page::class)
+            ->where('display', true);
+    }
+
     public function pages_display()
     {
         return $this->hasMany(Page::class)

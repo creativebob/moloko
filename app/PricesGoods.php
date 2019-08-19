@@ -83,6 +83,21 @@ class PricesGoods extends Model
         return $this->belongsTo(Goods::class);
     }
 
+    public function goods_public()
+    {
+        return $this->belongsTo(Goods::class, 'goods_id')
+            ->with('article')
+            ->whereHas('article', function ($q) {
+                $q->where([
+                    'draft' => false
+                ]);
+            })
+            ->where([
+                'display' => true,
+                'archive' => false,
+            ]);
+    }
+
     // История
     public function history()
     {
