@@ -196,6 +196,8 @@ trait ArticleTrait
 
                 $data['draft'] = request()->draft;
 
+                $data['photo_id'] = savePhoto($request, $article);
+
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $article->update($data);
 

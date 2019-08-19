@@ -78,6 +78,8 @@ class Article extends Model
         'volume',
         'unit_volume_id',
 
+        'photo_id',
+
         'unit_id',
         'draft',
 
