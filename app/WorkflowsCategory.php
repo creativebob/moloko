@@ -91,6 +91,12 @@ class WorkflowsCategory extends Model
         ->where('workflows.archive', false);
     }
 
+    // Метрики
+    public function metrics()
+    {
+        return $this->morphToMany(Metric::class, 'entity', 'preset_metric');
+    }
+
     // Аватар
     public function photo()
     {
@@ -103,10 +109,8 @@ class WorkflowsCategory extends Model
         return $this->morphToMany(Manufacturer::class, 'categories_manufacturer');
     }
 
-    // Группы
     public function groups()
     {
-        return $this->morphToMany(ProcessesGroup::class, 'processes_group_entity');
-        // ->where('archive', false);
+        return $this->morphToMany(ProcessesGroup::class, 'entity', 'processes_group_entity');
     }
 }

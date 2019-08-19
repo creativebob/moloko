@@ -69,7 +69,8 @@
                     </div>
 
                     <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('draft', 1, null, ['id' => 'draft']) }}
+                        {!! Form::hidden('draft', 0) !!}
+                        {!! Form::checkbox('draft', 1, null, ['id' => 'draft']) !!}
                         <label for="draft"><span>Черновик</span></label>
                     </div>
 

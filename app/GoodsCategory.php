@@ -104,7 +104,7 @@ class GoodsCategory extends Model
     // Метрики
     public function metrics()
     {
-        return $this->belongsToMany(Metric::class, 'preset_metric', 'category_id', 'metric_id');
+        return $this->morphToMany(Metric::class, 'entity', 'preset_metric');
     }
 
     public function raws()
@@ -127,7 +127,6 @@ class GoodsCategory extends Model
 
     public function groups()
     {
-        return $this->morphToMany(ArticlesGroup::class, 'articles_group_entity');
-        // ->where('archive', false);
+        return $this->morphToMany(ArticlesGroup::class, 'entity', 'articles_group_entity');
     }
 }

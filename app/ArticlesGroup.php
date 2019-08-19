@@ -56,6 +56,9 @@ class ArticlesGroup extends Model
         'rule_id',
         'album_id',
 
+        'company_id',
+
+        'display',
         'system',
         'moderation'
     ];
@@ -111,30 +114,30 @@ class ArticlesGroup extends Model
     // Товаров
     public function goods_categories()
     {
-        return $this->morphedByMany(GoodsCategory::class, 'articles_group_entity');
+        return $this->morphedByMany(GoodsCategory::class, 'entity', 'articles_group_entity');
     }
 
     // Сырья
     public function raws_categories()
     {
-        return $this->morphedByMany(RawsCategory::class, 'articles_group_entity');
+        return $this->morphedByMany(RawsCategory::class, 'entity', 'articles_group_entity');
     }
 
     // Упаковок
     public function containers_categories()
     {
-        return $this->morphedByMany(ContainersCategory::class, 'articles_group_entity');
+        return $this->morphedByMany(ContainersCategory::class, 'entity', 'articles_group_entity');
     }
 
     // Оборудования
     public function equipments_categories()
     {
-        return $this->morphedByMany(EquipmentsCategory::class, 'articles_group_entity');
+        return $this->morphedByMany(EquipmentsCategory::class, 'entity', 'articles_group_entity');
     }
 
     // Помещенй
     public function rooms_categories()
     {
-        return $this->morphedByMany(RoomsCategory::class, 'articles_group_entity');
+        return $this->morphedByMany(RoomsCategory::class, 'entity', 'articles_group_entity');
     }
 }

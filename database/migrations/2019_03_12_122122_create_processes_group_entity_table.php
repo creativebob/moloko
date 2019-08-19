@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProcessesGroupEntitiesTable extends Migration
+class CreateProcessesGroupEntityTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateProcessesGroupEntitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('processes_group_entities', function (Blueprint $table) {
-            $table->bigIncrements('id');
-
-            $table->bigInteger('processes_group_id')->nullable()->unsigned()->comment('Id альбома');
+        Schema::create('processes_group_entity', function (Blueprint $table) {
+            $table->bigInteger('processes_group_id')->nullable()->unsigned()->comment('Id группы');
             $table->foreign('processes_group_id')->references('id')->on('processes_groups');
 
-            $table->morphs('processes_group_entity', 'pro_gr_entity');
+            $table->morphs('entity');
         });
     }
 
@@ -30,6 +28,6 @@ class CreateProcessesGroupEntitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('processes_group_entities');
+        Schema::dropIfExists('processes_group_entity');
     }
 }

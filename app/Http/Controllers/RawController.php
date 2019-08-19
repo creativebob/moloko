@@ -352,8 +352,7 @@ class RawController extends Controller
 
         if (!is_array($result)) {
 
-            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-            $this->changeCategory($request, $raw);
+
 
             $raw->unit_for_composition_id = $request->unit_for_composition_id;
 
@@ -370,6 +369,26 @@ class RawController extends Controller
             $raw->system = $request->system;
 
             $raw->save();
+
+            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
+            $this->changeCategory($request, $raw);
+
+            // Метрики
+            if ($request->has('metrics')) {
+                // dd($request);
+
+                $metrics_insert = [];
+                foreach ($request->metrics as $metric_id => $value) {
+                    if (is_array($value)) {
+                        $metrics_insert[$metric_id]['value'] = implode(',', $value);
+                    } else {
+//                        if (!is_null($value)) {
+                            $metrics_insert[$metric_id]['value'] = $value;
+//                        }
+                    }
+                }
+                $raw->metrics()->syncWithoutDetaching($metrics_insert);
+            }
 
 
             // Если ли есть

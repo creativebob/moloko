@@ -275,7 +275,7 @@ Route::post('/ajax_add_property', 'PropertyController@add_property')->middleware
 
 
 // ---------------------------------------- Метрики -------------------------------------------------
-Route::get('/metrics', 'MetricController@store')->middleware('auth');
+Route::get('/metrics', 'MetricController@store');
 // Основные методы
 Route::resource('/metrics', 'MetricController')->middleware('auth');
 
@@ -312,10 +312,10 @@ Route::resource('articles_groups', 'ArticlesGroupController')->middleware('auth'
 // ------------------------------------- Категории сырья -------------------------------------------
 
 // Текущая добавленная/удаленная категория
-Route::any('/raws_categories', 'RawsCategoryController@index')->middleware('auth');
-Route::match(['get', 'post'], '/raws_categories/{id}/edit', 'RawsCategoryController@edit')->middleware('auth');
+Route::any('/raws_categories', 'RawsCategoryController@index');
+Route::post('/raws_categories/{id}/edit', 'RawsCategoryController@edit');
 // Основные методы
-Route::resource('/raws_categories', 'RawsCategoryController')->middleware('auth');
+Route::resource('/raws_categories', 'RawsCategoryController');
 
 
 
@@ -403,13 +403,13 @@ Route::post('/room/photos', 'RoomController@photos')->middleware('auth');
 // -------------------------------- Категории товаров -------------------------------------------
 
 // Текущая добавленная/удаленная категория
-Route::any('/goods_categories', 'GoodsCategoryController@index')->middleware('auth');
-Route::post('/goods_categories/{id}/edit', 'GoodsCategoryController@edit')->middleware('auth');
+Route::any('/goods_categories', 'GoodsCategoryController@index');
+Route::match(['get', 'post'], '/goods_categories/{id}/edit', 'GoodsCategoryController@edit')->middleware('auth');
 // Основные методы
-Route::resource('/goods_categories', 'GoodsCategoryController')->middleware('auth');
+Route::resource('/goods_categories', 'GoodsCategoryController');
 
-Route::any('/goods_category_metrics', 'GoodsCategoryController@ajax_get_metrics')->middleware('auth');
-Route::any('/goods_category_compositions', 'GoodsCategoryController@ajax_get_compositions')->middleware('auth');
+Route::any('/goods_category_metrics', 'GoodsCategoryController@ajax_get_metrics');
+Route::any('/goods_category_compositions', 'GoodsCategoryController@ajax_get_compositions');
 
 
 // ------------------------------------- Категории помещений -------------------------------------------
@@ -476,6 +476,7 @@ Route::resource('/stock_goods', 'StockGoodsController');
 
 // Текущая добавленная/удаленная категория
 Route::any('/services_categories', 'ServicesCategoryController@index')->middleware('auth');
+Route::match(['get', 'post'], '/services_categories/{id}/edit', 'ServicesCategoryController@edit')->middleware('auth');
 // Основные методы
 Route::resource('/services_categories', 'ServicesCategoryController')->middleware('auth');
 // Проверка на существование
@@ -510,6 +511,7 @@ Route::post('/service/photos', 'ServiceController@photos')->middleware('auth');
 
 // Текущая добавленная/удаленная категория
 Route::any('/workflows_categories', 'WorkflowsCategoryController@index')->middleware('auth');
+Route::match(['get', 'post'], '/workflows_categories/{id}/edit', 'WorkflowsCategoryController@edit')->middleware('auth');
 // Основные методы
 Route::resource('/workflows_categories', 'WorkflowsCategoryController')->middleware('auth');
 // Проверка на существование
@@ -533,6 +535,7 @@ Route::any('/workflows_create_mode', 'WorkflowController@ajax_change_create_mode
 
 // Текущая добавленная/удаленная категория
 Route::any('/expendables_categories', 'ExpendablesCategoryController@index')->middleware('auth');
+Route::match(['get', 'post'], '/expendables_categories/{id}/edit', 'ExpendablesCategoryController@edit')->middleware('auth');
 // Основные методы
 Route::resource('/expendables_categories', 'ExpendablesCategoryController')->middleware('auth');
 
@@ -1066,8 +1069,8 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
 
 
 
-Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');
-Route::any('catalogs_goods_items/prices', 'CatalogsGoodsItemController@get_prices');
+//Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');
+//Route::any('catalogs_goods_items/prices', 'CatalogsGoodsItemController@get_prices');
 
 
 // Route::any('archive_prices_service', 'PricesServiceController@ajax_archive');

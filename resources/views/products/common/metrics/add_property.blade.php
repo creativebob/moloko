@@ -103,6 +103,12 @@
 {{ Form::hidden('property_id', $property_id) }}
 {{ Form::hidden('entity', $entity) }}
 
+<div class="small-12 cell checkbox">
+	{!! Form::hidden('is_required', 0) !!}
+	{!! Form::checkbox('is_required', 1, null, ['id' => 'checkbox-required']) !!}
+	<label for="checkbox-required"><span>Обязательна для заполнения</span></label>
+</div>
+
 <div class="small-12 cell text-center">
 	<a class="button green-button" id="add-metric">Создать метрику</a>
 </div>

@@ -226,9 +226,10 @@ $disabled = $process->draft == 0 ? true : null;
                     {{-- Конец правого блока на первой вкладке --}}
 
                     {{-- Чекбокс черновика --}}
+                    {!! Form::hidden('draft', 0) !!}
                     @if ($process->draft == 1)
                     <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('draft', 1, $process->draft, ['id' => 'draft']) }}
+                        {!! Form::checkbox('draft', 1, $process->draft, ['id' => 'draft']) !!}
                         <label for="draft"><span>Черновик</span></label>
                     </div>
                     @endif

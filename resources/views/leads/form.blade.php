@@ -111,13 +111,24 @@
                                             <th></th>
                                         </tr>
                                     </thead>
-                                    <tbody id="prices_services-section">
+
+                                    <tbody id="prices_goods-section">
 
                                         @if (isset($lead->estimate))
-                                        @foreach ($lead->estimate->items as $estimates_item)
-                                        @include('leads.estimate.estimates_item_service', ['estimates_item' => $estimates_item])
+                                        @foreach ($lead->estimate->items->where('product_type', 'App\Goods') as $estimates_item)
+                                        @include('leads.estimate.estimates_item_goods', ['estimates_item' => $estimates_item])
                                         @endforeach
                                         @endif
+
+                                    </tbody>
+
+                                    <tbody id="prices_services-section">
+
+                                    @if (isset($lead->estimate))
+                                        @foreach ($lead->estimate->items->where('product_type', 'App\Service') as $estimates_item)
+                                            @include('leads.estimate.estimates_item_service', ['estimates_item' => $estimates_item])
+                                        @endforeach
+                                    @endif
 
                                     </tbody>
                                 </table>
@@ -209,12 +220,17 @@
                     <a href="#content-panel-notes" aria-selected="true">События</a>
                 </li>
 
+                @isset($сatalog_goods)
                 <li class="tabs-title">
                     <a data-tabs-target="content-panel-catalog-goods" href="#content-panel-catalog-goods">Товары</a>
                 </li>
+                @endisset
+
+                @isset($catalog_services)
                 <li class="tabs-title">
                     <a data-tabs-target="content-panel-catalog-services" href="#content-panel-catalog-services">Услуги</a>
                 </li>
+                @endisset
 
                 {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
 
@@ -262,6 +278,7 @@
                 </div>
 
                 {{-- КАТАЛОГ ТОВАРОВ --}}
+                @isset($сatalog_goods)
                 <div class="tabs-panel" id="content-panel-catalog-goods">
                     <div class="grid-x grid-padding-x">
 
@@ -282,9 +299,7 @@
 
                                 <div class="small-12 cell search-in-catalog-panel">
 
-                                    @isset ($cur_catalog_goods)
-                                        @include('leads.catalogs.catalogs_items', ['catalog' => $cur_catalog_goods, 'type' => 'goods'])
-                                    @endisset
+                                    @include('leads.catalogs.catalogs_items', ['catalog' => $сatalog_goods, 'type' => 'goods'])
 
                                 </div>
                             </div>
@@ -303,18 +318,57 @@
                                 </div>
 
                                 {{-- ВЫВОД ТОВАРОВ --}}
-                                <ul class="small-12 cell products-list view-list" id="list-prices_goods">
+                                <div id="block-prices_goods">
+                                    @foreach ($сatalog_goods->items as $item)
+                                    <ul class="small-12 cell products-list view-list" id="block-catalog_goods_item-{{ $item->id }}">
+                                        @foreach($item->prices as $cur_prices_goods)
+                                        <li>
+                                            <a class="add-to-estimate" id="prices_goods-{{ $cur_prices_goods->id }}" data-serial="{{ $cur_prices_goods->goods->serial }}">
 
+                                                <div class="media-object stack-for-small">
+                                                    <div class="media-object-section items-product-img" >
+                                                        <div class="thumbnail">
+                                                            <img src="{{ getPhotoPath($cur_prices_goods->goods->article, 'small') }}">
+                                                        </div>
+                                                    </div>
 
+                                                    <div class="media-object-section cell">
 
-                                </ul>
+                                                        <div class="grid-x grid-margin-x">
+                                                            <div class="cell auto">
+                                                                <h4>
+                                                                    <span class="items-product-name">{{ $cur_prices_goods->goods->article->name }}</span>
+                                                                    @if($cur_prices_goods->goods->article->manufacturer)
+                                                                        <span class="items-product-manufacturer"> ({{ $cur_prices_goods->goods->article->manufacturer->name ?? '' }})</span>
+                                                                    @endif
+                                                                </h4>
+                                                            </div>
+
+                                                            <div class="cell shrink wrap-product-price">
+
+                                                                <span class="items-product-price">{{ num_format($cur_prices_goods->price, 0) }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <p class="items-product-description">{{ $cur_prices_goods->goods->description }}</p>
+                                                    </div>
+                                                </div>
+
+                                            </a>
+                                        </li>
+                                            @endforeach
+                                    </ul>
+                                    @endforeach
+                                </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
+                @endisset
                 {{-- КОНЕЦ КАТАЛОГ ТОВАРОВ --}}
 
                 {{-- КАТАЛОГ УСЛУГ --}}
+                @isset($catalog_services)
                 <div class="tabs-panel" id="content-panel-catalog-services">
                     <div class="grid-x grid-padding-x">
 
@@ -335,9 +389,7 @@
 
                                 <div class="small-12 cell search-in-catalog-panel">
 
-                                    @isset ($catalog_service)
-                                    @include('leads.catalogs.catalogs_items', ['catalog' => $catalog_service, 'type' => 'services'])
-                                    @endisset
+                                    @include('leads.catalogs.catalogs_items', ['catalog' => $catalog_services, 'type' => 'services'])
 
                                 </div>
                             </div>
@@ -356,15 +408,53 @@
                                 </div>
 
                                 {{-- ВЫВОД УСЛУГ --}}
-                                <ul class="small-12 cell products-list view-list" id="list-prices_services">
+                                <div id="block-prices_services">
+                                @foreach ($catalog_services->items as $item)
+                                    <ul class="small-12 cell products-list view-list" id="block-catalog_services_item-{{ $item->id }}">
+                                        @foreach($item->prices as $prices_service)
+                                            <li>
+                                                <a class="add-to-estimate" id="prices_services-{{ $prices_service->id }}" data-serial="{{ $prices_service->service->serial }}">
 
+                                                    <div class="media-object stack-for-small">
+                                                        <div class="media-object-section items-product-img" >
+                                                            <div class="thumbnail">
+                                                                <img src="{{ getPhotoPath($prices_service->service->process, 'small') }}">
+                                                            </div>
+                                                        </div>
 
+                                                        <div class="media-object-section cell">
 
-                                </ul>
+                                                            <div class="grid-x grid-margin-x">
+                                                                <div class="cell auto">
+                                                                    <h4>
+                                                                        <span class="items-product-name">{{ $prices_service->service->process->name }}</span>
+                                                                        @if($prices_service->service->process->manufacturer)
+                                                                            <span class="items-product-manufacturer"> ({{ $prices_service->service->process->manufacturer->name ?? '' }})</span>
+                                                                        @endif
+                                                                    </h4>
+                                                                </div>
+
+                                                                <div class="cell shrink wrap-product-price">
+
+                                                                    <span class="items-product-price">{{ num_format($prices_service->price, 0) }}</span>
+                                                                </div>
+                                                            </div>
+                                                            <p class="items-product-description">{{ $prices_service->service->description }}</p>
+                                                        </div>
+                                                    </div>
+
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                    @endforeach
+                                </div>
+
                             </div>
                         </div>
                     </div>
                 </div>
+                @endisset
                 {{-- КОНЕЦ КАТАЛОГ УСЛУГ --}}
 
 

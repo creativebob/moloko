@@ -127,10 +127,13 @@ class RawsCategoryController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $raws_category = RawsCategory::with([
             'manufacturers',
+            'metrics' => function ($q) {
+                $q->with('unit', 'values');
+            },
         ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
-        // dd($raws_category);
+//         dd($raws_category);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raws_category);
@@ -139,6 +142,14 @@ class RawsCategoryController extends Controller
         $page_info = pageInfo($this->entity_alias);
 
         $settings = getSettings($this->entity_alias);
+
+        // При добавлении метрики отдаем ajax новый список свойст и метрик
+        if ($request->ajax()) {
+            return view('products.common.metrics.properties_list', [
+                'category' => $raws_category,
+                'page_info' => $page_info,
+            ]);
+        }
 
         return view('products.articles_categories.common.edit.edit', [
             'title' => 'Редактирование категории сырья',
@@ -166,8 +177,8 @@ class RawsCategoryController extends Controller
 
         if ($result) {
 
-            // Производители
             $raws_category->manufacturers()->sync($request->manufacturers);
+            $raws_category->metrics()->sync($request->metrics);
 
            // Переадресовываем на index
             return redirect()->route('raws_categories.index', ['id' => $raws_category->id]);

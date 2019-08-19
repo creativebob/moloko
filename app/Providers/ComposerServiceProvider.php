@@ -182,7 +182,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.empty_staff', EmptyStaffComposer::class);
 
         view()->composer('includes.selects.positions', PositionsComposer::class);
-        view()->composer('products.articles_categories.goods_categories.metrics.properties_list', PropertiesComposer::class);
+        view()->composer('products.common.metrics.properties_list', PropertiesComposer::class);
 
         view()->composer([
             'includes.selects.catalogs_chosen',

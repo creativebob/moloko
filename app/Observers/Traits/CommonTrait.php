@@ -15,6 +15,9 @@ trait CommonTrait
 
         $request = request();
 
+        $item->display = ($request->has('display')) ? $request->display : true;
+        $item->system = ($request->has('system')) ? $request->system : false;
+
         $user = $request->user();
         $item->company_id = $user->company_id;
         $item->author_id = hideGod($user);

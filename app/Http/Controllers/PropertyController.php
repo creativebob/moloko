@@ -104,7 +104,7 @@ class PropertyController extends Controller
             }
             // echo $property;
 
-            return view('includes.category_metrics.add_property', [
+            return view('products.common.metrics.add_property', [
                 'type' => $property->type,
                 'units_list' => $units_list,
                 'property_id' => $request->id,

@@ -250,7 +250,7 @@
 	                        </div>
 
 	                        {{-- Метрики --}}
-	                        @includeIf($page_info->entity->view_path . '.metrics.metrics')
+	                        @includeIf('products.common.edit.metrics.metrics')
 
 
 	                        <div id="item-inputs"></div>
@@ -415,13 +415,20 @@
 	                        <fieldset class="fieldset-access">
 	                            <legend>Доступность</legend>
 				                    {{-- Чекбокс черновика --}}
-				                    @if ($article->draft == 1)
+									{!! Form::hidden('draft', 0) !!}
+				                    @if ($article->draft)
 				                    <div class="small-12 cell checkbox">
-										{!! Form::hidden('draft', 0) !!}
-				                        {!! Form::checkbox('draft', 1, $article->draft, ['id' => 'draft']) !!}
-				                        <label for="draft"><span>Черновик</span></label>
+				                        {!! Form::checkbox('draft', 1, $article->draft, ['id' => 'checkbox-draft']) !!}
+				                        <label for="checkbox-draft"><span>Черновик</span></label>
 				                    </div>
 				                    @endif
+
+
+									<div class="small-12 cell checkbox">
+										{!! Form::hidden('serial', 0) !!}
+										{!! Form::checkbox('serial', 1, $item->serial, ['id' => 'checkbox-serial']) !!}
+										<label for="checkbox-serial"><span>Серийный номер</span></label>
+									</div>
 
 				                    {{-- Чекбоксы управления --}}
 				                    @include('includes.control.checkboxes', ['item' => $item])

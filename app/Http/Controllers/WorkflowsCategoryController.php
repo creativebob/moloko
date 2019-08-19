@@ -141,6 +141,14 @@ class WorkflowsCategoryController extends Controller
 
         $settings = getSettings($this->entity_alias);
 
+        // При добавлении метрики отдаем ajax новый список свойст и метрик
+        if ($request->ajax()) {
+            return view('products.common.metrics.properties_list', [
+                'category' => $workflows_category,
+                'page_info' => $page_info,
+            ]);
+        }
+
         // dd($goods_category->direction);
         return view('products.processes_categories.common.edit.edit', [
             'title' => 'Редактирование категории рабочих процессов',
@@ -168,8 +176,8 @@ class WorkflowsCategoryController extends Controller
 
         if ($result) {
 
-            // Производители
             $workflows_category->manufacturers()->sync($request->manufacturers);
+            $workflows_category->metrics()->sync($request->metrics);
 
            // Переадресовываем на index
             return redirect()->route('workflows_categories.index', ['id' => $workflows_category->id]);

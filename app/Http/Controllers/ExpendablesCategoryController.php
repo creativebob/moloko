@@ -115,7 +115,7 @@ class ExpendablesCategoryController extends Controller
         //
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -130,12 +130,25 @@ class ExpendablesCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $expendables_category);
 
-        return view('system.common.accordions.edit', [
-            'item' => $expendables_category,
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_alias);
+
+        $settings = getSettings($this->entity_alias);
+
+        // При добавлении метрики отдаем ajax новый список свойст и метрик
+        if ($request->ajax()) {
+            return view('products.common.metrics.properties_list', [
+                'category' => $expendables_category,
+                'page_info' => $page_info,
+            ]);
+        }
+
+        return view('products.articles_categories.common.edit.edit', [
+            'title' => 'Редактирование категории помещений',
+            'category' => $expendables_category,
+            'page_info' => $page_info,
+            'settings' => $settings,
             'entity' => $this->entity_alias,
-            'title' => 'Редактирование категории расходников',
-            'parent_id' => $expendables_category->parent_id,
-            'category_id' => $expendables_category->category_id
         ]);
     }
 
@@ -155,6 +168,10 @@ class ExpendablesCategoryController extends Controller
         $result = $expendables_category->update($data);
 
         if ($result) {
+
+            $expendables_category->manufacturers()->sync($request->manufacturers);
+            $expendables_category->metrics()->sync($request->metrics);
+
             // Переадресовываем на index
             return redirect()->route('expendables_categories.index', ['id' => $expendables_category->id]);
         } else {

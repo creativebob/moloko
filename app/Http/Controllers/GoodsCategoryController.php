@@ -153,22 +153,23 @@ class GoodsCategoryController extends Controller
         ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
-        // dd($goods_category);
+//         dd($goods_category);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $goods_category);
-
-        // При добавлении метрики отдаем ajax новый список свойст и метрик
-        if ($request->ajax()) {
-            return view('products.articles_categories.goods_categories.metrics.properties_list', [
-                'category' => $goods_category,
-            ]);
-        }
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
         $settings = getSettings($this->entity_alias);
+
+        // При добавлении метрики отдаем ajax новый список свойст и метрик
+        if ($request->ajax()) {
+            return view('products.common.metrics.properties_list', [
+                'category' => $goods_category,
+                'page_info' => $page_info,
+            ]);
+        }
 
         // dd($goods_category->direction);
         return view('products.articles_categories.common.edit.edit', [
@@ -198,18 +199,8 @@ class GoodsCategoryController extends Controller
 
         if ($result) {
 
-            // Проверка на направление
-//        if (is_null($goods_category->parent_id)) {
-//            $this->checkDirection($request, $goods_category);
-//        }
-
-            // Производители
             $goods_category->manufacturers()->sync($request->manufacturers);
-
-            // Метрики
             $goods_category->metrics()->sync($request->metrics);
-
-            // Cостав
             $goods_category->raws()->sync($request->raws);
 
             // Переадресовываем на index

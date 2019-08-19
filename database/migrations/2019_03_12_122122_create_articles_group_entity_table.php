@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateArticlesGroupEntitiesTable extends Migration
+class CreateArticlesGroupEntityTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateArticlesGroupEntitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('articles_group_entities', function (Blueprint $table) {
-            $table->bigIncrements('id');
-
-            $table->bigInteger('articles_group_id')->nullable()->unsigned()->comment('Id альбома');
+        Schema::create('articles_group_entity', function (Blueprint $table) {
+            $table->bigInteger('articles_group_id')->nullable()->unsigned()->comment('Id группы');
             $table->foreign('articles_group_id')->references('id')->on('articles_groups');
 
-            $table->morphs('articles_group_entity', 'art_gr_entity');
+            $table->morphs('entity');
         });
     }
 
@@ -30,6 +28,6 @@ class CreateArticlesGroupEntitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('articles_group_entities');
+        Schema::dropIfExists('articles_group_entity');
     }
 }

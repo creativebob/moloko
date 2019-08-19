@@ -33,10 +33,7 @@ trait ArticleTrait
                 'name' => $request->name,
                 'unit_id' => $request->unit_id,
                 'units_category_id' => $request->units_category_id,
-            ], [
-                'system' => $request->system ?? null,
                 'company_id' => $company_id,
-                'author_id' => $user_id
             ]);
 
             // Пишем к группе связь с категорией
@@ -48,10 +45,7 @@ trait ArticleTrait
                 'name' => $request->group_name,
                 'unit_id' => $request->unit_id,
                 'units_category_id' => $request->units_category_id,
-            ], [
-                'system' => $request->system ?? null,
-                'company_id' => $company_id,
-                'author_id' => $user_id
+                'company_id' => $company_id
             ]);
 
             // Пишем к группе связь с категорией
@@ -128,7 +122,7 @@ trait ArticleTrait
         // dd($data);
 
         // Проверка только если статус черновика не пришел, а сам артикул находится в черновике
-        if (!request()->has('draft') && $data['old_draft'] == 1) {
+        if ((request()->draft == 0) && $data['old_draft'] == 1) {
             // Проверяем совпадение (отдаем пришедшие данные, т.к. мы не можем сейчас записать артикул, запись будет после проверки)
             // Придет либо массив с ошибками, либо null
             $result = $this->checkCoincidenceArticle($data);
@@ -200,7 +194,7 @@ trait ArticleTrait
 
                 }
 
-                $data['draft'] = request()->has('draft');
+                $data['draft'] = request()->draft;
 
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $article->update($data);
@@ -386,30 +380,26 @@ trait ArticleTrait
         // Получаем выбранную категорию со страницы (то, что указал пользователь)
         $category_id = $request->category_id;
 
-            // Смотрим: была ли она изменена
+        // Смотрим: была ли она изменена
         if ($item->category_id != $category_id) {
 
             $articles_group = $item->article->group;
             $category = $item->category;
 
-                // Была изменена! Переназначаем категорию товару и группе:
+            // Была изменена! Переназначаем категорию товару и группе:
             $category->groups()->detach($articles_group->id);
-            $category->groups()->attach($articles_group->id);
-            // $category->groups()->syncWithoutDetaching($category_id);
 
 
-            $entity = Entity::where('alias', $item->getTable())
-            ->first(['model']);
-
+            $entity = Entity::where('alias', $item->category->getTable())
+                ->first(['model']);
             $model = 'App\\'.$entity->model;
-            $items = $model::whereHas('article', function ($q) use ($articles_group) {
-                $q->where('articles_group_id', $articles_group->id);
-            })
-            ->update([
+
+            $new_category = $model::findOrFail($category_id);
+            $new_category->groups()->attach($request->articles_group_id);
+
+            $item->update([
                 'category_id' => $category_id,
             ]);
         }
-
     }
 }
-

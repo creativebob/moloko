@@ -1,9 +1,17 @@
+@php
+	if (is_null($item->metrics->firstWhere('id', $metric->id))) {
+		$value = null;
+	}  else {
+		$value = $item->metrics->firstWhere('id', $metric->id)->pivot->value;
+	}
+@endphp
+
 @switch($metric->property->type)
 
 @case('numeric')
 <label>
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name . ', (' . $metric->unit->abbreviation . ')' }}</span>
-	{{ Form::number('metrics['.$metric->id.']', isset($metric->pivot) ? $metric->pivot->value : null, ['required', 'id' => 'metric-'.$metric->id.'-field', 'min' => number_format($metric->min, $metric->decimal_place), 'max' => number_format($metric->max, $metric->decimal_place), 'step' => 'any', $disabled ? 'disabled' : '']) }}
+	{{ Form::number('metrics['.$metric->id.']', $value, ['id' => 'metric-'.$metric->id.'-field', 'min' => number_format($metric->min, $metric->decimal_place), 'max' => number_format($metric->max, $metric->decimal_place), 'step' => 'any', ($metric->is_required) ? 'required' : '']) }}
 	<span class="form-error">Поле обязательно для заполнения!</span>
 </label>
 <script type="application/javascript">
@@ -21,7 +29,7 @@
 @case('percent')
 <label>
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
-	{{ Form::number('metrics['.$metric->id.']', isset($metric->pivot) ? $metric->pivot->value : null, ['required', 'id' => 'metric-'.$metric->id.'-field', 'min' => number_format($metric->min, $metric->decimal_place), 'max' => number_format($metric->max, $metric->decimal_place), 'step' => 'any', $disabled ? 'disabled' : '']) }}
+	{{ Form::number('metrics['.$metric->id.']', $value, ['id' => 'metric-'.$metric->id.'-field', 'min' => number_format($metric->min, $metric->decimal_place), 'max' => number_format($metric->max, $metric->decimal_place), 'step' => 'any', ($metric->is_required) ? 'required' : '']) }}
 	<span class="form-error">Поле обязательно для заполнения!</span>
 </label>
 <script type="application/javascript">
@@ -62,14 +70,16 @@
 
 	<ul class="checkbox checkbox-group" id="checkbox-group-{{ $metric->id }}">
 		@php
-		if (isset($metric->pivot)) {
-			$array = explode(',', $metric->pivot->value);
+		if (is_null($value)) {
+			$array = null;
+			} else {
+			$array = explode(',', $value);
 		}
 		@endphp
 
 		@foreach ($metric->values as $value)
 		<li>
-			{{ Form::checkbox('metrics['.$metric->id.'][]', $value->id, isset($metric->pivot) ? in_array($value->id, $array) : false, ['id' => 'add-metric-value-'. $value->id, $disabled ? 'disabled' : '']) }}
+			{{ Form::checkbox('metrics['.$metric->id.'][]', $value->id, (is_null($array)) ? false : in_array($value->id, $array), ['id' => 'add-metric-value-'. $value->id]) }}
 			<label for="add-metric-value-{{ $value->id }}"><span>{{ $value->value }}</span></label>
 		</li>
 		@endforeach
@@ -90,7 +100,7 @@
 @case('select')
 <label>
 	<span data-tooltip tabindex="1" title="{{ $metric->description }}">{{ $metric->name }}</span>
-	{{ Form::select('metrics['.$metric->id.']', $metric->values->pluck('value', 'id'), isset($metric->pivot) ? $metric->pivot->value : null, ['required', $disabled ? 'disabled' : '']) }}
+	{{ Form::select('metrics['.$metric->id.']', $metric->values->pluck('value', 'id'), $value, [($metric->is_required) ? 'required' : '']) }}
 </label>
 @break
 

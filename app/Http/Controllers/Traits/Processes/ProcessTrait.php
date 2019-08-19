@@ -29,16 +29,11 @@ trait ProcessTrait
             $processes_group = ProcessesGroup::firstOrCreate([
                 'name' => $request->name,
                 'unit_id' => $request->unit_id,
-            ], [
-                'system' => $request->system ?? null,
-                'display' => true,
                 'company_id' => $company_id,
-                'author_id' => $user_id
             ]);
 
             // Пишем к группе связь с категорией
             $category->groups()->syncWithoutDetaching($processes_group->id);
-
 
             break;
 
@@ -46,11 +41,7 @@ trait ProcessTrait
             $processes_group = ProcessesGroup::firstOrCreate([
                 'name' => $request->group_name,
                 'unit_id' => $request->unit_id,
-            ], [
-                'system' => $request->system ?? null,
-                'display' => true,
                 'company_id' => $company_id,
-                'author_id' => $user_id
             ]);
 
             // Пишем к группе связь с категорией
@@ -103,7 +94,7 @@ trait ProcessTrait
         // dd($data);
 
         // Проверка только если статус черновика не пришел, а сам артикул находится в черновике
-        if (!request()->has('draft') && $data['old_draft'] == 1) {
+        if ((request()->draft == 0) && $data['old_draft'] == 1) {
             // Проверяем совпадение (отдаем пришедшие данные, т.к. мы не можем сейчас записать артикул, запись будет после проверки)
             // Придет либо массив с ошибками, либо null
             $result = $this->checkCoincidenceProcess($data);
@@ -138,7 +129,7 @@ trait ProcessTrait
                     }
                 }
 
-                $data['draft'] = $request->has('draft');
+                $data['draft'] = $request->draft;
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $process->update($data);
 
@@ -320,23 +311,20 @@ trait ProcessTrait
             $processes_group = $item->process->group;
             $category = $item->category;
 
-                // Была изменена! Переназначаем категорию товару и группе:
+            // Была изменена! Переназначаем категорию товару и группе:
             $category->groups()->detach($processes_group->id);
-            $category->groups()->attach($processes_group->id);
-            // $category->groups()->syncWithoutDetaching($category_id);
 
 
-            $entity = Entity::where('alias', $item->getTable())
-            ->first(['model']);
-
+            $entity = Entity::where('alias', $item->category->getTable())
+                ->first(['model']);
             $model = 'App\\'.$entity->model;
-            $items = $model::whereHas('process', function ($q) use ($processes_group) {
-                $q->where('processes_group_id', $processes_group->id);
-            })
-            ->update([
+
+            $new_category = $model::findOrFail($category_id);
+            $new_category->groups()->attach($request->articles_group_id);
+
+            $item->update([
                 'category_id' => $category_id,
             ]);
         }
     }
 }
-

@@ -71,6 +71,12 @@ class ExpendablesCategory extends Model
         return $this->belongsTo(User::class);
     }
 
+    // Метрики
+    public function metrics()
+    {
+        return $this->morphToMany(Metric::class, 'entity', 'preset_metric');
+    }
+
     // Аватар
     public function photo()
     {

@@ -34,6 +34,8 @@ class CreateEntitiesTable extends Migration
             $table->boolean('dependence')->default(0)->comment('Филиалозависимость');
             $table->boolean('site')->default(0)->comment('Раздел сайта');
 
+            $table->boolean('metric')->default(0)->comment('Подключаем метрики');
+
             // Блок тмц
             // $table->boolean('tmc')->default(0)->comment('ТМЦ');
             // $table->bigInteger('consist_id')->unsigned()->nullable()->comment('Id сущности, из которой состоит сущность');

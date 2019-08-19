@@ -94,6 +94,12 @@ class RawsCategory extends Model
         ->where('raws.archive', false);
     }
 
+    // Метрики
+    public function metrics()
+    {
+        return $this->morphToMany(Metric::class, 'entity', 'preset_metric');
+    }
+
     // Аватар
     public function photo()
     {
@@ -108,7 +114,6 @@ class RawsCategory extends Model
 
     public function groups()
     {
-        return $this->morphToMany(ArticlesGroup::class, 'articles_group_entity');
-        // ->where('archive', false);
+        return $this->morphToMany(ArticlesGroup::class, 'entity', 'articles_group_entity');
     }
 }

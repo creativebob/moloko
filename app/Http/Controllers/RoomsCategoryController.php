@@ -149,6 +149,14 @@ class RoomsCategoryController extends Controller
 
         $settings = getSettings($this->entity_alias);
 
+        // При добавлении метрики отдаем ajax новый список свойст и метрик
+        if ($request->ajax()) {
+            return view('products.common.metrics.properties_list', [
+                'category' => $rooms_category,
+                'page_info' => $page_info,
+            ]);
+        }
+
         // dd($goods_category->direction);
         return view('products.articles_categories.common.edit.edit', [
             'title' => 'Редактирование категории помещений',
@@ -176,8 +184,8 @@ class RoomsCategoryController extends Controller
 
         if ($result) {
 
-            // Производители
             $rooms_category->manufacturers()->sync($request->manufacturers);
+            $rooms_category->metrics()->sync($request->metrics);
 
            // Переадресовываем на index
             return redirect()->route('rooms_categories.index', ['id' => $rooms_category->id]);

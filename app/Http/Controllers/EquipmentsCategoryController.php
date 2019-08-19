@@ -142,6 +142,14 @@ class EquipmentsCategoryController extends Controller
 
         $settings = getSettings($this->entity_alias);
 
+        // При добавлении метрики отдаем ajax новый список свойст и метрик
+        if ($request->ajax()) {
+            return view('products.common.metrics.properties_list', [
+                'category' => $equipments_category,
+                'page_info' => $page_info,
+            ]);
+        }
+
         // dd($goods_category->direction);
         return view('products.articles_categories.common.edit.edit', [
             'title' => 'Редактирование категории оборудования',
@@ -170,8 +178,8 @@ class EquipmentsCategoryController extends Controller
 
         if ($result) {
 
-            // Производители
             $equipments_category->manufacturers()->sync($request->manufacturers);
+            $equipments_category->metrics()->sync($request->metrics);
 
            // Переадресовываем на index
             return redirect()->route('equipments_categories.index', ['id' => $equipments_category->id]);

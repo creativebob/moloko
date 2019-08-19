@@ -62,7 +62,7 @@ class CatalogsServicesItem extends Model
 	// Каталог
 	public function catalog()
 	{
-		return $this->belongsTo(CatalogsService::class);
+		return $this->belongsTo(CatalogsService::class, 'catalogs_service_id');
 	}
 
     // Родитель
@@ -100,6 +100,11 @@ class CatalogsServicesItem extends Model
 	{
 		return $this->hasMany(PricesService::class);
 	}
+
+    public function prices()
+    {
+        return $this->hasMany(PricesService::class);
+    }
 
 	// Услуги каталога
     public function services()

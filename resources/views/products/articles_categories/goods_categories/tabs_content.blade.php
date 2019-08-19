@@ -1,7 +1,7 @@
 {{-- Свойства --}}
-<div class="tabs-panel" id="properties">
-	@include('products.articles_categories.goods_categories.metrics.section')
-</div>
+{{--<div class="tabs-panel" id="properties">--}}
+{{--	@include('products.common.metrics.section')--}}
+{{--</div>--}}
 
 {{-- Свойства для набора --}}
 {{-- <div class="tabs-panel" id="set-properties">

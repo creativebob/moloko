@@ -26,9 +26,9 @@ class CreateEstimatesItemsTable extends Migration
             $table->integer('cost')->nullable()->comment('Себестоимость');
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим мебестоимости');
 
-            $table->integer('price')->default(0)->comment('Цена');
+            $table->decimal('price', 12, 4)->comment('Цена');
             $table->integer('count')->default(0)->comment('Количество');
-            $table->decimal('sum', 10, 2)->nullable()->comment('Сумма');
+            $table->decimal('sum', 12, 4)->nullable()->comment('Сумма');
 
             $table->decimal('margin_percent', 10, 2)->nullable()->comment('Процент маржи');
             $table->decimal('margin_currency', 10, 2)->nullable()->comment('Сумма маржи');
@@ -42,8 +42,8 @@ class CreateEstimatesItemsTable extends Migration
             $table->decimal('extra_discount_percent', 10, 2)->nullable()->comment('Общий процент скидки');
             $table->decimal('extra_discount_currency', 10, 2)->nullable()->comment('Общая сумма скидки');
 
-            $table->decimal('total', 10, 2)->nullable()->comment('Итоговая сумма');
-            $table->decimal('profit', 10, 2)->nullable()->comment('прибыль');
+            $table->decimal('total', 12, 4)->nullable()->comment('Итоговая сумма');
+            $table->decimal('profit', 12, 4)->nullable()->comment('Прибыль');
 
             // Общие настройки
             

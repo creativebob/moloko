@@ -88,7 +88,7 @@ class Goods extends Model
     // Метрики
     public function metrics()
     {
-        return $this->belongsToMany(Metric::class, 'goods_metric', 'goods_id', 'metric_id')
+        return $this->morphToMany(Metric::class, 'entity', 'entity_metric_value')
         ->withPivot('value');
     }
 

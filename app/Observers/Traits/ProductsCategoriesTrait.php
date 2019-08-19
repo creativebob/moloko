@@ -10,10 +10,4 @@ trait ProductsCategoriesTrait
         $request = request();
         $category->manufacturers()->sync($request->manufacturers);
     }
-
-    public function syncMetrics($category)
-    {
-        $request = request();
-        $category->metrics()->sync($request->metrics);
-    }
 }
