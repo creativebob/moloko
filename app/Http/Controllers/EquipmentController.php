@@ -295,6 +295,7 @@ class EquipmentController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $equipment);
 
+            $equipment->serial = $request->serial;
             $equipment->display = $request->display;
             $equipment->system = $request->system;
             $equipment->save();

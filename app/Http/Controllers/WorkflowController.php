@@ -302,6 +302,7 @@ class WorkflowController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $workflow);
 
+            $workflow->serial = $request->serial;
             $workflow->display = $request->display;
             $workflow->system = $request->system;
             $workflow->save();
@@ -370,7 +371,7 @@ class WorkflowController extends Controller
         ])
         ->find($request->id);
 
-        return view('products.processes_categories.services.workflows.workflow_input', compact('workflow'));
+        return view('products.processes.services.workflows.workflow_input', compact('workflow'));
     }
 
     // Добавляем состав

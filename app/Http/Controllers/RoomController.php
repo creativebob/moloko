@@ -309,6 +309,7 @@ class RoomController extends Controller
             // dd($location_id);
             $room->location_id = $location_id;
 
+            $room->serial = $request->serial;
             $room->display = $request->display;
             $room->system = $request->system;
             $room->save();

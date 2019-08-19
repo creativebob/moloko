@@ -33,7 +33,7 @@
         "mixin-loader": "^2.0.3",
         "node-sass": "^4.12.0",
         "ruby-sass-loader": "^0.4.0",
-        "sass-loader": "^7.1.0",
+        "sass-loader": "^7.2.0",
         "sass-resources-loader": "^2.0.1",
         "style-loader": "^0.23.1",
         "yarn": "^1.17.3"

@@ -364,7 +364,8 @@ class RawController extends Controller
 
             $raw->price_unit_id = $request->price_unit_id;
             $raw->price_unit_category_id = $request->price_unit_category_id;
-            
+
+            $raw->serial = $request->serial;
             $raw->display = $request->display;
             $raw->system = $request->system;
 

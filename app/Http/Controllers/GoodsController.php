@@ -404,10 +404,11 @@ class GoodsController extends Controller
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
+            $cur_goods->serial = $request->serial;
             $cur_goods->display = $request->display;
             $cur_goods->system = $request->system;
 
-            if($article->draft){
+            if($article->draft) {
                 $cur_goods->price_unit_id = $request->price_unit_id;
                 $cur_goods->price_unit_category_id = $request->price_unit_category_id;               
             }

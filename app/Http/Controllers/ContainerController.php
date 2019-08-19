@@ -337,6 +337,7 @@ class ContainerController extends Controller
             $container->price_unit_id = $request->price_unit_id;
             $container->price_unit_category_id = $request->price_unit_category_id;
 
+            $container->serial = $request->serial;
             $container->display = $request->display;
             $container->system = $request->system;
 

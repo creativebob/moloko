@@ -309,7 +309,7 @@ class ServiceController extends Controller
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
-            $service->serial = $request->has('serial');
+            $service->serial = $request->serial;
             $service->display = $request->display;
             $service->system = $request->system;
             $service->save();
