@@ -15,7 +15,7 @@
 
 @section('content')
     {{-- Сайдбар услуг --}}
-    @include($site->alias.'.layouts.sidebars.sidebar_sticky')
+{{--    @include($site->alias.'.layouts.sidebars.sidebar_sticky')--}}
 
     {{-- Основой контент --}}
     @include($site->alias.'.pages.mains.main')
