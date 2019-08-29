@@ -51,7 +51,7 @@
 			
 			$site = $this->site;
 			
-			$page = $site->pages_public->where('alias', 'catalogs_goods')->first();
+			$page = $site->pages_public->where('alias', 'catalogs-goods')->first();
 			
 			$catalog_goods_item = CatalogsGoodsItem::whereHas('catalog_public', function ($q) use ($site, $catalog_slug) {
 				$q->whereHas('sites', function ($q) use ($site) {
