@@ -40,7 +40,7 @@
 			} else {
 				$site = $this->site;
 				$page = $site->pages_public
-					->where('alias'. 'main')
+					->where('alias', 'main')
 					->first();
 				
 				return view($site->alias.'.pages.mains.index', compact('site','page'));
