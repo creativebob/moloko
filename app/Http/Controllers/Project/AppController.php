@@ -3,13 +3,16 @@
 	namespace App\Http\Controllers\Project;
 	
 	use App\CatalogsGoodsItem;
-	use App\Filters\Vkusnyashka\PricesGoodsFilter;
-	use App\PricesGoods;
+    use App\Estimate;
+    use App\EstimatesItem;
+    use App\Lead;
+    use App\PricesGoods;
 	use App\Site;
 	use Illuminate\Http\Request;
 	use App\Http\Controllers\Controller;
-	
-	class AppController extends Controller
+    use Illuminate\Support\Facades\Cookie;
+
+    class AppController extends Controller
 	{
 		
 		// Настройки контроллера
@@ -137,17 +140,223 @@
 			}]);
 			dd($site->catalogs_services->first()->items->first());
 		}
-		
-		public function prices_goods(Request $request, $id)
-		{
-			$pice_goods = PricesGoods::with([
-				'goods_public'
-			])
-				->where([
-					'id' => $id,
-					'display' => true
-				])->first();
-			
-			dd($pice_goods);
-		}
+
+        public function prices_goods(Request $request, $id)
+        {
+            $site = $this->site;
+            $page = $site->pages_public->where('alias', 'prices-goods')->first();
+
+            $price_goods = PricesGoods::with([
+                'goods_public'
+            ])
+                ->where([
+                    'id' => $id,
+                    'display' => true
+                ])
+                ->first();
+
+            $page->title = $price_goods->goods_public->article->name;
+
+            return view($site->alias.'.pages.prices_goods.index', compact('site','page', 'price_goods'));
+        }
+
+        public function cart(Request $request)
+        {
+
+            if (Cookie::has('cart')) {
+                $cart = json_decode(Cookie::get('cart'), true);
+//            dd($cart);
+
+                $prices_ids = array_keys($cart['prices']);
+//            dd($prices_ids);
+
+                $prices_goods = PricesGoods::with('goods_public')
+                    ->find($prices_ids);
+//            dd($prices_goods);
+
+                foreach($cart['prices'] as $id => $price) {
+                    $price_goods = $prices_goods->firstWhere('id', $id);
+                    $price_goods->count_item = $price['count'];
+                }
+//            dd($prices_goods);
+            } else {
+                $prices_goods = [];
+                $prices_goods = collect($prices_goods);
+            }
+
+//        $cart = $prices_goods;
+//        dd($cart);
+
+            $site = $this->site;
+            $page = $site->pages_public->firstWhere('alias', 'cart');
+            return view($site->alias.'.pages.cart.index', compact('site', 'page', 'prices_goods'));
+        }
+
+        public function add_cart(Request $request)
+        {
+            $id = $request->id;
+
+            $price_goods = PricesGoods::findOrFail($id);
+//		dd($price_goods);
+
+            $count = $request->count;
+
+            if (Cookie::has('cart')) {
+                $cart = json_decode(Cookie::get('cart'), true);
+//            dd($cookie);
+                if (array_key_exists($id, $cart['prices'])) {
+                    $new_count = $cart['prices'][$id]['count'] + $count;
+                    $cart['prices'][$id] = [
+                        'count' => $new_count
+                    ];
+                } else {
+                    $cart['prices'][$id] = [
+                        'count' => $count
+                    ];
+                }
+                $all_count = $cart['count'] + $count;
+                $cart['count'] = $all_count;
+                $cart['sum'] = $cart['sum'] + ($price_goods->price * $count);
+//            dd($cart);
+            } else {
+                $cart['prices'][$id] = [
+                    'count' => $count
+                ];
+                $cart['count'] = $count;
+                $cart['sum'] = $price_goods->price * $count;
+            }
+//        dd($cart);
+
+            Cookie::queue(Cookie::forever('cart', json_encode($cart)));
+
+            $site = $this->site;
+            return view($site->alias.'.layouts.headers.includes.cart', compact('cart'));
+        }
+
+        public function cart_store(Request $request)
+        {
+            dd($request);
+            $site = $this->site;
+
+            $lead = new Lead;
+
+            $filial_id = $site->filials->first()->id;
+            $lead->filial_id = $filial_id;
+            $lead->name = $request->name;
+            $lead->stage_id = 2;
+            $lead->lead_method_id = 2;
+            $lead->badget = $request->badget;
+            $lead->draft = NULL;
+            $lead->author_id = 1;
+            $company_id = $site->company_id;
+            $lead->company_id = $company_id;
+            $lead->moderation = false;
+
+//        $choiceFromTag = getChoiceFromTag($request->choice_tag);
+//        $lead->choice_type = $choiceFromTag['type'];
+//        $lead->choice_id = $choiceFromTag['id'];
+
+            // Работаем с ПОЛЬЗОВАТЕЛЕМ лида ================================================================
+
+            // Проверяем, есть ли в базе телефонов пользователь с таким номером
+            $user_for_lead = check_user_by_phones($request->main_phone);
+            if ($user_for_lead != null) {
+
+                // Если есть: записываем в лида ID найденного в системе пользователя
+                $lead->user_id = $user_for_lead->id;
+
+            } else {
+
+                // Если нет: создаем нового пользователя по номеру телефона
+                // используя трейт экспресс создание пользователя
+                $user_for_lead = $this->createUserByPhone($request->main_phone);
+
+                // Обработка входящих данных ------------------------------------------
+                $mass_names = getNameUser($request->name);
+
+                $user_for_lead->first_name = $mass_names['first_name'] ?? $request->name ?? 'Укажите фамилию';
+                $user_for_lead->second_name = $mass_names['second_name'] ?? null;
+                $user_for_lead->patronymic = $mass_names['patronymic'] ?? null;
+                $user_for_lead->sex = $mass_names['gender'] ?? 1;
+
+                $user_for_lead->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
+
+                // Если к пользователю нужно добавить инфы, тут можно апнуть юзера: ----------------------------------
+
+                $user_for_lead->nickname = $request->name;
+
+                // Компания и филиал ----------------------------------------------------------
+                $user_for_lead->company_id = $company_id;
+                $user_for_lead->filial_id = $filial_id;
+                $user_for_lead->save();
+
+                // dd($user_for_lead);
+
+                // Конец апдейта юзеара -------------------------------------------------
+
+            }
+
+            // Конец работы с ПОЛЬЗОВАТЕЛЕМ лида ==============================================================
+
+
+
+            // if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
+            //     $lead->extra_phone = cleanPhone($request->extra_phone);
+            // } else {$lead->extra_phone = NULL;};
+
+            // $lead->telegram_id = $request->telegram_id;
+            // $lead->orgform_status = $request->orgform_status;
+            // $lead->user_inn = $request->inn;
+
+            $lead->save();
+
+            // Телефон
+            $phones = add_phones($request, $lead);
+
+            // Находим или создаем заказ для лида
+            $estimate = Estimate::firstOrCreate([
+                'lead_id' => $lead->id,
+                'company_id' => $company_id
+            ], [
+                'author_id' => 1
+            ]);
+            // dd($estimate);
+
+            $prices_goods_ids = array_keys($request->prices_goods);
+            $prices_goods = PricesGoods::with('goods')
+                ->find($prices_goods_ids);
+
+            $data = [];
+            foreach ($prices_goods as $price_goods) {
+                $data[] = new EstimatesItem([
+                    'product_id' => $price_goods->goods->id,
+                    'product_type' => 'App\Goods',
+
+                    'price_product_id' => $price_goods->id,
+                    'price_product_type' => 'App\PricesGoods',
+
+                    'company_id' => $company_id,
+                    'author_id' => 1,
+
+                    'price' => $price_goods->price,
+                    'count' => $request->prices_goods[$price_goods->id]['count'],
+
+                    'sum' => $request->prices_goods[$price_goods->id]['count'] * $price_goods->price
+                ]);
+            }
+//        dd($data);
+
+            $estimate->items()->saveMany($data);
+
+            Cookie::queue(Cookie::forget('cart'));
+//        $cookie = Cookie::forget('cart');
+
+            return redirect()->route('project.start');
+        }
+
+
+        public function telegram(Request $request)
+        {
+
+        }
 	}

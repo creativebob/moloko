@@ -51,8 +51,11 @@ class EstimatesItem extends Model
         'product_type',
         'company_id',
         'author_id',
+
         'count',
         'price',
+
+        'sum',
 
         'display',
         'system',

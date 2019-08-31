@@ -6,7 +6,7 @@
 
         change(elem) {
 
-            id = $(elem).val();
+            var id = $(elem).val();
 
             if ($(elem).prop('checked') == true) {
                 
@@ -26,9 +26,9 @@
 
         openModal(elem){
             // находим описание сущности, id и название удаляемого элемента в родителе
-            parent = $(elem).closest('.item');
-            id = parent.attr('id').split('-')[2];
-            name = parent.data('name');
+            let parent = $(elem).closest('.item');
+            let id = parent.attr('id').split('-')[2];
+            let name = parent.data('name');
             // alert(type + ' ' + id + ' ' + name);
             $('.title-item').text(name)
             $('.item-delete-button').attr('id', 'delete_raw-' + id);
@@ -40,6 +40,16 @@
             $('#table-raws-' + id).remove();
             // Убираем отмеченный чекбокс в списке метрик
             $('#raw-' + id).prop('checked', false);
+        }
+
+        fill(elem) {
+
+            let parent = $(elem).closest('.item');
+            let val = $(elem).val();
+
+            parent.find('.raw-use').val(val);
+            parent.find('.raw-waste').val(0);
+            parent.find('.raw-leftover').val(0);
         }
 
     }

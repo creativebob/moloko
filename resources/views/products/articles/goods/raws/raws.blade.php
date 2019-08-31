@@ -45,6 +45,7 @@
 
 					@if ($article->raws->isNotEmpty())
 						@foreach ($article->raws as $raw)
+{{--							<rawcomposition-component :raw="{{ json_encode($raw) }}" :disabled="{{ $raw->article->draft }}"></rawcomposition-component>--}}
 							@include ('products.articles.goods.raws.raw_input', $raw)
 						@endforeach
 					@endif
