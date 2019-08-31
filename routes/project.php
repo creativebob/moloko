@@ -23,4 +23,4 @@ Route::any('/add_cart', 'AppController@add_cart')->name('project.add_cart');
 Route::get('/cart', 'AppController@cart')->name('project.cart');
 Route::post('/cart_store', 'AppController@cart_store')->name('project.cart_store');
 
-Route::get('/telegram', 'AppController@telegram')->name('project.temegram');
+Route::get('/telegram', 'AppController@telegram')->name('project.telegram');
