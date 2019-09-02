@@ -362,10 +362,6 @@ input[type='search'] {
   color: #cacaca;
 }
 
-::-moz-placeholder {
-  color: #cacaca;
-}
-
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -597,10 +593,6 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
-  color: #cc4b37;
-}
-
-.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -9060,6 +9052,10 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   background-position: -96px -1120px;
 }
 
+.sidebar .icon-container {
+  background-position: -96px -1280px;
+}
+
 .sidebar .icon-arrow-forward {
   background-position: -160px -288px;
 }
@@ -9122,6 +9118,10 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 
 .sidebar .nav > ul > li > .active .icon-process, .sidebar .gen-menu-bot > li > .active .icon-process {
   background-position: -160px -1120px;
+}
+
+.sidebar .nav > ul > li > .active .icon-container, .sidebar .gen-menu-bot > li > .active .icon-container {
+  background-position: -160px -1280px;
 }
 
 .sidebar .nav::-webkit-scrollbar {

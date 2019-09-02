@@ -833,7 +833,7 @@ class EntitiesTableSeeder extends Seeder
             [
                 'name' => 'Упаковка',
                 'alias' => 'containers',
-                'model' => 'Сontainer',
+                'model' => 'Container',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,

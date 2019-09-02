@@ -195,6 +195,10 @@ $sidebar-li-border-bot: #3f3f3f;
     background-position:  -96px -1120px;
   }
 
+  .icon-container {
+    background-position:  -96px -1280px;
+  }
+
   .icon-arrow-forward {
     background-position: -160px -288px;
   }
@@ -244,6 +248,9 @@ $sidebar-li-border-bot: #3f3f3f;
     }
     .icon-process {
       background-position: -160px -1120px;
+    }
+    .icon-container {
+      background-position:  -160px -1280px;
     }
 
   }
