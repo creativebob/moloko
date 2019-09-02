@@ -20,7 +20,7 @@ class ReportCommand extends Command
     /**
      * @inheritdoc
      */
-    public function handle($arguments)
+    public function handle()
     {
 
         $params['text'] = 'Выберите тип отчета:';

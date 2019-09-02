@@ -25,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 
+        Schema::defaultStringLength(191);
+
         // Если существует таблица с меню
         if (Schema::hasTable('photo_settings')) {
             $settings = PhotoSetting::whereNull('company_id')

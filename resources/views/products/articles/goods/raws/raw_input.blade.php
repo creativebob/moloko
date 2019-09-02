@@ -20,7 +20,7 @@
 	<td>
 		<div class="wrap-input-table">
 			{{-- Количество чего-либо --}}
-			{{ Form::text('raws['.$raw->id.'][use]', $raw->pivot ? $raw->pivot->use : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder', 'id'=>'2', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
+			{{ Form::text('raws['.$raw->id.'][use]', $raw->pivot ? $raw->pivot->use : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder raw-use', 'id'=>'2', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="2" class="text-to-placeholder">
 
 				{{ $raw->portion_goods_abbreviation ?? $raw->unit_for_composition->abbreviation ?? $raw->article->group->unit->abbreviation }}
@@ -33,7 +33,7 @@
 	<td>
 		<div class="wrap-input-table">
 			{{-- Количество чего-либо --}}
-			{{ Form::text('raws['.$raw->id.'][waste]', $raw->pivot ? $raw->pivot->waste : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder', 'id'=>'3', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
+			{{ Form::text('raws['.$raw->id.'][waste]', $raw->pivot ? $raw->pivot->waste : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder raw-waste', 'id'=>'3', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="3" class="text-to-placeholder">
 
 				{{ $raw->portion_goods_abbreviation ?? $raw->unit_for_composition->abbreviation ?? $raw->article->group->unit->abbreviation }}
@@ -46,7 +46,7 @@
 	<td>
 		<div class="wrap-input-table">
 			{{-- Количество чего-либо --}}
-			{{ Form::text('raws['.$raw->id.'][leftover]', $raw->pivot ? $raw->pivot->leftover : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder', 'id'=>'4', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
+			{{ Form::text('raws['.$raw->id.'][leftover]', $raw->pivot ? $raw->pivot->leftover : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder raw-leftover', 'id'=>'4', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="4" class="text-to-placeholder">
 
 				{{ $raw->portion_goods_abbreviation ?? $raw->unit_for_composition->abbreviation ?? $raw->article->group->unit->abbreviation }}

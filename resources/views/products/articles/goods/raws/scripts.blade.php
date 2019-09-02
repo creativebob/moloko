@@ -26,5 +26,9 @@
         // Показываем нужную
         $('#' + $(this).data('open')).show();
     });
+
+    $(document).on('change', ".raw-value", function() {
+        raws.fill(this);
+    });
     
 </script>
