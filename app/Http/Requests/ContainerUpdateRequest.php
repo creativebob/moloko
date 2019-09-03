@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GoodsStoreRequest extends FormRequest
+class ContainerUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +25,10 @@ class GoodsStoreRequest extends FormRequest
     {
           return [
               'category_id' => 'required|integer',
-              'quickly' => 'integer|max:1',
-              'kit' => 'integer|max:1',
+
+              'display' => 'integer|max:1|nullable',
+              'moderation' => 'integer|max:1|nullable',
+              'system' => 'integer|max:1|nullable',
           ];
         }
   }

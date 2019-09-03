@@ -53,8 +53,6 @@ class AlbumObserver
 
     public function saving(Album $album)
     {
-        $this->setSlug($album);
-        $this->setPersonal($album);
 
         // Настройки фотографий
         $request = request();
@@ -66,11 +64,5 @@ class AlbumObserver
         if (empty($album->slug)) {
             $album->slug = Str::slug($album->name);
         }
-    }
-
-    protected function setPersonal(Album $album)
-    {
-        $request = request();
-        $album->personal = $request->has('personal');
     }
 }

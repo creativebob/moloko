@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Подключаем модели
+use App\Http\Controllers\Traits\Photable;
 use App\Photo;
 use App\Album;
 use App\Entity;
@@ -38,6 +39,8 @@ class PhotoController extends Controller
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
     }
+
+    use Photable;
 
     public function index(Request $request, $alias)
     {
@@ -254,7 +257,6 @@ class PhotoController extends Controller
             $model = 'App\\'.$entity->model;
             $item = $model::with('album')->findOrFail($request->id);
 
-
             if (isset($item->album)) {
                 $album = $item->album;
             } else {
@@ -278,7 +280,7 @@ class PhotoController extends Controller
             }
 
             // Cохраняем / обновляем фото
-            $result = savePhotoInAlbum($request, $album);
+            $result = $this->savePhotoInAlbum($request, $album);
 
             $album->photos()->attach($result['photo']->id);
 

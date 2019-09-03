@@ -25,6 +25,7 @@ use App\Observers\GoodsCategoryObserver;
 use App\Observers\MenuObserver;
 use App\Observers\MetricObserver;
 use App\Observers\PageObserver;
+use App\Observers\PhotoObserver;
 use App\Observers\PluginObserver;
 use App\Observers\PricesGoodsHistoryObserver;
 use App\Observers\PricesGoodsObserver;
@@ -35,6 +36,7 @@ use App\Observers\SectorObserver;
 use App\Observers\ServicesCategoryObserver;
 use App\Observers\WorkflowsCategoryObserver;
 use App\Page;
+use App\Photo;
 use App\Plugin;
 use App\PricesGoods;
 use App\PricesGoodsHistory;
@@ -45,7 +47,6 @@ use App\Sector;
 use App\ServicesCategory;
 use App\WorkflowsCategory;
 use Illuminate\Support\ServiceProvider;
-
 use App\RawsCategory;
 use App\Observers\RawsCategoryObserver;
 use App\EquipmentsCategory;
@@ -84,7 +85,6 @@ use App\AlbumsCategory;
 use App\Observers\AlbumsCategoryObserver;
 use App\Album;
 use App\Observers\AlbumObserver;
-
 
 class ObserverServiceProvider extends ServiceProvider
 {
@@ -162,6 +162,7 @@ class ObserverServiceProvider extends ServiceProvider
         // Альбомы
         AlbumsCategory::observe(AlbumsCategoryObserver::class);
         Album::observe(AlbumObserver::class);
+        Photo::observe(PhotoObserver::class);
 
         // Сектора
         Sector::observe(SectorObserver::class);

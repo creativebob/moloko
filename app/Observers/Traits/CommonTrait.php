@@ -15,28 +15,28 @@ trait CommonTrait
 
         $request = request();
 
-        $item->display = ($request->has('display')) ? $request->display : true;
-        $item->system = ($request->has('system')) ? $request->system : false;
+        $item->display = $request->get('display', true);
+        $item->system = $request->get('system', false);
 
         $user = $request->user();
         $item->company_id = $user->company_id;
-        $item->author_id = hideGod($user);
+        $item->author_id = $this->getUserId($user);
 
         return $item;
     }
 
     public function update($item)
     {
-        $request = request();
-
-        $item->editor_id = hideGod($request->user());
+        $user = request()->user();
+        $item->editor_id = $this->getUserId($user);
 
         return $item;
     }
 
     public function destroy($item)
     {
-        $item->editor_id = hideGod(request()->user());
+        $user = request()->user();
+        $item->editor_id = $this->getUserId($user);
         $item->save();
 
         return $item;
@@ -47,11 +47,22 @@ trait CommonTrait
         $item->slug = \Str::slug($item->name);
     }
 
-//    protected function setSlug($item)
-//    {
-//        if (empty($item->alias)) {
-//            $item->alias = \Str::slug($item->name);
-//            $item->slug = \Str::slug($item->name);
-//        }
-//    }
+    /**
+     * Скрываем бога и ставим Id робота.
+     *
+     * @param  $user
+     * @return int
+     */
+    function getUserId($user){
+
+        // Если пользователь не авторизован, например отправка заказа с сайта
+        if (is_null($user)) {
+            $user_id = 1;
+        } else {
+            // Если бог, то ставим автором робота
+            $user_id = $user->god == 1 ? 1 : $user->id;
+        }
+
+        return $user_id;
+    }
 }

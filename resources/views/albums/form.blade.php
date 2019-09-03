@@ -64,6 +64,7 @@
             </div>
 
             <div class="small-12 small-text-center cell checkbox">
+                {{ Form::hidden('personal', 0) }}
                 {{ Form::checkbox('personal', 1, null, ['id' => 'personal-checkbox']) }}
                 <label for="personal-checkbox"><span>Личный альбом</span></label>
             </div>

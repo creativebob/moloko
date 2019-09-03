@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Traits\Articles;
 use App\Article;
 use App\ArticlesGroup;
 use App\Entity;
+use App\Http\Controllers\Traits\Photable;
+use App\Http\Requests\ArticleUpdateRequest;
 use App\Unit;
 
 // Валидация
@@ -15,7 +17,7 @@ use Illuminate\Support\Facades\Log;
 trait ArticleTrait
 {
 
-    public function storeArticle(ArticleStoreRequest $request, $category)
+    public function storeArticle($request, $category)
     {
 
         $user = $request->user();
@@ -109,8 +111,9 @@ trait ArticleTrait
         return $article;
     }
 
+    use Photable;
 
-    public function updateArticle(ArticleStoreRequest $request, $item)
+    public function updateArticle($request, $item)
     {
 
         $article = $item->article;
@@ -196,7 +199,7 @@ trait ArticleTrait
 
                 $data['draft'] = request()->draft;
 
-                $data['photo_id'] = savePhoto($request, $article);
+                $data['photo_id'] = $this->getPhotoId($request, $article);
 
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $article->update($data);

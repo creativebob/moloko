@@ -3,23 +3,17 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\Http\Requests\ArticleStoreRequest;
+use App\Http\Requests\ArticleUpdateRequest;
+use App\Http\Requests\RawStoreRequest;
+use App\Http\Requests\RawUpdateRequest;
 use App\Raw;
-use App\Article;
 use App\RawsCategory;
 use App\Manufacturer;
-
-// Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\RawRequest;
-use App\Http\Requests\ArticleStoreRequest;
-
-// Куки
 use Illuminate\Support\Facades\Cookie;
-
-// Трейты
-use App\Http\Controllers\Traits\Articles\ArticleTrait;
-
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Traits\Articles\ArticleTrait;
 
 class RawController extends Controller
 {
@@ -232,7 +226,7 @@ class RawController extends Controller
         ]);
     }
 
-    public function store(ArticleStoreRequest $request)
+    public function store(RawStoreRequest $request)
     {
 
         // Подключение политики
@@ -313,6 +307,9 @@ class RawController extends Controller
         $dropzone['entity'] = $article->getTable();
 //        dd($dropzone);
 
+        // Получаем настройки по умолчанию
+        $settings = getSettings($this->entity_alias);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
@@ -322,7 +319,8 @@ class RawController extends Controller
             'item' => $raw,
             'article' => $article,
             'page_info' => $page_info,
-            'dropzone' => json_encode($dropzone),
+            'settings' => $settings,
+//            'dropzone' => json_encode($dropzone),
             'entity' => $this->entity_alias,
             'category_entity' => 'raws_categories',
             'categories_select_name' => 'raws_category_id',
@@ -330,7 +328,7 @@ class RawController extends Controller
         ]);
     }
 
-    public function update(ArticleStoreRequest $request, $id)
+    public function update(RawUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)

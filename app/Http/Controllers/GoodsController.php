@@ -2,26 +2,15 @@
 
 namespace App\Http\Controllers;
 
-// Модели
 use App\Goods;
 use App\GoodsCategory;
-use App\Manufacturer;
-
-// Валидация
-use Illuminate\Http\Request;
 use App\Http\Requests\GoodsStoreRequest;
-use App\Http\Requests\ArticleStoreRequest;
-
-// Куки
+use App\Http\Requests\GoodsUpdateRequest;
+use App\Manufacturer;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
-
-// Транслитерация
-use Illuminate\Support\Str;
-
-// Трейты
-use App\Http\Controllers\Traits\Articles\ArticleTrait;
-
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Traits\Articles\ArticleTrait;
 
 class GoodsController extends Controller
 {
@@ -277,7 +266,7 @@ class GoodsController extends Controller
         ]);
     }
 
-    public function store(ArticleStoreRequest $request)
+    public function store(GoodsStoreRequest $request)
     {
 
         // Подключение политики
@@ -370,6 +359,9 @@ class GoodsController extends Controller
         $dropzone['entity'] = $article->getTable();
 //        dd($dropzone);
 
+        // Получаем настройки по умолчанию
+        $settings = getSettings($this->entity_alias);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
@@ -378,14 +370,15 @@ class GoodsController extends Controller
             'item' => $cur_goods,
             'article' => $article,
             'page_info' => $page_info,
-            'dropzone' => json_encode($dropzone),
+            'settings' => $settings,
+//            'dropzone' => json_encode($dropzone),
             'entity' => $this->entity_alias,
             'category_entity' => 'goods_categories',
             'categories_select_name' => 'goods_category_id',
         ]);
     }
 
-    public function update(ArticleStoreRequest $request, $id)
+    public function update(GoodsUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)

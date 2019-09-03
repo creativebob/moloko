@@ -48,49 +48,60 @@ class Photo extends Model
 
     protected $fillable = [
         'name',
-        'company_id',
+        'title',
+        'description',
+
+        'path',
+        'link',
+        'color',
+
+        'width',
+        'height',
+        'size',
+        'extension',
+
+        'access',
+        'album_id',
 
         'display',
         'system',
         'moderation'
     ];
 
-    // Получаем компанию
-    public function company()
-    {
-        return $this->belongsTo('App\Company');
-    }
+
 
     public function cur_news()
     {
-        return $this->hasOne('App\News');
+        return $this->hasOne(News::class);
     }
 
     public function avatar()
     {
-        return $this->hasOne('App\Album');
+        return $this->hasOne(Album::class);
     }
 
-    // Получаем альбомы
     public function album()
     {
-        return $this->belongsTo('App\Album');
+        return $this->belongsTo(Album::class);
     }
 
-    // Получаем альбомы
     public function albums()
     {
-        return $this->morphToMany('App\Album', 'album_entity');
-    }
-
-    // Получаем автора
-    public function author()
-    {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->morphToMany(Album::class, 'album_entity');
     }
 
     public function user()
     {
-        return $this->hasOne('App\User');
+        return $this->hasOne(User::class);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
     }
 }

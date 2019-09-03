@@ -1,7 +1,7 @@
 	@extends('layouts.app')
 
 	@section('inhead')
-{{--	@include('includes.scripts.dropzone-inhead')--}}
+	@include('includes.scripts.dropzone-inhead')
 	@include('includes.scripts.fancybox-inhead')
 	@include('includes.scripts.sortable-inhead')
 	@include('products.articles.goods.raws.class')
@@ -460,23 +460,23 @@
 
 	                    <div class="small-12 medium-7 cell">
 
-{{--	                        {!!  Form::open([--}}
-{{--	                            'route' => 'photos.ajax_store',--}}
-{{--	                            'data-abide',--}}
-{{--	                            'novalidate',--}}
-{{--	                            'files' => 'true',--}}
-{{--	                            'class' => 'dropzone',--}}
-{{--	                            'id' => 'my-dropzone'--}}
-{{--	                        ]--}}
-{{--	                        ) !!}--}}
+	                        {!!  Form::open([
+	                            'route' => 'photos.ajax_store',
+	                            'data-abide',
+	                            'novalidate',
+	                            'files' => 'true',
+	                            'class' => 'dropzone',
+	                            'id' => 'my-dropzone'
+	                        ]
+	                        ) !!}
 
-{{--	                        {!! Form::hidden('name', $article->name) !!}--}}
-{{--	                        {!! Form::hidden('id', $article->id) !!}--}}
-{{--	                        {!! Form::hidden('entity', 'articles') !!}--}}
-{{--	                        --}}{{-- {!! Form::hidden('album_id', $cur_goods->album_id) !!} --}}
+	                        {!! Form::hidden('name', $article->name) !!}
+	                        {!! Form::hidden('id', $article->id) !!}
+	                        {!! Form::hidden('entity', 'articles') !!}
+	                         {!! Form::hidden('album_id', $item->album_id) !!}
 
-{{--	                        {!! Form::close() !!}--}}
-							<dropzone-component :dropzone="{{ $dropzone }}"></dropzone-component>
+	                        {!! Form::close() !!}
+{{--							<dropzone-component :dropzone="{{ $dropzone }}"></dropzone-component>--}}
 
 	                        <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
@@ -519,11 +519,11 @@
 		@include('includes.scripts.inputs-mask')
 		@include('includes.scripts.upload-file')
 
-		{{-- @include('includes.scripts.dropzone', [
+		@include('includes.scripts.dropzone', [
 		    'settings' => $settings,
 		    'item_id' => $article->id,
 		    'item_entity' => 'articles'
-		]) --}}
+		])
 
 		{{-- Проверка поля на существование --}}
 		@include('includes.scripts.check', [

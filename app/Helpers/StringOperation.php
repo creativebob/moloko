@@ -180,7 +180,13 @@ function getMassArguments($request, $name_argument){
 function hideGod($user){
 
     // Если бог, то ставим автором робота
-    return $user->god == 1 ? 1 : $user->id;
+    if (is_null($user)) {
+        $user_id = 1;
+    } else {
+        $user_id = $user->god == 1 ? 1 : $user->id;
+    }
+
+    return $user_id;
 }
 
 

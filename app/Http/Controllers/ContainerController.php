@@ -3,22 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Container;
-use App\Article;
 use App\ContainersCategory;
+use App\Http\Requests\ContainerStoreRequest;
+use App\Http\Requests\ContainerUpdateRequest;
 use App\Manufacturer;
-
-// Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\ContainerRequest;
-use App\Http\Requests\ArticleStoreRequest;
-
-// Куки
 use Illuminate\Support\Facades\Cookie;
-
-// Трейты
-use App\Http\Controllers\Traits\Articles\ArticleTrait;
-
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Traits\Articles\ArticleTrait;
 
 class ContainerController extends Controller
 {
@@ -203,7 +195,7 @@ class ContainerController extends Controller
         ]);
     }
 
-    public function store(ArticleStoreRequest $request)
+    public function store(ContainerStoreRequest $request)
     {
 
         // Подключение политики
@@ -284,6 +276,9 @@ class ContainerController extends Controller
         $dropzone['entity'] = $article->getTable();
 //        dd($dropzone);
 
+        // Получаем настройки по умолчанию
+        $settings = getSettings($this->entity_alias);
+
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
         // dd($page_info);
@@ -293,7 +288,8 @@ class ContainerController extends Controller
             'item' => $container,
             'article' => $article,
             'page_info' => $page_info,
-            'dropzone' => json_encode($dropzone),
+            'settings' => $settings,
+//            'dropzone' => json_encode($dropzone),
             'entity' => $this->entity_alias,
             'category_entity' => 'containers_categories',
             'categories_select_name' => 'containers_category_id',
@@ -301,7 +297,7 @@ class ContainerController extends Controller
         ]);
     }
 
-    public function update(ArticleStoreRequest $request, $id)
+    public function update(ContainerUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)

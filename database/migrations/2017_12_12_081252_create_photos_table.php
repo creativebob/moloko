@@ -30,7 +30,7 @@ class CreatePhotosTable extends Migration
             $table->decimal('size', 10, 2)->nullable()->comment('Размер фото');
             $table->string('extension')->nullable()->comment('Расширение фото');
 
-            $table->integer('photo_access')->nullable()->unsigned()->comment('0 - личный, 1 - публичный');
+            $table->boolean('access')->default(0)->comment('Доступность фото');
 
             $table->bigInteger('album_id')->nullable()->unsigned()->comment('Id альбома, физически содержащего в себе фотографию');
             $table->foreign('album_id')->references('id')->on('albums');
