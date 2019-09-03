@@ -55,6 +55,7 @@ class Menu extends Model
         'icon',
         'alias',
         'tag',
+        'title',
 
         'new_blank',
         'text_hidden',
