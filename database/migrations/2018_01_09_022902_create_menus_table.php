@@ -39,7 +39,7 @@ class CreateMenusTable extends Migration
             $table->foreign('category_id')->references('id')->on('menus');
 
             $table->boolean('new_blank')->default(0)->comment('Новая вкладка');
-
+            $table->boolean('text_hidden')->default(0)->comment('Скрыть текст ссылки');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

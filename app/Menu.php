@@ -56,6 +56,9 @@ class Menu extends Model
         'alias',
         'tag',
 
+        'new_blank',
+        'text_hidden',
+
         'navigation_id',
         'page_id',
 

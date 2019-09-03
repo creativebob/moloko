@@ -58,9 +58,13 @@
 					@endisset
 
 					<label>Введите имя иконки
-						@include('includes.inputs.text-en', ['name' => 'icon'])
+						@include('includes.inputs.text-en-space', ['name' => 'icon'])
 					</label>
-
+					
+					<div class="small-12 cell checkbox">
+						{{ Form::checkbox('text_hidden', 1, null, ['id' => 'text_hidden']) }}
+						<label for="text_hidden"><span>Показывать только иконку (Текст ссылки скрыть)</span></label>
+					</div>
 				</div>
 			</div>
 		</div>
