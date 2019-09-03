@@ -4,6 +4,8 @@ jQuery(function($) {
     $('.text-ru-field').mask('яя?яяяяяяяяяяяяяяяяяяяяя');
     // C дефисом en
     $('.text-en-field').mask('zz?zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+    // C дефисом en и пробелом
+    $('.text-en-space').mask('w?wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww');
     // Логин
     $('.login-field').mask('uuuuuu?uuuuuuuuuuuuuuuuuuuuuuuuuuuuuu');
     // Алиас
