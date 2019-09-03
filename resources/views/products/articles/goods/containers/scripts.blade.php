@@ -26,5 +26,9 @@
         // Показываем нужную
         $('#' + $(this).data('open')).show();
     });
+
+    $(document).on('change', ".container-value", function() {
+        containers.fill(this);
+    });
     
 </script>

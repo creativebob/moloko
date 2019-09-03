@@ -44,3 +44,7 @@
 
 	</div>
 </div>
+
+@push('scripts')
+	@include('products.articles.goods.goods.scripts')
+@endpush

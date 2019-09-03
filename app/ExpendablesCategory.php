@@ -91,8 +91,7 @@ class ExpendablesCategory extends Model
 
     public function groups()
     {
-        return $this->morphToMany(ArticlesGroup::class, 'articles_group_entity');
-        // ->where('archive', false);
+        return $this->morphToMany(ArticlesGroup::class, 'entity', 'articles_group_entity');
     }
 
 }

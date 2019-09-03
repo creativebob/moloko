@@ -42,5 +42,15 @@
             $('#goods-' + id).prop('checked', false);
         }
 
+        fill(elem) {
+
+            let parent = $(elem).closest('.item');
+            let val = $(elem).val();
+
+            parent.find('.goods-use').val(val);
+            parent.find('.goods-waste').val(0);
+            parent.find('.goods-leftover').val(0);
+        }
+
     }
 </script>
