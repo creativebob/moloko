@@ -57,8 +57,12 @@
 					</label>
 					@endisset
 
-					<label>Введите имя иконки
+					<label>Введите имя иконки (class)
 						@include('includes.inputs.text-en-space', ['name' => 'icon'])
+					</label>
+
+					<label>Тег title для ссылки
+						@include('includes.inputs.name', ['name' => 'title'])
 					</label>
 					
 					<div class="small-12 cell checkbox">

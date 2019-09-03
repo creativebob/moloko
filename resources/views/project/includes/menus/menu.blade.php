@@ -6,7 +6,8 @@
 						<li>
 							<a 
 							href="{{ $menu->alias }}" 
-							class="social-icon {{ $menu->icon ?? '' }}"
+							class="{{ $menu->icon ?? '' }}" 
+							title="{{ $menu->title ?? '' }}" 
 							@if($menu->new_blank) target="_blank" @endif
 							>@if(!$menu->text_hidden) {{ $menu->name }} @endif
 							</a>

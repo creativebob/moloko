@@ -23,6 +23,8 @@ class CreateMenusTable extends Migration
             $table->string('alias')->nullable()->comment('Ссылка на страницу');
             $table->string('tag')->nullable()->comment('Ключ для поиска');
 
+            $table->string('title')->nullable()->comment('Тег title для ссылки');
+
             $table->text('description')->nullable()->comment('Описание');
             $table->text('seo_description')->nullable()->comment('Описание для сайта');
 
