@@ -210,7 +210,8 @@
                         				<div class="grid-x grid-margin-x">
 		                                    <div class="small-12 medium-3 cell">
 			                                        <label>Вес
-			                                            {!! Form::number('weight', null, ['disabled' => ($article->draft == 1) ? null : true]) !!}
+			                                            {!! Form::number('weight', $article->weight_trans) !!}
+			                                            {{-- ['disabled' => ($article->draft == 1) ? null : true]  --}}
 			                                        </label>
 		                                    </div>
 		                                    <div class="small-12 medium-3 cell">
@@ -231,7 +232,7 @@
                         				<div class="grid-x grid-margin-x">
 		                                    <div class="small-12 medium-3 cell">
 		                                        <label>Объем
-		                                            {!! Form::number('volume', null, ['disabled' => ($article->draft == 1) ? null : true]) !!}
+		                                            {!! Form::number('volume', null) !!}
 		                                        </label>
 		                                    </div>
 		                                    <div class="small-12 medium-3 cell">

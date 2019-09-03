@@ -195,34 +195,23 @@
 		}
 		
 		// Вес
-		public function getWeightAttribute($value)
+		public function getWeightTransAttribute()
 		{
-			$weight = null;
-			if (isset($this->unit_id)) {
-				if(isset($this->unit_weight)){
-					$weight = $value / $this->unit_weight->ratio;
-				}
-			} else {
-				$weight = $value / $this->group->unit->ratio;
-			}
-			
-			return $weight == 0 ? null : $weight;
+	        $weight = 0;
+	        if (isset($this->unit_id)) {
+	            if(isset($this->unit_weight)){
+	                $weight = $this->weight / $this->unit_weight->ratio;
+	            }
+	        } else {
+	            $weight = $this->weight / $this->group->unit->ratio;
+	        }
+
+	        return $weight;
 		}
 		
-		public function getWeightGramAttribute($value)
+		public function getWeightGramAttribute()
 		{
-			if (isset($this->unit_id)) {
-				if(isset($this->unit_weight)){
-					$weight = $this->weight * 1000;
-					
-				}
-			} else {
-				$weight = $value / $this->group->unit->ratio;
-			}
-			
-			$result = $weight == 0 ? null : $weight;
-			
-			return $result;
+			return $this->weight * 1000;
 		}
 		
 		// Объем

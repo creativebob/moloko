@@ -93,7 +93,7 @@
                     </td>
                     <td class="td-weight">
                         @if(isset($item->article->weight))
-                            {{ $item->article->weight }} {{ $item->article->unit_weight->abbreviation }}
+                            {{ $item->article->weight_trans }} {{ $item->article->unit_weight->abbreviation }}
                             <br>
                         @endif
 
