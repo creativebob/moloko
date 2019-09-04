@@ -13,9 +13,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cookie;
 use Telegram;
 
+// Подрубаем трейт записи и обновления
+use App\Http\Controllers\Traits\UserControllerTrait;
+use App\Http\Controllers\Traits\LeadControllerTrait;
+
 class AppController extends Controller
 {
 
+    use UserControllerTrait;
+    use LeadControllerTrait;
+    
     // Настройки контроллера
     public function __construct(Request $request)
     {
@@ -283,7 +290,7 @@ class AppController extends Controller
 
     public function cart_store(Request $request)
     {
-        dd($request->user());
+        // dd($request->user());
         $site = $this->site;
 
         $lead = new Lead;
