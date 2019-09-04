@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\AlbumsCategoryUpdateRequest;
 use App\Http\Requests\AlbumsCategoryStoreRequest;
 use App\AlbumsCategory;
@@ -21,6 +22,8 @@ class AlbumsCategoryController extends Controller
         $this->model = 'App\AlbumsCategory';
         $this->type = 'modal';
     }
+
+    use Photable;
 
     public function index(Request $request)
     {
@@ -143,6 +146,7 @@ class AlbumsCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $albums_category);
 
         $data = $request->input();
+        $data['photo_id'] = $this->getPhotoId($request, $albums_category);
         $result = $albums_category->update($data);
 
         if ($result) {

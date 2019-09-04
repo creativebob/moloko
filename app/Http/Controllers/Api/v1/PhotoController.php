@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Album;
 use App\Entity;
+use App\Http\Controllers\Traits\Photable;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class PhotoController extends Controller
 {
+
+    use Photable;
     /**
      * Store a newly created resource in storage.
      *
@@ -48,7 +51,7 @@ class PhotoController extends Controller
             }
 
             // Cохраняем / обновляем фото
-            $result = savePhotoInAlbum($request, $album);
+            $result = $this->savePhotoInAlbum($request, $album);
 
             $album->photos()->attach($result['photo']->id);
 

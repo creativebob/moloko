@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\EquipmentsCategoryUpdateRequest;
 use App\Http\Requests\EquipmentsCategoryStoreRequest;
 use App\EquipmentsCategory;
@@ -22,6 +23,8 @@ class EquipmentsCategoryController extends Controller
         $this->entity_dependence = false;
         $this->type = 'edit';
     }
+
+    use Photable;
 
     public function index(Request $request)
     {
@@ -174,6 +177,7 @@ class EquipmentsCategoryController extends Controller
 
         // Заполнение и проверка основных полей в трейте
         $data = $request->input();
+        $data['photo_id'] = $this->getPhotoId($request, $equipments_category);
         $result = $equipments_category->update($data);
 
         if ($result) {

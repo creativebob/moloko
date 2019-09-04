@@ -116,7 +116,7 @@ class PhotoController extends Controller
             ->first();
 
             // Cохраняем / обновляем фото
-            $result = savePhotoInAlbum($request, $album);
+            $result = $this->savePhotoInAlbum($request, $album);
 
             $album->photos()->attach($result['photo']->id);
 

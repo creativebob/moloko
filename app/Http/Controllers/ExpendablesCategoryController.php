@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\ExpendablesCategoryUpdateRequest;
 use App\Http\Requests\ExpendablesCategoryStoreRequest;
 use App\ExpendablesCategory;
@@ -21,6 +22,8 @@ class ExpendablesCategoryController extends Controller
         $this->entity_dependence = false;
         $this->type = 'modal';
     }
+
+    use Photable;
 
     public function index(Request $request)
     {
@@ -165,6 +168,7 @@ class ExpendablesCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $expendables_category);
 
         $data = $request->input();
+        $data['photo_id'] = $this->getPhotoId($request, $expendables_category);
         $result = $expendables_category->update($data);
 
         if ($result) {

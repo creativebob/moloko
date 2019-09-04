@@ -49,8 +49,7 @@ class RubricatorsItem extends Model
         'description',
         'seo_description',
         'parent_id',
-
-        'rubricator_id',
+        'photo_id','rubricator_id',
 
         'display',
         'system',

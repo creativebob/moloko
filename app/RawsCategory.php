@@ -50,6 +50,7 @@ class RawsCategory extends Model
         'description',
         'seo_description',
         'parent_id',
+        'photo_id',
 
         'display',
         'system',

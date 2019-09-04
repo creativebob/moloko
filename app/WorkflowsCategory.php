@@ -51,8 +51,7 @@ class WorkflowsCategory extends Model
         'description',
         'seo_description',
         'parent_id',
-
-        'processes_type_id',
+        'photo_id','processes_type_id',
 
         'display',
         'system',

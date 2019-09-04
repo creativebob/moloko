@@ -2,8 +2,12 @@
 
 namespace App\Observers\Traits;
 
+use App\Http\Controllers\Traits\Photable;
+
 trait CategoriesTrait
 {
+
+    use Photable;
 
     public function storeCategory($category)
     {
@@ -14,8 +18,6 @@ trait CategoriesTrait
 
     public function updateCategory($category)
     {
-        $request = request();
-
         $category->load('childs');
 
         if ($category->isDirty('name') || $category->isDirty('parent_id')) {
@@ -23,8 +25,6 @@ trait CategoriesTrait
             $this->setCategoryLevel($category);
             $this->setCategoryCategoryId($category);
         }
-
-        $category->photo_id = savePhoto($request, $category);
     }
 
     protected function setCategorySlug($category)

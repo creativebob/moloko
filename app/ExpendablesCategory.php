@@ -45,7 +45,8 @@ class ExpendablesCategory extends Model
         'description',
         'seo_description',
         'parent_id',
-    ];
+        'photo_id',
+];
 
     // Родитель
     public function parent()

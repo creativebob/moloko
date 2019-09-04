@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Подключаем модели
+use App\Http\Controllers\Traits\Photable;
 use App\Page;
 use App\Process;
 use App\Site;
@@ -30,6 +31,8 @@ class PageController extends Controller
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
     }
+
+    use Photable;
 
     public function index(Request $request, $site_id)
     {
@@ -84,7 +87,7 @@ class PageController extends Controller
         $page->alias = empty($request->alias) ? Str::slug($request->title) : $request->alias;
 
         // Cохраняем / обновляем фото
-        $photo_id = savePhoto($request, $page);
+        $photo_id = $this->getPhotoId($request, $page);
         $page->photo_id = $photo_id;
         $page->save();
 

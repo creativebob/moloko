@@ -19,7 +19,7 @@ trait Photable
      * @return int
      */
 
-    function getPhotoId($request, $item)
+    public function getPhotoId($request, $item)
     {
 
         if ($request->hasFile('photo'))  {
@@ -110,7 +110,7 @@ trait Photable
     }
 
     // Сохраняем / обновляем фотографию
-    function savePhotoInAlbum($request, $album)
+    public function savePhotoInAlbum($request, $album)
     {
 
 
@@ -191,7 +191,7 @@ trait Photable
     }
 
     // Настройки для фоток
-    function getSettings($album_id = null)
+    public function getSettings()
     {
 
         // Вытаскиваем настройки из конфига

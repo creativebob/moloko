@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Employee;
+use App\Http\Controllers\Traits\Photable;
 use App\Position;
 use App\Staffer;
 use App\Department;
@@ -40,6 +41,8 @@ class EmployeeController extends Controller
         $this->entity_dependence = true;
         $this->type = 'modal';
     }
+
+    use Photable;
 
     public function index(Request $request)
     {
@@ -369,7 +372,8 @@ class EmployeeController extends Controller
         // Отдаем работу по редактированию нового юзера трейту
         $user = $this->updateUser($request, $user);
 
-        $photo_id = savePhoto($request, $user);
+
+        $photo_id = $this->getPhotoId($request, $user);
         $user->photo_id = $photo_id;
         $user->save();
 

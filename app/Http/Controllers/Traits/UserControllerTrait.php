@@ -122,7 +122,9 @@ trait UserControllerTrait
         if($user) {
 
             // Cохраняем или обновляем фото
-            savePhoto($request, $user);
+            $photo_id = $this->getPhotoId($request, $user);
+            $user->photo_id = $photo_id;
+            $user->save();
 
             // Сохряняем или обновляем телефон
             $phones = add_phones($request, $user);
@@ -305,7 +307,7 @@ trait UserControllerTrait
         if($user) {
 
             // Cохраняем или обновляем фото
-            $photo_id = savePhoto($request, $user);
+            $photo_id = $this->getPhotoId($request, $user);
             $user->photo_id = $photo_id;
             $user->save();
 

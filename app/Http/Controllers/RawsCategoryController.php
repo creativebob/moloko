@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\RawsCategoryUpdateRequest;
 use App\Http\Requests\RawsCategoryStoreRequest;
 use App\RawsCategory;
@@ -21,6 +22,8 @@ class RawsCategoryController extends Controller
         $this->entity_dependence = false;
         $this->type = 'edit';
     }
+
+    use Photable;
 
     public function index(Request $request)
     {
@@ -173,6 +176,7 @@ class RawsCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $raws_category);
 
         $data = $request->input();
+        $data['photo_id'] = $this->getPhotoId($request, $raws_category);
         $result = $raws_category->update($data);
 
         if ($result) {

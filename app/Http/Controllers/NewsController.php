@@ -2,33 +2,12 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Http\Controllers\Traits\Photable;
 use App\News;
-
-use App\Site;
-use App\Photo;
-use App\AlbumsCategory;
-use App\AlbumEntity;
-use App\CityEntity;
-
 use App\RubricatorsItem;
-
-// Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\NewsRequest;
-
-// Общие классы
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
-
-// Специфические классы
-// Фотографии
-use Intervention\Image\ImageManagerStatic as Image;
-
-// Транслитерация
-use Illuminate\Support\Str;
 
 class NewsController extends Controller
 {
@@ -43,6 +22,8 @@ class NewsController extends Controller
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
     }
+
+    use Photable;
 
     public function index(Request $request)
     {
@@ -137,6 +118,10 @@ class NewsController extends Controller
 
         if ($cur_news) {
 
+            $photo_id = $this->getPhotoId($request, $cur_news);
+            $cur_news->photo_id = $photo_id;
+            $cur_news->save();
+
             return redirect()->route('news.index');
         } else {
             abort(403, 'Ошибка при записи новости!');
@@ -184,6 +169,7 @@ class NewsController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $cur_news);
 
         $data = $request->input();
+        $data['photo_id'] = $this->getPhotoId($request, $cur_news);
         $cur_news->update($data);
 
         if ($cur_news) {

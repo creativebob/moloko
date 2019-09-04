@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\CatalogsServicesItemUpdateRequest;
 use App\Http\Requests\CatalogsServicesItemStoreRequest;
 use App\CatalogsServicesItem;
@@ -23,6 +24,8 @@ class CatalogsServicesItemController extends Controller
         $this->entity_dependence = false;
         $this->type = 'edit';
     }
+
+    use Photable;
 
     public function index(Request $request, $catalog_id)
     {
@@ -165,6 +168,7 @@ class CatalogsServicesItemController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $catalogs_services_item);
 
         $data = $request->input();
+        $data['photo_id'] = $this->getPhotoId($request, $catalogs_services_item);
         $result = $catalogs_services_item->update($data);
 
         if ($result) {

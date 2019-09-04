@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\MenuUpdateRequest;
 use App\Http\Requests\MenuStoreRequest;
 use App\Menu;
@@ -21,6 +22,8 @@ class MenuController extends Controller
         $this->entity_dependence = false;
         $this->type = 'modal';
     }
+
+    use Photable;
 
     public function index(Request $request, $site_id, $navigation_id)
     {
@@ -146,6 +149,7 @@ class MenuController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $menu);
 
         $data = $request->input();
+        $data['photo_id'] = $this->getPhotoId($request, $menu);
         $result = $menu->update($data);
 
         if ($result) {

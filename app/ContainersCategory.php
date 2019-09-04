@@ -50,8 +50,8 @@ class ContainersCategory extends Model
         'description',
         'seo_description',
         'parent_id',
-
-        'display',
+        'photo_id',
+'display',
         'system',
         'moderation'
     ];

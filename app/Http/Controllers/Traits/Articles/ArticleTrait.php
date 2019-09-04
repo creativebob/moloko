@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Log;
 trait ArticleTrait
 {
 
+    use Photable;
+
     public function storeArticle($request, $category)
     {
 
@@ -111,8 +113,6 @@ trait ArticleTrait
         return $article;
     }
 
-    use Photable;
-
     public function updateArticle($request, $item)
     {
 
@@ -193,8 +193,6 @@ trait ArticleTrait
                             $data['weight'] = $weight;
                         }
                     }
-
-
                 }
 
                 $data['draft'] = request()->draft;

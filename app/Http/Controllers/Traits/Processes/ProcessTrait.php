@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Traits\Processes;
 
+use App\Http\Controllers\Traits\Photable;
 use App\Process;
 use App\ProcessesGroup;
 use App\Entity;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\Log;
 
 trait ProcessTrait
 {
+
+    use Photable;
 
     public function storeProcess(ProcessRequest $request, $category)
     {
@@ -130,6 +133,9 @@ trait ProcessTrait
                 }
 
                 $data['draft'] = $request->draft;
+
+                $data['photo_id'] = $this->getPhotoId($request, $process);
+
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $process->update($data);
 

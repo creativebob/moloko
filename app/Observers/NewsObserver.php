@@ -20,7 +20,6 @@ class NewsObserver
 
     public function created(News $cur_news)
     {
-        $this->setPhotoId($cur_news);
         $this->setSlug($cur_news);
         $cur_news->save();
     }
@@ -28,7 +27,6 @@ class NewsObserver
     public function updating(News $cur_news)
     {
         $this->update($cur_news);
-        $this->setPhotoId($cur_news);
         $this->setSlug($cur_news);
     }
 
@@ -70,13 +68,6 @@ class NewsObserver
         $cur_news->slug = $slug;
     }
 
-    protected function setPhotoId(News $cur_news)
-    {
-        $request = request();
-        $photo_id = savePhoto($request, $cur_news);
-        $cur_news->photo_id = $photo_id;
-
-    }
 
     protected function setAlbums(News $cur_news)
     {

@@ -49,8 +49,8 @@ class GoodsCategory extends Model
         'description',
         'seo_description',
         'parent_id',
-
-        'is_direction',
+        'photo_id',
+'is_direction',
 
         'display',
         'system',

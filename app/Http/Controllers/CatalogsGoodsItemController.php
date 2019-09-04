@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\CatalogsGoodsItemUpdateRequest;
 use App\Http\Requests\CatalogsGoodsItemStoreRequest;
 use App\CatalogsGoodsItem;
@@ -22,6 +23,8 @@ class CatalogsGoodsItemController extends Controller
         $this->entity_dependence = false;
         $this->type = 'modal';
     }
+
+    use Photable;
 
     public function index(Request $request, $catalog_id)
     {
@@ -158,6 +161,7 @@ class CatalogsGoodsItemController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods_item);
 
         $data = $request->input();
+        $data['photo_id'] = $this->getPhotoId($request, $catalogs_goods_item);
         $result = $catalogs_goods_item->update($data);
 
         if ($result) {

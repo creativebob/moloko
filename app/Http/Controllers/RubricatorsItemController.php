@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\RubricatorsItemUpdateRequest;
 use App\Http\Requests\RubricatorsItemStoreRequest;
 use App\RubricatorsItem;
@@ -21,6 +22,8 @@ class RubricatorsItemController extends Controller
         $this->entity_dependence = false;
         $this->type = 'modal';
     }
+
+    use Photable;
 
     public function index(Request $request, $rubricator_id)
     {
@@ -161,6 +164,7 @@ class RubricatorsItemController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $rubricators_item);
 
         $data = $request->input();
+        $data['photo_id'] = $this->getPhotoId($request, $rubricators_item);
         $result = $rubricators_item->update($data);
 
         if ($result) {

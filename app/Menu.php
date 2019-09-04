@@ -51,8 +51,7 @@ class Menu extends Model
         'description',
         'seo_description',
         'parent_id',
-
-        'icon',
+        'photo_id','icon',
         'alias',
         'tag',
         'title',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\WorkflowsCategoryUpdateRequest;
 use App\Http\Requests\WorkflowsCategoryStoreRequest;
 use App\WorkflowsCategory;
@@ -21,6 +22,8 @@ class WorkflowsCategoryController extends Controller
         $this->entity_dependence = false;
         $this->type = 'edit';
     }
+
+    use Photable;
 
     public function index(Request $request)
     {
@@ -172,6 +175,7 @@ class WorkflowsCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $workflows_category);
 
         $data = $request->input();
+        $data['photo_id'] = $this->getPhotoId($request, $workflows_category);
         $result = $workflows_category->update($data);
 
         if ($result) {
