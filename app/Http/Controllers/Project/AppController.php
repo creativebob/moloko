@@ -8,6 +8,7 @@ use App\EstimatesItem;
 use App\Lead;
 use App\PricesGoods;
 use App\Site;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cookie;
@@ -288,20 +289,26 @@ class AppController extends Controller
 
     public function cart_store(Request $request)
     {
-        // dd($request->user());
+//         dd($request);
+        $cart = json_decode(Cookie::get('cart'), true);
+        $badget = $cart['sum'];
+        $count = $cart['count'];
+
         $site = $this->site;
+        $company_id = $site->company_id;
+        $filial_id = $site->filials->first()->id;
+
+        $name = $request->name;
+        $phone = $request->main_phone;
 
         $lead = new Lead;
-
-        $filial_id = $site->filials->first()->id;
         $lead->filial_id = $filial_id;
-        $lead->name = $request->name;
+        $lead->name = $name;
         $lead->stage_id = 2;
         $lead->lead_method_id = 2;
-        $lead->badget = $request->badget;
+        $lead->badget = $badget;
         $lead->draft = NULL;
         $lead->author_id = 1;
-        $company_id = $site->company_id;
         $lead->company_id = $company_id;
         $lead->moderation = false;
 
@@ -323,6 +330,8 @@ class AppController extends Controller
             // Если нет: создаем нового пользователя по номеру телефона
             // используя трейт экспресс создание пользователя
             $user_for_lead = $this->createUserByPhone($request->main_phone);
+
+            // dd($user_for_lead);
 
             // Обработка входящих данных ------------------------------------------
             $mass_names = getNameUser($request->name);
@@ -363,6 +372,19 @@ class AppController extends Controller
 
         $lead->save();
 
+        // Формируем сообщение
+        $message = "Заказ с сайта:\r\n";
+        $message .= "Клиент: " . $name . "\r\n";
+        $message .= "Тел: " . $phone . "\r\n";
+        $message .= "Количество товаров: " . $count . "\r\n";
+        $message .= "Бюджет: " . $badget . ' руб.';
+
+        $lead->notes()->create([
+            'company_id' => 1,
+            'body' => $message,
+            'author_id' => 1,
+        ]);
+
         // Телефон
         $phones = add_phones($request, $lead);
 
@@ -375,7 +397,7 @@ class AppController extends Controller
         ]);
         // dd($estimate);
 
-        $prices_goods_ids = array_keys($request->prices_goods);
+        $prices_goods_ids = array_keys($cart['prices']);
         $prices_goods = PricesGoods::with('goods')
             ->find($prices_goods_ids);
 
@@ -392,27 +414,42 @@ class AppController extends Controller
                 'author_id' => 1,
 
                 'price' => $price_goods->price,
-                'count' => $request->prices_goods[$price_goods->id]['count'],
+                'count' => $cart['prices'][$price_goods->id]['count'],
 
-                'sum' => $request->prices_goods[$price_goods->id]['count'] * $price_goods->price
+                'sum' => $cart['prices'][$price_goods->id]['count'] * $price_goods->price
             ]);
         }
 //        dd($data);
 
         $estimate->items()->saveMany($data);
 
+        $destinations = User::whereHas('staff', function ($query) {
+            $query->whereHas('position', function ($query) {
+                $query->whereHas('notifications', function ($query) {
+                    $query->where('notification_id', 1);
+                });
+            });
+        })
+            ->whereNotNull('telegram')
+            ->get(['telegram']);
+
+        if (isset($destinations)) {
+
+            // Отправляем на каждый telegram
+            foreach ($destinations as $destination) {
+
+                if (isset($destination->telegram_id)) {
+                    $response = Telegram::sendMessage([
+                        'chat_id' => $destination->telegram,
+                        'text' => $message
+                    ]);
+                }
+            }
+        }
+
         Cookie::queue(Cookie::forget('cart'));
 //        $cookie = Cookie::forget('cart');
 
         return redirect()->route('project.start');
-    }
-
-
-    public function telegram(Request $request)
-    {
-        Telegram::sendMessage([
-            'chat_id' => '228265675',
-            'text' => "Все рабит ",
-        ]);
     }
 }
