@@ -99,9 +99,7 @@ class AppController extends Controller
                 'archive' => false
             ])
             ->filter($request)
-            ->get();
-//        dd($prices_goods->filter($request));
-
+            ->paginate(16);
 
         return view($site->alias.'.pages.catalogs_goods.index', compact('site','page', 'request', 'catalog_goods_item', 'prices_goods'));
     }

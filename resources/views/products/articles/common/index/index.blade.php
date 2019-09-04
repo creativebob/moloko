@@ -93,12 +93,12 @@
                     </td>
                     <td class="td-weight">
                         @if(isset($item->article->weight))
-                            {{ $item->article->weight_trans }} {{ $item->article->unit_weight->abbreviation }}
+                            {{ $item->article->weight_trans ?? '' }} {{ $item->article->unit_weight->abbreviation ?? '' }}
                             <br>
                         @endif
 
                         @if(isset($item->article->volume))
-                            {{ $item->article->volume }} {{ $item->article->unit_volume->abbreviation }}
+                            {{ $item->article->volume ?? '' }} {{ $item->article->unit_volume->abbreviation ?? '' }}
                         @endif
                     </td>
                     <td class="td-portion">
