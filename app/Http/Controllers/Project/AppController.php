@@ -432,8 +432,8 @@ class AppController extends Controller
                 });
             });
         })
-            ->whereNotNull('telegram_id')
-            ->get(['telegram_id']);
+            ->whereNotNull('telegram')
+            ->get(['telegram']);
 
         if (isset($destinations)) {
 
@@ -442,7 +442,7 @@ class AppController extends Controller
 
                 if (isset($destination->telegram_id)) {
                     $response = Telegram::sendMessage([
-                        'chat_id' => $destination->telegram_id,
+                        'chat_id' => $destination->telegram,
                         'text' => $message
                     ]);
                 }
