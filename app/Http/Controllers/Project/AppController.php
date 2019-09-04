@@ -375,11 +375,11 @@ class AppController extends Controller
         $lead->save();
 
         // Формируем сообщение
-        $message = "Заказ с сайта:/r/n";
+        $message = "Заказ с сайта:\r\n";
         $message .= "Клиент: " . $name . "\r\n";
         $message .= "Тел: " . $phone . "\r\n";
         $message .= "Количество товаров: " . $count . "\r\n";
-        $message .= "Бюджет: " . $badget;
+        $message .= "Бюджет: " . $badget . ' руб.';
 
         $lead->notes()->create([
             'company_id' => 1,
