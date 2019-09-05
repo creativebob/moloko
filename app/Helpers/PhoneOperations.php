@@ -118,4 +118,54 @@ function check_user_by_phones($phone_search) {
 }
 
 
+// Отправка СМС через API smsru
+function sendSms($phone, $msg) {
+
+        $ch = curl_init("https://sms.ru/sms/send");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array(
+            "api_id" => "0D2876B1-01BD-B7A5-91FB-646A8F8D9E28",
+            "to" => $phone, // До 100 штук до раз
+            "msg" => $msg,
+            "json" => 1 // Для получения более развернутого ответа от сервера
+        )));
+
+        $body = curl_exec($ch);
+        curl_close($ch);
+
+        $json = json_decode($body);
+
+
+        // if ($json) { // Получен ответ от сервера
+        //     print_r($json); // Для дебага
+        //     if ($json->status == "OK") { // Запрос выполнился
+        //         foreach ($json->sms as $phone => $data) { // Перебираем массив СМС сообщений
+        //             if ($data->status == "OK") { // Сообщение отправлено
+        //                 echo "Сообщение на номер $phone успешно отправлено. ";
+        //                 echo "ID сообщения: $data->sms_id. ";
+        //                 echo "";
+        //             } else { // Ошибка в отправке
+        //                 echo "Сообщение на номер $phone не отправлено. ";
+        //                 echo "Код ошибки: $data->status_code. ";
+        //                 echo "Текст ошибки: $data->status_text. ";
+        //                 echo "";
+        //             }
+        //         }
+        //         echo "Баланс после отправки: $json->balance руб.";
+        //         echo "";
+        //     } else { // Запрос не выполнился (возможно ошибка авторизации, параметрах, итд...)
+        //         echo "Запрос не выполнился. ";      
+        //         echo "Код ошибки: $json->status_code. ";
+        //         echo "Текст ошибки: $json->status_text. ";
+        //     }
+        // } else { 
+
+        //     echo "Запрос не выполнился. Не удалось установить связь с сервером. ";
+
+        // }
+}
+
+
+
 ?>
