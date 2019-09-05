@@ -1,4 +1,4 @@
-@isset($articles_groups)
+@if($articles_groups->isNotEmpty())
 <div class="grid-x">
 <h4>Вложения:</h4>
  	@foreach($articles_groups as $articles_group)

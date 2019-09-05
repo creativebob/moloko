@@ -89,9 +89,9 @@ $sidebar-li-border-bot: #3f3f3f;
     margin-top: 40px;
     margin-bottom: 82px;
 
-    >ul>li {
+    &>ul>li {
 
-      >ul {
+      &>ul {
         margin-left: 3rem;
 
         li {
@@ -291,7 +291,7 @@ $sidebar-li-border-bot: #3f3f3f;
 // -------------------------Раздвигаем мобильный сайдбар на всю ширину ------------------------
 .sidebar {
   position: fixed;
-  width: 100%;
+  //width: 100%;
   display: block;
 
   .nav {
