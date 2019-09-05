@@ -167,6 +167,24 @@ class AppController extends Controller
         return view($site->alias.'.pages.prices_goods.index', compact('site','page', 'price_goods'));
     }
 
+    public function goods_composition(Request $request, $id)
+    {
+        $site = $this->site;
+        $price_goods = PricesGoods::with([
+            'goods_public'
+        ])
+            ->where([
+                'id' => $id,
+                'display' => true
+            ])
+            ->first();
+
+        return view($site->alias.'.pages.prices_goods.goods_composition', compact('site', 'price_goods'));
+    }
+
+
+
+
     public function cart(Request $request)
     {
 
