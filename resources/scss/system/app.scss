@@ -23,7 +23,7 @@
 @import "../reset";
 
 // Медиа
-@import "breakpoint-sass";
+@import "../../../node_modules/breakpoint-sass/stylesheets/breakpoint";
 
 // ----------------------- Подключаем шрифты ----------------------------------------
 @import "partials/fonts";

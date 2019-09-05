@@ -308,166 +308,170 @@ class AppController extends Controller
     public function cart_store(Request $request)
     {
 //         dd($request);
-        $cart = json_decode(Cookie::get('cart'), true);
-        $badget = $cart['sum'];
-        $count = $cart['count'];
+        if ($request->personal_data) {
 
-        $site = $this->site;
-        $company_id = $site->company_id;
-        $filial_id = $site->filials->first()->id;
+            $cart = json_decode(Cookie::get('cart'), true);
+            $badget = $cart['sum'];
+            $count = $cart['count'];
 
-        $name = $request->name;
-        $phone = $request->main_phone;
+            $site = $this->site;
+            $company_id = $site->company_id;
+            $filial_id = $site->filials->first()->id;
 
-        $lead = new Lead;
-        $lead->filial_id = $filial_id;
-        $lead->name = $name;
-        $lead->stage_id = 2;
-        $lead->lead_method_id = 2;
-        $lead->badget = $badget;
-        $lead->draft = NULL;
-        $lead->author_id = 1;
-        $lead->company_id = $company_id;
-        $lead->moderation = false;
+            $name = $request->name;
+            $phone = $request->main_phone;
 
-//        $choiceFromTag = getChoiceFromTag($request->choice_tag);
-//        $lead->choice_type = $choiceFromTag['type'];
-//        $lead->choice_id = $choiceFromTag['id'];
+            $lead = new Lead;
+            $lead->filial_id = $filial_id;
+            $lead->name = $name;
+            $lead->stage_id = 2;
+            $lead->lead_method_id = 2;
+            $lead->badget = $badget;
+            $lead->draft = NULL;
+            $lead->author_id = 1;
+            $lead->company_id = $company_id;
+            $lead->moderation = false;
 
-        // Работаем с ПОЛЬЗОВАТЕЛЕМ лида ================================================================
+    //        $choiceFromTag = getChoiceFromTag($request->choice_tag);
+    //        $lead->choice_type = $choiceFromTag['type'];
+    //        $lead->choice_id = $choiceFromTag['id'];
 
-        // Проверяем, есть ли в базе телефонов пользователь с таким номером
-        $user_for_lead = check_user_by_phones($request->main_phone);
-        if ($user_for_lead != null) {
+            // Работаем с ПОЛЬЗОВАТЕЛЕМ лида ================================================================
 
-            // Если есть: записываем в лида ID найденного в системе пользователя
-            $lead->user_id = $user_for_lead->id;
+            // Проверяем, есть ли в базе телефонов пользователь с таким номером
+            $user_for_lead = check_user_by_phones($request->main_phone);
+            if ($user_for_lead != null) {
 
-        } else {
+                // Если есть: записываем в лида ID найденного в системе пользователя
+                $lead->user_id = $user_for_lead->id;
 
-            // Если нет: создаем нового пользователя по номеру телефона
-            // используя трейт экспресс создание пользователя
-            $user_for_lead = $this->createUserByPhone($request->main_phone);
+            } else {
 
-            // dd($user_for_lead);
+                // Если нет: создаем нового пользователя по номеру телефона
+                // используя трейт экспресс создание пользователя
+                $user_for_lead = $this->createUserByPhone($request->main_phone);
 
-            // Обработка входящих данных ------------------------------------------
-            $mass_names = getNameUser($request->name);
+                // dd($user_for_lead);
 
-            $user_for_lead->first_name = $mass_names['first_name'] ?? $request->name ?? 'Укажите фамилию';
-            $user_for_lead->second_name = $mass_names['second_name'] ?? null;
-            $user_for_lead->patronymic = $mass_names['patronymic'] ?? null;
-            $user_for_lead->sex = $mass_names['gender'] ?? 1;
+                // Обработка входящих данных ------------------------------------------
+                $mass_names = getNameUser($request->name);
 
-            $user_for_lead->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
+                $user_for_lead->first_name = $mass_names['first_name'] ?? $request->name ?? 'Укажите фамилию';
+                $user_for_lead->second_name = $mass_names['second_name'] ?? null;
+                $user_for_lead->patronymic = $mass_names['patronymic'] ?? null;
+                $user_for_lead->sex = $mass_names['gender'] ?? 1;
 
-            // Если к пользователю нужно добавить инфы, тут можно апнуть юзера: ----------------------------------
+                $user_for_lead->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
 
-            $user_for_lead->nickname = $request->name;
+                // Если к пользователю нужно добавить инфы, тут можно апнуть юзера: ----------------------------------
 
-            // Компания и филиал ----------------------------------------------------------
-            $user_for_lead->company_id = $company_id;
-            $user_for_lead->filial_id = $filial_id;
-            $user_for_lead->save();
+                $user_for_lead->nickname = $request->name;
 
-            // dd($user_for_lead);
+                // Компания и филиал ----------------------------------------------------------
+                $user_for_lead->company_id = $company_id;
+                $user_for_lead->filial_id = $filial_id;
+                $user_for_lead->save();
 
-            // Конец апдейта юзеара -------------------------------------------------
+                // dd($user_for_lead);
 
-        }
+                // Конец апдейта юзеара -------------------------------------------------
 
-        // Конец работы с ПОЛЬЗОВАТЕЛЕМ лида ==============================================================
+            }
+
+            // Конец работы с ПОЛЬЗОВАТЕЛЕМ лида ==============================================================
 
 
 
-        // if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-        //     $lead->extra_phone = cleanPhone($request->extra_phone);
-        // } else {$lead->extra_phone = NULL;};
+            // if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
+            //     $lead->extra_phone = cleanPhone($request->extra_phone);
+            // } else {$lead->extra_phone = NULL;};
 
-        // $lead->telegram_id = $request->telegram_id;
-        // $lead->orgform_status = $request->orgform_status;
-        // $lead->user_inn = $request->inn;
+            // $lead->telegram_id = $request->telegram_id;
+            // $lead->orgform_status = $request->orgform_status;
+            // $lead->user_inn = $request->inn;
 
-        $lead->save();
+            $lead->save();
 
-        // Формируем сообщение
-        $message = "Заказ с сайта:\r\n";
-        $message .= "Клиент: " . $name . "\r\n";
-        $message .= "Тел: " . $phone . "\r\n";
-        $message .= "Количество товаров: " . $count . "\r\n";
-        $message .= "Бюджет: " . $badget . ' руб.';
+            // Формируем сообщение
+            $message = "Заказ с сайта:\r\n";
+            $message .= "Клиент: " . $name . "\r\n";
+            $message .= "Тел: " . $phone . "\r\n";
+            $message .= "Количество товаров: " . $count . "\r\n";
+            $message .= "Бюджет: " . $badget . ' руб.';
 
-        $lead->notes()->create([
-            'company_id' => 1,
-            'body' => $message,
-            'author_id' => 1,
-        ]);
-
-        // Телефон
-        $phones = add_phones($request, $lead);
-
-        // Находим или создаем заказ для лида
-        $estimate = Estimate::firstOrCreate([
-            'lead_id' => $lead->id,
-            'company_id' => $company_id
-        ], [
-            'author_id' => 1
-        ]);
-        // dd($estimate);
-
-        $prices_goods_ids = array_keys($cart['prices']);
-        $prices_goods = PricesGoods::with('goods')
-            ->find($prices_goods_ids);
-
-        $data = [];
-        foreach ($prices_goods as $price_goods) {
-            $data[] = new EstimatesItem([
-                'product_id' => $price_goods->goods->id,
-                'product_type' => 'App\Goods',
-
-                'price_product_id' => $price_goods->id,
-                'price_product_type' => 'App\PricesGoods',
-
-                'company_id' => $company_id,
+            $lead->notes()->create([
+                'company_id' => 1,
+                'body' => $message,
                 'author_id' => 1,
-
-                'price' => $price_goods->price,
-                'count' => $cart['prices'][$price_goods->id]['count'],
-
-                'sum' => $cart['prices'][$price_goods->id]['count'] * $price_goods->price
             ]);
-        }
-//        dd($data);
 
-        $estimate->items()->saveMany($data);
+            // Телефон
+            $phones = add_phones($request, $lead);
 
-        $destinations = User::whereHas('staff', function ($query) {
-            $query->whereHas('position', function ($query) {
-                $query->whereHas('notifications', function ($query) {
-                    $query->where('notification_id', 1);
+            // Находим или создаем заказ для лида
+            $estimate = Estimate::firstOrCreate([
+                'lead_id' => $lead->id,
+                'company_id' => $company_id
+            ], [
+                'author_id' => 1
+            ]);
+            // dd($estimate);
+
+            $prices_goods_ids = array_keys($cart['prices']);
+            $prices_goods = PricesGoods::with('goods')
+                ->find($prices_goods_ids);
+
+            $data = [];
+            foreach ($prices_goods as $price_goods) {
+                $data[] = new EstimatesItem([
+                    'product_id' => $price_goods->goods->id,
+                    'product_type' => 'App\Goods',
+
+                    'price_product_id' => $price_goods->id,
+                    'price_product_type' => 'App\PricesGoods',
+
+                    'company_id' => $company_id,
+                    'author_id' => 1,
+
+                    'price' => $price_goods->price,
+                    'count' => $cart['prices'][$price_goods->id]['count'],
+
+                    'sum' => $cart['prices'][$price_goods->id]['count'] * $price_goods->price
+                ]);
+            }
+    //        dd($data);
+
+            $estimate->items()->saveMany($data);
+
+            $destinations = User::whereHas('staff', function ($query) {
+                $query->whereHas('position', function ($query) {
+                    $query->whereHas('notifications', function ($query) {
+                        $query->where('notification_id', 1);
+                    });
                 });
-            });
-        })
-            ->whereNotNull('telegram')
-            ->get(['telegram']);
+            })
+                ->whereNotNull('telegram')
+                ->get(['telegram']);
 
-        if (isset($destinations)) {
+            if (isset($destinations)) {
 
-            // Отправляем на каждый telegram
-            foreach ($destinations as $destination) {
+                // Отправляем на каждый telegram
+                foreach ($destinations as $destination) {
 
-                if (isset($destination->telegram_id)) {
-                    $response = Telegram::sendMessage([
-                        'chat_id' => $destination->telegram,
-                        'text' => $message
-                    ]);
+                    if (isset($destination->telegram_id)) {
+                        $response = Telegram::sendMessage([
+                            'chat_id' => $destination->telegram,
+                            'text' => $message
+                        ]);
+                    }
                 }
             }
+
+            Cookie::queue(Cookie::forget('cart'));
+    //        $cookie = Cookie::forget('cart');
+
+            return redirect()->route('project.start');
+
         }
-
-        Cookie::queue(Cookie::forget('cart'));
-//        $cookie = Cookie::forget('cart');
-
-        return redirect()->route('project.start');
     }
 }

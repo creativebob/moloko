@@ -41,5 +41,5 @@ require('../main');
 
 // Наши скрипты
 require('./partials/main');
-require('./partials/filter');
 require('./partials/sidebar');
+require('./partials/filter');

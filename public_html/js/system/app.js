@@ -38130,8 +38130,8 @@ __webpack_require__(36);
 
 // Наши скрипты
 __webpack_require__(62);
-__webpack_require__(63);
 __webpack_require__(64);
+__webpack_require__(63);
 
 /***/ }),
 /* 39 */
@@ -57640,7 +57640,7 @@ function renderContent() {
 
 // Палим клики
 // Клики по стрелке сайдбара
-$("#sidebar-button").click(function () {
+$(document).on('click', '#sidebar-button', function () {
     var log = console.log("Клик по кнопке");
     if (localStorage.getItem('sidebar') == 0) {
         localStorage.setItem('sidebar', 1);
@@ -57651,7 +57651,7 @@ $("#sidebar-button").click(function () {
     console.log("-------------------");
 });
 // При клике на иконку разворачивается сайдбар и сама директория
-$(".nav a").click(function () {
+$(document).on('click', '.nav a', function () {
     var idMenuClick = $(this).data('link');
     if ($(document).width() > 640) {
         if (localStorage.getItem('sidebar') == 1) {
@@ -57681,7 +57681,7 @@ $(".nav a").click(function () {
     console.log("-------------------");
 });
 // На мобилах клик по иконке разворачивания сайдбара
-$('.menu-icon').click(function () {
+$(document).on('click', '.menu-icon', function () {
     if ($(document).width() <= 640) {
         if ($('#sidebar').css('display') == 'block') {
             $('body').css('overflow-y', 'hidden');
@@ -57697,7 +57697,7 @@ $('.menu-icon').click(function () {
     renderContent();
 });
 // Клики по кнопке менеджера задач
-$('#task-toggle').click(function () {
+$(document).on('click', '#task-toggle', function () {
     if ($(document).width() <= 640) {
         if ($('#task-manager').hasClass('task-active')) {
             $('body').css('overflow-y', 'auto');
@@ -57720,7 +57720,6 @@ $('#task-toggle').click(function () {
 // $(window).scroll(function () {
 //    checkFilter ();
 // });
-
 
 // $(document).on('ajaxSend', '#loading .find-status', function() {
 //     $(this).show(); // показываем элемент

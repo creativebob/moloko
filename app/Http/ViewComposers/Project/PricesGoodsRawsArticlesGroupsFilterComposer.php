@@ -12,10 +12,13 @@ class PricesGoodsRawsArticlesGroupsFilterComposer
 
         $catalog_goods_item = $view->catalog_goods_item;
 
-        $prices_goods = PricesGoods::whereHas('catalogs_item', function ($q) use($catalog_goods_item) {
+        $prices_goods = PricesGoods::with([
+            'goods_public.article.raws.metrics'
+        ])
+        ->whereHas('catalogs_item', function ($q) use($catalog_goods_item) {
             $q->where([
                 'id' => $catalog_goods_item->id,
-//                    'display' => true
+                'display' => true
             ]);
         } )
             ->has('goods_public')
