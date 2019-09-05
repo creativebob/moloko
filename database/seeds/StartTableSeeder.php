@@ -2,9 +2,6 @@
 
 use Illuminate\Database\Seeder;
 
-use App\Region;
-use App\City;
-
 use App\Company;
 use App\Location;
 use App\Department;
@@ -38,25 +35,6 @@ class StartTableSeeder extends Seeder
 
     public function run()
     {
-
-    	// Город
-    	Region::insert([
-        	[
-        		'name' => 'Тестовая область',
-        		'system' => true,
-        		'author_id' => 1,
-        	]
-        ]);
-
-        City::insert([
-        	[
-        		'name' => 'Тестовый',
-        		'alias' => 'test',
-        		'region_id' => 1,
-        		'system' => true,
-        		'author_id' => 1,
-        	]
-        ]);
 
         Location::insert([
         	[
@@ -120,6 +98,7 @@ class StartTableSeeder extends Seeder
         ]);
 
         User::where('login', 'makc_berluskone')->update(['company_id' => 1]);
+        User::where('login', 'creativebob')->update(['company_id' => 1]);
 
         $user = User::where('login', 'testovik')->first();
         $user->phones()->attach(1, ['main' => 1]);
