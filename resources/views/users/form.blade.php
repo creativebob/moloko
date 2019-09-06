@@ -100,8 +100,7 @@
 						</label>
 					</div>
 					<div class="small-12 medium-6 cell">
-						@php isset(Auth::user()->location->city->name) ? $city_default = Auth::user()->location->city : $city_default = null; @endphp
-						@include('includes.inputs.city_search', ['city' => isset($user->location->city->name) ? $user->location->city : $city_default, 'id' => 'cityForm', 'required' => true])
+						@include('system.common.includes.city_search', ['item' => isset($user->location) ? $user : $auth_user, 'required' => true])
 					</div>
 					<div class="small-12 medium-6 cell">
 						<label>Адрес

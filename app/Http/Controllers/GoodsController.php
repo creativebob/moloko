@@ -261,8 +261,8 @@ class GoodsController extends Controller
             'title' => 'Добавление товара',
             'entity' => $this->entity_alias,
             'category_entity' => 'goods_categories',
-            'unit_category_default' => '6', // Масса
-            'unit_default' => '32', // Кг
+            'units_category_default' => 6,
+            'unit_default' => 32,
         ]);
     }
 

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('inhead')
-    @include('includes.scripts.class.city_search')
     @include('includes.scripts.pickmeup-inhead')
 @endsection
 
@@ -20,7 +19,7 @@
 @endsection
 
 @section('content')
-    {{ Form::model($company, ['url' => '/admin/companies/'.$company->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+    {{ Form::model($company, ['url' => '/admin/companies/'.$company->id, 'data-abide', 'novalidate']) }}
     {{ method_field('PATCH') }}
     @include('companies.form', ['submitButtonText' => 'Редактировать компанию', 'param'=>''])
     {{ Form::close() }}

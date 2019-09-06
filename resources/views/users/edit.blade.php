@@ -2,7 +2,6 @@
 
 @section('inhead')
 	@include('includes.scripts.pickmeup-inhead')
-	@include('includes.scripts.class.city_search')
 @endsection
 
 @section('title', 'Редактировать пользователя')
@@ -21,7 +20,7 @@
 
 @section('content')
 
-{{ Form::model($user, ['url' => '/admin/users/'.$user->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
+{{ Form::model($user, ['url' => '/admin/users/'.$user->id, 'data-abide', 'novalidate', 'files'=>'true']) }}
 {{ method_field('PATCH') }}
 
 @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param'=>''])

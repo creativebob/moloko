@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('inhead')
-@include('includes.scripts.class.city_search')
 @include('includes.scripts.pickmeup-inhead')
 @endsection
 
@@ -21,7 +20,7 @@
 
 @section('content')
 
-{{ Form::open(['url' => '/admin/users', 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
+{{ Form::open(['url' => '/admin/users', 'data-abide', 'novalidate', 'files'=>'true']) }}
 @include('users.form', ['submitButtonText' => 'Добавить пользователя', 'param' => ''])
 {{ Form::close() }}
 

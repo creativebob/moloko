@@ -185,13 +185,13 @@ class ContainerController extends Controller
             return view('ajax_error', compact('ajax_error'));
         }
 
-        return view('products.articles.raws.create', [
+        return view('products.articles.common.create.create', [
             'item' => new $this->class,
             'title' => 'Добавление упаковки',
             'entity' => $this->entity_alias,
             'category_entity' => 'containers_categories',
-            'unit_category_default' => 2, // Масса
-            'unit_default' => 8, // Масса
+            'units_category_default' => 2,
+            'unit_default' => 8,
         ]);
     }
 

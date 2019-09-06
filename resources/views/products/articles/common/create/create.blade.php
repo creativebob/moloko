@@ -41,11 +41,11 @@
 				<div class="small-12 cell">
 					<div class="grid-x grid-margin-x" id="units-block">
 						<div class="small-12 medium-6 cell">
-							@include('includes.selects.units_categories', ['default' => $unit_category_default, 'type' => 'article'])
+							@include('includes.selects.units_categories', ['default' => $units_category_default, 'type' => 'article'])
 						</div>
 
 						<div class="small-12 medium-6 cell">
-							@include('includes.selects.units', ['default' => $unit_default, 'units_category_id' => $unit_category_default])
+							@include('includes.selects.units', ['default' => $unit_default, 'units_category_id' => $units_category_default])
 						</div>
 					</div>
 
@@ -105,10 +105,6 @@
 				{{ Form::checkbox('quickly', 1, null, ['id' => 'quickly', 'checked']) }}
 				<label for="quickly"><span>Быстрое добавление</span></label>
 			</div>
-
-			{{ Form::hidden('system', 0) }}
-
-			{{-- @include('includes.control.checkboxes', ['item' => $item]) --}}
 
 		</div>
 	</div>

@@ -106,16 +106,7 @@
               </label>
             </div>
             <div class="small-12 medium-6 cell">
-                <label class="input-icon">Введите город
-                  @php
-                $city_name = null;
-                $city_id = null;
-                if(isset($user->location->city->name)) {
-                $city_name = $user->location->city->name;
-                $city_id = $user->location->city->id;
-                }
-                @endphp
-                @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required' => true])
+              @include('system.common.includes.city_search', ['item' => $user, 'required' => true])
               </label>
             </div>
 

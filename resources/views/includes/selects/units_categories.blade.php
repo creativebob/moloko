@@ -1,12 +1,6 @@
-@php
-	if(!isset($name)){$name = 'units_category_id';};
-	if(!isset($id)){$id = 'select-units_categories';};
-	if(!isset($data)){$data = isset($default) ? $default : null;};
-@endphp
-
 <label>Величина
-	{{ Form::select($name, $units_categories->pluck('name', 'id'), $data, [
-		'id' => $id,
+	{{ Form::select($name ?? 'units_category_id', $units_categories->pluck('name', 'id'), $default ?? null, [
+		'id' => $id ?? 'select-units_categories',
 		'required',
 		(isset($disabled)) ? 'disabled' : '',
 	]

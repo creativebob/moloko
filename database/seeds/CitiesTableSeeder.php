@@ -15,29 +15,29 @@ class CitiesTableSeeder extends Seeder
         	[
 		        'name' => 'Иркутск',
                 'alias' => 'irkutsk',
-		        // 'area_id' => '',
 		        'region_id' => 1,
 		        'code' => 83952,
 		        'vk_external_id' => 57,
                 'system' => true,
+                'country_id' => 1
         	],
             [
                 'name' => 'Ангарск',
                 'alias' => 'angarsk',
-                // 'area_id' => '',
                 'region_id' => 1,
                 'code' => 83952,
                 'vk_external_id' => 19,
                 'system' => true,
+                'country_id' => 1
             ],
             [
                 'name' => 'Братск',
                 'alias' => 'bratsk',
-                // 'area_id' => '',
-                'region_id' => 1,
+                    'region_id' => 1,
                 'code' => 83952,
                 'vk_external_id' => 32,
                 'system' => true,
+                'country_id' => 1
             ],    
         ]);
     }

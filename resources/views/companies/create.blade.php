@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('inhead')
-  @include('includes.scripts.class.city_search')
   @include('includes.scripts.pickmeup-inhead')
 @endsection
 
@@ -21,7 +20,7 @@
 
 @section('content')
 
-  {{ Form::open(['url' => '/admin/companies', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+  {{ Form::open(['url' => '/admin/companies', 'data-abide', 'novalidate']) }}
     @include('companies.form', ['submitButtonText' => 'Добавить компанию', 'param' => ''])
   {{ Form::close() }}
 

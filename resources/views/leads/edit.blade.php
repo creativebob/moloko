@@ -2,7 +2,6 @@
 
 @section('inhead')
 @include('includes.scripts.pickmeup-inhead')
-@include('includes.scripts.class.city_search')
 @include('includes.scripts.class.digitfield')
 
 @endsection
@@ -27,7 +26,7 @@
 
 @section('content')
 
-{{ Form::model($lead, ['url' => '/admin/leads/'.$lead->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'id' => 'form-lead', 'files'=>'true']) }}
+{{ Form::model($lead, ['url' => '/admin/leads/'.$lead->id, 'data-abide', 'novalidate', 'id' => 'form-lead', 'files'=>'true']) }}
 
 {{ method_field('PATCH') }}
 

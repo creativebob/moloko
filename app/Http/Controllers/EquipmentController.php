@@ -168,11 +168,13 @@ class EquipmentController extends Controller
             return view('ajax_error', compact('ajax_error'));
         }
 
-        return view('products.articles.equipments.create', [
+        return view('products.articles.common.create.create', [
             'item' => new $this->class,
             'title' => 'Добавление оборудования',
             'entity' => $this->entity_alias,
             'category_entity' => 'equipments_categories',
+            'units_category_default' => 6,
+            'unit_default' => 32,
         ]);
     }
 

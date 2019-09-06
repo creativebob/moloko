@@ -121,11 +121,14 @@ class CompanyController extends Controller
         // Подключение политики
         $company = new Company;
         $user = new User;
+        $auth_user = Auth::user();
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        return view('companies.create', compact('company', 'user', 'page_info'));
+
+
+        return view('companies.create', compact('company', 'user', 'auth_user', 'page_info'));
     }
 
     public function store(CompanyRequest $request)

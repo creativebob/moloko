@@ -19,7 +19,7 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('citysearch-component', require('../components/system/CitySearchComponent.vue'));
+Vue.component('city-search-component', require('../components/system/CitySearchComponent.vue'));
 Vue.component('consignmentitemadd-component', require('../components/system/ConsignmentItemAddComponent.vue'));
 Vue.component('input-digit-component', require('../components/system/InputDigitComponent.vue'));
 Vue.component('dropzone-component', require('../components/system/DropzoneComponent.vue'));

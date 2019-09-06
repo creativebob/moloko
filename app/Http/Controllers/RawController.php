@@ -216,13 +216,13 @@ class RawController extends Controller
         //     }
         // }
 
-        return view('products.articles.raws.create', [
+        return view('products.articles.common.create.create', [
             'item' => new $this->class,
             'title' => 'Добавление сырья',
             'entity' => $this->entity_alias,
             'category_entity' => 'raws_categories',
-            'unit_category_default' => '2', // Масса
-            'unit_default' => '8', // Масса
+            'units_category_default' => 2,
+            'unit_default' => 8,
         ]);
     }
 

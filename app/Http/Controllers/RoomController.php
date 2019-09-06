@@ -183,6 +183,8 @@ class RoomController extends Controller
             'title' => 'Добавление помещения',
             'entity' => $this->entity_alias,
             'category_entity' => 'rooms_categories',
+            'units_category_default' => 6,
+            'unit_default' => 32,
         ]);
     }
 

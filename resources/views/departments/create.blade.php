@@ -47,6 +47,7 @@
          <div class="small-10 cell">
 
           {{-- Добавление города --}}
+{{--             @include('system.common.includes.city_search', ['item' => $department, 'required' => isset($parent_id) ? null : true])--}}
           @include('includes.scripts.class.city_search')
           @include('includes.inputs.city_search', ['city' => isset($department->location->city->name) ? $department->location->city : null, 'id' => 'cityForm', 'required' => isset($parent_id) ? null : true])
 

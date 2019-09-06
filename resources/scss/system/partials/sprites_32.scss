@@ -1,27 +1,17 @@
-// ----------------------------------------- Иконки ----------------------------------------------
-// Страница входа
-.icon-login {
-    background: url(img/login.svg) no-repeat;
-    // background-position: 0px 0px;
-}
-.icon-password {
-    background: url(img/password.svg) no-repeat;
-    // background-position: 0px -16px;
-}
-// Поиск города
-.icon-load {
-    background: url(img/loading.svg) no-repeat;
-    opacity: 0.5;
-}
-.icon-find-ok {
-    background-position: -16px -80px;
-    opacity: 1;
-}
-.icon-find-no {
-    background-position: -32px -80px;
-    opacity: 1;
-    cursor: pointer;
-    z-index: 50;
+// ------------------------------------------ Спрайты 32px --------------------------------------------
+
+.sprite {
+    display: inline-block;
+    vertical-align: middle;
+    width: 32px;
+    height: 32px;
+    background: url(sprites/sprite_menu.png) no-repeat;
+    transition: opacity ease 0.3s;
+
+    &:focus {
+        outline: none;
+    }
+
 }
 
 .icon-search {
@@ -31,13 +21,7 @@
 }
 
 
-// Расположение иконки в инпуте
-.one-icon-16 {
-    display: inline-block;
-    vertical-align: middle;
-    width: 16px;
-    height: 16px;
-}
+
 
 .icon-button{
     cursor: pointer;

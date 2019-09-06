@@ -57,7 +57,7 @@
                     </div>
                     <div class="small-12 medium-6 cell">
                         <label>Телефон
-                            @include('includes.inputs.phone', ['value' => isset($company->main_phone->phone) ? $company->main_phone->phone : null, 'name'=>'main_phone'])
+                            @include('includes.inputs.phone', ['value' => isset($company->main_phone->phone) ? $company->main_phone->phone : null, 'name'=>'main_phone', 'required' => true])
                         </label>
                     </div>
                     <div class="small-12 medium-6 cell" id="extra-phones">
@@ -77,8 +77,7 @@
                             @include('includes.inputs.email', ['value'=>$company->email, 'name'=>'email'])
                         </label>
                         {{-- Город --}}
-                        @include('includes.inputs.city_search', ['city' => isset($company->location->city->name) ? $company->location->city : null, 'id' => 'cityForm', 'required' => true])
-                        
+                        @include('system.common.includes.city_search', ['item' => $company, 'required' => true])
 
                     </div>
 
@@ -375,9 +374,9 @@
 
                 @if(!empty($user))
                 <!-- Блок дилера -->
-                <div class="small-12 medium-6 cell">
+                <div class="small-12 medium-3 cell">
                 </div>
-                <div class="small-12 medium-6 cell">
+                <div class="small-12 medium-9 cell">
                     <div class="small-12 large-6 cell">
                         <fieldset>
                             <legend>Директор (руководитель)</legend>
@@ -406,8 +405,12 @@
                                 <input type="hidden" name="user_country_id" value="1">
 
                                 <div class="small-12 medium-6 cell">
-                                    @php isset(Auth::user()->location->city->name) ? $city_default = Auth::user()->location->city : $city_default = null; @endphp
-                                    @include('includes.inputs.city_search', ['city' => isset($user->location->city->name) ? $user->location->city : $city_default, 'id' => 'cityForm2', 'required' => true, 'field_name' => 'user_city_id'])
+                                    @php
+
+                                    @endphp
+                                    @include('system.common.includes.city_search', ['item' => isset($user->location) ? $user : $auth_user, 'required' => true, 'name' => 'user_city_id'])
+{{--                                    @php isset(Auth::user()->location->city->name) ? $city_default = Auth::user()->location->city : $city_default = null; @endphp--}}
+{{--                                    @include('includes.inputs.city_search', ['city' => isset($user->location->city->name) ? $user->location->city : $city_default, 'id' => 'cityForm2', 'required' => true, 'field_name' => 'user_city_id'])--}}
                                 </div>
 
                                 <div class="small-12 medium-12 cell">

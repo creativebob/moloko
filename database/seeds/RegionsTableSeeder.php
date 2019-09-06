@@ -17,6 +17,7 @@ class RegionsTableSeeder extends Seeder
 		        'code' => 38,
 		        'vk_external_id' => 1127513,
                 'system' => true,
+                'country_id' => 1
      	    ],
         ]);
     }

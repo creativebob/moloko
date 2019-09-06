@@ -8577,20 +8577,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   src: url("./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf") format("truetype");
 }
 
-.sprite {
-  display: inline-block;
-  vertical-align: middle;
-  width: 32px;
-  height: 32px;
-  background: url(sprites/sprite_menu.png) no-repeat;
-  -webkit-transition: opacity ease 0.3s;
-  transition: opacity ease 0.3s;
-}
-
-.sprite:focus {
-  outline: none;
-}
-
 .sprite-16 {
   display: inline-block;
   vertical-align: middle;
@@ -8603,6 +8589,32 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
 
 .sprite-16:focus {
   outline: none;
+}
+
+.input-icon {
+  position: relative;
+}
+
+.input-icon .sprite-input-left {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 23px;
+  left: 8px;
+}
+
+.input-icon .sprite-input-right {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 23px;
+  right: 8px;
+  -webkit-transition: 0.5s ease opacity;
+  transition: 0.5s ease opacity;
 }
 
 .icon-login {
@@ -8618,21 +8630,16 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   opacity: 0.5;
 }
 
-.icon-find-ok {
+.icon-success {
   background-position: -16px -80px;
   opacity: 1;
 }
 
-.icon-find-no {
+.icon-error {
   background-position: -32px -80px;
   opacity: 1;
   cursor: pointer;
   z-index: 50;
-}
-
-.icon-search {
-  background: url(img/search.svg) no-repeat;
-  background-position: 0px -448px;
 }
 
 .one-icon-16 {
@@ -8640,6 +8647,25 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   vertical-align: middle;
   width: 16px;
   height: 16px;
+}
+
+.sprite {
+  display: inline-block;
+  vertical-align: middle;
+  width: 32px;
+  height: 32px;
+  background: url(sprites/sprite_menu.png) no-repeat;
+  -webkit-transition: opacity ease 0.3s;
+  transition: opacity ease 0.3s;
+}
+
+.sprite:focus {
+  outline: none;
+}
+
+.icon-search {
+  background: url(img/search.svg) no-repeat;
+  background-position: 0px -448px;
 }
 
 .icon-button {
@@ -9995,28 +10021,6 @@ span.wrap-label-checkboxer {
 #cke_content-ckeditor {
   margin-top: 0.25rem;
   border: 1px solid #999999;
-}
-
-.sprite-input-left {
-  display: inline-block;
-  vertical-align: middle;
-  width: 16px;
-  height: 16px;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.sprite-input-right {
-  display: inline-block;
-  vertical-align: middle;
-  width: 16px;
-  height: 16px;
-  position: absolute;
-  top: 23px;
-  right: 8px;
-  -webkit-transition: 0.5s ease opacity;
-  transition: 0.5s ease opacity;
 }
 
 .item-error {

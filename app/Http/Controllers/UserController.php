@@ -41,7 +41,7 @@ class UserController extends Controller
 {
 
     // Сущность над которой производит операции контроллер
-    protected $entity_name = 'users';
+    protected $entity_alias = 'users';
     protected $entity_dependence = true;
 
     use UserControllerTrait;
@@ -50,7 +50,7 @@ class UserController extends Controller
     {
 
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_name);
+        $filter_url = autoFilter($request, $this->entity_alias);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         $user_auth = $request->user();
@@ -59,7 +59,7 @@ class UserController extends Controller
         $this->authorize(getmethod(__FUNCTION__), User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
         // dd($answer);
 
         // --------------------------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ class UserController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             'city',                 // Город
             'user_type',            // Свой - чужой
             'access_block',         // Доступ
@@ -96,7 +96,7 @@ class UserController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         return view('users.index', compact('users', 'page_info', 'filter'));
     }
@@ -110,14 +110,16 @@ class UserController extends Controller
         $this->authorize(__FUNCTION__, User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $user = new User;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
-        return view('users.create', compact('user', 'page_info'));
+        $auth_user = Auth::user();
+
+        return view('users.create', compact('user', 'auth_user', 'page_info'));
     }
 
     public function store(UserStoreRequest $request)
@@ -127,7 +129,7 @@ class UserController extends Controller
         $this->authorize(getmethod(__FUNCTION__), User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
         // Отдаем работу по созданию нового юзера трейту
@@ -147,14 +149,13 @@ class UserController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $user = User::with(
-            'location.city',
+        $user = User::with([
             'photo',
             'main_phones',
-            'extra_phones')
+            'extra_phones'])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -167,7 +168,7 @@ class UserController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $user);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         return view('users.edit', compact('user', 'page_info'));
     }
@@ -182,7 +183,7 @@ class UserController extends Controller
         $company_id = $user_auth->company_id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::with('location', 'company', 'photo')
@@ -215,7 +216,7 @@ class UserController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::moderatorLimit($answer)
@@ -300,7 +301,7 @@ class UserController extends Controller
         $id = Auth::user()->id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $user = User::with('location.city', 'roles', 'role_user', 'role_user.role', 'role_user.position', 'role_user.department', 'photo', 'staff.position.notifications')->findOrFail($id);
@@ -329,7 +330,7 @@ class UserController extends Controller
         $countries_list = Country::get()->pluck('name', 'id');
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
         // dd($user);
 
         return view('users.myprofile', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list'));
@@ -348,7 +349,7 @@ class UserController extends Controller
         $company_id = $user_auth->company_id;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        // $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        // $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $user = $user_auth;
@@ -405,7 +406,7 @@ class UserController extends Controller
 
             // Начинаем проверку настроек, от компании до альбома
             // Смотрим общие настройки для сущности
-            $get_settings = PhotoSetting::where(['entity' => $this->entity_name])->first();
+            $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
 
             if($get_settings){
 

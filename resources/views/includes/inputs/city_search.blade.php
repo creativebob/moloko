@@ -1,14 +1,14 @@
 @php
-$id = isset($id) ? $id : '';
-$city_name = isset($city) ? $city->name : null;
-$city_id = isset($city) ? $city->id : null;
-$field_name = isset($field_name) ? $field_name : 'city_id';
+    $id = isset($id) ? $id : '';
+    $city_name = isset($city) ? $city->name : null;
+    $city_id = isset($city) ? $city->id : null;
+    $field_name = isset($field_name) ? $field_name : 'city_id';
 @endphp
 
 <label id="{{ $id }}" class="city-input-parent">Город
 
-	{{-- Город --}}
-	{{ Form::text('city_name', $city_name, [
+    {{-- Город --}}
+    {{ Form::text('city_name', $city_name, [
         'class' => 'varchar-field city_check-field',
         'maxlength' => '30',
         'autocomplete' => 'off',
@@ -26,20 +26,20 @@ $field_name = isset($field_name) ? $field_name : 'city_id';
 
 <script type="application/javascript">
 
-	{{ $id }} = new CitySearch("{{ $id }}");
+    {{ $id }} = new CitySearch("{{ $id }}");
 
-	// При добавлении филиала ищем город в нашей базе
-	$(document).on('keyup', '#{{ $id }} .city_check-field', function() {
-		{{ $id }}.find(this);
-	});
+    // При добавлении филиала ищем город в нашей базе
+    $(document).on('keyup', '#{{ $id }} .city_check-field', function() {
+        {{ $id }}.find(this);
+    });
 
-	// При клике на город в модальном окне добавления филиала заполняем инпуты
-	$(document).on('click', '#{{ $id }} .city-add', function() {
-		{{ $id }}.fill(this);
-	});
+    // При клике на город в модальном окне добавления филиала заполняем инпуты
+    $(document).on('click', '#{{ $id }} .city-add', function() {
+        {{ $id }}.fill(this);
+    });
 
-	$(document).on('click', '#{{ $id }} .icon-find-no', function() {
-		{{ $id }}.clear(this);
-	});
+    $(document).on('click', '#{{ $id }} .icon-find-no', function() {
+        {{ $id }}.clear(this);
+    });
 
 </script>

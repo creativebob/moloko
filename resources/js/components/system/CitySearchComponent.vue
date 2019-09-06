@@ -1,58 +1,58 @@
 <template>
     <div>
-        <label id="" class="city-input-parent input-icon">Город
+        <label id="" class="input-icon">Город
             <input
                 type="text"
                 name="city_name"
-                v-model="name"
+                v-model="text"
+                @input="reset"
                 maxlength="30"
                 autocomplete="off"
                 pattern="[А-Яа-яЁё0-9-_\s]{3,30}"
-                required
+                :required="required"
             >
+
+            <div
+                    class="sprite-input-right"
+                    :class="searchStatus"
+                    @click="clear"
+            >
+            </div>
+            <span class="form-error">Уж постарайтесь, введите город!</span>
+
         </label>
 
-        <div
-                class="sprite-input-right find-status city-check sprite-16"
-                :class="{ 'icon-find-ok' : find, 'icon-find-no' : error, 'icon-load' : load}"
-                @click="clear"
-        >
-        </div>
-
-        <span class="form-error">Уж постарайтесь, введите город!</span>
         <input
                 type="hidden"
-                name="city_id"
+                :name="name"
                 v-model="id"
                 maxlength="3"
                 pattern="[0-9]{3}"
         >
 
-        <table v-show="this.id == null && this.name.length > 2" class="content-table-search table-over">
+        <table class="content-table-search table-over">
             <tbody>
 
-            <template v-if="results.length > 0">
-                <tr v-for="result in results">
-                    <td>
-                        <a @click="add(result.id, result.name)">{{ result.name }}</a>
-                    </td>
-                    <td>
-                        <a v-if="(result.area != null)" @click="add(result.id, result.name)">{{ result.area.name }}</a>
-                    </td>
-                    <td>
-                        <a @click="add(result.id, result.name)">{{ result.region.name }}</a>
-                    </td>
-                    <td>
-                        <a @click="add(result.id, result.name)">{{ result.country.name }}</a>
-                    </td>
-                </tr>
-            </template>
+                <template v-if=searchTable>
+                    <tr v-for="(result, index) in results">
+                        <td>
+                            <a @click="add(index)">{{ result.name }}</a>
+                        </td>
+                        <td>
+                            <a v-if="(result.area != null)" @click="add(index)">{{ result.area.name }}</a>
+                        </td>
+                        <td>
+                            <a @click="add(index)">{{ result.region.name }}</a>
+                        </td>
+                        <td>
+                            <a @click="add(index)">{{ result.country.name }}</a>
+                        </td>
+                    </tr>
+                </template>
 
-            <template v-else>
-                <tr class="no-city">
+                <tr v-if=errorTable class="no-city">
                     <td>Населенный пункт не найден в базе данных, <a href="/admin/cities" target="_blank">добавьте его!</a></td>
                 </tr>
-            </template>
 
             </tbody>
         </table>
@@ -61,77 +61,104 @@
 </template>
 
 <script>
-    import _ from 'lodash'
-
     export default {
-        mounted() {
-            console.log('CitySearchComponent mounted.')
-        },
         props: {
             city: {
                 type: Object,
                 default: function(){
-                    return  {
+                    return {
                         id: null,
                         name: null
                     }
                 }
+            },
+            cities: {
+                type: Array
+            },
+            required: {
+                type: Boolean,
+                default: false
+            },
+            name: {
+                type: String,
+                default: 'city_id'
             }
         },
         data() {
             return {
                 id: this.city.id,
-                name: this.city.name,
+                text: this.city.name,
                 results: [],
-                find: (this.city.id != null) ? true : false,
-                error: false,
-                load: false
+                search: false,
+                found: (this.city.id != null) ? true : false,
+                error: false
             };
         },
-        watch: {
-            name: _.debounce(function () {
-                if (this.name.length > 2) {
-                    // this.results = [];
-                    // this.findNo = false;
-                    // this.findOk = false;
-                    // this.id = null;
-                    this.load = true;
-                    this.check();
-                } else {
-                    this.id = null;
-                    this.results = [];
-                    // this.findNo = false;
-                    // this.findOk = false;
+        computed: {
+            searchStatus() {
+                let result;
+
+                if (this.found) {
+                    result = 'sprite-16 icon-success'
                 }
-            }, 300)
+                if (this.error) {
+                    result = 'sprite-16 icon-error'
+                }
+                return result;
+            },
+            searchTable() {
+                return this.search
+            },
+            errorTable() {
+                return this.error
+            }
         },
-
         methods: {
-
             check() {
-                axios.get('/api/v1/cities_list', {
-                    params: {
-                        name: this.name
+                // console.log('Ищем введеные данные в наших городах (подгруженных), затем от результата меняем состояние на поиск или ошибку');
+                let obj = this.cities;
+                const search = this.text.toLowerCase();
+                for (var item in obj) {
+                    let el = obj[item]
+                    if (el.name.toLowerCase().includes(search)) {
+                        this.results.push(el);
                     }
-                })
-                .then(response => this.results = response.data)
-                    .then(this.load = false)
-                .catch(function (error) {
-                    console.log(error);
-                });
+                }
+
+                this.search = (this.results.length > 0)
+                this.error = (this.results.length == 0)
 
             },
-            add(id, name) {
-                this.id = id;
-                this.name = name;
-                this.results = [];
-                this.find = true;
+            add(index) {
+                // console.log('Клик по пришедшим данным, добавляем в инпут');
+                this.id = this.results[index].id;
+                this.text = this.results[index].name;
+                this.found = true;
+                this.error = false;
+                this.search = false;
+
             },
             clear() {
+                if (this.error) {
+                    // console.log('Клик по иконке ошибки на инпуте, обнуляем');
+                    this.text = '';
+                    this.id = null;
+                    this.found = false;
+                    this.error = false;
+                    this.results = [];
+                }
+            },
+            reset() {
+                // console.log('Изменение в инпуте, обнуляем все кроме имени, и если символов больше 2х начинаем поиск');
                 this.id = null;
-                this.name = '';
-                this.find = false;
+                this.found = false;
                 this.error = false;
+                this.search = false;
+                this.results = [];
+
+                if (this.text.length > 2) {
+                    this.check();
+                }
             }
         }
     }

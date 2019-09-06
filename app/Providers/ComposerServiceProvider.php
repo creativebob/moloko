@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\ViewComposers\System\AccountsComposer;
+use App\Http\ViewComposers\System\CitySearchComposer;
 use App\Http\ViewComposers\System\ContainersCategoriesComposer;
 use App\Http\ViewComposers\System\ContainersComposer;
 use Illuminate\Support\Facades\View;
@@ -120,6 +121,7 @@ class ComposerServiceProvider extends ServiceProvider
 
     public function boot()
     {
+
         view()->composer('layouts.sidebar', SidebarComposer::class);
         view()->composer('includes.selects.sectors_select', SectorsSelectComposer::class);
 
@@ -141,6 +143,11 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.inputs.checker', CheckerComposer::class);
 
         view()->composer('includes.selects.loyalties', LoyaltiesComposer::class);
+
+        view()->composer([
+            'system.common.includes.city_search',
+            'test'
+        ], CitySearchComposer::class);
 
         view()->composer([
             'includes.inputs.checker_contragents',

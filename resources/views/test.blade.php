@@ -4,8 +4,7 @@
 <div class="grid-x">
     <div class="small-4 cell">
 
-
-        <citysearch-component :city="{{ $city }}"></citysearch-component>
+        @include('system.common.includes.city_search')
     </div>
 
 </div>

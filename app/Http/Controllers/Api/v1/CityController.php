@@ -79,18 +79,12 @@ class CityController extends Controller
     public function cities_list(Request $request)
     {
 
-        // Подключение политики
-//        $this->authorize('index', $this->class);
-
-//        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'index');
-
-        // Проверка города в нашей базе данных
+        // Поиск города в нашей базе данных
         $cities = City::with([
             'area:id,name',
             'region:id,name',
             'country:id,name'
         ])
-//            ->moderatorLimit($answer)
             ->where('name', 'like', $request->name.'%')
             ->get([
                 'id',

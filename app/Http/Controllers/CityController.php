@@ -360,9 +360,16 @@ class CityController extends Controller
 
     public function test()
     {
-        $city = City::first();
-//        dd(json_encode($city));
+        $city = City::
+//        where('name', 'тет')
+//        ->
+        first([
+            'id',
+            'name'
+        ]);
+//        dd($city);
 
-        return view('test', compact('city'));
+        $location = null;
+        return view('test', compact('location'));
     }
 }

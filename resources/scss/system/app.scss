@@ -29,10 +29,8 @@
 @import "partials/fonts";
 
 // ----------------------- Спрайты ----------------------------------------------
-@import "partials/sprites";
-
-// ----------------------- Иконки ----------------------------------------------
-@import "partials/icons";
+@import "partials/sprites_16";
+@import "partials/sprites_32";
 
 // ------------------------ Сайдбар -------------------------------------
 @import "partials/sidebar";
@@ -1082,29 +1080,7 @@ span.wrap-label-checkboxer {
     border: 1px solid #999999;
 }
 
-// Расположение иконки в инпуте
-.sprite-input-left {
-    display: inline-block;
-    vertical-align: middle;
-    width: 16px;
-    height: 16px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    // opacity: 0.5;
-}
 
-.sprite-input-right {
-    display: inline-block;
-    vertical-align: middle;
-    width: 16px;
-    height: 16px;
-    position: absolute;
-    top: 23px;
-    right: 8px;
-    // opacity: 0.5;
-    transition: 0.5s ease opacity;
-}
 
 .item-error {
     padding-bottom: 1rem;

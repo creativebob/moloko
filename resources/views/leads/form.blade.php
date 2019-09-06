@@ -33,7 +33,7 @@
                     </div>
 
                     <div class="small-6 medium-6 large-6 cell">
-                        @include('includes.inputs.city_search', ['city' => isset($lead->location->city->name) ? $lead->location->city : null, 'id' => 'cityForm', 'required' => true])
+                        @include('system.common.includes.city_search', ['item' => $lead, 'required' => true])
                     </div>
                     <div class="small-6 medium-6 cell">
                         <label>Адрес

@@ -1,0 +1,88 @@
+// ------------------------------------------ Спрайты 16px --------------------------------------------
+
+.sprite-16 {
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    background: url(sprites/sprite_16.png) no-repeat;
+    transition: opacity ease 0.3s;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+// Расположение иконки в инпуте
+.input-icon {
+    position: relative;
+
+    .sprite-input-left {
+        display: inline-block;
+        vertical-align: middle;
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        top: 23px;
+        left: 8px;
+        // opacity: 0.5;
+    }
+
+    .sprite-input-right {
+        display: inline-block;
+        vertical-align: middle;
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        top: 23px;
+        right: 8px;
+        // opacity: 0.5;
+        transition: 0.5s ease opacity;
+    }
+}
+
+// Страница входа
+.icon-login {
+    background: url(img/login.svg) no-repeat;
+    // background-position: 0px 0px;
+}
+.icon-password {
+    background: url(img/password.svg) no-repeat;
+    // background-position: 0px -16px;
+}
+
+// Поиск города
+.icon-load {
+    background: url(img/loading.svg) no-repeat;
+    opacity: 0.5;
+}
+
+.icon-success {
+    background-position: -16px -80px;
+    opacity: 1;
+}
+.icon-error {
+    background-position: -32px -80px;
+    opacity: 1;
+    cursor: pointer;
+    z-index: 50;
+}
+
+//.icon-found {
+//    background-position: -16px -80px;
+//    opacity: 1;
+//}
+//.icon-find-no {
+//    background-position: -32px -80px;
+//    opacity: 1;
+//    cursor: pointer;
+//    z-index: 50;
+//}
+
+// Расположение иконки в инпуте
+.one-icon-16 {
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+}
