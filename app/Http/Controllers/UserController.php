@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Traits\UserControllerTrait;
 
+
+
 class UserController extends Controller
 {
 
