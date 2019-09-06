@@ -6,7 +6,7 @@
         </div>
     </div>
 
-    {{ Form::open(['id' => 'form-add']) }}
+    {{ Form::open(['id' => 'form-add', 'route' => 'cities.store']) }}
 
     <div class="grid-x grid-padding-x modal-content inputs">
         <div class="small-10 medium-4 cell">
