@@ -83,6 +83,7 @@ class CompanyController extends Controller
 
         $companies = Company::with('author', 'location.city', 'sector', 'we_suppliers', 'we_manufacturers', 'we_clients', 'main_phones', 'legal_form', 'director')
         ->companiesLimit($answer)
+        ->orWhere('id', $user->company_id)
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)

@@ -60,6 +60,48 @@ class AppController extends Controller
         }
     }
 
+
+    // Метод динамического формирования страницы
+    public function dynamic_pages(Request $request, $page_alias)
+    {
+
+        if (is_null($this->site)) {
+
+            return view('project.pages.mains.main');
+
+        } else {
+
+            $site = $this->site;
+
+            // Ищим в базе страницу с алиасом
+            $page = $site->pages_public
+                ->where('alias', $page_alias)
+                ->first();
+
+            // Если не существует страницы с таким алиасом - отдаем 404
+            if(!isset($page)){
+
+                abort(404, "Страница не найдена");
+            }
+
+            // Формируем путь до view которая предположительно должна существовать
+            $path_view = $site->alias . '/pages/' . $page_alias . '/index';
+
+            // Проверяем существование файла view по сформирванному пути
+            if(view()->exists($path_view)){
+
+                // Нашли - отправляем пользователя туда
+                return view($site->alias.'.pages.' . $page_alias . '.index', compact('site','page'));  
+
+            } else {
+
+                // Не нашли. Но нет повода для печали, отправляем на общий шаблон
+                return view($site->alias.'.pages.common.index', compact('site','page'));
+            }
+        }
+    }
+
+
     public function catalogs_goods(Request $request, $catalog_slug, $catalog_item_slug)
     {
 
