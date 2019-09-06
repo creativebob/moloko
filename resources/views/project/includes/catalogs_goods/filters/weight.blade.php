@@ -18,8 +18,8 @@
 				data-slider
 				data-initial-start="{{ isset($request->weight) ? $request->weight['min'] : $weight['min'] }}"
 				data-initial-end="{{ isset($request->weight) ? $request->weight['max'] : $weight['max'] }}"
-				data-start="{{ $weight['min'] }}"
-				data-end="{{ ($weight['max'] == $weight['min']) ? $weight['max'] + 1 : $weight['max'] }}"
+				data-start="{{ ($weight['max'] == $weight['min']) ? $weight['min'] - 1 : $weight['min'] }}"
+				data-end="{{ $weight['max'] }}"
 				{{-- data-step="{{ $weight['step'] }}" --}}
 		>
 			<span class="slider-handle" data-slider-handle role="slider" tabindex="1" aria-controls="sliderOutput3"></span>

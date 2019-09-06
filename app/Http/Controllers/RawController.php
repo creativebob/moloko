@@ -246,7 +246,14 @@ class RawController extends Controller
             $data['price_unit_category_id'] = $data['units_category_id'];
             $data['price_unit_id'] = $data['unit_id'];
 
+
             $raw = (new Raw())->create($data);
+
+            $raw->portion_goods_status = $request->portion_goods_status ?? 0;
+            $raw->portion_goods_abbreviation = $request->portion_goods_abbreviation;
+            $raw->unit_portion_goods_id = $request->unit_portion_goods_id;
+            $raw->portion_goods_count = $request->portion_goods_count;
+            $raw->save();
 
             if ($raw) {
 
@@ -356,7 +363,6 @@ class RawController extends Controller
 
             $raw->portion_goods_status = $request->portion_goods_status ?? 0;
             $raw->portion_goods_abbreviation = $request->portion_goods_abbreviation;
-            // $raw->portion_goods_name = $request->portion_goods_name;
             $raw->unit_portion_goods_id = $request->unit_portion_goods_id;
             $raw->portion_goods_count = $request->portion_goods_count;                       
 

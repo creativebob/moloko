@@ -18,8 +18,8 @@
                 data-slider
 				data-initial-start="{{ isset($request->price) ? $request->price['min'] : $price['min'] }}"
                 data-initial-end="{{ isset($request->price) ? $request->price['max'] : $price['max'] }}"
-                data-start="{{ $price['min'] }}"
-                data-end="{{ ($price['max'] == $price['min']) ? $price['max'] + 1 : $price['max'] }}"
+                data-start="{{ ($price['max'] == $price['min']) ? $price['min'] - 1 : $price['min'] }}"
+                data-end="{{ $price['max'] }}"
                 {{-- data-step="{{ $price['step'] }}" --}}
         >
 			<span class="slider-handle" data-slider-handle role="slider" tabindex="1" aria-controls="sliderOutput1"></span>
