@@ -1,7 +1,8 @@
 <?php
-	
+
 namespace App\Http\Controllers\Project;
-	
+
+use Telegram;
 use App\CatalogsGoodsItem;
 use App\Estimate;
 use App\EstimatesItem;
@@ -12,7 +13,8 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cookie;
-use Telegram;
+
+use Illuminate\Support\Facades\Auth;
 
 // Подрубаем трейт записи и обновления
 use App\Http\Controllers\Traits\UserControllerTrait;
@@ -23,7 +25,7 @@ class AppController extends Controller
 
     use UserControllerTrait;
     use LeadControllerTrait;
-    
+
     // Настройки контроллера
     public function __construct(Request $request)
     {
@@ -47,6 +49,8 @@ class AppController extends Controller
         if (is_null($this->site)) {
             return view('project.pages.mains.main');
         } else {
+
+            return redirect('catalogs-goods/tovary-dlya-sayta/tekstil');
             $site = $this->site;
             $page = $site->pages_public
                 ->where('alias', 'main')
@@ -154,13 +158,15 @@ class AppController extends Controller
         $page = $site->pages_public->where('alias', 'prices-goods')->first();
 
         $price_goods = PricesGoods::with([
-            'goods_public'
+            'goods_public.article.raws'
         ])
             ->where([
                 'id' => $id,
                 'display' => true
             ])
             ->first();
+
+        // dd($price_goods->goods_public->article->containers);
 
         $page->title = $price_goods->goods_public->article->name;
 
@@ -169,6 +175,7 @@ class AppController extends Controller
 
     public function goods_composition(Request $request, $id)
     {
+
         $site = $this->site;
         $price_goods = PricesGoods::with([
             'goods_public'
@@ -182,15 +189,13 @@ class AppController extends Controller
         return view($site->alias.'.pages.prices_goods.goods_composition', compact('site', 'price_goods'));
     }
 
-
-
-
     public function cart(Request $request)
     {
 
         if (Cookie::has('cart')) {
             $cart = json_decode(Cookie::get('cart'), true);
-            // dd($cart);
+
+           // dd($cart);
 
 
             // $cart_test = json_decode(Cookie::get('cart_test'), true);
@@ -212,11 +217,9 @@ class AppController extends Controller
             $prices_goods = collect($prices_goods);
         }
 
+        $prices_goods = $prices_goods->toArray();
+        $prices_goods = collect($prices_goods);
 
-//        $flattened = $prices_goods->flatten();
-//        $flattened->all();
-//        $prices_goods = $flattened->toArray();
-//        $prices_goods = collect($prices_goods);
 
         // dd($prices_goods);
 
@@ -224,6 +227,19 @@ class AppController extends Controller
         $page = $site->pages_public->firstWhere('alias', 'cart');
         return view($site->alias.'.pages.cart.index', compact('site', 'page', 'prices_goods'));
     }
+
+    // Личный кабинет пользователя
+    public function cabinet(Request $request)
+    {
+
+        $estimates = null;
+
+        $site = $this->site;
+        $page = $site->pages_public->firstWhere('alias', 'cabinet');
+
+        return view($site->alias.'.pages.cabinet.index', compact('site', 'page', 'estimates'));
+    }
+
 
     public function add_cart(Request $request)
     {
@@ -257,12 +273,50 @@ class AppController extends Controller
             $cart['count'] = $count;
             $cart['sum'] = $price_goods->price * $count;
         }
-//        dd($cart);
+       // dd($cart);
 
         Cookie::queue(Cookie::forever('cart', json_encode($cart)));
 
         $site = $this->site;
         return view($site->alias.'.layouts.headers.includes.cart', compact('cart'));
+    }
+
+    // Авторизация пользоваеля сайта через телефон и код СМС
+    public function site_user_login(Request $request)
+    {
+
+        $access_code = $request->access_code;
+        $main_phone = $request->main_phone;
+
+        // Получаем пользователя, который чужой
+
+        $user = check_user_by_phones($main_phone);
+
+        if($user != null){
+
+            if(($user->user_type == false) && ($user->access_code == $access_code) && ($user->access_block == false)){
+
+                // dd('Привет, ' . $user->name);
+                Auth::loginUsingId($user->id);
+                return redirect()->route('project.start');
+
+            } else {
+
+                dd('Факью, спилберг!!!');
+            }
+
+        } else {
+
+            dd('Сорян, мы не в курсе кто вы такие!');
+        }
+
+
+    }
+
+    public function logout_siteuser(Request $request)
+    {
+        Auth::logout();
+        return redirect()->route('project.start');
     }
 
     public function add_to_cart(Request $request)
@@ -307,8 +361,10 @@ class AppController extends Controller
 
     public function cart_store(Request $request)
     {
-//         dd($request);
+
         if ($request->personal_data) {
+
+            $lead = new Lead;
 
             $cart = json_decode(Cookie::get('cart'), true);
             $badget = $cart['sum'];
@@ -321,16 +377,6 @@ class AppController extends Controller
             $name = $request->name;
             $phone = $request->main_phone;
 
-            $lead = new Lead;
-            $lead->filial_id = $filial_id;
-            $lead->name = $name;
-            $lead->stage_id = 2;
-            $lead->lead_method_id = 2;
-            $lead->badget = $badget;
-            $lead->draft = NULL;
-            $lead->author_id = 1;
-            $lead->company_id = $company_id;
-            $lead->moderation = false;
 
     //        $choiceFromTag = getChoiceFromTag($request->choice_tag);
     //        $lead->choice_type = $choiceFromTag['type'];
@@ -338,8 +384,25 @@ class AppController extends Controller
 
             // Работаем с ПОЛЬЗОВАТЕЛЕМ лида ================================================================
 
-            // Проверяем, есть ли в базе телефонов пользователь с таким номером
-            $user_for_lead = check_user_by_phones($request->main_phone);
+            // Если пришел ID пользователя
+            if($request->user_id != null){
+
+                // Получаем пользователя
+                $user_for_lead = User::findOrFail($request->user_id);
+
+                // Готовим даные для лида
+                if($user_for_lead){
+
+                    $name = $user_for_lead->name;
+                    $request->main_phone = $user_for_lead->main_phone->phone;
+                }
+
+            } else {
+
+                // Проверяем, есть ли в базе телефонов пользователь с таким номером
+                $user_for_lead = check_user_by_phones($request->main_phone);
+            }
+
             if ($user_for_lead != null) {
 
                 // Если есть: записываем в лида ID найденного в системе пользователя
@@ -349,7 +412,8 @@ class AppController extends Controller
 
                 // Если нет: создаем нового пользователя по номеру телефона
                 // используя трейт экспресс создание пользователя
-                $user_for_lead = $this->createUserByPhone($request->main_phone);
+                $user_for_lead = $this->createUserByPhone($request->main_phone, null, $site->company);
+                sendSms('79041248598', 'Данные для входа: ' . $user_for_lead->access_code);
 
                 // dd($user_for_lead);
 
@@ -380,7 +444,19 @@ class AppController extends Controller
 
             // Конец работы с ПОЛЬЗОВАТЕЛЕМ лида ==============================================================
 
+            $lead->filial_id = $filial_id;
+            $lead->name = $name;
+            $lead->stage_id = 2;
+            $lead->lead_method_id = 2;
+            $lead->badget = $badget;
+            $lead->draft = NULL;
+            $lead->author_id = 1;
+            $lead->company_id = $company_id;
+            $lead->moderation = false;
 
+            if($user_for_lead->client){
+                $lead->client_id = $user_for_lead->client->id;
+            };
 
             // if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
             //     $lead->extra_phone = cleanPhone($request->extra_phone);
