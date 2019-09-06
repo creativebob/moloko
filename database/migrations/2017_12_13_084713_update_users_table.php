@@ -49,7 +49,9 @@ class UpdateUsersTable extends Migration
             $table->boolean('user_type')->default(0)->comment('Свой 1 или Чужой 0')->after('liter');
             $table->boolean('access_block')->default(1)->comment('Доступ открыт 0 или Блокирован 1')->default('0')->after('user_type');
 
-            $table->bigInteger('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('access_block');
+            $table->integer('access_code')->nullable()->unsigned()->comment('Код доступа')->after('access_block');
+
+            $table->bigInteger('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('access_code');
             $table->bigInteger('filial_id')->nullable()->unsigned()->comment('ID филиала компании')->after('company_id');
 
             $table->integer('god')->nullable()->unsigned()->comment('Божественное право')->default(null)->after('company_id');
@@ -103,6 +105,7 @@ class UpdateUsersTable extends Migration
 
             $table->dropColumn('user_type');
             $table->dropColumn('access_block');
+            $table->dropColumn('access_code'); 
             $table->dropColumn('god');
             $table->dropColumn('moderation');
             // $table->dropColumn('sort');

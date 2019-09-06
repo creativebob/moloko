@@ -50,6 +50,7 @@ trait UserControllerTrait
 
         // Пароль:
         $user->password = bcrypt($request->password);
+        $user->access_code = rand(1000, 9999);
         $user->nickname = $request->nickname;
 
         // Блокировка доступа
@@ -156,6 +157,7 @@ trait UserControllerTrait
         $user = new User;
         $user->login = 'user_'.$user_number;
         $user->password = bcrypt(str_random(12));
+        $user->access_code = rand(1000, 9999);
 
         if($request != null){
 
