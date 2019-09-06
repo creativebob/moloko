@@ -413,7 +413,7 @@ class AppController extends Controller
                 // Если нет: создаем нового пользователя по номеру телефона
                 // используя трейт экспресс создание пользователя
                 $user_for_lead = $this->createUserByPhone($request->main_phone, null, $site->company);
-                sendSms('79041248598', 'Данные для входа: ' . $user_for_lead->access_code);
+                // sendSms('79041248598', 'Данные для входа: ' . $user_for_lead->access_code);
 
                 // dd($user_for_lead);
 
