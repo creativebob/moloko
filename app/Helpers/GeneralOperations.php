@@ -159,6 +159,8 @@ function yandexGeocoder ($location) {
         // Если у локация не определялась, т.е. у нее не вписано количество ответов
         if ($location->answer_count == null) {
 
+//            dd($location);
+
             // Формируем запрос в Яндекс Карты
             $request_params = [
                 'geocode' => $location->city->name . ', ' .$location->address,
@@ -254,6 +256,7 @@ function create_location($request, $country_id = null, $city_id = null, $address
         ]);
 
         yandexGeocoder($location);
+//        dd($location);
 
         $location_id = $location->id;
         return $location_id;
@@ -264,7 +267,6 @@ function create_location($request, $country_id = null, $city_id = null, $address
 
     // Обновляем локацию
         $item_location = $item->location;
-
     // Проверяем страну, так как ее мы пока не выбираем
         if (isset($request->country_id)) {
             $country_id = ($item_location->country_id != $request->country_id) ? $request->country_id : $item_location->country_id;
@@ -281,7 +283,17 @@ function create_location($request, $country_id = null, $city_id = null, $address
         $user_id = hideGod($request->user());
 
     // Ищем или создаем локацию
-        $location = Location::with('city')->firstOrCreate(compact('country_id', 'city_id', 'address', 'zip_code'), ['author_id' => $user_id]);
+        $location = Location::with('city')
+            ->firstOrCreate(compact(
+                'country_id',
+                'city_id',
+                'address',
+                'zip_code'
+            ), [
+                'author_id' => $user_id
+            ]);
+
+//        dd($location);
 
     // Если пришла другая локация, то переписываем
         if ($item->location_id != $location->id) {

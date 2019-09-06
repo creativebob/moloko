@@ -304,7 +304,7 @@ class LeadController extends Controller
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
     {
-
+//        dd($request);
         // Получаем авторизованного пользователя
         $user = $request->user();
 
