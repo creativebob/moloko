@@ -10,6 +10,7 @@
                 autocomplete="off"
                 pattern="[А-Яа-яЁё0-9-_\s]{3,30}"
                 :required="required"
+                v-on:keydown.enter.prevent="onEnter"
             >
 
             <div
@@ -158,6 +159,11 @@
 
                 if (this.text.length > 2) {
                     this.check();
+                }
+            },
+            onEnter() {
+                if (this.results.length == 1) {
+                    this.add(0);
                 }
             }
         }

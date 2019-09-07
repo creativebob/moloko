@@ -6,6 +6,7 @@ use App\Http\ViewComposers\Project\CartComposer;
 use App\Http\ViewComposers\Project\DepartmentsComposer;
 use App\Http\ViewComposers\Project\CatalogsServiceComposer;
 use App\Http\ViewComposers\Project\CatalogsGoodsComposer;
+use App\Http\ViewComposers\Project\FilialComposer;
 use App\Http\ViewComposers\Project\NavigationsComposer;
 use App\Http\ViewComposers\Project\PricesGoodsPriceFilterComposer;
 use App\Http\ViewComposers\Project\PricesGoodsRawsArticlesGroupsFilterComposer;
@@ -63,6 +64,7 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 view()->composer('project.includes.catalogs_goods.filters.raws_articles_groups', PricesGoodsRawsArticlesGroupsFilterComposer::class);
 
                 view()->composer($alias. '.layouts.headers.includes.cart', CartComposer::class);
+	            view()->composer($alias. '.pages.contacts.index', FilialComposer::class);
             }
         }
     }

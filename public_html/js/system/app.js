@@ -38248,6 +38248,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -38346,6 +38347,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (this.text.length > 2) {
                 this.check();
             }
+        },
+        onEnter: function onEnter() {
+            if (this.results.length == 1) {
+                this.add(0);
+            }
         }
     }
 });
@@ -38388,7 +38394,17 @@ var render = function() {
               _vm.text = $event.target.value
             },
             _vm.reset
-          ]
+          ],
+          keydown: function($event) {
+            if (
+              !$event.type.indexOf("key") &&
+              _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+            ) {
+              return null
+            }
+            $event.preventDefault()
+            return _vm.onEnter($event)
+          }
         }
       }),
       _vm._v(" "),
