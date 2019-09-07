@@ -3,7 +3,6 @@
         <label id="" class="input-icon">Город
             <input
                 type="text"
-                name="city_name"
                 v-model="text"
                 @input="reset"
                 maxlength="30"
@@ -15,7 +14,7 @@
 
             <div
                     class="sprite-input-right"
-                    :class="searchStatus"
+                    :class="status"
                     @click="clear"
             >
             </div>
@@ -34,7 +33,7 @@
         <table class="content-table-search table-over">
             <tbody>
 
-                <template v-if=searchTable>
+                <template v-if=search>
                     <tr v-for="(result, index) in results">
                         <td>
                             <a @click="add(index)">{{ result.name }}</a>
@@ -51,7 +50,7 @@
                     </tr>
                 </template>
 
-                <tr v-if=errorTable class="no-city">
+                <tr v-if=error class="no-city">
                     <td>Населенный пункт не найден в базе данных, <a href="/admin/cities" target="_blank">добавьте его!</a></td>
                 </tr>
 
@@ -96,7 +95,7 @@
             };
         },
         computed: {
-            searchStatus() {
+            status() {
                 let result;
 
                 if (this.found) {
@@ -106,12 +105,6 @@
                     result = 'sprite-16 icon-error'
                 }
                 return result;
-            },
-            searchTable() {
-                return this.search
-            },
-            errorTable() {
-                return this.error
             }
         },
         methods: {
@@ -137,7 +130,7 @@
                 this.found = true;
                 this.error = false;
                 this.search = false;
-
+                this.results = [];
             },
             clear() {
                 if (this.error) {

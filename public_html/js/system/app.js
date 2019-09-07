@@ -38248,7 +38248,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -38285,7 +38284,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     computed: {
-        searchStatus: function searchStatus() {
+        status: function status() {
             var result = void 0;
 
             if (this.found) {
@@ -38295,12 +38294,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 result = 'sprite-16 icon-error';
             }
             return result;
-        },
-        searchTable: function searchTable() {
-            return this.search;
-        },
-        errorTable: function errorTable() {
-            return this.error;
         }
     },
     methods: {
@@ -38325,6 +38318,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.found = true;
             this.error = false;
             this.search = false;
+            this.results = [];
         },
         clear: function clear() {
             if (this.error) {
@@ -38378,7 +38372,6 @@ var render = function() {
         ],
         attrs: {
           type: "text",
-          name: "city_name",
           maxlength: "30",
           autocomplete: "off",
           pattern: "[А-Яа-яЁё0-9-_\\s]{3,30}",
@@ -38410,7 +38403,7 @@ var render = function() {
       _vm._v(" "),
       _c("div", {
         staticClass: "sprite-input-right",
-        class: _vm.searchStatus,
+        class: _vm.status,
         on: { click: _vm.clear }
       }),
       _vm._v(" "),
@@ -38444,7 +38437,7 @@ var render = function() {
       _c(
         "tbody",
         [
-          _vm.searchTable
+          _vm.search
             ? _vm._l(_vm.results, function(result, index) {
                 return _c("tr", [
                   _c("td", [
@@ -38508,7 +38501,7 @@ var render = function() {
               })
             : _vm._e(),
           _vm._v(" "),
-          _vm.errorTable
+          _vm.error
             ? _c("tr", { staticClass: "no-city" }, [_vm._m(0)])
             : _vm._e()
         ],
