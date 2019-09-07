@@ -248,13 +248,7 @@ class RawController extends Controller
 
 
             $raw = (new Raw())->create($data);
-
-            $raw->portion_goods_status = $request->portion_goods_status ?? 0;
-            $raw->portion_goods_abbreviation = $request->portion_goods_abbreviation;
-            $raw->unit_portion_goods_id = $request->unit_portion_goods_id;
-            $raw->portion_goods_count = $request->portion_goods_count;
-            $raw->save();
-
+            
             if ($raw) {
 
                 // Пишем куки состояния
@@ -342,39 +336,47 @@ class RawController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $raw = Raw::moderatorLimit($answer)
+        $raw = Raw::with('article')
+        ->moderatorLimit($answer)
         ->findOrFail($id);
         // dd($raw);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raw);
-
-        $article = $raw->article;
-        // dd($article);
+        
+	    $article = $raw->article;
+	
+	    if ($article->draft) {
+		    $raw->unit_for_composition_id = $request->unit_for_composition_id;
+		
+		    $raw->portion_goods_status = $request->portion_goods_status ?? 0;
+		    $raw->portion_goods_abbreviation = $request->portion_goods_abbreviation;
+		    $raw->unit_portion_goods_id = $request->unit_portion_goods_id;
+		    $raw->portion_goods_count = $request->portion_goods_count;
+		
+		    $raw->price_unit_id = $request->price_unit_id;
+		    $raw->price_unit_category_id = $request->price_unit_category_id;
+		
+		    $raw->serial = $request->serial;
+		
+		    $raw->portion_goods_status = $request->portion_goods_status ?? 0;
+		    $raw->portion_goods_abbreviation = $request->portion_goods_abbreviation;
+		    $raw->unit_portion_goods_id = $request->unit_portion_goods_id;
+		    $raw->portion_goods_count = $request->portion_goods_count;
+	    }
+	
+	    $raw->display = $request->display;
+	    $raw->system = $request->system;
+	
+	    $raw->save();
 
         $result = $this->updateArticle($request, $raw);
         // Если результат не массив с ошибками, значит все прошло удачно
 
         if (!is_array($result)) {
-
-
-
-            $raw->unit_for_composition_id = $request->unit_for_composition_id;
-
-            $raw->portion_goods_status = $request->portion_goods_status ?? 0;
-            $raw->portion_goods_abbreviation = $request->portion_goods_abbreviation;
-            $raw->unit_portion_goods_id = $request->unit_portion_goods_id;
-            $raw->portion_goods_count = $request->portion_goods_count;                       
-
-            $raw->price_unit_id = $request->price_unit_id;
-            $raw->price_unit_category_id = $request->price_unit_category_id;
-
-            $raw->serial = $request->serial;
-            $raw->display = $request->display;
-            $raw->system = $request->system;
-
-            $raw->save();
-
+        	
+        	
+        	
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $raw);
 
