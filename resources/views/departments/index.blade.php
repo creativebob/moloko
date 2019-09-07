@@ -55,6 +55,9 @@
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
 
+    {{-- Список городов --}}
+    @include('includes.scripts.class.city_search')
+
 {{-- Скрипт отображения на сайте --}}
 @include('includes.scripts.ajax-display')
 
