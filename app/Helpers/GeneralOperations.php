@@ -82,6 +82,7 @@ function getLeadNumbers($user, $lead = null) {
     // Формируем серийный номер. Берем самый большой серийник из базы и добавляем 1
     $serial_number = $leads->max('serial_number');
     if(empty($serial_number)){$serial_number = 0;};
+
     $serial_number = $serial_number + 1;
 
 
@@ -90,8 +91,19 @@ function getLeadNumbers($user, $lead = null) {
     // Создаем номер ОБЫЧНОГО обращения
     if($lead_type_id == 1){
 
-        $lead_numbers['case'] = $lead_date->format('dmy') . '/' .  $serial_number . '/' . $user->liter;
-        $lead_numbers['serial']  = $serial_number;
+        if(!isset($_ENV['LEAD_NUMBER_LOGIC'])){ abort(403, 'Укажите в env файле переменную LEAD_NUMBER_LOGIC');}
+
+        if($_ENV['LEAD_NUMBER_LOGIC'] == 'simple'){
+
+            $lead_numbers['case'] = $lead->id . '/' . $user->id;
+            $lead_numbers['serial']  = $serial_number;
+        } else {
+
+            $user_liter = $user->liter ?? $user->id;
+            $lead_numbers['case'] = $lead_date->format('dmy') . '/' .  $serial_number . '/' . $user_liter;
+            $lead_numbers['serial']  = $serial_number;
+        }
+
     }
 
     // Создаем номер ДИЛЕРСКОГО обращения

@@ -362,10 +362,6 @@ input[type='search'] {
   color: #cacaca;
 }
 
-::-moz-placeholder {
-  color: #cacaca;
-}
-
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -597,10 +593,6 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
-  color: #cc4b37;
-}
-
-.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -12364,4 +12356,9 @@ a#task-toggle {
   background-color: transparent;
   font-size: 0.6rem;
   padding: 4px 10px;
+}
+
+.content-table-search.table-over {
+  width: auto;
+  border: 1px solid #bbb;
 }

@@ -33,20 +33,20 @@
 											{{-- Считаем количество задач --}}
 
 											<div id="task-challenge-{{$challenge->id}}" class="task-content @if($challenge->deadline_date < Carbon\Carbon::now()) deadline-active @endif">
-												{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name or ''}}</h5>--}}
+												{{-- <h5 class="task-content-head">{{ $challenge->challenge_type->name ?? ''}}</h5>--}}
 												<span class="task-time">{{ $challenge->deadline_date->format('H:i') }}</span>
-												<span class="task-set">{{ $challenge->challenge_type->name or ''}} ({{ $challenge->appointed->name or ''}})</span>
+												<span class="task-set">{{ $challenge->challenge_type->name ?? ''}} ({{ $challenge->appointed->name ?? ''}})</span>
 
 												@if($challenge->priority_id == 2)<span class="priority_2">Молния</span>@endif
 
-												<p class="task-target">{{ $challenge->description or ''}}</p>
+												<p class="task-target">{{ $challenge->description ?? ''}}</p>
 												<ul class="task-list">
-													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->subject_id }}/edit">{{ $challenge->subject->case_number or '' }}</a></li>
-													<li><span class="task-data">Клиент: </span>{{ $challenge->subject->name or '' }}</li>
+													<li><span class="task-data">№: </span><a href="/admin/leads/{{ $challenge->subject_id }}/edit">{{ $challenge->subject->case_number ?? '' }}</a></li>
+													<li><span class="task-data">Клиент: </span>{{ $challenge->subject->name ?? '' }}</li>
 													{{-- <li><span class="task-data">Телефон: </span>{{ decorPhone($challenge->subject->phone) }}</li> --}}
 													<li><span class="task-data">Чек: </span>{{ $challenge->subject ? num_format($challenge->subject->badget, 0) : 0 }}</li>
 
-													{{-- <li><span class="task-data">Товар: </span>{{ $challenge->subject->choice->name or ''}}</li> --}}
+													{{-- <li><span class="task-data">Товар: </span>{{ $challenge->subject->choice->name ?? ''}}</li> --}}
 
 												</ul>
 
