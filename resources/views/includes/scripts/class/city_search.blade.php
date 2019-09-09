@@ -25,7 +25,7 @@
                 clearTimeout(timerId);
                 timerId = setTimeout(function() {
 
-                    $('#' + id + ' .city-check').removeClass('icon-find-ok');
+                    $('#' + id + ' .city-check').removeClass('icon-success');
                     $('#' + id + ' .city-check').removeClass('sprite-16');
 
                         // Сам ajax запрос
@@ -51,7 +51,7 @@
 
                                 // Если нет городов, ставим иконку ошибки
                                 if ($('.table-over tr:first').hasClass('no-city')) {
-                                    $('#' + id + ' .city-check').addClass('icon-find-no').addClass('sprite-16');
+                                    $('#' + id + ' .city-check').addClass('icon-error').addClass('sprite-16');
                                     $('#' + id + ' .city_id-field').val('');
                                 }
                             }
@@ -61,7 +61,7 @@
                 // Удаляем все значения, если символов меньше 3х
                 $('.table-over').remove();
                 $('.item-error').remove();
-                $('#' + id + ' .city-check').removeClass('icon-find-ok').removeClass('icon-find-no').removeClass('sprite-16');
+                $('#' + id + ' .city-check').removeClass('icon-success').removeClass('icon-error').removeClass('sprite-16');
                 $('#' + id + ' .city-id-field').val('');
             }
         }
@@ -73,14 +73,14 @@
             $('#' + this.id + ' .city_id-field').val(cityId);
             $('#' + this.id + ' .city_check-field').val(cityName);
             $('#' + this.id + ' .table-over').remove();
-            $('#' + this.id + ' .city-check').addClass('icon-find-ok').addClass('sprite-16').removeClass('icon-find-no');
+            $('#' + this.id + ' .city-check').addClass('icon-success').addClass('sprite-16').removeClass('icon-error');
         }
 
         clear(elem){
 
             $(elem).closest('.city-input-parent').find('.city_check-field').val('');
             $(elem).closest('.city-input-parent').find('.city_id-field').val('');
-            $(elem).removeClass('icon-find-no').removeClass('sprite-16');
+            $(elem).removeClass('icon-error').removeClass('sprite-16');
             $('#' + this.id + ' .table-over').remove();
         }
 

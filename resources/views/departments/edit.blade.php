@@ -5,8 +5,8 @@
 		</div>
 	</div>
 
-	{{ Form::model($department,['id' => 'form-edit', 'data-abide', 'novalidate']) }}
-
+	{{ Form::model($department, ['route' => ['departments.update', $department->id], 'id' => 'form-edit', 'data-abide', 'novalidate']) }}
+	@method('PATCH')
 	@include('departments.form', ['submit_text' => 'Редактировать', 'class' => 'submit-edit'])
 
 	{{ Form::close() }}

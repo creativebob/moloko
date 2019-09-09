@@ -5,7 +5,7 @@
     $field_name = isset($field_name) ? $field_name : 'city_id';
 @endphp
 
-<label id="{{ $id }}" class="city-input-parent">Город
+<label id="{{ $id }}" class="city-input-parent input-icon">Город
 
     {{-- Город --}}
     {{ Form::text('city_name', $city_name, [
@@ -16,7 +16,7 @@
         (isset($required) ? 'required' : '')
     ]
     ) }}
-    <div class="sprite-input-right find-status city-check @isset ($city_name) icon-find-ok sprite-16 @endisset"></div>
+    <div class="sprite-input-right find-status city-check @isset ($city_name) icon-success sprite-16 @endisset"></div>
     <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
 
     {{-- Id города --}}
@@ -38,7 +38,7 @@
         {{ $id }}.fill(this);
     });
 
-    $(document).on('click', '#{{ $id }} .icon-find-no', function() {
+    $(document).on('click', '#{{ $id }} .icon-error', function() {
         {{ $id }}.clear(this);
     });
 

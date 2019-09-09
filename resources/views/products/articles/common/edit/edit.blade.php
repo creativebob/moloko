@@ -342,7 +342,6 @@
 	                        <fieldset class="fieldset portion-fieldset" id="portion-fieldset">
 
 	                            <legend class="checkbox">
-									{!! Form::hidden('portion_status', 0) !!}
 									{!! Form::checkbox('portion_status', 1, $article->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) !!}
 	                                <label for="portion">
 	                                    <span id="portion-change">Принимать порциями</span>

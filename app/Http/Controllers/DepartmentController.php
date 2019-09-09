@@ -166,9 +166,6 @@ class DepartmentController extends Controller
         if (isset($request->parent_id)) {
             $department->filial_id = $request->filial_id;
             $department->parent_id = $request->parent_id;
-            $status = 'отдела';
-        } else {
-            $status = 'филиала';
         }
 
         $department->code_map = $request->code_map;

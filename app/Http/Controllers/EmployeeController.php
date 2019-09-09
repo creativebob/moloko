@@ -341,7 +341,7 @@ class EmployeeController extends Controller
         $user = $employee->user;
 
 
-        return view('employees.edit', compact('employee', 'page_info', 'list_user_employees', 'list_empty_staff', 'photo'));
+        return view('employees.edit', compact('employee', 'page_info', 'list_user_employees', 'list_empty_staff'));
     }
 
 
