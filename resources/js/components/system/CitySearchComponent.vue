@@ -62,6 +62,11 @@
 
 <script>
     export default {
+        mounted() {
+            axios.get('/api/v1/cities').then(response => {
+                this.cities = response.data
+            })
+        },
         props: {
             city: {
                 type: Object,
@@ -72,9 +77,9 @@
                     }
                 }
             },
-            cities: {
-                type: Array
-            },
+            // cities: {
+            //     type: Array
+            // },
             required: {
                 type: Boolean,
                 default: false
@@ -91,7 +96,8 @@
                 results: [],
                 search: false,
                 found: (this.city.id != null) ? true : false,
-                error: false
+                error: false,
+                cities: []
             };
         },
         computed: {

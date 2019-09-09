@@ -10,18 +10,18 @@ class CitySearchComposer
 {
 	public function compose(View $view)
 	{
-        $cities = City::with([
-            'area:id,name',
-            'region:id,name',
-            'country:id,name'
-        ])
-            ->get([
-                'id',
-                'name',
-                'area_id',
-                'region_id',
-                'country_id'
-            ]);
+//        $cities = City::with([
+//            'area:id,name',
+//            'region:id,name',
+//            'country:id,name'
+//        ])
+//            ->get([
+//                'id',
+//                'name',
+//                'area_id',
+//                'region_id',
+//                'country_id'
+//            ]);
 //         dd($cities);
 
         $item = $view->item;
@@ -45,7 +45,7 @@ class CitySearchComposer
 //        $required = is_null($view->required) ? false : true;
 //        dd($required);
 
-        return $view->with(compact('cities', 'city'));
+        return $view->with(compact('city'));
     }
 
 }

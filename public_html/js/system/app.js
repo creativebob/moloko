@@ -38250,6 +38250,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        var _this = this;
+
+        axios.get('/api/v1/cities').then(function (response) {
+            _this.cities = response.data;
+        });
+    },
+
     props: {
         city: {
             type: Object,
@@ -38260,9 +38268,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 };
             }
         },
-        cities: {
-            type: Array
-        },
+        // cities: {
+        //     type: Array
+        // },
         required: {
             type: Boolean,
             default: false
@@ -38279,7 +38287,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             results: [],
             search: false,
             found: this.city.id != null ? true : false,
-            error: false
+            error: false,
+            cities: []
         };
     },
 

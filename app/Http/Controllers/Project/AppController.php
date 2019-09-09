@@ -23,9 +23,6 @@ use App\Http\Controllers\Traits\LeadControllerTrait;
 class AppController extends Controller
 {
 
-    use UserControllerTrait;
-    use LeadControllerTrait;
-
     // Настройки контроллера
     public function __construct(Request $request)
     {
@@ -43,6 +40,9 @@ class AppController extends Controller
 
         $this->site = $site;
     }
+
+    use UserControllerTrait;
+    use LeadControllerTrait;
 
     public function start(Request $request)
     {
@@ -479,6 +479,7 @@ class AppController extends Controller
                 $user_for_lead->save();
 
                 // dd($user_for_lead);
+                $lead->user_id = $user_for_lead->id;
 
                 // Конец апдейта юзеара -------------------------------------------------
 

@@ -27,7 +27,20 @@ class CityController extends Controller
      */
     public function index()
     {
-        //
+        $cities = City::with([
+            'area:id,name',
+            'region:id,name',
+            'country:id,name'
+        ])
+            ->get([
+                'id',
+                'name',
+                'area_id',
+                'region_id',
+                'country_id'
+            ]);
+//         dd($cities);
+        return response()->json($cities);
     }
 
     /**

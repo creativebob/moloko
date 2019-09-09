@@ -25,3 +25,5 @@ Route::get('/cart', 'AppController@cart')->name('project.cart');
 Route::post('/cart_store', 'AppController@cart_store')->name('project.cart_store');
 
 Route::get('/telegram', 'AppController@telegram')->name('project.telegram');
+
+Route::resource('/estimates', 'EstimateController');
