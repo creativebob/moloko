@@ -19,11 +19,11 @@ Route::get('/catalogs-services/{catalog_slug}/{catalog_item_slug}', 'AppControll
 
 Route::get('/prices-goods/{id}/', 'AppController@prices_goods')->name('project.prices_goods');
 
+Route::resource('/estimates', 'EstimateController');
+
 Route::any('/add_cart', 'AppController@add_cart')->name('project.add_cart');
 Route::any('/add_to_cart', 'AppController@add_to_cart')->name('project.add_to_cart');
 Route::get('/cart', 'AppController@cart')->name('project.cart');
 Route::post('/cart_store', 'AppController@cart_store')->name('project.cart_store');
 
 Route::get('/telegram', 'AppController@telegram')->name('project.telegram');
-
-Route::resource('/estimates', 'EstimateController');

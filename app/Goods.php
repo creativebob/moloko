@@ -67,6 +67,11 @@ class Goods extends Model
         return $this->belongsTo(Article::class);
     }
 
+    public function core()
+    {
+        return $this->belongsTo(Article::class, 'article_id');
+    }
+
     // Категория
     public function category()
     {

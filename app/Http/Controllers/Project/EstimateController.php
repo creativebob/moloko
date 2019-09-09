@@ -14,7 +14,7 @@ class EstimateController extends Controller
     public function __construct()
     {
 //        $this->middleware('auth');
-        $domain = $request->getHost();
+        $domain = request()->getHost();
 
         $site = Site::where('domain', $domain)
             ->with([
@@ -35,18 +35,21 @@ class EstimateController extends Controller
     public function index()
     {
         $user = \Auth::user();
+//        dd($user);
 
-        $estimates = Estimate::whereHas('lead', function ($q) use ($user) {
-            $q->where('user_id', $user->id);
-        })
+        $estimates = Estimate::with('items')
+            ->whereHas('lead', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })
             ->get();
+//        dd($estimates);
 
         $site = $this->site;
         $page = $site->pages_public
             ->where('alias', 'estimates')
             ->first();
 
-        return view($site->alias.'.estinates.index', compact('site', 'page', 'estimates'));
+        return view($site->alias.'.pages.estimates.index', compact('site', 'page', 'estimates'));
     }
 
     /**
@@ -78,7 +81,15 @@ class EstimateController extends Controller
      */
     public function show($id)
     {
-        //
+
+        $estimate = Estimate::findOrFail($id);
+
+        $site = $this->site;
+        $page = $site->pages_public
+            ->where('alias', 'estimates-items')
+            ->first();
+
+        return view($site->alias.'.pages.estimates_items.index', compact('site', 'page', 'estimate'));
     }
 
     /**
