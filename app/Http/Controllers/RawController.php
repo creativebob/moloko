@@ -343,40 +343,33 @@ class RawController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raw);
-        
-	    $article = $raw->article;
-	
-	    if ($article->draft) {
-		    $raw->unit_for_composition_id = $request->unit_for_composition_id;
-		
-		    $raw->portion_goods_status = $request->portion_goods_status ?? 0;
-		    $raw->portion_goods_abbreviation = $request->portion_goods_abbreviation;
-		    $raw->unit_portion_goods_id = $request->unit_portion_goods_id;
-		    $raw->portion_goods_count = $request->portion_goods_count;
-		
-		    $raw->price_unit_id = $request->price_unit_id;
-		    $raw->price_unit_category_id = $request->price_unit_category_id;
-		
-		    $raw->serial = $request->serial;
-		
-		    $raw->portion_goods_status = $request->portion_goods_status ?? 0;
-		    $raw->portion_goods_abbreviation = $request->portion_goods_abbreviation;
-		    $raw->unit_portion_goods_id = $request->unit_portion_goods_id;
-		    $raw->portion_goods_count = $request->portion_goods_count;
-	    }
-	
-	    $raw->display = $request->display;
-	    $raw->system = $request->system;
-	
-	    $raw->save();
+
+        $article = $raw->article;
+
+        if ($article->draft) {
+            $raw->unit_for_composition_id = $request->unit_for_composition_id;
+
+            $raw->portion_goods_status = $request->portion_goods_status ?? 0;
+            $raw->portion_goods_abbreviation = $request->portion_goods_abbreviation;
+            $raw->unit_portion_goods_id = $request->unit_portion_goods_id;
+            $raw->portion_goods_count = $request->portion_goods_count;
+
+            $raw->price_unit_id = $request->price_unit_id;
+            $raw->price_unit_category_id = $request->price_unit_category_id;
+
+            $raw->serial = $request->serial;
+        }
 
         $result = $this->updateArticle($request, $raw);
         // Если результат не массив с ошибками, значит все прошло удачно
 
         if (!is_array($result)) {
-        	
-        	
-        	
+
+            $raw->display = $request->display;
+            $raw->system = $request->system;
+
+            $raw->save();
+
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $raw);
 
