@@ -240,7 +240,9 @@ class PhotoController extends Controller
         ->findOrFail($request->id);
         // dd($item);
 
-        return view('photos.photos', compact('item'));
+        $album = $item->album;
+
+        return view('photos.photos', compact('album'));
     }
 
     // Сохраняем фото через dropzone
@@ -332,6 +334,39 @@ class PhotoController extends Controller
         $photo->save();
 
         return response()->json(isset($photo) ?? 'Ошибка обновления информации!');
+    }
+
+    public function ajax_delete(Request $request, $id)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $photo = Photo::moderatorLimit($answer)
+            ->findOrFail($id);
+
+        $album = $photo->album;
+
+        if ($album->photo_id == $photo->id) {
+            $album->photo_id = null;
+            $album->save();
+        }
+
+        foreach (['small', 'medium', 'large', 'original'] as $value) {
+            Storage::disk('public')->delete($photo->company_id.'/media/albums/'.$photo->album_id.'/img/' . $value . '/'.$photo->name);
+        }
+
+        $photo->albums()->detach();
+
+        $photo->delete();
+
+        $album->load('photos');
+        if ($photo) {
+            return view('photos.photos', compact('album'));
+        } else {
+            abort(403, 'Ошибка при удалении фотографии');
+        }
     }
 
 }

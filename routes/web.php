@@ -262,6 +262,7 @@ Route::any('/photo_store', 'PhotoController@ajax_store')->name('photos.ajax_stor
 Route::post('/photo_edit/{id}', 'PhotoController@ajax_edit')->name('photos.ajax_edit');
 
 Route::patch('/photo_update/{id}', 'PhotoController@ajax_update');
+Route::delete('/photo_delete/{id}', 'PhotoController@ajax_delete');
 
 
 // --------------------------------------- Помещения -----------------------------------------------

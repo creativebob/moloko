@@ -87,4 +87,9 @@
 
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox_control_menu')
+
+    <script>
+        $.getScript("/js/system/jquery.maskedinput.js");
+        $.getScript("/js/system/inputs_mask.js");
+    </script>
 @endpush
