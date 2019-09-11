@@ -583,7 +583,7 @@ class AppController extends Controller
                 // Отправляем на каждый telegram
                 foreach ($destinations as $destination) {
 
-                    if (isset($destination->telegram_id)) {
+                    if (isset($destination->telegram)) {
                         $response = Telegram::sendMessage([
                             'chat_id' => $destination->telegram,
                             'text' => $message

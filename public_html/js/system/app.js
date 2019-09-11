@@ -38255,6 +38255,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         axios.get('/api/v1/cities').then(function (response) {
             _this.cities = response.data;
+        }).catch(function (error) {
+            console.log(error);
         });
     },
 

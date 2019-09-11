@@ -21,7 +21,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => $class, 'type' => 'menu'])
+@include('products.articles.common.index.includes.title-articles', ['page_info' => $page_info, 'class' => $class])
 @endsection
 
 @section('content')

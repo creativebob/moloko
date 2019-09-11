@@ -300,22 +300,22 @@
 	                            </div>
 	                        </fieldset>
 
-	                        <fieldset class="fieldset-access">
-	                            <legend>Умолчания для стоимости</legend>
+{{--	                        <fieldset class="fieldset-access">--}}
+{{--	                            <legend>Умолчания для стоимости</legend>--}}
 
-	                            <div class="grid-x grid-margin-x">
-	                                <div class="small-12 medium-6 cell">
-	                                    <label>Себестоимость
-	                                        {{ Form::number('cost_default', null) }}
-	                                    </label>
-	                                </div>
-	                                <div class="small-12 medium-6 cell">
-	                                    <label>Цена за (<span id="unit">{{ ($article->portion_status == false) ? $article->group->unit->abbreviation : 'порцию' }}</span>)
-	                                        {{ Form::number('price_default', null) }}
-	                                    </label>
-	                                </div>
-	                            </div>
-	                        </fieldset>
+{{--	                            <div class="grid-x grid-margin-x">--}}
+{{--	                                <div class="small-12 medium-6 cell">--}}
+{{--	                                    <label>Себестоимость--}}
+{{--	                                        {{ Form::number('cost_default', null) }}--}}
+{{--	                                    </label>--}}
+{{--	                                </div>--}}
+{{--	                                <div class="small-12 medium-6 cell">--}}
+{{--	                                    <label>Цена за (<span id="unit">{{ ($article->portion_status == false) ? $article->group->unit->abbreviation : 'порцию' }}</span>)--}}
+{{--	                                        {{ Form::number('price_default', null) }}--}}
+{{--	                                    </label>--}}
+{{--	                                </div>--}}
+{{--	                            </div>--}}
+{{--	                        </fieldset>--}}
 
 							@if(isset($raw))
 		                        <fieldset class="fieldset-access">
@@ -354,12 +354,12 @@
 	                                        {{ Form::text('portion_name', $article->portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
 	                                    </label>
 	                                </div> --}}
-	                                <div class="small-6 cell @if ($article->portion_status == null) portion-hide @endif">
+	                                <div class="small-6 cell @if (!$article->portion_status) portion-hide @endif">
 	                                    <label>Сокр.&nbsp;имя
 	                                        {{ Form::text('portion_abbreviation',  $article->portion_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
 	                                    </label>
 	                                </div>
-	                                <div class="small-6 cell @if ($article->portion_status == null) portion-hide @endif">
+	                                <div class="small-6 cell @if (!$article->portion_status) portion-hide @endif">
 	                                    <label>Кол-во,&nbsp;{{ $article->unit->abbreviation }}
 	                                        {{ Form::text('portion_count', $article->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
 	                                        <div class="sprite-input-right find-status" id="name-check"></div>
@@ -481,7 +481,7 @@
 	                        <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
 	                            @isset($article->album_id)
-	                            	@include('photos.photos', ['item' => $article])
+	                            	@include('photos.photos', ['album' => $article->album])
 	                            @endisset
 
 	                        </ul>
@@ -509,6 +509,73 @@
 		<script>
 		    // Основные настройки
 		    var category_entity = '{{ $category_entity }}';
+
+			// При клике на фотку подствляем ее значения в блок редактирования
+			$(document).on('click', '#photos-list .edit', function(event) {
+				event.preventDefault();
+
+				// Удаляем всем фоткам активынй класс
+				$('#photos-list img').removeClass('active');
+				$('#photos-list img').removeClass('updated');
+
+				// Наваливаем его текущей
+				$(this).addClass('active');
+
+				// Получаем инфу фотки
+				$.post('/admin/photo_edit/' + $(this).data('id'), function(html){
+					// alert(html);
+					$('#photo-edit-partail').html(html);
+				})
+			});
+
+			// При сохранении информации фотки
+			$(document).on('click', '#form-photo-edit .button-photo-edit', function(event) {
+				event.preventDefault();
+
+				let button = $(this);
+				button.prop('disabled', true);
+
+				let id = $(this).closest('#form-photo-edit').find('input[name=id]').val();
+				// alert(id);
+
+				// Записываем инфу и обновляем
+				$.ajax({
+					url: '/admin/photo_update/' + id,
+					type: 'PATCH',
+					data: $(this).closest('#form-photo-edit').serialize(),
+					success: function(res) {
+
+						if (res == true) {
+							button.prop('disabled', false);
+
+							$('#photos-list').find('.active').addClass('updated').removeClass('active');
+						} else {
+							alert(res);
+						};
+					}
+				})
+			});
+
+			// При сохранении удалении фотки
+			$(document).on('click', '#form-photo-edit .button-delete-photo', function(event) {
+				event.preventDefault();
+
+				let button = $(this);
+				button.prop('disabled', true);
+
+				let id = $(this).data('photo-id');
+				// alert(id);
+
+				// Записываем инфу и обновляем
+				$.ajax({
+					url: '/admin/photo_delete/' + id,
+					type: 'DELETE',
+					success: function(html) {
+						$('#photos-list').html(html);
+						$('#photo-edit-partail').html('');
+					}
+				})
+			});
 		</script>
 
 		@include('products.articles.common.edit.change_articles_groups_script')

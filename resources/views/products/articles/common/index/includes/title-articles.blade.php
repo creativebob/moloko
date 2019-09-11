@@ -10,74 +10,10 @@
                 </h2>
 
                 @can('create', $class)
-                @switch($type)
 
-                @case('table')
+                    <a class="icon-add sprite" data-open="modal-create" data-tooltip class="top" tabindex="2" title="Добавить позицию"></a>
+                    <a href="/admin/{{ $page_info->alias}}_categories" class="icon-category sprite" data-tooltip class="top" tabindex="2" title="Настройка категорий"></a>
 
-                {{-- Кнопки добавления для страницы ЛИДЫ --}}
-                @if($page_info->alias == 'leads')
-
-                    @if(!empty(Auth::user()->staff[0]))
-                        <div class="button-group">
-                            @if(extra_right('lead-regular'))
-                            {{ link_to_route('leads.create', '+ Обычное', ['lead_type' => 1], ['class' => 'button tiny']) }}
-                            @endif
-
-                            @if(extra_right('lead-service'))
-                            {{ link_to_route('leads.create', '+ Сервис', ['lead_type' => 3], ['class' => 'button tiny']) }}
-                            @endif
-
-                            @if(extra_right('lead-dealer'))
-                            {{ link_to_route('leads.create', '+ Дилер', ['lead_type' => 2], ['class' => 'button tiny']) }}
-                            @endif
-                        </div>
-                    @endif
-
-
-                @elseif($page_info->alias == 'dealers')
-
-                    @if(!empty(Auth::user()->staff[0]))
-                        <div class="button-group">
-                            @if(extra_right('lead-regular'))
-                            {{ link_to_route('dealers.createDealerCompany', '+ Компания', [], ['class' => 'button tiny']) }}
-                            @endif
-
-                            @if(extra_right('lead-service'))
-                            {{ link_to_route('dealers.createDealerUser', '+ Физическое лицо', [], ['class' => 'button tiny']) }}
-                            @endif
-
-                        </div>
-                    @endif
-
-
-                {{-- Кнопки добавления для остальных страниц --}}
-                @else
-
-                    @if (isset($page_alias))
-                    <a href="/admin/{{ $page_alias }}/create" class="icon-add sprite" data-tooltip class="top" tabindex="2" title="Добавить позицию"></a>
-                    @else
-                    <a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite" data-tooltip class="top" tabindex="2" title="Добавить позицию"></a>
-                    @endif
-
-                @endif
-
-                @break
-
-                @case('section-table')
-                <a href="/admin/{{ $page_alias }}/create" class="icon-add sprite"></a>
-                @break
-
-                @case('menu')
-                <a class="icon-add sprite" data-open="modal-create" data-tooltip class="top" tabindex="2" title="Добавить позицию"></a>
-
-                @break
-
-                @case('sections-menu')
-                {{-- <h2 class="header-content">{{ $page_info->title .' &laquo;'. $name .'&raquo;' }}</h2> --}}
-                <a class="icon-add sprite" data-open="modal-create"></a>
-                @break
-
-                @endswitch
                 @endcan  
 
             </div>

@@ -63,9 +63,13 @@
 <script>
     export default {
         mounted() {
-            axios.get('/api/v1/cities').then(response => {
+            axios.get('/api/v1/cities')
+                .then(response => {
                 this.cities = response.data
             })
+                .catch(error => {
+                    console.log(error)
+                })
         },
         props: {
             city: {

@@ -46,7 +46,11 @@
 {{ Form::hidden('id', $photo->id) }}
 
 <div class="small-12 cell text-center">
-	{{ Form::submit('Редактировать', ['class'=>'button tabs-margin-top']) }}
+	{{ Form::submit('Редактировать', ['class'=>'button tabs-margin-top button-photo-edit']) }}
+</div>
+
+<div class="small-12 cell text-center">
+	<a class="button button-delete-photo" data-photo-id="{{ $photo->id }}">Удалить</a>
 </div>
 
 {!!  Form::close() !!}

@@ -1,51 +1,5 @@
 <script type="application/javascript">
 
-    // При клике на фотку подствляем ее значения в блок редактирования
-    $(document).on('click', '#photos-list .edit', function(event) {
-        event.preventDefault();
-
-        // Удаляем всем фоткам активынй класс
-        $('#photos-list img').removeClass('active');
-        $('#photos-list img').removeClass('updated');
-
-        // Наваливаем его текущей
-        $(this).addClass('active');
-
-        // Получаем инфу фотки
-        $.post('/admin/photo_edit/' + $(this).data('id'), function(html){
-            // alert(html);
-            $('#photo-edit-partail').html(html);
-        })
-    });
-
-    // При сохранении информации фотки
-    $(document).on('click', '#form-photo-edit .button', function(event) {
-        event.preventDefault();
-
-        let button = $(this);
-        button.prop('disabled', true);
-
-        let id = $(this).closest('#form-photo-edit').find('input[name=id]').val();
-        // alert(id);
-
-        // Записываем инфу и обновляем
-        $.ajax({
-            url: '/admin/photo_update/' + id,
-            type: 'PATCH',
-            data: $(this).closest('#form-photo-edit').serialize(),
-            success: function(res) {
-
-                if (res == true) {
-                    button.prop('disabled', false);
-
-                    $('#photos-list').find('.active').addClass('updated').removeClass('active');
-                } else {
-                    alert(res);
-                };
-            }
-        })
-    });
-
     // Настройки dropzone
     Dropzone.options.myDropzone = {
         paramName: 'photo',
