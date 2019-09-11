@@ -66,7 +66,7 @@
             @if($edit == 1)
             <a href="manufacturers/{{ $manufacturer->id }}/edit">
               @endif
-              {{ $manufacturer->company->name }} ({{ $manufacturer->company->legal_form->name or '' }})
+              {{ $manufacturer->company->name }} ({{ $manufacturer->company->legal_form->name ?? '' }})
               @if($edit == 1)
             </a>
             @endif
@@ -74,7 +74,7 @@
 
             <br><span class="tiny-text">{{ $manufacturer->company->location->country->name }}</span>
           </td>
-          <td class="td-sector">{{ $manufacturer->company->sector->name or ' ... ' }} </td>
+          <td class="td-sector">{{ $manufacturer->company->sector->name ?? ' ... ' }} </td>
 
           {{-- Если пользователь бог, то показываем для него переключатель на компанию --}}
           <td class="td-phone">{{ isset($manufacturer->company->main_phone->phone) ? decorPhone($manufacturer->company->main_phone->phone) : 'Номер не указан' }}</td>

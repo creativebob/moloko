@@ -497,6 +497,10 @@ class AppController extends Controller
             $lead->company_id = $company_id;
             $lead->moderation = false;
 
+            // $lead_number = getLeadNumbers($user_auth, $lead);
+            // $lead->case_number = $lead_number['case'];
+            // $lead->serial_number = $lead_number['serial'];
+
             if($user_for_lead->client){
                 $lead->client_id = $user_for_lead->client->id;
             };
@@ -513,10 +517,10 @@ class AppController extends Controller
 
             // Формируем сообщение
             $message = "Заказ с сайта:\r\n";
-            $message .= "Клиент: " . $name . "\r\n";
-            $message .= "Тел: " . $phone . "\r\n";
+            $message .= "Клиент: " . $lead->name . "\r\n";
+            $message .= "Тел: " . $lead->main_phone->phone . "\r\n";
             $message .= "Количество товаров: " . $count . "\r\n";
-            $message .= "Бюджет: " . $badget . ' руб.';
+            $message .= "Бюджет: " . $lead->badget . ' руб.';
 
             $lead->notes()->create([
                 'company_id' => 1,
@@ -532,7 +536,9 @@ class AppController extends Controller
                 'lead_id' => $lead->id,
                 'company_id' => $company_id
             ], [
-                'author_id' => 1
+                'author_id' => 1,
+                'number' => $lead->case_number,
+                'date' => $lead->created_at,
             ]);
             // dd($estimate);
 

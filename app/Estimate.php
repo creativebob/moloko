@@ -48,6 +48,9 @@ class Estimate extends Model
         'lead_id',
         'client_id',
         'company_id',
+        'number',
+        'date',
+        'description',
         'author_id',
         'draft',
 
