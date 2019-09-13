@@ -15,7 +15,7 @@ class CatalogsGoodsItemsFilterComposer
         $catalogs_goods_items = CatalogsGoodsItem::whereHas('catalog', function ($q) use ($catalogs_goods) {
             $q->where('id', $catalogs_goods->id);
         })
-            ->where('display')
+            ->where('display', true)
             ->get([
             'id',
             'name',
