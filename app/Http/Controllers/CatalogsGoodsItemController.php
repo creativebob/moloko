@@ -54,6 +54,7 @@ class CatalogsGoodsItemController extends Controller
         ->authors($answer)
         ->systemItem($answer)
         ->where('catalogs_goods_id', $catalog_id)
+            ->orderBy('sort')
         ->get($columns);
         // dd($catalogs_goods_items);
 

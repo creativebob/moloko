@@ -2,8 +2,7 @@
 
 @section('inhead')
 <meta name="description" content="{{ $page_info->page_description }}" />
-{{-- Скрипты таблиц в шапке --}}
-@include('includes.scripts.tablesorter-inhead')
+
 @include('includes.scripts.pickmeup-inhead')
 @endsection
 

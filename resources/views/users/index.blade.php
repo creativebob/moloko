@@ -1,8 +1,7 @@
 @extends('layouts.app')
 
 @section('inhead')
-{{-- Скрипты таблиц в шапке --}}
-@include('includes.scripts.tablesorter-inhead')
+
 @endsection
 
 @section('title', $page_info->name)

@@ -1,9 +1,8 @@
-@section('inhead')
-{{-- Скрипты таблиц в шапке --}}
-@include('includes.scripts.tablesorter-inhead')
-@endsection
-
 @extends('layouts.app')
+
+@section('inhead')
+
+@endsection
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 

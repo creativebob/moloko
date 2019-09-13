@@ -1,8 +1,7 @@
 @extends('layouts.app')
 
 @section('inhead')
-{{-- Скрипты таблиц в шапке --}}
-@include('includes.scripts.tablesorter-inhead')
+
 @include('includes.scripts.fancybox-inhead')
 @endsection
 
