@@ -115,7 +115,7 @@
 		public function prices_public()
 		{
 			return $this->hasMany(PricesGoods::class)
-				->with('goods_public')
+				->has('goods_public')
 				->where([
 					'display' => true,
 					'archive' => false

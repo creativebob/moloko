@@ -39,6 +39,7 @@ class MenuController extends Controller
         ->authors($answer)
         ->systemItem($answer)
         ->where('navigation_id', $navigation_id)
+            ->orderBy('sort')
         ->get();
         // dd($menus);
 

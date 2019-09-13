@@ -2,8 +2,6 @@
 
 @section('inhead')
 <meta name="description" content="{{ $page_info->description }}" />
-{{-- Скрипты меню в шапке --}}
-@include('includes.scripts.sortable-inhead')
 @endsection
 
 @section('title', $page_info->name)
@@ -57,10 +55,12 @@
 @include('includes.modals.modal-delete-ajax')
 @endsection
 
-@section('scripts')
+@push('scripts')
 
 {{-- Скрипты --}}
 @include('menus.scripts')
+
+@include('includes.scripts.sortable-menu-script')
 
 {{-- Скрипт подсветки многоуровневого меню --}}
 @include('includes.scripts.multilevel-menu-active-scripts')
@@ -71,4 +71,4 @@
 {{-- Скрипт системной записи --}}
 @include('includes.scripts.ajax-system')
 
-@endsection
+@endpush

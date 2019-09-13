@@ -190,8 +190,8 @@ class ContainerController extends Controller
             'title' => 'Добавление упаковки',
             'entity' => $this->entity_alias,
             'category_entity' => 'containers_categories',
-            'units_category_default' => 2,
-            'unit_default' => 8,
+            'units_category_default' => 6,
+            'unit_default' => 32,
         ]);
     }
 

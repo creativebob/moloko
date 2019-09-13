@@ -197,7 +197,8 @@ trait ArticleTrait
 
                 $data['draft'] = request()->draft;
 
-                $data['photo_id'] = $this->getPhotoId($request, $article);
+                $result = $this->getPhotoId($request, $article);
+                $data['photo_id'] = $result;
 
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $article->update($data);

@@ -36,21 +36,24 @@ trait Photable
             $settings = $this->getSettings($item->getTable());
 
             if ($width < $settings['img_min_width']) {
-                return back()
-                    ->withErrors(['msg' => 'Ширина фотографии мала!'])
-                    ->withInput();
+                abort(403, 'lol');
+//                return back()
+//                    ->withErrors(['msg' => 'Ширина фотографии мала!'])
+//                    ->withInput();
             }
 
             if ($height < $settings['img_min_height']) {
-                return back()
-                    ->withErrors(['msg' => 'Высота фотографии мала!'])
-                    ->withInput();
+                abort(403, 'lol');
+//                return back()
+//                    ->withErrors(['msg' => 'Высота фотографии мала!'])
+//                    ->withInput();
             }
 
             if ($size > ($settings['img_max_size'] * 1024)) {
-                return back()
-                    ->withErrors(['msg' => 'Размер (Mb) фотографии высок!'])
-                    ->withInput();
+                abort(403, 'lol');
+//                return back()
+//                    ->withErrors(['msg' => 'Размер (Mb) фотографии высок!'])
+//                    ->withInput();
             }
 
             $directory = $item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
@@ -191,7 +194,7 @@ trait Photable
     }
 
     // Настройки для фоток
-    public function getSettings()
+    public function getSettings($entity_alias)
     {
 
         // Вытаскиваем настройки из конфига
@@ -200,7 +203,7 @@ trait Photable
         // dd($settings);
 
         $entity = Entity::with('photo_settings')
-            ->whereAlias($this->entity_alias)
+            ->whereAlias($entity_alias)
             ->first();
 
         // dd($entity);

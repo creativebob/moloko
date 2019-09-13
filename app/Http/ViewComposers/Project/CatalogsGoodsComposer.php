@@ -2,33 +2,47 @@
 
 namespace App\Http\ViewComposers\Project;
 
+use App\CatalogsGoods;
 use Illuminate\View\View;
 
 class CatalogsGoodsComposer
 {
-	public function compose(View $view)
-	{
+    public function compose(View $view)
+    {
 
-	    $site = $view->site->load(['catalogs_goods' => function ($q) {
-            $q->with([
-                'items.catalog'
+        $site = $view->site;
+
+        $catalog_goods = CatalogsGoods::with([
+            'items' => function ($q) {
+                $q->withCount('prices_public')
+                    ->where('display', true)
+                    ->orderBy('sort');
+            }
+        ])
+            ->whereHas('sites', function($q) use ($site) {
+                $q->where('id', $site->id);
+            })
+            ->where([
+                'display' => true
             ])
-                ->where([
-                    'display' => 1
-                ])
-                ->orderBy('sort');
-        }]);
+            ->orderBy('sort')
+            ->first();
 
-        $catalogs_cur_good = $site->catalogs_goods->first();
-//        dd($catalogs_cur_good);
+//	    dd($catalog_goods);
 
-        if (is_null($catalogs_cur_good)) {
-            $catalogs_goods_items = null;
-        } else {
-            $catalogs_goods_items = buildSidebarTree($catalogs_cur_good->items);
-        }
+        // ------------------ Непонятные махинации ----------------------------
+//        $catalogs_cur_good = $site->catalogs_goods->first();
+////        dd($catalogs_cur_good);
+//
+//        if (is_null($catalogs_cur_good)) {
+//            $catalogs_goods_items = null;
+//        } else {
+//            $catalogs_goods_items = buildSidebarTree($catalogs_cur_good->items);
+//        }
+//        dd($catalogs_goods_items);
+        // ------------------ Непонятные махинации ----------------------------
 
-        return $view->with(compact('catalogs_goods_items'));
+        return $view->with(compact('catalog_goods'));
     }
 
 }

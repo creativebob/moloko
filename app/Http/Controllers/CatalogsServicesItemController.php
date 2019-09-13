@@ -61,6 +61,7 @@ class CatalogsServicesItemController extends Controller
         // ->where('catalogs_service_id', $catalog_id)
         // ->template($answer)
         ->where('catalogs_service_id', $catalog_id)
+            ->orderBy('sort')
         ->get($columns);
         // dd($catalogs_services_items);
 
