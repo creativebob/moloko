@@ -15,7 +15,8 @@ class CatalogsGoodsComposer
         $catalog_goods = CatalogsGoods::with([
             'items' => function ($q) {
                 $q->withCount('prices_public')
-                    ->where('display', true);
+                    ->where('display', true)
+                    ->orderBy('sort');
             }
         ])
             ->whereHas('sites', function($q) use ($site) {
