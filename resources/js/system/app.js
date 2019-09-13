@@ -23,7 +23,8 @@ Vue.component('city-search-component', require('../components/system/CitySearchC
 Vue.component('consignmentitemadd-component', require('../components/system/ConsignmentItemAddComponent.vue'));
 Vue.component('input-digit-component', require('../components/system/InputDigitComponent.vue'));
 Vue.component('dropzone-component', require('../components/system/DropzoneComponent.vue'));
-Vue.component('rawcomposition-component', require('../components/system/RawCOmpositionComponent.vue'));
+Vue.component('rawcomposition-component', require('../components/system/RawCompositionComponent.vue'));
+Vue.component('articles-groups-component', require('../components/system/ArticlesGroupsComponent.vue'));
 
 
 /**

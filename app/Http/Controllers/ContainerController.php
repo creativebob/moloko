@@ -284,7 +284,7 @@ class ContainerController extends Controller
         // dd($page_info);
 
         return view('products.articles.common.edit.edit', [
-            'title' => 'Редактировать сырье',
+            'title' => 'Редактировать упаковку',
             'item' => $container,
             'article' => $article,
             'page_info' => $page_info,

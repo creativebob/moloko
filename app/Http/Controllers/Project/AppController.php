@@ -148,7 +148,9 @@ class AppController extends Controller
             ->filter($request)
             ->paginate(16);
 
-        return view($site->alias.'.pages.catalogs_goods.index', compact('site','page', 'request', 'catalog_goods_item', 'prices_goods'));
+        $catalog_goods = $catalog_goods_item->catalog;
+
+        return view($site->alias.'.pages.catalogs_goods.index', compact('site','page', 'request', 'catalog_goods_item', 'prices_goods', 'catalog_goods'));
     }
 
     public function catalogs_services(Request $request, $catalog_slug, $catalog_item_slug)
