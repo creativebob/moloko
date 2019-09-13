@@ -7,6 +7,9 @@
 try {
     window.$ = window.jQuery = require('jquery');
 
+    require('jquery-ui');
+    require('jquery-ui/ui/widgets/sortable');
+
     require('foundation-sites/dist/js/foundation'); // 'foundation.min' can also be used if you like
 
 } catch (e) {}
