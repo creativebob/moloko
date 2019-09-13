@@ -28,6 +28,7 @@
             <li class="tabs-title"><a data-tabs-target="content-panel-2" href="#content-panel-2">Реквизиты</a></li>
             <li class="tabs-title"><a data-tabs-target="content-panel-about" href="#content-panel-about">Описание</a></li>
             <li class="tabs-title"><a data-tabs-target="content-panel-4" href="#content-panel-4">График работы</a></li>
+            <li class="tabs-title"><a data-tabs-target="content-panel-brand" href="#content-panel-brand">Брендирование</a></li>
             <li class="tabs-title"><a data-tabs-target="content-panel-5" href="#content-panel-5">Настройка</a></li>
         </ul>
     </div>
@@ -275,6 +276,62 @@
             <!-- Конец описания компании -->
 
 
+
+            <!-- Брендирование -->
+            <div class="tabs-panel" id="content-panel-brand">
+                <div class="grid-x grid-padding-x">
+
+                    <div class="small-12 cell">
+                        <table class="brand-logo-table">
+                            <tbody class="brand-logo-table-tbody">
+                                <tr> 
+                                    <td>
+                                        <label>Стандартный логотип (jpg или png)
+                                            {{ Form::file('photo') }}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        {{-- <img id="photo" src="{{ getPhotoPathPlugEntity($item) }}"> --}}
+                                    </td>
+                                </tr>
+                                <tr> 
+                                    <td>
+                                        <label>Белый логотип (svg)
+                                            {{ Form::file('logo_white') }}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <img width="100px" id="photo" src="/img/system/svg/logo-white.svg">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Черный логотип (svg)
+                                            {{ Form::file('logo_black') }}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <img width="100px" id="photo" src="/img/system/svg/logo-black.svg">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label>Цветной логотип (svg)
+                                            {{ Form::file('logo_color') }}
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <img width="100px" id="photo" src="/img/system/svg/logo-color.svg">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+
             <!-- Настройки -->
             <div class="tabs-panel" id="content-panel-5">
                 <div class="grid-x grid-padding-x">
@@ -373,11 +430,11 @@
 
 
                 @if(!empty($user))
-                <!-- Блок дилера -->
-                <div class="small-12 medium-3 cell">
+                <div class="small-12 medium-1 large-6 cell">
                 </div>
-                <div class="small-12 medium-9 cell">
-                    <div class="small-12 large-6 cell">
+
+                <div class="small-12 medium-11 large-6 cell">
+
                         <fieldset>
                             <legend>Директор (руководитель)</legend>
                             <div class="grid-x grid-padding-x">
@@ -428,8 +485,6 @@
                             </div>
                         </fieldset>
                     </div>
-                </div>
-                <!-- Конец блока дилера -->
                 @endif
 
 

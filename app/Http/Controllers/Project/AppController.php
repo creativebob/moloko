@@ -344,12 +344,12 @@ class AppController extends Controller
 
             } else {
 
-                dd('Факью, спилберг!!!');
+                dd('Досуп закрыт');
             }
 
         } else {
 
-            dd('Сорян, мы не в курсе кто вы такие!');
+            dd('Мы не в курсе кто вы такие!');
         }
 
 
@@ -437,6 +437,7 @@ class AppController extends Controller
 
                     $name = $user_for_lead->name;
                     $request->main_phone = $user_for_lead->main_phone->phone;
+                    $phone = $user_for_lead->main_phone->phone;
                 }
 
             } else {
@@ -472,6 +473,7 @@ class AppController extends Controller
                 // Если к пользователю нужно добавить инфы, тут можно апнуть юзера: ----------------------------------
 
                 $user_for_lead->nickname = $request->name;
+                $phone = $user_for_lead->main_phone->phone;
 
                 // Компания и филиал ----------------------------------------------------------
                 $user_for_lead->company_id = $company_id;
@@ -517,10 +519,10 @@ class AppController extends Controller
 
             // Формируем сообщение
             $message = "Заказ с сайта:\r\n";
-            $message .= "Клиент: " . $lead->name . "\r\n";
-            $message .= "Тел: " . $lead->main_phone->phone . "\r\n";
-            $message .= "Количество товаров: " . $count . "\r\n";
-            $message .= "Бюджет: " . $lead->badget . ' руб.';
+            $message .= "Имя клиента: " . $lead->name . "\r\n";
+            $message .= "Тел: " . decorPhone($phone) . "\r\n";
+            $message .= "Кол-во товаров: " . $count . "\r\n";
+            $message .= "Сумма заказа: " . num_format($lead->badget, 0) . ' руб.';
 
             $lead->notes()->create([
                 'company_id' => 1,

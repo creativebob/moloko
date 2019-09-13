@@ -97,6 +97,10 @@ $breadcrumbs-a-color: #5190ff;
 $breadcrumbs-border-color: #dcdcdc;
 
 
+tbody.brand-logo-table-tbody{
+    background-color: transparent !important;
+}
+
 // Подсветка лидов по этапам
 // Готов
 .stage-12 td:first-child{

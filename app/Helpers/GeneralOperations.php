@@ -95,7 +95,7 @@ function getLeadNumbers($user, $lead = null) {
 
         if($_ENV['LEAD_NUMBER_LOGIC'] == 'simple'){
 
-            $lead_numbers['case'] = $lead->id . '/' . $user->id;
+            $lead_numbers['case'] = $lead->id;
             $lead_numbers['serial']  = $serial_number;
         } else {
 
@@ -123,7 +123,6 @@ function getLeadNumbers($user, $lead = null) {
     // Отдаем результат
     return $lead_numbers;
 }
-
 
 function getClaimNumbers($user) {
     // Получаем из сессии необходимые данные (Функция находиться в Helpers)

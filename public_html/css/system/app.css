@@ -9210,6 +9210,10 @@ a.has-tip {
   cursor: pointer;
 }
 
+tbody.brand-logo-table-tbody {
+  background-color: transparent !important;
+}
+
 .stage-12 td:first-child {
   border-left: 8px solid #afefb9;
 }
