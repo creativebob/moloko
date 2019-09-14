@@ -79,7 +79,8 @@ class ContainerController extends Controller
             'article' => function ($q) {
                 $q->with([
                     'group',
-                    'photo'
+                    'photo',
+                    'unit'
                 ]);
             },
             'category' => function ($q) {
@@ -267,13 +268,20 @@ class ContainerController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $container);
 
+        $container->load([
+            'article' => function ($q) {
+                $q->with([
+                    'unit'
+                ]);
+            }
+        ]);
         $article = $container->article;
         // dd($article);
 
         // Получаем настройки по умолчанию
-        $dropzone = getSettings($this->entity_alias);
-        $dropzone['id'] = $article->id;
-        $dropzone['entity'] = $article->getTable();
+//        $dropzone = getSettings($this->entity_alias);
+//        $dropzone['id'] = $article->id;
+//        $dropzone['entity'] = $article->getTable();
 //        dd($dropzone);
 
         // Получаем настройки по умолчанию
