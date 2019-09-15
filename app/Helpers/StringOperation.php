@@ -617,7 +617,7 @@ function getNameUser($string) {
 
                 Log::info('СИНТАКСИЧЕСКИЙ МЕТОД:');
 
-                if(Str::endsWith($parts[$x]['value'], array('ов', 'ко', 'ин', 'ский', 'чин', 'цкий'))){
+                if(Str::endsWith($parts[$x]['value'], array('ов', 'ко', 'ин', 'ский', 'чин', 'цкий', 'чев', 'чёв', 'цев'))){
                     $parts[$x]['opinion'] = 'second_name';
                     $parts[$x]['gender'] = 1;
 
@@ -625,7 +625,7 @@ function getNameUser($string) {
                     Log::info('Обнаружены признаки мужской фамилии в ' . $parts[$x]['value']);
                 }
 
-                if(Str::endsWith($parts[$x]['value'], array('ова', 'ина', 'ская', 'чина', 'цкая'))){
+                if(Str::endsWith($parts[$x]['value'], array('ова', 'ина', 'ская', 'чина', 'цкая', 'чёва', 'цева'))){
                     $parts[$x]['opinion'] = 'second_name';
                     $parts[$x]['gender'] = 0;
 
@@ -785,6 +785,11 @@ function getNameUser($string) {
             }
 
 
+            // Заполнение пустых переменных
+            if(!isset($result['first_name'])){$result['first_name'] = 'Имя не известно';}
+            if(!isset($result['second_name'])){$result['second_name'] = null;}
+            if(!isset($result['patronymic'])){$result['patronymic'] = null;}
+            if(!isset($result['gender'])){$result['gender'] = 1;} // По умолчанию ставим мужской пол
 
             // dd($result);
 

@@ -116,6 +116,10 @@ use App\Http\ViewComposers\System\RoomsComposer;
 use App\Http\ViewComposers\System\RubricatorsComposer;
 use App\Http\ViewComposers\System\RubricatorsItemsComposer;
 
+
+use App\Http\ViewComposers\System\ListChallengesComposer;
+use App\Http\ViewComposers\System\LeadMethodsComposer;
+
 class ComposerServiceProvider extends ServiceProvider
 {
 
@@ -298,6 +302,10 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('news.rubricators.rubricators', RubricatorsComposer::class);
         view()->composer('news.rubricators.select_rubricators_items', RubricatorsItemsComposer::class);
 
+        view()->composer('layouts.challenges_for_me', ListChallengesComposer::class);
+
+        view()->composer('includes.selects.lead_methods', LeadMethodsComposer::class);
+        
 
     }
 

@@ -26,18 +26,13 @@ class AppController extends Controller
     // Настройки контроллера
     public function __construct(Request $request)
     {
-//        $domain = $request->getHttpHost();
         $domain = $request->getHost();
-//        dd($domain);
-
         $site = Site::where('domain', $domain)
             ->with([
                 'pages_public',
                 'filials'
             ])
             ->first();
-//        dd($site);
-
         $this->site = $site;
     }
 
@@ -406,116 +401,7 @@ class AppController extends Controller
 
         if ($request->personal_data) {
 
-            $lead = new Lead;
-
-            $cart = json_decode(Cookie::get('cart'), true);
-            $badget = $cart['sum'];
-            $count = $cart['count'];
-
-            $site = $this->site;
-            $company_id = $site->company_id;
-            $filial_id = $site->filials->first()->id;
-
-            $name = $request->name;
-            $phone = $request->main_phone;
-
-
-    //        $choiceFromTag = getChoiceFromTag($request->choice_tag);
-    //        $lead->choice_type = $choiceFromTag['type'];
-    //        $lead->choice_id = $choiceFromTag['id'];
-
-            // Работаем с ПОЛЬЗОВАТЕЛЕМ лида ================================================================
-
-            // Если пришел ID пользователя
-            if($request->user_id != null){
-
-                // Получаем пользователя
-                $user_for_lead = User::findOrFail($request->user_id);
-
-                // Готовим даные для лида
-                if($user_for_lead){
-
-                    $name = $user_for_lead->name;
-                    $request->main_phone = $user_for_lead->main_phone->phone;
-                    $phone = $user_for_lead->main_phone->phone;
-                }
-
-            } else {
-
-                // Проверяем, есть ли в базе телефонов пользователь с таким номером
-                $user_for_lead = check_user_by_phones($request->main_phone);
-            }
-
-            if ($user_for_lead != null) {
-
-                // Если есть: записываем в лида ID найденного в системе пользователя
-                $lead->user_id = $user_for_lead->id;
-
-            } else {
-
-                // Если нет: создаем нового пользователя по номеру телефона
-                // используя трейт экспресс создание пользователя
-                $user_for_lead = $this->createUserByPhone($request->main_phone, null, $site->company);
-                // sendSms('79041248598', 'Данные для входа: ' . $user_for_lead->access_code);
-
-                // dd($user_for_lead);
-
-                // Обработка входящих данных ------------------------------------------
-                $mass_names = getNameUser($request->name);
-
-                $user_for_lead->first_name = $mass_names['first_name'] ?? $request->name ?? 'Укажите фамилию';
-                $user_for_lead->second_name = $mass_names['second_name'] ?? null;
-                $user_for_lead->patronymic = $mass_names['patronymic'] ?? null;
-                $user_for_lead->sex = $mass_names['gender'] ?? 1;
-
-                $user_for_lead->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
-
-                // Если к пользователю нужно добавить инфы, тут можно апнуть юзера: ----------------------------------
-
-                $user_for_lead->nickname = $request->name;
-                $phone = $user_for_lead->main_phone->phone;
-
-                // Компания и филиал ----------------------------------------------------------
-                $user_for_lead->company_id = $company_id;
-                $user_for_lead->filial_id = $filial_id;
-                $user_for_lead->save();
-
-                // dd($user_for_lead);
-                $lead->user_id = $user_for_lead->id;
-
-                // Конец апдейта юзеара -------------------------------------------------
-
-            }
-
-            // Конец работы с ПОЛЬЗОВАТЕЛЕМ лида ==============================================================
-
-            $lead->filial_id = $filial_id;
-            $lead->name = $name;
-            $lead->stage_id = 2;
-            $lead->lead_method_id = 2;
-            $lead->badget = $badget;
-            $lead->draft = NULL;
-            $lead->author_id = 1;
-            $lead->company_id = $company_id;
-            $lead->moderation = false;
-
-            // $lead_number = getLeadNumbers($user_auth, $lead);
-            // $lead->case_number = $lead_number['case'];
-            // $lead->serial_number = $lead_number['serial'];
-
-            if($user_for_lead->client){
-                $lead->client_id = $user_for_lead->client->id;
-            };
-
-            // if(($request->extra_phone != NULL)&&($request->extra_phone != "")){
-            //     $lead->extra_phone = cleanPhone($request->extra_phone);
-            // } else {$lead->extra_phone = NULL;};
-
-            // $lead->telegram_id = $request->telegram_id;
-            // $lead->orgform_status = $request->orgform_status;
-            // $lead->user_inn = $request->inn;
-
-            $lead->save();
+            $lead = createLeadFromSite($request);
 
             // Формируем сообщение
             $message = "Заказ с сайта:\r\n";
@@ -529,9 +415,6 @@ class AppController extends Controller
                 'body' => $message,
                 'author_id' => 1,
             ]);
-
-            // Телефон
-            $phones = add_phones($request, $lead);
 
             // Находим или создаем заказ для лида
             $estimate = Estimate::firstOrCreate([
@@ -595,10 +478,9 @@ class AppController extends Controller
             }
 
             Cookie::queue(Cookie::forget('cart'));
-    //        $cookie = Cookie::forget('cart');
+            // $cookie = Cookie::forget('cart');
 
             return redirect()->route('project.start');
-
         }
     }
 }

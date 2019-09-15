@@ -24,7 +24,6 @@ use App\Http\Requests\MyStageRequest;
 
 
 // Специфические классы
-
 use Carbon\Carbon;
 
 // На удаление
@@ -33,7 +32,6 @@ use App\Http\Controllers\Session;
 // Подрубаем трейт записи и обновления компании
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Http\Controllers\Traits\LeadControllerTrait;
-
 
 use App\Exports\LeadsExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -51,9 +49,6 @@ class LeadController extends Controller
     public function index(Request $request)
     {
 
-        $result = extra_right('lead-service');
-        $lead_all_managers = extra_right('lead-all-managers');
-
         // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_name);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
@@ -66,21 +61,23 @@ class LeadController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+
         // -----------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------
 
+        // Проверяем специфические права
+        $lead_all_managers = extra_right('lead-all-managers');
+
         $leads = Lead::with(
-            // 'location.city',
             'choice',
             'lead_type',
             'lead_method',
             'stage',
-            // 'challenges.challenge_type',
-            // 'challenges.appointed',
             'main_phones'
         )
 
+        // Если есть право смотреть лидов ВСЕХ менеджеров (true), то получаем еще данные менеджеров
         ->when($lead_all_managers, function($q){
             return $q->with(['manager' => function($query){
                 $query->select('id', 'first_name', 'second_name');
@@ -90,14 +87,13 @@ class LeadController extends Controller
         ->withCount(['challenges' => function ($query) {
             $query->whereNull('status');
         }])
-        // ->withCount('claims')
         ->manager($user)
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->filials($answer)
         // ->authors($answer)
         ->whereNull('draft')
-        ->systemItem($answer) // Фильтр по системным записям
+        ->systemItem($answer)
         ->filter($request, 'city_id', 'location')
         ->filter($request, 'stage_id')
         ->filter($request, 'manager_id')
@@ -130,9 +126,7 @@ class LeadController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        // Задачи пользователя
-        $list_challenges = challenges($request);
-        return view('leads.index', compact('leads', 'page_info', 'user', 'filter', 'list_challenges', 'lead_all_managers'));
+        return view('leads.index', compact('leads', 'page_info', 'user', 'filter'));
     }
 
 
@@ -154,17 +148,13 @@ class LeadController extends Controller
 
     public function store(LeadRequest $request)
     {
-
         // Не используется.
-
     }
 
 
     public function show(Request $request, $id)
     {
-
         dd('Это show - Тупиковая ветка');
-
     }
 
 
@@ -195,23 +185,19 @@ class LeadController extends Controller
                 $query->with('challenge_type')
                 ->whereNull('status')
                 ->orderBy('deadline_date', 'asc');
-            } // Вырезан фрагмент: ,'estimates.workflows.product'
+            }
         ])
         ->companiesLimit($answer)
-        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->filials($answer)
         // ->where('manager_id', '!=', 1)
         // ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
         ->moderatorLimit($answer)
         ->findOrFail($id);
-        // dd($lead);
 
         // Подключение политики
-        // $this->authorize(getmethod(__FUNCTION__), $lead);
+        $this->authorize(getmethod(__FUNCTION__), $lead);
 
-        $lead_methods_list = LeadMethod::whereIn('mode', [1, 2, 3])->get()->pluck('name', 'id');
-
-        // // $all_categories_list = null;
         $goods_categories_list = GoodsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
             return ['goods-' . $item->id => $item->name];
         })->toArray();
@@ -241,9 +227,6 @@ class LeadController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-
-        // Задачи пользователя
-        $list_challenges = challenges($request);
 
         $filial_id = $request->user()->filial_id;
 
@@ -298,15 +281,11 @@ class LeadController extends Controller
 //         dd($atalog_goods);
 
 
-
-        return view('leads.edit', compact('lead', 'page_info', 'list_challenges', 'lead_methods_list', 'choices', 'catalog_services', 'сatalog_goods'));
+        return view('leads.edit', compact('lead', 'page_info', 'choices', 'catalog_services', 'сatalog_goods'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
     {
-//        dd($request);
-        // Получаем авторизованного пользователя
-        $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
@@ -345,7 +324,6 @@ class LeadController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('index'));
-        // dd($answer);
 
         // --------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -409,15 +387,10 @@ class LeadController extends Controller
         // Добавляем данные по спискам (Требуется на каждом контроллере)
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
 
-        // Задачи пользователя
-        $list_challenges = challenges($request);
-        // dd($challenges);
-
-        return view('leads.index', compact('leads', 'page_info', 'filter', 'user', 'list_challenges'));
+        return view('leads.index', compact('leads', 'page_info', 'filter', 'user'));
     }
 
     public function search(Request $request)
@@ -538,8 +511,6 @@ class LeadController extends Controller
         // Удаляем комментарии
         $lead->notes()->delete();
         $lead->challenges()->delete();
-
-        // $lead->challenges()->delete();
 
         // Удаляем пользователя с обновлением
         $lead->destroy($id);

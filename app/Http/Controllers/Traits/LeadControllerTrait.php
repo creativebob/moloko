@@ -116,39 +116,30 @@ trait LeadControllerTrait
         // Работаем с ПОЛЬЗОВАТЕЛЕМ лида ================================================================
 
         // Проверяем, есть ли в базе телефонов пользователь с таким номером
-        $user_for_lead = check_user_by_phones($request->main_phone);
-        if($user_for_lead != null){
-
+        $user = check_user_by_phones($request->main_phone);
+        if($user != null){
 
             // Если есть: записываем в лида ID найденного в системе пользователя
-            $lead->user_id = $user_for_lead->id;
+            $lead->user_id = $user->id;
 
         } else {
 
             // Если нет: создаем нового пользователя по номеру телефона
             // используя трейт экспресс создание пользователя
-            $user_for_lead = $this->createUserByPhone($request->main_phone);
+            $user = $this->createUserByPhone($request->main_phone);
 
-            // Обработка входящих данных ------------------------------------------
-            $mass_names = getNameUser($request->name);
-
-            $user_for_lead->first_name = $mass_names['first_name'] ?? $request->name ?? 'Укажите фамилию';
-            $user_for_lead->second_name = $mass_names['second_name'] ?? null;
-            $user_for_lead->patronymic = $mass_names['patronymic'] ?? null;
-            $user_for_lead->sex = $mass_names['gender'] ?? 1;
-
-            $user_for_lead->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
+            $user->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
 
             // Если к пользователю нужно добавить инфы, тут можно апнуть юзера: ----------------------------------
 
-            $user_for_lead->nickname = $request->name;
-
             // Компания и филиал ----------------------------------------------------------
-            $user_for_lead->company_id = $company_id;
-            $user_for_lead->filial_id = $filial_id;
-            $user_for_lead->save();
+            $user->company_id = $company_id;
+            $user->filial_id = $filial_id;
+            $user->save();
 
-            // dd($user_for_lead);
+            $lead->user_id = $user->id;
+
+            // dd($user);
 
             // Конец апдейта юзеара -------------------------------------------------
 
@@ -190,36 +181,101 @@ trait LeadControllerTrait
         return $lead;
     }
 
+    public function createLeadFromSite($request){
 
-    // public function createLeadByPhone($phone){
+        if(!isset($request->main_phone)){abort(403, 'Не указан номер телефона!');}
 
-    //     $user_number = User::all()->last()->id;
-    //     $user_number = $user_number + 1;
+        // Готовим необходимые данные ======================================================================
+        // Получаем сайт
+        $site = getSite();
+        $company = $site->company;
 
-    //     $user = new User;
-    //     $user->login = 'user_'.$user_number;
-    //     $user->password = bcrypt(str_random(12));
+        // Если не пришел филиал, берем первый у компании
+        $filial_id = $request->filial_id ?? $site->filials->first()->id;
 
-    //     $user->access_block = 1;
-    //     $user->user_type = 0;
-    //     $user->save();
+        $name = $request->name;
+        $phone = $request->main_phone;
 
-    //     if($user) {
+        // Содержится ли в куках данные корзины
+        if(isset(Cookie::get('cart'))){
 
-    //         // Если номера нет, пишем или ищем новый и создаем связь
-    //         $new_phone = Phone::firstOrCreate(
-    //             ['phone' => cleanPhone($phone)
-    //         ], [
-    //             'crop' => substr(cleanPhone($phone), -4),
-    //         ]);
+            $cart = json_decode(Cookie::get('cart'), true);
+            $badget = $cart['sum'];
+            $count = $cart['count'];            
+        }
 
-    //         $user->phones()->attach($new_phone->id, ['main' => 1]);
-    //         return $user;
 
-    //     } else {
-    //         abort(403, 'Ошибка при создании пользователя по номеру телефона!');
-    //     }
-    // }
+        // Работаем с ПОЛЬЗОВАТЕЛЕМ для лида ================================================================
+
+        // Если пользователь АВТОРИЗОВАН
+        $user = Auth::User();
+        if($user){
+
+            // Формируем имя записи в лида
+            $nickname = $user->first_name . ' ' . $second_name;
+            $phone = $user->main_phone->phone;
+
+        // Если пользователь НЕ авторизован
+        } else {
+
+            // Получаем юзера если такой пользователь есть в базе по указанному номеру
+            $user = check_user_by_phones($request->main_phone);
+
+            // Если нет, то создадим нового
+            if (empty($user)) {
+
+                // Если нет: создаем нового пользователя по номеру телефона
+                // используя трейт экспресс создание пользователя
+                $user = $this->createUserByPhone($request->main_phone, null, $site->company);
+
+                // sendSms('79041248598', 'Данные для входа: ' . $user->access_code);
+
+                $user->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
+
+                // Компания и филиал
+                $user->company_id = $company->id;
+                $user->filial_id = $filial_id;
+                $user->save();
+
+                // Конец апдейта юзеара
+            }
+        }
+
+        // Конец работы с ПОЛЬЗОВАТЕЛЕМ для лида
+       
+
+        // Создание ЛИДА ======================================================================
+        $lead = new Lead;
+        $lead->filial_id = $filial_id;
+        $lead->email = $request->email ?? '';
+        $lead->name = $request->name;
+        $lead->company_name = $request->company_name;
+
+        $lead->stage_id = $request->stage_id ?? 2; // Этап: "обращение"" по умолчанию
+        $lead->badget = $badget ?? 0;
+        $lead->lead_method_id = $request->lead_method ?? 1; // Способ обращения: "звонок"" по умолчанию
+        $lead->draft = false;
+
+        $lead->editor_id = 1;
+
+        if($request->choice_tag){
+
+            $choiceFromTag = getChoiceFromTag($request->choice_tag);
+            $lead->choice_type = $choiceFromTag['type'];
+            $lead->choice_id = $choiceFromTag['id'];
+        } else {
+
+            dd('Хм, нет цели обращения');
+        }
+
+        $lead->save();
+
+        // Телефон
+        $phones = add_phones($request, $lead);
+        // $lead = update_location($request, $lead);
+
+        return $lead;
+    }
 
 
 

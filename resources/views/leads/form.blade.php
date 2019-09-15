@@ -552,7 +552,7 @@
                                                 $disabled_method_list = '';};
                                                 @endphp --}}
 
-                                                {{ Form::select('lead_method', $lead_methods_list, $lead->lead_method_id) }}
+                                                @include('includes.selects.lead_methods', ['lead_method_id' => $lead->lead_method_id])
 
                                             </td><td></td>
                                         </tr>

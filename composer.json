@@ -58,7 +58,6 @@
             "app/Helpers/RobotOperations.php",
             "app/Helpers/MessageOperations.php",
             "app/Helpers/PhoneOperations.php",
-            "app/Helpers/Challenges.php",
             "app/Helpers/Filters.php",
             "app/Helpers/GeneralOperations.php"
         ],

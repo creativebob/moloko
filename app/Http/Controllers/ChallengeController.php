@@ -89,14 +89,8 @@ class ChallengeController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-        // dd($page_info);
 
-        // Задачи пользователя
-        $list_challenges = challenges($request);
-
-        // dd($filter);
-
-        return view('challenges.index', compact('challenges', 'page_info', 'list_challenges', 'filter'));
+        return view('challenges.index', compact('challenges', 'page_info', 'filter'));
     }
 
     public function create(Request $request)

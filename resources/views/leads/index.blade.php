@@ -37,6 +37,13 @@
 
 @section('content')
 
+@php
+  $right_lead_regular = extra_right('lead-regular');
+  $right_lead_dealer = extra_right('lead-dealer');
+  $right_lead_service = extra_right('lead-service');
+  $right_lead_all_managers = extra_right('lead-all-managers');
+@endphp
+
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
@@ -56,7 +63,7 @@
           <th class="td-challenge">Задачи</th>
           {{-- <th class="td-deadline_date">Дедлайн</th> --}}
 
-          @if($lead_all_managers)
+          @if($right_lead_all_managers)
           <th class="td-manager">Менеджер</th>
           @endif
 
@@ -99,15 +106,15 @@
           <td class="td-action">
             @if($lead->manager_id == 1)
 
-            @if(($lead->lead_type_id == 1)&&(extra_right('lead-regular')))
+            @if(($lead->lead_type_id == 1)&&($right_lead-regular))
             <button class="button tiny take-lead">Принять</button>
             @endif
 
-            @if(($lead->lead_type_id == 2)&&(extra_right('lead-dealer')))
+            @if(($lead->lead_type_id == 2)&&($right_lead-dealer))
             <button class="button tiny take-lead">Принять (Дилер)</button>
             @endif
 
-            @if(($lead->lead_type_id == 3)&&(extra_right('lead-service')))
+            @if(($lead->lead_type_id == 3)&&($right_lead-service))
             <button class="button tiny take-lead">Принять (Сервисный центр)</button>
             @endif
 
@@ -137,7 +144,7 @@
                     @endif
                   </td> --}}
 
-                  @if($lead_all_managers)
+                  @if($right_lead_all_managers)
                   <td class="td-manager">
                     @if(!empty($lead->manager->first_name))
                     {{ $lead->manager->first_name . ' ' . $lead->manager->second_name }}

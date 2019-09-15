@@ -85,6 +85,8 @@ use App\AlbumsCategory;
 use App\Observers\AlbumsCategoryObserver;
 use App\Album;
 use App\Observers\AlbumObserver;
+use App\User;
+use App\Observers\UserObserver;
 
 class ObserverServiceProvider extends ServiceProvider
 {
@@ -95,6 +97,9 @@ class ObserverServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        // Пользователь
+        User::observe(UserObserver::class);
 
         // Метрики
         Metric::observe(MetricObserver::class);

@@ -19,6 +19,20 @@ use Illuminate\Support\Str;
 use GuzzleHttp\Client;
 
 
+// Получает экземпляр текущего сайта
+function getSite() {
+
+        $domain = $request->getHost();
+        $site = Site::where('domain', $domain)
+            ->with([
+                'pages_public',
+                'filials'
+            ])
+            ->first();
+        return $site;
+}
+
+
 // Если в функцию не передать ЛИДА, то будет сформирован номер
 // для первого типа обращения на текущую дату
 function getLeadNumbers($user, $lead = null) {
