@@ -256,6 +256,8 @@ trait LeadControllerTrait
         $lead->email = $request->email ?? '';
         $lead->name = $name;
         $lead->company_name = $request->company_name;
+        $lead->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
+
 
         $lead->stage_id = $request->stage_id ?? 2; // Этап: "обращение"" по умолчанию
         $lead->badget = $badget ?? 0;
@@ -280,6 +282,43 @@ trait LeadControllerTrait
         $request->main_phone = $phone;
         $phones = add_phones($request, $lead);
         // $lead = update_location($request, $lead);
+
+        // Формируем сообщение
+        $message = "Заказ с сайта:\r\n";
+        $message .= "Имя клиента: " . $lead->name . "\r\n";
+        $message .= "Тел: " . decorPhone($phone) . "\r\n";
+        $message .= "Кол-во товаров: " . $count ?? '' . "\r\n";
+        $message .= "Сумма заказа: " . num_format($lead->badget, 0) . ' руб.';
+
+        $lead->notes()->create([
+            'company_id' => $company->id,
+            'body' => $message,
+            'author_id' => 1,
+        ]);
+
+        $destinations = User::whereHas('staff', function ($query) {
+            $query->whereHas('position', function ($query) {
+                $query->whereHas('notifications', function ($query) {
+                    $query->where('notification_id', 1);
+                });
+            });
+        })
+            ->whereNotNull('telegram')
+            ->get(['telegram']);
+
+        if (isset($destinations)) {
+
+            // Отправляем на каждый telegram
+            foreach ($destinations as $destination) {
+
+                if (isset($destination->telegram)) {
+                    $response = Telegram::sendMessage([
+                        'chat_id' => $destination->telegram,
+                        'text' => $message
+                    ]);
+                }
+            }
+        }
 
         return $lead;
     }

@@ -402,86 +402,27 @@ class AppController extends Controller
     public function cart_store(Request $request)
     {
 
+        // Если пользователь дал согласие на обработку персональных данных
         if ($request->personal_data) {
 
+            // Содержится ли в куках данные корзины
+            if(Cookie::get('cart') !== null){
+
+                $cart = json_decode(Cookie::get('cart'), true);
+                $badget = $cart['sum'];
+                $count = $cart['count'];            
+            }
+
+            // Создаем лида
             $lead = $this->createLeadFromSite($request);
 
-            // Формируем сообщение
-            $message = "Заказ с сайта:\r\n";
-            $message .= "Имя клиента: " . $lead->name . "\r\n";
-            $message .= "Тел: " . decorPhone($phone) . "\r\n";
-            $message .= "Кол-во товаров: " . $count . "\r\n";
-            $message .= "Сумма заказа: " . num_format($lead->badget, 0) . ' руб.';
-
-            $lead->notes()->create([
-                'company_id' => 1,
-                'body' => $message,
-                'author_id' => 1,
-            ]);
-
-            // Находим или создаем заказ для лида
-            $estimate = Estimate::firstOrCreate([
-                'lead_id' => $lead->id,
-                'company_id' => $company_id
-            ], [
-                'author_id' => 1,
-                'number' => $lead->case_number,
-                'date' => $lead->created_at,
-            ]);
-            // dd($estimate);
-
-            $prices_goods_ids = array_keys($cart['prices']);
-            $prices_goods = PricesGoods::with('goods')
-                ->find($prices_goods_ids);
-
-            $data = [];
-            foreach ($prices_goods as $price_goods) {
-                $data[] = new EstimatesItem([
-                    'product_id' => $price_goods->goods->id,
-                    'product_type' => 'App\Goods',
-
-                    'price_product_id' => $price_goods->id,
-                    'price_product_type' => 'App\PricesGoods',
-
-                    'company_id' => $company_id,
-                    'author_id' => 1,
-
-                    'price' => $price_goods->price,
-                    'count' => $cart['prices'][$price_goods->id]['count'],
-
-                    'sum' => $cart['prices'][$price_goods->id]['count'] * $price_goods->price
-                ]);
-            }
-    //        dd($data);
-
-            $estimate->items()->saveMany($data);
-
-            $destinations = User::whereHas('staff', function ($query) {
-                $query->whereHas('position', function ($query) {
-                    $query->whereHas('notifications', function ($query) {
-                        $query->where('notification_id', 1);
-                    });
-                });
-            })
-                ->whereNotNull('telegram')
-                ->get(['telegram']);
-
-            if (isset($destinations)) {
-
-                // Отправляем на каждый telegram
-                foreach ($destinations as $destination) {
-
-                    if (isset($destination->telegram)) {
-                        $response = Telegram::sendMessage([
-                            'chat_id' => $destination->telegram,
-                            'text' => $message
-                        ]);
-                    }
-                }
+            // Если есть наполненная корзина, создаем смету на лиде
+            if(isset($cart)){
+                $estimate = $this->createEstimateFromCart($cart, $lead);
             }
 
+            // Чистим корзину у пользователя
             Cookie::queue(Cookie::forget('cart'));
-            // $cookie = Cookie::forget('cart');
 
             return redirect()->route('project.start');
         }
