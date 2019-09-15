@@ -8,8 +8,9 @@ use App\Phone;
 
 use App\Events\onAddLeadEvent;
 use Event;
-
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 trait LeadControllerTrait
 {
@@ -183,8 +184,6 @@ trait LeadControllerTrait
 
     public function createLeadFromSite($request){
 
-        if(!isset($request->main_phone)){abort(403, 'Не указан номер телефона!');}
-
         // Готовим необходимые данные ======================================================================
         // Получаем сайт
         $site = getSite();
@@ -197,7 +196,7 @@ trait LeadControllerTrait
         $phone = $request->main_phone;
 
         // Содержится ли в куках данные корзины
-        if(isset(Cookie::get('cart'))){
+        if(Cookie::get('cart') !== null){
 
             $cart = json_decode(Cookie::get('cart'), true);
             $badget = $cart['sum'];
@@ -212,14 +211,18 @@ trait LeadControllerTrait
         if($user){
 
             // Формируем имя записи в лида
-            $nickname = $user->first_name . ' ' . $second_name;
+            $name = $user->first_name ?? '' . ' ' . $second_name ?? '';
             $phone = $user->main_phone->phone;
 
         // Если пользователь НЕ авторизован
         } else {
 
+            if(!isset($request->main_phone)){abort(403, 'Не указан номер телефона!');}
+
             // Получаем юзера если такой пользователь есть в базе по указанному номеру
             $user = check_user_by_phones($request->main_phone);
+
+
 
             // Если нет, то создадим нового
             if (empty($user)) {
@@ -238,6 +241,9 @@ trait LeadControllerTrait
                 $user->save();
 
                 // Конец апдейта юзеара
+            } else {
+
+                $user->nickname = $name;
             }
         }
 
@@ -248,13 +254,13 @@ trait LeadControllerTrait
         $lead = new Lead;
         $lead->filial_id = $filial_id;
         $lead->email = $request->email ?? '';
-        $lead->name = $request->name;
+        $lead->name = $name;
         $lead->company_name = $request->company_name;
 
         $lead->stage_id = $request->stage_id ?? 2; // Этап: "обращение"" по умолчанию
         $lead->badget = $badget ?? 0;
-        $lead->lead_method_id = $request->lead_method ?? 1; // Способ обращения: "звонок"" по умолчанию
-        $lead->draft = false;
+        $lead->lead_method_id = 2; // Способ обращения: "звонок"" по умолчанию
+        $lead->draft = null;
 
         $lead->editor_id = 1;
 
@@ -271,6 +277,7 @@ trait LeadControllerTrait
         $lead->save();
 
         // Телефон
+        $request->main_phone = $phone;
         $phones = add_phones($request, $lead);
         // $lead = update_location($request, $lead);
 

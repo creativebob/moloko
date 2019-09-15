@@ -106,15 +106,15 @@
           <td class="td-action">
             @if($lead->manager_id == 1)
 
-            @if(($lead->lead_type_id == 1)&&($right_lead-regular))
+            @if(($lead->lead_type_id == 1)&&($right_lead_regular))
             <button class="button tiny take-lead">Принять</button>
             @endif
 
-            @if(($lead->lead_type_id == 2)&&($right_lead-dealer))
+            @if(($lead->lead_type_id == 2)&&($right_lead_dealer))
             <button class="button tiny take-lead">Принять (Дилер)</button>
             @endif
 
-            @if(($lead->lead_type_id == 3)&&($right_lead-service))
+            @if(($lead->lead_type_id == 3)&&($right_lead_service))
             <button class="button tiny take-lead">Принять (Сервисный центр)</button>
             @endif
 

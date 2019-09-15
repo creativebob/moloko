@@ -12,6 +12,7 @@ use App\Schedule;
 use App\Worktime;
 use App\Sector;
 use App\RoleUser;
+use App\Site;
 
 // Транслитерация
 use Illuminate\Support\Str;
@@ -21,7 +22,8 @@ use GuzzleHttp\Client;
 
 // Получает экземпляр текущего сайта
 function getSite() {
-
+    
+        $request = request();
         $domain = $request->getHost();
         $site = Site::where('domain', $domain)
             ->with([

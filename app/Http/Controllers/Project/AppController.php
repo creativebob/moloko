@@ -26,6 +26,7 @@ class AppController extends Controller
     // Настройки контроллера
     public function __construct(Request $request)
     {
+        $request = request();
         $domain = $request->getHost();
         $site = Site::where('domain', $domain)
             ->with([
@@ -403,7 +404,7 @@ class AppController extends Controller
 
         if ($request->personal_data) {
 
-            $lead = createLeadFromSite($request);
+            $lead = $this->createLeadFromSite($request);
 
             // Формируем сообщение
             $message = "Заказ с сайта:\r\n";
