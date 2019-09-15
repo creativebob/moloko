@@ -26,6 +26,8 @@ Route::group(['prefix' => '/v1',
 
     Route::post('dropzone', 'PhotoController@store');
 
+    Route::get('/categories/{category_entity}', 'AppController@categories_index');
+
 //    Route::apiResource('prices_goods', 'PricesGoodsController');
 });
 

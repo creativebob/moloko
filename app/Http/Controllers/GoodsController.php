@@ -344,19 +344,23 @@ class GoodsController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
 
         $cur_goods->load([
+            'article' => function ($q) {
+                $q->with([
+                    'unit',
+                    'raws.article.group.unit',
+                    'raws.category'
+                ]);
+            },
             'metrics',
             'prices'
         ]);
 
-        $article = $cur_goods->article->load([
-            'raws.article.group.unit',
-            'raws.category'
-        ]);
+        $article = $cur_goods->article;
 
         // Получаем настройки по умолчанию
-        $dropzone = getSettings($this->entity_alias);
-        $dropzone['id'] = $article->id;
-        $dropzone['entity'] = $article->getTable();
+//        $dropzone = getSettings($this->entity_alias);
+//        $dropzone['id'] = $article->id;
+//        $dropzone['entity'] = $article->getTable();
 //        dd($dropzone);
 
         // Получаем настройки по умолчанию

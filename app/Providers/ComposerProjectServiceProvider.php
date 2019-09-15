@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\ViewComposers\Project\CartComposer;
+use App\Http\ViewComposers\Project\CatalogsGoodsItemsFilterComposer;
 use App\Http\ViewComposers\Project\DepartmentsComposer;
 use App\Http\ViewComposers\Project\CatalogsServiceComposer;
 use App\Http\ViewComposers\Project\CatalogsGoodsComposer;
@@ -62,6 +63,7 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 view()->composer('project.includes.catalogs_goods.filters.price', PricesGoodsPriceFilterComposer::class);
                 view()->composer('project.includes.catalogs_goods.filters.weight', PricesGoodsWeightFilterComposer::class);
                 view()->composer('project.includes.catalogs_goods.filters.raws_articles_groups', PricesGoodsRawsArticlesGroupsFilterComposer::class);
+                view()->composer('project.includes.catalogs_goods.filters.catalogs_goods_items', CatalogsGoodsItemsFilterComposer::class);
 
                 view()->composer($alias. '.layouts.headers.includes.cart', CartComposer::class);
 	            view()->composer($alias. '.pages.contacts.index', FilialComposer::class);
