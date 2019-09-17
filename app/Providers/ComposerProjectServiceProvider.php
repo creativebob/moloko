@@ -13,6 +13,7 @@ use App\Http\ViewComposers\Project\PricesGoodsPriceFilterComposer;
 use App\Http\ViewComposers\Project\PricesGoodsRawsArticlesGroupsFilterComposer;
 use App\Http\ViewComposers\Project\PricesGoodsWeightFilterComposer;
 use App\Http\ViewComposers\Project\StaffComposer;
+use App\Http\ViewComposers\Project\ClientsCompaniesListComposer;
 
 use App\Site;
 use Illuminate\Support\Facades\View;
@@ -64,6 +65,7 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 view()->composer('project.includes.catalogs_goods.filters.weight', PricesGoodsWeightFilterComposer::class);
                 view()->composer('project.includes.catalogs_goods.filters.raws_articles_groups', PricesGoodsRawsArticlesGroupsFilterComposer::class);
                 view()->composer('project.includes.catalogs_goods.filters.catalogs_goods_items', CatalogsGoodsItemsFilterComposer::class);
+                view()->composer('project.includes.clients.companies_list', ClientsCompaniesListComposer::class);
 
                 view()->composer($alias. '.layouts.headers.includes.cart', CartComposer::class);
 	            view()->composer($alias. '.pages.contacts.index', FilialComposer::class);

@@ -195,6 +195,24 @@ class Company extends Model
         return $this->hasManyTrough('App\Dealer', 'App\Client', 'company_id');
     }
 
+    // Получаем клиентов-компании
+    public function clients()
+    {
+        return $this->hasMany('App\Client', 'company_id');
+    }
+
+    // Получаем клиентов-компании
+    public function clients_companies()
+    {
+        return $this->hasMany('App\Client', 'company_id')->where('clientable_type', 'App\Company');
+    }
+
+    // Получаем клиентов-компании
+    public function clients_users()
+    {
+        return $this->hasMany('App\Client', 'company_id')->where('clientable_type', 'App\User');
+    }
+    
     // Производители
     // public function manufacturers()
     // {

@@ -1,6 +1,6 @@
 		@php if(!isset($align)){$align = 'top';} @endphp
 		@isset($navigations[$align])
-			<ul class="cell menu medium-horizontal {{ $align }}-menu">
+			<ul class="cell menu medium-horizontal {{ $align }}-menu {{ $class ?? '' }}">
 				@foreach($navigations[$align]->first()->menus as $menu)
 					@if(isset($menu->alias))
 						<li>
