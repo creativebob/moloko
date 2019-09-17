@@ -2613,6 +2613,7 @@ a#task-toggle{
             float: left;
             font-family: $PFDDPT;
             padding: 0 0.8rem;
+            box-shadow: none;
         }
 
         .icon-search {
@@ -3197,7 +3198,8 @@ a#task-toggle{
 
                 // Ставим картинку градиент = 10пх вниз, и делаем под нее отступ
                 padding-bottom: 5px;
-                background-image: url(img/table-th-border-gradient.jpg);
+                // background-image: url(img/table-th-border-gradient.jpg);
+                border-bottom: 1px solid #666;
                 background-repeat: repeat-x;
                 background-position: bottom;
 
@@ -3257,8 +3259,9 @@ a#task-toggle{
             td {
                 font-family: $SUISL;
                 font-size: 0.8rem;
-                border-top: 1px solid $table-td-border;
-                border-bottom: 1px solid $table-td-border;
+                // border-top: 1px solid $table-td-border;
+                // border-bottom: 1px solid $table-td-border;
+                border-bottom: 1px solid #e5e5e5;
                 line-height: 1.4;
             }
             td.td-news-photo{
@@ -3524,7 +3527,7 @@ a#task-toggle{
     }
     // ------------------------------------- Мобильный контент -------------------------------------
     .content {
-        padding: 30px 0 20px 0;
+        padding: 15px 0 10px 0;s
 
         // .head-content {
         //   text-align: center;

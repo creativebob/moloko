@@ -43,7 +43,7 @@ class AppController extends Controller
     public function start(Request $request)
     {
         if (is_null($this->site)) {
-            return view('project.pages.mains.main');
+            return view('project.pages.main.main');
         } else {
 
             return redirect('catalogs-goods/tovary-dlya-sayta/tekstil');
@@ -52,7 +52,7 @@ class AppController extends Controller
                 ->where('alias', 'main')
                 ->first();
 
-            return view($site->alias.'.pages.mains.index', compact('site','page'));
+            return view($site->alias.'.pages.main.index', compact('site','page'));
         }
     }
 
@@ -63,7 +63,7 @@ class AppController extends Controller
 
         if (is_null($this->site)) {
 
-            return view('project.pages.mains.main');
+            return view('project.pages.main.main');
 
         } else {
 
@@ -407,10 +407,7 @@ class AppController extends Controller
 
             // Содержится ли в куках данные корзины
             if(Cookie::get('cart') !== null){
-
                 $cart = json_decode(Cookie::get('cart'), true);
-                $badget = $cart['sum'];
-                $count = $cart['count'];            
             }
 
             // Создаем лида

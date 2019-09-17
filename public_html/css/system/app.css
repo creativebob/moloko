@@ -11330,6 +11330,8 @@ a#task-toggle {
   float: left;
   font-family: "PFDinDisplayPro-Thin";
   padding: 0 0.8rem;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 
 .content .head-content .icon-search {
@@ -11804,7 +11806,7 @@ a#task-toggle {
   background-color: #eeeeee;
   line-height: 0.8;
   padding-bottom: 5px;
-  background-image: url(img/table-th-border-gradient.jpg);
+  border-bottom: 1px solid #666;
   background-repeat: repeat-x;
   background-position: bottom;
 }
@@ -11865,8 +11867,7 @@ a#task-toggle {
 .content .content-table tbody td {
   font-family: "SegoeUISemiLight";
   font-size: 0.8rem;
-  border-top: 1px solid #eeeeee;
-  border-bottom: 1px solid #eeeeee;
+  border-bottom: 1px solid #e5e5e5;
   line-height: 1.4;
 }
 
@@ -12075,13 +12076,13 @@ a#task-toggle {
     display: none;
   }
   .content {
-    padding: 30px 0 20px 0;
+    padding: 15px 0 10px 0;
   }
-  .content .tabs-wrap .tabs-content {
+  .content s .tabs-wrap .tabs-content {
     margin: 0;
     padding: 0 0.7rem;
   }
-  .content .tabs-wrap .fieldset-access {
+  .content s .tabs-wrap .fieldset-access {
     padding: 1rem 0.6rem;
   }
   .content .content-list .first-active .icon-list {
