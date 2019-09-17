@@ -239,7 +239,9 @@ class StartTableSeeder extends Seeder
             [
                 'catalogs_goods_id' => 1,
                 'name' => 'Первый',
-                'company_id' => 1,
+	            'slug' => \Str::slug('Первый'),
+	            'level' => 1,
+	            'company_id' => 1,
                 'display' => true,
                 'author_id' => 4
 
@@ -247,7 +249,9 @@ class StartTableSeeder extends Seeder
             [
                 'catalogs_goods_id' => 1,
                 'name' => 'Второй',
-                'company_id' => 1,
+	            'slug' => \Str::slug('Второй'),
+	            'level' => 1,
+	            'company_id' => 1,
                 'display' => true,
                 'author_id' => 4
 
@@ -255,7 +259,9 @@ class StartTableSeeder extends Seeder
             [
                 'catalogs_goods_id' => 1,
                 'name' => 'Третий',
-                'company_id' => 1,
+	            'slug' => \Str::slug('Третий'),
+	            'level' => 1,
+	            'company_id' => 1,
                 'display' => true,
                 'author_id' => 4
 
@@ -287,6 +293,8 @@ class StartTableSeeder extends Seeder
             [
                 'catalogs_service_id' => 1,
                 'name' => 'Первый',
+	            'slug' => \Str::slug('Первый'),
+	            'level' => 1,
                 'company_id' => 1,
                 'display' => true,
                 'author_id' => 4
@@ -295,6 +303,8 @@ class StartTableSeeder extends Seeder
             [
                 'catalogs_service_id' => 1,
                 'name' => 'Второй',
+	            'slug' => \Str::slug('Второй'),
+	            'level' => 1,
                 'company_id' => 1,
                 'display' => true,
                 'author_id' => 4
@@ -303,6 +313,8 @@ class StartTableSeeder extends Seeder
             [
                 'catalogs_service_id' => 1,
                 'name' => 'Третий',
+	            'slug' => \Str::slug('Третий'),
+	            'level' => 1,
                 'company_id' => 1,
                 'display' => true,
                 'author_id' => 4
@@ -324,12 +336,16 @@ class StartTableSeeder extends Seeder
         GoodsCategory::insert([
             [
                 'name' => 'Первая категория товаров',
+	            'slug' => \Str::slug('Первая категория товаров'),
+	            'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,
             ],
             [
                 'name' => 'Вторая категория товаров',
+	            'slug' => \Str::slug('Вторая категория товаров'),
+	            'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,
@@ -339,12 +355,16 @@ class StartTableSeeder extends Seeder
         RawsCategory::insert([
             [
                 'name' => 'Первая категория сырья',
+	            'slug' => \Str::slug('Первая категория сырья'),
+	            'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,
             ],
             [
                 'name' => 'Вторая категория сырья',
+	            'slug' => \Str::slug('Вторая категория сырья'),
+	            'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,
@@ -354,12 +374,16 @@ class StartTableSeeder extends Seeder
         ContainersCategory::insert([
             [
                 'name' => 'Первая категория упаковок',
+	            'slug' => \Str::slug('Первая категория упаковок'),
+	            'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,
             ],
             [
                 'name' => 'Вторая категория упаковок',
+	            'slug' => \Str::slug('Вторая категория упаковок'),
+	            'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,
@@ -369,12 +393,16 @@ class StartTableSeeder extends Seeder
         RoomsCategory::insert([
             [
                 'name' => 'Первая категория помещений',
+	            'slug' => \Str::slug('Первая категория помещений'),
+	            'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,
             ],
             [
                 'name' => 'Вторая категория помещений',
+	            'slug' => \Str::slug('Вторая категория помещений'),
+	            'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,
@@ -384,12 +412,16 @@ class StartTableSeeder extends Seeder
         ServicesCategory::insert([
             [
                 'name' => 'Первая категория услуг',
+	            'slug' => \Str::slug('Первая категория услуг'),
+	            'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,
             ],
             [
                 'name' => 'Вторая категория услуг',
+	            'slug' => \Str::slug('Вторая категория услуг'),
+	            'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,
@@ -397,12 +429,16 @@ class StartTableSeeder extends Seeder
 
             [
                 'name' => 'Первая общая категория услуг',
+	            'slug' => \Str::slug('Первая общая категория услуг'),
+	            'level' => 1,
                 'company_id' => null,
                 'author_id' => 4,
                 'display' => true,
             ],
             [
                 'name' => 'Вторая общая категория услуг',
+	            'slug' => \Str::slug('Вторая общая категория услуг'),
+	            'level' => 1,
                 'company_id' => null,
                 'author_id' => 4,
                 'display' => true,
@@ -412,12 +448,16 @@ class StartTableSeeder extends Seeder
         WorkflowsCategory::insert([
             [
                 'name' => 'Первая категория рабочих процессов',
+	            'slug' => \Str::slug('Первая категория рабочих процессов'),
+	            'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,
             ],
             [
                 'name' => 'Вторая категория рабочих процессов',
+	            'slug' => \Str::slug('Вторая категория рабочих процессов'),
+	            'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,

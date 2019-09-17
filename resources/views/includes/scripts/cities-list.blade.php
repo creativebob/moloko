@@ -46,7 +46,7 @@
                         data = "<table class=\"content-table-search table-over\"><tbody><tr><td>Населенный пункт не найден в базе данных, @can('create', App\City::class)<a href=\"/admin/cities\" target=\"_blank\">добавьте его!</a>@endcan @cannot('create', App\City::class)обратитесь к администратору!@endcannot</td></tr></tbody><table>";
                     };
                     // Выводим пришедшие данные на страницу
-                    $('.input-icon').after(data);
+                    $('.label-icon').after(data);
                 }
             });
         };

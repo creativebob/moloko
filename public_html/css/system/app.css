@@ -362,6 +362,10 @@ input[type='search'] {
   color: #cacaca;
 }
 
+::-moz-placeholder {
+  color: #cacaca;
+}
+
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -593,6 +597,10 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
+  color: #cc4b37;
+}
+
+.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -8591,6 +8599,32 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   outline: none;
 }
 
+.label-icon {
+  position: relative;
+}
+
+.label-icon .sprite-input-left {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 23px;
+  left: 8px;
+}
+
+.label-icon .sprite-input-right {
+  display: inline-block;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 23px;
+  right: 8px;
+  -webkit-transition: 0.5s ease opacity;
+  transition: 0.5s ease opacity;
+}
+
 .input-icon {
   position: relative;
 }
@@ -8601,7 +8635,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   width: 16px;
   height: 16px;
   position: absolute;
-  top: 23px;
+  top: 8px;
   left: 8px;
 }
 
@@ -8611,7 +8645,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   width: 16px;
   height: 16px;
   position: absolute;
-  top: 23px;
+  top: 8px;
   right: 8px;
   -webkit-transition: 0.5s ease opacity;
   transition: 0.5s ease opacity;
@@ -10068,11 +10102,11 @@ span.wrap-label-checkboxer {
           box-shadow: none;
 }
 
-.enter .input-icon {
+.enter .label-icon {
   position: relative;
 }
 
-.enter .input-icon .sprite-input-left {
+.enter .label-icon .sprite-input-left {
   top: 8px;
   left: 8px;
   opacity: 0.5;
@@ -10134,11 +10168,11 @@ span.wrap-label-checkboxer {
           box-shadow: none;
 }
 
-.search-in-catalog-panel .input-icon {
+.search-in-catalog-panel .label-icon {
   position: relative;
 }
 
-.search-in-catalog-panel .input-icon .sprite-input-left {
+.search-in-catalog-panel .label-icon .sprite-input-left {
   top: 7px;
   left: 8px;
   opacity: 0.2;

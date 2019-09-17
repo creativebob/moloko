@@ -288,7 +288,7 @@
 
                                 {{-- ПОИСК ПО ТОВАРАМ --}}
                                 <div class="small-12 cell search-in-catalog-panel">
-                                    <label class="input-icon">
+                                    <label class="label-icon">
                                         <input type="text" name="search" placeholder="Поиск" maxlength="25" autocomplete="off">
                                         <div class="sprite-input-left icon-search"></div>
                                         <span class="form-error">Обязательно нужно логиниться!</span>
@@ -378,7 +378,7 @@
 
                                 {{-- ПОИСК ПО УСЛУГАМ --}}
                                 <div class="small-12 cell search-in-catalog-panel">
-                                    <label class="input-icon">
+                                    <label class="label-icon">
                                         <input type="text" name="search" placeholder="Поиск" maxlength="25" autocomplete="off">
                                         <div class="sprite-input-left icon-search"></div>
                                         <span class="form-error">Обязательно нужно логиниться!</span>

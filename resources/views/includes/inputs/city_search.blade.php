@@ -5,7 +5,7 @@
     $field_name = isset($field_name) ? $field_name : 'city_id';
 @endphp
 
-<label id="{{ $id }}" class="city-input-parent input-icon">Город
+<label id="{{ $id }}" class="city-input-parent label-icon">Город
 
     {{-- Город --}}
     {{ Form::text('city_name', $city_name, [

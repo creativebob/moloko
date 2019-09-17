@@ -13,7 +13,34 @@
     }
 }
 
-// Расположение иконки в инпуте
+// Расположение иконки в лейбле
+.label-icon {
+     position: relative;
+
+     .sprite-input-left {
+         display: inline-block;
+         vertical-align: middle;
+         width: 16px;
+         height: 16px;
+         position: absolute;
+         top: 23px;
+         left: 8px;
+         // opacity: 0.5;
+     }
+
+     .sprite-input-right {
+         display: inline-block;
+         vertical-align: middle;
+         width: 16px;
+         height: 16px;
+         position: absolute;
+         top: 23px;
+         right: 8px;
+         // opacity: 0.5;
+         transition: 0.5s ease opacity;
+     }
+ }
+
 .input-icon {
     position: relative;
 
@@ -23,7 +50,7 @@
         width: 16px;
         height: 16px;
         position: absolute;
-        top: 23px;
+        top: 8px;
         left: 8px;
         // opacity: 0.5;
     }
@@ -34,7 +61,7 @@
         width: 16px;
         height: 16px;
         position: absolute;
-        top: 23px;
+        top: 8px;
         right: 8px;
         // opacity: 0.5;
         transition: 0.5s ease opacity;

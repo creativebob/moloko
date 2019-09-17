@@ -119,7 +119,7 @@
                                 </label>
                             </div> --}}
                             <div class="small-12 medium-4 cell">
-                                <label class="input-icon">
+                                <label class="label-icon">
                                     @php
                                         $city_name = null;
                                         $city_id = null;

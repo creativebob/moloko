@@ -19,12 +19,12 @@
         <img class="logo" src="/img/system/logo-creativebob.svg">
         <form action="{{ route('login') }}" method="POST" data-abide novalidate>
           {{ csrf_field() }}
-          <label class="input-icon">
+          <label class="label-icon">
             <input type="text" name="login" placeholder="Логин" maxlength="25" autocomplete="off" required>
             <div class="sprite-input-left icon-login"></div>
             <span class="form-error">Обязательно нужно логиниться!</span>
           </label>
-          <label class="input-icon">
+          <label class="label-icon">
             <input type="password" name="password" placeholder="Пароль" maxlength="25" autocomplete="off" required>
             <div class="sprite-input-left icon-password"></div>
             <span class="form-error">И пароль не помешает вовсе!</span>
