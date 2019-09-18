@@ -49,7 +49,6 @@
                     @endif
 
                     <th class="mark"></th>
-                    <th class="td-replicate"></th>
                     <th class="td-control"></th>
                     <th class="td-archive"></th>
                 </tr>
@@ -150,12 +149,6 @@
                         @if($item->moderation == 1)<span class="hollow button warning mark-no-moderate tiny">На модерации</span>@endif
 
                         @if($item->article->draft) <span class="mark-draft">Черновик</span> @endif
-
-                    </td>
-
-                    <td class="td-replicate">
-
-                        <a class="button" data-open="modal-replicate">Дублировать</a>
 
                     </td>
 
