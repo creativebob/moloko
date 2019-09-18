@@ -73,6 +73,13 @@ class Container extends Model
         return $this->belongsTo(ContainersCategory::class);
     }
 
+    // Метрики
+    public function metrics()
+    {
+        return $this->morphToMany(Metric::class, 'entity', 'entity_metric_value')
+            ->withPivot('value');
+    }
+
     // Компания
     public function company()
     {

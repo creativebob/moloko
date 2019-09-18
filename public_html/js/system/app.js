@@ -12481,12 +12481,12 @@ module.exports = Cancel;
  */
 
 try {
-    window.$ = window.jQuery = __webpack_require__(1);
+  window.$ = window.jQuery = __webpack_require__(1);
 
-    __webpack_require__(3);
-    __webpack_require__(16);
+  __webpack_require__(3);
+  __webpack_require__(16);
 
-    __webpack_require__(20); // 'foundation.min' can also be used if you like
+  __webpack_require__(20); // 'foundation.min' can also be used if you like
 } catch (e) {}
 
 /**
@@ -12508,9 +12508,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
 /**
@@ -40967,9 +40967,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 };
             }
         },
-        // cities: {
-        //     type: Array
-        // },
         required: {
             type: Boolean,
             default: false
@@ -41006,15 +41003,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         check: function check() {
+            var _this2 = this;
+
             // console.log('Ищем введеные данные в наших городах (подгруженных), затем от результата меняем состояние на поиск или ошибку');
-            var obj = this.cities;
-            var search = this.text.toLowerCase();
-            for (var item in obj) {
-                var el = obj[item];
-                if (el.name.toLowerCase().includes(search)) {
-                    this.results.push(el);
-                }
-            }
+            this.results = this.cities.filter(function (item) {
+                return item.name.toLowerCase().includes(_this2.text.toLowerCase());
+            });
 
             this.search = this.results.length > 0;
             this.error = this.results.length == 0;
@@ -41046,7 +41040,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.search = false;
             this.results = [];
 
-            if (this.text.length > 2) {
+            if (this.text.length > 0) {
                 this.check();
             }
         },
@@ -43209,6 +43203,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -43217,7 +43217,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         axios.get('/api/v1/categories_select/' + this.entity).then(function (response) {
             _this.categories = response.data.categories;
             _this.items = response.data.items;
-            _this.results = response.data.items;
         }).catch(function (error) {
             console.log(error);
         });
@@ -43295,7 +43294,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.search = false;
             this.results = [];
 
-            this.check();
+            if (this.text.length > 0) {
+                this.check();
+            }
         },
         onEnter: function onEnter() {
             if (this.results.length == 1) {
@@ -43355,7 +43356,7 @@ var render = function() {
       }),
       _vm._v(" "),
       _c("div", {
-        staticClass: "sprite-input-right sprite-16 icon-error",
+        staticClass: "sprite-input-right sprite-16 icon-select",
         on: {
           click: function($event) {
             _vm.showCategories = !_vm.showCategories
@@ -43385,40 +43386,42 @@ var render = function() {
     }),
     _vm._v(" "),
     _vm.showCategories
-      ? _c(
-          "ul",
-          {
-            staticClass: "vertical menu drilldown",
-            attrs: {
-              "data-drilldown": "",
-              "data-back-button":
-                '<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
-            }
-          },
-          _vm._l(_vm.categories, function(category) {
-            return _c("li", { staticClass: "item-catalog" }, [
-              _c("a", { staticClass: "get-prices" }, [
-                _vm._v(_vm._s(category.name))
-              ]),
-              _vm._v(" "),
-              category.childrens
-                ? _c(
-                    "ul",
-                    { staticClass: "menu vertical nested" },
-                    _vm._l(category.childrens, function(children) {
-                      return _c("li", { staticClass: "item-catalog" }, [
-                        _c("a", { staticClass: "get-prices" }, [
-                          _vm._v(_vm._s(children.name))
+      ? _c("div", { staticClass: "relat" }, [
+          _c(
+            "ul",
+            {
+              staticClass: "vertical menu abs",
+              attrs: {
+                "data-drilldown": "",
+                "data-back-button":
+                  '<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
+              }
+            },
+            _vm._l(_vm.categories, function(category) {
+              return _c("li", { staticClass: "item-catalog" }, [
+                _c("a", { staticClass: "get-prices" }, [
+                  _vm._v(_vm._s(category.name))
+                ]),
+                _vm._v(" "),
+                category.childrens
+                  ? _c(
+                      "ul",
+                      { staticClass: "menu vertical nested" },
+                      _vm._l(category.childrens, function(children) {
+                        return _c("li", { staticClass: "item-catalog" }, [
+                          _c("a", { staticClass: "get-prices" }, [
+                            _vm._v(_vm._s(children.name))
+                          ])
                         ])
-                      ])
-                    }),
-                    0
-                  )
-                : _vm._e()
-            ])
-          }),
-          0
-        )
+                      }),
+                      0
+                    )
+                  : _vm._e()
+              ])
+            }),
+            0
+          )
+        ])
       : _vm._e(),
     _vm._v(" "),
     _c("table", { staticClass: "content-table-search table-over" }, [

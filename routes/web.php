@@ -336,14 +336,16 @@ Route::resource('/raws_products', 'RawsProductController')->middleware('auth');
 // Основные методы
 Route::resource('/raws', 'RawController');
 // Route::get('/raws/search/{text_fragment}', 'RawController@search')->middleware('auth');
-Route::post('/raws/search/{text_fragment}', 'RawController@search')->middleware('auth');
+Route::post('/raws/search/{text_fragment}', 'RawController@search');
 // Архивация
-Route::post('/raws/archive/{id}', 'RawController@archive')->middleware('auth');
+Route::post('/raws/archive/{id}', 'RawController@archive');
+// Дублирование
+Route::post('/raws/replicate/{id}', 'RawController@replicate');
 // Фото
-Route::any('/raw/add_photo', 'RawController@add_photo')->middleware('auth');
-Route::post('/raw/photos', 'RawController@photos')->middleware('auth');
+Route::any('/raw/add_photo', 'RawController@add_photo');
+Route::post('/raw/photos', 'RawController@photos');
 
-Route::any('/raws_create_mode', 'RawController@ajax_change_create_mode')->middleware('auth');
+Route::any('/raws_create_mode', 'RawController@ajax_change_create_mode');
 
 // ------------------------------------- Категории упаковок -------------------------------------------
 
@@ -359,8 +361,10 @@ Route::resource('/containers_categories', 'ContainersCategoryController')->middl
 Route::resource('/containers', 'ContainerController');
 // Route::get('/containers/search/{text_fragment}', 'СontainerController@search')->middleware('auth');
 Route::post('/containers/search/{text_fragment}', 'СontainerController@search')->middleware('auth');
+// Дублирование
+Route::post('/containers/replicate/{id}', 'ContainerController@replicate');
 // Архивация
-Route::post('/containers/archive/{id}', 'СontainerController@archive')->middleware('auth');
+Route::post('/containers/archive/{id}', 'ContainerController@archive')->middleware('auth');
 // Фото
 Route::any('/container/add_photo', 'СontainerController@add_photo')->middleware('auth');
 Route::post('/container/photos', 'СontainerController@photos')->middleware('auth');
@@ -443,6 +447,8 @@ Route::post('/goods/photos', 'GoodsController@photos')->middleware('auth');
 // Основные методы
 Route::resource('/goods', 'GoodsController');
 Route::post('/goods/search/{text_fragment}', 'GoodsController@search')->middleware('auth');
+// Дублирование
+Route::post('/goods/replicate/{id}', 'GoodsController@replicate');
 // Архивация
 Route::post('/goods/archive/{id}', 'GoodsController@archive')->middleware('auth');
 

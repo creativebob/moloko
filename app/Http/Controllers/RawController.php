@@ -453,6 +453,41 @@ class RawController extends Controller
         }
     }
 
+    public function replicate(Request $request, $id)
+    {
+        $raw = Raw::findOrFail($id);
+
+        $raw->load('article');
+        $article = $raw->article;
+        $new_article = $this->replicateArticle($request, $article);
+
+        $new_raw = $raw->replicate();
+        $new_raw->article_id = $new_article->id;
+        $new_raw->save();
+
+        $raw->load('metrics');
+        if ($raw->metrics->isNotEmpty()) {
+            $metrics_insert = [];
+            foreach ($raw->metrics as $metric) {
+                $metrics_insert[$metric->id]['value'] = $metric->pivot->value;
+            }
+            $res = $new_raw->metrics()->attach($metrics_insert);
+        }
+
+        if($article->kit) {
+            $article->load('raws');
+            if ($article->raws->isNotEmpty()) {
+                $raws_insert = [];
+                foreach ($article->raws as $raw) {
+                    $raws_insert[$raw->id]['value'] = $raw->pivot->value;
+                }
+                $res = $new_article->raws()->attach($raws_insert);
+            }
+        }
+
+        return redirect()->route('raws.index');
+    }
+
     // --------------------------------------------- Ajax -------------------------------------------------
 
     public function ajax_get_raw(Request $request)

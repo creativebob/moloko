@@ -362,10 +362,6 @@ input[type='search'] {
   color: #cacaca;
 }
 
-::-moz-placeholder {
-  color: #cacaca;
-}
-
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -597,10 +593,6 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
-  color: #cc4b37;
-}
-
-.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -8676,6 +8668,13 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   z-index: 50;
 }
 
+.icon-select {
+  background: url(img/password.svg) no-repeat;
+  opacity: 1;
+  cursor: pointer;
+  z-index: 50;
+}
+
 .one-icon-16 {
   display: inline-block;
   vertical-align: middle;
@@ -12400,4 +12399,14 @@ a#task-toggle {
 .content-table-search.table-over {
   width: auto;
   border: 1px solid #bbb;
+}
+
+.relat {
+  position: relative;
+}
+
+.relat .abs {
+  position: absolute;
+  top: 0px;
+  left: 0px;
 }

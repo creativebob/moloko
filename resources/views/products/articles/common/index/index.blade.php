@@ -49,6 +49,7 @@
                     @endif
 
                     <th class="mark"></th>
+                    <th class="td-replicate"></th>
                     <th class="td-control"></th>
                     <th class="td-archive"></th>
                 </tr>
@@ -57,7 +58,7 @@
                 @if($items->isNotEmpty())
 
                 @foreach($items as $item)
-                <tr class="item @if($item->moderation == 1)no-moderation @endif @if($item->article->draft) draft @endif" id="{{ $entity }}-{{ $item->id }}" data-name="{{ $item->article->name }}">
+                <tr class="item @if($item->moderation == 1)no-moderation @endif @if($item->article->draft) draft @endif" id="{{ $entity }}-{{ $item->id }}" data-name="{{ $item->article->name }}" data-entity="{{ $entity }}" data-id="{{ $item->id }}">
                     <td class="td-drop">
                         <div class="sprite icon-drop"></div>
                     </td>
@@ -152,6 +153,12 @@
 
                     </td>
 
+                    <td class="td-replicate">
+
+                        <a class="button" data-open="modal-replicate">Дублировать</a>
+
+                    </td>
+
                     {{-- Элементы управления --}}
                     @include('includes.control.table_td', ['item' => $item]) 
 
@@ -187,9 +194,11 @@
 {{-- Модалка удаления с refresh --}}
 @include('includes.modals.modal-archive')
 
+@include('includes.modals.modal-replicate')
+
 @endsection
 
-@section('scripts')
+@push('scripts')
 {{-- Скрипт чекбоксов, сортировки и перетаскивания для таблицы --}}
 @include('includes.scripts.tablesorter-script')
 @include('includes.scripts.sortable-table-script')
@@ -216,4 +225,19 @@
 ]
 )
 
-@endsection
+<script>
+    // Дублирование
+    $(document).on('click', '[data-open="modal-replicate"]', function() {
+        // находим описание сущности, id и название удаляемого элемента в родителе
+        let parent = $(this).closest('.item'),
+            entity = parent.data('entity'),
+            id = parent.data('id'),
+            name = parent.data('name');
+
+        $('.title-replicate').text(name);
+        // $('.delete-button').attr('id', 'del-' + type + '-' + id);
+        $('#form-replicate').attr('action', '/admin/' + entity + '/replicate/' + id);
+    });
+</script>
+
+@endpush

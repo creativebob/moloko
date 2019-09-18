@@ -9,7 +9,7 @@
 
     {{-- CSRF Token --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    </style>
+
     <title>CRM System</title>
   </head>
   <body class="enter-page">

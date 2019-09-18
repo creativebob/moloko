@@ -12,7 +12,7 @@
             >
 
             <div
-                    class="sprite-input-right sprite-16 icon-error"
+                    class="sprite-input-right sprite-16 icon-select"
                     @click='showCategories = !showCategories'
             >
             </div>
@@ -27,11 +27,16 @@
                 pattern="[0-9]{3}"
         >
 
-        <ul
+        <div
                 v-if="showCategories"
-                class="vertical menu drilldown"
-                data-drilldown data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
+                class="relat"
         >
+            <ul
+
+                class="vertical menu abs"
+                data-drilldown
+                data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
+            >
 
             <li
                     v-for="category in categories"
@@ -58,6 +63,7 @@
 
 
         </ul>
+        </div>
 
         <table class="content-table-search table-over">
             <tbody>
@@ -83,11 +89,11 @@
 <script>
     export default {
         mounted() {
+
             axios.get('/api/v1/categories_select/' + this.entity)
                 .then(response => {
-                this.categories = response.data.categories
+                    this.categories = response.data.categories
                     this.items = response.data.items
-                    this.results = response.data.items
             })
                 .catch(error => {
                     console.log(error)
@@ -172,9 +178,9 @@
                 this.search = false;
                 this.results = [];
 
-
+                if (this.text.length > 0) {
                     this.check();
-
+                }
             },
             onEnter() {
                 if (this.results.length == 1) {

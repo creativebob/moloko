@@ -81,9 +81,6 @@
                     }
                 }
             },
-            // cities: {
-            //     type: Array
-            // },
             required: {
                 type: Boolean,
                 default: false
@@ -120,14 +117,9 @@
         methods: {
             check() {
                 // console.log('Ищем введеные данные в наших городах (подгруженных), затем от результата меняем состояние на поиск или ошибку');
-                let obj = this.cities;
-                const search = this.text.toLowerCase();
-                for (var item in obj) {
-                    let el = obj[item]
-                    if (el.name.toLowerCase().includes(search)) {
-                        this.results.push(el);
-                    }
-                }
+                this.results = this.cities.filter(item => {
+                    return item.name.toLowerCase().includes(this.text.toLowerCase());
+                });
 
                 this.search = (this.results.length > 0)
                 this.error = (this.results.length == 0)
@@ -160,7 +152,7 @@
                 this.search = false;
                 this.results = [];
 
-                if (this.text.length > 2) {
+                if (this.text.length > 0) {
                     this.check();
                 }
             },

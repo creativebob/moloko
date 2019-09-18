@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Traits;
 
+use Illuminate\Support\Facades\File;
 use App\Photo;
 use App\PhotoSetting;
 use App\Entity;
@@ -12,7 +13,7 @@ trait Photable
 {
 
     /**
-     * Get photo id.
+     * Сохраняем загруженную фотографию и получаем ее id.
      *
      * @param  $request
      * @param  $item
@@ -191,6 +192,111 @@ trait Photable
             'upload_success' => $upload_success,
         ];
         return $result;
+    }
+
+    /**
+     * Копируем фото из папки и получаем id.
+     *
+     * @param  $item
+     * @param  $new_item
+     * @return int
+     */
+
+    public function replicatePhoto($item, $new_item)
+    {
+
+        if (isset($item->photo_id))  {
+
+            $photo = $item->photo;
+            $new_photo = $photo->replicate();
+
+            $user = request()->user();
+            $new_photo->author_id = hideGod($user);
+
+            $new_photo->save();
+            // dd('Функция маслает!');
+
+            $directory = $item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
+            $new_directory = $new_item->company_id . '/media/' . $new_item->getTable() . '/' . $new_item->id . '/img';
+
+            foreach ([
+                'original',
+                'small',
+                         'medium',
+                         'large'
+             ] as $value) {
+
+                Storage::disk('public')
+                    ->copy($directory. '/' . $value . '/' . $photo->name, $new_directory. '/' . $value . '/' . $photo->name);
+
+            }
+            return $photo->id;
+        } else {
+            return $item->photo_id;
+        }
+    }
+
+    /**
+     * Копируем фото из папки и получаем id.
+     *
+     * @param  $item
+     * @param  $new_item
+     * @return int
+     */
+
+    public function replicateAlbumWithPhotos($item, $new_item)
+    {
+
+        if (isset($item->album_id))  {
+
+            $album = $item->album;
+            $new_album = $album->replicate();
+
+            $new_album->name = $new_item->name;
+
+            $user = request()->user();
+            $new_album->author_id = hideGod($user);
+
+            $new_album->save();
+            // dd('Функция маслает!');
+
+            $photos_insert = [];
+            foreach ($album->photos as $photo) {
+
+                $new_photo = $photo->replicate();
+
+                $new_photo->album_id = $new_album->id;
+
+                $user = request()->user();
+                $new_photo->author_id = hideGod($user);
+
+                $new_photo->save();
+
+                $photos_insert[] = $new_photo->id;
+                // dd('Функция маслает!');
+
+                $directory = $album->company_id . '/media/albums/' . $album->id . '/img';
+                $new_directory = $new_album->company_id . '/media/albums/' . $new_album->id . '/img';
+
+                foreach ([
+                             'original',
+                             'small',
+                             'medium',
+                             'large'
+                         ] as $value) {
+
+                    Storage::disk('public')
+                        ->copy($directory. '/' . $value . '/' . $photo->name, $new_directory. '/' . $value . '/' . $photo->name);
+
+                }
+
+            }
+            $new_album->photos()->attach($photos_insert);
+
+            return $album->id;
+        } else {
+            return $item->album_id;
+        }
     }
 
     // Настройки для фоток

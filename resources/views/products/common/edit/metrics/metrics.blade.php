@@ -6,7 +6,7 @@
     <div id="metrics-list">
 
         @foreach ($item->category->metrics as $metric)
-        @include('products..common.edit.metrics.metric_input')
+        @include('products.common.edit.metrics.metric_input')
         @endforeach
 
     </div>
