@@ -8912,6 +8912,24 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   opacity: 1;
 }
 
+.icon-stock {
+  background-position: 0px -1346px;
+  opacity: 0.3;
+}
+
+.icon-stock:hover {
+  opacity: 1;
+}
+
+.icon-consignment {
+  background-position: 0px -1378px;
+  opacity: 0.3;
+}
+
+.icon-consignment:hover {
+  opacity: 1;
+}
+
 .icon-filter {
   background-position: 0px -352px;
   float: left;
