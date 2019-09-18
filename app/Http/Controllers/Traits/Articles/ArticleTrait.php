@@ -196,6 +196,7 @@ trait ArticleTrait
                 }
 
                 $data['draft'] = request()->draft;
+                // dd($data);
 
                 $result = $this->getPhotoId($request, $article);
                 $data['photo_id'] = $result;

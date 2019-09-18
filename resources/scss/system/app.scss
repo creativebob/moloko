@@ -3984,3 +3984,14 @@ $responsive-card-table-label-bg: #ffffff;
     width: auto;
     border: 1px solid #bbb;
 }
+
+
+// Упаковка (на составах)
+.switch-inactive{
+    color: $white;
+}
+
+.switch-active {
+    padding-left: 5px;
+    color: $white;
+}

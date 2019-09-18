@@ -4100,7 +4100,7 @@ a.button:hover, a.button:focus {
   width: 4rem;
   height: 2rem;
   border-radius: 0;
-  background: #cacaca;
+  background: #8a8a8a;
   -webkit-transition: all 0.25s ease-out;
   transition: all 0.25s ease-out;
   font-weight: inherit;
@@ -4129,7 +4129,7 @@ input + .switch-paddle {
 }
 
 input:checked ~ .switch-paddle {
-  background: #1779ba;
+  background: #7e9a06;
 }
 
 input:checked ~ .switch-paddle::after {
@@ -8792,15 +8792,33 @@ a.icon-list-edit {
   opacity: 1;
 }
 
-tr:hover .icon-display-show, tr:hover .icon-system-unlock {
-  opacity: 0.2;
+.icon-clone {
+  opacity: 0;
+  -webkit-transition: opacity ease 0.3s;
+  transition: opacity ease 0.3s;
 }
 
-tr:hover .icon-display-show:hover, tr:hover .icon-system-unlock:hover {
+.icon-clone.black {
+  background-position: -32px -1312px;
+}
+
+.icon-clone.white {
+  background-position: -96px -1312px;
+}
+
+.icon-clone:hover {
   opacity: 1;
 }
 
-tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-unlock, tr:hover .icon-system-lock {
+tr:hover .icon-display-show, tr:hover .icon-system-unlock, tr:hover .icon-clone {
+  opacity: 0.2;
+}
+
+tr:hover .icon-display-show:hover, tr:hover .icon-system-unlock:hover, tr:hover .icon-clone:hover {
+  opacity: 1;
+}
+
+tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-unlock, tr:hover .icon-system-lock, tr:hover .icon-clone {
   cursor: pointer;
 }
 
@@ -12366,4 +12384,13 @@ a#task-toggle {
 .content-table-search.table-over {
   width: auto;
   border: 1px solid #bbb;
+}
+
+.switch-inactive {
+  color: #ffffff;
+}
+
+.switch-active {
+  padding-left: 5px;
+  color: #ffffff;
 }

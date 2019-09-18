@@ -27,7 +27,7 @@ class CreateArticlesGroupsTable extends Migration
             $table->foreign('unit_id')->references('id')->on('units');
 
             $table->bigInteger('units_category_id')->nullable()->unsigned()->comment('Id категории единицы измерения');
-            $table->foreign('units_category_id')->references('id')->on('units');
+            $table->foreign('units_category_id')->references('id')->on('units_categories');
 
             // $table->bigInteger('rule_id')->nullable()->unsigned()->comment('Id правила определения цены');
             // $table->foreign('rule_id')->references('id')->on('rules');

@@ -31,7 +31,8 @@
 
 	<div class="grid-x align-center">
 		<div class="small-6 medium-4 cell">
-			{{ Form::submit('Добавить', ['class'=>'button modal-button submit-create']) }}
+			<button type="button" class="button modal-button submit-create">Добавить</button>
+			{{-- Form::submit('Добавить', ['class'=>'button modal-button submit-create']) --}}
 		</div>
 	</div>
 
