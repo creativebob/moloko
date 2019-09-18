@@ -11805,6 +11805,10 @@ a#task-toggle {
   border-bottom: none;
 }
 
+.content .content-table .td-photo img {
+  max-height: 100px;
+}
+
 .content .content-table th:first-child:hover {
   cursor: default;
 }
@@ -12454,4 +12458,8 @@ a#task-toggle {
   position: absolute;
   top: 0px;
   left: 0px;
+}
+
+.wrap-article-photo img {
+  max-height: 300px;
 }

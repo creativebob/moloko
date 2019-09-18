@@ -167,7 +167,7 @@
 									<label>Фотография
 										{{ Form::file('photo') }}
 									</label>
-									<div class="text-center">
+									<div class="text-center wrap-article-photo">
 										<img id="photo" src="{{ getPhotoPathPlugEntity($item) }}">
 									</div>
 								</div>

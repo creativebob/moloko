@@ -1529,6 +1529,9 @@ table.list-employees {
 }
 
 
+
+
+
 // variables
 $multilevel-accordion-bg: #4d5158;
 $multilevel-accordion-sub-bg: #35383d;
@@ -3109,6 +3112,12 @@ a#task-toggle{
     // ----------------------------- Таблица в контенте --------------------------------------
     .content-table {
 
+        .td-photo{
+            img{
+                max-height: 100px;
+            }
+        }
+
         th:first-child:hover {
             cursor: default;
         }
@@ -4003,4 +4012,9 @@ $responsive-card-table-label-bg: #ffffff;
         top: 0px;
         left: 0px;
     }
+}
+
+// Артикул
+.wrap-article-photo img{
+    max-height: 300px;
 }
