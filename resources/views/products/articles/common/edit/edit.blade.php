@@ -222,7 +222,7 @@
 													'field_name' => 'unit_weight_id',
 													'units_category_id' => 2,
 													'disabled' => null,
-													'data' => $article->unit_weight_id,
+													'data' => $article->unit_weight_id ?? 7,
 												])
 											</label>
 										</div>
@@ -377,12 +377,12 @@
 							<legend>Доступность</legend>
 								{{-- Чекбокс черновика --}}
 								{!! Form::hidden('draft', 0) !!}
-								@if ($article->draft)
+								{{-- @if ($article->draft) --}}
 								<div class="small-12 cell checkbox">
 									{!! Form::checkbox('draft', 1, $article->draft, ['id' => 'checkbox-draft']) !!}
 									<label for="checkbox-draft"><span>Черновик</span></label>
 								</div>
-								@endif
+								{{-- @endif --}}
 
 
 								<div class="small-12 cell checkbox">

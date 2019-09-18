@@ -3,6 +3,15 @@
 
 		<div class="grid-x grid-padding-x">
 			<div class="small-12 medium-6 large-9 cell">
+				<p>Использовать фото упаковки вместо фото товара?</p>
+				<div class="cell small-12 switch tiny">
+					<input class="switch-input" id="yes-no" type="checkbox" name="exampleSwitch">
+					<label class="switch-paddle" for="yes-no">
+						<span class="show-for-sr">Использовать фото упаковки вместо фото товара?</span>
+						<span class="switch-active" aria-hidden="true"> Да</span>
+						<span class="switch-inactive" aria-hidden="true">Нет</span>
+					</label>
+				</div>
 			</div>
 			<div class="small-12 medium-6 large-3 cell">
 				{{-- Если статус у товара статус черновика, то показываем сырье --}}
@@ -34,9 +43,9 @@
 						<th>Продукт:</th>
 						<th>Кол-во:</th>
 						<th>Использование:</th>
-						<th>Отход:</th>
+						{{-- <th>Отход:</th>
 						<th>Остаток:</th>
-						<th>Операция над остатком:</th>
+						<th>Операция над остатком:</th> --}}
 						<th></th>
 					</tr>
 				</thead>

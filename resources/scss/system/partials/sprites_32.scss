@@ -146,9 +146,27 @@ a.icon-list-edit {
     }
 }
 
+.icon-clone {
+
+    &.black {
+        background-position: -32px -1312px;
+    }
+
+    &.white {
+        background-position: -96px -1312px;
+    }
+
+    opacity: 0;
+    transition: opacity ease 0.3s;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
 tr:hover {
 
-    .icon-display-show, .icon-system-unlock {
+    .icon-display-show, .icon-system-unlock, .icon-clone {
 
         opacity: 0.2;
 
@@ -157,7 +175,7 @@ tr:hover {
         }
     }
 
-    .icon-display-show, .icon-display-hide, .icon-system-unlock, .icon-system-lock {
+    .icon-display-show, .icon-display-hide, .icon-system-unlock, .icon-system-lock, .icon-clone {
         cursor: pointer;
     }
     // background-position: -32px -992px;

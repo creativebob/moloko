@@ -3985,6 +3985,16 @@ $responsive-card-table-label-bg: #ffffff;
     border: 1px solid #bbb;
 }
 
+// Упаковка (на составах)
+.switch-inactive{
+    color: $white;
+}
+
+.switch-active {
+    padding-left: 5px;
+    color: $white;
+}
+
 .relat {
     position: relative;
 
@@ -3993,5 +4003,4 @@ $responsive-card-table-label-bg: #ffffff;
         top: 0px;
         left: 0px;
     }
-
 }

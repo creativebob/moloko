@@ -489,6 +489,17 @@
         // ----------------------------------------------------------------------------
 
 
+
+        // ФИЛЬТР ПО КАТЕГОРИИ ТОВАРА -------------------------------------------------
+        if($name_filter == 'containers_category'){
+
+            $filter[$name_filter]['title'] = 'Категория:';                                          // Назавние фильтра
+            $column = 'category_id';                                                                // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterContainersCategoryList();  // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
+
         // ФИЛЬТР ПО ГРУППЕ ТОВАРА ----------------------------------------------------
         if($name_filter == 'articles_group'){
 
@@ -741,6 +752,14 @@
         ->get()->pluck('name', 'id')->toArray();
         return $goods_categories;
     }
+
+    function getFilterContainersCategoryList(){
+
+        $containers_categories = App\ContainersCategory::orderBy('name', 'asc')
+        ->get()->pluck('name', 'id')->toArray();
+        return $containers_categories;
+    }
+
 
     function getFilterArticlesGroupList(){
 

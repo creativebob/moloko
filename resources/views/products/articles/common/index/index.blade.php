@@ -136,7 +136,7 @@
 
                                     @if($item->article->unit_id == 32)
                                         @if($item->price_unit_id != 32)
-                                            <span class='tiny-text'>за {{ $item->price_unit->abbreviation }}</span>
+                                            <span class='tiny-text'>за {{ $item->price_unit->abbreviation ?? '' }}</span>
                                         @endif
                                     @endif
 
@@ -160,7 +160,7 @@
                     </td>
 
                     {{-- Элементы управления --}}
-                    @include('includes.control.table_td', ['item' => $item]) 
+                    @include('includes.control.table_td', ['item' => $item, 'clone' => true]) 
 
                     <td class="td-archive">
                         @if ($item->system != 1)

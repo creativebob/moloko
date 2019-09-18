@@ -30,9 +30,9 @@
 			<span class="form-error">Введите количество</span>
 		</div>
 	</td>
-	<td>
+	{{-- <td>
 		<div class="wrap-input-table">
-			{{-- Количество чего-либо --}}
+
 			{{ Form::text('containers['.$container->id.'][waste]', $container->pivot ? $container->pivot->waste : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder container-waste', 'id'=>'3', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="3" class="text-to-placeholder">
 
@@ -45,7 +45,7 @@
 	</td>
 	<td>
 		<div class="wrap-input-table">
-			{{-- Количество чего-либо --}}
+
 			{{ Form::text('containers['.$container->id.'][leftover]', $container->pivot ? $container->pivot->leftover : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder container-leftover', 'id'=>'4', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="4" class="text-to-placeholder">
 
@@ -58,7 +58,7 @@
 	</td>
 	<td>
 		@include('products.articles.goods.containers.leftover_operations_select', ['selected' => $container->pivot ? $container->pivot->leftover_operation_id : null])
-	</td>
+	</td> --}}
 
 	<td class="td-delete">
 		@empty($disabled)

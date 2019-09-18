@@ -1,5 +1,7 @@
 <td class="td-control">
 
+        @if($clone)<div title="Клонировать" class="icon-clone black sprite" data-open="item-clone"></div>@endif
+
         {{-- Отображение на сайте --}}
         @can ('display', $item)
         @display ($item)
@@ -23,7 +25,7 @@
         @switch($item)
 
         @case($item->system == 1 && $item->company_id == null)
-        <div class="icon-system-programm black sprite" data-open="item-system" data-nested="{{ $nested_count }}"></div>
+        <div title="Системная запись" class="icon-system-programm black sprite" data-open="item-system" data-nested="{{ $nested_count }}"></div>
         @break
 
         @case($item->system == null && $item->company_id == 1)
@@ -37,7 +39,7 @@
         @endcan
 
         @if ($item->system == null && $item->company_id == null)
-        <div class="icon-system-template black sprite" data-open="item-system" data-nested="{{ $nested_count }}"></div>
+        <div title="Шаблон" class="icon-system-template black sprite" data-open="item-system" data-nested="{{ $nested_count }}"></div>
         @endif
 
 </td>

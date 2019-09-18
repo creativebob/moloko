@@ -2,7 +2,7 @@
 	{{ Form::select($name ?? 'unit_id', $units->pluck('name', 'id'), $default ?? $units->first()->category->unit_id, [
 		'id' => $id ?? 'select-units',
 		'required',
-		(isset($disabled)) ? 'disabled' : '',
+		{{-- (isset($disabled)) ? 'disabled' : '', --}}
 	], $units_attributes ?? []
 	) }}
 </label>
