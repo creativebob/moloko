@@ -8,7 +8,7 @@
 					<input class="switch-input" id="yes-no" type="checkbox" name="exampleSwitch">
 					<label class="switch-paddle" for="yes-no">
 						<span class="show-for-sr">Использовать фото упаковки вместо фото товара?</span>
-						<span class="switch-active" aria-hidden="true"> Да</span>
+						<span class="switch-active" aria-hidden="true">Да</span>
 						<span class="switch-inactive" aria-hidden="true">Нет</span>
 					</label>
 				</div>

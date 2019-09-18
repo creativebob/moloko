@@ -10,20 +10,20 @@
       <p>Дублируем "<span class="title-replicate"></span>", вы уверены?</p>
       <br>
       <label>Новое имя
-        <input type="text" form="form-replicate" name="name">
+        <input type="text" form="form-replicate" name="name" required autofocus>
       </label>
     </div>
   </div>
   <div class="grid-x align-center grid-padding-x">
     <div class="small-6 medium-4 cell">
       {{ Form::open(['id' => 'form-replicate']) }}
-        <button data-close class="button modal-button button-replicate" type="submit">Дублирование</button>
+        <button class="button modal-button button-replicate" type="submit">Дублирование</button>
       {{ Form::close() }}
     </div>
     <div class="small-6 medium-4 cell">
-      <button data-close class="button modal-button" id="save-button" type="submit">Отменить</button>
+      <button data-close class="button modal-button">Отменить</button>
     </div>
   </div>
-  <div data-close class="icon-close-modal sprite close-modal"></div> 
+  <div data-close class="icon-close-modal sprite close-modal"></div>
 </div>
 {{-- Конец модалки добавления в архив с refresh --}}
