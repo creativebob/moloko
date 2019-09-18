@@ -68,8 +68,14 @@ class RawsCategory extends Model
     {
         return $this->hasMany(RawsCategory::class, 'parent_id');
     }
-
-    // Компания
+	
+//	public function childCategories()
+//	{
+//		return $this->hasMany(RawsCategory::class, 'parent_id')
+//			->with('childs');
+//	}
+		
+		// Компания
     public function company()
     {
         return $this->belongsTo(Company::class);

@@ -11,9 +11,9 @@
 
 				>
 					<option
-							v-for="category in categories"
+							v-for="category in categoriesList"
 							:value="category.id"
-					>{{ category.name}}</option>
+					>{{ getCount(category.level) }}{{ category.name}}</option>
 				</select>
 
 			</label>
@@ -61,6 +61,11 @@
 				type: String,
 			}
 		},
+		computed: {
+			categoriesList: function() {
+				return this.getCategoriesList(this.categories);
+			}
+		},
 		methods: {
 			getGroup() {
 				let obj = this.groups;
@@ -83,6 +88,26 @@
 				if (this.categoryId != this.group.category_id) {
 					this.groupsList.push(this.group);
 				}
+			},
+			getCategoriesList(flatCategories) {
+				var tree = [];
+				var self = this;
+				flatCategories.forEach( function(category) {
+					tree.push(category);
+
+					if (typeof category.childrens !== 'undefined') {
+						tree = tree.concat(self.getCategoriesList(category.childrens));
+					}
+				});
+
+				return tree;
+			},
+			getCount(level) {
+				let res = '';
+				for (var i = 1; i < level; i++) {
+					res = res + '_';
+				}
+				return res;
 			}
 		},
 		mounted() {

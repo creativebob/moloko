@@ -85,7 +85,7 @@
 
         <div class="small-12 medium-6 cell">
 <<<<<<< HEAD
-          <label class="input-icon">Город
+          <label class="label-icon">Город
             @php
             $city_name = null;
             $city_id = null;

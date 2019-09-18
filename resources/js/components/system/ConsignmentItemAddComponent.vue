@@ -3,7 +3,7 @@
 		<tr>
 			<td>1</td>
 			<td>
-				{{ info }}
+				<select-categories-component entity="raws"></select-categories-component>
 			</td>
 			<td>
 				<input-digit-component name="count_item" rate="2" :value="855" v-on:countchanged="changeCount"></input-digit-component>

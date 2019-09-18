@@ -85,7 +85,7 @@
 
             </div>
             <div class="small-12 medium-6 cell">
-              <label class="input-icon">Город
+              <label class="label-icon">Город
                 <input type="text" name="id_city" autocomplete="off">
                 <div class="sprite-input icon-password"></div>
               </label>

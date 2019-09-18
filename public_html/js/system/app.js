@@ -40775,8 +40775,8 @@ $.ajaxSetup({
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(45);
-__webpack_require__(73);
-module.exports = __webpack_require__(74);
+__webpack_require__(76);
+module.exports = __webpack_require__(77);
 
 
 /***/ }),
@@ -40810,6 +40810,7 @@ Vue.component('input-digit-component', __webpack_require__(52));
 Vue.component('dropzone-component', __webpack_require__(55));
 Vue.component('rawcomposition-component', __webpack_require__(64));
 Vue.component('articles-groups-component', __webpack_require__(67));
+Vue.component('select-categories-component', __webpack_require__(70));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -40825,9 +40826,9 @@ var app = new Vue({
 __webpack_require__(43);
 
 // Наши скрипты
-__webpack_require__(70);
-__webpack_require__(71);
-__webpack_require__(72);
+__webpack_require__(73);
+__webpack_require__(74);
+__webpack_require__(75);
 
 /***/ }),
 /* 46 */
@@ -41066,7 +41067,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("label", { staticClass: "input-icon", attrs: { id: "" } }, [
+    _c("label", { staticClass: "label-icon", attrs: { id: "" } }, [
       _vm._v("Город\n        "),
       _c("input", {
         directives: [
@@ -41389,7 +41390,11 @@ var render = function() {
       _c("tr", [
         _c("td", [_vm._v("1")]),
         _vm._v(" "),
-        _c("td", [_vm._v("\n\t\t\t" + _vm._s(_vm.info) + "\n\t\t")]),
+        _c(
+          "td",
+          [_c("select-categories-component", { attrs: { entity: "raws" } })],
+          1
+        ),
         _vm._v(" "),
         _c(
           "td",
@@ -42897,6 +42902,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			type: String
 		}
 	},
+	computed: {
+		categoriesList: function categoriesList() {
+			return this.getCategoriesList(this.categories);
+		}
+	},
 	methods: {
 		getGroup: function getGroup() {
 			var obj = this.groups;
@@ -42919,6 +42929,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			if (this.categoryId != this.group.category_id) {
 				this.groupsList.push(this.group);
 			}
+		},
+		getCategoriesList: function getCategoriesList(flatCategories) {
+			var tree = [];
+			var self = this;
+			flatCategories.forEach(function (category) {
+				tree.push(category);
+
+				if (typeof category.childrens !== 'undefined') {
+					tree = tree.concat(self.getCategoriesList(category.childrens));
+				}
+			});
+
+			return tree;
+		},
+		getCount: function getCount(level) {
+			var res = '';
+			for (var i = 1; i < level; i++) {
+				res = res + '_';
+			}
+			return res;
 		}
 	},
 	mounted: function mounted() {
@@ -42980,9 +43010,11 @@ var render = function() {
               ]
             }
           },
-          _vm._l(_vm.categories, function(category) {
+          _vm._l(_vm.categoriesList, function(category) {
             return _c("option", { domProps: { value: category.id } }, [
-              _vm._v(_vm._s(category.name))
+              _vm._v(
+                _vm._s(_vm.getCount(category.level)) + _vm._s(category.name)
+              )
             ])
           }),
           0
@@ -43044,6 +43076,408 @@ if (false) {
 
 /***/ }),
 /* 70 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(6)
+/* script */
+var __vue_script__ = __webpack_require__(71)
+/* template */
+var __vue_template__ = __webpack_require__(72)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/system/SelectCategoriesComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6b6a1570", Component.options)
+  } else {
+    hotAPI.reload("data-v-6b6a1570", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 71 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        var _this = this;
+
+        axios.get('/api/v1/categories_select/' + this.entity).then(function (response) {
+            _this.categories = response.data.categories;
+            _this.items = response.data.items;
+            _this.results = response.data.items;
+        }).catch(function (error) {
+            console.log(error);
+        });
+    },
+
+    props: {
+        entity: {
+            type: String
+        }
+    },
+    data: function data() {
+        return {
+            id: null,
+            text: null,
+            search: false,
+            found: false,
+            error: false,
+            items: [],
+            categories: [],
+            results: [],
+            showCategories: false
+
+        };
+    },
+
+    computed: {
+        status: function status() {
+            var result = void 0;
+
+            if (this.found) {
+                result = 'sprite-16 icon-success';
+            }
+            if (this.error) {
+                result = 'sprite-16 icon-error';
+            }
+            return result;
+        }
+    },
+    methods: {
+        check: function check() {
+            var _this2 = this;
+
+            // console.log('Ищем введеные данные в наших городах (подгруженных), затем от результата меняем состояние на поиск или ошибку');
+
+            this.results = this.items.filter(function (item) {
+                return item.name.toLowerCase().includes(_this2.text.toLowerCase());
+            });
+
+            this.search = this.results.length > 0;
+        },
+        add: function add(index) {
+            // console.log('Клик по пришедшим данным, добавляем в инпут');
+            this.id = this.results[index].id;
+            this.text = this.results[index].name;
+            this.found = true;
+            this.error = false;
+            this.search = false;
+            this.results = [];
+        },
+        clear: function clear() {
+            if (this.error) {
+                // console.log('Клик по иконке ошибки на инпуте, обнуляем');
+                this.text = '';
+                this.id = null;
+                this.found = false;
+                this.error = false;
+                this.results = [];
+            }
+        },
+        reset: function reset() {
+            // console.log('Изменение в инпуте, обнуляем все кроме имени, и если символов больше 2х начинаем поиск');
+            this.id = null;
+            this.found = false;
+            this.error = false;
+            this.search = false;
+            this.results = [];
+
+            this.check();
+        },
+        onEnter: function onEnter() {
+            if (this.results.length == 1) {
+                this.add(0);
+            }
+        }
+    }
+});
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("label", { staticClass: "input-icon", attrs: { id: "" } }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.text,
+            expression: "text"
+          }
+        ],
+        attrs: {
+          type: "text",
+          maxlength: "30",
+          autocomplete: "off",
+          pattern: "[А-Яа-яЁё0-9-_\\s]{3,30}"
+        },
+        domProps: { value: _vm.text },
+        on: {
+          input: [
+            function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.text = $event.target.value
+            },
+            _vm.reset
+          ],
+          keydown: function($event) {
+            if (
+              !$event.type.indexOf("key") &&
+              _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+            ) {
+              return null
+            }
+            $event.preventDefault()
+            return _vm.onEnter($event)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("div", {
+        staticClass: "sprite-input-right sprite-16 icon-error",
+        on: {
+          click: function($event) {
+            _vm.showCategories = !_vm.showCategories
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("span", { staticClass: "form-error" }, [
+        _vm._v("Уж постарайтесь, введите город!")
+      ])
+    ]),
+    _vm._v(" "),
+    _c("input", {
+      directives: [
+        { name: "model", rawName: "v-model", value: _vm.id, expression: "id" }
+      ],
+      attrs: { type: "hidden", maxlength: "3", pattern: "[0-9]{3}" },
+      domProps: { value: _vm.id },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.id = $event.target.value
+        }
+      }
+    }),
+    _vm._v(" "),
+    _vm.showCategories
+      ? _c(
+          "ul",
+          {
+            staticClass: "vertical menu drilldown",
+            attrs: {
+              "data-drilldown": "",
+              "data-back-button":
+                '<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
+            }
+          },
+          _vm._l(_vm.categories, function(category) {
+            return _c("li", { staticClass: "item-catalog" }, [
+              _c("a", { staticClass: "get-prices" }, [
+                _vm._v(_vm._s(category.name))
+              ]),
+              _vm._v(" "),
+              category.childrens
+                ? _c(
+                    "ul",
+                    { staticClass: "menu vertical nested" },
+                    _vm._l(category.childrens, function(children) {
+                      return _c("li", { staticClass: "item-catalog" }, [
+                        _c("a", { staticClass: "get-prices" }, [
+                          _vm._v(_vm._s(children.name))
+                        ])
+                      ])
+                    }),
+                    0
+                  )
+                : _vm._e()
+            ])
+          }),
+          0
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _c("table", { staticClass: "content-table-search table-over" }, [
+      _c(
+        "tbody",
+        [
+          _vm.search
+            ? _vm._l(_vm.results, function(item, index) {
+                return _c("tr", [
+                  _c("td", [
+                    _c(
+                      "a",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.add(index)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(item.name))]
+                    )
+                  ])
+                ])
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.error
+            ? _c("tr", { staticClass: "no-city" }, [_vm._m(0)])
+            : _vm._e()
+        ],
+        2
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [
+      _vm._v("Населенный пункт не найден в базе данных, "),
+      _c("a", { attrs: { href: "/admin/cities", target: "_blank" } }, [
+        _vm._v("добавьте его!")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6b6a1570", module.exports)
+  }
+}
+
+/***/ }),
+/* 73 */
 /***/ (function(module, exports) {
 
 // Валидируем кнопку при клике
@@ -43056,7 +43490,7 @@ window.submitAjax = function (id) {
 };
 
 /***/ }),
-/* 71 */
+/* 74 */
 /***/ (function(module, exports) {
 
 // Умолчания глобальные
@@ -43569,7 +44003,7 @@ $(window).resize(function () {
 // });
 
 /***/ }),
-/* 72 */
+/* 75 */
 /***/ (function(module, exports) {
 
 function checkFilter() {
@@ -43607,13 +44041,13 @@ $(document).on('click', '.filter-close', function () {
 });
 
 /***/ }),
-/* 73 */
+/* 76 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 74 */
+/* 77 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

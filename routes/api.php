@@ -20,13 +20,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => '/v1',
     'namespace' => 'Api\v1',
-    'as' => 'api.'], function () {
+    'as' => 'api.'
+], function () {
     Route::get('cities_list', 'CityController@cities_list');
     Route::resource('cities', 'CityController');
 
     Route::post('dropzone', 'PhotoController@store');
-
+	
+	Route::get('/categories_select/{entity}', 'AppController@categories_select');
     Route::get('/categories/{category_entity}', 'AppController@categories_index');
+	
 
 //    Route::apiResource('prices_goods', 'PricesGoodsController');
 });

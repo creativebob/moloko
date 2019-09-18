@@ -10,7 +10,7 @@
 
     <div class="grid-x grid-padding-x modal-content inputs">
         <div class="small-10 medium-4 cell">
-            <label class="input-icon">Название населенного пункта
+            <label class="label-icon">Название населенного пункта
                 {!! Form::text('city_name', null, ['id' => 'city-name-field', 'autocomplete' => 'off', 'pattern' => '[А-Яа-я0-9-_\s]{3,30}', 'required']) !!}
                 <div class="sprite-input-right find-status"></div>
                 <div class="item-error">Такой населенный пункт уже существует!</div>

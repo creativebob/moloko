@@ -25,6 +25,7 @@ Vue.component('input-digit-component', require('../components/system/InputDigitC
 Vue.component('dropzone-component', require('../components/system/DropzoneComponent.vue'));
 Vue.component('rawcomposition-component', require('../components/system/RawCompositionComponent.vue'));
 Vue.component('articles-groups-component', require('../components/system/ArticlesGroupsComponent.vue'));
+Vue.component('select-categories-component', require('../components/system/SelectCategoriesComponent.vue'));
 
 
 /**

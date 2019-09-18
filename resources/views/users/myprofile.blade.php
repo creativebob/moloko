@@ -113,7 +113,7 @@
           </label>
         </div>
         <div class="small-12 medium-6 cell">
-          <label class="input-icon">Введите город
+          <label class="label-icon">Введите город
             @php
             $city_name = null;
             $city_id = null;
