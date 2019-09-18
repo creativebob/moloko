@@ -231,6 +231,22 @@
         // $('.delete-button').attr('id', 'del-' + type + '-' + id);
         $('#form-replicate').attr('action', '/admin/' + entity + '/replicate/' + id);
     });
+
+    $(document).on('click', '#modal-replicate [data-close]', function() {
+        $('input[name="name"]').val('');
+    });
+
+    // $(document).on('click', '.button-replicate', function(event) {
+    //     let form = $(this).closest('form'),
+    //         id = form.attr('id');
+    //
+    //     form.foundation('validateForm');
+    //     let valid = $('#' + id + ' .is-invalid-input').length;
+    //     let result = valid == 0;
+    //     if (!result) {
+    //         event.preventDefault();
+    //     }
+    // });
 </script>
 
 @endpush

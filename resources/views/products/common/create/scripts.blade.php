@@ -23,7 +23,7 @@
     });
 
     // Закрываем модалку
-    $(document).on('click', '.close-modal', function() {
+    $(document).on('click', '.add-item', function() {
         // alert('lol');
         $('.reveal-overlay').remove();
     });
