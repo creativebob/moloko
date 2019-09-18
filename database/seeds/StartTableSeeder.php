@@ -198,6 +198,8 @@ class StartTableSeeder extends Seeder
         	[
                 'name' => 'Пункт 1',
                 'navigation_id' => 2,
+                'slug' => \Str::slug('Пункт 1'),
+                'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,
@@ -207,6 +209,8 @@ class StartTableSeeder extends Seeder
             [
                 'name' => 'Пункт 2',
                 'navigation_id' => 2,
+                'slug' => \Str::slug('Пункт 2'),
+                'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,
@@ -216,6 +220,8 @@ class StartTableSeeder extends Seeder
             [
                 'name' => 'Пункт 3',
                 'navigation_id' => 2,
+                'slug' => \Str::slug('Пункт 3'),
+                'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,

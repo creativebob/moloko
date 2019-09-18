@@ -14,26 +14,26 @@
 
 // ------------------------- Foundation -------------------------------------
 // Variables
-@import "foundation/settings";
+@import "./foundation/settings";
 
 // Bootstrap
-@import "foundation/foundation";
+@import "./foundation/foundation";
 
 // Сброс настроек compass
 @import "../reset";
 
 // Медиа
-@import "../../../node_modules/breakpoint-sass/stylesheets/breakpoint";
+@import "~breakpoint-sass/stylesheets/breakpoint";
 
 // ----------------------- Подключаем шрифты ----------------------------------------
-@import "partials/fonts";
+@import "./partials/fonts";
 
 // ----------------------- Спрайты ----------------------------------------------
-@import "partials/sprites_16";
-@import "partials/sprites_32";
+@import "./partials/sprites_16";
+@import "./partials/sprites_32";
 
 // ------------------------ Сайдбар -------------------------------------
-@import "partials/sidebar";
+@import "./partials/sidebar";
 
 // ------------------------------ Медиа ширины -------------------------------
 $small: 640px;
@@ -3985,7 +3985,6 @@ $responsive-card-table-label-bg: #ffffff;
     border: 1px solid #bbb;
 }
 
-
 // Упаковка (на составах)
 .switch-inactive{
     color: $white;
@@ -3994,4 +3993,14 @@ $responsive-card-table-label-bg: #ffffff;
 .switch-active {
     padding-left: 5px;
     color: $white;
+}
+
+.relat {
+    position: relative;
+
+    .abs {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
 }

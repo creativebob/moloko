@@ -481,6 +481,74 @@ class GoodsController extends Controller
         }
     }
 
+    public function replicate(Request $request, $id)
+    {
+        $cur_goods = Goods::findOrFail($id);
+
+        $cur_goods->load('article');
+        $article = $cur_goods->article;
+        $new_article = $this->replicateArticle($request, $article);
+
+        $new_cur_goods = $cur_goods->replicate();
+        $new_cur_goods->article_id = $new_article->id;
+        $new_cur_goods->save();
+
+            $cur_goods->load('metrics');
+            if ($cur_goods->metrics->isNotEmpty()) {
+                $metrics_insert = [];
+                foreach ($cur_goods->metrics as $metric) {
+                    $metrics_insert[$metric->id]['value'] = $metric->pivot->value;
+                }
+                $res = $new_cur_goods->metrics()->attach($metrics_insert);
+            }
+
+            // TODO - 18.09.19 - С копированием прайсов товаров пока решили временить
+
+            $article->load('containers');
+            if ($article->containers->isNotEmpty()) {
+                $containers_insert = [];
+                foreach ($article->containers as $container) {
+                    $containers_insert[$metric->id] = [
+                        'value' => $container->pivot->value,
+                        'use' => $container->pivot->use,
+                        'waste' => $container->pivot->waste,
+                        'leftover' => $container->pivot->leftover,
+                        'leftover_operation_id' => $container->pivot->leftover_operation_id,
+                    ];
+                }
+                $res = $new_article->containers()->attach($containers_insert);
+            }
+
+            if($article->kit) {
+                $article->load('goods');
+                if ($article->goods->isNotEmpty()) {
+                    $goods_insert = [];
+                    foreach ($article->goods as $cur_goods) {
+                        $goods_insert[$cur_goods->id]['value'] = $cur_goods->pivot->value;
+                    }
+                    $res = $new_article->goods()->attach($goods_insert);
+                }
+            } else {
+                $article->load('raws');
+                if ($article->raws->isNotEmpty()) {
+                    $raws_insert = [];
+                    foreach ($article->raws as $raw) {
+                        $raws_insert[$raw->id] = [
+                            'value' => $raw->pivot->value,
+                            'use' => $raw->pivot->use,
+                            'waste' => $raw->pivot->waste,
+                            'leftover' => $raw->pivot->leftover,
+                            'leftover_operation_id' => $raw->pivot->leftover_operation_id,
+                        ];
+                    }
+                    $res = $new_article->raws()->attach($raws_insert);
+                }
+            }
+
+
+        return redirect()->route('goods.index');
+    }
+
     // --------------------------------------------- Ajax -------------------------------------------------
 
     public function ajax_get_goods(Request $request)

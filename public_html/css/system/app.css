@@ -8668,6 +8668,13 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   z-index: 50;
 }
 
+.icon-select {
+  background: url(img/password.svg) no-repeat;
+  opacity: 1;
+  cursor: pointer;
+  z-index: 50;
+}
+
 .one-icon-16 {
   display: inline-block;
   vertical-align: middle;
@@ -12419,4 +12426,14 @@ a#task-toggle {
 .switch-active {
   padding-left: 5px;
   color: #ffffff;
+}
+
+.relat {
+  position: relative;
+}
+
+.relat .abs {
+  position: absolute;
+  top: 0px;
+  left: 0px;
 }

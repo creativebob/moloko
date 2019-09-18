@@ -31,7 +31,6 @@ class ContainerController extends Controller
     public function index(Request $request)
     {
 
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -403,6 +402,41 @@ class ContainerController extends Controller
         } else {
             abort(403, 'Сырьё не найдено');
         }
+    }
+
+    public function replicate(Request $request, $id)
+    {
+        $container = Container::findOrFail($id);
+
+        $container->load('article');
+        $article = $container->article;
+        $new_article = $this->replicateArticle($request, $article);
+
+        $new_container = $container->replicate();
+        $new_container->article_id = $new_article->id;
+        $new_container->save();
+
+        $container->load('metrics');
+        if ($container->metrics->isNotEmpty()) {
+            $metrics_insert = [];
+            foreach ($container->metrics as $metric) {
+                $metrics_insert[$metric->id]['value'] = $metric->pivot->value;
+            }
+            $res = $new_container->metrics()->attach($metrics_insert);
+        }
+
+        if($article->kit) {
+            $article->load('containers');
+            if ($article->raws->isNotEmpty()) {
+                $containers_insert = [];
+                foreach ($article->containers as $container) {
+                    $containers_insert[$container->id]['value'] = $container->pivot->value;
+                }
+                $res = $new_article->raws()->attach($containers_insert);
+            }
+        }
+
+        return redirect()->route('containers.index');
     }
 
     // --------------------------------------------- Ajax -------------------------------------------------

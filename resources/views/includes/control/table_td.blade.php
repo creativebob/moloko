@@ -1,6 +1,6 @@
 <td class="td-control">
 
-        @if($clone)<div title="Клонировать" class="icon-clone black sprite" data-open="item-clone"></div>@endif
+        @if($clone)<div title="Клонировать" class="icon-clone black sprite" data-open="modal-replicate"></div>@endif
 
         {{-- Отображение на сайте --}}
         @can ('display', $item)
