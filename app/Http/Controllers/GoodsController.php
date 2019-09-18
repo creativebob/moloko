@@ -69,7 +69,8 @@ class GoodsController extends Controller
                     'group.unit',
                     'photo',
                     'unit',
-                    'goods'
+                    'goods',
+                    'manufacturer.company'
                 ]);
                 // ->select([
                 //     'id',
@@ -405,10 +406,10 @@ class GoodsController extends Controller
             $cur_goods->display = $request->display;
             $cur_goods->system = $request->system;
 
-            if($article->draft) {
+            // if($article->draft) {
                 $cur_goods->price_unit_id = $request->price_unit_id;
                 $cur_goods->price_unit_category_id = $request->price_unit_category_id;               
-            }
+            // }
 
             $cur_goods->save();
 

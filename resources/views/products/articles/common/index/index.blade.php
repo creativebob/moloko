@@ -78,14 +78,13 @@
                         </a>
                     </td>
                     <td class="td-name">
-                        <a href="/admin/{{ $entity }}/{{ $item->id }}/edit">{{ $item->article->name }} @if ($item->article->kit == 1)</a><span class="tiny-text"> - Набор: @endif
-                        @if(isset($item->article->goods))
-                            @if($item->article->goods->count() != 0)
+                        <a href="/admin/{{ $entity }}/{{ $item->id }}/edit">{{ $item->article->name }}
+                        @if ($item->article->kit == 1)</a><span class="tiny-text"> - Набор: 
+                            @if(isset($item->article->goods))
                                 {{ $item->article->goods->count() }}</span>
                             @endif
                         @endif
-                        
-                        <br><span class="tiny-text">{{ $item->article->manufacturer->name ?? '' }}</span>
+                        <br><span class="tiny-text">{{ $item->article->manufacturer->company->name ?? '' }}</span>
                     </td>
                     <td class="td-unit">
                         {{ $item->article->unit->abbreviation }}
