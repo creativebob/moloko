@@ -12481,12 +12481,12 @@ module.exports = Cancel;
  */
 
 try {
-    window.$ = window.jQuery = __webpack_require__(1);
+  window.$ = window.jQuery = __webpack_require__(1);
 
-    __webpack_require__(3);
-    __webpack_require__(16);
+  __webpack_require__(3);
+  __webpack_require__(16);
 
-    __webpack_require__(20); // 'foundation.min' can also be used if you like
+  __webpack_require__(20); // 'foundation.min' can also be used if you like
 } catch (e) {}
 
 /**
@@ -12508,9 +12508,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
 /**
@@ -40809,7 +40809,7 @@ Vue.component('consignmentitemadd-component', __webpack_require__(49));
 Vue.component('input-digit-component', __webpack_require__(52));
 Vue.component('dropzone-component', __webpack_require__(55));
 Vue.component('rawcomposition-component', __webpack_require__(64));
-Vue.component('articles-groups-component', __webpack_require__(67));
+Vue.component('articles-categories-with-groups-component', __webpack_require__(67));
 Vue.component('select-categories-component', __webpack_require__(70));
 
 /**
@@ -42805,7 +42805,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/components/system/ArticlesGroupsComponent.vue"
+Component.options.__file = "resources/js/components/system/ArticlesCategoriesWithGroupsComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -42814,9 +42814,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-75a32097", Component.options)
+    hotAPI.createRecord("data-v-8e3cdc96", Component.options)
   } else {
-    hotAPI.reload("data-v-75a32097", Component.options)
+    hotAPI.reload("data-v-8e3cdc96", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -42872,12 +42872,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+	mounted: function mounted() {
+		// axios.get('/api/v1/categories/' + this.entity)
+		// 		.then(response => {
+		// 			this.categories = response.data.categories
+		// 			this.groups = response.data.groups
+		// 			this.getGroup()
+		// 			this.getGroupsList()
+		// 		})
+		// 		.catch(error => {
+		// 			console.log(error)
+		// 		})
+		this.getGroup();
+		this.getGroupsList();
+	},
 	data: function data() {
 		return {
-			categories: [],
-			groups: [],
+			// categories: [],
+			// groups: [],
 			groupsList: [],
 			categoryId: this.item.category_id,
 			groupId: this.article.articles_group_id,
@@ -42892,8 +42907,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		article: {
 			type: Object
 		},
-		entity: {
-			type: String
+		// entity: {
+		// 	type: String,
+		// },
+		categories: {
+			type: Array
+		},
+		groups: {
+			type: Array
 		}
 	},
 	computed: {
@@ -42910,6 +42931,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					this.group = el;
 				}
 			}
+		},
+		setGroup: function setGroup() {
+			var _this = this;
+
+			this.groups.filter(function (item) {
+				if (item.id == _this.groupId) {
+					return _this.group = item;
+				}
+			});
 		},
 		getGroupsList: function getGroupsList() {
 			this.groupsList = [];
@@ -42944,19 +42974,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			}
 			return res;
 		}
-	},
-	mounted: function mounted() {
-		var _this = this;
-
-		axios.get('/api/v1/categories/' + this.entity).then(function (response) {
-			_this.categories = response.data.categories;
-			_this.groups = response.data.groups;
-			_this.getGroup();
-			_this.getGroupsList();
-		}).catch(function (error) {
-			console.log(error);
-		});
 	}
+
 });
 
 /***/ }),
@@ -43032,19 +43051,24 @@ var render = function() {
             ],
             attrs: { name: "articles_group_id" },
             on: {
-              change: function($event) {
-                var $$selectedVal = Array.prototype.filter
-                  .call($event.target.options, function(o) {
-                    return o.selected
-                  })
-                  .map(function(o) {
-                    var val = "_value" in o ? o._value : o.value
-                    return val
-                  })
-                _vm.groupId = $event.target.multiple
-                  ? $$selectedVal
-                  : $$selectedVal[0]
-              }
+              change: [
+                function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.groupId = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                },
+                function($event) {
+                  return _vm.setGroup()
+                }
+              ]
             }
           },
           _vm._l(_vm.groupsList, function(group) {
@@ -43064,7 +43088,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-75a32097", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-8e3cdc96", module.exports)
   }
 }
 

@@ -25,6 +25,7 @@
 				<select
 						v-model="groupId"
 						name="articles_group_id"
+						@change="setGroup()"
 				>
 					<option
 							v-for="group in groupsList"
@@ -40,10 +41,24 @@
 
 <script>
     export default {
+		mounted() {
+			// axios.get('/api/v1/categories/' + this.entity)
+			// 		.then(response => {
+			// 			this.categories = response.data.categories
+			// 			this.groups = response.data.groups
+			// 			this.getGroup()
+			// 			this.getGroupsList()
+			// 		})
+			// 		.catch(error => {
+			// 			console.log(error)
+			// 		})
+			this.getGroup()
+			this.getGroupsList()
+		},
 		data() {
 			return {
-				categories: [],
-				groups: [],
+				// categories: [],
+				// groups: [],
 				groupsList: [],
 				categoryId: this.item.category_id,
 				groupId: this.article.articles_group_id,
@@ -57,9 +72,15 @@
 			article: {
 				type: Object,
 			},
-			entity: {
-				type: String,
-			}
+			// entity: {
+			// 	type: String,
+			// },
+			categories: {
+				type: Array,
+			},
+			groups: {
+				type: Array,
+			},
 		},
 		computed: {
 			categoriesList: function() {
@@ -75,6 +96,13 @@
 						this.group = el;
 					}
 				}
+			},
+			setGroup() {
+				this.groups.filter(item => {
+					if (item.id == this.groupId) {
+						return this.group = item;
+					}
+				});
 			},
 			getGroupsList() {
 				this.groupsList = []
@@ -110,17 +138,6 @@
 				return res;
 			}
 		},
-		mounted() {
-			axios.get('/api/v1/categories/' + this.entity)
-				.then(response => {
-					this.categories = response.data.categories
-					this.groups = response.data.groups
-					this.getGroup()
-					this.getGroupsList()
-				})
-				.catch(error => {
-					console.log(error)
-				})
-		},
+
 	}
 </script>

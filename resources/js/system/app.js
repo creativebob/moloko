@@ -24,7 +24,7 @@ Vue.component('consignmentitemadd-component', require('../components/system/Cons
 Vue.component('input-digit-component', require('../components/system/InputDigitComponent.vue'));
 Vue.component('dropzone-component', require('../components/system/DropzoneComponent.vue'));
 Vue.component('rawcomposition-component', require('../components/system/RawCompositionComponent.vue'));
-Vue.component('articles-groups-component', require('../components/system/ArticlesGroupsComponent.vue'));
+Vue.component('articles-categories-with-groups-component', require('../components/system/ArticlesCategoriesWithGroupsComponent.vue'));
 Vue.component('select-categories-component', require('../components/system/SelectCategoriesComponent.vue'));
 
 
