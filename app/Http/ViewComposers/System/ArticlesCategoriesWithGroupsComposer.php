@@ -13,7 +13,7 @@ class ArticlesCategoriesWithGroupsComposer
         $entity = Entity::whereAlias($view->category_entity)->first(['model']);
         $model = 'App\\'.$entity->model;
 
-        $categories = $model::with([
+        $categories = $model::whereHas('groups')->with([
             'groups:id,name'
         ])
             ->get([
