@@ -48,8 +48,8 @@
             let val = $(elem).val();
 
             parent.find('.raw-use').val(val);
-            parent.find('.raw-waste').val(0);
-            parent.find('.raw-leftover').val(0);
+            // parent.find('.raw-waste').val(0);
+            // parent.find('.raw-leftover').val(0);
         }
 
     }

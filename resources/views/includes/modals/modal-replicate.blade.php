@@ -1,11 +1,11 @@
 {{-- Модалка добавления в архив с refresh --}}
-<div class="reveal rev-small" id="modal-replicate" data-reveal>
+<div class="reveal rev-small" id="modal-replicate" data-reveal data-close-on-click="false">
   <div class="grid-x">
     <div class="small-12 cell modal-title">
       <h5>Дублирование</h5>
     </div>
   </div>
-  <div class="grid-x align-center modal-content ">
+  <div class="grid-x align-center modal-content">
     <div class="small-10 cell text-center inputs">
       <p>Дублируем "<span class="title-replicate"></span>", вы уверены?</p>
       <br>

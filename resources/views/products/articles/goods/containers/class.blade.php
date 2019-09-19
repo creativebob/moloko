@@ -48,8 +48,8 @@
             let val = $(elem).val();
 
             parent.find('.container-use').val(val);
-            parent.find('.container-waste').val(0);
-            parent.find('.container-leftover').val(0);
+            // parent.find('.container-waste').val(0);
+            // parent.find('.container-leftover').val(0);
         }
 
     }
