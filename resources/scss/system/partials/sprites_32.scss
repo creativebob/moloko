@@ -261,6 +261,29 @@ tr:hover {
 }
 
 
+// Иконка общего добавления
+.icon-stock {
+    background-position: 0px -1346px;
+    opacity: 0.3;
+    // z-index: 10;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+// Иконка общего добавления
+.icon-consignment {
+    background-position: 0px -1378px;
+    opacity: 0.3;
+    // z-index: 10;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+
 // Иконка фильтра
 .icon-filter {
     background-position: 0px -352px;

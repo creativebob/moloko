@@ -89,26 +89,6 @@
 
 								<articles-groups-component :item="{{ $item }}" :article="{{ $article }}" entity="{{ $category_entity }}"></articles-groups-component>
 
-{{--								<div class="grid-x grid-margin-x">--}}
-{{--									<div class="small-12 medium-6 cell">--}}
-{{--										<label>Категория--}}
-{{--											@include('includes.selects.categories', [--}}
-{{--												'category_entity' => $category_entity,--}}
-{{--												'category_id' => $item->category->id--}}
-{{--											])--}}
-{{--										</label>--}}
-{{--									</div>--}}
-{{--									<div class="small-12 medium-6 cell">--}}
-{{--										<label>Группа--}}
-{{--											@include('includes.selects.articles_groups', [--}}
-{{--												'entity' => $category_entity,--}}
-{{--												'category_id' => $item->category_id,--}}
-{{--												'articles_group_id' => $article->articles_group_id--}}
-{{--											])--}}
-{{--										</label>--}}
-{{--									</div>--}}
-{{--								</div>--}}
-
 								<label>Производитель
 
 									@if ($item->category->manufacturers->isNotEmpty())
@@ -187,7 +167,7 @@
 									<label>Фотография
 										{{ Form::file('photo') }}
 									</label>
-									<div class="text-center">
+									<div class="text-center wrap-article-photo">
 										<img id="photo" src="{{ getPhotoPathPlugEntity($item) }}">
 									</div>
 								</div>

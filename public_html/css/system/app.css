@@ -8912,6 +8912,24 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   opacity: 1;
 }
 
+.icon-stock {
+  background-position: 0px -1346px;
+  opacity: 0.3;
+}
+
+.icon-stock:hover {
+  opacity: 1;
+}
+
+.icon-consignment {
+  background-position: 0px -1378px;
+  opacity: 0.3;
+}
+
+.icon-consignment:hover {
+  opacity: 1;
+}
+
 .icon-filter {
   background-position: 0px -352px;
   float: left;
@@ -11787,6 +11805,10 @@ a#task-toggle {
   border-bottom: none;
 }
 
+.content .content-table .td-photo img {
+  max-height: 100px;
+}
+
 .content .content-table th:first-child:hover {
   cursor: default;
 }
@@ -12436,4 +12458,8 @@ a#task-toggle {
   position: absolute;
   top: 0px;
   left: 0px;
+}
+
+.wrap-article-photo img {
+  max-height: 300px;
 }
