@@ -3,22 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Employee;
-use App\Http\Controllers\Traits\Photable;
-use App\Position;
 use App\Staffer;
-use App\Department;
 use App\User;
-use App\Page;
-use App\Company;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\EmployeeRequest;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 
 // Общие классы
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 
 // Подрубаем трейт записи и обновления пользоватля
@@ -41,8 +34,6 @@ class EmployeeController extends Controller
         $this->entity_dependence = true;
         $this->type = 'modal';
     }
-
-    use Photable;
 
     public function index(Request $request)
     {
