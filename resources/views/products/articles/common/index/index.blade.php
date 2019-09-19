@@ -153,7 +153,7 @@
                     </td>
 
                     {{-- Элементы управления --}}
-                    @include('includes.control.table_td', ['item' => $item, 'clone' => true]) 
+                    @include('includes.control.table_td', ['item' => $item, 'replicate' => true])
 
                     <td class="td-archive">
                         @if ($item->system != 1)

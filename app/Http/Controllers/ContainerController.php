@@ -427,7 +427,7 @@ class ContainerController extends Controller
 
         if($article->kit) {
             $article->load('containers');
-            if ($article->raws->isNotEmpty()) {
+            if ($article->containers->isNotEmpty()) {
                 $containers_insert = [];
                 foreach ($article->containers as $container) {
                     $containers_insert[$container->id]['value'] = $container->pivot->value;

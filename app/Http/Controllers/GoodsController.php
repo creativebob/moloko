@@ -508,7 +508,7 @@ class GoodsController extends Controller
             if ($article->containers->isNotEmpty()) {
                 $containers_insert = [];
                 foreach ($article->containers as $container) {
-                    $containers_insert[$metric->id] = [
+                    $containers_insert[$container->id] = [
                         'value' => $container->pivot->value,
                         'use' => $container->pivot->use,
                         'waste' => $container->pivot->waste,
