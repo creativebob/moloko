@@ -2,16 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Observers\Traits\CategoriesTrait;
 use Illuminate\Http\Request;
 
 use App\Entity;
 
 class AppController extends Controller
 {
+    use CategoriesTrait;
 
     // Вход в crm
-    public function enter() {
+    public function enter()
+    {
         return view('layouts.enter');
+    }
+
+    public function recalculate_categories($entity_alias)
+    {
+        $entity = Entity::whereAlias($entity_alias)
+            ->first([
+                'model'
+            ]);
+        $model = 'App\\'.$entity->model;
+
+        $categories = $model::whereNull('parent_id')
+        ->get();
+
+        $this->recalculateCategories($categories);
+
+        return redirect()->route($entity_alias.'.index');
     }
 
     // ------------------------------------------------ Ajax -------------------------------------------------

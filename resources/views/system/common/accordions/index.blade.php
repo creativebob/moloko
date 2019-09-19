@@ -15,10 +15,8 @@
 
 @section('title-content')
 {{-- Меню --}}
-@include('includes.title-content', [
-    'page_info' => $page_info,
+@include('system.common.accordions.includes.title-categories', [
     'class' => $class,
-    'type' => 'menu'
 ]
 )
 @endsection

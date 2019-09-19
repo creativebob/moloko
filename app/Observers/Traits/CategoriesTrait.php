@@ -97,4 +97,18 @@ trait CategoriesTrait
         }
     }
 
+    protected function recalculateCategories($categories)
+    {
+        foreach ($categories as $category) {
+            $this->setCategorySlug($category);
+            $this->setCategoryLevel($category);
+            $this->setCategoryCategoryId($category);
+            $category->save();
+
+            $this->updateCategoryChildsSlug($category);
+            $this->updateCategoryChildsLevel($category);
+            $this->updateCategoryChildsCategoryId($category);
+        }
+    }
+
 }

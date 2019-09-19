@@ -193,6 +193,8 @@ Route::post('/system', 'AppController@ajax_system')->middleware('auth');
 Route::post('/display', 'AppController@ajax_display')->middleware('auth');
 // Отображение на сайте
 Route::post('/check', 'AppController@ajax_check')->middleware('auth');
+// Пересчитать уровни категорий
+Route::get('/recalculate_categories/{entity}', 'AppController@recalculate_categories')->middleware('auth');
 
 
 // --------------------------------------- Настройки -----------------------------------------------
