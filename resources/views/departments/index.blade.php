@@ -146,7 +146,6 @@
 
         // ------------------------ Кнопка добавления ---------------------------------------
         $(document).on('click', '.submit-create', function(event) {
-
             var form = $(this).closest('form');
             if (window.submitAjax(form.attr('id'))) {
                 $(this).prop('disabled', true);
@@ -160,7 +159,6 @@
 
         // ------------------------ Кнопка добавления ---------------------------------------
         $(document).on('click', '#submit-staffer-create', function(event) {
-
             var form = $(this).closest('form');
             $(this).prop('disabled', true);
             $.post('/admin/staff', form.serialize(), function(html) {
@@ -169,7 +167,6 @@
                 Foundation.reInit($('#content'));
             });
         });
-
 
         // ------------------------ Кнопка обновления ---------------------------------------
         $(document).on('click', '.submit-edit', function(event) {

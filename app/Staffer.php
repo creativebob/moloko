@@ -50,10 +50,6 @@ class Staffer extends Model
         'position_id',
         'department_id',
         'filial_id',
-
-        'display',
-        'system',
-        'moderation'
     ];
 
     // Отдел должности.

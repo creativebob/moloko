@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Employee;
+use App\Http\Controllers\Traits\Photable;
 use App\Staffer;
 use App\User;
 
@@ -34,6 +35,8 @@ class EmployeeController extends Controller
         $this->entity_dependence = true;
         $this->type = 'modal';
     }
+
+    use Photable;
 
     public function index(Request $request)
     {
@@ -262,7 +265,9 @@ class EmployeeController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('employees.create', compact('user', 'employee', 'page_info', 'list_empty_staff', 'list_user_employees'));
+        $auth_user = \Auth::user();
+
+        return view('employees.create', compact('user', 'employee', 'page_info', 'list_empty_staff', 'list_user_employees', 'auth_user'));
     }
 
     public function store(UserStoreRequest $request)

@@ -2,19 +2,13 @@
 
 namespace App\Http\Controllers\Traits;
 
-use App\Http\Controllers\Traits\Photable;
 use App\User;
-use App\RoleUser;
 use App\Phone;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-
 use Illuminate\Support\Facades\Auth;
 
 trait UserControllerTrait
 {
-
-    use Photable;
 
 	public function createUser($request){
 

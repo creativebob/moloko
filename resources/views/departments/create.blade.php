@@ -117,7 +117,7 @@
 {{-- Должность --}}
 @isset ($parent_id)
 
-{{ Form::model($department, ['id' => 'form-position-create']) }}
+{{ Form::model($department, ['route' => 'staff.store', 'id' => 'form-position-create']) }}
 <div class="tabs-panel" id="position">
     <div class="grid-x grid-padding-x align-center modal-content inputs">
      <div class="small-12 cell">

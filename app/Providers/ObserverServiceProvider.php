@@ -34,6 +34,7 @@ use App\Observers\ProcessesGroupObserver;
 use App\Observers\RoomsCategoryObserver;
 use App\Observers\SectorObserver;
 use App\Observers\ServicesCategoryObserver;
+use App\Observers\StafferObserver;
 use App\Observers\WorkflowsCategoryObserver;
 use App\Page;
 use App\Photo;
@@ -45,6 +46,7 @@ use App\ProcessesGroup;
 use App\RoomsCategory;
 use App\Sector;
 use App\ServicesCategory;
+use App\Staffer;
 use App\WorkflowsCategory;
 use Illuminate\Support\ServiceProvider;
 use App\RawsCategory;
@@ -100,6 +102,7 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Пользователь
         User::observe(UserObserver::class);
+        Staffer::observe(StafferObserver::class);
 
         // Метрики
         Metric::observe(MetricObserver::class);

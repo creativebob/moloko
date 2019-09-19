@@ -898,7 +898,7 @@ Route::post('/positions_list', 'PositionController@positions_list')->middleware(
 // -------------------------------------- Штат компании ---------------------------------------------
 
 // Основные методы
-Route::resource('/staff', 'StafferController')->middleware('auth');
+Route::resource('/staff', 'StafferController');
 
 
 // --------------------------------------- Сотрудники ---------------------------------------------

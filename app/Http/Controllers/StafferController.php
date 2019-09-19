@@ -93,30 +93,9 @@ class StafferController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $staffer = new Staffer;
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-        $staffer->company_id = $user->company_id;
-        $staffer->author_id = hideGod($user);
-
-        // Системная запись
-        $staffer->system = $request->system;
-        $staffer->display = $request->display;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if ($answer['automoderate'] == false){
-            $staffer->moderation = true;
-        }
-
-        $staffer->position_id = $request->position_id;
-        $staffer->department_id = $request->parent_id;
-        $staffer->filial_id = $request->filial_id;
-
-        $staffer->save();
+        $data = $request->input();
+        $data['department_id'] = $data['parent_id'];
+        $staffer = (new Staffer())->create($data);
 
         if ($staffer) {
 

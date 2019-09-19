@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\Http\Controllers\Traits\Photable;
 use App\User;
 use App\Position;
 use App\Staffer;
@@ -47,6 +48,7 @@ class UserController extends Controller
     protected $entity_dependence = true;
 
     use UserControllerTrait;
+    use Photable;
 
     public function index(Request $request)
     {
