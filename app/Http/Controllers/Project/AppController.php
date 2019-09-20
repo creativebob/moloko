@@ -124,7 +124,7 @@ class AppController extends Controller
         $page->title = $catalog_goods_item->title;
 
         $prices_goods = PricesGoods::with([
-            'goods_public'
+            'goods_public.article.raws.metrics'
         ])
             ->whereHas('catalogs_item_public', function ($q) use ($site, $catalog_slug, $catalog_item_slug) {
                 $q->whereHas('catalog_public', function ($q) use ($site, $catalog_slug) {
@@ -145,6 +145,26 @@ class AppController extends Controller
             ->paginate(16);
 
         $catalog_goods = $catalog_goods_item->catalog;
+
+        // Перебор и дописывание агрегаций
+        // Нужен способ проще!
+        foreach($prices_goods as $price_goods){
+            $sweets = $price_goods->goods_public->article->raws->filter(function ($value, $key) {
+                if(isset($value->metrics->where('name', 'Тип сырья')->first()->pivot->value)){
+                    return $value->metrics->where('name', 'Тип сырья')->first()->pivot->value == 1;
+                }
+            });
+            $price_goods->sweets = $sweets;
+
+            $addition = $price_goods->goods_public->article->raws->filter(function ($value, $key) {
+                if(isset($value->metrics->where('name', 'Тип сырья')->first()->pivot->value)){
+                    return $value->metrics->where('name', 'Тип сырья')->first()->pivot->value == 2;
+                }
+            });
+            $price_goods->addition = $addition;
+        }
+        
+        // dd($prices_goods);
 
         return view($site->alias.'.pages.catalogs_goods.index', compact('site','page', 'request', 'catalog_goods_item', 'prices_goods', 'catalog_goods'));
     }
