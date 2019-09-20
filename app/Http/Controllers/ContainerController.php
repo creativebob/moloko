@@ -79,7 +79,9 @@ class ContainerController extends Controller
                 $q->with([
                     'group',
                     'photo',
-                    'unit'
+                    'unit',
+                    'unit_weight',
+                    'unit_volume'
                 ]);
             },
             'category' => function ($q) {

@@ -79,11 +79,14 @@ class RawController extends Controller
             'author',
             'company',
             'compositions.goods',
+            'unit_portion_goods',
             'article' => function ($q) {
                 $q->with([
                     'group',
                     'photo',
-                    'unit'
+                    'unit',
+                    'unit_weight',
+                    'unit_volume'
                 ]);
             },
             'category' => function ($q) {

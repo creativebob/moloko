@@ -69,6 +69,8 @@ class GoodsController extends Controller
                     'group.unit',
                     'photo',
                     'unit',
+                    'unit_weight',
+                    'unit_volume',
                     'goods',
                     'manufacturer.company'
                 ]);
