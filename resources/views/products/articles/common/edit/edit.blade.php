@@ -326,7 +326,7 @@
 							<legend class="checkbox">
 								{!! Form::checkbox('portion_status', 1, $article->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) !!}
 								<label for="portion">
-									<span id="portion-change">Принимать порциями</span>
+									<span id="portion-change">Сформировать порцию для приема на склад</span>
 								</label>
 							</legend>
 

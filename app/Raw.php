@@ -109,4 +109,10 @@ class Raw extends Model
         return $this->belongsTo(Unit::class, 'unit_for_composition_id');
     }
 
+    // Еденица измерения
+    public function unit_portion_goods()
+    {
+        return $this->belongsTo(Unit::class, 'unit_portion_goods_id');
+    }
+
 }

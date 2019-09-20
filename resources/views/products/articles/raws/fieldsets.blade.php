@@ -9,12 +9,12 @@
 	<div class="grid-x grid-margin-x" id="portion-goods-block">
 		{{-- <div class="small-12 cell @if ($raw->portion_goods_status == null) portion-goods-hide @endif">
             <label>Имя&nbsp;порции
-                {{ Form::text('portion_goods_name', $raw>portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
+                {{ Form::text('portion_goods_name', $raw>portion_name, ['id'=>'portion_goods_name', class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
             </label>
         </div> --}}
 		<div class="small-6 cell @if ($raw->portion_goods_status == null) portion-goods-hide @endif">
 			<label>Сокр.&nbsp;имя
-				{{ Form::text('portion_goods_abbreviation',  $raw->portion_goods_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
+				{{ Form::text('portion_goods_abbreviation',  $raw->portion_goods_abbreviation, ['id'=>'portion_goods_abbreviation', 'class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
 			</label>
 		</div>
 
@@ -31,10 +31,11 @@
 
 		<div class="small-2 cell @if ($raw->portion_goods_status == null) portion-goods-hide @endif">
 			<label>Кол-во
-				{{ Form::text('portion_goods_count', $raw->portion_goods_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
+				{{ Form::text('portion_goods_count', $raw->portion_goods_count, ['id'=>'portion_goods_count', 'class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
 				<div class="sprite-input-right find-status" id="name-check"></div>
 				<span class="form-error">Введите количество</span>
 			</label>
 		</div>
 	</div>
 </fieldset>
+

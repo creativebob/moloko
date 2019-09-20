@@ -3,12 +3,12 @@
 
 		<div class="grid-x grid-padding-x">
 			<div class="small-12 medium-6 large-9 cell">
-				<p>Использовать фото упаковки вместо фото товара?</p>
+				<p>Использовать фото упаковки вместо фото товара?</p><br>
 				<div class="cell small-12 switch tiny">
 					<input class="switch-input" id="yes-no" type="checkbox" name="exampleSwitch">
 					<label class="switch-paddle" for="yes-no">
 						<span class="show-for-sr">Использовать фото упаковки вместо фото товара?</span>
-						<span class="switch-active" aria-hidden="true">Да</span>
+						<span class="switch-active" aria-hidden="true"> Да</span>
 						<span class="switch-inactive" aria-hidden="true">Нет</span>
 					</label>
 				</div>

@@ -212,33 +212,6 @@ trait ArticleTrait
         }
     }
 
-    public function replicateArticle($request, $article)
-    {
-
-        $new_article = $article->replicate();
-        $new_article->name = $request->name;
-        $new_article->draft = true;
-
-        $new_article->photo_id = null;
-        $new_article->album_id = null;
-
-        $new_article->save();
-
-        if ($new_article) {
-
-
-            $photo_id = $this->replicatePhoto($article, $new_article);
-            $new_article->photo_id = $photo_id;
-//
-            $album_id = $this->replicateAlbumWithPhotos($article, $new_article);
-            $new_article->album_id = $album_id;
-
-            $new_article->save();
-
-            return $new_article;
-        }
-    }
-
     protected function setRaws($request, $article)
     {
         // Запись состава сырья только для черновика

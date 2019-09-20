@@ -38,7 +38,7 @@
                     <th class="td-name">Название</th>
                     <th class="td-unit">Ед. измерения</th>
                     <th class="td-weight">Параметры</th>
-                    <th class="td-portion">Порция</th>  
+                    <th class="td-portion">Порционность</th>  
                     <th class="td-category">Категория</th>
                     {{-- <th class="td-description">Описание</th> --}}
                     <th class="td-cost">Себестоимость</th>
@@ -101,10 +101,18 @@
                     </td>
                     <td class="td-portion">
                         @if($item->article->portion_status == 1)
-                            <span>{{ $item->article->portion_abbreviation }}</span><br>
-                            <span>{{ $item->article->portion_count * $item->article->unit->ratio }} {{ $item->article->unit->abbreviation }}</span>
+                            <span>Прием на склад: {{ $item->article->portion_abbreviation }}</span> 
+                            <span>{{ $item->article->portion_count * $item->article->unit->ratio }} {{ $item->article->unit->abbreviation }}</span><br>
                             
                         @endif
+
+                        @if(isset($item->portion_goods_status))
+                            @if($item->portion_goods_status == 1)
+                                <span>Использовать в {{ $item->portion_goods_abbreviation }}</span>
+                                <span>:{{ $item->portion_goods_count }} {{ $item->unit_portion_goods->abbreviation }}</span>
+                            @endif
+                        @endif
+
                     </td>
                     <td class="td-category">
                         <a href="/admin/{{ $entity }}?category_id%5B%5D={{ $item->category->id }}" class="filter_link" title="Фильтровать">{{ $item->category->name }}</a>
