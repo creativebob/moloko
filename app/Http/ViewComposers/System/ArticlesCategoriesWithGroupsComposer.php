@@ -13,7 +13,13 @@ class ArticlesCategoriesWithGroupsComposer
         $entity = Entity::whereAlias($view->category_entity)->first(['model']);
         $model = 'App\\'.$entity->model;
 
-        $categories = $model::whereHas('groups')->with([
+        // Получаем из сессии необходимые данные
+        $answer = operator_right($entity, false, 'index');
+
+        $categories = $model::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->whereHas('groups')
+        ->with([
             'groups:id,name'
         ])
             ->get([
@@ -22,7 +28,7 @@ class ArticlesCategoriesWithGroupsComposer
                 'parent_id',
                 'level'
             ]);
-//        dd($categories);
+       // dd($categories);
 
         $groups = [];
         foreach($categories as $category) {

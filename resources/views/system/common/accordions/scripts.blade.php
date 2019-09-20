@@ -5,6 +5,17 @@
 
     $(function() {
 
+        // ------------- Ловим нажатие на enter -------------
+        $(document).on('keydown', 'input[name=name]', function(event) {
+
+            if ((event.keyCode == 13) && (event.shiftKey == false)) { //если нажали Enter, то true
+
+                event.preventDefault();
+                addNewCategory();
+            }
+            
+        });
+
         // ----------- Добавление -------------
         $(document).on('click', '[data-open="modal-create"]', function() {
             $.get('/admin/' + entity + '/create', {
@@ -36,9 +47,25 @@
                     form.closest('.reveal-overlay').remove();
                     $('#content').html(html);
                     Foundation.reInit($('#content'));
+                    alert('Тут');
+                    // event.preventDefault();
                 });
             }
+
         });
+
+
+        // ---------------- Общая функция добавления ------------------------
+        function addNewCategory(){
+
+            var form = $('#form-create');
+            $('#add-category-button').prop('disabled', true);
+            $.post('/admin/' + entity, form.serialize(), function(html) {
+                form.closest('.reveal-overlay').remove();
+                $('#content').html(html);
+                Foundation.reInit($('#content'));
+            });
+        }
 
         // ------------------------ Кнопка обновления ---------------------------------------
         $(document).on('click', '.submit-edit', function(event) {
