@@ -101,7 +101,6 @@ class AppController extends Controller
     public function catalogs_goods(Request $request, $catalog_slug, $catalog_item_slug)
     {
 
-//        dd($request);
 
         $site = $this->site;
 
@@ -119,7 +118,6 @@ class AppController extends Controller
 
             ])
             ->first();
-//        dd($catalog_goods_item);
 
         $page->title = $catalog_goods_item->title;
 
@@ -163,8 +161,6 @@ class AppController extends Controller
             });
             $price_goods->addition = $addition;
         }
-        
-        // dd($prices_goods);
 
         return view($site->alias.'.pages.catalogs_goods.index', compact('site','page', 'request', 'catalog_goods_item', 'prices_goods', 'catalog_goods'));
     }
