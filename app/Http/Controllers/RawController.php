@@ -462,7 +462,7 @@ class RawController extends Controller
 
         $raw->load('article');
         $article = $raw->article;
-        $new_article = $this->replicateArticle($request, $article);
+        $new_article = $this->replicateArticle($request, $raw);
 
         $new_raw = $raw->replicate();
         $new_raw->article_id = $new_article->id;

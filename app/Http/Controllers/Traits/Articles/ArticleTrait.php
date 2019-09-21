@@ -212,6 +212,49 @@ trait ArticleTrait
         }
     }
 
+    public function replicateArticle($request, $item)
+    {
+
+        $article = $item->article;
+        $new_article = $article->replicate();
+        $new_article->name = $request->name;
+        $new_article->draft = true;
+
+
+        if ($request->cur_group == 0) {
+            $group = $article->group;
+            $user = $request->user();
+            $articles_group = ArticlesGroup::firstOrCreate([
+                'name' => $request->name,
+                'unit_id' => $group->unit_id,
+                'units_category_id' => $group->units_category_id,
+                'company_id' => $user->company_id,
+            ]);
+            $new_article->articles_group_id = $articles_group->id;
+
+            $category = $item->category;
+            $category->groups()->syncWithoutDetaching($articles_group->id);
+        }
+
+        $new_article->photo_id = null;
+        $new_article->album_id = null;
+
+        $new_article->save();
+
+        if ($new_article) {
+
+            $photo_id = $this->replicatePhoto($article, $new_article);
+            $new_article->photo_id = $photo_id;
+//
+            $album_id = $this->replicateAlbumWithPhotos($article, $new_article);
+            $new_article->album_id = $album_id;
+
+            $new_article->save();
+
+            return $new_article;
+        }
+    }
+
     protected function setRaws($request, $article)
     {
         // Запись состава сырья только для черновика

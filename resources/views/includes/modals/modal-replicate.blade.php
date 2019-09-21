@@ -13,6 +13,11 @@
         <input type="text" form="form-replicate" name="name" required autofocus>
       </label>
     </div>
+    <div class="small-10 cell checkbox">
+      {{ Form::hidden('cur_group', 0) }}
+      {{ Form::checkbox('cur_group', 1, null, ['id' => 'cur_group']) }}
+      <label for="cur_group"><span>Создать в этой же группе</span></label>
+    </div>
   </div>
   <div class="grid-x align-center grid-padding-x">
     <div class="small-6 medium-4 cell">

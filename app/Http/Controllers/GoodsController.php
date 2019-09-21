@@ -490,7 +490,7 @@ class GoodsController extends Controller
 
         $cur_goods->load('article');
         $article = $cur_goods->article;
-        $new_article = $this->replicateArticle($request, $article);
+        $new_article = $this->replicateArticle($request, $cur_goods);
 
         $new_cur_goods = $cur_goods->replicate();
         $new_cur_goods->article_id = $new_article->id;

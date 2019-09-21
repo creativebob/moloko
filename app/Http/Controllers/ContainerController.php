@@ -412,7 +412,7 @@ class ContainerController extends Controller
 
         $container->load('article');
         $article = $container->article;
-        $new_article = $this->replicateArticle($request, $article);
+        $new_article = $this->replicateArticle($request, $container);
 
         $new_container = $container->replicate();
         $new_container->article_id = $new_article->id;
