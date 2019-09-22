@@ -227,10 +227,10 @@ trait Photable
              ] as $value) {
 
                 Storage::disk('public')
-                    ->copy($directory. '/' . $value . '/' . $photo->name, $new_directory. '/' . $value . '/' . $photo->name);
+                    ->copy($directory. '/' . $value . '/' . $photo->name, $new_directory. '/' . $value . '/' . $new_photo->name);
 
             }
-            return $photo->id;
+            return $new_photo->id;
         } else {
             return $item->photo_id;
         }
@@ -286,14 +286,14 @@ trait Photable
                          ] as $value) {
 
                     Storage::disk('public')
-                        ->copy($directory. '/' . $value . '/' . $photo->name, $new_directory. '/' . $value . '/' . $photo->name);
+                        ->copy($directory. '/' . $value . '/' . $photo->name, $new_directory. '/' . $value . '/' . $new_photo->name);
 
                 }
 
             }
             $new_album->photos()->attach($photos_insert);
 
-            return $album->id;
+            return $new_album->id;
         } else {
             return $item->album_id;
         }
