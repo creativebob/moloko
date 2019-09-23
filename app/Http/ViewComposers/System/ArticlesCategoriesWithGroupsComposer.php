@@ -18,7 +18,7 @@ class ArticlesCategoriesWithGroupsComposer
 
         $categories = $model::moderatorLimit($answer)
         ->companiesLimit($answer)
-        ->whereHas('groups')
+        ->has('groups')
         ->with([
             'groups:id,name'
         ])

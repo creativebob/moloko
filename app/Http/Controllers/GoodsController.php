@@ -10,7 +10,7 @@ use App\Manufacturer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Traits\Articles\ArticleTrait;
+use App\Http\Controllers\Traits\Articlable;
 
 class GoodsController extends Controller
 {
@@ -26,7 +26,7 @@ class GoodsController extends Controller
         $this->entity_dependence = false;
     }
 
-    use ArticleTrait;
+    use Articlable;
 
     public function index(Request $request)
     {
@@ -490,7 +490,7 @@ class GoodsController extends Controller
 
         $cur_goods->load('article');
         $article = $cur_goods->article;
-        $new_article = $this->replicateArticle($request, $article);
+        $new_article = $this->replicateArticle($request, $cur_goods);
 
         $new_cur_goods = $cur_goods->replicate();
         $new_cur_goods->article_id = $new_article->id;

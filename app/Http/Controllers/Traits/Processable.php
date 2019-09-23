@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Traits\Processes;
+namespace App\Http\Controllers\Traits;
 
 use App\Http\Controllers\Traits\Photable;
 use App\Process;
@@ -13,7 +13,7 @@ use App\Http\Requests\ProcessRequest;
 
 use Illuminate\Support\Facades\Log;
 
-trait ProcessTrait
+trait Processable
 {
 
     use Photable;

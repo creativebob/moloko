@@ -17,7 +17,7 @@ use App\Http\Requests\ProcessRequest;
 use Illuminate\Support\Facades\Cookie;
 
 // Трейты
-use App\Http\Controllers\Traits\Processes\ProcessTrait;
+use App\Http\Controllers\Traits\Processable;
 
 use Illuminate\Support\Facades\Log;
 
@@ -35,7 +35,7 @@ class WorkflowController extends Controller
         $this->entity_dependence = false;
     }
 
-    use ProcessTrait;
+    use Processable;
 
     public function index(Request $request)
     {

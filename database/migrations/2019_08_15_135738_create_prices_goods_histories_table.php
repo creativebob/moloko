@@ -21,7 +21,7 @@ class CreatePricesGoodsHistoriesTable extends Migration
 
             $table->decimal('price', 12, 4)->comment('Цена');
 
-            $table->timestamp('begin_date')->comment('Дата и время начала');
+            $table->timestamp('begin_date')->nullable()->comment('Дата и время начала');
             $table->timestamp('end_date')->nullable()->comment('Дата и время окончания');
 
 

@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
 
 // Трейты
-use App\Http\Controllers\Traits\Articles\ArticleTrait;
+use App\Http\Controllers\Traits\Articlable;
 
 use Illuminate\Support\Facades\Log;
 
@@ -46,7 +46,7 @@ class StockGoodsController extends Controller
         $this->entity_dependence = true;
     }
 
-    use ArticleTrait;
+    use Articlable;
 
     public function index(Request $request)
     {
