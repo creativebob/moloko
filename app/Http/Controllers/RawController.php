@@ -13,7 +13,7 @@ use App\Manufacturer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Traits\Articles\ArticleTrait;
+use App\Http\Controllers\Traits\Articlable;
 
 class RawController extends Controller
 {
@@ -29,7 +29,7 @@ class RawController extends Controller
         $this->entity_dependence = false;
     }
 
-    use ArticleTrait;
+    use Articlable;
 
     public function index(Request $request)
     {

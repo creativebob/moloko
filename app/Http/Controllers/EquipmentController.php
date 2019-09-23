@@ -17,7 +17,7 @@ use App\Http\Requests\ArticleStoreRequest;
 use Illuminate\Support\Facades\Cookie;
 
 // Трейты
-use App\Http\Controllers\Traits\Articles\ArticleTrait;
+use App\Http\Controllers\Traits\Articlable;
 
 use Illuminate\Support\Facades\Log;
 
@@ -35,7 +35,7 @@ class EquipmentController extends Controller
         $this->entity_dependence = false;
     }
 
-    use ArticleTrait;
+    use Articlable;
 
     public function index(Request $request)
     {

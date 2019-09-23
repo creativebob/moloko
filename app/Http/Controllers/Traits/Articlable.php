@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Traits\Articles;
+namespace App\Http\Controllers\Traits;
 
 use App\Article;
 use App\ArticlesGroup;
@@ -14,7 +14,7 @@ use App\Http\Requests\ArticleStoreRequest;
 
 use Illuminate\Support\Facades\Log;
 
-trait ArticleTrait
+trait Articlable
 {
 
     use Photable;
