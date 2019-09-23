@@ -7,6 +7,10 @@
 		raws.change(this);
 	});
 
+	$(document).ready(function() {
+		raws.change(this);
+	}); 
+
 	// Удаление состав со страницы
 	// Открываем модалку
 	$(document).on('click', "#table-raws a[data-open=\"delete-item\"]", function() {

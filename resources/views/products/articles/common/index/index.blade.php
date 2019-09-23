@@ -41,7 +41,7 @@
                     <th class="td-portion">Порционность</th>  
                     <th class="td-category">Категория</th>
                     {{-- <th class="td-description">Описание</th> --}}
-                    <th class="td-cost">Себестоимость</th>
+                    <th class="td-manually">Артикул</th>
                     {{-- <th class="td-author">Автор</th> --}}
 
                     @if($page_info->alias == 'goods')
@@ -125,11 +125,8 @@
 
                     {{-- <td class="td-description">{{ $item->article->description }}</td> --}}
 
-                    <td class="td-cost">
-                        {{-- Средняя: {{ num_format($item->article->cost_default, 0) }}<br>
-                        Последняя: {{ num_format($item->article->cost_default, 0) }} --}}
-
-                        {{ num_format($item->article->cost_default, 0) }}
+                    <td class="td-manually" title="Артикул">
+                        {{ $item->article->manually ?? '' }}
                     </td>
 
                     {{-- <td class="td-author">@if(isset($item->author->first_name)) {{ $item->author->name }} @endif</td> --}}

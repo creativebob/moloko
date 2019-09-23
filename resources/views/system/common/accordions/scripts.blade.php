@@ -47,8 +47,7 @@
                     form.closest('.reveal-overlay').remove();
                     $('#content').html(html);
                     Foundation.reInit($('#content'));
-                    alert('Тут');
-                    // event.preventDefault();
+
                 });
             }
 

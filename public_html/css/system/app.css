@@ -12305,7 +12305,7 @@ a#task-toggle {
 
 .table-compositions {
   border-collapse: separate;
-  border-spacing: 0px 5px !important;
+  border-spacing: 0px 4px !important;
 }
 
 .table-compositions thead {
@@ -12316,11 +12316,13 @@ a#task-toggle {
   background-color: transparent !important;
   border-bottom: 1px solid #000;
   font-size: 0.9rem;
+  font-family: "SegoeUISemiBold";
+  font-weight: 400;
 }
 
 .table-compositions tr td {
   background-color: #fff;
-  border-top: 2px solid #fff;
+  border-top: 1px solid #fff;
   padding: 0.1rem 0.625rem 0.1rem;
 }
 
@@ -12330,6 +12332,15 @@ a#task-toggle {
 
 .table-compositions tr:first-child td {
   background-color: #fff;
+}
+
+.table-compositions tfoot {
+  background-color: transparent;
+}
+
+.table-compositions tfoot td {
+  padding: 0.4rem 0.625rem 0.3rem;
+  background-color: transparent !important;
 }
 
 .widget-table th {
@@ -12474,4 +12485,35 @@ a#task-toggle {
   content: counter(rowNumber);
   min-width: 1em;
   margin-right: 0.5em;
+}
+
+em.raw-portion-goods-item {
+  color: #cccccc !important;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]:hover,
+input[type="number"]:focus {
+  -moz-appearance: number-input;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.raw-indicators .total_count_weight, .raw-indicators .total_count_cost {
+  padding: 0px 3px;
+  font-size: 1.3rem;
+  font-family: "PFDinDisplayPro-Med";
 }

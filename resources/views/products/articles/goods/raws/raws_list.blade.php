@@ -13,7 +13,11 @@
 				{{ Form::checkbox(null, $raw->id, in_array($raw->id, $article->raws->pluck('id')->toArray()), ['class' => 'add-raw', 'id' => 'raw-' . $raw->id]) }}
 				@if(isset($raw->article))
 					<label for="raw-{{ $raw->id }}">
-						<span>{{ $raw->article->name }}</span>
+						<span>{{ $raw->article->name }}
+							@if($raw->portion_goods_status)
+								<em class="raw-portion-goods-item">- {{ $raw->portion_goods_count }} {{ $raw->unit_portion_goods->abbreviation }}</em>
+							@endif
+						</span>
 					</label>
 				@endif
 			</li>
