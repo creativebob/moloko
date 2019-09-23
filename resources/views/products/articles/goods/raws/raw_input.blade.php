@@ -1,5 +1,6 @@
 
-<tr class="item" id="table-raws-{{ $raw->id }}" data-name="{{ $raw->article->name }}">
+<tr class="item goods-composition-row" id="table-raws-{{ $raw->id }}" data-name="{{ $raw->article->name }}">
+	<td class="number_counter"></td>
 	<td>
 
 		{{ $raw->category->name }}

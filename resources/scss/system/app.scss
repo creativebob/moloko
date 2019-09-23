@@ -3649,12 +3649,13 @@ a#task-toggle{
         // border-bottom: 1px solid transparent;
         // list-style-type: none;
         // width: 100%;
-
+        max-height: 500px;
+        overflow-y: auto;
         position: absolute;
-        left: -250px;
+        left: -300px;
         top: -17px;
         z-index: 10;
-        width: 230px;
+        width: 280px;
         padding: 1rem;
         // visibility: hidden;
         display: none;
@@ -4017,4 +4018,14 @@ $responsive-card-table-label-bg: #ffffff;
 // Артикул
 .wrap-article-photo img{
     max-height: 300px;
+}
+
+.goods-composition-row {
+    counter-increment: rowNumber;
+}
+
+.number_counter::before {
+    content: counter(rowNumber);
+    min-width: 1em;
+    margin-right: 0.5em;
 }
