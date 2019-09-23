@@ -200,7 +200,7 @@ trait LeadControllerTrait
         if(Cookie::get('cart') !== null){
 
             $count = 0; $badget = 0;
-            
+
             $cart = json_decode(Cookie::get('cart'), true);
             $badget = $cart['sum'];
             $count = $cart['count'];            
@@ -243,6 +243,8 @@ trait LeadControllerTrait
                 $user->filial_id = $filial_id;
                 $user->save();
 
+                $phone = $user->main_phone->phone;
+
                 // Конец апдейта юзеара
             } else {
 
@@ -255,12 +257,13 @@ trait LeadControllerTrait
 
         // Создание ЛИДА ======================================================================
         $lead = new Lead;
+        $lead->company_id = $company->id;
         $lead->filial_id = $filial_id;
+        $lead->user_id = $user->id;
         $lead->email = $request->email ?? '';
         $lead->name = $name;
         $lead->company_name = $request->company_name;
         $lead->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
-
 
         $lead->stage_id = $request->stage_id ?? 2; // Этап: "обращение"" по умолчанию
         $lead->badget = $badget ?? 0;

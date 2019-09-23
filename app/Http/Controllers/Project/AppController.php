@@ -437,7 +437,29 @@ class AppController extends Controller
             // Чистим корзину у пользователя
             Cookie::queue(Cookie::forget('cart'));
 
-            return redirect()->route('project.start');
+            // Пишем в сессию пользователю данные нового лида
+            
+            // Создаем массив для хранения данных заказа
+            $confirmation = [];
+
+            // Сохраняем в него лида
+            $confirmation['lead'] = $lead;
+            // $confirmation['...'] = Что-нибудь еше, если будет необходимо...
+
+
+            // Пишем в сессию
+            session(['confirmation' => $confirmation]);
+
+            return redirect()->route('project.confirmation');
         }
+    }
+
+    public function confirmation(Request $request)
+    {
+
+        $site = $this->site;
+        $page = $site->pages_public->firstWhere('alias', 'confirmation');
+
+        return view($site->alias.'.pages.confirmation.index', compact('site','page'));
     }
 }
