@@ -11,7 +11,7 @@ use Event;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Traits\Telegram;
+use Telegram;
 
 trait LeadControllerTrait
 {
@@ -199,6 +199,8 @@ trait LeadControllerTrait
         // Содержится ли в куках данные корзины
         if(Cookie::get('cart') !== null){
 
+            $count = 0; $badget = 0;
+            
             $cart = json_decode(Cookie::get('cart'), true);
             $badget = $cart['sum'];
             $count = $cart['count'];            
@@ -288,7 +290,7 @@ trait LeadControllerTrait
         $message = "Заказ с сайта:\r\n";
         $message .= "Имя клиента: " . $lead->name . "\r\n";
         $message .= "Тел: " . decorPhone($phone) . "\r\n";
-        $message .= "Кол-во товаров: " . $count ?? '' . "\r\n";
+        $message .= "Кол-во товаров: " . $count . "\r\n";
         $message .= "Сумма заказа: " . num_format($lead->badget, 0) . ' руб.';
 
         $lead->notes()->create([
