@@ -62,14 +62,14 @@
 	<td>
 		@php if(isset($raw->pivot->use)){$count = $raw->pivot->use;} else {$count = 0;}; @endphp
 		@if($raw->portion_goods_status)
-			<input style="display: none;" class="raw-weight" value="{{ $raw->portion_goods_count * $raw->unit_portion_goods->ratio * 1000 }}" name="weight">
+			<input style="display: none;" class="raw-weight" value="{{ $raw->portion_goods_count * $raw->unit_portion_goods->ratio * 1000 }}">
 			<span class="raw-weight-count">{{ num_format($raw->portion_goods_count * $raw->unit_portion_goods->ratio * 1000 * $count, 0) }}</span>
 		@else
 			@if($raw->article->unit_id == 32)
-				<input style="display: none;" class="raw-weight" value="{{ $raw->article->weight * $raw->unit_weight->ratio * 1000 }}" name="weight">
+				<input style="display: none;" class="raw-weight" value="{{ $raw->article->weight * $raw->unit_weight->ratio * 1000 }}">
 				<span class="raw-weight-count">{{ num_format($raw->article->weight * $raw->unit_weight->ratio * 1000 * $count, 0)}}</span>
 			@else
-				<input style="display: none;" class="raw-weight" value="{{ 1000 }}" name="weight">
+				<input style="display: none;" class="raw-weight" value="{{ 1000 }}">
 				<span class="raw-weight-count">{{ num_format(1000 * $count, 0)}}</span>
 			@endif
 		@endif
