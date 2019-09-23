@@ -30,10 +30,6 @@ class ArticlesGroupRequest extends FormRequest
             'set_status' => 'integer|max:1|nullable',
             'unit_id' => 'integer|nullable',
 
-            'company_id' => 'integer|nullable',
-            'author_id' => 'integer|nullable',
-            'editor_id' => 'integer|nullable',
-
             'display' => 'integer|max:1|nullable',
             'moderation' => 'integer|max:1|nullable',
             'system' => 'integer|max:1|nullable',

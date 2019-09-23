@@ -22,42 +22,51 @@ trait Articlable
     public function storeArticle($request, $category)
     {
 
-        $user = $request->user();
-        $user_id = $user->id;
-        $company_id = $user->company_id;
-
-
+//        $user = $request->user();
+//        $user_id = $user->id;
+//        $company_id = $user->company_id;
         // dd($request->input());
+
+        // TODO - 23.09.19 - При создании артикула не ищем похожую группу, а создаем новую (на Вкусняшке проблемы с дублированием имён)
 
         // Смотрим пришедший режим группы товаров
         switch ($request->mode) {
 
             case 'mode-default':
-            $articles_group = ArticlesGroup::firstOrCreate([
-                'name' => $request->name,
-                'unit_id' => $request->unit_id,
-                'units_category_id' => $request->units_category_id,
-                'company_id' => $company_id,
-            ]);
 
-            // Пишем к группе связь с категорией
-            $category->groups()->syncWithoutDetaching($articles_group->id);
+//                $articles_group = ArticlesGroup::firstOrCreate([
+//                    'name' => $request->name,
+//                    'unit_id' => $request->unit_id,
+//                    'units_category_id' => $request->units_category_id,
+//                    'company_id' => $company_id,
+//                ]);
+
+                $data = $request->input();
+                $articles_group = (new ArticlesGroup())->create($data);
+
+                // Пишем к группе связь с категорией
+                $category->groups()->syncWithoutDetaching($articles_group->id);
             break;
 
             case 'mode-add':
-            $articles_group = ArticlesGroup::firstOrCreate([
-                'name' => $request->group_name,
-                'unit_id' => $request->unit_id,
-                'units_category_id' => $request->units_category_id,
-                'company_id' => $company_id
-            ]);
 
-            // Пишем к группе связь с категорией
-            $category->groups()->syncWithoutDetaching($articles_group->id);
+//                $articles_group = ArticlesGroup::firstOrCreate([
+//                    'name' => $request->group_name,
+//                    'unit_id' => $request->unit_id,
+//                    'units_category_id' => $request->units_category_id,
+//                    'company_id' => $company_id
+//                ]);
+
+                $data = $request->input();
+                $data['name'] = $request->group_name;
+                $articles_group = (new ArticlesGroup())->create($data);
+
+                // Пишем к группе связь с категорией
+                $category->groups()->syncWithoutDetaching($articles_group->id);
             break;
 
             case 'mode-select':
-            $articles_group = ArticlesGroup::findOrFail($request->group_id);
+                $articles_group = ArticlesGroup::findOrFail($request->group_id);
             break;
         }
 
@@ -223,13 +232,20 @@ trait Articlable
 
         if ($request->cur_group == 0) {
             $group = $article->group;
-            $user = $request->user();
-            $articles_group = ArticlesGroup::firstOrCreate([
-                'name' => $request->name,
-                'unit_id' => $group->unit_id,
-                'units_category_id' => $group->units_category_id,
-                'company_id' => $user->company_id,
-            ]);
+
+            $data = $request->input();
+            $data['unit_id'] = $group->unit_id;
+            $data['units_category_id'] = $group->units_category_id;
+            $articles_group = (new ArticlesGroup())->create($data);
+
+            // TODO - 23.09.19 - Изменения из за проблен на Вкусняшке
+//            $user = $request->user();
+//            $articles_group = ArticlesGroup::firstOrCreate([
+//                'name' => $request->name,
+//                'unit_id' => $group->unit_id,
+//                'units_category_id' => $group->units_category_id,
+//                'company_id' => $user->company_id,
+//            ]);
             $new_article->articles_group_id = $articles_group->id;
 
             $category = $item->category;
