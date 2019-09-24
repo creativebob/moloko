@@ -48,3 +48,33 @@ class PricesGoodsRawsArticlesGroupsFilterComposer
     }
 
 }
+
+    // МОЖЕТ ТАК? =====================================================================================
+    // public function compose(View $view)
+    // {
+    //     $catalog_goods_items_ids = $view->catalog_goods_items->pluck('id');
+
+    //     $prices_goods = PricesGoods::whereIn('catalogs_goods_item_id', $catalog_goods_items_ids)
+    //         ->has('goods_public')
+    //         ->where([
+    //             'display' => true,
+    //             'archive' => false
+    //         ])
+    //         ->get();
+
+    //     $articles_groups = [];
+    //     foreach ($prices_goods as $price_goods) {
+    //         $article = $price_goods->goods_public->article;
+
+    //         foreach ($article->raws as $raw) {
+    //             foreach ($raw->metrics as $metric) {
+    //                 if ($metric->pivot->value == 2)
+    //                     $articles_groups[] = $raw->article->group;
+    //             }
+    //         }
+    //     }
+
+    //     $articles_groups = collect($articles_groups)->unique();
+
+    //     return $view->with(compact('articles_groups'));
+    // }

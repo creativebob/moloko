@@ -10,14 +10,9 @@ class PricesGoodsPriceFilterComposer
     public function compose(View $view)
     {
 
-        $catalog_goods_item = $view->catalog_goods_item;
+        $catalog_goods_items_ids = $view->catalog_goods_items->pluck('id');
 
-        $prices_goods = PricesGoods::whereHas('catalogs_item', function ($q) use($catalog_goods_item) {
-            $q->where([
-                'id' => $catalog_goods_item->id,
-//                    'display' => true
-            ]);
-        })
+        $prices_goods = PricesGoods::whereIn('catalogs_goods_item_id', $catalog_goods_items_ids)
             ->has('goods_public')
             ->where([
                 'display' => true,
@@ -31,9 +26,7 @@ class PricesGoodsPriceFilterComposer
         $price['step'] = 100;
         $price['min'] = $prices_goods->min('price');
         $price['max'] = $prices_goods->max('price');
-//		dd($price);
 
         return $view->with(compact('price'));
     }
-
 }

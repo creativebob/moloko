@@ -98,42 +98,42 @@ class AppController extends Controller
     }
 
 
-    public function catalogs_goods(Request $request, $catalog_slug, $catalog_item_slug)
+    public function catalogs_goods(Request $request, $catalog_slug, $catalog_item_slug = null)
     {
 
-
         $site = $this->site;
-
         $page = $site->pages_public->where('alias', 'catalogs-goods')->first();
 
-        $catalog_goods_item = CatalogsGoodsItem::whereHas('catalog_public', function ($q) use ($site, $catalog_slug) {
-            $q->whereHas('sites', function ($q) use ($site) {
-                $q->where('id', $site->id);
-            })
-                ->where('slug', $catalog_slug);
+        // Получаем полный прайс со всеми доступными разделами
+        $catalog_goods = CatalogsGoods::with('items_public')
+        ->whereHas('sites', function ($q) use ($site) {
+            $q->where('id', $site->id);
         })
-            ->where([
-                'slug' => $catalog_item_slug,
-                'display' => true
+        ->where('slug', $catalog_slug)
+        ->where(['display' => true])
+        ->first();
 
-            ])
-            ->first();
+        if($catalog_item_slug){
 
-        $page->title = $catalog_goods_item->title;
+            // Получаем разделы прайса ограниченный slug'ом 
+            $catalog_goods_items = $catalog_goods->items_public->where('slug', $catalog_item_slug);
+            $page->title = $catalog_goods_items->first()->title;
+
+        } else {
+
+            // Получаем все доступные разделы прайса
+            $catalog_goods_items = $catalog_goods->items_public;
+            $page->title = 'Все товары';
+        }
+
+        // Получаем id всех доступных на сайте разделов прайса, 
+        // чтобы далее не заниматься повторным перебором при получении товаров
+        $catalog_goods_items_ids = $catalog_goods_items->pluck('id');
 
         $prices_goods = PricesGoods::with([
             'goods_public.article.raws.metrics'
         ])
-            ->whereHas('catalogs_item_public', function ($q) use ($site, $catalog_slug, $catalog_item_slug) {
-                $q->whereHas('catalog_public', function ($q) use ($site, $catalog_slug) {
-                    $q->whereHas('sites', function ($q) use ($site) {
-                        $q->where('id', $site->id);
-                    })
-                        ->where('slug', $catalog_slug);
-                })
-                    ->where('slug', $catalog_item_slug);
-
-            })
+            ->whereIn('catalogs_goods_item_id', $catalog_goods_items_ids)
             ->has('goods_public')
             ->where([
                 'display' => true,
@@ -142,28 +142,25 @@ class AppController extends Controller
             ->filter($request)
             ->paginate(16);
 
-        $catalog_goods = $catalog_goods_item->catalog;
-
         // Перебор и дописывание агрегаций
         // Нужен способ проще!
         foreach($prices_goods as $price_goods){
-            $sweets = $price_goods->goods_public->article->raws->filter(function ($value, $key) {
+            $price_goods->sweets = $price_goods->goods_public->article->raws->filter(function ($value, $key) {
                 if(isset($value->metrics->where('name', 'Тип сырья')->first()->pivot->value)){
                     return $value->metrics->where('name', 'Тип сырья')->first()->pivot->value == 1;
                 }
             });
-            $price_goods->sweets = $sweets;
 
-            $addition = $price_goods->goods_public->article->raws->filter(function ($value, $key) {
+            $price_goods->addition = $price_goods->goods_public->article->raws->filter(function ($value, $key) {
                 if(isset($value->metrics->where('name', 'Тип сырья')->first()->pivot->value)){
                     return $value->metrics->where('name', 'Тип сырья')->first()->pivot->value == 2;
                 }
             });
-            $price_goods->addition = $addition;
         }
 
-        return view($site->alias.'.pages.catalogs_goods.index', compact('site','page', 'request', 'catalog_goods_item', 'prices_goods', 'catalog_goods'));
+        return view($site->alias.'.pages.catalogs_goods.index', compact('site','page', 'request', 'catalog_goods_items', 'prices_goods', 'catalog_goods'));
     }
+
 
     public function catalogs_services(Request $request, $catalog_slug, $catalog_item_slug)
     {
