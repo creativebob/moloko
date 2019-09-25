@@ -67,9 +67,10 @@
 
             let all_raws = $('#table-raws tr td .raw-weight-count');
             let summ = 0;
+            let result = 0;
 
             all_raws.each(function(){
-                summ += parseInt($(this).html().replace(/\D+/g,""));
+                summ += Number.parseFloat($(this).html().replace(/\s+/g, '').trim());
             });
 
             $('.total_count_weight').text(this.level(summ));
