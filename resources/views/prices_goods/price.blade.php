@@ -15,6 +15,12 @@
         ><label class="label-check" for="check-{{ $cur_prices_goods->id }}"></label>
     </td>
 
+    <td class="td-photo tiny">
+        <a href="/admin/{{ $entity }}/{{ $cur_prices_goods->goods->id }}/edit">
+            <img src="{{ getPhotoPathPlugEntity($cur_prices_goods->goods, 'small') }}" alt="{{ isset($cur_prices_goods->goods->article->photo_id) ? $cur_prices_goods->goods->article->name : 'Нет фото' }}">
+        </a>
+    </td>
+
     <td class="td-name">
         {{ $cur_prices_goods->goods->article->name }}
         {{-- @can('update', $cur_prices_goods)
@@ -37,7 +43,7 @@
     </td>
     <td class="td-weight">
         @if($cur_prices_goods->goods->article->group->unit_id != 8)
-            {{ $cur_prices_goods->goods->article->weight * $cur_prices_goods->goods->article->unit->ratio }} кг
+            {{ num_format($cur_prices_goods->goods->article->weight / $cur_prices_goods->goods->article->unit_weight->ratio, 0) }} {{ $cur_prices_goods->goods->article->unit_weight->abbreviation }}
         @endif
     </td>
 

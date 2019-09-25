@@ -11809,6 +11809,10 @@ a#task-toggle {
   max-height: 100px;
 }
 
+.content .content-table .td-photo.tiny img {
+  max-height: 60px;
+}
+
 .content .content-table th:first-child:hover {
   cursor: default;
 }
@@ -12489,27 +12493,6 @@ a#task-toggle {
 
 em.raw-portion-goods-item {
   color: #cccccc !important;
-}
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
-input[type="number"]:hover,
-input[type="number"]:focus {
-  -moz-appearance: number-input;
-}
-
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
 }
 
 .raw-indicators .total_count_weight, .raw-indicators .total_count_cost {

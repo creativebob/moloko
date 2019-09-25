@@ -197,11 +197,14 @@
 		// Вес
 		public function getWeightTransAttribute()
 		{
-	        $weight = 0;
+
 	        if (isset($this->unit_id)) {
 	            if(isset($this->unit_weight)){
 	                $weight = $this->weight / $this->unit_weight->ratio;
+	            } else {
+	            	$weight = $this->weight / $this->unit->ratio;
 	            }
+
 	        } else {
 	            $weight = $this->weight / $this->group->unit->ratio;
 	        }
@@ -215,18 +218,20 @@
 		}
 		
 		// Объем
-		public function getVolumeAttribute($value)
+		public function getVolumeTransAttribute()
 		{
-			$volume = null;
-			if (isset($this->unit_id)) {
-				if(isset($this->unit_volume)){
-					$volume = $value / $this->unit_volume->ratio;
-				}
-			} else {
-				$volume = $value / $this->group->unit->ratio;
-			}
-			
-			return $volume == 0 ? null : $volume;
+
+	        if (isset($this->unit_id)) {
+	            if(isset($this->unit_volume)){
+	                $volume = $this->volume / $this->unit_volume->ratio;
+	            } else {
+	            	$volume = $this->volume / $this->unit->ratio;
+	            }
+
+	        } else {
+	            $volume = $this->volume / $this->group->unit->ratio;
+	        }
+
+	        return $volume;
 		}
-		
 	}

@@ -18,8 +18,8 @@
 	use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 // Фильтры
-// use App\Scopes\Filters\Filter;
-// use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\Filter;
+use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 	
 	class CatalogsGoodsItem extends Model
@@ -39,8 +39,8 @@
 		use ModeratorLimitTraitScopes;
 		
 		// Фильтры
-		// use Filter;
-		// use BooklistFilter;
+		use Filter;
+		use BooklistFilter;
 		// use DateIntervalFilter;
 		
 		protected $dates = ['deleted_at'];

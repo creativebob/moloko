@@ -6,6 +6,7 @@ use App\PricesGoods;
 use App\CatalogsGoods;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
 
 class PricesGoodsController extends Controller
 {
@@ -14,7 +15,7 @@ class PricesGoodsController extends Controller
     {
         $this->middleware('auth');
         $this->prices_goods = $prices_goods;
-        $this->entity_alias = with(new PricesGoods)->getTable();;
+        $this->entity_alias = with(new PricesGoods)->getTable();
         $this->entity_dependence = true;
         $this->class = PricesGoods::class;
         $this->model = 'App\PricesGoods';
@@ -29,6 +30,14 @@ class PricesGoodsController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
+
+        // Включение контроля активного фильтра
+        $filter_url = autoFilter($request, $this->entity_alias);
+
+        if (($filter_url != null)&&($request->filter != 'active')) {
+            Cookie::queue(Cookie::forget('filter_' . $this->entity_alias));
+            return Redirect($filter_url);
+        }
 
         $user_filials = session('access.all_rights.index-prices_services-allow.filials');
 //        $user_filials = session('access.all_rights.index-leads-allow');
@@ -62,7 +71,17 @@ class PricesGoodsController extends Controller
 //        })
             // ->moderatorLimit($answer)
             ->companiesLimit($answer)
-//            ->filials($answer)
+            ->booklistFilter($request)
+
+            ->whereHas('catalogs_item', function($q) use ($request){
+                $q->filter($request, 'author_id');
+            })
+
+            ->whereHas('catalogs_item', function($q) use ($request){
+                $q->filter($request, 'catalogs_goods_item_id');
+            })
+
+            // ->filials($answer)
             // ->authors($answer)
             // ->systemItem($answer)
             ->where([
@@ -70,21 +89,22 @@ class PricesGoodsController extends Controller
                 'catalogs_goods_id' => $catalog_id,
                 'filial_id' => $filial_id,
             ])
+            ->orderBy('sort', 'asc')
             ->paginate(30);
-//         dd($prices_goods);
+        // dd($prices_goods);
+
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        // $filter = setFilter($this->entity_alias, $request, [
-        //     'author',               // Автор записи
-        //     // 'services_category',    // Категория услуги
-        //     // 'services_product',     // Группа услуги
-        //     // 'date_interval',     // Дата обращения
-        //     'booklist'              // Списки пользователя
-        // ]);
+        $filter = setFilter($this->entity_alias, $request, [
+            'author',                               // Автор записи
+            'booklist',                             // Списки пользователя
+            'catalogs_goods_items'                  // Списки пользователя
+        ]);
 
+        // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
@@ -99,7 +119,7 @@ class PricesGoodsController extends Controller
             'page_info' => $page_info,
             'class' => $this->class,
             'entity' => $this->entity_alias,
-            // 'filter' => $filter,
+            'filter' => $filter,
             'nested' => null,
             'catalog_id' => $catalog_id,
             'catalog' => $catalog,

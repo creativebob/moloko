@@ -140,6 +140,7 @@ class AppController extends Controller
                 'archive' => false
             ])
             ->filter($request)
+            ->orderBy('sort', 'asc')
             ->paginate(16);
 
         // Перебор и дописывание агрегаций

@@ -214,7 +214,7 @@
 									<div class="grid-x grid-margin-x">
 										<div class="small-12 medium-3 cell">
 											<label>Объем
-												{!! Form::number('volume', null) !!}
+												{!! Form::number('volume', $article->volume_trans) !!}
 											</label>
 										</div>
 										<div class="small-12 medium-3 cell">
@@ -223,7 +223,7 @@
 													'field_name' => 'unit_volume_id',
 													'units_category_id' => 5,
 													'disabled' => null,
-													'data' => $article->unit_volume_id,
+													'data' => $article->unit_volume_id ?? 30,
 												])
 											</label>
 										</div>

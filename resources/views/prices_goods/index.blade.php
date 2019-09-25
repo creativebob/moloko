@@ -16,8 +16,8 @@
 @section('title-content')
 
 	{{-- Таблица --}}
-	@include('includes.title-content', ['page_info' => $page_info, 'class' => App\PricesGoods::class, 'type' => 'table'])
-
+	{{-- @include('includes.title-content', ['page_info' => $page_info, 'class' => App\PricesGoods::class, 'type' => 'table']) --}}
+    @include('prices_goods.includes.title-articles', ['page_info' => $page_info, 'class' => $class])
 @endsection
 
 
@@ -53,10 +53,11 @@
                 <tr id="thead-content">
                     <th class="td-drop"></th>
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
+                    <th class="td-photo">Фото</th>
                     <th class="td-name" data-serversort="name">Название</th>
                     <th class="td-unit">Ед. измерения</th>
                     <th class="td-weight">Вес</th>  
-                    <th class="td-catalogs_item">Пункт каталога</th>
+                    <th class="td-catalogs_item">Раздел прайса</th>
                     <th class="td-price">Цена</th>
                     <th class="td-control"></th>
                     <th class="td-delete"></th>
