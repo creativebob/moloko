@@ -2,7 +2,15 @@
 	<div class="small-12 medium-9 cell">
 
 		<div class="grid-x grid-padding-x">
-			<div class="small-12 medium-6 large-9 cell">
+			<div class="small-12 medium-6 large-9 cell raw-indicators">
+				<div class="grid-x grid-margin-x">
+						<div class="cell shrink">
+							<span class="indicator-name">Вес: </span><span class="total_count_weight">0</span> <span>гр.</span>
+						</div>
+						<div class="cell auto">
+							<span class="indicator-name">Себестоимость: </span><span class="total_count_cost">0</span> <span>руб.</span>
+						</div>
+				</div>
 			</div>
 			<div class="small-12 medium-6 large-3 cell">
 				{{-- Если статус у товара статус черновика, то показываем сырье --}}
@@ -38,6 +46,7 @@
 						{{-- <th>Отход:</th>
 						<th>Остаток:</th>
 						<th>Операция над остатком:</th> --}}
+						<th>Вес</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -52,6 +61,19 @@
 					@endif
 
 				</tbody>
+				<tfoot>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td>
+							<span class="total_count_weight">0</span> <span>гр.</span>
+						</td>
+						<td></td>
+					</tr>
+				</tfoot>
 			</table>
 		</div>
 	</div>

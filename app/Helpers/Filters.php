@@ -489,6 +489,15 @@
         // ----------------------------------------------------------------------------
 
 
+        // ФИЛЬТР ПО ПУНКТАМ КАТАЛОГА -------------------------------------------------
+        if($name_filter == 'catalogs_goods_items'){
+
+            $filter[$name_filter]['title'] = 'Раздел прайса:';                                          // Назавние фильтра
+            $column = 'catalogs_goods_item_id';                                                         // Имя переменной в request
+            $filter[$name_filter]['list_select']['item_list'] = getFilterCatalogsGoodsItemList();       // Функция с запросом
+        }
+        // ----------------------------------------------------------------------------
+
 
         // ФИЛЬТР ПО КАТЕГОРИИ ТОВАРА -------------------------------------------------
         if($name_filter == 'containers_category'){
@@ -751,6 +760,13 @@
         $goods_categories = App\GoodsCategory::orderBy('name', 'asc')
         ->get()->pluck('name', 'id')->toArray();
         return $goods_categories;
+    }
+
+    function getFilterCatalogsGoodsItemList(){
+
+        $catalogs_goods_items = App\CatalogsGoodsItem::orderBy('name', 'asc')
+        ->get()->pluck('name', 'id')->toArray();
+        return $catalogs_goods_items;
     }
 
     function getFilterContainersCategoryList(){

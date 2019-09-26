@@ -21,9 +21,10 @@
 		<div class="small-4 cell @if ($raw->portion_goods_status == null) portion-goods-hide @endif">
 			<label>Единица измерения
 				@include('products.articles.common.edit.select_units', [
+					'id' => 'select_units_portion_goods',
                     'field_name' => 'unit_portion_goods_id',
                     'units_category_id' => $article->unit->category_id,
-                    'disabled' => null,
+                    'disabled' => $disabled,
                     'data' => $raw->unit_portion_goods_id ?? $raw->article->unit_id,
                 ])
 			</label>

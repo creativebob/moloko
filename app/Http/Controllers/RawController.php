@@ -496,7 +496,9 @@ class RawController extends Controller
     public function ajax_get_raw(Request $request)
     {
         $raw = Raw::with([
+            'unit_portion_goods',
             'article.group.unit',
+            'article.unit_weight',
             'category'
         ])
         ->find($request->id);
@@ -509,7 +511,9 @@ class RawController extends Controller
     {
 
         $raw = Raw::with([
+            'unit_portion_goods',
             'article.group.unit',
+            'article.unit_weight',
             'category'
         ])
         ->findOrFail($request->id);

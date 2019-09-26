@@ -191,17 +191,6 @@ trait Articlable
                     // }
 
 
-                    // Смена значения единицы измерения в рамках выбранной меры (категории ед. измерения) без смены 
-                    if (isset($data['unit_id'])) {
-
-                        // Если пришедшая единица измерения отличается от той, что устновлена на артикуле
-                        if($data['unit_id'] != $article->unit_id){
-                            $cur_weight = $article->weight;
-                            $unit_new = Unit::findOrFail($data['unit_id']);
-                            $weight = $cur_weight * $unit_new->ratio;
-                            $data['weight'] = $weight;
-                        }
-                    }
                 }
 
                 $data['draft'] = request()->draft;

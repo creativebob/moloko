@@ -16,6 +16,8 @@
                 }, function(html){
                     // alert(html);
                     $('#table-raws').append(html);
+                    // this.totalCount();
+                    
                 });
             } else {
 
@@ -24,7 +26,7 @@
             };
         }
 
-        openModal(elem){
+        openModal(elem) {
             // находим описание сущности, id и название удаляемого элемента в родителе
             let parent = $(elem).closest('.item');
             let id = parent.attr('id').split('-')[2];
@@ -40,6 +42,8 @@
             $('#table-raws-' + id).remove();
             // Убираем отмеченный чекбокс в списке метрик
             $('#raw-' + id).prop('checked', false);
+
+            this.totalCount(); 
         }
 
         fill(elem) {
@@ -48,8 +52,37 @@
             let val = $(elem).val();
 
             parent.find('.raw-use').val(val);
+
+            let weight = parent.find('.raw-weight').attr('value');
+            let weight_count = weight * val;
+
+            parent.find('.raw-weight-count').text(this.level(weight_count));
+
+            this.totalCount();
             // parent.find('.raw-waste').val(0);
             // parent.find('.raw-leftover').val(0);
+        }
+
+        totalCount() {
+
+            let all_raws = $('#table-raws tr td .raw-weight-count');
+            let summ = 0;
+            let result = 0;
+
+            all_raws.each(function(){
+                summ += Number.parseFloat($(this).html().replace(/\s+/g, '').trim());
+            });
+
+            $('.total_count_weight').text(this.level(summ));
+        }
+
+
+        level(value) {
+            return value.toLocaleString();
+        }
+
+        onlyInteger(value) {
+            return Math.floor(value);
         }
 
     }

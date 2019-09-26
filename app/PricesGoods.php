@@ -157,7 +157,12 @@
 					});
 				});
 			}
-			
+
+	        if (request('catalogs_goods_item')) {
+	            $catalogs_goods_item = request('catalogs_goods_item');
+	            $query->where('catalogs_goods_item_id', $catalogs_goods_item);
+	        }
+	        
 			if (request('raws_articles_groups')) {
 				$raws_articles_groups = request('raws_articles_groups');
 //		    dd($raws_articles_groups);

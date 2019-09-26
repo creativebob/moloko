@@ -948,7 +948,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('catalogs_goods')->first(['id'])->id,
-                'view_path' => 'prices_services',
+                'view_path' => 'prices_goods',
                 'page_id' => $pages->firstWhere('alias', 'prices_goods')->id,
             ],
             [

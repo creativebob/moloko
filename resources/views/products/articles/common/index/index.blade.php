@@ -41,7 +41,7 @@
                     <th class="td-portion">Порционность</th>  
                     <th class="td-category">Категория</th>
                     {{-- <th class="td-description">Описание</th> --}}
-                    <th class="td-cost">Себестоимость</th>
+                    <th class="td-manually">Артикул</th>
                     {{-- <th class="td-author">Автор</th> --}}
 
                     @if($page_info->alias == 'goods')
@@ -90,14 +90,18 @@
                         {{ $item->article->unit->abbreviation }}
                     </td>
                     <td class="td-weight">
-                        @if(isset($item->article->weight))
-                            {{ $item->article->weight_trans ?? '' }} {{ $item->article->unit_weight->abbreviation ?? '' }}
+
+                        @if($item->article->weight != 0)
+                            <span class="tiny-text">Вес: </span><span title="Вес указанный вручную">{{ num_format($item->article->weight_trans, 0) ?? '' }} {{ $item->article->unit_weight->abbreviation ?? $item->article->unit->abbreviation ?? '' }}</span>
                             <br>
                         @endif
 
-                        @if(isset($item->article->volume))
-                            {{ $item->article->volume ?? '' }} {{ $item->article->unit_volume->abbreviation ?? '' }}
+                        @if($item->article->volume != 0)
+                            <span class="tiny-text">Объем: </span><span title="Вес указанный вручную">{{ num_format($item->article->volume_trans, 0) ?? '' }} {{ $item->article->unit_volume->abbreviation ?? $item->article->unit->abbreviation ?? '' }}</span>
+                            <br>
                         @endif
+
+                        <span class="tiny-text">Состав: </span><span title="Кол-во сырья в составе">{{ $item->article->raws->count() }}</span>
                     </td>
                     <td class="td-portion">
                         @if($item->article->portion_status == 1)
@@ -125,11 +129,8 @@
 
                     {{-- <td class="td-description">{{ $item->article->description }}</td> --}}
 
-                    <td class="td-cost">
-                        {{-- Средняя: {{ num_format($item->article->cost_default, 0) }}<br>
-                        Последняя: {{ num_format($item->article->cost_default, 0) }} --}}
-
-                        {{ num_format($item->article->cost_default, 0) }}
+                    <td class="td-manually" title="Артикул">
+                        {{ $item->article->manually ?? '' }}
                     </td>
 
                     {{-- <td class="td-author">@if(isset($item->author->first_name)) {{ $item->author->name }} @endif</td> --}}
