@@ -56,7 +56,10 @@
             let weight = parent.find('.raw-weight').attr('value');
             let weight_count = weight * val;
 
-            parent.find('.raw-weight-count').text(this.level(weight_count));
+            elem = parent.find('.raw-weight-count');
+            elem.text(this.level(weight_count));
+
+            elem.data('count', weight_count);
 
             this.totalCount();
             // parent.find('.raw-waste').val(0);
@@ -70,7 +73,7 @@
             let result = 0;
 
             all_raws.each(function(){
-                summ += Number.parseFloat($(this).html().replace(/\s+/g, '').trim());
+                summ += $(this).data('count');
             });
 
             $('.total_count_weight').text(this.level(summ));
