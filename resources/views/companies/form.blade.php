@@ -291,7 +291,7 @@
                                         </label>
                                     </td>
                                     <td>
-                                        {{-- <img id="photo" src="{{ getPhotoPathPlugEntity($item) }}"> --}}
+                                        <img id="photo" src="{{ getPhotoPath($company, 'small') }}">
                                     </td>
                                 </tr>
                                 <tr> 
