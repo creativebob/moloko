@@ -87,7 +87,7 @@
 									{{ Form::text('name', $article->name, ['required']) }}
 								</label>
 
-								<articles-categories-with-groups-component :item="{{ $item }}" :article="{{ $article }}" :categories="{{ $categories_tree }}" :groups="{{ $groups }}"></articles-categories-with-groups-component>
+								<articles-categories-with-groups-component :item="{{ $item }}" :article="{{ $article }}" :categories='@json($categories_tree)' :groups='@json($groups)'></articles-categories-with-groups-component>
 
 								<label>Производитель
 

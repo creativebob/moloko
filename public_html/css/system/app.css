@@ -12452,11 +12452,11 @@ a#task-toggle {
   color: #ffffff;
 }
 
-.relat {
+.drilldown-categories-wrap {
   position: relative;
 }
 
-.relat .abs {
+.drilldown-categories-wrap .categories-wrap {
   position: absolute;
   top: 0px;
   left: 0px;

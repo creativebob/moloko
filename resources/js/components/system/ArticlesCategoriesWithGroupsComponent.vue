@@ -42,22 +42,14 @@
 <script>
     export default {
 		mounted() {
-			// axios.get('/api/v1/categories/' + this.entity)
-			// 		.then(response => {
-			// 			this.categories = response.data.categories
-			// 			this.groups = response.data.groups
-			// 			this.getGroup()
-			// 			this.getGroupsList()
-			// 		})
-			// 		.catch(error => {
-			// 			console.log(error)
-			// 		})
-			this.getGroup()
+			this.getCategoriesList(this.categories)
+			this.setGroup()
 			this.getGroupsList()
 		},
 		data() {
 			return {
 				// categories: [],
+				// categoriesList: [],
 				// groups: [],
 				groupsList: [],
 				categoryId: this.item.category_id,
@@ -88,15 +80,6 @@
 			}
 		},
 		methods: {
-			getGroup() {
-				let obj = this.groups;
-				for (var item in obj) {
-					let el = obj[item]
-					if (el.id == this.groupId) {
-						this.group = el;
-					}
-				}
-			},
 			setGroup() {
 				this.groups.filter(item => {
 					if (item.id == this.groupId) {
@@ -106,23 +89,23 @@
 			},
 			getGroupsList() {
 				this.groupsList = []
-				let obj = this.groups;
-				for (var item in obj) {
-					let el = obj[item]
-					if (el.category_id == this.categoryId) {
-						this.groupsList.push(el);
+
+				this.groupsList = this.groups.filter(item => {
+					if (item.category_id == this.categoryId) {
+						return item;
 					}
-				}
+				});
+
 				if (this.categoryId != this.group.category_id) {
 					this.groupsList.push(this.group);
 				}
 			},
-			getCategoriesList(flatCategories) {
+			getCategoriesList(categories) {
 				var tree = [];
 				var self = this;
-				flatCategories.forEach( function(category) {
-					tree.push(category);
 
+				categories.forEach( function(category) {
+					tree.push(category);
 					if (typeof category.childrens !== 'undefined') {
 						tree = tree.concat(self.getCategoriesList(category.childrens));
 					}
@@ -138,6 +121,5 @@
 				return res;
 			}
 		},
-
 	}
 </script>
