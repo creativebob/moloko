@@ -3,7 +3,7 @@
 		<tr>
 			<td>1</td>
 			<td>
-				<select-categories-component entity="raws"></select-categories-component>
+					<select-categories-component :data="selectData"></select-categories-component>
 			</td>
 			<td>
 				<input-digit-component name="count_item" rate="2" :value="855" v-on:countchanged="changeCount"></input-digit-component>
@@ -25,17 +25,17 @@
 			<td><span> {{ (count_item * price) + (count_item * price * vat_rate / 100) | roundtotwo }} </span></td>
 			<td><a class="button tiny">Добавить</a></td>
 		</tr>
-	    <tr v-for="item in consignment.items">
-	        <td>{{ item.id }}</td>
-	        <td>{{ item.cmv.article.name }}</td>
-	        <td>{{ item.count }}</td>
-	        <td>{{ item.price }}</td>
-	        <td>{{ item.amount }}</td>
-	        <td>{{ item.vat_rate }}</td>
-	        <td>{{ item.amount_vat }}</td>
-	        <td>{{ item.total }}</td>
-	        <td><a @click="delItem" class="button tiny">Удалить</a></td>
-	    </tr>
+		<tr v-for="item in consignment.items">
+			<td>{{ item.id }}</td>
+			<td>{{ item.cmv.article.name }}</td>
+			<td>{{ item.count }}</td>
+			<td>{{ item.price }}</td>
+			<td>{{ item.amount }}</td>
+			<td>{{ item.vat_rate }}</td>
+			<td>{{ item.amount_vat }}</td>
+			<td>{{ item.total }}</td>
+			<td><a @click="delItem" class="button tiny">Удалить</a></td>
+		</tr>
 	</tbody>
 </template>
 
@@ -56,7 +56,14 @@
 			}
 		},
 
-		props: ['consignment'],
+		props: {
+			consignment: {
+				type: Number,
+			},
+			selectData: {
+				type: Object,
+			},
+		},
 
 		created: function(){
 

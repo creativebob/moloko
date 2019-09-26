@@ -67,8 +67,15 @@ trait CompanyControllerTrait
 
             $result = cleanNameLegalForm($request->company_name);
             $company->legal_form_id = $result ? $result['legal_form_id'] : $request->legal_form_id ?? 1;
+	
+	        
 
             $company->save();
+	
+	        // Cохраняем или обновляем фото
+	        $photo_id = $this->getPhotoId($request, $company);
+	        $company->photo_id = $photo_id;
+	        $company->save();
 
         }
 
@@ -185,6 +192,10 @@ trait CompanyControllerTrait
         $company->seo_description = $request->seo_description;
         $company->about = $request->about;
         $company->birthday_company = $request->birthday_company;
+		
+	    // Cохраняем или обновляем фото
+	    $photo_id = $this->getPhotoId($request, $company);
+	    $company->photo_id = $photo_id;
 
         $company->save();
 

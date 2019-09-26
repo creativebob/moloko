@@ -20,7 +20,7 @@
 
 @section('content')
 
-  {{ Form::open(['url' => '/admin/companies', 'data-abide', 'novalidate']) }}
+  {{ Form::open(['url' => '/admin/companies', 'data-abide', 'novalidate', 'files' => 'true']) }}
     @include('companies.form', ['submitButtonText' => 'Добавить компанию', 'param' => ''])
   {{ Form::close() }}
 

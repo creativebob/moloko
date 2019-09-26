@@ -19,7 +19,7 @@
 @endsection
 
 @section('content')
-    {{ Form::model($company, ['url' => '/admin/companies/'.$company->id, 'data-abide', 'novalidate']) }}
+    {{ Form::model($company, ['url' => '/admin/companies/'.$company->id, 'data-abide', 'novalidate', 'files' => 'true']) }}
     {{ method_field('PATCH') }}
     @include('companies.form', ['submitButtonText' => 'Редактировать компанию', 'param'=>''])
     {{ Form::close() }}

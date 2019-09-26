@@ -20,7 +20,7 @@
 
 @section('content')
 
-{{ Form::open(['url' => '/admin/users', 'data-abide', 'novalidate', 'files'=>'true']) }}
+{{ Form::open(['url' => '/admin/users', 'data-abide', 'novalidate', 'files' => 'true']) }}
 @include('users.form', ['submitButtonText' => 'Добавить пользователя', 'param' => ''])
 {{ Form::close() }}
 

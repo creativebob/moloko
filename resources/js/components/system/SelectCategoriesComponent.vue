@@ -7,16 +7,14 @@
                 @input="reset"
                 maxlength="30"
                 autocomplete="off"
-                pattern="[А-Яа-яЁё0-9-_\s]{3,30}"
-                v-on:keydown.enter.prevent="onEnter"
+                @keydown.enter.prevent="onEnter"
             >
 
             <div
                     class="sprite-input-right sprite-16 icon-select"
-                    @click='showCategories = !showCategories'
+                    @click="toggleShowCategories()"
             >
             </div>
-            <span class="form-error">Уж постарайтесь, введите город!</span>
 
         </label>
 
@@ -29,40 +27,43 @@
 
         <div
                 v-if="showCategories"
-                class="relat"
+                class="drilldown-categories-wrap"
         >
-            <ul
-
-                class="vertical menu abs"
-                data-drilldown
-                data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
-            >
-
-            <li
-                    v-for="category in categories"
-                    class="item-catalog"
-            >
-                <a class="get-prices">{{ category.name }}</a>
-
-
+            <div class="categories-wrap">
                 <ul
-                        v-if="category.childrens"
-                        class="menu vertical nested"
+
+                    class="vertical menu"
+                    v-drilldown
+                    data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
                 >
-                    <li
-                            v-for="children in category.childrens"
-                            class="item-catalog"
+
+                <li
+                        v-for="category in categories"
+                        class="item-catalog"
+                >
+                    <a
+                        @click="getItems(category.id)"
+                    >{{ category.name }}</a>
+
+
+                    <ul
+                            v-if="category.childrens && category.childrens.length"
+                            class="menu vertical nested"
                     >
-                        <a class="get-prices">{{ children.name }}</a>
+                        <childrens-component v-for="children in category.childrens" :category="children" :key="children.id"></childrens-component>
+
+                    </ul>
+
+                </li>
+
+            </ul>
+
+                <ul v-if="listItems.length > 0" class="vertical menu">
+                    <li v-for="item in listItems">
+                        <a @click="addFromList(item.id)">{{ item.name }}</a>
                     </li>
-
                 </ul>
-
-
-            </li>
-
-
-        </ul>
+            </div>
         </div>
 
         <table class="content-table-search table-over">
@@ -71,7 +72,7 @@
                 <template v-if=search>
                     <tr v-for="(item, index) in results">
                         <td>
-                            <a @click="add(index)">{{ item.name }}</a>
+                            <a @click="addFromSearch(index)">{{ item.name }}</a>
                         </td>
                     </tr>
                 </template>
@@ -88,20 +89,16 @@
 
 <script>
     export default {
+        components: {
+            'childrens-component': require('./SelectCategoriesChildrensComponent.vue')
+        },
         mounted() {
-
-            axios.get('/api/v1/categories_select/' + this.entity)
-                .then(response => {
-                    this.categories = response.data.categories
-                    this.items = response.data.items
-            })
-                .catch(error => {
-                    console.log(error)
-                })
+            this.categories = this.data.categories
+            this.items = this.data.items
         },
         props: {
-            entity: {
-                type: String,
+            data: {
+                type: Object,
             }
         },
         data() {
@@ -112,6 +109,7 @@
                 found: false,
                 error: false,
                 items: [],
+                listItems: [],
                 categories: [],
                 results: [],
                 showCategories: false
@@ -150,8 +148,18 @@
                 });
 
                 this.search = (this.results.length > 0)
+
+                if (this.search) {
+                    this.showCategories = false
+                }
             },
-            add(index) {
+            toggleShowCategories() {
+                this.showCategories = !this.showCategories
+                if (!this.showCategories) {
+                    this.listItems = []
+                }
+            },
+            addFromSearch(index) {
                 // console.log('Клик по пришедшим данным, добавляем в инпут');
                 this.id = this.results[index].id;
                 this.text = this.results[index].name;
@@ -159,6 +167,21 @@
                 this.error = false;
                 this.search = false;
                 this.results = [];
+            },
+            addFromList(id) {
+
+                let it = this.items.filter(item => {
+                    return item.id == id;
+                })
+                // console.log('Клик по пришедшим данным, добавляем в инпут');
+                this.id = it[0].id;
+                this.text = it[0].name;
+                this.found = true;
+                this.error = false;
+                this.search = false;
+                this.results = [];
+                this.listItems = [];
+                this.showCategories = false;
             },
             clear() {
                 if (this.error) {
@@ -184,7 +207,22 @@
             },
             onEnter() {
                 if (this.results.length == 1) {
-                    this.add(0);
+                    this.addFromSearch(0);
+                }
+            },
+            getItems(id) {
+                this.listItems = this.items.filter(item => {
+                    return item.category_id == id;
+                });
+
+                this.id = null;
+                this.name = '';
+            }
+        },
+        directives: {
+            'drilldown': {
+                bind: function (el) {
+                    new Foundation.Drilldown($(el))
                 }
             }
         }

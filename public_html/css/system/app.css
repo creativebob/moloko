@@ -362,6 +362,10 @@ input[type='search'] {
   color: #cacaca;
 }
 
+::-moz-placeholder {
+  color: #cacaca;
+}
+
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -593,6 +597,10 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
+  color: #cc4b37;
+}
+
+.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -12467,11 +12475,11 @@ a#task-toggle {
   color: #ffffff;
 }
 
-.relat {
+.drilldown-categories-wrap {
   position: relative;
 }
 
-.relat .abs {
+.drilldown-categories-wrap .categories-wrap {
   position: absolute;
   top: 0px;
   left: 0px;

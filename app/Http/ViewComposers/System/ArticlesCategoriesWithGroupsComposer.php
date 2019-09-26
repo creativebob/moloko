@@ -14,11 +14,11 @@ class ArticlesCategoriesWithGroupsComposer
         $model = 'App\\'.$entity->model;
 
         // Получаем из сессии необходимые данные
-        $answer = operator_right($entity, false, 'index');
+        $answer = operator_right($entity->alias, false, 'index');
 
         $categories = $model::moderatorLimit($answer)
         ->companiesLimit($answer)
-        ->has('groups')
+//        ->has('groups')
         ->with([
             'groups:id,name'
         ])
@@ -28,7 +28,10 @@ class ArticlesCategoriesWithGroupsComposer
                 'parent_id',
                 'level'
             ]);
-       // dd($categories);
+//        dd($categories);
+
+        $categories_tree = buildTreeArray($categories);
+//        dd($categories_tree);
 
         $groups = [];
         foreach($categories as $category) {
@@ -41,13 +44,7 @@ class ArticlesCategoriesWithGroupsComposer
         }
 //        dd($groups);
 
-        $categories_tree = buildTree($categories);
-//        dd($categories_tree);
-
-        return $view->with([
-            'categories_tree' => json_encode($categories_tree),
-            'groups' => json_encode($groups)
-        ]);
+        return $view->with(compact('categories_tree', 'groups'));
     }
 
 }

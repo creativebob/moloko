@@ -65,6 +65,7 @@ class Company extends Model
         'sector_id',
         'legal_form_id',
         'birthday_company',
+	    'photo_id',
 
         'display',
         'system',
@@ -349,5 +350,11 @@ class Company extends Model
             $this->attributes['birthday_company'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
         }
     }
+	
+	// Фото
+	public function photo()
+	{
+		return $this->belongsTo(Photo::class);
+	}
 
 }

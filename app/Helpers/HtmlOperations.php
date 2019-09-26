@@ -16,6 +16,23 @@ function buildTree($items)
     return $items->where('parent_id', null);
 }
 
+function buildTreeArray($items)
+{
+    $grouped = $items->groupBy('parent_id');
+
+    $items_array = [];
+    foreach ($items->where('parent_id', null) as $item) {
+        $item = $item->toArray();
+        if ($grouped->has($item['id'])) {
+            $item['childrens'] = $grouped[$item['id']]->toArray();
+        }
+        $items_array[] = $item;
+    }
+//    dd($items_array);
+
+    return $items_array;
+}
+
 function buildSidebarTree($items)
 {
     $grouped = $items->groupBy('parent_id');

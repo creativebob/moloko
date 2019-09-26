@@ -353,8 +353,12 @@ function setSettings($request, $item) {
 function getPhotoPath($item, $size = 'medium') {
 
     if(isset($item->photo_id)) {
-
-        $path = "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
+    
+        if ($item->getTable() == 'companies') {
+            $path = "/storage/" . $item->id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
+        } else {
+            $path = "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
+        }
         return $path;
     } else {
 

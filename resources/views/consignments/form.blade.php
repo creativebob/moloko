@@ -81,8 +81,9 @@
             </tr>
         </thead>
 
-        <tbody id="table-raws" is="consignmentitemadd-component" :consignment="{{ $consignment ?? 0 }}">
-        </tbody>
+{{--            <consignment-item-add-component :consignment="{{ $consignment ?? 0 }}" :select-data='@json($articles_categories_with_items_data)'></consignment-item-add-component>--}}
+            <tbody id="table-raws" is="consignment-item-add-component" :consignment="{{ $consignment ?? 0 }}" :select-data='@json($articles_categories_with_items_data)'></tbody>
+
         
     </table>
 

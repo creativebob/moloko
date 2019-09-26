@@ -56,8 +56,13 @@ trait Photable
 //                    ->withErrors(['msg' => 'Размер (Mb) фотографии высок!'])
 //                    ->withInput();
             }
-
-            $directory = $item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
+			
+            if ($item->getTable() == 'companies') {
+	            $directory = $item->id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
+            } else {
+	            $directory = $item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
+            }
+            
 
             if (isset($item->photo_id)) {
                 $photo = Photo::findOrFail($item->photo_id);
@@ -392,8 +397,13 @@ trait Photable
     {
 
         if (isset($item->photo_id)) {
-
-            $path = "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
+			
+        	if ($item->getTable() == 'companies') {
+		        $path = "/storage/" . $item->id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
+	        } else {
+		        $path = "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
+	        }
+            
             return $path;
         } else {
 
