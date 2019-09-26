@@ -245,9 +245,9 @@ class ClientController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
-        Log::info('Попытка создания реквизитов клиента');
+        Log::info('Попытка создания реквизитов клиента. Приват статус: ' . $request->private_status);
 
-        if($request->private_status == 1){
+        if($request->private_status){
 
             Log::info('Видим, что это компания');
             $new_company = $this->createCompany($request);
