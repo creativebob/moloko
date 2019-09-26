@@ -20,7 +20,7 @@
 @endsection
 
 @section('content')
-    {{ Form::model($client->clientable, ['url' => '/admin/clients/'.$client->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+    {{ Form::model($client->clientable, ['url' => '/admin/clients/'.$client->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files' => 'true']) }}
     {{ method_field('PATCH') }}
         @include('users.form', ['submitButtonText' => 'Редактировать', 'param'=>'', 'user'=>$client->clientable])
     {{ Form::close() }}

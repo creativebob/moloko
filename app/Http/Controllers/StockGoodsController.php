@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
-use App\StockGoods;
+use App\GoodsStock;
 use App\Goods;
 use App\Article;
 use App\GoodsCategory;
@@ -36,12 +36,12 @@ class StockGoodsController extends Controller
 {
 
     // Настройки сконтроллера
-    public function __construct(StockGoods $stock_goods)
+    public function __construct(GoodsStock $stock_goods)
     {
         $this->middleware('auth');
         $this->stock_goods = $stock_goods;
-        $this->class = StockGoods::class;
-        $this->model = 'App\StockGoods';
+        $this->class = GoodsStock::class;
+        $this->model = 'App\GoodsStock';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = true;
     }
@@ -79,7 +79,7 @@ class StockGoodsController extends Controller
             'manufacturer_id',
         ];
 
-        $stock_goods = StockGoods::with([
+        $stock_goods = GoodsStock::with([
             'company',
             'goods',
             'manufacturer'

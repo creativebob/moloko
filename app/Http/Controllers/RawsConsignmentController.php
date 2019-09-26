@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
-use App\Consignment;
+use App\RawsConsignment;
 
 // Валидация
 use Illuminate\Http\Request;
@@ -12,16 +12,16 @@ use App\Http\Requests\ConsignmentRequest;
 // Карбон
 use Carbon\Carbon;
 
-class ConsignmentController extends Controller
+class RawsConsignmentController extends Controller
 {
 
     // Настройки сконтроллера
-    public function __construct(Consignment $consignment)
+    public function __construct(RawsConsignment $consignment)
     {
         $this->middleware('auth');
         $this->consignment = $consignment;
-        $this->class = Consignment::class;
-        $this->model = 'App\Consignment';
+        $this->class = RawsConsignment::class;
+        $this->model = 'App\RawsConsignment';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = true;
     }
@@ -35,7 +35,7 @@ class ConsignmentController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $consignments = Consignment::with('author')
+        $consignments = RawsConsignment::with('author')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
@@ -61,11 +61,12 @@ class ConsignmentController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
+        
+        $class = $this->class;
 
-        return view('consignments.index', compact('consignments', 'page_info', 'filter'));
+        return view('system.common.consignments.index', compact('consignments', 'page_info', 'filter', 'class'));
     }
-
-
+    
     public function create()
     {
 
@@ -76,20 +77,20 @@ class ConsignmentController extends Controller
         $answer = operator_right('consignments', false, 'index');
 
         // Главный запрос
-        $consignment = Consignment::moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
-        ->template($answer)
-        ->orderBy('sort', 'asc')
-        ->get();
-
-        // dd($consignments);
-
-        return view('consignments.create', [
-            'consignment',
-            'page_info' => pageInfo($this->entity_alias),
-        ]);
+        $consignment = new RawsConsignment;
+        $consignment->receipt_date = Carbon::now();
+	    $consignment->draft = true;
+        
+        $user = \Auth::user();
+	    $consignment->company_id = $user->company_id;
+	    $consignment->author_id = hideGod($user);
+	
+	    $consignment->filial_id = $user->filial_id;
+	
+	    $consignment->save();
+        // dd($consignment);
+	
+	    return redirect()->route('raws_consignments.edit', ['id' => $consignment->id]);
     }
 
 
@@ -101,7 +102,7 @@ class ConsignmentController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $consignment = new Consignment;
+        $consignment = new ContainersConsignment;
 
         $consignment->supplier_id = $request->supplier_id;
 
@@ -137,8 +138,10 @@ class ConsignmentController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $consignment = Consignment::with('items.cmv.article')
-        ->moderatorLimit($answer)
+        $consignment = RawsConsignment::
+//        with('items.cmv.article')
+//        ->
+        moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->findOrFail($id);
@@ -149,8 +152,10 @@ class ConsignmentController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
+	
+	    $entity = 'raws';
 
-        return view('consignments.edit', compact('consignment', 'page_info'));
+        return view('system.common.consignments.edit', compact('consignment', 'page_info', 'entity'));
     }
 
 
@@ -161,7 +166,7 @@ class ConsignmentController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $consignment = Consignment::moderatorLimit($answer)
+        $consignment = ContainersConsignment::moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->findOrFail($id);
@@ -194,7 +199,7 @@ class ConsignmentController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $consignment = Consignment::moderatorLimit($answer)
+        $consignment = ContainersConsignment::moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->findOrFail($id);

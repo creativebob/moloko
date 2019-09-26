@@ -39,7 +39,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Traits\UserControllerTrait;
 
 
-
 class UserController extends Controller
 {
 
@@ -48,7 +47,7 @@ class UserController extends Controller
     protected $entity_dependence = true;
 
     use UserControllerTrait;
-    use Photable;
+	use Photable;
 
     public function index(Request $request)
     {

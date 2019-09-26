@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 
 // Модели
-use App\Consignment;
+use App\ContainersConsignment;
 use App\Navigation;
 use App\Menu;
 use App\Page;

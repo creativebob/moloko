@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\Http\Controllers\Traits\Photable;
 use App\User;
 use App\Supplier;
 use App\Manufacturer;
@@ -46,6 +47,7 @@ class SupplierController extends Controller
 
     // Подключаем трейт записи и обновления компании
     use CompanyControllerTrait;
+	use Photable;
 
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'suppliers';

@@ -170,7 +170,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('products.processes.common.edit.select_units', UnitsProcessesComposer::class);
 
         view()->composer('products.articles.common.edit.edit', ArticlesCategoriesWithGroupsComposer::class);
-        view()->composer('consignments.form', ArticlesCategoriesWithItemsComposer::class);
+        view()->composer('system.common.consignments.form', ArticlesCategoriesWithItemsComposer::class);
 
         view()->composer(['includes.selects.source_with_source_services'], SourceWithSourceServicesComposer::class);
         view()->composer(['includes.selects.source_services'], SourceServicesComposer::class);

@@ -20,7 +20,7 @@
 
 @section('content')
 
-  {{ Form::model($supplier->company, ['route' => ['suppliers.update', $supplier->id], 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+  {{ Form::model($supplier->company, ['route' => ['suppliers.update', $supplier->id], 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files' => 'true']) }}
   {{ method_field('PATCH') }}
     @include('companies.form', ['submitButtonText' => 'Редактировать поставщика', 'param'=>'', 'company'=>$supplier->company])
   {{ Form::close() }}

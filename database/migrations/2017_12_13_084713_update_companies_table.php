@@ -27,6 +27,9 @@ class UpdateCompaniesTable extends Migration
 
             $table->bigInteger('sector_id')->nullable()->unsigned()->comment('Id сектора');
             $table->foreign('sector_id')->references('id')->on('sectors');
+	
+	        $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id аватара');
+	        $table->foreign('photo_id')->references('id')->on('photos');
         });
     }
 

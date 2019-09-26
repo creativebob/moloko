@@ -17,17 +17,16 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
-
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
-// use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\DateIntervalFilter;
 
-class StockGoods extends Model
+class GoodsConsignmentsItem extends Model
 {
 
     // Включаем кеш
-    // use Cachable;
+    use Cachable;
 
     use SoftDeletes;
 
@@ -42,36 +41,60 @@ class StockGoods extends Model
     // Фильтры
     use Filter;
     use BooklistFilter;
-    // use DateIntervalFilter;
+    use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
-
     protected $fillable = [
-        'stock_id',
-        'goods_id',
+        'consignment_id',
+        'cmv_id',
+        'cmv_type',
         'count',
-        'weight',
-        'serial',
+        'price',
+        'vat_rate',
+        'description',
+        'total',
+        'amount',
+        'stock_id',
 
         'display',
         'system',
         'moderation'
     ];
 
-    // Получаем компанию.
+    // Компания
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
-    public function goods()
+    // Автор
+    public function author()
     {
-        return $this->belongsTo(Goods::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function manufacturer()
+    // Родительская смета
+    public function consignment()
     {
-        return $this->belongsTo(Manufacturer::class);
+        return $this->belongsTo(ContainersConsignment::class);
+    }
+
+    // Склад
+    public function stock()
+    {
+        return $this->belongsTo(Stock::class);
+    }
+
+    // 
+    public function cmv()
+    {
+        return $this->morphTo();
+    }
+
+    // Артикул
+    public function article()
+    {
+        return $this->belongsTo(Article::class, 'cmv');
     }
 
 }

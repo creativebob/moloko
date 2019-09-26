@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\Http\Controllers\Traits\Photable;
 use App\User;
 use App\Department;
 use App\Staffer;
@@ -67,6 +68,7 @@ class ClientController extends Controller
     use UserControllerTrait;
     use LeadControllerTrait;
     use DepartmentControllerTrait;
+	use Photable;
 
     public function index(Request $request)
     {

@@ -20,7 +20,7 @@
 
 @section('content')
 
-  {{ Form::open(['route' => 'dealers.storeUser', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+  {{ Form::open(['route' => 'dealers.storeUser', 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files' => 'true']) }}
     @include('users.form', ['submitButtonText' => 'Добавить дилера', 'param' => ''])
   {{ Form::close() }}
 

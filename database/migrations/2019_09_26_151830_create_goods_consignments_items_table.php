@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateConsignmentsItemsTable extends Migration
+class CreateGoodsConsignmentsItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateConsignmentsItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('consignments_items', function (Blueprint $table) {
+        Schema::create('goods_consignments_items', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->bigInteger('consignment_id')->unsigned()->nullable()->comment('Id накладной');
-            $table->foreign('consignment_id')->references('id')->on('consignments');
+            $table->foreign('consignment_id')->references('id')->on('goods_consignments');
 
             $table->morphs('cmv');
 
@@ -38,8 +38,8 @@ class CreateConsignmentsItemsTable extends Migration
             $table->bigInteger('stock_id')->nullable()->unsigned()->comment('ID склада на который приходовать ТМЦ');
             $table->foreign('stock_id')->references('id')->on('stocks');
 
+            
             // Общие настройки
-
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->boolean('display')->default(0)->comment('Отображение на сайте');
             $table->boolean('system')->default(0)->comment('Системная запись');
@@ -63,6 +63,6 @@ class CreateConsignmentsItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('consignments_items');
+        Schema::dropIfExists('goods_consignments_items');
     }
 }
