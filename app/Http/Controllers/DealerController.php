@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\Http\Controllers\Traits\Photable;
 use App\User;
 use App\Client;
 use App\Dealer;
@@ -28,7 +29,8 @@ use Illuminate\Support\Facades\Auth;
 // Запросы и их валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\CompanyRequest;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Http\Requests\SupplierRequest;
 
 // Общие классы
@@ -52,6 +54,7 @@ class DealerController extends Controller
     // Подключаем трейт записи и обновления компании и пользователя
     use CompanyControllerTrait;
     use UserControllerTrait;
+	use Photable;
 
     public function index(Request $request)
     {
@@ -163,8 +166,10 @@ class DealerController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
+	
+	    $auth_user = Auth::user();
 
-        return view('dealers.create_dealer_user', compact('user', 'dealer', 'page_info'));
+        return view('dealers.create_dealer_user', compact('user', 'dealer', 'page_info', 'auth_user'));
 
     }
 
@@ -214,7 +219,7 @@ class DealerController extends Controller
     }
 
 
-    public function storeUser(UserRequest $request)
+    public function storeUser(UserStoreRequest $request)
     {
 
         // Подключение политики

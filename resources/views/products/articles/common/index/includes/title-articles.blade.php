@@ -11,10 +11,10 @@
 
                 @can('create', $class)
 
-                    <a class="icon-add sprite" data-open="modal-create" data-tooltip class="top" tabindex="2" title="Добавить позицию"></a>
-                    <a href="/admin/{{ $page_info->alias}}_categories" class="icon-category sprite" data-tooltip class="top" tabindex="2" title="Настройка категорий"></a>
-                    <a href="/admin/{{ $page_info->alias}}_consignments" class="icon-consignment sprite" data-tooltip class="top" tabindex="2" title="Накладные"></a>
-                    <a href="/admin/stock_{{ $page_info->alias}}" class="icon-stock sprite" data-tooltip class="top" tabindex="2" title="Склад"></a>
+                    <a class="icon-add sprite top" data-open="modal-create" data-tooltip tabindex="2" title="Добавить позицию"></a>
+                    <a href="/admin/{{ $page_info->alias}}_categories" class="icon-category sprite top" data-tooltip tabindex="2" title="Настройка категорий"></a>
+                    <a href="/admin/{{ $page_info->alias}}_consignments" class="icon-consignment sprite top" data-tooltip tabindex="2" title="Накладные"></a>
+                    <a href="/admin/{{ $page_info->alias}}_stocks" class="icon-stock sprite top" data-tooltip tabindex="2" title="Склад"></a>
                 @endcan  
 
             </div>

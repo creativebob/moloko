@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 
 trait CompanyControllerTrait
 {
+	
 	public function createCompany($request)
     {
 

@@ -20,7 +20,7 @@
 
 @section('content')
 
-  {{ Form::open(['url' => '/admin/clients', 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+  {{ Form::open(['url' => '/admin/clients', 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files' => 'true']) }}
     @include('companies.form', ['submitButtonText' => 'Добавить клиента', 'param' => ''])
   {{ Form::close() }}
 

@@ -1,9 +1,25 @@
 <template>
-	<tbody>
+
+	<table class="table-compositions">
+		<thead>
+		<tr>
+			<th>№</th>
+			<th>Наименование позиции:</th>
+			<th>Кол-во:</th>
+			<th>Цена:</th>
+			<th>Сумма:</th>
+			<th>% НДС:</th>
+			<th>НДС:</th>
+			<th>Всего:</th>
+			<th></th>
+		</tr>
+		</thead>
+
+		<tbody id="table-raws">
 		<tr>
 			<td>1</td>
 			<td>
-					<select-categories-component :data="selectData"></select-categories-component>
+				<select-categories-component :data="selectData"></select-categories-component>
 			</td>
 			<td>
 				<input-digit-component name="count_item" rate="2" :value="855" v-on:countchanged="changeCount"></input-digit-component>
@@ -36,7 +52,13 @@
 			<td>{{ item.total }}</td>
 			<td><a @click="delItem" class="button tiny">Удалить</a></td>
 		</tr>
-	</tbody>
+		</tbody>
+
+
+
+
+	</table>
+
 </template>
 
 <script>
@@ -58,7 +80,7 @@
 
 		props: {
 			consignment: {
-				type: Number,
+				type: Object,
 			},
 			selectData: {
 				type: Object,

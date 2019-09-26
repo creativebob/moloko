@@ -35,8 +35,8 @@ class EmployeeController extends Controller
         $this->entity_dependence = true;
         $this->type = 'modal';
     }
-
-    use Photable;
+	
+	use Photable;
 
     public function index(Request $request)
     {

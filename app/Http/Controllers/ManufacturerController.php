@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\Http\Controllers\Traits\Photable;
 use App\User;
 use App\Manufacturer;
 use App\Company;
@@ -49,6 +50,7 @@ class ManufacturerController extends Controller
 
     // Подключаем трейт записи и обновления компании
     use CompanyControllerTrait;
+	use Photable;
 
     public function index(Request $request)
     {

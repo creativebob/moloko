@@ -22,7 +22,7 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
 
-class Consignment extends Model
+class RawsConsignment extends Model
 {
 
     // Включаем кеш
@@ -94,6 +94,6 @@ class Consignment extends Model
     // Позиции в смете
     public function items()
     {
-        return $this->hasMany(ConsignmentsItem::class);
+        return $this->hasMany(ContainersConsignmentsItem::class);
     }
 }

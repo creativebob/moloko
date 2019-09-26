@@ -349,29 +349,48 @@ Route::post('/raw/photos', 'RawController@photos');
 
 Route::any('/raws_create_mode', 'RawController@ajax_change_create_mode');
 
-// ------------------------------------- Категории упаковок -------------------------------------------
 
-// Текущая добавленная/удаленная категория
-Route::any('/containers_categories', 'ContainersCategoryController@index')->middleware('auth');
-Route::match(['get', 'post'], '/containers_categories/{id}/edit', 'ContainersCategoryController@edit')->middleware('auth');
+// ---------------------------------- Накладные сырья -------------------------------------------
 // Основные методы
-Route::resource('/containers_categories', 'ContainersCategoryController')->middleware('auth');
+	Route::resource('/raws_consignments', 'RawsConsignmentController');
+
+
+// ---------------------------------- Склады сырья -------------------------------------------
+// Основные методы
+	Route::resource('/raws_stocks', 'RawsStockController');
+
+// ------------------------------------- Категории упаковок -------------------------------------------
+// Текущая добавленная/удаленная категория
+Route::any('/containers_categories', 'ContainersCategoryController@index');
+Route::match(['get', 'post'], '/containers_categories/{id}/edit', 'ContainersCategoryController@edit');
+// Основные методы
+Route::resource('/containers_categories', 'ContainersCategoryController');
+
 
 // ---------------------------------- Упаковки (Артикулы) -------------------------------------------
-
 // Основные методы
 Route::resource('/containers', 'ContainerController');
-// Route::get('/containers/search/{text_fragment}', 'СontainerController@search')->middleware('auth');
-Route::post('/containers/search/{text_fragment}', 'СontainerController@search')->middleware('auth');
+Route::post('/containers/search/{text_fragment}', 'СontainerController@search');
 // Дублирование
 Route::post('/containers/replicate/{id}', 'ContainerController@replicate');
 // Архивация
-Route::post('/containers/archive/{id}', 'ContainerController@archive')->middleware('auth');
+Route::post('/containers/archive/{id}', 'ContainerController@archive');
 // Фото
-Route::any('/container/add_photo', 'СontainerController@add_photo')->middleware('auth');
-Route::post('/container/photos', 'СontainerController@photos')->middleware('auth');
+Route::any('/container/add_photo', 'СontainerController@add_photo');
+Route::post('/container/photos', 'СontainerController@photos');
 
-Route::any('/containers_create_mode', 'СontainerController@ajax_change_create_mode')->middleware('auth');
+Route::any('/containers_create_mode', 'СontainerController@ajax_change_create_mode');
+
+
+// ---------------------------------- Накладные упаковок -------------------------------------------
+// Основные методы
+Route::resource('/containers_consignments', 'ContainersConsignmentController');
+
+
+// ---------------------------------- Склады упаковок -------------------------------------------
+// Основные методы
+Route::resource('/containers_stocks', 'ContainersStockController');
+
 
 // ------------------------------------- Категории оборудования -------------------------------------------
 
@@ -475,9 +494,14 @@ Route::any('/ajax_processes_groups_set_status', 'ProcessesGroupController@ajax_s
 Route::any('/processes_groups_list', 'ProcessesGroupController@ajax_processes_groups_list');
 
 
+// ---------------------------------- Накладные товаров -------------------------------------------
+// Основные методы
+Route::resource('/goods_consignments', 'GoodsConsignmentController');
 
-// -------------------------------- Склад товаров -------------------------------------------
-Route::resource('/stock_goods', 'StockGoodsController');
+
+// ---------------------------------- Склады упаковок -------------------------------------------
+// Основные методы
+Route::resource('/goods_stocks', 'GoodsStockController');
 
 
 

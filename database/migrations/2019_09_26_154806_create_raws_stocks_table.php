@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStockRawTable extends Migration
+class CreateRawsStocksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateStockRawTable extends Migration
      */
     public function up()
     {
-        Schema::create('stock_raw', function (Blueprint $table) {
+        Schema::create('raws_stocks', function (Blueprint $table) {
 
             $table->bigIncrements('id');
 
@@ -33,11 +33,23 @@ class CreateStockRawTable extends Migration
             $table->decimal('weight', 15, 2)->nullable()->comment('Вес (кг)');
             $table->string('serial')->nullable()->comment('Серийный номер');
 
-            $table->bigInteger('manufacturer_id')->nullable()->unsigned()->comment('ID контрагента');
-            $table->foreign('manufacturer_id')->references('id')->on('companies');
-
-            $table->timestamps();
-            $table->softDeletes();
+            $table->bigInteger('manufacturer_id')->nullable()->unsigned()->comment('Id производителя');
+            $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
+	
+	
+	        // Общие настройки
+	        $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
+	        $table->boolean('display')->default(0)->comment('Отображение на сайте');
+	        $table->boolean('system')->default(0)->comment('Системная запись');
+	        $table->boolean('moderation')->default(0)->comment('Модерация');
+	
+	        $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+	        $table->foreign('author_id')->references('id')->on('users');
+	
+	        $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
+	
+	        $table->timestamps();
+	        $table->softDeletes();
         });
     }
 
@@ -48,6 +60,6 @@ class CreateStockRawTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stock_raw');
+        Schema::dropIfExists('raws_stocks');
     }
 }

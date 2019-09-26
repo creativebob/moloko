@@ -19,7 +19,7 @@
 @endsection
 
 @section('content')
-    {{ Form::model($manufacturer->company, ['url' => '/admin/manufacturers/'.$manufacturer->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+    {{ Form::model($manufacturer->company, ['url' => '/admin/manufacturers/'.$manufacturer->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files' => 'true']) }}
     {{ method_field('PATCH') }}
     @include('companies.form', ['submitButtonText' => 'Редактировать производителя', 'param'=>'', 'company'=>$manufacturer->company])
     {{ Form::close() }}

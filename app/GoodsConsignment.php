@@ -22,7 +22,7 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
 
-class ConsignmentsItem extends Model
+class GoodsConsignment extends Model
 {
 
     // Включаем кеш
@@ -43,18 +43,19 @@ class ConsignmentsItem extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at', 'receipt_date'];
     protected $fillable = [
-        'consignment_id',
-        'cmv_id',
-        'cmv_type',
-        'count',
-        'price',
-        'vat_rate',
+        'supplier_id',
+        'company_id',
+        // 'filial_id',
+        'name',
         'description',
-        'total',
         'amount',
+        'receipt_date',
+        'number',
         'stock_id',
+        'author_id',
+        'draft',
 
         'display',
         'system',
@@ -64,37 +65,35 @@ class ConsignmentsItem extends Model
     // Компания
     public function company()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo('App\Company');
     }
+
+    // public function filials()
+    // {
+    //     return $this->hasMany('App\Department')->where('filial_status', 1);
+    // }
 
     // Автор
     public function author()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo('App\User');
     }
 
-    // Родительская смета
-    public function consignment()
+    // Поставщик
+    public function supplier()
     {
-        return $this->belongsTo(Consignment::class);
+        return $this->belongsTo('App\Supplier');
     }
 
     // Склад
     public function stock()
     {
-        return $this->belongsTo(Stock::class);
+        return $this->belongsTo('App\Stock');
     }
 
-    // 
-    public function cmv()
+    // Позиции в смете
+    public function items()
     {
-        return $this->morphTo();
+        return $this->hasMany(ContainersConsignmentsItem::class);
     }
-
-    // Артикул
-    public function article()
-    {
-        return $this->belongsTo(Article::class, 'cmv');
-    }
-
 }

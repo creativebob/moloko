@@ -7,7 +7,7 @@
 
 @section('title', 'Редактировать товарную накладную')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $consignment->number))
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $consignment->id))
 
 @section('title-content')
 <div class="top-bar head-content">
@@ -24,7 +24,7 @@
 {{ Form::model($consignment, ['route' => ['consignments.update', $consignment->id], 'data-abide', 'novalidate']) }}
 {{ method_field('PATCH') }}
 
-@include('consignments.form', ['submit_text' => 'Редактировать'])
+@include('system.common.consignments.form', ['submit_text' => 'Редактировать'])
 
 {{ Form::close() }}
 

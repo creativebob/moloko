@@ -62,7 +62,7 @@ class CompanyController extends Controller
     use CompanyControllerTrait;
     use UserControllerTrait;
     use DepartmentControllerTrait;
-    use Photable;
+	use Photable;
 
     public function index(Request $request)
     {

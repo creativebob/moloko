@@ -15,7 +15,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Consignment::class, 'type' => 'table'])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => $class, 'type' => 'table'])
 @endsection
 
 @section('content')
@@ -66,7 +66,7 @@
                     </td>
 
                     <td class="td-receipt_date">
-                        <a href="/admin/consignments/{{ $consignment->id }}/edit">
+                        <a href="/admin/{{ $consignment->getTable() }}/{{ $consignment->id }}/edit">
                         <span>{{ isset($consignment->receipt_date) ? $consignment->receipt_date->format('d.m.Y') : null }}</span></a><br>
                         <span class="tiny-text">{{ isset($consignment->receipt_date) ? $consignment->receipt_date->format('H:i') : null }}</span>
                     </td>

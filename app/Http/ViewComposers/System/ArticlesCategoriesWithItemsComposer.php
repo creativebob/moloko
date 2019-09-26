@@ -23,6 +23,9 @@ class ArticlesCategoriesWithItemsComposer
             ->with([
                 $entity_alias.'.article:id,name'
             ])
+	        ->whereHas($entity_alias.'.article', function ($q) {
+	        	$q->where('draft', false);
+	        })
             ->get([
                 'id',
                 'name',

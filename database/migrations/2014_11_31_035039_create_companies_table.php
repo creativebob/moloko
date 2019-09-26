@@ -46,9 +46,7 @@ class CreateCompaniesTable extends Migration
             $table->date('birthday_company')->nullable()->comment('Дата рождения компании');
 
             $table->bigInteger('external_id')->nullable()->unsigned()->comment('Внешний id компании');
-	
-	        $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id аватара');
-	        $table->foreign('photo_id')->references('id')->on('photos');
+            
 
             // Общие настройки
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');

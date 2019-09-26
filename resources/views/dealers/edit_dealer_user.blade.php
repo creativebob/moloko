@@ -20,7 +20,7 @@
 @endsection
 
 @section('content')
-    {{ Form::model($dealer->client->clientable, ['url' => '/admin/dealers/update-user/'.$dealer->id, 'data-abide', 'novalidate', 'class' => 'form-check-city']) }}
+    {{ Form::model($dealer->client->clientable, ['url' => '/admin/dealers/update-user/'.$dealer->id, 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files' => 'true']) }}
     {{ method_field('PATCH') }}
         @include('users.form', ['submitButtonText' => 'Редактировать', 'param'=>'', 'user'=>$dealer->client->clientable])
     {{ Form::close() }}
