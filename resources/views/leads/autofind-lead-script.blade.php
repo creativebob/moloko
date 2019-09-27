@@ -1,7 +1,7 @@
 <script type="application/javascript">
     // Обозначаем таймер для проверки
     var timerId;
-    var time = 100;
+    var time = 400;
 
     // Проверка существования
     $(document).on('keyup', '#phone', function() {
@@ -45,9 +45,9 @@
                 success: function(html){
 
                     // Выводим пришедшие данные на страницу
-                    $('#port-autofind').html(html.view);
+                    $('#port-autofind').html(html);
                     $('#port-autofind').show();
-                    // alert(html.params);
+
                 } 
             });
 

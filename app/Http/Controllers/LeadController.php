@@ -591,11 +591,13 @@ class LeadController extends Controller
 
         if($count_finded_leads > 0){
 
-            // return view('leads.autofind', compact('finded_leads'));
-            return response()->json([
-                'params' => $user,
-                'view' => view('leads.autofind', compact('finded_leads'))->render(),
-            ]);
+            return view('leads.autofind', compact('finded_leads'));
+
+            // Фрагмент кода, который мы так долго искали ;)
+            // return response()->json([
+            //     'params' => любые параметры... ,
+            //     'view' => view('leads.autofind', compact('finded_leads'))->render(),
+            // ]);
 
         } else {
             return '';
