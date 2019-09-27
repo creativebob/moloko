@@ -56,6 +56,7 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 view()->composer([
                     'project.includes.catalogs_goods.accordion',
                     'project.includes.catalogs_goods.menu',
+                    'project.includes.catalogs_goods.images_menu',
                     $alias . '.layouts.navigations.nav_catalogs_goods',
                 ], CatalogsGoodsComposer::class);
 
