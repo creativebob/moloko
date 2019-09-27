@@ -570,6 +570,7 @@ class LeadController extends Controller
             'choice',
             'manager',
             'stage',
+            'user',
             'challenges.challenge_type',
             'phones')
         ->companiesLimit($answer_lead)
@@ -584,10 +585,18 @@ class LeadController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
+        $user = $finded_leads->first()->user->name;
+
         $count_finded_leads = $finded_leads->count();
 
         if($count_finded_leads > 0){
-            return view('leads.autofind', compact('finded_leads'));
+
+            // return view('leads.autofind', compact('finded_leads'));
+            return response()->json([
+                'params' => $user,
+                'view' => view('leads.autofind', compact('finded_leads'))->render(),
+            ]);
+
         } else {
             return '';
         }

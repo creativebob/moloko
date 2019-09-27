@@ -354,21 +354,21 @@ class AuthServiceProvider extends ServiceProvider
         // Товары
         Goods::class => GoodsPolicy::class,
         GoodsCategory::class => GoodsCategoryPolicy::class,
-		GoodsConsignment::class => GoodsConsignmentPolicy::class,
-	    GoodsStock::class => GoodsStockPolicy::class,
+		// GoodsConsignment::class => GoodsConsignmentPolicy::class,
+	 //    GoodsStock::class => GoodsStockPolicy::class,
         PricesGoods::class => PricesGoodsPolicy::class,
 
         // Сырье
         Raw::class => RawPolicy::class,
         RawsCategory::class => RawsCategoryPolicy::class,
-	    RawsConsignment::class => RawsConsignmentPolicy::class,
-	    RawsStock::class => RawsStockPolicy::class,
+	    // RawsConsignment::class => RawsConsignmentPolicy::class,
+	    // RawsStock::class => RawsStockPolicy::class,
 
         // Упаковка
         Container::class => ContainerPolicy::class,
         ContainersCategory::class => ContainersCategoryPolicy::class,
-	    ContainersConsignment::class => ContainersConsignmentPolicy::class,
-	    ContainersStock::class => ContainersStockPolicy::class,
+	    // ContainersConsignment::class => ContainersConsignmentPolicy::class,
+	    // ContainersStock::class => ContainersStockPolicy::class,
 
         // Оборудование
         Equipment::class => EquipmentPolicy::class,
