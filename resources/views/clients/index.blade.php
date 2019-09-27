@@ -30,6 +30,7 @@
         <tr id="thead-content">
           <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
+          <th class="td-photo tiny">Фото</th>
           <th class="td-name" data-serversort="name">Клиент</th>
           <th class="td-address">Адрес</th>
           <th class="td-phone">Телефон</th>
@@ -58,6 +59,9 @@
             @endif
             @endif
             ><label class="label-check" for="check-{{ $client->id }}"></label>
+          </td>
+          <td class="td-photo tiny">
+              <img src="{{ getPhotoPath($client->clientable, 'small') }}" alt="">
           </td>
           <td class="td-name">
 
