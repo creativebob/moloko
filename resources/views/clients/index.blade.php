@@ -33,6 +33,7 @@
           <th class="td-name" data-serversort="name">Клиент</th>
           <th class="td-address">Адрес</th>
           <th class="td-phone">Телефон</th>
+          <th class="td-leads-count">Кол-во обращений</th>
           <th class="td-orders-count">Кол-во заказов</th>
           <th class="td-badget">Сумма</th>
           <th class="td-time-frame">Срок</th>
@@ -72,11 +73,11 @@
 
           </td>
 
-          <td class="td-address">@if(!empty($client->clientable->location->address)){{ $client->clientable->location->address }}@endif </td>
+          <td class="td-address">@if(!empty($client->clientable->location->address)){{ $client->clientable->location->city->name }}, {{ $client->clientable->location->address }}@endif </td>
           <td class="td-phone">{{ isset($client->clientable->main_phone->phone) ? decorPhone($client->clientable->main_phone->phone) : 'Номер не указан' }}</td>
 
-
-          <td class="td-count-orders">@if(!empty($client->orders)){{ $client->orders->count() }} @endif </td>
+          <td class="td-leads-count">@if(!empty($client->leads)){{ $client->leads->count() }} @endif </td>
+          <td class="td-orders-count">@if(!empty($client->orders)){{ $client->orders->count() }} @endif </td>
           <td class="td-badget">{{-- $client->badget_count ?? ' ... ' --}} </td>
           <td class="td-time-frame">{{ $client->time_frame ?? ' ... ' }}</td>
           <td class="td-loyalty">{{ $client->loyalty->name ?? ' ... ' }}</td>

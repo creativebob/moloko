@@ -49,6 +49,21 @@
                         </div>
                     @endif
 
+                @elseif($page_info->alias == 'clients')
+
+                    @if(!empty(Auth::user()->staff[0]))
+                        <div class="button-group">
+                            @if(extra_right('lead-regular'))
+                            {{ link_to_route('clients.createClientCompany', '+ Компания', [], ['class' => 'button tiny']) }}
+                            @endif
+
+                            @if(extra_right('lead-service'))
+                            {{ link_to_route('clients.createClientUser', '+ Физическое лицо', [], ['class' => 'button tiny']) }}
+                            @endif
+
+                        </div>
+                    @endif
+
 
                 {{-- Кнопки добавления для остальных страниц --}}
                 @else

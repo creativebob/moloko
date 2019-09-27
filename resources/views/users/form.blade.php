@@ -237,7 +237,7 @@
 
                     <div class="small-12 medium-12 cell">
                         <label>Комментарий к клиенту
-                            @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$client->description])
+                            @include('includes.inputs.textarea', ['name'=>'description_client', 'value'=>$client->description])
                         </label>
                     </div>
                 </div>

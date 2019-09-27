@@ -39,6 +39,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\CompanyRequest;
 use App\Http\Requests\ClientRequest;
+use App\Http\Requests\UserStoreRequest;
 
 use App\Http\Requests\SupplierRequest;
 
@@ -89,7 +90,7 @@ class ClientController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
 
-        $clients = Client::with('author', 'clientable.main_phones', 'loyalty')
+        $clients = Client::with('author', 'clientable.main_phones', 'loyalty', 'leads')
         // ->withCount(['orders' => function($q) {
         //     $q->whereNull('draft');
         // }])
@@ -102,7 +103,7 @@ class ClientController extends Controller
         // ->filter($request, 'sector_id')
         ->booklistFilter($request)
         ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
+        ->orderBy('id', 'desc')
         ->paginate(30);
 
         // -----------------------------------------------------------------------------------------------------------
@@ -123,6 +124,115 @@ class ClientController extends Controller
         $page_info = pageInfo($this->entity_name);
 
         return view('clients.index', compact('clients', 'page_info', 'filter', 'user'));
+    }
+
+    public function createClientCompany(Request $request)
+    {
+
+        //Подключение политики
+        $this->authorize(getmethod('create'), Client::class);
+        $this->authorize(getmethod('create'), Company::class);
+
+        // Создаем новый экземляр клиента
+        $client = new Client;
+
+        // Создаем новый экземляр компании
+        $company = new Company;
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+
+        return view('clients.create_client_company', compact('company', 'client', 'page_info'));
+
+    }
+
+    public function createClientUser(Request $request)
+    {
+
+        //Подключение политики
+        $this->authorize(getmethod('create'), Client::class);
+        $this->authorize(getmethod('create'), User::class);
+
+        // Создаем новый экземляр клиента
+        $client = new Client;
+
+        // Создаем новый экземляр пользователя
+        $user = new User;
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_name);
+    
+        $auth_user = Auth::user();
+
+        return view('clients.create_client_user', compact('user', 'client', 'page_info', 'auth_user'));
+
+    }
+
+    public function storeCompany(CompanyRequest $request)
+    {
+
+        // Подключение политики
+        $this->authorize(getmethod('store'), CLient::class);
+        $this->authorize(getmethod('store'), Company::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('store'));
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        // Отдаем работу по созданию новой компании трейту
+        $new_company = $this->createCompany($request);
+
+        $client = new Client;
+        $client->clientable_id = $new_company->id;
+        $client->clientable_type = 'App\Company';
+        $client->company_id = $request->user()->company->id;
+
+        // Запись информации по клиенту:
+        $client->description = $request->description_client;
+        $client->loyalty_id = $request->loyalty_id;
+
+        $client->save();
+
+        return redirect('/admin/clients');
+    }
+
+
+    public function storeUser(UserStoreRequest $request)
+    {
+
+        // Подключение политики
+        $this->authorize(getmethod('store'), Client::class);
+        $this->authorize(getmethod('store'), User::class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('store'));
+
+        // Получаем данные для авторизованного пользователя
+        $user = $request->user();
+
+        // Скрываем бога
+        $user_id = hideGod($user);
+
+        // Отдаем работу по созданию новой компании трейту
+        $new_user = $this->createUser($request);
+
+        $client = new Client;
+        $client->clientable_id = $new_user->id;
+        $client->clientable_type = 'App\User';
+        $client->company_id = $request->user()->company->id;
+
+        // Запись информации по клиенту:
+        $client->description = $request->description_client;
+        $client->loyalty_id = $request->loyalty_id;
+
+        $client->save();
+
+        return redirect('/admin/clients');
     }
 
     public function ajax_create(Request $request)

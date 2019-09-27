@@ -93,14 +93,17 @@ class Client extends Model
         return $this->belongsTo('App\Company', 'clientable_id');
     }
 
-
-
     // Получаем заказы
     public function orders()
     {
         return $this->hasMany('App\Estimate', 'client_id');
     }
 
+    // Получаем лиды
+    public function leads()
+    {
+        return $this->hasMany('App\Lead', 'client_id');
+    }
 
 
 
