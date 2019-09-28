@@ -51,7 +51,7 @@ class CatalogsServicesItem extends Model
         'description',
         'seo_description',
         'parent_id',
-
+        'photo_id',
 		'catalogs_service_id',
 
         'display',

@@ -21,7 +21,7 @@
             @endif
             @if(!empty($client))
             <li class="tabs-title">
-                <a data-tabs-target="content-panel-client" href="#content-panel-client">Коммуникация</a>
+                <a data-tabs-target="content-panel-client" href="#content-panel-client">О клиенте</a>
             </li>
             @endif
 

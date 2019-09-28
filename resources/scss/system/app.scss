@@ -1327,6 +1327,10 @@ span.wrap-label-checkboxer {
     width: 180px;
 }
 
+.content .content-table td.td-photo.tiny, .content .content-table th.td-photo.tiny {
+    width: 60px;
+    height: 60px;
+}
 
 
 // СТРАНИЦА СОТРУДНИКИ
@@ -3121,6 +3125,7 @@ a#task-toggle{
         .td-photo.tiny{
             img{
                 max-height: 60px;
+                max-width: 60px;
             }
         }
 

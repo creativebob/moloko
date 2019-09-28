@@ -51,7 +51,7 @@ use App\Scopes\Filters\BooklistFilter;
 			'title',
 			'seo_description',
 			'parent_id',
-			
+			'photo_id',
 			'catalogs_goods_id',
 			
 			'display',

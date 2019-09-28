@@ -789,6 +789,16 @@ Route::resource('/dealers', 'DealerController')->middleware('auth');
 Route::patch('/create_client', 'ClientController@ajax_create')->middleware('auth');
 Route::any('/store_client', 'ClientController@ajax_store')->middleware('auth');
 
+
+Route::get('/dealers/create-user', 'ClientController@createClientUser')->middleware('auth')->name('clients.createClientUser');
+Route::get('/dealers/create-company', 'ClientController@createClientCompany')->middleware('auth')->name('clients.createClientCompany');
+
+Route::post('/clients/store-user', 'ClientController@storeUser')->middleware('auth')->name('clients.storeUser');
+Route::post('/clients/store-company', 'ClientController@storeCompany')->middleware('auth')->name('clients.storeCompany');
+
+Route::patch('/clients/update-user/{id}', 'ClientController@updateClientUser')->middleware('auth')->name('clients.updateClientUser');
+Route::patch('/clients/update-company/{id}', 'ClientController@updateDealerCompany')->middleware('auth')->name('clients.updateClientCompany');
+
 Route::resource('/clients', 'ClientController')->middleware('auth');
 
 

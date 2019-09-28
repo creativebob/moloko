@@ -152,24 +152,6 @@ trait Articlable
             } else {
 
 
-            $units_category_id = $article->group->units_category_id;
-            if($units_category_id == 6){
-
-                // dd($data['volume_unit_id']);
-
-                if(isset($data['weight'])){
-                    $weight_unit = Unit::findOrFail($data['unit_weight_id']);
-                    $weight = $data['weight'] * $weight_unit->ratio;
-                    $data['weight'] = $weight;
-                };
-
-                if(isset($data['volume'])){
-                    $volume_unit = Unit::findOrFail($data['unit_volume_id']);
-                    $volume = $data['volume'] * $volume_unit->ratio;
-                    $data['volume'] = $volume;
-                };
-            }
-
                 if ($article->draft) {
                     // Обновляем составы только для товаров в черновике
                     if ($item->getTable() == 'goods') {

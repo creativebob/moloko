@@ -18,6 +18,9 @@ class ListChallengesComposer
         $user_id = $user->id;
         $answer_challenge = operator_right('challenges', false, 'index');
 
+        //Подключение политики
+        // $this->authorize(getmethod('index'), Challenge::class);
+
         $list_challenges = Challenge::with(
             'author',
             'appointed',

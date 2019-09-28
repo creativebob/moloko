@@ -4,13 +4,13 @@ namespace App\Providers;
 
 use App\ArticlesGroup;
 
-use App\ContainersConsignment;
+
 use App\Container;
 use App\ContainersCategory;
 use App\ContainersStock;
-use App\GoodsConsignment;
+
 use App\GoodsStock;
-use App\Policies\ContainersConsignmentPolicy;
+
 
 use App\Indicator;
 use App\Order;
@@ -19,7 +19,7 @@ use App\Policies\ArticlesGroupPolicy;
 use App\Policies\ContainerPolicy;
 use App\Policies\ContainersCategoryPolicy;
 use App\Policies\ContainersStockPolicy;
-use App\Policies\GoodsConsignmentPolicy;
+
 use App\Policies\GoodsStockPolicy;
 use App\Policies\IndicatorPolicy;
 use App\Policies\OrderPolicy;
@@ -354,21 +354,18 @@ class AuthServiceProvider extends ServiceProvider
         // Товары
         Goods::class => GoodsPolicy::class,
         GoodsCategory::class => GoodsCategoryPolicy::class,
-		GoodsConsignment::class => GoodsConsignmentPolicy::class,
-	    GoodsStock::class => GoodsStockPolicy::class,
+	   //    GoodsStock::class => GoodsStockPolicy::class,
         PricesGoods::class => PricesGoodsPolicy::class,
 
         // Сырье
         Raw::class => RawPolicy::class,
         RawsCategory::class => RawsCategoryPolicy::class,
-	    Consignment::class => ConsignmentPolicy::class,
-	    RawsStock::class => RawsStockPolicy::class,
+        // RawsStock::class => RawsStockPolicy::class,
 
         // Упаковка
         Container::class => ContainerPolicy::class,
         ContainersCategory::class => ContainersCategoryPolicy::class,
-	    ContainersConsignment::class => ContainersConsignmentPolicy::class,
-	    ContainersStock::class => ContainersStockPolicy::class,
+	    // ContainersStock::class => ContainersStockPolicy::class,
 
         // Оборудование
         Equipment::class => EquipmentPolicy::class,
@@ -380,6 +377,9 @@ class AuthServiceProvider extends ServiceProvider
 
         // Расходные материалы
         ExpendablesCategory::class => ExpendablesCategoryPolicy::class,
+
+        // Товарные накладные
+        Consignment::class => ConsignmentPolicy::class,
 
         Stock::class => StockPolicy::class,
 

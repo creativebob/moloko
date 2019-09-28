@@ -29,8 +29,6 @@
         var len_phone = phone.length;
         var lead_id = $('#lead_id').data('lead-id');
 
-        // alert(phone + ' ' + lead_id);
-
         // Если символов больше 3 - делаем запрос
         if(phone.length == 11) {
 
@@ -47,6 +45,7 @@
                     // Выводим пришедшие данные на страницу
                     $('#port-autofind').html(html);
                     $('#port-autofind').show();
+
                 } 
             });
 
