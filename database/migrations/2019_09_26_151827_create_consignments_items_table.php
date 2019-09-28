@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRawsConsignmentsItemsTable extends Migration
+class CreateConsignmentsItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,25 +13,25 @@ class CreateRawsConsignmentsItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('raws_consignments_items', function (Blueprint $table) {
+        Schema::create('consignments_items', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->bigInteger('consignment_id')->unsigned()->nullable()->comment('Id накладной');
-            $table->foreign('consignment_id')->references('id')->on('raws_consignments');
+            $table->foreign('consignment_id')->references('id')->on('consignments');
 
             $table->morphs('cmv');
 
-            $table->integer('count')->nullable()->comment('Кол-во');
-            $table->integer('price')->nullable()->comment('Цена за единицу');
-            $table->integer('amount')->nullable()->comment('Сумма до налога');
+            $table->integer('count')->default(0)->comment('Кол-во');
+            $table->integer('price')->default(0)->comment('Цена за единицу');
+            $table->integer('amount')->default(0)->comment('Сумма до налога');
 
             $table->integer('vat_rate')->nullable()->comment('Размер налога НДС');
             $table->integer('amount_vat')->nullable()->comment('Сумма НДС');
 
-            $table->integer('total')->nullable()->comment('Итого - Сумма с учетом НДС');
+            $table->integer('total')->default(0)->comment('Итого - Сумма с учетом НДС');
 
             $table->text('description')->nullable()->comment('Комментарий к позиции');
 
@@ -63,6 +63,6 @@ class CreateRawsConsignmentsItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('raws_consignments_items');
+        Schema::dropIfExists('consignments_items');
     }
 }

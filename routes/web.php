@@ -350,11 +350,6 @@ Route::post('/raw/photos', 'RawController@photos');
 Route::any('/raws_create_mode', 'RawController@ajax_change_create_mode');
 
 
-// ---------------------------------- Накладные сырья -------------------------------------------
-// Основные методы
-	Route::resource('/raws_consignments', 'RawsConsignmentController');
-
-
 // ---------------------------------- Склады сырья -------------------------------------------
 // Основные методы
 	Route::resource('/raws_stocks', 'RawsStockController');
@@ -380,11 +375,6 @@ Route::any('/container/add_photo', 'СontainerController@add_photo');
 Route::post('/container/photos', 'СontainerController@photos');
 
 Route::any('/containers_create_mode', 'СontainerController@ajax_change_create_mode');
-
-
-// ---------------------------------- Накладные упаковок -------------------------------------------
-// Основные методы
-Route::resource('/containers_consignments', 'ContainersConsignmentController');
 
 
 // ---------------------------------- Склады упаковок -------------------------------------------
@@ -492,11 +482,6 @@ Route::any('/articles_groups_list', 'ArticlesGroupController@ajax_articles_group
 Route::any('/ajax_processes_groups_count', 'ProcessesGroupController@ajax_count');
 Route::any('/ajax_processes_groups_set_status', 'ProcessesGroupController@ajax_set_status');
 Route::any('/processes_groups_list', 'ProcessesGroupController@ajax_processes_groups_list');
-
-
-// ---------------------------------- Накладные товаров -------------------------------------------
-// Основные методы
-Route::resource('/goods_consignments', 'GoodsConsignmentController');
 
 
 // ---------------------------------- Склады упаковок -------------------------------------------
@@ -768,8 +753,12 @@ Route::resource('applications', 'ApplicationController')->middleware('auth');
 
 // -------------------------------------- Товарные накладные ---------------------------------------------
 
+Route::any('/consignments/categories', 'ConsignmentController@categories');
 // Основные методы
-Route::resource('consignments', 'ConsignmentController');
+Route::resource('/consignments', 'ConsignmentController');
+
+//Route::any('/consignments_items', 'ConsignmentsItemController@store');
+Route::resource('/consignments_items', 'ConsignmentsItemController');
 
 
 // ------------------------------------ Производители ----------------------------------------------------

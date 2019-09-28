@@ -9,23 +9,45 @@ class ArticlesCategoriesWithItemsComposer
 {
 	public function compose(View $view)
 	{
-        $entity_alias = 'raws';
+
+	    $entities = Entity::whereIn('alias', [
+	        'raws',
+            'containers',
+            'goods'
+        ])
+            ->get([
+                'id',
+                'name',
+                'alias'
+            ]);
+
+	    $entity = $entities->first();
+        $entity_alias = $entity->alias;
         $alias = $entity_alias.'_categories';
 
-        $entity = Entity::whereAlias($alias)->first(['model']);
-        $model = 'App\\'.$entity->model;
+        $entity_categories = Entity::whereAlias($alias)->first(['model']);
+        $model = 'App\\'.$entity_categories->model;
 
         // Получаем из сессии необходимые данные
-        $answer = operator_right($entity->alias, false, 'index');
+        $answer = operator_right($entity_categories->alias, false, 'index');
 
         $categories = $model::moderatorLimit($answer)
             ->companiesLimit($answer)
+//            ->with([
+//                $entity_alias.'.article:id,name'
+//            ])
             ->with([
-                $entity_alias.'.article:id,name'
+                $entity_alias => function ($q) {
+                    $q->where('archive', false)
+                        ->whereHas('article', function ($q) {
+	        	            $q->where('draft', false)
+                            ->select([
+                                'id',
+                                'name'
+                            ]);
+	                    });
+                }
             ])
-	        ->whereHas($entity_alias.'.article', function ($q) {
-	        	$q->where('draft', false);
-	        })
             ->get([
                 'id',
                 'name',
@@ -38,11 +60,14 @@ class ArticlesCategoriesWithItemsComposer
 
         $items = [];
         foreach($categories as $category) {
+            $category->entity_id = $entity->id;
 
             if (isset($category->$entity_alias)) {
                 foreach ($category->$entity_alias as $item) {
-                    $item->article->category_id = $category->id;
-                    $items[] = $item->article;
+                    $item->category_id = $category->id;
+                    $item->entity_id = $entity->id;
+                    $item->name = $item->article->name;
+                    $items[] = $item;
                 }
             }
 
@@ -50,8 +75,10 @@ class ArticlesCategoriesWithItemsComposer
                 if (isset($category->$entity_alias)) {
                     foreach ($category->childCategories as $childCategory) {
                         foreach ($childCategory->$entity_alias as $item) {
-                            $item->article->category_id = $childCategory->id;
-                            $items[] = $item->article;
+                            $item->category_id = $category->id;
+                            $item->entity_id = $entity->id;
+                            $item->name = $item->article->name;
+                            $items[] = $item;
                         }
                     }
                 }
@@ -60,6 +87,7 @@ class ArticlesCategoriesWithItemsComposer
 //        dd($items);
 
         $articles_categories_with_items_data = [
+            'entities' => $entities,
             'categories' => $categories_tree,
             'items' => $items
         ];

@@ -6,6 +6,7 @@ use App\ArticlesGroup;
 use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\CatalogsService;
+use App\ConsignmentsItem;
 use App\Container;
 use App\ContainersCategory;
 use App\Direction;
@@ -17,6 +18,7 @@ use App\Observers\ArticlesGroupObserver;
 use App\Observers\CatalogsGoodsItemObserver;
 use App\Observers\CatalogsGoodsObserver;
 use App\Observers\CatalogsServiceObserver;
+use App\Observers\ConsignmentsItemObserver;
 use App\Observers\ContainerObserver;
 use App\Observers\ContainersCategoryObserver;
 use App\Observers\DirectionObserver;
@@ -137,6 +139,9 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Направления
         Direction::observe(DirectionObserver::class);
+
+        // Накладные
+        ConsignmentsItem::observe(ConsignmentsItemObserver::class);
 
         // Склады
         Stock::observe(StockObserver::class);

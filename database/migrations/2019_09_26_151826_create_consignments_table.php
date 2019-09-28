@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGoodsConsignmentsItemsTable extends Migration
+class CreateConsignmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,32 +13,31 @@ class CreateGoodsConsignmentsItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('goods_consignments_items', function (Blueprint $table) {
+        Schema::create('consignments', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
-            $table->bigInteger('consignment_id')->unsigned()->nullable()->comment('Id накладной');
-            $table->foreign('consignment_id')->references('id')->on('goods_consignments');
+            $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id отдела');
+            $table->foreign('filial_id')->references('id')->on('departments');
 
-            $table->morphs('cmv');
+            $table->string('name')->nullable()->comment('Короткое название накладной');
+            $table->text('description')->nullable()->comment('Описание');
 
-            $table->integer('count')->nullable()->comment('Кол-во');
-            $table->integer('price')->nullable()->comment('Цена за единицу');
-            $table->integer('amount')->nullable()->comment('Сумма до налога');
+            $table->timestamp('receipt_date')->nullable()->comment('Дата приема');
+            $table->string('number')->index()->nullable()->comment('Номер накладной');
 
-            $table->integer('vat_rate')->nullable()->comment('Размер налога НДС');
-            $table->integer('amount_vat')->nullable()->comment('Сумма НДС');
+            $table->bigInteger('supplier_id')->unsigned()->nullable()->comment('Id поставщика');
+            $table->foreign('supplier_id')->references('id')->on('suppliers');
 
-            $table->integer('total')->nullable()->comment('Итого - Сумма с учетом НДС');
-
-            $table->text('description')->nullable()->comment('Комментарий к позиции');
-
-            $table->bigInteger('stock_id')->nullable()->unsigned()->comment('ID склада на который приходовать ТМЦ');
+            $table->bigInteger('stock_id')->nullable()->unsigned()->comment('ID склада по умолчанию');
             $table->foreign('stock_id')->references('id')->on('stocks');
 
-            
+            $table->integer('amount')->nullable()->comment('Сумма');
+	        $table->boolean('draft')->default(1)->comment('Черновик');
+
+
             // Общие настройки
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->boolean('display')->default(0)->comment('Отображение на сайте');
@@ -63,6 +62,6 @@ class CreateGoodsConsignmentsItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('goods_consignments_items');
+        Schema::dropIfExists('consignments');
     }
 }

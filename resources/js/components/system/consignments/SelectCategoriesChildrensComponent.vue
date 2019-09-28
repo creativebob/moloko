@@ -18,9 +18,7 @@
     export default {
         name: 'childrens-component',
         props: {
-            category: {
-                type: Object,
-            },
+            category: Object,
         },
         methods: {
             getItems: function (id) {

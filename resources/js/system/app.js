@@ -20,12 +20,11 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 Vue.component('city-search-component', require('../components/system/CitySearchComponent.vue'));
-Vue.component('consignment-component', require('../components/system/ConsignmentComponent.vue'));
+Vue.component('consignment-component', require('../components/system/consignments/ConsignmentComponent.vue'));
 Vue.component('input-digit-component', require('../components/system/InputDigitComponent.vue'));
 Vue.component('dropzone-component', require('../components/system/DropzoneComponent.vue'));
 Vue.component('rawcomposition-component', require('../components/system/RawCompositionComponent.vue'));
 Vue.component('articles-categories-with-groups-component', require('../components/system/ArticlesCategoriesWithGroupsComponent.vue'));
-Vue.component('select-categories-component', require('../components/system/SelectCategoriesComponent.vue'));
 
 
 /**

@@ -23,10 +23,11 @@
                 v-model="id"
                 maxlength="3"
                 pattern="[0-9]{3}"
+                @change="setId(id)"
         >
 
         <div
-                v-if="showCategories"
+                v-if="!hideCategories && showCategories"
                 class="drilldown-categories-wrap"
         >
             <div class="categories-wrap">
@@ -38,7 +39,7 @@
                 >
 
                 <li
-                        v-for="category in categories"
+                        v-for="category in selectCategories"
                         class="item-catalog"
                 >
                     <a
@@ -92,14 +93,11 @@
         components: {
             'childrens-component': require('./SelectCategoriesChildrensComponent.vue')
         },
-        mounted() {
-            this.categories = this.data.categories
-            this.items = this.data.items
-        },
+        name: 'select-categories-component',
         props: {
-            data: {
-                type: Object,
-            }
+            hide: Boolean,
+            selectCategories: Array,
+            selectCategoriesItems: Array
         },
         data() {
             return {
@@ -108,52 +106,41 @@
                 search: false,
                 found: false,
                 error: false,
-                items: [],
                 listItems: [],
-                categories: [],
                 results: [],
-                showCategories: false
+                showCategories: !this.hide,
 
             };
         },
         computed: {
-            status() {
-                let result;
-
-                if (this.found) {
-                    result = 'sprite-16 icon-success'
+            hideCategories() {
+                if (this.hide) {
+                    this.showCategories = false;
+                    this.listItems = [];
+                    this.clear();
+                } else {
+                    return this.hide;
                 }
-                if (this.error) {
-                    result = 'sprite-16 icon-error'
-                }
-                return result;
             },
-            // filteredItems() {
-            //     if (this.text) {
-            //         this.search = true
-            //         return this.items.filter(item => {
-            //             return item.name.toLowerCase().includes(this.text.toLowerCase());
-            //         });
-            //
-            //     }
-            //     return this.items
-            // }
         },
         methods: {
             check() {
                 // console.log('Ищем введеные данные в наших городах (подгруженных), затем от результата меняем состояние на поиск или ошибку');
 
-                this.results = this.items.filter(item => {
+                this.results = this.selectCategoriesItems.filter(item => {
                     return item.name.toLowerCase().includes(this.text.toLowerCase());
                 });
 
                 this.search = (this.results.length > 0)
 
                 if (this.search) {
-                    this.showCategories = false
+                    this.hide = true;
+                    this.showCategories = false;
                 }
             },
             toggleShowCategories() {
+                this.$parent.checkHide();
+
                 this.showCategories = !this.showCategories
                 if (!this.showCategories) {
                     this.listItems = []
@@ -167,10 +154,15 @@
                 this.error = false;
                 this.search = false;
                 this.results = [];
+                this.hide = true;
+                this.showCategories = false;
+                this.resetSelect = false;
+
+                this.setId();
             },
             addFromList(id) {
 
-                let it = this.items.filter(item => {
+                let it = this.selectCategoriesItems.filter(item => {
                     return item.id == id;
                 })
                 // console.log('Клик по пришедшим данным, добавляем в инпут');
@@ -181,7 +173,10 @@
                 this.search = false;
                 this.results = [];
                 this.listItems = [];
+                this.hide = true;
                 this.showCategories = false;
+
+                this.setId();
             },
             clear() {
                 if (this.error) {
@@ -191,6 +186,10 @@
                     this.found = false;
                     this.error = false;
                     this.results = [];
+                    this.hide = true;
+                    this.showCategories = false;
+
+                    this.setId();
                 }
             },
             reset() {
@@ -200,6 +199,8 @@
                 this.error = false;
                 this.search = false;
                 this.results = [];
+
+                this.setId();
 
                 if (this.text.length > 0) {
                     this.check();
@@ -211,13 +212,18 @@
                 }
             },
             getItems(id) {
-                this.listItems = this.items.filter(item => {
+                this.listItems = this.selectCategoriesItems.filter(item => {
                     return item.category_id == id;
                 });
 
                 this.id = null;
                 this.name = '';
-            }
+
+                this.setId();
+            },
+            setId: function () {
+                this.$parent.setId(this.id);
+            },
         },
         directives: {
             'drilldown': {

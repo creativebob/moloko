@@ -22,7 +22,7 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
 
-class GoodsConsignment extends Model
+class Consignment extends Model
 {
 
     // Включаем кеш
@@ -65,7 +65,7 @@ class GoodsConsignment extends Model
     // Компания
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo(Company::class);
     }
 
     // public function filials()
@@ -76,24 +76,24 @@ class GoodsConsignment extends Model
     // Автор
     public function author()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo(User::class);
     }
 
     // Поставщик
     public function supplier()
     {
-        return $this->belongsTo('App\Supplier');
+        return $this->belongsTo(Supplier::class);
     }
 
     // Склад
     public function stock()
     {
-        return $this->belongsTo('App\Stock');
+        return $this->belongsTo(Stock::class);
     }
 
     // Позиции в смете
     public function items()
     {
-        return $this->hasMany(ContainersConsignmentsItem::class);
+        return $this->hasMany(ConsignmentsItem::class);
     }
 }

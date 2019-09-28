@@ -25,11 +25,11 @@ use App\Policies\IndicatorPolicy;
 use App\Policies\OrderPolicy;
 use App\Policies\PricesGoodsPolicy;
 use App\Policies\ProcessesGroupPolicy;
-use App\Policies\RawsConsignmentPolicy;
+use App\Policies\ConsignmentPolicy;
 use App\Policies\RawsStockPolicy;
 use App\PricesGoods;
 use App\ProcessesGroup;
-use App\RawsConsignment;
+use App\Consignment;
 use App\RawsStock;
 use App\User;
 use App\RightsRole;
@@ -361,7 +361,7 @@ class AuthServiceProvider extends ServiceProvider
         // Сырье
         Raw::class => RawPolicy::class,
         RawsCategory::class => RawsCategoryPolicy::class,
-	    RawsConsignment::class => RawsConsignmentPolicy::class,
+	    Consignment::class => ConsignmentPolicy::class,
 	    RawsStock::class => RawsStockPolicy::class,
 
         // Упаковка

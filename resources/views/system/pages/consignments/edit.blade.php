@@ -1,3 +1,29 @@
+@extends('layouts.app')
+
+@section('inhead')
+	@include('includes.scripts.pickmeup-inhead')
+	@include('includes.scripts.class.digitfield')
+@endsection
+
+@section('title', 'Редактировать товарную накладную')
+
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $consignment->id))
+
+@section('title-content')
+<div class="top-bar head-content">
+    <div class="top-bar-left">
+        <h2 class="header-content">РЕДАКТИРОВАТЬ товарную накладную</h2>
+    </div>
+    <div class="top-bar-right">
+    </div>
+</div>
+@endsection
+
+@section('content')
+
+{{ Form::model($consignment, ['route' => ['consignments.update', $consignment->id], 'data-abide', 'novalidate']) }}
+{{ method_field('PATCH') }}
+
 <div class="grid-x tabs-wrap inputs">
 
     <div class="small-12 cell tabs-margin-top">
@@ -27,11 +53,11 @@
                     <div class="small-12 medium-6 cell">
                         <label>Сумма
                             <input-digit-component name="amount" rate="2" :value="{{ $consignment->amount ?? 0 }}"></input-digit-component>
-                            {{-- @include('includes.inputs.digit', 
+                            {{-- @include('includes.inputs.digit',
                                 [
-                                'name' => 'amount', 
-                                'value'=>$consignment->amount, 
-                                'decimal_place'=> 2,                         
+                                'name' => 'amount',
+                                'value'=>$consignment->amount,
+                                'decimal_place'=> 2,
                                 'required' => true
                             ]) --}}
                         </label>
@@ -68,13 +94,19 @@
 
     <consignment-component :consignment='@json($consignment)' :select-data='@json($articles_categories_with_items_data)'></consignment-component>
 
-
-
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-        {{ Form::submit($submit_text, ['class' => 'button']) }}
+        {{ Form::submit('Редактировать', ['class' => 'button']) }}
     </div>
 
-
-
 </div>
+
+{{ Form::close() }}
+
+@endsection
+
+@push('scripts')
+@include('includes.scripts.inputs-mask')
+@include('includes.scripts.pickmeup-script')
+@endpush
+
 

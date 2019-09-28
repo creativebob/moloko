@@ -3,17 +3,17 @@
 namespace App\Policies;
 
 use App\User;
-use App\RawsConsignment as Model;
+use App\Consignment as Model;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 use App\Policies\Traits\PoliticTrait;
 
-class RawsConsignmentPolicy
+class ConsignmentPolicy
 {
     use HandlesAuthorization;
     use PoliticTrait;
 
-    protected $entity_name = 'raws_consignments';
+    protected $entity_name = 'consignments';
     protected $entity_dependence = true;
 
     public function index(User $user)
