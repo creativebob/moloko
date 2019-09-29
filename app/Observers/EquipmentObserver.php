@@ -4,11 +4,11 @@ namespace App\Observers;
 
 use App\Equipment;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class EquipmentObserver
 {
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Equipment $equipment)
     {

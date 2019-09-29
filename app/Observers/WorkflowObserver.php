@@ -4,12 +4,12 @@ namespace App\Observers;
 
 use App\Workflow;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class WorkflowObserver
 {
 
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Workflow $workflow)
     {

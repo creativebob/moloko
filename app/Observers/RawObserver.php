@@ -4,12 +4,12 @@ namespace App\Observers;
 
 use App\Raw;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class RawObserver
 {
 
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Raw $raw)
     {

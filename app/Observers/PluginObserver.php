@@ -4,11 +4,11 @@ namespace App\Observers;
 
 use App\Plugin;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class PluginObserver
 {
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Plugin $plugin)
     {

@@ -2,13 +2,13 @@
 
 namespace App\Observers;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 use App\CatalogsGoods;
 
 class CatalogsGoodsObserver
 {
 
-    use CommonTrait;
+    use Commonable;
 
     public function creating(CatalogsGoods $catalogs_goods)
     {

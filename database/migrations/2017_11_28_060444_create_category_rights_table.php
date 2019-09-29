@@ -17,7 +17,7 @@ class CreateCategoryRightsTable extends Migration
             $table->bigIncrements('id');
             $table->string('category_right_name')->index()->unique()->comment('Имя категории пользователей');
             
-            $table->boolean('display')->default(0)->comment('Отображение на сайте');
+            $table->boolean('display')->default(1)->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 

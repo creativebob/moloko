@@ -3,11 +3,11 @@
 namespace App\Observers;
 
 use App\ArticlesGroup;
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class ArticlesGroupObserver
 {
-    use CommonTrait;
+    use Commonable;
 
     public function creating(ArticlesGroup $articles_group)
     {

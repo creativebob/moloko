@@ -46,7 +46,7 @@ class CreateEntitiesTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
-            $table->boolean('display')->default(0)->comment('Отображение на сайте');
+            $table->boolean('display')->default(1)->comment('Отображение на сайте');
             $table->boolean('system')->default(0)->comment('Системная запись');
             $table->boolean('moderation')->default(0)->comment('Модерация');
 

@@ -9,6 +9,7 @@ use App\User;
 use App\Staffer;
 use App\Employee;
 use App\Manufacturer;
+use App\Supplier;
 
 use App\Site;
 use App\Page;
@@ -143,7 +144,7 @@ class StartTableSeeder extends Seeder
                 'author_id' => 4,
                 'system' => false,
                 'moderation' => false,
-                'api_token' => str_random(60),
+                'api_token' => Str::random(60),
         	],
         ]);
 
@@ -474,7 +475,7 @@ class StartTableSeeder extends Seeder
         Company::insert([
             [
                 'name' => 'Первый',
-                'alias' => str_slug('Первый'),
+                'alias' => \Str::slug('Первый'),
                 'location_id' => 1,
                 'legal_form_id' => 1,
                 'sector_id' => 23,
@@ -482,7 +483,7 @@ class StartTableSeeder extends Seeder
             ],
             [
                 'name' => 'Второй',
-                'alias' => str_slug('Второй'),
+                'alias' => \Str::slug('Второй'),
                 'location_id' => 1,
                 'legal_form_id' => 1,
                 'sector_id' => 23,
@@ -505,6 +506,17 @@ class StartTableSeeder extends Seeder
         foreach ($manufacturers as $manufacturer) {
             $manufacturer->company->phones()->attach(1, ['main' => 1]);
         }
+
+        Supplier::insert([
+            [
+                'company_id' => 1,
+                'supplier_id' => 2
+            ],
+            [
+                'company_id' => 1,
+                'supplier_id' => 3
+            ],
+        ]);
 
     }
 }

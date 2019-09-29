@@ -3,11 +3,11 @@
 namespace App\Observers;
 
 use App\Site;
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class SiteObserver
 {
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Site $site)
     {

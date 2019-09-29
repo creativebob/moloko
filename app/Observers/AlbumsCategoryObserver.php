@@ -3,13 +3,13 @@
 namespace App\Observers;
 
 use App\Observers\Traits\CategoriesTrait;
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 use App\AlbumsCategory as Category;
 
 class AlbumsCategoryObserver
 {
 
-    use CommonTrait;
+    use Commonable;
     use CategoriesTrait;
 
     public function creating(Category $category)

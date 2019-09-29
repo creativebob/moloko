@@ -50,6 +50,8 @@ class ConsignmentsItem extends Model
         'cmv_type',
         'count',
         'price',
+        'entity_id',
+
         'vat_rate',
         'description',
         'total',
@@ -87,10 +89,10 @@ class ConsignmentsItem extends Model
         return $this->morphTo();
     }
 
-    // Артикул
-    public function article()
+    // сущность
+    public function entity()
     {
-        return $this->belongsTo(Article::class, 'cmv');
+        return $this->belongsTo(Entity::class);
     }
 
 }

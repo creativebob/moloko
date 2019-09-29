@@ -4,12 +4,12 @@ namespace App\Observers;
 
 use App\Stock;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class StockObserver
 {
 
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Stock $stock)
     {

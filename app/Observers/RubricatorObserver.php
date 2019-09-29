@@ -4,11 +4,11 @@ namespace App\Observers;
 
 use App\Rubricator;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class RubricatorObserver
 {
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Rubricator $rubricator)
     {

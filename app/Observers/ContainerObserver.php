@@ -4,12 +4,12 @@ namespace App\Observers;
 
 use App\Container;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class ContainerObserver
 {
 
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Container $container)
     {

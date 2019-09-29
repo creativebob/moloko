@@ -4,12 +4,12 @@ namespace App\Observers;
 
 use App\Goods;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class GoodsObserver
 {
 
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Goods $cur_goods)
     {

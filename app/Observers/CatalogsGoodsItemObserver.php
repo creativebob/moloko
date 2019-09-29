@@ -3,13 +3,13 @@
 namespace App\Observers;
 
 use App\Observers\Traits\CategoriesTrait;
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 use App\CatalogsGoodsItem as Category;
 
 class CatalogsGoodsItemObserver
 {
 
-    use CommonTrait;
+    use Commonable;
     use CategoriesTrait;
 
     public function creating(Category $category)

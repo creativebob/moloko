@@ -7,12 +7,12 @@ use App\Album;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class AlbumObserver
 {
 
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Album $album)
     {

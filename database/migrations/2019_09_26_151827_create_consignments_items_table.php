@@ -38,10 +38,13 @@ class CreateConsignmentsItemsTable extends Migration
             $table->bigInteger('stock_id')->nullable()->unsigned()->comment('ID склада на который приходовать ТМЦ');
             $table->foreign('stock_id')->references('id')->on('stocks');
 
+            $table->bigInteger('entity_id')->nullable()->unsigned()->comment('Id сущности ТМЦ');
+            $table->foreign('entity_id')->references('id')->on('entities');
+
             
             // Общие настройки
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
-            $table->boolean('display')->default(0)->comment('Отображение на сайте');
+            $table->boolean('display')->default(1)->comment('Отображение на сайте');
             $table->boolean('system')->default(0)->comment('Системная запись');
             $table->boolean('moderation')->default(0)->comment('Модерация');
 
