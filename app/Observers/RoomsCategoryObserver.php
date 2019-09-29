@@ -3,14 +3,14 @@
 namespace App\Observers;
 
 use App\Observers\Traits\CategoriesTrait;
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 use App\Observers\Traits\ProductsCategoriesTrait;
 use App\RoomsCategory as Category;
 
 class RoomsCategoryObserver
 {
 
-    use CommonTrait;
+    use Commonable;
     use CategoriesTrait;
     use ProductsCategoriesTrait;
 

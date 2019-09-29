@@ -5,12 +5,12 @@ namespace App\Observers;
 use App\Photo;
 use Illuminate\Support\Facades\Storage;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class PhotoObserver
 {
 
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Photo $photo)
     {

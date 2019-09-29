@@ -23,8 +23,8 @@
 					:item="item"
 					:index="index"
 					:key="item.id"
-					:upd-item="updItem"
-					:del-item="delItem"
+					:upd-item="updateItems"
+					:del-item="deleteItems"
 			></consignments-item-component>
 
 			<tr class="tr-add">
@@ -38,18 +38,18 @@
 						<option
 								v-for="entity in entities"
 								:value="entity.id"
-								:selected="entity.id == selectedEntity"
+								:selected="entity.id === selectedEntity"
 						>{{ entity.name }}</option>
 					</select>
 				</td>
 				<td>
-					<select-categories-component :select-categories="selectCategories" :select-categories-items="selectCategoriesItems" :hide="hideCategories" :get-id="changeCount"></select-categories-component>
+					<select-categories-component :select-categories="selectCategories" :select-categories-items="selectCategoriesItems" :change="change" :get-id="changeCount"></select-categories-component>
 				</td>
 				<td>
-					<input-digit-component name="count" rate="2" :value="checkCount" v-on:countchanged="changeCount"></input-digit-component>
+					<input-digit-component name="count" rate="2" :value="count" v-on:countchanged="changeCount"></input-digit-component>
 				</td>
 				<td>
-					<input-digit-component name="price" :value="checkPrice" v-on:countchanged="changePrice"></input-digit-component>
+					<input-digit-component name="price" :value="price" v-on:countchanged="changePrice"></input-digit-component>
 				</td>
 				<td>
 					<span>{{ totalItemSum | roundToTwo }}</span>
@@ -78,7 +78,10 @@
 			<tr>
 				<td colspan="4">Итого:</td>
 				<td>Позиций: {{ totalItemsCount }}</td>
-				<td>Сумма: {{ totalItemsPrice }}</td>
+				<td>
+					<input name="amount" type="hidden" :value="totalItemsPrice">
+					Сумма: {{ totalItemsPrice }}
+				</td>
 				<td></td>
 			</tr>
 		</tfoot>
@@ -88,17 +91,14 @@
 
 <script>
     export default {
-
 		components: {
 			'select-categories-component': require('./SelectCategoriesComponent.vue'),
 			'consignments-item-component': require('./ConsignmentsItemComponent.vue')
 		},
-
 		props: {
 			consignment: Object,
 			selectData: Object
 		},
-
 		data() {
 			return {
 				// Сущности
@@ -109,28 +109,21 @@
 				//
 				items: this.consignment.items,
 				id: null,
-				count: 0,
-				price: 0,
-				disabledИгеещт: true,
+				count: null,
+				price: null,
 
-				// Категории лоя компонента выбора
+				// Категории для компонента выбора
 				categories: this.selectData.categories,
 				categoriesItems: this.selectData.items,
-				hideCategories: true,
+				change: false,
 			}
 		},
-
 		computed: {
 			totalItemSum() {
 				return this.count * this.price;
 			},
 			isDisabled() {
-				if (this.id == null) {
-					this.disabledИгеещт = true;
-				} else {
-					this.disabledИгеещт = false;
-				}
-				return this.disabledИгеещт
+				return this.id == null || this.price == null || (this.count == null || this.count == 0)
 			},
 			itemsList() {
 				return this.items;
@@ -141,33 +134,20 @@
 			totalItemsPrice() {
 				let price = 0;
 				this.items.forEach(function(item) {
-					return price += item.total
+					return price += item.amount
 				});
 				return price;
-			},
-
-			checkCount() {
-				if (this.count == '') {
-					this.count = 0;
-				}
-				return this.count
-			},
-			checkPrice() {
-				if (this.price == '') {
-					this.price = 0;
-				}
-				return this.price
 			},
 
 			// Списки для компонента выбора
 			selectCategories() {
 				return this.categories.filter(item => {
-					return item.entity_id == this.entity_id
+					return item.entity_id === this.entity_id
 				})
 			},
 			selectCategoriesItems() {
 				return this.categoriesItems.filter(item => {
-					return item.entity_id == this.entity_id
+					return item.entity_id === this.entity_id
 				})
 			},
 		},
@@ -181,16 +161,16 @@
 			},
 			changeEntity: function() {
 
-				this.hideCategories = true
+				this.change = true;
 
 				let count = 0;
 				this.categories.filter(item => {
-					if (item.entity_id == this.entity_id) {
+					if (item.entity_id === this.entity_id) {
 						count++
 					}
-				})
+				});
 
-				if (count == 0) {
+				if (count === 0) {
 					axios
 						.post('/admin/consignments/categories', {
 							entity_id: this.entity_id,
@@ -200,49 +180,47 @@
 							this.categoriesItems = this.categoriesItems.concat(response.data.items);
 						})
 						.catch(error => {
-							console.log(error)
+							console.log(error);
 						})
 				}
 
 			},
-			checkHide: function () {
-				this.hideCategories = false;
+			checkChange: function () {
+				this.change = false;
 			},
 			setId: function (id) {
 				this.id = id;
 			},
 
 			addItem: function() {
-				this.disabledИгеещт = true
-				axios
-					.post('/admin/consignments_items', {
-						consignment_id: this.consignment.id,
-						cmv_id: this.id,
-						entity_id: this.entity_id,
-						count: this.count,
-						price: this.price
-					})
-					.then(response => {
-						this.items.push(response.data)
+				if (!this.isDisabled) {
+					this.disabledButton = true;
+					axios
+						.post('/admin/consignments_items', {
+							consignment_id: this.consignment.id,
+							cmv_id: this.id,
+							entity_id: this.entity_id,
+							count: this.count,
+							price: this.price
+						})
+						.then(response => {
+								this.items.push(response.data)
+							},
+						)
+						.catch(error => {
+							console.log(error)
+						});
 
-					},
-					this.reset()
-					)
-					.catch(error => {
-						console.log(error)
-					})
+					this.id = null;
+					this.count = null;
+					this.price = null;
+				}
 			},
-			reset: function () {
-				this.id = null
-				this.count = 0
-				this.price = 0
-			},
-
-			updItem: function(item, index) {
+			updateItems: function(item, index) {
 				Vue.set(this.items, index, item);
 			},
 
-			delItem: function(index) {
+			deleteItems: function(index) {
 				this.items.splice(index, 1);
 			}
 		},

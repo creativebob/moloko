@@ -2,16 +2,10 @@
 
 namespace App\Http\Controllers;
 
-// Модели
 use App\Consignment;
-
-// Валидация
 use App\Entity;
+use App\Http\Requests\ConsignmentUpdateRequest;
 use Illuminate\Http\Request;
-use App\Http\Requests\ConsignmentRequest;
-
-// Карбон
-use Carbon\Carbon;
 
 class ConsignmentController extends Controller
 {
@@ -70,32 +64,17 @@ class ConsignmentController extends Controller
     
     public function create()
     {
-
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod('store'), $this->class);
 
-                // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('consignments', false, 'index');
-
-        // Главный запрос
-        $consignment = new Consignment;
-        $consignment->receipt_date = Carbon::now();
-	    $consignment->draft = true;
-
-        $user = \Auth::user();
-	    $consignment->company_id = $user->company_id;
-	    $consignment->author_id = hideGod($user);
-
-	    $consignment->filial_id = $user->filial_id;
-
-	    $consignment->save();
+        $consignment = (new Consignment())->create();
         // dd($consignment);
 
 	    return redirect()->route('consignments.edit', ['id' => $consignment->id]);
     }
 
 
-    public function store(ConsignmentRequest $request)
+    public function store(Request $request)
     {
         //
     }
@@ -111,12 +90,18 @@ class ConsignmentController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $consignment = Consignment::
-        with(['items.cmv' => function ($q) {
-            $q->with([
-                'article'
-            ]);
-        }])
+        $consignment = Consignment::with([
+            'items' => function ($q) {
+                $q->with([
+                    'cmv' => function ($q) {
+                        $q->with([
+                            'article:id,name'
+                        ]);
+                    },
+                    'entity:id,name',
+                ]);
+            },
+        ])
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
@@ -125,18 +110,14 @@ class ConsignmentController extends Controller
 
         $this->authorize(getmethod(__FUNCTION__), $consignment);
 
-        // dd($consignment->items);
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
-	
-	    $entity = 'raws';
 
-        return view('system.pages.consignments.edit', compact('consignment', 'page_info', 'entity'));
+        return view('system.pages.consignments.edit', compact('consignment', 'page_info'));
     }
 
 
-    public function update(ConsignmentRequest $request, $id)
+    public function update(ConsignmentUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -151,19 +132,8 @@ class ConsignmentController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $consignment);
 
-        $consignment->supplier_id = $request->supplier_id;
-
-        $consignment->description = $request->description;
-        $consignment->number = $request->number;
-        $consignment->amount = $request->amount;
-
-        // Дата приема
-        $consignment->receipt_date = Carbon::parse($request->receipt_date)->format('Y-m-d');
-
-        $consignment->draft = $request->draft;
-
-        $consignment->editor_id = hideGod($request->user());
-        $consignment->save();
+        $data = $request->input();
+        $consignment->update($data);
 
         return redirect()->route('consignments.index');
     }
@@ -194,13 +164,10 @@ class ConsignmentController extends Controller
         } else {
             abort(403, 'Ошибка при удалении товарной накладной');
         }
-
     }
-
 
     public function categories(Request $request)
     {
-
         $entity = Entity::find($request->entity_id);
 
         $entity_alias = $entity->alias;
@@ -267,17 +234,12 @@ class ConsignmentController extends Controller
         }
 //        dd($items);
 
-        $articles_categories_with_items_data = [
+        $data = [
             'categories' => $categories_tree,
             'items' => $items
         ];
+//        dd($data);
 
-//        dd($articles_categories_with_items_data);
-
-
-        return response()->json($articles_categories_with_items_data);
+        return response()->json($data);
     }
-
-
-
 }

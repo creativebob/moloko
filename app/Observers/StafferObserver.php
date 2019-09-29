@@ -4,12 +4,12 @@ namespace App\Observers;
 
 use App\Staffer;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class StafferObserver
 {
 
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Staffer $staffer)
     {

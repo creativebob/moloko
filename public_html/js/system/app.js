@@ -41374,19 +41374,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-
 	components: {
 		'select-categories-component': __webpack_require__(51),
 		'consignments-item-component': __webpack_require__(57)
 	},
-
 	props: {
 		consignment: Object,
 		selectData: Object
 	},
-
 	data: function data() {
 		return {
 			// Сущности
@@ -41397,29 +41397,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			//
 			items: this.consignment.items,
 			id: null,
-			count: 0,
-			price: 0,
-			disabledИгеещт: true,
+			count: null,
+			price: null,
 
-			// Категории лоя компонента выбора
+			// Категории для компонента выбора
 			categories: this.selectData.categories,
 			categoriesItems: this.selectData.items,
-			hideCategories: true
+			change: false
 		};
 	},
-
 
 	computed: {
 		totalItemSum: function totalItemSum() {
 			return this.count * this.price;
 		},
 		isDisabled: function isDisabled() {
-			if (this.id == null) {
-				this.disabledИгеещт = true;
-			} else {
-				this.disabledИгеещт = false;
-			}
-			return this.disabledИгеещт;
+			return this.id == null || this.price == null || this.count == null || this.count == 0;
 		},
 		itemsList: function itemsList() {
 			return this.items;
@@ -41430,21 +41423,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		totalItemsPrice: function totalItemsPrice() {
 			var price = 0;
 			this.items.forEach(function (item) {
-				return price += item.total;
+				return price += item.amount;
 			});
 			return price;
-		},
-		checkCount: function checkCount() {
-			if (this.count == '') {
-				this.count = 0;
-			}
-			return this.count;
-		},
-		checkPrice: function checkPrice() {
-			if (this.price == '') {
-				this.price = 0;
-			}
-			return this.price;
 		},
 
 
@@ -41453,14 +41434,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			var _this = this;
 
 			return this.categories.filter(function (item) {
-				return item.entity_id == _this.entity_id;
+				return item.entity_id === _this.entity_id;
 			});
 		},
 		selectCategoriesItems: function selectCategoriesItems() {
 			var _this2 = this;
 
 			return this.categoriesItems.filter(function (item) {
-				return item.entity_id == _this2.entity_id;
+				return item.entity_id === _this2.entity_id;
 			});
 		}
 	},
@@ -41475,16 +41456,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		changeEntity: function changeEntity() {
 			var _this3 = this;
 
-			this.hideCategories = true;
+			this.change = true;
 
 			var count = 0;
 			this.categories.filter(function (item) {
-				if (item.entity_id == _this3.entity_id) {
+				if (item.entity_id === _this3.entity_id) {
 					count++;
 				}
 			});
 
-			if (count == 0) {
+			if (count === 0) {
 				axios.post('/admin/consignments/categories', {
 					entity_id: this.entity_id
 				}).then(function (response) {
@@ -41495,8 +41476,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				});
 			}
 		},
-		checkHide: function checkHide() {
-			this.hideCategories = false;
+		checkChange: function checkChange() {
+			this.change = false;
 		},
 		setId: function setId(id) {
 			this.id = id;
@@ -41505,30 +41486,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		addItem: function addItem() {
 			var _this4 = this;
 
-			this.disabledИгеещт = true;
-			axios.post('/admin/consignments_items', {
-				consignment_id: this.consignment.id,
-				cmv_id: this.id,
-				entity_id: this.entity_id,
-				count: this.count,
-				price: this.price
-			}).then(function (response) {
-				_this4.items.push(response.data);
-			}, this.reset()).catch(function (error) {
-				console.log(error);
-			});
-		},
-		reset: function reset() {
-			this.id = null;
-			this.count = 0;
-			this.price = 0;
-		},
+			if (!this.isDisabled) {
+				this.disabledButton = true;
+				axios.post('/admin/consignments_items', {
+					consignment_id: this.consignment.id,
+					cmv_id: this.id,
+					entity_id: this.entity_id,
+					count: this.count,
+					price: this.price
+				}).then(function (response) {
+					_this4.items.push(response.data);
+				}).catch(function (error) {
+					console.log(error);
+				});
 
-		updItem: function updItem(item, index) {
+				this.id = null;
+				this.count = null;
+				this.price = null;
+			}
+		},
+		updateItems: function updateItems(item, index) {
 			Vue.set(this.items, index, item);
 		},
 
-		delItem: function delItem(index) {
+		deleteItems: function deleteItems(index) {
 			this.items.splice(index, 1);
 		}
 	},
@@ -41691,7 +41672,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     name: 'select-categories-component',
     props: {
-        hide: Boolean,
+        change: Boolean,
         selectCategories: Array,
         selectCategoriesItems: Array
     },
@@ -41700,24 +41681,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             id: null,
             text: null,
             search: false,
-            found: false,
             error: false,
             listItems: [],
             results: [],
-            showCategories: !this.hide
-
+            showCategories: false
         };
     },
 
     computed: {
-        hideCategories: function hideCategories() {
-            if (this.hide) {
-                this.showCategories = false;
+        closeCategories: function closeCategories() {
+            if (this.change) {
                 this.listItems = [];
                 this.clear();
-            } else {
-                return this.hide;
             }
+            return this.change;
         }
     },
     methods: {
@@ -41726,19 +41703,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             // console.log('Ищем введеные данные в наших городах (подгруженных), затем от результата меняем состояние на поиск или ошибку');
 
-            this.results = this.selectCategoriesItems.filter(function (item) {
-                return item.name.toLowerCase().includes(_this.text.toLowerCase());
-            });
+            // if (this.text.length === 2) {
+            //     this.results = this.selectCategoriesItems.filter(item => {
+            //         return item.name.toLowerCase().indexOf(this.text.toLowerCase()) > -1;
+            //     });
+            // }
+
+            if (this.text.length >= 2) {
+                this.results = this.selectCategoriesItems.filter(function (item) {
+                    return item.name.toLowerCase().includes(_this.text.toLowerCase());
+                });
+            }
 
             this.search = this.results.length > 0;
+            // this.error = (this.results.length == 0)
 
             if (this.search) {
-                this.hide = true;
                 this.showCategories = false;
             }
         },
         toggleShowCategories: function toggleShowCategories() {
-            this.$parent.checkHide();
+            this.$parent.checkChange();
 
             this.showCategories = !this.showCategories;
             if (!this.showCategories) {
@@ -41749,52 +41734,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             // console.log('Клик по пришедшим данным, добавляем в инпут');
             this.id = this.results[index].id;
             this.text = this.results[index].name;
-            this.found = true;
             this.error = false;
             this.search = false;
             this.results = [];
-            this.hide = true;
             this.showCategories = false;
-            this.resetSelect = false;
 
             this.setId();
         },
         addFromList: function addFromList(id) {
 
             var it = this.selectCategoriesItems.filter(function (item) {
-                return item.id == id;
+                return item.id === id;
             });
             // console.log('Клик по пришедшим данным, добавляем в инпут');
             this.id = it[0].id;
             this.text = it[0].name;
-            this.found = true;
             this.error = false;
             this.search = false;
             this.results = [];
             this.listItems = [];
-            this.hide = true;
             this.showCategories = false;
 
             this.setId();
         },
         clear: function clear() {
-            if (this.error) {
-                // console.log('Клик по иконке ошибки на инпуте, обнуляем');
-                this.text = '';
-                this.id = null;
-                this.found = false;
-                this.error = false;
-                this.results = [];
-                this.hide = true;
-                this.showCategories = false;
+            this.text = '';
+            this.id = null;
+            this.error = false;
+            this.results = [];
+            this.showCategories = false;
 
-                this.setId();
-            }
+            this.setId();
         },
         reset: function reset() {
             // console.log('Изменение в инпуте, обнуляем все кроме имени, и если символов больше 2х начинаем поиск');
             this.id = null;
-            this.found = false;
             this.error = false;
             this.search = false;
             this.results = [];
@@ -41806,13 +41780,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         onEnter: function onEnter() {
-            if (this.results.length == 1) {
+            if (this.results.length === 1) {
                 this.addFromSearch(0);
             }
         },
         getItems: function getItems(id) {
             this.listItems = this.selectCategoriesItems.filter(function (item) {
-                return item.category_id == id;
+                return item.category_id === id;
             });
 
             this.id = null;
@@ -42035,7 +42009,7 @@ var render = function() {
       }
     }),
     _vm._v(" "),
-    !_vm.hideCategories && _vm.showCategories
+    _vm.showCategories && !_vm.closeCategories
       ? _c("div", { staticClass: "drilldown-categories-wrap" }, [
           _c("div", { staticClass: "categories-wrap" }, [
             _c(
@@ -42260,7 +42234,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'consignments-item-component',
@@ -42273,30 +42246,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             count: this.item.count,
             price: this.item.price,
             changeCount: false,
-            changePrice: false,
-            disabledButton: false
+            changePrice: false
         };
     },
 
     computed: {
         isChangeCount: function isChangeCount() {
-            return this.changeCount = !this.changeCount;
+            if (this.changeCount) {
+                this.changePrice = false;
+            }
+            return this.changeCount;
         },
         isChangePrice: function isChangePrice() {
-            return this.changePrice = !this.changePrice;
+            if (this.changePrice) {
+                this.changeCount = false;
+            }
+            return this.changePrice;
         }
     },
     methods: {
         updateItem: function updateItem() {
             var _this = this;
 
+            this.changeCount = false;
+            this.changePrice = false;
             axios.patch('/admin/consignments_items/' + this.item.id, {
                 count: this.count,
                 price: this.price
             }).then(function (response) {
-                _this.$parent.updItem(response.data, _this.index);
-                _this.changeCount = false;
-                _this.changePrice = false;
+                _this.$parent.updateItems(response.data, _this.index);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -42304,14 +42282,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         deleteItem: function deleteItem() {
             var _this2 = this;
 
-            this.disabledButton = true;
             axios.delete('/admin/consignments_items/' + this.item.id).then(function (response) {
-                if (response.data == true) {
-                    _this2.$parent.delItem(_this2.index);
+                if (response.data === true) {
+                    _this2.$parent.deleteItems(_this2.index);
                 }
             }).catch(function (error) {
                 console.log(error);
             });
+        }
+    },
+    directives: {
+        focus: {
+            // directive definition
+            inserted: function inserted(el) {
+                el.focus();
+            }
         }
     }
 });
@@ -42327,7 +42312,7 @@ var render = function() {
   return _c("tr", [
     _c("td", [_vm._v(_vm._s(_vm.index + 1))]),
     _vm._v(" "),
-    _c("td", [_vm._v(_vm._s(_vm.item.id))]),
+    _c("td", [_vm._v(_vm._s(_vm.item.entity.name))]),
     _vm._v(" "),
     _c("td", [_vm._v(_vm._s(_vm.item.cmv.article.name))]),
     _vm._v(" "),
@@ -42341,10 +42326,11 @@ var render = function() {
         }
       },
       [
-        _vm.changeCount
+        _vm.isChangeCount
           ? [
               _c("input", {
                 directives: [
+                  { name: "focus", rawName: "v-focus" },
                   {
                     name: "model",
                     rawName: "v-model",
@@ -42352,7 +42338,7 @@ var render = function() {
                     expression: "count"
                   }
                 ],
-                attrs: { type: "number", autofocus: "" },
+                attrs: { type: "number" },
                 domProps: { value: _vm.count },
                 on: {
                   keydown: function($event) {
@@ -42392,10 +42378,11 @@ var render = function() {
         }
       },
       [
-        _vm.changePrice
+        _vm.isChangePrice
           ? [
               _c("input", {
                 directives: [
+                  { name: "focus", rawName: "v-focus" },
                   {
                     name: "model",
                     rawName: "v-model",
@@ -42403,7 +42390,7 @@ var render = function() {
                     expression: "price"
                   }
                 ],
-                attrs: { type: "number", autofocus: "" },
+                attrs: { type: "number" },
                 domProps: { value: _vm.price },
                 on: {
                   keydown: function($event) {
@@ -42433,18 +42420,13 @@ var render = function() {
       2
     ),
     _vm._v(" "),
-    _c("td", [_vm._v(_vm._s(_vm.item.total))]),
+    _c("td", [_vm._v(_vm._s(_vm.item.amount))]),
     _vm._v(" "),
     _c("td", [
-      _c(
-        "a",
-        {
-          staticClass: "button tiny",
-          attrs: { disabled: _vm.disabledButton },
-          on: { click: _vm.deleteItem }
-        },
-        [_vm._v("Удалить")]
-      )
+      _c("a", {
+        staticClass: "icon-delete sprite",
+        on: { click: _vm.deleteItem }
+      })
     ])
   ])
 }
@@ -42479,8 +42461,8 @@ var render = function() {
             attrs: {
               item: item,
               index: index,
-              "upd-item": _vm.updItem,
-              "del-item": _vm.delItem
+              "upd-item": _vm.updateItems,
+              "del-item": _vm.deleteItems
             }
           })
         }),
@@ -42526,7 +42508,7 @@ var render = function() {
                   {
                     domProps: {
                       value: entity.id,
-                      selected: entity.id == _vm.selectedEntity
+                      selected: entity.id === _vm.selectedEntity
                     }
                   },
                   [_vm._v(_vm._s(entity.name))]
@@ -42543,7 +42525,7 @@ var render = function() {
                 attrs: {
                   "select-categories": _vm.selectCategories,
                   "select-categories-items": _vm.selectCategoriesItems,
-                  hide: _vm.hideCategories,
+                  change: _vm.change,
                   "get-id": _vm.changeCount
                 }
               })
@@ -42555,7 +42537,7 @@ var render = function() {
             "td",
             [
               _c("input-digit-component", {
-                attrs: { name: "count", rate: "2", value: _vm.checkCount },
+                attrs: { name: "count", rate: "2", value: _vm.count },
                 on: { countchanged: _vm.changeCount }
               })
             ],
@@ -42566,7 +42548,7 @@ var render = function() {
             "td",
             [
               _c("input-digit-component", {
-                attrs: { name: "price", value: _vm.checkPrice },
+                attrs: { name: "price", value: _vm.price },
                 on: { countchanged: _vm.changePrice }
               })
             ],
@@ -42599,7 +42581,13 @@ var render = function() {
         _vm._v(" "),
         _c("td", [_vm._v("Позиций: " + _vm._s(_vm.totalItemsCount))]),
         _vm._v(" "),
-        _c("td", [_vm._v("Сумма: " + _vm._s(_vm.totalItemsPrice))]),
+        _c("td", [
+          _c("input", {
+            attrs: { name: "amount", type: "hidden" },
+            domProps: { value: _vm.totalItemsPrice }
+          }),
+          _vm._v("\n\t\t\t\tСумма: " + _vm._s(_vm.totalItemsPrice) + "\n\t\t\t")
+        ]),
         _vm._v(" "),
         _c("td")
       ])

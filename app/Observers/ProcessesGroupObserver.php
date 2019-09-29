@@ -3,11 +3,11 @@
 namespace App\Observers;
 
 use App\ProcessesGroup;
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class ProcessesGroupObserver
 {
-    use CommonTrait;
+    use Commonable;
 
     public function creating(ProcessesGroup $processes_group)
     {

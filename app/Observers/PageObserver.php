@@ -4,11 +4,11 @@ namespace App\Observers;
 
 use App\Page;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class PageObserver
 {
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Page $page)
     {

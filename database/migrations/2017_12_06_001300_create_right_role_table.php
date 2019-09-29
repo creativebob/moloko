@@ -22,7 +22,7 @@ class CreateRightRoleTable extends Migration
             $table->bigInteger('role_id')->nullable()->unsigned()->comment('ID категории пользователя');
             $table->foreign('role_id')->references('id')->on('roles');
 
-            $table->boolean('display')->default(0)->comment('Отображение на сайте');
+            $table->boolean('display')->default(1)->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 

@@ -31,7 +31,10 @@ class ConsignmentsItemController extends Controller
         $data = $request->input();
         $consignment_item = (new ConsignmentsItem())->create($data);
 
-        $consignment_item->load('cmv.article');
+        $consignment_item->load([
+            'cmv.article',
+            'entity:id,name'
+        ]);
 
         return response()->json($consignment_item);
     }
@@ -53,7 +56,10 @@ class ConsignmentsItemController extends Controller
         $data = $request->input();
         $consignment_item->update($data);
 
-        $consignment_item->load('cmv.article');
+        $consignment_item->load([
+            'cmv.article',
+            'entity:id,name'
+        ]);
 
         return response()->json($consignment_item);
     }

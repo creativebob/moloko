@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
 
-            $table->boolean('display')->default(0)->comment('Отображение на сайте');
+            $table->boolean('display')->default(1)->comment('Отображение на сайте');
 
             $table->timestamps();
 

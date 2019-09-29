@@ -1,17 +1,17 @@
 <template>
     <tr>
         <td>{{ index + 1 }}</td>
-        <td>{{ item.id }}</td>
+        <td>{{ item.entity.name }}</td>
         <td>{{ item.cmv.article.name }}</td>
 
         <td @click="changeCount = true">
-            <template v-if="changeCount">
+            <template v-if="isChangeCount">
                 <input
-                        @keydown.enter.prevent="updateItem"
-                        type="number"
-                        autofocus
-                        @focusout="changeCount = false"
-                        v-model="count"
+                    @keydown.enter.prevent="updateItem"
+                    type="number"
+                    v-focus
+                    @focusout="changeCount = false"
+                    v-model="count"
                 >
 <!--                <input-digit-component name="count" rate="2" :value="item.count" v-on:countchanged="changeCount"></input-digit-component>-->
             </template>
@@ -19,28 +19,27 @@
         </td>
 
         <td @click="changePrice = true">
-            <template v-if="changePrice">
+            <template v-if="isChangePrice">
                 <input
-                        @keydown.enter.prevent="updateItem"
-                        type="number"
-                        autofocus
-                        @focusout="changePrice = false"
-                        v-model="price"
+                    @keydown.enter.prevent="updateItem"
+                    type="number"
+                    v-focus
+                    @focusout="changePrice = false"
+                    v-model="price"
                 >
             </template>
             <template v-else="changePrice">{{ item.price }}</template>
         </td>
 
-        <td>{{ item.total }}</td>
+        <td>{{ item.amount }}</td>
         <!--			<td>{{ item.vat_rate }}</td>-->
         <!--			<td>{{ item.amount_vat }}</td>-->
         <!--			<td>{{ item.total }}</td>-->
         <td>
             <a
+                class="icon-delete sprite"
                 @click="deleteItem"
-                :disabled="disabledButton"
-                class="button tiny"
-            >Удалить</a>
+            ></a>
         </td>
     </tr>
 </template>
@@ -58,46 +57,59 @@
                 price: this.item.price,
                 changeCount: false,
                 changePrice: false,
-                disabledButton: false,
             }
         },
         computed: {
             isChangeCount() {
-                return this.changeCount = !this.changeCount
+                if (this.changeCount) {
+                    this.changePrice = false
+                }
+                return this.changeCount
             },
             isChangePrice() {
-                return this.changePrice = !this.changePrice
+                if (this.changePrice) {
+                    this.changeCount = false
+                }
+                return this.changePrice
             },
+
         },
         methods: {
             updateItem: function() {
+                this.changeCount = false;
+                this.changePrice = false;
                 axios
                     .patch('/admin/consignments_items/' + this.item.id, {
                         count: this.count,
                         price: this.price
                     })
                     .then(response => {
-                            this.$parent.updItem(response.data, this.index);
-                            this.changeCount = false
-                            this.changePrice = false
+                            this.$parent.updateItems(response.data, this.index);
                     })
                     .catch(error => {
                         console.log(error)
                     });
             },
             deleteItem: function() {
-                this.disabledButton = true;
                 axios
                     .delete('/admin/consignments_items/' + this.item.id)
                     .then(response => {
-                        if(response.data == true) {
-                            this.$parent.delItem(this.index);
+                        if(response.data === true) {
+                            this.$parent.deleteItems(this.index);
                         }
                     })
                     .catch(error => {
                         console.log(error)
                     });
             },
+        },
+        directives: {
+            focus: {
+                // directive definition
+                inserted: function (el) {
+                    el.focus()
+                }
+            }
         }
     }
 </script>

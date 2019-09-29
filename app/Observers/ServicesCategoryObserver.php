@@ -3,7 +3,7 @@
 namespace App\Observers;
 
 use App\Observers\Traits\CategoriesTrait;
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 use App\Observers\Traits\DirectionTrait;
 use App\Observers\Traits\ProductsCategoriesTrait;
 use App\ServicesCategory as Category;
@@ -16,7 +16,7 @@ class ServicesCategoryObserver
         $this->model ='App\ServicesCategory';
     }
 
-    use CommonTrait;
+    use Commonable;
     use CategoriesTrait;
     use ProductsCategoriesTrait;
     use DirectionTrait;

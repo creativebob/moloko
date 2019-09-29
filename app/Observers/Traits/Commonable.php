@@ -2,7 +2,7 @@
 
 namespace App\Observers\Traits;
 
-trait CommonTrait
+trait Commonable
 {
 
 	public function store($item)

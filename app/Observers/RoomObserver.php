@@ -4,12 +4,12 @@ namespace App\Observers;
 
 use App\Room;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class RoomObserver
 {
 
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Room $room)
     {

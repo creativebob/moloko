@@ -4,11 +4,11 @@ namespace App\Observers;
 
 use App\Service;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class ServiceObserver
 {
-    use CommonTrait;
+    use Commonable;
 
     public function creating(Service $service)
     {

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -46,8 +47,6 @@ class Consignment extends Model
     protected $dates = ['deleted_at', 'receipt_date'];
     protected $fillable = [
         'supplier_id',
-        'company_id',
-        // 'filial_id',
         'name',
         'description',
         'amount',
@@ -61,6 +60,11 @@ class Consignment extends Model
         'system',
         'moderation'
     ];
+
+    public function setReceiptDateAttribute($value)
+    {
+        $this->attributes['receipt_date'] = Carbon::createFromFormat('d.m.Y', $value);
+    }
 
     // Компания
     public function company()

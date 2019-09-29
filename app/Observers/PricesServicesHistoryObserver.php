@@ -4,13 +4,13 @@ namespace App\Observers;
 
 use App\PricesServicesHistory;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 use Carbon\Carbon;
 
 class PricesServicesHistoryObserver
 {
 
-    use CommonTrait;
+    use Commonable;
 
     public function creating(PricesServicesHistory $prices_services_history)
     {

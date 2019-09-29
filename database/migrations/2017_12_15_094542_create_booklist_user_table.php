@@ -22,7 +22,7 @@ class CreateBooklistUserTable extends Migration
             $table->bigInteger('user_id')->nullable()->unsigned()->comment('ID пользователя');
             $table->foreign('user_id')->references('id')->on('users');
 
-            $table->boolean('display')->default(0)->comment('Отображение на сайте');
+            $table->boolean('display')->default(1)->comment('Отображение на сайте');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
 

@@ -6,11 +6,11 @@ use App\News;
 
 use Illuminate\Support\Str;
 
-use App\Observers\Traits\CommonTrait;
+use App\Observers\Traits\Commonable;
 
 class NewsObserver
 {
-    use CommonTrait;
+    use Commonable;
 
     public function creating(News $cur_news)
     {

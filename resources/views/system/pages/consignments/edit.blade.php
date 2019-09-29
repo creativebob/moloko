@@ -40,7 +40,7 @@
 
                     <div class="small-6 medium-3 cell">
                         <label>Дата
-                            @include('includes.inputs.date', ['name' => 'receipt_date', 'value' => isset($consignment->receipt_date) ? $consignment->receipt_date->format('d.m.Y') : now()->format('d.m.Y')])
+                            @include('includes.inputs.date', ['name' => 'receipt_date', 'value' => $consignment->receipt_date->format('d.m.Y')])
                         </label>
                     </div>
 
@@ -52,7 +52,7 @@
 
                     <div class="small-12 medium-6 cell">
                         <label>Сумма
-                            <input-digit-component name="amount" rate="2" :value="{{ $consignment->amount ?? 0 }}"></input-digit-component>
+{{--                            <input-digit-component name="amount" rate="2" :value="{{ $consignment->amount ?? 0 }}"></input-digit-component>--}}
                             {{-- @include('includes.inputs.digit',
                                 [
                                 'name' => 'amount',
