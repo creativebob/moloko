@@ -37,7 +37,7 @@
                     <th class="td-amount">Сумма</th>
                     <th class="td-description">Коментарий</th>
                     <th class="td-payment">Оплачено</th>
-                    <th class="td-stage">Этап</th>
+                    <th class="td-status">Статус</th>
                     <th class="td-created_at">Создана</th>
                     <th class="td-author">Автор</th>
                     <th class="td-delete"></th>
@@ -67,8 +67,7 @@
 
                     <td class="td-receipt_date">
                         <a href="/admin/{{ $consignment->getTable() }}/{{ $consignment->id }}/edit">
-                        <span>{{ isset($consignment->receipt_date) ? $consignment->receipt_date->format('d.m.Y') : null }}</span></a><br>
-                        <span class="tiny-text">{{ isset($consignment->receipt_date) ? $consignment->receipt_date->format('H:i') : null }}</span>
+                        <span>{{ isset($consignment->receipt_date) ? $consignment->receipt_date->format('d.m.Y') : null }}</span></a>
                     </td>
 
 
@@ -110,7 +109,7 @@
                         <td class="td-payment">{{ num_format($consignment->payment, 0) }}
                           <br><span class="tiny-text">{{ num_format($consignment->amount - $consignment->payment, 0) }}</span>
                       </td>
-                      <td class="td-stage">{{ $consignment->stage->name ?? '' }}</td>
+                      <td class="td-stage">{{ $consignment->status ?? '' }}</td>
                       <td class="td-created_at">
                         <span>{{ $consignment->created_at->format('d.m.Y') }}</span><br>
                         <span class="tiny-text">{{ $consignment->created_at->format('H:i') }}</span>

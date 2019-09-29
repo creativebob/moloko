@@ -3843,9 +3843,49 @@ a#task-toggle{
         }
 
     }
+
 }
 
+.table-consignments {
+    border-collapse: separate;
+    border-spacing: 0px 4px !important;
 
+    thead {
+
+        background-color: transparent;
+        tr th{
+            background-color: transparent !important;
+            border-bottom: 1px solid #000;
+            font-size: 0.9rem;
+            font-family: $SUISB;
+            font-weight: 400;
+        }
+    }
+
+    tr td{
+        background-color: #fff;
+        border-top: 1px solid #fff;
+        padding: 3px 0.625rem 0.1rem;
+    }
+
+    td.td-delete, th.td-delete{
+        width: 52px;
+    }
+
+    tr:first-child td{
+        background-color: #fff;
+    }
+
+    tfoot{
+        background-color: transparent;
+
+        td{
+            padding: 0.4rem 0.625rem 0.3rem;
+            background-color: transparent !important;
+        }
+
+    }
+}
 
 
 

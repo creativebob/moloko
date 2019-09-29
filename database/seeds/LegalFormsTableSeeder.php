@@ -84,6 +84,30 @@ class LegalFormsTableSeeder extends Seeder
                 'sort' => 9,
                 'author_id' => 1,
             ],
+            [
+                'company_id' => null,
+                'name' => 'ФГБОУ ВО',
+                'full_name' => 'Федеральное государственное бюджетное образовательное учреждение Высшего образования',
+                'description' => null,
+                'sort' => 10,
+                'author_id' => 1,
+            ],
+            [
+                'company_id' => null,
+                'name' => 'АО',
+                'full_name' => 'Акционерное общество',
+                'description' => null,
+                'sort' => 11,
+                'author_id' => 1,
+            ],
+            [
+                'company_id' => null,
+                'name' => 'ФГКОУ ВО',
+                'full_name' => 'Федеральное государственное казенное образовательное учреждение высшего образования',
+                'description' => null,
+                'sort' => 12,
+                'author_id' => 1,
+            ],
         ]);
     }
 }

@@ -1,6 +1,6 @@
 <template>
 
-	<table class="table-compositions">
+	<table class="table-consignments">
 		<thead>
 			<tr>
 				<th>№</th>
@@ -27,7 +27,7 @@
 					:del-item="delItem"
 			></consignments-item-component>
 
-			<tr>
+			<tr class="tr-add">
 				<td>{{ items.length + 1}}</td>
 				<td>
 					<select

@@ -143,7 +143,7 @@ class ConsignmentController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $consignment = ContainersConsignment::moderatorLimit($answer)
+        $consignment = Consignment::moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->findOrFail($id);
@@ -158,7 +158,7 @@ class ConsignmentController extends Controller
         $consignment->amount = $request->amount;
 
         // Дата приема
-        $consignment->receipt_date = $request->has('draft') ? null : Carbon::parse($request->receipt_date)->format('Y-m-d');
+        $consignment->receipt_date = Carbon::parse($request->receipt_date)->format('Y-m-d');
 
         $consignment->draft = $request->draft;
 
@@ -176,7 +176,7 @@ class ConsignmentController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $consignment = ContainersConsignment::moderatorLimit($answer)
+        $consignment = Consignment::moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->findOrFail($id);

@@ -57,7 +57,7 @@ class GoodsController extends Controller
             'author_id',
             'company_id',
             'display',
-            'system'
+            'system',
         ];
 
         $goods = Goods::with([
@@ -109,8 +109,8 @@ class GoodsController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('id', 'desc')
         ->paginate(30);
-        // dd($goods);
 
+        // dd($goods);
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------

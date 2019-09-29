@@ -63,7 +63,6 @@
                         </label>
                     </div>
 
-
                     <div class="small-12 cell checkbox">
                         {!! Form::hidden('draft', 0) !!}
                         {!! Form::checkbox('draft', 1, null, ['id' => 'draft']) !!}

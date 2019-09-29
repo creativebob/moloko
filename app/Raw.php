@@ -115,4 +115,28 @@ class Raw extends Model
         return $this->belongsTo(Unit::class, 'unit_portion_goods_id');
     }
 
+    // Получаем себестоимость
+    public function cost($manufacturer_id = null, $supplier_id = null)
+    {
+        return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $manufacturer_id)->where('supplier_id', $supplier_id);
+    }
+
+    // Геттер: Функция получения веса в кг. учитывая все надстройки и переопределения в еденицах измерения
+    public function getWeightAttribute($value)
+    {
+        // Расчет если есть порции
+        if($this->portion_goods_status){
+            return $this->article->weight / $this->article->unit->ratio * $this->portion_goods_count * $this->unit_portion_goods->ratio;
+        } else {
+
+            // Расчет если указано в штуках
+            if($this->article->unit_id == 32){
+                return $this->article->weight * $this->article->unit_weight->ratio;
+
+            // Расчет если в единицах
+            } else {
+                return $this->article->weight;
+            }
+        }
+    }
 }

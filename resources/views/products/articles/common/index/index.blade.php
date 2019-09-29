@@ -42,6 +42,7 @@
                     <th class="td-category">Категория</th>
                     {{-- <th class="td-description">Описание</th> --}}
                     <th class="td-manually">Артикул</th>
+                    <th class="td-cost">c/c</th>
                     {{-- <th class="td-author">Автор</th> --}}
 
                     @if($page_info->alias == 'goods')
@@ -131,6 +132,10 @@
 
                     <td class="td-manually" title="Артикул">
                         {{ $item->article->manually ?? '' }}
+                    </td>
+
+                    <td class="td-cost" title="Себестоимость">
+                        {{ $item->cost(2, 1)->first()->cost_average ?? '' }}
                     </td>
 
                     {{-- <td class="td-author">@if(isset($item->author->first_name)) {{ $item->author->name }} @endif</td> --}}
