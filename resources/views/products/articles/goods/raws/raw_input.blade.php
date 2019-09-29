@@ -48,9 +48,7 @@
 
 			{{ Form::text('raws['.$raw->id.'][leftover]', $raw->pivot ? $raw->pivot->leftover : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder raw-leftover', 'id'=>'4', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="4" class="text-to-placeholder">
-
 				{{ $raw->portion_goods_abbreviation ?? $raw->unit_for_composition->abbreviation ?? $raw->article->group->unit->abbreviation }}
-
 			</label>
 			<div class="sprite-input-right find-status" id="name-check"></div>
 		</div>
@@ -61,19 +59,15 @@
 
 	<td>
 		@php if(isset($raw->pivot->use)){$count = $raw->pivot->use;} else {$count = 0;}; @endphp
-		@if($raw->portion_goods_status)
-			<input style="display: none;" class="raw-weight" value="{{ $raw->article->weight / $raw->article->unit->ratio * $raw->portion_goods_count * $raw->unit_portion_goods->ratio * 1000 }}">
-			<span class="raw-weight-count" data-count="{{ $raw->article->weight / $raw->article->unit->ratio * $raw->portion_goods_count * $raw->unit_portion_goods->ratio * 1000 * $count }}">{{ num_format($raw->article->weight / $raw->article->unit->ratio * $raw->portion_goods_count * $raw->unit_portion_goods->ratio * 1000 * $count, 0) }}</span>
-		@else
-			@if($raw->article->unit_id == 32)
-				<input style="display: none;" class="raw-weight" value="{{ $raw->article->weight * $raw->article->unit_weight->ratio * 1000 }}">
-				<span class="raw-weight-count" data-count="{{ $raw->article->weight * $raw->article->unit_weight->ratio * 1000 * $count }}>{{ num_format($raw->article->weight * $raw->article->unit_weight->ratio * 1000 * $count, 0) }}</span>
-			@else
-				<input style="display: none;" class="raw-weight" value="{{ 1000 }}">
-				<span class="raw-weight-count" data-count="{{ 1000 * $count }}>{{ num_format(1000 * $count, 0) }}</span>
-			@endif
-		@endif
+			<span class="raw-weight-count" data-weight="{{ $raw->weight * 1000 }}" data-weight-count="{{ $raw->weight * 1000 * $count }}">{{ num_format($raw->weight * 1000 * $count, 0) }}</span>
 		<span>гр.</span>
+	</td>
+	<td>
+		@php 
+			if(isset($raw->cost(1, 1)->first()->cost_average)){$cost = $raw->cost(1, 1)->first()->cost_average;} else {$cost = 0;};
+		@endphp
+			<span class="raw-cost-count" data-cost="{{ $cost }}" data-cost-count="{{ $cost * $count }}">{{ num_format($cost * $count, 0) }}</span>
+		<span>руб.</span>
 	</td>
 	<td class="td-delete">
 		@empty($disabled)

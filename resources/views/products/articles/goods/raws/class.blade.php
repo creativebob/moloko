@@ -49,17 +49,32 @@
         fill(elem) {
 
             let parent = $(elem).closest('.item');
-            let val = $(elem).val();
 
-            parent.find('.raw-use').val(val);
+            // Получаем значение кол-ва сырья в позиции
+            let count = $(elem).val();
 
-            let weight = parent.find('.raw-weight').attr('value');
-            let weight_count = weight * val;
+            // Автозаполнение поля кол-ва использования
+            parent.find('.raw-use').val(count);
 
-            elem = parent.find('.raw-weight-count');
-            elem.text(this.level(weight_count));
+            let elem_weight = 0; let elem_cost = 0;
+            elem_weight = parent.find('.raw-weight-count');
+            elem_cost = parent.find('.raw-cost-count');
 
-            elem.data('count', weight_count);
+            // Получаем вес сырья
+            let weight = elem_weight.data('weight');
+            let cost = elem_cost.data('cost');
+
+            // Вычисляем общий вес позиции
+            let weight_count = weight * count;
+            let cost_count = cost * count;
+
+            // Добавляем в span для отображения
+            elem_weight.text(this.level(weight_count));
+            elem_cost.text(this.level(cost_count));
+
+            // Добавляем в data для использования в вычислениях
+            elem_weight.data('weight_count', weight_count);
+            elem_cost.data('cost_count', cost_count);
 
             this.totalCount();
             // parent.find('.raw-waste').val(0);
@@ -68,17 +83,22 @@
 
         totalCount() {
 
-            let all_raws = $('#table-raws tr td .raw-weight-count');
-            let summ = 0;
-            let result = 0;
+            let all_raws_weight = $('#table-raws tr td .raw-weight-count');
+            let all_raws_cost = $('#table-raws tr td .raw-cost-count');
 
-            all_raws.each(function(){
-                summ += $(this).data('count');
+            let summ_weight = 0; let summ_cost = 0;
+
+            all_raws_weight.each(function(){
+                summ_weight += $(this).data('weight-count');
             });
 
-            $('.total_count_weight').text(this.level(summ));
-        }
+            all_raws_cost.each(function(){
+                summ_cost += $(this).data('cost-count');
+            });
 
+            $('.total_count_weight').text(this.level(summ_weight));
+            $('.total_count_cost').text(this.level(summ_cost));
+        }
 
         level(value) {
             return value.toLocaleString();

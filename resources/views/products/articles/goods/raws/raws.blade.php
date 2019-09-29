@@ -47,6 +47,7 @@
 						<th>Остаток:</th>
 						<th>Операция над остатком:</th> --}}
 						<th>Вес</th>
+						<th>Себестоимость</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -70,6 +71,9 @@
 						<td></td>
 						<td>
 							<span class="total_count_weight">0</span> <span>гр.</span>
+						</td>
+						<td>
+							<span class="total_count_cost">0</span> <span>руб.</span>
 						</td>
 						<td></td>
 					</tr>

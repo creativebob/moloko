@@ -42445,7 +42445,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("table", { staticClass: "table-compositions" }, [
+  return _c("table", { staticClass: "table-consignments" }, [
     _vm._m(0),
     _vm._v(" "),
     _c(
@@ -42464,7 +42464,7 @@ var render = function() {
           })
         }),
         _vm._v(" "),
-        _c("tr", [
+        _c("tr", { staticClass: "tr-add" }, [
           _c("td", [_vm._v(_vm._s(_vm.items.length + 1))]),
           _vm._v(" "),
           _c("td", [

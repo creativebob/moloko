@@ -12361,6 +12361,46 @@ a#task-toggle {
   background-color: transparent !important;
 }
 
+.table-consignments {
+  border-collapse: separate;
+  border-spacing: 0px 4px !important;
+}
+
+.table-consignments thead {
+  background-color: transparent;
+}
+
+.table-consignments thead tr th {
+  background-color: transparent !important;
+  border-bottom: 1px solid #000;
+  font-size: 0.9rem;
+  font-family: "SegoeUISemiBold";
+  font-weight: 400;
+}
+
+.table-consignments tr td {
+  background-color: #fff;
+  border-top: 1px solid #fff;
+  padding: 3px 0.625rem 0.1rem;
+}
+
+.table-consignments td.td-delete, .table-consignments th.td-delete {
+  width: 52px;
+}
+
+.table-consignments tr:first-child td {
+  background-color: #fff;
+}
+
+.table-consignments tfoot {
+  background-color: transparent;
+}
+
+.table-consignments tfoot td {
+  padding: 0.4rem 0.625rem 0.3rem;
+  background-color: transparent !important;
+}
+
 .widget-table th {
   font-size: 0.8rem;
 }
