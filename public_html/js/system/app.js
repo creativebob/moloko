@@ -41377,6 +41377,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: {
@@ -41403,7 +41405,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			// Категории для компонента выбора
 			categories: this.selectData.categories,
 			categoriesItems: this.selectData.items,
-			change: false
+			change: false,
+			itemUnit: null
 		};
 	},
 
@@ -41481,6 +41484,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		setId: function setId(id) {
 			this.id = id;
+			// let arr = this.categoriesItems.filter(item => {
+			// 	if (item.id === this.id) {
+			// 		return item
+			// 	}
+			// })
+			//
+			// this.itemUnit = arr[0].article.unit.name;
 		},
 
 		addItem: function addItem() {
@@ -42232,6 +42242,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'consignments-item-component',
@@ -42364,6 +42377,8 @@ var render = function() {
       ],
       2
     ),
+    _vm._v(" "),
+    _c("td", [_vm._v(_vm._s(_vm.item.cmv.article.unit.abbreviation))]),
     _vm._v(" "),
     _c(
       "td",
@@ -42541,6 +42556,8 @@ var render = function() {
             1
           ),
           _vm._v(" "),
+          _c("td", [_vm._v(_vm._s(_vm.itemUnit))]),
+          _vm._v(" "),
           _c(
             "td",
             [
@@ -42574,7 +42591,7 @@ var render = function() {
     _vm._v(" "),
     _c("tfoot", [
       _c("tr", [
-        _c("td", { attrs: { colspan: "4" } }, [_vm._v("Итого:")]),
+        _c("td", { attrs: { colspan: "5" } }, [_vm._v("Итого:")]),
         _vm._v(" "),
         _c("td", [_vm._v("Позиций: " + _vm._s(_vm.totalItemsCount))]),
         _vm._v(" "),
@@ -42605,6 +42622,8 @@ var staticRenderFns = [
         _c("th", [_vm._v("Наименование позиции:")]),
         _vm._v(" "),
         _c("th", [_vm._v("Кол-во:")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Ед. изм.:")]),
         _vm._v(" "),
         _c("th", [_vm._v("Цена:")]),
         _vm._v(" "),

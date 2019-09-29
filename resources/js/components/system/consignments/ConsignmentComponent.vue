@@ -7,6 +7,7 @@
 				<th>Тип:</th>
 				<th>Наименование позиции:</th>
 				<th>Кол-во:</th>
+				<th>Ед. изм.:</th>
 				<th>Цена:</th>
 				<th>Сумма:</th>
 	<!--			<th>% НДС:</th>-->
@@ -48,6 +49,7 @@
 				<td>
 					<input-digit-component name="count" rate="2" :value="count" v-on:countchanged="changeCount"></input-digit-component>
 				</td>
+				<td>{{ itemUnit }}</td>
 				<td>
 					<input-digit-component name="price" :value="price" v-on:countchanged="changePrice"></input-digit-component>
 				</td>
@@ -76,7 +78,7 @@
 
 		<tfoot>
 			<tr>
-				<td colspan="4">Итого:</td>
+				<td colspan="5">Итого:</td>
 				<td>Позиций: {{ totalItemsCount }}</td>
 				<td>
 					<input name="amount" type="hidden" :value="totalItemsPrice">
@@ -116,6 +118,7 @@
 				categories: this.selectData.categories,
 				categoriesItems: this.selectData.items,
 				change: false,
+				itemUnit: null
 			}
 		},
 		computed: {
@@ -189,6 +192,13 @@
 			},
 			setId: function (id) {
 				this.id = id;
+				// let arr = this.categoriesItems.filter(item => {
+				// 	if (item.id === this.id) {
+				// 		return item
+				// 	}
+				// })
+				//
+				// this.itemUnit = arr[0].article.unit.name;
 			},
 
 			addItem: function() {

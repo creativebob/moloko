@@ -753,7 +753,8 @@ Route::resource('applications', 'ApplicationController')->middleware('auth');
 
 // -------------------------------------- Товарные накладные ---------------------------------------------
 
-Route::any('/consignments/categories', 'ConsignmentController@categories');
+Route::any('/consignments/categories', 'ConsignmentController@categories')->name('consignments.categories');;
+Route::patch('/consignments/{id}/posting', 'ConsignmentController@posting')->name('consignments.posting');
 // Основные методы
 Route::resource('/consignments', 'ConsignmentController');
 

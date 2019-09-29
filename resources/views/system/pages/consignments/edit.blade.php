@@ -97,6 +97,10 @@
         {{ Form::submit('Редактировать', ['class' => 'button']) }}
     </div>
 
+    <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
+        {{ Form::submit('Оприходовать', ['class' => 'button', 'id' => 'button-posting']) }}
+    </div>
+
 </div>
 
 {{ Form::close() }}
@@ -106,6 +110,14 @@
 @push('scripts')
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.pickmeup-script')
+
+    <script>
+        $(document).on('click', '#button-posting', function () {
+            let id = '{{ $consignment->id }}';
+            $(this).closest('form').attr('action', '/admin/consignments/' + id + '/posting');
+        })
+
+    </script>
 @endpush
 
 

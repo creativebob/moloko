@@ -55,6 +55,7 @@ class Consignment extends Model
         'stock_id',
         'author_id',
         'draft',
+	    'is_posted',
 
         'display',
         'system',

@@ -51,17 +51,18 @@ class Cost extends Model
     
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = [
-        'cost_mix',
-        'cost_max',
-        'cost_average',
+        'mix',
+        'max',
+        'average',
         'serial',
         'author_id',
         'created_at',
         'company_id',
         'filial_id',
-        'display',
-        'system',
-        'moderation'
+	    
+        'cmv_id',
+        'cmv_type',
+        'manufacturer_id'
     ];
 
     public function cmv()

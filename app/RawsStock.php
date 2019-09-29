@@ -48,14 +48,13 @@ class RawsStock extends Model
 
     protected $fillable = [
         'stock_id',
-        'raw_id',
+	    'cmv_id',
+		'manufacturer_id',
+	    'stock_id',
+	    'supplier_id',
         'count',
         'weight',
         'serial',
-
-        'display',
-        'system',
-        'moderation'
     ];
 
     // Получаем компанию.

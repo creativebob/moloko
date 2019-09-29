@@ -32,10 +32,10 @@ class CreateCostsTable extends Migration
             $table->foreign('supplier_id')->references('id')->on('suppliers');
 
             $table->string('serial')->nullable()->comment('Серийный номер');
-
-            $table->integer('cost_average')->nullable()->unsigned()->comment('Среднее значение');
-            $table->integer('cost_min')->nullable()->unsigned()->comment('Минимальное значение');
-            $table->integer('cost_max')->nullable()->unsigned()->comment('Максимальное значение');
+            
+	        $table->decimal('min', 12, 4)->default(0)->comment('Минимальное значение');
+	        $table->decimal('max', 12, 4)->default(0)->comment('Максимальное значение');
+	        $table->decimal('average', 16, 8)->default(0)->comment('Среднее значение');
 
             $table->timestamps();
             $table->softDeletes();

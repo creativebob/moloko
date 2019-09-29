@@ -47,15 +47,14 @@ class GoodsStock extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'stock_id',
-        'goods_id',
-        'count',
-        'weight',
-        'serial',
-
-        'display',
-        'system',
-        'moderation'
+	    'stock_id',
+	    'cmv_id',
+	    'manufacturer_id',
+	    'stock_id',
+	    'supplier_id',
+	    'count',
+	    'weight',
+	    'serial',
     ];
 
     // Получаем компанию.

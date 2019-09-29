@@ -40,11 +40,11 @@ class ArticlesCategoriesWithItemsComposer
                 $entity_alias => function ($q) {
                     $q->where('archive', false)
                         ->whereHas('article', function ($q) {
-	        	            $q->where('draft', false)
-                            ->select([
-                                'id',
-                                'name'
-                            ]);
+	        	            $q->with([
+			                    'unit',
+			                    'unit_potion'
+		                    ])
+		                    ->where('draft', false);
 	                    });
                 }
             ])

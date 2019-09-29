@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Consignment;
+use App\Cost;
 use App\Entity;
 use App\Http\Requests\ConsignmentUpdateRequest;
 use Illuminate\Http\Request;
@@ -95,7 +96,7 @@ class ConsignmentController extends Controller
                 $q->with([
                     'cmv' => function ($q) {
                         $q->with([
-                            'article:id,name'
+                            'article.unit'
                         ]);
                     },
                     'entity:id,name',
@@ -188,11 +189,11 @@ class ConsignmentController extends Controller
                 $entity_alias => function ($q) {
                     $q->where('archive', false)
                         ->whereHas('article', function ($q) {
-                            $q->where('draft', false)
-                                ->select([
-                                    'id',
-                                    'name'
-                                ]);
+                            $q->with([
+	                            'unit',
+	                            'unit_potion'
+                            ])
+                            ->where('draft', false);
                         });
                 }
             ])
@@ -242,4 +243,97 @@ class ConsignmentController extends Controller
 
         return response()->json($data);
     }
+	
+	public function posting(ConsignmentUpdateRequest $request, $id)
+	{
+		
+		// Получаем из сессии необходимые данные (Функция находиться в Helpers)
+		$answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('update'));
+		
+		// ГЛАВНЫЙ ЗАПРОС:
+		$consignment = Consignment::moderatorLimit($answer)
+			->authors($answer)
+			->systemItem($answer)
+			->findOrFail($id);
+		
+		// Подключение политики
+		$this->authorize(getmethod('update'), $consignment);
+		
+		$data = $request->input();
+		$consignment->update($data);
+		
+		$consignment->load([
+			'items' => function($q) {
+				$q->with([
+					'cmv' => function ($q) {
+						$q->with([
+							'article'
+						]);
+					},
+					'entity'
+				]);
+			},
+		]);
+//		dd($consignment);
+		
+		if ($consignment->items->isNotEmpty()) {
+			
+			$grouped_items = $consignment->items->groupBy('entity.alias');
+//			dd($grouped_items);
+			
+			foreach ($grouped_items as $alias => $items) {
+				$entity = Entity::where('alias', $alias.'_stocks')->first();
+				$model = 'App\\'.$entity->model;
+				
+				foreach ($items as $item) {
+					
+					$stock = $model::firstOrNew([
+						'cmv_id' => $item->cmv_id,
+						'manufacturer_id' => $item->cmv->article->manufacturer_id,
+						'stock_id' => $consignment->stock_id,
+					]);
+					
+					$stock->filial_id = $consignment->filial_id;
+					
+					$stock_count = $stock->count;
+					
+					$stock->count += $item->count;
+					$stock->weight += ($item->cmv->article->weight * $item->count);
+					$stock->volume += ($item->cmv->article->volume * $item->count);
+					$stock->save();
+					
+					$cost = Cost::firstOrNew([
+						'cmv_id' => $item->cmv_id,
+						'cmv_type' => $item->cmv_type,
+						'manufacturer_id' => $item->cmv->article->manufacturer_id,
+					]);
+					
+					if ($cost->id) {
+						$cost->min = ($item->price < $cost->min) ? $item->price : $cost->min;
+						$cost->max = ($item->price > $cost->max) ? $item->price : $cost->max;
+						
+						$cost_average = $cost->average;
+						$average = (($stock_count * $cost_average) + ($item->count * $item->price)) / $stock->count;
+						$cost->average = $average;
+					} else {
+						$cost->min = $item->price;
+						$cost->max = $item->price;
+						$cost->average = $item->price;
+					}
+					$cost->save();
+//					dd($cost);
+				}
+			}
+			
+			$consignment->update([
+				'is_posted', true
+			]);
+			
+			return redirect()->route('consignments.index');
+		} else {
+			abort(403, 'Накладная пуста');
+		}
+		
+		
+	}
 }

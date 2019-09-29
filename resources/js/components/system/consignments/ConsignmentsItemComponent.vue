@@ -16,7 +16,10 @@
 <!--                <input-digit-component name="count" rate="2" :value="item.count" v-on:countchanged="changeCount"></input-digit-component>-->
             </template>
             <template v-else="changeCount">{{ item.count }}</template>
+
+
         </td>
+        <td>{{ item.cmv.article.unit.abbreviation }}</td>
 
         <td @click="changePrice = true">
             <template v-if="isChangePrice">
