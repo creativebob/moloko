@@ -41692,7 +41692,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         closeCategories: function closeCategories() {
             if (this.change) {
                 this.listItems = [];
-                this.clear();
+                alert('сносим текст');
+                this.text = '';
+                this.id = null;
+                this.error = false;
+                this.results = [];
+                this.showCategories = false;
+
+                this.setId();
             }
             return this.change;
         }
@@ -41753,15 +41760,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.search = false;
             this.results = [];
             this.listItems = [];
-            this.showCategories = false;
-
-            this.setId();
-        },
-        clear: function clear() {
-            this.text = '';
-            this.id = null;
-            this.error = false;
-            this.results = [];
             this.showCategories = false;
 
             this.setId();
@@ -42293,7 +42291,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     directives: {
         focus: {
-            // directive definition
             inserted: function inserted(el) {
                 el.focus();
             }

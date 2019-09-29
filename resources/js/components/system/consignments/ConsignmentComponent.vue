@@ -160,7 +160,6 @@
 				this.price = value;
 			},
 			changeEntity: function() {
-
 				this.change = true;
 
 				let count = 0;

@@ -105,7 +105,6 @@
         },
         directives: {
             focus: {
-                // directive definition
                 inserted: function (el) {
                     el.focus()
                 }

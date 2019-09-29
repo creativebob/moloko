@@ -114,7 +114,14 @@
             closeCategories() {
                 if (this.change) {
                     this.listItems = [];
-                    this.clear();
+                    alert('сносим текст');
+                    this.text = '';
+                    this.id = null;
+                    this.error = false;
+                    this.results = [];
+                    this.showCategories = false;
+
+                    this.setId();
                 }
                 return this.change;
             }
@@ -173,15 +180,6 @@
                 this.search = false;
                 this.results = [];
                 this.listItems = [];
-                this.showCategories = false;
-
-                this.setId();
-            },
-            clear() {
-                this.text = '';
-                this.id = null;
-                this.error = false;
-                this.results = [];
                 this.showCategories = false;
 
                 this.setId();
