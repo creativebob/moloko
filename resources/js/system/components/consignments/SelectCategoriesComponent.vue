@@ -23,7 +23,6 @@
                 v-model="id"
                 maxlength="3"
                 pattern="[0-9]{3}"
-                @change="setId(id)"
         >
 
         <div
@@ -125,7 +124,6 @@
                     this.error = false;
                     this.results = [];
                     this.showCategories = false;
-
                     this.setId();
                 }
                 return this.change;
@@ -142,6 +140,7 @@
                 // }
 
                 if (this.text.length >= 2) {
+                    this.$emit('check-change');
                     this.results = this.selectCategoriesItems.filter(item => {
                         return item.article.name.toLowerCase().includes(this.text.toLowerCase());
                     });
@@ -156,7 +155,6 @@
             },
             toggleShowCategories() {
                 this.$emit('check-change');
-                // this.$parent.checkChange();
 
                 this.showCategories = !this.showCategories
                 if (!this.showCategories) {
@@ -171,11 +169,9 @@
                 this.search = false;
                 this.results = [];
                 this.showCategories = false;
-
                 this.setId();
             },
             addFromList(id) {
-
                 let it = this.selectCategoriesItems.filter(item => {
                     return item.id === id;
                 })
@@ -187,7 +183,6 @@
                 this.results = [];
                 this.listItems = [];
                 this.showCategories = false;
-
                 this.setId();
             },
             reset() {
@@ -196,8 +191,6 @@
                 this.error = false;
                 this.search = false;
                 this.results = [];
-
-                this.setId();
 
                 if (this.text.length > 0) {
                     this.check();
@@ -215,7 +208,6 @@
 
                 this.id = null;
                 this.name = '';
-
                 this.setId();
             },
             setId: function () {
