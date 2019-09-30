@@ -13,7 +13,9 @@
 	<!--			<th>% НДС:</th>-->
 	<!--			<th>НДС:</th>-->
 	<!--			<th>Всего:</th>-->
-				<th></th>
+				<th
+					v-if="!isPosted"
+				></th>
 			</tr>
 		</thead>
 
@@ -24,11 +26,15 @@
 					:item="item"
 					:index="index"
 					:key="item.id"
+					:is-posted="isPosted"
 					:upd-item="updateItems"
 					:del-item="deleteItems"
 			></consignments-item-component>
 
-			<tr class="tr-add">
+			<tr
+				v-if="!isPosted"
+				class="tr-add"
+			>
 				<td>{{ items.length + 1}}</td>
 				<td>
 					<select
@@ -44,7 +50,7 @@
 					</select>
 				</td>
 				<td>
-					<select-categories-component :select-categories="selectCategories" :select-categories-items="selectCategoriesItems" :change="change" :get-id="changeCount"></select-categories-component>
+					<select-categories-component :select-categories="selectCategories" :select-categories-items="selectCategoriesItems" :change="isChanged"></select-categories-component>
 				</td>
 				<td>
 					<input-digit-component name="count" rate="2" :value="count" v-on:countchanged="changeCount"></input-digit-component>
@@ -78,13 +84,12 @@
 
 		<tfoot>
 			<tr>
-				<td colspan="5">Итого:</td>
+				<td	colspan="5">Итого:</td>
 				<td>Позиций: {{ totalItemsCount }}</td>
-				<td>
-					<input name="amount" type="hidden" :value="totalItemsPrice">
-					Сумма: {{ totalItemsPrice }}
-				</td>
-				<td></td>
+				<td>Сумма: {{ totalItemsPrice }}</td>
+				<td
+					v-if="!isPosted"
+				></td>
 			</tr>
 		</tfoot>
 	</table>
@@ -137,7 +142,7 @@
 			totalItemsPrice() {
 				let price = 0;
 				this.items.forEach(function(item) {
-					return price += item.amount
+					return price += Number(item.amount)
 				});
 				return price;
 			},
@@ -152,6 +157,12 @@
 				return this.categoriesItems.filter(item => {
 					return item.entity_id === this.entity_id
 				})
+			},
+			isPosted() {
+				return this.consignment.is_posted === 1;
+			},
+			isChanged() {
+				return this.change;
 			},
 		},
 
@@ -192,13 +203,15 @@
 			},
 			setId: function (id) {
 				this.id = id;
-				// let arr = this.categoriesItems.filter(item => {
-				// 	if (item.id === this.id) {
-				// 		return item
-				// 	}
-				// })
-				//
-				// this.itemUnit = arr[0].article.unit.name;
+				if (id != null) {
+					this.categoriesItems.filter(item => {
+						if (item.id === id && item.entity_id === this.entity_id) {
+							this.itemUnit = item.article.unit.abbreviation;
+						}
+					});
+				} else {
+					this.itemUnit = null;
+				}
 			},
 
 			addItem: function() {

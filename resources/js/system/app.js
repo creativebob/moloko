@@ -19,12 +19,12 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('city-search-component', require('../components/system/CitySearchComponent.vue'));
-Vue.component('consignment-component', require('../components/system/consignments/ConsignmentComponent.vue'));
-Vue.component('input-digit-component', require('../components/system/InputDigitComponent.vue'));
-Vue.component('dropzone-component', require('../components/system/DropzoneComponent.vue'));
-Vue.component('rawcomposition-component', require('../components/system/RawCompositionComponent.vue'));
-Vue.component('articles-categories-with-groups-component', require('../components/system/ArticlesCategoriesWithGroupsComponent.vue'));
+Vue.component('city-search-component', require('./components/CitySearchComponent.vue'));
+Vue.component('consignment-component', require('./components/consignments/ConsignmentComponent.vue'));
+Vue.component('input-digit-component', require('./components/InputDigitComponent.vue'));
+Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
+Vue.component('rawcomposition-component', require('./components/RawCompositionComponent.vue'));
+Vue.component('articles-categories-with-groups-component', require('./components/ArticlesCategoriesWithGroupsComponent.vue'));
 
 
 /**

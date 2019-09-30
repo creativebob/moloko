@@ -10,9 +10,12 @@ use App\Consignment;
 use App\ConsignmentsItem;
 use App\Container;
 use App\ContainersCategory;
+use App\ContainersStock;
+use App\Cost;
 use App\Direction;
 use App\ExpendablesCategory;
 use App\GoodsCategory;
+use App\GoodsStock;
 use App\Menu;
 use App\Metric;
 use App\Observers\ArticlesGroupObserver;
@@ -23,9 +26,12 @@ use App\Observers\ConsignmentObserver;
 use App\Observers\ConsignmentsItemObserver;
 use App\Observers\ContainerObserver;
 use App\Observers\ContainersCategoryObserver;
+use App\Observers\ContainersStockObserver;
+use App\Observers\CostObserver;
 use App\Observers\DirectionObserver;
 use App\Observers\ExpendablesCategoryObserver;
 use App\Observers\GoodsCategoryObserver;
+use App\Observers\GoodsStockObserver;
 use App\Observers\MenuObserver;
 use App\Observers\MetricObserver;
 use App\Observers\PageObserver;
@@ -35,6 +41,7 @@ use App\Observers\PricesGoodsHistoryObserver;
 use App\Observers\PricesGoodsObserver;
 use App\Observers\PricesServicesHistoryObserver;
 use App\Observers\ProcessesGroupObserver;
+use App\Observers\RawsStockObserver;
 use App\Observers\RoomsCategoryObserver;
 use App\Observers\SectorObserver;
 use App\Observers\ServicesCategoryObserver;
@@ -47,6 +54,7 @@ use App\PricesGoods;
 use App\PricesGoodsHistory;
 use App\PricesServicesHistory;
 use App\ProcessesGroup;
+use App\RawsStock;
 use App\RoomsCategory;
 use App\Sector;
 use App\ServicesCategory;
@@ -148,6 +156,11 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Склады
         Stock::observe(StockObserver::class);
+        RawsStock::observe(RawsStockObserver::class);
+        ContainersStock::observe(ContainersStockObserver::class);
+        GoodsStock::observe(GoodsStockObserver::class);
+
+        Cost::observe(CostObserver::class);
 
         // Новости
         Rubricator::observe(RubricatorObserver::class);

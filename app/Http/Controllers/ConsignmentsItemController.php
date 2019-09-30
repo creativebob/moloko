@@ -32,7 +32,7 @@ class ConsignmentsItemController extends Controller
         $consignment_item = (new ConsignmentsItem())->create($data);
 
         $consignment_item->load([
-            'cmv.article',
+            'cmv.article.unit',
             'entity:id,name'
         ]);
 
@@ -57,7 +57,7 @@ class ConsignmentsItemController extends Controller
         $consignment_item->update($data);
 
         $consignment_item->load([
-            'cmv.article',
+            'cmv.article.unit',
             'entity:id,name'
         ]);
 

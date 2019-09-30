@@ -33,18 +33,14 @@ class ArticlesCategoriesWithItemsComposer
 
         $categories = $model::moderatorLimit($answer)
             ->companiesLimit($answer)
-//            ->with([
-//                $entity_alias.'.article:id,name'
-//            ])
             ->with([
                 $entity_alias => function ($q) {
-                    $q->where('archive', false)
+                    $q->with([
+                            'article.unit'
+                        ])
+                        ->where('archive', false)
                         ->whereHas('article', function ($q) {
-	        	            $q->with([
-			                    'unit',
-			                    'unit_potion'
-		                    ])
-		                    ->where('draft', false);
+	        	            $q->where('draft', false);
 	                    });
                 }
             ])
@@ -66,7 +62,6 @@ class ArticlesCategoriesWithItemsComposer
                 foreach ($category->$entity_alias as $item) {
                     $item->category_id = $category->id;
                     $item->entity_id = $entity->id;
-                    $item->name = $item->article->name;
                     $items[] = $item;
                 }
             }
@@ -77,7 +72,6 @@ class ArticlesCategoriesWithItemsComposer
                         foreach ($childCategory->$entity_alias as $item) {
                             $item->category_id = $category->id;
                             $item->entity_id = $entity->id;
-                            $item->name = $item->article->name;
                             $items[] = $item;
                         }
                     }

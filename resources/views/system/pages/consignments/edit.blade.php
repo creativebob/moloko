@@ -97,9 +97,11 @@
         {{ Form::submit('Редактировать', ['class' => 'button']) }}
     </div>
 
+    @if(!$consignment->is_posted)
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
         {{ Form::submit('Оприходовать', ['class' => 'button', 'id' => 'button-posting']) }}
     </div>
+        @endif
 
 </div>
 

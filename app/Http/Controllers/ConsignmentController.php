@@ -136,6 +136,9 @@ class ConsignmentController extends Controller
         $data = $request->input();
         $consignment->update($data);
 
+        $consignment->amount = $this->getAmount($consignment);
+        $consignment->save();
+
         return redirect()->route('consignments.index');
     }
 
@@ -182,18 +185,14 @@ class ConsignmentController extends Controller
 
         $categories = $model::moderatorLimit($answer)
             ->companiesLimit($answer)
-//            ->with([
-//                $entity_alias.'.article:id,name'
-//            ])
             ->with([
                 $entity_alias => function ($q) {
-                    $q->where('archive', false)
+                    $q->with([
+                        'article.unit'
+                    ])
+                        ->where('archive', false)
                         ->whereHas('article', function ($q) {
-                            $q->with([
-	                            'unit',
-	                            'unit_potion'
-                            ])
-                            ->where('draft', false);
+                            $q->where('draft', false);
                         });
                 }
             ])
@@ -215,7 +214,6 @@ class ConsignmentController extends Controller
                 foreach ($category->$entity_alias as $item) {
                     $item->category_id = $category->id;
                     $item->entity_id = $entity->id;
-                    $item->name = $item->article->name;
                     $items[] = $item;
                 }
             }
@@ -226,7 +224,6 @@ class ConsignmentController extends Controller
                         foreach ($childCategory->$entity_alias as $item) {
                             $item->category_id = $category->id;
                             $item->entity_id = $entity->id;
-                            $item->name = $item->article->name;
                             $items[] = $item;
                         }
                     }
@@ -324,9 +321,10 @@ class ConsignmentController extends Controller
 //					dd($cost);
 				}
 			}
-			
+
 			$consignment->update([
-				'is_posted', true
+				'is_posted' => true,
+                'amount' => $this->getAmount($consignment)
 			]);
 			
 			return redirect()->route('consignments.index');
@@ -336,4 +334,14 @@ class ConsignmentController extends Controller
 		
 		
 	}
+
+	public function getAmount($consignment)
+    {
+        $amount = 0;
+        $consignment->load('items');
+        if ($consignment->items->isNotEmpty()) {
+            $amount = $consignment->items->sum('amount');
+        }
+        return $amount;
+    }
 }

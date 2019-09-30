@@ -12521,6 +12521,7 @@ a#task-toggle {
   position: absolute;
   top: 0px;
   left: 0px;
+  background-color: white;
 }
 
 .wrap-article-photo img {
