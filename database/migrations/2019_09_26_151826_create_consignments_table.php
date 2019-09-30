@@ -34,7 +34,7 @@ class CreateConsignmentsTable extends Migration
             $table->bigInteger('stock_id')->nullable()->unsigned()->comment('ID склада по умолчанию');
             $table->foreign('stock_id')->references('id')->on('stocks');
 
-            $table->integer('amount')->default(0)->comment('Сумма');
+            $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
 	        $table->boolean('draft')->default(1)->comment('Черновик');
             $table->boolean('is_posted')->default(0)->comment('Оприходовано');
 

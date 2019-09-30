@@ -4,7 +4,7 @@
         <td>{{ item.entity.name }}</td>
         <td>{{ item.cmv.article.name }}</td>
 
-        <td @click="changeCount = true">
+        <td @click="checkChangeCount">
             <template v-if="isChangeCount">
                 <input
                     @keydown.enter.prevent="updateItem"
@@ -21,7 +21,7 @@
         </td>
         <td>{{ item.cmv.article.unit.abbreviation }}</td>
 
-        <td @click="changePrice = true">
+        <td @click="checkChangePrice">
             <template v-if="isChangePrice">
                 <input
                     @keydown.enter.prevent="updateItem"
@@ -38,7 +38,9 @@
         <!--			<td>{{ item.vat_rate }}</td>-->
         <!--			<td>{{ item.amount_vat }}</td>-->
         <!--			<td>{{ item.total }}</td>-->
-        <td>
+        <td
+            v-if="!this.isPosted"
+        >
             <a
                 class="icon-delete sprite"
                 @click="deleteItem"
@@ -53,6 +55,7 @@
         props: {
             item: Object,
             index: Number,
+            isPosted: Boolean,
         },
         data() {
             return {
@@ -78,6 +81,16 @@
 
         },
         methods: {
+            checkChangeCount() {
+                if (!this.isPosted) {
+                    this.changeCount = !this.changeCount
+                }
+            },
+            checkChangePrice() {
+                if (!this.isPosted) {
+                    this.changePrice = !this.changePrice
+                }
+            },
             updateItem: function() {
                 this.changeCount = false;
                 this.changePrice = false;

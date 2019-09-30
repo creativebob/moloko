@@ -61,7 +61,7 @@
 
                 <ul v-if="listItems.length > 0" class="vertical menu">
                     <li v-for="item in listItems">
-                        <a @click="addFromList(item.id)">{{ item.name }}</a>
+                        <a @click="addFromList(item.id)">{{ item.article.name }}</a>
                     </li>
                 </ul>
             </div>
@@ -175,7 +175,7 @@
                 })
                 // console.log('Клик по пришедшим данным, добавляем в инпут');
                 this.id = it[0].id;
-                this.text = it[0].name;
+                this.text = it[0].article.name;
                 this.error = false;
                 this.search = false;
                 this.results = [];

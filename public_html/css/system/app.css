@@ -362,10 +362,6 @@ input[type='search'] {
   color: #cacaca;
 }
 
-::-moz-placeholder {
-  color: #cacaca;
-}
-
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -597,10 +593,6 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
-  color: #cc4b37;
-}
-
-.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -12529,6 +12521,7 @@ a#task-toggle {
   position: absolute;
   top: 0px;
   left: 0px;
+  background-color: white;
 }
 
 .wrap-article-photo img {

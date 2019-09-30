@@ -40855,7 +40855,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/components/system/CitySearchComponent.vue"
+Component.options.__file = "resources/js/system/components/CitySearchComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -40864,9 +40864,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-3e35fcd5", Component.options)
+    hotAPI.createRecord("data-v-9e09f2fa", Component.options)
   } else {
-    hotAPI.reload("data-v-3e35fcd5", Component.options)
+    hotAPI.reload("data-v-9e09f2fa", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -41229,7 +41229,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-3e35fcd5", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-9e09f2fa", module.exports)
   }
 }
 
@@ -41259,7 +41259,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/components/system/consignments/ConsignmentComponent.vue"
+Component.options.__file = "resources/js/system/components/consignments/ConsignmentComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -41268,9 +41268,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6d7caee4", Component.options)
+    hotAPI.createRecord("data-v-253f9fdc", Component.options)
   } else {
-    hotAPI.reload("data-v-6d7caee4", Component.options)
+    hotAPI.reload("data-v-253f9fdc", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -41286,6 +41286,11 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
 //
 //
 //
@@ -41426,7 +41431,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		totalItemsPrice: function totalItemsPrice() {
 			var price = 0;
 			this.items.forEach(function (item) {
-				return price += item.amount;
+				return price += Number(item.amount);
 			});
 			return price;
 		},
@@ -41446,6 +41451,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return this.categoriesItems.filter(function (item) {
 				return item.entity_id === _this2.entity_id;
 			});
+		},
+		isPosted: function isPosted() {
+			return this.consignment.is_posted === 1;
+		},
+		isChanged: function isChanged() {
+			return this.change;
 		}
 	},
 
@@ -41483,18 +41494,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.change = false;
 		},
 		setId: function setId(id) {
+			var _this4 = this;
+
 			this.id = id;
-			// let arr = this.categoriesItems.filter(item => {
-			// 	if (item.id === this.id) {
-			// 		return item
-			// 	}
-			// })
-			//
-			// this.itemUnit = arr[0].article.unit.name;
+			if (id != null) {
+				this.categoriesItems.filter(function (item) {
+					if (item.id === id && item.entity_id === _this4.entity_id) {
+						_this4.itemUnit = item.article.unit.abbreviation;
+					}
+				});
+			} else {
+				this.itemUnit = null;
+			}
 		},
 
 		addItem: function addItem() {
-			var _this4 = this;
+			var _this5 = this;
 
 			if (!this.isDisabled) {
 				this.disabledButton = true;
@@ -41505,7 +41520,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					count: this.count,
 					price: this.price
 				}).then(function (response) {
-					_this4.items.push(response.data);
+					_this5.items.push(response.data);
 				}).catch(function (error) {
 					console.log(error);
 				});
@@ -41558,7 +41573,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/components/system/consignments/SelectCategoriesComponent.vue"
+Component.options.__file = "resources/js/system/components/consignments/SelectCategoriesComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -41567,9 +41582,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-abd29f5e", Component.options)
+    hotAPI.createRecord("data-v-0fbabbe3", Component.options)
   } else {
-    hotAPI.reload("data-v-abd29f5e", Component.options)
+    hotAPI.reload("data-v-0fbabbe3", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -41765,7 +41780,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
             // console.log('Клик по пришедшим данным, добавляем в инпут');
             this.id = it[0].id;
-            this.text = it[0].name;
+            this.text = it[0].article.name;
             this.error = false;
             this.search = false;
             this.results = [];
@@ -41842,7 +41857,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/components/system/consignments/SelectCategoriesChildrensComponent.vue"
+Component.options.__file = "resources/js/system/components/consignments/SelectCategoriesChildrensComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -41851,9 +41866,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-cdae0936", Component.options)
+    hotAPI.createRecord("data-v-747857da", Component.options)
   } else {
-    hotAPI.reload("data-v-cdae0936", Component.options)
+    hotAPI.reload("data-v-747857da", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -41940,7 +41955,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-cdae0936", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-747857da", module.exports)
   }
 }
 
@@ -42077,7 +42092,7 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v(_vm._s(item.name))]
+                        [_vm._v(_vm._s(item.article.name))]
                       )
                     ])
                   }),
@@ -42139,7 +42154,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-abd29f5e", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-0fbabbe3", module.exports)
   }
 }
 
@@ -42169,7 +42184,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/components/system/consignments/ConsignmentsItemComponent.vue"
+Component.options.__file = "resources/js/system/components/consignments/ConsignmentsItemComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -42178,9 +42193,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-fc176000", Component.options)
+    hotAPI.createRecord("data-v-30cf48dc", Component.options)
   } else {
-    hotAPI.reload("data-v-fc176000", Component.options)
+    hotAPI.reload("data-v-30cf48dc", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -42245,12 +42260,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'consignments-item-component',
     props: {
         item: Object,
-        index: Number
+        index: Number,
+        isPosted: Boolean
     },
     data: function data() {
         return {
@@ -42276,6 +42294,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        checkChangeCount: function checkChangeCount() {
+            if (!this.isPosted) {
+                this.changeCount = !this.changeCount;
+            }
+        },
+        checkChangePrice: function checkChangePrice() {
+            if (!this.isPosted) {
+                this.changePrice = !this.changePrice;
+            }
+        },
+
         updateItem: function updateItem() {
             var _this = this;
 
@@ -42328,13 +42357,7 @@ var render = function() {
     _vm._v(" "),
     _c(
       "td",
-      {
-        on: {
-          click: function($event) {
-            _vm.changeCount = true
-          }
-        }
-      },
+      { on: { click: _vm.checkChangeCount } },
       [
         _vm.isChangeCount
           ? [
@@ -42382,13 +42405,7 @@ var render = function() {
     _vm._v(" "),
     _c(
       "td",
-      {
-        on: {
-          click: function($event) {
-            _vm.changePrice = true
-          }
-        }
-      },
+      { on: { click: _vm.checkChangePrice } },
       [
         _vm.isChangePrice
           ? [
@@ -42434,12 +42451,14 @@ var render = function() {
     _vm._v(" "),
     _c("td", [_vm._v(_vm._s(_vm.item.amount))]),
     _vm._v(" "),
-    _c("td", [
-      _c("a", {
-        staticClass: "icon-delete sprite",
-        on: { click: _vm.deleteItem }
-      })
-    ])
+    !this.isPosted
+      ? _c("td", [
+          _c("a", {
+            staticClass: "icon-delete sprite",
+            on: { click: _vm.deleteItem }
+          })
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = []
@@ -42448,7 +42467,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-fc176000", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-30cf48dc", module.exports)
   }
 }
 
@@ -42461,159 +42480,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("table", { staticClass: "table-consignments" }, [
-    _vm._m(0),
-    _vm._v(" "),
-    _c(
-      "tbody",
-      { attrs: { id: "table-raws" } },
-      [
-        _vm._l(_vm.itemsList, function(item, index) {
-          return _c("consignments-item-component", {
-            key: item.id,
-            attrs: {
-              item: item,
-              index: index,
-              "upd-item": _vm.updateItems,
-              "del-item": _vm.deleteItems
-            }
-          })
-        }),
-        _vm._v(" "),
-        _c("tr", { staticClass: "tr-add" }, [
-          _c("td", [_vm._v(_vm._s(_vm.items.length + 1))]),
-          _vm._v(" "),
-          _c("td", [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.entity_id,
-                    expression: "entity_id"
-                  }
-                ],
-                attrs: { name: "entity_id" },
-                on: {
-                  change: [
-                    function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.entity_id = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    },
-                    _vm.changeEntity
-                  ]
-                }
-              },
-              _vm._l(_vm.entities, function(entity) {
-                return _c(
-                  "option",
-                  {
-                    domProps: {
-                      value: entity.id,
-                      selected: entity.id === _vm.selectedEntity
-                    }
-                  },
-                  [_vm._v(_vm._s(entity.name))]
-                )
-              }),
-              0
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "td",
-            [
-              _c("select-categories-component", {
-                attrs: {
-                  "select-categories": _vm.selectCategories,
-                  "select-categories-items": _vm.selectCategoriesItems,
-                  change: _vm.change,
-                  "get-id": _vm.changeCount
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "td",
-            [
-              _c("input-digit-component", {
-                attrs: { name: "count", rate: "2", value: _vm.count },
-                on: { countchanged: _vm.changeCount }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("td", [_vm._v(_vm._s(_vm.itemUnit))]),
-          _vm._v(" "),
-          _c(
-            "td",
-            [
-              _c("input-digit-component", {
-                attrs: { name: "price", value: _vm.price },
-                on: { countchanged: _vm.changePrice }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("td", [
-            _c("span", [_vm._v(_vm._s(_vm._f("roundToTwo")(_vm.totalItemSum)))])
-          ]),
-          _vm._v(" "),
-          _c("td", [
-            _c(
-              "a",
-              {
-                staticClass: "button tiny",
-                attrs: { disabled: _vm.isDisabled },
-                on: { click: _vm.addItem }
-              },
-              [_vm._v("Добавить")]
-            )
-          ])
-        ])
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("tfoot", [
-      _c("tr", [
-        _c("td", { attrs: { colspan: "5" } }, [_vm._v("Итого:")]),
-        _vm._v(" "),
-        _c("td", [_vm._v("Позиций: " + _vm._s(_vm.totalItemsCount))]),
-        _vm._v(" "),
-        _c("td", [
-          _c("input", {
-            attrs: { name: "amount", type: "hidden" },
-            domProps: { value: _vm.totalItemsPrice }
-          }),
-          _vm._v("\n\t\t\t\tСумма: " + _vm._s(_vm.totalItemsPrice) + "\n\t\t\t")
-        ]),
-        _vm._v(" "),
-        _c("td")
-      ])
-    ])
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
+    _c("thead", [
       _c("tr", [
         _c("th", [_vm._v("№")]),
         _vm._v(" "),
@@ -42629,17 +42496,160 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Сумма:")]),
         _vm._v(" "),
-        _c("th")
+        !_vm.isPosted ? _c("th") : _vm._e()
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "tbody",
+      { attrs: { id: "table-raws" } },
+      [
+        _vm._l(_vm.itemsList, function(item, index) {
+          return _c("consignments-item-component", {
+            key: item.id,
+            attrs: {
+              item: item,
+              index: index,
+              "is-posted": _vm.isPosted,
+              "upd-item": _vm.updateItems,
+              "del-item": _vm.deleteItems
+            }
+          })
+        }),
+        _vm._v(" "),
+        !_vm.isPosted
+          ? _c("tr", { staticClass: "tr-add" }, [
+              _c("td", [_vm._v(_vm._s(_vm.items.length + 1))]),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.entity_id,
+                        expression: "entity_id"
+                      }
+                    ],
+                    attrs: { name: "entity_id" },
+                    on: {
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.entity_id = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        },
+                        _vm.changeEntity
+                      ]
+                    }
+                  },
+                  _vm._l(_vm.entities, function(entity) {
+                    return _c(
+                      "option",
+                      {
+                        domProps: {
+                          value: entity.id,
+                          selected: entity.id === _vm.selectedEntity
+                        }
+                      },
+                      [_vm._v(_vm._s(entity.name))]
+                    )
+                  }),
+                  0
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _c("select-categories-component", {
+                    attrs: {
+                      "select-categories": _vm.selectCategories,
+                      "select-categories-items": _vm.selectCategoriesItems,
+                      change: _vm.isChanged
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _c("input-digit-component", {
+                    attrs: { name: "count", rate: "2", value: _vm.count },
+                    on: { countchanged: _vm.changeCount }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("td", [_vm._v(_vm._s(_vm.itemUnit))]),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _c("input-digit-component", {
+                    attrs: { name: "price", value: _vm.price },
+                    on: { countchanged: _vm.changePrice }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("td", [
+                _c("span", [
+                  _vm._v(_vm._s(_vm._f("roundToTwo")(_vm.totalItemSum)))
+                ])
+              ]),
+              _vm._v(" "),
+              _c("td", [
+                _c(
+                  "a",
+                  {
+                    staticClass: "button tiny",
+                    attrs: { disabled: _vm.isDisabled },
+                    on: { click: _vm.addItem }
+                  },
+                  [_vm._v("Добавить")]
+                )
+              ])
+            ])
+          : _vm._e()
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c("tfoot", [
+      _c("tr", [
+        _c("td", { attrs: { colspan: "5" } }, [_vm._v("Итого:")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Позиций: " + _vm._s(_vm.totalItemsCount))]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Сумма: " + _vm._s(_vm.totalItemsPrice))]),
+        _vm._v(" "),
+        !_vm.isPosted ? _c("td") : _vm._e()
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6d7caee4", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-253f9fdc", module.exports)
   }
 }
 
@@ -42669,7 +42679,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/components/system/InputDigitComponent.vue"
+Component.options.__file = "resources/js/system/components/InputDigitComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -42678,9 +42688,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7ccdd645", Component.options)
+    hotAPI.createRecord("data-v-20da401a", Component.options)
   } else {
-    hotAPI.reload("data-v-7ccdd645", Component.options)
+    hotAPI.reload("data-v-20da401a", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -42854,7 +42864,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7ccdd645", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-20da401a", module.exports)
   }
 }
 
@@ -42884,7 +42894,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/components/system/DropzoneComponent.vue"
+Component.options.__file = "resources/js/system/components/DropzoneComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -42893,9 +42903,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-26080a6d", Component.options)
+    hotAPI.createRecord("data-v-483fa79b", Component.options)
   } else {
-    hotAPI.reload("data-v-26080a6d", Component.options)
+    hotAPI.reload("data-v-483fa79b", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -43674,7 +43684,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-26080a6d", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-483fa79b", module.exports)
   }
 }
 
@@ -43704,7 +43714,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/components/system/RawCompositionComponent.vue"
+Component.options.__file = "resources/js/system/components/RawCompositionComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -43713,9 +43723,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-397a1374", Component.options)
+    hotAPI.createRecord("data-v-18210e18", Component.options)
   } else {
-    hotAPI.reload("data-v-397a1374", Component.options)
+    hotAPI.reload("data-v-18210e18", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -43879,7 +43889,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-397a1374", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-18210e18", module.exports)
   }
 }
 
@@ -43909,7 +43919,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/components/system/ArticlesCategoriesWithGroupsComponent.vue"
+Component.options.__file = "resources/js/system/components/ArticlesCategoriesWithGroupsComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -43918,9 +43928,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-8e3cdc96", Component.options)
+    hotAPI.createRecord("data-v-a8b6683a", Component.options)
   } else {
-    hotAPI.reload("data-v-8e3cdc96", Component.options)
+    hotAPI.reload("data-v-a8b6683a", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -44176,7 +44186,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-8e3cdc96", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-a8b6683a", module.exports)
   }
 }
 
