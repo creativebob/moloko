@@ -27,43 +27,49 @@
         >
 
         <div
-                v-if="showCategories && !closeCategories"
+                v-if="!close"
                 class="drilldown-categories-wrap"
         >
-            <div class="categories-wrap">
-                <ul
-
-                    class="vertical menu"
-                    v-drilldown
-                    data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
-                >
-
-                <li
-                        v-for="category in selectCategories"
-                        class="item-catalog"
-                >
-                    <a
-                        @click="getItems(category.id)"
-                    >{{ category.name }}</a>
-
-
+            <div
+                    v-if="showCategories"
+                    class="grid-x categories-wrap">
+                <div class="medium-6 cell">
                     <ul
-                            v-if="category.childrens && category.childrens.length"
-                            class="menu vertical nested"
+                            class="vertical menu"
+                            v-drilldown
+                            data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
                     >
-                        <childrens-component v-for="children in category.childrens" :category="children" :key="children.id"></childrens-component>
+                        <li
+                                v-for="category in selectCategories"
+                                class="item-catalog"
+                        >
+                            <a
+                                    @click="getItems(category.id)"
+                            >{{ category.name }}</a>
 
+                            <ul
+                                    v-if="category.childrens && category.childrens.length"
+                                    class="menu vertical nested"
+                            >
+                                <childrens-component
+                                        v-for="children in category.childrens"
+                                        :category="children"
+                                        :key="children.id"
+                                        @get="getItems"
+                                ></childrens-component>
+
+                            </ul>
+                        </li>
                     </ul>
+                </div>
 
-                </li>
-
-            </ul>
-
-                <ul v-if="listItems.length > 0" class="vertical menu">
-                    <li v-for="item in listItems">
-                        <a @click="addFromList(item.id)">{{ item.article.name }}</a>
-                    </li>
-                </ul>
+                <div class="medium-6 cell">
+                    <ul v-if="listItems.length > 0" class="vertical menu">
+                        <li v-for="item in listItems">
+                            <a @click="addFromList(item.id)">{{ item.article.name }}</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -111,10 +117,9 @@
             };
         },
         computed: {
-            closeCategories() {
+            close() {
                 if (this.change) {
                     this.listItems = [];
-                    alert('сносим текст');
                     this.text = '';
                     this.id = null;
                     this.error = false;
@@ -150,7 +155,8 @@
                 }
             },
             toggleShowCategories() {
-                this.$parent.checkChange();
+                this.$emit('check-change');
+                // this.$parent.checkChange();
 
                 this.showCategories = !this.showCategories
                 if (!this.showCategories) {
@@ -213,7 +219,7 @@
                 this.setId();
             },
             setId: function () {
-                this.$parent.setId(this.id);
+                this.$emit('set-id', this.id);
             },
         },
         directives: {

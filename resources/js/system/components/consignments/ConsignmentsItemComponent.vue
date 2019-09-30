@@ -59,8 +59,8 @@
         },
         data() {
             return {
-                count: this.item.count,
-                price: this.item.price,
+                count: Number(this.item.count),
+                price: Number(this.item.price),
                 changeCount: false,
                 changePrice: false,
             }
@@ -96,11 +96,13 @@
                 this.changePrice = false;
                 axios
                     .patch('/admin/consignments_items/' + this.item.id, {
-                        count: this.count,
-                        price: this.price
+                        count: Number(this.count),
+                        price: Number(this.price)
                     })
                     .then(response => {
-                            this.$parent.updateItems(response.data, this.index);
+                        this.$emit('update', response.data, this.index);
+                        this.price = Number(response.data.price);
+                        this.count = Number(response.data.count);
                     })
                     .catch(error => {
                         console.log(error)
@@ -111,7 +113,7 @@
                     .delete('/admin/consignments_items/' + this.item.id)
                     .then(response => {
                         if(response.data === true) {
-                            this.$parent.deleteItems(this.index);
+                            this.$emit('remove');
                         }
                     })
                     .catch(error => {

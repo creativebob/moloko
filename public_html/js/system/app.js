@@ -41384,6 +41384,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: {
@@ -41521,20 +41527,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					price: this.price
 				}).then(function (response) {
 					_this5.items.push(response.data);
-				}).catch(function (error) {
+				}, this.id = null, this.count = null, this.price = null).catch(function (error) {
 					console.log(error);
 				});
-
-				this.id = null;
-				this.count = null;
-				this.price = null;
 			}
 		},
-		updateItems: function updateItems(item, index) {
+		updateItem: function updateItem(item, index) {
 			Vue.set(this.items, index, item);
 		},
 
-		deleteItems: function deleteItems(index) {
+		deleteItem: function deleteItem(index) {
 			this.items.splice(index, 1);
 		}
 	},
@@ -41690,6 +41692,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -41714,10 +41722,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     computed: {
-        closeCategories: function closeCategories() {
+        close: function close() {
             if (this.change) {
                 this.listItems = [];
-                alert('сносим текст');
                 this.text = '';
                 this.id = null;
                 this.error = false;
@@ -41755,7 +41762,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         toggleShowCategories: function toggleShowCategories() {
-            this.$parent.checkChange();
+            this.$emit('check-change');
+            // this.$parent.checkChange();
 
             this.showCategories = !this.showCategories;
             if (!this.showCategories) {
@@ -41819,7 +41827,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         setId: function setId() {
-            this.$parent.setId(this.id);
+            this.$emit('set-id', this.id);
         }
     },
     directives: {
@@ -41900,6 +41908,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'childrens-component',
@@ -41908,7 +41921,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         getItems: function getItems(id) {
-            this.$parent.getItems(id);
+            this.$emit('get', id);
         }
     }
 });
@@ -41941,7 +41954,8 @@ var render = function() {
           _vm._l(_vm.category.childrens, function(children) {
             return _c("childrens-component", {
               key: children.id,
-              attrs: { category: children }
+              attrs: { category: children },
+              on: { get: _vm.getItems }
             })
           }),
           1
@@ -42032,74 +42046,83 @@ var render = function() {
       }
     }),
     _vm._v(" "),
-    _vm.showCategories && !_vm.closeCategories
+    !_vm.close
       ? _c("div", { staticClass: "drilldown-categories-wrap" }, [
-          _c("div", { staticClass: "categories-wrap" }, [
-            _c(
-              "ul",
-              {
-                directives: [{ name: "drilldown", rawName: "v-drilldown" }],
-                staticClass: "vertical menu",
-                attrs: {
-                  "data-back-button":
-                    '<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
-                }
-              },
-              _vm._l(_vm.selectCategories, function(category) {
-                return _c("li", { staticClass: "item-catalog" }, [
+          _vm.showCategories
+            ? _c("div", { staticClass: "grid-x categories-wrap" }, [
+                _c("div", { staticClass: "medium-6 cell" }, [
                   _c(
-                    "a",
+                    "ul",
                     {
-                      on: {
-                        click: function($event) {
-                          return _vm.getItems(category.id)
-                        }
+                      directives: [
+                        { name: "drilldown", rawName: "v-drilldown" }
+                      ],
+                      staticClass: "vertical menu",
+                      attrs: {
+                        "data-back-button":
+                          '<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
                       }
                     },
-                    [_vm._v(_vm._s(category.name))]
-                  ),
-                  _vm._v(" "),
-                  category.childrens && category.childrens.length
+                    _vm._l(_vm.selectCategories, function(category) {
+                      return _c("li", { staticClass: "item-catalog" }, [
+                        _c(
+                          "a",
+                          {
+                            on: {
+                              click: function($event) {
+                                return _vm.getItems(category.id)
+                              }
+                            }
+                          },
+                          [_vm._v(_vm._s(category.name))]
+                        ),
+                        _vm._v(" "),
+                        category.childrens && category.childrens.length
+                          ? _c(
+                              "ul",
+                              { staticClass: "menu vertical nested" },
+                              _vm._l(category.childrens, function(children) {
+                                return _c("childrens-component", {
+                                  key: children.id,
+                                  attrs: { category: children },
+                                  on: { get: _vm.getItems }
+                                })
+                              }),
+                              1
+                            )
+                          : _vm._e()
+                      ])
+                    }),
+                    0
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "medium-6 cell" }, [
+                  _vm.listItems.length > 0
                     ? _c(
                         "ul",
-                        { staticClass: "menu vertical nested" },
-                        _vm._l(category.childrens, function(children) {
-                          return _c("childrens-component", {
-                            key: children.id,
-                            attrs: { category: children }
-                          })
+                        { staticClass: "vertical menu" },
+                        _vm._l(_vm.listItems, function(item) {
+                          return _c("li", [
+                            _c(
+                              "a",
+                              {
+                                on: {
+                                  click: function($event) {
+                                    return _vm.addFromList(item.id)
+                                  }
+                                }
+                              },
+                              [_vm._v(_vm._s(item.article.name))]
+                            )
+                          ])
                         }),
-                        1
+                        0
                       )
                     : _vm._e()
                 ])
-              }),
-              0
-            ),
-            _vm._v(" "),
-            _vm.listItems.length > 0
-              ? _c(
-                  "ul",
-                  { staticClass: "vertical menu" },
-                  _vm._l(_vm.listItems, function(item) {
-                    return _c("li", [
-                      _c(
-                        "a",
-                        {
-                          on: {
-                            click: function($event) {
-                              return _vm.addFromList(item.id)
-                            }
-                          }
-                        },
-                        [_vm._v(_vm._s(item.article.name))]
-                      )
-                    ])
-                  }),
-                  0
-                )
-              : _vm._e()
-          ])
+              ])
+            : _vm._e()
         ])
       : _vm._e(),
     _vm._v(" "),
@@ -42272,8 +42295,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            count: this.item.count,
-            price: this.item.price,
+            count: Number(this.item.count),
+            price: Number(this.item.price),
             changeCount: false,
             changePrice: false
         };
@@ -42311,10 +42334,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.changeCount = false;
             this.changePrice = false;
             axios.patch('/admin/consignments_items/' + this.item.id, {
-                count: this.count,
-                price: this.price
+                count: Number(this.count),
+                price: Number(this.price)
             }).then(function (response) {
-                _this.$parent.updateItems(response.data, _this.index);
+                _this.$emit('update', response.data, _this.index);
+                _this.price = Number(response.data.price);
+                _this.count = Number(response.data.count);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -42324,7 +42349,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.delete('/admin/consignments_items/' + this.item.id).then(function (response) {
                 if (response.data === true) {
-                    _this2.$parent.deleteItems(_this2.index);
+                    _this2.$emit('remove');
                 }
             }).catch(function (error) {
                 console.log(error);
@@ -42507,12 +42532,12 @@ var render = function() {
         _vm._l(_vm.itemsList, function(item, index) {
           return _c("consignments-item-component", {
             key: item.id,
-            attrs: {
-              item: item,
-              index: index,
-              "is-posted": _vm.isPosted,
-              "upd-item": _vm.updateItems,
-              "del-item": _vm.deleteItems
+            attrs: { item: item, index: index, "is-posted": _vm.isPosted },
+            on: {
+              update: _vm.updateItem,
+              remove: function($event) {
+                return _vm.deleteItem(index)
+              }
             }
           })
         }),
@@ -42576,8 +42601,9 @@ var render = function() {
                     attrs: {
                       "select-categories": _vm.selectCategories,
                       "select-categories-items": _vm.selectCategoriesItems,
-                      change: _vm.isChanged
-                    }
+                      change: _vm.change
+                    },
+                    on: { "set-id": _vm.setId, "check-change": _vm.checkChange }
                   })
                 ],
                 1

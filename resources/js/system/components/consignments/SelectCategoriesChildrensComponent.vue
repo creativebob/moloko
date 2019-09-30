@@ -9,7 +9,12 @@
                 v-if="category.childrens && category.childrens.length"
                 class="menu vertical nested"
         >
-            <childrens-component v-for="children in category.childrens" :category="children" :key="children.id"></childrens-component>
+            <childrens-component
+                    v-for="children in category.childrens"
+                    :category="children"
+                    :key="children.id"
+                    @get="getItems"
+            ></childrens-component>
         </ul>
     </li>
 </template>
@@ -22,7 +27,7 @@
         },
         methods: {
             getItems: function (id) {
-                this.$parent.getItems(id);
+                this.$emit('get', id);
             }
         }
     }

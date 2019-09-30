@@ -27,8 +27,8 @@
 					:index="index"
 					:key="item.id"
 					:is-posted="isPosted"
-					:upd-item="updateItems"
-					:del-item="deleteItems"
+					@update="updateItem"
+					@remove="deleteItem(index)"
 			></consignments-item-component>
 
 			<tr
@@ -50,7 +50,13 @@
 					</select>
 				</td>
 				<td>
-					<select-categories-component :select-categories="selectCategories" :select-categories-items="selectCategoriesItems" :change="isChanged"></select-categories-component>
+					<select-categories-component
+							:select-categories="selectCategories"
+							:select-categories-items="selectCategoriesItems"
+							:change="change"
+							@set-id="setId"
+							@check-change="checkChange"
+					></select-categories-component>
 				</td>
 				<td>
 					<input-digit-component name="count" rate="2" :value="count" v-on:countchanged="changeCount"></input-digit-component>
@@ -228,21 +234,20 @@
 						.then(response => {
 								this.items.push(response.data)
 							},
+								this.id = null,
+								this.count = null,
+								this.price = null
 						)
 						.catch(error => {
 							console.log(error)
 						});
-
-					this.id = null;
-					this.count = null;
-					this.price = null;
 				}
 			},
-			updateItems: function(item, index) {
+			updateItem: function(item, index) {
 				Vue.set(this.items, index, item);
 			},
 
-			deleteItems: function(index) {
+			deleteItem: function(index) {
 				this.items.splice(index, 1);
 			}
 		},
