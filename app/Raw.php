@@ -172,8 +172,22 @@ class Raw extends Model
 
             return 0;
         }
-
     }
 
+    public function getCostUnitAttribute()
+    {
+
+        // Существует ли запись на складе
+        if($this->morphMany(Cost::class, 'cmv')->first() !== null){
+
+            if($this->article->manufacturer_id){
+                return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
 
 }

@@ -109,7 +109,7 @@
                         <td class="td-payment">{{ num_format($consignment->payment, 0) }}
                           <br><span class="tiny-text">{{ num_format($consignment->amount - $consignment->payment, 0) }}</span>
                       </td>
-                      <td class="td-stage">{{ $consignment->status ?? '' }}</td>
+                      <td class="td-stage">@if($consignment->is_posted)Проведена @endif</td>
                       <td class="td-created_at">
                         <span>{{ $consignment->created_at->format('d.m.Y') }}</span><br>
                         <span class="tiny-text">{{ $consignment->created_at->format('H:i') }}</span>

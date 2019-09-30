@@ -135,7 +135,7 @@
                     </td>
 
                     <td class="td-cost" title="Себестоимость">
-                        <span>За единицу: </span><span>{{ num_format($item->cost_portion, 2) ?? '' }}</span><br>
+                        <span>За единицу: </span><span>{{ num_format($item->cost_unit, 2) ?? '' }}</span><br>
                         @if($item->portion_goods_status)<span>За порцию: </span><span>{{ num_format($item->cost_portion, 2) ?? '' }}</span>@endif
                     </td>
 
