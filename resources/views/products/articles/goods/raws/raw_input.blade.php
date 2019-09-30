@@ -64,9 +64,9 @@
 	</td>
 	<td>
 		@php 
-			if(isset($raw->cost(1, 1)->first()->cost_average)){$cost = $raw->cost(1, 1)->first()->cost_average;} else {$cost = 0;};
+			if(isset($raw->coster)){$cost = $raw->coster;} else {$cost = 0;};
 		@endphp
-			<span class="raw-cost-count" data-cost="{{ $cost }}" data-cost-count="{{ $cost * $count }}">{{ num_format($cost * $count, 0) }}</span>
+			<span class="raw-cost-count" data-cost={{ $cost }} data-cost-count={{ $cost * $count }}>{{ num_format($cost * $count, 0) }}</span>
 		<span>руб.</span>
 	</td>
 	<td class="td-delete">

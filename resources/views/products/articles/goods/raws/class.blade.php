@@ -73,8 +73,8 @@
             elem_cost.text(this.level(cost_count));
 
             // Добавляем в data для использования в вычислениях
-            elem_weight.data('weight_count', weight_count);
-            elem_cost.data('cost_count', cost_count);
+            elem_weight.data('weight-count', weight_count);
+            elem_cost.data('cost-count', cost_count);
 
             this.totalCount();
             // parent.find('.raw-waste').val(0);
@@ -86,7 +86,8 @@
             let all_raws_weight = $('#table-raws tr td .raw-weight-count');
             let all_raws_cost = $('#table-raws tr td .raw-cost-count');
 
-            let summ_weight = 0; let summ_cost = 0;
+            let summ_weight = 0;
+            let summ_cost = 0;
 
             all_raws_weight.each(function(){
                 summ_weight += $(this).data('weight-count');

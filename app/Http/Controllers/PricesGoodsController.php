@@ -81,6 +81,10 @@ class PricesGoodsController extends Controller
                 $q->filter($request, 'catalogs_goods_item_id');
             })
 
+            ->whereHas('goods.article', function($q){
+                $q->where('draft', false)->where('archive', false);
+            })
+
             // ->filials($answer)
             // ->authors($answer)
             // ->systemItem($answer)
@@ -90,7 +94,7 @@ class PricesGoodsController extends Controller
                 'filial_id' => $filial_id,
             ])
             ->orderBy('sort', 'asc')
-            ->paginate(30);
+            ->paginate(60);
         // dd($prices_goods);
 
 

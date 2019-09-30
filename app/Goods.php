@@ -128,10 +128,13 @@ class Goods extends Model
         return $this->belongsTo(Unit::class, 'price_unit_id');
     }
 
-    // Получаем себестоимость
-    public function cost($manufacturer_id = null, $supplier_id = null)
+    public function getCostAttribute()
     {
-        return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $manufacturer_id)->where('supplier_id', $supplier_id);
+        if($this->article->manufacturer_id){
+            return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
+        } else {
+            return 0;
+        } 
     }
 
 }

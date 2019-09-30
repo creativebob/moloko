@@ -26,7 +26,7 @@ class CreateConsignmentsItemsTable extends Migration
 
             $table->integer('count')->default(0)->comment('Кол-во');
             $table->integer('price')->default(0)->comment('Цена за единицу');
-            $table->integer('amount')->default(0)->comment('Сумма до налога');
+            $table->decimal('amount', 9, 4)->default(0)->comment('Сумма');
 
             $table->integer('vat_rate')->nullable()->comment('Размер налога НДС');
             $table->integer('amount_vat')->nullable()->comment('Сумма НДС');

@@ -298,7 +298,7 @@ class RawController extends Controller
         // Главный запрос
         $raw = Raw::moderatorLimit($answer)
         ->findOrFail($id);
-        // dd($raw->weight);
+        // dd($raw->coster);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $raw);

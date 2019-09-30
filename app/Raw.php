@@ -116,10 +116,20 @@ class Raw extends Model
     }
 
     // Получаем себестоимость
-    public function cost($manufacturer_id = null, $supplier_id = null)
-    {
-        return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $manufacturer_id)->where('supplier_id', $supplier_id);
-    }
+    // public function cost()
+    // {s
+    //     return $this->morphMany(Cost::class, 'cmv');
+    // }
+
+    // Получаем себестоимость
+    // public function getCostAttribute()
+    // {
+    //     if($this->article->manufacturer_id){
+    //         return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
+    //     } else {
+    //         return 0;
+    //     }
+    // }
 
     // Геттер: Функция получения веса в кг. учитывая все надстройки и переопределения в еденицах измерения
     public function getWeightAttribute($value)
@@ -139,4 +149,24 @@ class Raw extends Model
             }
         }
     }
+
+    // Получаем себестоимость
+    public function getCostPortionAttribute()
+    {
+
+        if($this->article->manufacturer_id){
+            
+            if($this->portion_goods_status){
+                return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average * $this->unit_portion_goods->ratio * $this->portion_goods_count;
+            } else {
+                return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
+            }
+
+        } else {
+            return 0;
+        } 
+
+    }
+
+
 }

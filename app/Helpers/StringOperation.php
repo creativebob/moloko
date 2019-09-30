@@ -12,6 +12,12 @@ function num_format($number, $value) {
     return $result;
 }
 
+function num_clean($number, $value) {
+
+    $result = number_format($number, $value, '.', '');
+    return $result;
+}
+
 function decor_access_block($access_block) {
     if($access_block == 1){$result = "Блокирован";} else {$result = "Открыт";};
 
