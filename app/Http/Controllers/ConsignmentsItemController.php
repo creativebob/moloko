@@ -33,7 +33,7 @@ class ConsignmentsItemController extends Controller
 
         $consignment_item->load([
             'cmv.article.unit',
-            'entity:id,name'
+            'entity:id,name,alias'
         ]);
 
         return response()->json($consignment_item);
@@ -58,7 +58,7 @@ class ConsignmentsItemController extends Controller
 
         $consignment_item->load([
             'cmv.article.unit',
-            'entity:id,name'
+            'entity:id,name,alias'
         ]);
 
         return response()->json($consignment_item);

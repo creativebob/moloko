@@ -100,7 +100,7 @@ class ConsignmentController extends Controller
                             'article.unit'
                         ]);
                     },
-                    'entity:id,name',
+                    'entity:id,name,alias',
                 ]);
             },
         ])
@@ -383,6 +383,8 @@ class ConsignmentController extends Controller
 					])
 						->first();
 					
+					$stock_count = $stock->count;
+					
 					$stock->count -= $item->count;
 					$stock->weight -= ($item->cmv->article->weight * $item->count);
 					$stock->volume -= ($item->cmv->article->volume * $item->count);
@@ -394,37 +396,34 @@ class ConsignmentController extends Controller
 						'manufacturer_id' => $item->cmv->article->manufacturer_id,
 					])
 						->first();
-					dd(ConsignmentsItem::where([
-						'cmv_id' => $item->cmv_id,
-						'cmv_type' => $item->cmv_type,
-						'manufacturer_id' => $item->cmv->article->manufacturer_id,
-					])
-						->whereHas('consignment', function ($q) {
-							$q->where('is_posted', true);
-						})
-						->min('price'));
 					
-					$cost->min = ConsignmentsItem::where([
+					$min = ConsignmentsItem::where([
 						'cmv_id' => $item->cmv_id,
 						'cmv_type' => $item->cmv_type,
-						'manufacturer_id' => $item->cmv->article->manufacturer_id,
 					])
-						->whereHas('consignment', function ($q) {
-							$q->where('is_posted', true);
+						->whereHas('consignment', function ($q) use ($consignment) {
+							$q->where('is_posted', true)
+								->where('id', '!=', $consignment->id);
 						})
 						->min('price');
+//					dd($min);
 					
-					$cost->max = ConsignmentsItem::where([
+					$cost->min = $min;
+					
+					$max = ConsignmentsItem::where([
 						'cmv_id' => $item->cmv_id,
 						'cmv_type' => $item->cmv_type,
-						'manufacturer_id' => $item->cmv->article->manufacturer_id,
 					])
-						->whereHas('consignment', function ($q) {
-							$q->where('is_posted', true);
+						->whereHas('consignment', function ($q) use ($consignment) {
+							$q->where('is_posted', true)
+								->where('id', '!=', $consignment->id);
 						})
-						->max('price');
+						->min('price');
+//					dd($max);
 					
-					$average = (($stock->count * $cost->average) - ($item->count * $item->price)) / ($stock->count - $item->count);
+					$cost->max = $max;
+					
+					$average = (($stock_count * $cost->average) - ($item->count * $item->price)) / ($stock->count);
 					$cost->average = $average;
 					
 					$cost->save();
