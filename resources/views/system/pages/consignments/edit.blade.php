@@ -15,6 +15,9 @@
         <h2 class="header-content">РЕДАКТИРОВАТЬ товарную накладную</h2>
     </div>
     <div class="top-bar-right">
+        @if(Auth::user()->god && $consignment->is_posted)
+            <a href="{{ route('consignments.unpost', $consignment->id) }}" class="button">Отменить проводку</a>
+            @endif
     </div>
 </div>
 @endsection

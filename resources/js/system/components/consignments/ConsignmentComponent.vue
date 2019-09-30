@@ -167,9 +167,6 @@
 			isPosted() {
 				return this.consignment.is_posted === 1;
 			},
-			isChanged() {
-				return this.change;
-			},
 		},
 
 		methods: {
@@ -236,7 +233,8 @@
 							},
 								this.id = null,
 								this.count = null,
-								this.price = null
+								this.price = null,
+								this.change = true
 						)
 						.catch(error => {
 							console.log(error)

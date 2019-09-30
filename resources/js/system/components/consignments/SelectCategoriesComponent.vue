@@ -79,7 +79,7 @@
                 <template v-if=search>
                     <tr v-for="(item, index) in results">
                         <td>
-                            <a @click="addFromSearch(index)">{{ item.name }}</a>
+                            <a @click="addFromSearch(index)">{{ item.article.name }}</a>
                         </td>
                     </tr>
                 </template>
@@ -143,7 +143,7 @@
 
                 if (this.text.length >= 2) {
                     this.results = this.selectCategoriesItems.filter(item => {
-                        return item.name.toLowerCase().includes(this.text.toLowerCase());
+                        return item.article.name.toLowerCase().includes(this.text.toLowerCase());
                     });
                 }
 
@@ -166,7 +166,7 @@
             addFromSearch(index) {
                 // console.log('Клик по пришедшим данным, добавляем в инпут');
                 this.id = this.results[index].id;
-                this.text = this.results[index].name;
+                this.text = this.results[index].article.name;
                 this.error = false;
                 this.search = false;
                 this.results = [];
