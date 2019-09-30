@@ -41694,7 +41694,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -41727,7 +41726,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.error = false;
                 this.results = [];
                 this.showCategories = false;
-
                 this.setId();
             }
             return this.change;
@@ -41746,6 +41744,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             // }
 
             if (this.text.length >= 2) {
+                this.$emit('check-change');
                 this.results = this.selectCategoriesItems.filter(function (item) {
                     return item.article.name.toLowerCase().includes(_this.text.toLowerCase());
                 });
@@ -41760,7 +41759,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         toggleShowCategories: function toggleShowCategories() {
             this.$emit('check-change');
-            // this.$parent.checkChange();
 
             this.showCategories = !this.showCategories;
             if (!this.showCategories) {
@@ -41775,11 +41773,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.search = false;
             this.results = [];
             this.showCategories = false;
-
             this.setId();
         },
         addFromList: function addFromList(id) {
-
             var it = this.selectCategoriesItems.filter(function (item) {
                 return item.id === id;
             });
@@ -41791,7 +41787,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.results = [];
             this.listItems = [];
             this.showCategories = false;
-
             this.setId();
         },
         reset: function reset() {
@@ -41800,8 +41795,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.error = false;
             this.search = false;
             this.results = [];
-
-            this.setId();
 
             if (this.text.length > 0) {
                 this.check();
@@ -41819,7 +41812,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.id = null;
             this.name = '';
-
             this.setId();
         },
 
@@ -42031,9 +42023,6 @@ var render = function() {
       attrs: { type: "hidden", maxlength: "3", pattern: "[0-9]{3}" },
       domProps: { value: _vm.id },
       on: {
-        change: function($event) {
-          return _vm.setId(_vm.id)
-        },
         input: function($event) {
           if ($event.target.composing) {
             return
