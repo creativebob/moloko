@@ -154,17 +154,24 @@ class Raw extends Model
     public function getCostPortionAttribute()
     {
 
-        if($this->article->manufacturer_id){
-            
-            if($this->portion_goods_status){
-                return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average * $this->unit_portion_goods->ratio * $this->portion_goods_count;
-            } else {
-                return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
-            }
+        // Существует ли запись на складе
+        if($this->morphMany(Cost::class, 'cmv')->first() !== null){
 
+            if($this->article->manufacturer_id){
+                
+                if($this->portion_goods_status){
+                    return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average * $this->unit_portion_goods->ratio * $this->portion_goods_count;
+                } else {
+                    return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
+                }
+
+            } else {
+                return 0;
+            }
         } else {
+
             return 0;
-        } 
+        }
 
     }
 
