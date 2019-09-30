@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Consignment;
+use App\ConsignmentsItem;
 use App\Cost;
 use App\Entity;
 use App\Http\Requests\ConsignmentUpdateRequest;
@@ -241,6 +242,104 @@ class ConsignmentController extends Controller
         return response()->json($data);
     }
 	
+	public function unpost(Request $request, $id)
+	{
+		
+		// Получаем из сессии необходимые данные (Функция находиться в Helpers)
+		$answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('update'));
+		
+		// ГЛАВНЫЙ ЗАПРОС:
+		$consignment = Consignment::moderatorLimit($answer)
+			->authors($answer)
+			->systemItem($answer)
+			->findOrFail($id);
+		
+		// Подключение политики
+		$this->authorize(getmethod('update'), $consignment);
+		
+		$consignment->load([
+			'items' => function($q) {
+				$q->with([
+					'cmv' => function ($q) {
+						$q->with([
+							'article'
+						]);
+					},
+					'entity'
+				]);
+			},
+		]);
+//		dd($consignment);
+		
+		if ($consignment->items->isNotEmpty()) {
+			
+			$grouped_items = $consignment->items->groupBy('entity.alias');
+//			dd($grouped_items);
+			
+			foreach ($grouped_items as $alias => $items) {
+				$entity = Entity::where('alias', $alias.'_stocks')->first();
+				$model = 'App\\'.$entity->model;
+				
+				foreach ($items as $item) {
+					
+					$stock = $model::where([
+						'cmv_id' => $item->cmv_id,
+						'manufacturer_id' => $item->cmv->article->manufacturer_id,
+						'stock_id' => $consignment->stock_id,
+					])
+					->first();
+					
+					$stock->count -= $item->count;
+					$stock->weight -= ($item->cmv->article->weight * $item->count);
+					$stock->volume -= ($item->cmv->article->volume * $item->count);
+					$stock->save();
+					
+					$cost = Cost::where([
+						'cmv_id' => $item->cmv_id,
+						'cmv_type' => $item->cmv_type,
+						'manufacturer_id' => $item->cmv->article->manufacturer_id,
+					])
+					->first();
+
+					$cost->min = ConsignmentsItem::where([
+						'cmv_id' => $item->cmv_id,
+						'cmv_type' => $item->cmv_type,
+						'manufacturer_id' => $item->cmv->article->manufacturer_id,
+					])
+						->whereHas('consignment', function ($q) {
+							$q->where('is_posted', true);
+						})
+						->min('price');
+					
+					$cost->max = ConsignmentsItem::where([
+						'cmv_id' => $item->cmv_id,
+						'cmv_type' => $item->cmv_type,
+						'manufacturer_id' => $item->cmv->article->manufacturer_id,
+					])
+						->whereHas('consignment', function ($q) {
+							$q->where('is_posted', true);
+						})
+						->max('price');
+					
+					$average = (($stock->count * $cost->average) - ($item->count * $item->price)) / ($stock->count - $item->count);
+					$cost->average = $average;
+
+					$cost->save();
+//					dd($cost);
+				}
+			}
+
+			$consignment->update([
+				'is_posted' => false,
+                'amount' => $this->getAmount($consignment)
+			]);
+			
+			return redirect()->route('consignments.index');
+		} else {
+			abort(403, 'Накладная пуста');
+		}
+	}
+	
 	public function posting(ConsignmentUpdateRequest $request, $id)
 	{
 		
@@ -321,10 +420,10 @@ class ConsignmentController extends Controller
 //					dd($cost);
 				}
 			}
-
+			
 			$consignment->update([
 				'is_posted' => true,
-                'amount' => $this->getAmount($consignment)
+				'amount' => $this->getAmount($consignment)
 			]);
 			
 			return redirect()->route('consignments.index');

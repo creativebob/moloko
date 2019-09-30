@@ -41460,9 +41460,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		isPosted: function isPosted() {
 			return this.consignment.is_posted === 1;
-		},
-		isChanged: function isChanged() {
-			return this.change;
 		}
 	},
 
@@ -41527,7 +41524,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					price: this.price
 				}).then(function (response) {
 					_this5.items.push(response.data);
-				}, this.id = null, this.count = null, this.price = null).catch(function (error) {
+				}, this.id = null, this.count = null, this.price = null, this.change = true).catch(function (error) {
 					console.log(error);
 				});
 			}
@@ -41750,7 +41747,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             if (this.text.length >= 2) {
                 this.results = this.selectCategoriesItems.filter(function (item) {
-                    return item.name.toLowerCase().includes(_this.text.toLowerCase());
+                    return item.article.name.toLowerCase().includes(_this.text.toLowerCase());
                 });
             }
 
@@ -41773,7 +41770,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         addFromSearch: function addFromSearch(index) {
             // console.log('Клик по пришедшим данным, добавляем в инпут');
             this.id = this.results[index].id;
-            this.text = this.results[index].name;
+            this.text = this.results[index].article.name;
             this.error = false;
             this.search = false;
             this.results = [];
@@ -42143,7 +42140,7 @@ var render = function() {
                           }
                         }
                       },
-                      [_vm._v(_vm._s(item.name))]
+                      [_vm._v(_vm._s(item.article.name))]
                     )
                   ])
                 ])
