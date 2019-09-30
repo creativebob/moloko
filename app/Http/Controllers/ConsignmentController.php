@@ -284,7 +284,7 @@ class ConsignmentController extends Controller
 				$model = 'App\\'.$entity->model;
 				
 				foreach ($items as $item) {
-					
+
 					$stock = $model::firstOrNew([
 						'cmv_id' => $item->cmv_id,
 						'manufacturer_id' => $item->cmv->article->manufacturer_id,
@@ -332,8 +332,6 @@ class ConsignmentController extends Controller
 		} else {
 			abort(403, 'Накладная пуста');
 		}
-		
-		
 	}
 	
 	public function unpost($id)
@@ -407,26 +405,28 @@ class ConsignmentController extends Controller
 						})
 						->min('price');
 //					dd($min);
-					
-					$cost->min = $min;
-					
-					$max = ConsignmentsItem::where([
-						'cmv_id' => $item->cmv_id,
-						'cmv_type' => $item->cmv_type,
-					])
-						->whereHas('consignment', function ($q) use ($consignment) {
-							$q->where('is_posted', true)
-								->where('id', '!=', $consignment->id);
-						})
-						->min('price');
+
+                    $max = ConsignmentsItem::where([
+                        'cmv_id' => $item->cmv_id,
+                        'cmv_type' => $item->cmv_type,
+                    ])
+                        ->whereHas('consignment', function ($q) use ($consignment) {
+                            $q->where('is_posted', true)
+                                ->where('id', '!=', $consignment->id);
+                        })
+                        ->min('price');
 //					dd($max);
-					
-					$cost->max = $max;
-					
-					$average = (($stock_count * $cost->average) - ($item->count * $item->price)) / ($stock->count);
-					$cost->average = $average;
-					
-					$cost->save();
+
+                    if (is_null($min) || is_null($max)) {
+                        $cost->delete();
+                    } else {
+                        $cost->min = $min;
+                        $cost->max = $max;
+                        $average = (($stock_count * $cost->average) - ($item->count * $item->price)) / ($stock->count);
+                        $cost->average = $average;
+                        $cost->save();
+                    }
+
 //					dd($cost);
 				}
 			}
