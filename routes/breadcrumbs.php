@@ -1,8 +1,21 @@
 <?php
 
+use App\Entity;
+
 // Все index'ы
 Breadcrumbs::register('index', function ($breadcrumbs, $page_info) {
     $breadcrumbs->push($page_info->name, route($page_info->alias.'.index'));
+});
+
+Breadcrumbs::for('category', function ($trail, $category) {
+    if ($category->parent) {
+        $trail->parent('category', $category->parent);
+    } else {
+        $entity = Entity::where('alias', $category->getTable())->first();
+        $trail->parent('index', $entity);
+    }
+
+    $trail->push($category->name, route($category->getTable().'.edit', $category->id));
 });
 
 // index > Создать
@@ -10,6 +23,8 @@ Breadcrumbs::register('create', function ($breadcrumbs, $page_info) {
 	$breadcrumbs->parent('index', $page_info);
     $breadcrumbs->push('Добавление', route($page_info->alias.'.create'));
 });
+
+
 
 // index > Редактировать
 // Breadcrumbs::register('edit', function ($breadcrumbs, $page_info, $item) {

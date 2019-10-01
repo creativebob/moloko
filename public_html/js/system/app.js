@@ -42737,7 +42737,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			point_status: false,
 			limit_status: false,
 			reg_rate: /^(\d+)(\.{1})(\d{3,})$/,
-			count_item: 0
+			count_item: this.value
 		};
 	},
 
@@ -42755,12 +42755,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			default: 0
 		}
 	},
-	created: function created() {
-		this.count_item = this.value;
-	},
+	// created: function(){
+	// 	this.count_item = this.value;
+	// },
 	computed: {
 		myrate: function myrate() {
 			return this.rate * 1;
+		},
+		change: function change() {
+			if (this.value !== this.count_item) {
+				this.count_item = this.value;
+			}
+			return this.count_item;
 		}
 	},
 	methods: {

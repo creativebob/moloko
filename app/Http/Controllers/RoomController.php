@@ -2,24 +2,15 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Http\Requests\RoomStoreRequest;
+use App\Http\Requests\RoomUpdateRequest;
 use App\Room;
-use App\Article;
 use App\RoomsCategory;
 use App\Manufacturer;
-
-// Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\RoomRequest;
-use App\Http\Requests\ArticleStoreRequest;
-
-// Куки
 use Illuminate\Support\Facades\Cookie;
-
-// Трейты
-use App\Http\Controllers\Traits\Articlable;
-
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Traits\Articlable;
 
 class RoomController extends Controller
 {
@@ -62,7 +53,7 @@ class RoomController extends Controller
             'id',
             'article_id',
             'category_id',
-            'set_status',
+
             'author_id',
             'company_id',
             'display',
@@ -188,7 +179,7 @@ class RoomController extends Controller
         ]);
     }
 
-    public function store(ArticleStoreRequest $request)
+    public function store(RoomStoreRequest $request)
     {
 
         // Подключение политики
@@ -205,6 +196,9 @@ class RoomController extends Controller
 
             $data = $request->input();
             $data['article_id'] = $article->id;
+            $data['price_unit_category_id'] = $data['units_category_id'];
+            $data['price_unit_id'] = $data['unit_id'];
+
             $room = (new Room())->create($data);
 
             if ($room) {
@@ -257,7 +251,14 @@ class RoomController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $room);
 
-        $room = $room->load(['article', 'location']);
+        $room->load([
+            'article' => function ($q) {
+                $q->with([
+                    'unit'
+                ]);
+            },
+            'location'
+        ]);
         $article = $room->article;
         // dd($article);
 
@@ -280,14 +281,15 @@ class RoomController extends Controller
         ]);
     }
 
-    public function update(ArticleStoreRequest $request, $id)
+    public function update(RoomUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $room = Room::moderatorLimit($answer)
+        $room = Room::with('article')
+        ->moderatorLimit($answer)
         ->findOrFail($id);
         // dd($room);
 
@@ -304,6 +306,22 @@ class RoomController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $room);
 
+            // Метрики
+            if ($request->has('metrics')) {
+                // dd($request);
+
+                $metrics_insert = [];
+                foreach ($request->metrics as $metric_id => $value) {
+                    if (is_array($value)) {
+                        $metrics_insert[$metric_id]['value'] = implode(',', $value);
+                    } else {
+//                        if (!is_null($value)) {
+                        $metrics_insert[$metric_id]['value'] = $value;
+//                        }
+                    }
+                }
+                $room->metrics()->syncWithoutDetaching($metrics_insert);
+            }
 
             $room->area = $request->area;
             // dd($request);
@@ -312,8 +330,6 @@ class RoomController extends Controller
             $room->location_id = $location_id;
 
             $room->serial = $request->serial;
-            $room->display = $request->display;
-            $room->system = $request->system;
             $room->save();
 
 
@@ -360,10 +376,10 @@ class RoomController extends Controller
             if ($room) {
                 return redirect()->route('rooms.index');
             } else {
-                abort(403, 'Ошибка при архивации сырья');
+                abort(403, 'Ошибка при архивации помещения');
             }
         } else {
-            abort(403, 'Сырьё не найдено');
+            abort(403, 'Помещение не найдено');
         }
     }
 }

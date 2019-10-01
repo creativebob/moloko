@@ -22,12 +22,19 @@ class CreateRoomsTable extends Migration
             $table->bigInteger('category_id')->nullable()->unsigned()->comment('Id категории помещения');
             $table->foreign('category_id')->references('id')->on('rooms_categories');
 
-            $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
+            $table->bigInteger('price_unit_category_id')->nullable()->unsigned()->comment('Категория единицы измерения для определения цены');
+            $table->foreign('price_unit_category_id')->references('id')->on('units_categories');
+
+            $table->bigInteger('price_unit_id')->nullable()->unsigned()->comment('Единица измерения для определения цены');
+            $table->foreign('price_unit_id')->references('id')->on('units');
 
             $table->decimal('area', 15, 2)->nullable()->comment('Площадь (м2)');
 
             $table->bigInteger('location_id')->nullable()->unsigned()->comment('Id локации');
             $table->foreign('location_id')->references('id')->on('locations');
+
+            $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
+            $table->boolean('serial')->default(0)->unsigned()->comment('Серийный номер');
 
 
             // Общие настройки

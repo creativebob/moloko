@@ -47,20 +47,36 @@ class ContainersStock extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-	    'stock_id',
-	    'cmv_id',
-	    'manufacturer_id',
-	    'stock_id',
-	    'supplier_id',
-	    'count',
-	    'weight',
-	    'serial',
+        'stock_id',
+        'cmv_id',
+        'manufacturer_id',
+        'stock_id',
+        'supplier_id',
+        'count',
+        'weight',
+        'serial',
     ];
 
-    // Получаем компанию.
+    // Компания
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
+    // Автор
+    public function author()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // Тмц
+    public function cmv()
+    {
+        return $this->belongsTo(Container::class);
+    }
+
+    public function manufacturer()
+    {
+        return $this->belongsTo(Manufacturer::class);
+    }
 }

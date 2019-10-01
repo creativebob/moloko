@@ -57,10 +57,26 @@ class RawsStock extends Model
         'serial',
     ];
 
-    // Получаем компанию.
+    // Компания
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
+    // Автор
+    public function author()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    // Тмц
+    public function cmv()
+    {
+        return $this->belongsTo(Raw::class);
+    }
+
+    public function manufacturer()
+    {
+        return $this->belongsTo(Manufacturer::class);
+    }
 }

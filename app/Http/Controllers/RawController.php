@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-// Модели
-use App\Http\Requests\ArticleStoreRequest;
-use App\Http\Requests\ArticleUpdateRequest;
 use App\Http\Requests\RawStoreRequest;
 use App\Http\Requests\RawUpdateRequest;
 use App\Raw;
@@ -33,7 +30,6 @@ class RawController extends Controller
 
     public function index(Request $request)
     {
-
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
@@ -249,7 +245,6 @@ class RawController extends Controller
             $data['article_id'] = $article->id;
             $data['price_unit_category_id'] = $data['units_category_id'];
             $data['price_unit_id'] = $data['unit_id'];
-
 
             $raw = (new Raw())->create($data);
             

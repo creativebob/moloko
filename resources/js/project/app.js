@@ -4,7 +4,7 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('../bootstrap');
+require('../common/bootstrap');
 
 window.Vue = require('vue');
 
@@ -32,4 +32,4 @@ const app = new Vue({
 });
 
 // Основные настройки
-require('../main');
+require('../common/main');

@@ -8,6 +8,7 @@ use App\Http\ViewComposers\System\ArticlesCategoriesWithItemsComposer;
 use App\Http\ViewComposers\System\CitySearchComposer;
 use App\Http\ViewComposers\System\ContainersCategoriesComposer;
 use App\Http\ViewComposers\System\ContainersComposer;
+use App\Http\ViewComposers\System\StocksComposer;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -186,6 +187,9 @@ class ComposerServiceProvider extends ServiceProvider
         ], ManufacturersComposer::class);
 
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);
+        view()->composer([
+            'includes.selects.stocks'
+        ], StocksComposer::class);
 
         // Conflict: то, что осталось в нижней части
         // view()->composer(['includes.selects.manufacturers', 'includes.lists.manufacturers'], ManufacturersComposer::class);

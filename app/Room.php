@@ -48,6 +48,8 @@ class Room extends Model
         'article_id',
         'location_id',
         'area',
+        'price_unit_id',
+        'price_unit_category_id',
 
         'display',
         'system',
@@ -90,6 +92,13 @@ class Room extends Model
     public function author()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // Метрики
+    public function metrics()
+    {
+        return $this->morphToMany(Metric::class, 'entity', 'entity_metric_value')
+            ->withPivot('value');
     }
 
 

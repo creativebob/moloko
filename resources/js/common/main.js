@@ -2,7 +2,7 @@
 $(document).foundation();
 
 // Csrf для axios
-window.axios = require('axios');
+window.axios = require('axios/index');
 
 window.axios.defaults.headers.common = {
     'X-Requested-With': 'XMLHttpRequest',

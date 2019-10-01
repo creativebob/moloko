@@ -54,17 +54,23 @@
                     </div>
 
                     <div class="small-12 medium-6 cell">
-                        <label>Сумма
-{{--                            <input-digit-component name="amount" rate="2" :value="{{ $consignment->amount ?? 0 }}"></input-digit-component>--}}
-                            {{-- @include('includes.inputs.digit',
-                                [
-                                'name' => 'amount',
-                                'value'=>$consignment->amount,
-                                'decimal_place'=> 2,
-                                'required' => true
-                            ]) --}}
+                        <label>Склад
+                            @include('includes.selects.stocks', ['stock_id' => $consignment->stock_id])
                         </label>
                     </div>
+
+{{--                    <div class="small-12 medium-6 cell">--}}
+{{--                        <label>Сумма--}}
+{{--                            <input-digit-component name="amount" rate="2" :value="{{ $consignment->amount ?? 0 }}"></input-digit-component>--}}
+{{--                             @include('includes.inputs.digit',--}}
+{{--                                [--}}
+{{--                                'name' => 'amount',--}}
+{{--                                'value'=>$consignment->amount,--}}
+{{--                                'decimal_place'=> 2,--}}
+{{--                                'required' => true--}}
+{{--                            ]) --}}
+{{--                        </label>--}}
+{{--                    </div>--}}
 
                     <div class="small-12 cell checkbox">
                         {!! Form::hidden('draft', 0) !!}

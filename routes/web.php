@@ -352,7 +352,7 @@ Route::any('/raws_create_mode', 'RawController@ajax_change_create_mode');
 
 // ---------------------------------- Склады сырья -------------------------------------------
 // Основные методы
-	Route::resource('/raws_stocks', 'RawsStockController');
+Route::resource('/raws_stocks', 'RawsStockController');
 
 // ------------------------------------- Категории упаковок -------------------------------------------
 // Текущая добавленная/удаленная категория

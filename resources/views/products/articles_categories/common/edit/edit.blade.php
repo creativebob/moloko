@@ -8,7 +8,7 @@
 
 @section('title', $title)
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $category->name))
+@section('breadcrumbs', Breadcrumbs::render('category', $category))
 
 @section('title-content')
 <div class="top-bar head-content">
