@@ -4,16 +4,15 @@
 
         <label>
             <span data-tooltip tabindex="1" title="Площадь помещения">Площадь (м2)</span>
-            {{ Form::number('area', isset($item->area) ? $item->area: null, ['required', $disabled ? 'disabled' : '']) }}
+            {{ Form::number('area', isset($item->area) ? $item->area: null, [$disabled ? 'disabled' : '']) }}
             <span class="form-error">Поле обязательно для заполнения!</span>
         </label>
 
-        @include('includes.scripts.class.city_search')
 
         <div class="grid-x grid-margin-x">
             <div class="small-12 medium-4 cell">
                 {{-- Город --}}
-                @include('includes.inputs.city_search', ['city' => isset($item->location->city->name) ? $item->location->city : null, 'id' => 'cityForm', 'required' => true])
+                @include('system.common.includes.city_search', ['item' => $item, 'required' => true])
             </div>
             <div class="small-12 medium-8 cell">
                 <label>Адрес
