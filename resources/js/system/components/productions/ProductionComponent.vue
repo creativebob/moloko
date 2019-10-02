@@ -8,31 +8,26 @@
 				<th>Наименование позиции:</th>
 				<th>Кол-во:</th>
 				<th>Ед. изм.:</th>
-				<th>Цена:</th>
-				<th>Сумма:</th>
-	<!--			<th>% НДС:</th>-->
-	<!--			<th>НДС:</th>-->
-	<!--			<th>Всего:</th>-->
 				<th
-					v-if="!isPosted"
+					v-if="!isProduced"
 				></th>
 			</tr>
 		</thead>
 
 		<tbody id="table-raws">
 
-			<consignments-item-component
+			<productions-item-component
 					v-for="(item, index) in itemsList"
 					:item="item"
 					:index="index"
 					:key="item.id"
-					:is-posted="isPosted"
+					:is-produced="isProduced"
 					@update="updateItem"
 					@remove="deleteItem(index)"
-			></consignments-item-component>
+			></productions-item-component>
 
 			<tr
-				v-if="!isPosted"
+				v-if="!isProduced"
 				class="tr-add"
 			>
 				<td>{{ items.length + 1}}</td>
@@ -63,21 +58,6 @@
 				</td>
 				<td>{{ itemUnit }}</td>
 				<td>
-					<input-digit-component name="price" :value="price" v-on:countchanged="changePrice"></input-digit-component>
-				</td>
-				<td>
-					<span>{{ totalItemSum | roundToTwo }}</span>
-				</td>
-	<!--			<td>-->
-	<!--				<select v-model="vat_rate" name="vat_rate">-->
-	<!--					<option value="0">Без НДС</option>-->
-	<!--					<option value="10">10</option>-->
-	<!--					<option value="20">20</option>-->
-	<!--				</select>-->
-	<!--			</td>-->
-	<!--			<td><span> {{ price * count_item * vat_rate / 100 | roundToTwo }} </span></td>-->
-	<!--			<td><span> {{ (count_item * price) + (count_item * price * vat_rate / 100) | roundToTwo }} </span></td>-->
-				<td>
 					<a
 							@click="addItem"
 							class="button tiny"
@@ -90,11 +70,10 @@
 
 		<tfoot>
 			<tr>
-				<td	colspan="5">Итого:</td>
+				<td	colspan="3">Итого:</td>
 				<td>Позиций: {{ totalItemsCount }}</td>
-				<td>Сумма: {{ totalItemsPrice }}</td>
 				<td
-					v-if="!isPosted"
+					v-if="!isProduced"
 				></td>
 			</tr>
 		</tfoot>
@@ -106,10 +85,10 @@
     export default {
 		components: {
 			'select-categories-component': require('../common/selects_categories/SelectCategoriesComponent.vue'),
-			'consignments-item-component': require('./ConsignmentsItemComponent.vue')
+			'productions-item-component': require('./ProductionsItemComponent.vue')
 		},
 		props: {
-			consignment: Object,
+			production: Object,
 			selectData: Object
 		},
 		data() {
@@ -120,7 +99,7 @@
 				entity_id: this.selectData.entities[0].id,
 
 				//
-				items: this.consignment.items,
+				items: this.production.items,
 				id: null,
 				count: null,
 				price: null,
@@ -133,11 +112,8 @@
 			}
 		},
 		computed: {
-			totalItemSum() {
-				return this.count * this.price;
-			},
 			isDisabled() {
-				return this.id == null || this.price == null || (this.count == null || this.count == 0)
+				return this.id == null  || (this.count == null || this.count == 0)
 			},
 			itemsList() {
 				return this.items;
@@ -164,8 +140,8 @@
 					return item.entity_id === this.entity_id
 				})
 			},
-			isPosted() {
-				return this.consignment.is_posted === 1;
+			isProduced() {
+				return this.production.is_produced === 1;
 			},
 		},
 
@@ -188,7 +164,7 @@
 
 				if (count === 0) {
 					axios
-						.post('/admin/consignments/categories', {
+						.post('/admin/productions/categories', {
 							entity_id: this.entity_id,
 						})
 						.then(response => {
@@ -221,8 +197,8 @@
 				if (!this.isDisabled) {
 					this.disabledButton = true;
 					axios
-						.post('/admin/consignments_items', {
-							consignment_id: this.consignment.id,
+						.post('/admin/productions_items', {
+							production_id: this.production.id,
 							cmv_id: this.id,
 							entity_id: this.entity_id,
 							count: this.count,

@@ -453,6 +453,18 @@ class EntitiesTableSeeder extends Seeder
                 'view_path' => 'consignments',
                 'page_id' => $pages->firstWhere('alias', 'consignments')->id,
             ],
+            [
+                'name' => 'Наряды на производство',
+                'alias' => 'productions',
+                'model' => 'Production',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'productions',
+                'page_id' => $pages->firstWhere('alias', 'productions')->id,
+            ],
             
             [
                 'name' => 'Показатели',

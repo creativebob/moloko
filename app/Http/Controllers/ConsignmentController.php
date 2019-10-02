@@ -58,10 +58,8 @@ class ConsignmentController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
-        
-        $class = $this->class;
 
-        return view('system.pages.consignments.index', compact('consignments', 'page_info', 'filter', 'class'));
+        return view('system.pages.consignments.index', compact('consignments', 'page_info', 'filter'));
     }
     
     public function create()
@@ -86,7 +84,7 @@ class ConsignmentController extends Controller
         //
     }
 
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -144,7 +142,7 @@ class ConsignmentController extends Controller
     }
 
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -158,9 +156,6 @@ class ConsignmentController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $consignment);
-
-        $consignment->editor_id = hideGod($request->user());
-        $consignment->save();
 
         $consignment->delete();
 
@@ -311,7 +306,12 @@ class ConsignmentController extends Controller
 						$cost->max = ($item->price > $cost->max) ? $item->price : $cost->max;
 						
 						$cost_average = $cost->average;
-						$average = (($stock_count * $cost_average) + ($item->count * $item->price)) / $stock->count;
+						if ($stock->count > 0) {
+                            $average = (($stock_count * $cost_average) + ($item->count * $item->price)) / $stock->count;
+                        } else {
+                            $average = (($stock_count * $cost_average) + ($item->count * $item->price));
+                        };
+
 						$cost->average = $average;
 					} else {
 						$cost->min = $item->price;

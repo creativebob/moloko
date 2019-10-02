@@ -21,6 +21,7 @@ window.Vue = require('vue');
 
 Vue.component('city-search-component', require('./components/CitySearchComponent.vue'));
 Vue.component('consignment-component', require('./components/consignments/ConsignmentComponent.vue'));
+Vue.component('production-component', require('./components/productions/ProductionComponent.vue'));
 Vue.component('input-digit-component', require('./components/InputDigitComponent.vue'));
 Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
 Vue.component('rawcomposition-component', require('./components/RawCompositionComponent.vue'));

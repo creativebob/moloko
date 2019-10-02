@@ -128,7 +128,19 @@ class Goods extends Model
         return $this->belongsTo(Unit::class, 'price_unit_id');
     }
 
-    public function getCostAttribute()
+    // Себестоимость
+    public function cost()
+    {
+        return $this->morphOne(Cost::class, 'cmv');
+    }
+
+    // Склад
+    public function stock()
+    {
+        return $this->hasOne(GoodsStock::class, 'cmv_id');
+    }
+
+    public function getCostAverageAttribute()
     {
         if($this->article->manufacturer_id){
             return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;

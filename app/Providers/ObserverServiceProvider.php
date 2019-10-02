@@ -34,6 +34,7 @@ use App\Observers\GoodsCategoryObserver;
 use App\Observers\GoodsStockObserver;
 use App\Observers\MenuObserver;
 use App\Observers\MetricObserver;
+use App\Observers\OffObserver;
 use App\Observers\PageObserver;
 use App\Observers\PhotoObserver;
 use App\Observers\PluginObserver;
@@ -41,12 +42,15 @@ use App\Observers\PricesGoodsHistoryObserver;
 use App\Observers\PricesGoodsObserver;
 use App\Observers\PricesServicesHistoryObserver;
 use App\Observers\ProcessesGroupObserver;
+use App\Observers\ProductionObserver;
+use App\Observers\ProductionsItemObserver;
 use App\Observers\RawsStockObserver;
 use App\Observers\RoomsCategoryObserver;
 use App\Observers\SectorObserver;
 use App\Observers\ServicesCategoryObserver;
 use App\Observers\StafferObserver;
 use App\Observers\WorkflowsCategoryObserver;
+use App\Off;
 use App\Page;
 use App\Photo;
 use App\Plugin;
@@ -54,6 +58,8 @@ use App\PricesGoods;
 use App\PricesGoodsHistory;
 use App\PricesServicesHistory;
 use App\ProcessesGroup;
+use App\Production;
+use App\ProductionsItem;
 use App\RawsStock;
 use App\RoomsCategory;
 use App\Sector;
@@ -153,6 +159,13 @@ class ObserverServiceProvider extends ServiceProvider
         // Накладные
         Consignment::observe(ConsignmentObserver::class);
         ConsignmentsItem::observe(ConsignmentsItemObserver::class);
+
+        // Наряды
+        Production::observe(ProductionObserver::class);
+        ProductionsItem::observe(ProductionsItemObserver::class);
+
+        // Регистрация списаний
+        Off::observe(OffObserver::class);
 
         // Склады
         Stock::observe(StockObserver::class);

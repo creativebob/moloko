@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Http\ViewComposers\System\AccountsComposer;
 use App\Http\ViewComposers\System\ArticlesCategoriesWithGroupsComposer;
 use App\Http\ViewComposers\System\ArticlesCategoriesWithItemsComposer;
+use App\Http\ViewComposers\System\ArticlesCategoriesWithItemsComposerForManufacturer;
 use App\Http\ViewComposers\System\CitySearchComposer;
 use App\Http\ViewComposers\System\ContainersCategoriesComposer;
 use App\Http\ViewComposers\System\ContainersComposer;
@@ -172,6 +173,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('products.articles.common.edit.edit', ArticlesCategoriesWithGroupsComposer::class);
         view()->composer('system.pages.consignments.edit', ArticlesCategoriesWithItemsComposer::class);
+        view()->composer('system.pages.productions.edit', ArticlesCategoriesWithItemsComposerForManufacturer::class);
 
         view()->composer(['includes.selects.source_with_source_services'], SourceWithSourceServicesComposer::class);
         view()->composer(['includes.selects.source_services'], SourceServicesComposer::class);

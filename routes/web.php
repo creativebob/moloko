@@ -762,6 +762,17 @@ Route::resource('/consignments', 'ConsignmentController');
 //Route::any('/consignments_items', 'ConsignmentsItemController@store');
 Route::resource('/consignments_items', 'ConsignmentsItemController');
 
+// -------------------------------------- Наряды на производство ---------------------------------------------
+
+Route::any('/productions/categories', 'ProductionController@categories')->name('productions.categories');;
+Route::patch('/productions/{id}/produced', 'ProductionController@produced')->name('productions.produced');
+Route::get('/productions/{id}/unpost', 'ProductionController@unpost')->name('productions.unproduced');
+// Основные методы
+Route::resource('/productions', 'ProductionController');
+
+//Route::any('/productions_items', 'ConsignmentsItemController@store');
+Route::resource('/productions_items', 'ProductionsItemController');
+
 
 // ------------------------------------ Производители ----------------------------------------------------
 

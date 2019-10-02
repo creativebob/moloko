@@ -5,18 +5,18 @@
 	@include('includes.scripts.class.digitfield')
 @endsection
 
-@section('title', 'Редактировать товарную накладную')
+@section('title', 'Редактировать наряд на производство')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $consignment->id))
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $production->id))
 
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">РЕДАКТИРОВАТЬ товарную накладную</h2>
+        <h2 class="header-content">РЕДАКТИРОВАТЬ наряд на производство</h2>
     </div>
     <div class="top-bar-right">
-        @if(Auth::user()->god && $consignment->is_posted)
-            <a href="{{ route('consignments.unpost', $consignment->id) }}" class="button">Отменить проводку</a>
+        @if(Auth::user()->god && $production->is_posted)
+            <a href="{{ route('productions.unpost', $production->id) }}" class="button">Отменить проводку</a>
             @endif
     </div>
 </div>
@@ -24,7 +24,7 @@
 
 @section('content')
 
-{{ Form::model($consignment, ['route' => ['consignments.update', $consignment->id], 'data-abide', 'novalidate']) }}
+{{ Form::model($production, ['route' => ['productions.update', $production->id], 'data-abide', 'novalidate']) }}
 {{ method_field('PATCH') }}
 
 <div class="grid-x tabs-wrap inputs">
@@ -37,35 +37,35 @@
 
                     <div class="small-6 medium-3 cell">
                         <label>Номер
-                            @include('includes.inputs.digit', ['name' => 'number',  'required' => true, 'value' => $consignment->id])
+                            @include('includes.inputs.digit', ['name' => 'number',  'required' => true, 'value' => $production->id])
                         </label>
                     </div>
 
                     <div class="small-6 medium-3 cell">
                         <label>Дата
-                            @include('includes.inputs.date', ['name' => 'receipt_date', 'value' => $consignment->receipt_date->format('d.m.Y')])
+                            @include('includes.inputs.date', ['name' => 'receipt_date', 'value' => $production->receipt_date->format('d.m.Y')])
                         </label>
                     </div>
 
                     <div class="small-12 medium-6 cell">
                         <label>Поставщик
-                            @include('includes.selects.suppliers', ['supplier_id' => $consignment->supplier_id ?? null])
+                            @include('includes.selects.suppliers', ['supplier_id' => $production->supplier_id ?? null])
                         </label>
                     </div>
 
                     <div class="small-12 medium-6 cell">
                         <label>Склад
-                            @include('includes.selects.stocks', ['stock_id' => $consignment->stock_id])
+                            @include('includes.selects.stocks', ['stock_id' => $production->stock_id])
                         </label>
                     </div>
 
 {{--                    <div class="small-12 medium-6 cell">--}}
 {{--                        <label>Сумма--}}
-{{--                            <input-digit-component name="amount" rate="2" :value="{{ $consignment->amount ?? 0 }}"></input-digit-component>--}}
+{{--                            <input-digit-component name="amount" rate="2" :value="{{ $production->amount ?? 0 }}"></input-digit-component>--}}
 {{--                             @include('includes.inputs.digit',--}}
 {{--                                [--}}
 {{--                                'name' => 'amount',--}}
-{{--                                'value'=>$consignment->amount,--}}
+{{--                                'value'=>$production->amount,--}}
 {{--                                'decimal_place'=> 2,--}}
 {{--                                'required' => true--}}
 {{--                            ]) --}}
@@ -79,7 +79,7 @@
                     </div>
 
                     {{-- Чекбоксы управления --}}
-                    {{-- @include('includes.control.checkboxes', ['item' => $consignment]) --}}
+                    {{-- @include('includes.control.checkboxes', ['item' => $production]) --}}
 
                 </div>
             </div>
@@ -90,7 +90,7 @@
 
                     <div class="small-12 cell">
                         <label>Комментарий:
-                            {{ Form::textarea('description', $consignment->description ?? null, []) }}
+                            {{ Form::textarea('description', $production->description ?? null, []) }}
                         </label>
                     </div>
 
@@ -100,15 +100,15 @@
         </div>
     </div>
 
-    <consignment-component :consignment='@json($consignment)' :select-data='@json($articles_categories_with_items_data)'></consignment-component>
+    <production-component :production='@json($production)' :select-data='@json($articles_categories_with_items_data)'></production-component>
 
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
         {{ Form::submit('Редактировать', ['class' => 'button']) }}
     </div>
 
-    @if(!$consignment->is_posted)
+    @if(!$production->is_posted)
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-        {{ Form::submit('Оприходовать', ['class' => 'button', 'id' => 'button-posting']) }}
+        {{ Form::submit('Произвести', ['class' => 'button', 'id' => 'button-produced']) }}
     </div>
         @endif
 
@@ -123,9 +123,9 @@
 @include('includes.scripts.pickmeup-script')
 
     <script>
-        $(document).on('click', '#button-posting', function () {
-            let id = '{{ $consignment->id }}';
-            $(this).closest('form').attr('action', '/admin/consignments/' + id + '/posting');
+        $(document).on('click', '#button-produced', function () {
+            let id = '{{ $production->id }}';
+            $(this).closest('form').attr('action', '/admin/productions/' + id + '/produced');
         })
 
     </script>

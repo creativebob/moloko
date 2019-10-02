@@ -115,11 +115,17 @@ class Raw extends Model
         return $this->belongsTo(Unit::class, 'unit_portion_goods_id');
     }
 
-    // Получаем себестоимость
-    // public function cost()
-    // {s
-    //     return $this->morphMany(Cost::class, 'cmv');
-    // }
+    // Себестоимость
+     public function cost()
+     {
+         return $this->morphOne(Cost::class, 'cmv');
+     }
+
+    // Склад
+    public function stock()
+    {
+        return $this->hasOne(RawsStock::class, 'cmv_id');
+    }
 
     // Получаем себестоимость
     // public function getCostAttribute()

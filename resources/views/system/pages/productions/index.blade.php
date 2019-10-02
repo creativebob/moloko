@@ -10,7 +10,7 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-{{ $consignments->isNotEmpty() ? num_format($consignments->total(), 0) : 0 }}
+{{ $productions->isNotEmpty() ? num_format($productions->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')
@@ -46,78 +46,78 @@
 
             <tbody data-tbodyId="1" class="tbody-width">
 
-                @if($consignments->isNotEmpty())
-                @foreach($consignments as $consignment)
+                @if($productions->isNotEmpty())
+                @foreach($productions as $production)
 
-                <tr class="item @if($consignment->moderation == 1)no-moderation @endif" id="consignments-{{ $consignment->id }}" data-name="{{ $consignment->name }}">
+                <tr class="item @if($production->moderation == 1)no-moderation @endif" id="consignments-{{ $production->id }}" data-name="{{ $production->name }}">
                     <td class="td-drop">
                         <div class="sprite icon-drop"></div>
                     </td>
                     <td class="td-checkbox checkbox">
 
-                        <input type="checkbox" class="table-check" name="consignment" id="check-{{ $consignment->id }}"
+                        <input type="checkbox" class="table-check" name="consignment" id="check-{{ $production->id }}"
                         @if(!empty($filter['booklist']['booklists']['default']))
-                        @if (in_array($consignment->id, $filter['booklist']['booklists']['default'])) checked
+                        @if (in_array($production->id, $filter['booklist']['booklists']['default'])) checked
                         @endif
                         @endif
                         >
-                        <label class="label-check" for="check-{{ $consignment->id }}"></label>
+                        <label class="label-check" for="check-{{ $production->id }}"></label>
 
                     </td>
 
                     <td class="td-receipt_date">
-                        <a href="/admin/{{ $consignment->getTable() }}/{{ $consignment->id }}/edit">
-                        <span>{{ isset($consignment->receipt_date) ? $consignment->receipt_date->format('d.m.Y') : null }}</span></a>
+                        <a href="/admin/{{ $production->getTable() }}/{{ $production->id }}/edit">
+                        <span>{{ isset($production->receipt_date) ? $production->receipt_date->format('d.m.Y') : null }}</span></a>
                     </td>
 
 
                     <td class="td-number">
-                        {{ $consignment->number ?? '' }}
+                        {{ $production->number ?? '' }}
                         <br><span class="tiny-text"></span>
                     </td>
 
                       <td class="td-supplier-name">
 
-                          <a href="/admin/consignments?supplier_id%5B%5D={{ $consignment->supplier->id ?? '' }}" class="filter_link" title="Фильтровать">
-                            {{ $consignment->supplier->company->name ?? '' }}
+                          <a href="/admin/consignments?supplier_id%5B%5D={{ $production->supplier->id ?? '' }}" class="filter_link" title="Фильтровать">
+                            {{ $production->supplier->company->name ?? '' }}
                         </a>
                         <br>
                         <span class="tiny-text">
-                            {{ $consignment->supplier->company->location->city->name ?? '' }}, {{ $consignment->supplier->company->location->address ?? '' }}
+                            {{ $production->supplier->company->location->city->name ?? '' }}, {{ $production->supplier->company->location->address ?? '' }}
                         </span>
                         <td class="td-phone">
-                            {{ isset($consignment->supplier->company->main_phone->phone) ? decorPhone($consignment->supplier->company->main_phone->phone) : 'Номер не указан' }}
-                            @if($consignment->supplier->email ?? '' )<br><span class="tiny-text">{{ $consignment->supplier->company->email ?? '' }}</span>@endif
+                            {{ isset($production->supplier->company->main_phone->phone) ? decorPhone($production->supplier->company->main_phone->phone) : 'Номер не указан' }}
+                            @if($production->supplier->email ?? '' )<br><span class="tiny-text">{{ $production->supplier->company->email ?? '' }}</span>@endif
                         </td>
 
-                        <td class="td-amount">{{ num_format($consignment->amount, 0) }}</td>
+                        <td class="td-amount">{{ num_format($production->amount, 0) }}</td>
 
                     <td class="td-description">
 
-                        @can('view', $consignment)
+                        @can('view', $production)
                         
-                            <span data-toggle="dropdown-{{ $consignment->id }}">{{ $consignment->name ?? '' }}</span>
-                            <div class="dropdown-pane bottom right" id="dropdown-{{ $consignment->id }}" data-dropdown data-hover="true" data-hover-pane="true">
-                              {!! $consignment->description ?? '' !!}
+                            <span data-toggle="dropdown-{{ $production->id }}">{{ $production->name ?? '' }}</span>
+                            <div class="dropdown-pane bottom right" id="dropdown-{{ $production->id }}" data-dropdown data-hover="true" data-hover-pane="true">
+                              {!! $production->description ?? '' !!}
                           </div>
                           @else
-                          {{ $consignment->name ?? '' }}
+                          {{ $production->name ?? '' }}
                           @endcan
 
                     </td>
 
-                        <td class="td-payment">{{ num_format($consignment->payment, 0) }}
-                          <br><span class="tiny-text">{{ num_format($consignment->amount - $consignment->payment, 0) }}</span>
+                        <td class="td-payment">{{ num_format($production->payment, 0) }}
+                          <br><span class="tiny-text">{{ num_format($production->amount - $production->payment, 0) }}</span>
                       </td>
-                      <td class="td-stage">@if($consignment->is_posted)Проведена @endif</td>
+                      <td class="td-stage">@if($production->is_posted)Проведена @endif</td>
                       <td class="td-created_at">
-                        <span>{{ $consignment->created_at->format('d.m.Y') }}</span><br>
-                        <span class="tiny-text">{{ $consignment->created_at->format('H:i') }}</span>
+                        <span>{{ $production->created_at->format('d.m.Y') }}</span><br>
+                        <span class="tiny-text">{{ $production->created_at->format('H:i') }}</span>
                     </td>
-                    <td class="td-author">{{ $consignment->author->name ?? '' }}</td>
+                    <td class="td-author">{{ $production->author->name ?? '' }}</td>
                     <td class="td-delete">
-                      @if ($consignment->system !== 1)
-                      @can('delete', $consignment)
+                      @if ($production->system !== 1)
+                      @can('delete', $production)
                       <a class="icon-delete sprite" data-open="item-delete"></a>
                       @endcan
                       @endif
@@ -133,8 +133,8 @@
 {{-- Pagination --}}
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
-    <span class="pagination-title">Кол-во записей: {{ $consignments->count() }}</span>
-    {{ $consignments->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
+    <span class="pagination-title">Кол-во записей: {{ $productions->count() }}</span>
+    {{ $productions->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
 </div>
 </div>
 
