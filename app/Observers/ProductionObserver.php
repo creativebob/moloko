@@ -19,6 +19,8 @@ class ProductionObserver
 
         $user = request()->user();
         $production->filial_id = $user->filial_id;
+        
+	    $production->manufacturer_id = $user->company->we_manufacturer->id;
     }
 
     public function updating(Production $production)

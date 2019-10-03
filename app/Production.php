@@ -46,7 +46,7 @@ class Production extends Model
 
     protected $dates = ['deleted_at', 'receipt_date'];
     protected $fillable = [
-        'supplier_id',
+        'manufacturer_id',
         'name',
         'description',
         'receipt_date',

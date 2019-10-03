@@ -48,12 +48,6 @@
                     </div>
 
                     <div class="small-12 medium-6 cell">
-                        <label>Поставщик
-                            @include('includes.selects.suppliers', ['supplier_id' => $production->supplier_id ?? null])
-                        </label>
-                    </div>
-
-                    <div class="small-12 medium-6 cell">
                         <label>Склад
                             @include('includes.selects.stocks', ['stock_id' => $production->stock_id])
                         </label>

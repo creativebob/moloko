@@ -28,8 +28,8 @@ class CreateProductionsTable extends Migration
             $table->date('receipt_date')->nullable()->comment('Дата приема');
             $table->string('number')->index()->nullable()->comment('Номер накладной');
 
-            $table->bigInteger('supplier_id')->unsigned()->nullable()->comment('Id поставщика');
-            $table->foreign('supplier_id')->references('id')->on('suppliers');
+            $table->bigInteger('manufacturer_id')->unsigned()->nullable()->comment('Id производителя');
+            $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
 
             $table->bigInteger('stock_id')->nullable()->unsigned()->comment('ID склада по умолчанию');
             $table->foreign('stock_id')->references('id')->on('stocks');
