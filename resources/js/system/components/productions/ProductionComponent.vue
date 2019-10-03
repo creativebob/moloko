@@ -102,7 +102,6 @@
 				items: this.production.items,
 				id: null,
 				count: null,
-				price: null,
 
 				// Категории для компонента выбора
 				categories: this.selectData.categories,
@@ -120,13 +119,6 @@
 			},
 			totalItemsCount() {
 				return this.items.length;
-			},
-			totalItemsPrice() {
-				let price = 0;
-				this.items.forEach(function(item) {
-					return price += Number(item.amount)
-				});
-				return price;
 			},
 
 			// Списки для компонента выбора
@@ -148,9 +140,6 @@
 		methods: {
 			changeCount: function(value) {
 				this.count = value;
-			},
-			changePrice: function(value) {
-				this.price = value;
 			},
 			changeEntity: function() {
 				this.change = true;
@@ -202,14 +191,12 @@
 							cmv_id: this.id,
 							entity_id: this.entity_id,
 							count: this.count,
-							price: this.price
 						})
 						.then(response => {
 								this.items.push(response.data)
 							},
 								this.id = null,
 								this.count = null,
-								this.price = null,
 								this.change = true
 						)
 						.catch(error => {

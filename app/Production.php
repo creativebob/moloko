@@ -100,4 +100,10 @@ class Production extends Model
     {
         return $this->hasMany(ProductionsItem::class);
     }
+	
+	// Списания
+	public function offs()
+	{
+		return $this->morphMAny(Off::class, 'document');
+	}
 }

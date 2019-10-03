@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use App\Cost;
 use App\Entity;
 use App\Http\Requests\ProductionUpdateRequest;
@@ -318,8 +319,11 @@ class ProductionController extends Controller
 //		dd($production);
 
         if ($production->items->isNotEmpty()) {
-
-            $grouped_items = $production->items->groupBy('entity.alias');
+	
+	        Log::channel('documents')
+		        ->info('========================================== НАЧАЛО НАРЯДА ПРОИЗВОДСТВА ==============================================');
+	        
+	        $grouped_items = $production->items->groupBy('entity.alias');
 //			dd($grouped_items);
 
             foreach ($grouped_items as $alias => $items) {
@@ -341,25 +345,49 @@ class ProductionController extends Controller
                             $model_composition = 'App\\'.$entity_composition->model;
 
                             foreach ($item->cmv->article->$relation_name as $composition) {
-                                // Получаем себестоимость
-                                $count = $composition->pivot->value;
-                                $price += ($count * isset($composition->cost)? $composition->cost->average : 0);
-
+	
+	                            Log::channel('documents')
+		                            ->info('=== СПИСАНИЕ ' . $composition->getTable() . ' ' . $composition->id . ' ===');
+	                            
                                 // Списываем позицию состава
-                                $entity_composition_stock = Entity::where('alias', $relation_name.'_stocks')->first();
-                                $model_composition_stock = 'App\\'.$entity_composition_stock->model;
-
-                                $stock_composition = $model_composition_stock::firstOrNew([
-                                    'cmv_id' => $composition->id,
-                                    'manufacturer_id' => $composition->article->manufacturer_id,
-                                    'stock_id' => $production->stock_id,
-                                ]);
+	                            if ($composition->stock) {
+		                            $stock_composition = $composition->stock;
+		
+		                            Log::channel('documents')
+			                            ->info('Существует склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);
+	                            
+	                            } else {
+		                            $data_stock = [
+			                            'cmv_id' => $item->cmv_id,
+			                            'manufacturer_id' => $item->cmv->article->manufacturer_id,
+			                            'stock_id' => $production->stock_id,
+			                            'filial_id' => $production->filial_id,
+		                            ];
+		                            $entity_composition_stock = Entity::where('alias', $relation_name.'_stocks')->first();
+		                            $model_composition_stock = 'App\\'.$entity_composition_stock->model;
+		
+		                            $stock_composition = (new $model_composition_stock())->create($data_stock);
+		
+		                            Log::channel('documents')
+			                            ->info('Создан склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);
+	                            
+	                            }
+	
+	                            Log::channel('documents')
+		                            ->info('Значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
+	                            
+	                            // Получаем себестоимость
+	                            $count = $composition->pivot->value;
+	                            $price += ($count * $composition->cost->average);
 
                                 $stock_composition->count -= $count * $item->count;
                                 $stock_composition->weight -= ($composition->article->weight * $count * $item->count);
                                 $stock_composition->volume -= ($composition->article->volume * $count * $item->count);
                                 $stock_composition->save();
-
+	
+	                            Log::channel('documents')
+		                            ->info('Обновлены значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
+	                            
 //                                dd($composition);
                                 $off = Off::create([
                                     'document_id' => $production->id,
@@ -367,66 +395,122 @@ class ProductionController extends Controller
                                     'cmv_id' => $composition->id,
                                     'cmv_type' => $model_composition,
                                     'count' => $count * $item->count,
-                                    'average' => isset($composition->cost)? $composition->cost->average : 0,
+                                    'average' => $composition->cost->average,
                                 ]);
+	
+	                            Log::channel('documents')
+		                            ->info('Записали списание с id: ' . $off->id .  ', count: ' . $off->count . ', average: ' . $off->average);
+	
+	                            Log::channel('documents')
+		                            ->info('=== КОНЕЦ СПИСАНИЯ ===');
                             }
                         }
                     }
 //                    dd($price);
-
+	
+	                Log::channel('documents')
+		                ->info('=== ПРИХОДОВАНИЕ ' . $item->cmv->getTable() . ' ' . $item->cmv->id . '  ===');
+                    
                     // Приходуем на склад позицию наряда
-                    $stock = $model::firstOrNew([
-                        'cmv_id' => $item->cmv_id,
-                        'manufacturer_id' => $item->cmv->article->manufacturer_id,
-                        'stock_id' => $production->stock_id,
-                    ]);
+	                if ($item->cmv->stock) {
+		                $stock = $item->cmv->stock;
+		                
+		                Log::channel('documents')
+			                ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
+	                } else {
+		                $data_stock = [
+			                'cmv_id' => $item->cmv_id,
+			                'manufacturer_id' => $item->cmv->article->manufacturer_id,
+			                'stock_id' => $production->stock_id,
+			                'filial_id' => $production->filial_id,
+		                ];
+		                $stock = (new $model())->create($data_stock);
+		
+		                Log::channel('documents')
+			                ->info('Создан склад ' . $stock->getTable() . ' c id: ' . $stock->id);
+	                }
 
-                    $stock->filial_id = $production->filial_id;
-
-                    $stock_count = isset($stock->count) ? $stock->count : 0;
-
-                    $stock->count += $item->count;
+                    $stock_count = $stock->count;
+	
+	                Log::channel('documents')
+		                ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+	                
+	                $stock->count += $item->count;
                     $stock->weight += ($item->cmv->article->weight * $item->count);
                     $stock->volume += ($item->cmv->article->volume * $item->count);
                     $stock->save();
-
-                    // Если себестоимость не 0, то меняем себестоимость
-                    if ($price > 0) {
-                        $cost = Cost::firstOrNew([
-                            'cmv_id' => $item->cmv_id,
-                            'cmv_type' => $item->cmv_type,
-                            'manufacturer_id' => $item->cmv->article->manufacturer_id,
-                        ]);
-
-                        if ($cost->id) {
-                            $cost->min = ($price < $cost->min) ? $price : $cost->min;
-                            $cost->max = ($price > $cost->max) ? $price : $cost->max;
-
-                            $cost_average = $cost->average;
-                            $average = (($stock_count * $cost_average) + ($item->count * $price)) / $stock->count;
-                            $cost->average = $average;
-                        } else {
-                            $cost->min = $price;
-                            $cost->max = $price;
-                            $cost->average = $price;
-                        }
-                        $cost->save();
-//					dd($cost);
-                    }
+	
+	                Log::channel('documents')
+		                ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+	                
+	                // Себестоимость
+	                if ($item->cmv->cost) {
+		                $cost = $item->cmv->cost;
+		
+		                Log::channel('documents')
+			                ->info('Существует себестоимость c id: ' . $cost->id);
+		                Log::channel('documents')
+			                ->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+		
+		                $cost_average = $cost->average;
+		                if ($stock->count > 0) {
+			                $average = (($stock_count * $cost_average) + ($item->count * $item->price)) / $stock->count;
+		                } else {
+			                $average = (($stock_count * $cost_average) + ($item->count * $item->price));
+		                };
+		
+		                $data_cost = [
+			                'min' => ($price < $cost->min) ? $price : $cost->min,
+			                'max' => ($price > $cost->max) ? $price : $cost->max,
+			                'average' => $average
+		                ];
+		
+		                $cost->average = $average;
+		                $cost->update($data_cost);
+		
+		                Log::channel('documents')
+			                ->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+		
+	                } else {
+		                $data_cost = [
+			                'cmv_id' => $item->cmv_id,
+			                'cmv_type' => $item->cmv_type,
+			                'manufacturer_id' => $item->cmv->article->manufacturer_id,
+			                'min' => $price,
+			                'max' => $price,
+			                'average' => $price,
+		                ];
+		                $cost = (new Cost())->create($data_cost);
+		
+		                Log::channel('documents')
+			                ->info('Создана себестоимость c id: ' . $cost->id);
+		                Log::channel('documents')
+			                ->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+		
+	                }
+	
+	                Log::channel('documents')
+		                ->info('=== КОНЕЦ ПРИХОДОВАНИЯ ===');
                 }
             }
 
             $production->update([
                 'is_produced' => true
             ]);
+	
+	        Log::channel('documents')
+		        ->info('Произведен наряд c id: ' . $production->id);
+	        Log::channel('documents')
+		        ->info('========================================== КОНЕЦ ПРОИЗВОДСТВА НАРЯДА ==============================================
+				
+				');
 
             return redirect()->route('productions.index');
         } else {
             abort(403, 'Наряд пуст');
         }
     }
-
-    // TODO - 02.10.19 - Откат производста будем делать 03.10.19
+    
     public function unproduced($id)
     {
 
@@ -449,8 +533,18 @@ class ProductionController extends Controller
                         $q->with([
                             'article' => function ($q) {
                                 $q->with([
-                                    'raws.cost',
-                                    'containers.cost'
+                                    'raws' => function ($q) {
+		                                $q->with([
+		                                    'cost',
+		                                    'stock'
+		                                ]);
+		                            },
+	                                'containers' => function ($q) {
+		                                $q->with([
+			                                'cost',
+			                                'stock'
+		                                ]);
+	                                },
                                 ]);
                             }
                         ]);
@@ -458,154 +552,151 @@ class ProductionController extends Controller
                     'entity'
                 ]);
             },
+	        'offs' => function ($q) {
+			    $q->with([
+				    'cmv' => function ($q) {
+					    $q->with([
+						    'cost',
+						    'stock',
+						    'article'
+					    ]);
+				    },
+			    ]);
+            },
         ]);
 //		dd($production);
 
         if ($production->items->isNotEmpty()) {
-
+	
+	        Log::channel('documents')
+		        ->info('========================================== ОТМЕНА НАРЯДА ПРОИЗВОДСТВА ==============================================');
+	
+	
+	        $item_average = 0;
+	
+	        Log::channel('documents')
+		        ->info('=== ПЕРЕБИРАЕМ СПИСАНИЯ И ПРИХОДУЕМ СОСТАВ  ===');
+	        
+        	foreach ($production->offs as $off) {
+        	    $cmv = $off->cmv;
+		
+        	    
+		        // Склад
+        	    $stock = $cmv->stock;
+        	    
+		        Log::channel('documents')
+			        ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
+		
+		        Log::channel('documents')
+			        ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+		        
+		        $stock_count = $stock->count;
+		
+		        $stock->count += $off->count;
+		        $stock->weight += ($cmv->article->weight * $off->count);
+		        $stock->volume += ($cmv->article->volume * $off->count);
+		        $stock->save();
+		
+		        Log::channel('documents')
+			        ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+		        
+		        // Себестоимость
+		        $cost = $cmv->cost;
+		
+		        Log::channel('documents')
+			        ->info('Существует себестоимость c id: ' . $cost->id);
+		        Log::channel('documents')
+			        ->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+		
+		        $cost_average = $cost->average;
+		        if ($stock->count > 0) {
+			        $average = (($stock_count * $cost_average) + ($off->count * $off->average)) / $stock->count;
+		        } else {
+			        $average = (($stock_count * $cost_average) + ($off->count * $off->average));
+		        };
+		        $cost->average = $average;
+		        $cost->save();
+		
+		        Log::channel('documents')
+			        ->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+		
+		
+		        $item_average += $off->average;
+		        
+		        $off->delete();
+		
+		        Log::channel('documents')
+			        ->info('Удалено списание с id:' . $off->id);
+	        }
+	
+	        Log::channel('documents')
+		        ->info('=== КОНЕЦ ПЕРЕБОРА СПИСАНИЯ ===');
+        	
             $grouped_items = $production->items->groupBy('entity.alias');
 //			dd($grouped_items);
 
             foreach ($grouped_items as $alias => $items) {
                 $entity = Entity::where('alias', $alias.'_stocks')->first();
                 $model = 'App\\'.$entity->model;
+	
+	            foreach ($items as $item) {
+		
+		            Log::channel('documents')
+			            ->info('=== СПИСАНИЕ ' . $item->cmv->getTable() . ' ' . $item->cmv->id . ' ===');
+		            
+		            // Склад
+		            $stock = $item->cmv->stock;
+		
+		            Log::channel('documents')
+			            ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
+		            Log::channel('documents')
+			            ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+		
+		            $stock_count = $stock->count;
+		
+		            $stock->count -= $item->count;
+		            $stock->weight -= ($item->cmv->article->weight * $item->count);
+		            $stock->volume -= ($item->cmv->article->volume * $item->count);
+		            $stock->save();
+		
+		            Log::channel('documents')
+			            ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+		
+		            // Себестоимость
+		            $cost = $item->cmv->cost;
+		
+		            Log::channel('documents')
+			            ->info('Существует себестоимость c id: ' . $cost->id);
+		            Log::channel('documents')
+			            ->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+		            
+		            if ($stock->count == 0) {
+			            $average = 0;
+		            } else {
+			            $average = (($stock_count * $cost->average) - ($item->count * $item_average)) / $stock->count;
+		            }
 
-                foreach ($items as $item) {
-
-                    $price = 0;
-                    $relations = [
-                        'raws',
-                        'containers'
-                    ];
-                    foreach ($relations as $relation_name) {
-                        if ($item->cmv->article->$relation_name->isNotEmpty()) {
-                            foreach ($item->cmv->article->$relation_name as $composition) {
-                                // Получаем себестоимость
-                                $count = $composition->pivot->value;
-                                $price += ($count * isset($composition->cost)? $composition->cost->average : 0);
-
-                                // Списываем позицию состава
-                                $entity_composition = Entity::where('alias', $relation_name.'_stocks')->first();
-                                $model_composition = 'App\\'.$entity_composition->model;
-
-                                $stock_composition = $model_composition::firstOrNew([
-                                    'cmv_id' => $composition->id,
-                                    'manufacturer_id' => $composition->article->manufacturer_id,
-                                    'stock_id' => $production->stock_id,
-                                ]);
-
-                                $stock_composition->count -= $count * $item->count;
-                                $stock_composition->weight -= ($composition->article->weight * $count * $item->count);
-                                $stock_composition->volume -= ($composition->article->volume * $count * $item->count);
-                                $stock_composition->save();
-                            }
-                        }
-                    }
-//                    dd($price);
-
-                    // Приходуем на склад позицию наряда
-                    $stock = $model::firstOrNew([
-                        'cmv_id' => $item->cmv_id,
-                        'manufacturer_id' => $item->cmv->article->manufacturer_id,
-                        'stock_id' => $production->stock_id,
-                    ]);
-
-                    $stock->filial_id = $production->filial_id;
-
-                    $stock_count = isset($stock->count) ? $stock->count : 0;
-
-                    $stock->count += $item->count;
-                    $stock->weight += ($item->cmv->article->weight * $item->count);
-                    $stock->volume += ($item->cmv->article->volume * $item->count);
-                    $stock->save();
-
-                    // Если себестоимость не 0, то меняем себестоимость
-                    if ($price > 0) {
-                        $cost = Cost::firstOrNew([
-                            'cmv_id' => $item->cmv_id,
-                            'cmv_type' => $item->cmv_type,
-                            'manufacturer_id' => $item->cmv->article->manufacturer_id,
-                        ]);
-
-                        if ($cost->id) {
-                            $cost->min = ($price < $cost->min) ? $price : $cost->min;
-                            $cost->max = ($price > $cost->max) ? $price : $cost->max;
-
-                            $cost_average = $cost->average;
-                            $average = (($stock_count * $cost_average) + ($item->count * $price)) / $stock->count;
-                            $cost->average = $average;
-                        } else {
-                            $cost->min = $price;
-                            $cost->max = $price;
-                            $cost->average = $price;
-                        }
-                        $cost->save();
+		            $cost->average = $average;
+		            $cost->save();
 //					dd($cost);
-                    }
-                }
-
-                foreach ($items as $item) {
-
-                    $stock = $model::where([
-                        'cmv_id' => $item->cmv_id,
-                        'manufacturer_id' => $item->cmv->article->manufacturer_id,
-                        'stock_id' => $production->stock_id,
-                    ])
-                        ->first();
-
-                    $stock_count = $stock->count;
-
-                    $stock->count -= $item->count;
-                    $stock->weight -= ($item->cmv->article->weight * $item->count);
-                    $stock->volume -= ($item->cmv->article->volume * $item->count);
-                    $stock->save();
-
-                    $cost = Cost::where([
-                        'cmv_id' => $item->cmv_id,
-                        'cmv_type' => $item->cmv_type,
-                        'manufacturer_id' => $item->cmv->article->manufacturer_id,
-                    ])
-                        ->first();
-
-                    $min = ProductionsItem::where([
-                        'cmv_id' => $item->cmv_id,
-                        'cmv_type' => $item->cmv_type,
-                    ])
-                        ->whereHas('consignment', function ($q) use ($production) {
-                            $q->where('is_posted', true)
-                                ->where('id', '!=', $production->id);
-                        })
-                        ->min('price');
-//					dd($min);
-
-                    $max = ProductionsItem::where([
-                        'cmv_id' => $item->cmv_id,
-                        'cmv_type' => $item->cmv_type,
-                    ])
-                        ->whereHas('consignment', function ($q) use ($production) {
-                            $q->where('is_posted', true)
-                                ->where('id', '!=', $production->id);
-                        })
-                        ->min('price');
-//					dd($max);
-
-                    if (is_null($min) || is_null($max)) {
-                        $cost->delete();
-                    } else {
-                        $cost->min = $min;
-                        $cost->max = $max;
-                        $average = (($stock_count * $cost->average) - ($item->count * $item->price)) / ($stock->count);
-                        $cost->average = $average;
-                        $cost->save();
-                    }
-
-//					dd($cost);
-                }
+		
+		            Log::channel('documents')
+			            ->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+		            Log::channel('documents')
+			            ->info('=== КОНЕЦ СПИСАНИЯ ===');
+	            }
             }
 
             $production->update([
-                'is_posted' => false
+                'is_produced' => false
             ]);
+	
+	        Log::channel('documents')
+		        ->info('Отменен наряд c id: ' . $production->id);
+	        Log::channel('documents')
+		        ->info('========================================== КОНЕЦ ОТМЕНЫ НАРЯДА ==============================================
+				
+				');
 
             return redirect()->route('productions.index');
         } else {

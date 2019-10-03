@@ -754,7 +754,7 @@ Route::resource('applications', 'ApplicationController')->middleware('auth');
 // -------------------------------------- Товарные накладные ---------------------------------------------
 
 Route::any('/consignments/categories', 'ConsignmentController@categories')->name('consignments.categories');;
-Route::patch('/consignments/{id}/posting', 'ConsignmentController@posting')->name('consignments.posting');
+Route::any('/consignments/{id}/posting', 'ConsignmentController@posting')->name('consignments.posting');
 Route::get('/consignments/{id}/unpost', 'ConsignmentController@unpost')->name('consignments.unpost');
 // Основные методы
 Route::resource('/consignments', 'ConsignmentController');
@@ -766,11 +766,11 @@ Route::resource('/consignments_items', 'ConsignmentsItemController');
 
 Route::any('/productions/categories', 'ProductionController@categories')->name('productions.categories');;
 Route::patch('/productions/{id}/produced', 'ProductionController@produced')->name('productions.produced');
-Route::get('/productions/{id}/unpost', 'ProductionController@unpost')->name('productions.unproduced');
+Route::get('/productions/{id}/unproduced', 'ProductionController@unproduced')->name('productions.unproduced');
 // Основные методы
 Route::resource('/productions', 'ProductionController');
 
-//Route::any('/productions_items', 'ConsignmentsItemController@store');
+//Route::get('/productions_items', 'ProductionsItemController@store');
 Route::resource('/productions_items', 'ProductionsItemController');
 
 

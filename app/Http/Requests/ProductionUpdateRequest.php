@@ -29,8 +29,7 @@ class ProductionUpdateRequest extends FormRequest
 
               'name' => 'string|max:255|nullable',
               'description' => 'string|nullable',
-
-                'supplier_id' => 'integer|required',
+	          
               'stock_id' => 'integer|required',
 
                 'draft' => 'integer|max:1',

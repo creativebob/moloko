@@ -14,4 +14,10 @@ class Off extends Model
         'count',
         'average',
     ];
+	
+	// Тмц
+	public function cmv()
+	{
+		return $this->morphTo();
+	}
 }

@@ -42823,7 +42823,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			items: this.production.items,
 			id: null,
 			count: null,
-			price: null,
 
 			// Категории для компонента выбора
 			categories: this.selectData.categories,
@@ -42842,13 +42841,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		totalItemsCount: function totalItemsCount() {
 			return this.items.length;
-		},
-		totalItemsPrice: function totalItemsPrice() {
-			var price = 0;
-			this.items.forEach(function (item) {
-				return price += Number(item.amount);
-			});
-			return price;
 		},
 
 
@@ -42875,9 +42867,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	methods: {
 		changeCount: function changeCount(value) {
 			this.count = value;
-		},
-		changePrice: function changePrice(value) {
-			this.price = value;
 		},
 		changeEntity: function changeEntity() {
 			var _this3 = this;
@@ -42929,11 +42918,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					production_id: this.production.id,
 					cmv_id: this.id,
 					entity_id: this.entity_id,
-					count: this.count,
-					price: this.price
+					count: this.count
 				}).then(function (response) {
 					_this5.items.push(response.data);
-				}, this.id = null, this.count = null, this.price = null, this.change = true).catch(function (error) {
+				}, this.id = null, this.count = null, this.change = true).catch(function (error) {
 					console.log(error);
 				});
 			}

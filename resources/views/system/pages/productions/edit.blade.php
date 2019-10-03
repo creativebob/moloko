@@ -15,8 +15,8 @@
         <h2 class="header-content">РЕДАКТИРОВАТЬ наряд на производство</h2>
     </div>
     <div class="top-bar-right">
-        @if(Auth::user()->god && $production->is_posted)
-            <a href="{{ route('productions.unpost', $production->id) }}" class="button">Отменить проводку</a>
+        @if(Auth::user()->god && $production->is_produced)
+            <a href="{{ route('productions.unproduced', $production->id) }}" class="button">Отменить производство</a>
             @endif
     </div>
 </div>
@@ -100,7 +100,7 @@
         {{ Form::submit('Редактировать', ['class' => 'button']) }}
     </div>
 
-    @if(!$production->is_posted)
+    @if(!$production->is_produced)
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
         {{ Form::submit('Произвести', ['class' => 'button', 'id' => 'button-produced']) }}
     </div>
