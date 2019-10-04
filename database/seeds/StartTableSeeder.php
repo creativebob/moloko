@@ -144,7 +144,7 @@ class StartTableSeeder extends Seeder
                 'author_id' => 4,
                 'system' => false,
                 'moderation' => false,
-                'api_token' => Str::random(60),
+                'api_token' => \Str::random(60),
         	],
         ]);
 

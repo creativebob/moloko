@@ -71,7 +71,7 @@
 	                    <td class="td-name">
 
 	                        @can('update', $cur_catalogs_goods)
-	                        {{ link_to_route('prices_goods.index', $cur_catalogs_goods->name, $parameters = ['id' => $cur_catalogs_goods->id], $attributes = []) }} <span class="tiny-text">({{ $cur_catalogs_goods->price_goods->where('archive', 0)->where('goods.article.draft', 0)->where('goods.article.draft', 0)->count() }})</span>
+								{{ link_to_route('prices_goods.index', $cur_catalogs_goods->name, $parameters = ['id' => $cur_catalogs_goods->id], $attributes = []) }} <span class="tiny-text">({{ $cur_catalogs_goods->price_goods->where('archive', 0)->where('goods.archive', 0)->where('goods.article.draft', 0)->count() }})</span>
 
 	                            @else
 	                            {{ $page->name }}
