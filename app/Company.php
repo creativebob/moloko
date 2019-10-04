@@ -235,6 +235,11 @@ class Company extends Model
     {
         return $this->belongsToMany('App\Company', 'manufacturers', 'manufacturer_id', 'company_id')->where('manufacturer_id', $company_id);
     }
+	
+	public function we_manufacturer()
+	{
+		return $this->belongsTo(Manufacturer::class, 'id', 'manufacturer_id');
+	}
 
     // Получаем клиентов
     // public function clients()

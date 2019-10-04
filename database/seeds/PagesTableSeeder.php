@@ -829,6 +829,17 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
+            [
+                'name' => 'Наряды на производство',
+                'site_id' => 1,
+                'title' => 'Наряды на производство',
+                'description' => 'Наряды на производство',
+                'alias' => 'productions',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
             
             [
                 'name' => 'Показатели',

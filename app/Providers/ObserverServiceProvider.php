@@ -12,6 +12,7 @@ use App\Container;
 use App\ContainersCategory;
 use App\ContainersStock;
 use App\Cost;
+use App\CostsHistory;
 use App\Direction;
 use App\ExpendablesCategory;
 use App\GoodsCategory;
@@ -28,12 +29,14 @@ use App\Observers\ContainerObserver;
 use App\Observers\ContainersCategoryObserver;
 use App\Observers\ContainersStockObserver;
 use App\Observers\CostObserver;
+use App\Observers\CostsHistoryObserver;
 use App\Observers\DirectionObserver;
 use App\Observers\ExpendablesCategoryObserver;
 use App\Observers\GoodsCategoryObserver;
 use App\Observers\GoodsStockObserver;
 use App\Observers\MenuObserver;
 use App\Observers\MetricObserver;
+use App\Observers\OffObserver;
 use App\Observers\PageObserver;
 use App\Observers\PhotoObserver;
 use App\Observers\PluginObserver;
@@ -41,12 +44,16 @@ use App\Observers\PricesGoodsHistoryObserver;
 use App\Observers\PricesGoodsObserver;
 use App\Observers\PricesServicesHistoryObserver;
 use App\Observers\ProcessesGroupObserver;
+use App\Observers\ProductionObserver;
+use App\Observers\ProductionsItemObserver;
 use App\Observers\RawsStockObserver;
+use App\Observers\ReceiptObserver;
 use App\Observers\RoomsCategoryObserver;
 use App\Observers\SectorObserver;
 use App\Observers\ServicesCategoryObserver;
 use App\Observers\StafferObserver;
 use App\Observers\WorkflowsCategoryObserver;
+use App\Off;
 use App\Page;
 use App\Photo;
 use App\Plugin;
@@ -54,7 +61,10 @@ use App\PricesGoods;
 use App\PricesGoodsHistory;
 use App\PricesServicesHistory;
 use App\ProcessesGroup;
+use App\Production;
+use App\ProductionsItem;
 use App\RawsStock;
+use App\Receipt;
 use App\RoomsCategory;
 use App\Sector;
 use App\ServicesCategory;
@@ -154,6 +164,16 @@ class ObserverServiceProvider extends ServiceProvider
         Consignment::observe(ConsignmentObserver::class);
         ConsignmentsItem::observe(ConsignmentsItemObserver::class);
 
+        // Наряды
+        Production::observe(ProductionObserver::class);
+        ProductionsItem::observe(ProductionsItemObserver::class);
+
+        // Поступления на склад
+        Receipt::observe(ReceiptObserver::class);
+
+        // Списания со склада
+        Off::observe(OffObserver::class);
+
         // Склады
         Stock::observe(StockObserver::class);
         RawsStock::observe(RawsStockObserver::class);
@@ -161,6 +181,7 @@ class ObserverServiceProvider extends ServiceProvider
         GoodsStock::observe(GoodsStockObserver::class);
 
         Cost::observe(CostObserver::class);
+        CostsHistory::observe(CostsHistoryObserver::class);
 
         // Новости
         Rubricator::observe(RubricatorObserver::class);

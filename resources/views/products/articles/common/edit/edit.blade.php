@@ -233,7 +233,7 @@
 						</div>
 
 						{{-- Метрики --}}
-						@includeIf('products.common.edit.metrics.metrics')
+						@includeIf('products.articles.'.$item->getTable().'.metrics.metrics')
 
 
 						<div id="item-inputs"></div>

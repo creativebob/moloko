@@ -12231,7 +12231,7 @@ a#task-toggle {
 }
 
 .checker .checker-nested {
-  max-height: 400px;
+  max-height: 300px;
   overflow-y: auto;
   position: absolute;
   left: -300px;
@@ -12353,16 +12353,16 @@ a#task-toggle {
   background-color: transparent !important;
 }
 
-.table-consignments {
+.table-invoice {
   border-collapse: separate;
   border-spacing: 0px 4px !important;
 }
 
-.table-consignments thead {
+.table-invoice thead {
   background-color: transparent;
 }
 
-.table-consignments thead tr th {
+.table-invoice thead tr th {
   background-color: transparent !important;
   border-bottom: 1px solid #000;
   font-size: 0.9rem;
@@ -12370,25 +12370,25 @@ a#task-toggle {
   font-weight: 400;
 }
 
-.table-consignments tr td {
+.table-invoice tr td {
   background-color: #fff;
   border-top: 1px solid #fff;
   padding: 3px 0.625rem 0.1rem;
 }
 
-.table-consignments td.td-delete, .table-consignments th.td-delete {
+.table-invoice td.td-delete, .table-invoice th.td-delete {
   width: 52px;
 }
 
-.table-consignments tr:first-child td {
+.table-invoice tr:first-child td {
   background-color: #fff;
 }
 
-.table-consignments tfoot {
+.table-invoice tfoot {
   background-color: transparent;
 }
 
-.table-consignments tfoot td {
+.table-invoice tfoot td {
   padding: 0.4rem 0.625rem 0.3rem;
   background-color: transparent !important;
 }

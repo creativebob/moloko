@@ -51,7 +51,7 @@ class Cost extends Model
     
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
     protected $fillable = [
-        'mix',
+        'min',
         'max',
         'average',
         'serial',
@@ -68,6 +68,12 @@ class Cost extends Model
     public function cmv()
     {
         return $this->morphTo();
+    }
+
+    // История
+    public function history()
+    {
+        return $this->hasMany(CostsHistory::class, 'cost_id');
     }
     
 }

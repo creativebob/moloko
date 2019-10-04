@@ -101,6 +101,12 @@ return [
             'path' => storage_path('logs/operations.log'),
             'level' => 'info',
         ],
+	
+	    'documents' => [
+		    'driver' => 'daily',
+		    'path' => storage_path('logs/documents.log'),
+		    'level' => 'info',
+	    ],
 
     ],
 

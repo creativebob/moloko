@@ -25,4 +25,18 @@ class CostObserver
         $this->destroy($cost);
     }
 
+    public function saved(Cost $cost)
+    {
+        $this->setCostHistory($cost);
+    }
+
+    private function setCostHistory($cost)
+    {
+        $cost->history()->create([
+            'min' => $cost->min,
+            'max' => $cost->max,
+            'average' => $cost->average,
+        ]);
+    }
+
 }

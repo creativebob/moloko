@@ -95,4 +95,10 @@ class ConsignmentsItem extends Model
         return $this->belongsTo(Entity::class);
     }
 
+    // Поступления
+    public function receipt()
+    {
+        return $this->morphOne(Receipt::class, 'documents_item');
+    }
+
 }

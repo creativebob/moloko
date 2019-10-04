@@ -32,6 +32,7 @@ class ConsignmentUpdateRequest extends FormRequest
               'description' => 'string|nullable',
 
                 'supplier_id' => 'integer|required',
+              'stock_id' => 'integer|required',
 
                 'draft' => 'integer|max:1',
 

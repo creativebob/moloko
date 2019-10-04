@@ -26,10 +26,12 @@ use App\Policies\OrderPolicy;
 use App\Policies\PricesGoodsPolicy;
 use App\Policies\ProcessesGroupPolicy;
 use App\Policies\ConsignmentPolicy;
+use App\Policies\ProductionPolicy;
 use App\Policies\RawsStockPolicy;
 use App\PricesGoods;
 use App\ProcessesGroup;
 use App\Consignment;
+use App\Production;
 use App\RawsStock;
 use App\User;
 use App\RightsRole;
@@ -354,18 +356,18 @@ class AuthServiceProvider extends ServiceProvider
         // Товары
         Goods::class => GoodsPolicy::class,
         GoodsCategory::class => GoodsCategoryPolicy::class,
-	   //    GoodsStock::class => GoodsStockPolicy::class,
+        GoodsStock::class => GoodsStockPolicy::class,
         PricesGoods::class => PricesGoodsPolicy::class,
 
         // Сырье
         Raw::class => RawPolicy::class,
         RawsCategory::class => RawsCategoryPolicy::class,
-        // RawsStock::class => RawsStockPolicy::class,
+        RawsStock::class => RawsStockPolicy::class,
 
         // Упаковка
         Container::class => ContainerPolicy::class,
         ContainersCategory::class => ContainersCategoryPolicy::class,
-	    // ContainersStock::class => ContainersStockPolicy::class,
+        ContainersStock::class => ContainersStockPolicy::class,
 
         // Оборудование
         Equipment::class => EquipmentPolicy::class,
@@ -380,6 +382,9 @@ class AuthServiceProvider extends ServiceProvider
 
         // Товарные накладные
         Consignment::class => ConsignmentPolicy::class,
+
+        // Наряды на производство
+        Production::class => ProductionPolicy::class,
 
         Stock::class => StockPolicy::class,
 

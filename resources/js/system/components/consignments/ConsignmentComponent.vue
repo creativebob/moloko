@@ -1,6 +1,6 @@
 <template>
 
-	<table class="table-consignments">
+	<table class="table-invoice">
 		<thead>
 			<tr>
 				<th>№</th>
@@ -59,11 +59,21 @@
 					></select-categories-component>
 				</td>
 				<td>
-					<input-digit-component name="count" rate="2" :value="count" v-on:countchanged="changeCount"></input-digit-component>
+					<input
+							v-model="count"
+							name="count"
+							type="number"
+					>
+<!--					<input-digit-component name="count" rate="2" :value="count" v-on:countchanged="changeCount"></input-digit-component>-->
 				</td>
 				<td>{{ itemUnit }}</td>
 				<td>
-					<input-digit-component name="price" :value="price" v-on:countchanged="changePrice"></input-digit-component>
+					<input
+							v-model="price"
+							name="price"
+							type="number"
+					>
+<!--					<input-digit-component name="price" :value="price" v-on:countchanged="changePrice"></input-digit-component>-->
 				</td>
 				<td>
 					<span>{{ totalItemSum | roundToTwo }}</span>
@@ -105,7 +115,7 @@
 <script>
     export default {
 		components: {
-			'select-categories-component': require('./SelectCategoriesComponent.vue'),
+			'select-categories-component': require('../common/selects_categories/SelectCategoriesComponent.vue'),
 			'consignments-item-component': require('./ConsignmentsItemComponent.vue')
 		},
 		props: {

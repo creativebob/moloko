@@ -70,13 +70,13 @@ class Menu extends Model
     // Родитель
     public function parent()
     {
-        return $this->belongsTo(GoodsCategory::class);
+        return $this->belongsTo(Menu::class);
     }
 
     // Вложенные
     public function childs()
     {
-        return $this->hasMany(GoodsCategory::class, 'parent_id');
+        return $this->hasMany(Menu::class, 'parent_id');
     }
 
     // Навигации

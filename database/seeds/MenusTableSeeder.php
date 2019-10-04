@@ -1,12 +1,14 @@
 <?php
 
+use App\Observers\Traits\CategoriesTrait;
 use Illuminate\Database\Seeder;
-
 use App\Menu;
 use App\Page;
 
 class MenusTableSeeder extends Seeder
 {
+
+    use CategoriesTrait;
 
     public function run()
     {
@@ -419,6 +421,20 @@ Menu::insert([
         'sort' => 1,
     ],
     [
+        'name' => 'Склады товаров',
+        'icon' => null,
+        'alias' => 'admin/goods_stocks',
+        'tag' => 'goods_stocks',
+        'parent_id' => $menus->where('tag', 'goods')->first()->id,
+        'page_id' => $pages->where('alias', 'goods_stocks')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 1,
+    ],
+    [
         'name' => 'Группы артикулов',
         'icon' => null,
         'alias' => 'admin/articles_groups',
@@ -596,6 +612,20 @@ Menu::insert([
         'sort' => null,
     ],
     [
+        'name' => 'Наряды на производство',
+        'icon' => null,
+        'alias' => 'admin/productions',
+        'tag' => 'productions',
+        'parent_id' => $menus->where('tag', 'productions')->first()->id,
+        'page_id' => $pages->where('alias', 'consignments')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => null,
+    ],
+    [
         'name' => 'Сырьё',
         'icon' => null,
         'alias' => 'admin/raws',
@@ -624,6 +654,20 @@ Menu::insert([
         'sort' => 2,
     ],
     [
+        'name' => 'Склады сырья',
+        'icon' => null,
+        'alias' => 'admin/raws_stocks',
+        'tag' => 'raws_stocks',
+        'parent_id' => $menus->where('tag', 'raws')->first()->id,
+        'page_id' => $pages->where('alias', 'raws_stocks')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 1,
+    ],
+    [
         'name' => 'Упаковка',
         'icon' => null,
         'alias' => 'admin/containers',
@@ -650,6 +694,20 @@ Menu::insert([
         'author_id' => 1,
         'display' => true,
         'sort' => 2,
+    ],
+    [
+        'name' => 'Склады упаковок',
+        'icon' => null,
+        'alias' => 'admin/containers_stocks',
+        'tag' => 'containers_stocks',
+        'parent_id' => $menus->where('tag', 'containers')->first()->id,
+        'page_id' => $pages->where('alias', 'containers_stocks')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 1,
     ],
     [
         'name' => 'Категории помещений',
@@ -1112,5 +1170,10 @@ Menu::insert([
         'sort' => null,
     ],
 ]);
+
+        $menus = Menu::whereNull('parent_id')
+            ->get();
+
+        $this->recalculateCategories($menus);
 }
 }

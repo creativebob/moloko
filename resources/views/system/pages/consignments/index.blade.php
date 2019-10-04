@@ -15,7 +15,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => $class, 'type' => 'table'])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Consignment::class, 'type' => 'table'])
 @endsection
 
 @section('content')

@@ -144,7 +144,7 @@ class StartTableSeeder extends Seeder
                 'author_id' => 4,
                 'system' => false,
                 'moderation' => false,
-                'api_token' => Str::random(60),
+                'api_token' => \Str::random(60),
         	],
         ]);
 
@@ -494,6 +494,10 @@ class StartTableSeeder extends Seeder
         Manufacturer::insert([
             [
                 'company_id' => 1,
+                'manufacturer_id' => 1
+            ],
+            [
+                'company_id' => 1,
                 'manufacturer_id' => 2
             ],
             [
@@ -502,7 +506,8 @@ class StartTableSeeder extends Seeder
             ],
         ]);
 
-        $manufacturers = Manufacturer::get();
+        $manufacturers = Manufacturer::where('id', '!=', 1)
+            ->get();
         foreach ($manufacturers as $manufacturer) {
             $manufacturer->company->phones()->attach(1, ['main' => 1]);
         }

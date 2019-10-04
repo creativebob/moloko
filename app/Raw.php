@@ -115,6 +115,20 @@ class Raw extends Model
         return $this->belongsTo(Unit::class, 'unit_portion_goods_id');
     }
 
+
+    // Себестоимость
+     public function cost()
+     {
+         return $this->morphOne(Cost::class, 'cmv');
+     }
+
+    // Склад
+    public function stock()
+    {
+        return $this->hasOne(RawsStock::class, 'cmv_id');
+    }
+
+
     // Геттер: Функция получения веса в кг. учитывая все надстройки и переопределения в еденицах измерения
     public function getWeightAttribute($value)
     {

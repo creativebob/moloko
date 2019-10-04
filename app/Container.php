@@ -108,10 +108,16 @@ class Container extends Model
         return $this->belongsTo(Unit::class, 'unit_for_composition_id');
     }
 
-    // Получаем себестоимость
-    public function cost($manufacturer_id = null, $supplier_id = null)
+    // Себестоимость
+    public function cost()
     {
-        return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $manufacturer_id)->where('supplier_id', $supplier_id);
+        return $this->morphOne(Cost::class, 'cmv');
+    }
+
+    // Склад
+    public function stock()
+    {
+        return $this->hasOne(ContainersStock::class, 'cmv_id');
     }
 
 

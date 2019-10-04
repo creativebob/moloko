@@ -54,6 +54,7 @@ class ContainersStock extends Model
         'supplier_id',
         'count',
         'weight',
+	    'volume',
         'serial',
     ];
 
