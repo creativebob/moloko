@@ -47,6 +47,7 @@ use App\Observers\ProcessesGroupObserver;
 use App\Observers\ProductionObserver;
 use App\Observers\ProductionsItemObserver;
 use App\Observers\RawsStockObserver;
+use App\Observers\ReceiptObserver;
 use App\Observers\RoomsCategoryObserver;
 use App\Observers\SectorObserver;
 use App\Observers\ServicesCategoryObserver;
@@ -63,6 +64,7 @@ use App\ProcessesGroup;
 use App\Production;
 use App\ProductionsItem;
 use App\RawsStock;
+use App\Receipt;
 use App\RoomsCategory;
 use App\Sector;
 use App\ServicesCategory;
@@ -166,7 +168,10 @@ class ObserverServiceProvider extends ServiceProvider
         Production::observe(ProductionObserver::class);
         ProductionsItem::observe(ProductionsItemObserver::class);
 
-        // Регистрация списаний
+        // Поступления на склад
+        Receipt::observe(ReceiptObserver::class);
+
+        // Списания со склада
         Off::observe(OffObserver::class);
 
         // Склады

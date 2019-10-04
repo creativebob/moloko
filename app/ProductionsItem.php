@@ -94,7 +94,13 @@ class ProductionsItem extends Model
     // Списания
     public function offs()
     {
-        return $this->morphMAny(Off::class, 'documents_item');
+        return $this->morphMany(Off::class, 'documents_item');
+    }
+
+    // Поступления
+    public function receipt()
+    {
+        return $this->morphOne(Receipt::class, 'documents_item');
     }
 
 }

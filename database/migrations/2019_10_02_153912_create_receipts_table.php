@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOffsTable extends Migration
+class CreateReceiptsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateOffsTable extends Migration
      */
     public function up()
     {
-        Schema::create('offs', function (Blueprint $table) {
+        Schema::create('receipts', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
@@ -54,6 +54,6 @@ class CreateOffsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('offs');
+        Schema::dropIfExists('receipts');
     }
 }

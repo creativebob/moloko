@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Off extends Model
+class Receipt extends Model
 {
     protected $fillable = [
         'stock_id',
@@ -17,10 +17,10 @@ class Off extends Model
         'count',
         'cost',
     ];
-	
-	// Тмц
-	public function cmv()
-	{
-		return $this->morphTo();
-	}
+
+    // Тмц
+    public function cmv()
+    {
+        return $this->morphTo();
+    }
 }

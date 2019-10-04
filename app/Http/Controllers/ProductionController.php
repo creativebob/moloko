@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Receipt;
 use Illuminate\Support\Facades\Log;
 use App\Cost;
 use App\Entity;
@@ -321,7 +322,7 @@ class ProductionController extends Controller
         if ($production->items->isNotEmpty()) {
 	
 	        Log::channel('documents')
-		        ->info('========================================== НАЧАЛО НАРЯДА ПРОИЗВОДСТВА ==============================================');
+		        ->info('========================================== НАЧАЛО НАРЯДА ПРОИЗВОДСТВА C ID: ' . $production->id . ' ==============================================');
 	        
 	        $grouped_items = $production->items->groupBy('entity.alias');
 //			dd($grouped_items);
@@ -399,11 +400,12 @@ class ProductionController extends Controller
                                     'cmv_id' => $composition->id,
                                     'cmv_type' => $model_composition,
                                     'count' => $count * $item->count,
-                                    'average' => $composition->cost->average,
+                                    'cost' => $composition->cost->average,
+                                    'stock_id' => $production->stock_id,
                                 ]);
 	
 	                            Log::channel('documents')
-		                            ->info('Записали списание с id: ' . $off->id .  ', count: ' . $off->count . ', average: ' . $off->average);
+		                            ->info('Записали списание с id: ' . $off->id .  ', count: ' . $off->count . ', cost: ' . $off->cost);
 	
 	                            Log::channel('documents')
 		                            ->info('=== КОНЕЦ СПИСАНИЯ ===
@@ -501,6 +503,21 @@ class ProductionController extends Controller
 			                ->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
 		
 	                }
+
+                    $receipt = Receipt::create([
+                        'document_id' => $production->id,
+                        'document_type' => 'App\Production',
+                        'documents_item_id' => $item->id,
+                        'documents_item_type' => 'App\ProductionsItem',
+                        'cmv_id' => $item->cmv->id,
+                        'cmv_type' => $model_composition,
+                        'count' => $item->count,
+                        'cost' => $price,
+                        'stock_id' => $production->stock_id,
+                    ]);
+
+                    Log::channel('documents')
+                        ->info('Записано поступление с id: ' . $receipt->id .  ', count: ' . $receipt->count . ', cost: ' . $receipt->cost);
 
 	                Log::channel('documents')
 		                ->info('=== КОНЕЦ ПРИХОДОВАНИЯ ===

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Receipt;
 use Illuminate\Support\Facades\Log;
 use App\Consignment;
 use App\ConsignmentsItem;
@@ -273,15 +274,19 @@ class ConsignmentController extends Controller
 		if ($consignment->items->isNotEmpty()) {
 			
 			Log::channel('documents')
-				->info('========================================== НАЧАЛО ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================');
+				->info('========================================== НАЧАЛО ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ, ID: ' . $consignment->id . ' ==============================================');
 			
 			$grouped_items = $consignment->items->groupBy('entity.alias');
 //			dd($grouped_items);
 			
 			foreach ($grouped_items as $alias => $items) {
-				$entity = Entity::where('alias', $alias.'_stocks')->first();
-				$model = 'App\\'.$entity->model;
-				
+
+                $entity = Entity::where('alias', $alias)->first();
+                $model = 'App\\'.$entity->model;
+
+				$entity_stock = Entity::where('alias', $alias.'_stocks')->first();
+				$model_stock = 'App\\'.$entity_stock->model;
+
 				foreach ($items as $item) {
                     Log::channel('documents')
                         ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() .' ' . $item->id . ' ===');
@@ -299,14 +304,13 @@ class ConsignmentController extends Controller
 							'stock_id' => $consignment->stock_id,
 							'filial_id' => $consignment->filial_id,
 						];
-						$stock = (new $model())->create($data_stock);
+						$stock = (new $model_stock())->create($data_stock);
 						
 						Log::channel('documents')
 							->info('Создан склад ' . $stock->getTable() . ' c id: ' . $stock->id);
 
 					}
-					
-					
+
 					$stock_count = $stock->count;
 					
 					Log::channel('documents')
@@ -379,6 +383,21 @@ class ConsignmentController extends Controller
 
 
 					}
+
+                    $receipt = Receipt::create([
+                        'document_id' => $consignment->id,
+                        'document_type' => 'App\Consignment',
+                        'documents_item_id' => $item->id,
+                        'documents_item_type' => 'App\ConsignmentsItem',
+                        'cmv_id' => $item->cmv->id,
+                        'cmv_type' => $model,
+                        'count' => $item->count,
+                        'cost' => $item->price,
+                        'stock_id' => $consignment->stock_id,
+                    ]);
+
+                    Log::channel('documents')
+                        ->info('Записано поступление с id: ' . $receipt->id .  ', count: ' . $receipt->count . ', cost: ' . $receipt->cost);
 
                     Log::channel('documents')
                         ->info('=== КОНЕЦ ПЕРЕБОРА ПУНКТА ===
