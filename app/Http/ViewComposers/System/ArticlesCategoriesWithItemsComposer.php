@@ -51,7 +51,7 @@ class ArticlesCategoriesWithItemsComposer
             ]);
 //		dd($categories);
 
-        $categories_tree = buildTree($categories);
+        $categories_tree = buildTreeArray($categories);
 //        dd($categories_tree);
 
         $items = [];
@@ -82,7 +82,7 @@ class ArticlesCategoriesWithItemsComposer
 
         $articles_categories_with_items_data = [
             'entities' => $entities,
-            'categories' => $categories_tree->toArray(),
+            'categories' => $categories_tree,
             'items' => $items
         ];
 
