@@ -198,7 +198,7 @@ fieldset {
 
     legend {
         font-family: $PFDDPM;
-        padding: 0 1rem 0.2rem 0;
+        padding: 0 1rem 0.2rem 1rem;
         margin-left: -1rem;
     }
 }
@@ -4119,11 +4119,31 @@ em.raw-portion-goods-item{
 //   margin: 0;
 // }
 
-.raw-indicators{
+.cmv-indicators{
+
+    .indicators-item{
+        padding-bottom: 1rem;
+    }
+
+    .goods-indicators{
+        padding-bottom: 1rem;
+        padding-left: 2rem;
+        margin-left: 2rem;
+        max-width: 300px;
+
+        
+        .goods-margin-calc{
+            width: 50px;
+        }
+
+
+
+    }
+
     .indicator-name{
 
     }
-    .total_count_weight, .total_count_cost{
+    .indicators_total{
         padding: 0px 3px;
         font-size: 1.3rem;
         font-family: $PFDDPM;

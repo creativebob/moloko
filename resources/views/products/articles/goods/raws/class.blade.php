@@ -16,8 +16,6 @@
                 }, function(html){
                     // alert(html);
                     $('#table-raws').append(html);
-                    // this.totalCount();
-                    
                 });
             } else {
 
@@ -26,7 +24,7 @@
             };
         }
 
-        openModal(elem) {
+        openModal(elem){
             // находим описание сущности, id и название удаляемого элемента в родителе
             let parent = $(elem).closest('.item');
             let id = parent.attr('id').split('-')[2];
@@ -43,7 +41,7 @@
             // Убираем отмеченный чекбокс в списке метрик
             $('#raw-' + id).prop('checked', false);
 
-            this.totalCount(); 
+            this.totalRawsCount(); 
         }
 
         fill(elem) {
@@ -76,12 +74,12 @@
             elem_weight.data('weight-count', weight_count);
             elem_cost.data('cost-count', cost_count);
 
-            this.totalCount();
+            this.totalRawsCount();
             // parent.find('.raw-waste').val(0);
             // parent.find('.raw-leftover').val(0);
         }
 
-        totalCount() {
+        totalRawsCount() {
 
             let all_raws_weight = $('#table-raws tr td .raw-weight-count');
             let all_raws_cost = $('#table-raws tr td .raw-cost-count');
@@ -97,8 +95,23 @@
                 summ_cost += $(this).data('cost-count');
             });
 
-            $('.total_count_weight').text(this.level(summ_weight));
-            $('.total_count_cost').text(this.level(summ_cost));
+            $('.total_raws_count_weight').text(this.level(summ_weight));
+            $('.total_raws_count_weight').data('amount', summ_weight);
+
+            $('.total_raws_count_cost').text(this.level(summ_cost));
+            $('.total_raws_count_cost').data('amount', summ_cost);
+
+            this.totalGoodsCount();
+        }
+
+        totalGoodsCount() {
+            let raws_weight_count = $('.total_raws_count_weight').data('amount') * 1;
+            let raws_cost_count = $('.total_raws_count_cost').data('amount') * 1;
+            let containers_weight_count = $('.total_containers_count_weight').data('amount') * 1;
+            let containers_cost_count = $('.total_containers_count_cost').data('amount') * 1;
+
+            $('#total_goods_weight').text(this.level(raws_weight_count + containers_weight_count));
+            $('#total_goods_cost').text(this.level(raws_cost_count + containers_cost_count));
         }
 
         level(value) {

@@ -95,13 +95,23 @@ function add_phones($request, $item) {
 // Функция нахождения экземпляра модели пользователя 
 // по номеру телефона (грязному)
 
-function check_user_by_phones($phone_search) {
+function check_user_by_phones($phone_search, $company = null) {
+
+	// Если не передан ID компании пытаемся его получить
+	if($company_id == null){
+		if(Auth::user()){
+			$company_id = Auth::user()->company_id;
+		} else {
+			abort(403, 'В хелпер очистки номера не передана компания!');
+		}
+	}
 
 	// Чистим телефон: приводим к исключительно числовому виду
 	$phone_search = cleanPhone($phone_search);
 
 	// Ищем телефон в базе телефонов
-	$phone = Phone::where('phone', $phone_search)->first();
+	$phone = Phone::where('phone', $phone_search)
+	->first();
 
 	if(!empty($phone)){
 
@@ -121,11 +131,14 @@ function check_user_by_phones($phone_search) {
 // Отправка СМС через API smsru
 function sendSms($phone, $msg) {
 
+        $site = getSite();
+        $company = $site->company;
+
         $ch = curl_init("https://sms.ru/sms/send");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array(
-            "api_id" => "0D2876B1-01BD-B7A5-91FB-646A8F8D9E28",
+            "api_id" => $company->accounts->where('alias', 'sms')->first()->api_token,
             "to" => $phone, // До 100 штук до раз
             "msg" => $msg,
             "json" => 1 // Для получения более развернутого ответа от сервера

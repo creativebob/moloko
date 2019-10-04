@@ -460,4 +460,28 @@ class AppController extends Controller
 
         return view($site->alias.'.pages.confirmation.index', compact('site','page'));
     }
+
+    public function get_access_code(Request $request)
+    {
+        $site = $this->site;
+
+        $lead = session('confirmation')['lead'];
+        $user = $lead->user;
+
+        // Проверяем, не частит ли пользователь с запросом кода
+
+
+        // Конец проверки
+
+        $access_code = rand(1000, 9999);
+        $user->access_code = $access_code;
+        $user->save();
+
+        $phone = $lead->user->main_phone->phone;
+        $msg = 'Код для входа: ' . $access_code;
+        // sendSms($phone, $msg);
+
+        return 'ок';
+    }
+    
 }

@@ -113,4 +113,51 @@ class Container extends Model
     {
         return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $manufacturer_id)->where('supplier_id', $supplier_id);
     }
+
+
+    // Геттер: Функция получения веса в кг. учитывая все надстройки и переопределения в еденицах измерения
+    public function getWeightAttribute($value)
+    {
+
+            // Расчет если указано в штуках
+            if($this->article->unit_id == 32){
+                
+                    // Расчет если есть порции
+                    if($this->portion_goods_status){
+                        return $this->article->weight / $this->article->unit->ratio * $this->portion_goods_count * $this->unit_portion_goods->ratio;
+
+                    } else {
+
+                        return $this->article->weight;
+                    }
+
+            // Расчет если в единицах
+            } else {
+
+                // Расчет если есть порции
+                if($this->portion_goods_status){
+                    return $this->article->weight / $this->article->unit->ratio * $this->portion_goods_count * $this->unit_portion_goods->ratio;
+                } else {
+
+                return $this->article->weight;
+            }
+        }
+    }
+
+    public function getCostUnitAttribute()
+    {
+
+        // Существует ли запись на складе
+        if($this->morphMany(Cost::class, 'cmv')->first() !== null){
+
+            if($this->article->manufacturer_id){
+                return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+    }
+
 }

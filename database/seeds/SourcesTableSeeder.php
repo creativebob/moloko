@@ -75,6 +75,13 @@ class SourcesTableSeeder extends Seeder
                 'utm' => 'avito',
                 'author_id' => 1,
             ],
+            [
+                'name' => 'SMS.RU',
+                'description' => null,
+                'domain' => 'sms.ru',
+                'utm' => 'sms',
+                'author_id' => 1,
+            ],
         ]);
     }
 }

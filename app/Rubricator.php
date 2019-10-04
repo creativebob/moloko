@@ -21,7 +21,6 @@ class Rubricator extends Model
 {
     // Включаем кеш
     use Cachable;
-
     use SoftDeletes;
 
     // Включаем Scopes
@@ -56,6 +55,11 @@ class Rubricator extends Model
         return $this->hasMany(RubricatorsItem::class);
     }
 
+    // Публичные пункты
+    public function items_public()
+    {
+        return $this->hasMany(RubricatorsItem::class)->where('display', true);
+    }
 
     // Сайты
     public function sites()
@@ -63,13 +67,13 @@ class Rubricator extends Model
         return $this->belongsToMany(Site::class, 'rubricator_site');
     }
 
-    // Аавтор
+    // Автор
     public function author()
     {
         return $this->belongsTo(User::class);
     }
 
-    // Аватар
+    // Фото
     public function photo()
     {
         return $this->belongsTo(Photo::class);

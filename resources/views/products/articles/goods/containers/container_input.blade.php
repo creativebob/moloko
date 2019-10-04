@@ -1,5 +1,6 @@
 
 <tr class="item" id="table-containers-{{ $container->id }}" data-name="{{ $container->article->name }}">
+	<td class="number_counter"></td>
 	<td>
 
 		{{ $container->category->name }}
@@ -59,6 +60,19 @@
 	<td>
 		@include('products.articles.goods.containers.leftover_operations_select', ['selected' => $container->pivot ? $container->pivot->leftover_operation_id : null])
 	</td> --}}
+
+	<td>
+		@php if(isset($container->pivot->use)){$count = $container->pivot->use;} else {$count = 0;}; @endphp
+			<span class="container-weight-count" data-weight="{{ $container->weight * 1000 }}" data-weight-count="{{ $container->weight * 1000 * $count }}">{{ num_format($container->weight * 1000 * $count, 0) }}</span>
+		<span>гр.</span>
+	</td>
+	<td>
+		@php 
+			if(isset($container->cost_unit)){$cost = $container->cost_unit;} else {$cost = 0;};
+		@endphp
+			<span class="container-cost-count" data-cost={{ $cost }} data-cost-count={{ $cost * $count }}>{{ num_format($cost * $count, 0) }}</span>
+		<span>руб.</span>
+	</td>
 
 	<td class="td-delete">
 		@empty($disabled)

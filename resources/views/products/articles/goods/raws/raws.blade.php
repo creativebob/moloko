@@ -2,14 +2,14 @@
 	<div class="small-12 medium-9 cell">
 
 		<div class="grid-x grid-padding-x">
-			<div class="small-12 medium-6 large-9 cell raw-indicators">
+			<div class="small-12 medium-6 large-9 cell cmv-indicators">
 				<div class="grid-x grid-margin-x">
-						<div class="cell shrink">
-							<span class="indicator-name">Вес: </span><span class="total_count_weight">0</span> <span>гр.</span>
-						</div>
-						<div class="cell auto">
-							<span class="indicator-name">Себестоимость: </span><span class="total_count_cost">0</span> <span>руб.</span>
-						</div>
+					<div class="cell shrink">
+						<span class="indicator-name">Вес: </span><span data-amount="0" class="indicators_total total_raws_count_weight">0</span> <span>гр.</span>
+					</div>
+					<div class="cell auto">
+						<span class="indicator-name">Себестоимость: </span><span data-amount="0"  class="indicators_total total_raws_count_cost">0</span> <span>руб.</span>
+					</div>
 				</div>
 			</div>
 			<div class="small-12 medium-6 large-3 cell">
@@ -70,10 +70,10 @@
 						<td></td>
 						<td></td>
 						<td>
-							<span class="total_count_weight">0</span> <span>гр.</span>
+							<span class="total_raws_count_weight">0</span> <span>гр.</span>
 						</td>
 						<td>
-							<span class="total_count_cost">0</span> <span>руб.</span>
+							<span class="total_raws_count_cost">0</span> <span>руб.</span>
 						</td>
 						<td></td>
 					</tr>

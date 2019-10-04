@@ -9327,7 +9327,7 @@ fieldset {
 
 fieldset legend {
   font-family: "PFDinDisplayPro-Med";
-  padding: 0 1rem 0.2rem 0;
+  padding: 0 1rem 0.2rem 1rem;
   margin-left: -1rem;
 }
 
@@ -12543,7 +12543,22 @@ em.raw-portion-goods-item {
   color: #cccccc !important;
 }
 
-.raw-indicators .total_count_weight, .raw-indicators .total_count_cost {
+.cmv-indicators .indicators-item {
+  padding-bottom: 1rem;
+}
+
+.cmv-indicators .goods-indicators {
+  padding-bottom: 1rem;
+  padding-left: 2rem;
+  margin-left: 2rem;
+  max-width: 300px;
+}
+
+.cmv-indicators .goods-indicators .goods-margin-calc {
+  width: 50px;
+}
+
+.cmv-indicators .indicators_total {
   padding: 0px 3px;
   font-size: 1.3rem;
   font-family: "PFDinDisplayPro-Med";

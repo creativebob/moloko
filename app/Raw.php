@@ -115,36 +115,30 @@ class Raw extends Model
         return $this->belongsTo(Unit::class, 'unit_portion_goods_id');
     }
 
-    // Получаем себестоимость
-    // public function cost()
-    // {s
-    //     return $this->morphMany(Cost::class, 'cmv');
-    // }
-
-    // Получаем себестоимость
-    // public function getCostAttribute()
-    // {
-    //     if($this->article->manufacturer_id){
-    //         return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
-    //     } else {
-    //         return 0;
-    //     }
-    // }
-
     // Геттер: Функция получения веса в кг. учитывая все надстройки и переопределения в еденицах измерения
     public function getWeightAttribute($value)
     {
-        // Расчет если есть порции
-        if($this->portion_goods_status){
-            return $this->article->weight / $this->article->unit->ratio * $this->portion_goods_count * $this->unit_portion_goods->ratio;
-        } else {
 
             // Расчет если указано в штуках
             if($this->article->unit_id == 32){
-                return $this->article->weight * $this->article->unit_weight->ratio;
+                
+                    // Расчет если есть порции
+                    if($this->portion_goods_status){
+                        return $this->article->weight / $this->article->unit->ratio * $this->portion_goods_count * $this->unit_portion_goods->ratio;
+
+                    } else {
+
+                        return $this->article->weight * $this->article->unit_weight->ratio;
+                    }
 
             // Расчет если в единицах
             } else {
+
+                // Расчет если есть порции
+                if($this->portion_goods_status){
+                    return $this->article->weight / $this->article->unit->ratio * $this->portion_goods_count * $this->unit_portion_goods->ratio;
+                } else {
+
                 return $this->article->weight;
             }
         }

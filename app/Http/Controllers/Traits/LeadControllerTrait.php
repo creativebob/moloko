@@ -194,7 +194,7 @@ trait LeadControllerTrait
         $filial_id = $request->filial_id ?? $site->filials->first()->id;
 
         $name = $request->name;
-        $phone = $request->main_phone;
+        $phone = cleanPhone($request->main_phone);
 
         // Содержится ли в куках данные корзины
         if(Cookie::get('cart') !== null){

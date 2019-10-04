@@ -124,14 +124,14 @@ class EntityController extends Controller
         // Вносим общие данные
         $entity->author_id = 1;
         $entity->system = 1;
-        $entity->moderation = NULL;
+        $entity->moderation = 0;
 
 
         $entity->statistic = $request->has('statistic');
         $entity->dependence = $request->has('dependence');
 
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if($answer['automoderate'] == false){$entity->moderation = true;};
+        if($answer['automoderate'] == false){$entity->moderation = 1;};
 
         // Пишем ID компании авторизованного пользователя
         // if($user->company_id == null){

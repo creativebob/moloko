@@ -7,6 +7,10 @@
 		containers.change(this);
 	});
 
+	$(document).ready(function() {
+		containers.change(this);
+	}); 
+
 	// Удаление состав со страницы
 	// Открываем модалку
 	$(document).on('click', "#table-containers a[data-open=\"delete-item\"]", function() {

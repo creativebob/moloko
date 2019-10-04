@@ -1,5 +1,5 @@
 		@isset($catalog_goods)
-			<ul class="grid-x grid-padding-x images-menu-list small-up-3 medium-up-3 large-up-5">
+			<ul class="grid-x grid-padding-x images-menu-list small-up-3 medium-up-3 large-up-5 align-center">
 				@foreach($catalog_goods->items as $item)
 					@if($item->slug == $page->alias)
 						<li class="cell images-menu-item is-active" data-equalizer-watch>
@@ -15,8 +15,9 @@
 								<div class="wrap-photo align-center">
 									<img src="{{ getPhotoPath($item, 'medium') }}" alt="" title="">
 								</div>
+								<span>{{ $item->name }}</span>
 							</a>
-							<span>{{ $item->name }}</span>
+							
 						</li>
 					@endif
 				@endforeach

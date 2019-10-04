@@ -14,6 +14,7 @@ use App\Http\ViewComposers\Project\PricesGoodsRawsArticlesGroupsFilterComposer;
 use App\Http\ViewComposers\Project\PricesGoodsWeightFilterComposer;
 use App\Http\ViewComposers\Project\StaffComposer;
 use App\Http\ViewComposers\Project\ClientsCompaniesListComposer;
+use App\Http\ViewComposers\Project\NewsComposer;
 
 use App\Site;
 use Illuminate\Support\Facades\View;
@@ -60,6 +61,10 @@ class ComposerProjectServiceProvider extends ServiceProvider
                     $alias . '.layouts.navigations.nav_catalogs_goods',
                 ], CatalogsGoodsComposer::class);
 
+                view()->composer([
+                    'project.includes.news.images'
+                ], NewsComposer::class);
+                
                 view()->composer('project.includes.staff.list', StaffComposer::class);
 
                 view()->composer('project.includes.catalogs_goods.filters.price', PricesGoodsPriceFilterComposer::class);

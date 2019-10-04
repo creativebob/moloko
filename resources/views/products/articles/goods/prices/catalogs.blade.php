@@ -1,6 +1,7 @@
 @if ($catalogs_goods->isNotEmpty())
 <div class="grid-x grid-padding-x" id="form-prices_goods">
 
+
 	{{-- <div class="cell small-12">
 
 				<div class="grid-x grid-margin-x" id="price-units-block">

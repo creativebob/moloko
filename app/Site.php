@@ -120,4 +120,9 @@ class Site extends Model
         return $this->belongsToMany(CatalogsService::class, 'catalogs_service_site');
     }
 
+    public function rubricators()
+    {
+        return $this->belongsToMany(Rubricator::class, 'rubricator_site');
+    }
+
 }

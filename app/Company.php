@@ -357,4 +357,10 @@ class Company extends Model
 		return $this->belongsTo(Photo::class);
 	}
 
+    // Получаем компании, где мы производители
+    public function accounts()
+    {
+        return $this->hasMany(Account::class);
+    }
+
 }

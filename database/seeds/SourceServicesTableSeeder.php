@@ -16,6 +16,7 @@ class SourceServicesTableSeeder extends Seeder
 
     	$yandex_id = Source::where('utm', 'yandex')->first()->id;
     	$google_id = Source::where('utm', 'google')->first()->id;
+        $sms_id = Source::where('utm', 'sms')->first()->id;
 
         SourceService::insert([
         	[
@@ -60,6 +61,13 @@ class SourceServicesTableSeeder extends Seeder
                 'author_id' => 1,
                 'source_id' => $google_id,
         	],
+            [
+                'name' => 'СМС рассылка',
+                'alias' => 'send_sms',
+                'domain' => 'sms.ru',
+                'author_id' => 1,
+                'source_id' => $sms_id,
+            ],
         ]);
     }
 }
