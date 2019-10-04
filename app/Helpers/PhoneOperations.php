@@ -95,7 +95,7 @@ function add_phones($request, $item) {
 // Функция нахождения экземпляра модели пользователя 
 // по номеру телефона (грязному)
 
-function check_user_by_phones($phone_search, $company = null) {
+function check_user_by_phones($phone_search, $company_id = null) {
 
 	// Если не передан ID компании пытаемся его получить
 	if($company_id == null){
