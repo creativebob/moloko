@@ -5,7 +5,6 @@ namespace App\Observers;
 use App\PricesGoodsHistory;
 
 use App\Observers\Traits\Commonable;
-use Carbon\Carbon;
 
 class PricesGoodsHistoryObserver
 {
@@ -30,7 +29,7 @@ class PricesGoodsHistoryObserver
 
     protected function setBeginDate($prices_goods_history)
     {
-        $prices_goods_history->begin_date = Carbon::now();
+        $prices_goods_history->begin_date = now();
     }
 
 }

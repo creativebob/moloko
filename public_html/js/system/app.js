@@ -41438,6 +41438,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: {
@@ -42596,29 +42606,53 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              _c(
-                "td",
-                [
-                  _c("input-digit-component", {
-                    attrs: { name: "count", rate: "2", value: _vm.count },
-                    on: { countchanged: _vm.changeCount }
-                  })
-                ],
-                1
-              ),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.count,
+                      expression: "count"
+                    }
+                  ],
+                  attrs: { name: "count", type: "number" },
+                  domProps: { value: _vm.count },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.count = $event.target.value
+                    }
+                  }
+                })
+              ]),
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(_vm.itemUnit))]),
               _vm._v(" "),
-              _c(
-                "td",
-                [
-                  _c("input-digit-component", {
-                    attrs: { name: "price", value: _vm.price },
-                    on: { countchanged: _vm.changePrice }
-                  })
-                ],
-                1
-              ),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.price,
+                      expression: "price"
+                    }
+                  ],
+                  attrs: { name: "price", type: "number" },
+                  domProps: { value: _vm.price },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.price = $event.target.value
+                    }
+                  }
+                })
+              ]),
               _vm._v(" "),
               _c("td", [
                 _c("span", [
@@ -42719,6 +42753,11 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
 //
 //
 //
@@ -43283,16 +43322,28 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              _c(
-                "td",
-                [
-                  _c("input-digit-component", {
-                    attrs: { name: "count", rate: "2", value: _vm.count },
-                    on: { countchanged: _vm.changeCount }
-                  })
-                ],
-                1
-              ),
+              _c("td", [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.count,
+                      expression: "count"
+                    }
+                  ],
+                  attrs: { name: "count", type: "number" },
+                  domProps: { value: _vm.count },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.count = $event.target.value
+                    }
+                  }
+                })
+              ]),
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(_vm.itemUnit))]),
               _vm._v(" "),

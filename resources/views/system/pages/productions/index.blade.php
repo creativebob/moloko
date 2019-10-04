@@ -109,7 +109,7 @@
                         <td class="td-payment">{{ num_format($production->payment, 0) }}
                           <br><span class="tiny-text">{{ num_format($production->amount - $production->payment, 0) }}</span>
                       </td>
-                      <td class="td-stage">@if($production->is_posted)Проведена @endif</td>
+                      <td class="td-status">@if($production->is_produced)Произведен @endif</td>
                       <td class="td-created_at">
                         <span>{{ $production->created_at->format('d.m.Y') }}</span><br>
                         <span class="tiny-text">{{ $production->created_at->format('H:i') }}</span>

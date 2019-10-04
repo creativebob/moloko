@@ -16,23 +16,18 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphTo; 
 
 // Фильтры
-// use App\Scopes\Filters\Filter;
-// use App\Scopes\Filters\BooklistFilter;
-// use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\Filter;
+use App\Scopes\Filters\BooklistFilter;
+use App\Scopes\Filters\DateIntervalFilter;
 
-class Cost extends Model
+class CostsHistory extends Model
 {
-
     // Включаем кеш
     use Cachable;
 
-    use Notifiable;
-    // use SoftDeletes;
+    use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -43,37 +38,45 @@ class Cost extends Model
     use ModeratorLimitTraitScopes;
 
     // Фильтры
-    // use Filter;
-    // use BooklistFilter;
-    // use DateIntervalFilter;
+    use Filter;
+    use BooklistFilter;
+    use DateIntervalFilter;
 
-    // public $timestamps = false;
-    
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+    protected $dates = [
+        'deleted_at',
+        'begin_date',
+        'end_date'
+    ];
+
     protected $fillable = [
+        'cost_id',
         'min',
         'max',
         'average',
-        'serial',
-        'author_id',
-        'created_at',
-        'company_id',
-        'filial_id',
-	    
-        'cmv_id',
-        'cmv_type',
-        'manufacturer_id'
+
+        'begin_date',
+        'end_date',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
-    public function cmv()
+    // Прайс
+    public function prices_goods()
     {
-        return $this->morphTo();
+        return $this->belongsTo(PricesGoods::class);
     }
 
-    // История
-    public function history()
+    // Компания
+    public function company()
     {
-        return $this->hasMany(CostsHistory::class, 'cost_id');
+        return $this->belongsTo(Company::class);
     }
-    
+
+    // Автор
+    public function author()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

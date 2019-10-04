@@ -331,6 +331,8 @@ class ProductionController extends Controller
                 $model = 'App\\'.$entity->model;
 
                 foreach ($items as $item) {
+                    Log::channel('documents')
+                        ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() .' ' . $item->id . ' ===');
 
                     $price = 0;
                     $relations = [
@@ -392,6 +394,8 @@ class ProductionController extends Controller
                                 $off = Off::create([
                                     'document_id' => $production->id,
                                     'document_type' => 'App\Production',
+                                    'documents_item_id' => $item->id,
+                                    'documents_item_type' => 'App\ProductionsItem',
                                     'cmv_id' => $composition->id,
                                     'cmv_type' => $model_composition,
                                     'count' => $count * $item->count,
@@ -402,7 +406,8 @@ class ProductionController extends Controller
 		                            ->info('Записали списание с id: ' . $off->id .  ', count: ' . $off->count . ', average: ' . $off->average);
 	
 	                            Log::channel('documents')
-		                            ->info('=== КОНЕЦ СПИСАНИЯ ===');
+		                            ->info('=== КОНЕЦ СПИСАНИЯ ===
+		                            ');
                             }
                         }
                     }
@@ -454,17 +459,25 @@ class ProductionController extends Controller
 		
 		                $cost_average = $cost->average;
 		                if ($stock->count > 0) {
-			                $average = (($stock_count * $cost_average) + ($item->count * $item->price)) / $stock->count;
+			                $average = (($stock_count * $cost_average) + ($item->count * $price)) / $stock->count;
 		                } else {
-			                $average = (($stock_count * $cost_average) + ($item->count * $item->price));
+			                $average = (($stock_count * $cost_average) + ($item->count * $price));
 		                };
-		
-		                $data_cost = [
-			                'min' => ($price < $cost->min) ? $price : $cost->min,
-			                'max' => ($price > $cost->max) ? $price : $cost->max,
-			                'average' => $average
-		                ];
-		
+
+                        if ($cost->min > 0 || $cost->max > 0) {
+                            $data_cost = [
+                                'min' => ($price < $cost->min) ? $price : $cost->min,
+                                'max' => ($price > $cost->max) ? $price : $cost->max,
+                                'average' => $average
+                            ];
+                        } else {
+                            $data_cost = [
+                                'min' => $price,
+                                'max' => $price,
+                                'average' => $price,
+                            ];
+                        }
+
 		                $cost->average = $average;
 		                $cost->update($data_cost);
 		
@@ -488,9 +501,21 @@ class ProductionController extends Controller
 			                ->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
 		
 	                }
-	
+
 	                Log::channel('documents')
-		                ->info('=== КОНЕЦ ПРИХОДОВАНИЯ ===');
+		                ->info('=== КОНЕЦ ПРИХОДОВАНИЯ ===
+		                ');
+
+                    $item->update([
+                        'cost' => $price
+                    ]);
+
+                    Log::channel('documents')
+                        ->info('Обновляем себестоимость за еденицу в пункте наряда: ' . $price);
+
+                    Log::channel('documents')
+                        ->info('=== КОНЕЦ ПЕРЕБОРА ПУНКТА ===
+                        ');
                 }
             }
 
@@ -570,68 +595,7 @@ class ProductionController extends Controller
 	
 	        Log::channel('documents')
 		        ->info('========================================== ОТМЕНА НАРЯДА ПРОИЗВОДСТВА ==============================================');
-	
-	
-	        $item_average = 0;
-	
-	        Log::channel('documents')
-		        ->info('=== ПЕРЕБИРАЕМ СПИСАНИЯ И ПРИХОДУЕМ СОСТАВ  ===');
-	        
-        	foreach ($production->offs as $off) {
-        	    $cmv = $off->cmv;
-		
-        	    
-		        // Склад
-        	    $stock = $cmv->stock;
-        	    
-		        Log::channel('documents')
-			        ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
-		
-		        Log::channel('documents')
-			        ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
-		        
-		        $stock_count = $stock->count;
-		
-		        $stock->count += $off->count;
-		        $stock->weight += ($cmv->article->weight * $off->count);
-		        $stock->volume += ($cmv->article->volume * $off->count);
-		        $stock->save();
-		
-		        Log::channel('documents')
-			        ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
-		        
-		        // Себестоимость
-		        $cost = $cmv->cost;
-		
-		        Log::channel('documents')
-			        ->info('Существует себестоимость c id: ' . $cost->id);
-		        Log::channel('documents')
-			        ->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
-		
-		        $cost_average = $cost->average;
-		        if ($stock->count > 0) {
-			        $average = (($stock_count * $cost_average) + ($off->count * $off->average)) / $stock->count;
-		        } else {
-			        $average = (($stock_count * $cost_average) + ($off->count * $off->average));
-		        };
-		        $cost->average = $average;
-		        $cost->save();
-		
-		        Log::channel('documents')
-			        ->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
-		
-		
-		        $item_average += $off->average;
-		        
-		        $off->delete();
-		
-		        Log::channel('documents')
-			        ->info('Удалено списание с id:' . $off->id);
-	        }
-	
-	        Log::channel('documents')
-		        ->info('=== КОНЕЦ ПЕРЕБОРА СПИСАНИЯ ===');
-        	
+
             $grouped_items = $production->items->groupBy('entity.alias');
 //			dd($grouped_items);
 
@@ -640,6 +604,69 @@ class ProductionController extends Controller
                 $model = 'App\\'.$entity->model;
 	
 	            foreach ($items as $item) {
+                    Log::channel('documents')
+                        ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() .' ' . $item->id . ' ===');
+
+                    Log::channel('documents')
+                        ->info('=== ПЕРЕБИРАЕМ СПИСАНИЯ И ПРИХОДУЕМ СОСТАВ ===');
+
+                    foreach ($item->offs as $off) {
+
+                        $cmv = $off->cmv;
+
+                        Log::channel('documents')
+                            ->info('=== ПРИХОДОВАНИЕ ' . $cmv->getTable() . ' ' . $cmv->id . ' ===');
+
+                        // Склад
+                        $stock = $cmv->stock;
+
+                        Log::channel('documents')
+                            ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
+
+                        Log::channel('documents')
+                            ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+
+                        $stock_count = $stock->count;
+
+                        $stock->count += $off->count;
+                        $stock->weight += ($cmv->article->weight * $off->count);
+                        $stock->volume += ($cmv->article->volume * $off->count);
+                        $stock->save();
+
+                        Log::channel('documents')
+                            ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+
+                        // Себестоимость
+                        $cost = $cmv->cost;
+
+                        Log::channel('documents')
+                            ->info('Существует себестоимость c id: ' . $cost->id);
+                        Log::channel('documents')
+                            ->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+
+                        $cost_average = $cost->average;
+                        if ($stock->count > 0) {
+                            $average = (($stock_count * $cost_average) + ($off->count * $off->average)) / $stock->count;
+                        } else {
+                            $average = (($stock_count * $cost_average) + ($off->count * $off->average));
+                        };
+                        $cost->average = $average;
+                        $cost->save();
+
+                        Log::channel('documents')
+                            ->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+
+                        $off->delete();
+
+                        Log::channel('documents')
+                            ->info('Удалено списание с id:' . $off->id);
+
+                        Log::channel('documents')
+                            ->info('=== КОНЕЦ ПРИХОДОВАНИЯ ===');
+                    }
+
+                    Log::channel('documents')
+                        ->info('=== КОНЕЦ ПЕРЕБОРА СПИСАНИЯ И ПРИХОДОВАНИЯ СОСТАВА ===');
 		
 		            Log::channel('documents')
 			            ->info('=== СПИСАНИЕ ' . $item->cmv->getTable() . ' ' . $item->cmv->id . ' ===');
@@ -669,21 +696,70 @@ class ProductionController extends Controller
 			            ->info('Существует себестоимость c id: ' . $cost->id);
 		            Log::channel('documents')
 			            ->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
-		            
-		            if ($stock->count == 0) {
-			            $average = 0;
-		            } else {
-			            $average = (($stock_count * $cost->average) - ($item->count * $item_average)) / $stock->count;
-		            }
 
-		            $cost->average = $average;
-		            $cost->save();
+                    // Получаем из сессии необходимые данные
+                    $answer = operator_right('consignments_items', true, 'index');
+
+                    $min = ProductionsItem::moderatorLimit($answer)
+                        ->companiesLimit($answer)
+                        ->where([
+                            'cmv_id' => $item->cmv_id,
+                            'cmv_type' => $item->cmv_type,
+                        ])
+                        ->whereHas('production', function ($q) use ($production) {
+                            $q->where('is_produced', true)
+                                ->where('id', '!=', $production->id);
+                        })
+                        ->min('cost');
+//					dd($min);
+
+                    $max = ProductionsItem::moderatorLimit($answer)
+                        ->companiesLimit($answer)
+                        ->where([
+                            'cmv_id' => $item->cmv_id,
+                            'cmv_type' => $item->cmv_type,
+                        ])
+                        ->whereHas('production', function ($q) use ($production) {
+                            $q->where('is_produced', true)
+                                ->where('id', '!=', $production->id);
+                        })
+                        ->min('cost');
+//					dd($max);
+
+                    if (is_null($min) || is_null($max)) {
+                        $data_cost = [
+                            'min' => 0,
+                            'max' => 0,
+                            'average' => 0,
+                        ];
+                    } else {
+                        $average = (($stock_count * $cost->average) - ($item->count * $item->cost)) / $stock->count;
+                        $data_cost = [
+                            'min' => $min,
+                            'max' => $max,
+                            'average' => $average,
+                        ];
+                    }
+
+		            $cost->update($data_cost);
 //					dd($cost);
 		
 		            Log::channel('documents')
 			            ->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
 		            Log::channel('documents')
 			            ->info('=== КОНЕЦ СПИСАНИЯ ===');
+
+                    $item->update([
+                        'cost' => 0
+                    ]);
+
+                    Log::channel('documents')
+                        ->info('Обновляем себестоимость за еденицу в пункте наряда: 0');
+
+                    Log::channel('documents')
+                        ->info('=== КОНЕЦ ПЕРЕБОРА ПУНКТА ===
+                        ');
+
 	            }
             }
 

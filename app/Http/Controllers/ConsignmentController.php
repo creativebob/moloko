@@ -283,14 +283,15 @@ class ConsignmentController extends Controller
 				$model = 'App\\'.$entity->model;
 				
 				foreach ($items as $item) {
-					
-					
+                    Log::channel('documents')
+                        ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() .' ' . $item->id . ' ===');
 					// Склад
 					if ($item->cmv->stock) {
 						$stock = $item->cmv->stock;
 						
 						Log::channel('documents')
 							->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
+
 					} else {
 						$data_stock = [
 							'cmv_id' => $item->cmv_id,
@@ -302,6 +303,7 @@ class ConsignmentController extends Controller
 						
 						Log::channel('documents')
 							->info('Создан склад ' . $stock->getTable() . ' c id: ' . $stock->id);
+
 					}
 					
 					
@@ -317,10 +319,11 @@ class ConsignmentController extends Controller
 					
 					Log::channel('documents')
 						->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
-					
+
 					// Себестоимость
 					if ($item->cmv->cost) {
 						$cost = $item->cmv->cost;
+//						dd($cost);
 						
 						Log::channel('documents')
 							->info('Существует себестоимость c id: ' . $cost->id);
@@ -333,18 +336,29 @@ class ConsignmentController extends Controller
 						} else {
 							$average = (($stock_count * $cost_average) + ($item->count * $item->price));
 						};
-						
-						$data_cost = [
-							'min' => ($item->price < $cost->min) ? $item->price : $cost->min,
-							'max' => ($item->price > $cost->max) ? $item->price : $cost->max,
-							'average' => $average
-						];
-						
-						$cost->average = $average;
+
+						if (is_null($cost->min) || is_null($cost->max)) {
+                            $data_cost = [
+                                'min' => $item->price,
+                                'max' => $item->price,
+                                'average' => $item->price,
+                            ];
+
+                        } else {
+                            $data_cost = [
+                                'min' => ($item->price < $cost->min) ? $item->price : $cost->min,
+                                'max' => ($item->price > $cost->max) ? $item->price : $cost->max,
+                                'average' => $average
+                            ];
+                        }
+
+//						dd($data_cost);
+
 						$cost->update($data_cost);
 						
 						Log::channel('documents')
 							->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+
 					} else {
 						$data_cost = [
 							'cmv_id' => $item->cmv_id,
@@ -354,13 +368,21 @@ class ConsignmentController extends Controller
 							'max' => $item->price,
 							'average' => $item->price,
 						];
+//						dd($data_cost);
 						$cost = (new Cost())->create($data_cost);
+//						dd($cost);
 						
 						Log::channel('documents')
 							->info('Создана себестоимость c id: ' . $cost->id);
 						Log::channel('documents')
 							->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+
+
 					}
+
+                    Log::channel('documents')
+                        ->info('=== КОНЕЦ ПЕРЕБОРА ПУНКТА ===
+                        ');
 				}
 			}
 			
@@ -424,6 +446,8 @@ class ConsignmentController extends Controller
 				$model = 'App\\'.$entity->model;
 				
 				foreach ($items as $item) {
+                    Log::channel('documents')
+                        ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() .' ' . $item->id . ' ===');
 					
 					// Склад
 					$stock = $item->cmv->stock;
@@ -494,6 +518,10 @@ class ConsignmentController extends Controller
 					
 					Log::channel('documents')
 						->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+
+                    Log::channel('documents')
+                        ->info('=== КОНЕЦ ПЕРЕБОРА ПУНКТА ===
+                        ');
 					
 				}
 			}

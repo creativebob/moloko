@@ -54,7 +54,12 @@
 					></select-categories-component>
 				</td>
 				<td>
-					<input-digit-component name="count" rate="2" :value="count" v-on:countchanged="changeCount"></input-digit-component>
+					<input
+							v-model="count"
+							name="count"
+							type="number"
+					>
+<!--					<input-digit-component name="count" rate="2" :value="count" v-on:countchanged="changeCount"></input-digit-component>-->
 				</td>
 				<td>{{ itemUnit }}</td>
 				<td>

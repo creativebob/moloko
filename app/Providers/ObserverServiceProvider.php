@@ -12,6 +12,7 @@ use App\Container;
 use App\ContainersCategory;
 use App\ContainersStock;
 use App\Cost;
+use App\CostsHistory;
 use App\Direction;
 use App\ExpendablesCategory;
 use App\GoodsCategory;
@@ -28,6 +29,7 @@ use App\Observers\ContainerObserver;
 use App\Observers\ContainersCategoryObserver;
 use App\Observers\ContainersStockObserver;
 use App\Observers\CostObserver;
+use App\Observers\CostsHistoryObserver;
 use App\Observers\DirectionObserver;
 use App\Observers\ExpendablesCategoryObserver;
 use App\Observers\GoodsCategoryObserver;
@@ -174,6 +176,7 @@ class ObserverServiceProvider extends ServiceProvider
         GoodsStock::observe(GoodsStockObserver::class);
 
         Cost::observe(CostObserver::class);
+        CostsHistory::observe(CostsHistoryObserver::class);
 
         // Новости
         Rubricator::observe(RubricatorObserver::class);

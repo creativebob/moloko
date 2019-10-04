@@ -48,6 +48,7 @@ class ProductionsItem extends Model
         'production_id',
         'cmv_id',
         'cmv_type',
+        'cost',
         'count',
         'entity_id',
         'description',
@@ -88,6 +89,12 @@ class ProductionsItem extends Model
     public function entity()
     {
         return $this->belongsTo(Entity::class);
+    }
+
+    // Списания
+    public function offs()
+    {
+        return $this->morphMAny(Off::class, 'documents_item');
     }
 
 }

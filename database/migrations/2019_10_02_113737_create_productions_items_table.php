@@ -24,6 +24,7 @@ class CreateProductionsItemsTable extends Migration
 
             $table->morphs('cmv');
 
+            $table->decimal('cost', 12, 4)->default(0)->comment('Себестоимость еденицы');
             $table->integer('count')->default(0)->comment('Кол-во');
 
             $table->text('description')->nullable()->comment('Комментарий к позиции');
