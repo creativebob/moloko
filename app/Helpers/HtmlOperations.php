@@ -16,7 +16,7 @@ function buildTree($items)
     return $items->where('parent_id', null);
 }
 
-function buildTreeArray($items, $entity)
+function buildTreeArray($items, $entity = null)
 {
     $grouped = $items->groupBy('parent_id');
 
@@ -24,7 +24,10 @@ function buildTreeArray($items, $entity)
     foreach ($items->where('parent_id', null) as $item) {
         $item = $item->toArray();
         if ($grouped->has($item['id'])) {
-            $item['entity_id'] = $entity->id;
+            if (!is_null($entity)) {
+                $item['entity_id'] = $entity->id;
+        }
+
             $item['childrens'] = $grouped[$item['id']]->toArray();
         }
         $items_array[] = $item;
