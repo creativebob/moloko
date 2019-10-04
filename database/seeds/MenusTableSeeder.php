@@ -617,7 +617,7 @@ Menu::insert([
         'alias' => 'admin/productions',
         'tag' => 'productions',
         'parent_id' => $menus->where('tag', 'productions')->first()->id,
-        'page_id' => $pages->where('alias', 'consignments')->first()->id,
+        'page_id' => $pages->where('alias', 'productions')->first()->id,
         'navigation_id' => 1,
         'company_id' => null,
         'system' => true,
