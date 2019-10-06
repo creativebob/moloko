@@ -28,7 +28,7 @@ class ConsignmentsItemStoreRequest extends FormRequest
               'cmv_id' => 'integer|nullable',
               'entity_id' => 'integer|nullable',
               'count' => 'integer|required',
-              'price' => 'integer|required',
+              'price' => 'numeric|required',
           ];
         }
   }
