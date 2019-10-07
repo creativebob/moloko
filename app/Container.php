@@ -25,7 +25,7 @@ use App\Scopes\Filters\BooklistFilter;
 class Container extends Model
 {
     // Включаем кеш
-    use Cachable;
+//    use Cachable;
 
     use Notifiable;
     use SoftDeletes;

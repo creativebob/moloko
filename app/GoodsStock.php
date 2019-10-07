@@ -27,7 +27,7 @@ class GoodsStock extends Model
 {
 
     // Включаем кеш
-    use Cachable;
+//    use Cachable;
 
     use SoftDeletes;
 
@@ -52,6 +52,7 @@ class GoodsStock extends Model
         'manufacturer_id',
         'stock_id',
         'supplier_id',
+	    'filial_id',
         'count',
         'weight',
 	    'volume',
