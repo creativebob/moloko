@@ -583,7 +583,9 @@ class ConsignmentController extends Controller
 				$q->with([
 					'cmv' => function ($q) {
 						$q->with([
-							'article'
+							'article',
+							'cost',
+							'stock'
 						]);
 					},
 					'entity'
@@ -615,6 +617,12 @@ class ConsignmentController extends Controller
 					$model_stock = 'App\\' . $entity_stock->model;
 					
 					foreach ($items as $item) {
+						
+						$item->cmv->load([
+							'cost',
+							'stock'
+						]);
+						
 						Log::channel('documents')
 							->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===');
 						// Склад
