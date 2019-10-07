@@ -6,6 +6,7 @@ use App\Estimate;
 use App\Site;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class EstimateController extends Controller
 {
@@ -81,8 +82,12 @@ class EstimateController extends Controller
      */
     public function show($id)
     {
-
-        $estimate = Estimate::findOrFail($id);
+	
+	    $estimate = Estimate::with('lead')
+		    ->whereHas('lead', function($q){
+			    $q->where('user_id', Auth::user()->id);
+		    })
+		    ->findOrFail($id);
 
         $site = $this->site;
         $page = $site->pages_public

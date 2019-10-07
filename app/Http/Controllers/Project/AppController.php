@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Project;
 
+use Carbon\Carbon;
 use Telegram;
 use App\CatalogsGoodsItem;
 use App\Estimate;
@@ -483,5 +484,23 @@ class AppController extends Controller
 
         return 'ок';
     }
+	
+	public function delivery_update(Request $request)
+	{
+		$data = Carbon::createFromFormat('d.m.Y H:i', $request->delivery_date . ' ' . $request->delivery_time);
+//		dd($data);
+		
+		$res = Lead::where('id', $request->lead_id)
+			->update([
+				'delivered_at' => $data
+			]);
+//		dd($res);
+		
+		if ($res) {
+			return response()->json(true);
+		}
+		
+		
+	}
     
 }
