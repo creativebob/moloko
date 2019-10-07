@@ -25,7 +25,7 @@ use App\Scopes\Filters\DateIntervalFilter;
 class CostsHistory extends Model
 {
     // Включаем кеш
-    use Cachable;
+//    use Cachable;
 
     use SoftDeletes;
 
