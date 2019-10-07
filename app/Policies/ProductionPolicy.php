@@ -58,9 +58,17 @@ class ProductionPolicy
 
     public function system(User $user, Model $model)
     {
-        if ($model->system == 1) {
-            return false;
-        }
+	    if ($model->system == 1) {
+		    return false;
+	    }
+
+	    if ($model->is_produced == 1) {
+		    return false;
+	    }
+	
+	    if ($model->items->count() > 0) {
+		    return false;
+	    }
 
         return $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
     }

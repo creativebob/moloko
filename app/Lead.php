@@ -60,9 +60,14 @@ class Lead extends Model
 
     // public $timestamps = false;
 
-    protected $dates = ['deleted_at', 'created_at'];
+    protected $dates = [
+    	'deleted_at',
+	    'created_at',
+	    'delivered_at'
+    ];
     protected $fillable = [
         'name',
+	    'delivered_at',
 
         'display',
         'system',

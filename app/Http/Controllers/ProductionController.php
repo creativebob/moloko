@@ -39,7 +39,10 @@ class ProductionController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $productions = Production::with('author')
+        $productions = Production::with([
+        	'author',
+	        'items'
+        ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
             ->authors($answer)
@@ -185,7 +188,8 @@ class ProductionController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $production = Production::moderatorLimit($answer)
+        $production = Production::with('items')
+	    ->moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
             ->findOrFail($id);

@@ -15,7 +15,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Consignment::class, 'type' => 'table'])
+@include('system.documents.includes.index.title', ['class' => App\Consignment::class])
 @endsection
 
 @section('content')
@@ -115,13 +115,8 @@
                         <span class="tiny-text">{{ $consignment->created_at->format('H:i') }}</span>
                     </td>
                     <td class="td-author">{{ $consignment->author->name ?? '' }}</td>
-                    <td class="td-delete">
-                      @if ($consignment->system !== 1)
-                      @can('delete', $consignment)
-                      <a class="icon-delete sprite" data-open="item-delete"></a>
-                      @endcan
-                      @endif
-                  </td>
+                    {{-- Элементы управления --}}
+                    @include('includes.control.table_td', ['item' => $consignment])
               </tr>
               @endforeach
               @endif

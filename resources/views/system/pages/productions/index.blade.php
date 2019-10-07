@@ -115,13 +115,8 @@
                         <span class="tiny-text">{{ $production->created_at->format('H:i') }}</span>
                     </td>
                     <td class="td-author">{{ $production->author->name ?? '' }}</td>
-                    <td class="td-delete">
-                      @if ($production->system !== 1)
-                      @can('delete', $production)
-                      <a class="icon-delete sprite" data-open="item-delete"></a>
-                      @endcan
-                      @endif
-                  </td>
+                    {{-- Элементы управления --}}
+                    @include('includes.control.table_td', ['item' => $production])
               </tr>
               @endforeach
               @endif

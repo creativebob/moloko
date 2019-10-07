@@ -61,6 +61,14 @@ class ConsignmentPolicy
         if ($model->system == 1) {
             return false;
         }
+	
+	    if ($model->is_posted == 1) {
+		    return false;
+	    }
+	
+	    if ($model->items->count() > 0) {
+		    return false;
+	    }
 
         return $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
     }

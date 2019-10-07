@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Telegram;
 
+// Специфические классы
+use Carbon\Carbon;
+
 trait LeadControllerTrait
 {
 
@@ -113,7 +116,12 @@ trait LeadControllerTrait
         $choiceFromTag = getChoiceFromTag($request->choice_tag);
         $lead->choice_type = $choiceFromTag['type'];
         $lead->choice_id = $choiceFromTag['id'];
-
+		
+        if (isset($request->delivery_date) || isset($request->delivery_time)) {
+	        $date = Carbon::createFromFormat('d.m.Y H:i', $request->delivery_date . ' ' . $request->delivery_time);
+	        $lead->delivered_at = $date;
+        }
+		
 
         // Работаем с ПОЛЬЗОВАТЕЛЕМ лида ================================================================
 

@@ -61,6 +61,7 @@
           <th class="td-badget">Сумма сделки</th>
           <th class="td-stage">Этап</th>
           <th class="td-challenge">Задачи</th>
+          <th class="td-delivery">Доставка</th>
           {{-- <th class="td-deadline_date">Дедлайн</th> --}}
 
           @if($right_lead_all_managers)
@@ -137,6 +138,12 @@
                     <span class="tiny-text">{{ $lead->challenges_active_count ?? ''}}</span>
 
                   </td>
+
+          <td class="td-delivery">
+            @isset ($lead->delivered_at)
+              {{ $lead->delivered_at->format('d.m.Y H:i') }}
+              @endisset
+          </td>
                 {{-- <td>
                     @if(!empty($lead->first_challenge->deadline_date))
                     <span class="">{{ $lead->first_challenge->deadline_date->format('d.m.Y') }}</span><br>

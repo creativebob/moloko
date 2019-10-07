@@ -754,8 +754,12 @@ Route::resource('applications', 'ApplicationController')->middleware('auth');
 // -------------------------------------- Товарные накладные ---------------------------------------------
 
 Route::any('/consignments/categories', 'ConsignmentController@categories')->name('consignments.categories');;
-Route::any('/consignments/{id}/posting', 'ConsignmentController@posting')->name('consignments.posting');
-//Route::get('/consignments/{id}/unpost', 'ConsignmentController@unpost')->name('consignments.unpost');
+Route::patch('/consignments/{id}/posting', 'ConsignmentController@posting')->name('consignments.posting');
+Route::get('/consignments/{id}/unpost', 'ConsignmentController@unpost')->name('consignments.unpost');
+
+// Перерасчет накладых
+Route::get('/consignments/reposting', 'ConsignmentController@reposting')->name('consignments.reposting');
+
 // Основные методы
 Route::resource('/consignments', 'ConsignmentController');
 
@@ -766,7 +770,7 @@ Route::resource('/consignments_items', 'ConsignmentsItemController');
 
 Route::any('/productions/categories', 'ProductionController@categories')->name('productions.categories');;
 Route::patch('/productions/{id}/produced', 'ProductionController@produced')->name('productions.produced');
-//Route::get('/productions/{id}/unproduced', 'ProductionController@unproduced')->name('productions.unproduced');
+Route::get('/productions/{id}/unproduced', 'ProductionController@unproduced')->name('productions.unproduced');
 // Основные методы
 Route::resource('/productions', 'ProductionController');
 
