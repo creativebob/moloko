@@ -41598,7 +41598,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	filters: {
 		roundToTwo: function roundToTwo(value) {
-			return Math.trunc(parseFloat(value.toFixed(2)) * 100) / 100;
+			return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+		},
+
+		// Создает разделители разрядов в строке с числами
+		level: function level(value) {
+			return Number(value).toLocaleString();
 		}
 	}
 
@@ -42359,6 +42364,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 el.focus();
             }
         }
+    },
+
+    filters: {
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return Number(value).toLocaleString();
+        }
     }
 });
 
@@ -42418,7 +42434,11 @@ var render = function() {
                 }
               })
             ]
-          : [_vm._v(_vm._s(_vm.item.count))]
+          : [
+              _vm._v(
+                _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.count)))
+              )
+            ]
       ],
       2
     ),
@@ -42466,12 +42486,18 @@ var render = function() {
                 }
               })
             ]
-          : [_vm._v(_vm._s(_vm.item.price))]
+          : [
+              _vm._v(
+                _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.price)))
+              )
+            ]
       ],
       2
     ),
     _vm._v(" "),
-    _c("td", [_vm._v(_vm._s(_vm.item.amount))]),
+    _c("td", [
+      _vm._v(_vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.amount))))
+    ]),
     _vm._v(" "),
     !this.isPosted
       ? _c("td", [
@@ -42683,7 +42709,12 @@ var render = function() {
         _vm._v(" "),
         _c("td", [_vm._v("Позиций: " + _vm._s(_vm.totalItemsCount))]),
         _vm._v(" "),
-        _c("td", [_vm._v("Сумма: " + _vm._s(_vm.totalItemsPrice))]),
+        _c("td", [
+          _vm._v(
+            "Сумма: " +
+              _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.totalItemsPrice)))
+          )
+        ]),
         _vm._v(" "),
         !_vm.isPosted ? _c("td") : _vm._e()
       ])
@@ -42976,7 +43007,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	filters: {
 		roundToTwo: function roundToTwo(value) {
-			return Math.trunc(parseFloat(value.toFixed(2)) * 100) / 100;
+			return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+		},
+
+		// Создает разделители разрядов в строке с числами
+		level: function level(value) {
+			return Number(value).toLocaleString();
 		}
 	}
 
@@ -43127,6 +43163,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 el.focus();
             }
         }
+    },
+
+    filters: {
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return Number(value).toLocaleString();
+        }
     }
 });
 
@@ -43186,7 +43233,11 @@ var render = function() {
                 }
               })
             ]
-          : [_vm._v(_vm._s(_vm.item.count))]
+          : [
+              _vm._v(
+                _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.count)))
+              )
+            ]
       ],
       2
     ),
@@ -43366,7 +43417,7 @@ var render = function() {
     _vm._v(" "),
     _c("tfoot", [
       _c("tr", [
-        _c("td", { attrs: { colspan: "3" } }, [_vm._v("Итого:")]),
+        _c("td", { attrs: { colspan: "4" } }, [_vm._v("Итого:")]),
         _vm._v(" "),
         _c("td", [_vm._v("Позиций: " + _vm._s(_vm.totalItemsCount))]),
         _vm._v(" "),

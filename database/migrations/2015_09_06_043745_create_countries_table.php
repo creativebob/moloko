@@ -17,8 +17,8 @@ class CreateCountriesTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name')->index()->comment('Название страны');
-
             $table->string('official')->index()->comment('Официальное название страны');
+	        $table->integer('vk_external_id')->unique()->unsigned()->nullable()->comment('Внешний Id (из базы vk)');
 
 
             // Общие настройки

@@ -27,6 +27,7 @@ class CityRequest extends FormRequest
             'city_name' => 'string|nullable',
             'code' => 'integer|nullable',
             'vk_external_id' => 'integer|nullable',
+	        'country_id' => 'integer',
             'area_name' => 'string|max:255|nullable',
             'region_name' => 'string|max:255|nullable',
 

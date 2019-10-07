@@ -102,7 +102,7 @@
 			<tr>
 				<td	colspan="5">Итого:</td>
 				<td>Позиций: {{ totalItemsCount }}</td>
-				<td>Сумма: {{ totalItemsPrice }}</td>
+				<td>Сумма: {{ totalItemsPrice | roundToTwo | level }}</td>
 				<td
 					v-if="!isPosted"
 				></td>
@@ -262,9 +262,14 @@
 
 		filters: {
 			roundToTwo: function (value) {
-				return Math.trunc(parseFloat(value.toFixed(2)) * 100) / 100;
-			}
-		}
+				return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+			},
+
+			// Создает разделители разрядов в строке с числами
+			level: function (value) {
+				return Number(value).toLocaleString();
+			},
+		},
 
 	}
 </script>

@@ -10,6 +10,9 @@
 
     <div class="grid-x grid-padding-x modal-content inputs">
         <div class="small-10 medium-4 cell">
+            <label>Страна
+                {!! Form::select('country_id', $countries->pluck('name', 'id'), 1, ['id' => 'select-countries']) !!}
+            </label>
             <label class="label-icon">Название населенного пункта
                 {!! Form::text('city_name', null, ['id' => 'city-name-field', 'autocomplete' => 'off', 'pattern' => '[А-Яа-я0-9-_\s]{3,30}', 'required']) !!}
                 <div class="sprite-input-right find-status"></div>

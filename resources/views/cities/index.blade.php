@@ -44,7 +44,7 @@
 @include('includes.modals.modal-delete-ajax')
 @endsection --}}
 
-@section('scripts')
+@push('scripts')
 {{-- Скрипт модалки удаления ajax --}}
 {{-- @include('includes.scripts.delete-ajax-script') --}}
 
@@ -82,7 +82,11 @@
                 },
                 url: "/admin/city_vk",
                 type: "POST",
-                data: {city: $('#city-name-field').val(), search_all: $('#search-all-checkbox').prop("checked")},
+                data: {
+                    country_id: $('#select-countries').val(),
+                    city: $('#city-name-field').val(),
+                    search_all: $('#search-all-checkbox').prop("checked")
+                },
                 beforeSend: function () {
                     $('.find-status').addClass('icon-load');
                 },
@@ -139,6 +143,18 @@
 
         // Отправляем запрос при клике на чекбокс
         $(document).on('change', '#search-all-checkbox', function() {
+            // Если символов больше 2 - делаем запрос
+            if($('#city-name-field').val().length > 2) {
+                // Выполняем запрос
+                clearTimeout(timerId);
+                timerId = setTimeout(function() {
+                    getCityVk ();
+                }, time);
+            };
+        });
+
+        // Отправляем запрос при изменении списка стран
+        $(document).on('change', '#select-countries', function() {
             // Если символов больше 2 - делаем запрос
             if($('#city-name-field').val().length > 2) {
                 // Выполняем запрос
@@ -220,4 +236,4 @@
         });
     });
 </script>
-@endsection
+@endpush

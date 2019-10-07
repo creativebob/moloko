@@ -900,7 +900,7 @@ Route::post('/city_check', 'CityController@ajax_check')->middleware('auth');
 // Таблица городов
 Route::any('/cities_list', 'CityController@cities_list')->middleware('auth');
 // Получаем города из vk
-Route::post('/city_vk', 'CityController@get_vk_city')->middleware('auth');
+Route::any('/city_vk', 'CityController@get_vk_city')->middleware('auth');
 
 // Тестовый маршрут проверки пришедших с вк данных
 Route::get('/city_vk/{city}', 'CityController@get_vk_city')->middleware('auth');
