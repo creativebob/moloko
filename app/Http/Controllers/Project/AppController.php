@@ -477,7 +477,7 @@ class AppController extends Controller
             // Если найден лид
             if($lead){
 
-                $user = $lead->user; 
+                $user = $lead->user;
 
                 // Проверяем, не частит ли пользователь с запросом кода
 
@@ -501,7 +501,7 @@ class AppController extends Controller
 
             } else {
 
-                return 'bad';
+                return 'Не существует лида';
 
             }
             
