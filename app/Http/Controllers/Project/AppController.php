@@ -463,25 +463,54 @@ class AppController extends Controller
 
     public function get_access_code(Request $request)
     {
+
         $site = $this->site;
 
-        $lead = session('confirmation')['lead'];
-        $user = $lead->user;
+        $confirmation = session('confirmation');
 
-        // Проверяем, не частит ли пользователь с запросом кода
+        // Если сессия найдена (Сессия может закончится по времени)
+        if($confirmation){
+
+            $lead = $confirmation['lead'];
+
+            // Если найден лид
+            if($lead){
+
+                $user = $lead->user; 
+
+                // Проверяем, не частит ли пользователь с запросом кода
 
 
-        // Конец проверки
+                // Конец проверки
 
-        $access_code = rand(1000, 9999);
-        $user->access_code = $access_code;
-        $user->save();
+                // Генерируем код доступа и записываем для пользователя
+                $access_code = rand(1000, 9999);
+                $user->access_code = $access_code;
+                $user->save();
 
-        $phone = $lead->user->main_phone->phone;
-        $msg = 'Код для входа: ' . $access_code;
-        // sendSms($phone, $msg);
+                 // Пишем в сессию время отправки СМС
+                session(['time_get_access_code' => now()]);
 
-        return 'ок';
+                $phone = $lead->user->main_phone->phone;
+                $msg = 'Код для входа: ' . $access_code;
+                sendSms($phone, $msg);
+
+                return 'ок';
+
+
+            } else {
+
+                return 'bad';
+
+            }
+            
+        } else {
+
+            // Сессия не существует
+            return response()->json(['name' => 'Steve', 'state' => 'CA']);
+
+        }
+
     }
     
 }
