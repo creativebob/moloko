@@ -16,6 +16,7 @@ class Receipt extends Model
         'cmv_type',
         'count',
         'cost',
+	    'amount',
     ];
 
     // Тмц

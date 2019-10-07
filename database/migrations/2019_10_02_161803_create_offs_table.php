@@ -26,9 +26,10 @@ class CreateOffsTable extends Migration
             $table->morphs('documents_item');
 
             $table->morphs('cmv');
-
-            $table->integer('count')->default(0)->comment('Количество');
+	
+	        $table->decimal('count', 12,4)->default(0)->comment('Количество');
             $table->decimal('cost', 16, 8)->default(0)->comment('Стоимость');
+	        $table->decimal('amount', 16, 8)->default(0)->comment('Сумма');
 
 
             // Общие настройки

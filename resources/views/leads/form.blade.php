@@ -86,7 +86,7 @@
                     {{-- ЗАКАЗ --}}
                     <div class="tabs-panel is-active" id="content-panel-order">
 
-                        <div class="grid-x">
+                        <div class="grid-x grid-margin-x">
 
                             <div class="small-4 cell">
                                 <label>Предварительная стоимость:
@@ -94,8 +94,14 @@
                                 </label>
                             </div>
                             <div class="small-4 cell">
+                                <label>Дата доставки:
+                                    @include('includes.inputs.date', ['name' => 'delivery_date', 'value' => isset($lead->delivered_at) ? $lead->delivered_at->format('d.m.Y') : null])
+                                </label>
                             </div>
                             <div class="small-4 cell">
+                                <label>Время доставки:
+                                    @include('includes.inputs.time', ['name' => 'delivery_time', 'placeholder' => true, 'value' => isset($lead->delivered_at) ? $lead->delivered_at->format('H:i') : null])
+                                </label>
                             </div>
 
                             <div class="small-12 medium-12 large-12 cell">

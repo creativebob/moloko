@@ -27,3 +27,5 @@ Route::get('/cart', 'AppController@cart')->name('project.cart');
 Route::post('/cart_store', 'AppController@cart_store')->name('project.cart_store');
 
 Route::get('/telegram', 'AppController@telegram')->name('project.telegram');
+
+Route::post('/delivery_update', 'AppController@delivery_update')->name('project.delivery_update');

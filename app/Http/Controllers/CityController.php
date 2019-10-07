@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\Country;
 use App\Region;
 use App\Area;
 use App\City;
@@ -97,7 +98,9 @@ class CityController extends Controller
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
-        return view('cities.create');
+        
+        $countries = Country::get();
+        return view('cities.create', compact('countries'));
     }
 
     public function store(CityRequest $request)
@@ -106,7 +109,7 @@ class CityController extends Controller
         // dd($request);
         if ($request->city_db == 1) {
 
-            $country_id = 1;
+            $country_id = $request->country_id;
 
             // Подключение политики
             $this->authorize(getmethod(__FUNCTION__), $this->class);
@@ -216,13 +219,15 @@ class CityController extends Controller
     public function get_vk_city(CityRequest $request)
     {
         // Отправляем запров вк
-        $city = $request->city;
+	    $country = Country::find($request->country_id);
+        $country_id = $country->vk_external_id;
+	    $city = $request->city;
         // $city = 'ангарск';
         // dd($city);
         // dd($request);
 
         $request_params = [
-            'country_id' => 1,
+            'country_id' => $country_id,
             'q' => $city,
             'need_all' => 0,
             'count' => 250,

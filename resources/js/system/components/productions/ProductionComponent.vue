@@ -75,7 +75,7 @@
 
 		<tfoot>
 			<tr>
-				<td	colspan="3">Итого:</td>
+				<td	colspan="4">Итого:</td>
 				<td>Позиций: {{ totalItemsCount }}</td>
 				<td
 					v-if="!isProduced"
@@ -220,9 +220,14 @@
 
 		filters: {
 			roundToTwo: function (value) {
-				return Math.trunc(parseFloat(value.toFixed(2)) * 100) / 100;
-			}
-		}
+				return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+			},
+
+			// Создает разделители разрядов в строке с числами
+			level: function (value) {
+				return Number(value).toLocaleString();
+			},
+		},
 
 	}
 </script>

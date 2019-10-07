@@ -14,6 +14,7 @@ class CountriesTableSeeder extends Seeder
 				'system' => true,
 				'author_id' => 1,
 				'moderation' => false,
+				'vk_external_id' => 1,
 			],
 			[
 				'name' => 'Белоруссия',
@@ -21,6 +22,7 @@ class CountriesTableSeeder extends Seeder
 				'system' => true,
 				'author_id' => 1,
 				'moderation' => false,
+				'vk_external_id' => 3,
 			],
 			[
 				'name' => 'Германия',
@@ -28,6 +30,7 @@ class CountriesTableSeeder extends Seeder
 				'system' => true,
 				'author_id' => 1,
 				'moderation' => false,
+				'vk_external_id' => 65,
 			],
 			[
 				'name' => 'Китай',
@@ -35,6 +38,7 @@ class CountriesTableSeeder extends Seeder
 				'system' => true,
 				'author_id' => 1,
 				'moderation' => false,
+				'vk_external_id' => 97,
 			],
 			[
 				'name' => 'Турция',
@@ -42,6 +46,15 @@ class CountriesTableSeeder extends Seeder
 				'system' => true,
 				'author_id' => 1,
 				'moderation' => false,
+				'vk_external_id' => 200,
+			],
+			[
+				'name' => 'Казахстан',
+				'official' => '',
+				'system' => true,
+				'author_id' => 1,
+				'moderation' => false,
+				'vk_external_id' => 4,
 			],
 		]);
 	}

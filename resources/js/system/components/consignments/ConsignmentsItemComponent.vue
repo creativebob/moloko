@@ -15,7 +15,7 @@
                 >
 <!--                <input-digit-component name="count" rate="2" :value="item.count" v-on:countchanged="changeCount"></input-digit-component>-->
             </template>
-            <template v-else="changeCount">{{ item.count }}</template>
+            <template v-else="changeCount">{{ item.count | roundToTwo | level }}</template>
 
 
         </td>
@@ -31,10 +31,10 @@
                     v-model="price"
                 >
             </template>
-            <template v-else="changePrice">{{ item.price }}</template>
+            <template v-else="changePrice">{{ item.price | roundToTwo | level }}</template>
         </td>
 
-        <td>{{ item.amount }}</td>
+        <td>{{ item.amount | roundToTwo | level }}</td>
         <!--			<td>{{ item.vat_rate }}</td>-->
         <!--			<td>{{ item.amount_vat }}</td>-->
         <!--			<td>{{ item.total }}</td>-->
@@ -127,6 +127,17 @@
                     el.focus()
                 }
             }
-        }
+        },
+
+        filters: {
+            roundToTwo: function (value) {
+                return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+            },
+
+            // Создает разделители разрядов в строке с числами
+            level: function (value) {
+                return Number(value).toLocaleString();
+            },
+        },
     }
 </script>

@@ -286,7 +286,7 @@ class LeadController extends Controller
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
     {
-
+    	
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 

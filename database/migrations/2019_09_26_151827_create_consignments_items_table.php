@@ -23,11 +23,10 @@ class CreateConsignmentsItemsTable extends Migration
             $table->foreign('consignment_id')->references('id')->on('consignments');
 
             $table->morphs('cmv');
-
-            $table->integer('count')->default(0)->comment('Кол-во');
-
+	
+	        $table->decimal('count', 12,4)->default(0)->comment('Количество');
             $table->decimal('price', 12, 4)->default(0)->comment('Цена за единицу');
-            $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
+            $table->decimal('amount', 16, 8)->default(0)->comment('Сумма');
 
             $table->integer('vat_rate')->nullable()->comment('Размер налога НДС');
             $table->integer('amount_vat')->nullable()->comment('Сумма НДС');

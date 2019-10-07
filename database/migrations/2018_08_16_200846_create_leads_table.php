@@ -85,6 +85,8 @@ class CreateLeadsTable extends Migration
             $table->integer('old_case_number')->nullable()->unsigned()->comment('Номер обращения из другой базы');
 
             $table->integer('draft')->nullable()->unsigned()->comment('Черновик - удаляется по графику');
+	
+	        $table->timestamp('delivered_at')->nullable()->comment('Дата доставки');
 
 
             // Общие настройки

@@ -23,13 +23,16 @@ function buildTreeArray($items, $entity = null)
     $items_array = [];
     foreach ($items->where('parent_id', null) as $item) {
         $item = $item->toArray();
+
         if ($grouped->has($item['id'])) {
-            if (!is_null($entity)) {
-                $item['entity_id'] = $entity->id;
-        }
 
             $item['childrens'] = $grouped[$item['id']]->toArray();
         }
+
+        if (isset($entity)) {
+            $item['entity_id'] = $entity->id;
+        }
+
         $items_array[] = $item;
     }
 //    dd($items_array);
