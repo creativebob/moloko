@@ -52,6 +52,7 @@ class RawsStock extends Model
 		'manufacturer_id',
 	    'stock_id',
 	    'supplier_id',
+	    'filial_id',
         'count',
         'weight',
 	    'volume',
