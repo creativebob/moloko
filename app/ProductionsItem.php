@@ -50,6 +50,7 @@ class ProductionsItem extends Model
         'cmv_type',
         'cost',
         'count',
+	    'amount',
         'entity_id',
         'description',
         'stock_id',

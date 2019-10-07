@@ -16,6 +16,7 @@ class Off extends Model
         'cmv_type',
         'count',
         'cost',
+	    'amount',
     ];
 	
 	// Тмц

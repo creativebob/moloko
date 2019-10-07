@@ -28,8 +28,8 @@ class CreateContainersStocksTable extends Migration
 
             $table->bigInteger('cmv_id')->nullable()->unsigned()->comment('Id упаковки');
             $table->foreign('cmv_id')->references('id')->on('containers');
-
-            $table->integer('count')->default(0)->comment('Количество');
+	
+	        $table->decimal('count', 12,4)->default(0)->comment('Количество');
             
 	        $table->decimal('weight', 9, 4)->default(0)->comment('Вес (кг)');
 	        $table->decimal('volume', 15, 8)->default(0)->comment('Обьем (м3)');

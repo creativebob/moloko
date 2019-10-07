@@ -24,7 +24,7 @@ class ConsignmentsItemUpdateRequest extends FormRequest
     public function rules()
     {
           return [
-              'count' => 'integer|nullable',
+              'count' => 'numeric|nullable',
               'price' => 'numeric|nullable',
           ];
         }

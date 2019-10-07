@@ -24,7 +24,7 @@ class ProductionsItemUpdateRequest extends FormRequest
     public function rules()
     {
           return [
-              'count' => 'integer|nullable',
+              'numeric' => 'integer|nullable',
           ];
         }
   }

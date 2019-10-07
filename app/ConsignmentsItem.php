@@ -50,6 +50,7 @@ class ConsignmentsItem extends Model
         'cmv_type',
         'count',
         'price',
+	    'amount',
         'entity_id',
 
         'vat_rate',

@@ -393,11 +393,12 @@ class ConsignmentController extends Controller
                         'cmv_type' => $model,
                         'count' => $item->count,
                         'cost' => $item->price,
+	                    'amount' => $item->count * $item->price,
                         'stock_id' => $consignment->stock_id,
                     ]);
 
                     Log::channel('documents')
-                        ->info('Записано поступление с id: ' . $receipt->id .  ', count: ' . $receipt->count . ', cost: ' . $receipt->cost);
+                        ->info('Записано поступление с id: ' . $receipt->id .  ', count: ' . $receipt->count . ', cost: ' . $receipt->cost . ', amount: ' . $receipt->amount);
 
                     Log::channel('documents')
                         ->info('=== КОНЕЦ ПЕРЕБОРА ПУНКТА ===

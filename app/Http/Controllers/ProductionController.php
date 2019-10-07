@@ -401,11 +401,12 @@ class ProductionController extends Controller
                                     'cmv_type' => $model_composition,
                                     'count' => $count * $item->count,
                                     'cost' => $composition->cost->average,
+	                                'amount' => ($count * $item->count) * $composition->cost->average,
                                     'stock_id' => $production->stock_id,
                                 ]);
 	
 	                            Log::channel('documents')
-		                            ->info('Записали списание с id: ' . $off->id .  ', count: ' . $off->count . ', cost: ' . $off->cost);
+		                            ->info('Записали списание с id: ' . $off->id .  ', count: ' . $off->count . ', cost: ' . $off->cost . ', amount: ' . $off->amount);
 	
 	                            Log::channel('documents')
 		                            ->info('=== КОНЕЦ СПИСАНИЯ ===
@@ -513,22 +514,24 @@ class ProductionController extends Controller
                         'cmv_type' => $model_composition,
                         'count' => $item->count,
                         'cost' => $price,
+	                    'amount' => $item->count * $price,
                         'stock_id' => $production->stock_id,
                     ]);
 
                     Log::channel('documents')
-                        ->info('Записано поступление с id: ' . $receipt->id .  ', count: ' . $receipt->count . ', cost: ' . $receipt->cost);
+                        ->info('Записано поступление с id: ' . $receipt->id .  ', count: ' . $receipt->count . ', cost: ' . $receipt->cost . ', amount: ' . $receipt->amount);
 
 	                Log::channel('documents')
 		                ->info('=== КОНЕЦ ПРИХОДОВАНИЯ ===
 		                ');
 
                     $item->update([
-                        'cost' => $price
+                        'cost' => $price,
+	                    'amount' => $item->count * $price,
                     ]);
 
                     Log::channel('documents')
-                        ->info('Обновляем себестоимость за еденицу в пункте наряда: ' . $price);
+                        ->info('Обновляем себестоимость за еденицу в пункте наряда: ' . $price . ', общая: ' . $item->amount);
 
                     Log::channel('documents')
                         ->info('=== КОНЕЦ ПЕРЕБОРА ПУНКТА ===
