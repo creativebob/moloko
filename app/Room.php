@@ -61,7 +61,7 @@ class Room extends Model
     // Категория
     public function category()
     {
-        return $this->belongsTo(RawsCategory::class);
+        return $this->belongsTo(RoomsCategory::class);
     }
 
     // Локация

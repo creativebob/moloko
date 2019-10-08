@@ -142,7 +142,7 @@ class Raw extends Model
 
                     } else {
 
-                        return $this->article->weight / $this->article->unit_weight->ratio;
+                        return $this->article->weight;
                     }
 
             // Расчет если в единицах

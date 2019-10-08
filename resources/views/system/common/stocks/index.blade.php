@@ -35,9 +35,13 @@
                         <label class="label-check" for="check-all"></label>
                     </th>
                     <th class="td-name">Название</th>
+                    <th class="td-manufacturer">Производитель</th>
                     <th class="td-count">Количество</th>
+                    <th class="td-weight">Вес</th>
+                    <th class="td-volume">Объем</th>
+                    <th class="td-cost">Стоимость</th>
+                    <th class="td-stock">Склад</th>
                     <th class="td-company">Компания</th>
-                    <th class="td-author">Автор</th>
                     <th class="td-control"></th>
                     <th class="td-delete"></th>
                 </tr>
@@ -66,25 +70,37 @@
 
 
                     <td class="td-name">
-                        {{ $stock->cmv->article->name }}
+                        {{ $stock->cmv->article->name }}<br>
+                        <span class="tiny-text">{{ $stock->cmv->category->name }}</span>
                     </td>
-                    <td class="td-count">{{ $stock->count }} {{ $stock->cmv->article->unit->abbreviation }}</td>
+                    <td>
+                        {{ $stock->cmv->article->manufacturer->company->name ?? '' }}
+                    </td>
+
+                    <td class="td-count">{{ num_format($stock->count, 2) }} {{ $stock->cmv->article->unit->abbreviation }}</td>
+                    <td class="td-weight">{{ num_format($stock->weight, 2) }} кг.</td>
+                    <td class="td-volume">{{ num_format($stock->volume / 0.001, 2) }} л.</td>
+                    <td class="td-cost">
+                        {{ num_format($stock->cmv->cost_unit * $stock->count, 2) }}<br>
+                        <span class="tiny-text">{{ num_format($stock->cmv->cost_unit, 2) }}</span>
+                    </td>
+
+                    <td class="td-stock">{{ $stock->stock->name }}</td>
 
                     <td class="td-company">
                         @if(!empty($stock->company->name))
-                        {{ $stock->company->name }}
+                            {{ $stock->company->designation ?? $stock->company->name }}
+                            <br><span class="tiny-text">{{ $stock->filial->name }}</span>
                         @else
 
-                        @if($stock->system == null)
-                        Шаблон
-                        @else
-                        Системная
-                        @endif
+                            @if($stock->system == null)
+                                Шаблон
+                            @else
+                                Системная
+                            @endif
 
                         @endif
                     </td>
-
-                    <td class="td-author">@if(isset($stock->author->first_name)) {{ $stock->author->first_name . ' ' . $stock->author->second_name }} @endif</td>
 
                     {{-- Элементы управления --}}
                     @include('includes.control.table-td', ['item' => $stock])
