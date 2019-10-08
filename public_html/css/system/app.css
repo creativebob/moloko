@@ -362,10 +362,6 @@ input[type='search'] {
   color: #cacaca;
 }
 
-::-moz-placeholder {
-  color: #cacaca;
-}
-
 ::-ms-input-placeholder {
   color: #cacaca;
 }
@@ -597,10 +593,6 @@ select[multiple] {
 }
 
 .is-invalid-input:not(:focus)::-webkit-input-placeholder {
-  color: #cc4b37;
-}
-
-.is-invalid-input:not(:focus)::-moz-placeholder {
   color: #cc4b37;
 }
 
@@ -12303,20 +12295,20 @@ a#task-toggle {
   cursor: pointer;
 }
 
-#portion-block .portion-hide {
+#package-block .package-hide {
   display: none;
 }
 
-#portion-change {
+#package-change {
   color: #1779ba;
 }
 
-#portion-change:hover {
+#package-change:hover {
   color: #1468a0;
   cursor: pointer;
 }
 
-.portion-fieldset {
+.package-fieldset {
   padding-top: 0.4rem;
   padding-bottom: 0.4rem;
 }
@@ -12547,7 +12539,7 @@ a#task-toggle {
   margin-right: 0.5em;
 }
 
-em.raw-portion-goods-item {
+em.raw-portion-item {
   color: #cccccc !important;
 }
 

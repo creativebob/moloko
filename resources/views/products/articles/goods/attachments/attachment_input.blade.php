@@ -12,7 +12,7 @@
 			{{-- Количество чего-либо --}}
 			{{ Form::text('attachments['.$attachment->id.'][value]', $attachment->pivot ? $attachment->pivot->value : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder attachment-value', 'id'=>'1', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '', 'required']) }}
 			<label for="1" class="text-to-placeholder">
-				{{ $attachment->portion_goods_abbreviation ?? $attachment->unit_for_composition->abbreviation ?? $attachment->article->group->unit->abbreviation }}
+				{{ $attachment->portion_abbreviation ?? $attachment->unit_for_composition->abbreviation ?? $attachment->article->group->unit->abbreviation }}
 			</label>
 			<div class="sprite-input-right find-status" id="name-check"></div>
 			<span class="form-error">Введите количество</span>
@@ -24,7 +24,7 @@
 			{{ Form::text('attachments['.$attachment->id.'][use]', $attachment->pivot ? $attachment->pivot->use : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder attachment-use', 'id'=>'2', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="2" class="text-to-placeholder">
 
-				{{ $attachment->portion_goods_abbreviation ?? $attachment->unit_for_composition->abbreviation ?? $attachment->article->group->unit->abbreviation }}
+				{{ $attachment->portion_abbreviation ?? $attachment->unit_for_composition->abbreviation ?? $attachment->article->group->unit->abbreviation }}
 
 			</label>
 			<div class="sprite-input-right find-status" id="name-check"></div>
@@ -37,7 +37,7 @@
 			{{ Form::text('attachments['.$attachment->id.'][waste]', $attachment->pivot ? $attachment->pivot->waste : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder attachment-waste', 'id'=>'3', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="3" class="text-to-placeholder">
 
-				{{ $attachment->portion_goods_abbreviation ?? $attachment->unit_for_composition->abbreviation ?? $attachment->article->group->unit->abbreviation }}
+				{{ $attachment->portion_abbreviation ?? $attachment->unit_for_composition->abbreviation ?? $attachment->article->group->unit->abbreviation }}
 
 			</label>
 			<div class="sprite-input-right find-status" id="name-check"></div>
@@ -50,7 +50,7 @@
 			{{ Form::text('attachments['.$attachment->id.'][leftover]', $attachment->pivot ? $attachment->pivot->leftover : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder attachment-leftover', 'id'=>'4', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="4" class="text-to-placeholder">
 
-				{{ $attachment->portion_goods_abbreviation ?? $attachment->unit_for_composition->abbreviation ?? $attachment->article->group->unit->abbreviation }}
+				{{ $attachment->portion_abbreviation ?? $attachment->unit_for_composition->abbreviation ?? $attachment->article->group->unit->abbreviation }}
 
 			</label>
 			<div class="sprite-input-right find-status" id="name-check"></div>

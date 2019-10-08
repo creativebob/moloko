@@ -12,7 +12,7 @@
 			{{-- КОЛИЧЕСТВО --}}
 			{{ Form::text('raws['.$raw->id.'][value]', $raw->pivot ? $raw->pivot->value : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder raw-value', 'id'=>'1', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '', 'required']) }}
 			<label for="1" class="text-to-placeholder">
-				{{ $raw->portion_goods_abbreviation ?? $raw->unit_for_composition->abbreviation ?? $raw->article->group->unit->abbreviation }}
+				{{ $raw->portion_abbreviation ?? $raw->unit_for_composition->abbreviation ?? $raw->article->group->unit->abbreviation }}
 			</label>
 			<div class="sprite-input-right find-status" id="name-check"></div>
 			{{-- <span class="form-error">Введите количество</span> --}}
@@ -24,7 +24,7 @@
 			{{ Form::text('raws['.$raw->id.'][use]', $raw->pivot ? $raw->pivot->use : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder raw-use', 'id'=>'2', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="2" class="text-to-placeholder">
 
-				{{ $raw->portion_goods_abbreviation ?? $raw->unit_for_composition->abbreviation ?? $raw->article->group->unit->abbreviation }}
+				{{ $raw->portion_abbreviation ?? $raw->unit_for_composition->abbreviation ?? $raw->article->group->unit->abbreviation }}
 
 			</label>
 			<div class="sprite-input-right find-status" id="name-check"></div>
@@ -37,7 +37,7 @@
 			{{ Form::text('raws['.$raw->id.'][waste]', $raw->pivot ? $raw->pivot->waste : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder raw-waste', 'id'=>'3', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="3" class="text-to-placeholder">
 
-				{{ $raw->portion_goods_abbreviation ?? $raw->unit_for_composition->abbreviation ?? $raw->article->group->unit->abbreviation }}
+				{{ $raw->portion_abbreviation ?? $raw->unit_for_composition->abbreviation ?? $raw->article->group->unit->abbreviation }}
 
 			</label>
 			<div class="sprite-input-right find-status" id="name-check"></div>
@@ -48,7 +48,7 @@
 
 			{{ Form::text('raws['.$raw->id.'][leftover]', $raw->pivot ? $raw->pivot->leftover : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder raw-leftover', 'id'=>'4', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="4" class="text-to-placeholder">
-				{{ $raw->portion_goods_abbreviation ?? $raw->unit_for_composition->abbreviation ?? $raw->article->group->unit->abbreviation }}
+				{{ $raw->portion_abbreviation ?? $raw->unit_for_composition->abbreviation ?? $raw->article->group->unit->abbreviation }}
 			</label>
 			<div class="sprite-input-right find-status" id="name-check"></div>
 		</div>

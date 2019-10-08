@@ -16,21 +16,21 @@ class CreateCompaniesTable extends Migration
             $table->string('prename')->nullable()->index()->comment('Статус компании');
             $table->string('designation')->nullable()->index()->comment('Коммерческое обозначение');
 
-            $table->string('alias', 40)->unique()->nullable()->index()->comment('Алиас компании');
+            $table->string('alias', 120)->unique()->nullable()->index()->comment('Алиас компании');
 
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
             $table->string('email')->nullable()->comment('Почта');
 
-            $table->bigInteger('inn')->nullable()->unsigned()->comment('ИНН компании');
-            $table->bigInteger('kpp')->nullable()->unsigned()->comment('КПП');
+            $table->string('inn', 12)->nullable()->comment('ИНН компании');
+            $table->string('kpp', 9)->nullable()->comment('КПП');
 
-            $table->bigInteger('ogrn')->nullable()->unsigned()->comment('Основной государственный регистрационный номер');
-            $table->bigInteger('okpo')->nullable()->unsigned()->comment('Общероссийский классификатор предприятий и организаций');
-            $table->string('okved')->nullable() ->comment('Общероссийский классификатор видов экономической деятельности');
+            $table->string('ogrn', 15)->nullable()->comment('Основной государственный регистрационный номер');
+            $table->string('okpo', 10)->nullable()->comment('Общероссийский классификатор предприятий и организаций');
+            $table->string('okved', 8)->nullable() ->comment('Общероссийский классификатор видов экономической деятельности');
 
-            $table->integer('bic') -> length (9)->nullable()->unsigned()->comment('Банковский идентификационный код');
+            $table->integer('bic')->length(9)->nullable()->unsigned()->comment('Банковский идентификационный код');
 
             // Видимо устарело - на удаление!
             // $table->bigInteger('director_user_id')->nullable()->unsigned()->comment('Директор компании');

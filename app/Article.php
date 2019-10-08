@@ -68,10 +68,10 @@
 			
 			'video_url',
 			
-			'portion_status',
-			'portion_name',
-			'portion_abbreviation',
-			'portion_count',
+			'package_status',
+			'package_name',
+			'package_abbreviation',
+			'package_count',
 			
 			'weight',
 			'unit_weight_id',

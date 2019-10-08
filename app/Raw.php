@@ -51,11 +51,11 @@ class Raw extends Model
         'price_unit_id',
         'price_unit_category_id',
 
-        'portion_goods_status',
-        'portion_goods_name',
-        'portion_goods_abbreviation',
-        'unit_portion_goods_id',
-        'portion_goods_count',
+        'portion_status',
+        'portion_name',
+        'portion_abbreviation',
+        'unit_portion_id',
+        'portion_count',
 
         'display',
         'system',
@@ -110,9 +110,9 @@ class Raw extends Model
     }
 
     // Еденица измерения
-    public function unit_portion_goods()
+    public function unit_portion()
     {
-        return $this->belongsTo(Unit::class, 'unit_portion_goods_id');
+        return $this->belongsTo(Unit::class, 'unit_portion_id');
     }
 
 
@@ -137,8 +137,8 @@ class Raw extends Model
             if($this->article->unit_id == 32){
                 
                     // Расчет если есть порции
-                    if($this->portion_goods_status){
-                        return $this->article->weight / $this->article->unit->ratio * $this->portion_goods_count * $this->unit_portion_goods->ratio;
+                    if($this->portion_status){
+                        return $this->article->weight / $this->article->unit->ratio * $this->portion_count * $this->unit_portion->ratio;
 
                     } else {
 
@@ -149,8 +149,8 @@ class Raw extends Model
             } else {
 
                 // Расчет если есть порции
-                if($this->portion_goods_status){
-                    return $this->article->weight / $this->article->unit->ratio * $this->portion_goods_count * $this->unit_portion_goods->ratio;
+                if($this->portion_status){
+                    return $this->article->weight / $this->article->unit->ratio * $this->portion_count * $this->unit_portion->ratio;
                 } else {
 
                 return $this->article->weight;
@@ -167,8 +167,8 @@ class Raw extends Model
 
             if($this->article->manufacturer_id){
                 
-                if($this->portion_goods_status){
-                    return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average * $this->unit_portion_goods->ratio * $this->portion_goods_count;
+                if($this->portion_status){
+                    return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average * $this->unit_portion->ratio * $this->portion_count;
                 } else {
                     return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
                 }

@@ -93,16 +93,16 @@ class ArticleObserver
 
 
             // Порции
-            if ($request->has('portion_status')) {
+            if ($request->has('package_status')) {
 
-                $article->portion_status = $request->portion_status;
-                $article->portion_name = $request->portion_name;
-                $article->portion_abbreviation = $request->portion_abbreviation;
-                $article->portion_count = $request->portion_count;
+                $article->package_status = $request->package_status;
+                $article->package_name = $request->package_name;
+                $article->package_abbreviation = $request->package_abbreviation;
+                $article->package_count = $request->package_count;
 
             } else {
 
-                $article->portion_status = false;
+                $article->package_status = false;
             }
 
             $article->editor_id = hideGod($request->user());

@@ -57,11 +57,11 @@ class RawController extends Controller
             'price_unit_id',
             'price_unit_category_id',
 
-            'portion_goods_status',
-            'portion_goods_name',
-            'portion_goods_abbreviation',
-            'unit_portion_goods_id',
-            'portion_goods_count',   
+            'portion_status',
+            'portion_name',
+            'portion_abbreviation',
+            'unit_portion_id',
+            'portion_count',   
 
             'author_id',
             'company_id',
@@ -75,7 +75,7 @@ class RawController extends Controller
             'author',
             'company',
             'compositions.goods',
-            'unit_portion_goods',
+            'unit_portion',
             'article' => function ($q) {
                 $q->with([
                     'group',
@@ -355,10 +355,10 @@ class RawController extends Controller
         if ($article->draft) {
             $raw->unit_for_composition_id = $request->unit_for_composition_id;
 
-            $raw->portion_goods_status = $request->portion_goods_status ?? 0;
-            $raw->portion_goods_abbreviation = $request->portion_goods_abbreviation;
-            $raw->unit_portion_goods_id = $request->unit_portion_goods_id;
-            $raw->portion_goods_count = $request->portion_goods_count;
+            $raw->portion_status = $request->portion_status ?? 0;
+            $raw->portion_abbreviation = $request->portion_abbreviation;
+            $raw->unit_portion_id = $request->unit_portion_id;
+            $raw->portion_count = $request->portion_count;
 
             $raw->price_unit_id = $request->price_unit_id;
             $raw->price_unit_category_id = $request->price_unit_category_id;
@@ -491,7 +491,7 @@ class RawController extends Controller
     public function ajax_get_raw(Request $request)
     {
         $raw = Raw::with([
-            'unit_portion_goods',
+            'unit_portion',
             'article.group.unit',
             'article.unit_weight',
             'category'
@@ -506,7 +506,7 @@ class RawController extends Controller
     {
 
         $raw = Raw::with([
-            'unit_portion_goods',
+            'unit_portion',
             'article.group.unit',
             'article.unit_weight',
             'category'

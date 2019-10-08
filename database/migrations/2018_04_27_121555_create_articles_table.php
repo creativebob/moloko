@@ -48,10 +48,10 @@ class CreateArticlesTable extends Migration
 
             $table->string('video_url')->nullable()->comment('Ссылка на видео');
 
-            $table->boolean('portion_status')->default(0)->unsigned()->comment('Статус порции');
-            $table->string('portion_name')->nullable()->comment('Имя порции');
-            $table->string('portion_abbreviation')->nullable()->comment('Сокращение порции');
-            $table->integer('portion_count')->nullable()->unsigned()->comment('Количество в порции');
+            $table->boolean('package_status')->default(0)->unsigned()->comment('Статус компоновки');
+            $table->string('package_name')->nullable()->comment('Имя компоновки');
+            $table->string('package_abbreviation')->nullable()->comment('Сокращение имени компоновки');
+            $table->integer('package_count')->nullable()->unsigned()->comment('Количество в компонвке');
 
             $table->decimal('weight', 15, 8)->nullable()->comment('Вес (кг)');
 

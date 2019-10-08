@@ -293,7 +293,7 @@
 {{--	                                    </label>--}}
 {{--	                                </div>--}}
 {{--	                                <div class="small-12 medium-6 cell">--}}
-{{--	                                    <label>Цена за (<span id="unit">{{ ($article->portion_status == false) ? $article->group->unit->abbreviation : 'порцию' }}</span>)--}}
+{{--	                                    <label>Цена за (<span id="unit">{{ ($article->package_status == false) ? $article->group->unit->abbreviation : 'порцию' }}</span>)--}}
 {{--	                                        {{ Form::number('price_default', null) }}--}}
 {{--	                                    </label>--}}
 {{--	                                </div>--}}
@@ -322,29 +322,29 @@
 							</fieldset>
 						@endif
 
-						<fieldset class="fieldset portion-fieldset" id="portion-fieldset">
+						<fieldset class="fieldset package-fieldset" id="package-fieldset">
 
 							<legend class="checkbox">
-								{!! Form::checkbox('portion_status', 1, $article->portion_status, ['id' => 'portion', $disabled ? 'disabled' : '']) !!}
-								<label for="portion">
-									<span id="portion-change">Сформировать порцию для приема на склад</span>
+								{!! Form::checkbox('package_status', 1, $article->package_status, ['id' => 'package', $disabled ? 'disabled' : '']) !!}
+								<label for="package">
+									<span id="package-change">Сформировать порцию для приема на склад</span>
 								</label>
 							</legend>
 
-							<div class="grid-x grid-margin-x" id="portion-block">
-								{{-- <div class="small-12 cell @if ($article->portion_status == null) portion-hide @endif">
+							<div class="grid-x grid-margin-x" id="package-block">
+								{{-- <div class="small-12 cell @if ($article->package_status == null) package-hide @endif">
 									<label>Имя&nbsp;порции
-										{{ Form::text('portion_name', $article->portion_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
+										{{ Form::text('package_name', $article->package_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
 									</label>
 								</div> --}}
-								<div class="small-6 cell @if (!$article->portion_status) portion-hide @endif">
+								<div class="small-6 cell @if (!$article->package_status) package-hide @endif">
 									<label>Сокр.&nbsp;имя
-										{{ Form::text('portion_abbreviation',  $article->portion_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
+										{{ Form::text('package_abbreviation',  $article->package_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
 									</label>
 								</div>
-								<div class="small-6 cell @if (!$article->portion_status) portion-hide @endif">
+								<div class="small-6 cell @if (!$article->package_status) package-hide @endif">
 									<label>Кол-во,&nbsp;{{ $article->unit->abbreviation }}
-										{{ Form::text('portion_count', $article->portion_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
+										{{ Form::text('package_count', $article->package_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}
 										<div class="sprite-input-right find-status" id="name-check"></div>
 										<span class="form-error">Введите количество</span>
 									</label>
@@ -521,8 +521,8 @@
 	</script>
 
 	@include('products.articles.common.edit.change_articles_groups_script')
-	@include('products.articles.common.edit.change_portions_script', [
-		'portion_unit' => $article->group->unit->abbreviation
+	@include('products.articles.common.edit.change_packages_script', [
+		'package_unit' => $article->group->unit->abbreviation
 	])
 
 	@include('includes.scripts.inputs-mask')

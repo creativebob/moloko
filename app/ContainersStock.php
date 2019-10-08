@@ -71,6 +71,17 @@ class ContainersStock extends Model
         return $this->belongsTo(User::class);
     }
 
+    // Склад
+    public function stock()
+    {
+        return $this->belongsTo(Stock::class);
+    }
+
+    public function filial()
+    {
+        return $this->belongsTo('App\Department', 'filial_id');
+    }
+    
     // Тмц
     public function cmv()
     {

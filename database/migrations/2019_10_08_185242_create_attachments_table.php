@@ -31,14 +31,14 @@ class CreateAttachmentsTable extends Migration
             $table->bigInteger('price_unit_id')->nullable()->unsigned()->comment('Единица измерения для определения цены');
             $table->foreign('price_unit_id')->references('id')->on('units');
 
-            $table->boolean('portion_goods_status')->default(0)->unsigned()->comment('Статус порции');
-            $table->string('portion_goods_name')->nullable()->comment('Имя порции');
-            $table->string('portion_goods_abbreviation')->nullable()->comment('Сокращение порции');
+            $table->boolean('portion_status')->default(0)->unsigned()->comment('Статус порции');
+            $table->string('portion_name')->nullable()->comment('Имя порции');
+            $table->string('portion_abbreviation')->nullable()->comment('Сокращение порции');
 
-            $table->bigInteger('unit_portion_goods_id')->nullable()->unsigned()->comment('Id единицы измерения для порции');
-            $table->foreign('unit_portion_goods_id')->references('id')->on('units');
+            $table->bigInteger('unit_portion_id')->nullable()->unsigned()->comment('Id единицы измерения для порции');
+            $table->foreign('unit_portion_id')->references('id')->on('units');
 
-            $table->integer('portion_goods_count')->nullable()->unsigned()->comment('Количество в порции');
+            $table->integer('portion_count')->nullable()->unsigned()->comment('Количество в порции');
 
             $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
             $table->boolean('serial')->default(0)->unsigned()->comment('Серийный номер');

@@ -3730,13 +3730,13 @@ a#task-toggle{
     }
 }
 
-#portion-block {
-    .portion-hide {
+#package-block {
+    .package-hide {
         display: none;
     }
 }
 
-#portion-change {
+#package-change {
     color: #1779ba;
 
     &:hover {
@@ -3745,7 +3745,7 @@ a#task-toggle{
     }
 }
 
-.portion-fieldset {
+.package-fieldset {
     padding-top: 0.4rem;
     padding-bottom: 0.4rem;
 }
@@ -4095,7 +4095,7 @@ $responsive-card-table-label-bg: #ffffff;
     margin-right: 0.5em;
 }
 
-em.raw-portion-goods-item{
+em.raw-portion-item{
     color: #cccccc !important;
 }
 

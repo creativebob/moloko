@@ -57,11 +57,11 @@ class ContainerController extends Controller
             'price_unit_id',
             'price_unit_category_id',
 
-            'portion_goods_status',
-            'portion_goods_name',
-            'portion_goods_abbreviation',
-            'unit_portion_goods_id',
-            'portion_goods_count',
+            'portion_status',
+            'portion_name',
+            'portion_abbreviation',
+            'unit_portion_id',
+            'portion_count',
 
             'author_id',
             'company_id',
@@ -336,11 +336,11 @@ class ContainerController extends Controller
 
             $container->unit_for_composition_id = $request->unit_for_composition_id;
 
-            $container->portion_goods_status = $request->portion_goods_status ?? 0;
-            $container->portion_goods_abbreviation = $request->portion_goods_abbreviation;
+            $container->portion_status = $request->portion_status ?? 0;
+            $container->portion_abbreviation = $request->portion_abbreviation;
             // $container->portion_goods_name = $request->portion_goods_name;
-            $container->unit_portion_goods_id = $request->unit_portion_goods_id;
-            $container->portion_goods_count = $request->portion_goods_count;
+            $container->unit_portion_id = $request->unit_portion_id;
+            $container->portion_count = $request->portion_count;
 
             $container->price_unit_id = $request->price_unit_id;
             $container->price_unit_category_id = $request->price_unit_category_id;

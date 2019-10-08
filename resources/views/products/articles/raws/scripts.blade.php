@@ -2,12 +2,12 @@
 
 // ----------- Изменение -------------
 
-    if(!{{ $raw->portion_goods_status }} ){
-        $('#portion-goods-block').hide();
+    if(!{{ $raw->portion_status }} ){
+        $('#portion-block').hide();
     }
 
-    $('#portion_goods_status').click(function(){
-        $('#portion-goods-block').slideToggle(200);
+    $('#portion_status').click(function(){
+        $('#portion-block').slideToggle(200);
     });
 
 </script>

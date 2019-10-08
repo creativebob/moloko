@@ -38,7 +38,7 @@
                     <th class="td-name">Название</th>
                     <th class="td-unit">Ед. измерения</th>
                     <th class="td-weight">Параметры</th>
-                    <th class="td-portion">Порционность</th>  
+                    <th class="td-package">Компоновка</th>  
                     <th class="td-category">Категория</th>
                     {{-- <th class="td-description">Описание</th> --}}
                     <th class="td-manually">Артикул</th>
@@ -104,17 +104,17 @@
 
                         <span class="tiny-text">Состав: </span><span title="Кол-во сырья в составе">{{ $item->article->raws->count() }}</span>
                     </td>
-                    <td class="td-portion">
-                        @if($item->article->portion_status == 1)
-                            <span>Прием на склад: {{ $item->article->portion_abbreviation }}</span> 
-                            <span>{{ $item->article->portion_count * $item->article->unit->ratio }} {{ $item->article->unit->abbreviation }}</span><br>
+                    <td class="td-package">
+                        @if($item->article->package_status == 1)
+                            <span>Прием на склад: {{ $item->article->package_abbreviation }}</span> 
+                            <span>{{ $item->article->package_count * $item->article->unit->ratio }} {{ $item->article->unit->abbreviation }}</span><br>
                             
                         @endif
 
-                        @if(isset($item->portion_goods_status))
-                            @if($item->portion_goods_status == 1)
-                                <span>Использовать в {{ $item->portion_goods_abbreviation }}</span>
-                                <span>:{{ $item->portion_goods_count }} {{ $item->unit_portion_goods->abbreviation }}</span>
+                        @if(isset($item->portion_status))
+                            @if($item->portion_status == 1)
+                                <span>Использовать в {{ $item->portion_abbreviation }}</span>
+                                <span>:{{ $item->portion_count }} {{ $item->unit_portion->abbreviation }}</span>
                             @endif
                         @endif
 
@@ -136,7 +136,7 @@
 
                     <td class="td-cost" title="Себестоимость">
                         <span>За единицу: </span><span>{{ num_format($item->cost_unit, 2) ?? '' }}</span><br>
-                        @if($item->portion_goods_status)<span>За порцию: </span><span>{{ num_format($item->cost_portion, 2) ?? '' }}</span>@endif
+                        @if($item->portion_status)<span>За порцию: </span><span>{{ num_format($item->cost_portion, 2) ?? '' }}</span>@endif
                     </td>
 
                     {{-- <td class="td-author">@if(isset($item->author->first_name)) {{ $item->author->name }} @endif</td> --}}

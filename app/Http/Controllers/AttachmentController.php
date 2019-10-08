@@ -57,11 +57,11 @@ class AttachmentController extends Controller
             'price_unit_id',
             'price_unit_category_id',
 
-            'portion_goods_status',
-            'portion_goods_name',
-            'portion_goods_abbreviation',
-            'unit_portion_goods_id',
-            'portion_goods_count',
+            'portion_status',
+            'portion_name',
+            'portion_abbreviation',
+            'unit_portion_id',
+            'portion_count',
 
             'author_id',
             'company_id',
@@ -118,7 +118,7 @@ class AttachmentController extends Controller
 
         $filter = setFilter($this->entity_alias, $request, [
             'author',               // Автор записи
-//            'attachments_category',  // Категория упаковки
+//            'attachments_category',  // Категория вложений
             'articles_group',       // Группа артикула
             'booklist'              // Списки пользователя
         ]);
@@ -162,7 +162,7 @@ class AttachmentController extends Controller
             // Описание ошибки
             $ajax_error = [];
             $ajax_error['title'] = "Обратите внимание!";
-            $ajax_error['text'] = "Для начала необходимо создать категории упаковок. А уже потом будем добавлять упаковку. Ок?";
+            $ajax_error['text'] = "Для начала необходимо создать категории вложений. А уже потом будем добавлять вложение. Ок?";
             $ajax_error['link'] = "/admin/attachments_categories";
             $ajax_error['title_link'] = "Идем в раздел категорий";
 
@@ -183,7 +183,7 @@ class AttachmentController extends Controller
             // Описание ошибки
             // $ajax_error = [];
             $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
-            $ajax_error['text'] = "Для начала необходимо добавить производителей. А уже потом будем добавлять упаковку. Ок?";
+            $ajax_error['text'] = "Для начала необходимо добавить производителей. А уже потом будем добавлять вложение. Ок?";
             $ajax_error['link'] = "/admin/manufacturers/create"; // Ссылка на кнопке
             $ajax_error['title_link'] = "Идем в раздел производителей"; // Текст на кнопке
 
@@ -192,7 +192,7 @@ class AttachmentController extends Controller
 
         return view('products.articles.common.create.create', [
             'item' => new $this->class,
-            'title' => 'Добавление упаковки',
+            'title' => 'Добавление вложения',
             'entity' => $this->entity_alias,
             'category_entity' => 'Attachments_categories',
             'units_category_default' => 6,
@@ -231,7 +231,7 @@ class AttachmentController extends Controller
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
 
                 Log::channel('operations')
-                    ->info('Записали упаковку c id: ' . $attachment->id);
+                    ->info('Записали вложение c id: ' . $attachment->id);
                 Log::channel('operations')
                     ->info('Автор: ' . $attachment->author->name . ' id: ' . $attachment->author_id .  ', компания: ' . $attachment->company->name . ', id: ' .$attachment->company_id);
                 Log::channel('operations')
@@ -246,10 +246,10 @@ class AttachmentController extends Controller
                     return redirect()->route('attachments.edit', ['id' => $attachment->id]);
                 }
             } else {
-                abort(403, 'Ошибка записи упаковок');
+                abort(403, 'Ошибка записи вложений');
             }
         } else {
-            abort(403, 'Ошибка записи информации упаковок');
+            abort(403, 'Ошибка записи информации вложений');
         }
     }
 
@@ -296,7 +296,7 @@ class AttachmentController extends Controller
         // dd($page_info);
 
         return view('products.articles.common.edit.edit', [
-            'title' => 'Редактировать упаковку',
+            'title' => 'Редактировать вложение',
             'item' => $attachment,
             'article' => $article,
             'page_info' => $page_info,
@@ -336,11 +336,11 @@ class AttachmentController extends Controller
 
             $attachment->unit_for_composition_id = $request->unit_for_composition_id;
 
-            $attachment->portion_goods_status = $request->portion_goods_status ?? 0;
-            $attachment->portion_goods_abbreviation = $request->portion_goods_abbreviation;
+            $attachment->portion_status = $request->portion_status ?? 0;
+            $attachment->portion_abbreviation = $request->portion_abbreviation;
             // $attachment->portion_goods_name = $request->portion_goods_name;
-            $attachment->unit_portion_goods_id = $request->unit_portion_goods_id;
-            $attachment->portion_goods_count = $request->portion_goods_count;
+            $attachment->unit_portion_id = $request->unit_portion_id;
+            $attachment->portion_count = $request->portion_count;
 
             $attachment->price_unit_id = $request->price_unit_id;
             $attachment->price_unit_category_id = $request->price_unit_category_id;
@@ -399,10 +399,10 @@ class AttachmentController extends Controller
             if ($attachment) {
                 return redirect()->route('attachments.index');
             } else {
-                abort(403, 'Ошибка при архивации упаковок');
+                abort(403, 'Ошибка при архивации вложений');
             }
         } else {
-            abort(403, 'упаковку не найдено');
+            abort(403, 'Вложение не найдено');
         }
     }
 

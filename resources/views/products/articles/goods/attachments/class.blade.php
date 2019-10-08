@@ -41,7 +41,7 @@
             // Убираем отмеченный чекбокс в списке метрик
             $('#attachment-' + id).prop('checked', false);
 
-            this.totalattachmentsCount();
+            this.totalAttachmentsCount();
         }
 
         fill(elem) {
@@ -107,11 +107,15 @@
         totalGoodsCount() {
             let raws_weight_count = $('.total_raws_count_weight').data('amount') * 1;
             let raws_cost_count = $('.total_raws_count_cost').data('amount') * 1;
+
+            let containers_weight_count = $('.total_containers_count_weight').data('amount') * 1;
+            let containers_cost_count = $('.total_containers_count_cost').data('amount') * 1;
+
             let attachments_weight_count = $('.total_attachments_count_weight').data('amount') * 1;
             let attachments_cost_count = $('.total_attachments_count_cost').data('amount') * 1;
 
-            $('#total_goods_weight').text(this.level(raws_weight_count + attachments_weight_count));
-            $('#total_goods_cost').text(this.level(raws_cost_count + attachments_cost_count));
+            $('#total_goods_weight').text(this.level(raws_weight_count + containers_weight_count + attachments_weight_count));
+            $('#total_goods_cost').text(this.level(raws_cost_count + containers_cost_count + attachments_cost_count));
         }
 
         level(value) {

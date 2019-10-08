@@ -13,8 +13,8 @@
 						@if(isset($raw->article))
 							<label for="raw-{{ $raw->id }}">
 								<span>{{ $raw->article->name }}
-									@if($raw->portion_goods_status)
-										<em class="raw-portion-goods-item">- {{ $raw->portion_goods_count }} {{ $raw->unit_portion_goods->abbreviation }}</em>
+									@if($raw->portion_status)
+										<em class="raw-portion-item">- {{ $raw->portion_count }} {{ $raw->unit_portion->abbreviation }}</em>
 									@endif
 								</span>
 							</label>
