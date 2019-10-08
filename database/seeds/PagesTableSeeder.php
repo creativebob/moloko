@@ -469,10 +469,10 @@ class PagesTableSeeder extends Seeder
                 'display' => true,
             ],
             [
-                'name' => 'Упаковка',
+                'name' => 'Упаковки',
                 'site_id' => 1,
-                'title' => 'Упаковка',
-                'description' => 'Упаковка',
+                'title' => 'Упаковки',
+                'description' => 'Упаковки',
                 'alias' => 'containers',
                 'company_id' => null,
                 'system' => true,
@@ -490,6 +490,41 @@ class PagesTableSeeder extends Seeder
 		        'author_id' => 1,
 		        'display' => true,
 	        ],
+
+            // Вложения
+            [
+                'name' => 'Категории вложений',
+                'site_id' => 1,
+                'title' => 'Категории вложений',
+                'description' => 'Категории вложений',
+                'alias' => 'attachments_categories',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Вложения',
+                'site_id' => 1,
+                'title' => 'Вложения',
+                'description' => 'Вложения',
+                'alias' => 'attachments',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Склады вложений',
+                'site_id' => 1,
+                'title' => 'Склады вложений',
+                'description' => 'Склады вложений',
+                'alias' => 'attachments_stocks',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
 
             // Оборудование
             [

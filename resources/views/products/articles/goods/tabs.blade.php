@@ -15,3 +15,7 @@
 <li class="tabs-title">
 	<a data-tabs-target="containers" href="#containers">Упаковка</a>
 </li>
+
+<li class="tabs-title">
+	<a data-tabs-target="attachments" href="#attachments">Вложения</a>
+</li>

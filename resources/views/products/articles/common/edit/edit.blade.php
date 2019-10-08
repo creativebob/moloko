@@ -9,6 +9,7 @@
 
 @if ($entity == 'goods')
 @include('includes.scripts.chosen-inhead')
+@include('products.articles.goods.attachments.class')
 @endif
 
 @endsection

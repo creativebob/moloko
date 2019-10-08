@@ -13,7 +13,8 @@ class ArticlesCategoriesWithItemsComposer
 	    $entities = Entity::whereIn('alias', [
 	        'raws',
             'containers',
-            'goods'
+            'goods',
+            'attachments'
         ])
             ->get([
                 'id',

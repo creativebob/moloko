@@ -66,3 +66,7 @@
 	@include('products.articles.goods.containers.containers')
 </div>
 
+<div class="tabs-panel" id="attachments">
+	@include('products.articles.goods.attachments.attachments')
+</div>
+

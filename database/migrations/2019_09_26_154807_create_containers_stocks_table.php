@@ -14,7 +14,6 @@ class CreateContainersStocksTable extends Migration
     public function up()
     {
         Schema::create('containers_stocks', function (Blueprint $table) {
-
             $table->bigIncrements('id');
 
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

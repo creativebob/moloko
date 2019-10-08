@@ -113,17 +113,30 @@
 		}
 		
 		// Упаковка
-		public function containers()
-		{
-			return $this->belongsToMany(Container::class, 'article_container')
-				->withPivot([
-					'value',
-					'use',
-					'waste',
-					'leftover',
-					'leftover_operation_id'
-				]);
-		}
+        public function containers()
+        {
+            return $this->belongsToMany(Container::class, 'article_container')
+                ->withPivot([
+                    'value',
+                    'use',
+                    'waste',
+                    'leftover',
+                    'leftover_operation_id'
+                ]);
+        }
+
+        // Вложения
+        public function attachments()
+        {
+            return $this->belongsToMany(Attachment::class, 'article_attachment')
+                ->withPivot([
+                    'value',
+                    'use',
+                    'waste',
+                    'leftover',
+                    'leftover_operation_id'
+                ]);
+        }
 		
 		// Товары
 		public function goods()

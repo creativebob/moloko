@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateArticleContainerTable extends Migration
+class CreateArticleAttachmentTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateArticleContainerTable extends Migration
      */
     public function up()
     {
-        Schema::create('article_container', function (Blueprint $table) {
+        Schema::create('article_attachment', function (Blueprint $table) {
             $table->bigInteger('article_id')->nullable()->unsigned()->comment('Id артикула');
             $table->foreign('article_id')->references('id')->on('articles');
 
             // $table->morphs('composition');
 
-            $table->bigInteger('container_id')->nullable()->unsigned()->comment('Id упаковки');
-            $table->foreign('container_id')->references('id')->on('containers');
+            $table->bigInteger('attachment_id')->nullable()->unsigned()->comment('Id вложения');
+            $table->foreign('attachment_id')->references('id')->on('attachments');
 
             $table->integer('value')->nullable()->unsigned()->comment('Значение');
 
@@ -40,6 +40,6 @@ class CreateArticleContainerTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('article_container');
+        Schema::dropIfExists('article_attachment');
     }
 }

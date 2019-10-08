@@ -299,6 +299,8 @@ Route::post('/ajax_get_raw', 'RawController@ajax_get_raw')->middleware('auth');
 
 Route::any('/ajax_get_container', 'ContainerController@ajax_get_container')->middleware('auth');
 
+Route::any('/ajax_get_attachment', 'AttachmentController@ajax_get_attachment')->middleware('auth');
+
 Route::any('/ajax_get_goods', 'GoodsController@ajax_get_goods')->middleware('auth');
 
 Route::post('/ajax_get_category_workflow', 'WorkflowController@ajax_get_category_workflow')->middleware('auth');
@@ -380,6 +382,34 @@ Route::any('/containers_create_mode', 'СontainerController@ajax_change_create_m
 // ---------------------------------- Склады упаковок -------------------------------------------
 // Основные методы
 Route::resource('/containers_stocks', 'ContainersStockController');
+
+
+// ------------------------------------- Категории вложений -------------------------------------------
+// Текущая добавленная/удаленная категория
+Route::any('/attachments_categories', 'AttachmentsCategoryController@index');
+Route::match(['get', 'post'], '/attachments_categories/{id}/edit', 'AttachmentsCategoryController@edit');
+// Основные методы
+Route::resource('/attachments_categories', 'AttachmentsCategoryController');
+
+
+// ---------------------------------- Вложения (Артикулы) -------------------------------------------
+// Основные методы
+Route::resource('/attachments', 'AttachmentController');
+Route::post('/attachments/search/{text_fragment}', 'AttachmentController@search');
+// Дублирование
+Route::post('/attachments/replicate/{id}', 'AttachmentController@replicate');
+// Архивация
+Route::post('/attachments/archive/{id}', 'AttachmentController@archive');
+// Фото
+Route::any('/attachment/add_photo', 'СontainerController@add_photo');
+Route::post('/attachment/photos', 'AttachmentController@photos');
+
+Route::any('/attachments_create_mode', 'СontainerController@ajax_change_create_mode');
+
+
+// ---------------------------------- Склады вложений -------------------------------------------
+// Основные методы
+Route::resource('/attachments_stocks', 'AttachmentsStockController');
 
 
 // ------------------------------------- Категории оборудования -------------------------------------------
