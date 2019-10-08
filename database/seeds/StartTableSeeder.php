@@ -24,6 +24,7 @@ use App\CatalogsServicesItem;
 use App\GoodsCategory;
 use App\RawsCategory;
 use App\ContainersCategory;
+use App\AttachmentsCategory;
 use App\RoomsCategory;
 
 use App\ServicesCategory;
@@ -391,6 +392,25 @@ class StartTableSeeder extends Seeder
                 'name' => 'Вторая категория упаковок',
 	            'slug' => \Str::slug('Вторая категория упаковок'),
 	            'level' => 1,
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => true,
+            ],
+        ]);
+
+        AttachmentsCategory::insert([
+            [
+                'name' => 'Первая категория вложений',
+                'slug' => \Str::slug('Первая категория вложений'),
+                'level' => 1,
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => true,
+            ],
+            [
+                'name' => 'Вторая категория вложений',
+                'slug' => \Str::slug('Вторая категория вложений'),
+                'level' => 1,
                 'company_id' => 1,
                 'author_id' => 4,
                 'display' => true,

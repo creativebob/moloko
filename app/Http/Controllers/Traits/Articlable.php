@@ -163,6 +163,8 @@ trait Articlable
                         }
 
                         $this->setContainers($request, $article);
+
+                        $this->setAttachments($request, $article);
                     }
 
                     // Устаревший код
@@ -263,6 +265,14 @@ trait Articlable
         // Запись состава упаковок только для черновика
         if ($article->draft) {
             $article->containers()->sync($request->containers);
+        }
+    }
+
+    protected function setAttachments($request, $article)
+    {
+        // Запись состава упаковок только для черновика
+        if ($article->draft) {
+            $article->attachments()->sync($request->attachments);
         }
     }
 

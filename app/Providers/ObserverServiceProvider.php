@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\ArticlesGroup;
+use App\Attachment;
+use App\AttachmentsCategory;
+use App\AttachmentsStock;
 use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\CatalogsService;
@@ -20,6 +23,9 @@ use App\GoodsStock;
 use App\Menu;
 use App\Metric;
 use App\Observers\ArticlesGroupObserver;
+use App\Observers\AttachmentObserver;
+use App\Observers\AttachmentsCategoryObserver;
+use App\Observers\AttachmentsStockObserver;
 use App\Observers\CatalogsGoodsItemObserver;
 use App\Observers\CatalogsGoodsObserver;
 use App\Observers\CatalogsServiceObserver;
@@ -133,6 +139,7 @@ class ObserverServiceProvider extends ServiceProvider
         GoodsCategory::observe(GoodsCategoryObserver::class);
         RawsCategory::observe(RawsCategoryObserver::class);
         ContainersCategory::observe(ContainersCategoryObserver::class);
+        AttachmentsCategory::observe(AttachmentsCategoryObserver::class);
         EquipmentsCategory::observe(EquipmentsCategoryObserver::class);
         RoomsCategory::observe(RoomsCategoryObserver::class);
         ExpendablesCategory::observe(ExpendablesCategoryObserver::class);
@@ -143,6 +150,7 @@ class ObserverServiceProvider extends ServiceProvider
         Goods::observe(GoodsObserver::class);
         Raw::observe(RawObserver::class);
         Container::observe(ContainerObserver::class);
+        Attachment::observe(AttachmentObserver::class);
         Equipment::observe(EquipmentObserver::class);
         Room::observe(RoomObserver::class);
 
@@ -178,6 +186,7 @@ class ObserverServiceProvider extends ServiceProvider
         Stock::observe(StockObserver::class);
         RawsStock::observe(RawsStockObserver::class);
         ContainersStock::observe(ContainersStockObserver::class);
+        AttachmentsStock::observe(AttachmentsStockObserver::class);
         GoodsStock::observe(GoodsStockObserver::class);
 
         Cost::observe(CostObserver::class);
