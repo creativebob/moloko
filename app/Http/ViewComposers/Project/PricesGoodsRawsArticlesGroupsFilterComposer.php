@@ -41,12 +41,11 @@ class PricesGoodsRawsArticlesGroupsFilterComposer
         $articles_groups = [];
         foreach ($prices_goods as $price_goods) {
             $article = $price_goods->goods_public->article;
-
-            foreach ($article->raws as $raw) {
-                foreach ($raw->metrics as $metric) {
-                    if ($metric->pivot->value == 2)
-                        $articles_groups[] = $raw->article->group;
-                }
+			
+            if ($article->attachments->isNotEmpty()) {
+	            foreach ($article->attachments as $attachment) {
+	            	$articles_groups[] = $attachment->article->group;
+	            }
             }
         }
 
