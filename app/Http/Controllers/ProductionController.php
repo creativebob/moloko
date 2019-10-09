@@ -342,7 +342,8 @@ class ProductionController extends Controller
                     $price = 0;
                     $relations = [
                         'raws',
-                        'containers'
+                        'containers',
+	                    'attachments'
                     ];
 
                     foreach ($relations as $relation_name) {
@@ -387,9 +388,9 @@ class ProductionController extends Controller
 	                            $count = $composition->pivot->value;
 	                            $price += ($count * $composition->cost->average);
 
-                                $stock_composition->count -= $count * $item->count;
-                                $stock_composition->weight -= ($composition->article->weight * $count * $item->count);
-                                $stock_composition->volume -= ($composition->article->volume * $count * $item->count);
+                                $stock_composition->count -= ($composition->portion * $count * $item->count);
+                                $stock_composition->weight -= ($composition->weight * $count * $item->count);
+                                $stock_composition->volume -= ($composition->volume * $count * $item->count);
                                 $stock_composition->save();
 	
 	                            Log::channel('documents')
@@ -403,7 +404,7 @@ class ProductionController extends Controller
                                     'documents_item_type' => 'App\ProductionsItem',
                                     'cmv_id' => $composition->id,
                                     'cmv_type' => $model_composition,
-                                    'count' => $count * $item->count,
+                                    'count' => $composition->portion * $count * $item->count,
                                     'cost' => $composition->cost->average,
 	                                'amount' => ($count * $item->count) * $composition->cost->average,
                                     'stock_id' => $production->stock_id,
@@ -446,16 +447,44 @@ class ProductionController extends Controller
 	
 	                Log::channel('documents')
 		                ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
-	                
-	                $stock->count += $item->count;
-                    $stock->weight += ($item->cmv->article->weight * $item->count);
-                    $stock->volume += ($item->cmv->article->volume * $item->count);
-                    $stock->save();
+	
+	                if ($item->cmv->article->package_status == 1) {
+		                $count = $item->count * $item->cmv->article->package_count;
+		                Log::channel('documents')
+			                ->info('Принимаем в "' . $item->cmv->article->package_abbreviation . '": в количестве' . $item->count . ', пересчитываем на ' . $item->cmv->article->unit->abbreviation . ' в количестве '. $count);
+	                } else {
+		                $count = $item->count;
+		                Log::channel('documents')
+			                ->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count);
+	                }
+	
+	                $stock->count += $count;
+	                $stock->weight += ($item->cmv->article->weight * $count);
+	                $stock->volume += ($item->cmv->article->volume * $count);
+	                $stock->save();
 	
 	                Log::channel('documents')
 		                ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 	                
 	                // Себестоимость
+	
+	                $item->update([
+		                'price' => $price,
+		                'amount' => $item->count * $price,
+	                ]);
+	
+	                Log::channel('documents')
+		                ->info('Обновляем себестоимость за еденицу в пункте наряда: ' . $price . ', общая: ' . $item->amount);
+	
+	                if ($item->cmv->article->package_status == 1) {
+		                $price = $item->price / $item->cmv->article->package_count;
+		                Log::channel('documents')
+			                ->info('Принимаем в "' . $item->cmv->article->package_abbreviation . '": в количестве' . $item->count . ', пересчитываем себестоимость: ' . $price . ' за 1 ' . $item->cmv->article->unit->abbreviation);
+	                } else {
+		                $price = $item->price;
+		                Log::channel('documents')
+			                ->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count . ', себестоимость: ' . $price);
+	                }
 	                if ($item->cmv->cost) {
 		                $cost = $item->cmv->cost;
 		
@@ -466,9 +495,9 @@ class ProductionController extends Controller
 		
 		                $cost_average = $cost->average;
 		                if ($stock->count > 0) {
-			                $average = (($stock_count * $cost_average) + ($item->count * $price)) / $stock->count;
+			                $average = (($stock_count * $cost_average) + ($count * $price)) / $stock->count;
 		                } else {
-			                $average = (($stock_count * $cost_average) + ($item->count * $price));
+			                $average = (($stock_count * $cost_average) + ($count * $price));
 		                };
 
                         if ($cost->min > 0 || $cost->max > 0) {
@@ -516,9 +545,9 @@ class ProductionController extends Controller
                         'documents_item_type' => 'App\ProductionsItem',
                         'cmv_id' => $item->cmv->id,
                         'cmv_type' => $model_composition,
-                        'count' => $item->count,
+                        'count' => $count,
                         'cost' => $price,
-	                    'amount' => $item->count * $price,
+	                    'amount' => $count * $price,
                         'stock_id' => $production->stock_id,
                     ]);
 
@@ -528,14 +557,7 @@ class ProductionController extends Controller
 	                Log::channel('documents')
 		                ->info('=== КОНЕЦ ПРИХОДОВАНИЯ ===
 		                ');
-
-                    $item->update([
-                        'cost' => $price,
-	                    'amount' => $item->count * $price,
-                    ]);
-
-                    Log::channel('documents')
-                        ->info('Обновляем себестоимость за еденицу в пункте наряда: ' . $price . ', общая: ' . $item->amount);
+	                
 
                     Log::channel('documents')
                         ->info('=== КОНЕЦ ПЕРЕБОРА ПУНКТА ===

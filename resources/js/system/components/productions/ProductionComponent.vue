@@ -179,7 +179,11 @@
 				if (id != null) {
 					this.categoriesItems.filter(item => {
 						if (item.id === id && item.entity_id === this.entity_id) {
-							this.itemUnit = item.article.unit.abbreviation;
+							if (item.article.package_status === 1) {
+								this.itemUnit = item.article.package_abbreviation;
+							} else {
+								this.itemUnit = item.article.unit.abbreviation;
+							}
 						}
 					});
 				} else {

@@ -41561,7 +41561,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			if (id != null) {
 				this.categoriesItems.filter(function (item) {
 					if (item.id === id && item.entity_id === _this4.entity_id) {
-						_this4.itemUnit = item.article.unit.abbreviation;
+						if (item.article.package_status === 1) {
+							_this4.itemUnit = item.article.package_abbreviation;
+						} else {
+							_this4.itemUnit = item.article.unit.abbreviation;
+						}
 					}
 				});
 			} else {
@@ -42316,6 +42320,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.changeCount = false;
             }
             return this.changePrice;
+        },
+        unitAbbreviation: function unitAbbreviation() {
+            var abbr = void 0;
+            if (this.item.cmv.article.package_status === 1) {
+                abbr = this.item.cmv.article.package_abbreviation;
+            } else {
+                abbr = this.item.cmv.article.unit.abbreviation;
+            }
+            return abbr;
         }
     },
     methods: {
@@ -42443,7 +42456,7 @@ var render = function() {
       2
     ),
     _vm._v(" "),
-    _c("td", [_vm._v(_vm._s(_vm.item.cmv.article.unit.abbreviation))]),
+    _c("td", [_vm._v(_vm._s(_vm.unitAbbreviation))]),
     _vm._v(" "),
     _c(
       "td",
@@ -42971,7 +42984,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			if (id != null) {
 				this.categoriesItems.filter(function (item) {
 					if (item.id === id && item.entity_id === _this4.entity_id) {
-						_this4.itemUnit = item.article.unit.abbreviation;
+						if (item.article.package_status === 1) {
+							_this4.itemUnit = item.article.package_abbreviation;
+						} else {
+							_this4.itemUnit = item.article.unit.abbreviation;
+						}
 					}
 				});
 			} else {
@@ -43123,6 +43140,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         isChangeCount: function isChangeCount() {
             return this.changeCount;
+        },
+        unitAbbreviation: function unitAbbreviation() {
+            var abbr = void 0;
+            if (this.item.cmv.article.package_status === 1) {
+                abbr = this.item.cmv.article.package_abbreviation;
+            } else {
+                abbr = this.item.cmv.article.unit.abbreviation;
+            }
+            return abbr;
         }
     },
     methods: {
@@ -43242,7 +43268,7 @@ var render = function() {
       2
     ),
     _vm._v(" "),
-    _c("td", [_vm._v(_vm._s(_vm.item.cmv.article.unit.abbreviation))]),
+    _c("td", [_vm._v(_vm._s(_vm.unitAbbreviation))]),
     _vm._v(" "),
     !this.isProduced
       ? _c("td", [
