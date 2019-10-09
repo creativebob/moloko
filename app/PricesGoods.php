@@ -170,7 +170,7 @@
 				$query->whereHas('goods_public', function($q) use ($raws_articles_groups) {
 					$q->whereHas('article', function($q) use ($raws_articles_groups) {
 						foreach($raws_articles_groups as $item){
-							$q->whereHas('raws',function($q) use ($item) {
+							$q->whereHas('attachments',function($q) use ($item) {
 								$q->whereHas('article', function ($q) use ($item) {
 									$q->where('articles_group_id', $item);
 								});

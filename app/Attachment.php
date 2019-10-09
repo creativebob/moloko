@@ -149,6 +149,46 @@ class Attachment extends Model
             }
         }
     }
+	
+	// Геттер: Функция получения обьема в м3. учитывая все надстройки и переопределения в еденицах измерения
+	public function getVolumeAttribute()
+	{
+		
+		// Расчет если указано в штуках
+		if($this->article->unit_id == 32){
+			
+			// Расчет если есть порции
+			if($this->portion_status){
+				return $this->article->volume / $this->article->unit->ratio * $this->portion_count * $this->unit_portion->ratio;
+				
+			} else {
+				
+				return $this->article->volume;
+			}
+			
+			// Расчет если в единицах
+		} else {
+			
+			// Расчет если есть порции
+			if($this->portion_status){
+				return $this->article->volume / $this->article->unit->ratio * $this->portion_count * $this->unit_portion->ratio;
+			} else {
+				
+				return $this->article->volume;
+			}
+		}
+	}
+	
+	// Геттер: из
+	public function getPortionAttribute()
+	{
+		// Расчет если есть порции
+		if($this->portion_status){
+			return $this->article->unit->ratio * $this->portion_count * $this->unit_portion->ratio;
+		} else {
+			return $this->article->unit->ratio;
+		}
+	}
 
     public function getCostUnitAttribute()
     {

@@ -235,6 +235,7 @@
 
 						{{-- Метрики --}}
 						@includeIf('products.articles.'.$item->getTable().'.metrics.metrics')
+						@include('products.common.edit.metrics.metrics')
 
 
 						<div id="item-inputs"></div>

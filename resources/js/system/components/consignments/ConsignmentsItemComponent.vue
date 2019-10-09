@@ -19,7 +19,7 @@
 
 
         </td>
-        <td>{{ item.cmv.article.unit.abbreviation }}</td>
+        <td>{{ unitAbbreviation }}</td>
 
         <td @click="checkChangePrice">
             <template v-if="isChangePrice">
@@ -78,6 +78,15 @@
                 }
                 return this.changePrice
             },
+            unitAbbreviation() {
+                let abbr;
+                if (this.item.cmv.article.package_status === 1) {
+                    abbr = this.item.cmv.article.package_abbreviation;
+                } else {
+                    abbr = this.item.cmv.article.unit.abbreviation;
+                }
+                return abbr;
+            }
 
         },
         methods: {

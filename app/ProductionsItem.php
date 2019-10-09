@@ -48,7 +48,7 @@ class ProductionsItem extends Model
         'production_id',
         'cmv_id',
         'cmv_type',
-        'cost',
+        'price',
         'count',
 	    'amount',
         'entity_id',

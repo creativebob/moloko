@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Schema;
+use App\CostsHistory;
 use App\Receipt;
 use Illuminate\Support\Facades\Log;
 use App\Consignment;
@@ -321,15 +323,36 @@ class ConsignmentController extends Controller
 					Log::channel('documents')
 						->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 					
-					$stock->count += $item->count;
-					$stock->weight += ($item->cmv->article->weight * $item->count);
-					$stock->volume += ($item->cmv->article->volume * $item->count);
+					if ($item->cmv->article->package_status == 1) {
+						$count = $item->count * $item->cmv->article->package_count;
+						Log::channel('documents')
+							->info('Принимаем в "' . $item->cmv->article->package_abbreviation . '": в количестве' . $item->count . ', пересчитываем на ' . $item->cmv->article->unit->abbreviation . ' в количестве '. $count);
+					} else {
+						$count = $item->count;
+						Log::channel('documents')
+							->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count);
+					}
+					
+					$stock->count += $count;
+					$stock->weight += ($item->cmv->article->weight * $count);
+					$stock->volume += ($item->cmv->article->volume * $count);
 					$stock->save();
 					
 					Log::channel('documents')
 						->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 
 					// Себестоимость
+					
+					if ($item->cmv->article->package_status == 1) {
+						$price = $item->price / $item->cmv->article->package_count;
+						Log::channel('documents')
+							->info('Принимаем в "' . $item->cmv->article->package_abbreviation . '": в количестве' . $item->count . ', пересчитываем себестоимость: ' . $price . ' за 1 ' . $item->cmv->article->unit->abbreviation);
+					} else {
+						$price = $item->price;
+						Log::channel('documents')
+							->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count . ', себестоимость: ' . $price);
+					}
+					
 					if ($item->cmv->cost) {
 						$cost = $item->cmv->cost;
 //						dd($cost);
@@ -341,22 +364,22 @@ class ConsignmentController extends Controller
 						
 						$cost_average = $cost->average;
 						if ($stock->count > 0) {
-							$average = (($stock_count * $cost_average) + ($item->count * $item->price)) / $stock->count;
+							$average = (($stock_count * $cost_average) + ($count * $price)) / $stock->count;
 						} else {
-							$average = (($stock_count * $cost_average) + ($item->count * $item->price));
+							$average = (($stock_count * $cost_average) + ($count * $price));
 						};
 
 						if (is_null($cost->min) || is_null($cost->max)) {
                             $data_cost = [
-                                'min' => $item->price,
-                                'max' => $item->price,
-                                'average' => $item->price,
+                                'min' => $price,
+                                'max' => $price,
+                                'average' => $price,
                             ];
 
                         } else {
                             $data_cost = [
-                                'min' => ($item->price < $cost->min) ? $item->price : $cost->min,
-                                'max' => ($item->price > $cost->max) ? $item->price : $cost->max,
+                                'min' => ($price < $cost->min) ? $price : $cost->min,
+                                'max' => ($price > $cost->max) ? $price : $cost->max,
                                 'average' => $average
                             ];
                         }
@@ -373,9 +396,9 @@ class ConsignmentController extends Controller
 							'cmv_id' => $item->cmv_id,
 							'cmv_type' => $item->cmv_type,
 							'manufacturer_id' => $item->cmv->article->manufacturer_id,
-							'min' => $item->price,
-							'max' => $item->price,
-							'average' => $item->price,
+							'min' => $price,
+							'max' => $price,
+							'average' => $price,
 						];
 //						dd($data_cost);
 						$cost = (new Cost())->create($data_cost);
@@ -396,9 +419,9 @@ class ConsignmentController extends Controller
                         'documents_item_type' => 'App\ConsignmentsItem',
                         'cmv_id' => $item->cmv->id,
                         'cmv_type' => $model,
-                        'count' => $item->count,
-                        'cost' => $item->price,
-	                    'amount' => $item->count * $item->price,
+                        'count' => $count,
+                        'cost' => $price,
+	                    'amount' => $count * $price,
                         'stock_id' => $consignment->stock_id,
                     ]);
 
@@ -599,6 +622,11 @@ class ConsignmentController extends Controller
 			->get();
 //		dd($consignments);
 		
+		Schema::disableForeignKeyConstraints();
+		CostsHistory::truncate();
+		Cost::truncate();
+		Receipt::truncate();
+		
 		foreach($consignments as $consignment) {
 			if ($consignment->items->isNotEmpty()) {
 				
@@ -615,6 +643,8 @@ class ConsignmentController extends Controller
 					
 					$entity_stock = Entity::where('alias', $alias . '_stocks')->first();
 					$model_stock = 'App\\' . $entity_stock->model;
+					
+					$model_stock::truncate();
 					
 					foreach ($items as $item) {
 						
@@ -651,15 +681,35 @@ class ConsignmentController extends Controller
 						Log::channel('documents')
 							->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 						
-						$stock->count += $item->count;
-						$stock->weight += ($item->cmv->article->weight * $item->count);
-						$stock->volume += ($item->cmv->article->volume * $item->count);
+						if ($item->cmv->article->package_status == 1) {
+							$count = $item->count * $item->cmv->article->package_count;
+							Log::channel('documents')
+								->info('Принимаем в "' . $item->cmv->article->package_abbreviation . '": в количестве ' . $item->count . ', пересчитываем на ' . $item->cmv->article->unit->abbreviation . ' в количестве '. $count);
+						} else {
+							$count = $item->count;
+							Log::channel('documents')
+								->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count);
+						}
+						
+						$stock->count += $count;
+						$stock->weight += ($item->cmv->article->weight * $count);
+						$stock->volume += ($item->cmv->article->volume * $count);
 						$stock->save();
 						
 						Log::channel('documents')
 							->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 						
 						// Себестоимость
+						
+						if ($item->cmv->article->package_status == 1) {
+							$price = $item->price / $item->cmv->article->package_count;
+							Log::channel('documents')
+								->info('Принимаем в "' . $item->cmv->article->package_abbreviation . '": в количестве ' . $item->count . ', пересчитываем себестоимость: ' . $price . ' за 1 ' . $item->cmv->article->unit->abbreviation);
+					} else {
+							$price = $item->price;
+							Log::channel('documents')
+								->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count . ', себестоимость: ' . $price);
+						}
 						if ($item->cmv->cost) {
 							$cost = $item->cmv->cost;
 //						dd($cost);
@@ -671,22 +721,22 @@ class ConsignmentController extends Controller
 							
 							$cost_average = $cost->average;
 							if ($stock->count > 0) {
-								$average = (($stock_count * $cost_average) + ($item->count * $item->price)) / $stock->count;
+								$average = (($stock_count * $cost_average) + ($count * $price)) / $stock->count;
 							} else {
-								$average = (($stock_count * $cost_average) + ($item->count * $item->price));
+								$average = (($stock_count * $cost_average) + ($count * $price));
 							};
 							
 							if (is_null($cost->min) || is_null($cost->max)) {
 								$data_cost = [
-									'min' => $item->price,
-									'max' => $item->price,
-									'average' => $item->price,
+									'min' => $price,
+									'max' => $price,
+									'average' => $price,
 								];
 								
 							} else {
 								$data_cost = [
-									'min' => ($item->price < $cost->min) ? $item->price : $cost->min,
-									'max' => ($item->price > $cost->max) ? $item->price : $cost->max,
+									'min' => ($price < $cost->min) ? $price : $cost->min,
+									'max' => ($price > $cost->max) ? $price : $cost->max,
 									'average' => $average
 								];
 							}
@@ -703,9 +753,9 @@ class ConsignmentController extends Controller
 								'cmv_id' => $item->cmv_id,
 								'cmv_type' => $item->cmv_type,
 								'manufacturer_id' => $item->cmv->article->manufacturer_id,
-								'min' => $item->price,
-								'max' => $item->price,
-								'average' => $item->price,
+								'min' => $price,
+								'max' => $price,
+								'average' => $price,
 							];
 //						dd($data_cost);
 							$cost = (new Cost())->create($data_cost);
@@ -726,9 +776,9 @@ class ConsignmentController extends Controller
 							'documents_item_type' => 'App\ConsignmentsItem',
 							'cmv_id' => $item->cmv->id,
 							'cmv_type' => $model,
-							'count' => $item->count,
-							'cost' => $item->price,
-							'amount' => $item->count * $item->price,
+							'count' => $count,
+							'cost' => $price,
+							'amount' => $count * $price,
 							'stock_id' => $consignment->stock_id,
 						]);
 						
@@ -755,6 +805,8 @@ class ConsignmentController extends Controller
 				
 			}
 		}
+		
+		Schema::enableForeignKeyConstraints();
 		
 		return redirect()->route('consignments.index');
 	}
