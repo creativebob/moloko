@@ -138,7 +138,7 @@ function sendSms($phone, $msg) {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array(
-            "api_id" => $company->accounts->where('alias', 'sms')->first()->api_token,
+            "api_id" => $company->accounts->where('alias', 'smssms')->first()->api_token,
             "to" => $phone, // До 100 штук до раз
             "msg" => $msg,
             "json" => 1 // Для получения более развернутого ответа от сервера

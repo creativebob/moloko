@@ -467,6 +467,9 @@ class AppController extends Controller
 
         $site = $this->site;
 
+        // $company = $site->company;
+        // return $company->accounts->where('alias', 'smssend')->first()->api_token;
+
         $confirmation = session('confirmation');
 
         // Если сессия найдена (Сессия может закончится по времени)
@@ -477,6 +480,7 @@ class AppController extends Controller
             // Если найден лид
             if($lead){
 
+                if(!isset($lead->user)){return 'Пользователь не существует';}
                 $user = $lead->user;
 
                 // Проверяем, не частит ли пользователь с запросом кода
@@ -508,7 +512,7 @@ class AppController extends Controller
         } else {
 
             // Сессия не существует
-            return response()->json(['name' => 'Steve', 'state' => 'CA']);
+            return 'Сессия не существует';
 
         }
 

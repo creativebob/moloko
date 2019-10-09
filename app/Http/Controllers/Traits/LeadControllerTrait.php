@@ -202,6 +202,12 @@ trait LeadControllerTrait
         $filial_id = $request->filial_id ?? $site->filials->first()->id;
 
         $name = $request->name;
+
+        $first_name = $request->first_name;
+        $second_name = $request->second_name;
+        $name = $first_name . ' ' . $second_name;
+        $nickname = $first_name . ' ' . $second_name;
+
         $phone = cleanPhone($request->main_phone);
 
         // Содержится ли в куках данные корзины
@@ -234,7 +240,6 @@ trait LeadControllerTrait
             $user = check_user_by_phones($request->main_phone);
 
 
-
             // Если нет, то создадим нового
             if (empty($user)) {
 
@@ -245,6 +250,10 @@ trait LeadControllerTrait
                 // sendSms('79041248598', 'Данные для входа: ' . $user->access_code);
 
                 $user->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
+
+                $user->first_name = $first_name;
+                $user->second_name = $second_name;
+                $user->nickname = $nickname;
 
                 // Компания и филиал
                 $user->company_id = $company->id;
