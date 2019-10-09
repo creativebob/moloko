@@ -303,7 +303,12 @@ class RawController extends Controller
                 $q->with([
                     'unit'
                 ]);
-            }
+            },
+            'category' => function ($q) {
+                $q->with([
+                    'metrics'
+                ]);
+            },
         ]);
         $article = $raw->article;
         // dd($article);
