@@ -521,6 +521,21 @@ class GoodsController extends Controller
                 }
                 $res = $new_article->containers()->attach($containers_insert);
             }
+	
+	    $article->load('attachments');
+	    if ($article->attachments->isNotEmpty()) {
+		    $attachments_insert = [];
+		    foreach ($article->attachments as $attachment) {
+			    $attachments_insert[$attachment->id] = [
+				    'value' => $attachment->pivot->value,
+				    'use' => $attachment->pivot->use,
+				    'waste' => $attachment->pivot->waste,
+				    'leftover' => $attachment->pivot->leftover,
+				    'leftover_operation_id' => $attachment->pivot->leftover_operation_id,
+			    ];
+		    }
+		    $res = $new_article->attachments()->attach($attachments_insert);
+	    }
 
             if($article->kit) {
                 $article->load('goods');
