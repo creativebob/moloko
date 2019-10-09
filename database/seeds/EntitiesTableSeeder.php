@@ -877,7 +877,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('attachments_categories')->first(['id'])->id,
-                'view_path' => 'products/articles/containers',
+                'view_path' => 'products/articles/attachments',
                 'page_id' => $pages->firstWhere('alias', 'attachments')->id,
             ],
             [
@@ -1111,7 +1111,7 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('attachments')->first(['id'])->id,
-                'view_path' => 'containers_stocks',
+                'view_path' => 'attachments_stocks',
                 'page_id' => $pages->firstWhere('alias', 'attachments_stocks')->id,
             ],
 	        [
