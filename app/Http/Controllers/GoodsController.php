@@ -76,7 +76,6 @@ class GoodsController extends Controller
                     'raws.article',
                     'attachments.article',
                     'containers.article'
-
                 ]);
                 // ->select([
                 //     'id',

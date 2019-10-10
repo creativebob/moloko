@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Project;
 
+use App\CatalogsGoods;
 use Carbon\Carbon;
 use Telegram;
 use App\CatalogsGoodsItem;
@@ -107,16 +108,16 @@ class AppController extends Controller
 
         // Получаем полный прайс со всеми доступными разделами
         $catalog_goods = CatalogsGoods::with('items_public')
-        ->whereHas('sites', function ($q) use ($site) {
-            $q->where('id', $site->id);
-        })
-        ->where('slug', $catalog_slug)
-        ->where(['display' => true])
-        ->first();
+            ->whereHas('sites', function ($q) use ($site) {
+                $q->where('id', $site->id);
+            })
+            ->where('slug', $catalog_slug)
+            ->where(['display' => true])
+            ->first();
 
         if($catalog_item_slug){
 
-            // Получаем разделы прайса ограниченный slug'ом 
+            // Получаем разделы прайса ограниченный slug'ом
             $catalog_goods_items = $catalog_goods->items_public->where('slug', $catalog_item_slug);
             $page->title = $catalog_goods_items->first()->title;
 
@@ -127,12 +128,35 @@ class AppController extends Controller
             $page->title = 'Все товары';
         }
 
-        // Получаем id всех доступных на сайте разделов прайса, 
+        // Получаем id всех доступных на сайте разделов прайса,
         // чтобы далее не заниматься повторным перебором при получении товаров
         $catalog_goods_items_ids = $catalog_goods_items->pluck('id');
 
         $prices_goods = PricesGoods::with([
-            'goods_public.article.raws.metrics'
+            'goods_public' => function ($q) {
+                $q->with([
+                    'article' => function ($q) {
+                        $q->with([
+                            'raws' => function ($q) {
+                                $q->with([
+                                    'article.unit',
+                                    'metrics'
+                                ]);
+                            },
+                            'attachments' => function ($q) {
+                                $q->with([
+                                    'article.unit',
+                                ]);
+                            },
+                            'containers' => function ($q) {
+                                $q->with([
+                                    'article.unit',
+                                ]);
+                            },
+                        ]);
+                    }
+                ]);
+            }
         ])
             ->whereIn('catalogs_goods_item_id', $catalog_goods_items_ids)
             ->has('goods_public')
