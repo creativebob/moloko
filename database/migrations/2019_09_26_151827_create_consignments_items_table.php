@@ -25,7 +25,7 @@ class CreateConsignmentsItemsTable extends Migration
             $table->morphs('cmv');
 	
 	        $table->decimal('count', 12,4)->default(0)->comment('Количество');
-            $table->decimal('price', 12, 4)->default(0)->comment('Цена за единицу');
+            $table->decimal('cost', 12, 4)->default(0)->comment('Цена за единицу');
             $table->decimal('amount', 16, 8)->default(0)->comment('Сумма');
 
             $table->integer('vat_rate')->nullable()->comment('Размер налога НДС');

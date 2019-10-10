@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -30,6 +31,8 @@ class ConsignmentsItem extends Model
 
 //    use SoftDeletes;
 
+    use Commonable;
+
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -49,7 +52,7 @@ class ConsignmentsItem extends Model
         'cmv_id',
         'cmv_type',
         'count',
-        'price',
+        'cost',
 	    'amount',
         'entity_id',
 
@@ -60,22 +63,15 @@ class ConsignmentsItem extends Model
         'stock_id',
     ];
 
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo(User::class);
-    }
-
     // Родительская смета
     public function consignment()
     {
         return $this->belongsTo(Consignment::class);
+    }
+
+    public function document()
+    {
+        return $this->belongsTo(Consignment::class, 'consignment_id');
     }
 
     // Склад

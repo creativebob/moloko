@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -30,6 +31,8 @@ class ProductionsItem extends Model
 
 //    use SoftDeletes;
 
+    use Commonable;
+
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -48,7 +51,7 @@ class ProductionsItem extends Model
         'production_id',
         'cmv_id',
         'cmv_type',
-        'price',
+        'cost',
         'count',
 	    'amount',
         'entity_id',
@@ -56,22 +59,15 @@ class ProductionsItem extends Model
         'stock_id',
     ];
 
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    // Родительская смета
+    // Наряд
     public function production()
     {
         return $this->belongsTo(Production::class);
+    }
+
+    public function document()
+    {
+        return $this->belongsTo(Production::class, 'production_id');
     }
 
     // Склад

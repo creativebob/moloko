@@ -41469,7 +41469,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			items: this.consignment.items,
 			id: null,
 			count: null,
-			price: null,
+			cost: null,
 
 			// Категории для компонента выбора
 			categories: this.selectData.categories,
@@ -41481,10 +41481,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 	computed: {
 		totalItemSum: function totalItemSum() {
-			return this.count * this.price;
+			return this.count * this.cost;
 		},
 		isDisabled: function isDisabled() {
-			return this.id == null || this.price == null || this.count == null || this.count == 0;
+			return this.id == null || this.cost == null || this.count == null || this.count == 0;
 		},
 		itemsList: function itemsList() {
 			return this.items;
@@ -41492,12 +41492,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		totalItemsCount: function totalItemsCount() {
 			return this.items.length;
 		},
-		totalItemsPrice: function totalItemsPrice() {
-			var price = 0;
+		totalItemsCost: function totalItemsCost() {
+			var cost = 0;
 			this.items.forEach(function (item) {
-				return price += Number(item.amount);
+				return cost += Number(item.amount);
 			});
-			return price;
+			return cost;
 		},
 
 
@@ -41525,8 +41525,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		changeCount: function changeCount(value) {
 			this.count = value;
 		},
-		changePrice: function changePrice(value) {
-			this.price = value;
+		changeCost: function changeCost(value) {
+			this.cost = value;
 		},
 		changeEntity: function changeEntity() {
 			var _this3 = this;
@@ -41583,10 +41583,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					cmv_id: this.id,
 					entity_id: this.entity_id,
 					count: this.count,
-					price: this.price
+					cost: this.cost
 				}).then(function (response) {
 					_this5.items.push(response.data);
-				}, this.id = null, this.count = null, this.price = null, this.change = true).catch(function (error) {
+				}, this.id = null, this.count = null, this.cost = null, this.change = true).catch(function (error) {
 					console.log(error);
 				});
 			}
@@ -42302,24 +42302,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             count: Number(this.item.count),
-            price: Number(this.item.price),
+            cost: Number(this.item.cost),
             changeCount: false,
-            changePrice: false
+            changeCost: false
         };
     },
 
     computed: {
         isChangeCount: function isChangeCount() {
             if (this.changeCount) {
-                this.changePrice = false;
+                this.changeCost = false;
             }
             return this.changeCount;
         },
-        isChangePrice: function isChangePrice() {
-            if (this.changePrice) {
+        isChangeCost: function isChangeCost() {
+            if (this.changeCost) {
                 this.changeCount = false;
             }
-            return this.changePrice;
+            return this.changeCost;
         },
         unitAbbreviation: function unitAbbreviation() {
             var abbr = void 0;
@@ -42337,9 +42337,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.changeCount = !this.changeCount;
             }
         },
-        checkChangePrice: function checkChangePrice() {
+        checkChangeCost: function checkChangeCost() {
             if (!this.isPosted) {
-                this.changePrice = !this.changePrice;
+                this.changeCost = !this.changeCost;
             }
         },
 
@@ -42347,13 +42347,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             this.changeCount = false;
-            this.changePrice = false;
+            this.changeCost = false;
             axios.patch('/admin/consignments_items/' + this.item.id, {
                 count: Number(this.count),
-                price: Number(this.price)
+                cost: Number(this.cost)
             }).then(function (response) {
                 _this.$emit('update', response.data, _this.index);
-                _this.price = Number(response.data.price);
+                _this.cost = Number(response.data.cost);
                 _this.count = Number(response.data.count);
             }).catch(function (error) {
                 console.log(error);
@@ -42460,9 +42460,9 @@ var render = function() {
     _vm._v(" "),
     _c(
       "td",
-      { on: { click: _vm.checkChangePrice } },
+      { on: { click: _vm.checkChangeCost } },
       [
-        _vm.isChangePrice
+        _vm.isChangeCost
           ? [
               _c("input", {
                 directives: [
@@ -42470,12 +42470,12 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.price,
-                    expression: "price"
+                    value: _vm.cost,
+                    expression: "cost"
                   }
                 ],
                 attrs: { type: "number" },
-                domProps: { value: _vm.price },
+                domProps: { value: _vm.cost },
                 on: {
                   keydown: function($event) {
                     if (
@@ -42488,20 +42488,20 @@ var render = function() {
                     return _vm.updateItem($event)
                   },
                   focusout: function($event) {
-                    _vm.changePrice = false
+                    _vm.changeCost = false
                   },
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.price = $event.target.value
+                    _vm.cost = $event.target.value
                   }
                 }
               })
             ]
           : [
               _vm._v(
-                _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.price)))
+                _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.cost)))
               )
             ]
       ],
@@ -42676,18 +42676,18 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.price,
-                      expression: "price"
+                      value: _vm.cost,
+                      expression: "cost"
                     }
                   ],
-                  attrs: { name: "price", type: "number" },
-                  domProps: { value: _vm.price },
+                  attrs: { name: "cost", type: "number" },
+                  domProps: { value: _vm.cost },
                   on: {
                     input: function($event) {
                       if ($event.target.composing) {
                         return
                       }
-                      _vm.price = $event.target.value
+                      _vm.cost = $event.target.value
                     }
                   }
                 })
@@ -42725,7 +42725,7 @@ var render = function() {
         _c("td", [
           _vm._v(
             "Сумма: " +
-              _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.totalItemsPrice)))
+              _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.totalItemsCost)))
           )
         ]),
         _vm._v(" "),
@@ -43088,7 +43088,6 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
 //
 //
 //

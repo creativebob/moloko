@@ -29,7 +29,7 @@ class AlbumsCategoriesSelectComposer
         // ->has('albums')
         ->orderBy('sort', 'asc')
         ->toBase()
-        ->get($columns);
+        ->get();
         // dd($albums_categories);
 
         // if ($albums_categories->count() == 0) {

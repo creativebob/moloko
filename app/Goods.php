@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Models\Traits\Cmvable;
+use App\Models\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -28,10 +30,13 @@ class Goods extends Model
 {
 
 	// Включаем кеш
-//    use Cachable;
+    use Cachable;
 
     use Notifiable;
     use SoftDeletes;
+
+    use Commonable;
+    use Cmvable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -61,46 +66,35 @@ class Goods extends Model
         'moderation'
     ];
 
-    // Артикул
-    public function article()
-    {
-        return $this->belongsTo(Article::class);
-    }
-
-    public function core()
-    {
-        return $this->belongsTo(Article::class, 'article_id');
-    }
-
     // Категория
     public function category()
     {
         return $this->belongsTo(GoodsCategory::class);
     }
 
-    // Компания
-    public function company()
+    // Склад
+    public function stock()
     {
-        return $this->belongsTo(Company::class);
-    }
-
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    // Метрики
-    public function metrics()
-    {
-        return $this->morphToMany(Metric::class, 'entity', 'entity_metric_value')
-        ->withPivot('value');
+        return $this->hasOne(GoodsStock::class, 'cmv_id');
     }
 
     // Пункты каталога
     public function catalogs_items()
     {
         return $this->belongsToMany(CatalogsGoodsItem::class, 'prices_goods', 'goods_id', 'catalogs_goods_item_id');
+    }
+
+    // Пункты каталога
+    public function prices()
+    {
+        return $this->hasMany(PricesGoods::class)
+            ->where('archive', false);
+    }
+
+    //
+    public function price_unit()
+    {
+        return $this->belongsTo(Unit::class, 'price_unit_id');
     }
 
     // Рабочие процессы
@@ -113,42 +107,5 @@ class Goods extends Model
     public function order_compositions()
     {
         return $this->morphMany(OrderComposition::class, 'order_compositions');
-    }
-
-    // Пункты каталога
-    public function prices()
-    {
-        return $this->hasMany(PricesGoods::class)
-            ->where('archive', false);
-    }
-
-    // 
-    public function price_unit()
-    {
-        return $this->belongsTo(Unit::class, 'price_unit_id');
-    }
-
-
-    // Себестоимость
-    public function cost()
-    {
-        return $this->morphOne(Cost::class, 'cmv');
-    }
-
-    // Склад
-    public function stock()
-    {
-        return $this->hasOne(GoodsStock::class, 'cmv_id');
-    }
-
-    public function getCostAverageAttribute()
-    {
-
-        // Существует ли запись на складе
-        if($this->morphMany(Cost::class, 'cmv')->first() !== null){
-            return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
-        } else {
-            return 0;
-        }
     }
 }

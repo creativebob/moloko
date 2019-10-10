@@ -28,7 +28,7 @@ class CategoriesSelectComposer
         ->systemItem($answer)
         ->orderBy('sort', 'asc')
         ->toBase()
-        ->get($columns);
+        ->get();
         // dd($items);
 
         $items_list = getSelectTree($items, ($view->parent_id ?? null), null, ($view->id ?? null));

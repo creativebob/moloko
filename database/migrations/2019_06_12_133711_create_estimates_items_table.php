@@ -26,8 +26,8 @@ class CreateEstimatesItemsTable extends Migration
             $table->integer('cost')->nullable()->comment('Себестоимость');
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим мебестоимости');
 
-            $table->decimal('price', 12, 4)->comment('Цена');
-            $table->integer('count')->default(0)->comment('Количество');
+            $table->decimal('price', 12, 4)->default(0)->comment('Цена');
+            $table->decimal('count', 12,4)->default(0)->comment('Количество');
             $table->decimal('sum', 12, 4)->nullable()->comment('Сумма');
 
             $table->decimal('margin_percent', 10, 2)->nullable()->comment('Процент маржи');

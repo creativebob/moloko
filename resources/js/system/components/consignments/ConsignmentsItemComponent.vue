@@ -21,17 +21,17 @@
         </td>
         <td>{{ unitAbbreviation }}</td>
 
-        <td @click="checkChangePrice">
-            <template v-if="isChangePrice">
+        <td @click="checkChangeCost">
+            <template v-if="isChangeCost">
                 <input
                     @keydown.enter.prevent="updateItem"
                     type="number"
                     v-focus
-                    @focusout="changePrice = false"
-                    v-model="price"
+                    @focusout="changeCost = false"
+                    v-model="cost"
                 >
             </template>
-            <template v-else="changePrice">{{ item.price | roundToTwo | level }}</template>
+            <template v-else="changeCost">{{ item.cost | roundToTwo | level }}</template>
         </td>
 
         <td>{{ item.amount | roundToTwo | level }}</td>
@@ -60,23 +60,23 @@
         data() {
             return {
                 count: Number(this.item.count),
-                price: Number(this.item.price),
+                cost: Number(this.item.cost),
                 changeCount: false,
-                changePrice: false,
+                changeCost: false,
             }
         },
         computed: {
             isChangeCount() {
                 if (this.changeCount) {
-                    this.changePrice = false
+                    this.changeCost = false
                 }
                 return this.changeCount
             },
-            isChangePrice() {
-                if (this.changePrice) {
+            isChangeCost() {
+                if (this.changeCost) {
                     this.changeCount = false
                 }
-                return this.changePrice
+                return this.changeCost
             },
             unitAbbreviation() {
                 let abbr;
@@ -95,22 +95,22 @@
                     this.changeCount = !this.changeCount
                 }
             },
-            checkChangePrice() {
+            checkChangeCost() {
                 if (!this.isPosted) {
-                    this.changePrice = !this.changePrice
+                    this.changeCost = !this.changeCost
                 }
             },
             updateItem: function() {
                 this.changeCount = false;
-                this.changePrice = false;
+                this.changeCost = false;
                 axios
                     .patch('/admin/consignments_items/' + this.item.id, {
                         count: Number(this.count),
-                        price: Number(this.price)
+                        cost: Number(this.cost)
                     })
                     .then(response => {
                         this.$emit('update', response.data, this.index);
-                        this.price = Number(response.data.price);
+                        this.cost = Number(response.data.cost);
                         this.count = Number(response.data.count);
                     })
                     .catch(error => {

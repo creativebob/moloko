@@ -3,7 +3,6 @@
         <td>{{ index + 1 }}</td>
         <td>{{ item.entity.name }}</td>
         <td>{{ item.cmv.article.name }}</td>
-
         <td @click="checkChangeCount">
             <template v-if="isChangeCount">
                 <input

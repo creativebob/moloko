@@ -55,7 +55,7 @@ class CatalogsGoodsItemController extends Controller
         ->systemItem($answer)
         ->where('catalogs_goods_id', $catalog_id)
             ->orderBy('sort')
-        ->get($columns);
+        ->get();
         // dd($catalogs_goods_items);
 
         // Отдаем Ajax

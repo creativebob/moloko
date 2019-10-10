@@ -66,13 +66,16 @@ class GoodsController extends Controller
             'company',
             'article' => function ($q) {
                 $q->with([
-                    'group.unit',
                     'photo',
+                    'goods.article',
+                    'manufacturer.company',
                     'unit',
                     'unit_weight',
                     'unit_volume',
-                    'goods',
-                    'manufacturer.company'
+                    'group.unit',
+                    'raws.article',
+                    'attachments.article',
+                    'containers.article'
                 ]);
                 // ->select([
                 //     'id',
@@ -82,12 +85,15 @@ class GoodsController extends Controller
                 //     'company_id'
                 // ]);
             },
-            'category' => function ($q) {
-                $q->select([
-                    'id',
-                    'name'
-                ]);
-            },
+            'cost',
+            'category'
+//            => function ($q) {
+//                $q->select([
+//                    'id',
+//                    'name'
+//                ]);
+//            }
+            ,
             'prices.catalog'
             // 'catalogs.site'
         ])
@@ -105,7 +111,7 @@ class GoodsController extends Controller
         ->filter($request, 'category_id')
         // ->filter($request, 'goods_product_id', 'article')
         ->where('archive', false)
-        ->select($columns)
+//        ->select($columns)
         ->orderBy('moderation', 'desc')
         ->orderBy('id', 'desc')
         ->paginate(30);

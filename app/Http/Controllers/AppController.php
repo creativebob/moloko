@@ -33,6 +33,20 @@ class AppController extends Controller
         return redirect()->route($entity_alias.'.index');
     }
 
+    public function draft_article($alias, $id)
+    {
+        $entity = Entity::whereAlias($alias)->first(['model']);
+        $model = 'App\\'.$entity->model;
+
+        $item = $model::findOrFail($id);
+
+        $item->article->update([
+            'draft' => true
+        ]);
+
+        return redirect()->route($alias.'.edit', ['id' => $id]);
+    }
+
     // ------------------------------------------------ Ajax -------------------------------------------------
 
     // Сортировка

@@ -35,6 +35,6 @@ class ConsignmentsItemObserver
 
     private function setAmount($consignments_item)
     {
-        $consignments_item->amount =  $consignments_item->count * $consignments_item->price;
+        $consignments_item->amount =  $consignments_item->count * $consignments_item->cost;
     }
 }
