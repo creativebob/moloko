@@ -61,10 +61,10 @@ jQuery(function($) {
     $('.inn-field').mask('9999999999?99');
 
     // КПП
-    $('.kpp-field').mask('999?999999');
+    $('.kpp-field').mask('999999999');
 
     // ОГРН
-    $('.ogrn-field').mask('9999999999999');
+    $('.ogrn-field').mask('9999999999999?99');
 
     // ОКПО
     $('.okpo-field').mask('9999999999');
