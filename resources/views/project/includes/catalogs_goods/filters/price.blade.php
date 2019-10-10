@@ -16,8 +16,8 @@
 		<div
                 class="slider"
                 data-slider
-				data-initial-start="{{ isset($request->price) ? $request->price['min'] : $price['min'] }}"
-                data-initial-end="{{ isset($request->price) ? $request->price['max'] : $price['max'] }}"
+				data-initial-start="{{ isset($request->price['min']) ? $request->price['min'] : $price['min'] }}"
+                data-initial-end="{{ isset($request->price['max']) ? $request->price['max'] : $price['max'] }}"
                 data-start="{{ ($price['max'] == $price['min']) ? $price['min'] - 1 : $price['min'] }}"
                 data-end="{{ $price['max'] }}"
                 {{-- data-step="{{ $price['step'] }}" --}}
