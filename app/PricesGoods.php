@@ -144,8 +144,13 @@
 		{
 			if (request('price')) {
 				$price = request('price');
-				$query->where('price', '>=', $price['min']);
-				$query->where('price', '<=', $price['max']);
+				if (isset($price['min'])) {
+                    $query->where('price', '>=', $price['min']);
+                }
+                if (isset($price['max'])) {
+                    $query->where('price', '<=', $price['max']);
+                }
+                $query->orderBy('price');
 			}
 			
 			if (request('weight')) {
