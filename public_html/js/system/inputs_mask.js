@@ -64,7 +64,7 @@ jQuery(function($) {
     $('.kpp-field').mask('999999999');
 
     // ОГРН
-    $('.ogrn-field').mask('9999999999999?99');
+    $('.ogrnip-field').mask('9999999999999?99');
 
     // ОКПО
     $('.okpo-field').mask('9999999999');
