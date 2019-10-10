@@ -146,6 +146,7 @@
 				$price = request('price');
 				$query->where('price', '>=', $price['min']);
 				$query->where('price', '<=', $price['max']);
+                $query->orderBy('price');
 			}
 			
 			if (request('weight')) {
