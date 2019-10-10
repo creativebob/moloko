@@ -86,6 +86,7 @@ class GoodsController extends Controller
                 //     'company_id'
                 // ]);
             },
+            'cost',
             'category'
 //            => function ($q) {
 //                $q->select([
