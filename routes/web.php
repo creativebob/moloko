@@ -197,6 +197,7 @@ Route::post('/check', 'AppController@ajax_check')->middleware('auth');
 Route::get('/recalculate_categories/{entity}', 'AppController@recalculate_categories')->middleware('auth');
 
 
+Route::get('/draft_article/{entity}/{id}', 'AppController@draft_article')->middleware('auth');
 // --------------------------------------- Настройки -----------------------------------------------
 
 Route::any('/set_setting', 'SettingController@ajax_set_setting')->middleware('auth');

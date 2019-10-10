@@ -25,7 +25,7 @@ class ConsignmentsItemUpdateRequest extends FormRequest
     {
           return [
               'count' => 'numeric|nullable',
-              'price' => 'numeric|nullable',
+              'cost' => 'numeric|nullable',
           ];
         }
   }

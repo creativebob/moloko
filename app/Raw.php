@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Models\Traits\Cmvable;
+use App\Models\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -30,6 +32,9 @@ class Raw extends Model
 
     use Notifiable;
     use SoftDeletes;
+
+    use Commonable;
+    use Cmvable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -62,35 +67,10 @@ class Raw extends Model
         'moderation'
     ];
 
-    // Артикул
-    public function article()
-    {
-        return $this->belongsTo(Article::class);
-    }
-
     // Категория
     public function category()
     {
         return $this->belongsTo(RawsCategory::class);
-    }
-
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    // Метрики
-    public function metrics()
-    {
-        return $this->morphToMany(Metric::class, 'entity', 'entity_metric_value')
-            ->withPivot('value');
     }
 
     // Состоит в составе
@@ -103,139 +83,10 @@ class Raw extends Model
         });
     }
 
-    // Еденица измерения
-    public function unit_for_composition()
-    {
-        return $this->belongsTo(Unit::class, 'unit_for_composition_id');
-    }
-
-    // Еденица измерения
-    public function unit_portion()
-    {
-        return $this->belongsTo(Unit::class, 'unit_portion_id');
-    }
-
-
-    // Себестоимость
-     public function cost()
-     {
-         return $this->morphOne(Cost::class, 'cmv');
-     }
-
     // Склад
     public function stock()
     {
         return $this->hasOne(RawsStock::class, 'cmv_id');
-    }
-
-
-    // Геттер: Функция получения веса в кг. учитывая все надстройки и переопределения в еденицах измерения
-    public function getWeightAttribute()
-    {
-
-            // Расчет если указано в штуках
-            if($this->article->unit_id == 32){
-                
-                    // Расчет если есть порции
-                    if($this->portion_status){
-                        return $this->article->weight / $this->article->unit->ratio * $this->portion_count * $this->unit_portion->ratio;
-
-                    } else {
-
-                        return $this->article->weight;
-                    }
-
-            // Расчет если в единицах
-            } else {
-
-                // Расчет если есть порции
-                if($this->portion_status){
-                    return $this->article->weight / $this->article->unit->ratio * $this->portion_count * $this->unit_portion->ratio;
-                } else {
-
-                return $this->article->weight;
-            }
-        }
-    }
-	
-	// Геттер: Функция получения обьема в м3. учитывая все надстройки и переопределения в еденицах измерения
-	public function getVolumeAttribute()
-	{
-		
-		// Расчет если указано в штуках
-		if($this->article->unit_id == 32){
-			
-			// Расчет если есть порции
-			if($this->portion_status){
-				return $this->article->volume / $this->article->unit->ratio * $this->portion_count * $this->unit_portion->ratio;
-				
-			} else {
-				
-				return $this->article->volume;
-			}
-			
-			// Расчет если в единицах
-		} else {
-			
-			// Расчет если есть порции
-			if($this->portion_status){
-				return $this->article->volume / $this->article->unit->ratio * $this->portion_count * $this->unit_portion->ratio;
-			} else {
-				
-				return $this->article->volume;
-			}
-		}
-	}
-	
-	// Геттер: из
-	public function getPortionAttribute()
-	{
-			// Расчет если есть порции
-			if($this->portion_status){
-				return $this->article->unit->ratio * $this->portion_count * $this->unit_portion->ratio;
-			} else {
-				return $this->article->unit->ratio;
-			}
-	}
-
-    // Получаем себестоимость
-    public function getCostPortionAttribute()
-    {
-
-        // Существует ли запись на складе
-        if($this->morphMany(Cost::class, 'cmv')->first() !== null){
-
-            if($this->article->manufacturer_id){
-                
-                if($this->portion_status){
-                    return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average * $this->unit_portion->ratio * $this->portion_count;
-                } else {
-                    return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
-                }
-
-            } else {
-                return 0;
-            }
-        } else {
-
-            return 0;
-        }
-    }
-
-    public function getCostUnitAttribute()
-    {
-
-        // Существует ли запись на складе
-        if($this->morphMany(Cost::class, 'cmv')->first() !== null){
-
-            if($this->article->manufacturer_id){
-                return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
-            } else {
-                return 0;
-            }
-        } else {
-            return 0;
-        }
     }
 
 }

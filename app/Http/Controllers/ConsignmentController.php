@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\Receiptable;
 use Illuminate\Support\Facades\Schema;
 use App\CostsHistory;
 use App\Receipt;
@@ -26,6 +27,8 @@ class ConsignmentController extends Controller
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = true;
     }
+
+    use Receiptable;
 
     public function index(Request $request)
     {
@@ -282,158 +285,18 @@ class ConsignmentController extends Controller
 			
 			Log::channel('documents')
 				->info('========================================== НАЧАЛО ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ, ID: ' . $consignment->id . ' ==============================================');
-			
-			$grouped_items = $consignment->items->groupBy('entity.alias');
+
+//            $grouped_items = $document->items->groupBy('entity.alias');
 //			dd($grouped_items);
-			
-			foreach ($grouped_items as $alias => $items) {
+//
+//            foreach ($grouped_items as $alias => $items) {
+            //            }
 
-                $entity = Entity::where('alias', $alias)->first();
-                $model = 'App\\'.$entity->model;
-
-				$entity_stock = Entity::where('alias', $alias.'_stocks')->first();
-				$model_stock = 'App\\'.$entity_stock->model;
-
-				foreach ($items as $item) {
-                    Log::channel('documents')
-                        ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() .' ' . $item->id . ' ===');
-					// Склад
-					if ($item->cmv->stock) {
-						$stock = $item->cmv->stock;
-						
-						Log::channel('documents')
-							->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
-
-					} else {
-						$data_stock = [
-							'cmv_id' => $item->cmv_id,
-							'manufacturer_id' => $item->cmv->article->manufacturer_id,
-							'stock_id' => $consignment->stock_id,
-							'filial_id' => $consignment->filial_id,
-						];
-						$stock = (new $model_stock())->create($data_stock);
-						
-						Log::channel('documents')
-							->info('Создан склад ' . $stock->getTable() . ' c id: ' . $stock->id);
-
-					}
-
-					$stock_count = $stock->count;
-					
-					Log::channel('documents')
-						->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
-					
-					if ($item->cmv->article->package_status == 1) {
-						$count = $item->count * $item->cmv->article->package_count;
-						Log::channel('documents')
-							->info('Принимаем в "' . $item->cmv->article->package_abbreviation . '": в количестве' . $item->count . ', пересчитываем на ' . $item->cmv->article->unit->abbreviation . ' в количестве '. $count);
-					} else {
-						$count = $item->count;
-						Log::channel('documents')
-							->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count);
-					}
-					
-					$stock->count += $count;
-					$stock->weight += ($item->cmv->article->weight * $count);
-					$stock->volume += ($item->cmv->article->volume * $count);
-					$stock->save();
-					
-					Log::channel('documents')
-						->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
-
-					// Себестоимость
-					
-					if ($item->cmv->article->package_status == 1) {
-						$price = $item->price / $item->cmv->article->package_count;
-						Log::channel('documents')
-							->info('Принимаем в "' . $item->cmv->article->package_abbreviation . '": в количестве' . $item->count . ', пересчитываем себестоимость: ' . $price . ' за 1 ' . $item->cmv->article->unit->abbreviation);
-					} else {
-						$price = $item->price;
-						Log::channel('documents')
-							->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count . ', себестоимость: ' . $price);
-					}
-					
-					if ($item->cmv->cost) {
-						$cost = $item->cmv->cost;
-//						dd($cost);
-						
-						Log::channel('documents')
-							->info('Существует себестоимость c id: ' . $cost->id);
-						Log::channel('documents')
-							->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
-						
-						$cost_average = $cost->average;
-						if ($stock->count > 0) {
-							$average = (($stock_count * $cost_average) + ($count * $price)) / $stock->count;
-						} else {
-							$average = (($stock_count * $cost_average) + ($count * $price));
-						};
-
-						if (is_null($cost->min) || is_null($cost->max)) {
-                            $data_cost = [
-                                'min' => $price,
-                                'max' => $price,
-                                'average' => $price,
-                            ];
-
-                        } else {
-                            $data_cost = [
-                                'min' => ($price < $cost->min) ? $price : $cost->min,
-                                'max' => ($price > $cost->max) ? $price : $cost->max,
-                                'average' => $average
-                            ];
-                        }
-
-//						dd($data_cost);
-
-						$cost->update($data_cost);
-						
-						Log::channel('documents')
-							->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
-
-					} else {
-						$data_cost = [
-							'cmv_id' => $item->cmv_id,
-							'cmv_type' => $item->cmv_type,
-							'manufacturer_id' => $item->cmv->article->manufacturer_id,
-							'min' => $price,
-							'max' => $price,
-							'average' => $price,
-						];
-//						dd($data_cost);
-						$cost = (new Cost())->create($data_cost);
-//						dd($cost);
-						
-						Log::channel('documents')
-							->info('Создана себестоимость c id: ' . $cost->id);
-						Log::channel('documents')
-							->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
+            foreach ($consignment->items as $item) {
+                $this->receipt($item);
+            }
 
 
-					}
-
-                    $receipt = Receipt::create([
-                        'document_id' => $consignment->id,
-                        'document_type' => 'App\Consignment',
-                        'documents_item_id' => $item->id,
-                        'documents_item_type' => 'App\ConsignmentsItem',
-                        'cmv_id' => $item->cmv->id,
-                        'cmv_type' => $model,
-                        'count' => $count,
-                        'cost' => $price,
-	                    'amount' => $count * $price,
-                        'stock_id' => $consignment->stock_id,
-                    ]);
-
-                    Log::channel('documents')
-                        ->info('Записано поступление с id: ' . $receipt->id .  ', count: ' . $receipt->count . ', cost: ' . $receipt->cost . ', amount: ' . $receipt->amount);
-
-                    Log::channel('documents')
-                        ->info('=== КОНЕЦ ПЕРЕБОРА ПУНКТА ===
-                        ');
-				}
-			}
-			
 			$consignment->update([
 				'is_posted' => true,
 				'amount' => $this->getAmount($consignment)
@@ -621,189 +484,56 @@ class ConsignmentController extends Controller
 			->where('is_posted', true)
 			->get();
 //		dd($consignments);
-		
+
+
 		Schema::disableForeignKeyConstraints();
-		CostsHistory::truncate();
-		Cost::truncate();
-		Receipt::truncate();
+
+//        Log::channel('documents')
+//            ->info('=== Очищаем таблицы receipts, cost, cost_histories ===');
+//		CostsHistory::truncate();
+//		Cost::truncate();
+//		Receipt::truncate();
+
+//		dd('очистка');
 		
 		foreach($consignments as $consignment) {
-			if ($consignment->items->isNotEmpty()) {
-				
-				Log::channel('documents')
-					->info('========================================== НАЧАЛО ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ, ID: ' . $consignment->id . ' ==============================================');
-				
-				$grouped_items = $consignment->items->groupBy('entity.alias');
-//			dd($grouped_items);
-				
-				foreach ($grouped_items as $alias => $items) {
-					
-					$entity = Entity::where('alias', $alias)->first();
-					$model = 'App\\' . $entity->model;
-					
-					$entity_stock = Entity::where('alias', $alias . '_stocks')->first();
-					$model_stock = 'App\\' . $entity_stock->model;
-					
-					$model_stock::truncate();
-					
-					foreach ($items as $item) {
-						
-						$item->cmv->load([
-							'cost',
-							'stock'
-						]);
-						
-						Log::channel('documents')
-							->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===');
-						// Склад
-						if ($item->cmv->stock) {
-							$stock = $item->cmv->stock;
-							
-							Log::channel('documents')
-								->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
-							
-						} else {
-							$data_stock = [
-								'cmv_id' => $item->cmv_id,
-								'manufacturer_id' => $item->cmv->article->manufacturer_id,
-								'stock_id' => $consignment->stock_id,
-								'filial_id' => $consignment->filial_id,
-							];
-							$stock = (new $model_stock())->create($data_stock);
-							
-							Log::channel('documents')
-								->info('Создан склад ' . $stock->getTable() . ' c id: ' . $stock->id);
-							
-						}
-						
-						$stock_count = $stock->count;
-						
-						Log::channel('documents')
-							->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
-						
-						if ($item->cmv->article->package_status == 1) {
-							$count = $item->count * $item->cmv->article->package_count;
-							Log::channel('documents')
-								->info('Принимаем в "' . $item->cmv->article->package_abbreviation . '": в количестве ' . $item->count . ', пересчитываем на ' . $item->cmv->article->unit->abbreviation . ' в количестве '. $count);
-						} else {
-							$count = $item->count;
-							Log::channel('documents')
-								->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count);
-						}
-						
-						$stock->count += $count;
-						$stock->weight += ($item->cmv->article->weight * $count);
-						$stock->volume += ($item->cmv->article->volume * $count);
-						$stock->save();
-						
-						Log::channel('documents')
-							->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
-						
-						// Себестоимость
-						
-						if ($item->cmv->article->package_status == 1) {
-							$price = $item->price / $item->cmv->article->package_count;
-							Log::channel('documents')
-								->info('Принимаем в "' . $item->cmv->article->package_abbreviation . '": в количестве ' . $item->count . ', пересчитываем себестоимость: ' . $price . ' за 1 ' . $item->cmv->article->unit->abbreviation);
-					} else {
-							$price = $item->price;
-							Log::channel('documents')
-								->info('Принимаем в стандартных ' . $item->cmv->article->unit->abbreviation . ' в количестве ' . $count . ', себестоимость: ' . $price);
-						}
-						if ($item->cmv->cost) {
-							$cost = $item->cmv->cost;
-//						dd($cost);
-							
-							Log::channel('documents')
-								->info('Существует себестоимость c id: ' . $cost->id);
-							Log::channel('documents')
-								->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
-							
-							$cost_average = $cost->average;
-							if ($stock->count > 0) {
-								$average = (($stock_count * $cost_average) + ($count * $price)) / $stock->count;
-							} else {
-								$average = (($stock_count * $cost_average) + ($count * $price));
-							};
-							
-							if (is_null($cost->min) || is_null($cost->max)) {
-								$data_cost = [
-									'min' => $price,
-									'max' => $price,
-									'average' => $price,
-								];
-								
-							} else {
-								$data_cost = [
-									'min' => ($price < $cost->min) ? $price : $cost->min,
-									'max' => ($price > $cost->max) ? $price : $cost->max,
-									'average' => $average
-								];
-							}
+            if ($consignment->items->isNotEmpty()) {
 
-//						dd($data_cost);
-							
-							$cost->update($data_cost);
-							
-							Log::channel('documents')
-								->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
-							
-						} else {
-							$data_cost = [
-								'cmv_id' => $item->cmv_id,
-								'cmv_type' => $item->cmv_type,
-								'manufacturer_id' => $item->cmv->article->manufacturer_id,
-								'min' => $price,
-								'max' => $price,
-								'average' => $price,
-							];
-//						dd($data_cost);
-							$cost = (new Cost())->create($data_cost);
-//						dd($cost);
-							
-							Log::channel('documents')
-								->info('Создана себестоимость c id: ' . $cost->id);
-							Log::channel('documents')
-								->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
-							
-							
-						}
-						
-						$receipt = Receipt::create([
-							'document_id' => $consignment->id,
-							'document_type' => 'App\Consignment',
-							'documents_item_id' => $item->id,
-							'documents_item_type' => 'App\ConsignmentsItem',
-							'cmv_id' => $item->cmv->id,
-							'cmv_type' => $model,
-							'count' => $count,
-							'cost' => $price,
-							'amount' => $count * $price,
-							'stock_id' => $consignment->stock_id,
-						]);
-						
-						Log::channel('documents')
-							->info('Записано поступление с id: ' . $receipt->id . ', count: ' . $receipt->count . ', cost: ' . $receipt->cost . ', amount: ' . $receipt->amount);
-						
-						Log::channel('documents')
-							->info('=== КОНЕЦ ПЕРЕБОРА ПУНКТА ===
-                        ');
-					}
-				}
-				
-				$consignment->update([
-					'is_posted' => true,
-					'amount' => $this->getAmount($consignment)
-				]);
-				
-				Log::channel('documents')
-					->info('Оприходована накладная c id: ' . $consignment->id);
-				Log::channel('documents')
-					->info('========================================== КОНЕЦ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
+//                $grouped_items = $consignment->items->groupBy('entity.alias');
+////                dd($grouped_items);
+//
+//                foreach ($grouped_items as $alias => $items) {
+//                    $entity_stock = Entity::where('alias', $alias . '_stocks')->first();
+//                    $model_stock = 'App\\' . $entity_stock->model;
+//                    $model_stock::truncate();
+//
+//                    Log::channel('documents')
+//                        ->info('=== Очищаем таблицу склада ' . $entity_stock->alias . ' ===');
+//                }
+
+                Log::channel('documents')
+                    ->info('========================================== НАЧАЛО ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ, ID: ' . $consignment->id . ' ==============================================');
+
+                foreach ($consignment->items as $item) {
+                    $this->receipt($item);
+                }
+
+                $consignment->update([
+                    'is_posted' => true,
+                    'amount' => $this->getAmount($consignment)
+                ]);
+
+                Log::channel('documents')
+                    ->info('Оприходована накладная c id: ' . $consignment->id);
+                Log::channel('documents')
+                    ->info('========================================== КОНЕЦ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
 				
 				');
-				
-			}
+
+                return redirect()->route('consignments.index');
+            } else {
+                abort(403, 'Накладная пуста');
+            }
 		}
 		
 		Schema::enableForeignKeyConstraints();

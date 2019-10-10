@@ -170,6 +170,7 @@
                     @include('includes.control.table_td', ['item' => $item, 'replicate' => true])
 
                     <td class="td-archive">
+                        <a class="button" href="/admin/draft_article/{{ $item->getTable() }}/{{ $item->id }}">В черновик</a>
                         @if ($item->system != 1)
                             @can('delete', $item)
                                 <a class="icon-delete sprite" data-open="item-archive"></a>

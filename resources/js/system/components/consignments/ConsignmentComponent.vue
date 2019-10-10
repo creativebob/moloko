@@ -69,11 +69,11 @@
 				<td>{{ itemUnit }}</td>
 				<td>
 					<input
-							v-model="price"
-							name="price"
+							v-model="cost"
+							name="cost"
 							type="number"
 					>
-<!--					<input-digit-component name="price" :value="price" v-on:countchanged="changePrice"></input-digit-component>-->
+<!--					<input-digit-component name="cost" :value="cost" v-on:countchanged="changeCost"></input-digit-component>-->
 				</td>
 				<td>
 					<span>{{ totalItemSum | roundToTwo }}</span>
@@ -85,8 +85,8 @@
 	<!--					<option value="20">20</option>-->
 	<!--				</select>-->
 	<!--			</td>-->
-	<!--			<td><span> {{ price * count_item * vat_rate / 100 | roundToTwo }} </span></td>-->
-	<!--			<td><span> {{ (count_item * price) + (count_item * price * vat_rate / 100) | roundToTwo }} </span></td>-->
+	<!--			<td><span> {{ cost * count_item * vat_rate / 100 | roundToTwo }} </span></td>-->
+	<!--			<td><span> {{ (count_item * cost) + (count_item * cost * vat_rate / 100) | roundToTwo }} </span></td>-->
 				<td>
 					<a
 							@click="addItem"
@@ -102,7 +102,7 @@
 			<tr>
 				<td	colspan="5">Итого:</td>
 				<td>Позиций: {{ totalItemsCount }}</td>
-				<td>Сумма: {{ totalItemsPrice | roundToTwo | level }}</td>
+				<td>Сумма: {{ totalItemsCost | roundToTwo | level }}</td>
 				<td
 					v-if="!isPosted"
 				></td>
@@ -133,7 +133,7 @@
 				items: this.consignment.items,
 				id: null,
 				count: null,
-				price: null,
+				cost: null,
 
 				// Категории для компонента выбора
 				categories: this.selectData.categories,
@@ -144,10 +144,10 @@
 		},
 		computed: {
 			totalItemSum() {
-				return this.count * this.price;
+				return this.count * this.cost;
 			},
 			isDisabled() {
-				return this.id == null || this.price == null || (this.count == null || this.count == 0)
+				return this.id == null || this.cost == null || (this.count == null || this.count == 0)
 			},
 			itemsList() {
 				return this.items;
@@ -155,12 +155,12 @@
 			totalItemsCount() {
 				return this.items.length;
 			},
-			totalItemsPrice() {
-				let price = 0;
+			totalItemsCost() {
+				let cost = 0;
 				this.items.forEach(function(item) {
-					return price += Number(item.amount)
+					return cost += Number(item.amount)
 				});
-				return price;
+				return cost;
 			},
 
 			// Списки для компонента выбора
@@ -183,8 +183,8 @@
 			changeCount: function(value) {
 				this.count = value;
 			},
-			changePrice: function(value) {
-				this.price = value;
+			changeCost: function(value) {
+				this.cost = value;
 			},
 			changeEntity: function() {
 				this.change = true;
@@ -240,14 +240,14 @@
 							cmv_id: this.id,
 							entity_id: this.entity_id,
 							count: this.count,
-							price: this.price
+							cost: this.cost
 						})
 						.then(response => {
 								this.items.push(response.data)
 							},
 								this.id = null,
 								this.count = null,
-								this.price = null,
+								this.cost = null,
 								this.change = true
 						)
 						.catch(error => {
