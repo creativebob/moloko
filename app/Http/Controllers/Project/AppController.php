@@ -457,9 +457,10 @@ class AppController extends Controller
     {
 
         $site = $this->site;
+        $company = $site->company;
         $page = $site->pages_public->firstWhere('alias', 'confirmation');
 
-        return view($site->alias.'.pages.confirmation.index', compact('site','page'));
+        return view($site->alias.'.pages.confirmation.index', compact('site','page', 'company'));
     }
 
     public function get_access_code(Request $request)

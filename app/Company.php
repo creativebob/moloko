@@ -103,9 +103,16 @@ class Company extends Model
         })->withDefault('Не найден');
     }
 
+    // Получение списка банковских счетов
     public function bank_accounts()
     {
         return $this->hasMany('App\BankAccount', 'holder_id');
+    }
+
+    // Получение одного основного банковского счета
+    public function getBankAccountAttribute()
+    {
+        return $this->hasMany('App\BankAccount', 'holder_id')->where('is_main', true)->first();
     }
 
     public function sites()

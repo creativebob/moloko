@@ -23,6 +23,8 @@ class CreateBankAccountsTable extends Migration
             $table->string('account_settlement', 20)->nullable()->comment('Расчетный счет');
             $table->string('account_correspondent', 20)->nullable()->comment('Корреспондентский счет');
 
+            $table->boolean('is_main')->default(0)->unsigned()->comment('Основной счет');
+
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
