@@ -50,7 +50,7 @@ class PricesGoodsRawsArticlesGroupsFilterComposer
         }
 
         $articles_groups = collect($articles_groups)->unique();
-        $articles_groups = $articles_groups->sortBy ('name');
+        $articles_groups = $articles_groups->sortBy('name');
 //		dd($articles_groups);
 
         return $view->with(compact('articles_groups'));

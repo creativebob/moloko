@@ -77,12 +77,14 @@ class ServiceController extends Controller
                     'photo'
                 ]);
             },
-            'category' => function ($q) {
-                $q->select([
-                    'id',
-                    'name'
-                ]);
-            },
+            'category'
+//            => function ($q) {
+//                $q->select([
+//                    'id',
+//                    'name'
+//                ]);
+//            }
+            ,
         ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -94,7 +96,7 @@ class ServiceController extends Controller
         // ->filter($request, 'services_category_id', 'process.product')
         // ->filter($request, 'services_product_id', 'process')
         ->where('archive', false)
-        ->select($columns)
+//        ->select($columns)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);

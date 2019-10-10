@@ -62,7 +62,7 @@ class CatalogsServicesItemController extends Controller
         // ->template($answer)
         ->where('catalogs_service_id', $catalog_id)
             ->orderBy('sort')
-        ->get($columns);
+        ->get();
         // dd($catalogs_services_items);
 
         // Отдаем Ajax

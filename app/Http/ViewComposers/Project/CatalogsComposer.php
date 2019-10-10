@@ -14,10 +14,10 @@ class CatalogsComposer
             ->with(['items' => function ($q) {
                 $q->orderBy('sort');
             }])
-            ->select([
-                'catalogs.id',
-                'name',
-            ])
+//            ->select([
+//                'catalogs.id',
+//                'name',
+//            ])
         	->where('display', true)
         	->orderBy('sort');
         }]);

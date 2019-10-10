@@ -56,7 +56,7 @@ class RubricatorsItemController extends Controller
         // ->systemItem($answer)
         // ->template($answer)
         ->where('rubricator_id', $rubricator_id)
-        ->get($columns);
+        ->get();
         // dd($rubricators_items);
 
         // Отдаем Ajax

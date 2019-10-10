@@ -86,7 +86,7 @@ class EquipmentController extends Controller
         ->booklistFilter($request)
         ->filter($request, 'author_id')
         ->where('archive', false)
-        ->select($columns)
+//        ->select($columns)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);

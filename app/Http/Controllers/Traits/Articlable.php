@@ -289,12 +289,14 @@ trait Articlable
         ])
         ->where('draft', false)
         ->where('id', '!=', $data['id'])
-        ->get([
-            'id',
-            'name',
-            'articles_group_id',
-            'manufacturer_id',
-        ]);
+        ->get(
+//            [
+//            'id',
+//            'name',
+//            'articles_group_id',
+//            'manufacturer_id',
+//        ]
+        );
         // dd($articles);
 
         // Если нашлись артикулы

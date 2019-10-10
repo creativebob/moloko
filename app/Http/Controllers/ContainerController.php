@@ -84,12 +84,14 @@ class ContainerController extends Controller
                     'unit_volume'
                 ]);
             },
-            'category' => function ($q) {
-                $q->select([
-                    'id',
-                    'name'
-                ]);
-            },
+            'category'
+//            => function ($q) {
+//                $q->select([
+//                    'id',
+//                    'name'
+//                ]);
+//            }
+            ,
         ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
@@ -105,7 +107,7 @@ class ContainerController extends Controller
             ->filter($request, 'category_id')
 
             ->where('archive', false)
-            ->select($columns)
+//            ->select($columns)
             ->orderBy('moderation', 'desc')
             ->orderBy('id', 'desc')
             ->paginate(30);

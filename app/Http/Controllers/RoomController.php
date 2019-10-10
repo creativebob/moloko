@@ -69,12 +69,14 @@ class RoomController extends Controller
                     'photo'
                 ]);
             },
-            'category' => function ($q) {
-                $q->select([
-                    'id',
-                    'name'
-                ]);
-            },
+            'category'
+//            => function ($q) {
+//                $q->select([
+//                    'id',
+//                    'name'
+//                ]);
+//            }
+            ,
         ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -85,7 +87,7 @@ class RoomController extends Controller
         // ->filter($request, 'rooms_category_id', 'article.product')
         // ->filter($request, 'rooms_product_id', 'article')
         ->where('archive', false)
-        ->select($columns)
+//        ->select($columns)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);

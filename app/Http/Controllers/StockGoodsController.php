@@ -92,7 +92,7 @@ class StockGoodsController extends Controller
             $q->filter($request, 'category_id');
         })
 
-        ->select($columns)
+//        ->select($columns)
         // ->orderBy('id', 'desc')
         ->paginate(30);
         // dd($goods);

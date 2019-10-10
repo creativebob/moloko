@@ -78,12 +78,14 @@ class WorkflowController extends Controller
                     'photo'
                 ]);
             },
-            'category' => function ($q) {
-                $q->select([
-                    'id',
-                    'name'
-                ]);
-            },
+            'category'
+//            => function ($q) {
+//                $q->select([
+//                    'id',
+//                    'name'
+//                ]);
+//            }
+            ,
         ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -94,7 +96,7 @@ class WorkflowController extends Controller
         // ->filter($request, 'workflows_category_id', 'process.product')
         // ->filter($request, 'workflows_product_id', 'process')
         ->where('archive', false)
-        ->select($columns)
+//        ->select($columns)
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
