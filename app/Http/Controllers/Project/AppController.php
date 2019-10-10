@@ -441,6 +441,7 @@ class AppController extends Controller
     public function cart_store(Request $request)
     {
 
+
         // Если пользователь дал согласие на обработку персональных данных
         if ($request->personal_data) {
 
@@ -449,9 +450,38 @@ class AppController extends Controller
                 $cart = json_decode(Cookie::get('cart'), true);
             }
 
+            // Собираем для request недостающие данные или преобразовываем
+
+            $lead_type = $request->has('lead_type') ? $request->lead_type : null;
+
+            $school_number = $request->has('school_number') ? $request->school_number : null;
+            $class_number = $request->has('class_number') ? $request->class_number : null;
+
+            $kindergarten_number = $request->has('kindergarten_number') ? $request->kindergarten_number : null;
+            $kindergarten_group = $request->has('kindergarten_group') ? $request->kindergarten_group : null;
+
+            $company_name = $request->has('company_name') ? $request->company_name : null;
+
+            if($lead_type == "Школа"){
+                $description = $lead_type . ' №' . $school_number . ', класс ' . $class_number;
+            }
+
+            if($lead_type == "Детский сад"){
+                $description = $lead_type . ' №' . $kindergarten_number . ', группа ' . $kindergarten_group;
+            }
+
+            if($lead_type == "Компания"){
+                $description = $lead_type . ' ' . $company_name;
+            }
+
+            // Отдаем недостающий description
+            if(isset($description)){
+                $request->description = $description;
+            }
+
             // Создаем лида
             $lead = $this->createLeadFromSite($request);
-
+            
             // Если есть наполненная корзина, создаем смету на лиде
             if(isset($cart)){
                 $estimate = $this->createEstimateFromCart($cart, $lead);
@@ -461,7 +491,7 @@ class AppController extends Controller
             Cookie::queue(Cookie::forget('cart'));
 
             // Пишем в сессию пользователю данные нового лида
-            
+
             // Создаем массив для хранения данных заказа
             $confirmation = [];
 

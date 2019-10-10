@@ -207,6 +207,17 @@ trait LeadControllerTrait
         $second_name = $request->second_name;
         $name = $first_name . ' ' . $second_name;
         $nickname = $first_name . ' ' . $second_name;
+        $company_name = $request->company_name;
+        $description = $request->description;
+
+        // ------------------------------------------------------------------------------
+
+        // Если пришло имя компании, то укажем, что это компания
+        if($company_name){
+            $private_status = 1;
+        } else {
+            $private_status = 0;
+        }
 
         $phone = cleanPhone($request->main_phone);
 
@@ -279,9 +290,11 @@ trait LeadControllerTrait
         $lead->user_id = $user->id;
         $lead->email = $request->email ?? '';
         $lead->name = $name;
-        $lead->company_name = $request->company_name;
+        $lead->company_name = $company_name;
+        $lead->private_status = $private_status;
         $lead->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
 
+        $lead->description = $description;
         $lead->stage_id = $request->stage_id ?? 2; // Этап: "обращение"" по умолчанию
         $lead->badget = $badget ?? 0;
         $lead->lead_method_id = 2; // Способ обращения: "звонок"" по умолчанию
@@ -311,7 +324,8 @@ trait LeadControllerTrait
         $message .= "Имя клиента: " . $lead->name . "\r\n";
         $message .= "Тел: " . decorPhone($phone) . "\r\n";
         $message .= "Кол-во товаров: " . $count . "\r\n";
-        $message .= "Сумма заказа: " . num_format($lead->badget, 0) . ' руб.';
+        $message .= "Сумма заказа: " . num_format($lead->badget, 0) . ' руб.' . "\r\n";
+        $message .= "Примечание: " . $description;
 
         $lead->notes()->create([
             'company_id' => $company->id,
