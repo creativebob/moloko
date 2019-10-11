@@ -39,7 +39,7 @@
                     <th class="td-unit">Ед. измерения</th>
                     <th class="td-weight">Параметры</th>
                     <th class="td-package">Компоновка</th>
-                    <th class="td-attachments">Вложения</th> 
+                    <th class="td-attachments-photo">Вложения</th>
                     <th class="td-category">Категория</th>
                     {{-- <th class="td-description">Описание</th> --}}
                     <th class="td-manually">Артикул</th>
@@ -120,9 +120,11 @@
                         @endif
 
                     </td>
-                    <td class="td-attachments">
-                        {{ $item->article->attachments->implode('article.name', ', ') }}
-                    </td> 
+                    <td class="td-attachments-photo">
+                        @foreach($item->article->attachments as $attachment)
+                            <img src="{{ getPhotoPathPlugEntity($attachment, 'small') }}">
+                        @endforeach
+                    </td>
                     <td class="td-category">
                         <a href="/admin/{{ $entity }}?category_id%5B%5D={{ $item->category->id }}" class="filter_link" title="Фильтровать">{{ $item->category->name }}</a>
 

@@ -137,6 +137,22 @@
                     'leftover_operation_id'
                 ]);
         }
+
+		public function attachments_public()
+		{
+
+            return $this->belongsToMany(Attachment::class, 'article_attachment')
+		    	->where([
+					'display' => true,
+				])
+		        ->withPivot([
+		            'value',
+		            'use',
+		            'waste',
+		            'leftover',
+		            'leftover_operation_id'
+		        ]);
+		}
 		
 		// Товары
 		public function goods()

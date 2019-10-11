@@ -4149,3 +4149,8 @@ em.raw-portion-item{
         font-family: $PFDDPM;
     }
 }
+
+.td-attachments-photo img{
+    max-width: 30px;
+    max-height: 30px;
+}

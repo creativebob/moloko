@@ -375,9 +375,8 @@ class AppController extends Controller
 
             if(($user->user_type == false) && ($user->access_code == $access_code) && ($user->access_block == false)){
 
-                // dd('Привет, ' . $user->name);
                 Auth::loginUsingId($user->id);
-                return redirect()->route('project.start');
+                return redirect('/estimates');
 
             } else {
 

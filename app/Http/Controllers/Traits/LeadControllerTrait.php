@@ -302,15 +302,13 @@ trait LeadControllerTrait
 
         $lead->editor_id = 1;
 
-        if($request->choice_tag){
-
-            $choiceFromTag = getChoiceFromTag($request->choice_tag);
-            $lead->choice_type = $choiceFromTag['type'];
-            $lead->choice_id = $choiceFromTag['id'];
-        } else {
-
-            dd('Хм, нет цели обращения');
-        }
+        // if($request->choice_tag){
+        //     $choiceFromTag = getChoiceFromTag($request->choice_tag);
+        //     $lead->choice_type = $choiceFromTag['type'];
+        //     $lead->choice_id = $choiceFromTag['id'];
+        // } else {
+        //     dd('Хм, нет цели обращения');
+        // }
 
         $lead->save();
 
