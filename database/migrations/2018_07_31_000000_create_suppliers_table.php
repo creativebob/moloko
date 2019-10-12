@@ -22,6 +22,7 @@ class CreateSuppliersTable extends Migration
             $table->text('description_supplier')->nullable()->comment('Описание поставщика');
             $table->boolean('preorder')->default(0)->comment('Предзаказ');
 
+            $table->boolean('is_partner')->default(0)->comment('Статус партнера');
             $table->boolean('archive')->default(0)->comment('Статус архива');
 
             // Общие настройки

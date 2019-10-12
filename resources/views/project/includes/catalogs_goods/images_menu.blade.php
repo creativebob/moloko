@@ -17,7 +17,6 @@
 								</div>
 								<span>{{ $item->name }}</span>
 							</a>
-							
 						</li>
 					@endif
 				@endforeach

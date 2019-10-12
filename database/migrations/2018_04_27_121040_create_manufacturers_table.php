@@ -24,7 +24,7 @@ class CreateManufacturersTable extends Migration
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
-
+            $table->boolean('is_partner')->default(0)->comment('Статус партнера');
             $table->boolean('archive')->default(0)->comment('Статус архива');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');

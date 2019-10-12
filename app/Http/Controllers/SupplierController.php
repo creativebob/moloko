@@ -151,6 +151,7 @@ class SupplierController extends Controller
         // Запись информации по поставщику:
         $supplier->description_supplier = $request->description_supplier;
         $supplier->preorder = $request->preorder ?? 0;
+        $supplier->is_partner = $request->has('is_partner');
 
         $supplier->save();
 
@@ -268,6 +269,8 @@ class SupplierController extends Controller
         // Обновление информации по поставщику:
         $supplier->description_supplier = $request->description_supplier;
         $supplier->preorder = $request->preorder ?? 0;
+        $supplier->is_partner = $request->has('is_partner');
+        
         $supplier->save();
 
         return redirect('/admin/suppliers');
