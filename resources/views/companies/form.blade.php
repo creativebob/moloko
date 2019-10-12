@@ -127,12 +127,6 @@
             <!-- Блок дилера -->
             <div class="tabs-panel" id="content-panel-dealer">
                 <div class="grid-x grid-padding-x">
-
-                    <div class="small-12 cell checkbox">
-                        {{ Form::checkbox('is_partner', 1, $supplier->is_partner, ['id' => 'is_partner-checkbox']) }}
-                        <label for="is_partner-checkbox"><span>Партнер</span></label>
-                    </div>
-
                     <div class="small-12 medium-6 cell">
                         <label>Комментарий к дилеру
                             @include('includes.inputs.textarea', ['name'=>'description_dealer', 'value'=>$dealer->description_dealer])
@@ -163,6 +157,11 @@
                             'name' => 'manufacturers',
                         ]
                         )
+                    </div>
+
+                    <div class="small-12 cell checkbox">
+                        {{ Form::checkbox('is_partner', 1, $supplier->is_partner, ['id' => 'is_partner-checkbox']) }}
+                        <label for="is_partner-checkbox"><span>Партнер</span></label>
                     </div>
 
                     <div class="small-12 medium-6 cell checkbox">

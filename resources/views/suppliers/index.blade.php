@@ -30,6 +30,7 @@
         <tr id="thead-content">
           <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
+          <th class="td-photo tiny">Фото</th>
           <th class="td-name" data-serversort="name">Название поставщика</th>
           <th class="td-address">Адрес</th>
           <th class="td-phone">Телефон</th>
@@ -54,6 +55,9 @@
             @endif
             ><label class="label-check" for="check-{{ $supplier->id }}"></label>
           </td>
+          <td class="td-photo tiny">
+              <img src="{{ getPhotoPath($supplier->company, 'small') }}" alt="">
+          </td>
           <td class="td-name">
             @php
             $edit = 0;
@@ -66,10 +70,11 @@
             @if($edit == 1)
             <a href="suppliers/{{ $supplier->id }}/edit">
               @endif
-              {{ $supplier->company->name }} ({{ $supplier->company->legal_form->name or '' }})
+              {{ $supplier->company->name }} ({{ $supplier->company->legal_form->name ?? '' }})
               @if($edit == 1)
             </a>
             @endif
+            <br><span class="tiny-text">{{ $supplier->company->location->country->name }}</span>
           </td>
           {{-- Если пользователь бог, то показываем для него переключатель на компанию --}}
           <td class="td-address">@if(!empty($supplier->company->location->address)){{ $supplier->company->location->address }}@endif </td>
