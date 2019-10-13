@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\Http\Controllers\Traits\Offable;
+use Illuminate\Support\Facades\Log;
 use App\User;
 use App\Lead;
 use App\LeadMethod;
@@ -41,6 +43,7 @@ class LeadController extends Controller
 
     use UserControllerTrait;
     use LeadControllerTrait;
+    use Offable;
 
     // Сущность над которой производит операции контроллер
     protected $entity_name = 'leads';
@@ -520,6 +523,74 @@ class LeadController extends Controller
         } else {
             abort(403,'Что-то пошло не так!');
         };
+    }
+
+    public function saling(Request $request, $id)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('update'));
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $lead = Lead::moderatorLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->findOrFail($id);
+
+        // Подключение политики
+        $this->authorize(getmethod('update'), $lead);
+
+//        $data = $request->input();
+//        $lead->update($data);
+
+        $lead->load([
+            'estimate' => function($q) {
+                $q->with([
+                    'items' => function ($q) {
+                        $q->with([
+                            'price_product',
+                            'product',
+                            'document'
+                        ]);
+                    },
+                ]);
+            },
+        ]);
+//		dd($lead);
+
+        $estimate = $lead->estimate;
+
+        if ($estimate->items->isNotEmpty()) {
+//            dd('Ща буит');
+
+            Log::channel('documents')
+                ->info('========================================== НАЧАЛО СПИСАНИЯ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
+
+            foreach ($estimate->items as $item) {
+                if ($item->product->getTable() == 'goods') {
+                    $this->off($item);
+                }
+            }
+
+            $amount = 0;
+            $amount = $estimate->items->sum('sum');
+
+            $estimate->update([
+                'is_saled' => true,
+                'amount' => $amount
+            ]);
+
+            Log::channel('documents')
+                ->info('Продана смета c id: ' . $estimate->id);
+            Log::channel('documents')
+                ->info('========================================== КОНЕЦ СПИСАНИЯ СМЕТЫ ==============================================
+				
+				');
+
+            return redirect()->route('leads.index');
+        } else {
+            abort(403, 'Смета пуста');
+        }
     }
 
 

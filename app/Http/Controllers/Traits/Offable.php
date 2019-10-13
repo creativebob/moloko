@@ -10,7 +10,7 @@ trait Offable
 {
 
     /**
-     * Прихожуем пункт документа.
+     * Списывание состава со склада для производства.
      *
      * @param $item
      * @return int
@@ -58,7 +58,7 @@ trait Offable
                         $entity_composition_stock = Entity::where('alias', $relation_name.'_stocks')->first();
                         $model_composition_stock = 'App\\'.$entity_composition_stock->model;
 
-                        $stock_composition = (new $model_composition_stock())->create($data_stock);
+                        $stock_composition = $model_composition_stock::create($data_stock);
 
                         Log::channel('documents')
                             ->info('Создан склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);
@@ -106,5 +106,78 @@ trait Offable
 //      dd($cost);
 
         return $cost;
+    }
+
+    /**
+     * Списание со склада.
+     *
+     * @param $item
+     */
+
+    public function off($item)
+    {
+        $entity_document = Entity::where('alias', $item->document->getTable())->first();
+        $model_document = 'App\\' . $entity_document->model;
+
+        $model_document_item = $model_document.'sItem';
+
+        Log::channel('documents')
+            ->info('=== СПИСАНИЕ ' . $item->getTable() . ' ' . $item->id . ' ===');
+
+        // Списываем позицию состава
+        $product = $item->product;
+        if ($product->stock) {
+            $stock = $product->stock;
+
+            Log::channel('documents')
+                ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
+
+        } else {
+            $data_stock = [
+                'cmv_id' => $item->product_id,
+                'manufacturer_id' => $item->product->article->manufacturer_id,
+//                'stock_id' => $item->document->stock_id,
+//                'filial_id' => $item->document->filial_id,
+            ];
+            $entity_stock = Entity::where('alias', $product->getTable() . '_stocks')->first();
+            $model_stock = 'App\\'.$entity_stock->model;
+
+            $stock = $model_stock::create($data_stock);
+
+            Log::channel('documents')
+                ->info('Создан склад ' . $stock->getTable() . ' c id: ' . $stock->id);
+
+        }
+
+        Log::channel('documents')
+            ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+
+        $stock->count -= ($product->portion * $item->count);
+        $stock->weight -= ($product->weight * $item->count);
+        $stock->volume -= ($product->volume * $item->count);
+        $stock->save();
+
+        Log::channel('documents')
+            ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+
+        $off = Off::create([
+            'document_id' => $item->document->id,
+            'document_type' => $model_document,
+            'documents_item_id' => $item->id,
+            'documents_item_type' => $model_document_item,
+            'cmv_id' => $product->id,
+            'cmv_type' => 'App\Goods',
+            'count' => $product->portion * $item->count,
+            'cost' => $item->price,
+            'amount' => $item->count * $item->price,
+            'stock_id' => $item->document->stock_id,
+        ]);
+
+        Log::channel('documents')
+            ->info('Записали списание с id: ' . $off->id .  ', count: ' . $off->count . ', cost: ' . $off->cost . ', amount: ' . $off->amount);
+
+        Log::channel('documents')
+            ->info('=== КОНЕЦ СПИСАНИЯ ===
+                        ');
     }
 }

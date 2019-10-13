@@ -53,6 +53,8 @@ class Estimate extends Model
         'description',
         'author_id',
         'draft',
+        'is_saled',
+        'amount',
 
         'display',
         'system',

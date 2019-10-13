@@ -631,6 +631,9 @@ Route::resource('/leads', 'LeadController')->middleware('auth');
 Route::get('/leads_export', 'LeadController@export')->middleware('auth');
 // Route::resource('/leads_calls', 'LeadController@leads_calls')->middleware('auth');
 
+// Продажа
+Route::patch('/leads/{id}/saling', 'LeadController@saling')->middleware('auth');
+
 // Поиск
 Route::post('/leads/search', 'LeadController@search')->middleware('auth');
 

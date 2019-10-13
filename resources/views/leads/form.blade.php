@@ -614,13 +614,17 @@
 
 
         <!-- Кнопка сохранить -->
-        <div class="small-12 small-text-center medium-text-left cell tabs-button tabs-margin-top">
+        <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
             @can('update', $lead)
             {{ Form::submit($submitButtonText, ['class'=>'button']) }}
             @else
             {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }}
             @endcan
         </div>
+
+    <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
+        {{ Form::submit('Продать', ['class' => 'button', 'id' => 'submit-saling']) }}
+    </div>
     </div>
 
     {{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}
