@@ -45,3 +45,6 @@ require('../common/main');
 require('./partials/main');
 require('./partials/sidebar');
 require('./partials/filter');
+
+window.CKEDITOR_BASEPATH = 'node_modules/ckeditor/';
+require('ckeditor');

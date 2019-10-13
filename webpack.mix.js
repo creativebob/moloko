@@ -20,6 +20,14 @@ mix.copyDirectory('resources/scss/system/fonts', 'public_html/css/system/fonts')
 mix.copyDirectory('resources/scss/system/img', 'public_html/css/system/img');
 mix.copyDirectory('resources/scss/system/sprites', 'public_html/css/system/sprites');
 
+// Ckeditor
+// mix.copy('node_modules/ckeditor/config.js', 'public_html/js/plugins/ckeditor/config.js')
+// 	.copy('node_modules/ckeditor/styles.js', 'public_html/js/plugins/ckeditor/styles.js')
+// 	.copy('node_modules/ckeditor/contents.css', 'public_html/js/plugins/ckeditor/contents.css')
+// 	.copyDirectory('node_modules/ckeditor/skins', 'public_html/js/plugins/ckeditor/skins')
+// 	.copyDirectory('node_modules/ckeditor/lang', 'public_html/js/plugins/ckeditor/lang')
+// 	.copyDirectory('node_modules/ckeditor/plugins', 'public_html/js/plugins/ckeditor/plugins');
+
 mix
 	.sass('resources/scss/system/app.scss', 'public_html/css/system', {
 

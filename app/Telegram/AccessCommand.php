@@ -23,7 +23,7 @@ class AccessCommand extends Command
     /**
      * @inheritdoc
      */
-    public function handle()
+    public function handle($arguments)
     {
         // Пишем в базу сообщение пользователя и выводим его id
         $message = $this->getUpdate();

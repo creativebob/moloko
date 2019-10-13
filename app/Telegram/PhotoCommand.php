@@ -20,7 +20,7 @@ class PhotoCommand extends Command
     /**
      * @inheritdoc
      */
-    public function handle()
+    public function handle($arguments)
     {
 
         $text = "Ваше изображение:\r\n";

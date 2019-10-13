@@ -119,9 +119,8 @@
             <div class="tabs-panel" id="site">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
-
                         <label>Описание:
-                            {{ Form::textarea('description', $category->description, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
+                            {{ Form::textarea('description', $category->description, ['id' => 'content-ckeditor', 'autocomplete' => 'off', 'size' => '10x3']) }}
                         </label>
 
                         <label>Description для сайта

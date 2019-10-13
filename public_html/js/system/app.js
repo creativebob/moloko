@@ -40877,6 +40877,9 @@ __webpack_require__(85);
 __webpack_require__(86);
 __webpack_require__(87);
 
+// window.CKEDITOR_BASEPATH = 'node_modules/ckeditor/';
+// require('ckeditor');
+
 /***/ }),
 /* 47 */
 /***/ (function(module, exports, __webpack_require__) {

@@ -12563,3 +12563,8 @@ em.raw-portion-item {
   font-size: 1.3rem;
   font-family: "PFDinDisplayPro-Med";
 }
+
+.td-attachments-photo img {
+  max-width: 30px;
+  max-height: 30px;
+}
