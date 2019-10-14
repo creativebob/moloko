@@ -71,7 +71,7 @@
                         <td class="td-name">
 
                             @can('update', $catalogs_service)
-                                {{ link_to_route('prices_services.index', $catalogs_service->name, $parameters = ['id' => $catalogs_service->id], $attributes = []) }} <span class="tiny-text">({{ $catalogs_service->price_services->where('archive', 0)->where('service.article.draft', 0)->count() }})</span>
+                                {{ link_to_route('prices_services.index', $catalogs_service->name, $catalogs_service->id, $attributes = []) }} <span class="tiny-text">({{ $catalogs_service->price_services->where('archive', 0)->where('service.article.draft', 0)->count() }})</span>
 
                                 @else
                                 {{ $page->name }}

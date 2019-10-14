@@ -133,7 +133,7 @@
                     <td class="td-alias">{{ $rubricator->alias }}</td>
                     <td class="td-description">{{ $rubricator->description }}</td>
                     <td class="td-tree">
-                        {{ link_to_route('rubricators_items.index', 'Дерево', $parameters = ['catalog_id' => $rubricator->id], $attributes = ['class' => 'button']) }}
+                        {{ link_to_route('rubricators_items.index', 'Дерево', $rubricator->id, $attributes = ['class' => 'button']) }}
                     </td>
                     <td class="td-author">{{ $rubricator->author->name}}</td>
 
