@@ -28,7 +28,10 @@ class CreateEstimatesTable extends Migration
 
             $table->string('number')->nullable()->comment('Номер сметы');
 
+            $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
+
             $table->boolean('draft')->default(0)->unsigned()->comment('Черновик');
+            $table->boolean('is_saled')->default(0)->comment('Продано');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

@@ -91,7 +91,7 @@ class ProductionController extends Controller
         $production = (new Production())->create();
         // dd($production);
 
-        return redirect()->route('productions.edit', ['id' => $production->id]);
+        return redirect()->route('productions.edit', $production->id);
     }
 
     /**

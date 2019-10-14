@@ -69,7 +69,7 @@ if($lead->manager_id == 1){
 @include('leads.estimate.modal_estimate_item_delete')
 @endsection
 
-@section('scripts')
+@push('scripts')
 @include('leads.scripts')
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.pickmeup-script')
@@ -193,6 +193,12 @@ if($lead->manager_id == 1){
 		});
 	});
 
+	$(document).on('click', '#submit-saling', function () {
+		let id = '{{ $lead->id }}';
+		$(this).closest('form').attr('action', '/admin/leads/' + id + '/saling');
+	})
+
+
 </script>
 
 @include('includes.scripts.notes', ['id' => $lead->id, 'model' => 'Lead'])
@@ -200,7 +206,7 @@ if($lead->manager_id == 1){
 @include('includes.contragents.contragents', ['id' => $lead->id])
 
 @include('leads.pricing.pricing-script', ['id' => $lead->id, 'model' => 'Lead'])
-@endsection
+@endpush
 
 
 

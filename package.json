@@ -39,6 +39,7 @@
         "yarn": "^1.17.3"
     },
     "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^12.4.0",
         "@fancyapps/fancybox": "^3.5.7",
         "ajv": "^6.10.2",
         "axios": "^0.16.2",

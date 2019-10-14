@@ -60,7 +60,7 @@
                     <td class="td-name">
 
                         @can('update', $articles_group)
-                        {{ link_to_route('articles_groups.edit', $articles_group->name, $parameters = ['id' => $articles_group->id], $attributes = []) }}
+                        {{ link_to_route('articles_groups.edit', $articles_group->name, $articles_group->id) }}
                         @endcan
 
                         @cannot('update', $articles_group)

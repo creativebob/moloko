@@ -48,9 +48,9 @@ $drop = 1;
             @case($type == 'edit')
 
             @if (isset($alias))
-            {{ link_to_route($entity.'.edit', '', $parameters = ['alias' => $alias, 'id' => $category->id], $attributes = ['class' => 'icon-list-edit sprite']) }}
+                <a href="{{ route($entity.'.edit', ['alias' => $alias, 'id' => $category->id]) }}" class="icon-list-edit sprite"></a>
             @else
-            {{ link_to_route($entity.'.edit', '', $parameters = ['id' => $category->id], $attributes = ['class' => 'icon-list-edit sprite']) }}
+                <a href="{{ route($entity.'.edit', $category->id) }}" class="icon-list-edit sprite"></a>
             @endif
 
             @break

@@ -224,7 +224,7 @@ class RoomController extends Controller
                 if ($request->quickly == 1) {
                     return redirect()->route('rooms.index');
                 } else {
-                    return redirect()->route('rooms.edit', ['id' => $room->id]);
+                    return redirect()->route('rooms.edit', $room->id);
                 }
             } else {
                 abort(403, 'Ошибка записи сырья');

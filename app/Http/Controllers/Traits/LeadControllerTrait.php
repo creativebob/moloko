@@ -317,43 +317,7 @@ trait LeadControllerTrait
         $phones = add_phones($request, $lead);
         // $lead = update_location($request, $lead);
 
-        // Формируем сообщение
-        $message = "Заказ с сайта:\r\n";
-        $message .= "Имя клиента: " . $lead->name . "\r\n";
-        $message .= "Тел: " . decorPhone($phone) . "\r\n";
-        $message .= "Кол-во товаров: " . $count . "\r\n";
-        $message .= "Сумма заказа: " . num_format($lead->badget, 0) . ' руб.' . "\r\n";
-        $message .= "Примечание: " . $description;
 
-        $lead->notes()->create([
-            'company_id' => $company->id,
-            'body' => $message,
-            'author_id' => 1,
-        ]);
-
-        $destinations = User::whereHas('staff', function ($query) {
-            $query->whereHas('position', function ($query) {
-                $query->whereHas('notifications', function ($query) {
-                    $query->where('notification_id', 1);
-                });
-            });
-        })
-            ->whereNotNull('telegram')
-            ->get(['telegram']);
-
-        if (isset($destinations)) {
-
-            // Отправляем на каждый telegram
-            foreach ($destinations as $destination) {
-
-                if (isset($destination->telegram)) {
-                    $response = Telegram::sendMessage([
-                        'chat_id' => $destination->telegram,
-                        'text' => $message
-                    ]);
-                }
-            }
-        }
 
         return $lead;
     }

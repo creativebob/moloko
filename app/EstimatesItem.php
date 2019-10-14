@@ -80,6 +80,11 @@ class EstimatesItem extends Model
         return $this->belongsTo(Estimate::class);
     }
 
+    public function document()
+    {
+        return $this->belongsTo(Estimate::class, 'estimate_id');
+    }
+
     // Прайс
     public function price_product()
     {

@@ -68,12 +68,10 @@
                     <td class="td-name">
 
                         @can('update', $site)
-                        {{ link_to_route('sites.edit', $site->name, $parameters = ['id' => $site->id], $attributes = []) }}
+                            <a href="{{ route('sites.edit', $site->id) }}">{{ $site->name }}</a>
+                            @else
+                            {{ $site->name }}
                         @endcan
-
-                        @cannot('update', $site)
-                        {{ $site->name }}
-                        @endcannot
 
                     </td>
                     <td class="td-domain">
@@ -98,13 +96,10 @@
                     <td class="td-edit">
 
                         @can('update', $site)
-                        {{ link_to_route('sites.show', 'Разделы', $parameters = ['id' => $site->id], $attributes = ['class' => 'tiny button']) }}
-
+                            <a href="{{ route('sites.show', $site->id) }}" class="tiny button">Разделы</a>
+                        @else
+                            {{ $site->name }}
                         @endcan
-
-                        @cannot('update', $site)
-                        {{ $site->name }}
-                        @endcannot
 
                     </td>
                     <td class="td-author">

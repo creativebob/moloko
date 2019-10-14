@@ -136,7 +136,7 @@ trait Receiptable
                 'average' => $cost,
             ];
 //						dd($data_cost);
-            $cost_item = (new Cost())->create($data_cost);
+            $cost_item = Cost::create($data_cost);
 //						dd($cost_item);
 
             Log::channel('documents')

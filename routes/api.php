@@ -46,7 +46,7 @@ Route::group(['prefix' => '/v1',
 // Прием лида
 Route::any('/lead_store', 'Api\AppController@lead_store');
 
-Route::post('/goods_check', 'Api\GoodsController@checkArticle');
+//Route::post('/goods_check', 'Api\GoodsController@checkArticle');
 
 
 // -------------------------------------- Основные операции ------------------------------------------

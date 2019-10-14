@@ -324,7 +324,7 @@ class GoodsController extends Controller
                 if ($request->quickly == 1) {
                     return redirect()->route('goods.index');
                 } else {
-                    return redirect()->route('goods.edit', ['id' => $cur_goods->id]);
+                    return redirect()->route('goods.edit', $cur_goods->id);
                 }
             } else {
                 abort(403, 'Ошибка записи товара');

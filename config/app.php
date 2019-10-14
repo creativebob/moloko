@@ -171,7 +171,6 @@ return [
 
         // Те, что подключаем сами, ручками )))
         Collective\Html\HtmlServiceProvider::class,
-        Unisharp\Ckeditor\ServiceProvider::class,
 
         // Intervention\Image\ImageServiceProvider::class,
         // ElForastero\Transliterate\TransliterationServiceProvider::class,

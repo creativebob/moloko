@@ -124,12 +124,10 @@
                     <td class="td-name">
 
                         @can('update', $rubricator)
-                        {{ link_to_route($page_info->alias.'.edit', $rubricator->name, $parameters = ['id' => $rubricator->id], $attributes = []) }}
+                            <a href="{{ route('rubricators.edit', $rubricator->id) }}">{{ $rubricator->name }}</a>
+                        @else
+                            {{ $rubricator->name }}
                         @endcan
-
-                        @cannot('update', $rubricator)
-                        {{ $page->name }}
-                        @endcannot
 
                     </td>
                     <td class="td-alias">{{ $rubricator->alias }}</td>

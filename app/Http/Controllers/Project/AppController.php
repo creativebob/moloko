@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Project;
 
 use App\CatalogsGoods;
+use App\Http\Controllers\Traits\EstimateControllerTrait;
 use Carbon\Carbon;
 use Telegram;
 use App\CatalogsGoodsItem;
@@ -41,6 +42,7 @@ class AppController extends Controller
 
     use UserControllerTrait;
     use LeadControllerTrait;
+    use EstimateControllerTrait;
 
     public function start(Request $request)
     {
@@ -486,6 +488,78 @@ class AppController extends Controller
                 $estimate = $this->createEstimateFromCart($cart, $lead);
             }
 
+            // Оповещение
+            // Получаем сайт
+            $site = getSite();
+            $company = $site->company;
+            $phone = cleanPhone($request->main_phone);
+
+            $count = 0;
+            $badget = 0;
+
+            // Содержится ли в куках данные корзины
+            if(Cookie::get('cart') !== null){
+
+                $cart = json_decode(Cookie::get('cart'), true);
+                $badget = $cart['sum'];
+                $count = $cart['count'];
+            }
+
+            // Формируем сообщение
+            $message = "Заказ с сайта:\r\n";
+            $message .= "Имя клиента: " . $lead->name . "\r\n";
+            $message .= "Тел: " . decorPhone($phone) . "\r\n";
+
+            if ($estimate->items->isNotEmpty()) {
+                $estimate->items->load([
+                    'product.article'
+                ]);
+
+                $message .= "\r\nСостав заказа:\r\n";
+                $num = 1;
+                foreach ($estimate->items as $item) {
+                    $message .= $num . ' - ' . $item->product->article->name . ", " . $item->count . ", на сумму: " . $item->sum . "\r\n";
+                    $num++;
+                }
+                $message .= "\r\n";
+            }
+
+            $message .= "Кол-во товаров: " . $count . "\r\n";
+            $message .= "Сумма заказа: " . num_format($lead->badget, 0) . ' руб.' . "\r\n";
+            $message .= "Примечание: " . $description;
+
+            $lead->notes()->create([
+                'company_id' => $company->id,
+                'body' => $message,
+                'author_id' => 1,
+            ]);
+
+            $destinations = User::whereHas('staff', function ($query) {
+                $query->whereHas('position', function ($query) {
+                    $query->whereHas('notifications', function ($query) {
+                        $query->where('notification_id', 1);
+                    });
+                });
+            })
+                ->whereNotNull('telegram')
+                ->get([
+                    'telegram'
+                ]);
+
+            if (isset($destinations)) {
+
+                // Отправляем на каждый telegram
+                foreach ($destinations as $destination) {
+
+                    if (isset($destination->telegram)) {
+                        $response = Telegram::sendMessage([
+                            'chat_id' => $destination->telegram,
+                            'text' => $message
+                        ]);
+                    }
+                }
+            }
+
             // Чистим корзину у пользователя
             Cookie::queue(Cookie::forget('cart'));
 
@@ -501,6 +575,8 @@ class AppController extends Controller
 
             // Пишем в сессию
             session(['confirmation' => $confirmation]);
+
+
 
             return redirect()->route('project.confirmation');
         }

@@ -20,7 +20,7 @@ class SitesTableSeeder extends Seeder
                 'author_id' => 1,
                 'system' => true,
                 'moderation' => false,
-                'api_token' => str_random(60),
+                'api_token' => \Str::random(60),
         	],
 
             // [

@@ -324,18 +324,6 @@ Route::post('/raws_categories/{id}/edit', 'RawsCategoryController@edit');
 Route::resource('/raws_categories', 'RawsCategoryController');
 
 
-
-// --------------------------------- Продукция сырья --------------------------------------------
-
-// Основные методы
-Route::resource('/raws_products', 'RawsProductController')->middleware('auth');
-
-// Route::any('/ajax_raws_count', 'RawsProductController@ajax_count')->middleware('auth');
-// Route::any('/raws_products_create_mode', 'RawsProductController@ajax_change_create_mode')->middleware('auth');
-
-// Route::any('/raws_products_list', 'RawsProductController@ajax_get_products_list')->middleware('auth');
-
-
 // ---------------------------------- Сырьё (Артикулы) -------------------------------------------
 
 // Основные методы
@@ -470,13 +458,9 @@ Route::resource('/rooms_categories', 'RoomsCategoryController')->middleware('aut
 
 // --------------------------------- Группы товаров --------------------------------------------
 
-// Основные методы
-Route::resource('/goods_products', 'GoodsProductController')->middleware('auth');
-
 Route::any('/ajax_articles_groups_count', 'ArticlesGroupController@ajax_count')->middleware('auth');
 Route::any('/ajax_articles_groups_set_status', 'ArticlesGroupController@ajax_set_status')->middleware('auth');
 
-Route::any('/goods_products_list', 'GoodsProductController@ajax_get_products_list')->middleware('auth');
 
 
 // ---------------------------------- Товары (Артикулы) -------------------------------------------
@@ -530,15 +514,6 @@ Route::match(['get', 'post'], '/services_categories/{id}/edit', 'ServicesCategor
 Route::resource('/services_categories', 'ServicesCategoryController')->middleware('auth');
 // Проверка на существование
 Route::post('/services_category_check', 'ServicesCategoryController@ajax_check')->middleware('auth');
-
-
-// --------------------------------- Продукция услуг --------------------------------------------
-
-// Основные методы
-Route::resource('/services_products', 'ServicesProductController')->middleware('auth');
-
-Route::any('/ajax_services_count', 'ServicesProductController@ajax_count')->middleware('auth');
-Route::any('/ajax_services_modes', 'ServicesProductController@ajax_modes')->middleware('auth');
 
 
 // ---------------------------------- Услуги (Артикулы) -------------------------------------------
@@ -630,6 +605,9 @@ Route::resource('/leads', 'LeadController')->middleware('auth');
 
 Route::get('/leads_export', 'LeadController@export')->middleware('auth');
 // Route::resource('/leads_calls', 'LeadController@leads_calls')->middleware('auth');
+
+// Продажа
+Route::patch('/leads/{id}/saling', 'LeadController@saling')->middleware('auth');
 
 // Поиск
 Route::post('/leads/search', 'LeadController@search')->middleware('auth');
