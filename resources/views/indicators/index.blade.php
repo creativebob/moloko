@@ -65,12 +65,11 @@
                     <td class="td-name">
 
                         @can('update', $indicator)
-                        {{ link_to_route('indicators.edit', $indicator->name, ['id' => $indicator->id], []) }}
+                            <a href="{{ route('indicators.edit', $indicator->id) }}">{{ $indicator->name }}</a>
+                        @else
+                            {{ $indicator->name }}
                         @endcan
 
-                        @cannot('update', $indicator)
-                        {{ $indicator->name }}
-                        @endcannot
 
                     </td>
 

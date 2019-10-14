@@ -35,9 +35,11 @@
 
             @case($type == 'edit')
             @if (isset($alias))
-            {{ link_to_route($entity.'.edit', '', $parameters = ['alias' => $alias, 'id' => $item->id], $attributes = ['class' => 'icon-list-edit sprite']) }}
+                <a href="{{ route($entity.'.edit', ['alias' => $alias, 'id' => $item->id]) }}" class="icon-list-edit sprite"></a>
+{{--            {{ link_to_route($entity.'.edit', '', $parameters = ['alias' => $alias, 'id' => $item->id], $attributes = ['class' => '']) }}--}}
             @else
-            {{ link_to_route($entity.'.edit', '', $parameters = ['id' => $item->id], $attributes = ['class' => 'icon-list-edit sprite']) }}
+                <a href="{{ route($entity.'.edit', $item->id) }}" class="icon-list-edit sprite"></a>
+{{--            {{ link_to_route($entity.'.edit', '', $parameters = ['id' => $item->id], $attributes = ['class' => 'icon-list-edit sprite']) }}--}}
             @endif
             @break
 

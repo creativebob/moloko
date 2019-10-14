@@ -68,12 +68,10 @@
                 <td class="td-name">
 
                     @can('update', $album)
-                    {{ link_to_route('albums.edit', $album->name, ['id' => $album->id], []) }}
+                        <a href="{{ route('albums.edit', $album->id) }}">{{ $album->name }}</a>
+                    @else
+                        {{ $album->name }}
                     @endcan
-
-                    @cannot('update', $album)
-                    {{ $album->name }}
-                    @endcannot
 
                 </td>
                 <td class="td-category">{{ $album->category->name }}</td>
