@@ -44,7 +44,7 @@ class AppController extends Controller
             'draft' => true
         ]);
 
-        return redirect()->route($alias.'.edit', ['id' => $id]);
+        return redirect()->route($alias.'.edit', $id);
     }
 
     // ------------------------------------------------ Ajax -------------------------------------------------

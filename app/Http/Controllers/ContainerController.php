@@ -245,7 +245,7 @@ class ContainerController extends Controller
                 if ($request->quickly == 1) {
                     return redirect()->route('containers.index');
                 } else {
-                    return redirect()->route('containers.edit', ['id' => $container->id]);
+                    return redirect()->route('containers.edit', $container->id);
                 }
             } else {
                 abort(403, 'Ошибка записи сырья');

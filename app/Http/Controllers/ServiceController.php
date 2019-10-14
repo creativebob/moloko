@@ -236,7 +236,7 @@ class ServiceController extends Controller
                 if ($request->quickly == 1) {
                     return redirect()->route('services.index');
                 } else {
-                    return redirect()->route('services.edit', ['id' => $service->id]);
+                    return redirect()->route('services.edit', $service->id);
                 }
             } else {
                 abort(403, 'Ошибка записи услуги');

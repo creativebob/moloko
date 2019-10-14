@@ -245,7 +245,7 @@ class AttachmentController extends Controller
                 if ($request->quickly == 1) {
                     return redirect()->route('attachments.index');
                 } else {
-                    return redirect()->route('attachments.edit', ['id' => $attachment->id]);
+                    return redirect()->route('attachments.edit', $attachment->id);
                 }
             } else {
                 abort(403, 'Ошибка записи вложений');

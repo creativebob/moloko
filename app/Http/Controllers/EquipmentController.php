@@ -222,7 +222,7 @@ class EquipmentController extends Controller
                 if ($request->quickly == 1) {
                     return redirect()->route('equipments.index');
                 } else {
-                    return redirect()->route('equipments.edit', ['id' => $equipment->id]);
+                    return redirect()->route('equipments.edit', $equipment->id);
                 }
             } else {
                 abort(403, 'Ошибка записи сырья');

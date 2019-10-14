@@ -229,7 +229,7 @@ class WorkflowController extends Controller
                 if ($request->quickly == 1) {
                     return redirect()->route('workflows.index');
                 } else {
-                    return redirect()->route('workflows.edit', ['id' => $workflow->id]);
+                    return redirect()->route('workflows.edit', $workflow->id);
                 }
             } else {
                 abort(403, 'Ошибка записи сырья');

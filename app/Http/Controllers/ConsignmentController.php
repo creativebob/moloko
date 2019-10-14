@@ -81,7 +81,7 @@ class ConsignmentController extends Controller
         $consignment = (new Consignment())->create();
         // dd($consignment);
 
-	    return redirect()->route('consignments.edit', ['id' => $consignment->id]);
+	    return redirect()->route('consignments.edit', $consignment->id);
     }
 
 

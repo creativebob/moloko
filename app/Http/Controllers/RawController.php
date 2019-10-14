@@ -271,7 +271,7 @@ class RawController extends Controller
                 if ($request->quickly == 1) {
                     return redirect()->route('raws.index');
                 } else {
-                    return redirect()->route('raws.edit', ['id' => $raw->id]);
+                    return redirect()->route('raws.edit', $raw->id);
                 }
             } else {
                 abort(403, 'Ошибка записи сырья');
