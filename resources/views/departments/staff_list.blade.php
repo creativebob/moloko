@@ -54,7 +54,7 @@
             <div></div>
 
             @can('update', $staffer)
-            <div class="icon-list-edit sprite sprite-edit">{{ link_to_route('staff.edit', '', $parameters = ['id' => $staffer->id], $attributes = []) }}</div>
+            <div class="icon-list-edit sprite sprite-edit">{{ link_to_route('staff.edit', '', $staffer->id, $attributes = []) }}</div>
             @endcan
 
             <div class="del">
