@@ -73,8 +73,6 @@
               @if($edit == 1)
             </a>
             @endif
-
-
             <br><span class="tiny-text">{{ $manufacturer->company->location->country->name }}</span>
           </td>
           <td class="td-sector">{{ $manufacturer->company->sector->name ?? ' ... ' }} </td>

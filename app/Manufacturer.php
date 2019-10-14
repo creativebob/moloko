@@ -73,5 +73,27 @@ class Manufacturer extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
+    // Вложения производителя
+    public function attachments()
+    {
+        return $this->hasManyThrough('App\Attachment', 'App\Article', 'manufacturer_id');
+    }
 
+    // Товары производителя
+    public function goods()
+    {
+        return $this->hasManyThrough('App\Goods', 'App\Article', 'manufacturer_id');
+    }
+
+    // Упаковка производителя
+    public function containers()
+    {
+        return $this->hasManyThrough('App\Container', 'App\Article', 'manufacturer_id');
+    }
+
+    // Сырье производителя
+    public function raws()
+    {
+        return $this->hasManyThrough('App\Raw', 'App\Article', 'manufacturer_id');
+    }
 }
