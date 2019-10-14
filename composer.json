@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.2",
         "appstract/laravel-opcache": "^3.0",
+        "ckeditor/ckeditor": "4.*",
         "davejamesmiller/laravel-breadcrumbs": "5.x",
         "fideloper/proxy": "^4.0",
         "fomvasss/laravel-dadata": "^2.0",
@@ -19,11 +20,11 @@
         "laracasts/utilities": "^3.0",
         "laravel-doctrine/orm": "1.5.*",
         "laravel/framework": "^6.0",
+        "laravel/helpers": "^1.1",
         "laravel/tinker": "^1.0",
         "laravel/ui": "^1.0",
         "laravelcollective/html": "^6.0",
-        "maatwebsite/excel": "^3.1",
-        "ckeditor/ckeditor": "4.*"
+        "maatwebsite/excel": "^3.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

@@ -564,7 +564,7 @@ class LeadController extends Controller
 //            dd('Ща буит');
 
             Log::channel('documents')
-                ->info('========================================== НАЧАЛО СПИСАНИЯ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
+                ->info('========================================== НАЧАЛО ПРОДАЖИ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
             foreach ($estimate->items as $item) {
                 if ($item->product->getTable() == 'goods') {
@@ -572,7 +572,6 @@ class LeadController extends Controller
                 }
             }
 
-            $amount = 0;
             $amount = $estimate->items->sum('sum');
 
             $estimate->update([
@@ -583,7 +582,7 @@ class LeadController extends Controller
             Log::channel('documents')
                 ->info('Продана смета c id: ' . $estimate->id);
             Log::channel('documents')
-                ->info('========================================== КОНЕЦ СПИСАНИЯ СМЕТЫ ==============================================
+                ->info('========================================== КОНЕЦ ПРОДАЖИ СМЕТЫ ==============================================
 				
 				');
 
