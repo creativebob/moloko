@@ -18,6 +18,7 @@ class StocksComposer
         $stocks = Stock::with('company')
         ->companiesLimit($answer)
         ->moderatorLimit($answer)
+//        ->filials($answer)
         // ->authors($answer)
         ->systemItem($answer)
         // ->template($answer)

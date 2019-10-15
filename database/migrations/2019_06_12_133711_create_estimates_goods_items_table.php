@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEstimatesItemsTable extends Migration
+class CreateEstimatesGoodsItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateEstimatesItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('estimates_items', function (Blueprint $table) {
+        Schema::create('estimates_goods_items', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->bigInteger('estimate_id')->nullable()->unsigned()->comment('Id сметы');
@@ -72,6 +72,6 @@ class CreateEstimatesItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('estimates_items');
+        Schema::dropIfExists('estimates_goods_items');
     }
 }
