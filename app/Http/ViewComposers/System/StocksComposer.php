@@ -12,13 +12,13 @@ class StocksComposer
 	{
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('stocks', false, 'index');
+        $answer = operator_right('stocks', true, 'index');
 
         // Главный запрос
         $stocks = Stock::with('company')
         ->companiesLimit($answer)
         ->moderatorLimit($answer)
-//        ->filials($answer)
+        ->filials($answer)
         // ->authors($answer)
         ->systemItem($answer)
         // ->template($answer)

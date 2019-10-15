@@ -83,8 +83,8 @@ class Attachment extends Model
     }
 
     // Склад
-    public function stock()
+    public function stocks()
     {
-        return $this->hasOne(AttachmentsStock::class, 'cmv_id');
+        return $this->hasMany(AttachmentsStock::class, 'cmv_id');
     }
 }

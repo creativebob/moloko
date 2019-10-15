@@ -73,9 +73,9 @@ class Goods extends Model
     }
 
     // Склад
-    public function stock()
+    public function stocks()
     {
-        return $this->hasOne(GoodsStock::class, 'cmv_id');
+        return $this->hasMany(GoodsStock::class, 'cmv_id');
     }
 
     // Пункты каталога

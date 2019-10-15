@@ -18,7 +18,7 @@ class ProductionObserver
         $production->draft = true;
 
         $user = request()->user();
-        $production->filial_id = $user->filial_id;
+        $production->filial_id = $user->staff->first()->filial_id;
         
 	    $production->manufacturer_id = $user->company->we_manufacturer->id;
     }

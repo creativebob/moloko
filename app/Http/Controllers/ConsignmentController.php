@@ -78,7 +78,7 @@ class ConsignmentController extends Controller
         // Подключение политики
         $this->authorize(getmethod('store'), $this->class);
 
-        $consignment = (new Consignment())->create();
+        $consignment = Consignment::create();
         // dd($consignment);
 
 	    return redirect()->route('consignments.edit', $consignment->id);
@@ -272,10 +272,12 @@ class ConsignmentController extends Controller
 				$q->with([
 					'cmv' => function ($q) {
 						$q->with([
-							'article'
+							'article',
+                            'stocks',
+                            'cost'
 						]);
 					},
-					'entity'
+					'entity',
 				]);
 			},
 		]);

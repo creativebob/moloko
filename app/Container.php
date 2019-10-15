@@ -83,8 +83,8 @@ class Container extends Model
     }
 
     // Склад
-    public function stock()
+    public function stocks()
     {
-        return $this->hasOne(ContainersStock::class, 'cmv_id');
+        return $this->hasMany(ContainersStock::class, 'cmv_id');
     }
 }

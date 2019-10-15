@@ -532,16 +532,18 @@ class LeadController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('update'));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $lead = Lead::moderatorLimit($answer)
-            ->authors($answer)
+        $lead = Lead::with('location', 'company')
+            ->companiesLimit($answer)
+            ->filials($answer)
             ->systemItem($answer)
+            ->moderatorLimit($answer)
             ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod('update'), $lead);
 
-//        $data = $request->input();
-//        $lead->update($data);
+        // Отдаем работу по редактировнию лида трейту
+        $this->updateLead($request, $lead);
 
         $lead->load([
             'estimate' => function($q) {

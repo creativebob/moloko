@@ -44,6 +44,18 @@
                             @include('includes.inputs.textarea', ['name' => 'description'])
                         </label>
                     </div>
+
+                    <div class="small-12 cell checkbox">
+                        {!! Form::hidden('is_production', 0) !!}
+                        {!! Form::checkbox('is_production', 1, null, ['id' => 'checkbox-production']) !!}
+                        <label for="checkbox-production"><span>Производственный склад</span></label>
+                    </div>
+
+                    <div class="small-12 cell checkbox">
+                        {!! Form::hidden('is_goods', 0) !!}
+                        {!! Form::checkbox('is_goods', 1, null, ['id' => 'checkbox-goods']) !!}
+                        <label for="checkbox-goods"><span>Склад готовой продукции</span></label>
+                    </div>
                 </div>
             </div>
 

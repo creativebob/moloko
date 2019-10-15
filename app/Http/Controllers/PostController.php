@@ -144,7 +144,7 @@ class PostController extends Controller
         $post->title = $request->title;
         $post->preview = $request->preview;
 
-        $post->content = $request->content;
+//        $post->content = $request->content;
         $post->publish_begin_date = $request->publish_begin_date;
         $post->publish_end_date = $request->publish_end_date;
 
@@ -392,7 +392,7 @@ class PostController extends Controller
         $post->title = $request->title;
 
         $post->preview = $request->preview;
-        $post->content = $request->content;
+//        $post->content = $request->content;
 
         $post->publish_begin_date = $request->publish_begin_date;
         $post->publish_end_date = $request->publish_end_date;

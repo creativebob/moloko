@@ -32,9 +32,14 @@ trait Receiptable
 
         Log::channel('documents')
             ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===');
+
+        Log::channel('documents')
+            ->info('В документе выбран stock с id: ' . $item->document->stock_id
+            );
+
         // Склад
-        if ($item->cmv->stock) {
-            $stock = $item->cmv->stock;
+        if ($item->cmv->stocks->firstWhere('stock_id', $item->document->stock_id)) {
+            $stock = $item->cmv->stocks->firstWhere('stock_id', $item->document->stock_id);
 
             Log::channel('documents')
                 ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);

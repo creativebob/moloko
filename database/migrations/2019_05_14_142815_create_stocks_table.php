@@ -23,6 +23,12 @@ class CreateStocksTable extends Migration
             $table->bigInteger('room_id')->nullable()->unsigned()->comment('Id помещения)');
             $table->foreign('room_id')->references('id')->on('rooms');
 
+            $table->bigInteger('filial_id')->nullable()->unsigned()->comment('Id филиала)');
+            $table->foreign('filial_id')->references('id')->on('departments');
+
+            $table->boolean('is_production')->default(1)->comment('Производственный склад');
+            $table->boolean('is_goods')->default(1)->comment('Склад готовой продукции');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

@@ -21,7 +21,7 @@ class StockController extends Controller
         $this->class = Stock::class;
         $this->model = 'App\Stock';
         $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entity_dependence = true;
     }
 
     public function index(Request $request)
@@ -78,7 +78,7 @@ class StockController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('stocks.index', compact('stocks', 'page_info', 'filter'));
+        return view('system.pages.stocks.index', compact('stocks', 'page_info', 'filter'));
     }
 
 
@@ -117,8 +117,8 @@ class StockController extends Controller
             return view('ajax_error', compact('ajax_error'));
         }
 
-        return view('stocks.create', [
-            'stock' => new $this->class,
+        return view('system.pages.stocks.create', [
+            'stock' => Stock::make(),
             'page_info' => pageInfo($this->entity_alias),
         ]);
     }
@@ -135,7 +135,7 @@ class StockController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $data = $request->input();
-        $stock = (new Stock())->create($data);
+        $stock = Stock::create($data);
 
         if ($stock) {
             return redirect()->route('stocks.index');
@@ -163,7 +163,7 @@ class StockController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $stock);
 
-        return view('stocks.edit', [
+        return view('system.pages.stocks.edit', [
             'stock' => $stock,
             'page_info' => pageInfo($this->entity_alias),
         ]);
