@@ -18,17 +18,17 @@
 @section('content')
 
 {{ Form::open(['route' => 'stocks.store', 'data-abide', 'novalidate']) }}
-@include('stocks.form', ['submit_text' => 'Добавить', 'form' => null])
+@include('system.pages.stocks.form', ['submit_text' => 'Добавить', 'form' => null])
 {{ Form::close() }}
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 @include('includes.scripts.inputs-mask')
-@include('stocks.scripts')
+@include('system.pages.stocks.scripts')
 {{-- Проверка поля на существование --}}
-@include('includes.scripts.check', ['entity' => 'stocks'])
-@endsection
+@include('includes.scripts.check', ['entity' => 'stocks', 'id' => $stock->id])
+@endpush
 
 
 

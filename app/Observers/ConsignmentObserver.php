@@ -18,7 +18,7 @@ class ConsignmentObserver
         $consignment->draft = true;
 
         $user = request()->user();
-        $consignment->filial_id = $user->filial_id;
+        $consignment->filial_id = $user->staff->first()->filial_id;
     }
 
     public function updating(Consignment $consignment)

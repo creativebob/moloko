@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Traits;
 
 use App\Entity;
 use App\Off;
+use App\Stock;
 use Illuminate\Support\Facades\Log;
 
 trait Offable
@@ -42,8 +43,13 @@ trait Offable
                         ->info('=== СПИСАНИЕ ' . $composition->getTable() . ' ' . $composition->id . ' ===');
 
                     // Списываем позицию состава
-                    if ($composition->stock) {
-                        $stock_composition = $composition->stock;
+                    $stock_production = $composition->stocks->filter(function ($stock, $key) {
+                        return $stock->stock->is_production == 1;
+                    });
+//                    dd($stock_production);
+
+                    if ($stock_production->isNotEmpty()) {
+                        $stock_composition = $stock_production->first();
 
                         Log::channel('documents')
                             ->info('Существует склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);
@@ -54,6 +60,7 @@ trait Offable
                             'manufacturer_id' => $item->cmv->article->manufacturer_id,
                             'stock_id' => $item->document->stock_id,
                             'filial_id' => $item->document->filial_id,
+                            'is_produced' => true,
                         ];
                         $entity_composition_stock = Entity::where('alias', $relation_name.'_stocks')->first();
                         $model_composition_stock = 'App\\'.$entity_composition_stock->model;
@@ -126,18 +133,27 @@ trait Offable
 
         // Списываем позицию состава
         $product = $item->product;
-        if ($product->stock) {
-            $stock = $product->stock;
+        $stock_goods = $product->stocks->filter(function ($stock, $key) {
+            return $stock->stock->is_goods == 1;
+        });
+//      dd($stock_goods);
+
+        if ($stock_goods->isNotEmpty()) {
+            $stock = $stock_goods->first();
 
             Log::channel('documents')
                 ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
 
         } else {
+            $user = \Auth::user();
+
+            // TODO - 15.10.19 - Какой ставить склад если при продаже нет склада товаров?
+
             $data_stock = [
                 'cmv_id' => $item->product_id,
                 'manufacturer_id' => $item->product->article->manufacturer_id,
-//                'stock_id' => $item->document->stock_id,
-//                'filial_id' => $item->document->filial_id,
+                'stock_id' => Stock::where('filial_id', $user->staff->first()->filial_id) ->fisrt()->id,
+                'filial_id' => $user->staff->first()->filial_id,
             ];
             $entity_stock = Entity::where('alias', $product->getTable() . '_stocks')->first();
             $model_stock = 'App\\'.$entity_stock->model;

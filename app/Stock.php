@@ -49,6 +49,11 @@ class Stock extends Model
         'description',
         'room_id',
 
+        'filial_id',
+
+        'is_production',
+        'is_goods',
+
         'display',
         'system',
         'moderation'

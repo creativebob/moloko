@@ -28,7 +28,12 @@
             $.ajax({
                 url: "/admin/check",
                 type: "POST",
-                data: {value: value, field: field, entity_alias: entity_alias, id: id},
+                data: {
+                    value: value,
+                    field: field,
+                    entity_alias: entity_alias,
+                    id: id
+                },
                 beforeSend: function () {
                     item.siblings('.find-status').addClass('icon-load');
                 },

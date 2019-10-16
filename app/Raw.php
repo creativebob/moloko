@@ -102,9 +102,9 @@ class Raw extends Model
     }
 
     // Склад
-    public function stock()
+    public function stocks()
     {
-        return $this->hasOne(RawsStock::class, 'cmv_id');
+        return $this->hasMany(RawsStock::class, 'cmv_id');
     }
 
 }

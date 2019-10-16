@@ -17,17 +17,16 @@
 @section('content')
 
 {{ Form::model($stock, ['route' => ['stocks.update', $stock->id], 'data-abide', 'novalidate']) }}
-{{ method_field('PATCH') }}
-
-@include('stocks.form', ['submit_text' => 'Редактировать'])
+@method('PATCH')
+@include('system.pages.stocks.form', ['submit_text' => 'Редактировать'])
 
 {{ Form::close() }}
 
 @endsection
 
-@section('scripts')
+@push('scripts')
 @include('includes.scripts.inputs-mask')
-@include('stocks.scripts')
+@include('system.pages.stocks.scripts')
 {{-- Проверка поля на существование --}}
-@include('includes.scripts.check', ['entity' => 'stocks'])
-@endsection
+@include('includes.scripts.check', ['entity' => 'stocks', 'id' => $stock->id])
+@endpush

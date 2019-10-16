@@ -107,11 +107,16 @@ class AppController extends Controller
         $entity = Entity::whereAlias($request->entity_alias)->first(['model']);
         $model = 'App\\'.$entity->model;
 
+        $id = $request->id;
+
         // Проверка поля в нашей базе данных
         $result_count = $model::where($request->field, $request->value)
-        ->where('id', '!=', $request->id)
-        ->whereCompany_id($request->user()->company_id)
-        ->count();
+            ->where('id', '!=', $request->id)
+//            ->when($id, function ($q, $id) {
+//                return $q->where('id', '!=', $id);
+//            })
+            ->whereCompany_id($request->user()->company_id)
+            ->count();
 
         return response()->json($result_count);
     }
