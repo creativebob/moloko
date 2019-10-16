@@ -97,7 +97,7 @@
                     <td class="td-company">
                         @if(!empty($stock->company->name))
                             {{ $stock->company->designation ?? $stock->company->name }}
-                            <br><span class="tiny-text">{{ $stock->filial->name }}</span>
+                            <br><span class="tiny-text">{{ $stock->stock->filial->name }}</span>
                         @else
 
                             @if($stock->system == null)

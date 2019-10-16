@@ -100,4 +100,9 @@ class Stock extends Model
         ]);
     }
 
+    public function filial()
+    {
+        return $this->belongsTo('App\Department', 'filial_id');
+    }
+
 }

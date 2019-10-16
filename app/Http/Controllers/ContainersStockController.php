@@ -41,6 +41,7 @@ class ContainersStockController extends Controller
         ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
+            ->filials($answer)
             ->systemItem($answer)
             ->orderBy('moderation', 'desc')
             ->orderBy('sort', 'asc')

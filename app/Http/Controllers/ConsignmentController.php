@@ -46,6 +46,7 @@ class ConsignmentController extends Controller
         ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
+        ->filials($answer)
         ->authors($answer)
         ->systemItem($answer)
         // ->whereNull('draft')
