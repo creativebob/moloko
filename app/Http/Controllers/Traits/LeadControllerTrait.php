@@ -30,7 +30,7 @@ trait LeadControllerTrait
         $user_auth_id = hideGod($user_auth);
 
         $company_id = $user_auth->company_id;
-        $filial_id = $user_auth->filial_id;
+        $filial_id = $user_auth->staff->first()->filial_id;
 
         // СОЗДАЕМ ЛИДА ----------------------------------------------------------------------------
 
@@ -92,8 +92,7 @@ trait LeadControllerTrait
         $user_auth_id = hideGod($user_auth);
 
         $company_id = $user_auth->company_id;
-        $filial_id = $user_auth->filial_id;
-
+        $filial_id = $user_auth->staff->first()->filial_id;
 
         // ОБНОВЛЯЕМ ЛИДА ----------------------------------------------------------------------------------
         // Обновляем локацию

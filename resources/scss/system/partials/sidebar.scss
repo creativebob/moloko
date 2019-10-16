@@ -198,6 +198,9 @@ $sidebar-li-border-bot: #3f3f3f;
   .icon-container {
     background-position:  -96px -1280px;
   }
+  .icon-attachment {
+    background-position:  -96px -1410px;
+  }
 
   .icon-arrow-forward {
     background-position: -160px -288px;
@@ -252,7 +255,9 @@ $sidebar-li-border-bot: #3f3f3f;
     .icon-container {
       background-position:  -160px -1280px;
     }
-
+    .icon-attachment {
+      background-position:  -160px -1410px;
+    }
   }
   // Скролл в сайбаре по умолчанию
   .nav::-webkit-scrollbar {

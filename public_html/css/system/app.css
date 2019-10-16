@@ -4586,17 +4586,7 @@ table.hover:not(.unstriped) tr:nth-of-type(even):hover {
   margin-right: 0.0625rem;
   border-radius: 0;
   font-size: 0.875rem;
-  display: none;
-}
-
-.pagination li:last-child, .pagination li:first-child {
   display: inline-block;
-}
-
-@media print, screen and (min-width: 40em) {
-  .pagination li {
-    display: inline-block;
-  }
 }
 
 .pagination a,
@@ -9151,6 +9141,10 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   background-position: -96px -1280px;
 }
 
+.sidebar .icon-attachment {
+  background-position: -96px -1410px;
+}
+
 .sidebar .icon-arrow-forward {
   background-position: -160px -288px;
 }
@@ -9217,6 +9211,10 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 
 .sidebar .nav > ul > li > .active .icon-container, .sidebar .gen-menu-bot > li > .active .icon-container {
   background-position: -160px -1280px;
+}
+
+.sidebar .nav > ul > li > .active .icon-attachment, .sidebar .gen-menu-bot > li > .active .icon-attachment {
+  background-position: -160px -1410px;
 }
 
 .sidebar .nav::-webkit-scrollbar {
@@ -12044,32 +12042,50 @@ a#task-toggle {
   margin: 0 -15px;
 }
 
-.content #pagination {
+#pagination {
   margin-top: 1rem;
 }
 
-.content #pagination .pagination-head .pagination-title {
+#pagination .pagination-head .pagination-title {
   font-size: 0.8rem;
 }
 
-.content #pagination .pagination-head .pagination {
+#pagination .pagination-head .pagination {
   margin-top: 0.4rem;
 }
 
-.content #pagination .right {
+#pagination .right {
   text-align: right;
 }
 
-.content #pagination .right a {
+#pagination .right a {
   color: #646464;
 }
 
-.content #pagination .right a .icon-deleted {
+#pagination .right a .icon-deleted {
   background-position: 0px -544px;
 }
 
-.content #pagination .right a:hover .icon-deleted {
+#pagination .right a:hover .icon-deleted {
   background-position: -32px -544px;
+}
+
+#pagination a.page-link {
+  background-color: #eee;
+  color: #000000;
+  border-radius: 2px;
+}
+
+#pagination a.page-link:hover {
+  background-color: #ddd;
+}
+
+#pagination .page-item.active span {
+  border-radius: 2px;
+  padding-left: 0.6rem;
+  padding-right: 0.6rem;
+  color: #cacaca;
+  background-color: #ffffff;
 }
 
 .footer {

@@ -74,6 +74,8 @@ class ContainerController extends Controller
         $containers = Container::with([
             'author',
             'company',
+            'in_cleans',
+            'in_drafts',
             'compositions.goods',
             'article' => function ($q) {
                 $q->with([

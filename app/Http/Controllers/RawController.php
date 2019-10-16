@@ -74,6 +74,8 @@ class RawController extends Controller
         $raws = Raw::with([
             'author',
             'company',
+            'in_cleans',
+            'in_drafts',
             'compositions.goods',
             'unit_portion',
             'article' => function ($q) {

@@ -154,7 +154,7 @@
 		        ]);
 		}
 		
-		// Товары
+		// Товары из которых состоит текущий артикул (Набор товаров)
 		public function goods()
 		{
 			return $this->belongsToMany(Goods::class, 'article_goods')
@@ -162,7 +162,13 @@
 					'value'
 				]);
 		}
-		
+
+		// Товары на базе этого артикула
+		public function in_goods()
+		{
+			return $this->hasMany(Goods::class, 'article_id');
+		}
+
 		// Состав (набор)
 		// public function set_compositions()
 		// {

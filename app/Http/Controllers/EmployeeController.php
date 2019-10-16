@@ -66,7 +66,7 @@ class EmployeeController extends Controller
         // все таки зависимая через staff, то делаем нестандартную фильтрацию (прямо в запросе)
         ->when($answer['dependence'] == true, function ($query) use ($user) {
             return $query->whereHas('staffer', function($q) use ($user){
-                $q->where('filial_id', $user->filial_id);
+                $q->where('filial_id', $user->staff->first()->filial_id);
             });
         })
 
@@ -599,6 +599,10 @@ class EmployeeController extends Controller
 
         Log::info('Открываем доступ для пользователя');
         $user->access_block = 0;
+
+        Log::info('Определяем пользователя как созданного под филиалом должности');
+        $user->filial_id = $staff->filial_id;
+
         $user->save();
 
         Log::info('Формируем права');

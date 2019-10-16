@@ -620,8 +620,6 @@ class LeadController extends Controller
     public function ajax_autofind_phone(Request $request)
     {
 
-
-
         // Подключение политики
         // $this->authorize('index', Lead::class);
 
@@ -655,11 +653,9 @@ class LeadController extends Controller
         ->orderBy('sort', 'asc')
         ->get();
 
-        $user = $finded_leads->first()->user->name;
+        // $user = $finded_leads->first()->user;
 
-        $count_finded_leads = $finded_leads->count();
-
-        if($count_finded_leads > 0){
+        if($finded_leads->count() > 0){
 
             return view('leads.autofind', compact('finded_leads'));
 
@@ -797,6 +793,7 @@ class LeadController extends Controller
     public function ajax_distribute(Request $request)
     {
 
+        dd('Мы тут');
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
         $lead = Lead::findOrFail($request->lead_id);

@@ -3402,6 +3402,10 @@ a#task-toggle{
         }
     }
 
+
+}
+
+
     // Pagination
     #pagination {
         margin-top: 1rem;
@@ -3433,11 +3437,29 @@ a#task-toggle{
                 }
             }
         }
+
+        a.page-link{
+            background-color: #eee;
+            color: $black;
+            border-radius: 2px;
+
+            &:hover{
+                background-color: #ddd; 
+            }
+
+        }
+
+
+
+        .page-item.active span{
+            border-radius: 2px;
+            padding-left: 0.6rem;
+            padding-right: 0.6rem;
+            color: $medium-gray;
+            background-color: $white; 
+        }
+
     }
-}
-
-
-
 
 
 

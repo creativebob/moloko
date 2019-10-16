@@ -161,7 +161,7 @@ class ArticlesGroupController extends Controller
         $articles_group->save();
 
         if ($articles_group) {
-            return redirect()->route('products.articles_groups.index');
+            return redirect()->route('articles_groups.index');
         } else {
             abort(403, 'Ошибка обновления группы артикулов');
         }

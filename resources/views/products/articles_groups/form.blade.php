@@ -16,11 +16,11 @@
                 </div>
 
                 <div class="small-12 medium-6 cell">
-                    @include('includes.selects.units_categories', ['default' => isset($articles_group->unit_id) ? $articles_group->unit->units_category_id : 6])
+                    @include('includes.selects.units_categories', ['default' => isset($articles_group->unit_id) ? $articles_group->unit->category_id : 6, 'type'=>'article'])
                 </div>
 
                 <div class="small-12 medium-6 cell">
-                    @include('includes.selects.units', ['default' => isset($articles_group->unit_id) ? $articles_group->unit_id : 26, 'units_category_id' => isset($articles_group->unit_id) ? $articles_group->unit->units_category_id : 6])
+                    @include('includes.selects.units', ['default' => isset($articles_group->unit_id) ? $articles_group->unit_id : 26, 'units_category_id' => isset($articles_group->unit_id) ? $articles_group->unit->category_id : 6])
                 </div>
 
             </div>

@@ -68,7 +68,7 @@
                         @endcannot
 
                         {{-- %5B%5D --}}
-                        ({{ link_to_route('goods.index', $articles_group->articles_count, $parameters = ['articles_group_id' => $articles_group->id], $attributes = ['class' => 'filter_link light-text', 'title' => 'Перейти на список артикулов']) }})
+                        ({{ link_to_route('goods.index', $articles_group->articles_count, $parameters = ['articles_group_id%5B%5D' => $articles_group->id], $attributes = ['class' => 'filter_link light-text', 'title' => 'Перейти на список артикулов']) }})
 
                     </td>
                     <td class="td-description">{{ $articles_group->description }}</td>

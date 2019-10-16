@@ -83,6 +83,24 @@ class Raw extends Model
         });
     }
 
+    public function in_cleans()
+    {
+        return $this->belongsToMany(Article::class, 'article_raw')
+        ->where('draft', false)
+        ->whereHas('in_goods', function($q) {
+            $q->where('archive', false);
+        });
+    }
+
+    public function in_drafts()
+    {
+        return $this->belongsToMany(Article::class, 'article_raw')
+        ->where('draft', true)
+        ->whereHas('in_goods', function($q) {
+            $q->where('archive', false);
+        });
+    }
+
     // Склад
     public function stock()
     {

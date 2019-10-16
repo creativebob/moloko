@@ -29,7 +29,7 @@
         var len_phone = phone.length;
         var lead_id = $('#lead_id').data('lead-id');
 
-        // Если символов больше 3 - делаем запрос
+        // Если символов 11 - делаем запрос
         if(phone.length == 11) {
 
             $.ajax({
@@ -41,6 +41,8 @@
                 type: "POST",
                 data: {phone: phone, lead_id: lead_id},
                 success: function(html){
+
+                    // alert(html);
 
                     // Выводим пришедшие данные на страницу
                     $('#port-autofind').html(html);

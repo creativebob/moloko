@@ -74,6 +74,8 @@ class AttachmentController extends Controller
         $attachments = Attachment::with([
             'author',
             'company',
+            'in_cleans',
+            'in_drafts',
             'compositions.goods',
             'article' => function ($q) {
                 $q->with([

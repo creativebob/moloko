@@ -12,12 +12,12 @@
                                 {{ $lead->created_at->format('d.m.Y') }}
                             </td>
                             <td>
-                                <span class="lead-name" id="lead-name" title="Использовать данные">{{$lead->name or ''}}</span><br>
-                                <span id="lead-city" data-city-id="{{$lead->location->city->id or ''}}">{{$lead->location->city->name or '- Город не указан -'}}</span>,
-                                <span id="lead-address">{{ $lead->location->address or ''}}</span>
+                                <span class="lead-name" id="lead-name" title="Использовать данные">{{$lead->name ?? ''}}</span><br>
+                                <span id="lead-city" data-city-id="{{$lead->location->city->id ?? ''}}">{{$lead->location->city->name ?? '- Город не указан -'}}</span>,
+                                <span id="lead-address">{{ $lead->location->address ?? ''}}</span>
                             </td>
                             <td>
-                                {{ $lead->choice->name or '' }}<br>
+                                {{ $lead->choice->name ?? '' }}<br>
                                 {{ $lead->stage->name }}
                             </td>
                             <td>
@@ -27,7 +27,7 @@
                                 Не назначен
                                 @endif
                                 <br>
-                                №: <a href="/admin/leads/{{ $lead->id }}/edit" id="{{ $lead->id }}" title="Перейти">{{ $lead->case_number  or ''}}</a>
+                                №: <a href="/admin/leads/{{ $lead->id }}/edit" id="{{ $lead->id }}" title="Перейти">{{ $lead->case_number ?? ''}}</a>
                             </td>
                         </tr>
                     @endforeach

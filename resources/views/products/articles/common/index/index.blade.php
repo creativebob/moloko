@@ -26,6 +26,12 @@
 @section('content')
 
 {{-- Таблица --}}
+
+<div class="grid-x" id="pagination">
+    <div class="small-6 cell pagination-head">
+        {{ $items->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
+    </div>
+</div>
 <div class="grid-x">
 
     <div class="small-12 cell">
@@ -165,11 +171,25 @@
                     @endif
 
                     <td class="mark">
-                        
-                        @if($item->moderation == 1)<span class="hollow button warning mark-no-moderate tiny">На модерации</span>@endif
+                        @if(!empty($item->in_cleans))
+                            @if($item->in_cleans->count() > 0)
+                                <span class="badge success" title="В составе активных товаров">{{ $item->in_cleans->count() }}</span>
+                            @endif
+                        @endif
 
-                        @if($item->article->draft) <span class="mark-draft">Черновик</span> @endif
+                        @if(!empty($item->in_drafts))
+                            @if($item->in_drafts->count() > 0)
+                                <span class="badge warning" title="В составе черновых товаров">{{ $item->in_drafts->count() }}</span>
+                            @endif
+                        @endif
 
+                        @if($item->moderation == 1)
+                            <span class="hollow button warning mark-no-moderate tiny">На модерации</span>
+                        @endif
+
+                        @if($item->article->draft)
+                            <span class="mark-draft">Черновик</span>
+                        @endif
                     </td>
 
                     {{-- Элементы управления --}}
