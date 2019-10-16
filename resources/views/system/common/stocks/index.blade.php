@@ -41,9 +41,8 @@
                     <th class="td-volume">Объем</th>
                     <th class="td-cost">Стоимость</th>
                     <th class="td-stock">Склад</th>
+                    <th class="td-status">Стутус</th>
                     <th class="td-company">Компания</th>
-                    <th class="td-control"></th>
-                    <th class="td-delete"></th>
                 </tr>
 
             </thead>
@@ -85,7 +84,15 @@
                         <span class="tiny-text">{{ num_format($stock->cmv->cost_unit, 2) }}</span>
                     </td>
 
-                    <td class="td-stock">{{ $stock->stock->name }}</td>
+                    <td class="td-stock">{{ $stock->stock->name }}
+                        {{-- @if($stock->stock->is_production)<br><span class="tiny-text">(Производственный)</span>@endif
+                        @if($stock->stock->is_goods)<br><span class="tiny-text">(Готовой продукции)</span>@endif --}}
+                    </td>
+
+                    <td class="td-status">
+                        @if($stock->stock->is_production)<span>Производственный</span><br>@endif
+                        @if($stock->stock->is_goods)<span>Готовой продукции</span><br>@endif
+                    </td>
 
                     <td class="td-company">
                         @if(!empty($stock->company->name))
@@ -99,17 +106,6 @@
                                 Системная
                             @endif
 
-                        @endif
-                    </td>
-
-                    {{-- Элементы управления --}}
-                    @include('includes.control.table-td', ['item' => $stock])
-
-                    <td class="td-delete">
-                        @if (($stock->system != 1) && ($stock->photos_count == 0))
-                        @can('delete', $stock)
-                        <a class="icon-delete sprite" data-open="item-delete"></a>
-                        @endcan
                         @endif
                     </td>
                 </tr>
