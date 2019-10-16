@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEstimatesGoodsItemsTable extends Migration
+class CreateEstimatesServicesItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateEstimatesGoodsItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('estimates_goods_items', function (Blueprint $table) {
+        Schema::create('estimates_services_items', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->bigInteger('estimate_id')->nullable()->unsigned()->comment('Id сметы');
@@ -23,10 +23,10 @@ class CreateEstimatesGoodsItemsTable extends Migration
 //            $table->morphs('price_product');
 
             $table->bigInteger('price_id')->unsigned()->nullable()->comment('Id прайса');
-            $table->foreign('price_id')->references('id')->on('prices_goods');
+            $table->foreign('price_id')->references('id')->on('prices_services');
 
-            $table->bigInteger('goods_id')->unsigned()->nullable()->comment('Id товара');
-            $table->foreign('goods_id')->references('id')->on('goods');
+            $table->bigInteger('service_id')->unsigned()->nullable()->comment('Id услуги');
+            $table->foreign('service_id')->references('id')->on('services');
 
             $table->integer('cost')->nullable()->comment('Себестоимость');
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим мебестоимости');
@@ -77,6 +77,6 @@ class CreateEstimatesGoodsItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('estimates_goods_items');
+        Schema::dropIfExists('estimates_services_items');
     }
 }

@@ -197,7 +197,8 @@ function yandexGeocoder ($location) {
             $params = http_build_query($request_params);
             // dd($get_params);
             // Отправляем
-            $result = (file_get_contents('https://geocode-maps.yandex.ru/1.x/?' . $params));
+            // TODO - 16.10.19 - Не отрабатывает яндекс
+//            $result = (file_get_contents('https://geocode-maps.yandex.ru/1.x/?' . $params));
             // dd($get_params);
 
             //     $client = new \GuzzleHttp\Client();
@@ -212,15 +213,15 @@ function yandexGeocoder ($location) {
 
             // $result = $request->send();
 
-            $res = json_decode($result);
-            if (count($res->response->GeoObjectCollection->featureMember) == 1) {
-
-                $string = $res->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
-                $coords = explode(' ', $string);
-                $update_location = Location::whereId($location->id)->update(['longitude' => $coords[0], 'latitude' => $coords[1], 'parse_count' => 1, 'answer_count' => 1]);
-            } else {
-                $update_location = Location::whereId($location->id)->update(['answer_count' => count($res->response->GeoObjectCollection->featureMember)]);
-            }
+//            $res = json_decode($result);
+//            if (count($res->response->GeoObjectCollection->featureMember) == 1) {
+//
+//                $string = $res->response->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
+//                $coords = explode(' ', $string);
+//                $update_location = Location::whereId($location->id)->update(['longitude' => $coords[0], 'latitude' => $coords[1], 'parse_count' => 1, 'answer_count' => 1]);
+//            } else {
+//                $update_location = Location::whereId($location->id)->update(['answer_count' => count($res->response->GeoObjectCollection->featureMember)]);
+//            }
         }
     }
 }

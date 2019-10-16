@@ -56,7 +56,7 @@ trait Commonable
     function getUserId($user){
 
         // Если пользователь не авторизован, например отправка заказа с сайта
-        if (is_null($user)) {
+        if (empty($user)) {
             $user_id = 1;
         } else {
             // Если бог, то ставим автором робота

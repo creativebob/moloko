@@ -2,7 +2,7 @@
 @if ($catalogs_services_item->prices_services->isNotEmpty())
 @foreach ($catalogs_services_item->prices_services as $prices_service)
 <li>
-	<a class="add-to-estimate" id="prices_services-{{ $prices_service->id }}" data-serial="{{ $prices_service->service->serial }}">
+	<a class="add-to-estimate" id="prices_services-{{ $prices_service->id }}" data-serial="{{ $prices_service->service->serial }}" data-type="services">
 
 		<div class="media-object stack-for-small">
 			<div class="media-object-section items-product-img" >

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Traits;
 
 use App\Estimate;
 use App\PricesGoods;
-use App\EstimatesItem;
+use App\EstimatesGoodsItem;
 
 trait EstimateControllerTrait
 {
@@ -27,12 +27,10 @@ trait EstimateControllerTrait
 
         $data = [];
         foreach ($prices_goods as $price_goods) {
-            $data[] = new EstimatesItem([
+            $data[] = new EstimatesGoodsItem([
                 'product_id' => $price_goods->goods->id,
-                'product_type' => 'App\Goods',
 
-                'price_product_id' => $price_goods->id,
-                'price_product_type' => 'App\PricesGoods',
+                'price_id' => $price_goods->id,
 
                 'company_id' => $lead->company->id,
                 'author_id' => 1,
@@ -40,11 +38,11 @@ trait EstimateControllerTrait
                 'price' => $price_goods->price,
                 'count' => $cart['prices'][$price_goods->id]['count'],
 
-                'sum' => $cart['prices'][$price_goods->id]['count'] * $price_goods->price
+                'amount' => $cart['prices'][$price_goods->id]['count'] * $price_goods->price
             ]);
         }
 
-        $estimate->items()->saveMany($data);
+        $estimate->goods_items()->saveMany($data);
 
         return $estimate;
     }

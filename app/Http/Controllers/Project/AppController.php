@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Telegram;
 use App\CatalogsGoodsItem;
 use App\Estimate;
-use App\EstimatesItem;
+use App\EstimatesGoodsItem;
 use App\Lead;
 use App\PricesGoods;
 use App\Site;
@@ -510,15 +510,15 @@ class AppController extends Controller
             $message .= "Имя клиента: " . $lead->name . "\r\n";
             $message .= "Тел: " . decorPhone($phone) . "\r\n";
 
-            if ($estimate->items->isNotEmpty()) {
-                $estimate->items->load([
+            if ($estimate->goods_items->isNotEmpty()) {
+                $estimate->goods_items->load([
                     'product.article'
                 ]);
 
                 $message .= "\r\nСостав заказа:\r\n";
                 $num = 1;
-                foreach ($estimate->items as $item) {
-                    $message .= $num . ' - ' . $item->product->article->name . ", " . $item->count . ", на сумму: " . $item->sum . "\r\n";
+                foreach ($estimate->goods_items as $item) {
+                    $message .= $num . ' - ' . $item->product->article->name . ", " . $item->count . ", на сумму: " . $item->amount . "\r\n";
                     $num++;
                 }
                 $message .= "\r\n";

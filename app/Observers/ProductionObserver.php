@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\Production;
 use App\Observers\Traits\Commonable;
-use Carbon\Carbon;
 
 class ProductionObserver
 {
@@ -14,7 +13,7 @@ class ProductionObserver
     public function creating(Production $production)
     {
         $this->store($production);
-        $production->receipt_date = Carbon::now()->format('d.m.Y');
+        $production->receipt_date = now()->format('d.m.Y');
         $production->draft = true;
 
         $user = request()->user();

@@ -118,23 +118,23 @@
                                         </tr>
                                     </thead>
 
-                                    <tbody id="prices_goods-section">
+                                    <tbody id="section-goods">
 
                                         @if (isset($lead->estimate))
-                                        @foreach ($lead->estimate->items->where('product_type', 'App\Goods') as $estimates_item)
-                                        @include('leads.estimate.estimates_item_goods', ['estimates_item' => $estimates_item])
-                                        @endforeach
+                                            @foreach ($lead->estimate->goods_items as $estimates_goods_item)
+                                                @include('leads.estimate.estimates_goods_item', ['estimates_goods_item' => $estimates_goods_item])
+                                            @endforeach
                                         @endif
 
                                     </tbody>
 
-                                    <tbody id="prices_services-section">
+                                    <tbody id="section-services">
 
-                                    @if (isset($lead->estimate))
-                                        @foreach ($lead->estimate->items->where('product_type', 'App\Service') as $estimates_item)
-                                            @include('leads.estimate.estimates_item_service', ['estimates_item' => $estimates_item])
-                                        @endforeach
-                                    @endif
+                                        @if (isset($lead->estimate))
+                                            @foreach ($lead->estimate->services_items as $estimates_services_item)
+                                                @include('leads.estimate.estimates_services_item', ['estimates_services_item' => $estimates_services_item])
+                                            @endforeach
+                                        @endif
 
                                     </tbody>
                                 </table>
@@ -329,7 +329,7 @@
                                     <ul class="small-12 cell products-list view-list" id="block-catalog_goods_item-{{ $item->id }}">
                                         @foreach($item->prices as $cur_prices_goods)
                                         <li>
-                                            <a class="add-to-estimate" id="prices_goods-{{ $cur_prices_goods->id }}" data-serial="{{ $cur_prices_goods->goods->serial }}">
+                                            <a class="add-to-estimate" data-price_id="{{ $cur_prices_goods->id }}" data-serial="{{ $cur_prices_goods->goods->serial }}" data-type="goods">
 
                                                 <div class="media-object stack-for-small">
                                                     <div class="media-object-section items-product-img" >
@@ -419,7 +419,7 @@
                                     <ul class="small-12 cell products-list view-list" id="block-catalog_services_item-{{ $item->id }}">
                                         @foreach($item->prices as $prices_service)
                                             <li>
-                                                <a class="add-to-estimate" id="prices_services-{{ $prices_service->id }}" data-serial="{{ $prices_service->service->serial }}">
+                                                <a class="add-to-estimate" data-price_id="{{ $prices_service->id }}" data-serial="{{ $prices_service->service->serial }}" data-type="services">
 
                                                     <div class="media-object stack-for-small">
                                                         <div class="media-object-section items-product-img" >

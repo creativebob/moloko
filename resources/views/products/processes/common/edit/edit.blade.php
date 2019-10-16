@@ -236,6 +236,7 @@ $disabled = $process->draft == 0 ? true : null;
 
                     {{-- Серийный номер --}}
                     <div class="small-12 cell checkbox">
+                        {!! Form::hidden('serial', 0) !!}
                         {{ Form::checkbox('serial', 1, $item->serial, ['id' => 'serial']) }}
                         <label for="serial"><span>Серийный номер</span></label>
                     </div>

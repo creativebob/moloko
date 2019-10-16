@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\Consignment;
 use App\Observers\Traits\Commonable;
-use Carbon\Carbon;
 
 class ConsignmentObserver
 {
@@ -14,7 +13,7 @@ class ConsignmentObserver
     public function creating(Consignment $consignment)
     {
         $this->store($consignment);
-        $consignment->receipt_date = Carbon::now()->format('d.m.Y');
+        $consignment->receipt_date = now()->format('d.m.Y');
         $consignment->draft = true;
 
         $user = request()->user();

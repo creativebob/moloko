@@ -274,8 +274,6 @@ class AuthServiceProvider extends ServiceProvider
         // Расчеты и заказы
         Order::class => OrderPolicy::class,
         Estimate::class => EstimatePolicy::class,
-        // EstimatesItem::class => EstimatesItemPolicy::class,
-
 
         // Показатели
         Indicator::class => IndicatorPolicy::class,

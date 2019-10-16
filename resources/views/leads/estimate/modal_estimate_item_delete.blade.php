@@ -43,11 +43,8 @@ $(document).on('click', '.button-delete-estimates_item', function(event) {
     var buttons = $('.button');
 
     $.ajax({
-        url: '/admin/destroy_' + entity,
+        url: '/admin/' + entity + '/' + id,
         type: 'DELETE',
-        data: {
-            id: id
-        },
         success: function (data) {
             $('#' + entity + '-' + id).remove();
             $('#delete-estimates_item').foundation('close');

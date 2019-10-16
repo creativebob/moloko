@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,12 +23,14 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
 
-class EstimatesItem extends Model
+class EstimatesGoodsItem extends Model
 {
     // Включаем кеш
     use Cachable;
 
     // use SoftDeletes;
+
+    use Commonable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -45,34 +48,21 @@ class EstimatesItem extends Model
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'estimate_id',
-        'price_product_id',
-        'price_product_type',
-        'product_id',
-        'product_type',
+        'price_id',
+        'goods_id',
+
         'company_id',
         'author_id',
 
         'count',
         'price',
 
-        'sum',
+        'amount',
 
         'display',
         'system',
         'moderation'
     ];
-
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
 
     // Смета
     public function estimate()
@@ -86,14 +76,24 @@ class EstimatesItem extends Model
     }
 
     // Прайс
-    public function price_product()
+    public function price()
     {
-        return $this->morphTo();
+        return $this->belongsTo(PricesGoods::class);
     }
 
-    // Продукт
+    // Товар
+    public function goods()
+    {
+        return $this->belongsTo(Goods::class);
+    }
+
     public function product()
     {
-        return $this->morphTo();
+        return $this->belongsTo(Goods::class, 'goods_id');
+    }
+
+    public function cmv()
+    {
+        return $this->belongsTo(Goods::class, 'goods_id');
     }
 }

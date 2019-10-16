@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Models\Traits\Commonable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -30,6 +32,8 @@ class Estimate extends Model
 
     use SoftDeletes;
 
+    use Commonable;
+
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -43,11 +47,16 @@ class Estimate extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at',
+        'date'
+    ];
     protected $fillable = [
         'lead_id',
         'client_id',
+
         'company_id',
+        
         'number',
         'date',
         'description',
@@ -61,17 +70,11 @@ class Estimate extends Model
         'moderation'
     ];
 
-    // Автор
-    public function author()
+    public function setDateAttribute($value)
     {
-        return $this->belongsTo(User::class);
+        $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $value);
     }
 
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
 
     // Лид
     public function lead()
@@ -85,9 +88,15 @@ class Estimate extends Model
         return $this->belongsTo(Client::class);
     }
 
-    // Позиции
-    public function items()
+    // Товары
+    public function goods_items()
     {
-        return $this->hasMany(EstimatesItem::class);
+        return $this->hasMany(EstimatesGoodsItem::class);
+    }
+
+    // Услуги
+    public function services_items()
+    {
+        return $this->hasMany(EstimatesServicesItem::class);
     }
 }

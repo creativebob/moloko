@@ -17,6 +17,9 @@ use App\ContainersStock;
 use App\Cost;
 use App\CostsHistory;
 use App\Direction;
+use App\Estimate;
+use App\EstimatesGoodsItem;
+use App\EstimatesServicesItem;
 use App\ExpendablesCategory;
 use App\GoodsCategory;
 use App\GoodsStock;
@@ -37,6 +40,9 @@ use App\Observers\ContainersStockObserver;
 use App\Observers\CostObserver;
 use App\Observers\CostsHistoryObserver;
 use App\Observers\DirectionObserver;
+use App\Observers\EstimateObserver;
+use App\Observers\EstimatesGoodsItemObserver;
+use App\Observers\EstimatesServicesItemObserver;
 use App\Observers\ExpendablesCategoryObserver;
 use App\Observers\GoodsCategoryObserver;
 use App\Observers\GoodsStockObserver;
@@ -175,6 +181,11 @@ class ObserverServiceProvider extends ServiceProvider
         // Наряды
         Production::observe(ProductionObserver::class);
         ProductionsItem::observe(ProductionsItemObserver::class);
+
+        // Сметы
+        Estimate::observe(EstimateObserver::class);
+        EstimatesGoodsItem::observe(EstimatesGoodsItemObserver::class);
+        EstimatesServicesItem::observe(EstimatesServicesItemObserver::class);
 
         // Поступления на склад
         Receipt::observe(ReceiptObserver::class);
