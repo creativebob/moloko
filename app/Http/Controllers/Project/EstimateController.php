@@ -38,7 +38,7 @@ class EstimateController extends Controller
         $user = \Auth::user();
 //        dd($user);
 
-        $estimates = Estimate::with('items')
+        $estimates = Estimate::with('goods_items')
             ->whereHas('lead', function ($q) use ($user) {
                 $q->where('user_id', $user->id);
             })

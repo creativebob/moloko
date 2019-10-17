@@ -16,9 +16,7 @@ trait EstimateControllerTrait
             'lead_id' => $lead->id,
             'company_id' => $lead->company->id,
         ], [
-            'author_id' => 1,
             'number' => $lead->case_number,
-            'date' => $lead->created_at,
         ]);
 
         $prices_goods_ids = array_keys($cart['prices']);
@@ -28,7 +26,7 @@ trait EstimateControllerTrait
         $data = [];
         foreach ($prices_goods as $price_goods) {
             $data[] = new EstimatesGoodsItem([
-                'product_id' => $price_goods->goods->id,
+                'goods_id' => $price_goods->goods->id,
 
                 'price_id' => $price_goods->id,
 
