@@ -37,7 +37,7 @@ class Estimate extends Model
         'amount',
 
     ];
-    
+
     // Лид
     public function lead()
     {

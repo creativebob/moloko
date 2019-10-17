@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Traits;
 
 use App\Models\Project\Estimate;
 use App\PricesGoods;
-use App\EstimatesGoodsItem;
+use App\Models\Project\EstimatesGoodsItem;
 
 trait EstimateControllerTrait
 {
