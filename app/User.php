@@ -127,6 +127,12 @@ class User extends Authenticatable
         $value = $this->second_name . ' ' . $this->first_name;
         return $value;
     }
+	
+	public function getStafferFilialIdAttribute() {
+		$access = session('access');
+		$filial_id = $access['user_info']['filial_id'];
+		return $filial_id;
+	}
 
     // public function getPhoneAttribute($value) {
 

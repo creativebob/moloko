@@ -13,21 +13,21 @@ class CostObserver
     public function creating(Cost $cost)
     {
         $this->store($cost);
+	    $this->setCostHistory($cost);
     }
 
     public function updating(Cost $cost)
     {
         $this->update($cost);
+        $cost->history()->latest()->update([
+        	'end_date' => now()
+        ]);
+	    $this->setCostHistory($cost);
     }
 
     public function deleting(Cost $cost)
     {
         $this->destroy($cost);
-    }
-
-    public function saved(Cost $cost)
-    {
-        $this->setCostHistory($cost);
     }
 
     private function setCostHistory($cost)

@@ -119,6 +119,7 @@ class EstimateController extends Controller
         $estimate = Estimate::create([
             'lead_id' => $lead->id,
             'client_id' => $lead->client_id,
+	        'filial_id' => $lead->filial_id,
         ]);
         // dd($estimate);
 

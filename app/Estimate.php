@@ -54,6 +54,7 @@ class Estimate extends Model
     protected $fillable = [
         'lead_id',
         'client_id',
+	    'filial_id',
 
         'company_id',
         

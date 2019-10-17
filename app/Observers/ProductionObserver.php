@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Production;
 use App\Observers\Traits\Commonable;
+use App\Stock;
 
 class ProductionObserver
 {
@@ -17,7 +18,7 @@ class ProductionObserver
         $production->draft = true;
 
         $user = request()->user();
-        $production->filial_id = $user->staff->first()->filial_id;
+	    $production->filial_id = $user->stafferFilialId;
         
 	    $production->manufacturer_id = $user->company->we_manufacturer->id;
     }
@@ -25,6 +26,9 @@ class ProductionObserver
     public function updating(Production $production)
     {
         $this->update($production);
+	
+	    $stock = Stock::findOrFail($production->stock_id);
+	    $production->filial_id = $stock->filial_id;
     }
 
     public function deleting(Production $production)

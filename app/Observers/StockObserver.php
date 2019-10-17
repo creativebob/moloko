@@ -14,6 +14,7 @@ class StockObserver
     public function creating(Stock $stock)
     {
         $this->store($stock);
+	    $stock->filial_id = \Auth::user()->stafferFilialId;
     }
 
     public function updating(Stock $stock)

@@ -622,9 +622,9 @@
             @endcan
         </div>
 
-    <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-        {{ Form::submit('Продать', ['class' => 'button', 'id' => 'submit-saling']) }}
-    </div>
+{{--    <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">--}}
+{{--        {{ Form::submit('Продать', ['class' => 'button', 'id' => 'submit-saling']) }}--}}
+{{--    </div>--}}
     </div>
 
     {{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}
