@@ -22,7 +22,8 @@ class CreateLeadsTable extends Migration
             $table->string('name', 80)->nullable()->index()->comment('Имя лида');
             $table->text('description')->nullable()->comment('Описание для лида');
 
-            $table->integer('badget')->nullable()->unsigned()->comment('Предполагаемая сумма сделки');
+            $table->decimal('badget', 12, 2)->default(0)->comment('Предполагаемая сумма сделки');
+            $table->decimal('payment', 12, 4)->default(0)->comment('Оплата по лиду');
 
             $table->string('company_name', 80)->nullable()->index()->comment('Имя компании лида');
 

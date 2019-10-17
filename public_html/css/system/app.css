@@ -12584,3 +12584,11 @@ em.raw-portion-item {
   max-width: 30px;
   max-height: 30px;
 }
+
+.text-red {
+  color: #f33;
+}
+
+.text-green {
+  color: #1ac11a;
+}

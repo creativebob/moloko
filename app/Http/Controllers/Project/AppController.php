@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Project;
 
 use App\CatalogsGoods;
-use App\Http\Controllers\Traits\EstimateControllerTrait;
 use Carbon\Carbon;
 use Telegram;
 use App\CatalogsGoodsItem;
@@ -14,6 +13,7 @@ use App\PricesGoods;
 use App\Site;
 use App\User;
 use Illuminate\Http\Request;
+use App\Http\Requests\Project\UserUpdateRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cookie;
 
@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Auth;
 // Подрубаем трейт записи и обновления
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Http\Controllers\Traits\LeadControllerTrait;
+use App\Http\Controllers\Traits\EstimateControllerTrait;
 
 class AppController extends Controller
 {
@@ -365,12 +366,10 @@ class AppController extends Controller
     // Авторизация пользоваеля сайта через телефон и код СМС
     public function site_user_login(Request $request)
     {
-
         $access_code = $request->access_code;
         $main_phone = $request->main_phone;
 
         // Получаем пользователя, который чужой
-
         $user = check_user_by_phones($main_phone);
 
         if($user != null){
@@ -378,25 +377,82 @@ class AppController extends Controller
             if(($user->user_type == false) && ($user->access_code == $access_code) && ($user->access_block == false)){
 
                 Auth::loginUsingId($user->id);
-                return redirect('/estimates');
+                return redirect('/cabinet');
 
             } else {
 
-                dd('Досуп закрыт');
+                abort(403, 'Не верный код');
             }
 
         } else {
 
             dd('Мы не в курсе кто вы такие!');
         }
+    }
 
+    // Запрос на получение СМС кода на указанный телефон
+    public function get_sms_code(Request $request)
+    {
+        $phone = cleanPhone($request->phone);
 
+        $site = $this->site;
+        $company = $site->company;
+
+        // Смотрим, есть ли пользователь с таким номером телефона в базе
+        $user = check_user_by_phones($phone);
+
+        // Если пользователь не найден - то создаем
+        if($user == null){
+            $user = $this->createUserByPhone($phone, null, $company);
+        }
+
+        // Генерируем код доступа и записываем для пользователя
+        $access_code = rand(1000, 9999);
+        $user->access_code = $access_code;
+        $user->save();
+
+        if(session('time_get_access_code')){
+
+            $second_blocking = 180 - session('time_get_access_code')->diffInSeconds(now());
+
+            if($second_blocking < 1){
+
+                // Пишем в сессию время отправки СМС
+                session(['time_get_access_code' => now()]);
+                $msg = 'Код для входа: ' . $access_code;
+                sendSms($phone, $msg);
+            };
+
+        } else {
+
+                // Пишем в сессию время отправки СМС
+                session(['time_get_access_code' => now()]);
+                $msg = 'Код для входа: ' . $access_code;
+                sendSms($phone, $msg);
+
+        }
+
+        return 'ок';
     }
 
     public function logout_siteuser(Request $request)
     {
         Auth::logout();
         return redirect()->route('project.start');
+    }
+
+    // Сохранение данных пользователя
+    public function update_profile(UserUpdateRequest $request)
+    {
+
+        //Получаем авторизованного пользователя
+        $user = $request->user();
+
+        $user->first_name = $request->first_name;
+        $user->second_name = $request->second_name;
+        $user->email = $request->email;
+        $user->save();
+
     }
 
     public function add_to_cart(Request $request)

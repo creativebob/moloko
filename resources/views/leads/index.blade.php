@@ -59,6 +59,7 @@
           <th class="td-phone">Телефон</th>
           <th class="td-choice">Спрос</th>
           <th class="td-badget">Сумма сделки</th>
+          <th class="td-payment">Оплата</th>
           <th class="td-stage">Этап</th>
           <th class="td-challenge">Задачи</th>
           <th class="td-delivery">Доставка</th>
@@ -131,6 +132,12 @@
           </td>
 
           <td class="td-badget">{{ num_format($lead->badget, 0) }}</td>
+          <td class="td-payment" title="Задолженость: {{ num_format($lead->badget - $lead->payment, 0) }}"><span class="
+            @if($lead->payment < $lead->badget) text-red @endif
+            @if($lead->payment == $lead->badget) text-green @endif
+
+            ">{{ num_format($lead->payment, 0) }}</span></td>
+
           <td class="td-stage">{{ $lead->stage->name }}</td>
           <td class="td-challenge">
                     {{-- $lead->first_challenge->challenge_type->name or '' }}<br>

@@ -88,19 +88,24 @@
 
                         <div class="grid-x grid-margin-x">
 
-                            <div class="small-4 cell">
+                            <div class="small-3 cell">
                                 <label>Предварительная стоимость:
                                     @include('includes.inputs.digit', ['name' => 'badget', 'value' => $lead->badget, 'decimal_place'=>2])
                                 </label>
                             </div>
-                            <div class="small-4 cell">
+                            <div class="small-3 cell">
                                 <label>Дата доставки:
                                     @include('includes.inputs.date', ['name' => 'delivery_date', 'value' => isset($lead->delivered_at) ? $lead->delivered_at->format('d.m.Y') : null])
                                 </label>
                             </div>
-                            <div class="small-4 cell">
+                            <div class="small-3 cell">
                                 <label>Время доставки:
                                     @include('includes.inputs.time', ['name' => 'delivery_time', 'placeholder' => true, 'value' => isset($lead->delivered_at) ? $lead->delivered_at->format('H:i') : null])
+                                </label>
+                            </div>
+                            <div class="small-3 cell">
+                                <label>Факт оплаты:
+                                    @include('includes.inputs.digit', ['name' => 'payment', 'value' => $lead->payment, 'decimal_place'=>2])
                                 </label>
                             </div>
 
