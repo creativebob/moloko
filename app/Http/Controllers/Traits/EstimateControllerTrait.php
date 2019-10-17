@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Traits;
 
-use App\Estimate;
+use App\Models\Project\Estimate;
 use App\PricesGoods;
 use App\EstimatesGoodsItem;
 
@@ -16,6 +16,7 @@ trait EstimateControllerTrait
             'lead_id' => $lead->id,
             'filial_id' => $lead->filial_id,
             'company_id' => $lead->company->id,
+            'date' => now()->format('Y-m-d')
         ], [
             'number' => $lead->case_number,
             'author_id' => $lead->author_id,
