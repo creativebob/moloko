@@ -23,7 +23,7 @@ class CreateEstimatesTable extends Migration
             $table->foreign('client_id')->references('id')->on('users');
 	
 	        $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id филиала');
-	        $table->foreign('cfilial_id')->references('id')->on('departments');
+	        $table->foreign('filial_id')->references('id')->on('departments');
 
             $table->text('description')->nullable()->comment('Описание');
 
