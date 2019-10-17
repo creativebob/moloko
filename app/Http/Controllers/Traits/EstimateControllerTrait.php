@@ -18,6 +18,8 @@ trait EstimateControllerTrait
             'company_id' => $lead->company->id,
         ], [
             'number' => $lead->case_number,
+            'author_id' => $lead->author_id,
+            'company_id' => $lead->company_id,
         ]);
 
         $prices_goods_ids = array_keys($cart['prices']);
