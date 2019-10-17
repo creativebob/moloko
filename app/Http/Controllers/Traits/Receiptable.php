@@ -6,6 +6,7 @@ use App\Cost;
 use App\Receipt;
 use App\Entity;
 
+use App\Stock;
 use Illuminate\Support\Facades\Log;
 
 trait Receiptable
@@ -36,29 +37,35 @@ trait Receiptable
         Log::channel('documents')
             ->info('В документе выбран stock с id: ' . $item->document->stock_id
             );
+        
+	    // Акутальный филиал
+	    $stock_general = Stock::findOrFail($item->document->stock_id);
+	    $filial_id = $stock_general->filial_id;
 
         // Склад
-        if ($item->cmv->stocks->firstWhere('stock_id', $item->document->stock_id)) {
-            $stock = $item->cmv->stocks->firstWhere('stock_id', $item->document->stock_id);
+        if ($item->cmv->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->first()) {
+            $stock = $item->cmv->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->first();
 
             Log::channel('documents')
                 ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
 
         } else {
+        	
             $data_stock = [
                 'cmv_id' => $item->cmv_id,
                 'manufacturer_id' => $item->cmv->article->manufacturer_id,
-                'stock_id' => $item->document->stock_id,
-                'filial_id' => $item->document->filial_id,
+                'stock_id' => $stock_general->id,
+                'filial_id' => $stock_general->filial_id,
             ];
-            $stock = (new $model_stock())->create($data_stock);
+            $stock = $model_stock::create($data_stock);
 
             Log::channel('documents')
                 ->info('Создан склад ' . $stock->getTable() . ' c id: ' . $stock->id);
 
         }
-
-        $stock_count = $stock->count;
+        
+//        $stock_count = $stock->count;
+        $stocks_count = $model_stock::where('filial_id', $filial_id)->sum('count');
 
         Log::channel('documents')
             ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
@@ -104,9 +111,9 @@ trait Receiptable
 
             $cost_average = $cost_item->average;
             if ($stock->count > 0) {
-                $average = (($stock_count * $cost_average) + ($count * $cost)) / $stock->count;
+                $average = (($stocks_count * $cost_average) + ($count * $cost)) / $stocks_count + $count;
             } else {
-                $average = (($stock_count * $cost_average) + ($count * $cost));
+                $average = (($stocks_count * $cost_average) + ($count * $cost));
             };
 
             if (is_null($cost_item->min) || is_null($cost_item->max)) {
@@ -139,17 +146,18 @@ trait Receiptable
                 'min' => $cost,
                 'max' => $cost,
                 'average' => $cost,
+	            'filial_id' => $filial_id,
             ];
-//						dd($data_cost);
+//			dd($data_cost);
+	        
             $cost_item = Cost::create($data_cost);
-//						dd($cost_item);
+//			dd($cost_item);
 
             Log::channel('documents')
                 ->info('Создана себестоимость c id: ' . $cost_item->id);
             Log::channel('documents')
                 ->info('Значения min: ' . $cost_item->min . ', max: ' . $cost_item->max . ', average: ' . $cost_item->average);
-
-
+            
         }
 
 

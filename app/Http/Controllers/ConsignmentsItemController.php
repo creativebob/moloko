@@ -66,9 +66,7 @@ class ConsignmentsItemController extends Controller
 
     public function destroy($id)
     {
-        $consignments_item = ConsignmentsItem::findOrFail($id);
-        $result = $consignments_item->delete();
-
+        $result = ConsignmentsItem::destroy($id);
         return response()->json($result);
     }
 }

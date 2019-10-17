@@ -107,9 +107,7 @@ class ProductionsItemController extends Controller
      */
     public function destroy($id)
     {
-        $productions_item = ProductionsItem::findOrFail($id);
-        $result = $productions_item->delete();
-
+        $result = ProductionsItem::destroy($id);
         return response()->json($result);
     }
 }

@@ -636,9 +636,10 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->mi
 Route::resource('estimates', 'EstimateController')->middleware('auth');
 
 // Отображение на сайте
-Route::any('/create_estimates_item', 'EstimateController@ajax_create')->middleware('auth');
-Route::any('/update_estimates_item', 'EstimateController@ajax_update')->middleware('auth');
-Route::delete('/destroy_estimates_item', 'EstimateController@ajax_delete')->middleware('auth');
+Route::any('/create_estimate', 'EstimateController@ajax_create');
+
+Route::resource('/estimates_goods_items', 'EstimatesGoodsItemController');
+Route::resource('/estimates_services_items', 'EstimatesServicesItemController');
 
 Route::any('/estimate_items_edit/{id}', 'EstimatesItemController@ajax_edit')->middleware('auth');
 

@@ -4,7 +4,7 @@ namespace App\Observers;
 
 use App\Production;
 use App\Observers\Traits\Commonable;
-use Carbon\Carbon;
+use App\Stock;
 
 class ProductionObserver
 {
@@ -14,11 +14,11 @@ class ProductionObserver
     public function creating(Production $production)
     {
         $this->store($production);
-        $production->receipt_date = Carbon::now()->format('d.m.Y');
+        $production->receipt_date = now()->format('d.m.Y');
         $production->draft = true;
 
         $user = request()->user();
-        $production->filial_id = $user->staff->first()->filial_id;
+	    $production->filial_id = $user->stafferFilialId;
         
 	    $production->manufacturer_id = $user->company->we_manufacturer->id;
     }
@@ -26,6 +26,9 @@ class ProductionObserver
     public function updating(Production $production)
     {
         $this->update($production);
+	
+	    $stock = Stock::findOrFail($production->stock_id);
+	    $production->filial_id = $stock->filial_id;
     }
 
     public function deleting(Production $production)

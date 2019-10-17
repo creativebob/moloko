@@ -1,7 +1,7 @@
 <li class="medium-as-last item" id="staff-{{ $staffer->id }}" data-name="{{ $staffer->position->name }}">
 
     <div class="medium-as-last-link">
-        <span>{{ $staffer->position->name }} ( <a href="{{route('staff.edit', $staffer->id)}}" class="link-recursion">@isset($staffer->user_id) $staffer->user->name @else 'Вакансия' @endisset</a> )</span>
+        <span>{{ $staffer->position->name }} ( <a href="{{route('staff.edit', $staffer->id)}}" class="link-recursion">@isset($staffer->user_id) {{ $staffer->user->name }} @else Вакансия @endisset</a> )</span>
         @moderation ($staffer)
         <span class="no-moderation">Не отмодерированная запись!</span>
         @endmoderation

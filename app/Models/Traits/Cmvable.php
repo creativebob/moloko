@@ -43,8 +43,13 @@ trait Cmvable
     // Себестоимость
     public function cost()
     {
-        return $this->morphOne(Cost::class, 'cmv');
+        return $this->morphOne(Cost::class, 'cmv')->where('filial_id', \Auth::user()->stafferFilialId);
     }
+	
+//	public function costs()
+//	{
+//		return $this->morphMany(Cost::class, 'cmv');
+//	}
 
     // Геттер: Функция получения веса в кг. учитывая все надстройки и переопределения в еденицах измерения
     public function getWeightAttribute()

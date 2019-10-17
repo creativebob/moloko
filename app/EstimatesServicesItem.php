@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Carbon\Carbon;
+use App\Models\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -23,13 +23,14 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
 
-class Consignment extends Model
+class EstimatesServicesItem extends Model
 {
-
     // Включаем кеш
-//    use Cachable;
+    use Cachable;
 
-    use SoftDeletes;
+    // use SoftDeletes;
+
+    use Commonable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -44,62 +45,51 @@ class Consignment extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    protected $dates = ['deleted_at', 'receipt_date'];
-
+    protected $dates = ['deleted_at'];
     protected $fillable = [
-        'supplier_id',
-        'name',
-        'description',
-        'amount',
-        'receipt_date',
-        'number',
-        'stock_id',
+        'estimate_id',
+        'price_id',
+        'service_id',
+
+        'company_id',
         'author_id',
-        'draft',
-	    'is_posted',
+
+        'count',
+        'price',
+
+        'amount',
 
         'display',
         'system',
         'moderation'
     ];
 
-    public function setReceiptDateAttribute($value)
+    // Смета
+    public function estimate()
     {
-        $this->attributes['receipt_date'] = Carbon::createFromFormat('d.m.Y', $value);
+        return $this->belongsTo(Estimate::class);
     }
 
-    // Компания
-    public function company()
+    public function document()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Estimate::class, 'estimate_id');
     }
 
-    // public function filials()
-    // {
-    //     return $this->hasMany('App\Department')->where('filial_status', 1);
-    // }
-
-    // Автор
-    public function author()
+    // Прайс
+    public function price()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(PricesService::class);
     }
 
-    // Поставщик
-    public function supplier()
+    // Услуга
+    public function service()
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Service::class);
     }
 
-    // Склад
-    public function stock()
+    public function product()
     {
-        return $this->belongsTo(Stock::class);
+        return $this->belongsTo(Service::class, 'service_id');
     }
 
-    // Позиции в смете
-    public function items()
-    {
-        return $this->hasMany(ConsignmentsItem::class);
-    }
 }

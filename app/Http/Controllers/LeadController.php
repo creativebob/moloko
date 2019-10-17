@@ -178,7 +178,12 @@ class LeadController extends Controller
             'source',
             'site',
             'claims',
-            'estimate.items.product',
+            'estimate' => function ($q) {
+            $q->with([
+                    'goods_items.product',
+                    'services_items.product',
+                ]);
+            },
             'lead_method',
             'choice' => function ($query) {
                 $query->orderBy('created_at', 'asc');
@@ -282,7 +287,6 @@ class LeadController extends Controller
 
         $сatalog_goods = $catalogs_goods->first();
 //         dd($atalog_goods);
-
 
         return view('leads.edit', compact('lead', 'page_info', 'choices', 'catalog_services', 'сatalog_goods'));
     }
@@ -548,9 +552,9 @@ class LeadController extends Controller
         $lead->load([
             'estimate' => function($q) {
                 $q->with([
-                    'items' => function ($q) {
+                    'goods_items' => function ($q) {
                         $q->with([
-                            'price_product',
+                            'price',
                             'product',
                             'document'
                         ]);
@@ -562,19 +566,17 @@ class LeadController extends Controller
 
         $estimate = $lead->estimate;
 
-        if ($estimate->items->isNotEmpty()) {
+        if ($estimate->goods_items->isNotEmpty()) {
 //            dd('Ща буит');
 
             Log::channel('documents')
                 ->info('========================================== НАЧАЛО ПРОДАЖИ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
-            foreach ($estimate->items as $item) {
-                if ($item->product->getTable() == 'goods') {
+            foreach ($estimate->goods_items as $item) {
                     $this->off($item);
-                }
             }
 
-            $amount = $estimate->items->sum('sum');
+            $amount = $estimate->goods_items->sum('amount');
 
             $estimate->update([
                 'is_saled' => true,

@@ -129,7 +129,7 @@ class StartTableSeeder extends Seeder
 
         DB::table('role_user')->insert([
             [
-                'role_id' => 1,
+                'role_id' => 2,
                 'department_id' => 1,
                 'position_id' => 1,
                 'user_id' => User::where('login', 'testovik')->first(['id'])->id,

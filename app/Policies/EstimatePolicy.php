@@ -50,7 +50,11 @@ class EstimatePolicy
             return false;
         }
 
-        if ($model->items->count() > 0) {
+        if ($model->goods_items->count() > 0) {
+            return false;
+        }
+
+        if ($model->sercvices_items->count() > 0) {
             return false;
         }
 

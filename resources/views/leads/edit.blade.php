@@ -198,7 +198,6 @@ if($lead->manager_id == 1){
 		$(this).closest('form').attr('action', '/admin/leads/' + id + '/saling');
 	})
 
-
 </script>
 
 @include('includes.scripts.notes', ['id' => $lead->id, 'model' => 'Lead'])
