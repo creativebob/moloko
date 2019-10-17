@@ -41,12 +41,12 @@ class Estimate extends Model
     // Лид
     public function lead()
     {
-        return $this->belongsTo(Lead::class);
+        return $this->belongsTo('App\Lead');
     }
 
     // Товары
     public function goods_items()
     {
-        return $this->hasMany(EstimatesGoodsItem::class);
+        return $this->hasMany('App\EstimatesGoodsItem');
     }
 }
