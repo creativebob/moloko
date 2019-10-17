@@ -8,10 +8,10 @@ trait Commonable
 	public function store($item)
     {
         // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        $answer = operator_right($item->getTable(), false, getmethod(__FUNCTION__));
-        if($answer['automoderate'] == false){
-            $item->moderation = true;
-        }
+//        $answer = operator_right($item->getTable(), false, getmethod(__FUNCTION__));
+//        if($answer['automoderate'] == false){
+//            $item->moderation = true;
+//        }
 
         $request = request();
 
