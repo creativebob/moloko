@@ -14,6 +14,7 @@ trait EstimateControllerTrait
         // Находим или создаем заказ для лида
         $estimate = Estimate::firstOrCreate([
             'lead_id' => $lead->id,
+            'filial_id' => $lead->filial_id,
             'company_id' => $lead->company->id,
         ], [
             'number' => $lead->case_number,

@@ -16,7 +16,7 @@ class EstimateObserver
         $this->store($estimate);
         $estimate->date = now()->format('d.m.Y');
 	
-	    $estimate->filial_id = \Auth::user()->stafferFilialId;
+//	    $estimate->filial_id = \Auth::user()->stafferFilialId;
     }
 
     public function updating(Estimate $estimate)
