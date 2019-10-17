@@ -70,7 +70,7 @@
         event.preventDefault();
 
         let object = $(this);
-        
+
         if (estimate_id === false) {
             $.post("/admin/create_estimate", {
                 lead_id: lead_id,
