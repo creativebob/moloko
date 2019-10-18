@@ -12481,12 +12481,12 @@ module.exports = Cancel;
  */
 
 try {
-    window.$ = window.jQuery = __webpack_require__(1);
+  window.$ = window.jQuery = __webpack_require__(1);
 
-    __webpack_require__(4);
-    __webpack_require__(16);
+  __webpack_require__(4);
+  __webpack_require__(16);
 
-    __webpack_require__(20); // 'foundation.min' can also be used if you like
+  __webpack_require__(20); // 'foundation.min' can also be used if you like
 } catch (e) {}
 
 /**
@@ -12505,13 +12505,13 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  * a simple convenience so we don't have to attach every token manually.
  */
 
-var token = document.head.querySelector('meta[name="csrf-token"]');
-
-if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-}
+// let token = document.head.querySelector('meta[name="csrf-token"]');
+//
+// if (token) {
+//     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+// } else {
+//     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+// }
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -12527,28 +12527,6 @@ if (token) {
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
-
-// Подключаем foundation
-$(document).foundation();
-
-// Csrf для axios
-window.axios = __webpack_require__(8);
-
-window.axios.defaults.headers.common = {
-    'X-Requested-With': 'XMLHttpRequest',
-    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-};
-
-// Ajax ошибка
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    error: function error(date) {
-        // alert(date);
-        alert('К сожалению, произошла ошибка. Попробуйте перезагрузить страницу!');
-    }
-});
 
 /***/ }),
 /* 16 */
@@ -40768,10 +40746,29 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 /* 43 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 // Подключаем foundation
 $(document).foundation();
+
+// Csrf для axios
+window.axios = __webpack_require__(8);
+
+window.axios.defaults.headers.common = {
+    'X-Requested-With': 'XMLHttpRequest',
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+};
+
+// Ajax ошибка
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    error: function error(date) {
+        // alert(date);
+        alert('К сожалению, произошла ошибка. Попробуйте перезагрузить страницу!');
+    }
+});
 
 /***/ }),
 /* 44 */
@@ -43129,7 +43126,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'consignments-item-component',
+    name: 'productions-item-component',
     props: {
         item: Object,
         index: Number,
@@ -43181,6 +43178,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.delete('/admin/productions_items/' + this.item.id).then(function (response) {
                 if (response.data === true) {
+                    console.log('Удаляем - ' + _this2.item.id);
                     _this2.$emit('remove');
                 }
             }).catch(function (error) {

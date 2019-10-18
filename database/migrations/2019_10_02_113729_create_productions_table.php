@@ -34,6 +34,7 @@ class CreateProductionsTable extends Migration
             $table->bigInteger('stock_id')->nullable()->unsigned()->comment('ID склада по умолчанию');
             $table->foreign('stock_id')->references('id')->on('stocks');
 
+            $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
             $table->boolean('draft')->default(1)->comment('Черновик');
             $table->boolean('is_produced')->default(0)->comment('Произведено');
 
