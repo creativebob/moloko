@@ -245,7 +245,10 @@ class LeadController extends Controller
             'items' => function ($q) use ($filial_id) {
             $q->with([
                 'prices' => function ($q) use ($filial_id) {
-                    $q->where('filial_id', $filial_id);
+                    $q->with([
+                        'product.process.photo'
+                    ])
+                    ->where('filial_id', $filial_id);
                 },
                 'childs'
             ]);
@@ -270,7 +273,10 @@ class LeadController extends Controller
             'items' => function ($q) use ($filial_id) {
                 $q->with([
                     'prices' => function ($q) use ($filial_id) {
-                        $q->where('filial_id', $filial_id);
+                        $q->with([
+                            'product.article.photo'
+                        ])
+                        ->where('filial_id', $filial_id);
                     },
                     'childs'
                 ]);

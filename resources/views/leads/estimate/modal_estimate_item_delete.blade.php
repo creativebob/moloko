@@ -46,10 +46,12 @@ $(document).on('click', '.button-delete-estimates_item', function(event) {
         url: '/admin/' + entity + '/' + id,
         type: 'DELETE',
         success: function (data) {
-            $('#' + entity + '-' + id).remove();
-            $('#delete-estimates_item').foundation('close');
-            $('.button-delete-estimates_item').removeAttr('id');
-            buttons.prop('disabled', false);
+            if (data > 0) {
+                $('#' + entity + '-' + id).remove();
+                $('#delete-estimates_item').foundation('close');
+                $('.button-delete-estimates_item').removeAttr('id');
+                buttons.prop('disabled', false);
+            }
         }
     });
 });
