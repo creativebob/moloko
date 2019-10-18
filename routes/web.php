@@ -622,7 +622,7 @@ Route::post('/open_change_lead_type', 'LeadController@ajax_open_change_lead_type
 Route::post('/change_lead_type', 'LeadController@ajax_change_lead_type')->middleware('auth');
 
 // Освобождаем лида
-Route::post('/lead_free', 'LeadController@ajax_lead_free')->middleware('auth');
+Route::any('/lead_free', 'LeadController@ajax_lead_free')->middleware('auth');
 
 // Добавление комментария
 Route::post('/leads_add_note', 'LeadController@ajax_add_note')->middleware('auth');

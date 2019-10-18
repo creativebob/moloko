@@ -688,12 +688,12 @@ class LeadController extends Controller
         } else {
             $phrase_sex = 'освободила';
         }
-        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
+        $note = add_note($lead, $user->staff->first()->position->name . ': ' . $user->first_name . ' ' . $user->second_name . ' ' . $phrase_sex . ' лида.');
 
         $lead->manager_id = 1;
         $lead->save();
 
-        return response()->json(isset($lead) ?? 'Ошибка при освобождении лида!');
+        return response()->json($lead);
     }
 
     // Назначение лида
@@ -796,7 +796,6 @@ class LeadController extends Controller
     public function ajax_distribute(Request $request)
     {
 
-        dd('Мы тут');
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
         $lead = Lead::findOrFail($request->lead_id);
@@ -879,7 +878,7 @@ class LeadController extends Controller
             'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
         ];
 
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        return response()->json($result);
     }
 
     public function ajax_lead_appointed(Request $request)
