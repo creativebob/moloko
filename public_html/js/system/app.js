@@ -42366,7 +42366,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             axios.delete('/admin/consignments_items/' + this.item.id).then(function (response) {
-                if (response.data === true) {
+                if (response.data > 0) {
                     _this2.$emit('remove');
                 }
             }).catch(function (error) {
@@ -43177,7 +43177,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             axios.delete('/admin/productions_items/' + this.item.id).then(function (response) {
-                if (response.data === true) {
+                if (response.data > 0) {
                     console.log('Удаляем - ' + _this2.item.id);
                     _this2.$emit('remove');
                 }

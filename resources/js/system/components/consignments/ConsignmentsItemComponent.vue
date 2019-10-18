@@ -121,7 +121,7 @@
                 axios
                     .delete('/admin/consignments_items/' + this.item.id)
                     .then(response => {
-                        if(response.data === true) {
+                        if(response.data > 0) {
                             this.$emit('remove');
                         }
                     })
