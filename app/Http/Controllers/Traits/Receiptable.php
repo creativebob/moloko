@@ -65,7 +65,11 @@ trait Receiptable
         }
         
 //        $stock_count = $stock->count;
-        $stocks_count = $model_stock::where('filial_id', $filial_id)->sum('count');
+        $stocks_count = $model_stock::where([
+            'filial_id' => $filial_id,
+            'cmv_id' => $item->cmv_id
+        ])
+        ->sum('count');
 
         Log::channel('documents')
             ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
@@ -111,10 +115,12 @@ trait Receiptable
 
             $cost_average = $cost_item->average;
             if ($stock->count > 0) {
-                $average = (($stocks_count * $cost_average) + ($count * $cost)) / $stocks_count + $count;
+                $average = (($stocks_count * $cost_average) + ($count * $cost)) / ($stocks_count + $count);
             } else {
                 $average = (($stocks_count * $cost_average) + ($count * $cost));
             };
+
+
 
             if (is_null($cost_item->min) || is_null($cost_item->max)) {
                 $data_cost = [

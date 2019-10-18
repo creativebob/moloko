@@ -379,7 +379,7 @@ class ProductionController extends Controller
 						        if ($total < 0) {
 							        $errors['msg'][] = 'Для позиции ' . $number . ' не хватает ' . $total . ' ' . $composition->article->unit->abbreviation .  ' "' . $composition->article->name . '" для производства';
 						        } else {
-							        $result[$item->id][$composition->id] = [
+							        $result[$item->id][] = [
 								        'entity' => $composition->getTable(),
 								        'id' => $composition->id,
 								        'model' => $model_composition,
@@ -415,6 +415,9 @@ class ProductionController extends Controller
 //			dd($grouped_items);
 
             foreach ($production->items as $item) {
+
+                Log::channel('documents')
+                    ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===');
             	
             	$compositions = $result[$item->id];
 
@@ -422,9 +425,6 @@ class ProductionController extends Controller
             	$amount = 0;
 
             	foreach ($compositions as $composition) {
-
-                    Log::channel('documents')
-                        ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
                     Log::channel('documents')
                         ->info('=== СПИСАНИЕ ' . $composition['entity'] . ' ' . $composition['id'] . ' ===');
@@ -460,10 +460,8 @@ class ProductionController extends Controller
                         'stock_id' => $item->document->stock_id,
                     ]);
 
-
                     $cost += $composition['cost'];
                     $amount += $composition['amount'];
-
 
                     Log::channel('documents')
                         ->info('Записали списание с id: ' . $off->id . ', count: ' . $off->count . ', cost: ' . $off->cost . ', amount: ' . $off->amount);
