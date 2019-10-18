@@ -39,7 +39,7 @@ const app = new Vue({
 });
 
 // Основные настройки
-// require('../common/main');
+require('../common/main');
 
 // Наши скрипты
 require('./partials/main');
