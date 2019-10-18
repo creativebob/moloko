@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 90);
+/******/ 	return __webpack_require__(__webpack_require__.s = 89);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -11878,6 +11878,12 @@ module.exports = g;
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
+module.exports = __webpack_require__(21);
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;( function( factory ) {
 	if ( true ) {
 
@@ -11897,12 +11903,6 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 return $.ui.ie = !!/msie [\w.]+/.exec( navigator.userAgent.toLowerCase() );
 } ) );
 
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(21);
 
 /***/ }),
 /* 9 */
@@ -12387,7 +12387,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(8);
+window.axios = __webpack_require__(7);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -12420,6 +12420,28 @@ if (token) {
 //     key: 'your-pusher-key'
 // });
 
+// Подключаем foundation
+$(document).foundation();
+
+// Csrf для axios
+window.axios = __webpack_require__(7);
+
+window.axios.defaults.headers.common = {
+    'X-Requested-With': 'XMLHttpRequest',
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+};
+
+// Ajax ошибка
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    error: function error(date) {
+        // alert(date);
+        alert('К сожалению, произошла ошибка. Попробуйте перезагрузить страницу!');
+    }
+});
+
 /***/ }),
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -12448,7 +12470,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 			__webpack_require__(1),
 			__webpack_require__(17),
 			__webpack_require__(18),
-			__webpack_require__(7),
+			__webpack_require__(8),
 			__webpack_require__(19),
 			__webpack_require__(2),
 			__webpack_require__(4)
@@ -14007,7 +14029,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 		// AMD. Register as an anonymous module.
 		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [
 			__webpack_require__(1),
-			__webpack_require__(7),
+			__webpack_require__(8),
 			__webpack_require__(2),
 			__webpack_require__(4)
 		], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
@@ -40637,32 +40659,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(10)))
 
 /***/ }),
-/* 43 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// Подключаем foundation
-$(document).foundation();
-
-// Csrf для axios
-window.axios = __webpack_require__(8);
-
-window.axios.defaults.headers.common = {
-    'X-Requested-With': 'XMLHttpRequest',
-    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-};
-
-// Ajax ошибка
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    error: function error(date) {
-        // alert(date);
-        alert('К сожалению, произошла ошибка. Попробуйте перезагрузить страницу!');
-    }
-});
-
-/***/ }),
+/* 43 */,
 /* 44 */,
 /* 45 */,
 /* 46 */,
@@ -40708,15 +40705,14 @@ $.ajaxSetup({
 /* 86 */,
 /* 87 */,
 /* 88 */,
-/* 89 */,
-/* 90 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(91);
+module.exports = __webpack_require__(90);
 
 
 /***/ }),
-/* 91 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -40752,7 +40748,33 @@ var app = new Vue({
 });
 
 // Основные настройки
-__webpack_require__(43);
+__webpack_require__(91);
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Подключаем foundation
+$(document).foundation();
+
+// Csrf для axios
+window.axios = __webpack_require__(7);
+
+window.axios.defaults.headers.common = {
+    'X-Requested-With': 'XMLHttpRequest',
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+};
+
+// Ajax ошибка
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    error: function error(date) {
+        // alert(date);
+        alert('К сожалению, произошла ошибка. Попробуйте перезагрузить страницу!');
+    }
+});
 
 /***/ })
 /******/ ]);
