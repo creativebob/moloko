@@ -36,6 +36,7 @@ function cleanPhone($str) {
     $ptn = "/[^0-9]/";
     $rpltxt = "";
     $result = preg_replace($ptn, $rpltxt, $str);
+    $result[0] = '8';
 
     return $result;
 }

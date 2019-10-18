@@ -565,7 +565,7 @@ class AppController extends Controller
             $message = "Заказ с сайта:\r\n";
             $message .= "Имя клиента: " . $lead->name . "\r\n";
             $message .= "Тел: " . decorPhone($phone) . "\r\n";
-            $message .= "Примечание: " . $lead->description . "\r\n";
+            if($lead->description){$message .= "Примечание: " . $lead->description . "\r\n";};
     
             if ($estimate->goods_items->isNotEmpty()) {
                 $estimate->goods_items->load([
@@ -575,10 +575,10 @@ class AppController extends Controller
                 $message .= "\r\nСостав заказа:\r\n";
                 $num = 1;
                 foreach ($estimate->goods_items as $item) {
-                    $message .= $num . '. ' . $item->product->article->name . ": " . $item->count . 
-                    $item->product->article->unit->abbreviation . 
+                    $message .= $num . ' - ' . $item->product->article->name . ": " . $item->count . 
+                    ' ' . $item->product->article->unit->abbreviation . 
 
-                    "Сумма: " . num_format($item->amount, 0) . "руб. \r\n";
+                    " (" . num_format($item->amount, 0) . " руб.) \r\n";
                     $num++;
                 }
                 $message .= "\r\n";
@@ -586,10 +586,7 @@ class AppController extends Controller
     
             $message .= "Кол-во товаров: " . $count . "\r\n";
             $message .= "Сумма заказа: " . num_format($lead->badget, 0) . ' руб.' . "\r\n";
-    
-            if(isset($description)){
-                $message .= "Примечание: " . $description;
-            }
+            $message .= "Сумма со скидкой: " . num_format($lead->badget - ($lead->badget * 10 / 100), 0) . ' руб.' . "\r\n";
 
             $lead->notes()->create([
                 'company_id' => $company->id,
