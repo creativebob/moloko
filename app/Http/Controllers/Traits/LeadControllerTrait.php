@@ -300,7 +300,8 @@ trait LeadControllerTrait
         $lead->lead_method_id = 2; // Способ обращения: "звонок"" по умолчанию
         $lead->draft = null;
 
-        $lead->editor_id = 1;
+        $lead->author_id = 1;
+//        $lead->editor_id = 1;
 
         // if($request->choice_tag){
         //     $choiceFromTag = getChoiceFromTag($request->choice_tag);

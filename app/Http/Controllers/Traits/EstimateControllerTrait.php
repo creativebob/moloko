@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Traits;
 
-use App\Estimate;
+use App\Models\Project\Estimate;
 use App\PricesGoods;
-use App\EstimatesGoodsItem;
+use App\Models\Project\EstimatesGoodsItem;
 
 trait EstimateControllerTrait
 {
@@ -14,9 +14,13 @@ trait EstimateControllerTrait
         // Находим или создаем заказ для лида
         $estimate = Estimate::firstOrCreate([
             'lead_id' => $lead->id,
+            'filial_id' => $lead->filial_id,
             'company_id' => $lead->company->id,
+            'date' => now()->format('Y-m-d')
         ], [
             'number' => $lead->case_number,
+            'author_id' => $lead->author_id,
+            'company_id' => $lead->company_id,
         ]);
 
         $prices_goods_ids = array_keys($cart['prices']);

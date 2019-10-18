@@ -12481,12 +12481,12 @@ module.exports = Cancel;
  */
 
 try {
-    window.$ = window.jQuery = __webpack_require__(1);
+  window.$ = window.jQuery = __webpack_require__(1);
 
-    __webpack_require__(4);
-    __webpack_require__(16);
+  __webpack_require__(4);
+  __webpack_require__(16);
 
-    __webpack_require__(20); // 'foundation.min' can also be used if you like
+  __webpack_require__(20); // 'foundation.min' can also be used if you like
 } catch (e) {}
 
 /**
@@ -12505,13 +12505,13 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  * a simple convenience so we don't have to attach every token manually.
  */
 
-var token = document.head.querySelector('meta[name="csrf-token"]');
-
-if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
-}
+// let token = document.head.querySelector('meta[name="csrf-token"]');
+//
+// if (token) {
+//     window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+// } else {
+//     console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+// }
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -42366,7 +42366,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             axios.delete('/admin/consignments_items/' + this.item.id).then(function (response) {
-                if (response.data === true) {
+                if (response.data > 0) {
                     _this2.$emit('remove');
                 }
             }).catch(function (error) {
@@ -43126,7 +43126,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'consignments-item-component',
+    name: 'productions-item-component',
     props: {
         item: Object,
         index: Number,
@@ -43177,7 +43177,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             axios.delete('/admin/productions_items/' + this.item.id).then(function (response) {
-                if (response.data === true) {
+                if (response.data > 0) {
+                    console.log('Удаляем - ' + _this2.item.id);
                     _this2.$emit('remove');
                 }
             }).catch(function (error) {

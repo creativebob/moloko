@@ -90,7 +90,7 @@ if($lead->manager_id == 1){
 	$(document).on('click', '#lead-free', function(event) {
 		event.preventDefault();
 
-		$.post("/admin/lead_appointed_check", {manager_id: manager_id}, function(data){
+		$.get("/admin/lead_appointed_check", {manager_id: manager_id}, function(data){
 
 			if (data == 1) {
 
@@ -102,7 +102,7 @@ if($lead->manager_id == 1){
 			} else {
 
 				$.post("/admin/lead_free", {id: lead_id}, function(data){
-					if (data == true) {
+					if (data === true) {
 
 						var url = '{{ url("admin/leads") }}';
 						window.location.replace(url);
@@ -122,7 +122,7 @@ if($lead->manager_id == 1){
 		$(this).prop('disabled', true);
 
 		$.post("/admin/lead_distribute", $(this).closest('form').serialize(), function(date){
-			let url = '{{ url("admin/leads") }}/' + lead_id + '/edit';
+			let url = '{{ url("admin/leads") }}';
 			window.location.replace(url);
 		});
 	});

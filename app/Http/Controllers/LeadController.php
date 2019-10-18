@@ -245,7 +245,10 @@ class LeadController extends Controller
             'items' => function ($q) use ($filial_id) {
             $q->with([
                 'prices' => function ($q) use ($filial_id) {
-                    $q->where('filial_id', $filial_id);
+                    $q->with([
+                        'product.process.photo'
+                    ])
+                    ->where('filial_id', $filial_id);
                 },
                 'childs'
             ]);
@@ -270,7 +273,10 @@ class LeadController extends Controller
             'items' => function ($q) use ($filial_id) {
                 $q->with([
                     'prices' => function ($q) use ($filial_id) {
-                        $q->where('filial_id', $filial_id);
+                        $q->with([
+                            'product.article.photo'
+                        ])
+                        ->where('filial_id', $filial_id);
                     },
                     'childs'
                 ]);
@@ -688,18 +694,17 @@ class LeadController extends Controller
         } else {
             $phrase_sex = 'освободила';
         }
-        $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
+        $note = add_note($lead, $user->staff->first()->position->name . ': ' . $user->first_name . ' ' . $user->second_name . ' ' . $phrase_sex . ' лида.');
 
         $lead->manager_id = 1;
         $lead->save();
 
-        return response()->json(isset($lead) ?? 'Ошибка при освобождении лида!');
+        return response()->json($lead);
     }
 
     // Назначение лида
     public function ajax_appointed_check(Request $request)
     {
-
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
@@ -724,7 +729,7 @@ class LeadController extends Controller
                 }
             }
         }
-        echo $direction;
+        return $direction;
     }
 
     // Прием лида менеджером
@@ -781,7 +786,7 @@ class LeadController extends Controller
                 $phrase_sex = 'приняла';
             }
 
-            $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
+            $note = add_note($lead, $user->staff->first()->position->name . ': ' . $user->first_name . ' ' . $user->second_name . ' ' . $phrase_sex.' лида.');
 
             $result = [
                 'id' => $lead->id,
@@ -789,7 +794,7 @@ class LeadController extends Controller
                 'case_number' => $lead->case_number,
                 'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
             ];
-            echo json_encode($result, JSON_UNESCAPED_UNICODE);
+            return response()->json($result);
         }
     }
 
@@ -797,7 +802,6 @@ class LeadController extends Controller
     public function ajax_distribute(Request $request)
     {
 
-        dd('Мы тут');
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
         $lead = Lead::findOrFail($request->lead_id);
@@ -880,7 +884,7 @@ class LeadController extends Controller
             'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
         ];
 
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
+        return response()->json($result);
     }
 
     public function ajax_lead_appointed(Request $request)

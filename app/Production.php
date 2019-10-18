@@ -53,6 +53,9 @@ class Production extends Model
         'number',
         'stock_id',
         'author_id',
+
+        'amount',
+
         'draft',
         'is_produced',
 

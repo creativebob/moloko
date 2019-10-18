@@ -33,7 +33,7 @@
 
 <script>
     export default {
-        name: 'consignments-item-component',
+        name: 'productions-item-component',
         props: {
             item: Object,
             index: Number,
@@ -84,7 +84,8 @@
                 axios
                     .delete('/admin/productions_items/' + this.item.id)
                     .then(response => {
-                        if(response.data === true) {
+                        if(response.data > 0) {
+                            console.log('Удаляем - ' + this.item.id);
                             this.$emit('remove');
                         }
                     })

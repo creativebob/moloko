@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\Estimate;
+use App\Models\Project\Estimate;
 use App\Site;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
