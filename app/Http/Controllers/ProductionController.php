@@ -400,9 +400,7 @@ class ProductionController extends Controller
 		        }
 		        $number++;
 	        }
-
-	        dd($result);
-
+//	        dd($result);
 
 	        if (!empty($errors)) {
 //                dd($errors);
@@ -411,9 +409,6 @@ class ProductionController extends Controller
 			        ->withInput();
 	        };
 
-
-
-	
 	        Log::channel('documents')
 		        ->info('========================================== НАЧАЛО НАРЯДА ПРОИЗВОДСТВА C ID: ' . $production->id . ' ==============================================');
 	        
