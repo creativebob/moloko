@@ -699,7 +699,6 @@ class LeadController extends Controller
     // Назначение лида
     public function ajax_appointed_check(Request $request)
     {
-
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
@@ -724,7 +723,7 @@ class LeadController extends Controller
                 }
             }
         }
-        echo $direction;
+        return $direction;
     }
 
     // Прием лида менеджером
@@ -781,7 +780,7 @@ class LeadController extends Controller
                 $phrase_sex = 'приняла';
             }
 
-            $note = add_note($lead, 'Менеджер: '. $user->first_name.' '.$user->second_name.' '.$phrase_sex.' лида.');
+            $note = add_note($lead, $user->staff->first()->position->name . ': ' . $user->first_name . ' ' . $user->second_name . ' ' . $phrase_sex.' лида.');
 
             $result = [
                 'id' => $lead->id,
@@ -789,7 +788,7 @@ class LeadController extends Controller
                 'case_number' => $lead->case_number,
                 'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
             ];
-            echo json_encode($result, JSON_UNESCAPED_UNICODE);
+            return response()->json($result);
         }
     }
 

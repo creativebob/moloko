@@ -217,53 +217,25 @@
 
             $(this).prop('disabled', true);
 
-            var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
             var id = $(this).closest('.item').attr('id').split('-')[1];
-            var item = $(this);
 
-            $.ajax({
-              headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-              },
-              url: "/admin/lead_appointed_check",
-              type: "POST",
-              success: function(data){
+            $.get("/admin/lead_appointed_check", function(data){
+                if (data === 1) {
 
-                if (data == 1) {
-
-                  $.ajax({
-                    headers: {
-                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: "/admin/lead_appointed",
-                    type: "POST",
-                    data: {id: id},
-                    success: function(html){
+                  $.get("/admin/lead_appointed", {id: id}, function(html){
                       $('#modal').html(html);
                       $('#add-appointed').foundation();
                       $('#add-appointed').foundation('open');
-                    }
                   });
                 } else {
 
-                  $.ajax({
-                    headers: {
-                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: "/admin/lead_take",
-                    type: "POST",
-                    data: {id: id},
-                    success: function(date){
-                      var result = $.parseJSON(date);
-
-                      $('#leads-' + result.id + ' .td-case-number').text(result.case_number);
-                      $('#leads-' + result.id + ' .td-name').html('<a href="/admin/leads/' + result.id + '/edit">' + result.name + '</a>');
-                      $('#leads-' + result.id + ' .td-action').html('');
-                      $('#leads-' + result.id + ' .td-manager').text(result.manager);
-                    }
+                  $.get("/admin/lead_take", {id: id}, function(date){
+                      $('#leads-' + date.id + ' .td-case-number').text(date.case_number);
+                      $('#leads-' + date.id + ' .td-name').html('<a href="/admin/leads/' + date.id + '/edit">' + date.name + '</a>');
+                      $('#leads-' + date.id + ' .td-action').html('');
+                      $('#leads-' + date.id + ' .td-manager').text(date.manager);
                   });
-                }
-              }
+                };
             });
             /* Act on the event */
           });
