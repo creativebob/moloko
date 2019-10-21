@@ -562,7 +562,7 @@ class AppController extends Controller
             }
 
             // Формируем сообщение
-            $message = "Заказ с сайта: №" . $lead->case_number . "\r\n";
+            $message = "Заказ с сайта: №" . $lead->id . "\r\n";
             $message .= "Имя клиента: " . $lead->name . "\r\n";
             $message .= "Тел: " . decorPhone($phone) . "\r\n";
             if($lead->description){$message .= "Примечание: " . $lead->description . "\r\n";};

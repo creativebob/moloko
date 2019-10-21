@@ -839,8 +839,12 @@ class LeadController extends Controller
             // Отдаем график работы и время в секундах (предварительно проверяем юзера на бога)
             $challenge->deadline_date = getDeadline(getSchedule($manager), 60*60);
 
-            $lead->challenges()->save($challenge);
-            $lead->increment('challenges_active_count');
+            // Автоматическая поставнока задачи: временно отключена
+            // TODO: Необходимо создать настройку, исходя из которой будет или не будет 
+            // автоматически ставиться задача
+
+            // $lead->challenges()->save($challenge);
+            // $lead->increment('challenges_active_count');
 
         }
 
@@ -873,7 +877,7 @@ class LeadController extends Controller
                 $telegram_destinations[] = $user;
                 send_message($telegram_destinations, $message);
             } else {
-                $note = add_note($lead, 'Оповещение никому не выслано, так как ни у кого нет telegram Id. Это просто комон какой-то!');
+                $note = add_note($lead, 'Оповещение никому не выслано, так как ни у кого нет telegram Id.');
             }
         }
 

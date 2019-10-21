@@ -96,9 +96,9 @@
           <td class="td-name">
 
             @can('view', $lead)
-            <a href="/admin/leads/{{ $lead->id }}/edit">{{ $lead->name }}</a>
+            <a href="/admin/leads/{{ $lead->id }}/edit">{{ $lead->name ?? 'Имя не указано' }}</a>
             @else
-            {{ $lead->name }}
+            {{ $lead->name ?? 'Имя не указано'}}
             @endcan
 
             <br>

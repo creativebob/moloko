@@ -78,6 +78,15 @@ class Goods extends Model
         return $this->hasMany(GoodsStock::class, 'cmv_id');
     }
 
+    public function getRestAttribute()
+    {
+        if(!empty($this->hasMany(GoodsStock::class, 'cmv_id')->where('filial_id', 1)->first())){
+            return $this->hasMany(GoodsStock::class, 'cmv_id')->where('filial_id', 1)->first()->count;  
+        } else {
+            return null;
+        }
+    }
+
     // Пункты каталога
     public function catalogs_items()
     {
