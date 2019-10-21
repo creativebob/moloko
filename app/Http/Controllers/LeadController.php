@@ -777,8 +777,12 @@ class LeadController extends Controller
                 $challenge->deadline_date = getDeadline(getSchedule($user), 60*15);
             }
 
-            $lead->challenges()->save($challenge);
-            $lead->increment('challenges_active_count');
+            // Автоматическая поставнока задачи: временно отключена
+            // TODO: Необходимо создать настройку, исходя из которой будет или не будет 
+            // автоматически ставиться задача
+
+            // $lead->challenges()->save($challenge);
+            // $lead->increment('challenges_active_count');
 
             if ($user->sex == 1) {
                 $phrase_sex = 'принял';
@@ -790,7 +794,7 @@ class LeadController extends Controller
 
             $result = [
                 'id' => $lead->id,
-                'name' => $lead->name,
+                'name' => $lead->name ?? 'Имя не указано',
                 'case_number' => $lead->case_number,
                 'manager' => $lead->manager->first_name.' '.$lead->manager->second_name,
             ];
@@ -839,12 +843,8 @@ class LeadController extends Controller
             // Отдаем график работы и время в секундах (предварительно проверяем юзера на бога)
             $challenge->deadline_date = getDeadline(getSchedule($manager), 60*60);
 
-            // Автоматическая поставнока задачи: временно отключена
-            // TODO: Необходимо создать настройку, исходя из которой будет или не будет 
-            // автоматически ставиться задача
-
-            // $lead->challenges()->save($challenge);
-            // $lead->increment('challenges_active_count');
+            $lead->challenges()->save($challenge);
+            $lead->increment('challenges_active_count');
 
         }
 
