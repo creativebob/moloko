@@ -207,7 +207,7 @@ trait LeadControllerTrait
 
         if(($first_name == null)&&($second_name == null)){
             if($nickname == null){
-                $lead_name = "Имя не указано";
+                $lead_name = null;
             } else {
                 $lead_name = $nickname;
             }
