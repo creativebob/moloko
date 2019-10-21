@@ -201,12 +201,21 @@ trait LeadControllerTrait
         // Если не пришел филиал, берем первый у компании
         $filial_id = $request->filial_id ?? $site->filials->first()->id;
 
-        $name = $request->name;
-
+        $nickname = $request->name;
         $first_name = $request->first_name;
         $second_name = $request->second_name;
-        $name = $first_name . ' ' . $second_name;
-        $nickname = $first_name . ' ' . $second_name;
+
+        if(($first_name == null)&&($second_name == null)){
+            if($nickname == null){
+                $lead_name = "Имя не указано";
+            } else {
+                $lead_name = $nickname;
+            }
+
+        } else {
+            $lead_name = $user->first_name ?? '' . ' ' . $second_name ?? '';
+        }
+
         $company_name = $request->company_name;
         $description = $request->description;
 
@@ -274,10 +283,7 @@ trait LeadControllerTrait
                 $phone = $user->main_phone->phone;
 
                 // Конец апдейта юзеара
-            } else {
-
-                $user->nickname = $name;
-            }
+            };
         }
 
         // Конец работы с ПОЛЬЗОВАТЕЛЕМ для лида
@@ -289,7 +295,7 @@ trait LeadControllerTrait
         $lead->filial_id = $filial_id;
         $lead->user_id = $user->id;
         $lead->email = $request->email ?? '';
-        $lead->name = $name;
+        $lead->name = $lead_name;
         $lead->company_name = $company_name;
         $lead->private_status = $private_status;
         $lead->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
