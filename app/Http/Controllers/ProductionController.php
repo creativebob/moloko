@@ -426,6 +426,7 @@ class ProductionController extends Controller
 
                 $cost = 0;
                 $amount = 0;
+                $is_wrong = 0;
 
                 // С проверкой остатка
                 if ($request->has('leftover')) {
@@ -479,7 +480,9 @@ class ProductionController extends Controller
                     }
                 } else {
                     // Без проверки остатка
-                    $cost = $this->production($item);
+                    $res = $this->production($item);
+                    $cost = $res['cost'];
+                    $is_wrong = $res['is_wrong'];
                     $amount = $cost * $item->count;
                 }
 
@@ -493,7 +496,7 @@ class ProductionController extends Controller
                 ]);
 
                 // Приходование
-                $this->receipt($item);
+                $this->receipt($item, $is_wrong);
             }
 
             $production->update([

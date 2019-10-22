@@ -14,12 +14,14 @@ trait Offable
      * Списывание состава со склада для производства.
      *
      * @param $item
-     * @return int
+     * @return array
      */
 
     public function production($item)
     {
         $cost = 0;
+        $is_wrong = 0;
+
         $relations = [
             'raws',
             'containers',
@@ -68,6 +70,7 @@ trait Offable
                         Log::channel('documents')
                             ->info('Создан склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);
 
+                        $is_wrong = 1;
                     }
 
                     Log::channel('documents')
@@ -98,6 +101,8 @@ trait Offable
 
                         Log::channel('documents')
                             ->info('Себестоисмости нет, пишем нулевые значения');
+
+                        $is_wrong = 1;
                     }
 
                     $cost += $cost_composition;
@@ -129,7 +134,12 @@ trait Offable
         }
 //      dd($cost);
 
-        return $cost;
+        $result = [
+            'cost' => $cost,
+            'is_wrong' => $is_wrong
+        ];
+
+        return $result;
     }
 
     /**

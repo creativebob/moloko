@@ -59,6 +59,8 @@ class Cost extends Model
         'created_at',
         'company_id',
         'filial_id',
+
+        'is_wrong',
 	    
         'cmv_id',
         'cmv_type',

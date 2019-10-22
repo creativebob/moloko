@@ -18,7 +18,7 @@ trait Receiptable
      * @param $item
      */
 
-    public function receipt($item)
+    public function receipt($item, $is_wrong = 0)
     {
 
         $entity_document = Entity::where('alias', $item->document->getTable())->first();
@@ -120,8 +120,6 @@ trait Receiptable
                 $average = (($stocks_count * $cost_average) + ($count * $cost));
             };
 
-
-
             if (is_null($cost_item->min) || is_null($cost_item->max)) {
                 $data_cost = [
                     'min' => $cost,
@@ -153,6 +151,7 @@ trait Receiptable
                 'max' => $cost,
                 'average' => $cost,
 	            'filial_id' => $filial_id,
+                'is_wrong' => $is_wrong
             ];
 //			dd($data_cost);
 	        

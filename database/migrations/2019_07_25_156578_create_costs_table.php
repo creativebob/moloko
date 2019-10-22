@@ -36,6 +36,8 @@ class CreateCostsTable extends Migration
 	        $table->decimal('max', 12, 4)->default(0)->comment('Максимальное значение');
 	        $table->decimal('average', 16, 8)->default(0)->comment('Среднее значение');
 
+            $table->boolean('is_wrong')->default(0)->comment('Неправильно');
+
             // Общие настройки
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->boolean('display')->default(1)->comment('Отображение на сайте');
