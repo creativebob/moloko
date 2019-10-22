@@ -114,7 +114,7 @@ trait Cmvable
     {
 
         // Существует ли запись на складе
-        if($this->morphMany(Cost::class, 'cmv')->first() !== null){
+        if($this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first() !== null){
 
             if($this->article->manufacturer_id){
                 return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
