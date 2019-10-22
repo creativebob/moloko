@@ -48,8 +48,8 @@ trait Offable
                     $stock_general = Stock::findOrFail($item->document->stock_id);
 //                    dd($stock_production);
 
-                    if ($composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->first()) {
-                        $stock_composition = $composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->first();
+                    if ($composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $composition->article->manufacturer_id)->first()) {
+                        $stock_composition = $composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $composition->article->manufacturer_id)->first();
 
                         Log::channel('documents')
                             ->info('Существует склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);

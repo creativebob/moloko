@@ -43,8 +43,8 @@ trait Receiptable
 	    $filial_id = $stock_general->filial_id;
 
         // Склад
-        if ($item->cmv->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->first()) {
-            $stock = $item->cmv->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->first();
+        if ($item->cmv->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $item->cmv->article->manufacturer_id)->first()) {
+            $stock = $item->cmv->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $item->cmv->article->manufacturer_id)->first();
 
             Log::channel('documents')
                 ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);

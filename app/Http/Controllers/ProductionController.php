@@ -371,7 +371,7 @@ class ProductionController extends Controller
                             foreach ($item->cmv->article->$relation_name as $composition) {
 
                                 // Списываем позицию состава
-                                $stock_composition = $composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->first();
+                                $stock_composition = $composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $composition->article->manufacturer_id)->first();
 //                          dd($stock_production);
 
                                 if ($stock_composition) {
