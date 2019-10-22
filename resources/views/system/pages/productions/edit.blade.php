@@ -66,15 +66,15 @@
 {{--                        </label>--}}
 {{--                    </div>--}}
 
-{{--                    <div class="small-12 cell checkbox">--}}
-{{--                        {!! Form::hidden('draft', 0) !!}--}}
-{{--                        {!! Form::checkbox('draft', 1, null, ['id' => 'draft']) !!}--}}
-{{--                        <label for="draft"><span>Черновик</span></label>--}}
-{{--                    </div>--}}
+
 
                     {{-- Чекбоксы управления --}}
                     {{-- @include('includes.control.checkboxes', ['item' => $production]) --}}
 
+                    <div class="small-12 cell checkbox">
+                        {!! Form::checkbox('leftover', 1, null, ['id' => 'checkbox-leftover']) !!}
+                        <label for="checkbox-leftover"><span>С проверкой остатка</span></label>
+                    </div>
                 </div>
             </div>
 

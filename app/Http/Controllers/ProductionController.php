@@ -335,140 +335,152 @@ class ProductionController extends Controller
         if ($production->items->isNotEmpty()) {
 	
 	        $stock_general = Stock::findOrFail($production->stock_id);
-	
-			$result = [];
-	        $errors = [];
-			
-	        $number = 1;
-	        foreach ($production->items as $item) {
-		        
-		        $relations = [
-			        'raws',
-			        'containers',
-			        'attachments'
-		        ];
-		
-		        $entity_document = Entity::where('alias', $item->document->getTable())->first();
-		        $model_document = 'App\\' . $entity_document->model;
-		
-		        $model_document_item = $model_document.'sItem';
-		
-		        $cost = 0;
-		
-		        foreach ($relations as $relation_name) {
-			        if ($item->cmv->article->$relation_name->isNotEmpty()) {
-				
-				        $entity_composition = Entity::where('alias', $relation_name)->first();
-				        $model_composition = 'App\\'.$entity_composition->model;
-				
-				        $entity_stock = Entity::where('alias', $relation_name.'_stocks')->first();
-				        $model_stock = 'App\\'.$entity_stock->model;
-				
-				        foreach ($item->cmv->article->$relation_name as $composition) {
-				        	
-					        // Списываем позицию состава
-					        $stock_composition = $composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->first();
+
+            set_time_limit(60*5);
+
+            // Если нужна проверка остатка на слкдах
+            if ($request->has('leftover')) {
+                $result = [];
+                $errors = [];
+
+                $number = 1;
+
+                foreach ($production->items as $item) {
+
+                    $relations = [
+                        'raws',
+                        'containers',
+                        'attachments'
+                    ];
+
+                    $entity_document = Entity::where('alias', $item->document->getTable())->first();
+                    $model_document = 'App\\' . $entity_document->model;
+
+                    $model_document_item = $model_document.'sItem';
+
+
+                    foreach ($relations as $relation_name) {
+                        if ($item->cmv->article->$relation_name->isNotEmpty()) {
+
+                            $entity_composition = Entity::where('alias', $relation_name)->first();
+                            $model_composition = 'App\\'.$entity_composition->model;
+
+                            $entity_stock = Entity::where('alias', $relation_name.'_stocks')->first();
+                            $model_stock = 'App\\'.$entity_stock->model;
+
+                            foreach ($item->cmv->article->$relation_name as $composition) {
+
+                                // Списываем позицию состава
+                                $stock_composition = $composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->first();
 //                          dd($stock_production);
-					
-					        if ($stock_composition) {
-						
-						        $count = $composition->pivot->value;
-						        $composition_count = $composition->portion * $count * $item->count;
-						        $total = $stock_composition->count - $composition_count;
-						        
-						        if ($total < 0) {
-							        $errors['msg'][] = 'Для позиции ' . $number . ' не хватает ' . $total . ' ' . $composition->article->unit->abbreviation .  ' "' . $composition->article->name . '" для производства';
-						        } else {
-							        $result[$item->id][] = [
-								        'entity' => $composition->getTable(),
-								        'id' => $composition->id,
-								        'model' => $model_composition,
-								        'stock_id' => $stock_composition->id,
-								        'stock_model' => $model_stock,
-								        'cost' => $composition->cost->average * $count * $composition->portion ,
-                                        'amount' => $composition->portion * $count * $item->count * $composition->cost->average,
-								        'count' => $composition->portion * $count * $item->count,
-							            'weight' => $composition->weight * $count * $item->count,
-							            'volume' => $composition->volume * $count * $item->count
-							        ];
-						        }
-					        } else {
-						        $errors['msg'][] = 'Для позиции ' . $number . ' не существует склада для ' . $composition->article->name;
-					        }
-				        }
-			        }
-		        }
-		        $number++;
-	        }
+
+                                if ($stock_composition) {
+
+                                    $count = $composition->pivot->value;
+                                    $composition_count = $composition->portion * $count * $item->count;
+                                    $total = $stock_composition->count - $composition_count;
+
+                                    if ($total < 0) {
+                                        $errors['msg'][] = 'Для позиции ' . $number . ' не хватает ' . $total . ' ' . $composition->article->unit->abbreviation .  ' "' . $composition->article->name . '" для производства';
+                                    } else {
+                                        $result[$item->id][] = [
+                                            'entity' => $composition->getTable(),
+                                            'id' => $composition->id,
+                                            'model' => $model_composition,
+                                            'stock_id' => $stock_composition->id,
+                                            'stock_model' => $model_stock,
+                                            'cost' => $composition->cost->average * $count * $composition->portion ,
+                                            'amount' => $composition->portion * $count * $item->count * $composition->cost->average,
+                                            'count' => $composition->portion * $count * $item->count,
+                                            'weight' => $composition->weight * $count * $item->count,
+                                            'volume' => $composition->volume * $count * $item->count
+                                        ];
+                                    }
+                                } else {
+                                    $errors['msg'][] = 'Для позиции ' . $number . ' не существует склада для ' . $composition->article->name;
+                                }
+                            }
+                        }
+                    }
+                    $number++;
+                }
 //	        dd($result);
 
-	        if (!empty($errors)) {
+                if (!empty($errors)) {
 //                dd($errors);
-		        return back()
-			        ->withErrors($errors)
-			        ->withInput();
-	        };
+                    return back()
+                        ->withErrors($errors)
+                        ->withInput();
+                };
+            }
 
 	        Log::channel('documents')
 		        ->info('========================================== НАЧАЛО НАРЯДА ПРОИЗВОДСТВА C ID: ' . $production->id . ' ==============================================');
-	        
-//			dd($grouped_items);
+            Log::channel('documents')
+                ->info('Режим проверки остатка = ' . $request->has('leftover'));
 
             foreach ($production->items as $item) {
 
                 Log::channel('documents')
                     ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===');
-            	
-            	$compositions = $result[$item->id];
 
-            	$cost = 0;
-            	$amount = 0;
+                $cost = 0;
+                $amount = 0;
 
-            	foreach ($compositions as $composition) {
+                // С проверкой остатка
+                if ($request->has('leftover')) {
+                    $compositions = $result[$item->id];
 
-                    Log::channel('documents')
-                        ->info('=== СПИСАНИЕ ' . $composition['entity'] . ' ' . $composition['id'] . ' ===');
+                    foreach ($compositions as $composition) {
 
-                    $stock_composition = $composition['stock_model']::findOrFail($composition['stock_id']);
+                        Log::channel('documents')
+                            ->info('=== СПИСАНИЕ ' . $composition['entity'] . ' ' . $composition['id'] . ' ===');
 
-                    Log::channel('documents')
-                        ->info('Существует склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);
+                        $stock_composition = $composition['stock_model']::findOrFail($composition['stock_id']);
+
+                        Log::channel('documents')
+                            ->info('Существует склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);
 
 
-                    Log::channel('documents')
-                        ->info('Значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
+                        Log::channel('documents')
+                            ->info('Значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
 
-                    $stock_composition->count -= $composition['count'];
-                    $stock_composition->weight -= $composition['weight'];
-                    $stock_composition->volume -= $composition['volume'];
-                    $stock_composition->save();
+                        $stock_composition->count -= $composition['count'];
+                        $stock_composition->weight -= $composition['weight'];
+                        $stock_composition->volume -= $composition['volume'];
+                        $stock_composition->save();
 
-                    Log::channel('documents')
-                        ->info('Обновлены значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
+                        Log::channel('documents')
+                            ->info('Обновлены значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
 
-                    //                                dd($composition);
-                    $off = Off::create([
-                        'document_id' => $item->document->id,
-                        'document_type' => $model_document,
-                        'documents_item_id' => $item->id,
-                        'documents_item_type' => $model_document_item,
-                        'cmv_id' => $composition['id'],
-                        'cmv_type' => $composition['model'],
-                        'count' => $composition['count'],
-                        'cost' => $composition['cost'],
-                        'amount' => $composition['amount'],
-                        'stock_id' => $item->document->stock_id,
-                    ]);
+                        //                                dd($composition);
+                        $off = Off::create([
+                            'document_id' => $item->document->id,
+                            'document_type' => $model_document,
+                            'documents_item_id' => $item->id,
+                            'documents_item_type' => $model_document_item,
+                            'cmv_id' => $composition['id'],
+                            'cmv_type' => $composition['model'],
+                            'count' => $composition['count'],
+                            'cost' => $composition['cost'],
+                            'amount' => $composition['amount'],
+                            'stock_id' => $item->document->stock_id,
+                        ]);
 
-                    $cost += $composition['cost'];
-                    $amount += $composition['amount'];
+                        $cost += $composition['cost'];
+                        $amount += $composition['amount'];
 
-                    Log::channel('documents')
-                        ->info('Записали списание с id: ' . $off->id . ', count: ' . $off->count . ', cost: ' . $off->cost . ', amount: ' . $off->amount);
+                        Log::channel('documents')
+                            ->info('Записали списание с id: ' . $off->id . ', count: ' . $off->count . ', cost: ' . $off->cost . ', amount: ' . $off->amount);
 
-                    Log::channel('documents')
-                        ->info('=== КОНЕЦ СПИСАНИЯ ===
+                        Log::channel('documents')
+                            ->info('=== КОНЕЦ СПИСАНИЯ ===
                                     ');
+                    }
+                } else {
+                    // Без проверки остатка
+                    $cost = $this->production($item);
+                    $amount = $cost * $item->count;
                 }
 
 //                    $check = $this->check_production();

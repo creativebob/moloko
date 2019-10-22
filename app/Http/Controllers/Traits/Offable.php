@@ -43,13 +43,11 @@ trait Offable
                         ->info('=== СПИСАНИЕ ' . $composition->getTable() . ' ' . $composition->id . ' ===');
 
                     // Списываем позицию состава
-                    $stock_production = $composition->stocks->filter(function ($stock, $key) {
-                        return $stock->stock->is_production == 1;
-                    });
+                    $stock_general = Stock::findOrFail($item->document->stock_id);
 //                    dd($stock_production);
 
-                    if ($stock_production->isNotEmpty()) {
-                        $stock_composition = $stock_production->first();
+                    if ($composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->first()) {
+                        $stock_composition = $composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->first();
 
                         Log::channel('documents')
                             ->info('Существует склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);
@@ -77,7 +75,6 @@ trait Offable
 
                     // Получаем себестоимость
                     $count = $composition->pivot->value;
-                    $cost += ($count * $composition->cost->average);
 
                     $stock_composition->count -= ($composition->portion * $count * $item->count);
                     $stock_composition->weight -= ($composition->weight * $count * $item->count);
@@ -87,7 +84,27 @@ trait Offable
                     Log::channel('documents')
                         ->info('Обновлены значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
 
+                    if ($composition->cost) {
+                        $average_composition = $composition->cost->average * $composition->portion;
+                        $cost_composition = $average_composition * $count;
+                        $amount_composition = $cost_composition * $item->count;
+
+                        Log::channel('documents')
+                            ->info('Существует себестоимость c id: ' . $composition->cost->id);
+                    } else {
+                        $average_composition = 0;
+                        $cost_composition = 0;
+                        $amount_composition = 0;
+
+                        Log::channel('documents')
+                            ->info('Себестоисмости нет, пишем нулевые значения');
+                    }
+
+                    $cost += $cost_composition;
+                    Log::channel('documents')
+                        ->info('Высчитываем себстоимость: ' . $count . ' * ' . $average_composition . ' = ' . $cost);
 //                                dd($composition);
+
                     $off = Off::create([
                         'document_id' => $item->document->id,
                         'document_type' => $model_document,
@@ -96,8 +113,8 @@ trait Offable
                         'cmv_id' => $composition->id,
                         'cmv_type' => $model_composition,
                         'count' => $composition->portion * $count * $item->count,
-                        'cost' => $composition->cost->average,
-                        'amount' => ($count * $item->count) * $composition->cost->average,
+                        'cost' => $cost_composition,
+                        'amount' => $amount_composition,
                         'stock_id' => $item->document->stock_id,
                     ]);
 
