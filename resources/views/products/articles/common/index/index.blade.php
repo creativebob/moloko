@@ -173,13 +173,13 @@
                     <td class="mark">
                         @if(!empty($item->in_cleans))
                             @if($item->in_cleans->count() > 0)
-                                <span class="badge success" title="В составе активных товаров">{{ $item->in_cleans->count() }}</span>
+                                <span class="badge success" title="В составе активных товаров: {{ $item->in_cleans->implode('id', ', ') }}">{{ $item->in_cleans->count() }}</span>
                             @endif
                         @endif
 
                         @if(!empty($item->in_drafts))
                             @if($item->in_drafts->count() > 0)
-                                <span class="badge warning" title="В составе черновых товаров">{{ $item->in_drafts->count() }}</span>
+                                <span class="badge warning" title="В составе черновых товаров: {{ $item->in_drafts->implode('id', ', ') }}">{{ $item->in_drafts->count() }}</span>
                             @endif
                         @endif
 

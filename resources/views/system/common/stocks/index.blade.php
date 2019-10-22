@@ -73,7 +73,7 @@
                         <span class="tiny-text">{{ $stock->cmv->category->name }}</span>
                     </td>
                     <td>
-                        {{ $stock->cmv->article->manufacturer->company->name ?? '' }}
+                        {{ $stock->manufacturer->company->name ?? '' }}
                     </td>
 
                     <td class="td-count">{{ num_format($stock->count, 2) }} {{ $stock->cmv->article->unit->abbreviation }}</td>
