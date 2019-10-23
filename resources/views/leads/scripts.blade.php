@@ -23,7 +23,10 @@
             // alert($(this).data('amount'));
             amount += ($(this).data('count') * $(this).data('price'));
         });
-        $('#estimate-amount').text(amount);
+        let total = amount - (amount * 10) / 100;
+        $('#estimate-amount').text(amount.toLocaleString());
+        $('#estimate-total').text(total.toLocaleString());
+
     };
 
     var estimate_id;
