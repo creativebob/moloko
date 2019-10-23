@@ -180,8 +180,8 @@ class LeadController extends Controller
             'claims',
             'estimate' => function ($q) {
             $q->with([
-                    'goods_items.product',
-                    'services_items.product',
+                    'goods_items.product.article',
+                    'services_items.product.article',
                 ]);
             },
             'lead_method',
@@ -246,11 +246,12 @@ class LeadController extends Controller
             $q->with([
                 'prices' => function ($q) use ($filial_id) {
                     $q->with([
-                        'product' => function($q) {
+                        'service' => function($q) {
 	                        $q->with([
 		                        'process' => function ($q) {
 			                        $q->with([
-				                        'photo'
+				                        'photo',
+				                        'manufacturer'
 			                        ])
 			                        ->where('draft', false);
 		                        }
@@ -288,7 +289,8 @@ class LeadController extends Controller
                         	    $q->with([
                         	    	'article' => function ($q) {
                         	    	    $q->with([
-                        	    	    	'photo'
+                        	    	    	'photo',
+			                                'manufacturer'
 		                                ])
 		                                ->where('draft', false);
 		                            }
