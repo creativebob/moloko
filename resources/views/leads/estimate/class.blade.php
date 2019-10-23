@@ -2,120 +2,141 @@
 
     'use strict';
 
-    class Containers {
+    class EstimatesItem {
 
-        change(elem) {
+        constructor(estimate_id) {
+            this.estimate_id = estimate_id;
+        }
 
-            var id = $(elem).val();
+        add(elem) {
+            // let object = $(this);
 
-            if ($(elem).prop('checked') == true) {
-                
-                // Если нужно добавить
-                $.post('/admin/ajax_get_container', {
-                    id: id,
+            if (this.estimate_id === false) {
+                $.post("/admin/create_estimate", {
+                    lead_id: lead_id,
+                }, function(id){
+                    this.estimate_id = id;
+                    // console.log('Создана смета с id: ' + estimate_id);
+                }).done(function() {
+                    this.estimateItem($(elem));
+                });
+            } else {
+                this.estimateItem($(elem));
+            }
+
+        }
+
+        estimateItem(elem) {
+            let price_id = elem.data('price_id'),
+                serial = elem.data('serial'),
+                type = elem.data('type');
+
+            // alert(entity + ', id: ' + id + ', serial: ' + serial);
+
+            if (serial === 1) {
+                $.post('/admin/estimates_' + type + '_items', {
+                    estimate_id: this.estimate_id,
+                    price_id: price_id,
                 }, function(html){
-                    // alert(html);
-                    $('#table-containers').append(html);
+                    $('#section-' + type).append(html);
+                    //$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
+                }).done(function() {
+                    this.parent.estimateTotal();
                 });
             } else {
 
-                // Если нужно удалить
-                this.delete(id);
-            };
+                if ($('#section-' + type + ' [data-price_id=' + price_id +']').length > 0) {
+
+                    let estimate_item_id = $('#section-' + type + ' [data-price_id=' + price_id +']').attr('id').split('-')[1];
+
+                    $.ajax({
+                        url: '/admin/estimates_' + type + '_items/' + estimate_item_id,
+                        type: 'PATCH',
+                        success: function (html) {
+                            $('#section-' + type + ' [data-price_id="' + price_id +'"]').replaceWith(html);
+                        },
+                    }).done(function() {
+                        this.parent.estimateTotal();
+                    });
+                } else {
+                    $.post('/admin/estimates_' + type + '_items', {
+                        estimate_id: estimate_id,
+                        price_id: price_id,
+                    }, function(html){
+                        $('#section-' + type).append(html);
+                        //$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
+                    }).done(function() {
+                        this.parent.estimateTotal();
+                    });
+                }
+            }
+
         }
 
         openModal(elem){
-            // находим описание сущности, id и название удаляемого элемента в родителе
+            // Находим описание сущности, id и название удаляемого элемента в родителе
             let parent = $(elem).closest('.item');
-            let id = parent.attr('id').split('-')[2];
+            let entity_alias = parent.attr('id').split('-')[0];
+            let id = parent.attr('id').split('-')[1];
             let name = parent.data('name');
-            // alert(type + ' ' + id + ' ' + name);
-            $('.title-item').text(name)
-            $('.item-delete-button').attr('id', 'delete_container-' + id);
+
+            $('.title-estimates_item').text(name);
+            $('.button-delete-estimates_item').attr('id', entity_alias + '-' + id);
         }
 
-        delete(id) {
-            // alert(id);
-            // Удаляем элемент со страницы
-            $('#table-containers-' + id).remove();
-            // Убираем отмеченный чекбокс в списке метрик
-            $('#container-' + id).prop('checked', false);
+        delete(elem) {
 
-            this.totalContainersCount(); 
-        }
+            var entity = $(elem).attr('id').split('-')[0];
+            var id = $(elem).attr('id').split('-')[1];
 
-        fill(elem) {
+            let buttons = $('.button');
 
-            let parent = $(elem).closest('.item');
-
-            // Получаем значение кол-ва сырья в позиции
-            let count = $(elem).val();
-
-            // Автозаполнение поля кол-ва использования
-            parent.find('.container-use').val(count);
-
-            let elem_weight = 0; let elem_cost = 0;
-            elem_weight = parent.find('.container-weight-count');
-            elem_cost = parent.find('.container-cost-count');
-
-            // Получаем вес сырья
-            let weight = elem_weight.data('weight');
-            let cost = elem_cost.data('cost');
-
-            // Вычисляем общий вес позиции
-            let weight_count = weight * count;
-            let cost_count = cost * count;
-
-            // Добавляем в span для отображения
-            elem_weight.text(this.level(weight_count));
-            elem_cost.text(this.level(cost_count));
-
-            // Добавляем в data для использования в вычислениях
-            elem_weight.data('weight-count', weight_count);
-            elem_cost.data('cost-count', cost_count);
-
-            this.totalContainersCount();
-            // parent.find('.container-waste').val(0);
-            // parent.find('.container-leftover').val(0);
-        }
-
-        totalContainersCount() {
-
-            let all_containers_weight = $('#table-containers tr td .container-weight-count');
-            let all_containers_cost = $('#table-containers tr td .container-cost-count');
-
-            let summ_weight = 0;
-            let summ_cost = 0;
-
-            all_containers_weight.each(function(){
-                summ_weight += $(this).data('weight-count');
+            $.ajax({
+                url: '/admin/' + entity + '/' + id,
+                type: 'DELETE',
+                success: function (data) {
+                    if (data > 0) {
+                        $('#' + entity + '-' + id).remove();
+                        $('#delete-estimates_item').foundation('close');
+                        $('.button-delete-estimates_item').removeAttr('id');
+                        buttons.prop('disabled', false);
+                    }
+                }
+            }).done(function() {
+                this.parent.estimateTotal();
             });
-
-            all_containers_cost.each(function(){
-                summ_cost += $(this).data('cost-count');
-            });
-
-            $('.total_containers_count_weight').text(this.level(summ_weight));
-            $('.total_containers_count_weight').data('amount', summ_weight);
-
-            $('.total_containers_count_cost').text(this.level(summ_cost));
-            $('.total_containers_count_cost').data('amount', summ_cost);
-
-            this.totalGoodsCount();
         }
 
-        totalGoodsCount() {
-            let raws_weight_count = $('.total_raws_count_weight').data('amount') * 1;
-            let raws_cost_count = $('.total_raws_count_cost').data('amount') * 1;
 
-            let containers_weight_count = $('.total_containers_count_weight').data('amount') * 1;
-            let containers_cost_count = $('.total_containers_count_cost').data('amount') * 1;
+        estimateTotal() {
 
-            let attachments_weight_count = $('.total_attachments_count_weight').data('amount') * 1;
-            let attachments_cost_count = $('.total_attachments_count_cost').data('amount') * 1;
+            alert('считаем');
+            var amount = 0;
+            $('#section-goods tr').each(function( index ) {
+                // alert($(this).data('amount'));
+                amount += ($(this).data('count') * $(this).data('price'));
+            });
+            $('#estimate-amount').text(this.level(amount));
 
-            $('#total_goods_weight').text(this.level(raws_weight_count + containers_weight_count + attachments_weight_count));
-            $('#total_goods_cost').text(this.level(raws_cost_count + containers_cost_count + attachments_cost_count));
+            // let all_containers_weight = $('#table-containers tr td .container-weight-count');
+            // let all_containers_cost = $('#table-containers tr td .container-cost-count');
+            //
+            // let summ_weight = 0;
+            // let summ_cost = 0;
+            //
+            // all_containers_weight.each(function(){
+            //     summ_weight += $(this).data('weight-count');
+            // });
+            //
+            // all_containers_cost.each(function(){
+            //     summ_cost += $(this).data('cost-count');
+            // });
+            //
+            // $('.total_containers_count_weight').text(this.level(summ_weight));
+            // $('.total_containers_count_weight').data('amount', summ_weight);
+            //
+            // $('.total_containers_count_cost').text(this.level(summ_cost));
+            // $('.total_containers_count_cost').data('amount', summ_cost);
         }
 
         level(value) {

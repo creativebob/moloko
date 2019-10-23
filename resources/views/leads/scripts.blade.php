@@ -17,7 +17,7 @@
     estimate_amount();
 
     function estimate_amount() {
-        alert('считаем');
+        // alert('считаем');
         var amount = 0;
         $('#section-goods tr').each(function( index ) {
             // alert($(this).data('amount'));
@@ -48,6 +48,8 @@
                 $('#section-' + type).append(html);
 
                 //$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
+            }).done(function() {
+                estimate_amount();
             });
         } else {
 
@@ -62,6 +64,8 @@
                         $('#section-' + type + ' [data-price_id="' + price_id +'"]').replaceWith(html);
 
                     },
+                }).done(function() {
+                    estimate_amount();
                 });
             } else {
                 $.post('/admin/estimates_' + type + '_items', {
@@ -71,6 +75,8 @@
                     $('#section-' + type).append(html);
 
                     //$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
+                }).done(function() {
+                    estimate_amount();
                 });
             }
         }
@@ -96,8 +102,6 @@
         } else {
             estimate_item(object);
         }
-
-        estimate_amount();
     });
 
     $(document).on('click', '[data-open="delete-estimates_item"]', function() {
@@ -128,9 +132,10 @@
                     $('#delete-estimates_item').foundation('close');
                     $('.button-delete-estimates_item').removeAttr('id');
                     buttons.prop('disabled', false);
-                    estimate_amount();
                 }
             }
+        }).done(function() {
+            estimate_amount();
         });
     });
 
