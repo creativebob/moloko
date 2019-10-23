@@ -33,6 +33,7 @@ class CreateEstimatesTable extends Migration
 
             $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
             $table->decimal('discount', 12, 4)->default(0)->comment('Скидка на заказ');
+            $table->decimal('discount_percent', 5, 2)->default(0)->comment('Процент скидки');
             $table->decimal('total', 12, 4)->default(0)->comment('Итоговая сумма по заказу');
 
             // $table->decimal('discount_total', 12, 4)->default(0)->comment('Итоговая сумма всех скидок');
