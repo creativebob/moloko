@@ -149,7 +149,7 @@
                                             <td id="estimate-amount"></td>
                                         </tr>
                                         <tr>
-                                            <td colspan="3" class="text-right">Итого со скидкой:</td>
+                                            <td colspan="3" class="text-right">Итого со скидкой (10%):</td>
                                             <td id="estimate-total"></td>
                                         </tr>
                                     </tfoot>

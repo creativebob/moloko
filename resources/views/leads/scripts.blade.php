@@ -27,6 +27,8 @@
         $('#estimate-amount').text(amount.toLocaleString());
         $('#estimate-total').text(total.toLocaleString());
 
+        check_badget(total);
+
     };
 
     var estimate_id;
@@ -35,6 +37,15 @@
     @else
         estimate_id = false;
     @endisset
+
+    function check_badget(total) {
+
+        if (estimate_id !== undefined) {
+            $('#digitfield-badget').attr('readonly', true);
+            $('#digitfield-badget').val(total);
+        }
+
+    };
 
      function estimate_item (object) {
         let price_id = object.data('price_id'),
