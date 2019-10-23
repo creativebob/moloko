@@ -31,8 +31,8 @@
                     <th class="td-drop"></th>
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
                     <th class="td-receipt_date">Дата</th>
-                    <th class="td-number">Номер</th>
-                    <th class="td-supplier-name">Поставщик</th>
+                    {{-- <th class="td-number">Номер</th> --}}
+                    {{-- <th class="td-supplier-name">Поставщик</th> --}}
                     <th class="td-phone">Телефон</th>
                     <th class="td-amount">Сумма</th>
                     <th class="td-description">Коментарий</th>
@@ -76,7 +76,7 @@
                         <br><span class="tiny-text"></span>
                     </td>
 
-                      <td class="td-supplier-name">
+                      {{-- <td class="td-supplier-name">
 
                           <a href="/admin/consignments?supplier_id%5B%5D={{ $production->supplier->id ?? '' }}" class="filter_link" title="Фильтровать">
                             {{ $production->supplier->company->name ?? '' }}
@@ -85,10 +85,12 @@
                         <span class="tiny-text">
                             {{ $production->supplier->company->location->city->name ?? '' }}, {{ $production->supplier->company->location->address ?? '' }}
                         </span>
-                        <td class="td-phone">
+                      </td> --}}
+
+                        {{-- <td class="td-phone">
                             {{ isset($production->supplier->company->main_phone->phone) ? decorPhone($production->supplier->company->main_phone->phone) : 'Номер не указан' }}
                             @if($production->supplier->email ?? '' )<br><span class="tiny-text">{{ $production->supplier->company->email ?? '' }}</span>@endif
-                        </td>
+                        </td> --}}
 
                         <td class="td-amount">{{ num_format($production->amount, 0) }}</td>
 

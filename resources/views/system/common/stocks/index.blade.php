@@ -21,6 +21,13 @@
 @section('content')
 
 {{-- Таблица --}}
+
+<div class="grid-x" id="pagination">
+    <div class="small-6 cell pagination-head">
+        {{ $stocks->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
+    </div>
+</div>s
+
 <div class="grid-x">
     <div class="small-12 cell">
 
