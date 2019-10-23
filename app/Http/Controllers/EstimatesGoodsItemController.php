@@ -63,6 +63,9 @@ class EstimatesGoodsItemController extends Controller
 
 
         $estimates_goods_item->load('product.article');
+        
+        $this->estimateUpdate($estimates_goods_item);
+        
         return view('leads.estimate.estimates_goods_item', compact('estimates_goods_item'));
     }
 
@@ -111,6 +114,9 @@ class EstimatesGoodsItemController extends Controller
         // dd($estimates_goods_item);
 
         $estimates_goods_item->load('product.article');
+	
+	    $this->estimateUpdate($estimates_goods_item);
+	    
         return view('leads.estimate.estimates_goods_item', compact('estimates_goods_item'));
 
     }
@@ -123,9 +129,41 @@ class EstimatesGoodsItemController extends Controller
      */
     public function destroy($id)
     {
-        $result = EstimatesGoodsItem::destroy($id);
+	    $estimates_goods_item = EstimatesGoodsItem::findOrFail($id);
+	    
+	    $result = $estimates_goods_item->delete();
+	
+	    $this->estimateUpdate($estimates_goods_item);
+//        $result = EstimatesGoodsItem::destroy($id);
         return response()->json($result);
     }
+	
+	public function estimateUpdate($item)
+	{
+		$estimate = $item->estimate;
+		$estimate->load('goods_items');
+		
+		if ($estimate->goods_items->isNotEmpty()) {
+			
+			$amount = $estimate->goods_items->sum('amount');
+			$discount = (($amount * $estimate->discount_percent) / 100);
+			$total = ($amount - $discount);
+			
+			$data = [
+				'amount' => $amount,
+				'discount' => $discount,
+				'total' => $total
+			];
+		} else {
+			$data = [
+				'amount' => 0,
+				'discount' => 0,
+				'total' => 0
+			];
+		}
+		
+		$estimate->update($data);
+	}
 
 
 //    public function ajax_edit(Request $request)
