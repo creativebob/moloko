@@ -56,8 +56,8 @@ trait Offable
 
                     } else {
                         $data_stock = [
-                            'cmv_id' => $item->cmv_id,
-                            'manufacturer_id' => $item->cmv->article->manufacturer_id,
+                            'cmv_id' => $composition->id,
+                            'manufacturer_id' => $composition->article->manufacturer_id,
                             'stock_id' => $item->document->stock_id,
                             'filial_id' => $item->document->filial_id,
                             'is_produced' => true,
