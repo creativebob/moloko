@@ -14,6 +14,21 @@
         $('#' + id).show();
     });
 
+    estimate_amount();
+
+    function estimate_amount() {
+        // alert('считаем');
+        var amount = 0;
+        $('#section-goods tr').each(function( index ) {
+            // alert($(this).data('amount'));
+            amount += ($(this).data('count') * $(this).data('price'));
+        });
+        let total = amount - (amount * 10) / 100;
+        $('#estimate-amount').text(amount.toLocaleString());
+        $('#estimate-total').text(total.toLocaleString());
+
+    };
+
     var estimate_id;
     @isset ($lead->estimate)
         estimate_id = '{{ $lead->estimate->id }}';
@@ -36,6 +51,8 @@
                 $('#section-' + type).append(html);
 
                 //$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
+            }).done(function() {
+                estimate_amount();
             });
         } else {
 
@@ -50,6 +67,8 @@
                         $('#section-' + type + ' [data-price_id="' + price_id +'"]').replaceWith(html);
 
                     },
+                }).done(function() {
+                    estimate_amount();
                 });
             } else {
                 $.post('/admin/estimates_' + type + '_items', {
@@ -59,6 +78,8 @@
                     $('#section-' + type).append(html);
 
                     //$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
+                }).done(function() {
+                    estimate_amount();
                 });
             }
         }
@@ -79,12 +100,46 @@
                 // console.log('Создана смета с id: ' + estimate_id);
             }).done(function() {
                 estimate_item(object);
+
             });
         } else {
             estimate_item(object);
         }
+    });
 
+    $(document).on('click', '[data-open="delete-estimates_item"]', function() {
 
+        // Находим описание сущности, id и название удаляемого элемента в родителе
+        var parent = $(this).closest('.item');
+        var entity_alias = parent.attr('id').split('-')[0];
+        var id = parent.attr('id').split('-')[1];
+        var name = parent.data('name');
+        $('.title-estimates_item').text(name);
+        $('.button-delete-estimates_item').attr('id', entity_alias + '-' + id);
+    });
+
+    $(document).on('click', '.button-delete-estimates_item', function(event) {
+        event.preventDefault();
+
+        var entity = $(this).attr('id').split('-')[0];
+        var id = $(this).attr('id').split('-')[1];
+
+        var buttons = $('.button');
+
+        $.ajax({
+            url: '/admin/' + entity + '/' + id,
+            type: 'DELETE',
+            success: function (data) {
+                if (data > 0) {
+                    $('#' + entity + '-' + id).remove();
+                    $('#delete-estimates_item').foundation('close');
+                    $('.button-delete-estimates_item').removeAttr('id');
+                    buttons.prop('disabled', false);
+                }
+            }
+        }).done(function() {
+            estimate_amount();
+        });
     });
 
 </script>

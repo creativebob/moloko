@@ -142,6 +142,17 @@
                                         @endif
 
                                     </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" class="text-right">Итого:</td>
+                                            <td id="estimate-amount"></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3" class="text-right">Итого со скидкой:</td>
+                                            <td id="estimate-total"></td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
