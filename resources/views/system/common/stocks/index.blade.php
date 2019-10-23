@@ -26,7 +26,7 @@
     <div class="small-6 cell pagination-head">
         {{ $stocks->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
     </div>
-</div>s
+</div>
 
 <div class="grid-x">
     <div class="small-12 cell">
