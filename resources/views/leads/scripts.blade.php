@@ -39,7 +39,6 @@
         };
 
         function check_badget(total) {
-            alert(estimate_id);
 
             if (estimate_id > 0) {
                 $('#digitfield-badget').attr('readonly', true);
