@@ -65,6 +65,9 @@ class Estimate extends Model
         'draft',
         'is_saled',
         'amount',
+        'total',
+        'discount',
+        'discount_percent',
 
         'display',
         'system',
