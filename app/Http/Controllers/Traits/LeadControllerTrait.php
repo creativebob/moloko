@@ -249,7 +249,10 @@ trait LeadControllerTrait
         if($user){
 
             // Формируем имя записи в лида
-            $lead_name = $user->first_name . ' ' . $user->second_name;
+            if(empty($lead_name)){
+                $lead_name = $user->first_name . ' ' . $user->second_name;
+            }
+            
             $phone = $user->main_phone->phone;
 
         // Если пользователь НЕ авторизован
