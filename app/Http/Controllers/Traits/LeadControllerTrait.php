@@ -213,7 +213,8 @@ trait LeadControllerTrait
             }
 
         } else {
-            $lead_name = $user->first_name ?? '' . ' ' . $second_name ?? '';
+
+            $lead_name = $first_name . ' ' . $second_name;
         }
 
         $company_name = $request->company_name;
@@ -248,7 +249,7 @@ trait LeadControllerTrait
         if($user){
 
             // Формируем имя записи в лида
-            $name = $user->first_name ?? '' . ' ' . $second_name ?? '';
+            $lead_name = $user->first_name . ' ' . $user->second_name;
             $phone = $user->main_phone->phone;
 
         // Если пользователь НЕ авторизован
