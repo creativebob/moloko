@@ -542,6 +542,22 @@ class AppController extends Controller
             // Если есть наполненная корзина, создаем смету на лиде
             if(isset($cart)){
                 $estimate = $this->createEstimateFromCart($cart, $lead);
+                $discount_percent = 10;
+
+                // Пока статично вписываем скидку и размер суммы со скидкой
+                $total = $lead->badget - ($lead->badget * 10 / 100);
+                $discount = $lead->badget * 10 / 100;
+
+                $estimate->amount = $lead->badget;
+                $estimate->total = $total;
+                $estimate->discount = $discount;
+                $estimate->discount_percent = $discount_percent;
+                $estimate->save();
+
+                // TODO - 23.10.19 Сделать адекатное сохранение в корзине
+                $lead->badget = $total;
+                $lead->save();
+
             }
 
             // Оповещение
@@ -586,7 +602,7 @@ class AppController extends Controller
     
             $message .= "Кол-во товаров: " . $count . "\r\n";
             $message .= "Сумма заказа: " . num_format($lead->badget, 0) . ' руб.' . "\r\n";
-            $message .= "Сумма со скидкой: " . num_format($lead->badget - ($lead->badget * 10 / 100), 0) . ' руб.' . "\r\n";
+            $message .= "Сумма со скидкой: " . num_format($lead->badget - ($lead->badget * $discount_percent / 100), 0) . ' руб.' . "\r\n";
 
             $lead->notes()->create([
                 'company_id' => $company->id,
