@@ -43,8 +43,8 @@ class RawsStockController extends Controller
             ->companiesLimit($answer)
             ->filials($answer)
             ->systemItem($answer)
-            ->orderBy('moderation', 'desc')
-            ->orderBy('sort', 'asc')
+            // ->orderBy('moderation', 'desc')
+//            ->orderBy('sort', 'asc')
             ->paginate(30);
 //         dd($stocks);
 
