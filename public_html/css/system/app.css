@@ -12592,3 +12592,15 @@ em.raw-portion-item {
 .text-green {
   color: #1ac11a;
 }
+
+.td-price-status {
+  width: 100px;
+}
+
+tr .td-price-status .price_goods-status.hide {
+  visibility: none;
+}
+
+tr:hover .td-price-status .price_goods-status.hide {
+  display: inline-block !important;
+}

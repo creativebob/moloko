@@ -59,6 +59,7 @@
                     <th class="td-weight">Вес</th>  
                     <th class="td-catalogs_item">Раздел прайса</th>
                     <th class="td-price">Цена</th>
+                    <th class="td-price-status">Статус</th>
                     <th class="td-control"></th>
                     <th class="td-delete"></th>
                 </tr>
