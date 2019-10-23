@@ -34,8 +34,7 @@
             $('#estimate-amount').text(amount.toLocaleString());
             $('#estimate-total').text(total.toLocaleString());
 
-            check_badget(total);
-
+            return total;
         };
 
         function check_badget(total) {
@@ -66,7 +65,8 @@
 
                     //$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
                 }).done(function() {
-                    estimate_amount();
+                    let total = estimate_amount();
+                    check_badget(total);
                 });
             } else {
 
@@ -82,7 +82,8 @@
 
                         },
                     }).done(function() {
-                        estimate_amount();
+                        let total = estimate_amount();
+                        check_badget(total);
                     });
                 } else {
                     $.post('/admin/estimates_' + type + '_items', {
@@ -93,7 +94,8 @@
 
                         //$(document).foundation('_handleTabChange', $('#content-panel-order'), historyHandled);
                     }).done(function() {
-                        estimate_amount();
+                        let total = estimate_amount();
+                        check_badget(total);
                     });
                 }
             }
@@ -152,7 +154,8 @@
                     }
                 }
             }).done(function() {
-                estimate_amount();
+                let total = estimate_amount();
+                check_badget(total);
             });
         });
 
