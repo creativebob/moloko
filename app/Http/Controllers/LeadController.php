@@ -293,7 +293,7 @@ class LeadController extends Controller
 
         $сatalog_goods = $catalogs_goods->first();
 //         dd($atalog_goods);
-
+	    
         return view('leads.edit', compact('lead', 'page_info', 'choices', 'catalog_services', 'сatalog_goods'));
     }
 
