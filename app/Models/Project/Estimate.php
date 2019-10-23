@@ -29,12 +29,18 @@ class Estimate extends Model
         'client_id',
 	    'filial_id',
         'company_id',
+	
+	    'date',
         
         'number',
         'author_id',
         'draft',
         'is_saled',
-        'amount',
+	    'amount',
+	    'total',
+	    'discount',
+	    'discount_percent',
+	    
 
     ];
 
