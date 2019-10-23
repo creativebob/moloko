@@ -76,8 +76,9 @@
     </td>
     <td class="td-status">
         <button type="button" class="hollow tiny button price_goods-status
-            @if($cur_prices_goods->status == null) show @else hide @endif
-        ">Доступен</button>
+            @if($cur_prices_goods->status == 1) show @else hide @endif
+        ">
+            @if($cur_prices_goods->status == 1) Продано @else Доступен @endif</button>
     </td>
 
     {{-- Элементы управления --}}

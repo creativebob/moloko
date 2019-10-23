@@ -212,16 +212,18 @@
         let item = $(this);
         let id = item.closest('.item').attr('id').split('-')[1];
 
-        let action = item.hasClass("show") ? 1 : 0;
+        let status = item.hasClass("hide") ? 1 : 0;
+
+        alert(catalog_id + ' ' + id + ' ' + status);
 
         // Ajax
-        $.post('/admin/prices_goods_status', {
+        $.post('/admin/catalogs_goods/' + catalog_id + '/prices_goods_status', {
             id: id,
             status: status,
-        }, function (status) {
+        }, function (result) {
             // Если нет ошибки
-            if (status === true) {
-                if (action === 1) {
+            if (result === true) {
+                if (status === 1) {
                     item.removeClass('hide');
                     item.addClass('show');
                     item.text('Продано');
@@ -232,7 +234,7 @@
                 }
             } else {
                 // Выводим ошибку на страницу
-                alert(status);
+                alert(result);
             };
         });
     });
