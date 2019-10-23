@@ -172,8 +172,10 @@ class UserController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
+        
+        $auth_user = \Auth::user();
 
-        return view('users.edit', compact('user', 'page_info'));
+        return view('users.edit', compact('user', 'page_info', 'auth_user'));
     }
 
     public function update(UserUpdateRequest $request, $id)
