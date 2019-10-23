@@ -53,6 +53,8 @@
 			'price',
 			'archive',
 			
+			'status',
+			
 			'display',
 			'system',
 			'moderation'

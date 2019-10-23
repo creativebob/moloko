@@ -206,6 +206,40 @@
         $('#form-delete-price').attr('action', '/admin/catalogs_goods/' + catalog_id + '/prices_goods/' + id);
     });
 
+    // Статус
+    $(document).on('click', '.price_goods-status', function(event) {
+        event.preventDefault();
+
+        let item = $(this);
+        let id = item.closest('.item').attr('id').split('-')[1];
+
+        let status = item.hasClass("hide") ? 1 : 0;
+
+        // alert(catalog_id + ' ' + id + ' ' + status);
+
+        // Ajax
+        $.post('/admin/catalogs_goods/' + catalog_id + '/prices_goods_status', {
+            id: id,
+            status: status,
+        }, function (result) {
+            // Если нет ошибки
+            if (result === true) {
+                if (status === 1) {
+                    item.removeClass('hide');
+                    item.addClass('show');
+                    item.text('Продано');
+                } else {
+                    item.removeClass('show');
+                    item.addClass('hide');
+                    item.text('Доступен');
+                }
+            } else {
+                // Выводим ошибку на страницу
+                alert(result);
+            };
+        });
+    });
+
 
 </script>
 @endpush
