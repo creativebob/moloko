@@ -1087,6 +1087,8 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
     Route::any('prices_goods/ajax_store', 'PricesGoodsController@ajax_store');
 
     Route::any('prices_goods_sync', 'PricesGoodsController@sync')->name('prices_goods.sync');
+	
+	Route::any('prices_goods_status', 'PricesGoodsController@ajax_status');
 
     Route::resource('prices_goods', 'PricesGoodsController');
 });
