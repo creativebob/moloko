@@ -74,6 +74,11 @@
 
 
     </td>
+    <td class="td-status">
+        <button type="button" class="hollow tiny button price_goods-status
+            @if($cur_prices_goods->status == null) show @else hide @endif
+        ">Доступен</button>
+    </td>
 
     {{-- Элементы управления --}}
     @include('includes.control.table_td', ['item' => $cur_prices_goods])
