@@ -246,7 +246,17 @@ class LeadController extends Controller
             $q->with([
                 'prices' => function ($q) use ($filial_id) {
                     $q->with([
-                        'product.process.photo'
+                        'product' => function($q) {
+	                        $q->with([
+		                        'process' => function ($q) {
+			                        $q->with([
+				                        'photo'
+			                        ])
+			                        ->where('draft', false);
+		                        }
+	                        ])
+		                        ->where('archive', false);
+                        }
                     ])
                     ->where('filial_id', $filial_id);
                 },
@@ -274,7 +284,17 @@ class LeadController extends Controller
                 $q->with([
                     'prices' => function ($q) use ($filial_id) {
                         $q->with([
-                            'product.article.photo'
+                            'product' => function($q) {
+                        	    $q->with([
+                        	    	'article' => function ($q) {
+                        	    	    $q->with([
+                        	    	    	'photo'
+		                                ])
+		                                ->where('draft', false);
+		                            }
+	                            ])
+	                            ->where('archive', false);
+                            }
                         ])
                         ->where('filial_id', $filial_id);
                     },
