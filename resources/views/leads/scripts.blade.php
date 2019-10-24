@@ -108,7 +108,7 @@
 
             let object = $(this);
 
-            if (estimate_id === false) {
+            if (estimate_id === 0) {
                 $.post("/admin/create_estimate", {
                     lead_id: lead_id,
                 }, function(id){
