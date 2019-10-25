@@ -55,6 +55,10 @@ class GoodsPolicy
             return false;
         }
 
+        if ($model->prices->isNotEmpty()) {
+            return false;
+        }
+
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
     }
