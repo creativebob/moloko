@@ -76,7 +76,6 @@ class Attachment extends Model
     public function compositions()
     {
         return $this->belongsToMany(Article::class, 'article_attachment')
-            ->where('draft', false)
             ->whereHas('cur_goods', function($q) {
                 $q->where('archive', false);
             });
