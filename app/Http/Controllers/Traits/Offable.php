@@ -60,7 +60,6 @@ trait Offable
                             'manufacturer_id' => $composition->article->manufacturer_id,
                             'stock_id' => $item->document->stock_id,
                             'filial_id' => $item->document->filial_id,
-                            'is_produced' => true,
                         ];
                         $entity_composition_stock = Entity::where('alias', $relation_name.'_stocks')->first();
                         $model_composition_stock = 'App\\'.$entity_composition_stock->model;
@@ -155,18 +154,24 @@ trait Offable
 
         $model_document_item = $model_document.'sItem';
 
+
+
         Log::channel('documents')
             ->info('=== СПИСАНИЕ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
         // Списываем позицию состава
+        $stock_general = Stock::findOrFail($item->document->stock_id);
+
+        // Списываем позицию состава
         $product = $item->product;
-        $stock_goods = $product->stocks->filter(function ($stock, $key) {
-            return $stock->stock->is_goods == 1;
-        });
+
+        $entity_product = Entity::where('alias', $product->getTable())->first();
+        $model_product = 'App\\'.$entity_product->model;
+
 //      dd($stock_goods);
 
-        if ($stock_goods->isNotEmpty()) {
-            $stock = $stock_goods->first();
+        if ($product->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $product->article->manufacturer_id)->first()) {
+            $stock = $product->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $product->article->manufacturer_id)->first();
 
             Log::channel('documents')
                 ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
@@ -177,10 +182,10 @@ trait Offable
             // TODO - 15.10.19 - Какой ставить склад если при продаже нет склада товаров?
 
             $data_stock = [
-                'cmv_id' => $item->product_id,
-                'manufacturer_id' => $item->product->article->manufacturer_id,
-                'stock_id' => Stock::where('filial_id', $user->staff->first()->filial_id) ->fisrt()->id,
-                'filial_id' => $user->staff->first()->filial_id,
+                'cmv_id' => $product->id,
+                'manufacturer_id' => $product->article->manufacturer_id,
+                'stock_id' => $item->document->stock_id,
+                'filial_id' => $item->document->filial_id,
             ];
             $entity_stock = Entity::where('alias', $product->getTable() . '_stocks')->first();
             $model_stock = 'App\\'.$entity_stock->model;
@@ -203,16 +208,34 @@ trait Offable
         Log::channel('documents')
             ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 
+        if ($product->cost) {
+            $average_product = $product->cost->average * $product->portion;
+            $cost_product = $average_product;
+            $amount_product = $cost_product * $item->count;
+
+            Log::channel('documents')
+                ->info('Существует себестоимость c id: ' . $product->cost->id);
+        } else {
+            $average_product = 0;
+            $cost_product = 0;
+            $amount_product = 0;
+
+            Log::channel('documents')
+                ->info('Себестоисмости нет, пишем нулевые значения');
+
+            $is_wrong = 1;
+        }
+
         $off = Off::create([
             'document_id' => $item->document->id,
             'document_type' => $model_document,
             'documents_item_id' => $item->id,
             'documents_item_type' => $model_document_item,
             'cmv_id' => $product->id,
-            'cmv_type' => 'App\Goods',
-            'count' => $product->portion * $item->count,
-            'cost' => $item->price,
-            'amount' => $item->count * $item->price,
+            'cmv_type' => $model_product,
+            'count' => $product->portion *  $item->count,
+            'cost' => $cost_product,
+            'amount' => $amount_product,
             'stock_id' => $item->document->stock_id,
         ]);
 

@@ -637,6 +637,7 @@ Route::resource('estimates', 'EstimateController')->middleware('auth');
 
 // Отображение на сайте
 Route::any('/create_estimate', 'EstimateController@ajax_create');
+Route::any('/update_estimate', 'EstimateController@ajax_update');
 
 Route::resource('/estimates_goods_items', 'EstimatesGoodsItemController');
 Route::resource('/estimates_services_items', 'EstimatesServicesItemController');

@@ -111,6 +111,7 @@
             if (estimate_id === 0) {
                 $.post("/admin/create_estimate", {
                     lead_id: lead_id,
+                    stock_id: $('#select-stocks').val()
                 }, function(id){
                     estimate_id = id;
                     // console.log('Создана смета с id: ' + estimate_id);
@@ -121,6 +122,22 @@
             } else {
                 estimate_item(object);
             }
+        });
+
+        $(document).on('change', '#select-stocks', function(event) {
+            event.preventDefault();
+
+            if (estimate_id > 0) {
+                $.post("/admin/update_estimate", {
+                    estimate_id: estimate_id,
+                    stock_id: $('#select-stocks').val()
+                }, function (result) {
+                    if (result === false) {
+                        alert('Ошибка обновления склада!');
+                    }
+                    // console.log('Создана смета с id: ' + estimate_id);
+                });
+            };
         });
 
         $(document).on('click', '[data-open="delete-estimates_item"]', function() {

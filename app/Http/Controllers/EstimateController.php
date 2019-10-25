@@ -116,15 +116,30 @@ class EstimateController extends Controller
 
         $lead = Lead::findOrFail($request->lead_id);
 
+        // TODO - 24.10.19 - Скидка должна браться из ценовой политики
+
         $estimate = Estimate::create([
             'lead_id' => $lead->id,
             'filial_id' => $lead->filial_id,
             'client_id' => $lead->client_id,
+            'stock_id' => $request->stock_id,
             'discount_percent' => 10,
         ]);
         // dd($estimate);
 
         return response()->json($estimate->id);
+    }
+
+    public function ajax_update(Request $request)
+    {
+
+        $result = Estimate::findOrFail($request->estimate_id)
+            ->update([
+                'stock_id' => $request->stock_id
+            ]);
+        // dd($result);
+
+        return response()->json($result);
     }
 
 

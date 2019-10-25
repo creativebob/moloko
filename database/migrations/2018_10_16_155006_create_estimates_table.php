@@ -25,6 +25,9 @@ class CreateEstimatesTable extends Migration
 	        $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id филиала');
 	        $table->foreign('filial_id')->references('id')->on('departments');
 
+            $table->bigInteger('stock_id')->nullable()->unsigned()->comment('Id склада');
+            $table->foreign('stock_id')->references('id')->on('stocks');
+
             $table->text('description')->nullable()->comment('Описание');
 
             $table->date('date')->nullable()->comment('Дата сметы');

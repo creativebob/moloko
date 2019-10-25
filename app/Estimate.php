@@ -55,6 +55,7 @@ class Estimate extends Model
         'lead_id',
         'client_id',
 	    'filial_id',
+        'stock_id',
 
         'company_id',
         

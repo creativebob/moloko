@@ -554,7 +554,7 @@ class AppController extends Controller
                 $estimate->discount_percent = $discount_percent;
                 $estimate->save();
 
-                // TODO - 23.10.19 Сделать адекатное сохранение в корзине
+                // TODO - 23.10.19 - Сделать адекатное сохранение в корзине
                 $lead->badget = $total;
                 $lead->save();
 

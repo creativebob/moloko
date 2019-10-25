@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Http\Controllers\Traits\Offable;
+use App\Stock;
 use Illuminate\Support\Facades\Log;
 use App\User;
 use App\Lead;
@@ -577,50 +578,73 @@ class LeadController extends Controller
         // Отдаем работу по редактировнию лида трейту
         $this->updateLead($request, $lead);
 
-        $lead->load([
-            'estimate' => function($q) {
-                $q->with([
-                    'goods_items' => function ($q) {
-                        $q->with([
-                            'price',
-                            'product',
-                            'document'
-                        ]);
-                    },
-                ]);
-            },
-        ]);
-//		dd($lead);
+        if (isset($lead->estimate)) {
 
-        $estimate = $lead->estimate;
+            $lead->load([
+                'estimate' => function($q) {
+                    $q->with([
+                        'goods_items' => function ($q) {
+                            $q->with([
+                                'price',
+                                'product',
+                                'document'
+                            ]);
+                        },
+                    ]);
+                },
+            ]);
+    //		dd($lead);
 
-        if ($estimate->goods_items->isNotEmpty()) {
-//            dd('Ща буит');
-
-            Log::channel('documents')
-                ->info('========================================== НАЧАЛО ПРОДАЖИ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
-
-            foreach ($estimate->goods_items as $item) {
-                    $this->off($item);
-            }
-
-            $amount = $estimate->goods_items->sum('amount');
+            $estimate = $lead->estimate;
 
             $estimate->update([
-                'is_saled' => true,
-                'amount' => $amount
+               'stock_id' => $request->stock_id
             ]);
 
-            Log::channel('documents')
-                ->info('Продана смета c id: ' . $estimate->id);
-            Log::channel('documents')
-                ->info('========================================== КОНЕЦ ПРОДАЖИ СМЕТЫ ==============================================
-				
-				');
+            if ($estimate->goods_items->isNotEmpty()) {
+    //            dd('Ща буит');
 
-            return redirect()->route('leads.index');
-        } else {
-            abort(403, 'Смета пуста');
+                $stock_general = Stock::findOrFail($request->stock_id);
+                $estimate->update([
+                    'stock_id' => $request->stock_id
+                ]);
+
+                Log::channel('documents')
+                    ->info('========================================== НАЧАЛО ПРОДАЖИ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
+
+                foreach ($estimate->goods_items as $item) {
+                        $this->off($item);
+                }
+
+                // ОБновляем смету
+                $estimate->load('goods_items');
+
+                if ($estimate->goods_items->isNotEmpty()) {
+
+                    $amount = $estimate->goods_items->sum('amount');
+                    $discount = (($amount * $estimate->discount_percent) / 100);
+                    $total = ($amount - $discount);
+
+                    $data = [
+                        'amount' => $amount,
+                        'discount' => $discount,
+                        'total' => $total,
+                        'is_saled' => true,
+                    ];
+                }
+                $estimate->update($data);
+
+                Log::channel('documents')
+                    ->info('Продана смета c id: ' . $estimate->id);
+                Log::channel('documents')
+                    ->info('========================================== КОНЕЦ ПРОДАЖИ СМЕТЫ ==============================================
+                    
+                    ');
+
+                return redirect()->route('leads.index');
+            } else {
+                abort(403, 'Смета пуста');
+            }
         }
     }
 

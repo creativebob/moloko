@@ -108,6 +108,11 @@
                                     @include('includes.inputs.digit', ['name' => 'payment', 'value' => $lead->payment, 'decimal_place'=>2])
                                 </label>
                             </div>
+                            <div class="small-12 medium-6 cell">
+                                <label>Склад
+                                    @include('includes.selects.stocks', ['stock_id' => isset($lead->estimate) ? $lead->estimate->stock_id : null])
+                                </label>
+                            </div>
 
                             <div class="small-12 medium-12 large-12 cell">
                                 <table class="table-order" id="table-order">
@@ -638,9 +643,9 @@
             @endcan
         </div>
 
-{{--    <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">--}}
-{{--        {{ Form::submit('Продать', ['class' => 'button', 'id' => 'submit-saling']) }}--}}
-{{--    </div>--}}
+    <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
+        {{ Form::submit('Продать', ['class' => 'button', 'id' => 'submit-saling']) }}
+    </div>
     </div>
 
     {{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}
