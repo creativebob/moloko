@@ -78,7 +78,7 @@ class Raw extends Model
     {
         return $this->belongsToMany(Article::class, 'article_raw')
         ->where('draft', false)
-        ->whereHas('goods', function($q) {
+        ->whereHas('cur_goods', function($q) {
             $q->where('archive', false);
         });
     }

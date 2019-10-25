@@ -76,7 +76,7 @@ class RawController extends Controller
             'company',
             'in_cleans',
             'in_drafts',
-            'compositions.goods',
+            'compositions.cur_goods',
             'unit_portion',
             'article' => function ($q) {
                 $q->with([

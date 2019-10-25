@@ -76,7 +76,7 @@ class ContainerController extends Controller
             'company',
             'in_cleans',
             'in_drafts',
-            'compositions.goods',
+            'compositions.cur_goods',
             'article' => function ($q) {
                 $q->with([
                     'group',
