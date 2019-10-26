@@ -16,7 +16,7 @@ function buildTree($items)
     return $items->where('parent_id', null);
 }
 
-function buildTreeArray($items, $entity = null)
+function buildTreeArray($items)
 {
     $grouped = $items->groupBy('parent_id');
 
@@ -29,35 +29,31 @@ function buildTreeArray($items, $entity = null)
 
     $res = $items->where('parent_id', null);
     return $res;
-//    dd($res->toArray());
-//    $grouped = $items->groupBy('parent_id');
-//
-//    $items_array = [];
-//    foreach ($items as $item) {
-//        $item = $item->toArray();
-//
-//        if ($grouped->has($item['id'])) {
-//
-//            $item['childrens'] = $grouped[$item['id']]->toArray();
-//        }
-//
-//        if (isset($entity)) {
-//            $item['entity_id'] = $entity->id;
-//        }
-//
-//        $items_array[] = $item;
-//    }
+}
+
+function buildTreeArrayWithEntity($items, $entity = null)
+{
+
+    $grouped = $items->groupBy('parent_id');
+
+    $items_array = [];
+    foreach ($items as $item) {
+        $item = $item->toArray();
+
+        if ($grouped->has($item['id'])) {
+
+            $item['childrens'] = $grouped[$item['id']]->toArray();
+        }
+
+        if (isset($entity)) {
+            $item['entity_id'] = $entity->id;
+        }
+
+        $items_array[] = $item;
+    }
 //    dd($items_array);
-//
-//    $result =[];
-//    foreach ($items_array as $item) {
-//        if($item['parent_id'] == null) {
-//            $result[] = $item;
-//        }
-//    }
-//    dd($result);
-//
-//    return $items_array;
+
+    return $items_array;
 }
 
 function buildSidebarTree($items)
