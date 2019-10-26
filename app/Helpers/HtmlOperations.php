@@ -26,9 +26,13 @@ function buildTreeArray($items)
         }
         $item->toArray();
     }
+//    dd($items);
 
-    $res = $items->where('parent_id', null);
-    return $res;
+    // TODO - 26.10.19 - На Containers при выборке делает ключами массива id, непонятно
+
+    $res = $items->where('parent_id', null)->toArray();
+    $result = $new_arr = array_values($res);
+    return $result;
 }
 
 function buildTreeArrayWithEntity($items, $entity = null)
