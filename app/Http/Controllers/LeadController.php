@@ -247,7 +247,7 @@ class LeadController extends Controller
             $q->with([
                 'prices' => function ($q) use ($filial_id) {
                     $q->with([
-                        'service' => function($q) {
+                        'product' => function($q) {
 	                        $q->with([
 		                        'process' => function ($q) {
 			                        $q->with([
@@ -256,11 +256,18 @@ class LeadController extends Controller
 			                        ])
 			                        ->where('draft', false);
 		                        }
+
 	                        ])
-		                        ->where('archive', false);
+                                ->whereHas('process', function ($q) {
+                                    $q->where('draft', false);
+                                })
+                                ->where('archive', false);
                         }
                     ])
-                    ->where('filial_id', $filial_id);
+                        ->whereHas('product', function ($q) {
+                            $q->where('archive', false);
+                        })
+                        ->where('filial_id', $filial_id);
                 },
                 'childs'
             ]);
@@ -296,9 +303,15 @@ class LeadController extends Controller
 		                                ->where('draft', false);
 		                            }
 	                            ])
+                                    ->whereHas('article', function ($q) {
+                                        $q->where('draft', false);
+                                    })
 	                            ->where('archive', false);
                             }
                         ])
+                            ->whereHas('product', function ($q) {
+                                $q->where('archive', false);
+                            })
                         ->where('filial_id', $filial_id);
                     },
                     'childs'
