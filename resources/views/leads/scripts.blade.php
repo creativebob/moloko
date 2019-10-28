@@ -1,11 +1,25 @@
 <script type="application/javascript">
 
-    var estimate_id = 0;
-    @isset($lead->estimate)
-        estimate_id = '{{ $lead->estimate->id }}';
-    @endisset
-
     $(document).ready(function () {
+
+        var estimate_id = 0;
+        var saled = 0;
+
+        @isset($lead->estimate)
+            estimate_id = '{{ $lead->estimate->id }}';
+            saled = '{{ $lead->estimate->is_saled }}';
+        @endisset
+
+        if (estimate_id === 0) {
+            $('#submit-saling').hide();
+        }
+
+        if (saled == 1) {
+            $('#submit-saling').hide();
+            $('#section-goods .actions div').remove();
+            $('.add-to-estimate').removeClass('add-to-estimate');
+        }
+
 
         $('.view-list').each(function(index) {
             $(this).hide();
@@ -42,6 +56,8 @@
             if (estimate_id > 0) {
                 $('#digitfield-badget').attr('readonly', true);
                 $('#digitfield-badget').val(total);
+
+                $('#submit-saling').show();
             }
         };
 
