@@ -326,7 +326,7 @@ class PricesGoodsController extends Controller
             if ($cur_price_goods->price != $request->price) {
 
                 $cur_price_goods->actual_price->update([
-                    'end_date' => Carbon::now(),
+                    'end_date' => now(),
                 ]);
 
                 $cur_price_goods->history()->create([
