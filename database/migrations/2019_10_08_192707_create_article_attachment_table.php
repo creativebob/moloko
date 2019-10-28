@@ -22,11 +22,10 @@ class CreateArticleAttachmentTable extends Migration
             $table->bigInteger('attachment_id')->nullable()->unsigned()->comment('Id вложения');
             $table->foreign('attachment_id')->references('id')->on('attachments');
 
-            $table->integer('value')->nullable()->unsigned()->comment('Значение');
-
-            $table->integer('use')->nullable()->unsigned()->comment('Использование');
-            $table->integer('leftover')->nullable()->unsigned()->comment('Остаток');
-            $table->integer('waste')->nullable()->unsigned()->comment('Отходы ');
+            $table->decimal('value', 12, 2)->default(0)->comment('Значение');
+            $table->decimal('use', 12, 2)->default(0)->comment('Использование');
+            $table->decimal('leftover', 12, 2)->default(0)->comment('Остаток');
+            $table->decimal('waste', 12, 2)->default(0)->comment('Отходы');
 
             $table->bigInteger('leftover_operation_id')->nullable()->unsigned()->comment('Id операции над остатком');
             $table->foreign('leftover_operation_id')->references('id')->on('leftover_operations');

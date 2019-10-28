@@ -11,9 +11,10 @@ class ArticlesCategoriesWithItemsComposerForManufacturer
 	{
 
 	    $entities = Entity::whereIn('alias', [
-//	        'raws',
+            'raws',
             'containers',
-            'goods'
+            'goods',
+            'attachments'
         ])
             ->get([
                 'id',
