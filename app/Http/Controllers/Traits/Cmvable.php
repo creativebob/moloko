@@ -25,6 +25,7 @@ trait Cmvable
             ->whereHas('article', function ($q) use ($search) {
                 $q->where('name', 'LIKE', '%' . $search . '%');
             })
+            ->where('archive', false)
             ->get([
                 'id',
                 'article_id'
