@@ -309,9 +309,37 @@ class PricesGoodsController extends Controller
 
     public function ajax_store(Request $request)
     {
-        $data = $request->input();
-        $cur_price_goods = (new PricesGoods())->create($data);
+        $cur_price_goods = PricesGoods::firstOrNew([
+            'catalogs_goods_item_id' => $request->catalogs_goods_item_id,
+            'catalogs_goods_id' => $request->catalogs_goods_id,
+            'goods_id' => $request->goods_id,
+            'filial_id' => $request->filial_id,
+        ], [
+            'price' => $request->price
+        ]);
 
+        if ($cur_price_goods->id) {
+            $cur_price_goods->update([
+               'archive' => false
+            ]);
+        } else {
+            $cur_price_goods->save();
+        }
+
+        if ($cur_price_goods->price != $request->price) {
+
+            $cur_price_goods->actual_price->update([
+                'end_date' => Carbon::now(),
+            ]);
+
+            $cur_price_goods->history()->create([
+                'price' => $request->price,
+            ]);
+
+            $cur_price_goods->update([
+                'price' => $request->price,
+            ]);
+        }
         return view('products.articles.goods.prices.price', compact('cur_price_goods'));
     }
 
@@ -326,9 +354,8 @@ class PricesGoodsController extends Controller
     {
         $cur_price_goods = PricesGoods::findOrFail($request->id);
 
-        if ($cur_price_goods->price == $request->price) {
-            return view('products.articles.goods.prices.price', ['cur_price_goods' => $cur_price_goods]);
-        } else {
+        if ($cur_price_goods->price != $request->price) {
+
             $cur_price_goods->actual_price->update([
                 'end_date' => Carbon::now(),
             ]);
@@ -340,9 +367,8 @@ class PricesGoodsController extends Controller
             $cur_price_goods->update([
                 'price' => $request->price,
             ]);
-
-            return view('products.articles.goods.prices.price', compact('cur_price_goods'));
         }
+        return view('products.articles.goods.prices.price', compact('cur_price_goods'));
     }
 
     public function ajax_archive(Request $request)
