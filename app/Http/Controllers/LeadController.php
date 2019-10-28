@@ -267,7 +267,8 @@ class LeadController extends Controller
                         ->whereHas('product', function ($q) {
                             $q->where('archive', false);
                         })
-                        ->where('filial_id', $filial_id);
+                        ->where('filial_id', $filial_id)
+                    ->where('archive', false);
                 },
                 'childs'
             ]);
@@ -312,7 +313,8 @@ class LeadController extends Controller
                             ->whereHas('product', function ($q) {
                                 $q->where('archive', false);
                             })
-                        ->where('filial_id', $filial_id);
+                        ->where('filial_id', $filial_id)
+                            ->where('archive', false);
                     },
                     'childs'
                 ]);
