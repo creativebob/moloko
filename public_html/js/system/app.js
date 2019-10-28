@@ -11115,6 +11115,33 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -11856,7 +11883,7 @@ return $.widget;
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11954,33 +11981,6 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
 
 /***/ }),
 /* 7 */
@@ -12483,7 +12483,7 @@ module.exports = Cancel;
 try {
   window.$ = window.jQuery = __webpack_require__(1);
 
-  __webpack_require__(4);
+  __webpack_require__(5);
   __webpack_require__(16);
 
   __webpack_require__(20); // 'foundation.min' can also be used if you like
@@ -12559,7 +12559,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 			__webpack_require__(7),
 			__webpack_require__(19),
 			__webpack_require__(2),
-			__webpack_require__(4)
+			__webpack_require__(5)
 		], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
@@ -14117,7 +14117,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 			__webpack_require__(1),
 			__webpack_require__(7),
 			__webpack_require__(2),
-			__webpack_require__(4)
+			__webpack_require__(5)
 		], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
@@ -27666,7 +27666,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_jquery__;
 var utils = __webpack_require__(0);
 var bind = __webpack_require__(9);
 var Axios = __webpack_require__(23);
-var defaults = __webpack_require__(5);
+var defaults = __webpack_require__(6);
 
 /**
  * Create an instance of Axios
@@ -27749,7 +27749,7 @@ function isSlowBuffer (obj) {
 "use strict";
 
 
-var defaults = __webpack_require__(5);
+var defaults = __webpack_require__(6);
 var utils = __webpack_require__(0);
 var InterceptorManager = __webpack_require__(32);
 var dispatchRequest = __webpack_require__(33);
@@ -28281,7 +28281,7 @@ module.exports = InterceptorManager;
 var utils = __webpack_require__(0);
 var transformData = __webpack_require__(34);
 var isCancel = __webpack_require__(13);
-var defaults = __webpack_require__(5);
+var defaults = __webpack_require__(6);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -40479,7 +40479,7 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(41).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(41).setImmediate))
 
 /***/ }),
 /* 41 */
@@ -40549,7 +40549,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
                          (typeof global !== "undefined" && global.clearImmediate) ||
                          (this && this.clearImmediate);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
 /* 42 */
@@ -40742,7 +40742,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(10)))
 
 /***/ }),
 /* 43 */
@@ -40822,8 +40822,8 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(46);
-__webpack_require__(91);
-module.exports = __webpack_require__(92);
+__webpack_require__(93);
+module.exports = __webpack_require__(94);
 
 
 /***/ }),
@@ -40874,9 +40874,9 @@ var app = new Vue({
 __webpack_require__(43);
 
 // Наши скрипты
-__webpack_require__(88);
-__webpack_require__(89);
 __webpack_require__(90);
+__webpack_require__(91);
+__webpack_require__(92);
 
 // window.CKEDITOR_BASEPATH = 'node_modules/ckeditor/';
 // require('ckeditor');
@@ -45018,7 +45018,7 @@ var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = __webpack_require__(86)
 /* template */
-var __vue_template__ = __webpack_require__(87)
+var __vue_template__ = __webpack_require__(89)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -45062,7 +45062,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(87);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
 //
 //
@@ -45173,659 +45173,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 /* 87 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { attrs: { id: "search" } }, [
-    _c("input", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model",
-          value: _vm.text,
-          expression: "text"
-        }
-      ],
-      staticClass: "search-field",
-      attrs: {
-        type: "search",
-        id: "field-search",
-        name: "search",
-        placeholder: "Поиск"
-      },
-      domProps: { value: _vm.text },
-      on: {
-        input: [
-          function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.text = $event.target.value
-          },
-          _vm.dedounceSearch
-        ]
-      }
-    }),
-    _vm._v(" "),
-    _vm.search
-      ? _c("div", { attrs: { id: "search-result-wrap" } }, [
-          _c(
-            "ul",
-            { staticClass: "search-result-list" },
-            _vm._l(_vm.results, function(result, index) {
-              return _c("li", [
-                _c(
-                  "a",
-                  {
-                    attrs: {
-                      href: "/admin/" + this.entity + "/" + result.id + "/edit"
-                    }
-                  },
-                  [_vm._v(_vm._s(result.name))]
-                )
-              ])
-            }),
-            0
-          )
-        ])
-      : _vm._e()
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-2fb9d66e", module.exports)
-  }
-}
-
-/***/ }),
-/* 88 */
-/***/ (function(module, exports) {
-
-// Валидируем кнопку при клике
-window.submitAjax = function (id) {
-    this.event.preventDefault();
-    $('#' + id).foundation('validateForm');
-    var valid = $('#' + id + ' .is-invalid-input').length;
-    var result = valid == 0;
-    return result;
-};
-
-/***/ }),
-/* 89 */
-/***/ (function(module, exports) {
-
-// Умолчания глобальные
-// Время применения изменений
-var transitionTime = 200;
-// Ширина менеджера задач
-var widthTask = 300;
-// Выставляем отступ контента по умолчанию = ширине сайдбара
-var widthSidebarSmall = 64;
-// Значение развернутого сайдбара
-var widthSidebarExpand = 240;
-// Блок фильтра
-// var heightFilterSmall = 140;
-
-var theadTh = $('.thead-width>tr>th');
-var tbodyTd = $('.tbody-width>tr:first>td');
-var oldContentWidth = 0;
-
-var oldThWidth = [];
-var oldTdWidth = [];
-
-// Если есть табличка, то берем ширины ячеек
-
-function getMassWidth() {
-    if ($("table").is("#table-content")) {
-        if (tbodyTd.length == theadTh.length) {
-            for (var i = 0; i < tbodyTd.length; i++) {
-
-                oldThWidth[i] = $(theadTh[i]).width();
-                oldTdWidth[i] = $(tbodyTd[i]).width();
-            };
-            console.table(oldThWidth);
-            console.table(oldTdWidth);
-        };
-    };
-};
-
-// Смотрим локальное хранилище, в каком состоянии был сайдбар
-var sidebar = localStorage.getItem('sidebar');
-if (sidebar === null) {
-    // Абсолютно первый запуск
-    localStorage.setItem('sidebar', 1); // Пишем в локальное значение по умолчанию
-};
-// Смотрим в локадьом хранилище ссылку
-var link = localStorage.getItem('link');
-if (link === null) {
-    // Абсолютно первый запуск
-    localStorage.setItem('link', 0); // Пишем в локальное значение по умолчанию
-};
-// Смотрим в локадьом хранилище состояние менеджера задач
-var task = localStorage.getItem('task');
-if (task === null) {
-    // Абсолютно первый запуск
-    localStorage.setItem('task', 0); // Пишем в локальное значение по умолчанию
-};
-
-// Открытие/закрытие элементов управления
-
-// Сайдбар
-// Открываем сайдбар
-function sidebarOpen() {
-    console.log("Запуск expandSidebar: " + widthSidebarExpand);
-    if ($("#sidebar").hasClass('expand') == false) {
-        $("#sidebar").addClass('expand'); // Добавляем расширенный класс
-    };
-    $("#sidebar span").show(transitionTime); // показываем текст
-    // $("#sidebar").css("width", widthSidebarExpand  + 'px'); // Ставим ширину сайдбара расширенную
-    // $("#wrapper").css("margin-left", "");
-    // $("#wrapper").css("margin-left", widthExpand); // Ставим отступ контента расширенного
-    // $('#wrapper').transition({marginLeft: widthSidebarExpand  + 'px'}, transitionTime, 'ease');
-    // $('#sidebar').transition({width: widthSidebarExpand  + 'px'}, transitionTime, 'ease');
-    // $('#sidebar').css('width', widthSidebarExpand  + 'px');
-    $('#wrapper').css('overflow-x', 'hidden');
-    if ($("#cursor").hasClass('icon-arrow-forward')) {
-        // Меняем стрелочку
-        $("#cursor").removeClass('icon-arrow-forward');
-        $("#cursor").removeClass('icon-arrow-back');
-    };
-    $("#cursor").addClass('icon-arrow-back'); // Ставим стрелочку назад
-    localStorage.setItem('sidebar', 1); // Меняем значение в хранилище
-    setActive(); // Подсвечиваем активное меню, и разворачиваем аккордионы
-    console.log("Завершение expandSidebar");
-};
-// Закрываем сайдбар
-function sidebarClose() {
-    var log = console.log("Запуск closeSidebar: " + widthSidebarSmall);
-    // По умолчанию на экранах
-    if ($("#sidebar").hasClass('expand')) {
-        // Если есть расширенный класс
-        $("#sidebar").removeClass('expand'); // Удаляем расширенный класс
-    };
-    $("#sidebar span").hide(); // убираем тескт в меню, оставляем иконки
-    $("#sidebar .accordion-menu").foundation('hideAll'); // Сворачиваем аккордионы
-    // $("#sidebar").css("width", widthSidebarSmall + 'px'); // Ставим ширину сайдбара по умолчанию
-    // $("#wrapper").css("margin-left", "");
-    // $("#wrapper").css("margin-left", widthSidebar); // Ставим отступ контента по умолчанию
-    // $('#wrapper').transition({marginLeft: widthSidebarSmall + 'px'}, transitionTime, 'ease');
-    // $('#sidebar').css('width', widthSidebarSmall + 'px');
-    // $('#sidebar').transition({width: widthSidebarSmall + 'px'}, transitionTime, 'ease');
-    $('#wrapper').css('overflow-x', 'hidden');
-    if ($("#cursor").hasClass('icon-arrow-back')) {
-        // Меняем стрелочку
-        $("#cursor").removeClass('icon-arrow-forward');
-        $("#cursor").removeClass('icon-arrow-back');
-        $("#cursor").addClass('icon-arrow-forward'); // Ставим стрелочку вперед
-    };
-    localStorage.setItem('sidebar', 0); // Меняем значение в хранилище
-    setActive(); // Подсвечиваем активное меню
-    console.log("Завершение closeSidebar");
-};
-// Проверка наличия у ссылки родителя-директории
-function checkParentDir(idMenuClick) {
-    var p = 0;
-    var link = localStorage.getItem('link');
-    var ulParent = $('[data-link="' + link + '"]').parents('ul'); // смотрим всех родителей ul у нажатой ссылки
-    var activeLi = ulParent.parents('li'); // Берем li всех ul, в котором нажата ссылка
-    var activeA = activeLi.children('a'); // Выбираем все вышестоящие ссылки
-    for (i = 0; i < activeA.length; i++) {
-        result = $(activeA[i]).data('link');
-        if (idMenuClick == result) {
-            // Если нажатая ссылка находится в одном списке с родителем, узнаем об этом
-            var p = 1;
-        };
-    };
-    // console.log(p);
-    return p;
-};
-// Присвоение активного статуса ссылкам
-function setActive() {
-    console.log("Запуск setActive");
-    var link = localStorage.getItem('link');
-    console.log("Видим ид ссылки: " + link);
-    var sidebar = localStorage.getItem('sidebar');
-    console.log("Видим состояние сайдбара: " + sidebar);
-    $(".nav a").removeClass('active');
-    $('[data-link="' + link + '"]').addClass('active');
-
-    // if ($('[data-link="' + link + '"]').parent('.is-accordion-submenu-parent')) {
-    //   $('[data-link="' + link + '"]').next('ul').css('display', '');
-    // };
-
-    var ulParent = $('[data-link="' + link + '"]').parents('ul');
-    numMainParent = ulParent.length - 1; // Минусуем самый главный ul сайдбара
-    // console.log(ulParent);
-    for (var i = 0; i < numMainParent; i++) {
-        $(ulParent[i]).addClass('is-active');
-        var activeDirectory = $(ulParent[i]).parent('li');
-        $(activeDirectory).children('a').addClass('active'); // Подсвечиваем все вышестоящие ссылки
-        if (sidebar == 1) {
-            $(ulParent[i]).css('display', ''); // Если сайдбар раскрыт - разворачиваем аккордион
-        };
-        if (sidebar == 0) {
-            $(ulParent[i]).css('display', 'none'); // Если сайдбар скрыт - сворачиваем аккордион
-        };
-    };
-    console.log("Завершение setActive");
-};
-
-// Менеджер задач
-// Открываем менеджер задач
-function taskOpen() {
-    // $('#task-manager').transition({'marginRight': '0'}, transitionTime, 'ease');
-    // $('#task-manager').css('marginRight', '0');
-    if ($('#task-manager').hasClass('task-active') == false) {
-        $('#task-manager').addClass('task-active');
-    };
-};
-// Закрываем менеджер задач
-function taskClose() {
-    // $('#task-manager').transition({'marginRight': '-' + widthTask + 'px'}, transitionTime, 'ease');
-    // $('#task-manager').css('marginRight', '-' + widthTask + 'px');
-    if ($('#task-manager').hasClass('task-active')) {
-        $('#task-manager').removeClass('task-active');
-    };
-};
-
-function fixedThead() {
-
-    getMassWidth();
-    // Ширина th в закрепленном заголовке таблицы
-    console.log('Запуск шапки таблицы');
-    // console.log('Видим количество td в одной строке = ' + tbodyTd.length);
-    // console.log('Видим количество th в одной строке = ' + theadTh.length);
-    if (tbodyTd.length == theadTh.length) {
-        for (var i = 0; i < tbodyTd.length; i++) {
-            var thWidth = oldThWidth[i];
-            var tdWidth = oldTdWidth[i];
-            if (tdWidth > thWidth) {
-                console.log('Старая ширина столбца = ' + tdWidth);
-                if (oldContentWidth != 0) {
-                    var tdWidth = computedContentWidth * tdWidth / oldContentWidth;
-                    console.log('Новая ширина столбца = ' + tdWidth);
-                };
-                $(tbodyTd[i]).width(tdWidth);
-                // console.log('Ширина столбца №' + i + ' = ' + tdWidth);
-                $(theadTh[i]).width(tdWidth);
-                // console.log('Ставим столбец  №' + i + ' в шапке = ' + $(theadTh[i]).width());
-            };
-            if (tdWidth < thWidth) {
-                console.log('Старая ширина столбца шапки = ' + thWidth);
-                if (oldContentWidth != 0) {
-                    var thWidth = computedContentWidth * thWidth / oldContentWidth;
-                    console.log('Новая ширина столбца шапки = ' + thWidth);
-                };
-                $(tbodyTd[i]).width(thWidth);
-                // console.log('Ширина столбца №' + i + ' = ' + thWidth);
-                $(theadTh[i]).width(thWidth);
-                // console.log('Ставим столбец  №' + i + ' в шапке = ' + $(theadTh[i]).width());
-            };
-            if (tdWidth == thWidth) {
-                if (oldContentWidth != 0) {
-                    var tdWidth = computedContentWidth * tdWidth / oldContentWidth;
-                    console.log('Новая ширина столбца = ' + tdWidth);
-                };
-                $(tbodyTd[i]).width(tdWidth);
-                // console.log('Ширина столбца №' + i + ' = ' + thWidth);
-                $(theadTh[i]).width(tdWidth);
-            };
-        };
-
-        oldContentWidth = computedContentWidth;
-        // alert('Записали старую = ' + oldContentWidth);
-
-    } else {
-            // alert('Братиш, в thead ' + theadTh.length + ' столбцов, а в tbody ' + tbodyTd.length + '! Непорядок, поправь!');
-        };
-
-    console.log('Завершаем шапку таблицы');
-    console.log('----');
-};
-
-// Глобальная функция отстройки
-function renderContent() {
-    var contentWidthFull = $(document).width();
-
-    // Смотрим локальное хранилище, в каком состоянии был сайдбар
-    var sidebar = localStorage.getItem('sidebar');
-    // Смотрим, какая была открыта ссылка в последний раз
-    var link = localStorage.getItem('link');
-    // Смотрим локальное хранилище, в каком состоянии был менеджер задач
-    var task = localStorage.getItem('task');
-
-    if ($(document).width() > 640) {
-        // Десктоп
-        console.log("Видим что комп");
-
-        // Показываем кнопку переключения сайдбара
-        $("#sidebar-button").parent('.gen-menu-bot').show();
-
-        // Убираем отступы по 20px с каждой стороны
-        var contentWidth = contentWidthFull - 40;
-        // var wrapperWidth = contentWidthFull;
-
-        // Все свернуто
-        if (sidebar == 0 && task == 0) {
-            computedContentWidth = contentWidth - widthSidebarSmall;
-
-            // computedWrapperWidth = wrapperWidth - widthSidebarSmall;
-            $('#wrapper').css({ 'marginLeft': widthSidebarSmall + 'px', 'marginRight': '0' });
-            $('#sidebar').css('width', widthSidebarSmall + 'px');
-            $('#task-manager').css('marginRight', '-' + widthTask + 'px');
-
-            // Прилипающий заголовок
-            if ($("div").is("#head-content")) {
-                // $('#head-sticky').css('maxWidth', computedContentWidth + 'px');
-                $('.head-content').css('width', computedContentWidth + 'px');
-            };
-            // Табличка
-            if ($("table").is("#table-content")) {
-                $('#thead-content').css('width', computedContentWidth + 'px');
-                fixedThead();
-            };
-            // Сайдбар
-            sidebarClose();
-            // Менеджер задач
-            taskClose();
-        };
-
-        // Открыт менеджер задач
-        if (sidebar == 0 && task == 1) {
-            computedContentWidth = contentWidth - widthSidebarSmall - widthTask;
-            $('#wrapper').css({ 'marginLeft': widthSidebarSmall + 'px', 'marginRight': widthTask + 'px' });
-            $('#sidebar').css('width', widthSidebarSmall + 'px');
-            $('#task-manager').css('marginRight', '0');
-
-            // Прилипающий заголовок
-            if ($("div").is("#head-content")) {
-                // $('#head-sticky').css('maxWidth', computedContentWidth + 'px');
-                $('.head-content').css('width', computedContentWidth + 'px');
-            };
-            // Табличка
-            if ($("table").is("#table-content")) {
-                $('#thead-content').css('width', computedContentWidth + 'px');
-                fixedThead();
-            };
-            // Сайдбар
-            sidebarClose();
-            // Менеджер задач
-            taskOpen();
-        };
-
-        // Открыт сайдбар
-        if (sidebar == 1 && task == 0) {
-            computedContentWidth = contentWidth - widthSidebarExpand;
-
-            // $('#wrapper').transition({'marginLeft': widthSidebarExpand + 'px', 'marginRight': '0px'}, transitionTime, 'ease');
-            $('#wrapper').css({ 'marginLeft': widthSidebarExpand + 'px', 'marginRight': '0px' });
-            $('#sidebar').css('width', widthSidebarExpand + 'px');
-            $('#task-manager').css('marginRight', '-' + widthTask + 'px');
-
-            // Прилипающий заголовок
-            if ($("div").is("#head-content")) {
-                $('#head-sticky').css('maxWidth', computedContentWidth + 'px');
-                $('.head-content').css('width', computedContentWidth + 'px');
-            };
-            // Табличка
-            if ($("table").is("#table-content")) {
-                $('#thead-content').css('width', computedContentWidth + 'px');
-                fixedThead();
-            };
-            // Сайдбар
-            sidebarOpen();
-            // Менеджер задач
-            taskClose();
-        };
-
-        // Открыты сайдбар и менеджер задач
-        if (sidebar == 1 && task == 1) {
-            computedContentWidth = contentWidth - widthSidebarExpand - widthTask;
-
-            // $('#wrapper').transition({'marginLeft': widthSidebarExpand + 'px','marginRight': widthTask + 'px'}, transitionTime, 'ease');
-            $('#wrapper').css({ 'marginLeft': widthSidebarExpand + 'px', 'marginRight': widthTask + 'px' });
-            $('#sidebar').css('width', widthSidebarExpand + 'px');
-            $('#task-manager').css('marginRight', '0');
-
-            // Прилипающий заголовок
-            if ($("div").is("#head-content")) {
-                $('#head-sticky').css('maxWidth', computedContentWidth + 'px');
-                $('.head-content').css('width', computedContentWidth + 'px');
-            };
-            // Табличка
-            if ($("table").is("#table-content")) {
-                $('#thead-content').css('width', computedContentWidth + 'px');
-                fixedThead();
-            };
-            // Сайдбар
-            sidebarOpen();
-            // Менеджер задач
-            taskOpen();
-        };
-    } else {
-        console.log("Видим что мобила");
-        // Мобила
-        // По умолчанию на телефонах
-        $("#sidebar").css("width", '100%');
-        $("#sidebar span").show(); // На мобилках показываем текст
-        if ($("#sidebar").hasClass('expand')) {
-            // Если есть расширенный класс
-            $("#sidebar").removeClass('expand'); // Удаляем расширенный класс
-        };
-        $("#sidebar-button").parent('.gen-menu-bot').hide(); // Скрываем кнопку переключения
-
-        computedContentWidth = contentWidth + 40;
-        // alert(contentWidth);
-        $('#wrapper').css({ 'marginLeft': '0', 'marginRight': '0' });
-
-        // Все свернуто
-        if (sidebar == 0 && task == 0) {
-            // Менеджер задач
-            taskClose();
-        };
-        // Менеджер
-        if (sidebar == 0 && task == 1) {
-            // Менеджер задач
-            taskOpen();
-        };
-    };
-};
-
-// Палим клики
-// Клики по стрелке сайдбара
-$(document).on('click', '#sidebar-button', function () {
-    var log = console.log("Клик по кнопке");
-    if (localStorage.getItem('sidebar') == 0) {
-        localStorage.setItem('sidebar', 1);
-    } else {
-        localStorage.setItem('sidebar', 0);
-    };
-    renderContent();
-    console.log("-------------------");
-});
-// При клике на иконку разворачивается сайдбар и сама директория
-$(document).on('click', '.nav a', function () {
-    var idMenuClick = $(this).data('link');
-    if ($(document).width() > 640) {
-        if (localStorage.getItem('sidebar') == 1) {
-            console.log("Делаем подсветку пунктов меню");
-            localStorage.setItem('link', idMenuClick);
-            console.log("Записали ID: " + idMenuClick);
-            setActive();
-        } else {
-            console.log("Видим надо развернуть по иконке");
-            localStorage.setItem('sidebar', 1);
-            console.log("Видим ID пункта меню по которому кликнули: " + idMenuClick);
-            var a = checkParentDir(idMenuClick);
-            if (a == 1) {
-                console.log("Не переписываем ссылку");
-            } else {
-                localStorage.setItem('link', idMenuClick);
-                console.log("Записали ID: " + idMenuClick);
-            };
-        };
-    } else {
-        console.log("Делаем подсветку для мобил");
-        localStorage.setItem('link', idMenuClick);
-        console.log("Записали ID: " + idMenuClick);
-        setActive();
-    };
-    renderContent();
-    console.log("-------------------");
-});
-// На мобилах клик по иконке разворачивания сайдбара
-$(document).on('click', '.menu-icon', function () {
-    if ($(document).width() <= 640) {
-        if ($('#sidebar').css('display') == 'block') {
-            $('body').css('overflow-y', 'hidden');
-        } else {
-            $('body').css('overflow-y', 'auto');
-        };
-        if (localStorage.getItem('task') == 1) {
-            localStorage.setItem('task', 0);
-            $('#task-manager').removeClass('task-active');
-            $('#task-manager').css('marginRight', '-240px');
-        };
-    };
-    renderContent();
-});
-// Клики по кнопке менеджера задач
-$(document).on('click', '#task-toggle', function () {
-    if ($(document).width() <= 640) {
-        if ($('#task-manager').hasClass('task-active')) {
-            $('body').css('overflow-y', 'auto');
-        } else {
-            $('body').css('overflow-y', 'hidden');
-        };
-        if ($('#sidebar').css('display') == 'block') {
-            $('#sidebar').css('display', 'none');
-            $('#task-toggle').addClass('task-active');
-        };
-    };
-    if (localStorage.getItem('task') == 0) {
-        localStorage.setItem('task', 1);
-    } else {
-        localStorage.setItem('task', 0);
-    };
-    renderContent();
-});
-
-// $(window).scroll(function () {
-//    checkFilter ();
-// });
-
-// $(document).on('ajaxSend', '#loading .find-status', function() {
-//     $(this).show(); // показываем элемент
-// }).on('ajaxComplete', '#loading .find-status', function(){
-//     $(this).hide(); // скрываем элемент
-// });
-// $("#loading .find-status").bind("ajaxSend", function(){
-//     $(this).show(); // показываем элемент
-// }).bind("ajaxComplete", function(){
-//     $(this).hide(); // скрываем элемент
-// });
-
-
-$(function () {
-    console.log('Начало обработки страницы');
-});
-$(window).on('load', function () {
-    $("body").removeClass("block-refresh");
-    renderContent();
-    setTimeout(function () {
-        $('#wrapper').css({ 'transition': 'margin 0.3s ease' });
-        $('#sidebar').css({ 'transition': 'width 0.3s ease' });
-        $('#task-manager').css({ 'transition': 'margin-right 0.3s ease' });
-        if ($("div").is("#head-content")) {
-            $('.head-content').css({ 'transition': 'width 0.3s ease' });
-        };
-        if ($("table").is("#table")) {
-            // $('#thead-sticky').css({'transition': 'margin 0.1s ease'});
-            $('#thead-content').css({ 'transition': 'width 0.3s ease' });
-            $('#thead-content>th').css({ 'transition': 'width 0.3s ease' });
-        };
-        // $('#filters').css({'transition': 'height 1s ease'});
-        $('.td-drop').width(32);
-        $('.td-checkbox').width(32);
-        $('.td-delete').width(32);
-        getMassWidth();
-        fixedThead();
-        // alert('lol');
-    }, 1);
-
-    // get_challenges();
-});
-$(window).resize(function () {
-    renderContent();
-});
-// Иконка в футере при клике
-// $('.icon-footer').bind('click', function() {
-//   $('#foot-drop').toggleClass('active-foot-drop');
-// });
-
-/***/ }),
-/* 90 */
-/***/ (function(module, exports) {
-
-function checkFilter() {
-
-    // var marginTop = '6.2em';
-    // if ($('#thead-sticky').hasClass('is-stuck')) {
-    // 	var string = $('#thead-sticky').css('marginTop');
-    if ($('.icon-filter').hasClass('active-filter')) {
-        $('#filters').css('display', 'block');
-
-        $('#thead-sticky').css('marginTop', '15em');
-        $('#thead-sticky').attr('data-margin-top', 15);
-    } else {
-        $('#filters').css('display', 'none');
-        $('#thead-sticky').attr('data-margin-top', 6.2);
-        $('#thead-sticky').css('marginTop', '6.2em');
-    };
-    // };
-};
-
-// Блок фильтра
-$(document).on('click', '.icon-filter', function () {
-    $(this).toggleClass("active-filter");
-    checkFilter();
-});
-// $('.icon-filter').click(function() {
-
-// });
-
-$(document).on('click', '.filter-close', function () {
-    $('.icon-filter').removeClass("active-filter");
-    $('#filters').css('display', 'none');
-    $('#thead-sticky').attr('data-margin-top', 6.2);
-    $('#thead-sticky').css('marginTop', '6.2em');
-});
-
-/***/ }),
-/* 91 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 92 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 93 */,
-/* 94 */,
-/* 95 */,
-/* 96 */,
-/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -62942,10 +62289,10 @@ $(document).on('click', '.filter-close', function () {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(98)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(88)(module)))
 
 /***/ }),
-/* 98 */
+/* 88 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -62971,6 +62318,655 @@ module.exports = function(module) {
 	return module;
 };
 
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { attrs: { id: "search" } }, [
+    _c("input", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.text,
+          expression: "text"
+        }
+      ],
+      staticClass: "search-field",
+      attrs: {
+        type: "search",
+        id: "field-search",
+        name: "search",
+        placeholder: "Поиск"
+      },
+      domProps: { value: _vm.text },
+      on: {
+        input: [
+          function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.text = $event.target.value
+          },
+          _vm.dedounceSearch
+        ]
+      }
+    }),
+    _vm._v(" "),
+    _vm.search
+      ? _c("div", { attrs: { id: "search-result-wrap" } }, [
+          _c(
+            "ul",
+            { staticClass: "search-result-list" },
+            _vm._l(_vm.results, function(result, index) {
+              return _c("li", [
+                _c(
+                  "a",
+                  {
+                    attrs: {
+                      href: "/admin/" + this.entity + "/" + result.id + "/edit"
+                    }
+                  },
+                  [_vm._v(_vm._s(result.name))]
+                )
+              ])
+            }),
+            0
+          )
+        ])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2fb9d66e", module.exports)
+  }
+}
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports) {
+
+// Валидируем кнопку при клике
+window.submitAjax = function (id) {
+    this.event.preventDefault();
+    $('#' + id).foundation('validateForm');
+    var valid = $('#' + id + ' .is-invalid-input').length;
+    var result = valid == 0;
+    return result;
+};
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports) {
+
+// Умолчания глобальные
+// Время применения изменений
+var transitionTime = 200;
+// Ширина менеджера задач
+var widthTask = 300;
+// Выставляем отступ контента по умолчанию = ширине сайдбара
+var widthSidebarSmall = 64;
+// Значение развернутого сайдбара
+var widthSidebarExpand = 240;
+// Блок фильтра
+// var heightFilterSmall = 140;
+
+var theadTh = $('.thead-width>tr>th');
+var tbodyTd = $('.tbody-width>tr:first>td');
+var oldContentWidth = 0;
+
+var oldThWidth = [];
+var oldTdWidth = [];
+
+// Если есть табличка, то берем ширины ячеек
+
+function getMassWidth() {
+    if ($("table").is("#table-content")) {
+        if (tbodyTd.length == theadTh.length) {
+            for (var i = 0; i < tbodyTd.length; i++) {
+
+                oldThWidth[i] = $(theadTh[i]).width();
+                oldTdWidth[i] = $(tbodyTd[i]).width();
+            };
+            console.table(oldThWidth);
+            console.table(oldTdWidth);
+        };
+    };
+};
+
+// Смотрим локальное хранилище, в каком состоянии был сайдбар
+var sidebar = localStorage.getItem('sidebar');
+if (sidebar === null) {
+    // Абсолютно первый запуск
+    localStorage.setItem('sidebar', 1); // Пишем в локальное значение по умолчанию
+};
+// Смотрим в локадьом хранилище ссылку
+var link = localStorage.getItem('link');
+if (link === null) {
+    // Абсолютно первый запуск
+    localStorage.setItem('link', 0); // Пишем в локальное значение по умолчанию
+};
+// Смотрим в локадьом хранилище состояние менеджера задач
+var task = localStorage.getItem('task');
+if (task === null) {
+    // Абсолютно первый запуск
+    localStorage.setItem('task', 0); // Пишем в локальное значение по умолчанию
+};
+
+// Открытие/закрытие элементов управления
+
+// Сайдбар
+// Открываем сайдбар
+function sidebarOpen() {
+    console.log("Запуск expandSidebar: " + widthSidebarExpand);
+    if ($("#sidebar").hasClass('expand') == false) {
+        $("#sidebar").addClass('expand'); // Добавляем расширенный класс
+    };
+    $("#sidebar span").show(transitionTime); // показываем текст
+    // $("#sidebar").css("width", widthSidebarExpand  + 'px'); // Ставим ширину сайдбара расширенную
+    // $("#wrapper").css("margin-left", "");
+    // $("#wrapper").css("margin-left", widthExpand); // Ставим отступ контента расширенного
+    // $('#wrapper').transition({marginLeft: widthSidebarExpand  + 'px'}, transitionTime, 'ease');
+    // $('#sidebar').transition({width: widthSidebarExpand  + 'px'}, transitionTime, 'ease');
+    // $('#sidebar').css('width', widthSidebarExpand  + 'px');
+    $('#wrapper').css('overflow-x', 'hidden');
+    if ($("#cursor").hasClass('icon-arrow-forward')) {
+        // Меняем стрелочку
+        $("#cursor").removeClass('icon-arrow-forward');
+        $("#cursor").removeClass('icon-arrow-back');
+    };
+    $("#cursor").addClass('icon-arrow-back'); // Ставим стрелочку назад
+    localStorage.setItem('sidebar', 1); // Меняем значение в хранилище
+    setActive(); // Подсвечиваем активное меню, и разворачиваем аккордионы
+    console.log("Завершение expandSidebar");
+};
+// Закрываем сайдбар
+function sidebarClose() {
+    var log = console.log("Запуск closeSidebar: " + widthSidebarSmall);
+    // По умолчанию на экранах
+    if ($("#sidebar").hasClass('expand')) {
+        // Если есть расширенный класс
+        $("#sidebar").removeClass('expand'); // Удаляем расширенный класс
+    };
+    $("#sidebar span").hide(); // убираем тескт в меню, оставляем иконки
+    $("#sidebar .accordion-menu").foundation('hideAll'); // Сворачиваем аккордионы
+    // $("#sidebar").css("width", widthSidebarSmall + 'px'); // Ставим ширину сайдбара по умолчанию
+    // $("#wrapper").css("margin-left", "");
+    // $("#wrapper").css("margin-left", widthSidebar); // Ставим отступ контента по умолчанию
+    // $('#wrapper').transition({marginLeft: widthSidebarSmall + 'px'}, transitionTime, 'ease');
+    // $('#sidebar').css('width', widthSidebarSmall + 'px');
+    // $('#sidebar').transition({width: widthSidebarSmall + 'px'}, transitionTime, 'ease');
+    $('#wrapper').css('overflow-x', 'hidden');
+    if ($("#cursor").hasClass('icon-arrow-back')) {
+        // Меняем стрелочку
+        $("#cursor").removeClass('icon-arrow-forward');
+        $("#cursor").removeClass('icon-arrow-back');
+        $("#cursor").addClass('icon-arrow-forward'); // Ставим стрелочку вперед
+    };
+    localStorage.setItem('sidebar', 0); // Меняем значение в хранилище
+    setActive(); // Подсвечиваем активное меню
+    console.log("Завершение closeSidebar");
+};
+// Проверка наличия у ссылки родителя-директории
+function checkParentDir(idMenuClick) {
+    var p = 0;
+    var link = localStorage.getItem('link');
+    var ulParent = $('[data-link="' + link + '"]').parents('ul'); // смотрим всех родителей ul у нажатой ссылки
+    var activeLi = ulParent.parents('li'); // Берем li всех ul, в котором нажата ссылка
+    var activeA = activeLi.children('a'); // Выбираем все вышестоящие ссылки
+    for (i = 0; i < activeA.length; i++) {
+        result = $(activeA[i]).data('link');
+        if (idMenuClick == result) {
+            // Если нажатая ссылка находится в одном списке с родителем, узнаем об этом
+            var p = 1;
+        };
+    };
+    // console.log(p);
+    return p;
+};
+// Присвоение активного статуса ссылкам
+function setActive() {
+    console.log("Запуск setActive");
+    var link = localStorage.getItem('link');
+    console.log("Видим ид ссылки: " + link);
+    var sidebar = localStorage.getItem('sidebar');
+    console.log("Видим состояние сайдбара: " + sidebar);
+    $(".nav a").removeClass('active');
+    $('[data-link="' + link + '"]').addClass('active');
+
+    // if ($('[data-link="' + link + '"]').parent('.is-accordion-submenu-parent')) {
+    //   $('[data-link="' + link + '"]').next('ul').css('display', '');
+    // };
+
+    var ulParent = $('[data-link="' + link + '"]').parents('ul');
+    numMainParent = ulParent.length - 1; // Минусуем самый главный ul сайдбара
+    // console.log(ulParent);
+    for (var i = 0; i < numMainParent; i++) {
+        $(ulParent[i]).addClass('is-active');
+        var activeDirectory = $(ulParent[i]).parent('li');
+        $(activeDirectory).children('a').addClass('active'); // Подсвечиваем все вышестоящие ссылки
+        if (sidebar == 1) {
+            $(ulParent[i]).css('display', ''); // Если сайдбар раскрыт - разворачиваем аккордион
+        };
+        if (sidebar == 0) {
+            $(ulParent[i]).css('display', 'none'); // Если сайдбар скрыт - сворачиваем аккордион
+        };
+    };
+    console.log("Завершение setActive");
+};
+
+// Менеджер задач
+// Открываем менеджер задач
+function taskOpen() {
+    // $('#task-manager').transition({'marginRight': '0'}, transitionTime, 'ease');
+    // $('#task-manager').css('marginRight', '0');
+    if ($('#task-manager').hasClass('task-active') == false) {
+        $('#task-manager').addClass('task-active');
+    };
+};
+// Закрываем менеджер задач
+function taskClose() {
+    // $('#task-manager').transition({'marginRight': '-' + widthTask + 'px'}, transitionTime, 'ease');
+    // $('#task-manager').css('marginRight', '-' + widthTask + 'px');
+    if ($('#task-manager').hasClass('task-active')) {
+        $('#task-manager').removeClass('task-active');
+    };
+};
+
+function fixedThead() {
+
+    getMassWidth();
+    // Ширина th в закрепленном заголовке таблицы
+    console.log('Запуск шапки таблицы');
+    // console.log('Видим количество td в одной строке = ' + tbodyTd.length);
+    // console.log('Видим количество th в одной строке = ' + theadTh.length);
+    if (tbodyTd.length == theadTh.length) {
+        for (var i = 0; i < tbodyTd.length; i++) {
+            var thWidth = oldThWidth[i];
+            var tdWidth = oldTdWidth[i];
+            if (tdWidth > thWidth) {
+                console.log('Старая ширина столбца = ' + tdWidth);
+                if (oldContentWidth != 0) {
+                    var tdWidth = computedContentWidth * tdWidth / oldContentWidth;
+                    console.log('Новая ширина столбца = ' + tdWidth);
+                };
+                $(tbodyTd[i]).width(tdWidth);
+                // console.log('Ширина столбца №' + i + ' = ' + tdWidth);
+                $(theadTh[i]).width(tdWidth);
+                // console.log('Ставим столбец  №' + i + ' в шапке = ' + $(theadTh[i]).width());
+            };
+            if (tdWidth < thWidth) {
+                console.log('Старая ширина столбца шапки = ' + thWidth);
+                if (oldContentWidth != 0) {
+                    var thWidth = computedContentWidth * thWidth / oldContentWidth;
+                    console.log('Новая ширина столбца шапки = ' + thWidth);
+                };
+                $(tbodyTd[i]).width(thWidth);
+                // console.log('Ширина столбца №' + i + ' = ' + thWidth);
+                $(theadTh[i]).width(thWidth);
+                // console.log('Ставим столбец  №' + i + ' в шапке = ' + $(theadTh[i]).width());
+            };
+            if (tdWidth == thWidth) {
+                if (oldContentWidth != 0) {
+                    var tdWidth = computedContentWidth * tdWidth / oldContentWidth;
+                    console.log('Новая ширина столбца = ' + tdWidth);
+                };
+                $(tbodyTd[i]).width(tdWidth);
+                // console.log('Ширина столбца №' + i + ' = ' + thWidth);
+                $(theadTh[i]).width(tdWidth);
+            };
+        };
+
+        oldContentWidth = computedContentWidth;
+        // alert('Записали старую = ' + oldContentWidth);
+
+    } else {
+            // alert('Братиш, в thead ' + theadTh.length + ' столбцов, а в tbody ' + tbodyTd.length + '! Непорядок, поправь!');
+        };
+
+    console.log('Завершаем шапку таблицы');
+    console.log('----');
+};
+
+// Глобальная функция отстройки
+function renderContent() {
+    var contentWidthFull = $(document).width();
+
+    // Смотрим локальное хранилище, в каком состоянии был сайдбар
+    var sidebar = localStorage.getItem('sidebar');
+    // Смотрим, какая была открыта ссылка в последний раз
+    var link = localStorage.getItem('link');
+    // Смотрим локальное хранилище, в каком состоянии был менеджер задач
+    var task = localStorage.getItem('task');
+
+    if ($(document).width() > 640) {
+        // Десктоп
+        console.log("Видим что комп");
+
+        // Показываем кнопку переключения сайдбара
+        $("#sidebar-button").parent('.gen-menu-bot').show();
+
+        // Убираем отступы по 20px с каждой стороны
+        var contentWidth = contentWidthFull - 40;
+        // var wrapperWidth = contentWidthFull;
+
+        // Все свернуто
+        if (sidebar == 0 && task == 0) {
+            computedContentWidth = contentWidth - widthSidebarSmall;
+
+            // computedWrapperWidth = wrapperWidth - widthSidebarSmall;
+            $('#wrapper').css({ 'marginLeft': widthSidebarSmall + 'px', 'marginRight': '0' });
+            $('#sidebar').css('width', widthSidebarSmall + 'px');
+            $('#task-manager').css('marginRight', '-' + widthTask + 'px');
+
+            // Прилипающий заголовок
+            if ($("div").is("#head-content")) {
+                // $('#head-sticky').css('maxWidth', computedContentWidth + 'px');
+                $('.head-content').css('width', computedContentWidth + 'px');
+            };
+            // Табличка
+            if ($("table").is("#table-content")) {
+                $('#thead-content').css('width', computedContentWidth + 'px');
+                fixedThead();
+            };
+            // Сайдбар
+            sidebarClose();
+            // Менеджер задач
+            taskClose();
+        };
+
+        // Открыт менеджер задач
+        if (sidebar == 0 && task == 1) {
+            computedContentWidth = contentWidth - widthSidebarSmall - widthTask;
+            $('#wrapper').css({ 'marginLeft': widthSidebarSmall + 'px', 'marginRight': widthTask + 'px' });
+            $('#sidebar').css('width', widthSidebarSmall + 'px');
+            $('#task-manager').css('marginRight', '0');
+
+            // Прилипающий заголовок
+            if ($("div").is("#head-content")) {
+                // $('#head-sticky').css('maxWidth', computedContentWidth + 'px');
+                $('.head-content').css('width', computedContentWidth + 'px');
+            };
+            // Табличка
+            if ($("table").is("#table-content")) {
+                $('#thead-content').css('width', computedContentWidth + 'px');
+                fixedThead();
+            };
+            // Сайдбар
+            sidebarClose();
+            // Менеджер задач
+            taskOpen();
+        };
+
+        // Открыт сайдбар
+        if (sidebar == 1 && task == 0) {
+            computedContentWidth = contentWidth - widthSidebarExpand;
+
+            // $('#wrapper').transition({'marginLeft': widthSidebarExpand + 'px', 'marginRight': '0px'}, transitionTime, 'ease');
+            $('#wrapper').css({ 'marginLeft': widthSidebarExpand + 'px', 'marginRight': '0px' });
+            $('#sidebar').css('width', widthSidebarExpand + 'px');
+            $('#task-manager').css('marginRight', '-' + widthTask + 'px');
+
+            // Прилипающий заголовок
+            if ($("div").is("#head-content")) {
+                $('#head-sticky').css('maxWidth', computedContentWidth + 'px');
+                $('.head-content').css('width', computedContentWidth + 'px');
+            };
+            // Табличка
+            if ($("table").is("#table-content")) {
+                $('#thead-content').css('width', computedContentWidth + 'px');
+                fixedThead();
+            };
+            // Сайдбар
+            sidebarOpen();
+            // Менеджер задач
+            taskClose();
+        };
+
+        // Открыты сайдбар и менеджер задач
+        if (sidebar == 1 && task == 1) {
+            computedContentWidth = contentWidth - widthSidebarExpand - widthTask;
+
+            // $('#wrapper').transition({'marginLeft': widthSidebarExpand + 'px','marginRight': widthTask + 'px'}, transitionTime, 'ease');
+            $('#wrapper').css({ 'marginLeft': widthSidebarExpand + 'px', 'marginRight': widthTask + 'px' });
+            $('#sidebar').css('width', widthSidebarExpand + 'px');
+            $('#task-manager').css('marginRight', '0');
+
+            // Прилипающий заголовок
+            if ($("div").is("#head-content")) {
+                $('#head-sticky').css('maxWidth', computedContentWidth + 'px');
+                $('.head-content').css('width', computedContentWidth + 'px');
+            };
+            // Табличка
+            if ($("table").is("#table-content")) {
+                $('#thead-content').css('width', computedContentWidth + 'px');
+                fixedThead();
+            };
+            // Сайдбар
+            sidebarOpen();
+            // Менеджер задач
+            taskOpen();
+        };
+    } else {
+        console.log("Видим что мобила");
+        // Мобила
+        // По умолчанию на телефонах
+        $("#sidebar").css("width", '100%');
+        $("#sidebar span").show(); // На мобилках показываем текст
+        if ($("#sidebar").hasClass('expand')) {
+            // Если есть расширенный класс
+            $("#sidebar").removeClass('expand'); // Удаляем расширенный класс
+        };
+        $("#sidebar-button").parent('.gen-menu-bot').hide(); // Скрываем кнопку переключения
+
+        computedContentWidth = contentWidth + 40;
+        // alert(contentWidth);
+        $('#wrapper').css({ 'marginLeft': '0', 'marginRight': '0' });
+
+        // Все свернуто
+        if (sidebar == 0 && task == 0) {
+            // Менеджер задач
+            taskClose();
+        };
+        // Менеджер
+        if (sidebar == 0 && task == 1) {
+            // Менеджер задач
+            taskOpen();
+        };
+    };
+};
+
+// Палим клики
+// Клики по стрелке сайдбара
+$(document).on('click', '#sidebar-button', function () {
+    var log = console.log("Клик по кнопке");
+    if (localStorage.getItem('sidebar') == 0) {
+        localStorage.setItem('sidebar', 1);
+    } else {
+        localStorage.setItem('sidebar', 0);
+    };
+    renderContent();
+    console.log("-------------------");
+});
+// При клике на иконку разворачивается сайдбар и сама директория
+$(document).on('click', '.nav a', function () {
+    var idMenuClick = $(this).data('link');
+    if ($(document).width() > 640) {
+        if (localStorage.getItem('sidebar') == 1) {
+            console.log("Делаем подсветку пунктов меню");
+            localStorage.setItem('link', idMenuClick);
+            console.log("Записали ID: " + idMenuClick);
+            setActive();
+        } else {
+            console.log("Видим надо развернуть по иконке");
+            localStorage.setItem('sidebar', 1);
+            console.log("Видим ID пункта меню по которому кликнули: " + idMenuClick);
+            var a = checkParentDir(idMenuClick);
+            if (a == 1) {
+                console.log("Не переписываем ссылку");
+            } else {
+                localStorage.setItem('link', idMenuClick);
+                console.log("Записали ID: " + idMenuClick);
+            };
+        };
+    } else {
+        console.log("Делаем подсветку для мобил");
+        localStorage.setItem('link', idMenuClick);
+        console.log("Записали ID: " + idMenuClick);
+        setActive();
+    };
+    renderContent();
+    console.log("-------------------");
+});
+// На мобилах клик по иконке разворачивания сайдбара
+$(document).on('click', '.menu-icon', function () {
+    if ($(document).width() <= 640) {
+        if ($('#sidebar').css('display') == 'block') {
+            $('body').css('overflow-y', 'hidden');
+        } else {
+            $('body').css('overflow-y', 'auto');
+        };
+        if (localStorage.getItem('task') == 1) {
+            localStorage.setItem('task', 0);
+            $('#task-manager').removeClass('task-active');
+            $('#task-manager').css('marginRight', '-240px');
+        };
+    };
+    renderContent();
+});
+// Клики по кнопке менеджера задач
+$(document).on('click', '#task-toggle', function () {
+    if ($(document).width() <= 640) {
+        if ($('#task-manager').hasClass('task-active')) {
+            $('body').css('overflow-y', 'auto');
+        } else {
+            $('body').css('overflow-y', 'hidden');
+        };
+        if ($('#sidebar').css('display') == 'block') {
+            $('#sidebar').css('display', 'none');
+            $('#task-toggle').addClass('task-active');
+        };
+    };
+    if (localStorage.getItem('task') == 0) {
+        localStorage.setItem('task', 1);
+    } else {
+        localStorage.setItem('task', 0);
+    };
+    renderContent();
+});
+
+// $(window).scroll(function () {
+//    checkFilter ();
+// });
+
+// $(document).on('ajaxSend', '#loading .find-status', function() {
+//     $(this).show(); // показываем элемент
+// }).on('ajaxComplete', '#loading .find-status', function(){
+//     $(this).hide(); // скрываем элемент
+// });
+// $("#loading .find-status").bind("ajaxSend", function(){
+//     $(this).show(); // показываем элемент
+// }).bind("ajaxComplete", function(){
+//     $(this).hide(); // скрываем элемент
+// });
+
+
+$(function () {
+    console.log('Начало обработки страницы');
+});
+$(window).on('load', function () {
+    $("body").removeClass("block-refresh");
+    renderContent();
+    setTimeout(function () {
+        $('#wrapper').css({ 'transition': 'margin 0.3s ease' });
+        $('#sidebar').css({ 'transition': 'width 0.3s ease' });
+        $('#task-manager').css({ 'transition': 'margin-right 0.3s ease' });
+        if ($("div").is("#head-content")) {
+            $('.head-content').css({ 'transition': 'width 0.3s ease' });
+        };
+        if ($("table").is("#table")) {
+            // $('#thead-sticky').css({'transition': 'margin 0.1s ease'});
+            $('#thead-content').css({ 'transition': 'width 0.3s ease' });
+            $('#thead-content>th').css({ 'transition': 'width 0.3s ease' });
+        };
+        // $('#filters').css({'transition': 'height 1s ease'});
+        $('.td-drop').width(32);
+        $('.td-checkbox').width(32);
+        $('.td-delete').width(32);
+        getMassWidth();
+        fixedThead();
+        // alert('lol');
+    }, 1);
+
+    // get_challenges();
+});
+$(window).resize(function () {
+    renderContent();
+});
+// Иконка в футере при клике
+// $('.icon-footer').bind('click', function() {
+//   $('#foot-drop').toggleClass('active-foot-drop');
+// });
+
+/***/ }),
+/* 92 */
+/***/ (function(module, exports) {
+
+function checkFilter() {
+
+    // var marginTop = '6.2em';
+    // if ($('#thead-sticky').hasClass('is-stuck')) {
+    // 	var string = $('#thead-sticky').css('marginTop');
+    if ($('.icon-filter').hasClass('active-filter')) {
+        $('#filters').css('display', 'block');
+
+        $('#thead-sticky').css('marginTop', '15em');
+        $('#thead-sticky').attr('data-margin-top', 15);
+    } else {
+        $('#filters').css('display', 'none');
+        $('#thead-sticky').attr('data-margin-top', 6.2);
+        $('#thead-sticky').css('marginTop', '6.2em');
+    };
+    // };
+};
+
+// Блок фильтра
+$(document).on('click', '.icon-filter', function () {
+    $(this).toggleClass("active-filter");
+    checkFilter();
+});
+// $('.icon-filter').click(function() {
+
+// });
+
+$(document).on('click', '.filter-close', function () {
+    $('.icon-filter').removeClass("active-filter");
+    $('#filters').css('display', 'none');
+    $('#thead-sticky').attr('data-margin-top', 6.2);
+    $('#thead-sticky').css('marginTop', '6.2em');
+});
+
+/***/ }),
+/* 93 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 94 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

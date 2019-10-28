@@ -94,7 +94,7 @@ class PricesGoodsController extends Controller
                 'filial_id' => $filial_id,
             ])
             ->orderBy('sort', 'asc')
-            ->paginate(60);
+            ->paginate(300);
         // dd($prices_goods);
 
 
