@@ -332,19 +332,11 @@ class AttachmentController extends Controller
         $article = $attachment->article;
         // dd($article);
 
-        $result = $this->updateArticle($request, $attachment);
-        // Если результат не массив с ошибками, значит все прошло удачно
-
-        if (!is_array($result)) {
-
-            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-            $this->changeCategory($request, $attachment);
-
+        if ($article->draft) {
             $attachment->unit_for_composition_id = $request->unit_for_composition_id;
 
             $attachment->portion_status = $request->portion_status ?? 0;
             $attachment->portion_abbreviation = $request->portion_abbreviation;
-            // $attachment->portion_goods_name = $request->portion_goods_name;
             $attachment->unit_portion_id = $request->unit_portion_id;
             $attachment->portion_count = $request->portion_count;
 
@@ -352,11 +344,37 @@ class AttachmentController extends Controller
             $attachment->price_unit_category_id = $request->price_unit_category_id;
 
             $attachment->serial = $request->serial;
+        }
+
+        $result = $this->updateArticle($request, $attachment);
+        // Если результат не массив с ошибками, значит все прошло удачно
+
+        if (!is_array($result)) {
+
             $attachment->display = $request->display;
             $attachment->system = $request->system;
 
             $attachment->save();
 
+            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
+            $this->changeCategory($request, $attachment);
+
+            // Метрики
+            if ($request->has('metrics')) {
+                // dd($request);
+
+                $metrics_insert = [];
+                foreach ($request->metrics as $metric_id => $value) {
+                    if (is_array($value)) {
+                        $metrics_insert[$metric_id]['value'] = implode(',', $value);
+                    } else {
+//                        if (!is_null($value)) {
+                        $metrics_insert[$metric_id]['value'] = $value;
+//                        }
+                    }
+                }
+                $attachment->metrics()->syncWithoutDetaching($metrics_insert);
+            }
 
             // Если ли есть
             if ($request->cookie('backlink') != null) {

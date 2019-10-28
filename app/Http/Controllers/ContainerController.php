@@ -332,19 +332,11 @@ class ContainerController extends Controller
         $article = $container->article;
         // dd($article);
 
-        $result = $this->updateArticle($request, $container);
-        // Если результат не массив с ошибками, значит все прошло удачно
-
-        if (!is_array($result)) {
-
-            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-            $this->changeCategory($request, $container);
-
+        if ($article->draft) {
             $container->unit_for_composition_id = $request->unit_for_composition_id;
 
             $container->portion_status = $request->portion_status ?? 0;
             $container->portion_abbreviation = $request->portion_abbreviation;
-            // $container->portion_goods_name = $request->portion_goods_name;
             $container->unit_portion_id = $request->unit_portion_id;
             $container->portion_count = $request->portion_count;
 
@@ -352,11 +344,37 @@ class ContainerController extends Controller
             $container->price_unit_category_id = $request->price_unit_category_id;
 
             $container->serial = $request->serial;
+        }
+
+        $result = $this->updateArticle($request, $container);
+        // Если результат не массив с ошибками, значит все прошло удачно
+
+        if (!is_array($result)) {
+
             $container->display = $request->display;
             $container->system = $request->system;
 
             $container->save();
 
+            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
+            $this->changeCategory($request, $container);
+
+            // Метрики
+            if ($request->has('metrics')) {
+                // dd($request);
+
+                $metrics_insert = [];
+                foreach ($request->metrics as $metric_id => $value) {
+                    if (is_array($value)) {
+                        $metrics_insert[$metric_id]['value'] = implode(',', $value);
+                    } else {
+//                        if (!is_null($value)) {
+                        $metrics_insert[$metric_id]['value'] = $value;
+//                        }
+                    }
+                }
+                $container->metrics()->syncWithoutDetaching($metrics_insert);
+            }
 
             // Если ли есть
             if ($request->cookie('backlink') != null) {

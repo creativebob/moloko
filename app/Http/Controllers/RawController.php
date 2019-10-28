@@ -362,6 +362,7 @@ class RawController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $raw);
 
         $article = $raw->article;
+        // dd($article);
 
         if ($article->draft) {
             $raw->unit_for_composition_id = $request->unit_for_composition_id;
