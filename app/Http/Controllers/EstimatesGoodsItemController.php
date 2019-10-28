@@ -52,7 +52,9 @@ class EstimatesGoodsItemController extends Controller
         $prices_goods = PricesGoods::findOrFail($request->price_id);
         $prices_goods->load('product');
 
-        $estimates_goods_item = EstimatesGoodsItem::create([
+        // TODO - 28.10.19 - ПРоверка при добавлении при множественном клике в смете, уйдет с Vue
+
+        $estimates_goods_item = EstimatesGoodsItem::firstOrNew([
             'estimate_id' => $request->estimate_id,
             'goods_id' => $prices_goods->product->id,
             'price_id' => $prices_goods->id,
@@ -61,12 +63,15 @@ class EstimatesGoodsItemController extends Controller
             'amount' => $prices_goods->price
         ]);
 
+        if (!$estimates_goods_item->id) {
+            $estimates_goods_item->save();
 
-        $estimates_goods_item->load('product.article');
-        
-        $this->estimateUpdate($estimates_goods_item);
-        
-        return view('leads.estimate.estimates_goods_item', compact('estimates_goods_item'));
+            $estimates_goods_item->load('product.article');
+
+            $this->estimateUpdate($estimates_goods_item);
+
+            return view('leads.estimate.estimates_goods_item', compact('estimates_goods_item'));
+        }
     }
 
     /**
