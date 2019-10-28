@@ -322,24 +322,27 @@ class PricesGoodsController extends Controller
             $cur_price_goods->update([
                'archive' => false
             ]);
+
+            if ($cur_price_goods->price != $request->price) {
+
+                $cur_price_goods->actual_price->update([
+                    'end_date' => Carbon::now(),
+                ]);
+
+                $cur_price_goods->history()->create([
+                    'price' => $request->price,
+                ]);
+
+                $cur_price_goods->update([
+                    'price' => $request->price,
+                ]);
+            }
+
         } else {
             $cur_price_goods->save();
         }
 
-        if ($cur_price_goods->price != $request->price) {
 
-            $cur_price_goods->actual_price->update([
-                'end_date' => Carbon::now(),
-            ]);
-
-            $cur_price_goods->history()->create([
-                'price' => $request->price,
-            ]);
-
-            $cur_price_goods->update([
-                'price' => $request->price,
-            ]);
-        }
         return view('products.articles.goods.prices.price', compact('cur_price_goods'));
     }
 
