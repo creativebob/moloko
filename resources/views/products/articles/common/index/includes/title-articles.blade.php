@@ -24,7 +24,9 @@
                 <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
                 @endif
 
-                <input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />
+
+                <search-component alias="{{ $page_info->alias }}"></search-component>
+{{--                <input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />--}}
                 {{-- <button type="button" class="icon-search sprite button"></button> --}}
 
             </div>
@@ -36,13 +38,10 @@
 
         <div id="port-result-search">
         </div>
-        {{-- Подключаем стандартный ПОИСК --}}
-        @include('includes.scripts.search-script')
 
         {{-- Блок фильтров --}}
         @if (isset($filter))
-
-
+            
         <div class="grid-x">
             <div class="small-12 cell filters fieldset-filters" id="filters">
                 <div class="grid-padding-x">

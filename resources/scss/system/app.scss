@@ -361,31 +361,7 @@ fieldset {
 }
 
 // СТИЛИЗАЦИЯ ПОИСКА
-#search-result-wrap{
-    // display: none;
-    position: absolute;
-    background-color: #fff;
-    // margin-top: 40px;
-    padding: 2rem 1rem;
-    border: 1px solid #000;
-
-    .search-result-head{
-        font-weight: 600;
-        padding-bottom: 1rem;
-    }
-
-    .search-result-list{
-
-        li {
-            border-bottom: 1px dotted #999;
-            padding: 0.5rem 0rem;
-
-            &:last-child {
-                border-bottom: 0px dotted #999;
-            }
-        }
-    }
-}
+@import "./partials/search";
 
 .tab-challanges-count{
     color: #fff;

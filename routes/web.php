@@ -326,6 +326,8 @@ Route::resource('/raws_categories', 'RawsCategoryController');
 
 // ---------------------------------- Сырьё (Артикулы) -------------------------------------------
 
+Route::get('/raws/search/{search}', 'RawController@search');
+
 // Основные методы
 Route::resource('/raws', 'RawController');
 // Route::get('/raws/search/{text_fragment}', 'RawController@search')->middleware('auth');
@@ -354,6 +356,8 @@ Route::resource('/containers_categories', 'ContainersCategoryController');
 
 
 // ---------------------------------- Упаковки (Артикулы) -------------------------------------------
+
+Route::get('/containers/search/{search}', 'ContainerController@search');
 // Основные методы
 Route::resource('/containers', 'ContainerController');
 Route::post('/containers/search/{text_fragment}', 'СontainerController@search');
@@ -382,6 +386,9 @@ Route::resource('/attachments_categories', 'AttachmentsCategoryController');
 
 
 // ---------------------------------- Вложения (Артикулы) -------------------------------------------
+
+Route::get('/attachments/search/{search}', 'AttachmentController@search');
+
 // Основные методы
 Route::resource('/attachments', 'AttachmentController');
 Route::post('/attachments/search/{text_fragment}', 'AttachmentController@search');
@@ -465,6 +472,8 @@ Route::any('/ajax_articles_groups_set_status', 'ArticlesGroupController@ajax_set
 
 // ---------------------------------- Товары (Артикулы) -------------------------------------------
 // Route::any('/goods/create', 'GoodsController@create')->middleware('auth');
+
+Route::get('/goods/search/{search}', 'GoodsController@search');
 //
 // Фотки
 Route::any('/goods/add_photo', 'GoodsController@add_photo')->middleware('auth');

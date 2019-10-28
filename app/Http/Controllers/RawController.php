@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\Cmvable;
 use App\Http\Requests\RawStoreRequest;
 use App\Http\Requests\RawUpdateRequest;
 use App\Raw;
@@ -27,6 +28,7 @@ class RawController extends Controller
     }
 
     use Articlable;
+    use Cmvable;
 
     public function index(Request $request)
     {
@@ -524,4 +526,6 @@ class RawController extends Controller
 
         return view('products.articles_categories.goods_categories.raws.raw_tr', compact('raw'));
     }
+
+
 }

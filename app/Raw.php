@@ -106,4 +106,9 @@ class Raw extends Model
         return $this->hasMany(RawsStock::class, 'cmv_id');
     }
 
+    public function getNameAttribute() {
+        $value = $this->article->name;
+        return $value;
+    }
+
 }

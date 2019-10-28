@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Goods;
 use App\GoodsCategory;
+use App\Http\Controllers\Traits\Cmvable;
 use App\Http\Requests\GoodsStoreRequest;
 use App\Http\Requests\GoodsUpdateRequest;
 use App\Manufacturer;
@@ -27,6 +28,7 @@ class GoodsController extends Controller
     }
 
     use Articlable;
+    use Cmvable;
 
     public function index(Request $request)
     {
@@ -143,40 +145,40 @@ class GoodsController extends Controller
         ]);
     }
 
-    public function search($text_fragment)
-    {
-
-        // Подключение политики
-        $this->authorize('index', Goods::class);
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // --------------------------------------------------------------------------------------------------------------
-        // ГЛАВНЫЙ ЗАПРОС
-        // --------------------------------------------------------------------------------------------------------------
-
-        $result_search = Goods::with('author', 'company', 'article.product.category')
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->where('name', 'LIKE', '%'.$text_fragment.'%')
-        ->whereNull('archive')
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get();
-
-        if ($result_search->count()) {
-
-            $entity_alias = $this->entity_alias;
-
-            return view('includes.search', compact('result_search', 'entity_alias'));
-        } else {
-
-            return view('includes.search');
-        }
-    }
+//    public function search($text_fragment)
+//    {
+//
+//        // Подключение политики
+//        $this->authorize('index', Goods::class);
+//
+//        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+//        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+//
+//        // --------------------------------------------------------------------------------------------------------------
+//        // ГЛАВНЫЙ ЗАПРОС
+//        // --------------------------------------------------------------------------------------------------------------
+//
+//        $result_search = Goods::with('author', 'company', 'article.product.category')
+//        ->moderatorLimit($answer)
+//        ->companiesLimit($answer)
+//        ->authors($answer)
+//        ->systemItem($answer) // Фильтр по системным записям
+//        ->where('name', 'LIKE', '%'.$text_fragment.'%')
+//        ->whereNull('archive')
+//        ->orderBy('moderation', 'desc')
+//        ->orderBy('sort', 'asc')
+//        ->get();
+//
+//        if ($result_search->count()) {
+//
+//            $entity_alias = $this->entity_alias;
+//
+//            return view('includes.search', compact('result_search', 'entity_alias'));
+//        } else {
+//
+//            return view('includes.search');
+//        }
+//    }
 
     public function create(Request $request)
     {

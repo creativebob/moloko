@@ -9476,11 +9476,17 @@ fieldset legend {
   padding-right: 60px !important;
 }
 
+#search {
+  display: inline-block;
+  position: relative;
+}
+
 #search-result-wrap {
   position: absolute;
   background-color: #fff;
   padding: 2rem 1rem;
   border: 1px solid #000;
+  top: 2rem;
 }
 
 #search-result-wrap .search-result-head {
