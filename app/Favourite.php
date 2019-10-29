@@ -63,10 +63,9 @@ class Favourite extends Model
         'moderation'
     ];
 
-    // Получаем вакансию для сотрудников.
-    public function staffer()
+    public function entity()
     {
-        return $this->belongsTo('App\Staffer');
+        return $this->morphTo();
     }
 
 

@@ -21,6 +21,7 @@ use App\Estimate;
 use App\EstimatesGoodsItem;
 use App\EstimatesServicesItem;
 use App\ExpendablesCategory;
+use App\Favourite;
 use App\GoodsCategory;
 use App\GoodsStock;
 use App\Menu;
@@ -44,6 +45,7 @@ use App\Observers\EstimateObserver;
 use App\Observers\EstimatesGoodsItemObserver;
 use App\Observers\EstimatesServicesItemObserver;
 use App\Observers\ExpendablesCategoryObserver;
+use App\Observers\FavouriteObserver;
 use App\Observers\GoodsCategoryObserver;
 use App\Observers\GoodsStockObserver;
 use App\Observers\MenuObserver;
@@ -236,6 +238,8 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Сектора
         Sector::observe(SectorObserver::class);
+
+        Favourite::observe(FavouriteObserver::class);
     }
 
     /**

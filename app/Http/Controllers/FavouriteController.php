@@ -44,7 +44,7 @@ class FavouriteController extends Controller
      * @param  \App\Favourite  $favourite
      * @return \Illuminate\Http\Response
      */
-    public function show(Favourite $favourite)
+    public function show($id)
     {
         //
     }
@@ -55,7 +55,7 @@ class FavouriteController extends Controller
      * @param  \App\Favourite  $favourite
      * @return \Illuminate\Http\Response
      */
-    public function edit(Favourite $favourite)
+    public function edit($id)
     {
         //
     }
@@ -67,7 +67,7 @@ class FavouriteController extends Controller
      * @param  \App\Favourite  $favourite
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Favourite $favourite)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -78,7 +78,7 @@ class FavouriteController extends Controller
      * @param  \App\Favourite  $favourite
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Favourite $favourite)
+    public function destroy($id)
     {
         //
     }
