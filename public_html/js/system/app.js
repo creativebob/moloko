@@ -41452,6 +41452,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: {
@@ -41479,7 +41502,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			categories: this.selectData.categories,
 			categoriesItems: this.selectData.items,
 			change: false,
-			itemUnit: null
+			itemUnit: null,
+
+			// Производители
+			manufacturers: this.selectData.manufacturers,
+			itemManufacturer: null,
+			manufacturer_id: null
 		};
 	},
 
@@ -41522,6 +41550,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		isPosted: function isPosted() {
 			return this.consignment.is_posted === 1;
+		},
+		manufacturer: function manufacturer() {
+			var _this3 = this;
+
+			return this.manufacturers.filter(function (item) {
+				if (item.id === _this3.itemManufacturer) {
+					_this3.manufacturer_id = item.id;
+					return item;
+				}
+			});
 		}
 	},
 
@@ -41533,13 +41571,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.cost = value;
 		},
 		changeEntity: function changeEntity() {
-			var _this3 = this;
+			var _this4 = this;
 
 			this.change = true;
 
 			var count = 0;
 			this.categories.filter(function (item) {
-				if (item.entity_id === _this3.entity_id) {
+				if (item.entity_id === _this4.entity_id) {
 					count++;
 				}
 			});
@@ -41548,8 +41586,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				axios.post('/admin/consignments/categories', {
 					entity_id: this.entity_id
 				}).then(function (response) {
-					_this3.categories = _this3.categories.concat(response.data.categories);
-					_this3.categoriesItems = _this3.categoriesItems.concat(response.data.items);
+					_this4.categories = _this4.categories.concat(response.data.categories);
+					_this4.categoriesItems = _this4.categoriesItems.concat(response.data.items);
 				}).catch(function (error) {
 					console.log(error);
 				});
@@ -41559,26 +41597,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.change = false;
 		},
 		setId: function setId(id) {
-			var _this4 = this;
+			var _this5 = this;
 
 			this.id = id;
 			if (id != null) {
 				this.categoriesItems.filter(function (item) {
-					if (item.id === id && item.entity_id === _this4.entity_id) {
+					if (item.id === id && item.entity_id === _this5.entity_id) {
+
+						// Смотрим в чем принимать
 						if (item.article.package_status === 1) {
-							_this4.itemUnit = item.article.package_abbreviation;
+							_this5.itemUnit = item.article.package_abbreviation;
 						} else {
-							_this4.itemUnit = item.article.unit.abbreviation;
+							_this5.itemUnit = item.article.unit.abbreviation;
+						}
+
+						// Смотрим производителя
+						if (item.article.manufacturer_id != null) {
+							_this5.itemManufacturer = item.article.manufacturer_id;
 						}
 					}
 				});
 			} else {
 				this.itemUnit = null;
+				this.itemManufacturer = null;
 			}
 		},
 
 		addItem: function addItem() {
-			var _this5 = this;
+			var _this6 = this;
 
 			if (!this.isDisabled) {
 				this.disabledButton = true;
@@ -41587,10 +41633,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					cmv_id: this.id,
 					entity_id: this.entity_id,
 					count: this.count,
-					cost: this.cost
+					cost: this.cost,
+					manufacturer_id: this.manufacturer_id
 				}).then(function (response) {
-					_this5.items.push(response.data);
-				}, this.id = null, this.count = null, this.cost = null, this.change = true).catch(function (error) {
+					_this6.items.push(response.data);
+				}, this.id = null, this.count = null, this.cost = null, this.change = true, this.manufacturer_id = null, this.itemManufacturer = null).catch(function (error) {
 					console.log(error);
 				});
 			}
@@ -42295,6 +42342,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'consignments-item-component',
@@ -42409,6 +42457,8 @@ var render = function() {
     _c("td", [_vm._v(_vm._s(_vm.item.entity.name))]),
     _vm._v(" "),
     _c("td", [_vm._v(_vm._s(_vm.item.cmv.article.name))]),
+    _vm._v(" "),
+    _c("td", [_vm._v(_vm._s(_vm.item.manufacturer.company.name))]),
     _vm._v(" "),
     _c(
       "td",
@@ -42553,6 +42603,8 @@ var render = function() {
         _vm._v(" "),
         _c("th", [_vm._v("Наименование позиции:")]),
         _vm._v(" "),
+        _c("th", [_vm._v("Производитель")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Кол-во:")]),
         _vm._v(" "),
         _c("th", [_vm._v("Ед. изм.:")]),
@@ -42647,6 +42699,70 @@ var render = function() {
                   })
                 ],
                 1
+              ),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _vm.id != null
+                    ? [
+                        _vm.itemManufacturer != null
+                          ? _c("span", [
+                              _vm._v(
+                                "\n\t\t\t\t\t\t\t" +
+                                  _vm._s(_vm.manufacturer[0].company.name) +
+                                  "\n\t\t\t\t\t\t"
+                              )
+                            ])
+                          : [
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.manufacturer_id,
+                                      expression: "manufacturer_id"
+                                    }
+                                  ],
+                                  attrs: { name: "entity_id" },
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.manufacturer_id = $event.target
+                                        .multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    }
+                                  }
+                                },
+                                _vm._l(_vm.manufacturers, function(
+                                  manufacturer
+                                ) {
+                                  return _c(
+                                    "option",
+                                    { domProps: { value: manufacturer.id } },
+                                    [_vm._v(_vm._s(manufacturer.company.name))]
+                                  )
+                                }),
+                                0
+                              )
+                            ]
+                      ]
+                    : _vm._e()
+                ],
+                2
               ),
               _vm._v(" "),
               _c("td", [
@@ -42915,7 +43031,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			categories: this.selectData.categories,
 			categoriesItems: this.selectData.items,
 			change: false,
-			itemUnit: null
+			itemUnit: null,
+
+			// Производитель
+			manufacturer_id: null
 		};
 	},
 
@@ -42993,10 +43112,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 						} else {
 							_this4.itemUnit = item.article.unit.abbreviation;
 						}
+
+						_this4.manufacturer_id = item.article.manufacturer_id;
 					}
 				});
 			} else {
 				this.itemUnit = null;
+				this.manufacturer_id = null;
 			}
 		},
 
@@ -43009,10 +43131,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					production_id: this.production.id,
 					cmv_id: this.id,
 					entity_id: this.entity_id,
-					count: this.count
+					count: this.count,
+					manufacturer_id: this.manufacturer_id
 				}).then(function (response) {
 					_this5.items.push(response.data);
-				}, this.id = null, this.count = null, this.change = true).catch(function (error) {
+				}, this.id = null, this.count = null, this.change = true, this.manufacturer_id = null).catch(function (error) {
 					console.log(error);
 				});
 			}

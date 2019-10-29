@@ -136,7 +136,7 @@ class ProductionController extends Controller
                             'article.unit'
                         ]);
                     },
-                    'entity:id,name,alias',
+                    'entity:id,name,alias'
                 ]);
             },
         ])

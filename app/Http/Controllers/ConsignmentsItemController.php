@@ -29,11 +29,12 @@ class ConsignmentsItemController extends Controller
     public function store(ConsignmentsItemStoreRequest $request)
     {
         $data = $request->input();
-        $consignment_item = (new ConsignmentsItem())->create($data);
+        $consignment_item = ConsignmentsItem::create($data);
 
         $consignment_item->load([
             'cmv.article.unit',
-            'entity:id,name,alias'
+            'entity:id,name,alias',
+            'manufacturer.company'
         ]);
 
         return response()->json($consignment_item);

@@ -43,8 +43,8 @@ trait Receiptable
 	    $filial_id = $stock_general->filial_id;
 
         // Склад
-        if ($item->cmv->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $item->cmv->article->manufacturer_id)->first()) {
-            $stock = $item->cmv->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $item->cmv->article->manufacturer_id)->first();
+        if ($item->cmv->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $item->manufacturer_id)->first()) {
+            $stock = $item->cmv->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $item->manufacturer_id)->first();
 
             Log::channel('documents')
                 ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
@@ -53,7 +53,7 @@ trait Receiptable
         	
             $data_stock = [
                 'cmv_id' => $item->cmv_id,
-                'manufacturer_id' => $item->cmv->article->manufacturer_id,
+                'manufacturer_id' => $item->manufacturer_id,
                 'stock_id' => $stock_general->id,
                 'filial_id' => $stock_general->filial_id,
             ];
@@ -146,7 +146,7 @@ trait Receiptable
             $data_cost = [
                 'cmv_id' => $item->cmv_id,
                 'cmv_type' => $item->cmv_type,
-                'manufacturer_id' => $item->cmv->article->manufacturer_id,
+                'manufacturer_id' => $item->manufacturer_id,
                 'min' => $cost,
                 'max' => $cost,
                 'average' => $cost,

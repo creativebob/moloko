@@ -55,6 +55,8 @@ class ProductionsItem extends Model
         'count',
 	    'amount',
         'entity_id',
+        'manufacturer_id',
+
         'description',
         'stock_id',
     ];
@@ -98,6 +100,11 @@ class ProductionsItem extends Model
     public function receipt()
     {
         return $this->morphOne(Receipt::class, 'documents_item');
+    }
+
+    public function manufacturer()
+    {
+        return $this->belongsTo(Manufacturer::class);
     }
 
 }

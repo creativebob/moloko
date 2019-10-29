@@ -45,7 +45,7 @@ class ProductionsItemController extends Controller
     public function store(ProductionsItemStoreRequest $request)
     {
         $data = $request->input();
-        $production_item = (new ProductionsItem())->create($data);
+        $production_item = ProductionsItem::create($data);
 
         $production_item->load([
             'cmv.article.unit',

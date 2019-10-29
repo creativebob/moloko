@@ -111,6 +111,7 @@ class ConsignmentController extends Controller
                         ]);
                     },
                     'entity:id,name,alias',
+                    'manufacturer.company'
                 ]);
             },
         ])

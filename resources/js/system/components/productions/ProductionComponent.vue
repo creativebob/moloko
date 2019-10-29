@@ -112,7 +112,10 @@
 				categories: this.selectData.categories,
 				categoriesItems: this.selectData.items,
 				change: false,
-				itemUnit: null
+				itemUnit: null,
+
+				// Производитель
+				manufacturer_id: null
 			}
 		},
 		computed: {
@@ -184,10 +187,13 @@
 							} else {
 								this.itemUnit = item.article.unit.abbreviation;
 							}
+
+							this.manufacturer_id = item.article.manufacturer_id;
 						}
 					});
 				} else {
 					this.itemUnit = null;
+					this.manufacturer_id = null;
 				}
 			},
 
@@ -200,13 +206,15 @@
 							cmv_id: this.id,
 							entity_id: this.entity_id,
 							count: this.count,
+							manufacturer_id: this.manufacturer_id,
 						})
 						.then(response => {
 								this.items.push(response.data)
 							},
 								this.id = null,
 								this.count = null,
-								this.change = true
+								this.change = true,
+								this.manufacturer_id = null,
 						)
 						.catch(error => {
 							console.log(error)

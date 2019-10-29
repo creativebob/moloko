@@ -3,6 +3,7 @@
 namespace App\Http\ViewComposers\System;
 
 use App\Entity;
+use App\Manufacturer;
 use Illuminate\View\View;
 
 class ArticlesCategoriesWithItemsComposer
@@ -42,7 +43,8 @@ class ArticlesCategoriesWithItemsComposer
                         ->where('archive', false)
                         ->whereHas('article', function ($q) {
 	        	            $q->where('draft', false)
-                            ->whereNotNull('manufacturer_id');
+//                            ->whereNotNull('manufacturer_id')
+                            ;
 	                    });
                 }
             ])
@@ -82,10 +84,28 @@ class ArticlesCategoriesWithItemsComposer
         }
 //        dd($items);
 
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('manufacturers', false, getmethod('index'));
+
+        $manufacturers = Manufacturer::with([
+            'company:id,name'
+        ])
+            ->companiesLimit($answer)
+            ->where('archive', false)
+            ->moderatorLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->get([
+                'id',
+                'manufacturer_id',
+                'company_id'
+            ]);
+
         $articles_categories_with_items_data = [
             'entities' => $entities,
             'categories' => $categories_tree,
-            'items' => $items
+            'items' => $items,
+            'manufacturers' => $manufacturers
         ];
 
         return $view->with(compact('articles_categories_with_items_data'));

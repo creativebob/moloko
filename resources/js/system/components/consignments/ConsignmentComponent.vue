@@ -6,6 +6,7 @@
 				<th>№</th>
 				<th>Тип:</th>
 				<th>Наименование позиции:</th>
+				<th>Производитель</th>
 				<th>Кол-во:</th>
 				<th>Ед. изм.:</th>
 				<th>Цена:</th>
@@ -57,6 +58,28 @@
 							@set-id="setId"
 							@check-change="checkChange"
 					></select-categories-component>
+				</td>
+				<td>
+
+					<template v-if="id != null">
+						<span v-if="itemManufacturer != null ">
+							{{ manufacturer[0].company.name }}
+						</span>
+
+						<template v-else>
+							<select
+
+									v-model="manufacturer_id"
+									name="entity_id"
+							>
+								<option
+										v-for="manufacturer in manufacturers"
+										:value="manufacturer.id"
+								>{{ manufacturer.company.name}}</option>
+							</select>
+						</template>
+					</template>
+
 				</td>
 				<td>
 					<input
@@ -139,7 +162,12 @@
 				categories: this.selectData.categories,
 				categoriesItems: this.selectData.items,
 				change: false,
-				itemUnit: null
+				itemUnit: null,
+
+				// Производители
+				manufacturers: this.selectData.manufacturers,
+				itemManufacturer: null,
+				manufacturer_id: null
 			}
 		},
 		computed: {
@@ -177,6 +205,15 @@
 			isPosted() {
 				return this.consignment.is_posted === 1;
 			},
+			manufacturer() {
+				return this.manufacturers.filter(item => {
+					if (item.id === this.itemManufacturer) {
+						this.manufacturer_id = item.id;
+						return item;
+					}
+
+				})
+			}
 		},
 
 		methods: {
@@ -219,15 +256,23 @@
 				if (id != null) {
 					this.categoriesItems.filter(item => {
 						if (item.id === id && item.entity_id === this.entity_id) {
+
+							// Смотрим в чем принимать
 							if (item.article.package_status === 1) {
 								this.itemUnit = item.article.package_abbreviation;
 							} else {
 								this.itemUnit = item.article.unit.abbreviation;
 							}
+
+							// Смотрим производителя
+							if (item.article.manufacturer_id != null) {
+								this.itemManufacturer = item.article.manufacturer_id;
+							}
 						}
 					});
 				} else {
 					this.itemUnit = null;
+					this.itemManufacturer = null;
 				}
 			},
 
@@ -240,7 +285,8 @@
 							cmv_id: this.id,
 							entity_id: this.entity_id,
 							count: this.count,
-							cost: this.cost
+							cost: this.cost,
+							manufacturer_id: this.manufacturer_id,
 						})
 						.then(response => {
 								this.items.push(response.data)
@@ -248,7 +294,10 @@
 								this.id = null,
 								this.count = null,
 								this.cost = null,
-								this.change = true
+								this.change = true,
+								this.manufacturer_id = null,
+								this.itemManufacturer = null,
+
 						)
 						.catch(error => {
 							console.log(error)

@@ -23,6 +23,9 @@ class CreateConsignmentsItemsTable extends Migration
             $table->foreign('consignment_id')->references('id')->on('consignments');
 
             $table->morphs('cmv');
+
+            $table->bigInteger('manufacturer_id')->unsigned()->nullable()->comment('Id производителя');
+            $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
 	
 	        $table->decimal('count', 12,4)->default(0)->comment('Количество');
             $table->decimal('cost', 12, 4)->default(0)->comment('Цена за единицу');

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Consignment;
 use App\Observers\Traits\CategoriesTrait;
+use App\Production;
 use Illuminate\Http\Request;
 
 use App\Entity;
@@ -119,5 +121,48 @@ class AppController extends Controller
             ->count();
 
         return response()->json($result_count);
+    }
+
+    public function parser()
+    {
+        $consignments = Consignment::with([
+            'items.cmv.article'
+        ])
+            ->get();
+
+//        dd($consignments->first());
+        foreach ($consignments as $consignment) {
+            foreach($consignment->items as $item) {
+                if (empty($item->manufacturer_id)) {
+                    if(isset($item->cmv->article->manufacturer_id)) {
+                        $item->update([
+                            'manufacturer_id' => $item->cmv->article->manufacturer_id
+                        ]);
+                    }
+                }
+            }
+        }
+
+        echo('Отпарсил товарные накладные');
+
+        $productions = Production::with([
+            'items.cmv.article'
+        ])
+            ->get();
+
+//        dd($productions->first());
+        foreach ($productions as $production) {
+            foreach($production->items as $item) {
+                if (empty($item->manufacturer_id)) {
+                    if(isset($item->cmv->article->manufacturer_id)) {
+                        $item->update([
+                            'manufacturer_id' => $item->cmv->article->manufacturer_id
+                        ]);
+                    }
+                }
+            }
+        }
+
+        echo('Отпарсил наряды на производство');
     }
 }

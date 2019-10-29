@@ -47,6 +47,7 @@ class ConsignmentsItem extends Model
     use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
+
     protected $fillable = [
         'consignment_id',
         'cmv_id',
@@ -55,6 +56,7 @@ class ConsignmentsItem extends Model
         'cost',
 	    'amount',
         'entity_id',
+        'manufacturer_id',
 
         'vat_rate',
         'description',
@@ -96,6 +98,11 @@ class ConsignmentsItem extends Model
     public function receipt()
     {
         return $this->morphOne(Receipt::class, 'documents_item');
+    }
+
+    public function manufacturer()
+    {
+        return $this->belongsTo(Manufacturer::class);
     }
 
 }

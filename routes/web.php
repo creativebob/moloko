@@ -20,6 +20,8 @@ Auth::routes();
 // Вход в панель управления
 Route::get('/', 'AppController@enter');
 
+Route::any('/manufacturer_parser', 'AppController@parser');
+
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
 
@@ -773,7 +775,9 @@ Route::resource('applications', 'ApplicationController')->middleware('auth');
 
 // -------------------------------------- Товарные накладные ---------------------------------------------
 
-Route::any('/consignments/categories', 'ConsignmentController@categories')->name('consignments.categories');;
+
+
+Route::any('/consignments/categories', 'ConsignmentController@categories')->name('consignments.categories');
 Route::patch('/consignments/{id}/posting', 'ConsignmentController@posting')->name('consignments.posting');
 Route::get('/consignments/{id}/unpost', 'ConsignmentController@unpost')->name('consignments.unpost');
 
