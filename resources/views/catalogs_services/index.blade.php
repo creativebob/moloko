@@ -83,14 +83,13 @@
                         <td class="td-description">{{ $catalogs_service->description }}</td>
                         @can('index', App\CatalogsServicesItem::class)
                             <td class="td-tree">
-                                {{ link_to_route('catalogs_services_items.index', '', ['catalog_id' => $catalogs_service->id], ['class' => 'icon-category sprite']) }}
+                                <a href="{{ route('catalogs_services_items.index', $catalogs_service->id) }}" class="icon-category sprite"></a>
                             </td>
                         @endcan
 
                         @can('index', App\PricesService::class)
                             <td class="td-services">
-
-                                {{ link_to_route($page_info->alias.'.edit', 'Настройка', ['catalog_id' => $catalogs_service->id], ['class' => 'button tiny']) }}
+                                <a href="{{ route($page_info->alias.'.edit', $catalogs_service->id) }}" class="button tiny">Настройка</a>
                             </td>
                         @endcan
                         <td class="td-author">{{ $catalogs_service->author->name}}</td>
