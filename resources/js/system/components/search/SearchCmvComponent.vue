@@ -14,8 +14,8 @@
 
                 <ul class="search-result-list">
 
-                    <li v-for="(result, index) in results">
-                        <a :href="'/admin/' + this.entity + '/' + result.id + '/edit'">{{ result.name }}</a>
+                    <li v-for="(item, index) in results">
+                        <a :href="'/admin/' + this.entity + '/' + item.id + '/edit'">{{ item.article.name }}</a>
                     </li>
 
                 </ul>

@@ -26,7 +26,7 @@ Vue.component('input-digit-component', require('./components/InputDigitComponent
 Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
 Vue.component('rawcomposition-component', require('./components/RawCompositionComponent.vue'));
 Vue.component('articles-categories-with-groups-component', require('./components/ArticlesCategoriesWithGroupsComponent.vue'));
-Vue.component('search-component', require('./components/SearchComponent.vue'));
+Vue.component('search-cmv-component', require('./components/search/SearchCmvComponent.vue'));
 
 
 /**

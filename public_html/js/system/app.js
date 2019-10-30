@@ -40858,7 +40858,7 @@ Vue.component('input-digit-component', __webpack_require__(67));
 Vue.component('dropzone-component', __webpack_require__(70));
 Vue.component('rawcomposition-component', __webpack_require__(79));
 Vue.component('articles-categories-with-groups-component', __webpack_require__(82));
-Vue.component('search-component', __webpack_require__(85));
+Vue.component('search-cmv-component', __webpack_require__(85));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -45158,7 +45158,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/system/components/SearchComponent.vue"
+Component.options.__file = "resources/js/system/components/search/SearchCmvComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -45167,9 +45167,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-2fb9d66e", Component.options)
+    hotAPI.createRecord("data-v-251e734e", Component.options)
   } else {
-    hotAPI.reload("data-v-2fb9d66e", Component.options)
+    hotAPI.reload("data-v-251e734e", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -62486,16 +62486,16 @@ var render = function() {
           _c(
             "ul",
             { staticClass: "search-result-list" },
-            _vm._l(_vm.results, function(result, index) {
+            _vm._l(_vm.results, function(item, index) {
               return _c("li", [
                 _c(
                   "a",
                   {
                     attrs: {
-                      href: "/admin/" + this.entity + "/" + result.id + "/edit"
+                      href: "/admin/" + this.entity + "/" + item.id + "/edit"
                     }
                   },
-                  [_vm._v(_vm._s(result.name))]
+                  [_vm._v(_vm._s(item.article.name))]
                 )
               ])
             }),
@@ -62511,7 +62511,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-2fb9d66e", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-251e734e", module.exports)
   }
 }
 

@@ -32,9 +32,6 @@ trait Cmvable
             ]);
 
 //        dd($items);
-        foreach ($items as $item) {
-            $item->name = $item->article->name;
-        }
 
         return response()->json($items);
     }
