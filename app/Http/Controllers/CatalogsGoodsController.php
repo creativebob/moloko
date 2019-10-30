@@ -180,4 +180,53 @@ class CatalogsGoodsController extends Controller
 
         return response()->json($result_count);
     }
+
+    public function get_catalog ($id)
+    {
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer_cg = operator_right('catalogs_goods', false, getmethod('index'));
+
+        $сatalog_goods = CatalogsGoods::with([
+            'items' => function ($q) {
+                $q->with([
+                    'prices' => function ($q) {
+                        $q->with([
+                            'product' => function($q) {
+                                $q->with([
+                                    'article' => function ($q) {
+                                        $q->with([
+                                            'photo',
+                                            'manufacturer'
+                                        ])
+                                            ->where('draft', false);
+                                    }
+                                ])
+                                    ->whereHas('article', function ($q) {
+                                        $q->where('draft', false);
+                                    })
+                                    ->where('archive', false);
+                            }
+                        ])
+                            ->whereHas('product', function ($q) {
+                                $q->where('archive', false);
+                            })
+                            ->where('filial_id', \Auth::user()->filial_id)
+                            ->where('archive', false);
+                    },
+                    'childs'
+                ]);
+            }
+        ])
+            ->moderatorLimit($answer_cg)
+            ->companiesLimit($answer_cg)
+            ->authors($answer_cg)
+            ->whereHas('sites', function ($q) {
+                $q->whereId(1);
+            })
+            ->findOrFail($id);
+//         dd($сatalog_goods);
+
+        return view('leads.catalogs.catalog_goods', compact('сatalog_goods'));
+    }
 }

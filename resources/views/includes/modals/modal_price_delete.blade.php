@@ -21,5 +21,5 @@
             <button data-close class="button modal-button" id="save-button" type="submit">Отменить</button>
         </div>
     </div>
-    <div data-close class="icon-close-modal sprite close-modal"></div>
+    <div data-close class="icon-close-modal sprite close-modal remove-modal"></div>
 </div>

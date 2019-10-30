@@ -289,7 +289,7 @@ class LeadController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_cg = operator_right('catalogs_goods', false, getmethod('index'));
 
-        $catalogs_goods = CatalogsGoods::with([
+        $сatalog_goods = CatalogsGoods::with([
             'items' => function ($q) use ($filial_id) {
                 $q->with([
                     'prices' => function ($q) use ($filial_id) {
@@ -326,12 +326,9 @@ class LeadController extends Controller
             ->whereHas('sites', function ($q) {
                 $q->whereId(1);
             })
-            ->get();
-//         dd($catalogs_goods);
+            ->first();
+//         dd($сatalog_goods);
 
-        $сatalog_goods = $catalogs_goods->first();
-//         dd($atalog_goods);
-	    
         return view('leads.edit', compact('lead', 'page_info', 'choices', 'catalog_services', 'сatalog_goods'));
     }
 

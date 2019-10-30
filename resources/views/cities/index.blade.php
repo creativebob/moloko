@@ -216,7 +216,7 @@
         });
 
         // Закрытие модалки
-        $(document).on('click', '.icon-close-modal', function(event) {
+        $(document).on('click', '.remove-modal', function(event) {
             $(this).closest('.reveal-overlay').remove();
         });
 

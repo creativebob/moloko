@@ -1074,8 +1074,9 @@ Route::resource('/news', 'NewsController');
 
 // ----------------------------------------- Каталоги товаров ------------------------------------------
 
+Route::any('/catalog_goods/{id}', 'CatalogsGoodsController@get_catalog');
 // Основные методы
-Route::resource('catalogs_goods', 'CatalogsGoodsController');
+Route::resource('/catalogs_goods', 'CatalogsGoodsController');
 // Проверка на существование
 // Route::post('/catalog_check', 'CatalogController@ajax_check')->middleware('auth');
 

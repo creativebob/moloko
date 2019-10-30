@@ -67,6 +67,7 @@ if($lead->manager_id == 1){
 @include('includes.modals.modal-delete-ajax')
 @include('includes.modals.modal-add-claim', ['lead' => $lead])
 @include('leads.estimate.modal_estimate_item_delete')
+@include('leads.catalogs.modal_catalogs_goods')
 @endsection
 
 @push('scripts')

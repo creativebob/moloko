@@ -192,6 +192,19 @@
             });
         });
 
+        $(document).on('click', '.button-change-catalog_goods', function(event) {
+            event.preventDefault();
+
+            var buttons = $('.button');
+            buttons.prop('disabled', true);
+
+            $.post("/admin/catalog_goods/" + $('#select-catalogs_goods').val(), function (html) {
+                $('#tab-catalog-goods').html(html);
+                $('#modal-catalogs-goods').foundation('close');
+                buttons.prop('disabled', false);
+            });
+        });
+
     });
 
 </script>

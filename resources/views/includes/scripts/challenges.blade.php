@@ -103,7 +103,7 @@
 
 
   	// ---------------------------------- Закрытие модалки -----------------------------------
-  	$(document).on('click', '.icon-close-modal, .submit-edit, .submit-add, .submit-goods-product-add', function() {
+  	$(document).on('click', '.remove-modal, .submit-edit, .submit-add, .submit-goods-product-add', function() {
   		$(this).closest('.reveal-overlay').remove();
   	});
 

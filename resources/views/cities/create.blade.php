@@ -52,6 +52,6 @@
 
     {{ Form::close() }}
 
-    <div data-close class="icon-close-modal sprite close-modal"></div>
+    <div data-close class="icon-close-modal sprite close-modal remove-modal"></div>
 </div>
 {{-- Конец модалки добавления города и района --}}

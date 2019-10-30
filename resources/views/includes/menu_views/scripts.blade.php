@@ -59,7 +59,7 @@
         });
 
         // ---------------------------------- Закрытие модалки -----------------------------------
-        $(document).on('click', '.icon-close-modal', function() {
+        $(document).on('click', '.remove-modal', function() {
             $(this).closest('.reveal-overlay').remove();
         });
     });

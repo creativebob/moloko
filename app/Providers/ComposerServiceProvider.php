@@ -7,6 +7,7 @@ use App\Http\ViewComposers\System\ArticlesCategoriesWithGroupsComposer;
 use App\Http\ViewComposers\System\ArticlesCategoriesWithItemsComposer;
 use App\Http\ViewComposers\System\ArticlesCategoriesWithItemsComposerForManufacturer;
 use App\Http\ViewComposers\System\AttachmentsComposer;
+use App\Http\ViewComposers\System\CatalogGoodsWithPricesComposer;
 use App\Http\ViewComposers\System\CitySearchComposer;
 use App\Http\ViewComposers\System\ContainersCategoriesComposer;
 use App\Http\ViewComposers\System\ContainersComposer;
@@ -272,9 +273,14 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('products.processes.services.prices.catalogs_items', CatalogsServicesItemsComposer::class);
         view()->composer('products.processes.services.prices.filials', FilialsForCatalogsServicesComposer::class);
 
-        view()->composer('products.articles.goods.prices.catalogs', CatalogsGoodsComposer::class);
+        view()->composer([
+            'products.articles.goods.prices.catalogs',
+            'leads.catalogs.modal_catalogs_goods'
+        ], CatalogsGoodsComposer::class);
         view()->composer('products.articles.goods.prices.catalogs_items', CatalogsGoodsItemsComposer::class);
         view()->composer('products.articles.goods.prices.filials', FilialsForCatalogsGoodsComposer::class);
+
+//        view()->composer('leads.catalogs.catalog_goods', CatalogGoodsWithPricesComposer::class);
 
         view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
         view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);
