@@ -287,7 +287,7 @@ class LeadController extends Controller
         // dd($catalog_service);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_cg = operator_right('catalogs_goods', false, getmethod('index'));
+        $answer_cg = operator_right('catalogs_goods', true, getmethod('index'));
 
         $сatalog_goods = CatalogsGoods::with([
             'items' => function ($q) use ($filial_id) {
@@ -313,7 +313,6 @@ class LeadController extends Controller
                             ->whereHas('product', function ($q) {
                                 $q->where('archive', false);
                             })
-                        ->where('filial_id', $filial_id)
                             ->where('archive', false);
                     },
                     'childs'
@@ -323,6 +322,7 @@ class LeadController extends Controller
             ->moderatorLimit($answer_cg)
             ->companiesLimit($answer_cg)
             ->authors($answer_cg)
+            ->filials($answer_cg)
             ->whereHas('sites', function ($q) {
                 $q->whereId(1);
             })
