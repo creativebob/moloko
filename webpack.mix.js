@@ -30,6 +30,7 @@ mix
 		// 	require('postcss-css-variables')()
 		// ]
 	})
+	.minify('public_html/css/system/app.css')
 	// .sourceMaps()
 ;
 // mix.browserSync('crmsystem.local/admin/test');
@@ -51,6 +52,7 @@ mix
 		// 	require('postcss-css-variables')()
 		// ]
 	})
+	.minify('public_html/css/project/app.css')
 // .sourceMaps()
 ;
 // mix.browserSync('crmsystem.local/admin/test');

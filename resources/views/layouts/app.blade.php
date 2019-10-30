@@ -31,13 +31,14 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
 
     <link rel="shortcut icon" href="{{ asset('/favicon.ico') }}" type="image/x-icon">
 
-    <link rel="stylesheet" href="{{ mix('/css/system/app.css') }}">
+    <link rel="stylesheet" href="{{ mix('/css/system/app.min.css') }}">
 
     {{-- CSRF Token --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- Add jQuery library --}}
     <script type="application/javascript" src="/js/system/jquery.latest.min.js"></script>
+{{--    <script type="application/javascript" src="{{ mix('/js/system/app.js') }}"></script>--}}
 
     {{-- Transition --}}
     <style type="text/css">
