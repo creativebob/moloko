@@ -103,9 +103,23 @@ class AppController extends Controller
     }
 
 
-    public function catalogs_goods(Request $request, $catalog_slug, $catalog_item_slug = null)
+    public function catalogs_goods(Request $request, $url)
     {
+//        dd(__METHOD__, $url);
+        $arr = explode('/', $url);
 
+        $catalog_slug = $arr[0];
+
+        if (count($arr) > 1) {
+            $sliced = array_slice($arr, 1);
+            $slug = '';
+            foreach($sliced as $lol) {
+                $slug .= $lol . '/';
+            }
+            $catalog_item_slug = substr($slug, 0, -1);
+        } else {
+            $catalog_item_slug = null;
+        }
         $site = $this->site;
         $page = $site->pages_public->where('alias', 'catalogs-goods')->first();
 
