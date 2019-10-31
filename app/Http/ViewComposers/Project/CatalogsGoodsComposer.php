@@ -15,6 +15,7 @@ class CatalogsGoodsComposer
         $catalog_goods = CatalogsGoods::with([
             'items' => function ($q) {
                 $q->withCount('prices_public')
+                    ->where('parent_id', null)
                     ->where('display', true)
                     ->orderBy('sort');
             }
