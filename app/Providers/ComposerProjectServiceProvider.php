@@ -77,7 +77,7 @@ class ComposerProjectServiceProvider extends ServiceProvider
 
                 view()->composer('project.includes.manufacturers.list', ManufacturersListComposer::class);
 
-                view()->composer($alias. '.layouts.headers.includes.cart', CartComposer::class);
+//                view()->composer($alias. '.layouts.headers.includes.cart', CartComposer::class);
 	            view()->composer($alias. '.pages.contacts.index', FilialComposer::class);
             }
         }

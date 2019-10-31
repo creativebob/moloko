@@ -22,7 +22,7 @@ Route::get('/prices-goods/{id}/', 'AppController@prices_goods')->name('project.p
 
 Route::resource('/estimates', 'EstimateController');
 
-Route::any('/add_cart', 'AppController@add_cart')->name('project.add_cart');
+Route::any('/update_cookies', 'AppController@update_cookies')->name('project.update_cookies');
 Route::any('/add_to_cart', 'AppController@add_to_cart')->name('project.add_to_cart');
 Route::get('/cart', 'AppController@cart')->name('project.cart');
 Route::post('/cart_store', 'AppController@cart_store')->name('project.cart_store');

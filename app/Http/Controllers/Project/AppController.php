@@ -340,44 +340,47 @@ class AppController extends Controller
     }
 
 
-    public function add_cart(Request $request)
+    public function update_cookies(Request $request)
     {
-        $id = $request->id;
-
-        $price_goods = PricesGoods::findOrFail($id);
-//		dd($price_goods);
-
-        $count = $request->count;
-
-        if (Cookie::has('cart')) {
-            $cart = json_decode(Cookie::get('cart'), true);
-//            dd($cookie);
-            if (array_key_exists($id, $cart['prices'])) {
-                $new_count = $cart['prices'][$id]['count'] + $count;
-                $cart['prices'][$id] = [
-                    'count' => $new_count
-                ];
-            } else {
-                $cart['prices'][$id] = [
-                    'count' => $count
+//        dd($request->cartGoods);
+        $cart = [];
+        if (isset($request->cartGoods)) {
+            $result = Cookie::queue(Cookie::forget('cart'));
+            foreach($request->cartGoods as $cartGood) {
+                $cartGood = json_decode($cartGood, true);
+                $cart['prices'][$cartGood['id']] = [
+                    'count' => $cartGood['quantity']
                 ];
             }
-            $cart['count'] += $count;
-            $cart['sum'] += ($price_goods->price * $count);
-//            dd($cart);
+
+            $result = Cookie::queue(Cookie::forever('cart', json_encode($cart)));
+            return response()->json($result);
         } else {
-            $cart['prices'][$id] = [
-                'count' => $count
-            ];
-            $cart['count'] = $count;
-            $cart['sum'] = $price_goods->price * $count;
+            $result = Cookie::queue(Cookie::forget('cart'));
+            return response()->json($result);
         }
-       // dd($cart);
+//        dd($cart);
 
-        Cookie::queue(Cookie::forever('cart', json_encode($cart)));
 
-        $site = $this->site;
-        return view($site->alias.'.layouts.headers.includes.cart', compact('cart'));
+//        if (array_key_exists($id, $cart['prices'])) {
+//            $new_count = $cart['prices'][$id]['count'] + $count;
+//            $cart['prices'][$id] = [
+//                'count' => $new_count
+//            ];
+//        } else {
+//            $cart['prices'][$id] = [
+//                'count' => $count
+//            ];
+//            $cart['count'] = $count;
+//            $cart['sum'] = $price_goods->price * $count;
+//        }
+//        $cart['count'] += $count;
+//        $cart['sum'] += ($price_goods->price * $count);
+////            dd($cart);
+//    } else {
+//        $cart['prices'][$id] = [
+//        'count' => $count
+//        }
     }
 
     // Авторизация пользоваеля сайта через телефон и код СМС
