@@ -107,7 +107,7 @@ class AppController extends Controller
     {
 
         // TODO - 30.10.19 - Костыль по парсингу роута для вложенных пунктов каталога, нужно нормальное решение
-        
+
 //        dd(__METHOD__, $url);
         $arr = explode('/', $url);
 
