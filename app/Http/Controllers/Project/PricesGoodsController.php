@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Project;
 
-App\Models\Project\PricesGoods;
+use App\Models\Project\PricesGoods;
 use App\Site;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
