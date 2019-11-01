@@ -33,7 +33,7 @@ class CatalogsGoodsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($url)
+    public function index()
     {
         //
     }
@@ -65,7 +65,7 @@ class CatalogsGoodsController extends Controller
      * @param  string  $url
      * @return \Illuminate\Http\Response
      */
-    public function show($url)
+    public function show(Request $request, $url)
     {
 
         // TODO - 30.10.19 - Костыль по парсингу роута для вложенных пунктов каталога, нужно нормальное решение

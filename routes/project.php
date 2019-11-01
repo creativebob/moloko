@@ -27,8 +27,8 @@ Route::resource('/prices-goods', 'PricesGoodsController')
 Route::any('/update_cookies', 'CartController@update_cookies')->name('project.update_cookies');
 
 Route::resource('/cart', 'CartController')
-    ->only(['index', 'store', 'update_cookies'])
-    ->names('project.carts');
+    ->only(['index', 'store'])
+    ->names('project.cart');
 
 Route::resource('/estimates', 'EstimateController')
     ->only(['index', 'show'])
