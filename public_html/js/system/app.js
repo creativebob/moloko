@@ -58729,7 +58729,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				axios.post('/admin/consignments/categories', {
 					entity_id: this.entity_id
 				}).then(function (response) {
-					console.log(response.data);
 					_this4.categories = _this4.categories.concat(response.data.categories);
 					_this4.categoriesItems = _this4.categoriesItems.concat(response.data.items);
 				}).catch(function (error) {

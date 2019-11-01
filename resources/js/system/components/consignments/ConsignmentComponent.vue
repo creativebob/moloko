@@ -239,7 +239,6 @@
 							entity_id: this.entity_id,
 						})
 						.then(response => {
-							console.log(response.data);
 							this.categories = this.categories.concat(response.data.categories);
 							this.categoriesItems = this.categoriesItems.concat(response.data.items);
 						})
