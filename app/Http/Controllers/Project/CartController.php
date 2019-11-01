@@ -309,6 +309,8 @@ class CartController extends Controller
     {
 //        dd($request->cartGoods);
         $cart = [];
+        $sum = 0;
+        $count = 0;
         if (isset($request->cartGoods)) {
             $result = Cookie::queue(Cookie::forget('cart'));
             foreach($request->cartGoods as $cartGood) {
@@ -316,7 +318,13 @@ class CartController extends Controller
                 $cart['prices'][$cartGood['id']] = [
                     'count' => $cartGood['quantity']
                 ];
+
+                $sum += $cartGood['totalPrice'];
+                $count += $cartGood['quantity'];
             }
+
+            $cart['sum'] = $sum;
+            $cart['count'] = $count;
 
             $result = Cookie::queue(Cookie::forever('cart', json_encode($cart)));
             return response()->json($result);
