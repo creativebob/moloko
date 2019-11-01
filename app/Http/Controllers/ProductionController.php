@@ -257,8 +257,8 @@ class ProductionController extends Controller
             ]);
 //		dd($categories);
 
-        $categories_tree = buildTree($categories);
-//        dd($categories);
+        $categories_tree = buildTreeArrayWithEntity($categories, $entity);
+//        dd($categories_tree);
 
         $items = [];
         foreach($categories as $category) {

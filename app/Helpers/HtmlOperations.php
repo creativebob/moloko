@@ -53,7 +53,10 @@ function buildTreeArrayWithEntity($items, $entity = null)
             $item['entity_id'] = $entity->id;
         }
 
-        $items_array[] = $item;
+        if (is_null($item['parent_id'])) {
+            $items_array[] = $item;
+        }
+
     }
 //    dd($items_array);
 
