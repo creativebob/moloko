@@ -311,7 +311,7 @@ class CartController extends Controller
         $cart = [];
         $sum = 0;
         $count = 0;
-        if (isset($request->cartGoods)) {
+        if ($request->has('cartGoods')) {
             $result = Cookie::queue(Cookie::forget('cart'));
             foreach($request->cartGoods as $cartGood) {
                 $cartGood = json_decode($cartGood, true);
