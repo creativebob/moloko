@@ -6,7 +6,15 @@
 
 require('../common/bootstrap');
 
-window.Vue = require('vue');
+// window.Vue = require('vue');
+// window.Vuex = require('vuex');
+
+import Vue from 'vue';
+import Vuex from 'vuex';
+window.Vue = Vue;
+window.Vuex = Vuex;
+
+Vue.use(Vuex);
 
 /**
  * The following block of code may be used to automatically register your
@@ -22,21 +30,25 @@ window.Vue = require('vue');
 Vue.component('city-search-component', require('./components/CitySearchComponent.vue'));
 Vue.component('consignment-component', require('./components/consignments/ConsignmentComponent.vue'));
 Vue.component('production-component', require('./components/productions/ProductionComponent.vue'));
+Vue.component('estimate-component', require('./components/estimates/EstimateComponent.vue'));
 Vue.component('input-digit-component', require('./components/InputDigitComponent.vue'));
 Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
 Vue.component('rawcomposition-component', require('./components/RawCompositionComponent.vue'));
 Vue.component('articles-categories-with-groups-component', require('./components/ArticlesCategoriesWithGroupsComponent.vue'));
 Vue.component('search-cmv-component', require('./components/search/SearchCmvComponent.vue'));
-
+Vue.component('catalog-goods-component', require('./components/catalogs/goods/CatalogGoodsComponent.vue'));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+// Vuex хранилище
+import store from './store/index.js';
 
 const app = new Vue({
     el: '#app',
+    store: new Vuex.Store(store)
 });
 
 // Основные настройки

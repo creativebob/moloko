@@ -88,4 +88,9 @@ class CatalogsGoods extends Model
     {
         return $this->belongsTo(Photo::class);
     }
+
+    public function prices()
+    {
+        return $this->hasManyThrough(PricesGoods::class, CatalogsGoodsItem::class);
+    }
 }

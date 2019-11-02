@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\Estimate;
 use App\Http\Controllers\Traits\Offable;
 use App\Stock;
 use Illuminate\Support\Facades\Log;
@@ -145,6 +146,13 @@ class LeadController extends Controller
 
         // Отдаем работу по созданию нового лида трейту
         $lead = $this->createLead($request);
+
+        // Создаем смету для лида
+        $estimate = Estimate::make([
+            'filial_id' => $lead->filial_id
+        ]);
+
+        $result = $lead->estimate()->save($estimate);
 
         return Redirect('/admin/leads/' . $lead->id . '/edit');
     }
@@ -313,11 +321,25 @@ class LeadController extends Controller
                             ->whereHas('product', function ($q) {
                                 $q->where('archive', false);
                             })
-                            ->where('archive', false);
+                            ->where('archive', false)
+                            ->select([
+                                'id',
+                                'archive',
+                                'catalogs_goods_id',
+                                'catalogs_goods_item_id',
+                                'price',
+                            ]);
                     },
-                    'childs'
+                ])
+                ->select([
+                    'id',
+                    'catalogs_goods_id',
+                    'name',
+                    'photo_id',
+                    'parent_id',
                 ]);
-            }
+            },
+            'prices.goods.article.manufacturer'
         ])
             ->moderatorLimit($answer_cg)
             ->companiesLimit($answer_cg)
@@ -328,6 +350,11 @@ class LeadController extends Controller
             })
             ->first();
 //         dd($сatalog_goods);
+
+        $сatalog_goods_items = buildTreeArray($сatalog_goods->items);
+//        dd($сatalog_goods_items);
+
+        $сatalog_goods->catalogGoodsItems = $сatalog_goods_items;
 
         return view('leads.edit', compact('lead', 'page_info', 'choices', 'catalog_services', 'сatalog_goods'));
     }

@@ -110,55 +110,12 @@
                             </div>
                             <div class="small-12 medium-6 cell">
                                 <label>Склад
-                                    @include('includes.selects.stocks', ['stock_id' => isset($lead->estimate) ? $lead->estimate->stock_id : null])
+                                    @include('includes.selects.stocks', ['stock_id' => $lead->estimate->stock_id])
                                 </label>
                             </div>
 
                             <div class="small-12 medium-12 large-12 cell">
-                                <table class="table-order" id="table-order">
-                                    <thead>
-                                        <tr>
-                                            <th>Наименование</th>
-                                            <th>Кол-во</th>
-<!--                                        <th>Себестоимость</th>
-                                            <th>ДопРасх</th>
-                                            <th>Наценка</th> -->
-                                            <th>Цена</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody id="section-goods">
-
-                                        @if (isset($lead->estimate))
-                                            @foreach ($lead->estimate->goods_items as $estimates_goods_item)
-                                                @include('leads.estimate.estimates_goods_item', ['estimates_goods_item' => $estimates_goods_item])
-                                            @endforeach
-                                        @endif
-
-                                    </tbody>
-
-                                    <tbody id="section-services">
-
-                                        @if (isset($lead->estimate))
-                                            @foreach ($lead->estimate->services_items as $estimates_services_item)
-                                                @include('leads.estimate.estimates_services_item', ['estimates_services_item' => $estimates_services_item])
-                                            @endforeach
-                                        @endif
-
-                                    </tbody>
-
-                                    <tfoot>
-                                        <tr>
-                                            <td colspan="3" class="text-right">Итого:</td>
-                                            <td id="estimate-amount"></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="3" class="text-right">Итого со скидкой (10%):</td>
-                                            <td id="estimate-total"></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                                <estimate-component :estimate='@json($lead->estimate)'></estimate-component>
                             </div>
                         </div>
                     </div>
@@ -307,7 +264,7 @@
                 {{-- КАТАЛОГ ТОВАРОВ --}}
                 @isset($сatalog_goods)
                 <div class="tabs-panel" id="tab-catalog-goods">
-                    @include('leads.catalogs.catalog_goods')
+                    <catalog-goods-component :catalog-goods='@json($сatalog_goods)'></catalog-goods-component>
                 </div>
                 @endisset
                 {{-- КОНЕЦ КАТАЛОГ ТОВАРОВ --}}
@@ -571,4 +528,9 @@
     @include('includes.scripts.product-to-estimate-script')
 
 
-
+<script>
+    import EstimateComponent from "../../js/system/components/estimates/EstimateComponent";
+    export default {
+        components: {EstimateComponent}
+    }
+</script>
