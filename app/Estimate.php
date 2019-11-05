@@ -17,7 +17,7 @@ use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
-use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+// use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 // Фильтры
 use App\Scopes\Filters\Filter;
@@ -28,7 +28,7 @@ class Estimate extends Model
 {
 
     // Включаем кеш
-    use Cachable;
+    // use Cachable;
 
     use SoftDeletes;
 

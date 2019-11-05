@@ -10,19 +10,24 @@ trait CompaniesLimitTraitScopes
     {
 
         // Получаем из массива answer нужную информацию:
-        $companies = $answer['company_id'];
+        $company_id = $answer['company_id'];
+        $entity_name = $answer['entity_name'];
 
         // ФИЛЬТРАЦИЯ ПО КОМПАНИИ  -----------------------------------------------------------------------------------------------------------
 
-        if($companies == null){
+        if($company_id == null){
 
             // Показываем записи всех компаний
             return $query;
+
         } else {
 
             // Показываем записи выбранной компании
             // return $query->Where('company_id', $companies)->orWhere('id', $companies);
-            return $query->Where('company_id', $companies);
+            return $query->where('company_id', $company_id)
+            ->when($entity_name == 'companies', function($q) use ($company_id){
+                $q->orWhere('id', $company_id);
+            });
         };
     }
 
