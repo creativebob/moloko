@@ -263,61 +263,65 @@ class ConsignmentController extends Controller
 			->authors($answer)
 			->systemItem($answer)
 			->findOrFail($id);
-		
-		// Подключение политики
-		$this->authorize(getmethod('update'), $consignment);
-		
-		$data = $request->input();
-		$consignment->update($data);
-		
-		$consignment->load([
-			'items' => function($q) {
-				$q->with([
-					'cmv' => function ($q) {
-						$q->with([
-							'article',
-                            'stocks',
-                            'cost'
-						]);
-					},
-					'entity',
-				]);
-			},
-		]);
+
+		if ($consignment->is_posted == 0) {
+            // Подключение политики
+            $this->authorize(getmethod('update'), $consignment);
+
+            $data = $request->input();
+            $consignment->update($data);
+
+            $consignment->load([
+                'items' => function($q) {
+                    $q->with([
+                        'cmv' => function ($q) {
+                            $q->with([
+                                'article',
+                                'stocks',
+                                'cost'
+                            ]);
+                        },
+                        'entity',
+                    ]);
+                },
+            ]);
 //		dd($consignment);
-		
-		if ($consignment->items->isNotEmpty()) {
-			
-			Log::channel('documents')
-				->info('========================================== НАЧАЛО ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ, ID: ' . $consignment->id . ' ==============================================');
+
+            if ($consignment->items->isNotEmpty()) {
+
+                Log::channel('documents')
+                    ->info('========================================== НАЧАЛО ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ, ID: ' . $consignment->id . ' ==============================================');
 
 //            $grouped_items = $document->items->groupBy('entity.alias');
 //			dd($grouped_items);
 //
 //            foreach ($grouped_items as $alias => $items) {
-            //            }
+                //            }
 
-            foreach ($consignment->items as $item) {
-                $this->receipt($item);
-            }
+                foreach ($consignment->items as $item) {
+                    $this->receipt($item);
+                }
 
 
-			$consignment->update([
-				'is_posted' => true,
-				'amount' => $this->getAmount($consignment)
-			]);
-			
-			Log::channel('documents')
-				->info('Оприходована накладная c id: ' . $consignment->id);
-			Log::channel('documents')
-				->info('========================================== КОНЕЦ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
+                $consignment->update([
+                    'is_posted' => true,
+                    'amount' => $this->getAmount($consignment)
+                ]);
+
+                Log::channel('documents')
+                    ->info('Оприходована накладная c id: ' . $consignment->id);
+                Log::channel('documents')
+                    ->info('========================================== КОНЕЦ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
 				
 				');
-			
-			return redirect()->route('consignments.index');
-		} else {
-			abort(403, 'Накладная пуста');
-		}
+
+
+            } else {
+                abort(403, 'Накладная пуста');
+            }
+        }
+
+        return redirect()->route('consignments.index');
 	}
 	
 	public function unpost($id)
