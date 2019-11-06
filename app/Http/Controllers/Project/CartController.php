@@ -50,19 +50,20 @@ class CartController extends Controller
 
             // dd($cart);
 
-
-            // $cart_test = json_decode(Cookie::get('cart_test'), true);
-            // dd($cart_test);
-
-            $prices_ids = array_keys($cart['prices']);
+            if (isset($cart['prices'])) {
+                $prices_ids = array_keys($cart['prices']);
 //            dd($prices_ids);
 
-            $prices_goods = PricesGoods::with('goods_public')
-                ->find($prices_ids);
+                $prices_goods = PricesGoods::with('goods_public')
+                    ->find($prices_ids);
 
-            foreach($cart['prices'] as $id => $price) {
-                $price_goods = $prices_goods->firstWhere('id', $id);
-                $price_goods->count = $price['count'];
+                foreach($cart['prices'] as $id => $price) {
+                    $price_goods = $prices_goods->firstWhere('id', $id);
+                    $price_goods->count = $price['count'];
+                }
+            } else {
+                $prices_goods = [];
+                $prices_goods = collect($prices_goods);
             }
 //            dd($prices_goods);
         } else {

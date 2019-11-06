@@ -62105,7 +62105,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            count: Number(this.item.count),
+            countInput: Number(this.item.count),
             cost: Number(this.item.cost),
             changeCount: false,
             changeCost: false
@@ -62115,7 +62115,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         isChangeCount: function isChangeCount() {
             return this.changeCount;
+        },
+
+        count: {
+            get: function get() {
+                return Number(this.item.count);
+            },
+            set: function set(value) {
+                this.countInput = Number(value);
+            }
         }
+        //     isChangeCost() {
+        //         if (this.changeCost) {
+        //             this.changeCount = false
+        //         }
+        //         return this.changeCost
+        //     },
+        //     unitAbbreviation() {
+        //         let abbr;
+        //         if (this.item.cmv.article.package_status === 1) {
+        //             abbr = this.item.cmv.article.package_abbreviation;
+        //         } else {
+        //             abbr = this.item.cmv.article.unit.abbreviation;
+        //         }
+        //         return abbr;
+        //     }
+        //
     },
     methods: {
         openModalRemoveItem: function openModalRemoveItem() {
@@ -62140,11 +62165,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.changeCount = false;
             // this.changeCost = false;
             axios.patch('/admin/estimates_goods_items/' + this.item.id, {
-                count: Number(this.count)
+                count: Number(this.countInput)
                 // cost: Number(this.cost)
             }).then(function (response) {
                 _this.$emit('update', response.data);
-                _this.count = Number(response.data.count);
+                _this.countInput = Number(response.data.count);
                 // this.cost = Number(response.data.cost);
             }).catch(function (error) {
                 console.log(error);
