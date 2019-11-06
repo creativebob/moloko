@@ -617,8 +617,7 @@ Route::resource('/leads', 'LeadController')->middleware('auth');
 Route::get('/leads_export', 'LeadController@export')->middleware('auth');
 // Route::resource('/leads_calls', 'LeadController@leads_calls')->middleware('auth');
 
-// Продажа
-Route::patch('/leads/{id}/saling', 'LeadController@saling')->middleware('auth');
+
 
 // Поиск
 Route::post('/leads/search', 'LeadController@search')->middleware('auth');
@@ -643,8 +642,11 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->mi
 
 // --------------------------------------- Расчеты -----------------------------------------------
 
+// Продажа
+Route::patch('/estimates/{id}/saling', 'EstimateController@saling');
+
 // Основные методы
-Route::resource('estimates', 'EstimateController')->middleware('auth');
+Route::resource('/estimates', 'EstimateController');
 
 // Отображение на сайте
 Route::any('/create_estimate', 'EstimateController@ajax_create');

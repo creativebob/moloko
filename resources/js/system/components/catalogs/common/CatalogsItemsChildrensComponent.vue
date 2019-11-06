@@ -1,7 +1,7 @@
 <template>
     <li class="item-catalog">
         <a
-                @click="getItems(item.id)"
+                @click="getPrices(item.id)"
         >{{ item.name }}</a>
         <ul
                 v-if="item.childrens && item.childrens.length"
@@ -24,7 +24,7 @@
             item: Object,
         },
         methods: {
-            getItems: function (id) {
+            getPrices: function (id) {
                 this.$emit('get', id);
             }
         }

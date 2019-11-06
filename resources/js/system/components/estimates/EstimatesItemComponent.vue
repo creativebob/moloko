@@ -8,16 +8,29 @@
             :data-price="item.price">
 <!--        <td>{{ index + 1 }}</td>-->
         <td>{{ item.product.article.name }}</td>
-        <td>{{ item.count }}</td>
-        <td><a class="button green-button" data-open="price-set">{{ item.price | roundToTwo | level }}</a></td>
-        <td
-            v-if="!this.isSaled"
-        >
+
+<!--        <td>{{ item.count }}</td>-->
+        <td @click="checkChangeCount">
+            <template v-if="isChangeCount">
+                <input
+                        @keydown.enter.prevent="updateItem"
+                        type="number"
+                        v-focus
+                        @focusout="changeCount = false"
+                        v-model="count"
+                >
+            </template>
+            <template v-else="changeCount">{{ item.count | roundToTwo | level }}</template>
+        </td>
+
+        <td><a class="button green-button" data-open="price-set">{{ item.amount | roundToTwo | level }}</a></td>
+        <td>
             <div
+                    v-if="!this.isSaled"
+                    @click="openModalRemoveItem"
                     class="icon-delete sprite"
                     data-open="delete-estimates_item"
             ></div>
-
         </td>
     </tr>
 </template>
@@ -38,13 +51,10 @@
                 changeCost: false,
             }
         },
-        // computed: {
-        //     isChangeCount() {
-        //         if (this.changeCount) {
-        //             this.changeCost = false
-        //         }
-        //         return this.changeCount
-        //     },
+        computed: {
+            isChangeCount() {
+                return this.changeCount
+            },
         //     isChangeCost() {
         //         if (this.changeCost) {
         //             this.changeCount = false
@@ -61,35 +71,40 @@
         //         return abbr;
         //     }
         //
-        // },
+        },
         methods: {
-            // checkChangeCount() {
-            //     if (!this.isSaled) {
-            //         this.changeCount = !this.changeCount
-            //     }
-            // },
+            openModalRemoveItem() {
+                this.$emit('open-modal-remove', this.item);
+            },
+            checkChangeCount() {
+                if (this.item.product.serial === 0) {
+                    if (!this.isSaled) {
+                        this.changeCount = !this.changeCount
+                    }
+                }
+            },
             // checkChangeCost() {
             //     if (!this.isSaled) {
             //         this.changeCost = !this.changeCost
             //     }
             // },
-            // updateItem: function() {
-            //     this.changeCount = false;
-            //     this.changeCost = false;
-            //     axios
-            //         .patch('/admin/consignments_items/' + this.item.id, {
-            //             count: Number(this.count),
-            //             cost: Number(this.cost)
-            //         })
-            //         .then(response => {
-            //             this.$emit('update', response.data, this.index);
-            //             this.cost = Number(response.data.cost);
-            //             this.count = Number(response.data.count);
-            //         })
-            //         .catch(error => {
-            //             console.log(error)
-            //         });
-            // },
+            updateItem: function() {
+                this.changeCount = false;
+                // this.changeCost = false;
+                axios
+                    .patch('/admin/estimates_goods_items/' + this.item.id, {
+                        count: Number(this.count),
+                        // cost: Number(this.cost)
+                    })
+                    .then(response => {
+                        this.$emit('update', response.data);
+                        this.count = Number(response.data.count);
+                        // this.cost = Number(response.data.cost);
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    });
+            },
             // deleteItem: function() {
             //     axios
             //         .delete('/admin/consignments_items/' + this.item.id)

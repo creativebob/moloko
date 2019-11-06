@@ -154,8 +154,6 @@ trait Offable
 
         $model_document_item = $model_document.'sItem';
 
-
-
         Log::channel('documents')
             ->info('=== СПИСАНИЕ ' . $item->getTable() . ' ' . $item->id . ' ===');
 

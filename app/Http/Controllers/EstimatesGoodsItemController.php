@@ -49,29 +49,51 @@ class EstimatesGoodsItemController extends Controller
     public function store(Request $request)
     {
 
-        $prices_goods = PricesGoods::findOrFail($request->price_id);
-        $prices_goods->load('product');
+        $price_goods = PricesGoods::findOrFail($request->price_id);
+        $price_goods->load('product');
 
-        // TODO - 28.10.19 - ПРоверка при добавлении при множественном клике в смете, уйдет с Vue
+        if ($price_goods->product->serial == 1) {
+            $estimates_goods_item = EstimatesGoodsItem::create([
+                'estimate_id' => $request->estimate_id,
+                'goods_id' => $price_goods->product->id,
+                'price_id' => $price_goods->id,
+                'price' => $price_goods->price,
+                'count' => 1,
+                'amount' => $price_goods->price
+            ]);
+        } else {
 
-        $estimates_goods_item = EstimatesGoodsItem::firstOrNew([
-            'estimate_id' => $request->estimate_id,
-            'goods_id' => $prices_goods->product->id,
-            'price_id' => $prices_goods->id,
-            'price' => $prices_goods->price,
-            'count' => 1,
-            'amount' => $prices_goods->price
-        ]);
+            // TODO - 28.10.19 - Проверка при добавлении при множественном клике в смете, уйдет с Vue
 
-        if (!$estimates_goods_item->id) {
-            $estimates_goods_item->save();
+            $estimates_goods_item = EstimatesGoodsItem::firstOrNew([
+                'estimate_id' => $request->estimate_id,
+                'goods_id' => $price_goods->product->id,
+                'price_id' => $price_goods->id,
+            ], [
+                'price' => $price_goods->price,
+                'count' => 1,
+                'amount' => $price_goods->price
+            ]);
 
-            $estimates_goods_item->load('product.article');
+            if ($estimates_goods_item->id) {
 
-            $this->estimateUpdate($estimates_goods_item);
+                $count = $estimates_goods_item->count + 1;
+                $amount = $count * $estimates_goods_item->price;
 
-            return view('leads.estimate.estimates_goods_item', compact('estimates_goods_item'));
+                $estimates_goods_item->update([
+                    'count' => $count,
+                    'amount' => $amount
+                ]);
+
+            } else {
+                $estimates_goods_item->save();
+            }
         }
+
+        $estimates_goods_item->load('product.article');
+        $this->estimateUpdate($estimates_goods_item);
+
+        return response()->json($estimates_goods_item);
     }
 
     /**
@@ -103,27 +125,21 @@ class EstimatesGoodsItemController extends Controller
      * @param  \App\EstimatesGoodsItem  $estimatesItem
      * @return \Illuminate\Http\Response
      */
-    public function update($id)
+    public function update(Request $request, $id)
     {
 
         $estimates_goods_item = EstimatesGoodsItem::findOrFail($id);
-
-        $count = $estimates_goods_item->count + 1;
-        $amount = $count * $estimates_goods_item->price;
-
-        $estimates_goods_item->update([
-            'count' => $count,
-            'amount' => $amount
-        ]);
-
         // dd($estimates_goods_item);
 
-        $estimates_goods_item->load('product.article');
-	
-	    $this->estimateUpdate($estimates_goods_item);
-	    
-        return view('leads.estimate.estimates_goods_item', compact('estimates_goods_item'));
+        $result = $estimates_goods_item->update([
+            'count' => $request->count,
+        ]);
+//        dd($result);
 
+        $estimates_goods_item->load('product.article');
+	    $this->estimateUpdate($estimates_goods_item);
+
+        return response()->json($estimates_goods_item);
     }
 
     /**
@@ -168,6 +184,8 @@ class EstimatesGoodsItemController extends Controller
 		}
 		
 		$estimate->update($data);
+
+//		return $estimate;
 	}
 
 

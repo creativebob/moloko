@@ -66,8 +66,8 @@ if($lead->manager_id == 1){
 {{-- Модалка удаления с ajax --}}
 @include('includes.modals.modal-delete-ajax')
 @include('includes.modals.modal-add-claim', ['lead' => $lead])
-@include('leads.estimate.modal_estimate_item_delete')
-@include('leads.catalogs.modal_catalogs_goods')
+{{--@include('leads.estimate.modal_estimate_item_delete')--}}
+{{--@include('leads.catalogs.modal_catalogs_goods')--}}
 @endsection
 
 @push('scripts')
@@ -194,10 +194,6 @@ if($lead->manager_id == 1){
 		});
 	});
 
-	$(document).on('click', '#submit-saling', function () {
-		let id = '{{ $lead->id }}';
-		$(this).closest('form').attr('action', '/admin/leads/' + id + '/saling');
-	})
 
 </script>
 

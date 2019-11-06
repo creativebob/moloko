@@ -30,13 +30,16 @@ Vue.use(Vuex);
 Vue.component('city-search-component', require('./components/CitySearchComponent.vue'));
 Vue.component('consignment-component', require('./components/consignments/ConsignmentComponent.vue'));
 Vue.component('production-component', require('./components/productions/ProductionComponent.vue'));
+Vue.component('estimate-init-component', require('./components/estimates/EstimateInitComponent.vue'));
 Vue.component('estimate-component', require('./components/estimates/EstimateComponent.vue'));
+Vue.component('estimate-sale-button-component', require('./components/estimates/EstimateSaleButtonComponent.vue'));
 Vue.component('input-digit-component', require('./components/InputDigitComponent.vue'));
 Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
 Vue.component('rawcomposition-component', require('./components/RawCompositionComponent.vue'));
 Vue.component('articles-categories-with-groups-component', require('./components/ArticlesCategoriesWithGroupsComponent.vue'));
 Vue.component('search-cmv-component', require('./components/search/SearchCmvComponent.vue'));
 Vue.component('catalog-goods-component', require('./components/catalogs/goods/CatalogGoodsComponent.vue'));
+Vue.component('lead-badget-component', require('./components/LeadBadgetComponent.vue'));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
