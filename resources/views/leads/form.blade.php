@@ -88,33 +88,6 @@
 
                         <div class="grid-x grid-margin-x">
                             <estimate-init-component :estimate='@json($lead->estimate)'></estimate-init-component>
-
-                            <div class="small-3 cell">
-                                <label>Предварительная стоимость:
-                                    <lead-badget-component></lead-badget-component>
-                                </label>
-                            </div>
-                            <div class="small-3 cell">
-                                <label>Дата доставки:
-                                    @include('includes.inputs.date', ['name' => 'delivery_date', 'value' => isset($lead->delivered_at) ? $lead->delivered_at->format('d.m.Y') : null])
-                                </label>
-                            </div>
-                            <div class="small-3 cell">
-                                <label>Время доставки:
-                                    @include('includes.inputs.time', ['name' => 'delivery_time', 'placeholder' => true, 'value' => isset($lead->delivered_at) ? $lead->delivered_at->format('H:i') : null])
-                                </label>
-                            </div>
-                            <div class="small-3 cell">
-                                <label>Факт оплаты:
-                                    @include('includes.inputs.digit', ['name' => 'payment', 'value' => $lead->payment, 'decimal_place'=>2])
-                                </label>
-                            </div>
-                            <div class="small-12 medium-6 cell">
-                                <label>Склад
-                                    @include('includes.selects.stocks', ['stock_id' => $lead->estimate->stock_id])
-                                </label>
-                            </div>
-
                             <div class="small-12 medium-12 large-12 cell">
                                 <estimate-component></estimate-component>
                             </div>
@@ -219,11 +192,15 @@
 
                 {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
 
-                @can ('index', App\Claim::class)
+                {{-- @can ('index', App\Claim::class)
                 <li class="tabs-title">
                     <a data-tabs-target="content-panel-claims" href="#content-panel-claims">Рекламации</a>
                 </li>
-                @endcan
+                @endcan --}}
+
+                <li class="tabs-title"><a href="#content-panel-payments" aria-selected="true">Оплата</a></li>
+
+
                 {{-- <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li> --}}
                 <li class="tabs-title" id="tab-attribution">
                     <a data-tabs-target="content-panel-attribution" href="#content-panel-attribution">Аттрибуция</a>
@@ -243,13 +220,22 @@
                             <fieldset class="fieldset-challenge">
                                 <legend>Контроль процесса:</legend>
                                 <div class="grid-x grid-padding-x">
-                                    <div class="small-12 medium-6 cell">
+                                    <div class="small-12 large-6 cell">
 
                                         {{-- Подключаем этапы процесса --}}
                                         @include('includes.selects.stages', ['value' => $lead->stage_id])
 
                                     </div>
-
+                                    <div class="small-3 medium-6 large-3 cell">
+                                        <label>Дата доставки:
+                                            @include('includes.inputs.date', ['name' => 'delivery_date', 'value' => isset($lead->delivered_at) ? $lead->delivered_at->format('d.m.Y') : null])
+                                        </label>
+                                    </div>
+                                    <div class="small-3 medium-6 large-3 cell">
+                                        <label>Время доставки:
+                                            @include('includes.inputs.time', ['name' => 'delivery_time', 'placeholder' => true, 'value' => isset($lead->delivered_at) ? $lead->delivered_at->format('H:i') : null])
+                                        </label>
+                                    </div>
                                 </div>
                             </fieldset>
 
@@ -425,6 +411,17 @@
                         </div>
                     </div> --}}
 
+                    {{-- ФАКТ ОПЛАТЫ --}}
+                    <div class="tabs-panel" id="content-panel-payments">
+                        <div class="grid-x grid-padding-x">
+                            <div class="cell small-4">
+                                <label>Сумма:
+                                    @include('includes.inputs.digit', ['name' => 'payment', 'value' => num_format($lead->payment, 2), 'decimal_place'=>2])
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     {{-- АТТРИБУЦИЯ --}}
                     <div class="tabs-panel" id="content-panel-attribution">
                         <div class="grid-x grid-padding-x">
@@ -462,6 +459,20 @@
                                         <td>Интерес: </td>
                                         <td>
                                             {{ Form::select('choice_tag', $choices, genChoiceTag($lead), ['disabled' => ($lead->lead_method_id == 2)]) }}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Предварительная стоимость:</td>
+                                            <td>
+                                                <lead-badget-component></lead-badget-component>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Склад списания:</td>
+                                            <td>
+                                                @include('includes.selects.stocks', ['stock_id' => $lead->estimate->stock_id])
+                                            </td>
                                             <td></td>
                                         </tr>
                                         <tr>
