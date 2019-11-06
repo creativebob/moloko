@@ -41,6 +41,15 @@ function cleanPhone($str) {
     return $result;
 }
 
+function cleanDigit($str) {
+    $ptn = "/[^.,0-9]/";
+    $rpltxt = "";
+    $result = preg_replace($ptn, $rpltxt, $str);
+    $result = str_replace(",", ".", $result);
+    // dd($result);
+    return $result;
+}
+
 function secToTime($sec) {
     $hour = floor($sec/3600);
     $sec = $sec - ($hour*3600);
