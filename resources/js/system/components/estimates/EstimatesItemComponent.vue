@@ -45,7 +45,7 @@
         },
         data() {
             return {
-                count: Number(this.item.count),
+                countInput: Number(this.item.count),
                 cost: Number(this.item.cost),
                 changeCount: false,
                 changeCost: false,
@@ -54,6 +54,15 @@
         computed: {
             isChangeCount() {
                 return this.changeCount
+            },
+            count: {
+                get () {
+                    return Number(this.item.count);
+                },
+                set (value) {
+                    this.countInput = Number(value)
+                }
+
             },
         //     isChangeCost() {
         //         if (this.changeCost) {
@@ -93,12 +102,12 @@
                 // this.changeCost = false;
                 axios
                     .patch('/admin/estimates_goods_items/' + this.item.id, {
-                        count: Number(this.count),
+                        count: Number(this.countInput),
                         // cost: Number(this.cost)
                     })
                     .then(response => {
                         this.$emit('update', response.data);
-                        this.count = Number(response.data.count);
+                        this.countInput = Number(response.data.count);
                         // this.cost = Number(response.data.cost);
                     })
                     .catch(error => {
