@@ -307,214 +307,217 @@ class ProductionController extends Controller
             ->systemItem($answer)
             ->findOrFail($id);
 
-        // Подключение политики
-        $this->authorize(getmethod('update'), $production);
+        if ($production->is_produced == 0) {
+            // Подключение политики
+            $this->authorize(getmethod('update'), $production);
 
-        $data = $request->input();
-        $production->update($data);
+            $data = $request->input();
+            $production->update($data);
 
-        $production->load([
-            'items' => function($q) {
-                $q->with([
-                    'cmv' => function ($q) {
-                        $q->with([
-                            'article' => function ($q) {
-                                $q->with([
-                                    'raws.cost',
-                                    'containers.cost'
-                                ]);
-                            }
-                        ]);
-                    },
-                    'entity'
-                ]);
-            },
-        ]);
+            $production->load([
+                'items' => function($q) {
+                    $q->with([
+                        'cmv' => function ($q) {
+                            $q->with([
+                                'article' => function ($q) {
+                                    $q->with([
+                                        'raws.cost',
+                                        'containers.cost'
+                                    ]);
+                                }
+                            ]);
+                        },
+                        'entity'
+                    ]);
+                },
+            ]);
 //		dd($production);
 
-        if ($production->items->isNotEmpty()) {
-	
-	        $stock_general = Stock::findOrFail($production->stock_id);
+            if ($production->items->isNotEmpty()) {
 
-            set_time_limit(60*5);
+                $stock_general = Stock::findOrFail($production->stock_id);
 
-            // Если нужна проверка остатка на слкдах
-            if ($request->has('leftover')) {
-                $result = [];
-                $errors = [];
+                set_time_limit(60*5);
 
-                $number = 1;
+                // Если нужна проверка остатка на слкдах
+                if ($request->has('leftover')) {
+                    $result = [];
+                    $errors = [];
 
-                foreach ($production->items as $item) {
+                    $number = 1;
 
-                    $relations = [
-                        'raws',
-                        'containers',
-                        'attachments'
-                    ];
+                    foreach ($production->items as $item) {
 
-                    $entity_document = Entity::where('alias', $item->document->getTable())->first();
-                    $model_document = 'App\\' . $entity_document->model;
+                        $relations = [
+                            'raws',
+                            'containers',
+                            'attachments'
+                        ];
 
-                    $model_document_item = $model_document.'sItem';
+                        $entity_document = Entity::where('alias', $item->document->getTable())->first();
+                        $model_document = 'App\\' . $entity_document->model;
+
+                        $model_document_item = $model_document.'sItem';
 
 
-                    foreach ($relations as $relation_name) {
-                        if ($item->cmv->article->$relation_name->isNotEmpty()) {
+                        foreach ($relations as $relation_name) {
+                            if ($item->cmv->article->$relation_name->isNotEmpty()) {
 
-                            $entity_composition = Entity::where('alias', $relation_name)->first();
-                            $model_composition = 'App\\'.$entity_composition->model;
+                                $entity_composition = Entity::where('alias', $relation_name)->first();
+                                $model_composition = 'App\\'.$entity_composition->model;
 
-                            $entity_stock = Entity::where('alias', $relation_name.'_stocks')->first();
-                            $model_stock = 'App\\'.$entity_stock->model;
+                                $entity_stock = Entity::where('alias', $relation_name.'_stocks')->first();
+                                $model_stock = 'App\\'.$entity_stock->model;
 
-                            foreach ($item->cmv->article->$relation_name as $composition) {
+                                foreach ($item->cmv->article->$relation_name as $composition) {
 
-                                // Списываем позицию состава
-                                $stock_composition = $composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $composition->article->manufacturer_id)->first();
+                                    // Списываем позицию состава
+                                    $stock_composition = $composition->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $composition->article->manufacturer_id)->first();
 //                          dd($stock_production);
 
-                                if ($stock_composition) {
+                                    if ($stock_composition) {
 
-                                    $count = $composition->pivot->value;
-                                    $composition_count = $composition->portion * $count * $item->count;
-                                    $total = $stock_composition->count - $composition_count;
+                                        $count = $composition->pivot->value;
+                                        $composition_count = $composition->portion * $count * $item->count;
+                                        $total = $stock_composition->count - $composition_count;
 
-                                    if ($total < 0) {
-                                        $errors['msg'][] = 'Для позиции ' . $number . ' не хватает ' . $total . ' ' . $composition->article->unit->abbreviation .  ' "' . $composition->article->name . '" для производства';
+                                        if ($total < 0) {
+                                            $errors['msg'][] = 'Для позиции ' . $number . ' не хватает ' . $total . ' ' . $composition->article->unit->abbreviation .  ' "' . $composition->article->name . '" для производства';
+                                        } else {
+                                            $result[$item->id][] = [
+                                                'entity' => $composition->getTable(),
+                                                'id' => $composition->id,
+                                                'model' => $model_composition,
+                                                'stock_id' => $stock_composition->id,
+                                                'stock_model' => $model_stock,
+                                                'cost' => $composition->cost->average * $count * $composition->portion ,
+                                                'amount' => $composition->portion * $count * $item->count * $composition->cost->average,
+                                                'count' => $composition->portion * $count * $item->count,
+                                                'weight' => $composition->weight * $count * $item->count,
+                                                'volume' => $composition->volume * $count * $item->count
+                                            ];
+                                        }
                                     } else {
-                                        $result[$item->id][] = [
-                                            'entity' => $composition->getTable(),
-                                            'id' => $composition->id,
-                                            'model' => $model_composition,
-                                            'stock_id' => $stock_composition->id,
-                                            'stock_model' => $model_stock,
-                                            'cost' => $composition->cost->average * $count * $composition->portion ,
-                                            'amount' => $composition->portion * $count * $item->count * $composition->cost->average,
-                                            'count' => $composition->portion * $count * $item->count,
-                                            'weight' => $composition->weight * $count * $item->count,
-                                            'volume' => $composition->volume * $count * $item->count
-                                        ];
+                                        $errors['msg'][] = 'Для позиции ' . $number . ' не существует склада для ' . $composition->article->name;
                                     }
-                                } else {
-                                    $errors['msg'][] = 'Для позиции ' . $number . ' не существует склада для ' . $composition->article->name;
                                 }
                             }
                         }
+                        $number++;
                     }
-                    $number++;
-                }
 //	        dd($result);
 
-                if (!empty($errors)) {
+                    if (!empty($errors)) {
 //                dd($errors);
-                    return back()
-                        ->withErrors($errors)
-                        ->withInput();
-                };
-            }
-
-	        Log::channel('documents')
-		        ->info('========================================== НАЧАЛО НАРЯДА ПРОИЗВОДСТВА C ID: ' . $production->id . ' ==============================================');
-            Log::channel('documents')
-                ->info('Режим проверки остатка = ' . $request->has('leftover'));
-
-            foreach ($production->items as $item) {
-
-                Log::channel('documents')
-                    ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===');
-
-                $cost = 0;
-                $amount = 0;
-                $is_wrong = 0;
-
-                // С проверкой остатка
-                if ($request->has('leftover')) {
-                    $compositions = $result[$item->id];
-
-                    foreach ($compositions as $composition) {
-
-                        Log::channel('documents')
-                            ->info('=== СПИСАНИЕ ' . $composition['entity'] . ' ' . $composition['id'] . ' ===');
-
-                        $stock_composition = $composition['stock_model']::findOrFail($composition['stock_id']);
-
-                        Log::channel('documents')
-                            ->info('Существует склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);
-
-
-                        Log::channel('documents')
-                            ->info('Значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
-
-                        $stock_composition->count -= $composition['count'];
-                        $stock_composition->weight -= $composition['weight'];
-                        $stock_composition->volume -= $composition['volume'];
-                        $stock_composition->save();
-
-                        Log::channel('documents')
-                            ->info('Обновлены значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
-
-                        //                                dd($composition);
-                        $off = Off::create([
-                            'document_id' => $item->document->id,
-                            'document_type' => $model_document,
-                            'documents_item_id' => $item->id,
-                            'documents_item_type' => $model_document_item,
-                            'cmv_id' => $composition['id'],
-                            'cmv_type' => $composition['model'],
-                            'count' => $composition['count'],
-                            'cost' => $composition['cost'],
-                            'amount' => $composition['amount'],
-                            'stock_id' => $item->document->stock_id,
-                        ]);
-
-                        $cost += $composition['cost'];
-                        $amount += $composition['amount'];
-
-                        Log::channel('documents')
-                            ->info('Записали списание с id: ' . $off->id . ', count: ' . $off->count . ', cost: ' . $off->cost . ', amount: ' . $off->amount);
-
-                        Log::channel('documents')
-                            ->info('=== КОНЕЦ СПИСАНИЯ ===
-                                    ');
-                    }
-                } else {
-                    // Без проверки остатка
-                    $res = $this->production($item);
-                    $cost = $res['cost'];
-                    $is_wrong = $res['is_wrong'];
-                    $amount = $cost * $item->count;
+                        return back()
+                            ->withErrors($errors)
+                            ->withInput();
+                    };
                 }
 
+                Log::channel('documents')
+                    ->info('========================================== НАЧАЛО НАРЯДА ПРОИЗВОДСТВА C ID: ' . $production->id . ' ==============================================');
+                Log::channel('documents')
+                    ->info('Режим проверки остатка = ' . $request->has('leftover'));
+
+                foreach ($production->items as $item) {
+
+                    Log::channel('documents')
+                        ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() . ' ' . $item->id . ' ===');
+
+                    $cost = 0;
+                    $amount = 0;
+                    $is_wrong = 0;
+
+                    // С проверкой остатка
+                    if ($request->has('leftover')) {
+                        $compositions = $result[$item->id];
+
+                        foreach ($compositions as $composition) {
+
+                            Log::channel('documents')
+                                ->info('=== СПИСАНИЕ ' . $composition['entity'] . ' ' . $composition['id'] . ' ===');
+
+                            $stock_composition = $composition['stock_model']::findOrFail($composition['stock_id']);
+
+                            Log::channel('documents')
+                                ->info('Существует склад ' . $stock_composition->getTable() . ' c id: ' . $stock_composition->id);
+
+
+                            Log::channel('documents')
+                                ->info('Значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
+
+                            $stock_composition->count -= $composition['count'];
+                            $stock_composition->weight -= $composition['weight'];
+                            $stock_composition->volume -= $composition['volume'];
+                            $stock_composition->save();
+
+                            Log::channel('documents')
+                                ->info('Обновлены значения count: ' . $stock_composition->count . ', weight: ' . $stock_composition->weight . ', volume: ' . $stock_composition->volume);
+
+                            //                                dd($composition);
+                            $off = Off::create([
+                                'document_id' => $item->document->id,
+                                'document_type' => $model_document,
+                                'documents_item_id' => $item->id,
+                                'documents_item_type' => $model_document_item,
+                                'cmv_id' => $composition['id'],
+                                'cmv_type' => $composition['model'],
+                                'count' => $composition['count'],
+                                'cost' => $composition['cost'],
+                                'amount' => $composition['amount'],
+                                'stock_id' => $item->document->stock_id,
+                            ]);
+
+                            $cost += $composition['cost'];
+                            $amount += $composition['amount'];
+
+                            Log::channel('documents')
+                                ->info('Записали списание с id: ' . $off->id . ', count: ' . $off->count . ', cost: ' . $off->cost . ', amount: ' . $off->amount);
+
+                            Log::channel('documents')
+                                ->info('=== КОНЕЦ СПИСАНИЯ ===
+                                    ');
+                        }
+                    } else {
+                        // Без проверки остатка
+                        $res = $this->production($item);
+                        $cost = $res['cost'];
+                        $is_wrong = $res['is_wrong'];
+                        $amount = $cost * $item->count;
+                    }
+
 //                    $check = $this->check_production();
-                // Списание
+                    // Списание
 //                    $cost = $this->production($item);
 
-                $item->update([
-                    'cost' => $cost,
-                    'amount' => $amount,
+                    $item->update([
+                        'cost' => $cost,
+                        'amount' => $amount,
+                    ]);
+
+                    // Приходование
+                    $this->receipt($item, $is_wrong);
+                }
+
+                $production->update([
+                    'is_produced' => true,
+                    'amount' => $this->getAmount($production)
                 ]);
 
-                // Приходование
-                $this->receipt($item, $is_wrong);
-            }
-
-            $production->update([
-                'is_produced' => true,
-                'amount' => $this->getAmount($production)
-            ]);
-	
-	        Log::channel('documents')
-		        ->info('Произведен наряд c id: ' . $production->id);
-	        Log::channel('documents')
-		        ->info('========================================== КОНЕЦ ПРОИЗВОДСТВА НАРЯДА ==============================================
+                Log::channel('documents')
+                    ->info('Произведен наряд c id: ' . $production->id);
+                Log::channel('documents')
+                    ->info('========================================== КОНЕЦ ПРОИЗВОДСТВА НАРЯДА ==============================================
 				
 				');
 
-            return redirect()->route('productions.index');
-        } else {
-            abort(403, 'Наряд пуст');
+            } else {
+                abort(403, 'Наряд пуст');
+            }
         }
+
+        return redirect()->route('productions.index');
     }
     
     public function unproduced($id)

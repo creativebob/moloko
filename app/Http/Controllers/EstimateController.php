@@ -128,61 +128,64 @@ class EstimateController extends Controller
         ])
             ->findOrFail($id);
 
-        // Подключение политики
+        if ($estimate->is_saled == 0) {
+            // Подключение политики
 //        $this->authorize(getmethod('update'), $lead);
 
-        $lead = $estimate->lead;
-        // Отдаем работу по редактировнию лида трейту
-        $this->updateLead($request, $lead);
+            $lead = $estimate->lead;
+            // Отдаем работу по редактировнию лида трейту
+            $this->updateLead($request, $lead);
 
-        $estimate->update([
-            'stock_id' => $request->stock_id
-        ]);
-
-        if ($estimate->goods_items->isNotEmpty()) {
-            //            dd('Ща буит');
-
-            $stock_general = Stock::findOrFail($request->stock_id);
             $estimate->update([
                 'stock_id' => $request->stock_id
             ]);
 
-            Log::channel('documents')
-                ->info('========================================== НАЧАЛО ПРОДАЖИ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
-
-            foreach ($estimate->goods_items as $item) {
-                $this->off($item);
-            }
-
-            // ОБновляем смету
-            $estimate->load('goods_items');
-
             if ($estimate->goods_items->isNotEmpty()) {
+                //            dd('Ща буит');
 
-                $amount = $estimate->goods_items->sum('amount');
-                $discount = (($amount * $estimate->discount_percent) / 100);
-                $total = ($amount - $discount);
+                $stock_general = Stock::findOrFail($request->stock_id);
+                $estimate->update([
+                    'stock_id' => $request->stock_id
+                ]);
 
-                $data = [
-                    'amount' => $amount,
-                    'discount' => $discount,
-                    'total' => $total,
-                    'is_saled' => true,
-                ];
-            }
-            $estimate->update($data);
+                Log::channel('documents')
+                    ->info('========================================== НАЧАЛО ПРОДАЖИ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
-            Log::channel('documents')
-                ->info('Продана смета c id: ' . $estimate->id);
-            Log::channel('documents')
-                ->info('========================================== КОНЕЦ ПРОДАЖИ СМЕТЫ ==============================================
+                foreach ($estimate->goods_items as $item) {
+                    $this->off($item);
+                }
+
+                // ОБновляем смету
+                $estimate->load('goods_items');
+
+                if ($estimate->goods_items->isNotEmpty()) {
+
+                    $amount = $estimate->goods_items->sum('amount');
+                    $discount = (($amount * $estimate->discount_percent) / 100);
+                    $total = ($amount - $discount);
+
+                    $data = [
+                        'amount' => $amount,
+                        'discount' => $discount,
+                        'total' => $total,
+                        'is_saled' => true,
+                    ];
+                }
+                $estimate->update($data);
+
+                Log::channel('documents')
+                    ->info('Продана смета c id: ' . $estimate->id);
+                Log::channel('documents')
+                    ->info('========================================== КОНЕЦ ПРОДАЖИ СМЕТЫ ==============================================
                 
                 ');
 
-            return redirect()->route('leads.index');
-        } else {
-            abort(403, 'Смета пуста');
+            } else {
+                abort(403, 'Смета пуста');
+            }
         }
+
+        return redirect()->route('leads.index');
     }
 
     public function ajax_create(Request $request)
