@@ -280,7 +280,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('products.articles.goods.prices.catalogs_items', CatalogsGoodsItemsComposer::class);
         view()->composer('products.articles.goods.prices.filials', FilialsForCatalogsGoodsComposer::class);
 
-//        view()->composer('leads.catalogs.catalog_goods', CatalogGoodsWithPricesComposer::class);
+        view()->composer('leads.form', CatalogGoodsWithPricesComposer::class);
 
         view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
         view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);

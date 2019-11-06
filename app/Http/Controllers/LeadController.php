@@ -148,8 +148,11 @@ class LeadController extends Controller
         $lead = $this->createLead($request);
 
         // Создаем смету для лида
+
+        // TODO - 24.10.19 - Скидка должна браться из ценовой политики
         $estimate = Estimate::make([
-            'filial_id' => $lead->filial_id
+            'filial_id' => $lead->filial_id,
+            'discount_percent' => 10
         ]);
 
         $result = $lead->estimate()->save($estimate);
@@ -294,69 +297,8 @@ class LeadController extends Controller
         $catalog_services = $catalogs_services->first();
         // dd($catalog_service);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_cg = operator_right('catalogs_goods', true, getmethod('index'));
 
-        $сatalog_goods = CatalogsGoods::with([
-            'items' => function ($q) use ($filial_id) {
-                $q->with([
-                    'prices' => function ($q) use ($filial_id) {
-                        $q->with([
-                            'product' => function($q) {
-                        	    $q->with([
-                        	    	'article' => function ($q) {
-                        	    	    $q->with([
-                        	    	    	'photo',
-			                                'manufacturer'
-		                                ])
-		                                ->where('draft', false);
-		                            }
-	                            ])
-                                    ->whereHas('article', function ($q) {
-                                        $q->where('draft', false);
-                                    })
-	                            ->where('archive', false);
-                            }
-                        ])
-                            ->whereHas('product', function ($q) {
-                                $q->where('archive', false);
-                            })
-                            ->where('archive', false)
-                            ->select([
-                                'id',
-                                'archive',
-                                'catalogs_goods_id',
-                                'catalogs_goods_item_id',
-                                'price',
-                            ]);
-                    },
-                ])
-                ->select([
-                    'id',
-                    'catalogs_goods_id',
-                    'name',
-                    'photo_id',
-                    'parent_id',
-                ]);
-            },
-            'prices.goods.article.manufacturer'
-        ])
-            ->moderatorLimit($answer_cg)
-            ->companiesLimit($answer_cg)
-            ->authors($answer_cg)
-            ->filials($answer_cg)
-            ->whereHas('sites', function ($q) {
-                $q->whereId(1);
-            })
-            ->first();
-//         dd($сatalog_goods);
-
-        $сatalog_goods_items = buildTreeArray($сatalog_goods->items);
-//        dd($сatalog_goods_items);
-
-        $сatalog_goods->catalogGoodsItems = $сatalog_goods_items;
-
-        return view('leads.edit', compact('lead', 'page_info', 'choices', 'catalog_services', 'сatalog_goods'));
+        return view('leads.edit', compact('lead', 'page_info', 'choices', 'catalog_services'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
@@ -378,6 +320,10 @@ class LeadController extends Controller
 
         // Отдаем работу по редактировнию лида трейту
         $this->updateLead($request, $lead);
+
+        $lead->estimate->update([
+           'stock_id' => $request->stock_id
+        ]);
 
         return redirect('/admin/leads');
     }
@@ -596,97 +542,6 @@ class LeadController extends Controller
             abort(403,'Что-то пошло не так!');
         };
     }
-
-    public function saling(Request $request, $id)
-    {
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('update'));
-
-        // ГЛАВНЫЙ ЗАПРОС:
-        $lead = Lead::with('location', 'company')
-            ->companiesLimit($answer)
-            ->filials($answer)
-            ->systemItem($answer)
-            ->moderatorLimit($answer)
-            ->findOrFail($id);
-
-        // Подключение политики
-        $this->authorize(getmethod('update'), $lead);
-
-        // Отдаем работу по редактировнию лида трейту
-        $this->updateLead($request, $lead);
-
-        if (isset($lead->estimate)) {
-
-            $lead->load([
-                'estimate' => function($q) {
-                    $q->with([
-                        'goods_items' => function ($q) {
-                            $q->with([
-                                'price',
-                                'product',
-                                'document'
-                            ]);
-                        },
-                    ]);
-                },
-            ]);
-    //		dd($lead);
-
-            $estimate = $lead->estimate;
-
-            $estimate->update([
-               'stock_id' => $request->stock_id
-            ]);
-
-            if ($estimate->goods_items->isNotEmpty()) {
-    //            dd('Ща буит');
-
-                $stock_general = Stock::findOrFail($request->stock_id);
-                $estimate->update([
-                    'stock_id' => $request->stock_id
-                ]);
-
-                Log::channel('documents')
-                    ->info('========================================== НАЧАЛО ПРОДАЖИ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
-
-                foreach ($estimate->goods_items as $item) {
-                        $this->off($item);
-                }
-
-                // ОБновляем смету
-                $estimate->load('goods_items');
-
-                if ($estimate->goods_items->isNotEmpty()) {
-
-                    $amount = $estimate->goods_items->sum('amount');
-                    $discount = (($amount * $estimate->discount_percent) / 100);
-                    $total = ($amount - $discount);
-
-                    $data = [
-                        'amount' => $amount,
-                        'discount' => $discount,
-                        'total' => $total,
-                        'is_saled' => true,
-                    ];
-                }
-                $estimate->update($data);
-
-                Log::channel('documents')
-                    ->info('Продана смета c id: ' . $estimate->id);
-                Log::channel('documents')
-                    ->info('========================================== КОНЕЦ ПРОДАЖИ СМЕТЫ ==============================================
-                    
-                    ');
-
-                return redirect()->route('leads.index');
-            } else {
-                abort(403, 'Смета пуста');
-            }
-        }
-    }
-
 
     // --------------------------------------- Ajax ----------------------------------------------------------
 

@@ -19,6 +19,7 @@ class EstimatesGoodsItemObserver
     public function updating(EstimatesGoodsItem $estimates_goods_item)
     {
         $this->update($estimates_goods_item);
+        $estimates_goods_item->amount = $estimates_goods_item->count * $estimates_goods_item->price;
     }
 
     public function deleting(EstimatesGoodsItem $estimates_goods_item)

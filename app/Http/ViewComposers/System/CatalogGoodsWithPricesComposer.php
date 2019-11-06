@@ -12,9 +12,9 @@ class CatalogGoodsWithPricesComposer
 	{
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_cg = operator_right('catalogs_goods', false, getmethod('index'));
+        $answer_cg = operator_right('catalogs_goods', true, getmethod('index'));
 
-        $catalog_goods = CatalogsGoods::with([
+        $сatalogs_goods = CatalogsGoods::with([
             'items' => function ($q) {
                 $q->with([
                     'prices' => function ($q) {
@@ -38,23 +38,52 @@ class CatalogGoodsWithPricesComposer
                             ->whereHas('product', function ($q) {
                                 $q->where('archive', false);
                             })
-                            ->where('filial_id', \Auth::user()->filial_id)
-                            ->where('archive', false);
+                            ->where('archive', false)
+                            ->select([
+                                'id',
+                                'archive',
+                                'catalogs_goods_id',
+                                'catalogs_goods_item_id',
+                                'price',
+                            ]);
                     },
-                    'childs'
-                ]);
-            }
+                ])
+                    ->select([
+                        'id',
+                        'catalogs_goods_id',
+                        'name',
+                        'photo_id',
+                        'parent_id',
+                    ]);
+            },
+            'prices.product.article.manufacturer'
         ])
             ->moderatorLimit($answer_cg)
             ->companiesLimit($answer_cg)
             ->authors($answer_cg)
+            ->filials($answer_cg)
             ->whereHas('sites', function ($q) {
-                $q->where('id', 1);
+                $q->whereId(1);
             })
-            ->findOrFail($view->id);
-//         dd($catalog_goods);
+            ->get();
+//         dd($сatalogs_goods);
 
-        return $view->with(compact('catalog_goods'));
+        $сatalogs_goods_items = [];
+        $catalogs_goods_prices = [];
+        foreach ($сatalogs_goods as $сatalog_goods) {
+            $сatalogs_goods_items = array_merge($сatalogs_goods_items, buildTreeArray($сatalog_goods->items));
+            $catalogs_goods_prices = array_merge($catalogs_goods_prices, $сatalog_goods->prices->toArray());
+        }
+//        dd($catalogs_goods_prices);
+
+        $catalogs_goods_data = [
+            'catalogsGoods' => $сatalogs_goods,
+            'сatalogsGoodsItems' => $сatalogs_goods_items,
+            'catalogsGoodsPrices' => $catalogs_goods_prices
+
+        ];
+
+        return $view->with(compact('catalogs_goods_data'));
     }
 
 }

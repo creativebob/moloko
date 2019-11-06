@@ -87,10 +87,11 @@
                     <div class="tabs-panel is-active" id="content-panel-order">
 
                         <div class="grid-x grid-margin-x">
+                            <estimate-init-component :estimate='@json($lead->estimate)'></estimate-init-component>
 
                             <div class="small-3 cell">
                                 <label>Предварительная стоимость:
-                                    @include('includes.inputs.digit', ['name' => 'badget', 'value' => $lead->badget, 'decimal_place'=>2])
+                                    <lead-badget-component></lead-badget-component>
                                 </label>
                             </div>
                             <div class="small-3 cell">
@@ -115,7 +116,7 @@
                             </div>
 
                             <div class="small-12 medium-12 large-12 cell">
-                                <estimate-component :estimate='@json($lead->estimate)'></estimate-component>
+                                <estimate-component></estimate-component>
                             </div>
                         </div>
                     </div>
@@ -204,7 +205,7 @@
                     <a href="#content-panel-notes" aria-selected="true">События</a>
                 </li>
 
-                @isset($сatalog_goods)
+                @isset($catalogs_goods_data)
                 <li class="tabs-title">
                     <a data-tabs-target="tab-catalog-goods" href="#tab-catalog-goods">Товары</a>
                 </li>
@@ -262,9 +263,9 @@
                 </div>
 
                 {{-- КАТАЛОГ ТОВАРОВ --}}
-                @isset($сatalog_goods)
+                @isset($catalogs_goods_data)
                 <div class="tabs-panel" id="tab-catalog-goods">
-                    <catalog-goods-component :catalog-goods='@json($сatalog_goods)'></catalog-goods-component>
+                    <catalog-goods-component :catalogs-goods-data='@json($catalogs_goods_data)'></catalog-goods-component>
                 </div>
                 @endisset
                 {{-- КОНЕЦ КАТАЛОГ ТОВАРОВ --}}
@@ -518,19 +519,11 @@
             @endcan
         </div>
 
-    <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-        {{ Form::submit('Продать', ['class' => 'button', 'id' => 'submit-saling']) }}
-    </div>
-    </div>
+        <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
+            <estimate-sale-button-component></estimate-sale-button-component>
+        </div>
+</div>
 
     {{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}
     @include('leads.autofind-lead-script')
     @include('includes.scripts.product-to-estimate-script')
-
-
-<script>
-    import EstimateComponent from "../../js/system/components/estimates/EstimateComponent";
-    export default {
-        components: {EstimateComponent}
-    }
-</script>

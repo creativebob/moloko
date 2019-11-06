@@ -1,47 +1,77 @@
 <template>
 
-	<table class="table-estimate" id="table-estimate">
-		<thead>
-		<tr>
-			<th>Наименование</th>
-			<th>Кол-во</th>
-			<!--                                        <th>Себестоимость</th>
-                                                        <th>ДопРасх</th>
-                                                        <th>Наценка</th> -->
-			<th>Цена</th>
-			<th></th>
-		</tr>
-		</thead>
+	<div>
 
-		<tbody id="section-goods" v-if="goodsList.length > 0">
+		<table class="table-estimate" id="table-estimate">
+			<thead>
+			<tr>
+				<th>Наименование</th>
+				<th>Кол-во</th>
+				<!--                                        <th>Себестоимость</th>
+															<th>ДопРасх</th>
+															<th>Наценка</th> -->
+				<th>Цена</th>
+				<th></th>
+			</tr>
+			</thead>
 
-		<estimates-item-component
-				v-for="(item, index) in goodsList"
-				:item="item"
-				:index="index"
-				:key="item.id"
-				:is-saled="isSaled"
-				@update="updateItem"
-				@remove="deleteItem(index)"
-		></estimates-item-component>
+			<tbody id="section-goods" v-if="goodsList.length > 0">
 
-		</tbody>
+				<estimates-item-component
+						v-for="(item, index) in goodsList"
+						:item="item"
+						:index="index"
+						:key="item.id"
+						:is-saled="isSaled"
+						@open-modal-remove="openModalGoods(item, index)"
+						@update="updateItem"
+				></estimates-item-component>
 
-		<tbody id="section-services">
+			</tbody>
 
-		</tbody>
+			<tbody id="section-services">
 
-		<tfoot>
-		<tr>
-			<td colspan="3" class="text-right">Итого:</td>
-			<td>{{ totalItemsAmount | roundToTwo | level }}</td>
-		</tr>
-		<tr>
-			<td colspan="3" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>
-			<td>{{ totalItemsAmountWithDiscount | roundToTwo | level }}</td>
-		</tr>
-		</tfoot>
-	</table>
+			</tbody>
+
+			<tfoot>
+				<tr>
+					<td colspan="3" class="text-right">Итого:</td>
+					<td>{{ totalItemsAmount | roundToTwo | level }}</td>
+				</tr>
+				<tr>
+					<td colspan="3" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>
+					<td>{{ totalItemsAmountWithDiscount | roundToTwo | level }}</td>
+				</tr>
+			</tfoot>
+		</table>
+
+		<div class="reveal rev-small" id="delete-estimates_item" data-reveal>
+			<div class="grid-x">
+				<div class="small-12 cell modal-title">
+					<h5>Удаление</h5>
+				</div>
+			</div>
+			<div class="grid-x align-center modal-content ">
+				<div class="small-10 cell text-center">
+					<p>Удаляем "{{ itemGoodsName }}", вы уверены?</p>
+				</div>
+			</div>
+			<div class="grid-x align-center grid-padding-x">
+				<div class="small-6 medium-4 cell">
+					<button
+							@click.prevent="deleteGoodsItem"
+							data-close
+							class="button modal-button"
+							type="submit"
+					>Удалить</button>
+				</div>
+				<div class="small-6 medium-4 cell">
+					<button data-close class="button modal-button" id="save-button" type="submit">Отменить</button>
+				</div>
+			</div>
+		</div>
+
+	</div>
 
 </template>
 
@@ -50,52 +80,44 @@
 		components: {
 			'estimates-item-component': require('./EstimatesItemComponent.vue')
 		},
-		props: {
-			estimate: Object,
-		},
 		data() {
 			return {
-				goodsList: this.estimate.goods_items,
-
 				//
 				id: null,
 				count: null,
 				cost: null,
-				discountPercent: 10
+				discountPercent: 10,
 
+				itemGoods: null,
+				itemGoodsName: null,
+				itemGoodsIndex: null,
+
+				isSaled: this.$store.state.estimate.estimate.is_saled === 1
 			}
 		},
 		computed: {
+			goodsList() {
+				return this.$store.state.estimate.goodsItems;
+			},
 			totalItemsAmount() {
-				let amount = 0;
-				if (this.goodsList.length > 0) {
-					this.goodsList.forEach(function(item) {
-						return amount += Number(item.price)
-					});
-				}
-
-				return amount;
+				return this.$store.getters.estimateAmount;
 			},
 
 			totalItemsAmountWithDiscount() {
-				let amount = 0;
-				if (this.totalItemsAmount > 0) {
-					let discountAmount = (this.totalItemsAmount * this.discountPercent) / 100;
-
-					amount += this.totalItemsAmount - discountAmount;
-				}
-
-				return amount;
+				return this.$store.getters.estimateTotal;
 			},
 
-			isSaled() {
-				return this.estimate.is_saled === 1;
-			},
+
 		},
 
 		methods: {
 			changeCount: function(value) {
 				this.count = value;
+			},
+			openModalGoods(item, index) {
+				this.itemGoodsIndex = index;
+				this.itemGoods = item;
+				this.itemGoodsName = item.product.article.name;
 			},
 			// changeCost: function(value) {
 			// 	this.cost = value;
@@ -128,41 +150,13 @@
 			// 	}
 			// },
 
-			// addItem: function() {
-			// 	if (!this.isDisabled) {
-			// 		this.disabledButton = true;
-			// 		axios
-			// 			.post('/admin/consignments_items', {
-			// 				consignment_id: this.consignment.id,
-			// 				cmv_id: this.id,
-			// 				entity_id: this.entity_id,
-			// 				count: this.count,
-			// 				cost: this.cost,
-			// 				manufacturer_id: this.manufacturer_id,
-			// 			})
-			// 			.then(response => {
-			// 					this.items.push(response.data)
-			// 				},
-			// 					this.id = null,
-			// 					this.count = null,
-			// 					this.cost = null,
-			// 					this.change = true,
-			// 					this.manufacturer_id = null,
-			// 					this.itemManufacturer = null,
-			//
-			// 			)
-			// 			.catch(error => {
-			// 				console.log(error)
-			// 			});
-			// 	}
-			// },
-			// updateItem: function(item, index) {
-			// 	Vue.set(this.items, index, item);
-			// },
-			//
-			// deleteItem: function(index) {
-			// 	this.items.splice(index, 1);
-			// }
+			updateItem: function(item) {
+				this.$store.commit('UPDATE_GOODS_ITEM', item);
+			},
+			deleteGoodsItem() {
+				this.$store.dispatch('REMOVE_GOODS_ITEM_FROM_ESTIMATE', this.itemGoods.id);
+				$('#delete-estimates_item').foundation('close');
+			}
 		},
 
 		filters: {

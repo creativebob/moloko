@@ -20,11 +20,11 @@
                             data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
                     >
                         <li
-                                v-for="item in catalogGoodsItems"
+                                v-for="item in catalogGoodsItemsList"
                                 class="item-catalog"
                         >
                             <a
-                                    @click="getItems(item.id)"
+                                    @click="getPrices(item.id)"
                             >{{ item.name }}</a>
 
                             <ul
@@ -35,7 +35,7 @@
                                         v-for="children in item.childrens"
                                         :item="children"
                                         :key="children.id"
-                                        @get="getItems"
+                                        @get="getPrices"
                                 ></childrens-component>
 
                             </ul>
@@ -81,7 +81,7 @@
                                         <div class="grid-x grid-margin-x">
                                             <div class="cell auto">
                                                 <h4>
-                                                    <span class="items-product-name">{{ price.goods.article.name }}</span>
+                                                    <span class="items-product-name">{{ price.product.article.name }}</span>
 <!--                                                    <span class="items-product-manufacturer"> ({{ $cur_prices_goods->goods->article->manufacturer->name ?? '' }})</span>-->
                                                 </h4>
                                             </div>
@@ -91,7 +91,7 @@
                                                 <span class="items-product-price">{{ price.price | roundToTwo | level }}</span>
                                             </div>
                                         </div>
-                                        <p class="items-product-description">{{ price.goods.description }}</p>
+                                        <p class="items-product-description">{{ price.product.description }}</p>
                                     </div>
                                 </div>
 
@@ -103,6 +103,38 @@
 
             </div>
         </div>
+
+        <div class="reveal rev-small" id="modal-catalogs-goods" data-reveal>
+            <div class="grid-x">
+                <div class="small-12 cell modal-title">
+                    <h5>Каталоги товаров</h5>
+                </div>
+            </div>
+            <div class="grid-x align-center modal-content">
+                <div class="small-10 cell text-center inputs">
+
+                    <select
+                            v-model="changeCatalogId"
+                    >
+                        <option
+                                :value="catalog.id"
+                                v-for="catalog in catalogs"
+                                :selected="catalogId"
+                        >{{ catalog.name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid-x align-center grid-padding-x">
+                <div class="small-6 medium-4 cell">
+                    <button
+                            class="button modal-button button-change-catalog_goods"
+                            type="submit"
+                            @click.prevent="changeCatalog"
+                    >Использовать</button>
+                </div>
+            </div>
+            <div data-close class="icon-close-modal sprite close-modal"></div>
+        </div>
     </div>
 </template>
 
@@ -112,27 +144,44 @@
             'childrens-component': require('../common/CatalogsItemsChildrensComponent.vue')
         },
         props: {
-            catalogGoods: Object,
+            catalogsGoodsData: Object,
             // isPosted: Boolean,
         },
         data() {
             return {
-                catalogGoodsItems: this.catalogGoods.catalogGoodsItems,
-                // items: this.catalogGoodsItems.items,
-                prices: this.catalogGoods.prices,
+                catalogId: this.catalogsGoodsData.catalogsGoods[0].id,
+                catalogs: this.catalogsGoodsData.catalogsGoods,
+                catalogsItems: this.catalogsGoodsData.сatalogsGoodsItems,
+                prices: this.catalogsGoodsData.catalogsGoodsPrices,
                 listPrices: [],
-            }
+                changeCatalogId: this.catalogsGoodsData.catalogsGoods[0].id
+        }
         },
         computed: {
-
-
+            catalogGoodsItemsList() {
+                let itemsList = this.catalogsItems.filter(item => {
+                    return item.catalogs_goods_id === this.catalogId;
+                });
+                return itemsList;
+            },
         },
         methods: {
-            getItems(id) {
+            getPrices(id) {
                 this.listPrices = this.prices.filter(item => {
                     return item.catalogs_goods_item_id === id;
                 });
             },
+            changeCatalog() {
+                if (this.catalogId !== this.changeCatalogId) {
+                    this.catalogId = this.changeCatalogId;
+                    this.getPrices(0);
+                }
+
+                $('#modal-catalogs-goods').foundation('close');
+            },
+            addPriceToEstimate(id) {
+                this.$store.dispatch('ADD_GOODS_ITEM_TO_ESTIMATE', id);
+            }
         },
         directives: {
             'drilldown': {
