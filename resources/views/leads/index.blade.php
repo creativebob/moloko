@@ -68,7 +68,7 @@
           <th class="td-payment">Оплата</th>
           <th class="td-stage">Этап</th>
           <th class="td-challenge">Задачи</th>
-          <th class="td-delivery">Доставка</th>
+          <th class="td-status">Статус</th>
           {{-- <th class="td-deadline_date">Дедлайн</th> --}}
 
           @if($right_lead_all_managers)
@@ -134,7 +134,8 @@
             @if($lead->email)<br><span class="tiny-text">{{ $lead->email ?? '' }}</span>@endif
           </td>
           <td class="td-choice">
-            {{ $lead->choice->name ?? '' }}
+            {{-- $lead->choice->name ?? '' --}}
+            {{ $lead->estimate->goods_items->implode('goods.article.name', ', ') }}
           </td>
 
           <td class="td-badget">{{ num_format($lead->badget, 0) }}</td>
@@ -152,10 +153,8 @@
 
                   </td>
 
-          <td class="td-delivery">
-            @isset ($lead->delivered_at)
-              {{ $lead->delivered_at->format('d.m.Y H:i') }}
-              @endisset
+          <td class="td-status">
+            @if($lead->estimate->is_saled) Чек закрыт @else Открыт @endif
           </td>
                 {{-- <td>
                     @if(!empty($lead->first_challenge->deadline_date))
