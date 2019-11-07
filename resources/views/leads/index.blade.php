@@ -61,11 +61,10 @@
           <th class="td-date">Дата</th>
           <th class="td-case-number">Номер</th>
           <th class="td-name">Контакт</th>
-          <th class="td-action">Действие</th>
+          <th class="td-action"></th>
           <th class="td-phone">Телефон</th>
           <th class="td-choice">Спрос</th>
           <th class="td-badget">Сумма сделки</th>
-          <th class="td-payment">Оплата</th>
           <th class="td-stage">Этап</th>
           <th class="td-challenge">Задачи</th>
           <th class="td-status">Статус</th>
@@ -138,12 +137,17 @@
             {{ $lead->estimate->goods_items->implode('goods.article.name', ', ') }}
           </td>
 
-          <td class="td-badget">{{ num_format($lead->badget, 0) }}</td>
-          <td class="td-payment" title="Задолженость: {{ num_format($lead->badget - $lead->payment, 0) }}"><span class="
-            @if($lead->payment < $lead->badget) text-red @endif
+          <td class="td-badget">
+            <span class="
+            @if(($lead->payment > 0)&&($lead->payment < $lead->badget)) text-red @endif
             @if($lead->payment == $lead->badget) text-green @endif
 
-            ">{{ num_format($lead->payment, 0) }}</span></td>
+            ">{{ num_format($lead->badget, 0) }}</span>
+
+            @if(($lead->payment != $lead->badget)&&($lead->payment != 0))
+              <br><span class="tiny-text">{{ num_format($lead->payment, 0) }}</span>
+            @endif
+          </td>
 
           <td class="td-stage">{{ $lead->stage->name }}</td>
           <td class="td-challenge">
