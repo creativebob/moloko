@@ -81,7 +81,7 @@
                                         <div class="grid-x grid-margin-x">
                                             <div class="cell auto">
                                                 <h4>
-                                                    <span class="items-product-name">{{ price.product.article.name }}</span>
+                                                    <span class="items-product-name">{{ price.goods.article.name }}</span>
 <!--                                                    <span class="items-product-manufacturer"> ({{ $cur_prices_goods->goods->article->manufacturer->name ?? '' }})</span>-->
                                                 </h4>
                                             </div>
@@ -91,7 +91,7 @@
                                                 <span class="items-product-price">{{ price.price | roundToTwo | level }}</span>
                                             </div>
                                         </div>
-                                        <p class="items-product-description">{{ price.product.description }}</p>
+                                        <p class="items-product-description">{{ price.goods.description }}</p>
                                     </div>
                                 </div>
 

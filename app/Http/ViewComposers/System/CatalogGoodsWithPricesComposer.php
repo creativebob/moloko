@@ -15,48 +15,49 @@ class CatalogGoodsWithPricesComposer
         $answer_cg = operator_right('catalogs_goods', true, getmethod('index'));
 
         $сatalogs_goods = CatalogsGoods::with([
-            'items' => function ($q) {
+            'items:id,catalogs_goods_id,name,photo_id,parent_id',
+            'prices' => function ($q) {
                 $q->with([
-                    'prices' => function ($q) {
+                    'goods' => function($q) {
                         $q->with([
-                            'product' => function($q) {
+                            'article' => function ($q) {
                                 $q->with([
-                                    'article' => function ($q) {
-                                        $q->with([
-                                            'photo',
-                                            'manufacturer'
-                                        ])
-                                            ->where('draft', false);
-                                    }
+                                    'photo',
+                                    'manufacturer'
                                 ])
-                                    ->whereHas('article', function ($q) {
-                                        $q->where('draft', false);
-                                    })
-                                    ->where('archive', false);
+                                ->where('draft', false)
+                                ->select([
+                                    'id',
+                                    'name',
+                                    'photo_id',
+                                    'manufacturer_id',
+                                    'draft'
+                                ]);
                             }
                         ])
-                            ->whereHas('product', function ($q) {
-                                $q->where('archive', false);
-                            })
                             ->where('archive', false)
                             ->select([
                                 'id',
-                                'archive',
-                                'catalogs_goods_id',
-                                'catalogs_goods_item_id',
-                                'price',
+                                'article_id',
                             ]);
-                    },
+                    }
                 ])
+                    ->whereHas('goods', function ($q) {
+                        $q->where('archive', false)
+                            ->whereHas('article', function ($q) {
+                                $q->where('draft', false);
+                            });
+                    })
+                    ->where('archive', false)
                     ->select([
-                        'id',
-                        'catalogs_goods_id',
-                        'name',
-                        'photo_id',
-                        'parent_id',
+                        'prices_goods.id',
+                        'archive',
+                        'prices_goods.catalogs_goods_id',
+                        'catalogs_goods_item_id',
+                        'price',
+                        'goods_id'
                     ]);
             },
-            'prices.product.article.manufacturer'
         ])
             ->moderatorLimit($answer_cg)
             ->companiesLimit($answer_cg)

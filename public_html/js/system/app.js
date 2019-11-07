@@ -64954,7 +64954,7 @@ var render = function() {
                               _c(
                                 "span",
                                 { staticClass: "items-product-name" },
-                                [_vm._v(_vm._s(price.product.article.name))]
+                                [_vm._v(_vm._s(price.goods.article.name))]
                               )
                             ])
                           ]),
@@ -64981,7 +64981,7 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("p", { staticClass: "items-product-description" }, [
-                          _vm._v(_vm._s(price.product.description))
+                          _vm._v(_vm._s(price.goods.description))
                         ])
                       ])
                     ])
