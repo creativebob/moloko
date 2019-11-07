@@ -797,6 +797,7 @@ Route::resource('/consignments_items', 'ConsignmentsItemController');
 Route::any('/productions/categories', 'ProductionController@categories')->name('productions.categories');;
 Route::patch('/productions/{id}/produced', 'ProductionController@produced')->name('productions.produced');
 Route::get('/productions/{id}/unproduced', 'ProductionController@unproduced')->name('productions.unproduced');
+Route::get('/productions/reproduced/{num}', 'ProductionController@reproduced')->name('productions.reproduced');
 // Основные методы
 Route::resource('/productions', 'ProductionController');
 

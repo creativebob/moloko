@@ -468,10 +468,12 @@ class ConsignmentController extends Controller
 	{
 		// Подключение политики
 		$this->authorize(getmethod('index'), $this->class);
+
+        set_time_limit(60*10);
 		
 		// Получаем из сессии необходимые данные (Функция находиться в Helpers)
 		$answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
-		
+
 		// ГЛАВНЫЙ ЗАПРОС:
 		$consignments = Consignment::with([
 			'items' => function($q) {
@@ -480,73 +482,49 @@ class ConsignmentController extends Controller
 						$q->with([
 							'article',
 							'cost',
-							'stock'
+							'stocks'
 						]);
 					},
 					'entity'
 				]);
 			},
 		])
-		->moderatorLimit($answer)
-			->authors($answer)
-			->systemItem($answer)
+            ->companiesLimit($answer)
 			->where('is_posted', true)
-			->get();
-//		dd($consignments);
+            ->chunk(5, function($consignments)
+            {
+                foreach ($consignments as $consignment) {
+                    if ($consignment->is_posted == 1) {
+                        if ($consignment->items->isNotEmpty()) {
 
+                            Log::channel('documents')
+                                ->info('========================================== НАЧАЛО ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ, ID: ' . $consignment->id . ' ==============================================');
 
-		Schema::disableForeignKeyConstraints();
+                            foreach ($consignment->items as $item) {
+                                $item->cmv->load([
+                                    'article',
+                                    'cost',
+                                    'stocks'
+                                ]);
+                                $this->receipt($item);
+                            }
 
-//        Log::channel('documents')
-//            ->info('=== Очищаем таблицы receipts, cost, cost_histories ===');
-//		CostsHistory::truncate();
-//		Cost::truncate();
-//		Receipt::truncate();
+                            $consignment->update([
+                                'is_posted' => true,
+                                'amount' => $this->getAmount($consignment)
+                            ]);
 
-//		dd('очистка');
-		
-		foreach($consignments as $consignment) {
-            if ($consignment->items->isNotEmpty()) {
-
-//                $grouped_items = $consignment->items->groupBy('entity.alias');
-////                dd($grouped_items);
-//
-//                foreach ($grouped_items as $alias => $items) {
-//                    $entity_stock = Entity::where('alias', $alias . '_stocks')->first();
-//                    $model_stock = 'App\\' . $entity_stock->model;
-//                    $model_stock::truncate();
-//
-//                    Log::channel('documents')
-//                        ->info('=== Очищаем таблицу склада ' . $entity_stock->alias . ' ===');
-//                }
-
-                Log::channel('documents')
-                    ->info('========================================== НАЧАЛО ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ, ID: ' . $consignment->id . ' ==============================================');
-
-                foreach ($consignment->items as $item) {
-                    $this->receipt($item);
-                }
-
-                $consignment->update([
-                    'is_posted' => true,
-                    'amount' => $this->getAmount($consignment)
-                ]);
-
-                Log::channel('documents')
-                    ->info('Оприходована накладная c id: ' . $consignment->id);
-                Log::channel('documents')
-                    ->info('========================================== КОНЕЦ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
+                            Log::channel('documents')
+                                ->info('Оприходована накладная c id: ' . $consignment->id);
+                            Log::channel('documents')
+                                ->info('========================================== КОНЕЦ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
 				
-				');
+				            ');
+                        }
+                    }
+                }
+            });
 
-                return redirect()->route('consignments.index');
-            } else {
-                abort(403, 'Накладная пуста');
-            }
-		}
-		
-		Schema::enableForeignKeyConstraints();
-		
 		return redirect()->route('consignments.index');
 	}
 
