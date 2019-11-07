@@ -114,10 +114,10 @@ trait Receiptable
                 ->info('Значения min: ' . $cost_item->min . ', max: ' . $cost_item->max . ', average: ' . $cost_item->average);
 
             $cost_average = $cost_item->average;
-            if ($stock->count > 0) {
+            if ($stocks_count > 0) {
                 $average = (($stocks_count * $cost_average) + ($count * $cost)) / ($stocks_count + $count);
             } else {
-                $average = (($stocks_count * $cost_average) + ($count * $cost));
+                $average = $cost;
             };
 
             if (is_null($cost_item->min) || is_null($cost_item->max)) {
