@@ -44,6 +44,12 @@
   $right_lead_all_managers = extra_right('lead-all-managers');
 @endphp
 
+<div class="grid-x" id="pagination">
+    <div class="small-6 cell pagination-head">
+        {{ $leads->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
+    </div>
+</div>
+
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
