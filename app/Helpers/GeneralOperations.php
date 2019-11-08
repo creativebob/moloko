@@ -109,8 +109,8 @@ function getLeadNumbers($user, $lead = null) {
 
 //        if(!isset($_ENV['LEAD_NUMBER_LOGIC'])){ abort(403, 'Укажите в env файле переменную LEAD_NUMBER_LOGIC');}
 
-//        dd(config('lead_number_logic'));
-//        if(config('lead_number_logic') == 'simple'){
+//            dd(config('app.lead_number_logic'));
+//        if(config('app.lead_number_logic') == 'simple'){
 
             $lead_numbers['case'] = $lead->id;
             $lead_numbers['serial']  = $serial_number;
