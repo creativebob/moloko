@@ -152,6 +152,7 @@ class EstimateController extends Controller
                     ->info('========================================== НАЧАЛО ПРОДАЖИ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
                 foreach ($estimate->goods_items as $item) {
+                    $item->load('document');
                     $this->off($item);
                 }
 
