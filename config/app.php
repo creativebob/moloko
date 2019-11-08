@@ -258,5 +258,6 @@ return [
     // Наши настройки
     // 'vk_api_token' => env('VK_API_TOKEN'),
     // 'telegram_bot_token' => env('TELEGRAM_BOT_TOKEN'),
+    'lead_number_logic' => env('LEAD_NUMBER_LOGIC', 'simple'),
 
 ];
