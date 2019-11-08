@@ -2552,6 +2552,13 @@ a#task-toggle{
         max-width: 240px;
     }
 
+    td.td-choice{
+        max-width: 280px;
+    }
+
+    td.td-badget, td.td-payment{
+        min-width: 50px;
+    }
 }
 
 
