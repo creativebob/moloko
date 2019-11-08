@@ -109,16 +109,17 @@ function getLeadNumbers($user, $lead = null) {
 
 //        if(!isset($_ENV['LEAD_NUMBER_LOGIC'])){ abort(403, 'Укажите в env файле переменную LEAD_NUMBER_LOGIC');}
 
-        if(config('lead_number_logic') == 'simple'){
+//        dd(config('lead_number_logic'));
+//        if(config('lead_number_logic') == 'simple'){
 
             $lead_numbers['case'] = $lead->id;
             $lead_numbers['serial']  = $serial_number;
-        } else {
-
-            $user_liter = $user->liter ?? $user->id;
-            $lead_numbers['case'] = $lead_date->format('dmy') . '/' .  $serial_number . '/' . $user_liter;
-            $lead_numbers['serial']  = $serial_number;
-        }
+//        } else {
+//
+//            $user_liter = $user->liter ?? $user->id;
+//            $lead_numbers['case'] = $lead_date->format('dmy') . '/' .  $serial_number . '/' . $user_liter;
+//            $lead_numbers['serial']  = $serial_number;
+//        }
 
     }
 
