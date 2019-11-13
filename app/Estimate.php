@@ -65,6 +65,7 @@ class Estimate extends Model
         'author_id',
         'draft',
         'is_saled',
+        'is_reserved',
         'amount',
         'total',
         'discount',
@@ -103,5 +104,11 @@ class Estimate extends Model
     public function services_items()
     {
         return $this->hasMany(EstimatesServicesItem::class);
+    }
+
+    // Резервы
+    public function reserves()
+    {
+        return $this->morphMany(Reserve::class, 'document');
     }
 }

@@ -85,6 +85,7 @@ trait Receiptable
         }
 
         $stock->count += $count;
+        $stock->free += $count;
         $stock->weight += ($item->cmv->article->weight * $count);
         $stock->volume += ($item->cmv->article->volume * $count);
         $stock->save();

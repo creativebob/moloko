@@ -393,4 +393,12 @@ class PricesGoodsController extends Controller
 		]);
 		return response()->json($result);
 	}
+
+    public function ajax_hit(Request $request)
+    {
+        $result = PricesGoods::findOrFail($request->id)->update([
+            'is_hit' => $request->is_hit
+        ]);
+        return response()->json($result);
+    }
 }

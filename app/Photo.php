@@ -95,6 +95,16 @@ class Photo extends Model
         return $this->hasOne(User::class);
     }
 
+    public function goods()
+    {
+        return $this->hasOne(Goods::class);
+    }
+
+    public function raw()
+    {
+        return $this->hasOne(Raw::class);
+    }
+
     public function company()
     {
         return $this->belongsTo(Company::class);

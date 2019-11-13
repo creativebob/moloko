@@ -82,12 +82,13 @@
                     </td>
                     <td class="td-photo">
                         <a href="/admin/{{ $entity }}/{{ $item->id }}/edit">
+{{--                            <img src="{!! route('get_photo', [$item->article_id, 'articles', 'small']) !!}">--}}
                             <img src="{{ getPhotoPathPlugEntity($item, 'small') }}" alt="{{ isset($item->article->photo_id) ? $item->article->name : 'Нет фото' }}">
                         </a>
                     </td>
                     <td class="td-name">
                         <a href="/admin/{{ $entity }}/{{ $item->id }}/edit">{{ $item->article->name }}
-                        @if ($item->article->kit == 1)</a><span class="tiny-text"> - Набор: 
+                        @if ($item->article->kit == 1)</a><span class="tiny-text"> - Набор:
                             @if(isset($item->article->goods))
                                 {{ $item->article->goods->count() }}</span>
                             @endif
@@ -113,9 +114,9 @@
                     </td>
                     <td class="td-package">
                         @if($item->article->package_status == 1)
-                            <span>Прием на склад: {{ $item->article->package_abbreviation }}</span> 
+                            <span>Прием на склад: {{ $item->article->package_abbreviation }}</span>
                             <span>{{ $item->article->package_count * $item->article->unit->ratio }} {{ $item->article->unit->abbreviation }}</span><br>
-                            
+
                         @endif
 
                         @if(isset($item->portion_status))
@@ -152,7 +153,7 @@
                     </td>
 
                     {{-- <td class="td-author">@if(isset($item->author->first_name)) {{ $item->author->name }} @endif</td> --}}
-                    
+
                     @if($page_info->alias == 'goods')
                         <td class="td-catalog">
                             @php // dd($item); @endphp

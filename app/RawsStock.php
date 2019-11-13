@@ -54,6 +54,8 @@ class RawsStock extends Model
 	    'supplier_id',
 	    'filial_id',
         'count',
+        'reserve',
+        'free',
         'weight',
 	    'volume',
         'serial',

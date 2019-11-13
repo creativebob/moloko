@@ -54,6 +54,7 @@
 			'archive',
 			
 			'status',
+            'is_hit',
 			
 			'display',
 			'system',

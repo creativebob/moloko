@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\AttachmentsStock;
 use App\Consignment;
+use App\ContainersStock;
+use App\GoodsStock;
 use App\Observers\Traits\CategoriesTrait;
+use App\Off;
 use App\Production;
+use App\RawsStock;
 use Illuminate\Http\Request;
 
 use App\Entity;
@@ -125,44 +130,41 @@ class AppController extends Controller
 
     public function parser()
     {
-        $consignments = Consignment::with([
-            'items.cmv.article'
-        ])
-            ->get();
-
-//        dd($consignments->first());
-        foreach ($consignments as $consignment) {
-            foreach($consignment->items as $item) {
-                if (empty($item->manufacturer_id)) {
-                    if(isset($item->cmv->article->manufacturer_id)) {
-                        $item->update([
-                            'manufacturer_id' => $item->cmv->article->manufacturer_id
-                        ]);
-                    }
-                }
-            }
+        $raws_stocks = RawsStock::get();
+        foreach ($raws_stocks as $raws_stock) {
+            $raws_stock->free = $raws_stock->count;
+            $raws_stock->save();
         }
+        echo ('Сырье');
 
-        echo('Отпарсил товарные накладные');
-
-        $productions = Production::with([
-            'items.cmv.article'
-        ])
-            ->get();
-
-//        dd($productions->first());
-        foreach ($productions as $production) {
-            foreach($production->items as $item) {
-                if (empty($item->manufacturer_id)) {
-                    if(isset($item->cmv->article->manufacturer_id)) {
-                        $item->update([
-                            'manufacturer_id' => $item->cmv->article->manufacturer_id
-                        ]);
-                    }
-                }
-            }
+        $goods_stocks = GoodsStock::get();
+        foreach ($goods_stocks as $goods_stock) {
+            $goods_stock->free = $goods_stock->count;
+            $goods_stock->save();
         }
+        echo ('Товары');
 
-        echo('Отпарсил наряды на производство');
+        $containers_stocks = ContainersStock::get();
+        foreach ($containers_stocks as $containers_stock) {
+            $containers_stock->free = $containers_stock->count;
+            $containers_stock->save();
+        }
+        echo ('Упаковки');
+
+        $attachments_stocks = AttachmentsStock::get();
+        foreach ($attachments_stocks as $attachments_stock) {
+            $attachments_stock->free = $attachments_stock->count;
+            $attachments_stock->save();
+        }
+        echo ('Вложения');
+
+    }
+
+    public function parser_offs()
+    {
+        $result = Off::where('documents_item_type', 'App\EstimatesItem')->update([
+            'documents_item_type' => 'App\EstimatesGoodsItem'
+        ]);
+        echo $result;
     }
 }

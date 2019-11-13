@@ -20,12 +20,15 @@ Auth::routes();
 // Вход в панель управления
 Route::get('/', 'AppController@enter');
 
-Route::any('/manufacturer_parser', 'AppController@parser');
+Route::any('/stocks_parser', 'AppController@parser');
+Route::any('/offs_parser', 'AppController@parser_offs');
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
 
-Route::get('/img/{path}', 'ImageController@show')->where('path', '.*');
+Route::get('/img/{item_id}/{entity}/{size?}', 'ImageController@show')->name('get_photo')
+//    ->where('path', '.*')
+;
 Route::get('/home', 'HomeController@index')->name('home');
 Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
 
@@ -644,6 +647,8 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->mi
 
 // Продажа
 Route::patch('/estimates/{id}/saling', 'EstimateController@saling');
+Route::patch('/estimates/{id}/reserving', 'EstimateController@reserving');
+Route::patch('/estimates/{id}/unreserving', 'EstimateController@unreserving');
 
 // Основные методы
 Route::resource('/estimates', 'EstimateController');
@@ -1107,6 +1112,7 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
     Route::any('prices_goods_sync', 'PricesGoodsController@sync')->name('prices_goods.sync');
 	
 	Route::any('prices_goods_status', 'PricesGoodsController@ajax_status');
+    Route::any('prices_goods_hit', 'PricesGoodsController@ajax_hit');
 
     Route::resource('prices_goods', 'PricesGoodsController');
 });

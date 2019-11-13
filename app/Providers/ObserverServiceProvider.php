@@ -62,6 +62,8 @@ use App\Observers\ProductionObserver;
 use App\Observers\ProductionsItemObserver;
 use App\Observers\RawsStockObserver;
 use App\Observers\ReceiptObserver;
+use App\Observers\ReserveObserver;
+use App\Observers\ReservesHistoryObserver;
 use App\Observers\RoomsCategoryObserver;
 use App\Observers\SectorObserver;
 use App\Observers\ServicesCategoryObserver;
@@ -79,6 +81,8 @@ use App\Production;
 use App\ProductionsItem;
 use App\RawsStock;
 use App\Receipt;
+use App\Reserve;
+use App\ReservesHistory;
 use App\RoomsCategory;
 use App\Sector;
 use App\ServicesCategory;
@@ -188,6 +192,10 @@ class ObserverServiceProvider extends ServiceProvider
         Estimate::observe(EstimateObserver::class);
         EstimatesGoodsItem::observe(EstimatesGoodsItemObserver::class);
         EstimatesServicesItem::observe(EstimatesServicesItemObserver::class);
+
+        // Резервы
+        Reserve::observe(ReserveObserver::class);
+        ReservesHistory::observe(ReservesHistoryObserver::class);
 
         // Поступления на склад
         Receipt::observe(ReceiptObserver::class);

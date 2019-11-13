@@ -79,6 +79,12 @@
         ">
             @if($cur_prices_goods->status == 1) Продано @else Доступен @endif</button>
     </td>
+    <td class="td-hit">
+        <button type="button" class="hollow tiny button price_goods-hit
+            @if($cur_prices_goods->is_hit == 1) hit @endif
+                ">
+            @if($cur_prices_goods->is_hit == 1) Хит продаж @else Обычный @endif</button>
+    </td>
 
     {{-- Элементы управления --}}
     @include('includes.control.table_td', ['item' => $cur_prices_goods])
