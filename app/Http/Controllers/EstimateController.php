@@ -212,7 +212,7 @@ class EstimateController extends Controller
 
             $lead = $estimate->lead;
             // Отдаем работу по редактировнию лида трейту
-//            $this->updateLead($request, $lead);
+            $this->updateLead($request, $lead);
 
             if ($estimate->goods_items->isNotEmpty()) {
                 Log::channel('documents')
