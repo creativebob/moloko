@@ -471,7 +471,13 @@
                                         <tr>
                                             <td>Склад списания:</td>
                                             <td>
-                                                @include('includes.selects.stocks', ['stock_id' => $lead->estimate->stock_id])
+                                                @php
+                                                $disabled = null;
+                                                    if ($lead->estimate->is_saled == 1 || $lead->estimate->is_reserved == 1) {
+                                                    $disabled = true;
+                                                }
+                                                @endphp
+                                                @include('includes.selects.stocks', ['stock_id' => $lead->estimate->stock_id, 'disabled' =>  $disabled])
                                             </td>
                                             <td></td>
                                         </tr>

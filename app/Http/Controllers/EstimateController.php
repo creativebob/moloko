@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Http\Controllers\Traits\Offable;
+use App\Http\Controllers\Traits\Reservable;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use Illuminate\Support\Facades\Log;
 use App\Estimate;
@@ -29,6 +30,7 @@ class EstimateController extends Controller
     use UserControllerTrait;
     use LeadControllerTrait;
     use Offable;
+    use Reservable;
 
     public function index(Request $request)
     {
@@ -144,14 +146,12 @@ class EstimateController extends Controller
                 //            dd('Ща буит');
 
                 $stock_general = Stock::findOrFail($request->stock_id);
-                $estimate->update([
-                    'stock_id' => $request->stock_id
-                ]);
 
                 Log::channel('documents')
                     ->info('========================================== НАЧАЛО ПРОДАЖИ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
                 foreach ($estimate->goods_items as $item) {
+                    $item->load('document');
                     $this->off($item);
                 }
 
@@ -177,6 +177,114 @@ class EstimateController extends Controller
                     ->info('Продана смета c id: ' . $estimate->id);
                 Log::channel('documents')
                     ->info('========================================== КОНЕЦ ПРОДАЖИ СМЕТЫ ==============================================
+                
+                ');
+
+            } else {
+                abort(403, 'Смета пуста');
+            }
+        }
+
+        return redirect()->route('leads.index');
+    }
+
+    public function reserving(Request $request, $id)
+    {
+//        dd($request);
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $estimate = Estimate::with([
+            'lead',
+            'goods_items' => function ($q) {
+                $q->with([
+                    'price',
+                    'product',
+                    'document'
+                ]);
+            },
+        ])
+            ->findOrFail($id);
+//        dd($estimate);
+
+        if ($estimate->is_saled == 0 && $estimate->is_reserved == 0) {
+            // Подключение политики
+//        $this->authorize(getmethod('update'), $lead);
+
+            $lead = $estimate->lead;
+            // Отдаем работу по редактировнию лида трейту
+            $this->updateLead($request, $lead);
+
+            if ($estimate->goods_items->isNotEmpty()) {
+                Log::channel('documents')
+                    ->info('========================================== НАЧАЛО РЕЗЕРВИРОВАНИЯ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
+
+                foreach ($estimate->goods_items as $item) {
+                    $item->load('document');
+                    $this->reserve($item);
+                }
+
+                // ОБновляем смету
+                $estimate->update([
+                    'is_reserved' => true
+                ]);
+
+                Log::channel('documents')
+                    ->info('Отменен резерв смет c id: ' . $estimate->id);
+                Log::channel('documents')
+                    ->info('========================================== КОНЕЦ РЕЗЕРВИРОВАНИЯ СМЕТЫ ==============================================
+                
+                ');
+            } else {
+                abort(403, 'Смета пуста');
+            }
+        }
+
+        return redirect()->route('leads.index');
+    }
+
+    public function unreserving(Request $request, $id)
+    {
+//        dd($request);
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $estimate = Estimate::with([
+            'goods_items.reserve.history',
+        ])
+            ->findOrFail($id);
+//        dd($estimate);
+
+        if ($estimate->is_saled == 0 && $estimate->is_reserved == 1) {
+            // Подключение политики
+//        $this->authorize(getmethod('update'), $lead);
+
+//            $lead = $estimate->lead;
+//            // Отдаем работу по редактировнию лида трейту
+////            $this->updateLead($request, $lead);
+//
+//            $estimate->update([
+//                'stock_id' => $request->stock_id
+//            ]);
+
+            if ($estimate->goods_items->isNotEmpty()) {
+//                            dd('Ща буит');
+
+                Log::channel('documents')
+                    ->info('========================================== НАЧАЛО ОТМЕНЫ РЕЗЕРВИРОВАНИЯ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
+
+                foreach ($estimate->goods_items as $item) {
+                    $item->load('document');
+                    $this->unreserve($item);
+                }
+
+                // ОБновляем смету
+                $estimate->update([
+                    'is_reserved' => false
+                ]);
+
+                Log::channel('documents')
+                    ->info('Отменен резервв сметы c id: ' . $estimate->id);
+                Log::channel('documents')
+                    ->info('========================================== КОНЕЦ ОТМЕНЫ РЕЗЕРВИРОВАНИЯ СМЕТЫ ==============================================
                 
                 ');
 

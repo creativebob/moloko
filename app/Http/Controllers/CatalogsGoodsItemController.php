@@ -21,7 +21,7 @@ class CatalogsGoodsItemController extends Controller
         $this->model = 'App\CatalogsGoodsItem';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-        $this->type = 'modal';
+        $this->type = 'edit';
     }
 
     use Photable;
@@ -106,12 +106,12 @@ class CatalogsGoodsItemController extends Controller
 
         $data = $request->input();
         $data['catalogs_goods_id'] = $catalog_id;
-        $catalogs_goods_item = (new $this->class())->create($data);
+        $catalogs_goods_item = CatalogsGoodsItem::create($data);
 
         if ($catalogs_goods_item) {
 
             // Переадресовываем на index
-            return redirect()->route('catalogs_goods_items.index', ['catalog_id' => $catalog_id, 'id' => $catalogs_goods_item->id]);
+            return redirect()->route('catalogs_goods_items.index', ['catalog_id' => $catalog_id, $catalogs_goods_item->id]);
 
         } else {
 

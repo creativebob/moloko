@@ -37,6 +37,8 @@ class CreatePricesGoodsTable extends Migration
 	
 	        $table->boolean('status')->default(0)->comment('Статус');
 
+            $table->boolean('is_hit')->default(0)->comment('Хит');
+
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');

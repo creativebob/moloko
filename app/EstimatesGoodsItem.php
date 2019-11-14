@@ -96,4 +96,10 @@ class EstimatesGoodsItem extends Model
     {
         return $this->belongsTo(Goods::class, 'goods_id');
     }
+
+    // Резерв
+    public function reserve()
+    {
+        return $this->morphOne(Reserve::class, 'documents_item');
+    }
 }

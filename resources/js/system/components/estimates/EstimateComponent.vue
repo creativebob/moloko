@@ -45,6 +45,23 @@
 			</tfoot>
 		</table>
 
+		<div>
+			<input
+					v-if="showButtonReserved"
+					type="submit"
+					value="В резерв"
+					class="button"
+					@click="reserveEstimate"
+			>
+			<input
+					v-else
+					type="submit"
+					value="Снять с резерва"
+					class="button"
+					@click="unreserveEstimate"
+			>
+		</div>
+
 		<div class="reveal rev-small" id="delete-estimates_item" data-reveal>
 			<div class="grid-x">
 				<div class="small-12 cell modal-title">
@@ -92,10 +109,13 @@
 				itemGoodsName: null,
 				itemGoodsIndex: null,
 
-				isSaled: this.$store.state.estimate.estimate.is_saled === 1
+				isSaled: this.$store.state.estimate.estimate.is_saled === 1,
 			}
 		},
 		computed: {
+			estimate() {
+				return this.$store.state.estimate.estimate;
+			},
 			goodsList() {
 				return this.$store.state.estimate.goodsItems;
 			},
@@ -106,6 +126,9 @@
 			totalItemsAmountWithDiscount() {
 				return this.$store.getters.estimateTotal;
 			},
+			showButtonReserved() {
+				return this.estimate.is_reserved === 0;
+			}
 
 
 		},
@@ -118,6 +141,14 @@
 				this.itemGoodsIndex = index;
 				this.itemGoods = item;
 				this.itemGoodsName = item.product.article.name;
+			},
+			reserveEstimate () {
+				$('form').attr('action', '/admin/estimates/' + this.estimate.id + '/reserving');
+
+			},
+			unreserveEstimate () {
+				$('form').attr('action', '/admin/estimates/' + this.estimate.id + '/unreserving');
+
 			},
 			// changeCost: function(value) {
 			// 	this.cost = value;

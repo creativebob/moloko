@@ -38,7 +38,7 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            {{ Form::model($catalogs_goods_item, ['route' => ['catalogs_goods_items.update', 'catalog_id' => $catalog_id, 'id' => $catalogs_goods_item->id], 'data-abide', 'novalidate', 'files' => 'true']) }}
+            {{ Form::model($catalogs_goods_item, ['route' => ['catalogs_goods_items.update', 'catalog_id' => $catalog_id, $catalogs_goods_item->id], 'data-abide', 'novalidate', 'files' => 'true']) }}
             {{ method_field('PATCH') }}
 
             {{-- Общая информация --}}

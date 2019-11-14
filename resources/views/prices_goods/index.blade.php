@@ -60,6 +60,7 @@
                     <th class="td-catalogs_item">Раздел прайса</th>
                     <th class="td-price">Цена</th>
                     <th class="td-price-status">Статус</th>
+                    <th class="td-hit">Хит</th>
                     <th class="td-control"></th>
                     <th class="td-delete"></th>
                 </tr>
@@ -232,6 +233,38 @@
                     item.removeClass('show');
                     item.addClass('hide');
                     item.text('Доступен');
+                }
+            } else {
+                // Выводим ошибку на страницу
+                alert(result);
+            };
+        });
+    });
+
+    // Хит
+    $(document).on('click', '.price_goods-hit', function(event) {
+        event.preventDefault();
+
+        let item = $(this);
+        let id = item.closest('.item').attr('id').split('-')[1];
+
+        let hit = item.hasClass("hit") ? 0 : 1;
+
+        // alert(id + ' ' + hit);
+
+        // Ajax
+        $.post('/admin/catalogs_goods/' + catalog_id + '/prices_goods_hit', {
+            id: id,
+            is_hit: hit,
+        }, function (result) {
+            // Если нет ошибки
+            if (result === true) {
+                if (hit === 1) {
+                    item.addClass('hit');
+                    item.text('Хит продаж');
+                } else {
+                    item.removeClass('hit');
+                    item.text('Обычный');
                 }
             } else {
                 // Выводим ошибку на страницу

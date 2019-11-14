@@ -62044,6 +62044,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: {
@@ -62066,6 +62083,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	},
 
 	computed: {
+		estimate: function estimate() {
+			return this.$store.state.estimate.estimate;
+		},
 		goodsList: function goodsList() {
 			return this.$store.state.estimate.goodsItems;
 		},
@@ -62074,6 +62094,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		totalItemsAmountWithDiscount: function totalItemsAmountWithDiscount() {
 			return this.$store.getters.estimateTotal;
+		},
+		showButtonReserved: function showButtonReserved() {
+			return this.estimate.is_reserved === 0;
 		}
 	},
 
@@ -62085,6 +62108,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.itemGoodsIndex = index;
 			this.itemGoods = item;
 			this.itemGoodsName = item.product.article.name;
+		},
+		reserveEstimate: function reserveEstimate() {
+			$('form').attr('action', '/admin/estimates/' + this.estimate.id + '/reserving');
+		},
+		unreserveEstimate: function unreserveEstimate() {
+			$('form').attr('action', '/admin/estimates/' + this.estimate.id + '/unreserving');
 		},
 
 		// changeCost: function(value) {
@@ -62523,6 +62552,20 @@ var render = function() {
         ])
       ]
     ),
+    _vm._v(" "),
+    _c("div", [
+      _vm.showButtonReserved
+        ? _c("input", {
+            staticClass: "button",
+            attrs: { type: "submit", value: "В резерв" },
+            on: { click: _vm.reserveEstimate }
+          })
+        : _c("input", {
+            staticClass: "button",
+            attrs: { type: "submit", value: "Снять с резерва" },
+            on: { click: _vm.unreserveEstimate }
+          })
+    ]),
     _vm._v(" "),
     _c(
       "div",

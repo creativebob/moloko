@@ -31,7 +31,11 @@ trait Offable
         $entity_document = Entity::where('alias', $item->document->getTable())->first();
         $model_document = 'App\\' . $entity_document->model;
 
-        $model_document_item = $model_document.'sItem';
+        if ($item->document->getTable() == 'estimates') {
+            $model_document_item = $model_document.'sGoodsItem';
+        } else {
+            $model_document_item = $model_document.'sItem';
+        }
 
         foreach ($relations as $relation_name) {
             if ($item->cmv->article->$relation_name->isNotEmpty()) {
@@ -152,7 +156,11 @@ trait Offable
         $entity_document = Entity::where('alias', $item->document->getTable())->first();
         $model_document = 'App\\' . $entity_document->model;
 
-        $model_document_item = $model_document.'sItem';
+        if ($item->document->getTable() == 'estimates') {
+            $model_document_item = $model_document.'sGoodsItem';
+        } else {
+            $model_document_item = $model_document.'sItem';
+        }
 
         Log::channel('documents')
             ->info('=== СПИСАНИЕ ' . $item->getTable() . ' ' . $item->id . ' ===');

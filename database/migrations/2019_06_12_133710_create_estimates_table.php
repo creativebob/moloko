@@ -43,6 +43,7 @@ class CreateEstimatesTable extends Migration
 
             $table->boolean('draft')->default(0)->unsigned()->comment('Черновик');
             $table->boolean('is_saled')->default(0)->comment('Продано');
+            $table->boolean('is_reserved')->default(0)->comment('Зарезервировано');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

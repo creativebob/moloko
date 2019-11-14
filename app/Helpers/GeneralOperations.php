@@ -107,18 +107,19 @@ function getLeadNumbers($user, $lead = null) {
     // Создаем номер ОБЫЧНОГО обращения
     if($lead_type_id == 1){
 
-        if(!isset($_ENV['LEAD_NUMBER_LOGIC'])){ abort(403, 'Укажите в env файле переменную LEAD_NUMBER_LOGIC');}
+//        if(!isset($_ENV['LEAD_NUMBER_LOGIC'])){ abort(403, 'Укажите в env файле переменную LEAD_NUMBER_LOGIC');}
 
-        if($_ENV['LEAD_NUMBER_LOGIC'] == 'simple'){
+//            dd(config('app.lead_number_logic'));
+//        if(config('app.lead_number_logic') == 'simple'){
 
             $lead_numbers['case'] = $lead->id;
             $lead_numbers['serial']  = $serial_number;
-        } else {
-
-            $user_liter = $user->liter ?? $user->id;
-            $lead_numbers['case'] = $lead_date->format('dmy') . '/' .  $serial_number . '/' . $user_liter;
-            $lead_numbers['serial']  = $serial_number;
-        }
+//        } else {
+//
+//            $user_liter = $user->liter ?? $user->id;
+//            $lead_numbers['case'] = $lead_date->format('dmy') . '/' .  $serial_number . '/' . $user_liter;
+//            $lead_numbers['serial']  = $serial_number;
+//        }
 
     }
 

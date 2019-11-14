@@ -171,8 +171,8 @@ return [
 
         // Те, что подключаем сами, ручками )))
         Collective\Html\HtmlServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
-        // Intervention\Image\ImageServiceProvider::class,
         // ElForastero\Transliterate\TransliterationServiceProvider::class,
 
         /*
@@ -248,15 +248,13 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-
         'Telegram'  => Telegram\Bot\Laravel\Facades\Telegram::class,
-
-
 
     ],
 
     // Наши настройки
     // 'vk_api_token' => env('VK_API_TOKEN'),
     // 'telegram_bot_token' => env('TELEGRAM_BOT_TOKEN'),
+    'lead_number_logic' => env('LEAD_NUMBER_LOGIC', 'simple'),
 
 ];

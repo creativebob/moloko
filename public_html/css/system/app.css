@@ -11370,6 +11370,14 @@ a#task-toggle {
   max-width: 240px;
 }
 
+#content td.td-choice {
+  max-width: 280px;
+}
+
+#content td.td-badget, #content td.td-payment {
+  min-width: 50px;
+}
+
 .content {
   padding: 30px 20px 44px 20px;
   z-index: 60;

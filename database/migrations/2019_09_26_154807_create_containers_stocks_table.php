@@ -29,6 +29,8 @@ class CreateContainersStocksTable extends Migration
             $table->foreign('cmv_id')->references('id')->on('containers');
 	
 	        $table->decimal('count', 12,4)->default(0)->comment('Количество');
+            $table->decimal('reserve', 12,4)->default(0)->comment('Резерв');
+            $table->decimal('free', 12,4)->default(0)->comment('Свободно');
             
 	        $table->decimal('weight', 9, 4)->default(0)->comment('Вес (кг)');
 	        $table->decimal('volume', 15, 8)->default(0)->comment('Обьем (м3)');
