@@ -2,16 +2,18 @@
 
 	<div>
 
-		<table class="table-estimate" id="table-estimate">
+		<table class="table-estimate lead-estimate" id="table-estimate">
 			<thead>
 			<tr>
 				<th>Наименование</th>
+				<th>Цена</th>
 				<th>Кол-во</th>
 				<!--                                        <th>Себестоимость</th>
 															<th>ДопРасх</th>
 															<th>Наценка</th> -->
-				<th>Цена</th>
-				<th></th>
+				<th class="th-amount">Сумма</th>
+				<th class="th-delete"></th>
+				<th class="th-action"><span class="button-to-reserve button-reserve-all" title="Зарезервировать все!"></span></th>
 			</tr>
 			</thead>
 
@@ -37,10 +39,12 @@
 				<tr>
 					<td colspan="3" class="text-right">Итого:</td>
 					<td>{{ totalItemsAmount | roundToTwo | level }}</td>
+					<td colspan="2"></td>
 				</tr>
 				<tr>
 					<td colspan="3" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>
 					<td>{{ totalItemsAmountWithDiscount | roundToTwo | level }}</td>
+					<td colspan="2"></td>
 				</tr>
 			</tfoot>
 		</table>

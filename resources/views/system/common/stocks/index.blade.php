@@ -44,6 +44,9 @@
                     <th class="td-name">Название</th>
                     <th class="td-manufacturer">Производитель</th>
                     <th class="td-count">Количество</th>
+                    <th class="td-reserve">Резерв</th>
+                    <th class="td-free">Доступно</th>
+
                     <th class="td-weight">Вес</th>
                     <th class="td-volume">Объем</th>
                     <th class="td-cost">Стоимость</th>
@@ -84,6 +87,9 @@
                     </td>
 
                     <td class="td-count">{{ num_format($stock->count, 2) }} {{ $stock->cmv->article->unit->abbreviation }}</td>
+                    <td class="td-reserve">{{ num_format($stock->reserve, 2) }} {{ $stock->cmv->article->unit->abbreviation }}</td>
+                    <td class="td-free">{{ num_format($stock->free, 2) }} {{ $stock->cmv->article->unit->abbreviation }}</td>
+
                     <td class="td-weight">{{ num_format($stock->weight, 2) }} кг.</td>
                     <td class="td-volume">{{ num_format($stock->volume / 0.001, 2) }} л.</td>
                     <td class="td-cost">

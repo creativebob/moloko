@@ -8,6 +8,7 @@
             :data-price="item.price">
 <!--        <td>{{ index + 1 }}</td>-->
         <td>{{ item.product.article.name }}</td>
+        <td>Сюда цену</td>
 
 <!--        <td>{{ item.count }}</td>-->
         <td @click="checkChangeCount">
@@ -23,14 +24,20 @@
             <template v-else="changeCount">{{ item.count | roundToTwo | level }}</template>
         </td>
 
-        <td><a class="button green-button" data-open="price-set">{{ item.amount | roundToTwo | level }}</a></td>
-        <td>
+        <td class="td-amount"><a class="button green-button" data-open="price-set">{{ item.amount | roundToTwo | level }}</a></td>
+        <td class="td-delete">
             <div
                     v-if="!this.isSaled"
                     @click="openModalRemoveItem"
                     class="icon-delete sprite"
                     data-open="delete-estimates_item"
             ></div>
+        </td>
+        <td class="td-action">
+            <div class="wrap-reserved-info active">
+                <span class="button-to-reserve" title="Позицию в резерв!"></span>
+                <span class="reserved-count">4</span>
+            </div>
         </td>
     </tr>
 </template>

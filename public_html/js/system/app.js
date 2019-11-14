@@ -62061,6 +62061,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: {
@@ -62259,6 +62263,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'estimates-item-component',
@@ -62395,6 +62406,8 @@ var render = function() {
     [
       _c("td", [_vm._v(_vm._s(_vm.item.product.article.name))]),
       _vm._v(" "),
+      _c("td", [_vm._v("Сюда цену")]),
+      _vm._v(" "),
       _c(
         "td",
         { on: { click: _vm.checkChangeCount } },
@@ -62445,7 +62458,7 @@ var render = function() {
         2
       ),
       _vm._v(" "),
-      _c("td", [
+      _c("td", { staticClass: "td-amount" }, [
         _c(
           "a",
           {
@@ -62460,7 +62473,7 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _c("td", [
+      _c("td", { staticClass: "td-delete" }, [
         !this.isSaled
           ? _c("div", {
               staticClass: "icon-delete sprite",
@@ -62468,11 +62481,29 @@ var render = function() {
               on: { click: _vm.openModalRemoveItem }
             })
           : _vm._e()
-      ])
+      ]),
+      _vm._v(" "),
+      _vm._m(0)
     ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "td-action" }, [
+      _c("div", { staticClass: "wrap-reserved-info active" }, [
+        _c("span", {
+          staticClass: "button-to-reserve",
+          attrs: { title: "Позицию в резерв!" }
+        }),
+        _vm._v(" "),
+        _c("span", { staticClass: "reserved-count" }, [_vm._v("4")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -62493,7 +62524,10 @@ var render = function() {
   return _c("div", [
     _c(
       "table",
-      { staticClass: "table-estimate", attrs: { id: "table-estimate" } },
+      {
+        staticClass: "table-estimate lead-estimate",
+        attrs: { id: "table-estimate" }
+      },
       [
         _vm._m(0),
         _vm._v(" "),
@@ -62531,7 +62565,9 @@ var render = function() {
                   _vm._f("level")(_vm._f("roundToTwo")(_vm.totalItemsAmount))
                 )
               )
-            ])
+            ]),
+            _vm._v(" "),
+            _c("td", { attrs: { colspan: "2" } })
           ]),
           _vm._v(" "),
           _c("tr", [
@@ -62547,7 +62583,9 @@ var render = function() {
                   )
                 )
               )
-            ])
+            ]),
+            _vm._v(" "),
+            _c("td", { attrs: { colspan: "2" } })
           ])
         ])
       ]
@@ -62617,11 +62655,20 @@ var staticRenderFns = [
       _c("tr", [
         _c("th", [_vm._v("Наименование")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Кол-во")]),
-        _vm._v(" "),
         _c("th", [_vm._v("Цена")]),
         _vm._v(" "),
-        _c("th")
+        _c("th", [_vm._v("Кол-во")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "th-amount" }, [_vm._v("Сумма")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "th-delete" }),
+        _vm._v(" "),
+        _c("th", { staticClass: "th-action" }, [
+          _c("span", {
+            staticClass: "button-to-reserve button-reserve-all",
+            attrs: { title: "Зарезервировать все!" }
+          })
+        ])
       ])
     ])
   },
