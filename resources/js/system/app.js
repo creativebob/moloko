@@ -40,6 +40,7 @@ Vue.component('articles-categories-with-groups-component', require('./components
 Vue.component('search-cmv-component', require('./components/search/SearchCmvComponent.vue'));
 Vue.component('catalog-goods-component', require('./components/catalogs/goods/CatalogGoodsComponent.vue'));
 Vue.component('lead-badget-component', require('./components/LeadBadgetComponent.vue'));
+Vue.component('select-stocks-component', require('./components/common/selects/SelectStocksComponent.vue'));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

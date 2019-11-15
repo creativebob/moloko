@@ -28,6 +28,9 @@ class CreateEstimatesGoodsItemsTable extends Migration
             $table->bigInteger('goods_id')->unsigned()->nullable()->comment('Id товара');
             $table->foreign('goods_id')->references('id')->on('goods');
 
+            $table->bigInteger('stock_id')->unsigned()->nullable()->comment('Id склада');
+            $table->foreign('stock_id')->references('id')->on('stocks');
+
             $table->integer('cost')->nullable()->comment('Себестоимость');
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим мебестоимости');
 
@@ -68,7 +71,7 @@ class CreateEstimatesGoodsItemsTable extends Migration
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 
             $table->timestamps();
-            // $table->softDeletes();
+             $table->softDeletes();
         });
     }
 

@@ -65,7 +65,7 @@ class Estimate extends Model
         'author_id',
         'draft',
         'is_saled',
-        'is_reserved',
+
         'amount',
         'total',
         'discount',

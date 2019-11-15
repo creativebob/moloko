@@ -19,7 +19,7 @@
         },
         computed: {
             isShow() {
-                return this.estimate.is_saled === 0;
+                return this.estimate.is_saled === 0 && this.$store.state.estimate.goodsItems.length > 0;
             },
         },
         methods: {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\AttachmentsStock;
 use App\Consignment;
 use App\ContainersStock;
+use App\EstimatesGoodsItem;
 use App\GoodsStock;
 use App\Observers\Traits\CategoriesTrait;
 use App\Off;
@@ -166,5 +167,25 @@ class AppController extends Controller
             'documents_item_type' => 'App\EstimatesGoodsItem'
         ]);
         echo $result;
+    }
+
+    public function parser_estimates_goods_items()
+    {
+        $estimates_goods_items = EstimatesGoodsItem::with('estimate')
+            ->whereHas('estimate', function ($q) {
+              $q->whereNotNull('stock_id');
+            })
+            ->whereNull('stock_id')
+            ->get();
+//        dd($estimates_goods_items);
+
+        $count = 0;
+        foreach ($estimates_goods_items as $estimates_goods_item) {
+//            dd($estimates_goods_item);
+            $estimates_goods_item->stock_id = $estimates_goods_item->estimate->stock_id;
+            $estimates_goods_item->save();
+            $count++;
+        }
+        echo "Пункты смет пропарсил $count";
     }
 }

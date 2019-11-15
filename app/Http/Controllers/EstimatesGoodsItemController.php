@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\EstimatesGoodsItem;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Traits\Reservable;
 use App\PricesGoods;
 use Illuminate\Http\Request;
 
@@ -19,6 +21,8 @@ class EstimatesGoodsItemController extends Controller
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
     }
+
+    use Reservable;
 
     /**
      * Display a listing of the resource.
@@ -57,6 +61,7 @@ class EstimatesGoodsItemController extends Controller
                 'estimate_id' => $request->estimate_id,
                 'goods_id' => $price_goods->product->id,
                 'price_id' => $price_goods->id,
+                'stock_id' => $request->stock_id,
                 'price' => $price_goods->price,
                 'count' => 1,
                 'amount' => $price_goods->price
@@ -69,6 +74,7 @@ class EstimatesGoodsItemController extends Controller
                 'estimate_id' => $request->estimate_id,
                 'goods_id' => $price_goods->product->id,
                 'price_id' => $price_goods->id,
+                'stock_id' => $request->stock_id,
             ], [
                 'price' => $price_goods->price,
                 'count' => 1,
@@ -90,7 +96,11 @@ class EstimatesGoodsItemController extends Controller
             }
         }
 
-        $estimates_goods_item->load('product.article');
+        $estimates_goods_item->load([
+            'product.article',
+            'reserve',
+            'stock:id,name'
+        ]);
         $this->estimateUpdate($estimates_goods_item);
 
         return response()->json($estimates_goods_item);
@@ -136,7 +146,11 @@ class EstimatesGoodsItemController extends Controller
         ]);
 //        dd($result);
 
-        $estimates_goods_item->load('product.article');
+        $estimates_goods_item->load([
+            'product.article',
+            'reserve',
+            'stock:id,name'
+        ]);
 	    $this->estimateUpdate($estimates_goods_item);
 
         return response()->json($estimates_goods_item);
@@ -150,10 +164,26 @@ class EstimatesGoodsItemController extends Controller
      */
     public function destroy($id)
     {
-	    $estimates_goods_item = EstimatesGoodsItem::findOrFail($id);
-	    
-	    $result = $estimates_goods_item->delete();
-	
+	    $estimates_goods_item = EstimatesGoodsItem::with([
+            'product',
+            'document',
+            'reserve'
+        ])
+        ->findOrFail($id);
+
+	    if (isset($estimates_goods_item->reserve)) {
+            Log::channel('documents')
+                ->info('========================================== УДАЛЯЕМ ПУНКТ СМЕТЫ, ИМЕЮЩИЙ РЕЗЕРВ, ID: ' . $estimates_goods_item->id . ' ==============================================');
+            $this->unreserve($estimates_goods_item);
+            $result = $estimates_goods_item->delete();
+            Log::channel('documents')
+                ->info('========================================== КОНЕЦ УДАЛЕНИЯУНКТА СМЕТЫ, ИМЕЮЩЕГО РЕЗЕРВ ==============================================
+                
+                ');
+        } else {
+            $result = $estimates_goods_item->forceDelete();
+        }
+
 	    $this->estimateUpdate($estimates_goods_item);
 //        $result = EstimatesGoodsItem::destroy($id);
         return response()->json($result);
@@ -187,6 +217,64 @@ class EstimatesGoodsItemController extends Controller
 
 //		return $estimate;
 	}
+
+    public function reserving(Request $request, $id)
+    {
+
+        $estimates_goods_item = EstimatesGoodsItem::with([
+            'product',
+            'document',
+            'reserve'
+        ])
+        ->findOrfail($id);
+
+        Log::channel('documents')
+            ->info('========================================== НАЧАЛО РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ, ID: ' . $estimates_goods_item->id . ' ==============================================');
+
+        $this->reserve($estimates_goods_item);
+
+        Log::channel('documents')
+            ->info('========================================== КОНЕЦ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ ==============================================
+                
+                ');
+
+        $estimates_goods_item->load([
+            'product.article',
+            'reserve',
+            'stock:id,name'
+        ]);
+
+        return response()->json($estimates_goods_item);
+    }
+
+    public function unreserving(Request $request, $id)
+    {
+
+        $estimates_goods_item = EstimatesGoodsItem::with([
+            'product',
+            'document',
+            'reserve'
+        ])
+            ->findOrfail($id);
+
+        Log::channel('documents')
+            ->info('========================================== НАЧАЛО СНЯТИЯ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ, ID: ' . $estimates_goods_item->id . ' ==============================================');
+
+        $this->unreserve($estimates_goods_item);
+
+        Log::channel('documents')
+            ->info('========================================== КОНЕЦ СНЯТИЯ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ ==============================================
+                
+                ');
+
+        $estimates_goods_item->load([
+            'product.article',
+            'reserve',
+            'stock:id,name'
+        ]);
+
+        return response()->json($estimates_goods_item);
+    }
 
 
 //    public function ajax_edit(Request $request)

@@ -2,12 +2,13 @@ const moduleEstimate = {
     state: {
         estimate: null,
         goodsItems: [],
+        stockId: null
     },
     mutations: {
-        GET_ESTIMATE(state, estimate) {
+        SET_ESTIMATE(state, estimate) {
             state.estimate = estimate;
         },
-        GET_GOODS_ITEMS(state, goodsItems) {
+        SET_GOODS_ITEMS(state, goodsItems) {
             state.goodsItems = goodsItems;
         },
         UPDATE_ESTIMATE(state) {
@@ -33,6 +34,9 @@ const moduleEstimate = {
 
             this.commit('UPDATE_ESTIMATE');
         },
+        SET_STOCK_ID(state, stockId) {
+            state.stockId = stockId;
+        },
     },
     actions: {
         ADD_GOODS_ITEM_TO_ESTIMATE({ state }, priceId) {
@@ -40,7 +44,8 @@ const moduleEstimate = {
                 axios
                     .post('/admin/estimates_goods_items', {
                         estimate_id: state.estimate.id,
-                        price_id: priceId
+                        price_id: priceId,
+                        stock_id: state.stockId
                     })
                     .then(response => {
                         let item = response.data,

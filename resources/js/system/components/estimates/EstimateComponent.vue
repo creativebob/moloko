@@ -6,6 +6,7 @@
 			<thead>
 			<tr>
 				<th>Наименование</th>
+				<th>Склад</th>
 				<th>Цена</th>
 				<th>Кол-во</th>
 				<!--                                        <th>Себестоимость</th>
@@ -19,7 +20,7 @@
 
 			<tbody id="section-goods" v-if="goodsList.length > 0">
 
-				<estimates-item-component
+				<estimates-goods-item-component
 						v-for="(item, index) in goodsList"
 						:item="item"
 						:index="index"
@@ -27,7 +28,7 @@
 						:is-saled="isSaled"
 						@open-modal-remove="openModalGoods(item, index)"
 						@update="updateItem"
-				></estimates-item-component>
+				></estimates-goods-item-component>
 
 			</tbody>
 
@@ -37,34 +38,17 @@
 
 			<tfoot>
 				<tr>
-					<td colspan="3" class="text-right">Итого:</td>
+					<td colspan="4" class="text-right">Итого:</td>
 					<td>{{ totalItemsAmount | roundToTwo | level }}</td>
 					<td colspan="2"></td>
 				</tr>
 				<tr>
-					<td colspan="3" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>
+					<td colspan="4" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>
 					<td>{{ totalItemsAmountWithDiscount | roundToTwo | level }}</td>
 					<td colspan="2"></td>
 				</tr>
 			</tfoot>
 		</table>
-
-		<div>
-			<input
-					v-if="showButtonReserved"
-					type="submit"
-					value="В резерв"
-					class="button"
-					@click="reserveEstimate"
-			>
-			<input
-					v-else
-					type="submit"
-					value="Снять с резерва"
-					class="button"
-					@click="unreserveEstimate"
-			>
-		</div>
 
 		<div class="reveal rev-small" id="delete-estimates_item" data-reveal>
 			<div class="grid-x">
@@ -99,7 +83,7 @@
 <script>
     export default {
 		components: {
-			'estimates-item-component': require('./EstimatesItemComponent.vue')
+			'estimates-goods-item-component': require('./EstimatesGoodsItemComponent.vue')
 		},
 		data() {
 			return {
@@ -145,14 +129,6 @@
 				this.itemGoodsIndex = index;
 				this.itemGoods = item;
 				this.itemGoodsName = item.product.article.name;
-			},
-			reserveEstimate () {
-				$('form').attr('action', '/admin/estimates/' + this.estimate.id + '/reserving');
-
-			},
-			unreserveEstimate () {
-				$('form').attr('action', '/admin/estimates/' + this.estimate.id + '/unreserving');
-
 			},
 			// changeCost: function(value) {
 			// 	this.cost = value;
