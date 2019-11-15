@@ -160,7 +160,7 @@ class LeadController extends Controller
 
         $estimate = Estimate::make([
             'filial_id' => $lead->filial_id,
-            'discount_percent' => 10,
+//            'discount_percent' => 10,
             'stock_id' => $stock_id
         ]);
 

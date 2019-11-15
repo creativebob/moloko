@@ -143,11 +143,12 @@ class CartController extends Controller
             // Если есть наполненная корзина, создаем смету на лиде
             if(isset($cart)){
                 $estimate = $this->createEstimateFromCart($cart, $lead);
-                $discount_percent = 10;
+                // TODO - 15.11.19 - Скидка должна браться из ценовой политики
+                $discount_percent = 0;
 
                 // Пока статично вписываем скидку и размер суммы со скидкой
-                $total = $lead->badget - ($lead->badget * 10 / 100);
-                $discount = $lead->badget * 10 / 100;
+                $total = $lead->badget - ($lead->badget * $discount_percent / 100);
+                $discount = $lead->badget * $discount_percent / 100;
 
                 $estimate->amount = $lead->badget;
                 $estimate->total = $total;

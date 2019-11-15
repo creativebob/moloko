@@ -308,7 +308,7 @@ class EstimateController extends Controller
             'filial_id' => $lead->filial_id,
             'client_id' => $lead->client_id,
             'stock_id' => $request->stock_id,
-            'discount_percent' => 10,
+//            'discount_percent' => 10,
         ]);
 
         // dd($estimate);
