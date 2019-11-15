@@ -8,7 +8,8 @@
             :data-price="item.price">
 <!--        <td>{{ index + 1 }}</td>-->
         <td>{{ item.product.article.name }}</td>
-        <td>Сюда цену</td>
+        <td>{{ item.stock.name }}</td>
+        <td>{{ item.price | roundToTwo | level }}</td>
 
 <!--        <td>{{ item.count }}</td>-->
         <td @click="checkChangeCount">
@@ -34,9 +35,25 @@
             ></div>
         </td>
         <td class="td-action">
-            <div class="wrap-reserved-info active">
-                <span class="button-to-reserve" title="Позицию в резерв!"></span>
-                <span class="reserved-count">4</span>
+            <div
+                    :class="isReservedClass"
+            >
+                <span
+                        v-if="!isReserved"
+                        @click="reserveEstimateGoodsItem"
+                        class="button-to-reserve"
+                        title="Позицию в резерв!"
+                ></span>
+                <span
+                        v-else
+                        @click="unreserveEstimateGoodsItem"
+                        class="button-to-reserve unreserve"
+                        title="Снять с резерва!"
+                ></span>
+                <span
+                        v-if="reservedCount > 0"
+                        class="reserved-count"
+                >{{ reservedCount | roundToTwo | level }}</span>
             </div>
         </td>
     </tr>
@@ -44,7 +61,7 @@
 
 <script>
     export default {
-        name: 'estimates-item-component',
+        name: 'estimates-goods-item-component',
         props: {
             item: Object,
             index: Number,
@@ -70,6 +87,30 @@
                     this.countInput = Number(value)
                 }
 
+            },
+            isReservedClass() {
+                if (this.item.reserve !== null) {
+                    if (this.item.reserve.count > 0) {
+                        return 'wrap-reserved-info active';
+                    }
+                }
+                return 'wrap-reserved-info';
+            },
+            isReserved() {
+                if (this.item.reserve !== null) {
+                    if (this.item.reserve.count > 0) {
+                        return true;
+                    }
+                }
+                return false;
+            },
+            reservedCount() {
+                if (this.item.reserve !== null) {
+                    if (this.item.reserve.count > 0) {
+                        return this.item.reserve.count;
+                    }
+                }
+                return 0;
             },
         //     isChangeCost() {
         //         if (this.changeCost) {
@@ -133,6 +174,26 @@
             //             console.log(error)
             //         });
             // },
+            reserveEstimateGoodsItem() {
+                axios
+                    .post('/admin/estimates_goods_items/' + this.item.id + '/reserving')
+                    .then(response => {
+                        this.$emit('update', response.data);
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    });
+            },
+            unreserveEstimateGoodsItem() {
+                axios
+                    .post('/admin/estimates_goods_items/' + this.item.id + '/unreserving')
+                    .then(response => {
+                        this.$emit('update', response.data);
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    });
+            },
         },
         directives: {
             focus: {

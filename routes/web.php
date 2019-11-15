@@ -22,6 +22,7 @@ Route::get('/', 'AppController@enter');
 
 Route::any('/stocks_parser', 'AppController@parser');
 Route::any('/offs_parser', 'AppController@parser_offs');
+Route::any('/estimates_goods_items_parser', 'AppController@parser_estimates_goods_items');
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
@@ -657,6 +658,8 @@ Route::resource('/estimates', 'EstimateController');
 Route::any('/create_estimate', 'EstimateController@ajax_create');
 Route::any('/update_estimate', 'EstimateController@ajax_update');
 
+Route::any('/estimates_goods_items/{id}/reserving', 'EstimatesGoodsItemController@reserving');
+Route::any('/estimates_goods_items/{id}/unreserving', 'EstimatesGoodsItemController@unreserving');
 Route::resource('/estimates_goods_items', 'EstimatesGoodsItemController');
 Route::resource('/estimates_services_items', 'EstimatesServicesItemController');
 

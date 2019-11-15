@@ -477,7 +477,8 @@
                                                     $disabled = true;
                                                 }
                                                 @endphp
-                                                @include('includes.selects.stocks', ['stock_id' => $lead->estimate->stock_id, 'disabled' =>  $disabled])
+                                                <select-stocks-component :stock-id="{{ $lead->estimate->stock_id }}" :stocks='@json($stocks)'></select-stocks-component>
+{{--                                                @include('includes.selects.stocks', ['stock_id' => $lead->estimate->stock_id, 'disabled' =>  $disabled])--}}
                                             </td>
                                             <td></td>
                                         </tr>

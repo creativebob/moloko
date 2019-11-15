@@ -28,7 +28,7 @@ class EstimatesGoodsItem extends Model
     // Включаем кеш
     use Cachable;
 
-    // use SoftDeletes;
+     use SoftDeletes;
 
     use Commonable;
 
@@ -50,6 +50,7 @@ class EstimatesGoodsItem extends Model
         'estimate_id',
         'price_id',
         'goods_id',
+        'stock_id',
 
         'company_id',
         'author_id',
@@ -58,6 +59,8 @@ class EstimatesGoodsItem extends Model
         'price',
 
         'amount',
+
+        'is_reserved',
 
         'display',
         'system',
@@ -101,5 +104,11 @@ class EstimatesGoodsItem extends Model
     public function reserve()
     {
         return $this->morphOne(Reserve::class, 'documents_item');
+    }
+
+    // Склад
+    public function stock()
+    {
+        return $this->belongsTo(Stock::class);
     }
 }

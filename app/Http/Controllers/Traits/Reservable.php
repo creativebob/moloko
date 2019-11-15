@@ -32,7 +32,7 @@ trait Reservable
             ->info('=== РЕЗЕРВИРОВАНИЕ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
         // Списываем позицию состава
-        $stock_general = Stock::findOrFail($item->document->stock_id);
+        $stock_general = Stock::findOrFail($item->stock_id);
 
         // Списываем позицию состава
         $product = $item->product;
@@ -42,8 +42,8 @@ trait Reservable
 
 //      dd($stock_goods);
 
-        if ($product->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $product->article->manufacturer_id)->first()) {
-            $stock = $product->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $product->article->manufacturer_id)->first();
+        $stock = $product->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $product->article->manufacturer_id)->first();
+        if ($stock) {
 
             Log::channel('documents')
                 ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
@@ -70,21 +70,41 @@ trait Reservable
                 Log::channel('documents')
                     ->info('Обновлены значения count: ' . $stock->count . ', reserve: ' . $stock->reserve . ', free: ' . $stock->free);
 
+                if ($item->reserve) {
+                    $reserve = $item->reserve;
+                    $reserve->count += $item_count;
+                    $reserve->save();
 
-                $reserve = Reserve::create([
-                    'document_id' => $item->document->id,
-                    'document_type' => $model_document,
-                    'documents_item_id' => $item->id,
-                    'documents_item_type' => $model_document_item,
-                    'cmv_id' => $product->id,
-                    'cmv_type' => $model_product,
-                    'count' => $item_count,
-                    'stock_id' => $item->document->stock_id,
-                    'filial_id' => $item->document->filial_id,
+
+                    $reserve->history()->save(
+                        ReservesHistory::make([
+                            'count' => $item_count
+                        ])
+                    );
+
+                    Log::channel('documents')
+                        ->info('Обновили актуальный резерв с id: ' . $reserve->id .  ', count: ' . $reserve->count);
+
+                } else {
+                    $reserve = Reserve::create([
+                        'document_id' => $item->document->id,
+                        'document_type' => $model_document,
+                        'documents_item_id' => $item->id,
+                        'documents_item_type' => $model_document_item,
+                        'cmv_id' => $product->id,
+                        'cmv_type' => $model_product,
+                        'count' => $item_count,
+                        'stock_id' => $item->document->stock_id,
+                        'filial_id' => $item->document->filial_id,
+                    ]);
+
+                    Log::channel('documents')
+                        ->info('Записали актуальный резерв с id: ' . $reserve->id .  ', count: ' . $reserve->count);
+                }
+
+                $item->update([
+                   'is_reserved' => true
                 ]);
-
-                Log::channel('documents')
-                    ->info('Записали актуальный резерв с id: ' . $reserve->id .  ', count: ' . $reserve->count);
 
                 Log::channel('documents')
                     ->info('=== КОНЕЦ РЕЗЕРВИРОВАНИЯ ===
@@ -108,24 +128,53 @@ trait Reservable
         Log::channel('documents')
             ->info('=== ОТМЕНА РЕЗЕРВИРОВАНИЯ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
-        $result = $item->reserve->update([
-            'count' => 0
-        ]);
+        $stock_general = Stock::findOrFail($item->stock_id);
 
-        Log::channel('documents')
-            ->info('Ставим количество 0 в атуальынй резерв с id: ' . $item->reserve->id . ', результат ' . $result);
+        $product = $item->product;
+
+        $stock = $product->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $product->article->manufacturer_id)->first();
+        if ($stock) {
+
+            Log::channel('documents')
+                ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
+
+            Log::channel('documents')
+                ->info('Значения count: ' . $stock->count . ', reserve: ' . $stock->reserve . ', free: ' . $stock->free);
+
+            $reserve_count = ($product->portion * $item->reserve->count);
+
+            $stock->free += $reserve_count;
+            $stock->reserve -= $reserve_count;
+            $stock->save();
+
+            Log::channel('documents')
+                ->info('Обновлены значения count: ' . $stock->count . ', reserve: ' . $stock->reserve . ', free: ' . $stock->free);
+
+            $result = $item->reserve->update([
+                'count' => 0
+            ]);
+
+            Log::channel('documents')
+                ->info('Ставим количество 0 в атуальынй резерв с id: ' . $item->reserve->id . ', результат ' . $result);
 
 
-        $result = ReservesHistory::where('reserve_id', $item->reserve->id)->update([
-            'archive' => true
-        ]);
+            $result = ReservesHistory::where([
+                'reserve_id' => $item->reserve->id,
+                'archive' => false
+            ])->update([
+                'archive' => true
+            ]);
 
-        Log::channel('documents')
-            ->info('Ставим всей истории резерва архив, результат ' . $result);
+            Log::channel('documents')
+                ->info('Ставим всей истории резерва архив, результат ' . $result);
 
+            $item->update([
+                'is_reserved' => false
+            ]);
 
-        Log::channel('documents')
-            ->info('=== КОНЕЦ ОТМЕНЫ РЕЗЕРВИРОВАНИЯ ===
+            Log::channel('documents')
+                ->info('=== КОНЕЦ ОТМЕНЫ РЕЗЕРВИРОВАНИЯ ===
                 ');
+        }
     }
 }

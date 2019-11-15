@@ -224,9 +224,9 @@ class EstimateController extends Controller
                 }
 
                 // ОБновляем смету
-                $estimate->update([
-                    'is_reserved' => true
-                ]);
+//                $estimate->update([
+//                    'is_reserved' => true
+//                ]);
 
                 Log::channel('documents')
                     ->info('Отменен резерв смет c id: ' . $estimate->id);
@@ -308,7 +308,7 @@ class EstimateController extends Controller
             'filial_id' => $lead->filial_id,
             'client_id' => $lead->client_id,
             'stock_id' => $request->stock_id,
-            'discount_percent' => 10,
+            'discount_percent' => 0,
         ]);
 
         // dd($estimate);

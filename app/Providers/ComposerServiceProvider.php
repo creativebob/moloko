@@ -192,7 +192,8 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);
         view()->composer([
-            'includes.selects.stocks'
+            'includes.selects.stocks',
+            'leads.form'
         ], StocksComposer::class);
 
         // Conflict: то, что осталось в нижней части

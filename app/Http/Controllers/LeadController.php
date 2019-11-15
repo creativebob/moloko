@@ -153,9 +153,15 @@ class LeadController extends Controller
         // Создаем смету для лида
 
         // TODO - 24.10.19 - Скидка должна браться из ценовой политики
+        // TODO - 15.11.19 - Склад должен браться из настроек, пока берем первый по филиалу
+
+        $stock_id = Stock::where('filial_id', $lead->filial_id)->value('id');
+//        dd($stock_id);
+
         $estimate = Estimate::make([
             'filial_id' => $lead->filial_id,
-            'discount_percent' => 10
+            'discount_percent' => 0,
+            'stock_id' => $stock_id
         ]);
 
         $result = $lead->estimate()->save($estimate);
@@ -194,9 +200,19 @@ class LeadController extends Controller
             'site',
             'claims',
             'estimate' => function ($q) {
-            $q->with([
-                    'goods_items.product.article',
-                    'services_items.product.article',
+                $q->with([
+                    'goods_items' => function ($q) {
+                        $q->with([
+                            'product.article',
+                            'reserve',
+                            'stock:id,name'
+                        ]);
+                    },
+                    'services_items' => function ($q) {
+                        $q->with([
+                            'product.article',
+                        ]);
+                    },
                 ]);
             },
             'lead_method',
