@@ -62210,24 +62210,6 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("td", { attrs: { colspan: "2" } })
-          ]),
-          _vm._v(" "),
-          _c("tr", [
-            _c("td", { staticClass: "text-right", attrs: { colspan: "4" } }, [
-              _vm._v("Итого со скидкой (" + _vm._s(_vm.discountPercent) + "%):")
-            ]),
-            _vm._v(" "),
-            _c("td", [
-              _vm._v(
-                _vm._s(
-                  _vm._f("level")(
-                    _vm._f("roundToTwo")(_vm.totalItemsAmountWithDiscount)
-                  )
-                )
-              )
-            ]),
-            _vm._v(" "),
-            _c("td", { attrs: { colspan: "2" } })
           ])
         ])
       ]

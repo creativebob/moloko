@@ -42,11 +42,11 @@
 					<td>{{ totalItemsAmount | roundToTwo | level }}</td>
 					<td colspan="2"></td>
 				</tr>
-				<tr>
-					<td colspan="4" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>
-					<td>{{ totalItemsAmountWithDiscount | roundToTwo | level }}</td>
-					<td colspan="2"></td>
-				</tr>
+<!--				<tr>-->
+<!--					<td colspan="4" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>-->
+<!--					<td>{{ totalItemsAmountWithDiscount | roundToTwo | level }}</td>-->
+<!--					<td colspan="2"></td>-->
+<!--				</tr>-->
 			</tfoot>
 		</table>
 
