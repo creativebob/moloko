@@ -12618,3 +12618,59 @@ tr .td-price-status .price_goods-status.hide {
 tr:hover .td-price-status .price_goods-status.hide {
   display: inline-block !important;
 }
+
+.wrap-reserved-info {
+  position: relative;
+}
+
+.wrap-reserved-info .reserved-count {
+  display: none;
+}
+
+.wrap-reserved-info.active .reserved-count {
+  display: inline;
+}
+
+.wrap-reserved-info.active .button-to-reserve {
+  opacity: 0.7;
+  top: 4px;
+  left: -2px;
+}
+
+.wrap-reserved-info.active .button-to-reserve:active {
+  opacity: 1 !important;
+}
+
+.button-to-reserve {
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url("img/pushpin.svg") 4px 4px no-repeat;
+  background-size: 16px;
+  opacity: 0;
+  -webkit-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+tr:hover .button-to-reserve {
+  opacity: 0.3;
+}
+
+.button-to-reserve:hover {
+  opacity: 1 !important;
+}
+
+.lead-estimate .td-action {
+  max-width: 50px;
+}
+
+.lead-estimate .td-delete {
+  max-width: 50px;
+}
+
+.lead-estimate .td-amount {
+  max-width: 70px;
+}

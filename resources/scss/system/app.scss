@@ -4178,3 +4178,70 @@ tr:hover .td-price-status .price_goods-status.hide{
     display: inline-block !important;
 }
 
+.wrap-reserved-info{
+    position: relative;
+
+    .reserved-count{
+        display: none;
+    }
+}
+
+.wrap-reserved-info.active{
+    .reserved-count{
+        display: inline;
+    }
+
+    .button-to-reserve{
+        opacity: 0.7;
+        top: 4px;
+        left: -2px;
+    }
+
+    .button-to-reserve:active{
+        opacity: 1 !important;
+    }
+
+}
+
+
+// Оформлением сметы на ЛИДе
+.button-to-reserve{
+    position: relative;
+    top: 3px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url('img/pushpin.svg') 4px 4px no-repeat;
+    background-size: 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+}
+
+tr:hover .button-to-reserve{
+    opacity: 0.3;
+}
+
+// tr th .button-to-reserve{
+//     opacity: 0.3;
+// }
+
+.button-to-reserve:hover{
+    opacity: 1 !important;
+}
+
+.lead-estimate{
+    .td-action{
+        max-width: 50px;
+    }
+
+    .td-delete{
+        max-width: 50px;
+    }
+
+    .td-amount{
+        max-width: 70px;
+    }
+}
+
+

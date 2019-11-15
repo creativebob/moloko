@@ -100,8 +100,8 @@ class CatalogsGoodsController extends Controller
         if($catalog_item_slug){
 
             // Получаем разделы прайса ограниченный slug'ом
-            $catalog_goods_items = $catalog_goods->items_public->where('slug', $catalog_item_slug);
-            $page->title = $catalog_goods_items->first()->title;
+            $catalog_goods_items = $catalog_goods->items_public->where('slug', $catalog_item_slug)->first();
+            $page->title = $catalog_goods_items->title;
 
             $catalog_goods_items->load('childs');
             // dd($catalog_goods_items);
