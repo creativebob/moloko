@@ -20,6 +20,7 @@ class EstimatesGoodsItem extends Model
         'estimate_id',
         'price_id',
         'goods_id',
+        'stock_id',
 
         'company_id',
         'author_id',
