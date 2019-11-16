@@ -115,6 +115,7 @@ trait Reservable
             } else {
                 Log::channel('documents')
                     ->info('На сладе свободных остатков нет');
+                $result = 'На сладе свободных остатков нет';
             }
         } else {
             Log::channel('documents')
