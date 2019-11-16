@@ -236,8 +236,17 @@ trait Offable
             $stock->free = 0;
         }
 
-        $stock->weight -= $item_count;
-        $stock->volume -= $item_count;
+        // TODO - 16.11.19 - Вес и обьем некорректно списываются если значение было 0
+
+//        if ($stock->weight > 0) {
+//            $stock->weight -= $item_count;
+//        }
+//        if ($stock->volume > 0) {
+//            $stock->volume -= $item_count;
+//        }
+        $stock->weight -= $product->weight * $item->count;
+        $stock->volume -= $product->volume * $item->count;
+
         $stock->save();
 
         Log::channel('documents')
