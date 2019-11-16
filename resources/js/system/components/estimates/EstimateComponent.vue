@@ -91,7 +91,7 @@
 				id: null,
 				count: null,
 				cost: null,
-				discountPercent: 0,
+				discountPercent: Number(this.$store.state.estimate.estimate.discount_percent),
 
 				itemGoods: null,
 				itemGoodsName: null,
