@@ -70,6 +70,13 @@ function timeToSec($time) {
     return $sec;
 }
 
+function getFirstSlug($slug) {
+
+    $arr = explode('/', $slug);
+    $first_slug = $arr[0];
+    return $first_slug;
+}
+
 // ====================================================================
 // Преобразует данные (Полученную на шаблоне дату)
 // из плагина PickMeUp в формат базы данных

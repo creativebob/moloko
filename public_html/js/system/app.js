@@ -375,6 +375,115 @@ module.exports = {
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10979,115 +11088,6 @@ return jQuery;
 
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11095,7 +11095,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 	if ( true ) {
 
 		// AMD. Register as an anonymous module.
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(1) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -11163,7 +11163,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 	if ( true ) {
 
 		// AMD. Register as an anonymous module.
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(1), __webpack_require__(3) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2), __webpack_require__(3) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -11990,7 +11990,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 	if ( true ) {
 
 		// AMD. Register as an anonymous module.
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(1), __webpack_require__(3) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2), __webpack_require__(3) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -29598,7 +29598,7 @@ window._ = __webpack_require__(14);
 
 try {
     // window.Popper = require('popper.js').default;
-    window.$ = window.jQuery = __webpack_require__(1);
+    window.$ = window.jQuery = __webpack_require__(2);
 
     __webpack_require__(5);
     __webpack_require__(17);
@@ -29698,7 +29698,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 		// AMD. Register as an anonymous module.
 		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-			__webpack_require__(1),
+			__webpack_require__(2),
 			__webpack_require__(18),
 			__webpack_require__(19),
 			__webpack_require__(7),
@@ -31259,7 +31259,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 		// AMD. Register as an anonymous module.
 		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [
-			__webpack_require__(1),
+			__webpack_require__(2),
 			__webpack_require__(7),
 			__webpack_require__(3),
 			__webpack_require__(5)
@@ -31493,7 +31493,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 	if ( true ) {
 
 		// AMD. Register as an anonymous module.
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(1), __webpack_require__(3) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2), __webpack_require__(3) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -31541,7 +31541,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 	if ( true ) {
 
 		// AMD. Register as an anonymous module.
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(1), __webpack_require__(3) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [ __webpack_require__(2), __webpack_require__(3) ], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
 				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
 				(__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -31579,7 +31579,7 @@ return $.fn.scrollParent = function( includeHidden ) {
 
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(true)
-		module.exports = factory(__webpack_require__(1));
+		module.exports = factory(__webpack_require__(2));
 	else if(typeof define === 'function' && define.amd)
 		define(["jquery"], factory);
 	else {
@@ -57918,7 +57918,7 @@ $.ajaxSetup({
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(56)
 /* template */
@@ -57965,7 +57965,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(83)
 /* template */
@@ -58012,8 +58012,8 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(49);
-__webpack_require__(117);
-module.exports = __webpack_require__(118);
+__webpack_require__(120);
+module.exports = __webpack_require__(121);
 
 
 /***/ }),
@@ -58025,7 +58025,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(50);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store_index_js__ = __webpack_require__(112);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store_index_js__ = __webpack_require__(115);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -58068,7 +58068,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('articles-categories-with-
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('search-cmv-component', __webpack_require__(100));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('catalog-goods-component', __webpack_require__(103));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('lead-badget-component', __webpack_require__(109));
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('select-stocks-component', __webpack_require__(126));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('select-stocks-component', __webpack_require__(112));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -58087,9 +58087,9 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 __webpack_require__(45);
 
 // Наши скрипты
-__webpack_require__(114);
-__webpack_require__(115);
-__webpack_require__(116);
+__webpack_require__(117);
+__webpack_require__(118);
+__webpack_require__(119);
 
 // window.CKEDITOR_BASEPATH = 'node_modules/ckeditor/';
 // require('ckeditor');
@@ -59124,7 +59124,7 @@ var index_esm = {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(52)
 /* template */
@@ -59528,7 +59528,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(55)
 /* template */
@@ -60142,7 +60142,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(58)
 /* template */
@@ -60481,7 +60481,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(62)
 /* template */
@@ -61107,7 +61107,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(66)
 /* template */
@@ -61405,7 +61405,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(68)
 /* template */
@@ -61832,7 +61832,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(72)
 /* template */
@@ -61920,7 +61920,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(75)
 /* template */
@@ -62053,7 +62053,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: {
-		'estimates-goods-item-component': __webpack_require__(123)
+		'estimates-goods-item-component': __webpack_require__(76)
 	},
 	data: function data() {
 		return {
@@ -62153,9 +62153,401 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 76 */,
-/* 77 */,
-/* 78 */,
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(77)
+/* template */
+var __vue_template__ = __webpack_require__(78)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/estimates/EstimatesGoodsItemComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-11e89fd4", Component.options)
+  } else {
+    hotAPI.reload("data-v-11e89fd4", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 77 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'estimates-goods-item-component',
+    props: {
+        item: Object,
+        index: Number,
+        isSaled: Boolean
+    },
+    data: function data() {
+        return {
+            countInput: Number(this.item.count),
+            cost: Number(this.item.cost),
+            changeCount: false,
+            changeCost: false
+        };
+    },
+
+    computed: {
+        isChangeCount: function isChangeCount() {
+            return this.changeCount;
+        },
+
+        count: {
+            get: function get() {
+                return Number(this.item.count);
+            },
+            set: function set(value) {
+                this.countInput = Number(value);
+            }
+        },
+        isReservedClass: function isReservedClass() {
+            if (this.item.reserve !== null) {
+                if (this.item.reserve.count > 0) {
+                    return 'wrap-reserved-info active';
+                }
+            }
+            return 'wrap-reserved-info';
+        },
+        isReserved: function isReserved() {
+            if (this.item.reserve !== null) {
+                if (this.item.reserve.count > 0) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        reservedCount: function reservedCount() {
+            if (this.item.reserve !== null) {
+                if (this.item.reserve.count > 0) {
+                    return this.item.reserve.count;
+                }
+            }
+            return 0;
+        }
+    },
+    methods: {
+        openModalRemoveItem: function openModalRemoveItem() {
+            this.$emit('open-modal-remove', this.item);
+        },
+        checkChangeCount: function checkChangeCount() {
+            if (this.item.product.serial === 0) {
+                if (!this.isSaled) {
+                    this.changeCount = !this.changeCount;
+                }
+            }
+        },
+
+        // checkChangeCost() {
+        //     if (!this.isSaled) {
+        //         this.changeCost = !this.changeCost
+        //     }
+        // },
+        updateItem: function updateItem() {
+            var _this = this;
+
+            this.changeCount = false;
+            // this.changeCost = false;
+            axios.patch('/admin/estimates_goods_items/' + this.item.id, {
+                count: Number(this.countInput)
+                // cost: Number(this.cost)
+            }).then(function (response) {
+                _this.$emit('update', response.data);
+                _this.countInput = Number(response.data.count);
+                // this.cost = Number(response.data.cost);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        // deleteItem: function() {
+        //     axios
+        //         .delete('/admin/consignments_items/' + this.item.id)
+        //         .then(response => {
+        //             if(response.data > 0) {
+        //                 this.$emit('remove');
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.log(error)
+        //         });
+        // },
+        reserveEstimateGoodsItem: function reserveEstimateGoodsItem() {
+            var _this2 = this;
+
+            axios.post('/admin/estimates_goods_items/' + this.item.id + '/reserving').then(function (response) {
+                _this2.$emit('update', response.data);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        unreserveEstimateGoodsItem: function unreserveEstimateGoodsItem() {
+            var _this3 = this;
+
+            axios.post('/admin/estimates_goods_items/' + this.item.id + '/unreserving').then(function (response) {
+                _this3.$emit('update', response.data);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    },
+    directives: {
+        focus: {
+            inserted: function inserted(el) {
+                el.focus();
+            }
+        }
+    },
+
+    filters: {
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return Number(value).toLocaleString();
+        }
+    }
+});
+
+/***/ }),
+/* 78 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "tr",
+    {
+      staticClass: "item",
+      attrs: {
+        id: "estimates_goods_items-" + _vm.item.id,
+        "data-name": _vm.item.product.article.name,
+        "data-price_id": _vm.item.price_id,
+        "data-count": _vm.item.count,
+        "data-price": _vm.item.price
+      }
+    },
+    [
+      _c("td", [_vm._v(_vm._s(_vm.item.product.article.name))]),
+      _vm._v(" "),
+      _c("td", [_vm._v(_vm._s(_vm.item.stock.name))]),
+      _vm._v(" "),
+      _c("td", [
+        _vm._v(_vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))))
+      ]),
+      _vm._v(" "),
+      _c(
+        "td",
+        { on: { click: _vm.checkChangeCount } },
+        [
+          _vm.isChangeCount
+            ? [
+                _c("input", {
+                  directives: [
+                    { name: "focus", rawName: "v-focus" },
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.count,
+                      expression: "count"
+                    }
+                  ],
+                  attrs: { type: "number" },
+                  domProps: { value: _vm.count },
+                  on: {
+                    keydown: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      $event.preventDefault()
+                      return _vm.updateItem($event)
+                    },
+                    focusout: function($event) {
+                      _vm.changeCount = false
+                    },
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.count = $event.target.value
+                    }
+                  }
+                })
+              ]
+            : [
+                _vm._v(
+                  _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.count)))
+                )
+              ]
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c("td", { staticClass: "td-amount" }, [
+        _c(
+          "a",
+          {
+            staticClass: "button green-button",
+            attrs: { "data-open": "price-set" }
+          },
+          [
+            _vm._v(
+              _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.amount)))
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("td", { staticClass: "td-delete" }, [
+        !this.isSaled
+          ? _c("div", {
+              staticClass: "icon-delete sprite",
+              attrs: { "data-open": "delete-estimates_item" },
+              on: { click: _vm.openModalRemoveItem }
+            })
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("td", { staticClass: "td-action" }, [
+        _c("div", { class: _vm.isReservedClass }, [
+          !_vm.isReserved
+            ? _c("span", {
+                staticClass: "button-to-reserve",
+                attrs: { title: "Позицию в резерв!" },
+                on: { click: _vm.reserveEstimateGoodsItem }
+              })
+            : _c("span", {
+                staticClass: "button-to-reserve unreserve",
+                attrs: { title: "Снять с резерва!" },
+                on: { click: _vm.unreserveEstimateGoodsItem }
+              }),
+          _vm._v(" "),
+          _vm.reservedCount > 0
+            ? _c("span", { staticClass: "reserved-count" }, [
+                _vm._v(
+                  _vm._s(
+                    _vm._f("level")(_vm._f("roundToTwo")(_vm.reservedCount))
+                  )
+                )
+              ])
+            : _vm._e()
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-11e89fd4", module.exports)
+  }
+}
+
+/***/ }),
 /* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -62342,7 +62734,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(81)
 /* template */
@@ -62629,7 +63021,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(86)
 /* template */
@@ -63449,7 +63841,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(95)
 /* template */
@@ -63654,7 +64046,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(98)
 /* template */
@@ -63951,7 +64343,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(101)
 /* template */
@@ -64186,7 +64578,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(104)
 /* template */
@@ -64447,7 +64839,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(106)
 /* template */
@@ -64878,7 +65270,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(110)
 /* template */
@@ -64981,10 +65373,158 @@ if (false) {
 
 /***/ }),
 /* 112 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(113)
+/* template */
+var __vue_template__ = __webpack_require__(114)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/common/selects/SelectStocksComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-a7438542", Component.options)
+  } else {
+    hotAPI.reload("data-v-a7438542", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 113 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_estimate__ = __webpack_require__(113);
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    created: function created() {
+        this.$store.commit('SET_STOCK_ID', this.stockId);
+    },
+    props: {
+        stocks: Array,
+        stockId: Number
+    },
+    data: function data() {
+        return {
+            curStockId: this.stockId
+        };
+    },
+
+    methods: {
+        changeStockId: function changeStockId() {
+            this.$store.commit('SET_STOCK_ID', this.curStockId);
+        }
+    }
+});
+
+/***/ }),
+/* 114 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "select",
+    {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.curStockId,
+          expression: "curStockId"
+        }
+      ],
+      attrs: { name: "stock_id" },
+      on: {
+        change: [
+          function($event) {
+            var $$selectedVal = Array.prototype.filter
+              .call($event.target.options, function(o) {
+                return o.selected
+              })
+              .map(function(o) {
+                var val = "_value" in o ? o._value : o.value
+                return val
+              })
+            _vm.curStockId = $event.target.multiple
+              ? $$selectedVal
+              : $$selectedVal[0]
+          },
+          _vm.changeStockId
+        ]
+      }
+    },
+    _vm._l(_vm.stocks, function(stock) {
+      return _c(
+        "option",
+        { domProps: { value: stock.id, selected: _vm.stockId == stock.id } },
+        [_vm._v(_vm._s(stock.name))]
+      )
+    }),
+    0
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-a7438542", module.exports)
+  }
+}
+
+/***/ }),
+/* 115 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_estimate__ = __webpack_require__(116);
 
 
 // const debug = process.env.NODE_ENV !== 'production'
@@ -64999,7 +65539,7 @@ var store = {
 /* harmony default export */ __webpack_exports__["a"] = (store);
 
 /***/ }),
-/* 113 */
+/* 116 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -65108,7 +65648,7 @@ var moduleEstimate = {
 /* harmony default export */ __webpack_exports__["a"] = (moduleEstimate);
 
 /***/ }),
-/* 114 */
+/* 117 */
 /***/ (function(module, exports) {
 
 // Валидируем кнопку при клике
@@ -65121,7 +65661,7 @@ window.submitAjax = function (id) {
 };
 
 /***/ }),
-/* 115 */
+/* 118 */
 /***/ (function(module, exports) {
 
 // Умолчания глобальные
@@ -65634,7 +66174,7 @@ $(window).resize(function () {
 // });
 
 /***/ }),
-/* 116 */
+/* 119 */
 /***/ (function(module, exports) {
 
 function checkFilter() {
@@ -65672,563 +66212,16 @@ $(document).on('click', '.filter-close', function () {
 });
 
 /***/ }),
-/* 117 */
+/* 120 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 118 */
+/* 121 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 119 */,
-/* 120 */,
-/* 121 */,
-/* 122 */,
-/* 123 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(2)
-/* script */
-var __vue_script__ = __webpack_require__(124)
-/* template */
-var __vue_template__ = __webpack_require__(125)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/estimates/EstimatesGoodsItemComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-11e89fd4", Component.options)
-  } else {
-    hotAPI.reload("data-v-11e89fd4", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 124 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'estimates-goods-item-component',
-    props: {
-        item: Object,
-        index: Number,
-        isSaled: Boolean
-    },
-    data: function data() {
-        return {
-            countInput: Number(this.item.count),
-            cost: Number(this.item.cost),
-            changeCount: false,
-            changeCost: false
-        };
-    },
-
-    computed: {
-        isChangeCount: function isChangeCount() {
-            return this.changeCount;
-        },
-
-        count: {
-            get: function get() {
-                return Number(this.item.count);
-            },
-            set: function set(value) {
-                this.countInput = Number(value);
-            }
-        },
-        isReservedClass: function isReservedClass() {
-            if (this.item.reserve !== null) {
-                if (this.item.reserve.count > 0) {
-                    return 'wrap-reserved-info active';
-                }
-            }
-            return 'wrap-reserved-info';
-        },
-        isReserved: function isReserved() {
-            if (this.item.reserve !== null) {
-                if (this.item.reserve.count > 0) {
-                    return true;
-                }
-            }
-            return false;
-        },
-        reservedCount: function reservedCount() {
-            if (this.item.reserve !== null) {
-                if (this.item.reserve.count > 0) {
-                    return this.item.reserve.count;
-                }
-            }
-            return 0;
-        }
-    },
-    methods: {
-        openModalRemoveItem: function openModalRemoveItem() {
-            this.$emit('open-modal-remove', this.item);
-        },
-        checkChangeCount: function checkChangeCount() {
-            if (this.item.product.serial === 0) {
-                if (!this.isSaled) {
-                    this.changeCount = !this.changeCount;
-                }
-            }
-        },
-
-        // checkChangeCost() {
-        //     if (!this.isSaled) {
-        //         this.changeCost = !this.changeCost
-        //     }
-        // },
-        updateItem: function updateItem() {
-            var _this = this;
-
-            this.changeCount = false;
-            // this.changeCost = false;
-            axios.patch('/admin/estimates_goods_items/' + this.item.id, {
-                count: Number(this.countInput)
-                // cost: Number(this.cost)
-            }).then(function (response) {
-                _this.$emit('update', response.data);
-                _this.countInput = Number(response.data.count);
-                // this.cost = Number(response.data.cost);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        // deleteItem: function() {
-        //     axios
-        //         .delete('/admin/consignments_items/' + this.item.id)
-        //         .then(response => {
-        //             if(response.data > 0) {
-        //                 this.$emit('remove');
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.log(error)
-        //         });
-        // },
-        reserveEstimateGoodsItem: function reserveEstimateGoodsItem() {
-            var _this2 = this;
-
-            axios.post('/admin/estimates_goods_items/' + this.item.id + '/reserving').then(function (response) {
-                _this2.$emit('update', response.data);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        unreserveEstimateGoodsItem: function unreserveEstimateGoodsItem() {
-            var _this3 = this;
-
-            axios.post('/admin/estimates_goods_items/' + this.item.id + '/unreserving').then(function (response) {
-                _this3.$emit('update', response.data);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        }
-    },
-    directives: {
-        focus: {
-            inserted: function inserted(el) {
-                el.focus();
-            }
-        }
-    },
-
-    filters: {
-        roundToTwo: function roundToTwo(value) {
-            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-        },
-
-        // Создает разделители разрядов в строке с числами
-        level: function level(value) {
-            return Number(value).toLocaleString();
-        }
-    }
-});
-
-/***/ }),
-/* 125 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "tr",
-    {
-      staticClass: "item",
-      attrs: {
-        id: "estimates_goods_items-" + _vm.item.id,
-        "data-name": _vm.item.product.article.name,
-        "data-price_id": _vm.item.price_id,
-        "data-count": _vm.item.count,
-        "data-price": _vm.item.price
-      }
-    },
-    [
-      _c("td", [_vm._v(_vm._s(_vm.item.product.article.name))]),
-      _vm._v(" "),
-      _c("td", [_vm._v(_vm._s(_vm.item.stock.name))]),
-      _vm._v(" "),
-      _c("td", [
-        _vm._v(_vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))))
-      ]),
-      _vm._v(" "),
-      _c(
-        "td",
-        { on: { click: _vm.checkChangeCount } },
-        [
-          _vm.isChangeCount
-            ? [
-                _c("input", {
-                  directives: [
-                    { name: "focus", rawName: "v-focus" },
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.count,
-                      expression: "count"
-                    }
-                  ],
-                  attrs: { type: "number" },
-                  domProps: { value: _vm.count },
-                  on: {
-                    keydown: function($event) {
-                      if (
-                        !$event.type.indexOf("key") &&
-                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                      ) {
-                        return null
-                      }
-                      $event.preventDefault()
-                      return _vm.updateItem($event)
-                    },
-                    focusout: function($event) {
-                      _vm.changeCount = false
-                    },
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.count = $event.target.value
-                    }
-                  }
-                })
-              ]
-            : [
-                _vm._v(
-                  _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.count)))
-                )
-              ]
-        ],
-        2
-      ),
-      _vm._v(" "),
-      _c("td", { staticClass: "td-amount" }, [
-        _c(
-          "a",
-          {
-            staticClass: "button green-button",
-            attrs: { "data-open": "price-set" }
-          },
-          [
-            _vm._v(
-              _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.amount)))
-            )
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _c("td", { staticClass: "td-delete" }, [
-        !this.isSaled
-          ? _c("div", {
-              staticClass: "icon-delete sprite",
-              attrs: { "data-open": "delete-estimates_item" },
-              on: { click: _vm.openModalRemoveItem }
-            })
-          : _vm._e()
-      ]),
-      _vm._v(" "),
-      _c("td", { staticClass: "td-action" }, [
-        _c("div", { class: _vm.isReservedClass }, [
-          !_vm.isReserved
-            ? _c("span", {
-                staticClass: "button-to-reserve",
-                attrs: { title: "Позицию в резерв!" },
-                on: { click: _vm.reserveEstimateGoodsItem }
-              })
-            : _c("span", {
-                staticClass: "button-to-reserve unreserve",
-                attrs: { title: "Снять с резерва!" },
-                on: { click: _vm.unreserveEstimateGoodsItem }
-              }),
-          _vm._v(" "),
-          _vm.reservedCount > 0
-            ? _c("span", { staticClass: "reserved-count" }, [
-                _vm._v(
-                  _vm._s(
-                    _vm._f("level")(_vm._f("roundToTwo")(_vm.reservedCount))
-                  )
-                )
-              ])
-            : _vm._e()
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-11e89fd4", module.exports)
-  }
-}
-
-/***/ }),
-/* 126 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(2)
-/* script */
-var __vue_script__ = __webpack_require__(127)
-/* template */
-var __vue_template__ = __webpack_require__(128)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/common/selects/SelectStocksComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-a7438542", Component.options)
-  } else {
-    hotAPI.reload("data-v-a7438542", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 127 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    created: function created() {
-        this.$store.commit('SET_STOCK_ID', this.stockId);
-    },
-    props: {
-        stocks: Array,
-        stockId: Number
-    },
-    data: function data() {
-        return {
-            curStockId: this.stockId
-        };
-    },
-
-    methods: {
-        changeStockId: function changeStockId() {
-            this.$store.commit('SET_STOCK_ID', this.curStockId);
-        }
-    }
-});
-
-/***/ }),
-/* 128 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "select",
-    {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model",
-          value: _vm.curStockId,
-          expression: "curStockId"
-        }
-      ],
-      attrs: { name: "stock_id" },
-      on: {
-        change: [
-          function($event) {
-            var $$selectedVal = Array.prototype.filter
-              .call($event.target.options, function(o) {
-                return o.selected
-              })
-              .map(function(o) {
-                var val = "_value" in o ? o._value : o.value
-                return val
-              })
-            _vm.curStockId = $event.target.multiple
-              ? $$selectedVal
-              : $$selectedVal[0]
-          },
-          _vm.changeStockId
-        ]
-      }
-    },
-    _vm._l(_vm.stocks, function(stock) {
-      return _c(
-        "option",
-        { domProps: { value: stock.id, selected: _vm.stockId == stock.id } },
-        [_vm._v(_vm._s(stock.name))]
-      )
-    }),
-    0
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-a7438542", module.exports)
-  }
-}
 
 /***/ })
 /******/ ]);
