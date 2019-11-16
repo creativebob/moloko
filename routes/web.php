@@ -21,8 +21,6 @@ Auth::routes();
 Route::get('/', 'AppController@enter');
 
 Route::any('/stocks_parser', 'AppController@parser');
-Route::any('/offs_parser', 'AppController@parser_offs');
-Route::any('/estimates_goods_items_parser', 'AppController@parser_estimates_goods_items');
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');

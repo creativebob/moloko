@@ -133,59 +133,32 @@ class AppController extends Controller
     {
         $raws_stocks = RawsStock::get();
         foreach ($raws_stocks as $raws_stock) {
-            $raws_stock->free = $raws_stock->count;
+            $raws_stock->free = ($raws_stock->count >= 0) ? $raws_stock->count : 0;
             $raws_stock->save();
         }
         echo ('Сырье');
 
         $goods_stocks = GoodsStock::get();
         foreach ($goods_stocks as $goods_stock) {
-            $goods_stock->free = $goods_stock->count;
+            $goods_stock->free = ($goods_stock->count >= 0) ? $goods_stock->count : 0;
             $goods_stock->save();
         }
         echo ('Товары');
 
         $containers_stocks = ContainersStock::get();
         foreach ($containers_stocks as $containers_stock) {
-            $containers_stock->free = $containers_stock->count;
+            $containers_stock->free = ($containers_stock->count >= 0) ? $containers_stock->count : 0;
             $containers_stock->save();
         }
         echo ('Упаковки');
 
         $attachments_stocks = AttachmentsStock::get();
         foreach ($attachments_stocks as $attachments_stock) {
-            $attachments_stock->free = $attachments_stock->count;
+            $attachments_stock->free = ($attachments_stock->count >= 0) ? $attachments_stock->count : 0;
             $attachments_stock->save();
         }
         echo ('Вложения');
 
     }
 
-    public function parser_offs()
-    {
-        $result = Off::where('documents_item_type', 'App\EstimatesItem')->update([
-            'documents_item_type' => 'App\EstimatesGoodsItem'
-        ]);
-        echo $result;
-    }
-
-    public function parser_estimates_goods_items()
-    {
-        $estimates_goods_items = EstimatesGoodsItem::with('estimate')
-            ->whereHas('estimate', function ($q) {
-              $q->whereNotNull('stock_id');
-            })
-            ->whereNull('stock_id')
-            ->get();
-//        dd($estimates_goods_items);
-
-        $count = 0;
-        foreach ($estimates_goods_items as $estimates_goods_item) {
-//            dd($estimates_goods_item);
-            $estimates_goods_item->stock_id = $estimates_goods_item->estimate->stock_id;
-            $estimates_goods_item->save();
-            $count++;
-        }
-        echo "Пункты смет пропарсил $count";
-    }
 }
