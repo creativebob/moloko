@@ -68,12 +68,14 @@ class CatalogsGoodsController extends Controller
     public function show(Request $request, $url)
     {
 
-        // TODO - 30.10.19 - Костыль по парсингу роута для вложенных пунктов каталога, нужно нормальное решение
+         // TODO - 30.10.19 - Костыль по парсингу роута для вложенных пунктов каталога, нужно нормальное решение
 
 //        dd(__METHOD__, $url);
         $arr = explode('/', $url);
 
         $catalog_slug = $arr[0];
+        $main_slug = $arr[1] ?? null;
+        $sub_menu_ids = null;
 
         if (count($arr) > 1) {
             $sliced = array_slice($arr, 1);
@@ -81,10 +83,14 @@ class CatalogsGoodsController extends Controller
             foreach($sliced as $lol) {
                 $slug .= $lol . '/';
             }
+
             $catalog_item_slug = substr($slug, 0, -1);
+
         } else {
+
             $catalog_item_slug = null;
         }
+
         $site = $this->site;
         $page = $site->pages_public->where('alias', 'catalogs-goods')->first();
 
@@ -101,21 +107,43 @@ class CatalogsGoodsController extends Controller
 
             // Получаем разделы прайса ограниченный slug'ом
             $catalog_goods_items = $catalog_goods->items_public->where('slug', $catalog_item_slug)->first();
-            $page->title = $catalog_goods_items->title;
-
-            $catalog_goods_items->load('childs');
             // dd($catalog_goods_items);
+
+            if($catalog_goods_items){
+
+                $page->title = $catalog_goods_items->title;
+                $catalog_goods_items->load('childs');
+                //dd($catalog_goods_items);
+
+                $sub_menu = $catalog_goods->items_public->where('slug', getFirstSlug($catalog_item_slug))->first();
+                $sub_menu->load('childs');
+                $sub_menu_ids = $sub_menu->childs->pluck('id');
+
+                // Получаем id всех доступных на сайте разделов прайса,
+                // чтобы далее не заниматься повторным перебором при получении товаров
+                $catalog_goods_items_ids = $catalog_goods->items_public->where('slug', $catalog_item_slug)->pluck('id');
+
+
+            } else {
+
+                abort(404, 'Страница не найдена');
+            }
+
 
         } else {
 
             // Получаем все доступные разделы прайса
             $catalog_goods_items = $catalog_goods->items_public;
             $page->title = 'Все товары';
+            $catalog_goods_items_ids = $catalog_goods->items_public->pluck('id');
         }
 
-        // Получаем id всех доступных на сайте разделов прайса,
-        // чтобы далее не заниматься повторным перебором при получении товаров
-        $catalog_goods_items_ids = $catalog_goods_items->pluck('id');
+
+        if($sub_menu_ids){
+            if(getFirstSlug($catalog_item_slug) == $catalog_item_slug){
+                $catalog_goods_items_ids = $catalog_goods_items_ids->merge($sub_menu_ids);
+            }
+        }
 
         $prices_goods = PricesGoods::with([
             'goods_public' => function ($q) {
@@ -169,7 +197,7 @@ class CatalogsGoodsController extends Controller
         //     });
         // }
 
-        return view($site->alias.'.pages.catalogs_goods.index', compact('site','page', 'request', 'catalog_goods_items', 'prices_goods', 'catalog_goods'));
+        return view($site->alias.'.pages.catalogs_goods.index', compact('site','page', 'request', 'catalog_goods_items', 'prices_goods', 'catalog_goods', 'main_slug', 'sub_menu'));
     }
 
     /**

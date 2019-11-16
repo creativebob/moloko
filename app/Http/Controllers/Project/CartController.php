@@ -205,8 +205,10 @@ class CartController extends Controller
             $message .= "Кол-во товаров: " . num_format($count, 0) . "\r\n";
             $message .= "Сумма заказа: " . num_format($estimate->amount, 0) . ' руб.' . "\r\n";
 
-            $message .= "Сумма со скидкой: " . num_format($estimate->total, 0) . ' руб.' . "\r\n";
-            $message .= "Скидка: " . num_format($estimate->discount, 0) . ' руб.' . "\r\n";
+            if($discount > 0){
+                $message .= "Сумма со скидкой: " . num_format($estimate->total, 0) . ' руб.' . "\r\n";
+                $message .= "Скидка: " . num_format($estimate->discount, 0) . ' руб.' . "\r\n";
+            }
 
             $lead->notes()->create([
                 'company_id' => $company->id,
