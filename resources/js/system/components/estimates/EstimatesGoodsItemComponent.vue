@@ -178,7 +178,8 @@
                 axios
                     .post('/admin/estimates_goods_items/' + this.item.id + '/reserving')
                     .then(response => {
-                        this.$emit('update', response.data);
+                        alert(response.data.msg);
+                        this.$emit('update', response.data.item);
                     })
                     .catch(error => {
                         console.log(error)
@@ -188,7 +189,8 @@
                 axios
                     .post('/admin/estimates_goods_items/' + this.item.id + '/unreserving')
                     .then(response => {
-                        this.$emit('update', response.data);
+                        alert(response.data.msg);
+                        this.$emit('update', response.data.item);
                     })
                     .catch(error => {
                         console.log(error)

@@ -133,28 +133,28 @@ class AppController extends Controller
     {
         $raws_stocks = RawsStock::get();
         foreach ($raws_stocks as $raws_stock) {
-            $raws_stock->free = ($raws_stock->count >= 0) ? $raws_stock->count : 0;
+            $raws_stock->free = ($raws_stock->count > 0) ? $raws_stock->count : 0;
             $raws_stock->save();
         }
         echo ('Сырье');
 
         $goods_stocks = GoodsStock::get();
         foreach ($goods_stocks as $goods_stock) {
-            $goods_stock->free = ($goods_stock->count >= 0) ? $goods_stock->count : 0;
+            $goods_stock->free = ($goods_stock->count > 0) ? $goods_stock->count : 0;
             $goods_stock->save();
         }
         echo ('Товары');
 
         $containers_stocks = ContainersStock::get();
         foreach ($containers_stocks as $containers_stock) {
-            $containers_stock->free = ($containers_stock->count >= 0) ? $containers_stock->count : 0;
+            $containers_stock->free = ($containers_stock->count > 0) ? $containers_stock->count : 0;
             $containers_stock->save();
         }
         echo ('Упаковки');
 
         $attachments_stocks = AttachmentsStock::get();
         foreach ($attachments_stocks as $attachments_stock) {
-            $attachments_stock->free = ($attachments_stock->count >= 0) ? $attachments_stock->count : 0;
+            $attachments_stock->free = ($attachments_stock->count > 0) ? $attachments_stock->count : 0;
             $attachments_stock->save();
         }
         echo ('Вложения');

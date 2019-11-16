@@ -231,7 +231,7 @@ class EstimatesGoodsItemController extends Controller
         Log::channel('documents')
             ->info('========================================== НАЧАЛО РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ, ID: ' . $estimates_goods_item->id . ' ==============================================');
 
-        $this->reserve($estimates_goods_item);
+        $result = $this->reserve($estimates_goods_item);
 
         Log::channel('documents')
             ->info('========================================== КОНЕЦ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ ==============================================
@@ -244,7 +244,10 @@ class EstimatesGoodsItemController extends Controller
             'stock:id,name'
         ]);
 
-        return response()->json($estimates_goods_item);
+        return response()->json([
+            'item' => $estimates_goods_item,
+            'msg' => $result
+        ]);
     }
 
     public function unreserving(Request $request, $id)
@@ -260,7 +263,7 @@ class EstimatesGoodsItemController extends Controller
         Log::channel('documents')
             ->info('========================================== НАЧАЛО СНЯТИЯ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ, ID: ' . $estimates_goods_item->id . ' ==============================================');
 
-        $this->unreserve($estimates_goods_item);
+        $result = $this->unreserve($estimates_goods_item);
 
         Log::channel('documents')
             ->info('========================================== КОНЕЦ СНЯТИЯ РЕЗЕРВИРОВАНИЯ ПУНКТА СМЕТЫ ==============================================
@@ -273,7 +276,10 @@ class EstimatesGoodsItemController extends Controller
             'stock:id,name'
         ]);
 
-        return response()->json($estimates_goods_item);
+        return response()->json([
+            'item' => $estimates_goods_item,
+            'msg' => $result
+        ]);
     }
 
 

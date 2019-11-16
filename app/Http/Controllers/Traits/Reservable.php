@@ -56,11 +56,14 @@ trait Reservable
             if ($stock->free > 0) {
 
                 if ($item_count > $stock->free) {
+                    $result = 'Резерв поставлен не на все количество, недостаточно ' . ($item_count - $stock->free);
+
                     $item_count = $stock->free;
 
                     $stock->free -= $item_count;
                     $stock->reserve += $item_count;
                 } else {
+                    $result = 'Резерв успешно поставлен';
                     $stock->free -= ($product->portion * $item->count);
                     $stock->reserve += ($product->portion * $item->count);
                 }
@@ -113,7 +116,14 @@ trait Reservable
                 Log::channel('documents')
                     ->info('На сладе свободных остатков нет');
             }
+        } else {
+            Log::channel('documents')
+                ->info('Склада нет, негде ставить в резерв');
+            $result = 'Не существует склада товара, невозможно поставить в резерв';
         }
+
+
+        return $result;
     }
 
     /**
@@ -172,9 +182,17 @@ trait Reservable
                 'is_reserved' => false
             ]);
 
+            $result = 'Резерв успешно снят';
+
             Log::channel('documents')
                 ->info('=== КОНЕЦ ОТМЕНЫ РЕЗЕРВИРОВАНИЯ ===
                 ');
+        }  else {
+            Log::channel('documents')
+                ->info('Склада нет, негде ставить в резерв');
+            $result = 'Не существует склада товара, невозможно снять с резерва';
         }
+
+        return $result;
     }
 }

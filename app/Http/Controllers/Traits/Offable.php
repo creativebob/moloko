@@ -190,7 +190,7 @@ trait Offable
             $data_stock = [
                 'cmv_id' => $product->id,
                 'manufacturer_id' => $product->article->manufacturer_id,
-                'stock_id' => $item->document->stock_id,
+                'stock_id' => $item->stock_id,
                 'filial_id' => $item->document->filial_id,
             ];
             $entity_stock = Entity::where('alias', $product->getTable() . '_stocks')->first();
@@ -204,15 +204,44 @@ trait Offable
         }
 
         Log::channel('documents')
-            ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+            ->info('Значения count: ' . $stock->count . ', reserve: ' . $stock->reserve . ', free: ' . $stock->free . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 
-        $stock->count -= ($product->portion * $item->count);
-        $stock->weight -= ($product->weight * $item->count);
-        $stock->volume -= ($product->volume * $item->count);
+        $item_count = ($product->portion * $item->count);
+
+        $stock->count -= $item_count;
+
+        $item->load('reserve');
+        if (optional($item->reserve)->count > 0) {
+            if ($item->count == $item->reserve->count) {
+                $stock->reserve -= $item->reserve->count;
+                Log::channel('documents')
+                    ->info('Есть резерв с id: ' . $item->reserve->id . ', и количеством: '. $item->reserve->count . ', списываем с резерва');
+            } else {
+                $dif = $item->count - $item->reserve->count;
+                $stock->reserve -= $item->reserve->count;
+                $stock->free -= $dif;
+                Log::channel('documents')
+                    ->info('В пункте количество больше чем в резерве с id: ' . $item->reserve->id . ', списываем с резерва: '. $item->reserve->count . ', и со свободных: ' . $dif . ', всего должно быть ' . $item->count);
+            }
+
+        } else {
+            $stock->free -= $item_count;
+            Log::channel('documents')
+                ->info('Нет резерва, списываем со свободных');
+        }
+
+        if ($stock->count < 0) {
+            Log::channel('documents')
+                ->info('Количество на складе < 0, ставим свободным 0');
+            $stock->free = 0;
+        }
+
+        $stock->weight -= $item_count;
+        $stock->volume -= $item_count;
         $stock->save();
 
         Log::channel('documents')
-            ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
+            ->info('Обновлены значения count: ' . $stock->count . ', reserve: ' . $stock->reserve . ', free: ' . $stock->free . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 
         if ($product->cost) {
             $average_product = $product->cost->average * $product->portion;

@@ -58058,14 +58058,17 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('city-search-component', __webpack_require__(51));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('consignment-component', __webpack_require__(54));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('production-component', __webpack_require__(65));
+
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('estimate-init-component', __webpack_require__(71));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('estimate-component', __webpack_require__(74));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('estimate-sale-button-component', __webpack_require__(80));
+
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('input-digit-component', __webpack_require__(47));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('dropzone-component', __webpack_require__(85));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('rawcomposition-component', __webpack_require__(94));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('articles-categories-with-groups-component', __webpack_require__(97));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('search-cmv-component', __webpack_require__(100));
+
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('catalog-goods-component', __webpack_require__(103));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('lead-badget-component', __webpack_require__(109));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('select-stocks-component', __webpack_require__(112));
@@ -62370,7 +62373,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             axios.post('/admin/estimates_goods_items/' + this.item.id + '/reserving').then(function (response) {
-                _this2.$emit('update', response.data);
+                alert(response.data.msg);
+                _this2.$emit('update', response.data.item);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -62379,7 +62383,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this3 = this;
 
             axios.post('/admin/estimates_goods_items/' + this.item.id + '/unreserving').then(function (response) {
-                _this3.$emit('update', response.data);
+                alert(response.data.msg);
+                _this3.$emit('update', response.data.item);
             }).catch(function (error) {
                 console.log(error);
             });
