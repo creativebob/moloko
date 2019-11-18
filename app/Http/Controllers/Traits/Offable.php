@@ -224,6 +224,14 @@ trait Offable
                     ->info('В пункте количество больше чем в резерве с id: ' . $item->reserve->id . ', списываем с резерва: '. $item->reserve->count . ', и со свободных: ' . $dif . ', всего должно быть ' . $item->count);
             }
 
+            $reserve = $item->reserve;
+
+            $reserve->update([
+                'count' => 0
+            ]);
+            Log::channel('documents')
+                ->info("Ставим резерву с id: $reserve->id значение количества 0");
+
         } else {
             $stock->free -= $item_count;
             Log::channel('documents')

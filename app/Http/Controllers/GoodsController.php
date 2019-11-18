@@ -521,7 +521,7 @@ class GoodsController extends Controller
                 foreach ($article->containers as $container) {
                     $containers_insert[$container->id] = [
                         'value' => $container->pivot->value,
-                        'use' => $container->pivot->use,
+                        'useful' => $container->pivot->useful,
                         'waste' => $container->pivot->waste,
                         'leftover' => $container->pivot->leftover,
                         'leftover_operation_id' => $container->pivot->leftover_operation_id,
@@ -536,7 +536,7 @@ class GoodsController extends Controller
 		    foreach ($article->attachments as $attachment) {
 			    $attachments_insert[$attachment->id] = [
 				    'value' => $attachment->pivot->value,
-				    'use' => $attachment->pivot->use,
+				    'useful' => $attachment->pivot->useful,
 				    'waste' => $attachment->pivot->waste,
 				    'leftover' => $attachment->pivot->leftover,
 				    'leftover_operation_id' => $attachment->pivot->leftover_operation_id,
@@ -561,7 +561,7 @@ class GoodsController extends Controller
                     foreach ($article->raws as $raw) {
                         $raws_insert[$raw->id] = [
                             'value' => $raw->pivot->value,
-                            'use' => $raw->pivot->use,
+                            'useful' => $raw->pivot->useful,
                             'waste' => $raw->pivot->waste,
                             'leftover' => $raw->pivot->leftover,
                             'leftover_operation_id' => $raw->pivot->leftover_operation_id,

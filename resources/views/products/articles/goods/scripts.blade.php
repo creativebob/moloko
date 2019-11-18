@@ -185,6 +185,8 @@
         $(document).on('click', '#button-store-prices_goods', function(event) {
             event.preventDefault();
 
+            $(this).prop('disabled', true);
+
             let catalog_id = $('#select-catalogs').val();
 
             if ($('#form-prices_goods input[name=price]').val() == '') {

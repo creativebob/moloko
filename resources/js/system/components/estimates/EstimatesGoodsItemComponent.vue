@@ -36,6 +36,7 @@
         </td>
         <td class="td-action">
             <div
+                    v-if="!isSaled"
                     :class="isReservedClass"
             >
                 <span

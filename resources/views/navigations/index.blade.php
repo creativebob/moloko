@@ -127,10 +127,8 @@
                     <td class="td-name">
 
                         @can('update', $navigation)
-                        {{ link_to_route('navigations.edit', $navigation->name, $parameters = ['site_id' => $site_id, 'id' => $navigation->id], $attributes = []) }}
-                        @endcan
-
-                        @cannot('update', $navigation)
+                            <a href="{{ route('navigations.edit', [$site_id, $navigation->id]) }}">{{ $navigation->name }}</a>
+                        @else
                         {{ $navigation->name }}
                         @endcannot
 

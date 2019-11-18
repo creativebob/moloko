@@ -21,7 +21,7 @@
 	<td>
 		<div class="wrap-input-table">
 			{{-- Количество чего-либо --}}
-			{{ Form::text('attachments['.$attachment->id.'][use]', $attachment->pivot ? $attachment->pivot->use : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder attachment-use', 'id'=>'2', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
+			{{ Form::text('attachments['.$attachment->id.'][useful]', $attachment->pivot ? $attachment->pivot->useful : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder attachment-use', 'id'=>'2', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="2" class="text-to-placeholder">
 
 				{{ $attachment->portion_abbreviation ?? $attachment->unit_for_composition->abbreviation ?? $attachment->article->group->unit->abbreviation }}
@@ -62,7 +62,7 @@
 	</td> --}}
 
 	<td>
-		@php if(isset($attachment->pivot->use)){$count = $attachment->pivot->use;} else {$count = 0;}; @endphp
+		@php if(isset($attachment->pivot->useful)){$count = $attachment->pivot->useful;} else {$count = 0;}; @endphp
 			<span class="attachment-weight-count" data-weight="{{ $attachment->weight * 1000 }}" data-weight-count="{{ $attachment->weight * 1000 * $count }}">{{ num_format($attachment->weight * 1000 * $count, 0) }}</span>
 		<span>гр.</span>
 	</td>

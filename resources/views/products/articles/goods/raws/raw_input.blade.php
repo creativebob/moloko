@@ -21,7 +21,7 @@
 	<td>
 		<div class="wrap-input-table">
 			{{-- ИСПОЛЬЗОВАНИЕ --}}
-			{{ Form::text('raws['.$raw->id.'][use]', $raw->pivot ? $raw->pivot->use : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder raw-use', 'id'=>'2', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
+			{{ Form::text('raws['.$raw->id.'][useful]', $raw->pivot ? $raw->pivot->useful : null, ['class'=>'digit-field name-field compact w12 padding-to-placeholder raw-use', 'id'=>'2', 'maxlength'=>'7', 'autocomplete'=>'off', 'pattern'=>'[0-9]{0,10}', 'placeholder'=>'0', !empty($disabled) ? 'disabled' : '']) }}
 			<label for="2" class="text-to-placeholder">
 
 				{{ $raw->portion_abbreviation ?? $raw->unit_for_composition->abbreviation ?? $raw->article->group->unit->abbreviation }}
@@ -58,7 +58,7 @@
 	</td> --}}
 
 	<td>
-		@php if(isset($raw->pivot->use)){$count = $raw->pivot->use;} else {$count = 0;}; @endphp
+		@php if(isset($raw->pivot->useful)){$count = $raw->pivot->useful;} else {$count = 0;}; @endphp
 			<span class="raw-weight-count" data-weight="{{ $raw->weight * 1000 }}" data-weight-count="{{ $raw->weight * 1000 * $count }}">{{ num_format($raw->weight * 1000 * $count, 0) }}</span>
 		<span>гр.</span>
 	</td>

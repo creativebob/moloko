@@ -22,7 +22,7 @@ Route::group(['prefix' => '/v1',
     'namespace' => 'Api\v1',
     'as' => 'api.'
 ], function () {
-    Route::get('cities_list', 'CityController@cities_list');
+    Route::get('/cities_list', 'CityController@cities_list');
     Route::resource('cities', 'CityController');
 
     Route::post('dropzone', 'PhotoController@store');

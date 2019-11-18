@@ -121,9 +121,25 @@
                     return item.name.toLowerCase().includes(this.text.toLowerCase());
                 });
 
-                this.search = (this.results.length > 0)
-                this.error = (this.results.length == 0)
-
+                if (this.results.length == 0) {
+                    axios
+                        .get('/api/v1/cities_list', {
+                            params: {
+                                name: this.text
+                            }
+                        })
+                        .then(response => {
+                            this.results = response.data;
+                            this.search = (this.results.length > 0)
+                            this.error = (this.results.length == 0)
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        });
+                } else {
+                    this.search = (this.results.length > 0)
+                    this.error = (this.results.length == 0)
+                }
             },
             add(index) {
                 // console.log('Клик по пришедшим данным, добавляем в инпут');

@@ -98,7 +98,7 @@ class CityController extends Controller
             'region:id,name',
             'country:id,name'
         ])
-            ->where('name', 'like', $request->name.'%')
+            ->where('name', 'like', $request->name  . '%')
             ->get([
                 'id',
                 'name',

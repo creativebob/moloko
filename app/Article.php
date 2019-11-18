@@ -105,7 +105,7 @@
 			return $this->belongsToMany(Raw::class, 'article_raw')
 				->withPivot([
 					'value',
-					'use',
+					'useful',
 					'waste',
 					'leftover',
 					'leftover_operation_id'
@@ -118,7 +118,7 @@
             return $this->belongsToMany(Container::class, 'article_container')
                 ->withPivot([
                     'value',
-                    'use',
+                    'useful',
                     'waste',
                     'leftover',
                     'leftover_operation_id'
@@ -131,7 +131,7 @@
             return $this->belongsToMany(Attachment::class, 'article_attachment')
                 ->withPivot([
                     'value',
-                    'use',
+                    'useful',
                     'waste',
                     'leftover',
                     'leftover_operation_id'
@@ -147,7 +147,7 @@
 				])
 		        ->withPivot([
 		            'value',
-		            'use',
+		            'useful',
 		            'waste',
 		            'leftover',
 		            'leftover_operation_id'

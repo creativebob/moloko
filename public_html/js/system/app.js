@@ -59302,8 +59302,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return item.name.toLowerCase().includes(_this2.text.toLowerCase());
             });
 
-            this.search = this.results.length > 0;
-            this.error = this.results.length == 0;
+            if (this.results.length == 0) {
+                axios.get('/api/v1/cities_list', {
+                    params: {
+                        name: this.text
+                    }
+                }).then(function (response) {
+                    _this2.results = response.data;
+                    _this2.search = _this2.results.length > 0;
+                    _this2.error = _this2.results.length == 0;
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            } else {
+                this.search = this.results.length > 0;
+                this.error = this.results.length == 0;
+            }
         },
         add: function add(index) {
             // console.log('Клик по пришедшим данным, добавляем в инпут');
@@ -62269,6 +62283,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'estimates-goods-item-component',
@@ -62515,29 +62530,31 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("td", { staticClass: "td-action" }, [
-        _c("div", { class: _vm.isReservedClass }, [
-          !_vm.isReserved
-            ? _c("span", {
-                staticClass: "button-to-reserve",
-                attrs: { title: "Позицию в резерв!" },
-                on: { click: _vm.reserveEstimateGoodsItem }
-              })
-            : _c("span", {
-                staticClass: "button-to-reserve unreserve",
-                attrs: { title: "Снять с резерва!" },
-                on: { click: _vm.unreserveEstimateGoodsItem }
-              }),
-          _vm._v(" "),
-          _vm.reservedCount > 0
-            ? _c("span", { staticClass: "reserved-count" }, [
-                _vm._v(
-                  _vm._s(
-                    _vm._f("level")(_vm._f("roundToTwo")(_vm.reservedCount))
-                  )
-                )
-              ])
-            : _vm._e()
-        ])
+        !_vm.isSaled
+          ? _c("div", { class: _vm.isReservedClass }, [
+              !_vm.isReserved
+                ? _c("span", {
+                    staticClass: "button-to-reserve",
+                    attrs: { title: "Позицию в резерв!" },
+                    on: { click: _vm.reserveEstimateGoodsItem }
+                  })
+                : _c("span", {
+                    staticClass: "button-to-reserve unreserve",
+                    attrs: { title: "Снять с резерва!" },
+                    on: { click: _vm.unreserveEstimateGoodsItem }
+                  }),
+              _vm._v(" "),
+              _vm.reservedCount > 0
+                ? _c("span", { staticClass: "reserved-count" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(_vm._f("roundToTwo")(_vm.reservedCount))
+                      )
+                    )
+                  ])
+                : _vm._e()
+            ])
+          : _vm._e()
       ])
     ]
   )

@@ -48,7 +48,8 @@ class ProductionController extends Controller
 
         $productions = Production::with([
         	'author',
-	        'items'
+	        'items',
+            'stock'
         ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
@@ -89,7 +90,21 @@ class ProductionController extends Controller
         // Подключение политики
         $this->authorize(getmethod('store'), $this->class);
 
-        $production = (new Production())->create();
+        if (is_null(\Auth::user()->company->we_manufacturer)) {
+            // Описание ошибки
+//            $ajax_error = [];
+//            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+//            $ajax_error['text'] = "Для начала необходимо стать производителем. А уже потом будем производить товары. Ок?";
+//            $ajax_error['link'] = "/admin/companies"; // Ссылка на кнопке
+//            $ajax_error['title_link'] = "Идем в раздел компаний"; // Текст на кнопке
+//
+//            return view('ajax_error', compact('ajax_error'));
+
+            return back()
+                ->withErrors(['msg' => 'Для начала необходимо стать производителем. А уже потом будем производить товары. Ок?']);
+        }
+
+        $production = Production::create();
         // dd($production);
 
         return redirect()->route('productions.edit', $production->id);

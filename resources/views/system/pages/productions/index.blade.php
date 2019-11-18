@@ -33,7 +33,7 @@
                     <th class="td-receipt_date">Дата</th>
                     {{-- <th class="td-number">Номер</th> --}}
                     {{-- <th class="td-supplier-name">Поставщик</th> --}}
-                    <th class="td-phone">Телефон</th>
+                    <th class="td-stock">Склад</th>
                     <th class="td-amount">Сумма</th>
                     <th class="td-description">Коментарий</th>
                     <th class="td-payment">Оплачено</th>
@@ -72,7 +72,7 @@
 
 
                     <td class="td-number">
-                        {{ $production->number ?? '' }}
+                        {{ optional($production->stock)->name }}
                         <br><span class="tiny-text"></span>
                     </td>
 

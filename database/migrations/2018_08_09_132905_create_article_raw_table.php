@@ -24,7 +24,7 @@ class CreateArticleRawTable extends Migration
             $table->foreign('raw_id')->references('id')->on('raws');
 
             $table->decimal('value', 12, 2)->default(0)->comment('Значение');
-            $table->decimal('use', 12, 2)->default(0)->comment('Использование');
+            $table->decimal('useful', 12, 2)->default(0)->comment('Использование');
             $table->decimal('leftover', 12, 2)->default(0)->comment('Остаток');
             $table->decimal('waste', 12, 2)->default(0)->comment('Отходы');
 
