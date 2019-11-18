@@ -285,7 +285,7 @@ trait Offable
             'documents_item_type' => $model_document_item,
             'cmv_id' => $product->id,
             'cmv_type' => $model_product,
-            'count' => $product->portion *  $item->count,
+            'count' => $item->count,
             'cost' => $cost_product,
             'amount' => $amount_product,
             'stock_id' => $item->document->stock_id,
