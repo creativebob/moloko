@@ -62067,6 +62067,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: {
@@ -62585,7 +62591,30 @@ var render = function() {
         attrs: { id: "table-estimate" }
       },
       [
-        _vm._m(0),
+        _c("thead", [
+          _c("tr", [
+            _c("th", [_vm._v("Наименование")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Склад")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Цена")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("Кол-во")]),
+            _vm._v(" "),
+            _c("th", { staticClass: "th-amount" }, [_vm._v("Сумма")]),
+            _vm._v(" "),
+            _c("th", { staticClass: "th-delete" }),
+            _vm._v(" "),
+            _c("th", { staticClass: "th-action" }, [
+              !_vm.isSaled
+                ? _c("span", {
+                    staticClass: "button-to-reserve button-reserve-all",
+                    attrs: { title: "Зарезервировать все!" }
+                  })
+                : _vm._e()
+            ])
+          ])
+        ]),
         _vm._v(" "),
         _vm.goodsList.length > 0
           ? _c(
@@ -62654,7 +62683,7 @@ var render = function() {
         attrs: { id: "delete-estimates_item", "data-reveal": "" }
       },
       [
-        _vm._m(1),
+        _vm._m(0),
         _vm._v(" "),
         _c("div", { staticClass: "grid-x align-center modal-content " }, [
           _c("div", { staticClass: "small-10 cell text-center" }, [
@@ -62682,40 +62711,13 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _vm._m(2)
+          _vm._m(1)
         ])
       ]
     )
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Наименование")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Склад")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Цена")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Кол-во")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "th-amount" }, [_vm._v("Сумма")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "th-delete" }),
-        _vm._v(" "),
-        _c("th", { staticClass: "th-action" }, [
-          _c("span", {
-            staticClass: "button-to-reserve button-reserve-all",
-            attrs: { title: "Зарезервировать все!" }
-          })
-        ])
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

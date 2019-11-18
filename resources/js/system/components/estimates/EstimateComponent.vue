@@ -14,7 +14,13 @@
 															<th>Наценка</th> -->
 				<th class="th-amount">Сумма</th>
 				<th class="th-delete"></th>
-				<th class="th-action"><span class="button-to-reserve button-reserve-all" title="Зарезервировать все!"></span></th>
+				<th class="th-action">
+					<span
+							v-if="!isSaled"
+						class="button-to-reserve button-reserve-all"
+						title="Зарезервировать все!"
+					></span>
+				</th>
 			</tr>
 			</thead>
 
