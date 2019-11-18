@@ -64,8 +64,8 @@ trait Reservable
                     $stock->reserve += $item_count;
                 } else {
                     $result = 'Резерв успешно поставлен';
-                    $stock->free -= ($product->portion * $item->count);
-                    $stock->reserve += ($product->portion * $item->count);
+                    $stock->free -= $item->count;
+                    $stock->reserve += $item->count;
                 }
 
                 $stock->save();
