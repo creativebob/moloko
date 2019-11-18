@@ -238,7 +238,7 @@ trait Offable
                 ->info('Нет резерва, списываем со свободных');
         }
 
-        if ($stock->count < 0) {
+        if ($stock->count < 0 || $stock->free < 0) {
             Log::channel('documents')
                 ->info('Количество на складе < 0, ставим свободным 0');
             $stock->free = 0;
