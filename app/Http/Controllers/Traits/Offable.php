@@ -206,7 +206,7 @@ trait Offable
         Log::channel('documents')
             ->info('Значения count: ' . $stock->count . ', reserve: ' . $stock->reserve . ', free: ' . $stock->free . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
 
-        $item_count = ($product->portion * $item->count);
+        $item_count = $item->count;
 
         $stock->count -= $item_count;
 

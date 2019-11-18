@@ -51,7 +51,7 @@ trait Reservable
             Log::channel('documents')
                 ->info('Значения count: ' . $stock->count . ', reserve: ' . $stock->reserve . ', free: ' . $stock->free);
 
-            $item_count = ($product->portion * $item->count);
+            $item_count = $item->count;
 
             if ($stock->free > 0) {
 
@@ -152,7 +152,7 @@ trait Reservable
             Log::channel('documents')
                 ->info('Значения count: ' . $stock->count . ', reserve: ' . $stock->reserve . ', free: ' . $stock->free);
 
-            $reserve_count = ($product->portion * $item->reserve->count);
+            $reserve_count = $item->reserve->count;
 
             $stock->free += $reserve_count;
             $stock->reserve -= $reserve_count;
