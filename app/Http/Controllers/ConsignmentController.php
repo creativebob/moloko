@@ -79,6 +79,11 @@ class ConsignmentController extends Controller
         // Подключение политики
         $this->authorize(getmethod('store'), $this->class);
 
+        if (\Auth::user()->company->suppliers->isEmpty()) {
+            return back()
+                ->withErrors(['msg' => 'Для начала необходимо добавить поставщиквов!']);
+        }
+
         $consignment = Consignment::create();
         // dd($consignment);
 
