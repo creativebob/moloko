@@ -25,7 +25,7 @@ class CreateReservesHistoriesTable extends Migration
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
-//            $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->boolean('display')->default(1)->comment('Отображение на сайте');
@@ -33,7 +33,7 @@ class CreateReservesHistoriesTable extends Migration
             $table->boolean('moderation')->default(0)->comment('Модерация');
 
             $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-//            $table->foreign('author_id')->references('id')->on('users');
+            $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 

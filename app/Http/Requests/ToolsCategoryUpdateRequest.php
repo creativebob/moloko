@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EquipmentsCategoryStoreRequest extends FormRequest
+class ToolsCategoryUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,11 +23,20 @@ class EquipmentsCategoryStoreRequest extends FormRequest
      */
     public function rules()
     {
+        $settings = getSettings('tools_categories');
+
         return [
             'name' => 'required|string|max:255',
+            'description' => 'string|nullable',
+            'seo_description' => 'string|nullable',
             'parent_id' => 'integer|nullable',
 
+            'file' => 'max:'.$settings['img_max_size'].'|mimes:'.$settings['img_formats'].'|nullable',
+
+            'manufacturers.*' => 'integer|nullable',
+
             'display' => 'integer|max:1|nullable',
+            'moderation' => 'integer|max:1|nullable',
             'system' => 'integer|max:1|nullable',
         ];
     }

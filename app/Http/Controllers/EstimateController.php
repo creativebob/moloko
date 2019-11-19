@@ -150,8 +150,10 @@ class EstimateController extends Controller
                 Log::channel('documents')
                     ->info('========================================== НАЧАЛО ПРОДАЖИ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
+                $estimate->goods_items->load('document');
+
                 foreach ($estimate->goods_items as $item) {
-                    $item->load('document');
+//                    $item->load('document');
                     $this->off($item);
                 }
 
@@ -194,52 +196,59 @@ class EstimateController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $estimate = Estimate::with([
-            'lead',
+//            'lead',
             'goods_items' => function ($q) {
                 $q->with([
                     'price',
-                    'product',
-                    'document'
+                    'product.article',
+                    'document',
+                    'reserve.history'
                 ]);
             },
         ])
             ->findOrFail($id);
 //        dd($estimate);
 
-        if ($estimate->is_saled == 0 && $estimate->is_reserved == 0) {
+        if ($estimate->is_saled == 0) {
             // Подключение политики
 //        $this->authorize(getmethod('update'), $lead);
 
-            $lead = $estimate->lead;
-            // Отдаем работу по редактировнию лида трейту
-            $this->updateLead($request, $lead);
+//            $lead = $estimate->lead;
+//            // Отдаем работу по редактировнию лида трейту
+//            $this->updateLead($request, $lead);
 
             if ($estimate->goods_items->isNotEmpty()) {
                 Log::channel('documents')
                     ->info('========================================== НАЧАЛО РЕЗЕРВИРОВАНИЯ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
+                $result = [];
                 foreach ($estimate->goods_items as $item) {
-                    $item->load('document');
-                    $this->reserve($item);
+//                    $item->load('document');
+                    $result[] = $this->reserve($item);
                 }
 
-                // ОБновляем смету
-//                $estimate->update([
-//                    'is_reserved' => true
-//                ]);
-
-                Log::channel('documents')
-                    ->info('Отменен резерв смет c id: ' . $estimate->id);
                 Log::channel('documents')
                     ->info('========================================== КОНЕЦ РЕЗЕРВИРОВАНИЯ СМЕТЫ ==============================================
                 
                 ');
+
+                $estimate->load([
+                    'goods_items' => function ($q) {
+                        $q->with([
+                            'product.article',
+                            'reserve',
+                            'stock:id,name'
+                        ]);
+                    }
+                ]);
+                return response()->json([
+                    'items' => $estimate->goods_items,
+                    'msg' => $result
+                ]);
             } else {
                 abort(403, 'Смета пуста');
             }
         }
-
-        return redirect()->route('leads.index');
     }
 
     public function unreserving(Request $request, $id)
@@ -248,12 +257,19 @@ class EstimateController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $estimate = Estimate::with([
-            'goods_items.reserve.history',
+            'goods_items' => function ($q) {
+                $q->with([
+                    'price',
+                    'product.article',
+                    'document',
+                    'reserve.history'
+                ]);
+            },
         ])
             ->findOrFail($id);
 //        dd($estimate);
 
-        if ($estimate->is_saled == 0 && $estimate->is_reserved == 1) {
+        if ($estimate->is_saled == 0) {
             // Подключение политики
 //        $this->authorize(getmethod('update'), $lead);
 
@@ -271,29 +287,37 @@ class EstimateController extends Controller
                 Log::channel('documents')
                     ->info('========================================== НАЧАЛО ОТМЕНЫ РЕЗЕРВИРОВАНИЯ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
+                $result = [];
                 foreach ($estimate->goods_items as $item) {
-                    $item->load('document');
-                    $this->unreserve($item);
+//                    $item->load('document');
+                    $result[] = $this->unreserve($item);
                 }
 
-                // ОБновляем смету
-                $estimate->update([
-                    'is_reserved' => false
-                ]);
-
-                Log::channel('documents')
-                    ->info('Отменен резервв сметы c id: ' . $estimate->id);
                 Log::channel('documents')
                     ->info('========================================== КОНЕЦ ОТМЕНЫ РЕЗЕРВИРОВАНИЯ СМЕТЫ ==============================================
                 
                 ');
+
+                $estimate->load([
+                    'goods_items' => function ($q) {
+                        $q->with([
+                            'product.article',
+                            'reserve',
+                            'stock:id,name'
+                        ]);
+                    }
+                ]);
+                return response()->json([
+                    'items' => $estimate->goods_items,
+                    'msg' => $result
+                ]);
 
             } else {
                 abort(403, 'Смета пуста');
             }
         }
 
-        return redirect()->route('leads.index');
+
     }
 
     public function ajax_create(Request $request)

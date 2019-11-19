@@ -33,6 +33,9 @@ class CreatePricesServicesTable extends Migration
 
             $table->decimal('price', 12, 4)->comment('Цена');
 
+            $table->bigInteger('currency_id')->nullable()->unsigned()->comment('Id валюты');
+            $table->foreign('currency_id')->references('id')->on('currencies');
+
             $table->boolean('archive')->default(0)->unsigned()->comment('Архив');
 
             // Общие настройки

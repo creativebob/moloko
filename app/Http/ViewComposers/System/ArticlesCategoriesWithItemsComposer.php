@@ -15,7 +15,8 @@ class ArticlesCategoriesWithItemsComposer
 	        'raws',
             'containers',
             'goods',
-            'attachments'
+            'attachments',
+            'tools'
         ])
             ->get([
                 'id',

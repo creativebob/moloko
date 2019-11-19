@@ -15,11 +15,26 @@
 				<th class="th-amount">Сумма</th>
 				<th class="th-delete"></th>
 				<th class="th-action">
-					<span
+					<template
 							v-if="!isSaled"
-						class="button-to-reserve button-reserve-all"
-						title="Зарезервировать все!"
-					></span>
+					>
+						<span
+								v-if="isReserved"
+								@click="unreserveEstimateGoodsItems"
+								class="button-to-reserve"
+								title="Снять все с резерва!"
+
+						></span>
+						<span
+								v-else
+								@click="reserveEstimateGoodsItems"
+								class="button-to-reserve"
+								title="Зарезервировать все!"
+
+						></span>
+
+					</template>
+
 				</th>
 			</tr>
 			</thead>
@@ -48,7 +63,7 @@
 					<td>{{ totalItemsAmount | roundToTwo | level }}</td>
 					<td colspan="2"></td>
 				</tr>
-				<tr>
+				<tr v-if="discountPercent > 0">
 					<td colspan="4" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>
 					<td>{{ totalItemsAmountWithDiscount | roundToTwo | level }}</td>
 					<td colspan="2"></td>
@@ -122,6 +137,18 @@
 			},
 			showButtonReserved() {
 				return this.estimate.is_reserved === 0;
+			},
+			isReserved() {
+				let result = [];
+				result = this.$store.state.estimate.goodsItems.filter(item => {
+					if (item.reserve !== null) {
+						if (item.reserve.count > 0) {
+							return item;
+						}
+					}
+				})
+
+				return result.length > 0;
 			}
 
 
@@ -173,7 +200,51 @@
 			deleteGoodsItem() {
 				this.$store.dispatch('REMOVE_GOODS_ITEM_FROM_ESTIMATE', this.itemGoods.id);
 				$('#delete-estimates_item').foundation('close');
-			}
+			},
+			reserveEstimateGoodsItems() {
+				axios
+					.post('/admin/estimates/' + this.estimate.id + '/reserving')
+					.then(response => {
+						console.log(response.data);
+						if (response.data.msg.length > 0) {
+							let msg = '';
+							response.data.msg.forEach(item => {
+								if (item !== null) {
+									msg = msg + '- ' + item + '\r\n';
+								}
+							});
+							if (msg !== '') {
+								alert(msg);
+							}
+						}
+						this.$store.commit('UPDATE_GOODS_ITEMS', response.data.items);
+					})
+					.catch(error => {
+						console.log(error)
+					});
+			},
+			unreserveEstimateGoodsItems() {
+				axios
+					.post('/admin/estimates/' + this.estimate.id + '/unreserving')
+					.then(response => {
+						console.log(response.data);
+						if (response.data.msg.length > 0) {
+							let msg = '';
+							response.data.msg.forEach(item => {
+								if (item !== null) {
+									msg = msg + '- ' + item + '\r\n';
+								}
+							});
+							if (msg !== '') {
+								alert(msg);
+							}
+						}
+						this.$store.commit('UPDATE_GOODS_ITEMS', response.data.items);
+					})
+					.catch(error => {
+						console.log(error)
+					});
+			},
 		},
 
 		filters: {

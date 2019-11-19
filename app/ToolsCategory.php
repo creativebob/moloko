@@ -22,7 +22,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 // use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class EquipmentsCategory extends Model
+class ToolsCategory extends Model
 {
     // Включаем кеш
     use Cachable;
@@ -58,13 +58,13 @@ class EquipmentsCategory extends Model
     // Родитель
     public function parent()
     {
-        return $this->belongsTo(EquipmentsCategory::class);
+        return $this->belongsTo(ToolsCategory::class);
     }
 
     // Вложенные
     public function childs()
     {
-        return $this->hasMany(EquipmentsCategory::class, 'parent_id');
+        return $this->hasMany(ToolsCategory::class, 'parent_id');
     }
 
     // Компания
@@ -73,18 +73,18 @@ class EquipmentsCategory extends Model
         return $this->belongsTo(Company::class);
     }
 
-    // Сырье
-    public function equipments()
+    // Инструменты
+    public function tools()
     {
-        return $this->hasMany(Equipment::class, 'category_id');
+        return $this->hasMany(Tool::class, 'category_id');
     }
 
     // Артикулы
     public function articles()
     {
-        return $this->belongsToMany(Article::class, 'equipments')
+        return $this->belongsToMany(Article::class, 'tools')
         ->where('draft', false)
-        ->where('equipments.archive', false);
+        ->where('tools.archive', false);
     }
 
     // Метрики

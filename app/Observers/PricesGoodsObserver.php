@@ -15,6 +15,9 @@ class PricesGoodsObserver
     {
         $this->store($prices_goods);
         $prices_goods->display = true;
+
+        // TODO - 19.11.19 - Пока по дефолту рубль
+        $prices_goods->currency_id = 1;
     }
 
     public function created(PricesGoods $prices_goods)

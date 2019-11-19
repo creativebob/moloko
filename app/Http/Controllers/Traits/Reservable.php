@@ -10,13 +10,12 @@ use Illuminate\Support\Facades\Log;
 
 trait Reservable
 {
-
     /**
-     * Резервирование на складе.
+     * Резервирование позиции документа на складе
      *
-     * @param $item
+     * @param object $item
+     * @return string|null
      */
-
     public function reserve($item)
     {
         $entity_document = Entity::where('alias', $item->document->getTable())->first();
@@ -56,14 +55,14 @@ trait Reservable
             if ($stock->free > 0) {
 
                 if ($item_count > $stock->free) {
-                    $result = 'Резерв поставлен не на все количество, недостаточно ' . ($item_count - $stock->free);
+                    $result = "По позиции \"{$item->product->article->name}\" резерв поставлен не на все количество, недостаточно " . ($item_count - $stock->free);
 
                     $item_count = $stock->free;
 
                     $stock->free -= $item_count;
                     $stock->reserve += $item_count;
                 } else {
-                    $result = 'Резерв успешно поставлен';
+                    $result = null;
                     $stock->free -= $item->count;
                     $stock->reserve += $item->count;
                 }
@@ -106,7 +105,7 @@ trait Reservable
                 }
 
                 $item->update([
-                   'is_reserved' => true
+                   'is_reserved' => 1
                 ]);
 
                 Log::channel('documents')
@@ -115,12 +114,12 @@ trait Reservable
             } else {
                 Log::channel('documents')
                     ->info('На сладе свободных остатков нет');
-                $result = 'На сладе свободных остатков нет';
+                $result = "По позиции \"{$item->product->article->name}\" на сладе свободных остатков нет";
             }
         } else {
             Log::channel('documents')
                 ->info('Склада нет, негде ставить в резерв');
-            $result = 'Не существует склада товара, невозможно поставить в резерв';
+            $result = "По позиции \"{$item->product->article->name}\" не существует склада товара, невозможно поставить в резерв";
         }
 
 
@@ -180,10 +179,10 @@ trait Reservable
                 ->info('Ставим всей истории резерва архив, результат ' . $result);
 
             $item->update([
-                'is_reserved' => false
+                'is_reserved' => 0
             ]);
 
-            $result = 'Резерв успешно снят';
+            $result = null;
 
             Log::channel('documents')
                 ->info('=== КОНЕЦ ОТМЕНЫ РЕЗЕРВИРОВАНИЯ ===
@@ -191,7 +190,7 @@ trait Reservable
         }  else {
             Log::channel('documents')
                 ->info('Склада нет, негде ставить в резерв');
-            $result = 'Не существует склада товара, невозможно снять с резерва';
+            $result = "По позиции \"{$item->product->article->name}\" не существует склада, невозможно снять с резерва";
         }
 
         return $result;

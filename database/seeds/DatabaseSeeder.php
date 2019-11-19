@@ -9,7 +9,6 @@ class DatabaseSeeder extends Seeder
     {
 
 
-
         // Локации
         // $this->call(LocationsTableSeeder::class);
 
@@ -36,6 +35,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PagesTableSeeder::class);
 
         $this->call(AlignsTableSeeder::class);
+
+        $this->call(CurrenciesTableSeeder::class);
 
         // Сущности
         $this->call(EntitiesTableSeeder::class);

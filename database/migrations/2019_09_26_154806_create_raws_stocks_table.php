@@ -14,7 +14,6 @@ class CreateRawsStocksTable extends Migration
     public function up()
     {
         Schema::create('raws_stocks', function (Blueprint $table) {
-
             $table->bigIncrements('id');
 
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

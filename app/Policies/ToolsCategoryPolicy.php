@@ -3,26 +3,24 @@
 namespace App\Policies;
 
 use App\User;
-use App\Equipment as Model;
+use App\ToolsCategory as Model;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 use App\Policies\Traits\PoliticTrait;
 
-class EquipmentPolicy
+class ToolsCategoryPolicy
 {
     use HandlesAuthorization;
     use PoliticTrait;
 
-    /**
-     * Determine whether the user can view the model.
-     *
-     * @param  \App\User  $user
-     * @param  \App\User  $model
-     * @return mixed
-     */
-
-    protected $entity_name = 'equipments';
+    protected $entity_name = 'tools_categories';
     protected $entity_dependence = false;
+
+    public function before($user)
+    {
+        // if (Auth::user()->god == 1) {return true;} else {return null;};
+        // return $result;
+    }
 
     public function index(User $user)
     {
@@ -50,13 +48,29 @@ class EquipmentPolicy
 
     public function delete(User $user, Model $model)
     {
-
         if ($model->system == 1) {
             return false;
         }
 
-        $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
-        return $result;
+        if ($model->tools->count() > 0) {
+            return false;
+        }
+
+        if ($model->childs->count() > 0) {
+            return false;
+        }
+
+        if ($model->groups->count() > 0) {
+            return false;
+        }
+
+        // foreach ($model->getRelations() as $relation) {
+        //     if ($relation->count() > 0) {
+        //         return false;
+        //     }
+        // }
+
+        return $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
     }
 
     public function moderator(User $user, Model $model)

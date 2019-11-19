@@ -15,6 +15,9 @@ class PricesServiceObserver
     {
         $this->store($prices_service);
         $prices_service->display = true;
+
+        // TODO - 19.11.19 - Пока по дефолту рубль
+        $prices_service->currency_id = 1;
     }
 
     public function created(PricesService $prices_service)

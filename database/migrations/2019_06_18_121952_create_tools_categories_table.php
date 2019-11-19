@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEquipmentsCategoriesTable extends Migration
+class CreateToolsCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateEquipmentsCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('equipments_categories', function (Blueprint $table) {
+        Schema::create('tools_categories', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->string('name')->index()->comment('Название');
@@ -27,10 +27,10 @@ class CreateEquipmentsCategoriesTable extends Migration
             $table->foreign('photo_id')->references('id')->on('photos');
 
             $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id родителя');
-            $table->foreign('parent_id')->references('id')->on('equipments_categories');
+            $table->foreign('parent_id')->references('id')->on('tools_categories');
 
             $table->bigInteger('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
-            $table->foreign('category_id')->references('id')->on('equipments_categories');
+            $table->foreign('category_id')->references('id')->on('tools_categories');
 
 
             // Общие настройки
@@ -59,6 +59,6 @@ class CreateEquipmentsCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('equipments_categories');
+        Schema::dropIfExists('tools_categories');
     }
 }
