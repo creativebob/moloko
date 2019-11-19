@@ -91,16 +91,16 @@ use App\WorkflowsCategory;
 use Illuminate\Support\ServiceProvider;
 use App\RawsCategory;
 use App\Observers\RawsCategoryObserver;
-use App\EquipmentsCategory;
-use App\Observers\EquipmentsCategoryObserver;
+use App\ToolsCategory;
+use App\Observers\ToolsCategoryObserver;
 use App\Article;
 use App\Observers\ArticleObserver;
 use App\Goods;
 use App\Observers\GoodsObserver;
 use App\Raw;
 use App\Observers\RawObserver;
-use App\Equipment;
-use App\Observers\EquipmentObserver;
+use App\Tool;
+use App\Observers\ToolObserver;
 use App\Room;
 use App\Observers\RoomObserver;
 use App\Process;
@@ -152,7 +152,7 @@ class ObserverServiceProvider extends ServiceProvider
         RawsCategory::observe(RawsCategoryObserver::class);
         ContainersCategory::observe(ContainersCategoryObserver::class);
         AttachmentsCategory::observe(AttachmentsCategoryObserver::class);
-        EquipmentsCategory::observe(EquipmentsCategoryObserver::class);
+        ToolsCategory::observe(ToolsCategoryObserver::class);
         RoomsCategory::observe(RoomsCategoryObserver::class);
         ExpendablesCategory::observe(ExpendablesCategoryObserver::class);
 
@@ -163,7 +163,7 @@ class ObserverServiceProvider extends ServiceProvider
         Raw::observe(RawObserver::class);
         Container::observe(ContainerObserver::class);
         Attachment::observe(AttachmentObserver::class);
-        Equipment::observe(EquipmentObserver::class);
+        Tool::observe(ToolObserver::class);
         Room::observe(RoomObserver::class);
 
 

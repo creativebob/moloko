@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReservesTable extends Migration
+class CreateToolsStocksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,25 +13,30 @@ class CreateReservesTable extends Migration
      */
     public function up()
     {
-        Schema::create('reserves', function (Blueprint $table) {
+        Schema::create('tools_stocks', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->bigInteger('stock_id')->unsigned()->nullable()->comment('Id склада');
-            $table->foreign('stock_id')->references('id')->on('stocks');
-
-            $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id филиала');
+            $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id отдела');
             $table->foreign('filial_id')->references('id')->on('departments');
 
-            $table->morphs('document');
-            $table->morphs('documents_item');
+            $table->bigInteger('stock_id')->nullable()->unsigned()->comment('Id склада');
+            $table->foreign('stock_id')->references('id')->on('stocks');
 
-            $table->morphs('cmv');
+            $table->bigInteger('cmv_id')->nullable()->unsigned()->comment('Id инструмента');
+            $table->foreign('cmv_id')->references('id')->on('tools');
 
             $table->decimal('count', 12,4)->default(0)->comment('Количество');
-//            $table->decimal('cost', 16, 8)->default(0)->comment('Стоимость');
-//            $table->decimal('amount', 16, 8)->default(0)->comment('Сумма');
+            $table->decimal('reserve', 12,4)->default(0)->comment('Резерв');
+            $table->decimal('free', 12,4)->default(0)->comment('Свободно');
 
-            $table->boolean('archive')->default(0)->comment('Архив');
+            $table->decimal('weight', 9, 4)->default(0)->comment('Вес (кг)');
+            $table->decimal('volume', 15, 8)->default(0)->comment('Обьем (м3)');
+
+            $table->string('serial')->nullable()->comment('Серийный номер');
+
+            $table->bigInteger('manufacturer_id')->nullable()->unsigned()->comment('Id производителя');
+            $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
@@ -59,6 +64,6 @@ class CreateReservesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reserves');
+        Schema::dropIfExists('tools_stocks');
     }
 }

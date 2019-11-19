@@ -86,8 +86,16 @@ trait Receiptable
 
         $stock->count += $count;
         $stock->free += $count;
+
         $stock->weight += ($item->cmv->article->weight * $count);
         $stock->volume += ($item->cmv->article->volume * $count);
+
+        if ($stock->count < 0 || $stock->free < 0) {
+            Log::channel('documents')
+                ->info('Количество на складе < 0, ставим свободным 0');
+            $stock->free = 0;
+        }
+
         $stock->save();
 
         Log::channel('documents')

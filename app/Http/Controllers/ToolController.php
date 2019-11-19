@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 // Модели
-use App\Equipment;
+use App\Tool;
 use App\Article;
-use App\EquipmentsCategory;
+use App\ToolsCategory;
 use App\Manufacturer;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\EquipmentRequest;
+use App\Http\Requests\ToolRequest;
 use App\Http\Requests\ArticleStoreRequest;
 
 // Куки
@@ -21,16 +21,16 @@ use App\Http\Controllers\Traits\Articlable;
 
 use Illuminate\Support\Facades\Log;
 
-class EquipmentController extends Controller
+class ToolController extends Controller
 {
 
     // Настройки сконтроллера
-    public function __construct(Equipment $equipment)
+    public function __construct(Tool $tool)
     {
         $this->middleware('auth');
-        $this->equipment = $equipment;
-        $this->class = Equipment::class;
-        $this->model = 'App\Equipment';
+        $this->tool = $tool;
+        $this->class = Tool::class;
+        $this->model = 'App\Tool';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
     }
@@ -68,7 +68,7 @@ class EquipmentController extends Controller
             'system'
         ];
 
-        $equipments = Equipment::with([
+        $tools = Tool::with([
             'author',
             'company',
             'article' => function ($q) {
@@ -90,7 +90,7 @@ class EquipmentController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->paginate(30);
-        // dd($equipments);
+        // dd($tools);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -98,8 +98,8 @@ class EquipmentController extends Controller
 
         $filter = setFilter($this->entity_alias, $request, [
             'author',               // Автор записи
-            // 'equipments_category',    // Категория услуги
-            // 'equipments_product',     // Группа услуги
+            // 'tools_category',    // Категория услуги
+            // 'tools_product',     // Группа услуги
             // 'date_interval',     // Дата обращения
             'booklist'              // Списки пользователя
         ]);
@@ -109,11 +109,11 @@ class EquipmentController extends Controller
         $page_info = pageInfo($this->entity_alias);
 
         return view('products.articles.common.index.index', [
-            'items' => $equipments,
+            'items' => $tools,
             'page_info' => $page_info,
             'class' => $this->class,
             'entity' => $this->entity_alias,
-            'category_entity' => 'equipments_categories',
+            'category_entity' => 'tools_categories',
             'filter' => $filter,
         ]);
     }
@@ -125,23 +125,23 @@ class EquipmentController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right('equipments_categories', false, 'index');
+        $answer = operator_right('tools_categories', false, 'index');
 
         // Главный запрос
-        $equipments_categories = EquipmentsCategory::moderatorLimit($answer)
+        $tools_categories = ToolsCategory::moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->orderBy('sort', 'asc')
         ->get();
 
-        if($equipments_categories->count() == 0){
+        if($tools_categories->count() == 0){
 
             // Описание ошибки
             $ajax_error = [];
             $ajax_error['title'] = "Обратите внимание!";
             $ajax_error['text'] = "Для начала необходимо создать категории оборудования. А уже потом будем добавлять оборудование. Ок?";
-            $ajax_error['link'] = "/admin/equipments_categories";
+            $ajax_error['link'] = "/admin/tools_categories";
             $ajax_error['title_link'] = "Идем в раздел категорий";
 
             return view('ajax_error', compact('ajax_error'));
@@ -172,7 +172,7 @@ class EquipmentController extends Controller
             'item' => new $this->class,
             'title' => 'Добавление оборудования',
             'entity' => $this->entity_alias,
-            'category_entity' => 'equipments_categories',
+            'category_entity' => 'tools_categories',
             'units_category_default' => 6,
             'unit_default' => 32,
         ]);
@@ -185,11 +185,11 @@ class EquipmentController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         Log::channel('operations')
-        ->info('========================================== НАЧИНАЕМ ЗАПИСЬ ОБОРУДОВАНИЯ ==============================================');
+        ->info('========================================== НАЧИНАЕМ ЗАПИСЬ ИНСТРУМЕНТА ==============================================');
 
-        $equipments_category = EquipmentsCategory::findOrFail($request->category_id);
+        $tools_category = ToolsCategory::findOrFail($request->category_id);
         // dd($goods_category->load('groups'));
-        $article = $this->storeArticle($request, $equipments_category);
+        $article = $this->storeArticle($request, $tools_category);
 
 //        Выводим артикул из черновика для оборудования
         $article->draft = false;
@@ -199,9 +199,9 @@ class EquipmentController extends Controller
 
             $data = $request->input();
             $data['article_id'] = $article->id;
-            $equipment = (new Equipment())->create($data);
+            $tool = (new Tool())->create($data);
 
-            if ($equipment) {
+            if ($tool) {
 
                 // Пишем куки состояния
                 // $mass = [
@@ -210,19 +210,19 @@ class EquipmentController extends Controller
                 // Cookie::queue('conditions_goods_category', $goods_category_id, 1440);
 
                 Log::channel('operations')
-                ->info('Записали оборудование c id: ' . $equipment->id);
+                ->info('Записали оборудование c id: ' . $tool->id);
                 Log::channel('operations')
-                ->info('Автор: ' . $equipment->author->name . ' id: ' . $equipment->author_id .  ', компания: ' . $equipment->company->name . ', id: ' .$equipment->company_id);
+                ->info('Автор: ' . $tool->author->name . ' id: ' . $tool->author_id .  ', компания: ' . $tool->company->name . ', id: ' .$tool->company_id);
                 Log::channel('operations')
-                ->info('========================================== КОНЕЦ ЗАПИСИ ОБОРУДОВАНИЯ ==============================================
+                ->info('========================================== КОНЕЦ ЗАПИСИ ИНСТРУМЕНТА ==============================================
 
                     ');
 
                 // dd($request->quickly);
                 if ($request->quickly == 1) {
-                    return redirect()->route('equipments.index');
+                    return redirect()->route('tools.index');
                 } else {
-                    return redirect()->route('equipments.edit', $equipment->id);
+                    return redirect()->route('tools.edit', $tool->id);
                 }
             } else {
                 abort(403, 'Ошибка записи сырья');
@@ -244,14 +244,14 @@ class EquipmentController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Главный запрос
-        $equipment = Equipment::moderatorLimit($answer)
+        $tool = Tool::moderatorLimit($answer)
         ->findOrFail($id);
-        // dd($equipment);
+        // dd($tool);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $equipment);
+        $this->authorize(getmethod(__FUNCTION__), $tool);
 
-        $article = $equipment->article;
+        $article = $tool->article;
         // dd($article);
 
         // Получаем настройки по умолчанию
@@ -262,14 +262,14 @@ class EquipmentController extends Controller
         // dd($page_info);
 
         return view('products.articles.common.edit.edit', [
-            'title' => 'Редактировать оборудование',
-            'item' => $equipment,
+            'title' => 'Редактировать инструмент',
+            'item' => $tool,
             'article' => $article,
             'page_info' => $page_info,
             'settings' => $settings,
             'entity' => $this->entity_alias,
-            'category_entity' => 'equipments_categories',
-            'categories_select_name' => 'equipments_category_id',
+            'category_entity' => 'tools_categories',
+            'categories_select_name' => 'tools_category_id',
         ]);
     }
 
@@ -280,27 +280,27 @@ class EquipmentController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $equipment = Equipment::moderatorLimit($answer)
+        $tool = Tool::moderatorLimit($answer)
         ->findOrFail($id);
-        // dd($equipment);
+        // dd($tool);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $equipment);
+        $this->authorize(getmethod(__FUNCTION__), $tool);
 
-        $article = $equipment->article;
+        $article = $tool->article;
         // dd($article);
 
-        $result = $this->updateArticle($request, $equipment);
+        $result = $this->updateArticle($request, $tool);
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-            $this->changeCategory($request, $equipment);
+            $this->changeCategory($request, $tool);
 
-            $equipment->serial = $request->serial;
-            $equipment->display = $request->display;
-            $equipment->system = $request->system;
-            $equipment->save();
+            $tool->serial = $request->serial;
+            $tool->display = $request->display;
+            $tool->system = $request->system;
+            $tool->save();
 
 
             // Если ли есть
@@ -309,7 +309,7 @@ class EquipmentController extends Controller
                 return Redirect($backlink);
             }
 
-            return redirect()->route('equipments.index');
+            return redirect()->route('tools.index');
         } else {
             return back()
             ->withErrors($result)
@@ -329,25 +329,25 @@ class EquipmentController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $equipment = Equipment::with([
+        $tool = Tool::with([
             'compositions.goods',
         ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod('destroy'), $equipment);
+        $this->authorize(getmethod('destroy'), $tool);
 
-        if ($equipment) {
+        if ($tool) {
 
-            $equipment->archive = true;
+            $tool->archive = true;
 
             // Скрываем бога
-            $equipment->editor_id = hideGod($request->user());
-            $equipment->save();
+            $tool->editor_id = hideGod($request->user());
+            $tool->save();
 
-            if ($equipment) {
-                return redirect()->route('equipments.index');
+            if ($tool) {
+                return redirect()->route('tools.index');
             } else {
                 abort(403, 'Ошибка при архивации');
             }

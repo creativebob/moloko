@@ -51,6 +51,8 @@ class PricesService extends Model
         'price',
         'archive',
 
+        'currency_id',
+
         'display',
         'system',
         'moderation'
@@ -111,5 +113,11 @@ class PricesService extends Model
     public function product()
     {
         return $this->belongsTo(Service::class, 'service_id');
+    }
+
+    // Валюта
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
     }
 }

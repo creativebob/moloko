@@ -32,7 +32,10 @@ class CreatePricesGoodsTable extends Migration
             $table->foreign('ancestor_id')->references('id')->on('prices_goods');
 
             $table->decimal('price', 12, 4)->default(0)->comment('Цена');
-            
+
+            $table->bigInteger('currency_id')->nullable()->unsigned()->comment('Id валюты');
+            $table->foreign('currency_id')->references('id')->on('currencies');
+
             $table->boolean('archive')->default(0)->unsigned()->comment('Архив');
 	
 	        $table->boolean('status')->default(0)->comment('Статус');

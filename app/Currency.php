@@ -22,7 +22,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 
-class Equipment extends Model
+class Currency extends Model
 {
     // Включаем кеш
     use Cachable;
@@ -43,39 +43,6 @@ class Equipment extends Model
     use Filter;
     use BooklistFilter;
 
-    protected $table = 'equipments';
+    protected $table = 'currencies';
 
-    protected $fillable = [
-        'category_id',
-        'article_id',
-
-        'display',
-        'system',
-        'moderation'
-
-    ];
-
-    // Артикул
-    public function article()
-    {
-        return $this->belongsTo(Article::class);
-    }
-
-    // Категория
-    public function category()
-    {
-        return $this->belongsTo(EquipmentsCategory::class);
-    }
-
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo(User::class);
-    }
 }

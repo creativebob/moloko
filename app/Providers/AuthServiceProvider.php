@@ -28,11 +28,13 @@ use App\Policies\ProcessesGroupPolicy;
 use App\Policies\ConsignmentPolicy;
 use App\Policies\ProductionPolicy;
 use App\Policies\RawsStockPolicy;
+use App\Policies\ToolsStockPolicy;
 use App\PricesGoods;
 use App\ProcessesGroup;
 use App\Consignment;
 use App\Production;
 use App\RawsStock;
+use App\ToolsStock;
 use App\User;
 use App\RightsRole;
 use App\Company;
@@ -135,10 +137,10 @@ use App\Policies\RawPolicy;
 // use App\Policies\RawsProductPolicy;
 
 // Оборудование
-use App\EquipmentsCategory;
-use App\Policies\EquipmentsCategoryPolicy;
-use App\Equipment;
-use App\Policies\EquipmentPolicy;
+use App\ToolsCategory;
+use App\Policies\ToolsCategoryPolicy;
+use App\Tool;
+use App\Policies\ToolPolicy;
 
 
 
@@ -367,9 +369,10 @@ class AuthServiceProvider extends ServiceProvider
         ContainersCategory::class => ContainersCategoryPolicy::class,
         ContainersStock::class => ContainersStockPolicy::class,
 
-        // Оборудование
-        Equipment::class => EquipmentPolicy::class,
-        EquipmentsCategory::class => EquipmentsCategoryPolicy::class,
+        // Инструменты
+        Tool::class => ToolPolicy::class,
+        ToolsCategory::class => ToolsCategoryPolicy::class,
+        ToolsStock::class => ToolsStockPolicy::class,
 
         // Помещения
         RoomsCategory::class => RoomsCategoryPolicy::class,

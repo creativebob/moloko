@@ -52,6 +52,8 @@
 			'filial_id',
 			'price',
 			'archive',
+
+            'currency_id',
 			
 			'status',
             'is_hit',
@@ -141,6 +143,12 @@
 		{
 			return $this->belongsTo(Goods::class, 'goods_id');
 		}
+
+        // Валюта
+        public function currency()
+        {
+            return $this->belongsTo(Currency::class);
+        }
 		
 		// Фильтр
 		public function scopeFilter($query)

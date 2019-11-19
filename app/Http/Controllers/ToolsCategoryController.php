@@ -3,22 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\EquipmentsCategoryUpdateRequest;
-use App\Http\Requests\EquipmentsCategoryStoreRequest;
-use App\EquipmentsCategory;
+use App\Http\Requests\ToolsCategoryUpdateRequest;
+use App\Http\Requests\ToolsCategoryStoreRequest;
+use App\ToolsCategory;
 use Illuminate\Http\Request;
 
 
-class EquipmentsCategoryController extends Controller
+class ToolsCategoryController extends Controller
 {
 
     // Настройки сконтроллера
-    public function __construct(EquipmentsCategory $equipments_category)
+    public function __construct(ToolsCategory $tools_category)
     {
         $this->middleware('auth');
-        $this->equipments_category = $equipments_category;
-        $this->class = EquipmentsCategory::class;
-        $this->model = 'App\EquipmentsCategory';
+        $this->tools_category = $tools_category;
+        $this->class = ToolsCategory::class;
+        $this->model = 'App\ToolsCategory';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
         $this->type = 'edit';
@@ -34,8 +34,8 @@ class EquipmentsCategoryController extends Controller
 
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $equipments_categories = EquipmentsCategory::with([
-            'equipments',
+        $tools_categories = ToolsCategory::with([
+            'tools',
             'childs',
             'groups'
         ])
@@ -48,18 +48,18 @@ class EquipmentsCategoryController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
         ->get();
-//        dd($equipments_categories);
+//        dd($tools_categories);
 
         // Отдаем Ajax
         if ($request->ajax()) {
 
             return view('system.common.accordions.categories_list',
                 [
-                    'items' => $equipments_categories,
+                    'items' => $tools_categories,
                     'entity' => $this->entity_alias,
                     'class' => $this->model,
                     'type' => $this->type,
-                    'count' => $equipments_categories->count(),
+                    'count' => $tools_categories->count(),
                     'id' => $request->id,
                     // 'nested' => 'raws_products_count',
                 ]
@@ -69,7 +69,7 @@ class EquipmentsCategoryController extends Controller
         // Отдаем на шаблон
         return view('system.common.accordions.index',
             [
-                'items' => $equipments_categories,
+                'items' => $tools_categories,
                 'page_info' => pageInfo($this->entity_alias),
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
@@ -92,24 +92,24 @@ class EquipmentsCategoryController extends Controller
         return view('system.common.accordions.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
-            'title' => 'Добавление категории оборудования',
+            'title' => 'Добавление категории инструментов',
             'parent_id' => $request->parent_id,
             'category_id' => $request->category_id
         ]);
     }
 
-    public function store(EquipmentsCategoryStoreRequest $request)
+    public function store(ToolsCategoryStoreRequest $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $data = $request->input();
-        $equipments_category = (new $this->class())->create($data);
+        $tools_category = (new $this->class())->create($data);
 
-        if ($equipments_category) {
+        if ($tools_category) {
             // Переадресовываем на index
-            return redirect()->route('equipments_categories.index', ['id' => $equipments_category->id]);
+            return redirect()->route('tools_categories.index', ['id' => $tools_category->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -130,15 +130,15 @@ class EquipmentsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $equipments_category = EquipmentsCategory::with([
+        $tools_category = ToolsCategory::with([
             'manufacturers',
         ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
-        // dd($equipments_category);
+        // dd($tools_category);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $equipments_category);
+        $this->authorize(getmethod(__FUNCTION__), $tools_category);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
@@ -148,7 +148,7 @@ class EquipmentsCategoryController extends Controller
         // При добавлении метрики отдаем ajax новый список свойст и метрик
         if ($request->ajax()) {
             return view('products.common.metrics.properties_list', [
-                'category' => $equipments_category,
+                'category' => $tools_category,
                 'page_info' => $page_info,
             ]);
         }
@@ -156,37 +156,37 @@ class EquipmentsCategoryController extends Controller
         // dd($goods_category->direction);
         return view('products.articles_categories.common.edit.edit', [
             'title' => 'Редактирование категории оборудования',
-            'category' => $equipments_category,
+            'category' => $tools_category,
             'page_info' => $page_info,
             'settings' => $settings,
             'entity' => $this->entity_alias,
         ]);
     }
 
-    public function update(EquipmentsCategoryUpdateRequest $request, $id)
+    public function update(ToolsCategoryUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $equipments_category = EquipmentsCategory::moderatorLimit($answer)
+        $tools_category = ToolsCategory::moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $equipments_category);
+        $this->authorize(getmethod(__FUNCTION__), $tools_category);
 
         // Заполнение и проверка основных полей в трейте
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $equipments_category);
-        $result = $equipments_category->update($data);
+        $data['photo_id'] = $this->getPhotoId($request, $tools_category);
+        $result = $tools_category->update($data);
 
         if ($result) {
 
-            $equipments_category->manufacturers()->sync($request->manufacturers);
-            $equipments_category->metrics()->sync($request->metrics);
+            $tools_category->manufacturers()->sync($request->manufacturers);
+            $tools_category->metrics()->sync($request->metrics);
 
            // Переадресовываем на index
-            return redirect()->route('equipments_categories.index', ['id' => $equipments_category->id]);
+            return redirect()->route('tools_categories.index', ['id' => $tools_category->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -202,24 +202,24 @@ class EquipmentsCategoryController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $equipments_category = EquipmentsCategory::with([
+        $tools_category = ToolsCategory::with([
             'childs',
-        'equipments'
+        'tools'
         ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $equipments_category);
+        $this->authorize(getmethod(__FUNCTION__), $tools_category);
 
-        $parent_id = $equipments_category->parent_id;
+        $parent_id = $tools_category->parent_id;
 
-        $equipments_category->delete();
+        $tools_category->delete();
 
-        if ($equipments_category) {
+        if ($tools_category) {
 
             // Переадресовываем на index
-            return redirect()->route('equipments_categories.index', ['id' => $parent_id]);
+            return redirect()->route('tools_categories.index', ['id' => $parent_id]);
         } else {
             $result = [
                 'error_status' => 1,

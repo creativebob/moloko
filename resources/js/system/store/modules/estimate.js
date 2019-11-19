@@ -34,6 +34,11 @@ const moduleEstimate = {
 
             this.commit('UPDATE_ESTIMATE');
         },
+        UPDATE_GOODS_ITEMS(state, goodsItems) {
+            state.goodsItems = goodsItems;
+
+            this.commit('UPDATE_ESTIMATE');
+        },
         SET_STOCK_ID(state, stockId) {
             state.stockId = stockId;
         },

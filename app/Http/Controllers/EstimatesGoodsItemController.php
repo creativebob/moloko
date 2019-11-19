@@ -222,7 +222,7 @@ class EstimatesGoodsItemController extends Controller
     {
 
         $estimates_goods_item = EstimatesGoodsItem::with([
-            'product',
+            'product.article',
             'document',
             'reserve'
         ])
@@ -254,7 +254,7 @@ class EstimatesGoodsItemController extends Controller
     {
 
         $estimates_goods_item = EstimatesGoodsItem::with([
-            'product',
+            'product.article',
             'document',
             'reserve'
         ])

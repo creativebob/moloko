@@ -412,26 +412,30 @@ Route::any('/attachments_create_mode', 'СontainerController@ajax_change_create_
 Route::resource('/attachments_stocks', 'AttachmentsStockController');
 
 
-// ------------------------------------- Категории оборудования -------------------------------------------
+// ------------------------------------- Категории инструментов -------------------------------------------
 
 // Текущая добавленная/удаленная категория
-Route::any('/equipments_categories', 'EquipmentsCategoryController@index')->middleware('auth');
-Route::match(['get', 'post'], '/equipments_categories/{id}/edit', 'EquipmentsCategoryController@edit')->middleware('auth');
+Route::any('/tools_categories', 'ToolsCategoryController@index')->middleware('auth');
+Route::match(['get', 'post'], '/tools_categories/{id}/edit', 'ToolsCategoryController@edit')->middleware('auth');
 // Основные методы
-Route::resource('/equipments_categories', 'EquipmentsCategoryController')->middleware('auth');
+Route::resource('/tools_categories', 'ToolsCategoryController')->middleware('auth');
 
-// ---------------------------------- Оборудование-------------------------------------------
+// ---------------------------------- Инструменты-------------------------------------------
 
 // Основные методы
-Route::resource('/equipments', 'EquipmentController');
+Route::resource('/tools', 'ToolController');
 
 // Архивация
-Route::post('/equipments/archive/{id}', 'EquipmentController@archive')->middleware('auth');
+Route::post('/tools/archive/{id}', 'ToolController@archive')->middleware('auth');
 // Фото
-Route::any('/equipment/add_photo', 'EquipmentController@add_photo')->middleware('auth');
-Route::post('/equipment/photos', 'EquipmentController@photos')->middleware('auth');
+Route::any('/tool/add_photo', 'ToolController@add_photo')->middleware('auth');
+Route::post('/tool/photos', 'ToolController@photos')->middleware('auth');
 
-Route::any('/equipments_create_mode', 'EquipmentController@ajax_change_create_mode')->middleware('auth');
+Route::any('/tools_create_mode', 'ToolController@ajax_change_create_mode')->middleware('auth');
+
+// ---------------------------------- Склады инструментов -------------------------------------------
+// Основные методы
+Route::resource('/tools_stocks', 'ToolsStockController');
 
 // ---------------------------------- Помещения -------------------------------------------
 
@@ -646,8 +650,8 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->mi
 
 // Продажа
 Route::patch('/estimates/{id}/saling', 'EstimateController@saling');
-Route::patch('/estimates/{id}/reserving', 'EstimateController@reserving');
-Route::patch('/estimates/{id}/unreserving', 'EstimateController@unreserving');
+Route::post('/estimates/{id}/reserving', 'EstimateController@reserving');
+Route::post('/estimates/{id}/unreserving', 'EstimateController@unreserving');
 
 // Основные методы
 Route::resource('/estimates', 'EstimateController');

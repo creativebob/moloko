@@ -5,9 +5,9 @@ namespace App\Observers;
 use App\Observers\Traits\CategoriesTrait;
 use App\Observers\Traits\Commonable;
 use App\Observers\Traits\ProductsCategoriesTrait;
-use App\EquipmentsCategory as Category;
+use App\ToolsCategory as Category;
 
-class EquipmentsCategoryObserver
+class ToolsCategoryObserver
 {
 
     use Commonable;

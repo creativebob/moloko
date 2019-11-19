@@ -62073,6 +62073,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: {
@@ -62109,6 +62124,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		},
 		showButtonReserved: function showButtonReserved() {
 			return this.estimate.is_reserved === 0;
+		},
+		isReserved: function isReserved() {
+			var result = [];
+			result = this.$store.state.estimate.goodsItems.filter(function (item) {
+				if (item.reserve !== null) {
+					if (item.reserve.count > 0) {
+						return item;
+					}
+				}
+			});
+
+			return result.length > 0;
 		}
 	},
 
@@ -62159,6 +62186,48 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		deleteGoodsItem: function deleteGoodsItem() {
 			this.$store.dispatch('REMOVE_GOODS_ITEM_FROM_ESTIMATE', this.itemGoods.id);
 			$('#delete-estimates_item').foundation('close');
+		},
+		reserveEstimateGoodsItems: function reserveEstimateGoodsItems() {
+			var _this = this;
+
+			axios.post('/admin/estimates/' + this.estimate.id + '/reserving').then(function (response) {
+				console.log(response.data);
+				if (response.data.msg.length > 0) {
+					var msg = '';
+					response.data.msg.forEach(function (item) {
+						if (item !== null) {
+							msg = msg + '- ' + item + '\r\n';
+						}
+					});
+					if (msg !== '') {
+						alert(msg);
+					}
+				}
+				_this.$store.commit('UPDATE_GOODS_ITEMS', response.data.items);
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		unreserveEstimateGoodsItems: function unreserveEstimateGoodsItems() {
+			var _this2 = this;
+
+			axios.post('/admin/estimates/' + this.estimate.id + '/unreserving').then(function (response) {
+				console.log(response.data);
+				if (response.data.msg.length > 0) {
+					var msg = '';
+					response.data.msg.forEach(function (item) {
+						if (item !== null) {
+							msg = msg + '- ' + item + '\r\n';
+						}
+					});
+					if (msg !== '') {
+						alert(msg);
+					}
+				}
+				_this2.$store.commit('UPDATE_GOODS_ITEMS', response.data.items);
+			}).catch(function (error) {
+				console.log(error);
+			});
 		}
 	},
 
@@ -62394,7 +62463,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             axios.post('/admin/estimates_goods_items/' + this.item.id + '/reserving').then(function (response) {
-                alert(response.data.msg);
+                if (response.data.msg !== null) {
+                    alert(response.data.msg);
+                }
                 _this2.$emit('update', response.data.item);
             }).catch(function (error) {
                 console.log(error);
@@ -62404,7 +62475,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this3 = this;
 
             axios.post('/admin/estimates_goods_items/' + this.item.id + '/unreserving').then(function (response) {
-                alert(response.data.msg);
+                if (response.data.msg !== null) {
+                    alert(response.data.msg);
+                }
                 _this3.$emit('update', response.data.item);
             }).catch(function (error) {
                 console.log(error);
@@ -62605,14 +62678,28 @@ var render = function() {
             _vm._v(" "),
             _c("th", { staticClass: "th-delete" }),
             _vm._v(" "),
-            _c("th", { staticClass: "th-action" }, [
-              !_vm.isSaled
-                ? _c("span", {
-                    staticClass: "button-to-reserve button-reserve-all",
-                    attrs: { title: "Зарезервировать все!" }
-                  })
-                : _vm._e()
-            ])
+            _c(
+              "th",
+              { staticClass: "th-action" },
+              [
+                !_vm.isSaled
+                  ? [
+                      _vm.isReserved
+                        ? _c("span", {
+                            staticClass: "button-to-reserve",
+                            attrs: { title: "Снять все с резерва!" },
+                            on: { click: _vm.unreserveEstimateGoodsItems }
+                          })
+                        : _c("span", {
+                            staticClass: "button-to-reserve",
+                            attrs: { title: "Зарезервировать все!" },
+                            on: { click: _vm.reserveEstimateGoodsItems }
+                          })
+                    ]
+                  : _vm._e()
+              ],
+              2
+            )
           ])
         ]),
         _vm._v(" "),
@@ -62655,23 +62742,31 @@ var render = function() {
             _c("td", { attrs: { colspan: "2" } })
           ]),
           _vm._v(" "),
-          _c("tr", [
-            _c("td", { staticClass: "text-right", attrs: { colspan: "4" } }, [
-              _vm._v("Итого со скидкой (" + _vm._s(_vm.discountPercent) + "%):")
-            ]),
-            _vm._v(" "),
-            _c("td", [
-              _vm._v(
-                _vm._s(
-                  _vm._f("level")(
-                    _vm._f("roundToTwo")(_vm.totalItemsAmountWithDiscount)
+          _vm.discountPercent > 0
+            ? _c("tr", [
+                _c(
+                  "td",
+                  { staticClass: "text-right", attrs: { colspan: "4" } },
+                  [
+                    _vm._v(
+                      "Итого со скидкой (" + _vm._s(_vm.discountPercent) + "%):"
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("td", [
+                  _vm._v(
+                    _vm._s(
+                      _vm._f("level")(
+                        _vm._f("roundToTwo")(_vm.totalItemsAmountWithDiscount)
+                      )
+                    )
                   )
-                )
-              )
-            ]),
-            _vm._v(" "),
-            _c("td", { attrs: { colspan: "2" } })
-          ])
+                ]),
+                _vm._v(" "),
+                _c("td", { attrs: { colspan: "2" } })
+              ])
+            : _vm._e()
         ])
       ]
     ),
@@ -65602,6 +65697,11 @@ var moduleEstimate = {
                 return obj.id === item.id;
             });
             Vue.set(state.goodsItems, index, item);
+
+            this.commit('UPDATE_ESTIMATE');
+        },
+        UPDATE_GOODS_ITEMS: function UPDATE_GOODS_ITEMS(state, goodsItems) {
+            state.goodsItems = goodsItems;
 
             this.commit('UPDATE_ESTIMATE');
         },

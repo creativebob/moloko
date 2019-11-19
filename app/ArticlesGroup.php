@@ -130,9 +130,9 @@ class ArticlesGroup extends Model
     }
 
     // Оборудования
-    public function equipments_categories()
+    public function tools_categories()
     {
-        return $this->morphedByMany(EquipmentsCategory::class, 'entity', 'articles_group_entity');
+        return $this->morphedByMany(ToolsCategory::class, 'entity', 'articles_group_entity');
     }
 
     // Помещенй

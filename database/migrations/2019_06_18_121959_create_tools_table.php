@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEquipmentsTable extends Migration
+class CreateToolsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,31 @@ class CreateEquipmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('equipments', function (Blueprint $table) {
+        Schema::create('tools', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->bigInteger('article_id')->nullable()->unsigned()->comment('Id артикула');
             $table->foreign('article_id')->references('id')->on('articles');
 
             $table->bigInteger('category_id')->nullable()->unsigned()->comment('Id категории оборудования');
-            $table->foreign('category_id')->references('id')->on('equipments_categories');
+            $table->foreign('category_id')->references('id')->on('tools_categories');
 
-            $table->boolean('set_status')->default(0)->unsigned()->comment('Статус набора');
+            $table->bigInteger('price_unit_category_id')->nullable()->unsigned()->comment('Категория единицы измерения для определения цены');
+            $table->foreign('price_unit_category_id')->references('id')->on('units_categories');
+
+            $table->bigInteger('price_unit_id')->nullable()->unsigned()->comment('Единица измерения для определения цены');
+            $table->foreign('price_unit_id')->references('id')->on('units');
+
+            $table->boolean('portion_status')->default(0)->unsigned()->comment('Статус порции');
+            $table->string('portion_name')->nullable()->comment('Имя порции');
+            $table->string('portion_abbreviation')->nullable()->comment('Сокращение порции');
+
+            $table->bigInteger('unit_portion_id')->nullable()->unsigned()->comment('Id единицы измерения для порции');
+            $table->foreign('unit_portion_id')->references('id')->on('units');
+
+            $table->integer('portion_count')->nullable()->unsigned()->comment('Количество в порции');
 
             $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
-
             $table->boolean('serial')->default(0)->unsigned()->comment('Серийный номер');
 
 
@@ -55,6 +67,6 @@ class CreateEquipmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('equipments');
+        Schema::dropIfExists('tools');
     }
 }
