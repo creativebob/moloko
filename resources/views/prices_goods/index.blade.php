@@ -156,7 +156,7 @@
         var id = parent.attr('id').split('-')[1];
 
         $.get('/admin/catalogs_goods/' + catalog_id + '/prices_goods/' + id + '/edit', function(html) {
-            $('#prices_goods-' + id + ' .td-price').html(html);
+            $('#prices_goods-' + id + ' .td-price').html(html).find('input[name=price]').focus();
         });
     });
 
