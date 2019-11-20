@@ -135,7 +135,7 @@ class ProductionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Production  $production
+     * @param integer $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -310,6 +310,14 @@ class ProductionController extends Controller
         return response()->json($data);
     }
 
+    /**
+     * Производство наряда
+     *
+     * @param ProductionUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function produced(ProductionUpdateRequest $request, $id)
     {
 
@@ -367,7 +375,7 @@ class ProductionController extends Controller
 
                 set_time_limit(60*10);
 
-                // Если нужна проверка остатка на слкдах
+                // Если нужна проверка остатка на складах
                 if ($request->has('leftover')) {
                     $result = [];
                     $errors = [];

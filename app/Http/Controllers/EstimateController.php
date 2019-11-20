@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\Entity;
 use App\Http\Controllers\Traits\Offable;
 use App\Http\Controllers\Traits\Reservable;
 use App\Http\Controllers\Traits\UserControllerTrait;
@@ -114,6 +115,13 @@ class EstimateController extends Controller
         //
     }
 
+    /**
+     * Продажа сметы
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function saling(Request $request, $id)
     {
 
@@ -147,13 +155,90 @@ class EstimateController extends Controller
 
                 $stock_general = Stock::findOrFail($request->stock_id);
 
+                $leftover = 1;
+                // Если нужна проверка остатка на складах
+                if ($leftover) {
+                    $result = [];
+                    $errors = [];
+
+                    $number = 1;
+
+                    foreach ($estimate->goods_items as $item) {
+
+//                        $entity_document = Entity::where('alias', $item->document->getTable())->first();
+//                        $model_document = 'App\\' . $entity_document->model;
+
+//                        if ($item->document->getTable() == 'estimates') {
+//                            $model_document_item = $model_document.'sGoodsItem';
+//                        } else {
+//                            $model_document_item = $model_document.'sItem';
+//                        }
+
+                        // Проверяем позицию сметы
+                        $stock = $item->stock;
+                        $storage = $item->product->stocks->where('stock_id', $stock->id)->where('filial_id', $stock->filial_id)->where('manufacturer_id', $item->product->article->manufacturer_id)->first();
+//                          dd($storage);
+
+                        if ($storage) {
+
+//                            $entity_storage = Entity::where('alias', $storage->getTable())->first();
+//                            $model_storage = 'App\\' . $entity_storage->model;
+
+                            // проверяем наличие резерва по позиции
+                            if (optional($item->reserve)->count > 0) {
+                                if ($storage->reserve < $item->reserve->count) {
+                                    $dif = $storage->reserve - $item->reserve->count;
+                                    $errors['msg'][] = "Для зарезервированной позиции \"{$item->product->article->name}\" не хватает в резерве склада {$dif} для продажи";
+                                }
+                                $total = $storage->free - ($item->count - $item->reserve->count);
+                            } else {
+                                $total = $storage->free - $item->count;
+                            }
+
+                            if ($total < 0) {
+                                $errors['msg'][] = "Для позиции \"{$item->product->article->name}\" не хватает {$total} {$item->product->article->unit->abbreviation} для продажи";
+                            } else {
+//                                $result[$item->id][] = [
+//                                    'entity' => $item->getTable(),
+//                                    'id' => $item->id,
+//                                    'model' => $model_document_item,
+//                                    'stock_id' => $storage->id,
+//                                    'stock_model' => $model_storage,
+//                                    'price' => $item->price,
+//                                    'amount' => $item->amount,
+//                                    'count' => $item->count
+//                                ];
+                            }
+                        } else {
+                            $errors['msg'][] = "Для позиции {$number} не существует склада для {$item->product->article->name}";
+                        }
+
+                        $number++;
+                    }
+//	        dd($result);
+
+                    if ($errors) {
+//                dd($errors);
+                        return back()
+                            ->withErrors($errors)
+                            ->withInput();
+                    };
+                }
+
                 Log::channel('documents')
                     ->info('========================================== НАЧАЛО ПРОДАЖИ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
                 $estimate->goods_items->load('document');
 
+                // Если нужна проверка остатка на складах
+//                if ($leftover) {
+//
+//                } else {
+//
+//                }
+
+
                 foreach ($estimate->goods_items as $item) {
-//                    $item->load('document');
                     $this->off($item);
                 }
 
@@ -251,6 +336,13 @@ class EstimateController extends Controller
         }
     }
 
+    /**
+     * Снатие резерва со сметы
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function unreserving(Request $request, $id)
     {
 //        dd($request);
@@ -259,7 +351,6 @@ class EstimateController extends Controller
         $estimate = Estimate::with([
             'goods_items' => function ($q) {
                 $q->with([
-                    'price',
                     'product.article',
                     'document',
                     'reserve.history'

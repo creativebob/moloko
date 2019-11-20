@@ -127,70 +127,78 @@ trait Reservable
     }
 
     /**
-     * Отмена резервирования на складе.
+     * Отмена резервирования пункта
      *
      * @param $item
+     * @return string|null
      */
-
     public function unreserve($item)
     {
-
-        Log::channel('documents')
-            ->info('=== ОТМЕНА РЕЗЕРВИРОВАНИЯ ' . $item->getTable() . ' ' . $item->id . ' ===');
-
-        $stock_general = Stock::findOrFail($item->stock_id);
-
-        $product = $item->product;
-
-        $stock = $product->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $product->article->manufacturer_id)->first();
-        if ($stock) {
-
+        if (optional($item->reserve)->count > 0) {
             Log::channel('documents')
-                ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
+                ->info('=== ОТМЕНА РЕЗЕРВИРОВАНИЯ ' . $item->getTable() . ' ' . $item->id . ' ===');
 
+            $stock_general = Stock::findOrFail($item->stock_id);
+
+            $product = $item->product;
+
+            // Ищем хранилище
+            $storage = $product->stocks->where('stock_id', $stock_general->id)->where('filial_id', $stock_general->filial_id)->where('manufacturer_id', $product->article->manufacturer_id)->first();
+            if ($storage) {
+
+                Log::channel('documents')
+                    ->info("Существует хранилище {$storage->getTable()} c id: {$storage->id}");
+
+                Log::channel('documents')
+                    ->info('Значения count: ' . $storage->count . ', reserve: ' . $storage->reserve . ', free: ' . $storage->free);
+
+                $reserve_count = $item->reserve->count;
+
+                $storage->free += $reserve_count;
+                $storage->reserve -= $reserve_count;
+                $storage->save();
+
+
+                Log::channel('documents')
+                    ->info('Обновлены значения count: ' . $storage->count . ', reserve: ' . $storage->reserve . ', free: ' . $storage->free);
+
+                $result = $item->reserve->update([
+                    'count' => 0
+                ]);
+
+                Log::channel('documents')
+                    ->info('Ставим количество 0 в атуальынй резерв с id: ' . $item->reserve->id . ', результат ' . $result);
+
+
+                $result = ReservesHistory::where([
+                    'reserve_id' => $item->reserve->id,
+                    'archive' => false
+                ])->update([
+                    'archive' => true
+                ]);
+
+                Log::channel('documents')
+                    ->info('Ставим всей истории резерва архив, результат ' . $result);
+
+                $item->update([
+                    'is_reserved' => 0
+                ]);
+
+                $result = null;
+
+                Log::channel('documents')
+                    ->info('=== КОНЕЦ ОТМЕНЫ РЕЗЕРВИРОВАНИЯ ===
+                    ');
+            }  else {
+                Log::channel('documents')
+                    ->info('Склада нет, негде ставить в резерв');
+                $result = "По позиции \"{$item->product->article->name}\" не существует склада, невозможно снять с резерва";
+            }
+        } else {
             Log::channel('documents')
-                ->info('Значения count: ' . $stock->count . ', reserve: ' . $stock->reserve . ', free: ' . $stock->free);
-
-            $reserve_count = $item->reserve->count;
-
-            $stock->free += $reserve_count;
-            $stock->reserve -= $reserve_count;
-            $stock->save();
-
-            Log::channel('documents')
-                ->info('Обновлены значения count: ' . $stock->count . ', reserve: ' . $stock->reserve . ', free: ' . $stock->free);
-
-            $result = $item->reserve->update([
-                'count' => 0
-            ]);
-
-            Log::channel('documents')
-                ->info('Ставим количество 0 в атуальынй резерв с id: ' . $item->reserve->id . ', результат ' . $result);
-
-
-            $result = ReservesHistory::where([
-                'reserve_id' => $item->reserve->id,
-                'archive' => false
-            ])->update([
-                'archive' => true
-            ]);
-
-            Log::channel('documents')
-                ->info('Ставим всей истории резерва архив, результат ' . $result);
-
-            $item->update([
-                'is_reserved' => 0
-            ]);
-
+                ->info("=== ПО ПУНКТУ {$item->getTable()} {$item->id} РЕЗЕРВА НЕТ ===
+                    ");
             $result = null;
-
-            Log::channel('documents')
-                ->info('=== КОНЕЦ ОТМЕНЫ РЕЗЕРВИРОВАНИЯ ===
-                ');
-        }  else {
-            Log::channel('documents')
-                ->info('Склада нет, негде ставить в резерв');
-            $result = "По позиции \"{$item->product->article->name}\" не существует склада, невозможно снять с резерва";
         }
 
         return $result;

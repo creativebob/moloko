@@ -65034,6 +65034,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         getPrices: function getPrices(id) {
             this.$emit('get', id);
+        },
+        getItems: function getItems(id) {
+            this.$emit('get', id);
         }
     }
 });
@@ -65066,8 +65069,12 @@ var render = function() {
           _vm._l(_vm.item.childrens, function(children) {
             return _c("childrens-component", {
               key: children.id,
-              attrs: { category: children },
-              on: { get: _vm.getItems }
+              attrs: { item: children },
+              on: {
+                get: function($event) {
+                  return _vm.getItems(children.id)
+                }
+              }
             })
           }),
           1
