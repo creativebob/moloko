@@ -61,6 +61,7 @@ class Menu extends Model
 
         'navigation_id',
         'page_id',
+        'filial_id',
 
         'display',
         'system',

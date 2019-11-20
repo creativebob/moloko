@@ -15,6 +15,9 @@ class CreateMenusTable extends Migration
             $table->bigInteger('navigation_id')->unsigned()->nullable()->comment('Id навигации');
             $table->foreign('navigation_id')->references('id')->on('navigations');
 
+            $table->bigInteger('filial_id')->nullable()->unsigned()->comment('Id филиала');
+            $table->foreign('filial_id')->references('id')->on('departments');
+
             $table->string('name')->nullable()->comment('Название');
             $table->string('slug')->nullable()->index()->comment('Слаг');
             $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');

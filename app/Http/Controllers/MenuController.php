@@ -19,7 +19,7 @@ class MenuController extends Controller
         $this->class = Menu::class;
         $this->model = 'App\Menu';
         $this->entity_alias = with(new $this->class)->getTable();
-        $this->entity_dependence = false;
+        $this->entity_dependence = true;
         $this->type = 'modal';
     }
 
@@ -127,6 +127,8 @@ class MenuController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $menu);
+
+
 
         return view('menus.edit', [
             'menu' => $menu,

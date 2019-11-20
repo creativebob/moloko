@@ -69,6 +69,10 @@
 						{{ Form::checkbox('text_hidden', 1, null, ['id' => 'text_hidden']) }}
 						<label for="text_hidden"><span>Показывать только иконку (Текст ссылки скрыть)</span></label>
 					</div>
+
+					<label>Филиал
+						{!! Form::select('filial_id', $filials->pluck('name', 'id'), $menu->filial_id, ['placeholder' => 'Отображать везде']) !!}
+					</label>
 				</div>
 			</div>
 		</div>
