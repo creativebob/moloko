@@ -34,11 +34,11 @@ class CitySearchComposer
 
         if (is_null($location)) {
             if (\Auth::user()->location) {
+                $city = \Auth::user()->location->city;
+            } else {
                 $city = collect((object) [
                     'id' => null
                 ]);
-            } else {
-                $city = \Auth::user()->location->city;
             }
         } else {
             $city = $location->city;
