@@ -9,9 +9,9 @@
         >
             <childrens-component
                     v-for="children in item.childrens"
-                    :category="children"
+                    :item="children"
                     :key="children.id"
-                    @get="getItems"
+                    @get="getItems(children.id)"
             ></childrens-component>
         </ul>
     </li>
@@ -24,7 +24,10 @@
             item: Object,
         },
         methods: {
-            getPrices: function (id) {
+            getPrices(id) {
+                this.$emit('get', id);
+            },
+            getItems(id) {
                 this.$emit('get', id);
             }
         }
