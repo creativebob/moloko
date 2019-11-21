@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Action;
+use App\ActionEntity;
 use App\AttachmentsStock;
 use App\Consignment;
 use App\ContainersStock;
 use App\EstimatesGoodsItem;
 use App\GoodsStock;
+use App\Menu;
 use App\Observers\Traits\CategoriesTrait;
 use App\Off;
+use App\Page;
 use App\Production;
 use App\RawsStock;
+use App\Right;
+use DB;
 use Illuminate\Http\Request;
 
 use App\Entity;
@@ -131,34 +137,202 @@ class AppController extends Controller
 
     public function parser()
     {
-        $raws_stocks = RawsStock::get();
-        foreach ($raws_stocks as $raws_stock) {
-            $raws_stock->free = ($raws_stock->count > 0) ? $raws_stock->count : 0;
-            $raws_stock->save();
-        }
-        echo ('Сырье');
+        Page::insert([
+            // Вложения
+            [
+                'name' => 'Склады инструментов',
+                'site_id' => 1,
+                'title' => 'Склады инструментов',
+                'description' => 'Склады инструментов',
+                'alias' => 'tools_stocks',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+        ]);
 
-        $goods_stocks = GoodsStock::get();
-        foreach ($goods_stocks as $goods_stock) {
-            $goods_stock->free = ($goods_stock->count > 0) ? $goods_stock->count : 0;
-            $goods_stock->save();
-        }
-        echo ('Товары');
+        echo "Создана страница Склады инструментов<br>";
 
-        $containers_stocks = ContainersStock::get();
-        foreach ($containers_stocks as $containers_stock) {
-            $containers_stock->free = ($containers_stock->count > 0) ? $containers_stock->count : 0;
-            $containers_stock->save();
-        }
-        echo ('Упаковки');
+        Menu::insert([
+            //  Вложения
+            //  Инструменты
+            [
+                'name' => 'Инструменты',
+                'icon' => 'icon-tool',
+                'alias' => null,
+                'tag' => 'tools',
+                'parent_id' => null,
+                'page_id' => null,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 14,
+            ],
 
-        $attachments_stocks = AttachmentsStock::get();
-        foreach ($attachments_stocks as $attachments_stock) {
-            $attachments_stock->free = ($attachments_stock->count > 0) ? $attachments_stock->count : 0;
-            $attachments_stock->save();
-        }
-        echo ('Вложения');
+            //  Помещения
+            [
+                'name' => 'Помещения',
+                'icon' => 'icon-room',
+                'alias' => null,
+                'tag' => 'rooms',
+                'parent_id' => null,
+                'page_id' => null,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 15,
+            ],
 
+        ]);
+
+        echo "Добавлены 2 главные категори меню<br>";
+
+
+        $pages = Page::get();
+        $menus = Menu::get();
+
+        $menu = Menu::where([
+            'navigation_id' => 1,
+            'tag' => 'tools'
+        ])->first();
+        $menu->update([
+            'parent_id' => $menus->where('icon', 'icon-tool')->first()->id,
+        ]);
+
+        $menu = Menu::where([
+            'navigation_id' => 1,
+            'tag' => 'tools_categories'
+        ])->first();
+        $menu->update([
+            'parent_id' => $menus->where('icon', 'icon-tool')->first()->id,
+        ]);
+
+        echo "Перенесены инструменты<br>";
+
+        Menu::insert([
+            [
+                'name' => 'Склады инструментов',
+                'icon' => null,
+                'alias' => 'admin/tools_stocks',
+                'tag' => 'tools_stocks',
+                'parent_id' => $menus->where('icon', 'icon-tool')->first()->id,
+                'page_id' => $pages->where('alias', 'tools_stocks')->first()->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 1,
+            ],
+        ]);
+
+        echo "Добавлены слады инструментов<br>";
+
+        $menu = Menu::where([
+            'navigation_id' => 1,
+            'tag' => 'rooms'
+        ])->first();
+        $menu->update([
+            'parent_id' => $menus->where('icon', 'icon-room')->first()->id,
+        ]);
+
+        $menu = Menu::where([
+            'navigation_id' => 1,
+            'tag' => 'rooms_categories'
+        ])->first();
+        $menu->update([
+            'parent_id' => $menus->where('icon', 'icon-room')->first()->id,
+        ]);
+
+        $menu = Menu::where([
+            'navigation_id' => 1,
+            'tag' => 'stocks'
+        ])->first();
+        $menu->update([
+            'parent_id' => $menus->where('icon', 'icon-room')->first()->id,
+        ]);
+
+        echo "Перенесены комнаты и склады<br>";
+
+
+        Entity::insert([
+            [
+                'name' => 'Склад инструментов',
+                'alias' => 'tools_stocks',
+                'model' => 'ToolsStock',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('tools')->first(['id'])->id,
+                'view_path' => 'attachments_stocks',
+                'page_id' => $pages->firstWhere('alias', 'tools_stocks')->id,
+            ],
+        ]);
+
+        echo "СОздана сущность складов инструментов<br>";
+
+
+        // Наваливание прав
+
+        // Добавленным
+        $entities = Entity::whereIn('alias', [
+            'tools_stocks',
+        ])
+            ->get();
+        // Всем
+//        $entities = Entity::get();
+
+        foreach($entities as $entity) {
+            // Генерируем права
+            $actions = Action::get();
+            $mass = [];
+
+            foreach($actions as $action){
+                $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+            };
+            DB::table('action_entity')->insert($mass);
+
+            $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
+            $mass = [];
+
+            foreach($actionentities as $actionentity){
+
+                $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+
+                $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+            };
+
+            DB::table('rights')->insert($mass);
+
+            $actionentities = $actionentities->pluck('id')->toArray();
+
+            // Получаем все существующие разрешения (allow)
+            $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+
+            $mass = [];
+            // Генерируем права на полный доступ
+            foreach($rights as $right){
+                $mass[] = ['right_id' => $right->id, 'role_id' => 1, 'system' => 1];
+            };
+
+            DB::table('right_role')->insert($mass);
+
+            $mass = null;
+            $mass = [];
+            foreach($rights as $right){
+                $mass[] = ['right_id' => $right->id, 'role_id' => 2, 'system' => 1];
+            };
+
+            DB::table('right_role')->insert($mass);
+        }
+
+        echo "Навалены права<br>";
     }
 
 }

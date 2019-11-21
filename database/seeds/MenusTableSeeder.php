@@ -128,7 +128,7 @@ class MenusTableSeeder extends Seeder
                 'sort' => null,
             ],
 
-            //  Помещения
+            //  Инструменты
             [
                 'name' => 'Инструменты',
                 'icon' => 'icon-tool',
