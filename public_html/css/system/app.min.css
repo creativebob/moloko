@@ -9145,6 +9145,14 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   background-position: -96px -1410px;
 }
 
+.sidebar .icon-tool {
+  background-position: -96px -1442px;
+}
+
+.sidebar .icon-room {
+  background-position: -96px -1474px;
+}
+
 .sidebar .icon-arrow-forward {
   background-position: -160px -288px;
 }
@@ -9215,6 +9223,14 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
 
 .sidebar .nav > ul > li > .active .icon-attachment, .sidebar .gen-menu-bot > li > .active .icon-attachment {
   background-position: -160px -1410px;
+}
+
+.sidebar .nav > ul > li > .active .icon-tool, .sidebar .gen-menu-bot > li > .active .icon-tool {
+  background-position: -160px -1442px;
+}
+
+.sidebar .nav > ul > li > .active .icon-room, .sidebar .gen-menu-bot > li > .active .icon-room {
+  background-position: -160px -1474px;
 }
 
 .sidebar .nav::-webkit-scrollbar {
