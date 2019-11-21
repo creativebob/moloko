@@ -236,7 +236,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.lists.departments', DepartmentsComposer::class);
 
         view()->composer([
-            'sites.filials_list'
+            'sites.filials_list',
+            'menus.form'
         ], FilialsComposer::class);
         // view()->composer('includes.selects.sectors', SectorsComposer::class);
 

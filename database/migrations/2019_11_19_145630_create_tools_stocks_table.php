@@ -17,13 +17,13 @@ class CreateToolsStocksTable extends Migration
             $table->bigIncrements('id');
 
             $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id отдела');
-            $table->foreign('filial_id')->references('id')->on('departments');
+//            $table->foreign('filial_id')->references('id')->on('departments');
 
             $table->bigInteger('stock_id')->nullable()->unsigned()->comment('Id склада');
-            $table->foreign('stock_id')->references('id')->on('stocks');
+//            $table->foreign('stock_id')->references('id')->on('stocks');
 
             $table->bigInteger('cmv_id')->nullable()->unsigned()->comment('Id инструмента');
-            $table->foreign('cmv_id')->references('id')->on('tools');
+//            $table->foreign('cmv_id')->references('id')->on('tools');
 
             $table->decimal('count', 12,4)->default(0)->comment('Количество');
             $table->decimal('reserve', 12,4)->default(0)->comment('Резерв');
@@ -35,12 +35,12 @@ class CreateToolsStocksTable extends Migration
             $table->string('serial')->nullable()->comment('Серийный номер');
 
             $table->bigInteger('manufacturer_id')->nullable()->unsigned()->comment('Id производителя');
-            $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
+//            $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
 
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
-            $table->foreign('company_id')->references('id')->on('companies');
+//            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->boolean('display')->default(1)->comment('Отображение на сайте');
@@ -48,7 +48,7 @@ class CreateToolsStocksTable extends Migration
             $table->boolean('moderation')->default(0)->comment('Модерация');
 
             $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-            $table->foreign('author_id')->references('id')->on('users');
+//            $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 

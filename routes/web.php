@@ -20,7 +20,7 @@ Auth::routes();
 // Вход в панель управления
 Route::get('/', 'AppController@enter');
 
-Route::any('/stocks_parser', 'AppController@parser');
+Route::any('/update_parser', 'AppController@parser');
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');

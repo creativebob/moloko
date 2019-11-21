@@ -11,7 +11,7 @@
                     v-for="children in item.childrens"
                     :item="children"
                     :key="children.id"
-                    @get="getItems(children.id)"
+                    @get="getPrices"
             ></childrens-component>
         </ul>
     </li>
@@ -27,9 +27,6 @@
             getPrices(id) {
                 this.$emit('get', id);
             },
-            getItems(id) {
-                this.$emit('get', id);
-            }
         }
     }
 </script>

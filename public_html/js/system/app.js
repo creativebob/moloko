@@ -64872,19 +64872,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -65034,9 +65021,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         getPrices: function getPrices(id) {
             this.$emit('get', id);
-        },
-        getItems: function getItems(id) {
-            this.$emit('get', id);
         }
     }
 });
@@ -65070,11 +65054,7 @@ var render = function() {
             return _c("childrens-component", {
               key: children.id,
               attrs: { item: children },
-              on: {
-                get: function($event) {
-                  return _vm.getItems(children.id)
-                }
-              }
+              on: { get: _vm.getPrices }
             })
           }),
           1
@@ -65116,37 +65096,14 @@ var render = function() {
                   '<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
               }
             },
-            _vm._l(_vm.catalogGoodsItemsList, function(item) {
-              return _c("li", { staticClass: "item-catalog" }, [
-                _c(
-                  "a",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.getPrices(item.id)
-                      }
-                    }
-                  },
-                  [_vm._v(_vm._s(item.name))]
-                ),
-                _vm._v(" "),
-                item.childrens && item.childrens.length
-                  ? _c(
-                      "ul",
-                      { staticClass: "menu vertical nested" },
-                      _vm._l(item.childrens, function(children) {
-                        return _c("childrens-component", {
-                          key: children.id,
-                          attrs: { item: children },
-                          on: { get: _vm.getPrices }
-                        })
-                      }),
-                      1
-                    )
-                  : _vm._e()
-              ])
+            _vm._l(_vm.catalogGoodsItemsList, function(catalogGoodsItem) {
+              return _c("childrens-component", {
+                key: catalogGoodsItem.id,
+                attrs: { item: catalogGoodsItem },
+                on: { get: _vm.getPrices }
+              })
             }),
-            0
+            1
           )
         ])
       ])

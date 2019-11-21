@@ -111,7 +111,7 @@ class CatalogsGoodsItemController extends Controller
         if ($catalogs_goods_item) {
 
             // Переадресовываем на index
-            return redirect()->route('catalogs_goods_items.index', ['catalog_id' => $catalog_id, $catalogs_goods_item->id]);
+            return redirect()->route('catalogs_goods_items.index', [$catalog_id, 'id' => $catalogs_goods_item->id]);
 
         } else {
 
@@ -168,7 +168,7 @@ class CatalogsGoodsItemController extends Controller
         if ($result) {
 
             // Переадресовываем на index
-            return redirect()->route('catalogs_goods_items.index', ['catalog_id' => $catalog_id, 'id' => $catalogs_goods_item->id]);
+            return redirect()->route('catalogs_goods_items.index', [$catalog_id, 'id' => $catalogs_goods_item->id]);
         } else {
             $result = [
                 'error_status' => 1,

@@ -19,27 +19,14 @@
                             v-drilldown
                             data-back-button='<li class="js-drilldown-back"><a tabindex="0">Назад</a></li>'
                     >
-                        <li
-                                v-for="item in catalogGoodsItemsList"
-                                class="item-catalog"
-                        >
-                            <a
-                                    @click="getPrices(item.id)"
-                            >{{ item.name }}</a>
 
-                            <ul
-                                    v-if="item.childrens && item.childrens.length"
-                                    class="menu vertical nested"
-                            >
-                                <childrens-component
-                                        v-for="children in item.childrens"
-                                        :item="children"
-                                        :key="children.id"
-                                        @get="getPrices"
-                                ></childrens-component>
+                        <childrens-component
+                                v-for="catalogGoodsItem in catalogGoodsItemsList"
+                                :item="catalogGoodsItem"
+                                :key="catalogGoodsItem.id"
+                                @get="getPrices"
+                        ></childrens-component>
 
-                            </ul>
-                        </li>
                     </ul>
 
                 </div>
