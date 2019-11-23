@@ -27,12 +27,14 @@ use App\Policies\PricesGoodsPolicy;
 use App\Policies\ProcessesGroupPolicy;
 use App\Policies\ConsignmentPolicy;
 use App\Policies\ProductionPolicy;
+use App\Policies\PromotionPolicy;
 use App\Policies\RawsStockPolicy;
 use App\Policies\ToolsStockPolicy;
 use App\PricesGoods;
 use App\ProcessesGroup;
 use App\Consignment;
 use App\Production;
+use App\Promotion;
 use App\RawsStock;
 use App\ToolsStock;
 use App\User;
@@ -328,6 +330,7 @@ class AuthServiceProvider extends ServiceProvider
         Navigation::class => NavigationPolicy::class,
         Page::class => PagePolicy::class,
         Site::class => SitePolicy::class,
+        Promotion::class => PromotionPolicy::class,
 
 
         Rubricator::class => RubricatorPolicy::class,

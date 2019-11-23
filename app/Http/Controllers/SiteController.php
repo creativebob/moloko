@@ -39,12 +39,12 @@ class SiteController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
 
-        $sites = Site::with(
+        $sites = Site::with([
             'author',
             'company',
             'pages',
             'navigations'
-        )
+        ])
         // ->withCount('pages')
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -86,7 +86,7 @@ class SiteController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         return view('sites.create', [
-            'site' => new $this->class,
+            'site' => Site::make(),
             'page_info' => pageInfo($this->entity_alias),
         ]);
     }
@@ -99,7 +99,7 @@ class SiteController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $data = $request->input();
-        $site = (new Site())->create($data);
+        $site = Site::create($data);
 
         if ($site) {
             return redirect()

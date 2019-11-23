@@ -1157,6 +1157,11 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
     Route::resource('prices_services', 'PricesServiceController');
 });
 
+// --------------------------- Продвижение -------------------------------------
+
+// Основные методы
+Route::resource('/promotions', 'PromotionController');
+
 
 
 //Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');

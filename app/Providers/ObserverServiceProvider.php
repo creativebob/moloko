@@ -60,6 +60,7 @@ use App\Observers\PricesServicesHistoryObserver;
 use App\Observers\ProcessesGroupObserver;
 use App\Observers\ProductionObserver;
 use App\Observers\ProductionsItemObserver;
+use App\Observers\PromotionObserver;
 use App\Observers\RawsStockObserver;
 use App\Observers\ReceiptObserver;
 use App\Observers\ReserveObserver;
@@ -79,6 +80,7 @@ use App\PricesServicesHistory;
 use App\ProcessesGroup;
 use App\Production;
 use App\ProductionsItem;
+use App\Promotion;
 use App\RawsStock;
 use App\Receipt;
 use App\Reserve;
@@ -223,6 +225,7 @@ class ObserverServiceProvider extends ServiceProvider
         Site::observe(SiteObserver::class);
         Page::observe(PageObserver::class);
         Menu::observe(MenuObserver::class);
+        Promotion::observe(PromotionObserver::class);
 
         // Плагины
         Plugin::observe(PluginObserver::class);

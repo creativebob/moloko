@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateToolsStocksTable extends Migration
+class CreatePromotionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,30 +13,15 @@ class CreateToolsStocksTable extends Migration
      */
     public function up()
     {
-        Schema::create('tools_stocks', function (Blueprint $table) {
+        Schema::create('promotions', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id отдела');
-            $table->foreign('filial_id')->references('id')->on('departments');
+            $table->string('name')->index()->comment('Название');
 
-            $table->bigInteger('stock_id')->nullable()->unsigned()->comment('Id склада');
-            $table->foreign('stock_id')->references('id')->on('stocks');
+            $table->text('description')->nullable()->comment('Описание');
 
-            $table->bigInteger('cmv_id')->nullable()->unsigned()->comment('Id инструмента');
-            $table->foreign('cmv_id')->references('id')->on('tools');
-
-            $table->decimal('count', 12,4)->default(0)->comment('Количество');
-            $table->decimal('reserve', 12,4)->default(0)->comment('Резерв');
-            $table->decimal('free', 12,4)->default(0)->comment('Свободно');
-
-            $table->decimal('weight', 9, 4)->default(0)->comment('Вес (кг)');
-            $table->decimal('volume', 15, 8)->default(0)->comment('Обьем (м3)');
-
-            $table->string('serial')->nullable()->comment('Серийный номер');
-
-            $table->bigInteger('manufacturer_id')->nullable()->unsigned()->comment('Id производителя');
-            $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
-
+            $table->date('begin_date')->index()->comment('Дата начала');
+            $table->date('end_date')->nullable()->index()->comment('Дата окончания');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
@@ -64,6 +49,6 @@ class CreateToolsStocksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tools_stocks');
+        Schema::dropIfExists('promotions');
     }
 }

@@ -910,6 +910,18 @@ class PagesTableSeeder extends Seeder
                 'display' => true,
             ],
 
+            [
+                'name' => 'Продвижения',
+                'site_id' => 1,
+                'title' => 'Продвижения',
+                'description' => 'Продвижения',
+                'alias' => 'promotions',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+
         ]);
 }
 }
