@@ -148,7 +148,7 @@
                     </td>
 
                     <td class="td-cost" title="Себестоимость">
-                        <span>За единицу: </span><span>{{ num_format($item->cost_unit, 2) ?? '' }}</span><br>
+                        <span>{{ num_format($item->cost_unit, 2) ?? '' }}</span><br>
                         @if($item->portion_status)<span>За порцию: </span><span>{{ num_format($item->cost_portion, 2) ?? '' }}</span>@endif
                     </td>
 
@@ -197,7 +197,7 @@
                     @include('includes.control.table_td', ['item' => $item, 'replicate' => true])
 
                     <td class="td-archive">
-                        <a class="button" href="/admin/draft_article/{{ $item->getTable() }}/{{ $item->id }}">В черновик</a>
+                        <a class="button tiny" href="/admin/draft_article/{{ $item->getTable() }}/{{ $item->id }}">Ч</a>
                         @if ($item->system != 1)
                             @can('delete', $item)
                                 <a class="icon-delete sprite" data-open="item-archive"></a>
