@@ -73,6 +73,10 @@
         </div> --}}
 
     </td>
+{{--    <price-goods-price-component :price="{{ $cur_prices_goods->price }}"></price-goods-price-component>--}}
+    <td class="td-point">
+        @include('prices_goods.price_point')
+    </td>
     <td class="td-price-status">
         <button type="button" class="hollow tiny button price_goods-status
             @if($cur_prices_goods->status == 1) show @else hide @endif

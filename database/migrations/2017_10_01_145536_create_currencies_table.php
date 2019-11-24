@@ -21,8 +21,6 @@ class CreateCurrenciesTable extends Migration
             $table->string('short')->nullable()->comment('Короткое');
             $table->string('symbol')->nullable()->comment('Символ');
 
-            $table->decimal('points', 12, 4)->default(0)->comment('ВНутренняя валюта');
-
 
             // Общие настройки
 //            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

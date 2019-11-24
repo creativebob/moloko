@@ -185,25 +185,42 @@ class PricesGoodsController extends Controller
      */
     public function update(Request $request, $catalog_id, $id)
     {
-        $cur_prices_goods = PricesGoods::findOrFail($id);
-        $price = $request->price;
+        $cur_price_goods = PricesGoods::findOrFail($id);
 
-        if ($cur_prices_goods->price == $price) {
-            return view('prices_goods.price', ['cur_prices_goods' => $cur_prices_goods]);
-        } else {
-            $new_cur_prices_goods = $cur_prices_goods->replicate();
+        If ($request->price) {
 
-            $cur_prices_goods->update([
-                'archive' => true,
-            ]);
-            // dd($new_price);
+            $price = $request->price;
+            if ($cur_price_goods->price == $price) {
+                return view('prices_goods.price', ['cur_prices_goods' => $cur_price_goods]);
+            } else {
+                if ($cur_price_goods->price != $price) {
 
-            $new_cur_prices_goods->price = $price;
-            $new_cur_prices_goods->save();
+                    $cur_price_goods->actual_price->update([
+                        'end_date' => now(),
+                    ]);
 
-            // dd($price);
-            return view('prices_goods.price', ['cur_prices_goods' => $new_cur_prices_goods]);
+                    $cur_price_goods->history()->create([
+                        'price' => $price,
+                    ]);
+
+                    $cur_price_goods->update([
+                        'price' => $price,
+                    ]);
+                }
+
+                // dd($price);
+                return view('prices_goods.price', ['cur_prices_goods' => $cur_price_goods]);
+            }
         }
+
+        if ($request->point) {
+            $point = $request->point;
+            $cur_price_goods->update([
+                'point' => $point,
+            ]);
+            return view('prices_goods.price', ['cur_prices_goods' => $cur_price_goods]);
+        }
+
     }
 
     /**

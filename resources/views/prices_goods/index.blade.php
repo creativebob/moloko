@@ -59,6 +59,7 @@
                     <th class="td-weight">Вес</th>  
                     <th class="td-catalogs_item">Раздел прайса</th>
                     <th class="td-price">Цена</th>
+                    <th class="td-point">Внут. вал</th>
                     <th class="td-price-status">Статус</th>
                     <th class="td-hit">Хит</th>
                     <th class="td-control"></th>
@@ -193,6 +194,51 @@
         $.get('/admin/catalogs_goods/' + catalog_id + '/get_prices_goods/' + id, function(html) {
             $('#prices_goods-' + id + ' .td-price').html(html);
         });
+    });
+
+    /**
+     * Работа со столбцом point
+     */
+    // При клике на внут. вал. подставляем инпут
+    $(document).on('click', '#content .td-point span', function(event) {
+        event.preventDefault();
+
+        var parent = $(this).closest('.td-point');
+        parent.find('span').hide();
+        parent.find('input').show().focus();
+
+    });
+
+    // При изменении внут. вал. ловим enter
+    $(document).on('keydown', '#content .td-point [name=point]', function(event) {
+
+        var parent = $(this).closest('.item');
+        var id = parent.attr('id').split('-')[1];
+
+        // если нажали Enter, то true
+        if ((event.keyCode == 13) && (event.shiftKey == false)) {
+            event.preventDefault();
+            // event.stopPropagation();
+            $.ajax({
+                url: '/admin/catalogs_goods/' + catalog_id + '/prices_goods/' + id,
+                type: "PATCH",
+                data: {
+                    point: $(this).val()
+                },
+                success: function(html){
+                    $('#prices_goods-' + id).replaceWith(html);
+                }
+            });
+        };
+    });
+
+    // При потере фокуса при редактировании возвращаем обратно
+    $(document).on('focusout', '.td-point input[name=point]', function(event) {
+        event.preventDefault();
+
+        var parent = $(this).closest('.td-point');
+        parent.find('span').show();
+        parent.find('input').hide();
     });
 
     // Удаление ajax

@@ -1,1 +1,1 @@
-{!! Form::number('price', $price, null, ['autofocus' => true]) !!}
+{!! Form::number('price', $price) !!}

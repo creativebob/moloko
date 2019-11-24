@@ -52,6 +52,7 @@ class PricesService extends Model
         'archive',
 
         'currency_id',
+        'point',
 
         'display',
         'system',

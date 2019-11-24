@@ -36,6 +36,8 @@ class CreatePricesGoodsTable extends Migration
             $table->bigInteger('currency_id')->nullable()->unsigned()->comment('Id валюты');
             $table->foreign('currency_id')->references('id')->on('currencies');
 
+            $table->decimal('point', 12, 4)->default(0)->comment('Внутренняя валюта');
+
             $table->boolean('archive')->default(0)->unsigned()->comment('Архив');
 	
 	        $table->boolean('status')->default(0)->comment('Статус');

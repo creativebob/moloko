@@ -54,6 +54,7 @@
 			'archive',
 
             'currency_id',
+            'point',
 			
 			'status',
             'is_hit',
