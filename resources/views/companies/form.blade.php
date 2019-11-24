@@ -359,11 +359,21 @@
                     </div>
 
                     <div class="small-12 large-6 cell">
+                        <label>Название компании (короткий вариант)
+                            @include('includes.inputs.name', ['value'=>$company->name_short, 'name'=>'name_short'])
+                        </label>
+                    </div>
+
+                    <div class="small-12 large-6 cell">
                         <label>Алиас
                             @include('includes.inputs.alias', ['value'=>$company->alias, 'name'=>'alias'])
                         </label>
                     </div>
-                    <div class="small-12 large-6 cell">
+
+                    <div class="small-12 cell">
+                        <label>Слоган
+                            @include('includes.inputs.name', ['name' => 'slogan'])
+                        </label>
                     </div>
 
                     <div class="small-12 cell checkbox">

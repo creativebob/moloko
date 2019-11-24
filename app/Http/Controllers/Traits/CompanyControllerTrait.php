@@ -51,6 +51,8 @@ trait CompanyControllerTrait
             }
 
             $company->prename = $request->prename;
+            $company->slogan = $request->slogan;
+            $company->name_short = $request->name_short; 
             $company->designation = $request->designation;
             $company->email = $request->email;
             $company->inn = $request->inn;
@@ -174,6 +176,8 @@ trait CompanyControllerTrait
         }
 
         $company->prename = $request->prename;
+        $company->slogan = $request->slogan;
+        $company->name_short = $request->name_short; 
         $company->designation = $request->designation;
         $company->email = $request->email;
         $company->inn = $request->inn;

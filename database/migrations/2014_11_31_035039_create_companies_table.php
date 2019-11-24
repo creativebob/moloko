@@ -13,7 +13,9 @@ class CreateCompaniesTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name')->nullable()->index()->comment('Имя компании');
+            $table->string('name_short')->nullable()->index()->comment('Короткое имя компании');
             $table->string('prename')->nullable()->index()->comment('Статус компании');
+            $table->string('slogan')->nullable()->comment('Слоган');
             $table->string('designation')->nullable()->index()->comment('Коммерческое обозначение');
 
             $table->string('alias', 120)->unique()->nullable()->index()->comment('Алиас компании');
