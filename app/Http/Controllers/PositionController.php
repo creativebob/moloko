@@ -251,7 +251,10 @@ class PositionController extends Controller
         ->get();
 
         // Список оповещений для должности
-        $notifications = Notification::get();
+        $notifications = Notification::whereHas('sites', function($q) {
+            $q->where('sites.id', 1);
+        })
+        ->get();
 
         // Список обязанностей для должности
         $charges = Charge::get();

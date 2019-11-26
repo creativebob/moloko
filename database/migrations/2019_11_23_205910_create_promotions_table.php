@@ -20,8 +20,28 @@ class CreatePromotionsTable extends Migration
 
             $table->text('description')->nullable()->comment('Описание');
 
+            $table->string('link')->comment('Ссылка');
+
             $table->date('begin_date')->index()->comment('Дата начала');
             $table->date('end_date')->nullable()->index()->comment('Дата окончания');
+
+            $table->bigInteger('tiny_id')->nullable()->unsigned()->comment('tiny');
+            $table->foreign('tiny_id')->references('id')->on('photos');
+
+            $table->bigInteger('small_id')->nullable()->unsigned()->comment('small');
+            $table->foreign('small_id')->references('id')->on('photos');
+
+            $table->bigInteger('medium_id')->nullable()->unsigned()->comment('medium');
+            $table->foreign('medium_id')->references('id')->on('photos');
+
+            $table->bigInteger('large_id')->nullable()->unsigned()->comment('large');
+            $table->foreign('large_id')->references('id')->on('photos');
+
+            $table->bigInteger('large_x_id')->nullable()->unsigned()->comment('large_x');
+            $table->foreign('large_x_id')->references('id')->on('photos');
+
+            $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id филиала');
+            $table->foreign('filial_id')->references('id')->on('departments');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

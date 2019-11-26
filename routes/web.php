@@ -1158,9 +1158,13 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
 });
 
 // --------------------------- Продвижение -------------------------------------
-
 // Основные методы
 Route::resource('/promotions', 'PromotionController');
+
+
+// --------------------------- Рассылки -------------------------------------
+// Основные методы
+Route::resource('/dispatches', 'DispatchController');
 
 
 

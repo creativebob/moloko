@@ -90,6 +90,7 @@ class StartTableSeeder extends Seeder
                 'user_type' => 1,
                 'access_block' => 0,
                 'filial_id' => 1,
+                'site_id' => 1,
                 'company_id' => 1,
                 'god' => null,
                 'system' => false,

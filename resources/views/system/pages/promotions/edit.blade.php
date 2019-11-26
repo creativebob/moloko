@@ -11,7 +11,7 @@
 @section('title-content')
 <div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">РЕДАКТИРОВАТЬ сайт</h2>
+       <h2 class="header-content">РЕДАКТИРОВАТЬ продвижение</h2>
    </div>
    <div class="top-bar-right">
    </div>
@@ -20,10 +20,10 @@
 
 @section('content')
 
-{{ Form::model($promotion, ['route' => ['promotions.update', $promotion->id], 'data-abide', 'novalidate']) }}
+{{ Form::model($promotion, ['route' => ['promotions.update', $promotion->id], 'data-abide', 'novalidate', 'files' => 'true']) }}
 {{ method_field('PATCH') }}
 
-@include('promotions.form', ['submit_text' => 'Редактировать'])
+@include('system.pages.promotions.form', ['submit_text' => 'Редактировать'])
 
 {{ Form::close() }}
 

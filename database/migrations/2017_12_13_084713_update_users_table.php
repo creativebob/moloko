@@ -51,7 +51,9 @@ class UpdateUsersTable extends Migration
 
             $table->integer('access_code')->nullable()->unsigned()->comment('Код доступа')->after('access_block');
 
-            $table->bigInteger('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('access_code');
+            $table->bigInteger('site_id')->nullable()->unsigned()->comment('Id сайта')->after('access_code');
+
+            $table->bigInteger('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('site_id');
             $table->bigInteger('filial_id')->nullable()->unsigned()->comment('ID филиала компании')->after('company_id');
 
             $table->integer('god')->nullable()->unsigned()->comment('Божественное право')->default(null)->after('company_id');

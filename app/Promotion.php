@@ -57,6 +57,13 @@ class Promotion extends Model
         'description',
         'begin_date',
         'end_date',
+        'link',
+
+        'tiny',
+        'small',
+        'medium',
+        'large',
+        'large_x',
 
         'display',
         'system',
@@ -73,5 +80,37 @@ class Promotion extends Model
         if (isset($value)) {
             $this->attributes['end_date'] = Carbon::createFromFormat('d.m.Y', $value);
         }
+    }
+
+    public function getEntityAliasAttribute($value)
+    {
+
+            return $this->getTable();
+    }
+
+    // Фотки
+    public function tiny()
+    {
+        return $this->belongsTo(Photo::class, 'tiny_id');
+    }
+
+    public function small()
+    {
+        return $this->belongsTo(Photo::class, 'small_id');
+    }
+
+    public function medium()
+    {
+        return $this->belongsTo(Photo::class, 'medium_id');
+    }
+
+    public function large()
+    {
+        return $this->belongsTo(Photo::class, 'large_id');
+    }
+
+    public function large_x()
+    {
+        return $this->belongsTo(Photo::class, 'large_x_id');
     }
 }

@@ -24,6 +24,7 @@ use App\Http\Requests\EmployeeRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class StafferController extends Controller
 {
@@ -95,7 +96,7 @@ class StafferController extends Controller
 
         $data = $request->input();
         $data['department_id'] = $data['parent_id'];
-        $staffer = (new Staffer())->create($data);
+        $staffer = Staffer::create($data);
 
         if ($staffer) {
 
@@ -147,10 +148,24 @@ class StafferController extends Controller
         $answer = operator_right($this->entity_alias, true, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $staffer = Staffer::with('schedules.worktimes', 'position', 'employee')->moderatorLimit($answer)->findOrFail($id);
+        $staffer = Staffer::with([
+            'schedules.worktimes',
+            'position' => function($q) {
+                $q->with([
+                   'roles',
+                   'notifications'
+                ]);
+            },
+            'employee'
+        ])
+            ->moderatorLimit($answer)
+            ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $staffer);
+
+        Log::channel('personals')
+            ->info("============== ОБНОВЛЕНИЕ {$staffer->getTable()} с id: {$staffer->id} ========");
 
         // Если на должность назначен сотрудник
         if (isset($staffer->employee)) {
@@ -164,17 +179,18 @@ class StafferController extends Controller
                 $employee->save();
             }
 
+            Log::channel('personals')
+                ->info("На staffer: {$staffer->id} назнанчен сотрудник {$user->name}");
+
         } else {
 
             $staffer->employees()->create([
-                'company_id' => $user->company_id,
                 'user_id' => $request->user_id,
                 'employment_date' => outPickMeUp($request->employment_date),
                 'dismissal_date' => null,
-                'author_id' => $user_id,
             ]);
 
-            $employee = $staffer->load('employee');
+            $staffer->load('employee');
             $employee = $staffer->employee;
 
             $staffer->user_id = $request->user_id;
@@ -187,36 +203,58 @@ class StafferController extends Controller
                 ];
             }
 
-            User::findOrFail($request->user_id)->roles()->attach($roles);
+            $user = User::findOrFail($request->user_id);
+
+            $user->roles()->attach($roles);
+
+            $notifications = [];
+            foreach ($staffer->position->notifications as $notification) {
+                $notifications[] = $notification->id;
+            }
+//            dd($notifications);
+            $user->notifications()->attach($notifications);
+
+            Log::channel('personals')
+                ->info("На staffer: {$staffer->id} назнанчен сотрудник {$user->name}");
 
         }
+
+
         // dd($employee);
         // dd($staffer);
 
         // Если пришла дата увольнения, то снимаем с должности в штате и удаляем роли
         if (isset($request->dismissal_date)) {
 
+
             $employee->dismissal_date = outPickMeUp($request->dismissal_date);
             $employee->dismissal_description = $request->dismissal_description;
-            $employee->editor_id = $user_id;
             $employee->save();
 
+
             // Удаляем должность и права данного юзера
-            // 05.12.18 - решали что при увольнении сносить все права (включая спецправа), т.к. должность одна пока что
-            User::findOrFail($staffer->user_id)->roles()->detach();
+            // TODO - 05.12.18 - решали что при увольнении сносить все права (включая спецправа), т.к. должность одна пока что
+            $user = User::findOrFail($staffer->user_id);
+            $res = $user->roles()->detach();
+            $res = $user->notifications()->detach();
 
             // Освобождаем штат
             $staffer->user_id = null;
-            $staffer->editor_id = $user_id;
+
+            Log::channel('personals')
+                ->info("C staffer: {$staffer->id} уволен сотрудник {$user->name}");
 
         }
 
         // Расписание для штата
         setSchedule($request, $staffer);
 
-        $staffer->display = $request->display;
-        $staffer->editor_id = $user_id;
         $staffer->save();
+
+        Log::channel('personals')
+            ->info("============== ЗАВЕРШЕНО ОБНОВЛЕНИЕ {$staffer->getTable()} с id: {$staffer->id} ========
+            
+            ");
 
         if ($staffer) {
             return redirect()->route('staff.index');

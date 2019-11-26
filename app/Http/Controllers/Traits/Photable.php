@@ -7,7 +7,7 @@ use App\Photo;
 use App\PhotoSetting;
 use App\Entity;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManagerStatic as Image;
+use Image;
 
 trait Photable
 {
@@ -87,6 +87,8 @@ trait Photable
 
             $image_name = 'photo_' . time() . '.' . $extension;
             $photo->name = $image_name;
+
+//            $photo->path = "/storage/{$directory}/{$image_name}";
 
             $user = $request->user();
             $photo->company_id = $user->company_id;
@@ -458,6 +460,83 @@ trait Photable
     {
 
         return "/storage/" . $photo->company_id . "/media/albums/" . $photo->album_id . "/img/" . $size . "/" . $photo->name;
+
+    }
+
+    /**
+     * Сохранение одной фотографии
+     *
+     * @param $request
+     * @param $item
+     * @param string $name
+     * @return integer $photo_id
+     */
+    public function savePhoto($request, $item, $name = 'photo')
+    {
+        if ($request->hasFile($name)) {
+
+            $image = $request->file($name);
+
+            $params = getimagesize($image);
+            $width = $params[0];
+            $height = $params[1];
+
+            $size = filesize($image)/1024;
+            // dd($size);
+
+//                $settings = getSettings($item->getTable());
+//
+//                if ($width < $settings['img_min_width']) {
+//                    abort(403, 'Ширина фотографии мала!');
+//                }
+//
+//                if ($height < $settings['img_min_height']) {
+//                    abort(403, 'Высота фотографии мала!');
+//                }
+//
+//                if ($size > ($settings['img_max_size'] * 1024)) {
+//                    abort(403, 'Размер (Mb) фотографии высок!');
+//                }
+
+            $directory = $item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
+
+            if ($item->$name) {
+                $photo = $item->$name;
+                Storage::disk('public')->delete("{$directory}/{$photo->name}");
+            } else {
+                $photo = Photo::make();
+            }
+
+            $extension = $image->getClientOriginalExtension();
+
+            $photo->extension = $extension;
+
+
+            $photo->width = $width;
+            $photo->height = $height;
+
+            $photo->size = number_format($size, 2, '.', '');
+
+            $image_name = $name .'_' . time() . '.' . $extension;
+            $photo->name = $image_name;
+
+            $photo->path = "/storage/{$directory}/{$image_name}";
+
+            $user = $request->user();
+            $photo->company_id = $user->company_id;
+            $photo->author_id = hideGod($user);
+
+            $photo->save();
+//             dd('Функция маслает!');
+
+            // Сохранияем
+            $res = Storage::disk('public')->putFileAs(
+                $directory, $image, $image_name
+            );
+//            dd($res);
+
+            return $photo->id;
+        }
 
     }
 }

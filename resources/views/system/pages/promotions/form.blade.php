@@ -5,11 +5,9 @@
                 <a href="#options" aria-selected="true">Общая информация</a>
             </li>
 
-            @if($promotion->exists)
             <li class="tabs-title">
                 <a data-tabs-target="photos" href="#photos">Фотки</a>
             </li>
-@endif
 
         </ul>
     </div>
@@ -34,6 +32,10 @@
                             @include('includes.inputs.textarea', ['name' => 'description', 'value' => $promotion->description])
                         </label>
 
+                        <label>Ссылка
+                            @include('includes.inputs.name', ['name' => 'link', 'value' => $promotion->link, 'required' => true])
+                        </label>
+
                         <div class="grid-x grid-padding-x">
                             <div class="small-6 cell">
                                 <label>Начало публикации
@@ -55,10 +57,11 @@
                                 </label>
                             </div>
                         </div>
+
+
                     </div>
 
                     <div class="small-12 medium-7 cell">
-
 
                     </div>
 
@@ -71,15 +74,20 @@
                 </div>
             </div>
 
-            @if($promotion->exists)
             <div class="tabs-panel" id="photos">
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-5 cell">
+                        <div class="grid-x">
+                            <photo-upload-component :options='@json(['title' => 'Tiny', 'name' => 'tiny'])' :photo='@json($promotion->tiny)'></photo-upload-component>
+                            <photo-upload-component :options='@json(['title' => 'Small', 'name' => 'small'])' :photo='@json($promotion->small)'></photo-upload-component>
+                            <photo-upload-component :options='@json(['title' => 'Medium', 'name' => 'medium'])' :photo='@json($promotion->medium)'></photo-upload-component>
+                            <photo-upload-component :options='@json(['title' => 'Large', 'name' => 'large'])' :photo='@json($promotion->large)'></photo-upload-component>
+                            <photo-upload-component :options='@json(['title' => 'Large X', 'name' => 'large_x'])' :photo='@json($promotion->large_x)'></photo-upload-component>
+                        </div>
                     </div>
                 </div>
             </div>
-            @endif
         </div>
     </div>
 </div>
@@ -88,5 +96,20 @@
 @push('scripts')
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.pickmeup-script')
+{{--<script>--}}
+{{--    function readURL(input) {--}}
+{{--        if (input.files && input.files[0]) {--}}
+{{--            var reader = new FileReader();--}}
+{{--            reader.onload = function (e) {--}}
+{{--                $('#photo').attr('src', e.target.result);--}}
+{{--                // createDraggable();--}}
+{{--            };--}}
+{{--            reader.readAsDataURL(input.files[0]);--}}
+{{--        }--}}
+{{--    }--}}
+{{--    $("input[name='photo']").change(function () {--}}
+{{--        readURL(this);--}}
+{{--    });--}}
+{{--</script>--}}
 @endpush
 
