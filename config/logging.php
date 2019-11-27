@@ -108,6 +108,12 @@ return [
 		    'level' => 'info',
 	    ],
 
+        'personals' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/personals.log'),
+            'level' => 'info',
+        ],
+
     ],
 
 ];

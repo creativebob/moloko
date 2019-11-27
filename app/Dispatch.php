@@ -2,9 +2,10 @@
 
 namespace App;
 
+use App\Models\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-// use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Scopes для главного запроса
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
@@ -13,22 +14,24 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
+use App\Scopes\Traits\SuppliersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
 
 // Фильтры
-// use App\Scopes\Filters\Filter;
-// use App\Scopes\Filters\BooklistFilter;
-// use App\Scopes\Filters\DateIntervalFilter;
+use App\Scopes\Filters\Filter;
+use App\Scopes\Filters\BooklistFilter;
 
-class Notification extends Model
+class Dispatch extends Model
 {
     // Включаем кеш
-     use Cachable;
+    use Cachable;
 
-    // use SoftDeletes;
+    use Notifiable;
+    use SoftDeletes;
+
+    use Commonable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -37,28 +40,19 @@ class Notification extends Model
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
+    use SuppliersTraitScopes;
 
     // Фильтры
-    // use Filter;
-    // use BooklistFilter;
-    // use DateIntervalFilter;
-    
-    // protected $dates = ['deleted_at'];
+    use Filter;
+    use BooklistFilter;
 
     protected $fillable = [
         'name',
-        'description',
+        'body',
         'channel_id',
-        'trigger_id',
 
         'display',
         'system',
         'moderation'
     ];
-
-    // Сайты
-    public function sites()
-    {
-        return $this->belongsToMany(Site::class);
-    }
 }

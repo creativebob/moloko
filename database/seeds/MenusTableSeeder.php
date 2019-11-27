@@ -1015,6 +1015,36 @@ Menu::insert([
         'sort' => 3,
     ],
 
+    [
+        'name' => 'Продвижения',
+        'icon' => null,
+        'alias' => 'admin/promotions',
+        'tag' => 'promotions',
+        'parent_id' => $menus->where('tag', 'marketings')->first()->id,
+        'page_id' => $pages->where('alias', 'promotions')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 5,
+    ],
+
+    [
+        'name' => 'Рассылки',
+        'icon' => null,
+        'alias' => 'admin/dispatches',
+        'tag' => 'dispatches',
+        'parent_id' => $menus->where('tag', 'marketings')->first()->id,
+        'page_id' => $pages->where('alias', 'dispatches')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 5,
+    ],
+
 
     // Справочники
     [
@@ -1274,20 +1304,7 @@ Menu::insert([
         'sort' => null,
     ],
 
-    [
-        'name' => 'Продвижения',
-        'icon' => null,
-        'alias' => 'admin/promotions',
-        'tag' => 'sites',
-        'parent_id' => $menus->where('tag', 'marketings')->first()->id,
-        'page_id' => $pages->where('alias', 'promotions')->first()->id,
-        'navigation_id' => 1,
-        'company_id' => null,
-        'system' => true,
-        'author_id' => 1,
-        'display' => true,
-        'sort' => 5,
-    ],
+
 ]);
 
         $menus = Menu::whereNull('parent_id')

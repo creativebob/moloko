@@ -40,7 +40,7 @@ class AppController extends Controller
     public function start(Request $request)
     {
         if (is_null($this->site)) {
-            return view('project.pages.main.main');
+            return view('project.pages.mains.main');
         } else {
 
             return redirect('catalogs-goods/tovary-dlya-sayta/tekstil');

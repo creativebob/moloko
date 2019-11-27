@@ -1,0 +1,1 @@
+{!! Form::select('channel_id', $channels->pluck('name', 'id'), null, ['id' => 'select-channels']) !!}

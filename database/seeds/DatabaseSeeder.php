@@ -96,7 +96,11 @@ class DatabaseSeeder extends Seeder
 
         // Настройки должности
         $this->call(WidgetsTableSeeder::class);
+
+        $this->call(ChannelsTableSeeder::class);
+        $this->call(TriggersTableSeeder::class);
         $this->call(NotificationsTableSeeder::class);
+        $this->call(NotificationSiteTableSeeder::class);
 
         $this->call(LeftoverOperationsTableSeeder::class);
 

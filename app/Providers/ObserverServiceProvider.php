@@ -17,6 +17,8 @@ use App\ContainersStock;
 use App\Cost;
 use App\CostsHistory;
 use App\Direction;
+use App\Dispatch;
+use App\Employee;
 use App\Estimate;
 use App\EstimatesGoodsItem;
 use App\EstimatesServicesItem;
@@ -41,6 +43,8 @@ use App\Observers\ContainersStockObserver;
 use App\Observers\CostObserver;
 use App\Observers\CostsHistoryObserver;
 use App\Observers\DirectionObserver;
+use App\Observers\DispatchObserver;
+use App\Observers\EmployeeObserver;
 use App\Observers\EstimateObserver;
 use App\Observers\EstimatesGoodsItemObserver;
 use App\Observers\EstimatesServicesItemObserver;
@@ -145,6 +149,7 @@ class ObserverServiceProvider extends ServiceProvider
         // Пользователь
         User::observe(UserObserver::class);
         Staffer::observe(StafferObserver::class);
+        Employee::observe(EmployeeObserver::class);
 
         // Метрики
         Metric::observe(MetricObserver::class);
@@ -226,6 +231,7 @@ class ObserverServiceProvider extends ServiceProvider
         Page::observe(PageObserver::class);
         Menu::observe(MenuObserver::class);
         Promotion::observe(PromotionObserver::class);
+        Dispatch::observe(DispatchObserver::class);
 
         // Плагины
         Plugin::observe(PluginObserver::class);

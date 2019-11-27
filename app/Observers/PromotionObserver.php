@@ -13,6 +13,7 @@ class PromotionObserver
     public function creating(Promotion $promotion)
     {
         $this->store($promotion);
+        $promotion->filial_id = \Auth::user()->filial_id;
     }
 
     public function updating(Promotion $promotion)

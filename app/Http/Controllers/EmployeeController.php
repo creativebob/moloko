@@ -420,7 +420,7 @@ class EmployeeController extends Controller
                 $position = $staff->position;
                 $position->load('roles');
 
-                $insert_array = [];
+                $roles = [];
                 foreach ($position->roles as $role) {
                     $insert_array[$role->id] = [
                         'department_id' => $staff->department_id,
@@ -428,7 +428,14 @@ class EmployeeController extends Controller
                     ];
                 }
 
-                $user->roles()->attach($insert_array);
+                $user->roles()->attach($roles);
+
+                $notifications = [];
+                foreach ($position->notifications as $notification) {
+                    $notifications[] = $notification->id;
+                }
+                $user->notifications()->attach($notifications);
+
                 Log::info('Записали роли для юзера (сотрудника)');
 
 

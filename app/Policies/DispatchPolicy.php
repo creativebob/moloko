@@ -3,12 +3,12 @@
 namespace App\Policies;
 
 use App\User;
-use App\Promotion as Model;
+use App\Dispatch as Model;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 use App\Policies\Traits\PoliticTrait;
 
-class PromotionPolicy
+class DispatchPolicy
 {
     use HandlesAuthorization;
     use PoliticTrait;
@@ -21,8 +21,8 @@ class PromotionPolicy
      * @return mixed
      */
 
-    protected $entity_name = 'promotions';
-    protected $entity_dependence = true;
+    protected $entity_name = 'dispatches';
+    protected $entity_dependence = false;
 
     public function index(User $user)
     {

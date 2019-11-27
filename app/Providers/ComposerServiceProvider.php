@@ -8,6 +8,7 @@ use App\Http\ViewComposers\System\ArticlesCategoriesWithItemsComposer;
 use App\Http\ViewComposers\System\ArticlesCategoriesWithItemsComposerForManufacturer;
 use App\Http\ViewComposers\System\AttachmentsComposer;
 use App\Http\ViewComposers\System\CatalogGoodsWithPricesComposer;
+use App\Http\ViewComposers\System\ChannelsComposer;
 use App\Http\ViewComposers\System\CitySearchComposer;
 use App\Http\ViewComposers\System\ContainersCategoriesComposer;
 use App\Http\ViewComposers\System\ContainersComposer;
@@ -329,6 +330,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('layouts.challenges_for_me', ListChallengesComposer::class);
 
         view()->composer('includes.selects.lead_methods', LeadMethodsComposer::class);
+
+        view()->composer('includes.selects.channels', ChannelsComposer::class);
         
 
     }

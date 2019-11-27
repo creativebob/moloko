@@ -2,26 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\PromotionRequest;
-use App\Promotion;
+use App\Dispatch;
+use App\Http\Requests\DispatchRequest;
 use Illuminate\Http\Request;
 
-class PromotionController extends Controller
+class DispatchController extends Controller
 {
 
     // Настройки контроллера
-    public function __construct(Promotion $promotion)
+    public function __construct(Dispatch $dispatch)
     {
         $this->middleware('auth');
-        $this->promotion = $promotion;
-        $this->class = Promotion::class;
-        $this->model = 'App\Promotion';
+        $this->dispatch = $dispatch;
+        $this->class = Dispatch::class;
+        $this->model = 'App\Dispatch';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
     }
-
-    use Photable;
 
     /**
      * Display a listing of the resource.
@@ -40,7 +37,7 @@ class PromotionController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
 
-        $promotions = Promotion::with([
+        $dispatches = Dispatch::with([
             'author',
             'company',
         ])
@@ -70,8 +67,8 @@ class PromotionController extends Controller
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
-        return view('system.pages.promotions.index',[
-            'promotions' => $promotions,
+        return view('system.pages.dispatches.index',[
+            'dispatches' => $dispatches,
             'page_info' => pageInfo($this->entity_alias),
             'filter' => $filter,
             'nested' => 'pages_count'
@@ -88,8 +85,8 @@ class PromotionController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('system.pages.promotions.create', [
-            'promotion' => Promotion::make(),
+        return view('system.pages.dispatches.create', [
+            'dispatch' => Dispatch::make(),
             'page_info' => pageInfo($this->entity_alias),
         ]);
     }
@@ -100,31 +97,16 @@ class PromotionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(PromotionRequest $request)
+    public function store(DispatchRequest $request)
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $data = $request->input();
-        $promotion = Promotion::create($data);
+        $dispatch = Dispatch::create($data);
 
-        $names = [
-            'tiny',
-            'small',
-            'medium',
-            'large',
-            'large_x',
-
-        ];
-
-        foreach ($names as $name) {
-            $column = $name . '_id';
-            $promotion->$column = $this->savePhoto($request, $promotion, $name);
-        }
-        $promotion->save();
-
-        if ($promotion) {
-            return redirect()->route('promotions.index');
+        if ($dispatch) {
+            return redirect()->route('dispatches.index');
         } else {
             abort(403, 'Ошибка записи сайта');
         }
@@ -133,10 +115,10 @@ class PromotionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Promotion  $promotion
+     * @param  \App\Dispatch  $dispatch
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Dispatch $dispatch)
     {
         //
     }
@@ -144,7 +126,7 @@ class PromotionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Promotion  $promotion
+     * @param  \App\Dispatch  $dispatch
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -152,22 +134,15 @@ class PromotionController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $promotion = Promotion::with([
-            'tiny:id,name,path',
-            'small:id,name,path',
-            'medium:id,name,path',
-            'large:id,name,path',
-            'large_x:id,name,path',
-        ])
-        ->moderatorLimit($answer)
+        $dispatch = Dispatch::moderatorLimit($answer)
             ->findOrFail($id);
-        // dd($promotion);
+        // dd($dispatch);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $promotion);
+        $this->authorize(getmethod(__FUNCTION__), $dispatch);
 
-        return view('system.pages.promotions.edit', [
-            'promotion' => $promotion,
+        return view('system.pages.dispatches.edit', [
+            'dispatch' => $dispatch,
             'page_info' => pageInfo($this->entity_alias),
         ]);
     }
@@ -176,45 +151,25 @@ class PromotionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Promotion  $promotion
+     * @param  \App\Dispatch  $dispatch
      * @return \Illuminate\Http\Response
      */
-    public function update(PromotionRequest $request, $id)
+    public function update(DispatchRequest $request, $id)
     {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $promotion = Promotion::with([
-            'tiny',
-            'small',
-            'medium',
-            'large',
-            'large_x',
-        ])
-        ->moderatorLimit($answer)
-        ->findOrFail($id);
+        $dispatch = Dispatch::moderatorLimit($answer)
+            ->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $promotion);
+        $this->authorize(getmethod(__FUNCTION__), $dispatch);
 
         $data = $request->input();
-        $names = [
-            'tiny',
-            'small',
-            'medium',
-            'large',
-            'large_x',
-        ];
-
-        foreach ($names as $name) {
-            $column = $name . '_id';
-            $data[$column] = $this->savePhoto($request, $promotion, $name);
-        }
-
-        $result = $promotion->update($data);
+        $result = $dispatch->update($data);
 
         if ($result) {
-            return redirect()->route('promotions.index');
+            return redirect()->route('dispatches.index');
         } else {
             abort(403, 'Ошибка обновления');
         }
@@ -223,7 +178,7 @@ class PromotionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Promotion  $promotion
+     * @param  \App\Dispatch  $dispatch
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -231,16 +186,16 @@ class PromotionController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $promotion = Promotion::moderatorLimit($answer)
+        $dispatch = Dispatch::moderatorLimit($answer)
             ->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $promotion);
+        $this->authorize(getmethod(__FUNCTION__), $dispatch);
 
-        $promotion->delete();
+        $dispatch->delete();
 
-        if ($promotion) {
-            return redirect()->route('promotions.index');
+        if ($dispatch) {
+            return redirect()->route('dispatches.index');
         } else {
             abort(403, 'Ошибка при удалении');
         }

@@ -235,6 +235,12 @@ class User extends Authenticatable
         return $this->belongsToMany('App\Role')->withPivot('department_id');
     }
 
+    // Оповещения
+    public function notifications()
+    {
+        return $this->belongsToMany(Notification::class);
+    }
+
     public function role_user()
     {
         return $this->hasMany('App\RoleUser');
@@ -417,11 +423,7 @@ class User extends Authenticatable
         return $this->morphToMany('App\Phone', 'phone_entity');
     }
 
-    // Оповещения
-    public function notifications()
-    {
-        return $this->belongsToMany('App\Notification');
-    }
+
 
     // Лиды
     public function leads()

@@ -922,6 +922,18 @@ class PagesTableSeeder extends Seeder
                 'display' => true,
             ],
 
+            [
+                'name' => 'Рассылки',
+                'site_id' => 1,
+                'title' => 'Рассылки',
+                'description' => 'Рассылки',
+                'alias' => 'dispatches',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+
         ]);
 }
 }
