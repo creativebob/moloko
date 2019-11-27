@@ -20,6 +20,9 @@ class PhotoSettingsTableSeeder extends Seeder
 		        'name' => 'Общие настройки',
 		        'description' => 'Комментарий к настройке',
 
+                'quality' => '80',
+                'store_format' => 'webp',
+
                 'photo_settings_id' => null,
                 'photo_settings_type' => null,
 
