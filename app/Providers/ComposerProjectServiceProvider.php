@@ -31,19 +31,27 @@ class ComposerProjectServiceProvider extends ServiceProvider
         if (Schema::hasTable('sites')) {
 
             $domain = request()->getHost();
+            $arr = explode('.', $domain);
+//        dd($arr);
 
+            if (count($arr) > 2) {
+                $domain = $arr[1] . '.' . $arr[2];
+            }
+//            dd($domain);
             $site = Site::where('domain', $domain)
                 ->first([
+                    'domain',
                     'alias'
                 ]);
+//            dd($site);
 
-            if (!is_null($site)) {
+            if ($site) {
                 $alias = $site->alias;
 
-                view()->composer([
-                    $alias . '.layouts.headers.header',
-                    $alias . '.layouts.footers.footer',
-                ], DepartmentsComposer::class);
+//                view()->composer([
+//                    $alias . '.layouts.headers.header',
+//                    $alias . '.layouts.footers.footer',
+//                ], DepartmentsComposer::class);
 
                 view()->composer([
                     $alias . '.layouts.navigations.nav',

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Project;
 
+use App\Http\Controllers\Project\Traits\Commonable;
 use App\Http\Controllers\Traits\EstimateControllerTrait;
 use App\Http\Controllers\Traits\LeadControllerTrait;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\PricesGoods;
-use App\Site;
 use App\User;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
@@ -17,23 +17,7 @@ use Telegram;
 class CartController extends Controller
 {
 
-    // Настройки сконтроллера
-    public function __construct()
-    {
-//        $this->middleware('auth');
-        $domain = request()->getHost();
-
-        $site = Site::where('domain', $domain)
-            ->with([
-                'pages_public',
-                'filials'
-            ])
-            ->first();
-//        dd($site);
-
-        $this->site = $site;
-    }
-
+    use Commonable;
     use UserControllerTrait;
     use LeadControllerTrait;
     use EstimateControllerTrait;
@@ -78,8 +62,9 @@ class CartController extends Controller
         // dd($prices_goods);
 
         $site = $this->site;
+$filial = $this->filial;
         $page = $site->pages_public->firstWhere('alias', 'cart');
-        return view($site->alias.'.pages.cart.index', compact('site', 'page', 'prices_goods'));
+        return view($site->alias.'.pages.cart.index', compact('site', 'filial', 'page', 'prices_goods'));
     }
 
     /**

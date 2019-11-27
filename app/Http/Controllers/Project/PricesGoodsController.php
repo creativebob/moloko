@@ -2,30 +2,15 @@
 
 namespace App\Http\Controllers\Project;
 
+use App\Http\Controllers\Project\Traits\Commonable;
 use App\Models\Project\PricesGoods;
-use App\Site;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class PricesGoodsController extends Controller
 {
 
-    // Настройки сконтроллера
-    public function __construct()
-    {
-//        $this->middleware('auth');
-        $domain = request()->getHost();
-
-        $site = Site::where('domain', $domain)
-            ->with([
-                'pages_public',
-                'filials'
-            ])
-            ->first();
-//        dd($site);
-
-        $this->site = $site;
-    }
+    use Commonable;
 
     /**
      * Display a listing of the resource.
@@ -68,6 +53,7 @@ class PricesGoodsController extends Controller
     {
 
         $site = $this->site;
+$filial = $this->filial;
         $page = $site->pages_public->where('alias', 'prices-goods')->first();
 
         $price_goods = PricesGoods::with([

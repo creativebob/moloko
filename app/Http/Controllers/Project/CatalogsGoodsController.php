@@ -3,30 +3,15 @@
 namespace App\Http\Controllers\Project;
 
 use App\CatalogsGoods;
+use App\Http\Controllers\Project\Traits\Commonable;
 use App\Models\Project\PricesGoods;
-use App\Site;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class CatalogsGoodsController extends Controller
 {
 
-    // Настройки сконтроллера
-    public function __construct()
-    {
-//        $this->middleware('auth');
-        $domain = request()->getHost();
-
-        $site = Site::where('domain', $domain)
-            ->with([
-                'pages_public',
-                'filials'
-            ])
-            ->first();
-//        dd($site);
-
-        $this->site = $site;
-    }
+    use Commonable;
 
     /**
      * Display a listing of the resource.
@@ -92,6 +77,7 @@ class CatalogsGoodsController extends Controller
         }
 
         $site = $this->site;
+$filial = $this->filial;
         $page = $site->pages_public->where('alias', 'catalogs-goods')->first();
 
         // Получаем полный прайс со всеми доступными разделами
