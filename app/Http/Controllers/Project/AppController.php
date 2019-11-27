@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\CatalogsGoods;
+use App\Http\Controllers\Project\Traits\Commonable;
 use Carbon\Carbon;
 use App\Lead;
 use App\PricesGoods;
-use App\Site;
 
 use Illuminate\Http\Request;
 //use App\Http\Requests\Project\UserUpdateRequest;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Cookie;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -21,20 +19,7 @@ use App\Http\Controllers\Traits\UserControllerTrait;
 class AppController extends Controller
 {
 
-    // Настройки контроллера
-    public function __construct(Request $request)
-    {
-        $request = request();
-        $domain = $request->getHost();
-        $site = Site::where('domain', $domain)
-            ->with([
-                'pages_public',
-                'filials'
-            ])
-            ->first();
-        $this->site = $site;
-    }
-
+    use Commonable;
     use UserControllerTrait;
 
     public function start(Request $request)
@@ -45,11 +30,12 @@ class AppController extends Controller
 
             return redirect('catalogs-goods/tovary-dlya-sayta/tekstil');
             $site = $this->site;
+$filial = $this->filial;
             $page = $site->pages_public
                 ->where('alias', 'main')
                 ->first();
 
-            return view($site->alias.'.pages.main.index', compact('site','page'));
+            return view($site->alias.'.pages.main.index', compact('site', 'filial', 'page'));
         }
     }
 
@@ -65,6 +51,7 @@ class AppController extends Controller
         } else {
 
             $site = $this->site;
+$filial = $this->filial;
 
             // Ищим в базе страницу с алиасом
             $page = $site->pages_public
@@ -84,12 +71,12 @@ class AppController extends Controller
             if(view()->exists($path_view)){
 
                 // Нашли - отправляем пользователя туда
-                return view($site->alias.'.pages.' . $page_alias . '.index', compact('site','page'));  
+                return view($site->alias.'.pages.' . $page_alias . '.index', compact('site', 'filial', 'page'));
 
             } else {
 
                 // Не нашли. Но нет повода для печали, отправляем на общий шаблон
-                return view($site->alias.'.pages.common.index', compact('site','page'));
+                return view($site->alias.'.pages.common.index', compact('site', 'filial', 'page'));
             }
         }
     }
@@ -97,6 +84,7 @@ class AppController extends Controller
     public function catalogs_services(Request $request, $catalog_slug, $catalog_item_slug)
     {
         $site = $this->site;
+$filial = $this->filial;
 
         // Вытаскивает через сайт каталог и его пункт с прайсами (не архивными), товаром и артикулом
         $site->load(['catalogs_services' => function ($q) use ($catalog_slug, $catalog_item_slug) {
@@ -142,6 +130,7 @@ class AppController extends Controller
     {
 
         $site = $this->site;
+$filial = $this->filial;
         $price_goods = PricesGoods::with([
             'goods_public'
         ])
@@ -151,7 +140,7 @@ class AppController extends Controller
             ])
             ->first();
 
-        return view($site->alias.'.pages.prices_goods.goods_composition', compact('site', 'price_goods'));
+        return view($site->alias.'.pages.prices_goods.goods_composition', compact('site', 'filial', 'price_goods'));
     }
 
     // Личный кабинет пользователя
@@ -161,9 +150,10 @@ class AppController extends Controller
         $estimates = null;
 
         $site = $this->site;
+$filial = $this->filial;
         $page = $site->pages_public->firstWhere('alias', 'cabinet');
 
-        return view($site->alias.'.pages.cabinet.index', compact('site', 'page', 'estimates'));
+        return view($site->alias.'.pages.cabinet.index', compact('site', 'filial', 'page', 'estimates', 'user'));
     }
 
     // Авторизация пользоваеля сайта через телефон и код СМС
@@ -199,6 +189,7 @@ class AppController extends Controller
         $phone = cleanPhone($request->phone);
 
         $site = $this->site;
+$filial = $this->filial;
         $company = $site->company;
 
         // Смотрим, есть ли пользователь с таким номером телефона в базе
@@ -264,16 +255,18 @@ class AppController extends Controller
     {
 
         $site = $this->site;
+$filial = $this->filial;
         $company = $site->company;
         $page = $site->pages_public->firstWhere('alias', 'confirmation');
 
-        return view($site->alias.'.pages.confirmation.index', compact('site','page', 'company'));
+        return view($site->alias.'.pages.confirmation.index', compact('site', 'filial', 'page', 'company'));
     }
 
     public function get_access_code(Request $request)
     {
 
         $site = $this->site;
+$filial = $this->filial;
 
         // $company = $site->company;
         // return $company->accounts->where('alias', 'smssend')->first()->api_token;

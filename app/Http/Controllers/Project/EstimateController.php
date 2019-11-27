@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Project;
 
+use App\Http\Controllers\Project\Traits\Commonable;
 use App\Models\Project\Estimate;
-use App\Site;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -11,22 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class EstimateController extends Controller
 {
 
-    // Настройки сконтроллера
-    public function __construct()
-    {
-//        $this->middleware('auth');
-        $domain = request()->getHost();
-
-        $site = Site::where('domain', $domain)
-            ->with([
-                'pages_public',
-                'filials'
-            ])
-            ->first();
-//        dd($site);
-
-        $this->site = $site;
-    }
+    use Commonable;
 
     /**
      * Display a listing of the resource.
@@ -46,11 +31,12 @@ class EstimateController extends Controller
 //        dd($estimates);
 
         $site = $this->site;
+$filial = $this->filial;
         $page = $site->pages_public
             ->where('alias', 'estimates')
             ->first();
 
-        return view($site->alias.'.pages.estimates.index', compact('site', 'page', 'estimates'));
+        return view($site->alias.'.pages.estimates.index', compact('site', 'filial', 'page', 'estimates'));
     }
 
     /**
@@ -90,11 +76,12 @@ class EstimateController extends Controller
 		    ->findOrFail($id);
 
         $site = $this->site;
+$filial = $this->filial;
         $page = $site->pages_public
             ->where('alias', 'estimates-items')
             ->first();
 
-        return view($site->alias.'.pages.estimates_items.index', compact('site', 'page', 'estimate'));
+        return view($site->alias.'.pages.estimates_items.index', compact('site', 'filial', 'page', 'estimate'));
     }
 
     /**
