@@ -21,7 +21,7 @@ class CreatePhotoSettingsTable extends Migration
             $table->string('name')->nullable()->index()->comment('Название настройки');
             $table->text('description')->nullable()->comment('Описание настройки');
             
-            $table->tinyInteger('quality', 100)->default(80)->comment('Качество сжатия (общий)');
+            $table->integer('quality')->default(80)->comment('Качество сжатия (общий)');
             $table->string('store_format', 6)->default('jpg')->nullable()->comment('Формат изображния для записи');
 
             $table->integer('img_small_width')->nullable()->unsigned()->comment('Ширина маленького изображения');
