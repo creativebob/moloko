@@ -16,6 +16,7 @@ use App\Http\ViewComposers\Project\StaffComposer;
 use App\Http\ViewComposers\Project\ClientsCompaniesListComposer;
 use App\Http\ViewComposers\Project\ManufacturersListComposer;
 use App\Http\ViewComposers\Project\NewsComposer;
+use App\Http\ViewComposers\Project\PromotionsComposer;
 
 use App\Site;
 use Illuminate\Support\Facades\View;
@@ -82,6 +83,8 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 view()->composer('project.includes.catalogs_goods.filters.catalogs_goods_items', CatalogsGoodsItemsFilterComposer::class);
                 
                 view()->composer('project.includes.clients.companies_list', ClientsCompaniesListComposer::class);
+
+                view()->composer('project.layouts.promotions.gallery', PromotionsComposer::class);
 
                 view()->composer('project.includes.manufacturers.list', ManufacturersListComposer::class);
 

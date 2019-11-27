@@ -205,4 +205,10 @@ class Department extends Model
         return $this->morphToMany(Phone::class, 'phone_entity');
     }
 
+    // Продвижения
+    public function promotions()
+    {
+        return $this->hasMany(Promotion::class, 'filial_id');
+    }
+    
 }

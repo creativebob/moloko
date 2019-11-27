@@ -105,7 +105,10 @@ trait Photable
             // Сохраняем small, medium и large
             foreach (['small', 'medium', 'large'] as $value) {
                 // $item = Image::make($request->photo)->grab(1200, 795);
-                $folder = Image::make($request->photo)->widen($settings['img_' . $value . '_width']);
+                // $folder = Image::make($request->photo)->widen($settings['img_' . $value . '_width'])->crop($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
+
+                $folder = Image::make($request->photo)->fit($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
+
                 $save_path = storage_path('app/public/' . $directory . '/' . $value);
                 if (!file_exists($save_path)) {
                     mkdir($save_path, 0755);
