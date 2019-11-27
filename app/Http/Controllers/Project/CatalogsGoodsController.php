@@ -183,7 +183,7 @@ $filial = $this->filial;
         //     });
         // }
 
-        return view($site->alias.'.pages.catalogs_goods.index', compact('site','page', 'request', 'catalog_goods_items', 'prices_goods', 'catalog_goods', 'main_slug', 'sub_menu'));
+        return view($site->alias.'.pages.catalogs_goods.index', compact('site', 'filial', 'page', 'request', 'catalog_goods_items', 'prices_goods', 'catalog_goods', 'main_slug', 'sub_menu'));
     }
 
     /**

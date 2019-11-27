@@ -68,7 +68,7 @@ $filial = $this->filial;
 
         $page->title = $price_goods->goods_public->article->name;
 
-        return view($site->alias.'.pages.prices_goods.index', compact('site','page', 'price_goods'));
+        return view($site->alias.'.pages.prices_goods.index', compact('site', 'filial', 'page', 'price_goods'));
     }
 
     /**

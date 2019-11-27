@@ -35,7 +35,7 @@ $filial = $this->filial;
                 ->where('alias', 'main')
                 ->first();
 
-            return view($site->alias.'.pages.main.index', compact('site','page'));
+            return view($site->alias.'.pages.main.index', compact('site', 'filial', 'page'));
         }
     }
 
@@ -71,12 +71,12 @@ $filial = $this->filial;
             if(view()->exists($path_view)){
 
                 // Нашли - отправляем пользователя туда
-                return view($site->alias.'.pages.' . $page_alias . '.index', compact('site','page'));  
+                return view($site->alias.'.pages.' . $page_alias . '.index', compact('site', 'filial', 'page'));
 
             } else {
 
                 // Не нашли. Но нет повода для печали, отправляем на общий шаблон
-                return view($site->alias.'.pages.common.index', compact('site','page'));
+                return view($site->alias.'.pages.common.index', compact('site', 'filial', 'page'));
             }
         }
     }
@@ -259,7 +259,7 @@ $filial = $this->filial;
         $company = $site->company;
         $page = $site->pages_public->firstWhere('alias', 'confirmation');
 
-        return view($site->alias.'.pages.confirmation.index', compact('site','page', 'company'));
+        return view($site->alias.'.pages.confirmation.index', compact('site', 'filial', 'page', 'company'));
     }
 
     public function get_access_code(Request $request)
