@@ -6,7 +6,7 @@
             </li>
 
             <li class="tabs-title">
-                <a data-tabs-target="photos" href="#photos">Фотки</a>
+                <a data-tabs-target="photos" href="#photos">Креативы</a>
             </li>
 
         </ul>
@@ -33,7 +33,7 @@
                         </label>
 
                         <label>Ссылка
-                            @include('includes.inputs.name', ['name' => 'link', 'value' => $promotion->link, 'required' => true])
+                            @include('includes.inputs.name', ['name' => 'link', 'value' => $promotion->link])
                         </label>
 
                         <div class="grid-x grid-padding-x">

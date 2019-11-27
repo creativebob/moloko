@@ -31,7 +31,12 @@
                 <tr id="thead-content">
                     <th class="td-drop"></th>
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
+                    <th class="td-photo">Фото</th>
                     <th class="td-name">Название</th>
+                    <th class="td-description">Описание</th>
+                    <th class="td-begin-date">Дата начала</th>
+                    <th class="td-end-date">Дата окончания</th>
+                    <th class="td-link">Ссылка</th>
                     <th class="td-author">Автор</th>
                     <th class="td-control"></th>
                     <th class="td-delete"></th>
@@ -61,14 +66,27 @@
                         >
                         <label class="label-check" for="check-{{ $promotion->id }}"></label>
                     </td>
+                    <td class="td-photo tiny">
+                        <img src="{{ $promotion->tiny->path }}" alt="">
+                    </td>
                     <td class="td-name">
-
                         @can('update', $promotion)
                             <a href="{{ route('promotions.edit', $promotion->id) }}">{{ $promotion->name }}</a>
                             @else
                             {{ $promotion->name }}
                         @endcan
-
+                    </td>
+                    <td class="td-description">
+                        {{ $promotion->description }}
+                    </td>
+                    <td class="td-begin-date">
+                        {{ $promotion->begin_date->format('d.m.Y') }}
+                    </td>
+                    <td class="td-begin-date">
+                        {{ $promotion->end_date->format('d.m.Y') }}
+                    </td>
+                    <td class="td-link">
+                        <a href="{{ $promotion->link }}">{{ $promotion->link }}</a>
                     </td>
                     <td class="td-author">
 

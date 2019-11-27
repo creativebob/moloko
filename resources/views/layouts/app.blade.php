@@ -84,7 +84,7 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                         <li>
                             <a id="task-toggle"><img src="/img/system/header/alert.png">
                                 @if(!empty($list_challenges['for_me']))
-                                <span class="challenges_count" id="challenges-count">{{ $list_challenges['for_me']->flatten()->count() }}</span>
+                                    <span class="challenges_count" id="challenges-count">{{ $list_challenges['for_me']->flatten()->count() }}</span>
                                 @endif
                             </a></li>
                             <li>
@@ -177,7 +177,9 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
 
 
 {{--         Менеджер задач--}}
-        @include('layouts.task-manager', ['open' => $task])
+        @if(Auth::user())
+            @include('layouts.task-manager', ['open' => $task])
+        @endif
 
 
         {{-- Основной контент --}}

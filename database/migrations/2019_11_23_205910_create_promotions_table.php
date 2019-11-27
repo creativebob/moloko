@@ -20,7 +20,7 @@ class CreatePromotionsTable extends Migration
 
             $table->text('description')->nullable()->comment('Описание');
 
-            $table->string('link')->comment('Ссылка');
+            $table->string('link')->nullable()->comment('Ссылка');
 
             $table->date('begin_date')->index()->comment('Дата начала');
             $table->date('end_date')->nullable()->index()->comment('Дата окончания');
