@@ -1,101 +1,62 @@
-<!doctype html>
-<html lang="{{ app()->getLocale() }}">
+
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Страница не найдена!</title>
+        <link rel="shortcut icon" href="{{ asset('/favicon.ico') }}" type="image/x-icon">
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="{{ mix('/css/system/app.min.css') }}">
 
-        <!-- Styles -->
+        {{-- CSRF Token --}}
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        {{-- Add jQuery library --}}
+        <script type="application/javascript" src="/js/system/jquery.latest.min.js"></script>
+
+        <title>@yield('title')</title>
+
+        {{-- Дополнительные плагины / скрипты / стили для конкретной страницы --}}
+        @yield('inhead')
+
         <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Raleway', sans-serif;
-                font-weight: 100;
-                height: 100vh;
-                margin: 0;
+            .robot-message{
+                padding: 1rem 0rem 1rem 2rem;
+                font-size: 1.3rem;
             }
 
-            .full-height {
-                height: 100vh;
+            .robot-message-block{
+                margin-top: 20%;
             }
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
+            .wrap-img-robot{
+                border-right: 2px solid #ddd;
             }
 
-            .position-ref {
-                position: relative;
+            .img-robot{
+                margin-right: 2rem;
             }
 
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
         </style>
+
     </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ route('logout') }}"
-                            onclick="event.preventDefault();
-                            document.getElementById('logout-form').submit();">Выход</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-                        <a href="{{ route('register') }}">Register</a>
-                    @endauth
 
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                        </form>
+    {{-- Блочим все подергивания в блоке  --}}
+    <body id="body" class="block-refresh">
+        <div id="app">
+            <div class="grid-x">
+                <div class="cell small-12 medium-10 large-6 large-offset-2 robot-message-block">
+                    <div class="grid-x">
+                        <div class="cell small-4 medium-6 text-right wrap-img-robot">
+                            <img src="/img/system/robot.svg" width="90px" title="Robot system" class="img-robot">
+                        </div>
+                        <div class="cell small-6 medium-6 ">
+                            <p class="robot-message">{{ $exception->getMessage() }}</p>
+                        </div>
+                    </div>
                 </div>
-            @endif
-
-            <div class="content">
-                <div class="title m-b-md">
-                    {{ $exception->getMessage() }}
-                </div>
-
-                <div class="links">
-{{--                     <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a> --}}
-                </div>
-                <div></div>
             </div>
         </div>
     </body>

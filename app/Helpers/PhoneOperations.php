@@ -102,8 +102,12 @@ function check_user_by_phones($phone_search, $company_id = null) {
 		if(Auth::user()){
 			$company_id = Auth::user()->company_id;
 		} else {
-			abort(403, 'В хелпер очистки номера не передана компания!');
+			$company_id = getSite()->company_id;
 		}
+	}
+
+	if($company_id == null){
+		abort(403, 'В хелпер очистки номера не передана компания!');
 	}
 
 	// Чистим телефон: приводим к исключительно числовому виду
@@ -138,7 +142,7 @@ function sendSms($phone, $msg) {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array(
-            "api_id" => $company->accounts->where('alias', 'smssms')->first()->api_token,
+            "api_id" => $company->accounts->where('alias', 'smssend')->first()->api_token,
             "to" => $phone, // До 100 штук до раз
             "msg" => $msg,
             "json" => 1 // Для получения более развернутого ответа от сервера

@@ -29,7 +29,7 @@ class PhotoSettingsTableSeeder extends Seeder
                 'img_medium_height' => 596,  // Высота среднего изображения
                 'img_large_width' => 1200,  // Ширина большого изображения
                 'img_large_height' => 795,  // Высота большого изображения
-                'img_formats' => '.jpeg,.jpg,.png,.gif,.svg',  // Форматы изображения
+                'img_formats' => '.jpeg,.jpg,.png,.gif,.svg,.webp',  // Форматы изображения
                 'img_min_width' => 300,  // Минимальная ширина изображения
                 'img_min_height' => 150,  // Минимальная высота изображения
                 'img_max_size' => 8,  // Размер изображения

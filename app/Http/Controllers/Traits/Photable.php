@@ -37,21 +37,21 @@ trait Photable
             $settings = $this->getSettings($item->getTable());
 
             if ($width < $settings['img_min_width']) {
-                abort(403, 'lol');
+                abort(403, 'Ширина изображения должна быть не менее ' . $settings['img_min_width'] . 'px.');
 //                return back()
 //                    ->withErrors(['msg' => 'Ширина фотографии мала!'])
 //                    ->withInput();
             }
 
             if ($height < $settings['img_min_height']) {
-                abort(403, 'lol');
+                abort(403, 'Высота изображения должна быть не менее ' . $settings['img_min_height'] . 'px.');
 //                return back()
 //                    ->withErrors(['msg' => 'Высота фотографии мала!'])
 //                    ->withInput();
             }
 
             if ($size > ($settings['img_max_size'] * 1024)) {
-                abort(403, 'lol');
+                abort(403, 'Размер изображения не должен превышать ' . $settings['img_max_size'] . 'mb.');
 //                return back()
 //                    ->withErrors(['msg' => 'Размер (Mb) фотографии высок!'])
 //                    ->withInput();
@@ -77,15 +77,16 @@ trait Photable
             }
 
             $extension = $image->getClientOriginalExtension();
+            $need_extension = $settings['store_format'] ?? $extension;
 
-            $photo->extension = $extension;
+            $photo->extension = $need_extension;
 
             $photo->width = $width;
             $photo->height = $height;
 
             $photo->size = number_format($size, 2, '.', '');
 
-            $image_name = 'photo_' . time() . '.' . $extension;
+            $image_name = 'photo_' . time() . '.' . $need_extension;
             $photo->name = $image_name;
 
             $user = $request->user();
@@ -107,7 +108,7 @@ trait Photable
                 if (!file_exists($save_path)) {
                     mkdir($save_path, 0755);
                 }
-                $folder->save(storage_path('app/public/' . $directory . '/' . $value . '/' . $image_name));
+                $folder->save(storage_path('app/public/' . $directory . '/' . $value . '/' . $image_name), $settings['quality'], $settings['store_format']);
             }
 
             // $item->photo_id = $photo->id;
