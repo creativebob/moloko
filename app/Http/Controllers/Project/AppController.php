@@ -153,7 +153,7 @@ $filial = $this->filial;
 $filial = $this->filial;
         $page = $site->pages_public->firstWhere('alias', 'cabinet');
 
-        return view($site->alias.'.pages.cabinet.index', compact('site', 'filial', 'page', 'estimates'));
+        return view($site->alias.'.pages.cabinet.index', compact('site', 'filial', 'page', 'estimates', 'user'));
     }
 
     // Авторизация пользоваеля сайта через телефон и код СМС
