@@ -127,7 +127,7 @@ class User extends Authenticatable
         $value = $this->second_name . ' ' . $this->first_name;
         return $value;
     }
-	
+
 	public function getStafferFilialIdAttribute() {
 		$access = session('access');
 		$filial_id = $access['user_info']['filial_id'];
@@ -290,7 +290,11 @@ class User extends Authenticatable
     // Фото
     public function photo()
     {
-        return $this->belongsTo('App\Photo');
+        return $this->belongsTo(Photo::class)
+//            ->withDefault([
+//                'path' => '/img/system/plug/' . $this->sex == 1 ? 'avatar_small_man.png' : 'avatar_small_woman.png'
+//            ])
+            ;
     }
 
     // Получаем локацию пользователя

@@ -198,7 +198,7 @@
                 </div>
             </div>
             <!-- Конец блока клиента -->
-            
+
             @endif
 
 
@@ -292,52 +292,57 @@
             <div class="tabs-panel" id="content-panel-brand">
                 <div class="grid-x grid-padding-x">
 
-                    <div class="small-12 cell">
-                        <table class="brand-logo-table">
-                            <tbody class="brand-logo-table-tbody">
-                                <tr> 
-                                    <td>
-                                        <label>Стандартный логотип (jpg или png)
-                                            {{ Form::file('photo') }}
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <img id="photo" src="{{ getPhotoPath($company, 'small') }}">
-                                    </td>
-                                </tr>
-                                <tr> 
-                                    <td>
-                                        <label>Белый логотип (svg)
-                                            {{ Form::file('logo_white') }}
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <img width="100px" id="photo" src="/img/system/svg/logo-white.svg">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>Черный логотип (svg)
-                                            {{ Form::file('logo_black') }}
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <img width="100px" id="photo" src="/img/system/svg/logo-black.svg">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>Цветной логотип (svg)
-                                            {{ Form::file('logo_color') }}
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <img width="100px" id="photo" src="/img/system/svg/logo-color.svg">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <photo-upload-component :options='@json(['title' => 'Стандартный логотип (jpg или png)', 'name' => 'photo'])' :photo='@json($company->photo)'></photo-upload-component>
+                    <photo-upload-component :options='@json(['title' => 'Белый логотип (svg)', 'name' => 'white'])' :photo='@json($company->white)'></photo-upload-component>
+                    <photo-upload-component :options='@json(['title' => 'Черный логотип (svg)', 'name' => 'black'])' :photo='@json($company->black)'></photo-upload-component>
+                    <photo-upload-component :options='@json(['title' => 'Цветной логотип (svg)', 'name' => 'color'])' :photo='@json($company->color)'></photo-upload-component>
+
+{{--                    <div class="small-12 cell">--}}
+{{--                        <table class="brand-logo-table">--}}
+{{--                            <tbody class="brand-logo-table-tbody">--}}
+{{--                                <tr>--}}
+{{--                                    <td>--}}
+{{--                                        <label>Стандартный логотип (jpg или png)--}}
+{{--                                            {{ Form::file('photo') }}--}}
+{{--                                        </label>--}}
+{{--                                    </td>--}}
+{{--                                    <td>--}}
+{{--                                        <img id="photo" src="{{ getPhotoPath($company, 'small') }}">--}}
+{{--                                    </td>--}}
+{{--                                </tr>--}}
+{{--                                <tr>--}}
+{{--                                    <td>--}}
+{{--                                        <label>Белый логотип (svg)--}}
+{{--                                            {{ Form::file('logo_white') }}--}}
+{{--                                        </label>--}}
+{{--                                    </td>--}}
+{{--                                    <td>--}}
+{{--                                        <img width="100px" id="photo" src="/img/system/svg/logo-white.svg">--}}
+{{--                                    </td>--}}
+{{--                                </tr>--}}
+{{--                                <tr>--}}
+{{--                                    <td>--}}
+{{--                                        <label>Черный логотип (svg)--}}
+{{--                                            {{ Form::file('logo_black') }}--}}
+{{--                                        </label>--}}
+{{--                                    </td>--}}
+{{--                                    <td>--}}
+{{--                                        <img width="100px" id="photo" src="/img/system/svg/logo-black.svg">--}}
+{{--                                    </td>--}}
+{{--                                </tr>--}}
+{{--                                <tr>--}}
+{{--                                    <td>--}}
+{{--                                        <label>Цветной логотип (svg)--}}
+{{--                                            {{ Form::file('logo_color') }}--}}
+{{--                                        </label>--}}
+{{--                                    </td>--}}
+{{--                                    <td>--}}
+{{--                                        <img width="100px" id="photo" src="/img/system/svg/logo-color.svg">--}}
+{{--                                    </td>--}}
+{{--                                </tr>--}}
+{{--                            </tbody>--}}
+{{--                        </table>--}}
+{{--                    </div>--}}
 
                 </div>
             </div>
@@ -396,7 +401,7 @@
                         @endif
 
                     {{-- Предлагаем добавить компанию в поставщики, если, конечно, создаем ее не из под страницы создания поставщиков --}}
-                    
+
                         @if(empty($supplier))
                             @if(isset($company->supplier_self) && (Auth::user()->company_id != null))
                                 @if($company->supplier_self == false)

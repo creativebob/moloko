@@ -256,7 +256,13 @@ class CompanyController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $company = Company::with('location', 'schedules.worktimes')
+        $company = Company::with([
+            'location',
+            'schedules.worktimes',
+            'white',
+            'black',
+            'color'
+        ])
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)

@@ -114,7 +114,6 @@ class PromotionController extends Controller
             'medium',
             'large',
             'large_x',
-
         ];
 
         foreach ($names as $name) {

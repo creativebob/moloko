@@ -73,6 +73,7 @@ use App\Observers\RoomsCategoryObserver;
 use App\Observers\SectorObserver;
 use App\Observers\ServicesCategoryObserver;
 use App\Observers\StafferObserver;
+use App\Observers\VectorObserver;
 use App\Observers\WorkflowsCategoryObserver;
 use App\Off;
 use App\Page;
@@ -93,6 +94,7 @@ use App\RoomsCategory;
 use App\Sector;
 use App\ServicesCategory;
 use App\Staffer;
+use App\Vector;
 use App\WorkflowsCategory;
 use Illuminate\Support\ServiceProvider;
 use App\RawsCategory;
@@ -252,6 +254,7 @@ class ObserverServiceProvider extends ServiceProvider
         AlbumsCategory::observe(AlbumsCategoryObserver::class);
         Album::observe(AlbumObserver::class);
         Photo::observe(PhotoObserver::class);
+        Vector::observe(VectorObserver::class);
 
         // Сектора
         Sector::observe(SectorObserver::class);
