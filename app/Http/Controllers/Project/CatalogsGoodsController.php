@@ -161,7 +161,8 @@ $filial = $this->filial;
             ->has('goods_public')
             ->where([
                 'display' => true,
-                'archive' => false
+                'archive' => false,
+                'filial_id' => $this->filial->id
             ])
             ->filter(request())
             ->orderBy('sort', 'asc')
