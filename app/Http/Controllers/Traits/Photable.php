@@ -589,8 +589,8 @@ trait Photable
             $image = $request->file($name);
 
             $params = getimagesize($image);
-            $width = $params[0];
-            $height = $params[1];
+//            $width = $params[0];
+//            $height = $params[1];
 
             $size = filesize($image)/1024;
             // dd($size);
@@ -626,9 +626,8 @@ trait Photable
 
             $vector->extension = $extension;
 
-
-            $vector->width = $width;
-            $vector->height = $height;
+//            $vector->width = $width;
+//            $vector->height = $height;
 
             $vector->size = number_format($size, 2, '.', '');
 
