@@ -108,6 +108,8 @@ class PromotionController extends Controller
         $data = $request->input();
         $promotion = Promotion::create($data);
 
+        $promotion->filials()->sync($request->filials);
+
         $names = [
             'tiny',
             'small',
@@ -211,6 +213,8 @@ class PromotionController extends Controller
         }
 
         $result = $promotion->update($data);
+
+        $promotion->filials()->sync($request->filials);
 
         if ($result) {
             return redirect()->route('promotions.index');

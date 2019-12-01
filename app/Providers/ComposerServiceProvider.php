@@ -237,7 +237,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.lists.departments', DepartmentsComposer::class);
 
         view()->composer([
-            'sites.filials_list',
+            'includes.lists.filials',
             'menus.form'
         ], FilialsComposer::class);
         // view()->composer('includes.selects.sectors', SectorsComposer::class);
@@ -332,7 +332,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.lead_methods', LeadMethodsComposer::class);
 
         view()->composer('includes.selects.channels', ChannelsComposer::class);
-        
+
 
     }
 

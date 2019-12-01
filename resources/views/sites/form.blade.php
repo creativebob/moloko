@@ -41,7 +41,7 @@
 
                         <fieldset class="fieldset-access">
                             <legend>Филиалы</legend>
-                            @include('sites.filials_list')
+                            @include('includes.lists.filials')
                         </fieldset>
                     </div>
 

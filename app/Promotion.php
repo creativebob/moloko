@@ -85,7 +85,12 @@ class Promotion extends Model
     public function getEntityAliasAttribute($value)
     {
 
-            return $this->getTable();
+        return $this->getTable();
+    }
+
+    public function filials()
+    {
+        return $this->belongsToMany(Department::class, 'filial_promotion', 'promotion_id', 'filial_id');
     }
 
     // Фотки
