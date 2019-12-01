@@ -38,6 +38,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call(CurrenciesTableSeeder::class);
 
+        $this->call(DisplayModesTableSeeder::class);
+
         // Сущности
         $this->call(EntitiesTableSeeder::class);
 

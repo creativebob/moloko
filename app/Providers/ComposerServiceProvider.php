@@ -12,6 +12,7 @@ use App\Http\ViewComposers\System\ChannelsComposer;
 use App\Http\ViewComposers\System\CitySearchComposer;
 use App\Http\ViewComposers\System\ContainersCategoriesComposer;
 use App\Http\ViewComposers\System\ContainersComposer;
+use App\Http\ViewComposers\System\DisplayModesComposer;
 use App\Http\ViewComposers\System\StocksComposer;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -332,6 +333,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.lead_methods', LeadMethodsComposer::class);
 
         view()->composer('includes.selects.channels', ChannelsComposer::class);
+
+        view()->composer('includes.selects.display_modes', DisplayModesComposer::class);
 
 
     }

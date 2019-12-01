@@ -54,6 +54,9 @@ class CatalogsServicesItem extends Model
         'photo_id',
 		'catalogs_service_id',
 
+        'display_mode_id',
+        'is_controllable_mode',
+
         'display',
         'system',
         'moderation'

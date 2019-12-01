@@ -99,6 +99,16 @@
                                     @include('includes.inputs.textarea', ['value' => $catalogs_services_item->seo_description, 'name' => 'seo_description'])
                                 </label>
                             </div>
+                            <div class="small-12 cell">
+                                <label>Режим отображения
+                                    @include('includes.selects.display_modes')
+                                </label>
+                            </div>
+                            {!! Form::hidden('is_controllable_mode', 0) !!}
+                            <div class="small-12 cell checkbox">
+                                {!! Form::checkbox('is_controllable_mode', 1, $catalogs_services_item->is_controllable_mode, ['id' => 'is_controllable_mode-checkbox']) !!}
+                                <label for="is_controllable_mode-checkbox"><span>Разрешить смену отображения</span></label>
+                            </div>
                         </div>
                     </div>
                     <div class="small-12 medium-6 cell">
