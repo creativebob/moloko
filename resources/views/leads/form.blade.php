@@ -477,8 +477,10 @@
                                                     $disabled = true;
                                                 }
                                                 @endphp
+                                                @if ($stocks->isNotEmpty())
                                                 <select-stocks-component :stock-id="{{ $lead->estimate->stock_id }}" :stocks='@json($stocks)'></select-stocks-component>
 {{--                                                @include('includes.selects.stocks', ['stock_id' => $lead->estimate->stock_id, 'disabled' =>  $disabled])--}}
+                                                    @endif
                                             </td>
                                             <td></td>
                                         </tr>
