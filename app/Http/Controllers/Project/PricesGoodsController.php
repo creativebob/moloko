@@ -53,7 +53,7 @@ class PricesGoodsController extends Controller
     {
 
         $site = $this->site;
-$filial = $this->filial;
+        $filial = $this->filial;
         $page = $site->pages_public->where('alias', 'prices-goods')->first();
 
         $price_goods = PricesGoods::with([
@@ -103,5 +103,30 @@ $filial = $this->filial;
     public function destroy($id)
     {
         //
+    }
+
+    public function search($search)
+    {
+
+        $items = PricesGoods::with([
+            'goods_public.article.photo'
+        ])
+            ->where([
+                'archive' => false,
+                'company_id' => $this->site->company_id,
+                'filial_id' => $this->filial->id,
+            ])
+            ->whereHas('goods_public', function($q) use ($search) {
+                $q->whereHas('article', function ($q) use ($search) {
+                    $q->where('name', 'LIKE', '%' . $search . '%')
+                        ->where('draft', false);;
+                })
+                ->where('archive', false);
+            })
+            ->get();
+
+//        dd($items);
+
+        return response()->json($items);
     }
 }
