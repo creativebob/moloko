@@ -136,6 +136,7 @@ $filial = $this->filial;
                 $q->with([
                     'article' => function ($q) {
                         $q->with([
+                            'photo:id,path',
                             'raws' => function ($q) {
                                 $q->with([
                                     'article.unit',
