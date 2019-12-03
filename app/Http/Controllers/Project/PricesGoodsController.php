@@ -109,7 +109,12 @@ class PricesGoodsController extends Controller
     {
 
         $items = PricesGoods::with([
-            'goods_public.article.photo'
+            'goods_public' => function ($q) {
+                $q->with([
+                    'article.photo',
+                    'metrics.values'
+                ]);
+            }
         ])
             ->where([
                 'archive' => false,

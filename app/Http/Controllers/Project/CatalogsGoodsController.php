@@ -156,7 +156,8 @@ $filial = $this->filial;
                         ]);
                     }
                 ]);
-            }
+            },
+
         ])
             ->whereIn('catalogs_goods_item_id', $catalog_goods_items_ids)
             ->has('goods_public')
