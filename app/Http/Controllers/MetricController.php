@@ -44,7 +44,7 @@ class MetricController extends Controller
     public function store(MetricStoreRequest $request)
     {
         $data = $request->input();
-        $metric = (new Metric)->create($data);
+        $metric = Metric::create($data);
 
         if ($metric) {
 

@@ -12,8 +12,9 @@ class CreateMetricsTable extends Migration
         Schema::create('metrics', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('name')->comment('Имя метрики');
-            $table->text('description')->nullable()->comment('Описание метрики');
+            $table->string('name')->comment('Имя');
+            $table->string('alias')->comment('Алиас');
+            $table->text('description')->nullable()->comment('Описание');
 
             $table->bigInteger('property_id')->nullable()->unsigned()->comment('ID свойства');
             $table->foreign('property_id')->references('id')->on('properties');

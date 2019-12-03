@@ -16,6 +16,8 @@ class MetricObserver
         $metric->company_id = $user->company_id;
         $metric->author_id = hideGod($user);
 
+        $this->setAlias($metric);
+
         $metric->display = true;
         $metric->system = false;
         $metric->moderation = false;
@@ -64,5 +66,12 @@ class MetricObserver
     {
         $request = request();
         $metric->entities()->sync($request->entity_id);
+    }
+
+    protected function setAlias(Metric $metric)
+    {
+        if (is_null($metric->alias)) {
+            $metric->alias = \Str::slug($metric->name, '');
+        }
     }
 }

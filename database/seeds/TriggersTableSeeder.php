@@ -23,6 +23,16 @@ class TriggersTableSeeder extends Seeder
                 'alias' => 'create-claim',
                 'description' => '',
             ],
+            [
+                'name' => 'Уведомление',
+                'alias' => 'notification',
+                'description' => '',
+            ],
+            [
+                'name' => 'Предложение',
+                'alias' => 'offer',
+                'description' => '',
+            ],
         ]);
     }
 }

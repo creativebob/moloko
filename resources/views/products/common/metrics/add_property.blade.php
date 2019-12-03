@@ -4,6 +4,11 @@
 	</label>
 </div>
 <div class="small-12 cell">
+    <label>Алиас:
+        @include('includes.inputs.name', ['name' => 'alias'])
+    </label>
+</div>
+<div class="small-12 cell">
 	<label>Описание:
 		@include('includes.inputs.textarea', ['name'=>'description'])
 	</label>

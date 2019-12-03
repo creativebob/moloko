@@ -36,6 +36,7 @@ class Metric extends Model
     protected $fillable = [
         'name',
         'description',
+        'alias',
 
         'property_id',
 

@@ -30,6 +30,9 @@
             <li class="tabs-title">
                 <a data-tabs-target="site" href="#site">Сайт</a>
             </li>
+            <li class="tabs-title">
+                <a data-tabs-target="tab-filters" href="#tab-filters">Фильтры</a>
+            </li>
         </ul>
     </div>
 </div>
@@ -118,6 +121,26 @@
                         <div class="text-center">
                             <img id="photo" src="{{ getPhotoPath($catalogs_goods_item) }}">
                         </div>
+                    </div>
+
+                    {{-- Кнопка --}}
+                    <div class="small-12 cell tabs-button tabs-margin-top">
+                        {{ Form::submit('Редактировать', ['class'=>'button']) }}
+                    </div>
+                </div>
+            </div>
+
+            {{-- Фильтры --}}
+            <div class="tabs-panel" id="tab-filters">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-6 cell">
+                        <fieldset>
+                            <legend>Фильтры</legend>
+                            @include('includes.lists.filters')
+                        </fieldset>
+                    </div>
+                    <div class="small-12 medium-6 cell">
+
                     </div>
 
                     {{-- Кнопка --}}

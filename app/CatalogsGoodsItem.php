@@ -130,4 +130,10 @@ use App\Scopes\Filters\BooklistFilter;
 		{
 			return $this->belongsToMany(Goods::class, 'price_goods', 'catalogs_goods_item_id', 'goods_id');
 		}
+
+		// Фильтры
+        public function filters()
+        {
+            return $this->belongsToMany(Metric::class, 'filters_goods', 'catalogs_goods_item_id', 'metric_id');
+        }
 	}
