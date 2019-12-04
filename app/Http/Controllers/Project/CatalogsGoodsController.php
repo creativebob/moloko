@@ -81,7 +81,7 @@ $filial = $this->filial;
         $page = $site->pages_public->where('alias', 'catalogs-goods')->first();
 
         // Получаем полный прайс со всеми доступными разделами
-        $catalog_goods = CatalogsGoods::with('items_public')
+        $catalog_goods = CatalogsGoods::with('items_public.filters.values')
             ->whereHas('sites', function ($q) use ($site) {
                 $q->where('id', $site->id);
             })
@@ -154,7 +154,8 @@ $filial = $this->filial;
                                 ]);
                             },
                         ]);
-                    }
+                    },
+                    'metrics'
                 ]);
             },
 
