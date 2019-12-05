@@ -85,32 +85,52 @@ class Promotion extends Model
     public function getEntityAliasAttribute($value)
     {
 
-            return $this->getTable();
+        return $this->getTable();
+    }
+
+    public function filials()
+    {
+        return $this->belongsToMany(Department::class, 'filial_promotion', 'promotion_id', 'filial_id');
     }
 
     // Фотки
     public function tiny()
     {
-        return $this->belongsTo(Photo::class, 'tiny_id');
+        return $this->belongsTo(Photo::class, 'tiny_id')
+            ->withDefault([
+                'path' => '/img/system/plug/album_small_default.jpg'
+            ]);
     }
 
     public function small()
     {
-        return $this->belongsTo(Photo::class, 'small_id');
+        return $this->belongsTo(Photo::class, 'small_id')
+            ->withDefault([
+                'path' => '/img/system/plug/album_small_default.jpg'
+            ]);
     }
 
     public function medium()
     {
-        return $this->belongsTo(Photo::class, 'medium_id');
+        return $this->belongsTo(Photo::class, 'medium_id')
+            ->withDefault([
+                'path' => '/img/system/plug/album_small_default.jpg'
+            ]);
     }
 
     public function large()
     {
-        return $this->belongsTo(Photo::class, 'large_id');
+        return $this->belongsTo(Photo::class, 'large_id')
+            ->withDefault([
+                'path' => '/img/system/plug/album_small_default.jpg'
+            ]);
     }
 
     public function large_x()
     {
-        return $this->belongsTo(Photo::class, 'large_x_id');
+        return $this->belongsTo(Photo::class, 'large_x_id')
+            ->withDefault([
+                'path' => '/img/system/plug/album_small_default.jpg'
+            ]);
     }
 }

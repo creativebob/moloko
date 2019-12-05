@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 
 trait CompanyControllerTrait
 {
-	
+
 	public function createCompany($request)
     {
 
@@ -52,7 +52,7 @@ trait CompanyControllerTrait
 
             $company->prename = $request->prename;
             $company->slogan = $request->slogan;
-            $company->name_short = $request->name_short; 
+            $company->name_short = $request->name_short;
             $company->designation = $request->designation;
             $company->email = $request->email;
             $company->inn = $request->inn;
@@ -70,14 +70,26 @@ trait CompanyControllerTrait
 
             $result = cleanNameLegalForm($request->company_name);
             $company->legal_form_id = $result ? $result['legal_form_id'] : $request->legal_form_id ?? 1;
-	
-	        
+
+
 
             $company->save();
-	
+
 	        // Cохраняем или обновляем фото
 	        $photo_id = $this->getPhotoId($request, $company);
 	        $company->photo_id = $photo_id;
+
+            $names = [
+                'black',
+                'white',
+                'color',
+            ];
+
+            foreach ($names as $name) {
+                $column = $name . '_id';
+                $company->$column = $this->saveVector($request, $company, $name);
+            }
+
 	        $company->save();
 
         }
@@ -97,7 +109,7 @@ trait CompanyControllerTrait
                 $manufacturer = new Manufacturer;
 
 
-                // Если компанию создает бог (без компании) и указывает, что она являеться производителем, 
+                // Если компанию создает бог (без компании) и указывает, что она являеться производителем,
                 if($auth_company_id == null){
                     // то она будет производителем сама для себя
                     $manufacturer->company_id = $company->id;
@@ -177,7 +189,7 @@ trait CompanyControllerTrait
 
         $company->prename = $request->prename;
         $company->slogan = $request->slogan;
-        $company->name_short = $request->name_short; 
+        $company->name_short = $request->name_short;
         $company->designation = $request->designation;
         $company->email = $request->email;
         $company->inn = $request->inn;
@@ -197,10 +209,21 @@ trait CompanyControllerTrait
         $company->seo_description = $request->seo_description;
         $company->about = $request->about;
         $company->birthday_company = $request->birthday_company;
-		
+
 	    // Cохраняем или обновляем фото
 	    $photo_id = $this->getPhotoId($request, $company);
 	    $company->photo_id = $photo_id;
+
+        $names = [
+            'black',
+            'white',
+            'color',
+        ];
+
+        foreach ($names as $name) {
+            $column = $name . '_id';
+            $company->$column = $this->saveVector($request, $company, $name);
+        }
 
         $company->save();
 

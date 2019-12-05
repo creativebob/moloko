@@ -101,6 +101,8 @@ class SiteController extends Controller
         $data = $request->input();
         $site = Site::create($data);
 
+        $site->filials()->sync($request->filials);
+
         if ($site) {
             return redirect()
                 ->route('sites.edit', [$site->id])
@@ -173,6 +175,8 @@ class SiteController extends Controller
 
         $data = $request->input();
         $result = $site->update($data);
+
+        $site->filials()->sync($request->filials);
 
         if ($result) {
             return redirect()

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Traits;
 
+use App\Vector;
 use Illuminate\Support\Facades\File;
 use App\Photo;
 use App\PhotoSetting;
@@ -56,13 +57,13 @@ trait Photable
 //                    ->withErrors(['msg' => 'Размер (Mb) фотографии высок!'])
 //                    ->withInput();
             }
-			
+
             if ($item->getTable() == 'companies') {
 	            $directory = $item->id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
             } else {
 	            $directory = $item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/img';
             }
-            
+
 
             if (isset($item->photo_id)) {
                 $photo = Photo::findOrFail($item->photo_id);
@@ -89,6 +90,8 @@ trait Photable
             $image_name = 'photo_' . time() . '.' . $need_extension;
             $photo->name = $image_name;
 
+            $photo->path = "/storage/{$directory}/{$image_name}";
+
 //            $photo->path = "/storage/{$directory}/{$image_name}";
 
             $user = $request->user();
@@ -100,6 +103,10 @@ trait Photable
 
             // Сохранияем оригинал
             $upload_success = $image->storeAs($directory . '/original', $image_name, 'public');
+
+            $res = Storage::disk('public')->putFileAs(
+                $directory, $image, $image_name
+            );
             // dd($upload_success);
 
             // Сохраняем small, medium и large
@@ -315,7 +322,26 @@ trait Photable
     {
 
         // Вытаскиваем настройки из конфига
-        $settings = config('photo_settings');
+        $settings = PhotoSetting::whereNull('company_id')
+            ->first();
+
+        if (! $settings) {
+            // Умолчания на случай, если нет доступа к базе (Для формирования autoload)
+            $settings = [];
+            $settings['img_small_width'] = 0;
+            $settings['img_small_height'] = 0;
+            $settings['img_medium_width'] = 0;
+            $settings['img_medium_height'] = 0;
+            $settings['img_large_width'] = 0;
+            $settings['img_large_height'] = 0;
+
+            $settings['img_formats'] = 0;
+            $settings['strict_mode'] = 0;
+
+            $settings['img_min_width'] = 0;
+            $settings['img_min_height'] = 0;
+            $settings['img_max_size'] = 0;
+        }
 
         // dd($settings);
 
@@ -344,7 +370,7 @@ trait Photable
     // Пишем / удаляем настройки для фоток, принимаем пришедшие данные, и запись, к которой нужно создать / удалить настройки
     function setSettings($request, $item)
     {
-
+        // TODO - 29.11.19 - Настройки фоток более не берутся из конфига, сделать запрос
 
         // Смотрим есть ли отношение
         if (isset($item->photo_settings)) {
@@ -403,13 +429,13 @@ trait Photable
     {
 
         if (isset($item->photo_id)) {
-			
+
         	if ($item->getTable() == 'companies') {
 		        $path = "/storage/" . $item->id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
 	        } else {
 		        $path = "/storage/" . $item->company_id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
 	        }
-            
+
             return $path;
         } else {
 
@@ -468,13 +494,13 @@ trait Photable
     }
 
     /**
-     * Сохранение одной фотографии
-     *
-     * @param $request
-     * @param $item
-     * @param string $name
-     * @return integer $photo_id
-     */
+ * Сохранение одной фотографии
+ *
+ * @param $request
+ * @param $item
+ * @param string $name
+ * @return integer $photo_id
+ */
     public function savePhoto($request, $item, $name = 'photo')
     {
         if ($request->hasFile($name)) {
@@ -540,6 +566,93 @@ trait Photable
 //            dd($res);
 
             return $photo->id;
+        }  else {
+            $column = $name . '_id';
+            return $item->$column;
+        }
+
+    }
+
+    /**
+     * Сохранение векторной фотографии
+     *
+     * @param $request
+     * @param $item
+     * @param string $name
+     * @return integer $vector_id
+     */
+    public function saveVector($request, $item, $name = 'vector')
+    {
+
+        if ($request->hasFile($name)) {
+
+            $image = $request->file($name);
+
+            $params = getimagesize($image);
+//            $width = $params[0];
+//            $height = $params[1];
+
+            $size = filesize($image)/1024;
+            // dd($size);
+
+//                $settings = getSettings($item->getTable());
+//
+//                if ($width < $settings['img_min_width']) {
+//                    abort(403, 'Ширина фотографии мала!');
+//                }
+//
+//                if ($height < $settings['img_min_height']) {
+//                    abort(403, 'Высота фотографии мала!');
+//                }
+//
+//                if ($size > ($settings['img_max_size'] * 1024)) {
+//                    abort(403, 'Размер (Mb) фотографии высок!');
+//                }
+
+            if ($item->getTable() == 'companies') {
+                $directory = $item->id . '/media/' . $item->getTable() . '/' . $item->id . '/svg';
+            } else {
+                $directory = $item->company_id . '/media/' . $item->getTable() . '/' . $item->id . '/svg';
+            }
+
+            if ($item->$name) {
+                $vector = $item->$name;
+                Storage::disk('public')->delete("{$directory}/{$vector->name}");
+            } else {
+                $vector = Vector::make();
+            }
+
+            $extension = $image->getClientOriginalExtension();
+
+            $vector->extension = $extension;
+
+//            $vector->width = $width;
+//            $vector->height = $height;
+
+            $vector->size = number_format($size, 2, '.', '');
+
+            $image_name = $name .'_' . time() . '.' . $extension;
+            $vector->name = $image_name;
+
+            $vector->path = "/storage/{$directory}/{$image_name}";
+
+            $user = $request->user();
+            $vector->company_id = $user->company_id;
+            $vector->author_id = hideGod($user);
+
+            $vector->save();
+//             dd('Функция маслает!');
+
+            // Сохранияем
+            $res = Storage::disk('public')->putFileAs(
+                $directory, $image, $image_name
+            );
+//            dd($res);
+
+            return $vector->id;
+        }  else {
+            $column = $name . '_id';
+            return $item->$column;
         }
 
     }

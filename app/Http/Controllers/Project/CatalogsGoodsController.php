@@ -81,7 +81,7 @@ class CatalogsGoodsController extends Controller
         $page = $site->pages_public->where('alias', 'catalogs-goods')->first();
 
         // Получаем полный прайс со всеми доступными разделами
-        $catalog_goods = CatalogsGoods::with('items_public')
+        $catalog_goods = CatalogsGoods::with('items_public.filters.values')
             ->whereHas('sites', function ($q) use ($site) {
                 $q->where('id', $site->id);
             })
@@ -138,6 +138,7 @@ class CatalogsGoodsController extends Controller
                 $q->with([
                     'article' => function ($q) {
                         $q->with([
+                            'photo',
                             'raws' => function ($q) {
                                 $q->with([
                                     'article.unit',
@@ -155,15 +156,18 @@ class CatalogsGoodsController extends Controller
                                 ]);
                             },
                         ]);
-                    }
+                    },
+                    'metrics'
                 ]);
-            }
+            },
+
         ])
             ->whereIn('catalogs_goods_item_id', $catalog_goods_items_ids)
             ->has('goods_public')
             ->where([
                 'display' => true,
-                'archive' => false
+                'archive' => false,
+                'filial_id' => $this->filial->id
             ])
             ->filter(request())
             ->orderBy('sort', 'asc')

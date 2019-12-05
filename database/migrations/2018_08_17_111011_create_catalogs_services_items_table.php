@@ -36,6 +36,11 @@ class CreateCatalogsServicesItemsTable extends Migration
             $table->bigInteger('category_id')->unsigned()->nullable()->comment('Id категории, пишется каждому вложенному пункту');
             $table->foreign('category_id')->references('id')->on('catalogs_services_items');
 
+            $table->bigInteger('display_mode_id')->unsigned()->default(1)->comment('Id типа отображения');
+            $table->foreign('display_mode_id')->references('id')->on('display_modes');
+
+            $table->boolean('is_controllable_mode')->default(0)->comment('Контроль режима');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

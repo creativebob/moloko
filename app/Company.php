@@ -220,7 +220,7 @@ class Company extends Model
     {
         return $this->hasMany('App\Client', 'company_id')->where('clientable_type', 'App\User');
     }
-    
+
     // Производители
     // public function manufacturers()
     // {
@@ -242,7 +242,7 @@ class Company extends Model
     {
         return $this->belongsToMany('App\Company', 'manufacturers', 'manufacturer_id', 'company_id')->where('manufacturer_id', $company_id);
     }
-	
+
 	public function we_manufacturer()
 	{
 		return $this->belongsTo(Manufacturer::class, 'id', 'manufacturer_id');
@@ -362,12 +362,36 @@ class Company extends Model
             $this->attributes['birthday_company'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
         }
     }
-	
+
 	// Фото
 	public function photo()
 	{
 		return $this->belongsTo(Photo::class);
 	}
+
+    public function white()
+    {
+        return $this->belongsTo(Vector::class)
+            ->withDefault([
+                'path' => '/img/system/svg/logo-white.svg'
+            ]);
+    }
+
+    public function black()
+    {
+        return $this->belongsTo(Vector::class)
+            ->withDefault([
+                'path' => '/img/system/svg/logo-black.svg'
+            ]);
+    }
+
+    public function color()
+    {
+        return $this->belongsTo(Vector::class)
+            ->withDefault([
+                'path' => '/img/system/svg/logo-color.svg'
+            ]);
+    }
 
     // Получаем аккаунты
     public function accounts()

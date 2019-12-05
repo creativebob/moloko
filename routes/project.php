@@ -20,6 +20,8 @@ Route::get('/catalogs-goods/{all}', 'CatalogsGoodsController@show')
 //Route::get('/catalogs-goods/{catalog_slug}/{catalog_item_slug}', 'AppController@catalogs_goods')->name('project.catalogs_goods');
 //Route::get('/catalogs-services/{catalog_slug}/{catalog_item_slug}', 'AppController@catalogs_services')->name('project.catalogs_services');
 
+Route::get('/prices-goods/search/{text}', 'PricesGoodsController@search')
+    ->name('project.prices_goods.search');
 Route::resource('/prices-goods', 'PricesGoodsController')
     ->only(['show'])
     ->names('project.prices_goods');

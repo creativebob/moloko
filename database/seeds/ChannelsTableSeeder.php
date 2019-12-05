@@ -20,7 +20,7 @@ class ChannelsTableSeeder extends Seeder
                 'name' => 'Email'
             ],
             [
-                'name' => 'Смс'
+                'name' => 'Sms'
             ],
         ]);
     }

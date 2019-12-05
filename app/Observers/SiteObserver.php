@@ -31,14 +31,14 @@ class SiteObserver
         $this->destroy($site);
     }
 
-    public function saved(Site $site)
-    {
-        $this->setFilials($site);
-    }
-
-    protected function setFilials(Site $site)
-    {
-        $request = request();
-        $site->filials()->sync($request->filials);
-    }
+//    public function saved(Site $site)
+//    {
+//        $this->setFilials($site);
+//    }
+//
+//    protected function setFilials(Site $site)
+//    {
+//        $request = request();
+//        $site->filials()->sync($request->filials);
+//    }
 }

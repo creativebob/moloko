@@ -1,7 +1,7 @@
 <?php
-	
+
 	namespace App;
-	
+
 	use Illuminate\Database\Eloquent\Model;
 	use Illuminate\Notifications\Notifiable;
 	use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,15 +21,15 @@
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
-	
+
 	class CatalogsGoodsItem extends Model
 	{
-		
+
 		// Включаем кеш
 		use Cachable;
-		
+
 		use SoftDeletes;
-		
+
 		// Включаем Scopes
 		use CompaniesLimitTraitScopes;
 		use AuthorsTraitScopes;
@@ -37,14 +37,14 @@ use App\Scopes\Filters\BooklistFilter;
 		// use FilialsTraitScopes;
 		use TemplateTraitScopes;
 		use ModeratorLimitTraitScopes;
-		
+
 		// Фильтры
 		use Filter;
 		use BooklistFilter;
 		// use DateIntervalFilter;
-		
+
 		protected $dates = ['deleted_at'];
-		
+
 		protected $fillable = [
 			'name',
 			'description',
@@ -53,65 +53,68 @@ use App\Scopes\Filters\BooklistFilter;
 			'parent_id',
 			'photo_id',
 			'catalogs_goods_id',
-			
+
+            'display_mode_id',
+            'is_controllable_mode',
+
 			'display',
 			'system',
 			'moderation'
 		];
-		
+
 		// Каталог
 		public function catalog()
 		{
 			return $this->belongsTo(CatalogsGoods::class, 'catalogs_goods_id');
 		}
-		
+
 		public function catalog_public()
 		{
 			return $this->belongsTo(CatalogsGoods::class, 'catalogs_goods_id')
 				->where('display', true);
 		}
-		
+
 		// Родитель
 		public function parent()
 		{
 			return $this->belongsTo(CatalogsGoodsItem::class);
 		}
-		
+
 		// Вложенные
 		public function childs()
 		{
 			return $this->hasMany(CatalogsGoodsItem::class, 'parent_id');
 		}
-		
+
 		// Главный
 		public function category()
 		{
 			return $this->belongsTo(CatalogsGoodsItem::class);
 		}
-		
+
 		// Аватар
 		public function photo()
 		{
 			return $this->belongsTo(Photo::class);
 		}
-		
+
 		// Автор
 		public function author()
 		{
 			return $this->belongsTo(User::class);
 		}
-		
+
 		// Прайс
 		public function prices_goods()
 		{
 			return $this->hasMany(PricesGoods::class);
 		}
-		
+
 		public function prices()
 		{
 			return $this->hasMany(PricesGoods::class);
 		}
-		
+
 		public function prices_public()
 		{
 			return $this->hasMany(PricesGoods::class)
@@ -121,10 +124,16 @@ use App\Scopes\Filters\BooklistFilter;
 					'archive' => false
 				]);
 		}
-		
+
 		// Товары каталога
 		public function goods()
 		{
 			return $this->belongsToMany(Goods::class, 'price_goods', 'catalogs_goods_item_id', 'goods_id');
 		}
+
+		// Фильтры
+        public function filters()
+        {
+            return $this->belongsToMany(Metric::class, 'filters_goods', 'catalogs_goods_item_id', 'metric_id');
+        }
 	}

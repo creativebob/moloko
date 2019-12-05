@@ -30,6 +30,9 @@
             <li class="tabs-title">
                 <a data-tabs-target="site" href="#site">Настройка для сайта</a>
             </li>
+            <li class="tabs-title">
+                <a data-tabs-target="tab-filters" href="#tab-filters">Фильтры</a>
+            </li>
         </ul>
     </div>
 </div>
@@ -99,6 +102,16 @@
                                     @include('includes.inputs.textarea', ['value' => $catalogs_goods_item->seo_description, 'name' => 'seo_description'])
                                 </label>
                             </div>
+                            <div class="small-12 cell">
+                                <label>Режим отображения
+                                    @include('includes.selects.display_modes')
+                                </label>
+                            </div>
+                            {!! Form::hidden('is_controllable_mode', 0) !!}
+                            <div class="small-12 cell checkbox">
+                                {!! Form::checkbox('is_controllable_mode', 1, $catalogs_goods_item->is_controllable_mode, ['id' => 'is_controllable_mode-checkbox']) !!}
+                                <label for="is_controllable_mode-checkbox"><span>Разрешить смену отображения</span></label>
+                            </div>
                         </div>
                     </div>
                     <div class="small-12 medium-6 cell">
@@ -113,6 +126,26 @@
                                 <input type="color" name="bg" value="#ff0000">
                             </label>
                         </div>
+                    </div>
+
+                    {{-- Кнопка --}}
+                    <div class="small-12 cell tabs-button tabs-margin-top">
+                        {{ Form::submit('Редактировать', ['class'=>'button']) }}
+                    </div>
+                </div>
+            </div>
+
+            {{-- Фильтры --}}
+            <div class="tabs-panel" id="tab-filters">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-6 cell">
+                        <fieldset>
+                            <legend>Фильтры</legend>
+                            @include('includes.lists.filters')
+                        </fieldset>
+                    </div>
+                    <div class="small-12 medium-6 cell">
+
                     </div>
 
                     {{-- Кнопка --}}

@@ -167,6 +167,8 @@ class CatalogsGoodsItemController extends Controller
 
         if ($result) {
 
+            $catalogs_goods_item->filters()->sync($request->filters);
+
             // Переадресовываем на index
             return redirect()->route('catalogs_goods_items.index', [$catalog_id, 'id' => $catalogs_goods_item->id]);
         } else {

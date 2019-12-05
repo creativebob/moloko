@@ -48,14 +48,18 @@ class CatalogGoodsWithPricesComposer
                                 $q->where('draft', false);
                             });
                     })
-                    ->where('archive', false)
+                    ->where([
+                        'archive' => false,
+                        'filial_id' => \Auth::user()->StafferFilialId
+                    ])
                     ->select([
                         'prices_goods.id',
                         'archive',
                         'prices_goods.catalogs_goods_id',
                         'catalogs_goods_item_id',
                         'price',
-                        'goods_id'
+                        'goods_id',
+                        'filial_id'
                     ]);
             },
         ])
