@@ -107,7 +107,7 @@
 </div>
 @endcan
 
-          @can('index', App\Site::class)
+  @can('index', App\Site::class)
 @empty ($parent_id)
 {{-- Сайт --}}
 <div class="tabs-panel" id="site">
