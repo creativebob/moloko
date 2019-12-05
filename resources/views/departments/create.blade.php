@@ -14,21 +14,30 @@
 				<li class="tabs-title is-active">
 					<a href="#department" aria-selected="true">Отдел</a>
 				</li>
+
+                @can('create', App\Staffer::class)
 				<li class="tabs-title">
 					<a data-tabs-target="position" href="#position">Должность</a>
 				</li>
+                @endcan
 
 				@else
 
 				<li class="tabs-title is-active">
 					<a href="#department" aria-selected="true">Филиал</a>
 				</li>
+
+                @can('create', App\Schedule::class)
 				<li class="tabs-title">
 					<a data-tabs-target="worktimes" href="#worktimes">График работы</a>
 				</li>
+                @endcan
+
+                @can('index', App\Site::class)
                 <li class="tabs-title">
-                    <a data-tabs-target="site" href="#site">Сайт</a>
+                    <a data-tabs-target="site" href="#site">Настройки для сайта</a>
                 </li>
+                @endcan
 
                 @endisset
 
@@ -62,7 +71,7 @@
            <div class="item-error">Такой {{ isset($parent_id) ? 'отдел' : 'филиал' }} уже существует в {{ isset($parent_id) ? 'филиале' : 'организации' }}!</div>
        </label>
 
-       <label>Адресс
+       <label>Адрес
            @include('includes.inputs.address', ['value' => isset($department->location->address) ? $department->location->address : null, 'name'=>'address'])
        </label>
        <label>Телефон
@@ -87,6 +96,7 @@
 </div>
 </div>
 
+@can('create', App\Schedule::class)
 {{-- Схема работы --}}
 <div class="tabs-panel" id="worktimes">
     <div class="grid-x grid-padding-x align-center">
@@ -95,7 +105,9 @@
   </div>
 </div>
 </div>
+@endcan
 
+          @can('index', App\Site::class)
 @empty ($parent_id)
 {{-- Сайт --}}
 <div class="tabs-panel" id="site">
@@ -108,12 +120,14 @@
     </div>
 </div>
 @endempty
+          @endcan
 
 
 
 
 {{ Form::close() }}
 
+@can('create', App\Staffer::class)
 {{-- Должность --}}
 @isset ($parent_id)
 
@@ -176,6 +190,7 @@
 </div>
 {{ Form::close() }}
 @endisset
+@endcan
 
 
 <div data-close class="icon-close-modal sprite close-modal add-item"></div>

@@ -79,7 +79,10 @@
 
                 @if($sections->isNotEmpty())
                 @foreach($sections as $section)
-
+                    @php
+                    $model = 'App\\' . $section->model;
+                    @endphp
+                    @can('index', $model)
                 <tr class="item" id="sites-{{ $site->id }}" data-name="{{ $site->name }}">
                     <td class="td-drop">
                         <div class="sprite icon-drop"></div>
@@ -94,6 +97,7 @@
 
                     </td>
                 </tr>
+                @endcan
 
                 @endforeach
                 @endif

@@ -182,7 +182,7 @@
                     <a href="#content-panel-notes" aria-selected="true">События</a>
                 </li>
 
-                @can('index', App\CatalogsGoods::class)
+                @can('create', App\Estimate::class)
                     @isset($catalogs_goods_data)
                         <li class="tabs-title">
                             <a data-tabs-target="tab-catalog-goods" href="#tab-catalog-goods">Товары</a>
@@ -190,7 +190,7 @@
                     @endisset
                 @endcan
 
-                @can('index', App\CatalogsService::class)
+                @can('create', App\Estimate::class)
                     @isset($catalog_services)
                         <li class="tabs-title">
                             <a data-tabs-target="content-panel-catalog-services" href="#content-panel-catalog-services">Услуги</a>

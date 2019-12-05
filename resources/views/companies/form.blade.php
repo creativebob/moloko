@@ -388,7 +388,7 @@
 
 
                     {{-- Предлагаем добавить компанию в производители, если, конечно, создаем ее не из под страницы создания производителей --}}
-
+                    @can('index', App\Manufacturer::class)
                         @if(empty($manufacturer))
                             @if(isset($company->manufacturer_self))
                                 @if($company->manufacturer_self == false)
@@ -399,9 +399,11 @@
                                 @endif
                             @endif
                         @endif
+                    @endcan
 
                     {{-- Предлагаем добавить компанию в поставщики, если, конечно, создаем ее не из под страницы создания поставщиков --}}
 
+                    @can('index', App\Supplier::class)
                         @if(empty($supplier))
                             @if(isset($company->supplier_self) && (Auth::user()->company_id != null))
                                 @if($company->supplier_self == false)
@@ -412,6 +414,7 @@
                                 @endif
                             @endif
                         @endif
+                    @endcan
 
                         {{-- Чекбоксы управления --}}
                         @include('includes.control.checkboxes', ['item' => $company])
