@@ -15,9 +15,9 @@
 {{-- Состав --}}
 
 
-
+@can('index', App\Raw::class)
 <div class="tabs-panel" id="raws">
-
 	@include('products.articles_categories.goods_categories.raws.raws', ['category' => $category])
 </div>
+@endcan
 
