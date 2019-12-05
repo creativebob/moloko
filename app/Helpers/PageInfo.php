@@ -2,7 +2,7 @@
 use App\Page;
 
     function pageInfo($alias) {
-        $result = Page::with('entity:id,page_id,view_path,metric,ancestor_id')
+        $result = Page::with('entity:id,page_id,view_path,metric,ancestor_id,model')
         ->where([
             'alias' => $alias,
             'site_id' => 1

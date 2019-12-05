@@ -63,7 +63,7 @@ class RawController extends Controller
             'portion_name',
             'portion_abbreviation',
             'unit_portion_id',
-            'portion_count',   
+            'portion_count',
 
             'author_id',
             'company_id',
