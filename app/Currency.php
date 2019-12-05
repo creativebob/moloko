@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
+// use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Scopes для главного запроса
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
@@ -28,7 +28,7 @@ class Currency extends Model
     use Cachable;
 
     use Notifiable;
-    use SoftDeletes;
+    // use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;

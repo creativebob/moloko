@@ -77,7 +77,7 @@ class CatalogsGoodsController extends Controller
         }
 
         $site = $this->site;
-$filial = $this->filial;
+        $filial = $this->filial;
         $page = $site->pages_public->where('alias', 'catalogs-goods')->first();
 
         // Получаем полный прайс со всеми доступными разделами
@@ -88,8 +88,10 @@ $filial = $this->filial;
             ->where('slug', $catalog_slug)
             ->where(['display' => true])
             ->first();
-
-        if($catalog_item_slug){
+            
+            // Проверим, а доступен ли каталог товаров. Если нет, то кидаем ошибку
+            if(!$catalog_goods){abort(403, 'Доступ к прайсу товаров компании ограничен. Согласен, это довольно странно...'); }
+            if($catalog_item_slug){
 
             // Получаем разделы прайса ограниченный slug'ом
             $catalog_goods_items = $catalog_goods->items_public->where('slug', $catalog_item_slug)->first();

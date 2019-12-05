@@ -38,8 +38,10 @@ class CartController extends Controller
                 $prices_ids = array_keys($cart['prices']);
 //            dd($prices_ids);
 
-                $prices_goods = PricesGoods::with('goods_public')
+                $prices_goods = PricesGoods::with('goods_public.article.photo', 'currency')
                     ->find($prices_ids);
+
+                // dd($prices_goods->first()->goods->article);
 
                 foreach($cart['prices'] as $id => $price) {
                     $price_goods = $prices_goods->firstWhere('id', $id);
@@ -62,7 +64,7 @@ class CartController extends Controller
         // dd($prices_goods);
 
         $site = $this->site;
-$filial = $this->filial;
+        $filial = $this->filial;
         $page = $site->pages_public->firstWhere('alias', 'cart');
         return view($site->alias.'.pages.cart.index', compact('site', 'filial', 'page', 'prices_goods'));
     }

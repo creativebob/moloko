@@ -117,4 +117,37 @@ class Goods extends Model
     {
         return $this->morphMany(OrderComposition::class, 'order_compositions');
     }
+
+    public function getMetricByName($metric_name){
+
+        $metric = $this->metrics->where('name', $metric_name)->first();
+
+        if(isset($metric)){
+            
+            if($metric->property->type == 'list'){
+                return $metric->values->where('id', $metric->pivot->value)->first()->value;
+            }
+            return $metric->pivot->value;
+
+        } else {
+            return null;
+        }
+    }
+
+    public function getMetricById($metric_id){
+
+        $metric = $this->metrics->where('id', $metric_id)->first();
+
+        if(isset($metric)){
+            
+            if($metric->property->type == 'list'){
+                return $metric->values->where('id', $metric->pivot->value)->first()->value;
+            }
+            return $metric->pivot->value;
+
+        } else {
+            return null;
+        }
+    }
+
 }
