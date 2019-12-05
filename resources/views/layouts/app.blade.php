@@ -7,7 +7,7 @@ $user_filial_id = $session_access['user_info']['filial_id'];
 $user_status = $session_access['user_info']['user_status'];
 $company_id = $session_access['user_info']['company_id'];
 $company_name = $session_access['company_info']['company_name'];
-
+$company_designation = $session_access['company_info']['company_designation'];
 
 if (isset($session_access['user_info']['position_id'])) {
     $position_id = $session_access['user_info']['position_id'];
@@ -81,18 +81,21 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                             @endif
                         </li>
 
-                        <li>
-                            <a id="task-toggle"><img src="/img/system/header/alert.png">
-                                @if(!empty($list_challenges['for_me']))
-                                    <span class="challenges_count" id="challenges-count">{{ $list_challenges['for_me']->flatten()->count() }}</span>
-                                @endif
-                            </a></li>
+                        @can('index', App\Challenge::class)
+                            <li>
+                                <a id="task-toggle"><img src="/img/system/header/alert.png">
+                                    @if(!empty($list_challenges['for_me']))
+                                        <span class="challenges_count" id="challenges-count">{{ $list_challenges['for_me']->flatten()->count() }}</span>
+                                    @endif
+                                </a>
+                            </li>
+                        @endcan
                             <li>
                                 <a data-toggle="profile">
 
                                     <span>
                                         @if(isset(Auth::user()->company_id))
-                                        {{ $company_name }}  |
+                                        {{ $company_designation ?? $company_name }}  |
                                         @endif
                                         {{ isset(Auth::user()->login) ? Auth::user()->login : 'Чужак' }} {{ $count_authors }}
                                     </span>

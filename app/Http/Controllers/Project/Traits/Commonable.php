@@ -65,6 +65,8 @@ trait Commonable
         if (count($arr) > 2) {
             $site->load('filials.location.city');
         }
+
+        $site->filial_mode = $this->filial;
         $this->site = $site;
     }
 }

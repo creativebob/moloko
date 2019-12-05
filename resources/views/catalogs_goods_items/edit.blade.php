@@ -28,7 +28,7 @@
                 <a href="#options" aria-selected="true">Общая информация</a>
             </li>
             <li class="tabs-title">
-                <a data-tabs-target="site" href="#site">Сайт</a>
+                <a data-tabs-target="site" href="#site">Настройка для сайта</a>
             </li>
             <li class="tabs-title">
                 <a data-tabs-target="tab-filters" href="#tab-filters">Фильтры</a>
@@ -120,6 +120,11 @@
                         </label>
                         <div class="text-center">
                             <img id="photo" src="{{ getPhotoPath($catalogs_goods_item) }}">
+                        </div>
+                        <div class="small-6 medium-6 cell">
+                            <label>Цвет для оформления
+                                <input type="color" name="bg" value="#ff0000">
+                            </label>
                         </div>
                     </div>
 
