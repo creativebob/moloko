@@ -30,7 +30,7 @@ class AppController extends Controller
 
             return redirect('catalogs-goods/tovary-dlya-sayta/tekstil');
             $site = $this->site;
-$filial = $this->filial;
+            $filial = $this->filial;
             $page = $site->pages_public
                 ->where('alias', 'main')
                 ->first();
@@ -51,7 +51,7 @@ $filial = $this->filial;
         } else {
 
             $site = $this->site;
-$filial = $this->filial;
+            $filial = $this->filial;
 
             // Ищим в базе страницу с алиасом
             $page = $site->pages_public
@@ -84,7 +84,7 @@ $filial = $this->filial;
     public function catalogs_services(Request $request, $catalog_slug, $catalog_item_slug)
     {
         $site = $this->site;
-$filial = $this->filial;
+        $filial = $this->filial;
 
         // Вытаскивает через сайт каталог и его пункт с прайсами (не архивными), товаром и артикулом
         $site->load(['catalogs_services' => function ($q) use ($catalog_slug, $catalog_item_slug) {
@@ -150,8 +150,10 @@ $filial = $this->filial;
         $estimates = null;
 
         $site = $this->site;
-$filial = $this->filial;
+        $filial = $this->filial;
         $page = $site->pages_public->firstWhere('alias', 'cabinet');
+
+        $site->load('notifications');
 
         return view($site->alias.'.pages.cabinet.index', compact('site', 'filial', 'page', 'estimates', 'user'));
     }
@@ -309,7 +311,7 @@ $filial = $this->filial;
                 return 'Не существует лида';
 
             }
-            
+
         } else {
 
             // Сессия не существует
@@ -318,23 +320,23 @@ $filial = $this->filial;
         }
 
     }
-	
+
 	public function delivery_update(Request $request)
 	{
 		$data = Carbon::createFromFormat('d.m.Y H:i', $request->delivery_date . ' ' . $request->delivery_time);
 //		dd($data);
-		
+
 		$res = Lead::where('id', $request->lead_id)
 			->update([
 				'delivered_at' => $data
 			]);
 //		dd($res);
-		
+
 		if ($res) {
 			return response()->json(true);
 		}
-		
-		
+
+
 	}
-    
+
 }
