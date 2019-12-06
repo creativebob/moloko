@@ -6,7 +6,7 @@
 
 @section('title', 'Новый пользователь')
 
-@section('breadcrumbs', Breadcrumbs::render('create', $page_info))
+{{--@section('breadcrumbs', Breadcrumbs::render('create', $page_info))--}}
 
 @section('title-content')
 <div class="top-bar head-content">
@@ -20,7 +20,7 @@
 
 @section('content')
 
-{{ Form::open(['url' => '/admin/users', 'data-abide', 'novalidate', 'files' => 'true']) }}
+{{ Form::open(['route' => ['users.store', $site_id], 'data-abide', 'novalidate', 'files' => 'true']) }}
 @include('users.form', ['submitButtonText' => 'Добавить пользователя', 'param' => ''])
 {{ Form::close() }}
 

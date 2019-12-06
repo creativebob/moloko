@@ -213,6 +213,8 @@ $filial = $this->filial;
                     $user->second_name = $second_name;
                     $user->nickname = $nickname;
 
+                    $user->site_id = $site->id;
+
                     // Компания и филиал
                     $user->company_id = $company->id;
                     $user->filial_id = $filial_id;

@@ -38,7 +38,7 @@ class GetAccessController extends Controller
     {
 
         // Ссылка по умолчанию на страницу входа
-        $link = 'users.index';
+        $link = 'employees.index';
 
 
         // Получаем пользователя в user
@@ -205,7 +205,7 @@ class GetAccessController extends Controller
                                 }
 
                                 // // При обработке права на просмотр чужих записей добавляем список авторов к праву
-                                // if($right->alias_right == $right->entity->alias . 'nolimit-allow'){$all_rights[$right->alias_right]['authors'] = $list_authors;};          
+                                // if($right->alias_right == $right->entity->alias . 'nolimit-allow'){$all_rights[$right->alias_right]['authors'] = $list_authors;};
 
                         }
 

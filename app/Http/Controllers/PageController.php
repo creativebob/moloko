@@ -94,7 +94,7 @@ class PageController extends Controller
         if ($page) {
 
             // Переадресовываем на index
-            return redirect()->route('pages.index', ['site_id' => $site_id]);
+            return redirect()->route('pages.index', $site_id);
         } else {
             abort(403, 'Ошибка при записи страницы!');
         }
@@ -145,7 +145,7 @@ class PageController extends Controller
         if ($page) {
 
             // Переадресовываем на index
-            return redirect()->route('pages.index', ['site_id' => $site_id]);
+            return redirect()->route('pages.index', $site_id);
         } else {
             abort(403, 'Ошибка при записи страницы!');
         }
