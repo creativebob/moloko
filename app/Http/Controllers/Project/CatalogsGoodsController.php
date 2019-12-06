@@ -174,7 +174,7 @@ class CatalogsGoodsController extends Controller
             ->where([
                 'display' => true,
                 'archive' => false,
-                'filial_id' => $this->filial->id
+                'filial_id' => $this->site->filial->id
             ])
             ->filter(request())
             ->orderBy('sort', 'asc')

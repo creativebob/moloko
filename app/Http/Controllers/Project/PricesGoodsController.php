@@ -119,7 +119,7 @@ class PricesGoodsController extends Controller
             ->where([
                 'archive' => false,
                 'company_id' => $this->site->company_id,
-                'filial_id' => $this->filial->id,
+                'filial_id' => $this->site->filial->id,
             ])
             ->whereHas('goods_public', function($q) use ($search) {
                 $q->whereHas('article', function ($q) use ($search) {
