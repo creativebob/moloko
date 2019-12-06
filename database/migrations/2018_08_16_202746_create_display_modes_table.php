@@ -17,6 +17,8 @@ class CreateDisplayModesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name')->index()->comment('Название');
             $table->string('alias')->index()->comment('Алиас');
+            $table->string('class')->comment('Класс');
+            $table->string('icon')->comment('Класс иконки');
         });
     }
 

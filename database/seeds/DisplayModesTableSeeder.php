@@ -16,10 +16,14 @@ class DisplayModesTableSeeder extends Seeder
            [
                'name' => 'Блок',
                'alias' => 'box',
+               'class' => 'display-mode-box',
+               'icon' => 'icon-display-box',
            ],
             [
                 'name' => 'Список',
                 'alias' => 'list',
+                'class' => 'display-mode-list',
+                'icon' => 'icon-display-list',
             ],
         ]);
     }
