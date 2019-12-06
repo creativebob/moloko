@@ -1,4 +1,5 @@
 <?php
+
 use App\Phone;
 use App\Client;
 
@@ -101,8 +102,6 @@ function check_user_by_phones($phone_search, $company_id = null) {
 	if($company_id == null){
 		if(Auth::user()){
 			$company_id = Auth::user()->company_id;
-		} else {
-			$company_id = getSite()->company_id;
 		}
 	}
 
@@ -131,13 +130,12 @@ function check_user_by_phones($phone_search, $company_id = null) {
 	return $result;
 }
 
-
 // Отправка СМС через API smsru
-function sendSms($phone, $msg) {
+function sendSms($company, $phone, $msg) {
 
-        $site = getSite();
-        $company = $site->company;
+		Log::info('Запущена функция отправки:');
 
+		Log::info('Компания: ' . $company . ', телефон: ' . $phone . ', сообщение: ' . $msg);
         $ch = curl_init("https://sms.ru/sms/send");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
@@ -172,17 +170,16 @@ function sendSms($phone, $msg) {
         //         echo "Баланс после отправки: $json->balance руб.";
         //         echo "";
         //     } else { // Запрос не выполнился (возможно ошибка авторизации, параметрах, итд...)
-        //         echo "Запрос не выполнился. ";      
+        //         echo "Запрос не выполнился. ";
         //         echo "Код ошибки: $json->status_code. ";
         //         echo "Текст ошибки: $json->status_text. ";
         //     }
-        // } else { 
+        // } else {
 
         //     echo "Запрос не выполнился. Не удалось установить связь с сервером. ";
 
         // }
 }
-
 
 
 ?>
