@@ -6,7 +6,7 @@
 
 @section('title', 'Редактировать пользователя')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $user->second_name.' '.$user->first_name))
+{{--@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $user->second_name.' '.$user->first_name))--}}
 
 @section('title-content')
 <div class="top-bar head-content">
@@ -20,7 +20,7 @@
 
 @section('content')
 
-{{ Form::model($user, ['url' => '/admin/users/'.$user->id, 'data-abide', 'novalidate', 'files' => 'true']) }}
+{{ Form::model($user, ['url' => '/admin/sites/' . $site_id . '/users/' . $user->id, 'data-abide', 'novalidate', 'files' => 'true']) }}
 {{ method_field('PATCH') }}
 
 @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param'=>''])

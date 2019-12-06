@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 trait UserControllerTrait
 {
 
-	public function createUser($request){
+	public function createUser($request, $site_id = 1) {
 
         // Подготовка: -------------------------------------------------------------------------------------
 
@@ -72,6 +72,8 @@ trait UserControllerTrait
 
         // Литера (Особая идентификационная отметка, например в номере договора)
         $user->liter = $request->liter;
+
+        $user->site_id = $site_id;
 
 
         // Контактные данные: ----------------------------------------------------------
@@ -209,7 +211,7 @@ trait UserControllerTrait
 
         // Логин:
         if(!isset($request->login)){
-            
+
             if($user->login == null){
 
                 // Если не указан логин, то генерируем

@@ -38,7 +38,7 @@ class GetAccessController extends Controller
     {
 
         // Ссылка по умолчанию на страницу входа
-        $link = 'users.index';
+        $link = 'employees.index';
 
 
         // Получаем пользователя в user
@@ -205,7 +205,7 @@ class GetAccessController extends Controller
                                 }
 
                                 // // При обработке права на просмотр чужих записей добавляем список авторов к праву
-                                // if($right->alias_right == $right->entity->alias . 'nolimit-allow'){$all_rights[$right->alias_right]['authors'] = $list_authors;};          
+                                // if($right->alias_right == $right->entity->alias . 'nolimit-allow'){$all_rights[$right->alias_right]['authors'] = $list_authors;};
 
                         }
 
@@ -317,7 +317,6 @@ class GetAccessController extends Controller
 
 
 
-
             if(isset($user_redirect)){
                 return redirect($user_redirect);
             ;};
@@ -336,7 +335,6 @@ class GetAccessController extends Controller
             //     return redirect()->action($action_method, $action_array);
 
             // } else {
-
                 return redirect()->route($link);
             // };
 

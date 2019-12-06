@@ -136,4 +136,9 @@ use App\Scopes\Filters\BooklistFilter;
         {
             return $this->belongsToMany(Metric::class, 'filters_goods', 'catalogs_goods_item_id', 'metric_id');
         }
+
+        public function display_mode()
+        {
+            return $this->belongsTo(DisplayMode::class);
+        }
 	}

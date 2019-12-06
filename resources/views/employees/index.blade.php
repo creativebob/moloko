@@ -41,6 +41,7 @@
                     @if (($employees->isNotEmpty() && $employees->first()->company->filials->count() > 1) || (Auth::user()->god == 1))
                     <th class="td-filial">Филиал</th>
                     @endif
+                    @if(Auth::user()->god == 1)<th class="td-getauth">Действие</th> @endif
                     <th class="td-employment-date">Дата приема</th>
                     <th class="td-status">Статус</th>
                     <th class="td-access-block">Доступ</th>
@@ -96,6 +97,24 @@
 
                         @if (($employee->company->filials->count() > 1) || (Auth::user()->god == 1))
                             <td class="td-filial">{{ $employee->staffer->filial->name }}</td>
+                        @endif
+
+                        {{-- Если пользователь бог, то показываем для него переключатель на авторизацию под пользователем --}}
+                        @if(Auth::user()->god == 1)
+
+                            @php
+                                $count_roles = count($employee->staffer->user->roles);
+                                if($count_roles < 1) {
+                                    $but_class = "tiny button warning"; $but_text = "Права не назначены";
+                                } else {
+                                    $but_class = "tiny button"; $but_text = "Авторизоваться";
+                                };
+                            @endphp
+                            <td class="td-getauth">
+                                @if((Auth::user()->id != $employee->staffer->user_id) && !empty($employee->staffer->user->company_id))
+                                    {{ link_to_route('users.getauthuser', $but_text, ['user_id' => $employee->staffer->user_id], ['class' => $but_class]) }}
+                                @endif
+                            </td>
                         @endif
 
                         <td class="td-employment-date">{{ $employee->employment_date->format('d.m.Y') }}</td>

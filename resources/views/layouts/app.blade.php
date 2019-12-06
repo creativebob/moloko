@@ -7,7 +7,7 @@ $user_filial_id = $session_access['user_info']['filial_id'];
 $user_status = $session_access['user_info']['user_status'];
 $company_id = $session_access['user_info']['company_id'];
 $company_name = $session_access['company_info']['company_name'];
-$company_designation = $session_access['company_info']['company_designation'];
+// $company_designation = $session_access['company_info']['company_designation'];
 
 if (isset($session_access['user_info']['position_id'])) {
     $position_id = $session_access['user_info']['position_id'];

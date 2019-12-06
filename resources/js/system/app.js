@@ -46,6 +46,7 @@ Vue.component('lead-badget-component', require('./components/LeadBadgetComponent
 Vue.component('select-stocks-component', require('./components/common/selects/SelectStocksComponent.vue'));
 
 Vue.component('photo-upload-component', require('./components/PhotoUploadComponent.vue'));
+Vue.component('metrics-categories-component', require('./components/metrics/categories/MetricsCategoriesComponent'));
 
 // Vue.component('price-goods-price-component', require('./components/prices_goods/PriceGoodsPriceComponent.vue'));
 

@@ -58012,8 +58012,8 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(49);
-__webpack_require__(123);
-module.exports = __webpack_require__(124);
+__webpack_require__(132);
+module.exports = __webpack_require__(133);
 
 
 /***/ }),
@@ -58025,7 +58025,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(50);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store_index_js__ = __webpack_require__(118);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store_index_js__ = __webpack_require__(127);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -58074,6 +58074,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('lead-badget-component', _
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('select-stocks-component', __webpack_require__(112));
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('photo-upload-component', __webpack_require__(115));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('metrics-categories-component', __webpack_require__(118));
 
 // Vue.component('price-goods-price-component', require('./components/prices_goods/PriceGoodsPriceComponent.vue'));
 
@@ -58094,9 +58095,9 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 __webpack_require__(45);
 
 // Наши скрипты
-__webpack_require__(120);
-__webpack_require__(121);
-__webpack_require__(122);
+__webpack_require__(129);
+__webpack_require__(130);
+__webpack_require__(131);
 
 // window.CKEDITOR_BASEPATH = 'node_modules/ckeditor/';
 // require('ckeditor');
@@ -65787,10 +65788,1402 @@ if (false) {
 
 /***/ }),
 /* 118 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(119)
+/* template */
+var __vue_template__ = __webpack_require__(126)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/metrics/categories/MetricsCategoriesComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7260f2be", Component.options)
+  } else {
+    hotAPI.reload("data-v-7260f2be", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 119 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_estimate__ = __webpack_require__(119);
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    'metric-component': __webpack_require__(120),
+    'metrics-component': __webpack_require__(123)
+  },
+  data: function data() {
+    return {};
+  },
+
+  props: {
+    category: Object,
+    properties: Array,
+    entity: String,
+    entityId: Number,
+    categoryId: Number
+  }
+});
+
+/***/ }),
+/* 120 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(121)
+/* template */
+var __vue_template__ = __webpack_require__(122)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/metrics/categories/MetricComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2d84539d", Component.options)
+  } else {
+    hotAPI.reload("data-v-2d84539d", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 121 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        metric: Object
+    },
+    filters: {
+        decimal: function decimal(value) {
+            return Math.trunc(parseFloat(parseInt(value).toFixed(value)) * 100) / 100;
+        }
+    }
+});
+
+/***/ }),
+/* 122 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "tr",
+    {
+      staticClass: "item",
+      attrs: {
+        id: "table-metrics-" + _vm.metric.id,
+        "data-name": _vm.metric.name
+      }
+    },
+    [
+      _c("td", [_vm._v(_vm._s(_vm.metric.name))]),
+      _vm._v(" "),
+      _c("td", [_vm._v(_vm._s(_vm.metric.min))]),
+      _vm._v(" "),
+      _c("td", [_vm._v(_vm._s(_vm.metric.max))]),
+      _vm._v(" "),
+      _c("td", [_vm._v(_vm._s(_vm.metric.boolean_true))]),
+      _vm._v(" "),
+      _c("td", [_vm._v(_vm._s(_vm.metric.boolean_false))]),
+      _vm._v(" "),
+      _c("td", [_vm._v(_vm._s(_vm.metric.color))]),
+      _vm._v(" "),
+      _c("td"),
+      _vm._v(" "),
+      _vm._m(0)
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "td-delete" }, [
+      _c("a", {
+        staticClass: "icon-delete sprite",
+        attrs: { "data-open": "delete-metric" }
+      })
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2d84539d", module.exports)
+  }
+}
+
+/***/ }),
+/* 123 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(124)
+/* template */
+var __vue_template__ = __webpack_require__(125)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/metrics/categories/MetricsComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7ba905ba", Component.options)
+  } else {
+    hotAPI.reload("data-v-7ba905ba", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 124 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            propertyId: 0,
+            open: false,
+            name: null,
+            alias: null,
+            description: null,
+            isRequired: false,
+            type: null,
+            listType: null,
+            min: null,
+            max: null,
+            unit: null,
+            units: [],
+            decimalPlace: null,
+            decimalPlaces: ['0', '0,0', '0,00', '0,000'],
+            value: null,
+            values: []
+        };
+    },
+
+    props: {
+        properties: Array,
+        entity: String,
+        entityId: Number,
+        categoryId: Number
+    },
+    computed: {
+        // propertiesWithMetrics() {
+        //     return properties.filter(property => {
+        //
+        //     })
+        // }
+    },
+    methods: {
+        resetPropertyId: function resetPropertyId() {
+            this.propertyId = 0;
+        },
+        resetMetricForm: function resetMetricForm() {
+            this.open = false;
+        },
+        openForm: function openForm() {
+            var _this = this;
+
+            axios.post('/admin/ajax_add_property', {
+                id: this.propertyId,
+                entity: this.entity
+            }).then(function (response) {
+                _this.units = response.data.units;
+                _this.type = response.data.type;
+
+                _this.open = true;
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        addValue: function addValue() {
+            this.values.push(this.value);
+            this.value = null;
+        },
+        removeValue: function removeValue(index) {
+            this.values.splice(index, 1);
+        },
+        addMetric: function addMetric() {}
+    }
+});
+
+/***/ }),
+/* 125 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      [
+        _c("fieldset", [
+          _c("legend", [
+            !_vm.open
+              ? _c(
+                  "a",
+                  {
+                    attrs: { "data-toggle": "properties-dropdown" },
+                    on: { click: _vm.resetPropertyId }
+                  },
+                  [_vm._v("Добавить метрику")]
+                )
+              : _c("a", { on: { click: _vm.resetMetricForm } }, [
+                  _vm._v("Отменить")
+                ])
+          ]),
+          _vm._v(" "),
+          _vm.open
+            ? _c(
+                "div",
+                {
+                  staticClass: "grid-x grid-padding-x",
+                  attrs: { id: "property-form" }
+                },
+                [
+                  _c("div", { staticClass: "small-12 cell" }, [
+                    _c("label", [
+                      _vm._v("Название:\n                            "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.name,
+                            expression: "name"
+                          }
+                        ],
+                        attrs: { type: "text", required: "" },
+                        domProps: { value: _vm.name },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.name = $event.target.value
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 cell" }, [
+                    _c("label", [
+                      _vm._v("Алиас:\n                            "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.alias,
+                            expression: "alias"
+                          }
+                        ],
+                        attrs: { type: "text" },
+                        domProps: { value: _vm.alias },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.alias = $event.target.value
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 cell" }, [
+                    _c("label", [
+                      _vm._v("Описание:\n                            "),
+                      _c("textarea", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.description,
+                            expression: "description"
+                          }
+                        ],
+                        domProps: { value: _vm.description },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.description = $event.target.value
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _vm.type == "numeric"
+                    ? [
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v("Минимум\n                                "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.min,
+                                  expression: "min"
+                                }
+                              ],
+                              attrs: { type: "number" },
+                              domProps: { value: _vm.min },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.min = $event.target.value
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v(
+                              "Максимум\n                                "
+                            ),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.max,
+                                  expression: "max"
+                                }
+                              ],
+                              attrs: { type: "number" },
+                              domProps: { value: _vm.max },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.max = $event.target.value
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v(
+                              "Единица измерения\n                                "
+                            ),
+                            _c(
+                              "select",
+                              _vm._l(_vm.units, function(unit) {
+                                return _c(
+                                  "option",
+                                  { domProps: { value: unit.id } },
+                                  [_vm._v(_vm._s(unit.abbreviation))]
+                                )
+                              }),
+                              0
+                            )
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v(
+                              "Знаки после запятой\n                                "
+                            ),
+                            _c(
+                              "select",
+                              _vm._l(_vm.decimalPlaces, function(decimalPlace) {
+                                return _c("option", [
+                                  _vm._v(_vm._s(decimalPlace))
+                                ])
+                              }),
+                              0
+                            )
+                          ])
+                        ])
+                      ]
+                    : _vm.type == "percent"
+                    ? [
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v("Минимум\n                                "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.min,
+                                  expression: "min"
+                                }
+                              ],
+                              attrs: { type: "number" },
+                              domProps: { value: _vm.min },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.min = $event.target.value
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v(
+                              "Максимум\n                                "
+                            ),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.max,
+                                  expression: "max"
+                                }
+                              ],
+                              attrs: { type: "number" },
+                              domProps: { value: _vm.max },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.max = $event.target.value
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v(
+                              "Единица измерения\n                                "
+                            ),
+                            _c(
+                              "select",
+                              _vm._l(_vm.units, function(unit) {
+                                return _c(
+                                  "option",
+                                  { domProps: { value: unit.id } },
+                                  [_vm._v(_vm._s(unit.abbreviation))]
+                                )
+                              }),
+                              0
+                            )
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v(
+                              "Знаки после запятой\n                                "
+                            ),
+                            _c(
+                              "select",
+                              _vm._l(_vm.decimalPlaces, function(decimalPlace) {
+                                return _c("option", [
+                                  _vm._v(_vm._s(decimalPlace))
+                                ])
+                              }),
+                              0
+                            )
+                          ])
+                        ])
+                      ]
+                    : [
+                        _c("div", { staticClass: "small-12 cell" }, [
+                          _c("div", { staticClass: "radiobutton" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.listType,
+                                  expression: "listType"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                name: "select-type",
+                                value: "list",
+                                id: "metric-list-type",
+                                checked: ""
+                              },
+                              domProps: {
+                                checked: _vm._q(_vm.listType, "list")
+                              },
+                              on: {
+                                change: function($event) {
+                                  _vm.listType = "list"
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm._m(0),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.listType,
+                                  expression: "listType"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                name: "select-type",
+                                value: "select",
+                                id: "metric-select-type"
+                              },
+                              domProps: {
+                                checked: _vm._q(_vm.listType, "select")
+                              },
+                              on: {
+                                change: function($event) {
+                                  _vm.listType = "select"
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm._m(1)
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "small-12 cell input-group inputs wrap-add-list-metric"
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.value,
+                                  expression: "value"
+                                }
+                              ],
+                              attrs: {
+                                type: "text",
+                                placeholder: "Введите значение"
+                              },
+                              domProps: { value: _vm.value },
+                              on: {
+                                keydown: function($event) {
+                                  if (
+                                    !$event.type.indexOf("key") &&
+                                    _vm._k(
+                                      $event.keyCode,
+                                      "enter",
+                                      13,
+                                      $event.key,
+                                      "Enter"
+                                    )
+                                  ) {
+                                    return null
+                                  }
+                                  $event.preventDefault()
+                                  return _vm.addValue($event)
+                                },
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.value = $event.target.value
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "input-group-button" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "button add-value",
+                                  on: { click: _vm.addValue }
+                                },
+                                [_vm._v("Добавить в список")]
+                              )
+                            ])
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass: "small-12 cell wrap-table-list-metric"
+                          },
+                          [
+                            _c(
+                              "table",
+                              {
+                                staticClass:
+                                  "tablesorter unstriped table-list-metric",
+                                attrs: { id: "values-table" }
+                              },
+                              [
+                                _c(
+                                  "tbody",
+                                  { attrs: { id: "values-tbody" } },
+                                  _vm._l(_vm.values, function(value, index) {
+                                    return _c("tr", { staticClass: "item" }, [
+                                      _vm._m(2, true),
+                                      _vm._v(" "),
+                                      _c("td", [_vm._v(_vm._s(value))]),
+                                      _vm._v(" "),
+                                      _c("td", { staticClass: "td-delete" }, [
+                                        _c("a", {
+                                          staticClass: "icon-delete sprite",
+                                          attrs: {
+                                            "data-open": "delete-metric-value"
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.removeValue(index)
+                                            }
+                                          }
+                                        })
+                                      ])
+                                    ])
+                                  }),
+                                  0
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ],
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 cell checkbox" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.isRequired,
+                          expression: "isRequired"
+                        }
+                      ],
+                      attrs: { type: "checkbox", id: "checkbox-required" },
+                      domProps: {
+                        checked: Array.isArray(_vm.isRequired)
+                          ? _vm._i(_vm.isRequired, null) > -1
+                          : _vm.isRequired
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.isRequired,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 && (_vm.isRequired = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.isRequired = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.isRequired = $$c
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm._m(3)
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 cell text-center" }, [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "button green-button",
+                        on: { click: _vm.addMetric }
+                      },
+                      [_vm._v("Создать метрику")]
+                    )
+                  ])
+                ],
+                2
+              )
+            : _vm._e()
+        ])
+      ],
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: !_vm.open,
+              expression: "!open"
+            }
+          ],
+          staticClass: "dropdown-pane properties-dropdown",
+          attrs: {
+            id: "properties-dropdown",
+            "data-dropdown": "",
+            "data-position": "bottom",
+            "data-alignment": "center",
+            "data-close-on-click": "true"
+          }
+        },
+        [
+          _c("div", { staticClass: "grid-x grid-padding-x" }, [
+            _vm._m(4),
+            _vm._v(" "),
+            _c("div", { staticClass: "small-12 cell wrap-add-new-metric" }, [
+              _c("label", [
+                _vm._v("Создать свойство\n                        "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.propertyId,
+                        expression: "propertyId"
+                      }
+                    ],
+                    on: {
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.propertyId = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        },
+                        _vm.openForm
+                      ]
+                    }
+                  },
+                  [
+                    _c(
+                      "option",
+                      { attrs: { value: "0" }, on: { change: _vm.openForm } },
+                      [_vm._v("Выберите свойство")]
+                    ),
+                    _vm._v(" "),
+                    _vm._l(_vm.properties, function(property) {
+                      return _c(
+                        "option",
+                        { domProps: { value: property.id } },
+                        [_vm._v(_vm._s(property.name))]
+                      )
+                    })
+                  ],
+                  2
+                )
+              ])
+            ])
+          ])
+        ]
+      )
+    ],
+    2
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "metric-list-type" } }, [
+      _c("span", [_vm._v("Выбор нескольких значений")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "metric-select-type" } }, [
+      _c("span", [_vm._v("Выбор одного значения")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "td-drop" }, [
+      _c("div", { staticClass: "sprite icon-drop" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "checkbox-required" } }, [
+      _c("span", [_vm._v("Обязательна для заполнения")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "small-12 cell" }, [
+      _c("ul", { staticClass: "checker", attrs: { id: "properties-list" } }, [
+        _c("li")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7ba905ba", module.exports)
+  }
+}
+
+/***/ }),
+/* 126 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "grid-x grid-padding-x" }, [
+    _c("div", { staticClass: "small-12 medium-8 cell" }, [
+      _c("table", [
+        _vm._m(0),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          { attrs: { id: "table-metrics" } },
+          _vm._l(_vm.category.metrics, function(metric, index) {
+            return _c("metric-component", {
+              key: metric.id,
+              attrs: { metric: metric, index: index }
+            })
+          }),
+          1
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "small-12 medium-4 cell" },
+      [
+        _c("metrics-component", {
+          attrs: {
+            properties: _vm.properties,
+            entity: _vm.entity,
+            "entity-id": _vm.entityId,
+            "category-id": _vm.categoryId
+          }
+        })
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Название")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Минимум")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Максимум")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Подтверждение")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Отрицание")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Цвет")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Список")]),
+        _vm._v(" "),
+        _c("th")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7260f2be", module.exports)
+  }
+}
+
+/***/ }),
+/* 127 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_estimate__ = __webpack_require__(128);
 
 
 // const debug = process.env.NODE_ENV !== 'production'
@@ -65805,7 +67198,7 @@ var store = {
 /* harmony default export */ __webpack_exports__["a"] = (store);
 
 /***/ }),
-/* 119 */
+/* 128 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -65919,7 +67312,7 @@ var moduleEstimate = {
 /* harmony default export */ __webpack_exports__["a"] = (moduleEstimate);
 
 /***/ }),
-/* 120 */
+/* 129 */
 /***/ (function(module, exports) {
 
 // Валидируем кнопку при клике
@@ -65932,7 +67325,7 @@ window.submitAjax = function (id) {
 };
 
 /***/ }),
-/* 121 */
+/* 130 */
 /***/ (function(module, exports) {
 
 // Умолчания глобальные
@@ -66445,7 +67838,7 @@ $(window).resize(function () {
 // });
 
 /***/ }),
-/* 122 */
+/* 131 */
 /***/ (function(module, exports) {
 
 function checkFilter() {
@@ -66483,13 +67876,13 @@ $(document).on('click', '.filter-close', function () {
 });
 
 /***/ }),
-/* 123 */
+/* 132 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 124 */
+/* 133 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

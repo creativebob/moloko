@@ -99,10 +99,16 @@ class PropertyController extends Controller
 
             if (isset($property->units_category->name)) {
                 $units_list = $property->units_category->units->pluck('abbreviation', 'id');
+//                $units_list = $property->units_category->units;
             } else {
                 $units_list = null;
             }
             // echo $property;
+
+//            return response()->json([
+//                'type' => $property->type,
+//                'units' => $units_list,
+//            ]);
 
             return view('products.common.metrics.add_property', [
                 'type' => $property->type,

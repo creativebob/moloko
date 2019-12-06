@@ -49,7 +49,7 @@ class UserController extends Controller
     use UserControllerTrait;
 	use Photable;
 
-    public function index(Request $request)
+    public function index(Request $request, $site_id)
     {
 
         // Включение контроля активного фильтра
@@ -70,6 +70,7 @@ class UserController extends Controller
         // --------------------------------------------------------------------------------------------------------
 
         $users = User::with('roles', 'staff', 'staff.position', 'main_phones')
+            ->where('site_id', $site_id)
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -101,10 +102,10 @@ class UserController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('users.index', compact('users', 'page_info', 'filter'));
+        return view('users.index', compact('users', 'page_info', 'filter', 'site_id'));
     }
 
-    public function create(Request $request)
+    public function create(Request $request, $site_id)
     {
 
         $user_auth = $request->user();
@@ -122,10 +123,10 @@ class UserController extends Controller
 
         $auth_user = Auth::user();
 
-        return view('users.create', compact('user', 'auth_user', 'page_info'));
+        return view('users.create', compact('user', 'auth_user', 'page_info', 'site_id'));
     }
 
-    public function store(UserStoreRequest $request)
+    public function store(UserStoreRequest $request, $site_id)
     {
 
         // Подключение политики
@@ -136,9 +137,9 @@ class UserController extends Controller
 
         // ПОЛУЧЕНИЕ И СОХРАНЕНИЕ ДАННЫХ
         // Отдаем работу по созданию нового юзера трейту
-        $new_user = $this->createUser($request);
+        $new_user = $this->createUser($request, $site_id);
 
-        return Redirect('/admin/users');
+        return redirect()->route('users.index', $site_id);
 
     }
 
@@ -148,7 +149,7 @@ class UserController extends Controller
 
     }
 
-    public function edit(Request $request, $id)
+    public function edit(Request $request, $site_id, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -172,13 +173,13 @@ class UserController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
-        
+
         $auth_user = \Auth::user();
 
-        return view('users.edit', compact('user', 'page_info', 'auth_user'));
+        return view('users.edit', compact('user', 'page_info', 'auth_user', 'site_id'));
     }
 
-    public function update(UserUpdateRequest $request, $id)
+    public function update(UserUpdateRequest $request, $site_id, $id)
     {
         // Получаем авторизованного пользователя
         $user_auth = $request->user();
@@ -213,11 +214,11 @@ class UserController extends Controller
             return redirect($backroute);
         };
 
-        return redirect('/admin/users');
+        return redirect()->route('users.index', $site_id);
 
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $site_id, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
@@ -238,7 +239,11 @@ class UserController extends Controller
         // Удаляем пользователя с обновлением
         $user = User::destroy($id);
 
-        if($user) {return redirect('/admin/users');} else {abort(403,'Что-то пошло не так!');};
+        if($user) {
+            return redirect()->route('users.index', $site_id);
+        } else {
+            abort(403,'Что-то пошло не так!');
+        };
     }
 
 

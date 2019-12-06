@@ -216,7 +216,7 @@ Route::post('/add_extra_phone', 'PhoneController@ajax_add_extra_phone')->middlew
 
 // -------------------------------------- Пользователи ------------------------------------------------
 
-Route::resource('/users', 'UserController')->middleware('auth');
+//Route::resource('/users', 'UserController')->middleware('auth');
 Route::get('/myprofile', 'UserController@myprofile')->middleware('auth')->name('users.myprofile');
 Route::patch('/updatemyprofile', 'UserController@updatemyprofile')->middleware('auth')->name('users.updatemyprofile');
 
@@ -1025,6 +1025,10 @@ Route::prefix('/sites/{site_id}')->group(function () {
     // Проверка на существование страницы
 	Route::post('/page_check', 'PageController@ajax_check')->middleware('auth');
 
+
+    // --------------------------------------- Пользователи ---------------------------------------------
+    Route::resource('/users', 'UserController')->middleware('auth');
+
 	// --------------------------------------- Навигации --------------------------------------------
 
 	// Основные методы
@@ -1115,7 +1119,7 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
     Route::any('prices_goods/ajax_store', 'PricesGoodsController@ajax_store');
 
     Route::any('prices_goods_sync', 'PricesGoodsController@sync')->name('prices_goods.sync');
-	
+
 	Route::any('prices_goods_status', 'PricesGoodsController@ajax_status');
     Route::any('prices_goods_hit', 'PricesGoodsController@ajax_hit');
 

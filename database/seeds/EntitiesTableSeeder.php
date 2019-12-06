@@ -452,7 +452,7 @@ class EntitiesTableSeeder extends Seeder
                 'view_path' => 'applications',
                 'page_id' => $pages->firstWhere('alias', 'applications')->id,
             ],
-            
+
             [
                 'name' => 'Товарные накладные',
                 'alias' => 'consignments',
@@ -477,7 +477,7 @@ class EntitiesTableSeeder extends Seeder
                 'view_path' => 'productions',
                 'page_id' => $pages->firstWhere('alias', 'productions')->id,
             ],
-            
+
             [
                 'name' => 'Показатели',
                 'alias' => 'indicators',
@@ -785,18 +785,7 @@ class EntitiesTableSeeder extends Seeder
                 'view_path' => 'dealers',
                 'page_id' => $pages->firstWhere('alias', 'dealers')->id,
             ],
-            [
-                'name' => 'Пользователи',
-                'alias' => 'users',
-                'model' => 'User',
-                'rights' => true,
-                'system' => true,
-                'author_id' => 1,
-                'site' => 0,
-                'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
-                'view_path' => 'users',
-                'page_id' => $pages->firstWhere('alias', 'users')->id,
-            ],
+
             [
                 'name' => 'Отделы',
                 'alias' => 'departments',
@@ -844,6 +833,18 @@ class EntitiesTableSeeder extends Seeder
                 'ancestor_id' => Entity::whereAlias('sites')->first(['id'])->id,
                 'view_path' => 'navigations',
                 'page_id' => $pages->firstWhere('alias', 'navigations')->id,
+            ],
+            [
+                'name' => 'Пользователи',
+                'alias' => 'users',
+                'model' => 'User',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 1,
+                'ancestor_id' => Entity::whereAlias('sites')->first(['id'])->id,
+                'view_path' => 'users',
+                'page_id' => $pages->firstWhere('alias', 'users')->id,
             ],
 
             [
@@ -1103,7 +1104,7 @@ class EntitiesTableSeeder extends Seeder
                 'view_path' => 'bank_accounts',
                 'page_id' => null,
             ],
-            
+
             [
                 'name' => 'Склад сырья',
                 'alias' => 'raws_stocks',

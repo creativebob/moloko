@@ -33,6 +33,7 @@ use App\Policies\ConsignmentPolicy;
 use App\Policies\ProductionPolicy;
 use App\Policies\PromotionPolicy;
 use App\Policies\RawsStockPolicy;
+use App\Policies\SchedulePolicy;
 use App\Policies\ToolsStockPolicy;
 use App\PricesGoods;
 use App\ProcessesGroup;
@@ -40,6 +41,7 @@ use App\Consignment;
 use App\Production;
 use App\Promotion;
 use App\RawsStock;
+use App\Schedule;
 use App\ToolsStock;
 use App\User;
 use App\RightsRole;
@@ -336,6 +338,7 @@ class AuthServiceProvider extends ServiceProvider
         Site::class => SitePolicy::class,
         Promotion::class => PromotionPolicy::class,
         Dispatch::class => DispatchPolicy::class,
+        Schedule::class => SchedulePolicy::class,
         
         Metric::class => MetricPolicy::class,
 
