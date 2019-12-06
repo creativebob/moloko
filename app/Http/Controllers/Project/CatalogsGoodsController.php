@@ -81,14 +81,21 @@ class CatalogsGoodsController extends Controller
         $page = $site->pages_public->where('alias', 'catalogs-goods')->first();
 
         // Получаем полный прайс со всеми доступными разделами
-        $catalog_goods = CatalogsGoods::with('items_public.filters.values')
+        $catalog_goods = CatalogsGoods::with([
+            'items_public' => function ($q) {
+                $q->with([
+                    'display_mode',
+                    'filters.values',
+                ]);
+            }
+        ])
             ->whereHas('sites', function ($q) use ($site) {
                 $q->where('id', $site->id);
             })
             ->where('slug', $catalog_slug)
             ->where(['display' => true])
             ->first();
-            
+
             // Проверим, а доступен ли каталог товаров. Если нет, то кидаем ошибку
             if(!$catalog_goods){abort(403, 'Доступ к прайсу товаров компании ограничен. Согласен, это довольно странно...'); }
             if($catalog_item_slug){
