@@ -269,9 +269,8 @@ class AppController extends Controller
     }
 
     // Сохранение данных пользователя
-    public function update_profile(UserUpdateRequest $request)
+    public function update_profile(Request $request)
     {
-
         //Получаем авторизованного пользователя
         $user = $request->user();
 
@@ -279,6 +278,17 @@ class AppController extends Controller
         $user->second_name = $request->second_name;
         $user->email = $request->email;
         $user->save();
+
+        $user->notifications()->sync($request->notifications);
+
+        $estimates = null;
+
+        $site = $this->site;
+        $page = $site->pages_public->firstWhere('alias', 'cabinet');
+
+        $site->load('notifications');
+
+        return view($site->alias.'.pages.cabinet.index', compact('site', 'page', 'estimates', 'user'));
 
     }
 
