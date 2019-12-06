@@ -147,6 +147,7 @@
             @if($page_info->entity->metric)
             {{-- Свойства --}}
             <div class="tabs-panel" id="metrics">
+{{--                @include('products.common.metrics.page')--}}
                 @include('products.common.metrics.section')
             </div>
             @endif
