@@ -265,6 +265,7 @@ class GetAccessController extends Controller
                 $access['company_info']['schedule'] = $user->company->schedule;
 
             } else {
+                $access['company_info']['company_designation'] = '';
                 $access['company_info']['company_id'] = '';
                 $access['company_info']['company_name'] = '';
                 $access['company_info']['sector_id'] = '';
