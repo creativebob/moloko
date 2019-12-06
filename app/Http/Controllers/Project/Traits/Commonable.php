@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Project\Traits;
 
+use Illuminate\Support\Facades\Cookie;
 use App\Site;
 use Illuminate\Http\Request;
 
@@ -34,19 +35,32 @@ trait Commonable
                 'company'
             ])->first();
 
+            $this->site = $site;
+            $this->site->filial = $site->filials->where('location.city.alias', $city_alias)->first();
+
+            // Ставим куку города
+            if (Cookie::has('city')) {
+                $cookie_city_alias = Cookie::get('city');
+                if ($cookie_city_alias != $city_alias) {
+                    return redirect()->route('project.change_city', $cookie_city_alias);
+                }
+            }
+
         // Если сайт работает в режиме БЕЗ СУБДОМЕНОВ
         } else {
-            
+
             $site = Site::where('domain', $domain)->with([
                 'pages_public',
                 'filials.location.city',
                 'company'
             ])
             ->first();
+
+            $this->site = $site;
+            $this->site->filial = $site->filials-first();
         }
 
-        $this->site = $site;
-        $this->site->filial = $site->filials->where('location.city.alias', $city_alias)->first();
+
 
     }
 

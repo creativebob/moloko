@@ -14,6 +14,9 @@
 // Первый запуск
 Route::get('/', 'AppController@start')->name('project.start');
 
+// Смена города
+Route::get('/change_city/{alias}', 'AppController@change_city')->name('project.change_city');
+
 Route::get('/catalogs-goods/{all}', 'CatalogsGoodsController@show')
     ->where('all', '.*')
     ->name('project.catalogs_goods.show');

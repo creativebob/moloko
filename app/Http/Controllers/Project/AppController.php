@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 // Подрубаем трейт записи и обновления
 use App\Http\Controllers\Traits\UserControllerTrait;
@@ -39,6 +40,20 @@ class AppController extends Controller
         }
     }
 
+    /**
+     * Перенаправление с одного города (поддомена) на другой, и записсь нового в куку
+     *
+     * @param Request $request
+     * @param string $alias алиас города
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function change_city(Request $request, $alias)
+    {
+        Cookie::queue(Cookie::forever('city', $alias));
+        $url = "https://{$alias}.{$this->site->domain}";
+        return \Redirect::away($url);;
+
+    }
 
     // Метод динамического формирования страницы
     public function dynamic_pages(Request $request, $page_alias)
