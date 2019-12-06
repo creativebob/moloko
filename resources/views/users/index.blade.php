@@ -28,7 +28,7 @@
                     </span>
                     </h2>
 
-                    @can('create', App\Page::class)
+                    @can('create', App\User::class)
 
                         {{ link_to_route($page_info->alias.'.create', '', $parameters = ['site_id' => $site_id], $attributes = ['class' => 'icon-add sprite']) }}
 
@@ -102,7 +102,6 @@
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-second-name">Пользователь</th>
           <th class="td-login">Логин</th>
-          @if(Auth::user()->god == 1)<th class="td-getauth">Действие</th> @endif
           <!--           <th class="td-first-name">Имя</th> -->
           <th class="td-phone">Телефон</th>
           <th class="td-email">Почта</th>
@@ -154,17 +153,6 @@
 
           </td>
           <td class="td-login">{{ $user->login }}</td>
-
-
-          {{-- Если пользователь бог, то показываем для него переключатель на авторизацию под пользователем --}}
-          @if(Auth::user()->god == 1)
-
-          @php
-          $count_roles = count($user->roles);
-          if($count_roles < 1){$but_class = "tiny button warning"; $but_text = "Права не назначены";} else {$but_class = "tiny button"; $but_text = "Авторизоваться";};
-          @endphp
-          <td class="td-getauth">@if((Auth::user()->id != $user->id)&&!empty($user->company_id)) {{ link_to_route('users.getauthuser', $but_text, ['user_id'=>$user->id], ['class' => $but_class]) }} @endif</td>
-          @endif
 
           <td class="td-phone">{{ isset($user->main_phone->phone) ? decorPhone($user->main_phone->phone) : 'Телефон не указан' }}</td>
           <td class="td-email">{{ $user->email }}</td>

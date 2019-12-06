@@ -316,7 +316,6 @@ class GetAccessController extends Controller
 
 
 
-
             if(isset($user_redirect)){
                 return redirect($user_redirect);
             ;};
@@ -335,7 +334,6 @@ class GetAccessController extends Controller
             //     return redirect()->action($action_method, $action_array);
 
             // } else {
-
                 return redirect()->route($link);
             // };
 
