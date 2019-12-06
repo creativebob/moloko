@@ -1,5 +1,5 @@
 <?php
-	
+
 namespace App\Providers;
 
 use App\Http\ViewComposers\Project\CartComposer;
@@ -7,6 +7,7 @@ use App\Http\ViewComposers\Project\CatalogsGoodsItemsFilterComposer;
 use App\Http\ViewComposers\Project\DepartmentsComposer;
 use App\Http\ViewComposers\Project\CatalogsServiceComposer;
 use App\Http\ViewComposers\Project\CatalogsGoodsComposer;
+use App\Http\ViewComposers\Project\DisplayModesComposer;
 use App\Http\ViewComposers\Project\FilialComposer;
 use App\Http\ViewComposers\Project\NavigationsComposer;
 use App\Http\ViewComposers\Project\PricesGoodsPriceFilterComposer;
@@ -75,7 +76,9 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 view()->composer([
                     'project.includes.news.images'
                 ], NewsComposer::class);
-                
+
+
+
                 view()->composer('project.includes.staff.list', StaffComposer::class);
                 view()->composer('project.includes.schedules.worktime_filial_today', WorktimeFilialTodayComposer::class);
 
@@ -83,7 +86,7 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 view()->composer('project.includes.catalogs_goods.filters.weight', PricesGoodsWeightFilterComposer::class);
                 view()->composer('project.includes.catalogs_goods.filters.raws_articles_groups', PricesGoodsRawsArticlesGroupsFilterComposer::class);
                 view()->composer('project.includes.catalogs_goods.filters.catalogs_goods_items', CatalogsGoodsItemsFilterComposer::class);
-                
+
                 view()->composer('project.includes.clients.companies_list', ClientsCompaniesListComposer::class);
 
                 view()->composer('project.includes.promotions.slider', PromotionsComposer::class);
@@ -92,6 +95,10 @@ class ComposerProjectServiceProvider extends ServiceProvider
 
 //                view()->composer($alias. '.layouts.headers.includes.cart', CartComposer::class);
 	            view()->composer($alias. '.pages.contacts.index', FilialComposer::class);
+
+                view()->composer([
+                    $alias . '.pages.catalogs_goods.index'
+                ], DisplayModesComposer::class);
             }
         }
     }
