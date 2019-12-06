@@ -10,15 +10,42 @@
                 </h2>
 
                 @can('create', $class)
-
                     <a class="icon-add sprite top" data-open="modal-create" data-tooltip tabindex="2" title="Добавить позицию"></a>
-                    <a href="/admin/{{ $page_info->alias}}_categories" class="icon-category sprite top" data-tooltip tabindex="2" title="Настройка категорий"></a>
-                    <a href="/admin/consignments" class="icon-consignment sprite top" data-tooltip tabindex="2" title="Накладные"></a>
-                    <a href="/admin/{{ $page_info->alias}}_stocks" class="icon-stock sprite top" data-tooltip tabindex="2" title="Склад"></a>
-                @endcan  
+                @endcan
+
+                @php
+                    $model = $page_info->entity->model;
+                    if ($model == 'Goods') {
+                        $class = 'App\\' . $model . 'Category';
+                    } else {
+                        $class = 'App\\' . $model . 'sCategory';
+                    }
+                @endphp
+{{--                {{ dd($class) }}--}}
+
+                @can('index', $class)
+                <a href="/admin/{{ $page_info->alias}}_categories" class="icon-category sprite top" data-tooltip tabindex="2" title="Настройка категорий"></a>
+                @endcan
+
+                @can('index', App\Consignment::class)
+                <a href="{{ route('consignments.index') }}" class="icon-consignment sprite top" data-tooltip tabindex="2" title="Накладные"></a>
+                @endcan
+
+                @php
+                    $model = $page_info->entity->model;
+                    if ($model == 'Goods') {
+                        $class = 'App\\' . $model . 'Stock';
+                    } else {
+                        $class = 'App\\' . $model . 'sStock';
+                    }
+                @endphp
+
+                @can('index', $class)
+                <a href="/admin/{{ $page_info->alias}}_stocks" class="icon-stock sprite top" data-tooltip tabindex="2" title="Склад"></a>
+                @endcan
 
             </div>
-            <div class="top-bar-right">   
+            <div class="top-bar-right">
 
                 @if (isset($filter))
                 <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
@@ -41,7 +68,7 @@
 
         {{-- Блок фильтров --}}
         @if (isset($filter))
-            
+
         <div class="grid-x">
             <div class="small-12 cell filters fieldset-filters" id="filters">
                 <div class="grid-padding-x">

@@ -28,15 +28,19 @@
                 <a href="#options" aria-selected="true">Общая информация</a>
             </li>
 
-            @if($page_info->entity->metric)
-            <li class="tabs-title">
-                <a data-tabs-target="metrics" href="#metrics">Свойства</a>
-            </li>
-            @endif
+            @can('index', App\Metric::class)
+                @if($page_info->entity->metric)
+                <li class="tabs-title">
+                    <a data-tabs-target="metrics" href="#metrics">Метрики</a>
+                </li>
+                @endif
+            @endcan
 
+            @can('index', App\Site::class)
             <li class="tabs-title">
-                <a data-tabs-target="site" href="#site">Сайт</a>
+                <a data-tabs-target="site" href="#site">Настройка для сайта</a>
             </li>
+            @endcan
 
             {{-- Табы для сущности --}}
             @includeIf($page_info->entity->view_path . '.tabs')
@@ -115,6 +119,7 @@
                 </div>
             </div>
 
+            @can('index', App\Site::class)
             {{-- Сайт --}}
             <div class="tabs-panel" id="site">
                 <div class="grid-x grid-padding-x">
@@ -143,7 +148,9 @@
                     </div>
                 </div>
             </div>
+            @endcan
 
+            @can('index', App\Metric::class)
             @if($page_info->entity->metric)
             {{-- Свойства --}}
             <div class="tabs-panel" id="metrics">
@@ -151,6 +158,7 @@
                 @include('products.common.metrics.section')
             </div>
             @endif
+            @endcan
 
             {{-- Табы для сущности --}}
             @includeIf($page_info->entity->view_path . '.tabs_content')

@@ -14,6 +14,7 @@ use App\GoodsStock;
 
 
 use App\Indicator;
+use App\Metric;
 use App\Order;
 use App\Policies\ArticlesGroupPolicy;
 
@@ -24,6 +25,7 @@ use App\Policies\ContainersStockPolicy;
 use App\Policies\DispatchPolicy;
 use App\Policies\GoodsStockPolicy;
 use App\Policies\IndicatorPolicy;
+use App\Policies\MetricPolicy;
 use App\Policies\OrderPolicy;
 use App\Policies\PricesGoodsPolicy;
 use App\Policies\ProcessesGroupPolicy;
@@ -31,6 +33,7 @@ use App\Policies\ConsignmentPolicy;
 use App\Policies\ProductionPolicy;
 use App\Policies\PromotionPolicy;
 use App\Policies\RawsStockPolicy;
+use App\Policies\SchedulePolicy;
 use App\Policies\ToolsStockPolicy;
 use App\PricesGoods;
 use App\ProcessesGroup;
@@ -38,6 +41,7 @@ use App\Consignment;
 use App\Production;
 use App\Promotion;
 use App\RawsStock;
+use App\Schedule;
 use App\ToolsStock;
 use App\User;
 use App\RightsRole;
@@ -334,6 +338,9 @@ class AuthServiceProvider extends ServiceProvider
         Site::class => SitePolicy::class,
         Promotion::class => PromotionPolicy::class,
         Dispatch::class => DispatchPolicy::class,
+        Schedule::class => SchedulePolicy::class,
+        
+        Metric::class => MetricPolicy::class,
 
 
         Rubricator::class => RubricatorPolicy::class,

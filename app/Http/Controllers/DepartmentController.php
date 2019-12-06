@@ -132,7 +132,7 @@ class DepartmentController extends Controller
         return view('departments.create', [
             'department' => new $this->class,
             'entity' => $this->entity_alias,
-            'title' => isset($request->parent_id) ? 'Добавление отдела / должности' : 'Добавление филиала',
+            'title' => isset($request->parent_id) ? 'Добавление в структуру филиала' : 'Добавление филиала',
             'parent_id' => $request->parent_id,
             'filial_id' => $request->filial_id
         ]);

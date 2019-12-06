@@ -1,7 +1,15 @@
 <li class="medium-as-last item" id="staff-{{ $staffer->id }}" data-name="{{ $staffer->position->name }}">
 
     <div class="medium-as-last-link">
-        <span>{{ $staffer->position->name }} ( <a href="{{route('staff.edit', $staffer->id)}}" class="link-recursion">@isset($staffer->user_id) {{ $staffer->user->name }} @else Вакансия @endisset</a> )</span>
+        @if ($staffer->user_id)
+        <span>
+            {{ $staffer->position->name }} ( <a href="{{route('employees.edit', $staffer->employee->id)}}" class="link-recursion">{{ $staffer->user->name }}</a> )
+        </span>
+        @else
+            <span>
+            {{ $staffer->position->name }} ( <a href="{{route('employees.create')}}" class="link-recursion">Вакансия</a> )
+        </span>
+        @endif
         @moderation ($staffer)
         <span class="no-moderation">Не отмодерированная запись!</span>
         @endmoderation
@@ -54,7 +62,7 @@
             <div></div>
 
             @can('update', $staffer)
-            <div class="icon-list-edit sprite sprite-edit">{{ link_to_route('staff.edit', '', $staffer->id, $attributes = []) }}</div>
+                <div class="icon-list-edit sprite sprite-edit">{{ link_to_route('staff.edit', '', $staffer->id, $attributes = []) }}</div>
             @endcan
 
             <div class="del">
