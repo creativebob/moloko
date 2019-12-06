@@ -77,7 +77,7 @@ class CatalogsGoodsController extends Controller
         }
 
         $site = $this->site;
-        $filial = $this->filial;
+
         $page = $site->pages_public->where('alias', 'catalogs-goods')->first();
 
         // Получаем полный прайс со всеми доступными разделами
@@ -196,7 +196,7 @@ class CatalogsGoodsController extends Controller
         //     });
         // }
 
-        return view($site->alias.'.pages.catalogs_goods.index', compact('site', 'filial', 'page', 'request', 'catalog_goods_items', 'prices_goods', 'catalog_goods', 'main_slug', 'sub_menu'));
+        return view($site->alias.'.pages.catalogs_goods.index', compact('site',  'page', 'request', 'catalog_goods_items', 'prices_goods', 'catalog_goods', 'main_slug', 'sub_menu'));
     }
 
     /**

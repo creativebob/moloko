@@ -35,7 +35,7 @@ class AppController extends Controller
                 ->where('alias', 'main')
                 ->first();
 
-            return view($site->alias.'.pages.main.index', compact('site', 'filial', 'page'));
+            return view($site->alias.'.pages.main.index', compact('site',  'page'));
         }
     }
 

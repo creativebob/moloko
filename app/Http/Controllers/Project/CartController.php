@@ -65,9 +65,9 @@ class CartController extends Controller
         // dd($prices_goods);
 
         $site = $this->site;
-        $filial = $this->filial;
+
         $page = $site->pages_public->firstWhere('alias', 'cart');
-        return view($site->alias.'.pages.cart.index', compact('site', 'filial', 'page', 'prices_goods'));
+        return view($site->alias.'.pages.cart.index', compact('site',  'page', 'prices_goods'));
     }
 
     /**

@@ -31,12 +31,12 @@ class EstimateController extends Controller
 //        dd($estimates);
 
         $site = $this->site;
-$filial = $this->filial;
+
         $page = $site->pages_public
             ->where('alias', 'estimates')
             ->first();
 
-        return view($site->alias.'.pages.estimates.index', compact('site', 'filial', 'page', 'estimates'));
+        return view($site->alias.'.pages.estimates.index', compact('site',  'page', 'estimates'));
     }
 
     /**
@@ -68,7 +68,7 @@ $filial = $this->filial;
      */
     public function show($id)
     {
-	
+
 	    $estimate = Estimate::with('lead')
 		    ->whereHas('lead', function($q){
 			    $q->where('user_id', Auth::user()->id);
@@ -76,12 +76,12 @@ $filial = $this->filial;
 		    ->findOrFail($id);
 
         $site = $this->site;
-$filial = $this->filial;
+
         $page = $site->pages_public
             ->where('alias', 'estimates-items')
             ->first();
 
-        return view($site->alias.'.pages.estimates_items.index', compact('site', 'filial', 'page', 'estimate'));
+        return view($site->alias.'.pages.estimates_items.index', compact('site',  'page', 'estimate'));
     }
 
     /**
