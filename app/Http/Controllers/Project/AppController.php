@@ -51,7 +51,7 @@ class AppController extends Controller
     {
         Cookie::queue(Cookie::forever('city', $alias));
         $url = "https://{$alias}.{$this->site->domain}";
-        return \Redirect::away($url);;
+        return \Redirect::away($url);
 
     }
 
