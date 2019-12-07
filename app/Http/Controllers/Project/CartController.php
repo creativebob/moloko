@@ -292,7 +292,7 @@ class CartController extends Controller
 
             // Оповещение
             // Получаем сайт
-            $site = getSite();
+            $site = $this->site;
             $company = $site->company;
             $phone = cleanPhone($request->main_phone);
 
