@@ -296,14 +296,13 @@ class AppController extends Controller
 
         $user->notifications()->sync($request->notifications);
 
-        $estimates = null;
 
         $site = $this->site;
         $page = $site->pages_public->firstWhere('alias', 'cabinet');
 
         $site->load('notifications');
 
-        return view($site->alias.'.pages.cabinet.index', compact('site', 'page', 'estimates', 'user'));
+        return redirect()->route('project.cabinet');
 
     }
 
