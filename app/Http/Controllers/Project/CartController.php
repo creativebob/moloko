@@ -338,6 +338,8 @@ class CartController extends Controller
                 $message .= "Скидка: " . num_format($estimate->discount, 0) . ' руб.' . "\r\n";
             }
 
+            $message .= "\r\n";
+
             // Ролл Хаус
             if ($request->has('address')) {
                 $message .= "Адрес: {$request->address}\r\n";
