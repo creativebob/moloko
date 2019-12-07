@@ -71,10 +71,10 @@ class PromotionController extends Controller
         $site = $this->site;
 
         $page = $site->pages_public
-            ->where('alias', 'promotions-items')
+            ->where('alias', 'promotion')
             ->first();
 
-        return view($site->alias.'.pages.promotions_items.index', compact('site',  'page', 'promotion'));
+        return view($site->alias.'.pages.promotion.index', compact('site',  'page', 'promotion'));
     }
 
     /**
