@@ -446,7 +446,8 @@ class CartController extends Controller
         if ($request->has('cartGoods')) {
             $result = Cookie::queue(Cookie::forget('cart'));
             foreach($request->cartGoods as $cartGood) {
-                $cartGood = json_decode($cartGood, true);
+//                $cartGood = json_decode($cartGood, true);
+
                 $cart['prices'][$cartGood['id']] = [
                     'count' => $cartGood['quantity']
                 ];
