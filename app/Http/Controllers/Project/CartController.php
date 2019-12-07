@@ -136,7 +136,7 @@ class CartController extends Controller
             $company = $site->company;
 
             // Если не пришел филиал, берем первый у компании
-            $filial_id = $this->filial->id;
+            $filial_id = $this->site->filial->id;
 
             $nickname = $request->name;
             $first_name = $request->first_name;
