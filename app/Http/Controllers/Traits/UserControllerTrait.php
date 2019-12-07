@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 trait UserControllerTrait
 {
 
-	public function createUser($request, $site_id = 1) {
+	public function createUser($request, $site_id = null) {
 
         // Подготовка: -------------------------------------------------------------------------------------
 
