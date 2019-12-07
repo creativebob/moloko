@@ -98,6 +98,7 @@ class CartController extends Controller
 
             // Собираем для request недостающие данные или преобразовываем
 
+            // Вкусняшка
             $lead_type = $request->has('lead_type') ? $request->lead_type : null;
 
             $school_number = $request->has('school_number') ? $request->school_number : null;
@@ -209,7 +210,7 @@ class CartController extends Controller
 
                     // sendSms('79041248598', 'Данные для входа: ' . $user->access_code);
 
-                    $user->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
+                    $user->location_id = create_location($request, $country_id = 1, $city_id = 1);
 
                     $user->first_name = $first_name;
                     $user->second_name = $second_name;
@@ -240,7 +241,7 @@ class CartController extends Controller
             $lead->name = $lead_name;
             $lead->company_name = $company_name;
             $lead->private_status = $private_status;
-            $lead->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
+            $lead->location_id = create_location($request, $country_id = 1, $city_id = 1);
 
             $lead->description = $description;
             $lead->stage_id = $request->stage_id ?? 2; // Этап: "обращение"" по умолчанию
@@ -336,6 +337,19 @@ class CartController extends Controller
                 $message .= "Сумма со скидкой: " . num_format($estimate->total, 0) . ' руб.' . "\r\n";
                 $message .= "Скидка: " . num_format($estimate->discount, 0) . ' руб.' . "\r\n";
             }
+
+            // Ролл Хаус
+            if ($request->has('address')) {
+                $message .= "Адрес: {$request->address}\r\n";
+            };
+            if ($request->has('comment')) {
+                $message .= "Комментарий: {$request->comment}\r\n";
+            };
+            $pickup = $request->has('pickup') ? 'Самовывоз' : 'Доставка';
+            $message .= "Доставка: {$pickup}\r\n";
+
+            $card = $request->has('card') ? 'по карте' : 'наличный расчет';
+            $message .= "Оплата: {$card}\r\n";
 
             $lead->notes()->create([
                 'company_id' => $company->id,
