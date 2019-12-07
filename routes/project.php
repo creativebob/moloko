@@ -39,6 +39,10 @@ Route::resource('/estimates', 'EstimateController')
     ->only(['index', 'show'])
     ->names('project.estimates');
 
+Route::resource('/promotions', 'PromotionController')
+    ->only(['index', 'show'])
+    ->names('project.promotions');
+
 Route::get('/goods-composition/{id}/', 'AppController@goods_composition')->name('project.goods_composition');
 
 Route::post('/site_user_login', 'AppController@site_user_login')->name('project.site_user_login');
