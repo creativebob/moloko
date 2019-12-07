@@ -45,7 +45,7 @@
         "ajv": "^6.10.2",
         "axios": ">=0.18.1",
         "ckeditor": "^4.12.1",
-        "foundation-sites": "^6.5.3",
+        "foundation-sites": "6.5.3",
         "jquery": "^3.4.1",
         "jquery-ui": "^1.12.1",
         "lodash.debounce": "^4.0.8",
