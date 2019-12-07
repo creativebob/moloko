@@ -43,6 +43,7 @@ class PromotionController extends Controller
         $promotions = Promotion::with([
             'author',
             'company',
+            'photo'
         ])
             // ->withCount('pages')
             ->moderatorLimit($answer)
@@ -109,6 +110,8 @@ class PromotionController extends Controller
         $promotion = Promotion::create($data);
 
         $promotion->filials()->sync($request->filials);
+
+        $promotion->photo_id = $this->getPhotoId($request, $promotion);
 
         $names = [
             'tiny',
@@ -186,6 +189,7 @@ class PromotionController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $promotion = Promotion::with([
+            'photo',
             'tiny',
             'small',
             'medium',
@@ -199,6 +203,8 @@ class PromotionController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $promotion);
 
         $data = $request->input();
+        $data['photo_id'] = $this->getPhotoId($request, $promotion);;
+
         $names = [
             'tiny',
             'small',
