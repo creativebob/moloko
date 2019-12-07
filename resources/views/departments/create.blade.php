@@ -96,7 +96,7 @@
 </div>
 </div>
 
-@can('create', App\Schedule::class)
+@can('index', App\Schedule::class)
 {{-- Схема работы --}}
 <div class="tabs-panel" id="worktimes">
     <div class="grid-x grid-padding-x align-center">

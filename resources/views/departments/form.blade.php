@@ -69,7 +69,7 @@
         </div>
 
         {{-- Схема работы --}}
-        @can('edit', App\Schedule::class)
+        @can('index', App\Schedule::class)
         <div class="tabs-panel" id="worktime">
             <div class="grid-x grid-padding-x align-center">
                 <div class="small-8 cell">
