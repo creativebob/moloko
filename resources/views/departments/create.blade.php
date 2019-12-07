@@ -27,7 +27,7 @@
 					<a href="#department" aria-selected="true">Филиал</a>
 				</li>
 
-                @can('create', App\Schedule::class)
+                @can('index', App\Schedule::class)
 				<li class="tabs-title">
 					<a data-tabs-target="worktimes" href="#worktimes">График работы</a>
 				</li>
