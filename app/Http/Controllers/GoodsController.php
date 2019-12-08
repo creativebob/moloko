@@ -116,7 +116,7 @@ class GoodsController extends Controller
 //        ->select($columns)
         ->orderBy('moderation', 'desc')
         ->orderBy('id', 'desc')
-        ->paginate(30);
+        ->paginate(1);
 
         // dd($goods);
         // -----------------------------------------------------------------------------------------------------------
@@ -390,12 +390,12 @@ class GoodsController extends Controller
             'entity' => $this->entity_alias,
             'category_entity' => 'goods_categories',
             'categories_select_name' => 'goods_category_id',
+            'paginator_url' => url()->previous()
         ]);
     }
 
     public function update(GoodsUpdateRequest $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -418,7 +418,7 @@ class GoodsController extends Controller
 
             // if($article->draft) {
                 $cur_goods->price_unit_id = $request->price_unit_id;
-                $cur_goods->price_unit_category_id = $request->price_unit_category_id;               
+                $cur_goods->price_unit_category_id = $request->price_unit_category_id;
             // }
 
             $cur_goods->save();
@@ -447,6 +447,10 @@ class GoodsController extends Controller
             if ($request->cookie('backlink') != null) {
                 $backlink = Cookie::get('backlink');
                 return Redirect($backlink);
+            }
+
+            if ($request->has('paginator_url')) {
+                return redirect($request->paginator_url);
             }
 
             return redirect()->route('goods.index');
@@ -529,7 +533,7 @@ class GoodsController extends Controller
                 }
                 $res = $new_article->containers()->attach($containers_insert);
             }
-	
+
 	    $article->load('attachments');
 	    if ($article->attachments->isNotEmpty()) {
 		    $attachments_insert = [];

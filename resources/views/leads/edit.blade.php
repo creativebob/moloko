@@ -30,6 +30,8 @@
 
 {{ method_field('PATCH') }}
 
+{!! Form::hidden('paginator_url', $paginator_url ?? null) !!}
+
 @php
 
 $readonly = '';

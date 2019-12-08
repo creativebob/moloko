@@ -312,6 +312,7 @@ class AttachmentController extends Controller
             'category_entity' => 'attachments_categories',
             'categories_select_name' => 'attachments_category_id',
             'attachment' => $attachment,
+            'paginator_url' => url()->previous()
         ]);
     }
 
@@ -380,6 +381,10 @@ class AttachmentController extends Controller
             if ($request->cookie('backlink') != null) {
                 $backlink = Cookie::get('backlink');
                 return Redirect($backlink);
+            }
+
+            if ($request->has('paginator_url')) {
+                return redirect($request->paginator_url);
             }
 
             return redirect()->route('attachments.index');

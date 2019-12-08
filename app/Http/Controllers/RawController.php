@@ -253,7 +253,7 @@ class RawController extends Controller
             $data['price_unit_id'] = $data['unit_id'];
 
             $raw = (new Raw())->create($data);
-            
+
             if ($raw) {
 
                 // Пишем куки состояния
@@ -343,6 +343,7 @@ class RawController extends Controller
             'category_entity' => 'raws_categories',
             'categories_select_name' => 'raws_category_id',
             'raw' => $raw,
+            'paginator_url' => url()->previous()
         ]);
     }
 
@@ -413,6 +414,10 @@ class RawController extends Controller
             if ($request->cookie('backlink') != null) {
                 $backlink = Cookie::get('backlink');
                 return Redirect($backlink);
+            }
+
+            if ($request->has('paginator_url')) {
+                return redirect($request->paginator_url);
             }
 
             return redirect()->route('raws.index');
