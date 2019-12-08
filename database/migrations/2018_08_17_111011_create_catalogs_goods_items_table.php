@@ -30,6 +30,8 @@ class CreateCatalogsGoodsItemsTable extends Migration
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
             $table->foreign('photo_id')->references('id')->on('photos');
 
+            $table->string('color', 7)->nullable()->comment('Цвет');
+
             $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id родителя');
             $table->foreign('parent_id')->references('id')->on('catalogs_goods_items');
 

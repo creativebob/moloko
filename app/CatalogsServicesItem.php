@@ -53,6 +53,7 @@ class CatalogsServicesItem extends Model
         'parent_id',
         'photo_id',
 		'catalogs_service_id',
+        'color',
 
         'display_mode_id',
         'is_controllable_mode',

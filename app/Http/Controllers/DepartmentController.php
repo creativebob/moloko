@@ -149,7 +149,7 @@ class DepartmentController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        $department = new Department;
+        $department = Department::make();
 
         if (isset($request->city_name)) {
             $department->location_id = create_location($request);

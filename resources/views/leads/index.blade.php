@@ -27,12 +27,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', [
-  'page_info' => $page_info,
-  'class' => App\Lead::class,
-  'type' => 'table'
-]
-)
+@include('leads.includes.title_leads')
 @endsection
 
 @section('content')

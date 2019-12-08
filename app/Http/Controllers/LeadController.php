@@ -112,7 +112,7 @@ class LeadController extends Controller
         ->paginate(30);
 
         // dd($leads);
-        
+
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
@@ -322,7 +322,7 @@ class LeadController extends Controller
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
     {
-    	
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -433,94 +433,100 @@ class LeadController extends Controller
         return view('leads.index', compact('leads', 'page_info', 'filter', 'user'));
     }
 
-    public function search(Request $request)
+    public function search(Request $request, $search)
     {
 
-        // Подключение политики
-        $this->authorize('index', Lead::class);
-
-        $entity_name = $this->entity_name;
-
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        $text_fragment = $request->text_fragment;
-        $fragment_phone = NULL;
-        $crop_phone = NULL;
-
-        $len_text = strlen($text_fragment);
-
-        if((strlen($text_fragment) == 11)&&(is_numeric($text_fragment))){
-            $fragment_phone = $text_fragment;
-        }
-
-        if((strlen($text_fragment) == 4)&&(is_numeric($text_fragment))){
-            $crop_phone = $text_fragment;
-        }
-
-        if(strlen($text_fragment) == 17){
-            $fragment_phone = cleanPhone($text_fragment);
-        }
-
-        if(strlen($text_fragment) > 6){
-            $fragment_case_number = $text_fragment;
-        } else {
-            $fragment_case_number = '';
-        }
-
-
-        if($len_text > 3){
-
-            // ------------------------------------------------------------------------------------------------------------
-            // ГЛАВНЫЙ ЗАПРОС
-            // ------------------------------------------------------------------------------------------------------------
-
-            $result_search = Lead::with(
-                'location.city',
-                'choice',
-                'manager',
-                'stage',
-                'challenges.challenge_type',
-                'phones')
-            ->companiesLimit($answer)
-            ->whereNull('draft')
-            ->where(function ($query) use ($fragment_case_number, $text_fragment, $len_text, $fragment_phone, $crop_phone) {
-
-                if($len_text > 5){
-                    $query->where('name', $text_fragment);
-                };
-
-                if(($len_text > 6)||($len_text < 14)){
-                    $query->orWhere('case_number', 'LIKE', $fragment_case_number);
-                };
-
-                if(isset($fragment_phone)){
-                    $query->orWhereHas('phones', function($query) use ($fragment_phone){
-                       $query->where('phone', $fragment_phone);
-                   });
-                };
-
-                if(isset($crop_phone)){
-                    $query->orWhereHas('phones', function($query) use ($crop_phone){
-                       $query->where('crop', $crop_phone);
-                   });
-                };
-
-            })
-            ->orderBy('created_at', 'asc')
+        $results = Lead::where('case_number', $search)
+            ->orWhere('name', 'LIKE', $search . '%')
             ->get();
 
-        } else {
-            return '';
-        };
+        return response()->json($results);
 
-        if($result_search->count()){
+        // Подключение политики
+//        $this->authorize('index', Lead::class);
 
-            return view('includes.search_lead', compact('result_search', 'entity_name'));
-        } else {
-
-            return '';
-        }
+//        $entity_name = $this->entity_name;
+//
+//        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+//        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+//
+//        $text_fragment = $request->text_fragment;
+//        $fragment_phone = NULL;
+//        $crop_phone = NULL;
+//
+//        $len_text = strlen($text_fragment);
+//
+//        if((strlen($text_fragment) == 11)&&(is_numeric($text_fragment))){
+//            $fragment_phone = $text_fragment;
+//        }
+//
+//        if((strlen($text_fragment) == 4)&&(is_numeric($text_fragment))){
+//            $crop_phone = $text_fragment;
+//        }
+//
+//        if(strlen($text_fragment) == 17){
+//            $fragment_phone = cleanPhone($text_fragment);
+//        }
+//
+//        if(strlen($text_fragment) > 6){
+//            $fragment_case_number = $text_fragment;
+//        } else {
+//            $fragment_case_number = '';
+//        }
+//
+//
+//        if($len_text > 3){
+//
+//            // ------------------------------------------------------------------------------------------------------------
+//            // ГЛАВНЫЙ ЗАПРОС
+//            // ------------------------------------------------------------------------------------------------------------
+//
+//            $result_search = Lead::with(
+//                'location.city',
+//                'choice',
+//                'manager',
+//                'stage',
+//                'challenges.challenge_type',
+//                'phones')
+//            ->companiesLimit($answer)
+//            ->whereNull('draft')
+//            ->where(function ($query) use ($fragment_case_number, $text_fragment, $len_text, $fragment_phone, $crop_phone) {
+//
+//                if($len_text > 5){
+//                    $query->where('name', $text_fragment);
+//                };
+//
+//                if(($len_text > 6)||($len_text < 14)){
+//                    $query->orWhere('case_number', 'LIKE', $fragment_case_number);
+//                };
+//
+//                if(isset($fragment_phone)){
+//                    $query->orWhereHas('phones', function($query) use ($fragment_phone){
+//                       $query->where('phone', $fragment_phone);
+//                   });
+//                };
+//
+//                if(isset($crop_phone)){
+//                    $query->orWhereHas('phones', function($query) use ($crop_phone){
+//                       $query->where('crop', $crop_phone);
+//                   });
+//                };
+//
+//            })
+//            ->orderBy('created_at', 'asc')
+//            ->get();
+//
+//        } else {
+//            return '';
+//        };
+//
+//        if($result_search->count()){
+//
+//            return view('includes.search_lead', compact('result_search', 'entity_name'));
+//        } else {
+//
+//            return '';
+//        }
     }
 
     public function destroy(Request $request, $id)
@@ -737,7 +743,7 @@ class LeadController extends Controller
             }
 
             // Автоматическая поставнока задачи: временно отключена
-            // TODO: Необходимо создать настройку, исходя из которой будет или не будет 
+            // TODO: Необходимо создать настройку, исходя из которой будет или не будет
             // автоматически ставиться задача
 
             // $lead->challenges()->save($challenge);

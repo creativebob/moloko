@@ -103,21 +103,21 @@ class SiteController extends Controller
 
         $site->filials()->sync($request->filials);
 
-        if ($site) {
-            return redirect()
-                ->route('sites.edit', [$site->id])
-                ->with(['success' => 'Успешно сохранено']);
-        } else {
-            return back()
-                ->withErrors(['msg' => 'Ошибка сохранения'])
-                ->withInput();
-        }
-
 //        if ($site) {
-//            return redirect()->route('sites.index');
+//            return redirect()
+//                ->route('sites.edit', [$site->id])
+//                ->with(['success' => 'Успешно сохранено']);
 //        } else {
-//            abort(403, 'Ошибка записи сайта');
+//            return back()
+//                ->withErrors(['msg' => 'Ошибка сохранения'])
+//                ->withInput();
 //        }
+
+        if ($site) {
+            return redirect()->route('sites.index');
+        } else {
+            abort(403, 'Ошибка записи сайта');
+        }
     }
 
     public function show(Request $request, $id)
@@ -178,21 +178,21 @@ class SiteController extends Controller
 
         $site->filials()->sync($request->filials);
 
-        if ($result) {
-            return redirect()
-                ->route('sites.edit', $site->id)
-                ->with(['success' => 'Успешно сохранено']);
-        } else {
-            return back()
-                ->withErrors(['msg' => 'Ошибка сохранения'])
-                ->withInput();
-        }
-
 //        if ($result) {
-//            return redirect()->route('sites.index');
+//            return redirect()
+//                ->route('sites.edit', $site->id)
+//                ->with(['success' => 'Успешно сохранено']);
 //        } else {
-//            abort(403, 'Ошибка обновления сайта');
+//            return back()
+//                ->withErrors(['msg' => 'Ошибка сохранения'])
+//                ->withInput();
 //        }
+
+        if ($result) {
+            return redirect()->route('sites.index');
+        } else {
+            abort(403, 'Ошибка обновления сайта');
+        }
     }
 
     public function destroy($id)

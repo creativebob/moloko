@@ -53,6 +53,7 @@ use App\Scopes\Filters\BooklistFilter;
 			'parent_id',
 			'photo_id',
 			'catalogs_goods_id',
+            'color',
 
             'display_mode_id',
             'is_controllable_mode',
