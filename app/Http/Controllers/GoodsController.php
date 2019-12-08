@@ -116,7 +116,7 @@ class GoodsController extends Controller
 //        ->select($columns)
         ->orderBy('moderation', 'desc')
         ->orderBy('id', 'desc')
-        ->paginate(1);
+        ->paginate(30);
 
         // dd($goods);
         // -----------------------------------------------------------------------------------------------------------
