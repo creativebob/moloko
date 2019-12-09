@@ -11,7 +11,7 @@ class WorktimeFilialTodayComposer
         if ($worktimes[date('N')]['begin'] && $worktimes[date('N')]['begin']) {
             $worktime = $worktimes[date('N')]['begin'] . ' - ' . $worktimes[date('N')]['end'];
         } else {
-            $worktime = 'ВЫходной';
+            $worktime = 'Выходной';
         }
         return $view->with(compact('worktime'));
 
