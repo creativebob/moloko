@@ -117,7 +117,6 @@ class PricesGoodsController extends Controller
         $page_info->title = 'Прайс: ' . $catalog->name;
         $page_info->name = 'Прайс: ' . $catalog->name;
 
-
         return view('prices_goods.index', [
             'prices_goods' => $prices_goods,
             'page_info' => $page_info,
@@ -127,7 +126,8 @@ class PricesGoodsController extends Controller
             'nested' => null,
             'catalog_id' => $catalog_id,
             'catalog' => $catalog,
-            'filial_id' => $filial_id
+            'filial_id' => $filial_id,
+            'catalog_goods' => $catalog
         ]);
     }
 

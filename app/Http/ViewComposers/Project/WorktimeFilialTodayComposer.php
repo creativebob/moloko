@@ -1,23 +1,22 @@
 <?php
-	
-	namespace App\Http\ViewComposers\Project;
-	use Illuminate\View\View;
-	
-	class WorktimeFilialTodayComposer
-	{
-		public function compose(View $view)
-		{
-			$filial = $view->site->filial_mode;
 
-			if(!isset($filial)){
+namespace App\Http\ViewComposers\Project;
+use Illuminate\View\View;
 
-				// abort(403, 'В график работ не передан выбранный на сайте филиал');
-				$filial = $view->site->filials->first();
-			}
+class WorktimeFilialTodayComposer
+{
+    public function compose(View $view)
+    {
+        $worktimes = $view->site->filial->worktime;
+        if ($worktimes[date('N')]['begin'] && $worktimes[date('N')]['begin']) {
+            $worktime = $worktimes[date('N')]['begin'] . ' - ' . $worktimes[date('N')]['end'];
+        } else {
+            $worktime = 'Выходной';
+        }
+        return $view->with(compact('worktime'));
 
-			$worktimes = $filial->worktime;
-			
-			return $view->with(compact('worktimes', 'days'));
-		}
-		
-	}
+//        $worktimes = $view->site->filial->worktime;
+//        return $view->with(compact('worktimes'));
+    }
+
+}

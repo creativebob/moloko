@@ -35,6 +35,10 @@
                             <div class="sprite-input-right find-status" id="name-check"></div>
                             <div class="item-error">Такой сайт уже существует!</div>
                         </label>
+
+                        <label>Стартовая ссылка
+                            @include('includes.inputs.name', ['name' => 'start_url', 'value' => $site->start_url])
+                        </label>
                     </div>
 
                     <div class="small-12 medium-7 cell">

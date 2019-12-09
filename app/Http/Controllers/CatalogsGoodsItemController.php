@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CatalogsGoods;
 use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\CatalogsGoodsItemUpdateRequest;
 use App\Http\Requests\CatalogsGoodsItemStoreRequest;
@@ -74,11 +75,14 @@ class CatalogsGoodsItemController extends Controller
             );
         }
 
+        $catalog_goods = CatalogsGoods::findOrFail($catalog_id);
+
         // Отдаем на шаблон
         return view('catalogs_goods_items.index', [
             'catalogs_goods_items' => $catalogs_goods_items,
             'page_info' => pageInfo($this->entity_alias),
             'catalog_id' => $catalog_id,
+            'catalog_goods' => $catalog_goods
         ]);
     }
 
@@ -141,10 +145,13 @@ class CatalogsGoodsItemController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods_item);
 
+        $catalog_goods = CatalogsGoods::findOrFail($catalog_id);
+
         return view('catalogs_goods_items.edit', [
             'catalogs_goods_item' => $catalogs_goods_item,
             'catalog_id' => $catalog_id,
             'page_info' => pageInfo($this->entity_alias),
+            'catalog_goods' => $catalog_goods
         ]);
     }
 

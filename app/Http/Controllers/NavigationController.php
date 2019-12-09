@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Navigation;
 
 // Валидация
+use App\Site;
 use Illuminate\Http\Request;
 use App\Http\Requests\NavigationRequest;
 
@@ -43,10 +44,13 @@ class NavigationController extends Controller
         ->paginate(30);
         // dd($navigations);
 
+        $site = Site::findOrFail($site_id);
+
         return view('navigations.index', [
             'navigations' => $navigations,
             'page_info' => pageInfo($this->entity_alias),
-            'site_id' => $site_id
+            'site_id' => $site_id,
+            'site' => $site
         ]);
     }
 
@@ -57,10 +61,13 @@ class NavigationController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
+        $site = Site::findOrFail($site_id);
+
         return view('navigations.create', [
             'navigation' => new $this->class,
             'page_info' => pageInfo($this->entity_alias),
-            'site_id' => $site_id
+            'site_id' => $site_id,
+            'site' => $site
         ]);
     }
 
@@ -132,10 +139,13 @@ class NavigationController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $navigation);
 
+        $site = Site::findOrFail($site_id);
+
         return view('navigations.edit', [
             'navigation' => $navigation,
             'page_info' => pageInfo($this->entity_alias),
-            'site_id' => $site_id
+            'site_id' => $site_id,
+            'site' => $site
         ]);
     }
 

@@ -23,6 +23,8 @@ class CreateSitesTable extends Migration
 
             $table->string('api_token', 60)->unique()->nullable()->comment('Токен');
 
+            $table->string('start_url')->nullable()->comment('Стартовая ссылка для сайта');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

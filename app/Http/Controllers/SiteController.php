@@ -24,6 +24,7 @@ class SiteController extends Controller
         $this->model = 'App\Site';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
+
     }
 
     public function index(Request $request, SiteFilter $filters)
@@ -90,7 +91,6 @@ class SiteController extends Controller
             'page_info' => pageInfo($this->entity_alias),
         ]);
     }
-
 
     public function store(SiteRequest $request)
     {
@@ -241,8 +241,9 @@ class SiteController extends Controller
         return view('sites.sections', compact('site', 'sections', 'page_info'));
     }
 
-    public function kek(Request $request)
+    public function getSite($id)
     {
-        dd($request);
+        $site = Site::findOrFail($id);
+        return $site;
     }
 }
