@@ -30,12 +30,16 @@
             <span class="form-error">И пароль не помешает вовсе!</span>
           </label>
           <button class="button" type="submit" value="Submit">Войти</button>
+          {{--
           <div class="checkbox">
             <input type="checkbox" name="" id="remember">
             <label for="remember" class="remember"><span>Запомнить меня</span></label>
           </div>
+          --}}
         </form>
-        <a href="" class="forgot">Кажется пароль забыл...</a>
+
+        {{-- <a href="" class="forgot">Кажется пароль забыл...</a> --}}
+
       </div>
     </div>
     </div>

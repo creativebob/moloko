@@ -132,7 +132,8 @@ class GetAccessController extends Controller
                     abort(403, "Пользователь не устроен в компании!");
                 };
 
-                $user_redirect = '/admin/' . $user->staff->first()->position->page->alias;
+                $start_url_alias = $user->staff->first()->position->page->alias ?? 'dashboard';
+                $user_redirect = '/admin/' . $start_url_alias;
                 $user_position_id = $user->staff->first()->position->id;
 
 
