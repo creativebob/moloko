@@ -443,7 +443,7 @@ class LeadController extends Controller
     {
 
         $results = Lead::where('case_number', $search)
-            ->orWhere('name', 'LIKE', $search . '%')
+            ->orWhere('name', 'LIKE', '%' . $search . '%')
             ->get();
 
         return response()->json($results);

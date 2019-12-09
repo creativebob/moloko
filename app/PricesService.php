@@ -54,6 +54,10 @@ class PricesService extends Model
         'currency_id',
         'point',
 
+        'status',
+        'is_hit',
+        'is_new',
+
         'display',
         'system',
         'moderation'

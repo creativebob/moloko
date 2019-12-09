@@ -40,6 +40,10 @@ class CreatePricesServicesTable extends Migration
 
             $table->boolean('archive')->default(0)->unsigned()->comment('Архив');
 
+            $table->boolean('status')->default(0)->comment('Статус');
+            $table->boolean('is_hit')->default(0)->comment('Хит');
+            $table->boolean('is_new')->default(0)->comment('Новинка');
+
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');

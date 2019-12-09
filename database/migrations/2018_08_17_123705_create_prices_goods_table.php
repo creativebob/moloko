@@ -39,10 +39,10 @@ class CreatePricesGoodsTable extends Migration
             $table->decimal('point', 12, 4)->default(0)->comment('Внутренняя валюта');
 
             $table->boolean('archive')->default(0)->unsigned()->comment('Архив');
-	
-	        $table->boolean('status')->default(0)->comment('Статус');
 
+	        $table->boolean('status')->default(0)->comment('Статус');
             $table->boolean('is_hit')->default(0)->comment('Хит');
+            $table->boolean('is_new')->default(0)->comment('Новинка');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

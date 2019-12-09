@@ -1126,6 +1126,7 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
 
 	Route::any('prices_goods_status', 'PricesGoodsController@ajax_status');
     Route::any('prices_goods_hit', 'PricesGoodsController@ajax_hit');
+    Route::any('prices_goods_new', 'PricesGoodsController@ajax_new');
 
     Route::resource('prices_goods', 'PricesGoodsController');
 });
