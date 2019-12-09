@@ -25,6 +25,9 @@ class PromotionController extends Controller
             ->whereHas('filials', function ($q) use ($site) {
                 $q->where('id', $site->filial->id);
             })
+            ->where('display', true)
+            ->where('begin_date', '<=', now())
+            ->where('end_date', '>=', now())
             ->get();
 //        dd($promotions);
 
