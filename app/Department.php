@@ -208,7 +208,7 @@ class Department extends Model
     // Продвижения
     public function promotions()
     {
-        return $this->hasMany(Promotion::class, 'filial_id');
+        return $this->belongsToMany(Promotion::class, 'filial_promotion', 'filial_id', 'promotion_id');
     }
-    
+
 }
