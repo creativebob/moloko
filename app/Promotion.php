@@ -59,6 +59,8 @@ class Promotion extends Model
         'end_date',
         'link',
 
+        'photo_id',
+
         'tiny',
         'small',
         'medium',
@@ -91,6 +93,12 @@ class Promotion extends Model
     public function filials()
     {
         return $this->belongsToMany(Department::class, 'filial_promotion', 'promotion_id', 'filial_id');
+    }
+
+    // Фото
+    public function photo()
+    {
+        return $this->belongsTo(Photo::class);
     }
 
     // Фотки

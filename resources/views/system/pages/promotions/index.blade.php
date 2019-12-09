@@ -67,7 +67,7 @@
                         <label class="label-check" for="check-{{ $promotion->id }}"></label>
                     </td>
                     <td class="td-photo tiny">
-                        <img src="{{ $promotion->tiny->path }}" alt="">
+                        <img src="{{ getPhotoPath($promotion) }}" alt="">
                     </td>
                     <td class="td-name">
                         @can('update', $promotion)

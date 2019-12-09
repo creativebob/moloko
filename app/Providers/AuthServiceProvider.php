@@ -339,7 +339,7 @@ class AuthServiceProvider extends ServiceProvider
         Promotion::class => PromotionPolicy::class,
         Dispatch::class => DispatchPolicy::class,
         Schedule::class => SchedulePolicy::class,
-        
+
         Metric::class => MetricPolicy::class,
 
 

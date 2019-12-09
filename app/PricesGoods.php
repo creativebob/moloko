@@ -1,7 +1,7 @@
 <?php
-	
+
 	namespace App;
-	
+
 	use Illuminate\Database\Eloquent\Model;
 	use Illuminate\Notifications\Notifiable;
 	use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,15 +21,15 @@
 // Фильтры
 	use App\Scopes\Filters\Filter;
 	use App\Scopes\Filters\BooklistFilter;
-	
+
 	class PricesGoods extends Model
 	{
 		// Включаем кеш
 		use Cachable;
-		
+
 		use Notifiable;
 		use SoftDeletes;
-		
+
 		// Включаем Scopes
 		use CompaniesLimitTraitScopes;
 		use AuthorsTraitScopes;
@@ -38,13 +38,13 @@
 		use TemplateTraitScopes;
 		use ModeratorLimitTraitScopes;
 		use SuppliersTraitScopes;
-		
+
 		// Фильтры
 		use Filter;
 		use BooklistFilter;
-		
+
 		protected $table = 'prices_goods';
-		
+
 		protected $fillable = [
 			'catalogs_goods_item_id',
 			'catalogs_goods_id',
@@ -55,46 +55,47 @@
 
             'currency_id',
             'point',
-			
+
 			'status',
             'is_hit',
-			
+            'is_new',
+
 			'display',
 			'system',
 			'moderation'
 		];
-		
-		
+
+
 		// Каталог
 		public function catalog()
 		{
 			return $this->belongsTo(CatalogsGoods::class, 'catalogs_goods_id');
 		}
-		
+
 		// Пункты каталога
 		public function catalogs_item()
 		{
 			return $this->belongsTo(CatalogsGoodsItem::class, 'catalogs_goods_item_id');
 		}
-		
+
 		public function catalogs_item_public()
 		{
 			return $this->belongsTo(CatalogsGoodsItem::class, 'catalogs_goods_item_id')
 				->where('display', true);
 		}
-		
+
 		// Филиал
 		public function filial()
 		{
 			return $this->belongsTo(Department::class);
 		}
-		
+
 		// Товар
 		public function goods()
 		{
 			return $this->belongsTo(Goods::class);
 		}
-		
+
 		public function goods_public()
 		{
 			return $this->belongsTo(Goods::class, 'goods_id')
@@ -112,33 +113,33 @@
 					'archive' => false,
 				]);
 		}
-		
+
 		// История
 		public function history()
 		{
 			return $this->hasMany(PricesGoodsHistory::class, 'prices_goods_id');
 		}
-		
+
 		// Актуальная цена
 		public function actual_price()
 		{
 			return $this->hasOne(PricesGoodsHistory::class, 'prices_goods_id')
 				->whereNull('end_date');
 		}
-		
+
 		// Предок
 		public function ancestor()
 		{
 			return $this->belongsTo(PricesGoods::class);
 		}
-		
+
 		// Последователь
 		public function follower()
 		{
 			return $this->hasOne(PricesGoods::class, 'ancestor_id')
 				->where('archive', false);
 		}
-		
+
 		// Общее отношение для товаров и услуг
 		public function product()
 		{
@@ -150,7 +151,7 @@
         {
             return $this->belongsTo(Currency::class);
         }
-		
+
 		// Фильтр
 		public function scopeFilter($query)
 		{
@@ -164,7 +165,7 @@
                 }
                 $query->orderBy('price');
 			}
-			
+
 			if (request('weight')) {
 				$weight = request('weight');
 				$query->whereHas('goods_public', function($q) use ($weight) {
@@ -179,11 +180,11 @@
 	            $catalogs_goods_item = request('catalogs_goods_item');
 	            $query->where('catalogs_goods_item_id', $catalogs_goods_item);
 	        }
-	        
+
 			if (request('raws_articles_groups')) {
 				$raws_articles_groups = request('raws_articles_groups');
 //		    dd($raws_articles_groups);
-				
+
 				$query->whereHas('goods_public', function($q) use ($raws_articles_groups) {
 					$q->whereHas('article', function($q) use ($raws_articles_groups) {
 						foreach($raws_articles_groups as $item){
@@ -196,7 +197,7 @@
 					});
 				});
 			}
-			
+
 			return $query;
 		}
 

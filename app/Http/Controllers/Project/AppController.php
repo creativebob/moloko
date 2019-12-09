@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 // Подрубаем трейт записи и обновления
 use App\Http\Controllers\Traits\UserControllerTrait;
@@ -35,10 +36,24 @@ class AppController extends Controller
                 ->where('alias', 'main')
                 ->first();
 
-            return view($site->alias.'.pages.main.index', compact('site', 'filial', 'page'));
+            return view($site->alias.'.pages.main.index', compact('site',  'page'));
         }
     }
 
+    /**
+     * Перенаправление с одного города (поддомена) на другой, и записсь нового в куку
+     *
+     * @param Request $request
+     * @param string $alias алиас города
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function change_city(Request $request, $alias)
+    {
+        Cookie::queue(Cookie::forever('city', $alias));
+        $url = "https://{$alias}.{$this->site->domain}";
+        return \Redirect::away($url);
+
+    }
 
     // Метод динамического формирования страницы
     public function dynamic_pages(Request $request, $page_alias)
@@ -150,6 +165,8 @@ class AppController extends Controller
         $site = $this->site;
         $page = $site->pages_public->firstWhere('alias', 'cabinet');
 
+        $site->load('notifications');
+
         return view($site->alias.'.pages.cabinet.index', compact('site', 'page', 'estimates', 'user'));
     }
 
@@ -167,7 +184,7 @@ class AppController extends Controller
             // Делаем запрос к базе данных
             $user = check_user_by_phones($main_phone, $site->company->id);
 
-            // Зарегистрирован ли кто-нибудь по такому номеру?    
+            // Зарегистрирован ли кто-нибудь по такому номеру?
             if($user != null){
 
                 // Есть ли аккаунт на текущем сайте?
@@ -267,9 +284,8 @@ class AppController extends Controller
     }
 
     // Сохранение данных пользователя
-    public function update_profile(UserUpdateRequest $request)
+    public function update_profile(Request $request)
     {
-
         //Получаем авторизованного пользователя
         $user = $request->user();
 
@@ -277,6 +293,16 @@ class AppController extends Controller
         $user->second_name = $request->second_name;
         $user->email = $request->email;
         $user->save();
+
+        $user->notifications()->sync($request->notifications);
+
+
+        $site = $this->site;
+        $page = $site->pages_public->firstWhere('alias', 'cabinet');
+
+        $site->load('notifications');
+
+        return redirect()->route('project.cabinet');
 
     }
 
@@ -346,20 +372,18 @@ class AppController extends Controller
 
         }
     }
-	
+
 	public function delivery_update(Request $request)
 	{
 		$data = Carbon::createFromFormat('d.m.Y H:i', $request->delivery_date . ' ' . $request->delivery_time);
-		
 		$res = Lead::where('id', $request->lead_id)
 			->update([
 				'delivered_at' => $data
 			]);
-		
+
 		if ($res) {
 			return response()->json(true);
 		}
-		
 	}
-    
+
 }

@@ -217,8 +217,12 @@ Route::post('/add_extra_phone', 'PhoneController@ajax_add_extra_phone')->middlew
 // -------------------------------------- Пользователи ------------------------------------------------
 
 //Route::resource('/users', 'UserController')->middleware('auth');
-Route::get('/myprofile', 'UserController@myprofile')->middleware('auth')->name('users.myprofile');
-Route::patch('/updatemyprofile', 'UserController@updatemyprofile')->middleware('auth')->name('users.updatemyprofile');
+Route::get('/profile', 'UserController@profile')
+    ->middleware('auth')
+    ->name('users.profile');
+Route::patch('/update_profile', 'UserController@update_profile')
+    ->middleware('auth')
+    ->name('users.update_profile');
 
 
 // ---------------------------------- Категории альбомов -------------------------------------------
@@ -626,7 +630,7 @@ Route::get('/leads_export', 'LeadController@export')->middleware('auth');
 
 
 // Поиск
-Route::post('/leads/search', 'LeadController@search')->middleware('auth');
+Route::get('/leads/search/{text}', 'LeadController@search')->middleware('auth');
 
 // Назначение лида
 Route::any('/lead_appointed_check', 'LeadController@ajax_appointed_check')->middleware('auth');
@@ -1122,6 +1126,7 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
 
 	Route::any('prices_goods_status', 'PricesGoodsController@ajax_status');
     Route::any('prices_goods_hit', 'PricesGoodsController@ajax_hit');
+    Route::any('prices_goods_new', 'PricesGoodsController@ajax_new');
 
     Route::resource('prices_goods', 'PricesGoodsController');
 });

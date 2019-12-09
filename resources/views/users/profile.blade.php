@@ -20,7 +20,7 @@
 
 @section('content')
 
-{{ Form::model($user, ['route' => ['users.updatemyprofile'], 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
+{{ Form::model($user, ['route' => ['users.update_profile'], 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files'=>'true']) }}
 {{ method_field('PATCH') }}
 
 <div class="grid-x tabs-wrap">
@@ -71,13 +71,7 @@
             </label>
           </div>
           <div class="small-12 large-6 cell">
-            <label>Выберите аватар
-              {{ Form::file('photo') }}
-            </label>
-
-            <div class="text-center">
-              <img id="photo" @if (isset($user->photo_id)) src="/storage/{{ $user->company->id }}/media/albums/{{ $user->login }}/img/original-{{ $user->avatar->name }}" @endif>
-            </div>
+              <photo-upload-component :photo='@json($user->photo)'></photo-upload-component>
           </div>
         </div>
 
@@ -113,17 +107,7 @@
           </label>
         </div>
         <div class="small-12 medium-6 cell">
-          <label class="label-icon">Введите город
-            @php
-            $city_name = null;
-            $city_id = null;
-            if(isset($user->location->city->name)) {
-            $city_name = $user->location->city->name;
-            $city_id = $user->location->city->id;
-          }
-          @endphp
-          @include('includes.inputs.city_search', ['city_value'=>$city_name, 'city_id_value'=>$city_id, 'required' => true])
-        </label>
+            @include('system.common.includes.city_search', ['item' => $user, 'required' => true])
       </div>
 
 
@@ -147,7 +131,7 @@
 
     <div class="small-12 medium-6 cell">
       <label>Телеграм ID
-        {{ Form::text('telegram_id', $user->telegram_id, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
+        {{ Form::text('telegram', $user->telegram, ['class'=>'telegram-id-field', 'pattern'=>'[0-9]{9,12}', 'maxlength'=>'12', 'autocomplete'=>'off']) }}
         <span class="form-error">Укажите номер Telegram</span>
       </label>
     </div>

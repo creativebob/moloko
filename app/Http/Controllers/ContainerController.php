@@ -312,6 +312,7 @@ class ContainerController extends Controller
             'category_entity' => 'containers_categories',
             'categories_select_name' => 'containers_category_id',
             'container' => $container,
+            'paginator_url' => url()->previous()
         ]);
     }
 
@@ -380,6 +381,10 @@ class ContainerController extends Controller
             if ($request->cookie('backlink') != null) {
                 $backlink = Cookie::get('backlink');
                 return Redirect($backlink);
+            }
+
+            if ($request->has('paginator_url')) {
+                return redirect($request->paginator_url);
             }
 
             return redirect()->route('containers.index');

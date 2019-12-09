@@ -123,7 +123,7 @@
                         </div>
                         <div class="small-6 medium-6 cell">
                             <label>Цвет для оформления
-                                <input type="color" name="bg" value="#ff0000">
+                                {!! Form::color('color') !!}
                             </label>
                         </div>
                     </div>

@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Project\Traits\Commonable;
-use App\Models\Project\Estimate;
+use App\Promotion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class EstimateController extends Controller
+class PromotionController extends Controller
 {
 
     use Commonable;
@@ -20,23 +20,19 @@ class EstimateController extends Controller
      */
     public function index()
     {
-        $user = \Auth::user();
-//        dd($user);
-
-        $estimates = Estimate::with('goods_items')
-            ->whereHas('lead', function ($q) use ($user) {
-                $q->where('user_id', $user->id);
+        $site = $this->site;
+        $promotions = Promotion::with('photo')
+            ->whereHas('filials', function ($q) use ($site) {
+                $q->where('id', $site->filial->id);
             })
             ->get();
-//        dd($estimates);
-
-        $site = $this->site;
+//        dd($promotions);
 
         $page = $site->pages_public
-            ->where('alias', 'estimates')
+            ->where('alias', 'promotions')
             ->first();
 
-        return view($site->alias.'.pages.estimates.index', compact('site',  'page', 'estimates'));
+        return view($site->alias.'.pages.promotions.index', compact('site',  'page', 'promotions'));
     }
 
     /**
@@ -69,19 +65,16 @@ class EstimateController extends Controller
     public function show($id)
     {
 
-	    $estimate = Estimate::with('lead')
-		    ->whereHas('lead', function($q){
-			    $q->where('user_id', Auth::user()->id);
-		    })
+	    $promotion = Promotion::with('photo')
 		    ->findOrFail($id);
 
         $site = $this->site;
 
         $page = $site->pages_public
-            ->where('alias', 'estimates-items')
+            ->where('alias', 'promotion')
             ->first();
 
-        return view($site->alias.'.pages.estimates_items.index', compact('site',  'page', 'estimate'));
+        return view($site->alias.'.pages.promotion.index', compact('site',  'page', 'promotion'));
     }
 
     /**

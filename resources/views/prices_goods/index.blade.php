@@ -40,7 +40,7 @@
         </div>
 
     </div>
-@endif 
+@endif
 
 
 {{-- Таблица --}}
@@ -56,12 +56,13 @@
                     <th class="td-photo">Фото</th>
                     <th class="td-name" data-serversort="name">Название</th>
                     <th class="td-unit">Ед. измерения</th>
-                    <th class="td-weight">Вес</th>  
+                    <th class="td-weight">Вес</th>
                     <th class="td-catalogs_item">Раздел прайса</th>
                     <th class="td-price">Цена</th>
                     <th class="td-point">Внут. вал</th>
                     <th class="td-price-status">Статус</th>
                     <th class="td-hit">Хит</th>
+                    <th class="td-new">Новинка</th>
                     <th class="td-control"></th>
                     <th class="td-delete"></th>
                 </tr>
@@ -310,6 +311,38 @@
                     item.text('Хит продаж');
                 } else {
                     item.removeClass('hit');
+                    item.text('Обычный');
+                }
+            } else {
+                // Выводим ошибку на страницу
+                alert(result);
+            };
+        });
+    });
+
+    // Хит
+    $(document).on('click', '.price_goods-new', function(event) {
+        event.preventDefault();
+
+        let item = $(this);
+        let id = item.closest('.item').attr('id').split('-')[1];
+
+        let status = item.hasClass("new") ? 0 : 1;
+
+        // alert(id + ' ' + hit);
+
+        // Ajax
+        $.post('/admin/catalogs_goods/' + catalog_id + '/prices_goods_new', {
+            id: id,
+            is_new: status,
+        }, function (result) {
+            // Если нет ошибки
+            if (result === true) {
+                if (status === 1) {
+                    item.addClass('new');
+                    item.text('Новинка');
+                } else {
+                    item.removeClass('new');
                     item.text('Обычный');
                 }
             } else {

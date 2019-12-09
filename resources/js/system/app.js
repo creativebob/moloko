@@ -27,7 +27,7 @@ Vue.use(Vuex);
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.component('city-search-component', require('./components/CitySearchComponent.vue'));
+
 Vue.component('consignment-component', require('./components/consignments/ConsignmentComponent.vue'));
 Vue.component('production-component', require('./components/productions/ProductionComponent.vue'));
 
@@ -39,7 +39,7 @@ Vue.component('input-digit-component', require('./components/InputDigitComponent
 Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
 Vue.component('rawcomposition-component', require('./components/RawCompositionComponent.vue'));
 Vue.component('articles-categories-with-groups-component', require('./components/ArticlesCategoriesWithGroupsComponent.vue'));
-Vue.component('search-cmv-component', require('./components/search/SearchCmvComponent.vue'));
+
 
 Vue.component('catalog-goods-component', require('./components/catalogs/goods/CatalogGoodsComponent.vue'));
 Vue.component('lead-badget-component', require('./components/LeadBadgetComponent.vue'));
@@ -47,6 +47,11 @@ Vue.component('select-stocks-component', require('./components/common/selects/Se
 
 Vue.component('photo-upload-component', require('./components/PhotoUploadComponent.vue'));
 Vue.component('metrics-categories-component', require('./components/metrics/categories/MetricsCategoriesComponent'));
+
+// Поиск
+Vue.component('search-city-component', require('./components/search/SearchCityComponent'));
+Vue.component('search-lead-component', require('./components/search/SearchLeadComponent'));
+Vue.component('search-cmv-component', require('./components/search/SearchCmvComponent'));
 
 // Vue.component('price-goods-price-component', require('./components/prices_goods/PriceGoodsPriceComponent.vue'));
 

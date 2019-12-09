@@ -70,6 +70,8 @@
 			) }}
 			{{ method_field('PATCH') }}
 
+            {!! Form::hidden('paginator_url', $paginator_url ?? null) !!}
+
 
 			{{-- Общая информация --}}
 			<div class="tabs-panel is-active" id="options">

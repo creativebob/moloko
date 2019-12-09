@@ -25,6 +25,9 @@ class CreatePromotionsTable extends Migration
             $table->date('begin_date')->index()->comment('Дата начала');
             $table->date('end_date')->nullable()->index()->comment('Дата окончания');
 
+            $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Фото');
+            $table->foreign('photo_id')->references('id')->on('photos');
+
             $table->bigInteger('tiny_id')->nullable()->unsigned()->comment('tiny');
             $table->foreign('tiny_id')->references('id')->on('photos');
 

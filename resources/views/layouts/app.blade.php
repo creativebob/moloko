@@ -106,10 +106,13 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
                         </ul>
                         <div class="dropdown-pane profile-head" id="profile" data-dropdown data-position="bottom" data-alignment="right" data-v-offset="10" data-h-offset="-30" data-close-on-click="true">
                             <ul class="menu vertical">
-                                <li>{{ link_to_route('users.myprofile', 'Мой профиль', $value = Null) }} </li>
-                                 <li><a href="">Настройки</a></li>
-                                <li><hr></li>
-                                 <li><a href="">Нужна помощь?</a></li>
+                                <li>
+                                    <a href="{{ route('users.profile') }}">Мой профиль</a>
+{{--                                    {{ link_to_route('users.myprofile', 'Мой профиль', $value = Null) }}--}}
+                                </li>
+{{--                                 <li><a href="">Настройки</a></li>--}}
+{{--                                <li><hr></li>--}}
+{{--                                 <li><a href="">Нужна помощь?</a></li>--}}
                                 <li>
                                     @if(isset($company_id)&&($user_status == 1))
                                     {{ link_to_route('users.getgod', 'Выйти из компании', $value = Null) }}
@@ -259,37 +262,37 @@ if(isset($session_access['list_authors']['authors_id'])){$count_authors = ' +' .
             @yield('modals')
         </div>
         {{-- Footer --}}
-        <footer class="grid-x footer">
-            <div class="small-12 cell">
-                <ul class="right">
-                    <li>КОЛ-ВО ЗАЯВОК С САЙТА: <span>12</span></li>
-                    <li>КОЛ-ВО ЗВОНКОВ: <span>9</span></li>
-                    <li>РЕКЛАМАЦИИ: <span>0</span></li>
-                    <li>ПОСТУПЛЕНИЯ ДЕНЕГ: <span>670 500</span></li>
-                    <li class="foot-drop" id="foot-drop"><a class="icon-footer sprite" data-toggle="foot-options"></a></li>
-                </ul>
-                <div class="dropdown-pane foot-options" id="foot-options" data-dropdown data-position="top" data-alignment="right" data-v-offset="6" data-h-offset="-32" data-close-on-click="true">
-                    <ul class="menu vertical checkbox">
-                        <li>
-                            <input type="checkbox" name="" id="leads-option">
-                            <label for="leads-option"><span>Количество заявок</span></label>
-                        </li>
-                        <li>
-                            <input type="checkbox" name="" id="calls-option">
-                            <label for="calls-option"><span>Количество звонков</span></label>
-                        </li>
-                        <li>
-                            <input type="checkbox" name="" id="claim-option">
-                            <label for="claim-option"><span>Рекламации</span></label>
-                        </li>
-                        <li>
-                            <input type="checkbox" name="" id="money-option">
-                            <label for="money-option"><span>Поступления денег</span></label>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </footer>
+{{--        <footer class="grid-x footer">--}}
+{{--            <div class="small-12 cell">--}}
+{{--                <ul class="right">--}}
+{{--                    <li>КОЛ-ВО ЗАЯВОК С САЙТА: <span>12</span></li>--}}
+{{--                    <li>КОЛ-ВО ЗВОНКОВ: <span>9</span></li>--}}
+{{--                    <li>РЕКЛАМАЦИИ: <span>0</span></li>--}}
+{{--                    <li>ПОСТУПЛЕНИЯ ДЕНЕГ: <span>670 500</span></li>--}}
+{{--                    <li class="foot-drop" id="foot-drop"><a class="icon-footer sprite" data-toggle="foot-options"></a></li>--}}
+{{--                </ul>--}}
+{{--                <div class="dropdown-pane foot-options" id="foot-options" data-dropdown data-position="top" data-alignment="right" data-v-offset="6" data-h-offset="-32" data-close-on-click="true">--}}
+{{--                    <ul class="menu vertical checkbox">--}}
+{{--                        <li>--}}
+{{--                            <input type="checkbox" name="" id="leads-option">--}}
+{{--                            <label for="leads-option"><span>Количество заявок</span></label>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <input type="checkbox" name="" id="calls-option">--}}
+{{--                            <label for="calls-option"><span>Количество звонков</span></label>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <input type="checkbox" name="" id="claim-option">--}}
+{{--                            <label for="claim-option"><span>Рекламации</span></label>--}}
+{{--                        </li>--}}
+{{--                        <li>--}}
+{{--                            <input type="checkbox" name="" id="money-option">--}}
+{{--                            <label for="money-option"><span>Поступления денег</span></label>--}}
+{{--                        </li>--}}
+{{--                    </ul>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </footer>--}}
     </div>
 
     {{-- Скрипты --}}

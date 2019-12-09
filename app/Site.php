@@ -125,4 +125,10 @@ class Site extends Model
         return $this->belongsToMany(Rubricator::class, 'rubricator_site');
     }
 
+    // Оповещения
+    public function notifications()
+    {
+        return $this->belongsToMany(Notification::class);
+    }
+
 }

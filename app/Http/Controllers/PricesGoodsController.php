@@ -402,7 +402,7 @@ class PricesGoodsController extends Controller
         ]);
         return response()->json($result);
     }
-    
+
 	public function ajax_status(Request $request)
 	{
 		$result = PricesGoods::findOrFail($request->id)->update([
@@ -415,6 +415,14 @@ class PricesGoodsController extends Controller
     {
         $result = PricesGoods::findOrFail($request->id)->update([
             'is_hit' => $request->is_hit
+        ]);
+        return response()->json($result);
+    }
+
+    public function ajax_new(Request $request)
+    {
+        $result = PricesGoods::findOrFail($request->id)->update([
+            'is_new' => $request->is_new
         ]);
         return response()->json($result);
     }

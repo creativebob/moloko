@@ -6,7 +6,7 @@
                 <a href="#department" aria-selected="true">{{ isset($parent_id) ? 'Отдел' : 'Филиал' }}</a>
             </li>
 
-            @can('edit', App\Schedule::class)
+            @can('index', App\Schedule::class)
             <li class="tabs-title">
                 <a data-tabs-target="worktime" href="#worktime">График работы</a>
             </li>
@@ -15,7 +15,7 @@
             @can('index', App\Site::class)
             @empty($parent_id)
             <li class="tabs-title">
-                <a data-tabs-target="site" href="#site">Настройки дял сайта</a>
+                <a data-tabs-target="site" href="#site">Настройки для сайта</a>
             </li>
             @endempty
             @endcan
@@ -69,7 +69,7 @@
         </div>
 
         {{-- Схема работы --}}
-        @can('edit', App\Schedule::class)
+        @can('index', App\Schedule::class)
         <div class="tabs-panel" id="worktime">
             <div class="grid-x grid-padding-x align-center">
                 <div class="small-8 cell">

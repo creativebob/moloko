@@ -53,7 +53,7 @@ class PricesGoodsController extends Controller
     {
 
         $site = $this->site;
-        $filial = $this->filial;
+
         $page = $site->pages_public->where('alias', 'prices-goods')->first();
 
         $price_goods = PricesGoods::with([
@@ -68,7 +68,7 @@ class PricesGoodsController extends Controller
 
         $page->title = $price_goods->goods_public->article->name;
 
-        return view($site->alias.'.pages.prices_goods.index', compact('site', 'filial', 'page', 'price_goods'));
+        return view($site->alias.'.pages.prices_goods.index', compact('site',  'page', 'price_goods'));
     }
 
     /**
@@ -119,7 +119,7 @@ class PricesGoodsController extends Controller
             ->where([
                 'archive' => false,
                 'company_id' => $this->site->company_id,
-                'filial_id' => $this->filial->id,
+                'filial_id' => $this->site->filial->id,
             ])
             ->whereHas('goods_public', function($q) use ($search) {
                 $q->whereHas('article', function ($q) use ($search) {

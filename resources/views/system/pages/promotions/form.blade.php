@@ -63,6 +63,8 @@
 
                     <div class="small-12 medium-7 cell">
 
+                        <photo-upload-component :photo='@json($promotion->photo)'></photo-upload-component>
+
                         <fieldset class="fieldset-access">
                             <legend>Филиалы</legend>
                             @include('includes.lists.filials')

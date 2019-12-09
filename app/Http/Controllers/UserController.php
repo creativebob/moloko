@@ -305,7 +305,7 @@ class UserController extends Controller
     }
 
 
-    public function myprofile(Request $request)
+    public function profile(Request $request)
     {
 
         $id = Auth::user()->id;
@@ -341,13 +341,13 @@ class UserController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
-        // dd($user);
+//         dd($user);
 
-        return view('users.myprofile', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list'));
+        return view('users.profile', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list'));
     }
 
 
-    public function updatemyprofile(Request $request)
+    public function update_profile(Request $request)
     {
 
 
@@ -383,7 +383,7 @@ class UserController extends Controller
         // Телефон
         $phones = add_phones($request, $user);
 
-        $user->telegram_id = $request->telegram_id;
+        $user->telegram = $request->telegram;
 
         // $user->orgform_status = $request->orgform_status;
 
@@ -405,81 +405,7 @@ class UserController extends Controller
         // $user->access_block = $request->access_block;
 
         // $user->filial_id = $request->filial_id;
-
-
-        // Если прикрепили фото
-        if ($request->hasFile('photo')) {
-
-            // Вытаскиваем настройки
-            // Вытаскиваем базовые настройки сохранения фото
-            $settings = config()->get('settings');
-
-            // Начинаем проверку настроек, от компании до альбома
-            // Смотрим общие настройки для сущности
-            $get_settings = PhotoSetting::where(['entity' => $this->entity_alias])->first();
-
-            if($get_settings){
-
-                if ($get_settings->img_small_width != null) {
-                    $settings['img_small_width'] = $get_settings->img_small_width;
-                }
-
-                if ($get_settings->img_small_height != null) {
-                    $settings['img_small_height'] = $get_settings->img_small_height;
-                }
-
-                if ($get_settings->img_medium_width != null) {
-                    $settings['img_medium_width'] = $get_settings->img_medium_width;
-                }
-
-                if ($get_settings->img_medium_height != null) {
-                    $settings['img_medium_height'] = $get_settings->img_medium_height;
-                }
-
-                if ($get_settings->img_large_width != null) {
-                    $settings['img_large_width'] = $get_settings->img_large_width;
-                }
-
-                if ($get_settings->img_large_height != null) {
-                    $settings['img_large_height'] = $get_settings->img_large_height;
-                }
-
-                if ($get_settings->img_formats != null) {
-                    $settings['img_formats'] = $get_settings->img_formats;
-                }
-
-                if ($get_settings->img_min_width != null) {
-                    $settings['img_min_width'] = $get_settings->img_min_width;
-                }
-
-                if ($get_settings->img_min_height != null) {
-                    $settings['img_min_height'] = $get_settings->img_min_height;
-                }
-
-                if ($get_settings->img_max_size != null) {
-                    $settings['img_max_size'] = $get_settings->img_max_size;
-
-                }
-            }
-
-
-
-            // dd($company_id);
-            // Директория
-            $directory = $user->company_id.'/media/users/'.$user->id.'/img';
-
-            // Отправляем на хелпер request(в нем находится фото и все его параметры (так же id автора и id сомпании), директорию сохранения, название фото, id (если обновляем)), настройки, в ответ придет МАССИВ с записаным обьектом фото, и результатом записи
-            if ($user->photo_id) {
-                $array = save_photo($request, $directory, 'avatar-'.time(), null, $user->photo_id, $settings);
-
-            } else {
-               $array = save_photo($request, $directory, 'avatar-'.time(), null, null, $settings);
-           }
-
-           $photo = $array['photo'];
-
-           $user->photo_id = $photo->id;
-       }
+        $user->photo_id = $this->getPhotoId($request, $user);
 
        $user->save();
 
@@ -533,16 +459,23 @@ class UserController extends Controller
 
     if ($user) {
 
+        return redirect()
+            ->route('users.profile')
+            ->with(['success' => 'Профиль успешно обновлен']);
+
             // $backroute = $request->backroute;
             // if(isset($backroute)){
             //     // return redirect()->back();
             //     return redirect($backroute);
             // };
 
-        return redirect('/admin/home');
+//        return redirect()->route('users.profile');
 
     } else {
-        abort(403, 'Ошибка при обновлении пользователя!');
+        return back()
+            ->withErrors(['msg' => 'Ошибка обновления профиля'])
+            ->withInput();
+//        abort(403, 'Ошибка при обновлении пользователя!');
     }
 
 }
