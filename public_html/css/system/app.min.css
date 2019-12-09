@@ -12675,6 +12675,19 @@ tr:hover .button-to-reserve {
   opacity: 0.3;
 }
 
+.icon-comment {
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url("img/comment.svg") 4px 4px no-repeat;
+  background-size: 16px;
+  -webkit-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
 .button-to-reserve:hover {
   opacity: 1 !important;
 }

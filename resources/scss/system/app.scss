@@ -4222,6 +4222,19 @@ tr:hover .button-to-reserve{
     opacity: 0.3;
 }
 
+.icon-comment{
+    position: relative;
+    top: 3px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url('img/comment.svg') 4px 4px no-repeat;
+    background-size: 16px;
+    // opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+}
+
 // tr th .button-to-reserve{
 //     opacity: 0.3;
 // }

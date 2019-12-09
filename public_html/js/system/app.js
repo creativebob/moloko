@@ -62364,6 +62364,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'estimates-goods-item-component',
@@ -62530,7 +62533,14 @@ var render = function() {
       }
     },
     [
-      _c("td", [_vm._v(_vm._s(_vm.item.product.article.name))]),
+      _c("td", [
+        _vm._v(
+          "\n            " +
+            _vm._s(_vm.item.product.article.name) +
+            "\n            "
+        ),
+        _c("span", { staticClass: "icon-comment" })
+      ]),
       _vm._v(" "),
       _c("td", [_vm._v(_vm._s(_vm.item.stock.name))]),
       _vm._v(" "),

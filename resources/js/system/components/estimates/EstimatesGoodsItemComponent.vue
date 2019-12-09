@@ -7,7 +7,10 @@
             :data-count="item.count"
             :data-price="item.price">
 <!--        <td>{{ index + 1 }}</td>-->
-        <td>{{ item.product.article.name }}</td>
+        <td>
+            {{ item.product.article.name }}
+            <span class="icon-comment"></span>
+        </td>
         <td>{{ item.stock.name }}</td>
         <td>{{ item.price | roundToTwo | level }}</td>
 
