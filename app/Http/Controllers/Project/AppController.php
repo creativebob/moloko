@@ -29,14 +29,17 @@ class AppController extends Controller
         if (is_null($this->site)) {
             return view('project.pages.mains.main');
         } else {
-
-            return redirect('catalogs-goods/tovary-dlya-sayta/tekstil');
             $site = $this->site;
-            $page = $site->pages_public
-                ->where('alias', 'main')
-                ->first();
 
-            return view($site->alias.'.pages.main.index', compact('site',  'page'));
+            if (isset($site->start_url)) {
+                return redirect($site->start_url);
+            } else {
+                $page = $site->pages_public
+                    ->where('alias', 'main')
+                    ->first();
+
+                return view($site->alias.'.pages.main.index', compact('site',  'page'));
+            }
         }
     }
 

@@ -6,7 +6,7 @@
 
 @section('title', $site->name)
 
-{{-- @section('breadcrumbs', Breadcrumbs::render('sections', $page_info, $site)) --}}
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $site->name))
 
 @section('title-content')
 {{-- Таблица --}}

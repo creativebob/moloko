@@ -6,7 +6,7 @@
 
 @section('title', 'Новый пользователь')
 
-{{--@section('breadcrumbs', Breadcrumbs::render('create', $page_info))--}}
+@section('breadcrumbs', Breadcrumbs::render('site-section-create', $site, $page_info))
 
 @section('title-content')
 <div class="top-bar head-content">

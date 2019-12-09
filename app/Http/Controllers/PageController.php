@@ -54,10 +54,13 @@ class PageController extends Controller
         ->paginate(30);
         // dd($navigations);
 
+        $site = Site::findOrFail($site_id);
+
         return view('pages.index', [
             'pages' => $pages,
             'page_info' => pageInfo($this->entity_alias),
-            'site_id' => $site_id
+            'site_id' => $site_id,
+            'site' => $site
         ]);
     }
 
@@ -67,10 +70,13 @@ class PageController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
+        $site = Site::findOrFail($site_id);
+
         return view('pages.create', [
-            'page' => new $this->class,
+            'page' => Page::make(),
             'page_info' => pageInfo($this->entity_alias),
-            'site_id' => $site_id
+            'site_id' => $site_id,
+            'site' => $site
         ]);
     }
 
@@ -118,10 +124,14 @@ class PageController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $page);
 
+        $site = Site::findOrFail($site_id);
+
+
         return view('pages.edit', [
             'page' => $page,
             'page_info' => pageInfo($this->entity_alias),
-            'site_id' => $site_id
+            'site_id' => $site_id,
+            'site' => $site
         ]);
     }
 

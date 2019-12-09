@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 // Модели
 use App\Http\Controllers\Traits\Photable;
+use App\Site;
 use App\User;
 use App\Position;
 use App\Staffer;
@@ -102,7 +103,9 @@ class UserController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('users.index', compact('users', 'page_info', 'filter', 'site_id'));
+        $site = Site::findOrFail($site_id);
+
+        return view('users.index', compact('users', 'page_info', 'filter', 'site_id', 'site'));
     }
 
     public function create(Request $request, $site_id)
@@ -123,7 +126,9 @@ class UserController extends Controller
 
         $auth_user = Auth::user();
 
-        return view('users.create', compact('user', 'auth_user', 'page_info', 'site_id'));
+        $site = Site::findOrFail($site_id);
+
+        return view('users.create', compact('user', 'auth_user', 'page_info', 'site_id', 'site'));
     }
 
     public function store(UserStoreRequest $request, $site_id)
@@ -176,7 +181,9 @@ class UserController extends Controller
 
         $auth_user = \Auth::user();
 
-        return view('users.edit', compact('user', 'page_info', 'auth_user', 'site_id'));
+        $site = Site::findOrFail($site_id);
+
+        return view('users.edit', compact('user', 'page_info', 'auth_user', 'site_id', 'site'));
     }
 
     public function update(UserUpdateRequest $request, $site_id, $id)

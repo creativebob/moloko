@@ -6,6 +6,8 @@ use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\MenuUpdateRequest;
 use App\Http\Requests\MenuStoreRequest;
 use App\Menu;
+use App\Navigation;
+use App\Site;
 use Illuminate\Http\Request;
 
 class MenuController extends Controller
@@ -58,12 +60,17 @@ class MenuController extends Controller
             );
         }
 
+        $site = Site::findOrFail($site_id);
+        $navigation = Navigation::findOrFail($navigation_id);
+
         // Отдаем на шаблон
         return view('menus.index', [
             'menus' => $menus,
             'page_info' => pageInfo($this->entity_alias),
             'site_id' => $site_id,
-            'navigation_id' => $navigation_id
+            'navigation_id' => $navigation_id,
+            'site' => $site,
+            'navigation' => $navigation
         ]);
     }
 

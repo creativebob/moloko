@@ -99,3 +99,52 @@ Breadcrumbs::register('section-edit', function ($breadcrumbs, $parent_page_info,
 //   $breadcrumbs->parent('category', $post->category);
 //   $breadcrumbs->push($post->title, route('post', $post));
 // });
+
+// Статика для сайта
+Breadcrumbs::register('site-section-index', function ($breadcrumbs, $site, $page_info) {
+    $breadcrumbs->push('Сайты', route('sites.index'));
+    $breadcrumbs->push($site->name, route('sites.show', $site->id));
+    $breadcrumbs->push($page_info->name, route($page_info->alias . '.index', $site->id));
+});
+
+Breadcrumbs::register('site-section-create', function ($breadcrumbs, $site, $page_info) {
+    $breadcrumbs->push('Сайты', route('sites.index'));
+    $breadcrumbs->push($site->name, route('sites.show', $site->id));
+    $breadcrumbs->push($page_info->name, route($page_info->alias . '.index', $site->id));
+    $breadcrumbs->push('Добавление');
+});
+
+Breadcrumbs::register('site-section-edit', function ($breadcrumbs, $site, $page_info, $item) {
+    $breadcrumbs->push('Сайты', route('sites.index'));
+    $breadcrumbs->push($site->name, route('sites.show', $site->id));
+    $breadcrumbs->push($page_info->name, route($page_info->alias . '.index', $site->id));
+    $breadcrumbs->push($item->name);
+});
+
+Breadcrumbs::register('menus-index', function ($breadcrumbs, $site, $navigation, $page_info) {
+    $breadcrumbs->push('Сайты', route('sites.index'));
+    $breadcrumbs->push($site->name, route('sites.show', $site->id));
+    $breadcrumbs->push('Навигации', route('navigations.index', $site->id));
+    $breadcrumbs->push($navigation->name, route('navigations.edit', [$site->id, $navigation->id]));
+    $breadcrumbs->push($page_info->name);
+});
+
+// Статика для каталога товаров
+Breadcrumbs::register('catalogs_goods-section-index', function ($breadcrumbs, $catalog, $page_info) {
+    $breadcrumbs->push('Прайсы товаров', route('catalogs_goods.index'));
+    $breadcrumbs->push($catalog->name);
+});
+
+Breadcrumbs::register('catalogs_goods-section-edit', function ($breadcrumbs, $catalog, $page_info, $item) {
+    $breadcrumbs->push('Прайсы товаров', route('catalogs_goods.index'));
+    $breadcrumbs->push($catalog->name, route('catalogs_goods.edit', $catalog->id));
+    $breadcrumbs->push($page_info->name, route($page_info->alias . '.index', $catalog->id));
+    $breadcrumbs->push($item->name);
+});
+
+Breadcrumbs::register('prices_goods-index', function ($breadcrumbs, $catalog, $page_info) {
+    $breadcrumbs->push('Прайсы товаров', route('catalogs_goods.index'));
+    $breadcrumbs->push($catalog->name, route('catalogs_goods.edit', $catalog->id));
+    $breadcrumbs->push($page_info->name);
+});
+

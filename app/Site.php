@@ -48,6 +48,7 @@ class Site extends Model
     protected $fillable = [
         'name',
         'domain',
+        'start_url',
 
         'display',
         'system',

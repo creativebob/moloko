@@ -6,7 +6,7 @@
 
 @section('title', $page_info->name)
 
-{{-- @section('breadcrumbs', Breadcrumbs::render('index', $page_info)) --}}
+@section('breadcrumbs', Breadcrumbs::render('menus-index', $site, $navigation, $page_info))
 
 @section('content-count')
 {{-- Количество элементов --}}

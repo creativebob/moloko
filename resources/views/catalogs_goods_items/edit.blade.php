@@ -8,7 +8,7 @@
 
 @section('title', 'Редактирование пункта каталога услуг')
 
-{{-- @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $catalogs_goods_item->name)) --}}
+@section('breadcrumbs', Breadcrumbs::render('catalogs_goods-section-edit', $catalog_goods,  $page_info, $catalogs_goods_item))
 
 @section('title-content')
 <div class="top-bar head-content">
