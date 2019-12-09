@@ -7,11 +7,8 @@ class WorktimeFilialTodayComposer
 {
     public function compose(View $view)
     {
-        $filial = $view->site->filial;
-
-        $worktimes = $filial->worktime;
-
-        return $view->with(compact('worktimes', 'days'));
+        $worktimes = $view->site->filial->worktime;
+        return $view->with(compact('worktimes'));
     }
 
 }
