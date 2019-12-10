@@ -25,9 +25,9 @@ class PositionRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'page_id' => 'integer|required',
-            'roles' => 'array|required',  
-            'roles.*.role' => 'integer',  
+            'page_id' => 'integer|nullable',
+            'roles' => 'array|nullable',
+            'roles.*.role' => 'integer',
 
             'moderation' => 'integer|max:1|nullable',
             'system' => 'integer|max:1|nullable',

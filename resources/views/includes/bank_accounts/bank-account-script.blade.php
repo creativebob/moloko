@@ -136,7 +136,7 @@
 
 
   	// ---------------------------------- Закрытие модалки -----------------------------------
-  	$(document).on('click', '.remove-modal', function() {
+  	$(document).on('click', '.close-modal', function() {
   		$(this).closest('.reveal-overlay').remove();
   	});
 

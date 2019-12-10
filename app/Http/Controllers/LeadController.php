@@ -954,7 +954,7 @@ class LeadController extends Controller
 
     public function export()
     {
-        return Excel::download(new LeadsExport, 'Воротная компания "Марс".xlsx');
+        return Excel::download(new LeadsExport, 'Номера телефонов.xlsx');
     }
 
 }

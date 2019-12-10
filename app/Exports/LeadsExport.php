@@ -26,9 +26,9 @@ class LeadsExport implements WithMultipleSheets, ShouldAutoSize
         $sheets = [];
 
         $sheets[] = new LeadsSheet();
-        $sheets[] = new ChallengesSheet();
-        $sheets[] = new NotesSheet();
-        $sheets[] = new ClaimsSheet();
+//        $sheets[] = new ChallengesSheet();
+//        $sheets[] = new NotesSheet();
+//        $sheets[] = new ClaimsSheet();
 
         return $sheets;
     }

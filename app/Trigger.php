@@ -9,4 +9,9 @@ class Trigger extends Model
 {
     // Включаем кеш
     use Cachable;
+
+    public function entity()
+    {
+        return $this->belongsTo(Entity::class);
+    }
 }

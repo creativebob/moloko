@@ -18,6 +18,9 @@ class CreateTriggersTable extends Migration
             $table->string('name')->index()->comment('Название');
             $table->string('alias')->index()->comment('Алиас');
             $table->text('description')->nullable()->comment('Описание');
+
+            $table->bigInteger('entity_id')->unsigned()->nullable()->comment('Id сущности');
+            $table->foreign('entity_id')->references('id')->on('entities');
         });
     }
 

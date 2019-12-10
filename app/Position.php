@@ -46,12 +46,12 @@ class Position extends Model
     // use DateIntervalFilter;
 
     protected $dates = ['deleted_at'];
-    
+
     protected $fillable = [
         'name',
         'page_id',
+        'sector_id',
         'direct_status',
-        'company_id',
 
         'display',
         'system',

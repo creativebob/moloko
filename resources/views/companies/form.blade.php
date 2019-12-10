@@ -265,7 +265,7 @@
 
                     <div class="small-6 medium-3 cell">
                         <label>Дата рождения компании
-                            @include('includes.inputs.date', ['name'=>'birthday_company', 'value'=>$company->birthday_company])
+                            @include('includes.inputs.date', ['name'=>'birthday_company', 'value'=> isset($company->birthday_company) ? $company->birthday_company->format('d.m.Y') : null ])
                         </label>
                     </div>
                     <div class="small-6 cell">

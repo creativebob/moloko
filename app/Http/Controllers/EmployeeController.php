@@ -35,7 +35,7 @@ class EmployeeController extends Controller
         $this->entity_dependence = true;
         $this->type = 'modal';
     }
-	
+
 	use Photable;
 
     public function index(Request $request)
@@ -289,8 +289,7 @@ class EmployeeController extends Controller
         $staff = Staffer::with('position', 'department')->findOrFail($request->staff_id);
 
         // Отдаем работу по созданию нового юзера трейту
-        $new_user = new User;
-        $user = $this->createUser($request, $new_user);
+        $user = $this->createUser($request, 1);
         $employment_date = $request->employment_date;
 
         $this->employment($user, $employment_date, $staff);

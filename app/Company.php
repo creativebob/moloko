@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -354,12 +355,12 @@ class Company extends Model
         return $value;
     }
 
-    public function setBirthdayCompanyAttribute($value) {
-        if($value == Null){
-            return $value;
+    public function setBirthdayCompanyAttribute($value)
+    {
+        if (isset($value)) {
+            $this->attributes['birthday_company'] = Carbon::createFromFormat('d.m.Y', $value);
         } else {
-            $date_parts = explode('.', $value);
-            $this->attributes['birthday_company'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+            $this->attributes['birthday_company'] = null;
         }
     }
 

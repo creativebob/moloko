@@ -16,7 +16,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -42,7 +42,7 @@ class Notification extends Model
     // use Filter;
     // use BooklistFilter;
     // use DateIntervalFilter;
-    
+
     // protected $dates = ['deleted_at'];
 
     protected $fillable = [
@@ -60,5 +60,10 @@ class Notification extends Model
     public function sites()
     {
         return $this->belongsToMany(Site::class);
+    }
+
+    public function trigger()
+    {
+        return $this->belongsTo(Trigger::class);
     }
 }

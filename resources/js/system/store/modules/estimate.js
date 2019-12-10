@@ -53,16 +53,21 @@ const moduleEstimate = {
                         stock_id: state.stockId
                     })
                     .then(response => {
-                        let item = response.data,
-                            index = state.goodsItems.findIndex(obj => obj.id === item.id);
+                        if (response.data.success) {
+                            let item = response.data.item,
+                                index = state.goodsItems.findIndex(obj => obj.id === item.id);
 
-                        if (index > -1) {
-                            Vue.set(state.goodsItems, index, item);
+                            if (index > -1) {
+                                Vue.set(state.goodsItems, index, item);
+                            } else {
+                                state.goodsItems.push(item);
+                            }
+
+                            this.commit('UPDATE_ESTIMATE');
                         } else {
-                            state.goodsItems.push(response.data);
+                            alert('Невозможно добавить позицию, так как цена изменилась. Удалите позицию со старой ценой и добавьте позицию заново');
                         }
 
-                        this.commit('UPDATE_ESTIMATE');
                     })
                     .catch(error => {
                         console.log(error)

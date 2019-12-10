@@ -58,6 +58,7 @@ use App\Observers\OffObserver;
 use App\Observers\PageObserver;
 use App\Observers\PhotoObserver;
 use App\Observers\PluginObserver;
+use App\Observers\PositionObserver;
 use App\Observers\PricesGoodsHistoryObserver;
 use App\Observers\PricesGoodsObserver;
 use App\Observers\PricesServicesHistoryObserver;
@@ -79,6 +80,7 @@ use App\Off;
 use App\Page;
 use App\Photo;
 use App\Plugin;
+use App\Position;
 use App\PricesGoods;
 use App\PricesGoodsHistory;
 use App\PricesServicesHistory;
@@ -152,6 +154,7 @@ class ObserverServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
         Staffer::observe(StafferObserver::class);
         Employee::observe(EmployeeObserver::class);
+        Position::observe(PositionObserver::class);
 
         // Метрики
         Metric::observe(MetricObserver::class);

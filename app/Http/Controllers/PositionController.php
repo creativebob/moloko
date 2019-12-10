@@ -30,28 +30,41 @@ use Illuminate\Support\Facades\Auth;
 
 class PositionController extends Controller
 {
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'positions';
-    protected $entity_dependence = false;
+
+    // Настройки сконтроллера
+    public function __construct(Position $position)
+    {
+        $this->middleware('auth');
+        $this->position = $position;
+        $this->class = Position::class;
+        $this->model = 'App\Position';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+    }
 
     public function index(Request $request)
     {
 
         // Включение контроля активного фильтра
-        $filter_url = autoFilter($request, $this->entity_name);
+        $filter_url = autoFilter($request, $this->entity_alias);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Position::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
 
-        $positions = Position::with('author', 'page', 'roles', 'company')
+        $positions = Position::with([
+            'author',
+            'page',
+            'roles',
+            'company'
+        ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
@@ -69,7 +82,7 @@ class PositionController extends Controller
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             'company',                 // Компания
             // 'author',                  // Автор
             // 'city',                 // Город
@@ -79,7 +92,7 @@ class PositionController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         return view('positions.index', compact('positions', 'page_info', 'filter'));
     }
@@ -120,7 +133,7 @@ class PositionController extends Controller
         // Список обязанностей для должности
         $widgets = Widget::get();
 
-        $position = new Position;
+        $position = Position::make();
 
         // Получаем список секторов
         $sectors = Sector::get()->keyBy('id')->toArray();
@@ -146,7 +159,7 @@ class PositionController extends Controller
         };
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         return view('positions.create', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications', 'charges', 'widgets'));
     }
@@ -158,7 +171,7 @@ class PositionController extends Controller
         $this->authorize(getmethod(__FUNCTION__), Position::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -172,24 +185,8 @@ class PositionController extends Controller
         $company_id = $user->company_id;
 
         // Создаем новую должность
-        $position = new Position;
-        $position->company_id = $company_id;
-        $position->name = $request->name;
-        $position->page_id = $request->page_id;
-        $position->author_id = $user_id;
-        $position->sector_id = $user->company->sector_id;
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if($answer['automoderate'] == false){
-            $position->moderation = true;
-        };
-
-        // Пишем ID компании авторизованного пользователя
-        if($company_id == null) {
-            abort(403, 'Необходимо авторизоваться под компанией');
-        };
-
-        $position->save();
+        $data = $request->input();
+        $position = Position::create($data);
 
         // Если должность записалась
         if($position) {
@@ -222,7 +219,7 @@ class PositionController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $position = Position::moderatorLimit($answer)->findOrFail($id);
@@ -288,7 +285,7 @@ class PositionController extends Controller
         };
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         return view('positions.edit', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications', 'charges', 'widgets'));
     }
@@ -306,7 +303,7 @@ class PositionController extends Controller
         };
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $position = Position::moderatorLimit($answer)->findOrFail($id);
@@ -318,15 +315,12 @@ class PositionController extends Controller
         $position_roles = $position->roles;
 
         // Перезаписываем данные
-        $position->name = $request->name;
-        $position->page_id = $request->page_id;
 
-        // $position->company_id = $user->company_id;
-        $position->editor_id = $user_id;
-        $position->save();
+        $data = $request->input();
+        $result = $position->update($data);
 
         // Если записалось
-        if ($position) {
+        if ($result) {
 
             // Когда должность обновилась, обновляем пришедшие для нее роли
             $position->roles()->sync($request->roles);
@@ -426,7 +420,7 @@ class PositionController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, true, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, true, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $position = Position::moderatorLimit($answer)->findOrFail($id);
@@ -538,7 +532,7 @@ class PositionController extends Controller
         };
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС

@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Trigger;
+use App\Entity;
 
 class TriggersTableSeeder extends Seeder
 {
@@ -12,26 +13,33 @@ class TriggersTableSeeder extends Seeder
      */
     public function run()
     {
+
+        $entities = Entity::get();
+
         Trigger::insert([
             [
                 'name' => 'Лид с сайта',
                 'alias' => 'create-lead-from-project',
-                'description' => '',
+                'description' => null,
+                'entity_id' => $entities->firstWhere('alias', 'leads')->id,
             ],
             [
                 'name' => 'Рекламация',
                 'alias' => 'create-claim',
-                'description' => '',
+                'description' => null,
+                'entity_id' => $entities->firstWhere('alias', 'claims')->id,
             ],
             [
                 'name' => 'Уведомление',
                 'alias' => 'notification',
-                'description' => '',
+                'description' => null,
+                'entity_id' => null,
             ],
             [
                 'name' => 'Предложение',
                 'alias' => 'offer',
-                'description' => '',
+                'description' => null,
+                'entity_id' => null,
             ],
         ]);
     }

@@ -21,7 +21,6 @@ class CreateChargesTable extends Migration
 
             $table->string('alias')->nullable()->index()->comment('Алиас обязанности');
 
-
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');

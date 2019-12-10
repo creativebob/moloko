@@ -52,6 +52,7 @@ class EstimatesGoodsItemController extends Controller
      */
     public function store(Request $request)
     {
+        $success = true;
 
         $price_goods = PricesGoods::findOrFail($request->price_id);
         $price_goods->load('product');
@@ -66,6 +67,7 @@ class EstimatesGoodsItemController extends Controller
                 'count' => 1,
                 'amount' => $price_goods->price
             ]);
+
         } else {
 
             // TODO - 28.10.19 - Проверка при добавлении при множественном клике в смете, уйдет с Vue
@@ -83,27 +85,44 @@ class EstimatesGoodsItemController extends Controller
 
             if ($estimates_goods_item->id) {
 
-                $count = $estimates_goods_item->count + 1;
-                $amount = $count * $estimates_goods_item->price;
+                if ($estimates_goods_item->price != $price_goods->price) {
+                    $success = false;
+                } else {
+                    $count = $estimates_goods_item->count + 1;
+                    $amount = $count * $estimates_goods_item->price;
 
-                $estimates_goods_item->update([
-                    'count' => $count,
-                    'amount' => $amount
-                ]);
-
+                    $estimates_goods_item->update([
+                        'count' => $count,
+                        'amount' => $amount
+                    ]);
+                }
             } else {
                 $estimates_goods_item->save();
+
             }
         }
 
-        $estimates_goods_item->load([
-            'product.article',
-            'reserve',
-            'stock:id,name'
-        ]);
-        $this->estimateUpdate($estimates_goods_item);
+        $result = [];
+        if ($success) {
+            $estimates_goods_item->load([
+                'product.article',
+                'reserve',
+                'stock:id,name'
+            ]);
+            $this->estimateUpdate($estimates_goods_item);
 
-        return response()->json($estimates_goods_item);
+            $result = [
+                'success' => $success,
+                'item' => $estimates_goods_item
+            ];
+        } else {
+            $result = [
+                'success' => $success,
+            ];
+        }
+
+
+        return response()->json($result);
     }
 
     /**
@@ -188,18 +207,18 @@ class EstimatesGoodsItemController extends Controller
 //        $result = EstimatesGoodsItem::destroy($id);
         return response()->json($result);
     }
-	
+
 	public function estimateUpdate($item)
 	{
 		$estimate = $item->estimate;
 		$estimate->load('goods_items');
-		
+
 		if ($estimate->goods_items->isNotEmpty()) {
-			
+
 			$amount = $estimate->goods_items->sum('amount');
 			$discount = (($amount * $estimate->discount_percent) / 100);
 			$total = ($amount - $discount);
-			
+
 			$data = [
 				'amount' => $amount,
 				'discount' => $discount,
@@ -212,7 +231,7 @@ class EstimatesGoodsItemController extends Controller
 				'total' => 0
 			];
 		}
-		
+
 		$estimate->update($data);
 
 //		return $estimate;

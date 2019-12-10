@@ -67503,18 +67503,22 @@ var moduleEstimate = {
                     price_id: priceId,
                     stock_id: state.stockId
                 }).then(function (response) {
-                    var item = response.data,
-                        index = state.goodsItems.findIndex(function (obj) {
-                        return obj.id === item.id;
-                    });
+                    if (response.data.success) {
+                        var item = response.data.item,
+                            index = state.goodsItems.findIndex(function (obj) {
+                            return obj.id === item.id;
+                        });
 
-                    if (index > -1) {
-                        Vue.set(state.goodsItems, index, item);
+                        if (index > -1) {
+                            Vue.set(state.goodsItems, index, item);
+                        } else {
+                            state.goodsItems.push(item);
+                        }
+
+                        _this.commit('UPDATE_ESTIMATE');
                     } else {
-                        state.goodsItems.push(response.data);
+                        alert('Невозможно добавить позицию, так как цена изменилась. Удалите позицию со старой ценой и добавьте позицию заново');
                     }
-
-                    _this.commit('UPDATE_ESTIMATE');
                 }).catch(function (error) {
                     console.log(error);
                 });
