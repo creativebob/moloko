@@ -62,7 +62,10 @@ class Position extends Model
 
     public function page()
     {
-        return $this->belongsTo(Page::class);
+        return $this->belongsTo(Page::class)
+            ->withDefault([
+                'alias' => 'Нет страницы'
+            ]);
     }
 
     public function employees()

@@ -10,17 +10,17 @@ class RolesComposer
 	public function compose(View $view)
 	{
 
-		$answer_roles = operator_right('roles', false, 'index');
+		$answer = operator_right('roles', false, 'index');
 
-        $roles_list = Role::moderatorLimit($answer_roles)
-        ->companiesLimit($answer_roles)
-        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям
-        ->template($answer_roles) // Выводим шаблоны в список
-        ->pluck('name', 'id');
+        $roles = Role::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+        ->authors($answer)
+        ->systemItem($answer) // Фильтр по системным записям
+        ->template($answer) // Выводим шаблоны в список
+        ->get();
 
-		return $view->with('roles_list', $roles_list);
+		return $view->with(compact('roles'));
 
 	}
 

@@ -20,9 +20,9 @@
             <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
         </label>
 
-        @if (\Auth::user()->god)
+        @if (auth()->user()->god)
         <label>Страница должности:
-            {{ Form::select('page_id', $pages_list, null, ['id'=>'page-select']) }}
+            @include('includes.selects.pages', ['site_id' => 1])
         </label>
         @endif
 
@@ -30,7 +30,7 @@
         @include('includes.control.checkboxes', ['item' => $position])
 
         <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
-            {{ Form::submit($submitButtonText, ['class'=>'button position-button', 'disabled']) }}
+            {{ Form::submit($submitButtonText, ['class'=>'button position-button']) }}
         </div>
 
     </div>
@@ -41,20 +41,20 @@
                 <ul class="tabs-list" data-tabs id="tabs">
                     @can('index', App\Role::class)
                     <li class="tabs-title is-active">
-                        <a href="#roles" aria-selected="true">Роли</a>
+                        <a href="#tab-roles" aria-selected="true">Роли</a>
                     </li>
                     @endcan
 
                     <li class="tabs-title">
-                        <a data-tabs-target="notifications" href="#notifications">Оповещения</a>
+                        <a data-tabs-target="tab-notifications" href="#tab-notifications">Оповещения</a>
                     </li>
 
                     <li class="tabs-title">
-                        <a data-tabs-target="charges" href="#charges">Обязанности</a>
+                        <a data-tabs-target="tab-charges" href="#tab-charges">Обязанности</a>
                     </li>
 
                     <li class="tabs-title">
-                        <a data-tabs-target="widgets" href="#widgets">Виджеты</a>
+                        <a data-tabs-target="tab-widgets" href="#wtab-idgets">Виджеты</a>
                     </li>
                 </ul>
             </div>
@@ -63,31 +63,12 @@
 
                     <!-- Роли -->
                     @can('index', App\Role::class)
-                    <div class="tabs-panel is-active" id="roles">
+                    <div class="tabs-panel is-active" id="tab-roles">
                         <fieldset class="fieldset-access">
                             <legend>Настройка доступа</legend>
                             <div class="grid-x grid-padding-x">
                                 <div class="small-12 cell">
-
-                                    <ul>
-                                        @foreach ($roles as $role)
-                                            @if ($role->id != 1 || ($role->id == 1) && (\Auth::user()->god))
-                                                <li>
-                                                    <div class="small-12 cell checkbox">
-                                                        {{ Form::checkbox('roles[]', $role->id, null, ['id'=>'role-'.$role->id, 'class'=>'access-checkbox']) }}
-                                                        <label for="role-{{ $role->id }}"><span>{{ $role->name }}</span></label>
-                                                        @php
-                                                            $allow = count($role->rights->where('directive', 'allow'));
-                                                            $deny = count($role->rights->where('directive', 'deny'));
-                                                        @endphp
-                                                        (<span class="allow">{{ $allow }}</span> / <span class="deny">{{ $deny }}</span>)
-                                                    </div>
-                                                </li>
-                                            @endif
-
-                                        @endforeach
-                                    </ul>
-
+                                    @include('includes.lists.roles')
                                 </div>
                             </div>
                         </fieldset>
@@ -95,28 +76,13 @@
                     @endcan
 
                     <!-- Оповещения -->
-                    <div class="tabs-panel" id="notifications">
+                    <div class="tabs-panel" id="tab-notifications">
                         <fieldset class="fieldset-access">
                             <legend>Настройка оповещений</legend>
                             <div class="grid-x grid-padding-x">
                                 <div class="small-12 cell">
 
-                                    <ul>
-                                        @foreach ($notifications as $notification)
-
-                                            @php
-                                                $model = 'App\\' . $notification->trigger->entity->model;
-                                            @endphp
-                                        @can('index', $model)
-                                        <li>
-                                            <div class="small-12 cell checkbox">
-                                                {{ Form::checkbox('notifications[]', $notification->id, null, ['id'=>'notification-'.$notification->id, 'class'=>'access-checkbox']) }}
-                                                <label for="notification-{{ $notification->id }}"><span>{{ $notification->name }}</span></label>
-                                            </div>
-                                        </li>
-                                            @endcan
-                                        @endforeach
-                                    </ul>
+                                    @include('includes.lists.notifications', ['site_id' => 1])
 
                                 </div>
                             </div>
@@ -124,22 +90,13 @@
                     </div>
 
                     <!-- Оповещения -->
-                    <div class="tabs-panel" id="charges">
+                    <div class="tabs-panel" id="tab-charges">
                         <fieldset class="fieldset-access">
                             <legend>Настройка обязанностей</legend>
                             <div class="grid-x grid-padding-x">
                                 <div class="small-12 cell">
 
-                                    <ul>
-                                        @foreach ($charges as $charge)
-                                        <li>
-                                            <div class="small-12 cell checkbox">
-                                                {{ Form::checkbox('charges[]', $charge->id, null, ['id'=>'charge-'.$charge->id, 'class'=>'access-checkbox']) }}
-                                                <label for="charge-{{ $charge->id }}"><span>{{ $charge->name }}</span></label>
-                                            </div>
-                                        </li>
-                                        @endforeach
-                                    </ul>
+                                    @include('includes.lists.charges')
 
                                 </div>
                             </div>
@@ -147,22 +104,13 @@
                     </div>
 
                     <!-- Виджеты -->
-                    <div class="tabs-panel" id="widgets">
+                    <div class="tabs-panel" id="tab-widgets">
                         <fieldset class="fieldset-access">
                             <legend>Настройка виджетов</legend>
                             <div class="grid-x grid-padding-x">
                                 <div class="small-12 cell">
 
-                                    <ul>
-                                        @foreach ($widgets as $widget)
-                                        <li>
-                                            <div class="small-12 cell checkbox">
-                                                {{ Form::checkbox('widgets[]', $widget->id, null, ['id'=>'widget-'.$widget->id, 'class'=>'access-checkbox']) }}
-                                                <label for="widget-{{ $widget->id }}"><span>{{ $widget->name }}</span></label>
-                                            </div>
-                                        </li>
-                                        @endforeach
-                                    </ul>
+                                    @include('includes.lists.widgets')
 
                                 </div>
                             </div>

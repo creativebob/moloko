@@ -16,10 +16,13 @@ class PagesComposer
 
         // Главный запрос
         $pages = Page::moderatorLimit($answer)
-        ->where('site_id', $view->site_id)
-        ->get();
+            ->authors($answer)
+            ->systemItem($answer)
+            ->template($answer)
+            ->where('site_id', $view->site_id)
+            ->get();
 
-        return $view->with('pages', $pages);
+        return $view->with(compact('pages'));
     }
 
 }

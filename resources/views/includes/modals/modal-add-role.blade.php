@@ -9,7 +9,7 @@
 	{{ Form::open(['id' => 'form-role-add']) }}
 	<div class="grid-x grid-padding-x modal-content inputs">
 		<div class="small-10 medium-6 cell">
-			<label>
+			<label>Роли:
 				@include('includes.selects.roles')
 			</label>
 		</div>
@@ -36,7 +36,7 @@
 	</div>
 
 	{{ Form::close() }}
-	<div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+	<div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
 
 {{-- Конец модалки добавления роли --}}

@@ -103,65 +103,12 @@ class PositionController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Position::class);
 
-        // Список посадочных страниц для должности
-        $answer_pages = operator_right('pages', false, 'index');
-
-        $pages_list = Page::moderatorLimit($answer_pages)
-        ->whereSite_id(1) // Только для должностей посадочная страница системного сайта
-        // ->companiesLimit($answer_pages)
-        ->authors($answer_pages)
-        ->systemItem($answer_pages) // Фильтр по системным записям
-        ->template($answer_pages)
-        ->pluck('name', 'id');
-
-        // Список ролей для должности
-        $answer_roles = operator_right('roles', false, 'index');
-        $roles = Role::moderatorLimit($answer_roles)
-        ->companiesLimit($answer_roles)
-        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям
-        ->template($answer_pages)
-        ->get();
-
-        // Список оповещений для должности
-        $notifications = Notification::get();
-
-        // Список обязанностей для должности
-        $charges = Charge::get();
-
-        // Список обязанностей для должности
-        $widgets = Widget::get();
-
         $position = Position::make();
-
-        // Получаем список секторов
-        $sectors = Sector::get()->keyBy('id')->toArray();
-        $sectors_cat = [];
-        foreach ($sectors as $id => &$node) {
-            //Если нет вложений
-            if (!$node['parent_id']){
-                $sectors_cat[$id] = &$node;
-            } else {
-                //Если есть потомки то перебераем массив
-                $sectors[$node['parent_id']]['children'][$id] = &$node;
-            };
-        };
-        // dd($sectors_cat);
-        $sectors_list = [];
-        foreach ($sectors_cat as $id => &$node) {
-            $sectors_list[$id] = &$node;
-            if (isset($node['children'])) {
-                foreach ($node['children'] as $id => &$node) {
-                    $sectors_list[$id] = &$node;
-                }
-            };
-        };
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('positions.create', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications', 'charges', 'widgets'));
+        return view('positions.create', compact('position', 'page_info'));
     }
 
     public function store(PositionRequest $request)
@@ -227,67 +174,10 @@ class PositionController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $position);
 
-        // Список посадочных страниц для должности
-        $answer_pages = operator_right('pages', false, 'index');
-        $pages_list = Page::moderatorLimit($answer_pages)
-        // ->companiesLimit($answer_pages)
-        ->whereSite_id(1) // Только для должностей посадочная страница системного сайта
-        ->authors($answer_pages)
-        ->systemItem($answer_pages) // Фильтр по системным записям
-        ->template($answer_pages)
-        ->pluck('name', 'id');
-
-        // Список ролей для должности
-        $answer_roles = operator_right('roles', false, 'index');
-        $roles = Role::moderatorLimit($answer_roles)
-        ->companiesLimit($answer_roles)
-        ->filials($answer_roles) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer_roles)
-        ->systemItem($answer_roles) // Фильтр по системным записям
-        ->template($answer_pages)
-        ->get();
-
-        // Список оповещений для должности
-        $notifications = Notification::whereHas('sites', function($q) {
-            $q->where('sites.id', 1);
-        })
-        ->get();
-
-        // Список обязанностей для должности
-        $charges = Charge::get();
-
-        // Список обязанностей для должности
-        $widgets = Widget::get();
-        // dd($widgets);
-
-        // Получаем список секторов
-        $sectors = Sector::get()->keyBy('id')->toArray();
-        $sectors_cat = [];
-        foreach ($sectors as $id => &$node) {
-            //Если нет вложений
-            if (!$node['parent_id']){
-                $sectors_cat[$id] = &$node;
-            } else {
-                //Если есть потомки то перебераем массив
-                $sectors[$node['parent_id']]['children'][$id] = &$node;
-            };
-        };
-
-        // dd($sectors_cat);
-        $sectors_list = [];
-        foreach ($sectors_cat as $id => &$node) {
-            $sectors_list[$id] = &$node;
-            if (isset($node['children'])) {
-                foreach ($node['children'] as $id => &$node) {
-                    $sectors_list[$id] = &$node;
-                }
-            };
-        };
-
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('positions.edit', compact('position', 'pages_list', 'roles', 'sectors_list', 'page_info', 'notifications', 'charges', 'widgets'));
+        return view('positions.edit', compact('position', 'page_info'));
     }
 
     public function update(PositionRequest $request, $id)

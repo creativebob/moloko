@@ -9,12 +9,15 @@ use App\Http\ViewComposers\System\ArticlesCategoriesWithItemsComposerForManufact
 use App\Http\ViewComposers\System\AttachmentsComposer;
 use App\Http\ViewComposers\System\CatalogGoodsWithPricesComposer;
 use App\Http\ViewComposers\System\ChannelsComposer;
+use App\Http\ViewComposers\System\ChargesComposer;
 use App\Http\ViewComposers\System\CitySearchComposer;
 use App\Http\ViewComposers\System\ContainersCategoriesComposer;
 use App\Http\ViewComposers\System\ContainersComposer;
 use App\Http\ViewComposers\System\DisplayModesComposer;
 use App\Http\ViewComposers\System\FiltersComposer;
+use App\Http\ViewComposers\System\NotificationsComposer;
 use App\Http\ViewComposers\System\StocksComposer;
+use App\Http\ViewComposers\System\WidgetsComposer;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -150,7 +153,14 @@ class ComposerServiceProvider extends ServiceProvider
         ], UserFilialsComposer::class);
         view()->composer('prices_services.sync.modal', CatalogsServicesItemsForFilialComposer::class);
 
-        view()->composer('includes.selects.roles', RolesComposer::class);
+        view()->composer([
+            'includes.selects.roles',
+            'includes.lists.roles',
+        ], RolesComposer::class);
+
+        view()->composer('includes.lists.charges', ChargesComposer::class);
+        view()->composer('includes.lists.widgets', WidgetsComposer::class);
+        view()->composer('includes.lists.notifications', NotificationsComposer::class);
 
         view()->composer('includes.selects.legal_forms', LegalFormsSelectComposer::class);
         view()->composer('includes.inputs.checker', CheckerComposer::class);

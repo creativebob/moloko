@@ -32,7 +32,7 @@
 					</label>
 
 					<label>Страница
-						@include('includes.selects.pages', ['site_id' => $site_id])
+						@include('includes.selects.pages', ['site_id' => $site_id, 'placeholder' => true])
 					</label>
 
 					<div class="small-12 cell checkbox">
@@ -64,7 +64,7 @@
 					<label>Тег title для ссылки
 						@include('includes.inputs.name', ['name' => 'title'])
 					</label>
-					
+
 					<div class="small-12 cell checkbox">
 						{{ Form::checkbox('text_hidden', 1, null, ['id' => 'text_hidden']) }}
 						<label for="text_hidden"><span>Показывать только иконку (Текст ссылки скрыть)</span></label>
