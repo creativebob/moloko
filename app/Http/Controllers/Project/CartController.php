@@ -404,11 +404,15 @@ class CartController extends Controller
             if ($request->has('comment')) {
                 $message .= "Комментарий: {$request->comment}\r\n";
             };
-            $pickup = $request->has('pickup') ? 'Самовывоз' : 'Доставка';
-            $message .= "Доставка: {$pickup}\r\n";
+            if ($request->has('pickup')) {
+                $pickup = $request->pickup == 1 ? 'Самовывоз' : 'Доставка';
+                $message .= "Доставка: {$pickup}\r\n";
+            }
 
-            $card = $request->has('card') ? 'по карте' : 'наличный расчет';
-            $message .= "Оплата: {$card}\r\n";
+            if ($request->has('card')) {
+                $card = $request->card == 1 ? 'по карте' : 'наличный расчет';
+                $message .= "Оплата: {$card}\r\n";
+            }
 
             $lead->notes()->create([
                 'company_id' => $company->id,
