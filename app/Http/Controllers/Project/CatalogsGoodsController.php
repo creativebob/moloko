@@ -165,10 +165,9 @@ class CatalogsGoodsController extends Controller
                         ]);
                     },
                     'metrics',
-                    'currency',
                 ]);
             },
-
+            'currency',
         ])
             ->whereIn('catalogs_goods_item_id', $catalog_goods_items_ids)
             ->has('goods_public')
