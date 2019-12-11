@@ -164,7 +164,8 @@ class CatalogsGoodsController extends Controller
                             },
                         ]);
                     },
-                    'metrics'
+                    'metrics',
+                    'currency',
                 ]);
             },
 

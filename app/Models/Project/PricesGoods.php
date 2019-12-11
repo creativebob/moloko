@@ -1,5 +1,5 @@
 <?php
-	
+
 namespace App\Models\Project;
 
 use Illuminate\Database\Eloquent\Model;
@@ -98,6 +98,12 @@ class PricesGoods extends Model
     public function product()
     {
         return $this->belongsTo('App\Goods', 'goods_id');
+    }
+
+    // Валюта
+    public function currency()
+    {
+        return $this->belongsTo('App\Currency');
     }
 
     // Фильтр
