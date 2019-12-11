@@ -114,7 +114,9 @@ class PricesGoodsController extends Controller
                     'article.photo',
                     'metrics.values'
                 ]);
-            }
+
+            },
+            'currency',
         ])
             ->where([
                 'archive' => false,
