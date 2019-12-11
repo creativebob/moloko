@@ -562,4 +562,34 @@ class CartController extends Controller
 //        }
     }
 
+    public function check_prices(Request $request)
+    {
+        if (Cookie::get('cart') !== null) {
+
+
+            $cart = json_decode(Cookie::get('cart'), true);
+
+            if (count($cart['prices']) > 0) {
+                // Проверка на различие цены
+                $prices = $cart['prices'];
+                $prices_ids = array_keys($cart['prices']);
+                $prices_goods = PricesGoods::with('goods.article.photo', 'currency')
+                    ->find($prices_ids);
+
+                $result = [];
+                foreach ($prices_goods as $price_goods) {
+                    if ($price_goods->price != $prices[$price_goods->id]['price']) {
+                        $result['changes'][] = $price_goods;
+                    }
+                }
+                if(count($result) > 0) {
+                    $result['success'] = false;
+                } else {
+                    $result['success'] = true;
+                }
+            }
+            return response()->json($result);
+        }
+    }
+
 }
