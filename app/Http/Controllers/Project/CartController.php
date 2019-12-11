@@ -7,7 +7,10 @@ use App\Http\Controllers\Traits\EstimateControllerTrait;
 use App\Http\Controllers\Traits\LeadControllerTrait;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Lead;
+use App\Models\Project\Estimate;
+use App\Models\Project\EstimatesGoodsItem;
 use App\PricesGoods;
+use App\Stock;
 use App\User;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
@@ -269,7 +272,46 @@ class CartController extends Controller
 
             // Если есть наполненная корзина, создаем смету на лиде
             if(isset($cart)){
-                $estimate = $this->createEstimateFromCart($cart, $lead);
+//                $estimate = $this->createEstimateFromCart($cart, $lead);
+
+                // TODO - 15.11.19 - Склад должен браться из настроек, пока берем первый по филиалу
+                $stock_id = Stock::where('filial_id', $lead->filial_id)->value('id');
+
+                // Находим или создаем заказ для лида
+                $estimate = Estimate::create([
+                    'lead_id' => $lead->id,
+                    'filial_id' => $lead->filial_id,
+                    'company_id' => $lead->company->id,
+                    'stock_id' => $stock_id,
+                    'date' => now()->format('Y-m-d'),
+                    'number' => $lead->case_number,
+                    'author_id' => $lead->author_id,
+
+                ]);
+
+                $prices_goods_ids = array_keys($cart['prices']);
+                $prices_goods = PricesGoods::with('goods')
+                    ->find($prices_goods_ids);
+
+                $data = [];
+                foreach ($prices_goods as $price_goods) {
+                    $data[] = new EstimatesGoodsItem([
+                        'goods_id' => $price_goods->goods->id,
+
+                        'price_id' => $price_goods->id,
+                        'stock_id' => $estimate->stock_id,
+
+                        'company_id' => $lead->company->id,
+                        'author_id' => 1,
+
+                        'price' => $price_goods->price,
+                        'count' => $cart['prices'][$price_goods->id]['count'],
+
+                        'amount' => $cart['prices'][$price_goods->id]['count'] * $price_goods->price
+                    ]);
+                }
+
+                $estimate->goods_items()->saveMany($data);
                 // TODO - 15.11.19 - Скидка должна браться из ценовой политики
                 $discount_percent = 0;
 
