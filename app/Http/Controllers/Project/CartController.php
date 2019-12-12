@@ -156,15 +156,18 @@ class CartController extends Controller
             // Если не пришел филиал, берем первый у компании
             $filial_id = $this->site->filial->id;
 
+
+
+            $first_name = $request->first_name == '' ? 'Клиент не указал имя' : $request->first_name;
+
             $nickname = $request->name;
-            $first_name = $request->first_name;
             $second_name = $request->second_name;
 
             if(($first_name == null)&&($second_name == null)){
                 if($nickname == null){
                     $lead_name = null;
                 } else {
-                    $lead_name = $nickname;
+                    $lead_name = $first_name;
                 }
 
             } else {
@@ -405,7 +408,7 @@ class CartController extends Controller
                 $message .= "Комментарий: {$request->comment}\r\n";
             };
             if ($request->has('pickup')) {
-                $pickup = $request->pickup == 1 ? 'Самовывоз' : 'Доставка';
+                $pickup = $request->pickup == 1 ? 'самовывоз' : 'да';
                 $message .= "Доставка: {$pickup}\r\n";
             }
 
