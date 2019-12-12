@@ -158,7 +158,7 @@ class CartController extends Controller
 
 
 
-            $first_name = $request->first_name == '' ? 'Клиент не указал имя' : $request->first_name;
+            $first_name = isset($request->first_name) ? $request->first_name : 'Клиент не указал имя';
 
             $nickname = $request->name;
             $second_name = $request->second_name;
