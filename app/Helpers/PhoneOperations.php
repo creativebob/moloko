@@ -127,11 +127,15 @@ function check_user_by_phones($phone_search, $site) {
 		// 	Log::info('Пользователь: ' . $owner->name);
 		// }
 
-		$result = $phone->user_owner->where('site_id', $site->id)->where('company_id', $company_id);
+		if($site){
+			$result = $phone->user_owner->where('site_id', $site->id)->where('company_id', $company_id);
+		} else {
+			$result = $phone->user_owner->where('company_id', $company_id);
+		};
 
 		if(!empty($result)){
 
-			$user = $phone->user_owner->where('site_id', $site->id)->where('company_id', $company_id)->first();
+			$user = $result->first();
 			Log::info($user->name ?? 'Имя не указано');
 
 		} else {
