@@ -381,7 +381,7 @@ class CartController extends Controller
                 $message .= "\r\nСостав заказа:\r\n";
                 $num = 1;
                 foreach ($estimate->goods_items as $item) {
-                    $message .= $num . ' - ' . $item->product->article->name . ": " . $item->count .
+                    $message .= $num . ' - ' . $item->product->article->name . ": " . num_format($item->count, 0) .
                         ' ' . $item->product->article->unit->abbreviation .
 
                         " (" . num_format($item->amount, 0) . " руб.) \r\n";
