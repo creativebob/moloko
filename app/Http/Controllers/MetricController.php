@@ -48,7 +48,11 @@ class MetricController extends Controller
 
         if ($metric) {
 
-            return view('products.common.metrics.metric', compact('metric'));
+            $metric->load('values');
+
+            return response()->json($metric);
+
+//            return view('products.common.metrics.metric', compact('metric'));
 
         } else {
             $result = [

@@ -4,23 +4,19 @@ namespace App\Observers;
 
 use App\Metric;
 use App\MetricValue;
+use App\Observers\Traits\Commonable;
 
 class MetricObserver
 {
 
+    use Commonable;
+
     public function creating(Metric $metric)
     {
-        $request = request();
-
-        $user = $request->user();
-        $metric->company_id = $user->company_id;
-        $metric->author_id = hideGod($user);
-
+        $this->store($metric);
         $this->setAlias($metric);
 
-        $metric->display = true;
-        $metric->system = false;
-        $metric->moderation = false;
+        $request = request();
 
         if (
             $request->type == 'numeric' ||

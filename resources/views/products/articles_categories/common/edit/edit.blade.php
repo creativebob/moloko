@@ -25,20 +25,20 @@
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active">
-                <a href="#options" aria-selected="true">Общая информация</a>
+                <a href="#tab-options" aria-selected="true">Общая информация</a>
             </li>
 
             @can('index', App\Metric::class)
                 @if($page_info->entity->metric)
                 <li class="tabs-title">
-                    <a data-tabs-target="metrics" href="#metrics">Метрики</a>
+                    <a data-tabs-target="tab-metrics" href="#tab-metrics">Метрики</a>
                 </li>
                 @endif
             @endcan
 
             @can('index', App\Site::class)
             <li class="tabs-title">
-                <a data-tabs-target="site" href="#site">Настройка для сайта</a>
+                <a data-tabs-target="tab-site" href="#tab-site">Настройка для сайта</a>
             </li>
             @endcan
 
@@ -58,7 +58,7 @@
             {{ method_field('PATCH') }}
 
             {{-- Общая информация --}}
-            <div class="tabs-panel is-active" id="options">
+            <div class="tabs-panel is-active" id="tab-options">
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-6 cell">
@@ -121,7 +121,7 @@
 
             @can('index', App\Site::class)
             {{-- Сайт --}}
-            <div class="tabs-panel" id="site">
+            <div class="tabs-panel" id="tab-site">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
                         <label>Описание:
@@ -150,20 +150,20 @@
             </div>
             @endcan
 
-            @can('index', App\Metric::class)
-            @if($page_info->entity->metric)
-            {{-- Свойства --}}
-            <div class="tabs-panel" id="metrics">
-{{--                @include('products.common.metrics.page')--}}
-                @include('products.common.metrics.section')
-            </div>
-            @endif
-            @endcan
-
             {{-- Табы для сущности --}}
             @includeIf($page_info->entity->view_path . '.tabs_content')
 
             {{ Form::close() }}
+
+            @can('index', App\Metric::class)
+                @if($page_info->entity->metric)
+                    {{-- Свойства --}}
+                    <div class="tabs-panel" id="tab-metrics">
+                        @include('products.common.metrics.page')
+                        {{--                @include('products.common.metrics.section')--}}
+                    </div>
+                @endif
+            @endcan
         </div>
     </div>
 </div>
@@ -171,7 +171,7 @@
 @endsection
 
 @section('modals')
-@include('includes.modals.modal-metric-delete')
+{{--@include('includes.modals.modal-metric-delete')--}}
 @include('includes.modals.modal_item_delete')
 @endsection
 

@@ -35,6 +35,6 @@ class PropertiesComposer
         ->orderBy('sort', 'asc')
         ->get();
 
-        return $view->with('properties', $properties);
+        return $view->with(compact('properties'));
     }
 }
