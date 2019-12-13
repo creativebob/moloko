@@ -45,11 +45,6 @@ class Estimate extends Model
 
     ];
 
-    public function getCreatedAtAttribute($value)
-    {
-        return $value->format('d.m.Y');
-    }
-
     // Лид
     public function lead()
     {
