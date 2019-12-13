@@ -28,7 +28,7 @@ class EstimatesGoodsItem extends Model
     // Включаем кеш
     use Cachable;
 
-     use SoftDeletes;
+    use SoftDeletes;
 
     use Commonable;
 

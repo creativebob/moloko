@@ -56,7 +56,7 @@ class CreateEstimatesGoodsItemsTable extends Migration
             $table->boolean('is_reserved')->default(0)->comment('Зарезервировано');
 
             // Общие настройки
-            
+
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 
@@ -71,7 +71,7 @@ class CreateEstimatesGoodsItemsTable extends Migration
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 
             $table->timestamps();
-             $table->softDeletes();
+            $table->softDeletes();
         });
     }
 
