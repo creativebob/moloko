@@ -67332,17 +67332,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        var _this = this;
-
-        axios.get('/api/v1/cities').then(function (response) {
-            _this.cities = response.data;
-        }).catch(function (error) {
-            console.log(error);
-        });
-    },
-
+    // mounted() {
+    //     axios.get('/api/v1/cities')
+    //         .then(response => {
+    //         this.cities = response.data
+    //     })
+    //         .catch(error => {
+    //             console.log(error)
+    //         })
+    // },
     props: {
+        startCities: Array,
         city: {
             type: Object,
             default: function _default() {
@@ -67369,7 +67369,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             search: false,
             found: this.city.id != null ? true : false,
             error: false,
-            cities: []
+            cities: this.startCities
         };
     },
 
@@ -67388,11 +67388,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         check: function check() {
-            var _this2 = this;
+            var _this = this;
 
             // console.log('Ищем введеные данные в наших городах (подгруженных), затем от результата меняем состояние на поиск или ошибку');
             this.results = this.cities.filter(function (item) {
-                return item.name.toLowerCase().includes(_this2.text.toLowerCase());
+                return item.name.toLowerCase().includes(_this.text.toLowerCase());
             });
 
             if (this.results.length == 0) {
@@ -67401,9 +67401,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         name: this.text
                     }
                 }).then(function (response) {
-                    _this2.results = response.data;
-                    _this2.search = _this2.results.length > 0;
-                    _this2.error = _this2.results.length == 0;
+                    _this.results = response.data;
+                    _this.search = _this.results.length > 0;
+                    _this.error = _this.results.length == 0;
                 }).catch(function (error) {
                     console.log(error);
                 });

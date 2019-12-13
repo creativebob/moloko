@@ -10,6 +10,7 @@ use App\Http\ViewComposers\System\AttachmentsComposer;
 use App\Http\ViewComposers\System\CatalogGoodsWithPricesComposer;
 use App\Http\ViewComposers\System\ChannelsComposer;
 use App\Http\ViewComposers\System\ChargesComposer;
+use App\Http\ViewComposers\System\CitiesComposer;
 use App\Http\ViewComposers\System\CitySearchComposer;
 use App\Http\ViewComposers\System\ContainersCategoriesComposer;
 use App\Http\ViewComposers\System\ContainersComposer;
@@ -171,6 +172,10 @@ class ComposerServiceProvider extends ServiceProvider
             'system.common.includes.city_search',
             'test'
         ], CitySearchComposer::class);
+
+        view()->composer([
+            'system.common.includes.city_search',
+        ], CitiesComposer::class);
 
         view()->composer([
             'includes.inputs.checker_contragents',
