@@ -31,9 +31,9 @@ class Estimate extends Model
         'stock_id',
 
         'company_id',
-	
+
 	    'date',
-        
+
         'number',
         'author_id',
         'draft',

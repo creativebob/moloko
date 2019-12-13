@@ -62,16 +62,17 @@
 
 <script>
     export default {
-        mounted() {
-            axios.get('/api/v1/cities')
-                .then(response => {
-                this.cities = response.data
-            })
-                .catch(error => {
-                    console.log(error)
-                })
-        },
+        // mounted() {
+        //     axios.get('/api/v1/cities')
+        //         .then(response => {
+        //         this.cities = response.data
+        //     })
+        //         .catch(error => {
+        //             console.log(error)
+        //         })
+        // },
         props: {
+            startCities: Array,
             city: {
                 type: Object,
                 default: function(){
@@ -98,7 +99,7 @@
                 search: false,
                 found: (this.city.id != null) ? true : false,
                 error: false,
-                cities: []
+                cities: this.startCities
             };
         },
         computed: {

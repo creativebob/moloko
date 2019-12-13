@@ -30,6 +30,7 @@ Route::resource('/prices-goods', 'PricesGoodsController')
     ->names('project.prices_goods');
 
 Route::any('/update_cookies', 'CartController@update_cookies')->name('project.update_cookies');
+Route::get('/check_prices', 'CartController@check_prices')->name('project.check_prices');
 
 Route::resource('/cart', 'CartController')
     ->only(['index', 'store'])

@@ -21,7 +21,8 @@ class PropertiesComposer
         ->authors($answer_properties)
         ->systemItem($answer_properties)
         ->template($answer_properties)
-        ->with(['metrics' => function ($query) use ($answer_metrics, $entity_id) {
+        ->with([
+            'metrics' => function ($query) use ($answer_metrics, $entity_id) {
             $query->with('values')
             ->moderatorLimit($answer_metrics)
             ->companiesLimit($answer_metrics)
@@ -30,11 +31,13 @@ class PropertiesComposer
             ->whereHas('entities', function($q) use ($entity_id) {
                 $q->where('id', $entity_id);
             });
-        }])
+        },
+            'units_category.units'
+        ])
         ->withCount('metrics')
         ->orderBy('sort', 'asc')
         ->get();
 
-        return $view->with('properties', $properties);
+        return $view->with(compact('properties'));
     }
 }

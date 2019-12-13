@@ -17,9 +17,7 @@ class PropertyController extends Controller
      */
     public function index()
     {
-        // $property = Property::with('units_category.units')->findOrFail(3);
-
-        // dd($property);
+        //
     }
 
     /**
@@ -88,40 +86,4 @@ class PropertyController extends Controller
         //
     }
 
-    // ---------------------------------------------- Ajax ----------------------------------------------------------
-
-    public function add_property(Request $request)
-    {
-        $property = Property::with('units_category.units')
-        ->findOrFail($request->id);
-
-        if ($property) {
-
-            if (isset($property->units_category->name)) {
-                $units_list = $property->units_category->units->pluck('abbreviation', 'id');
-//                $units_list = $property->units_category->units;
-            } else {
-                $units_list = null;
-            }
-            // echo $property;
-
-//            return response()->json([
-//                'type' => $property->type,
-//                'units' => $units_list,
-//            ]);
-
-            return view('products.common.metrics.add_property', [
-                'type' => $property->type,
-                'units_list' => $units_list,
-                'property_id' => $request->id,
-                'entity' => $request->entity,
-                'set_status' => $request->set_status
-            ]);
-        } else {
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при добавлении свойства!'
-            ];
-        }
-    }
 }

@@ -31,12 +31,14 @@ class CreatePricesServicesTable extends Migration
             $table->bigInteger('ancestor_id')->nullable()->unsigned()->comment('Предок');
             $table->foreign('ancestor_id')->references('id')->on('prices_services');
 
-            $table->decimal('price', 12, 4)->comment('Цена');
+            $table->integer('price')->default(0)->comment('Цена');
+//            $table->decimal('price', 12, 4)->default(0)->comment('Цена');
+
+            $table->integer('point')->default(0)->comment('Внутренняя валюта');
+//            $table->decimal('point', 12, 4)->default(0)->comment('Внутренняя валюта');
 
             $table->bigInteger('currency_id')->nullable()->unsigned()->comment('Id валюты');
             $table->foreign('currency_id')->references('id')->on('currencies');
-
-            $table->decimal('point', 12, 4)->default(0)->comment('Внутренняя валюта');
 
             $table->boolean('archive')->default(0)->unsigned()->comment('Архив');
 

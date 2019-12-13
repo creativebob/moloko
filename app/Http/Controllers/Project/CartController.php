@@ -156,15 +156,18 @@ class CartController extends Controller
             // Если не пришел филиал, берем первый у компании
             $filial_id = $this->site->filial->id;
 
+
+
+            $first_name = isset($request->first_name) ? $request->first_name : 'Клиент не указал имя';
+
             $nickname = $request->name;
-            $first_name = $request->first_name;
             $second_name = $request->second_name;
 
             if(($first_name == null)&&($second_name == null)){
                 if($nickname == null){
                     $lead_name = null;
                 } else {
-                    $lead_name = $nickname;
+                    $lead_name = $first_name;
                 }
 
             } else {
@@ -378,7 +381,7 @@ class CartController extends Controller
                 $message .= "\r\nСостав заказа:\r\n";
                 $num = 1;
                 foreach ($estimate->goods_items as $item) {
-                    $message .= $num . ' - ' . $item->product->article->name . ": " . $item->count .
+                    $message .= $num . ' - ' . $item->product->article->name . ": " . num_format($item->count, 0) .
                         ' ' . $item->product->article->unit->abbreviation .
 
                         " (" . num_format($item->amount, 0) . " руб.) \r\n";
@@ -404,11 +407,15 @@ class CartController extends Controller
             if ($request->has('comment')) {
                 $message .= "Комментарий: {$request->comment}\r\n";
             };
-            $pickup = $request->has('pickup') ? 'Самовывоз' : 'Доставка';
-            $message .= "Доставка: {$pickup}\r\n";
+            if ($request->has('pickup')) {
+                $pickup = $request->pickup == 1 ? 'самовывоз' : 'да';
+                $message .= "Доставка: {$pickup}\r\n";
+            }
 
-            $card = $request->has('card') ? 'по карте' : 'наличный расчет';
-            $message .= "Оплата: {$card}\r\n";
+            if ($request->has('card')) {
+                $card = $request->card == 1 ? 'по карте' : 'наличный расчет';
+                $message .= "Оплата: {$card}\r\n";
+            }
 
             $lead->notes()->create([
                 'company_id' => $company->id,
@@ -560,6 +567,36 @@ class CartController extends Controller
 //        $cart['prices'][$id] = [
 //        'count' => $count
 //        }
+    }
+
+    public function check_prices(Request $request)
+    {
+        if (Cookie::get('cart') !== null) {
+
+
+            $cart = json_decode(Cookie::get('cart'), true);
+
+            if (count($cart['prices']) > 0) {
+                // Проверка на различие цены
+                $prices = $cart['prices'];
+                $prices_ids = array_keys($cart['prices']);
+                $prices_goods = PricesGoods::with('goods.article.photo', 'currency')
+                    ->find($prices_ids);
+
+                $result = [];
+                foreach ($prices_goods as $price_goods) {
+                    if ($price_goods->price != $prices[$price_goods->id]['price']) {
+                        $result['changes'][] = $price_goods;
+                    }
+                }
+                if(count($result) > 0) {
+                    $result['success'] = false;
+                } else {
+                    $result['success'] = true;
+                }
+            }
+            return response()->json($result);
+        }
     }
 
 }

@@ -24,24 +24,26 @@ class MetricStoreRequest extends FormRequest
     public function rules()
     {
         return [
-//            'name' => 'required|string|max:255',
-            'name' => 'string|max:255',
-            'description' => 'string|nullable',
+            'name' => 'required|string|max:255',
+            'alias' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
 
-//            'property_id' => 'required|integer',
-            'property_id' => 'integer',
+            'type' => 'required|string|max:20',
+
+            'property_id' => 'required|integer',
+            'entity_id' => 'required|integer',
+
+            'is_required' => 'nullable|boolean',
+
+            'list_type' => 'nullable|string|max:255',
 
 
-//            'type' => 'required|string|max:255',
-            'type' => 'string|max:255',
+            'decimal_place' => 'nullable|integer|max:1',
+            'min' => 'nullable|integer',
+            'max' => 'nullable|integer',
+            'unit_id' => 'nullable|integer',
 
-            'category_id' => 'integer|nullable',
-            'category_entity' => 'string|max:255|nullable',
 
-            'is_required' => 'integer|max:1|nullable',
-
-            'display' => 'integer|max:1|nullable',
-            'system' => 'integer|max:1|nullable',
         ];
     }
 }
