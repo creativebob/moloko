@@ -65980,6 +65980,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -66334,695 +66336,655 @@ var render = function() {
                 ])
           ]),
           _vm._v(" "),
-          _c(
-            "form",
-            {
-              directives: [{ name: "abide", rawName: "v-abide" }],
-              attrs: { "data-abide": "", novalidate: "" }
-            },
-            [
-              _vm.open
-                ? _c(
-                    "div",
-                    {
-                      staticClass: "grid-x grid-padding-x",
-                      attrs: { id: "propertyForm" }
-                    },
-                    [
-                      _c("div", { staticClass: "small-12 cell" }, [
-                        _c("label", [
-                          _vm._v("Название:\n                                "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.name,
-                                expression: "name"
-                              }
-                            ],
-                            attrs: { type: "text", required: "" },
-                            domProps: { value: _vm.name },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.name = $event.target.value
-                              }
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("span", { staticClass: "form-error" }, [
-                            _vm._v("Имя обязательно")
-                          ])
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "small-12 cell" }, [
-                        _c("label", [
-                          _vm._v("Алиас:\n                                "),
-                          _c("input", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.alias,
-                                expression: "alias"
-                              }
-                            ],
-                            attrs: { type: "text" },
-                            domProps: { value: _vm.alias },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.alias = $event.target.value
-                              }
-                            }
-                          })
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "small-12 cell" }, [
-                        _c("label", [
-                          _vm._v("Описание:\n                                "),
-                          _c("textarea", {
-                            directives: [
-                              {
-                                name: "model",
-                                rawName: "v-model",
-                                value: _vm.description,
-                                expression: "description"
-                              }
-                            ],
-                            domProps: { value: _vm.description },
-                            on: {
-                              input: function($event) {
-                                if ($event.target.composing) {
-                                  return
-                                }
-                                _vm.description = $event.target.value
-                              }
-                            }
-                          })
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _vm.type == "numeric"
-                        ? [
-                            _c("div", { staticClass: "small-6 cell" }, [
-                              _c("label", [
-                                _vm._v(
-                                  "Минимум\n                                    "
-                                ),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.min,
-                                      expression: "min"
-                                    }
-                                  ],
-                                  attrs: { type: "number", required: "" },
-                                  domProps: { value: _vm.min },
-                                  on: {
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.min = $event.target.value
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "form-error" }, [
-                                  _vm._v("Имя обязательно")
-                                ])
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "small-6 cell" }, [
-                              _c("label", [
-                                _vm._v(
-                                  "Максимум\n                                    "
-                                ),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.max,
-                                      expression: "max"
-                                    }
-                                  ],
-                                  attrs: { type: "number", required: "" },
-                                  domProps: { value: _vm.max },
-                                  on: {
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.max = $event.target.value
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "form-error" }, [
-                                  _vm._v("Имя обязательно")
-                                ])
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "small-6 cell" }, [
-                              _c("label", [
-                                _vm._v(
-                                  "Единица измерения\n                                    "
-                                ),
-                                _c(
-                                  "select",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: _vm.unitId,
-                                        expression: "unitId"
-                                      }
-                                    ],
-                                    on: {
-                                      change: function($event) {
-                                        var $$selectedVal = Array.prototype.filter
-                                          .call($event.target.options, function(
-                                            o
-                                          ) {
-                                            return o.selected
-                                          })
-                                          .map(function(o) {
-                                            var val =
-                                              "_value" in o ? o._value : o.value
-                                            return val
-                                          })
-                                        _vm.unitId = $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      }
-                                    }
-                                  },
-                                  _vm._l(_vm.actualUnits, function(unit) {
-                                    return _c(
-                                      "option",
-                                      { domProps: { value: unit.id } },
-                                      [_vm._v(_vm._s(unit.abbreviation))]
-                                    )
-                                  }),
-                                  0
-                                )
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "small-6 cell" }, [
-                              _c("label", [
-                                _vm._v(
-                                  "Знаки после запятой\n                                    "
-                                ),
-                                _c(
-                                  "select",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: _vm.decimalPlace,
-                                        expression: "decimalPlace"
-                                      }
-                                    ],
-                                    on: {
-                                      change: function($event) {
-                                        var $$selectedVal = Array.prototype.filter
-                                          .call($event.target.options, function(
-                                            o
-                                          ) {
-                                            return o.selected
-                                          })
-                                          .map(function(o) {
-                                            var val =
-                                              "_value" in o ? o._value : o.value
-                                            return val
-                                          })
-                                        _vm.decimalPlace = $event.target
-                                          .multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      }
-                                    }
-                                  },
-                                  _vm._l(_vm.decimalPlaces, function(
-                                    decimalPlace,
-                                    index
-                                  ) {
-                                    return _c(
-                                      "option",
-                                      {
-                                        domProps: {
-                                          value: index,
-                                          selected: index === 0
-                                        }
-                                      },
-                                      [_vm._v(_vm._s(decimalPlace))]
-                                    )
-                                  }),
-                                  0
-                                )
-                              ])
-                            ])
-                          ]
-                        : _vm.type == "percent"
-                        ? [
-                            _c("div", { staticClass: "small-6 cell" }, [
-                              _c("label", [
-                                _vm._v(
-                                  "Минимум\n                                    "
-                                ),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.min,
-                                      expression: "min"
-                                    }
-                                  ],
-                                  attrs: { type: "number" },
-                                  domProps: { value: _vm.min },
-                                  on: {
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.min = $event.target.value
-                                    }
-                                  }
-                                })
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "small-6 cell" }, [
-                              _c("label", [
-                                _vm._v(
-                                  "Максимум\n                                    "
-                                ),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.max,
-                                      expression: "max"
-                                    }
-                                  ],
-                                  attrs: { type: "number" },
-                                  domProps: { value: _vm.max },
-                                  on: {
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.max = $event.target.value
-                                    }
-                                  }
-                                })
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "small-6 cell" }, [
-                              _c("label", [
-                                _vm._v(
-                                  "Единица измерения\n                                    "
-                                ),
-                                _c(
-                                  "select",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: _vm.unitId,
-                                        expression: "unitId"
-                                      }
-                                    ],
-                                    on: {
-                                      change: function($event) {
-                                        var $$selectedVal = Array.prototype.filter
-                                          .call($event.target.options, function(
-                                            o
-                                          ) {
-                                            return o.selected
-                                          })
-                                          .map(function(o) {
-                                            var val =
-                                              "_value" in o ? o._value : o.value
-                                            return val
-                                          })
-                                        _vm.unitId = $event.target.multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      }
-                                    }
-                                  },
-                                  _vm._l(_vm.actualUnits, function(unit) {
-                                    return _c(
-                                      "option",
-                                      { domProps: { value: unit.id } },
-                                      [_vm._v(_vm._s(unit.abbreviation))]
-                                    )
-                                  }),
-                                  0
-                                )
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "small-6 cell" }, [
-                              _c("label", [
-                                _vm._v(
-                                  "Знаки после запятой\n                                    "
-                                ),
-                                _c(
-                                  "select",
-                                  {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: _vm.decimalPlace,
-                                        expression: "decimalPlace"
-                                      }
-                                    ],
-                                    on: {
-                                      change: function($event) {
-                                        var $$selectedVal = Array.prototype.filter
-                                          .call($event.target.options, function(
-                                            o
-                                          ) {
-                                            return o.selected
-                                          })
-                                          .map(function(o) {
-                                            var val =
-                                              "_value" in o ? o._value : o.value
-                                            return val
-                                          })
-                                        _vm.decimalPlace = $event.target
-                                          .multiple
-                                          ? $$selectedVal
-                                          : $$selectedVal[0]
-                                      }
-                                    }
-                                  },
-                                  _vm._l(_vm.decimalPlaces, function(
-                                    decimalPlace,
-                                    index
-                                  ) {
-                                    return _c(
-                                      "option",
-                                      {
-                                        domProps: {
-                                          value: index,
-                                          selected: index == 0
-                                        }
-                                      },
-                                      [_vm._v(_vm._s(decimalPlace))]
-                                    )
-                                  }),
-                                  0
-                                )
-                              ])
-                            ])
-                          ]
-                        : [
-                            _c("div", { staticClass: "small-12 cell" }, [
-                              _c("div", { staticClass: "radiobutton" }, [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.listType,
-                                      expression: "listType"
-                                    }
-                                  ],
-                                  attrs: {
-                                    type: "radio",
-                                    name: "list_type",
-                                    value: "list",
-                                    id: "metric-list-type",
-                                    checked: ""
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.listType, "list")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.listType = "list"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _vm._m(0),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.listType,
-                                      expression: "listType"
-                                    }
-                                  ],
-                                  attrs: {
-                                    type: "radio",
-                                    name: "list_type",
-                                    value: "select",
-                                    id: "metric-select-type"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.listType, "select")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.listType = "select"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _vm._m(1)
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "small-12 cell input-group inputs wrap-add-list-metric"
-                              },
-                              [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.value,
-                                      expression: "value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    type: "text",
-                                    placeholder: "Введите значение"
-                                  },
-                                  domProps: { value: _vm.value },
-                                  on: {
-                                    keydown: function($event) {
-                                      if (
-                                        !$event.type.indexOf("key") &&
-                                        _vm._k(
-                                          $event.keyCode,
-                                          "enter",
-                                          13,
-                                          $event.key,
-                                          "Enter"
-                                        )
-                                      ) {
-                                        return null
-                                      }
-                                      $event.preventDefault()
-                                      return _vm.addValue($event)
-                                    },
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.value = $event.target.value
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c(
-                                  "div",
-                                  { staticClass: "input-group-button" },
-                                  [
-                                    _c(
-                                      "a",
-                                      {
-                                        staticClass: "button add-value",
-                                        on: { click: _vm.addValue }
-                                      },
-                                      [_vm._v("Добавить в список")]
-                                    )
-                                  ]
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "small-12 cell wrap-table-list-metric"
-                              },
-                              [
-                                _c(
-                                  "table",
-                                  {
-                                    staticClass:
-                                      "tablesorter unstriped table-list-metric",
-                                    attrs: { id: "values-table" }
-                                  },
-                                  [
-                                    _c(
-                                      "tbody",
-                                      { attrs: { id: "values-tbody" } },
-                                      _vm._l(_vm.values, function(
-                                        value,
-                                        index
-                                      ) {
-                                        return _c(
-                                          "tr",
-                                          { staticClass: "item" },
-                                          [
-                                            _vm._m(2, true),
-                                            _vm._v(" "),
-                                            _c("td", [_vm._v(_vm._s(value))]),
-                                            _vm._v(" "),
-                                            _c(
-                                              "td",
-                                              { staticClass: "td-delete" },
-                                              [
-                                                _c("a", {
-                                                  staticClass:
-                                                    "icon-delete sprite",
-                                                  attrs: {
-                                                    "data-open":
-                                                      "delete-metric-value"
-                                                  },
-                                                  on: {
-                                                    click: function($event) {
-                                                      return _vm.removeValue(
-                                                        index
-                                                      )
-                                                    }
-                                                  }
-                                                })
-                                              ]
-                                            )
-                                          ]
-                                        )
-                                      }),
-                                      0
-                                    )
-                                  ]
-                                )
-                              ]
-                            )
-                          ],
-                      _vm._v(" "),
-                      _c("div", { staticClass: "small-12 cell checkbox" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.isRequired,
-                              expression: "isRequired"
-                            }
-                          ],
-                          attrs: { type: "checkbox", id: "checkbox-required" },
-                          domProps: {
-                            checked: Array.isArray(_vm.isRequired)
-                              ? _vm._i(_vm.isRequired, null) > -1
-                              : _vm.isRequired
-                          },
-                          on: {
-                            change: function($event) {
-                              var $$a = _vm.isRequired,
-                                $$el = $event.target,
-                                $$c = $$el.checked ? true : false
-                              if (Array.isArray($$a)) {
-                                var $$v = null,
-                                  $$i = _vm._i($$a, $$v)
-                                if ($$el.checked) {
-                                  $$i < 0 &&
-                                    (_vm.isRequired = $$a.concat([$$v]))
-                                } else {
-                                  $$i > -1 &&
-                                    (_vm.isRequired = $$a
-                                      .slice(0, $$i)
-                                      .concat($$a.slice($$i + 1)))
-                                }
-                              } else {
-                                _vm.isRequired = $$c
-                              }
-                            }
+          _vm.open
+            ? _c(
+                "div",
+                {
+                  staticClass: "grid-x grid-padding-x",
+                  attrs: { id: "propertyForm" }
+                },
+                [
+                  _c("div", { staticClass: "small-12 cell" }, [
+                    _c("label", [
+                      _vm._v("Название:\n                                "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.name,
+                            expression: "name"
                           }
-                        }),
-                        _vm._v(" "),
-                        _vm._m(3)
-                      ]),
+                        ],
+                        attrs: { type: "text", required: "" },
+                        domProps: { value: _vm.name },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.name = $event.target.value
+                          }
+                        }
+                      }),
                       _vm._v(" "),
-                      _vm.errors.length
-                        ? _c("div", { staticClass: "small-12 cell" }, [
-                            _c("b", [
-                              _vm._v("Пожалуйста исправьте указанные ошибки:")
-                            ]),
+                      _c("span", { staticClass: "form-error" }, [
+                        _vm._v("Имя обязательно")
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 cell" }, [
+                    _c("label", [
+                      _vm._v("Алиас:\n                                "),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.alias,
+                            expression: "alias"
+                          }
+                        ],
+                        attrs: { type: "text" },
+                        domProps: { value: _vm.alias },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.alias = $event.target.value
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 cell" }, [
+                    _c("label", [
+                      _vm._v("Описание:\n                                "),
+                      _c("textarea", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.description,
+                            expression: "description"
+                          }
+                        ],
+                        domProps: { value: _vm.description },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.description = $event.target.value
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _vm.type == "numeric"
+                    ? [
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v(
+                              "Минимум\n                                    "
+                            ),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.min,
+                                  expression: "min"
+                                }
+                              ],
+                              attrs: { type: "number", required: "" },
+                              domProps: { value: _vm.min },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.min = $event.target.value
+                                }
+                              }
+                            }),
                             _vm._v(" "),
+                            _c("span", { staticClass: "form-error" }, [
+                              _vm._v("Имя обязательно")
+                            ])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v(
+                              "Максимум\n                                    "
+                            ),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.max,
+                                  expression: "max"
+                                }
+                              ],
+                              attrs: { type: "number", required: "" },
+                              domProps: { value: _vm.max },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.max = $event.target.value
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "form-error" }, [
+                              _vm._v("Имя обязательно")
+                            ])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v(
+                              "Единица измерения\n                                    "
+                            ),
                             _c(
-                              "ul",
-                              _vm._l(_vm.errors, function(error) {
-                                return _c("li", [_vm._v(_vm._s(error))])
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.unitId,
+                                    expression: "unitId"
+                                  }
+                                ],
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.unitId = $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  }
+                                }
+                              },
+                              _vm._l(_vm.actualUnits, function(unit) {
+                                return _c(
+                                  "option",
+                                  { domProps: { value: unit.id } },
+                                  [_vm._v(_vm._s(unit.abbreviation))]
+                                )
                               }),
                               0
                             )
                           ])
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "small-12 cell text-center" }, [
-                        _c("input", {
-                          staticClass: "button green-button",
-                          attrs: { type: "submit", value: "Создать метрику" },
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.addMetric($event)
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v(
+                              "Знаки после запятой\n                                    "
+                            ),
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.decimalPlace,
+                                    expression: "decimalPlace"
+                                  }
+                                ],
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.decimalPlace = $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  }
+                                }
+                              },
+                              _vm._l(_vm.decimalPlaces, function(
+                                decimalPlace,
+                                index
+                              ) {
+                                return _c(
+                                  "option",
+                                  {
+                                    domProps: {
+                                      value: index,
+                                      selected: index === 0
+                                    }
+                                  },
+                                  [_vm._v(_vm._s(decimalPlace))]
+                                )
+                              }),
+                              0
+                            )
+                          ])
+                        ])
+                      ]
+                    : _vm.type == "percent"
+                    ? [
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v(
+                              "Минимум\n                                    "
+                            ),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.min,
+                                  expression: "min"
+                                }
+                              ],
+                              attrs: { type: "number" },
+                              domProps: { value: _vm.min },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.min = $event.target.value
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v(
+                              "Максимум\n                                    "
+                            ),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.max,
+                                  expression: "max"
+                                }
+                              ],
+                              attrs: { type: "number" },
+                              domProps: { value: _vm.max },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.max = $event.target.value
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v(
+                              "Единица измерения\n                                    "
+                            ),
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.unitId,
+                                    expression: "unitId"
+                                  }
+                                ],
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.unitId = $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  }
+                                }
+                              },
+                              _vm._l(_vm.actualUnits, function(unit) {
+                                return _c(
+                                  "option",
+                                  { domProps: { value: unit.id } },
+                                  [_vm._v(_vm._s(unit.abbreviation))]
+                                )
+                              }),
+                              0
+                            )
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-6 cell" }, [
+                          _c("label", [
+                            _vm._v(
+                              "Знаки после запятой\n                                    "
+                            ),
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.decimalPlace,
+                                    expression: "decimalPlace"
+                                  }
+                                ],
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.decimalPlace = $event.target.multiple
+                                      ? $$selectedVal
+                                      : $$selectedVal[0]
+                                  }
+                                }
+                              },
+                              _vm._l(_vm.decimalPlaces, function(
+                                decimalPlace,
+                                index
+                              ) {
+                                return _c(
+                                  "option",
+                                  {
+                                    domProps: {
+                                      value: index,
+                                      selected: index == 0
+                                    }
+                                  },
+                                  [_vm._v(_vm._s(decimalPlace))]
+                                )
+                              }),
+                              0
+                            )
+                          ])
+                        ])
+                      ]
+                    : [
+                        _c("div", { staticClass: "small-12 cell" }, [
+                          _c("div", { staticClass: "radiobutton" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.listType,
+                                  expression: "listType"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                name: "list_type",
+                                value: "list",
+                                id: "metric-list-type",
+                                checked: ""
+                              },
+                              domProps: {
+                                checked: _vm._q(_vm.listType, "list")
+                              },
+                              on: {
+                                change: function($event) {
+                                  _vm.listType = "list"
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm._m(0),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.listType,
+                                  expression: "listType"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                name: "list_type",
+                                value: "select",
+                                id: "metric-select-type"
+                              },
+                              domProps: {
+                                checked: _vm._q(_vm.listType, "select")
+                              },
+                              on: {
+                                change: function($event) {
+                                  _vm.listType = "select"
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm._m(1)
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "small-12 cell input-group inputs wrap-add-list-metric"
+                          },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.value,
+                                  expression: "value"
+                                }
+                              ],
+                              attrs: {
+                                type: "text",
+                                placeholder: "Введите значение"
+                              },
+                              domProps: { value: _vm.value },
+                              on: {
+                                keydown: function($event) {
+                                  if (
+                                    !$event.type.indexOf("key") &&
+                                    _vm._k(
+                                      $event.keyCode,
+                                      "enter",
+                                      13,
+                                      $event.key,
+                                      "Enter"
+                                    )
+                                  ) {
+                                    return null
+                                  }
+                                  $event.preventDefault()
+                                  return _vm.addValue($event)
+                                },
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.value = $event.target.value
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "input-group-button" }, [
+                              _c(
+                                "a",
+                                {
+                                  staticClass: "button add-value",
+                                  on: { click: _vm.addValue }
+                                },
+                                [_vm._v("Добавить в список")]
+                              )
+                            ])
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass: "small-12 cell wrap-table-list-metric"
+                          },
+                          [
+                            _c(
+                              "table",
+                              {
+                                staticClass:
+                                  "tablesorter unstriped table-list-metric",
+                                attrs: { id: "values-table" }
+                              },
+                              [
+                                _c(
+                                  "tbody",
+                                  { attrs: { id: "values-tbody" } },
+                                  _vm._l(_vm.values, function(value, index) {
+                                    return _c("tr", { staticClass: "item" }, [
+                                      _vm._m(2, true),
+                                      _vm._v(" "),
+                                      _c("td", [_vm._v(_vm._s(value))]),
+                                      _vm._v(" "),
+                                      _c("td", { staticClass: "td-delete" }, [
+                                        _c("a", {
+                                          staticClass: "icon-delete sprite",
+                                          attrs: {
+                                            "data-open": "delete-metric-value"
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.removeValue(index)
+                                            }
+                                          }
+                                        })
+                                      ])
+                                    ])
+                                  }),
+                                  0
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ],
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 cell checkbox" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.isRequired,
+                          expression: "isRequired"
+                        }
+                      ],
+                      attrs: { type: "checkbox", id: "checkbox-required" },
+                      domProps: {
+                        checked: Array.isArray(_vm.isRequired)
+                          ? _vm._i(_vm.isRequired, null) > -1
+                          : _vm.isRequired
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.isRequired,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 && (_vm.isRequired = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.isRequired = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
                             }
+                          } else {
+                            _vm.isRequired = $$c
                           }
-                        })
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm._m(3)
+                  ]),
+                  _vm._v(" "),
+                  _vm.errors.length
+                    ? _c("div", { staticClass: "small-12 cell" }, [
+                        _c("b", [
+                          _vm._v("Пожалуйста исправьте указанные ошибки:")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "ul",
+                          _vm._l(_vm.errors, function(error) {
+                            return _c("li", [_vm._v(_vm._s(error))])
+                          }),
+                          0
+                        )
                       ])
-                    ],
-                    2
-                  )
-                : _vm._e()
-            ]
-          )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 cell text-center" }, [
+                    _c("input", {
+                      staticClass: "button green-button",
+                      attrs: { type: "submit", value: "Создать метрику" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.addMetric($event)
+                        }
+                      }
+                    })
+                  ])
+                ],
+                2
+              )
+            : _vm._e()
         ])
       ]
     ],

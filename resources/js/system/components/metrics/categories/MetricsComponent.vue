@@ -88,11 +88,11 @@
                     >Отменить</a>
                 </legend>
 
-                <form
-                    v-abide
-                    data-abide
-                    novalidate
-                >
+<!--                <form-->
+<!--                    v-abide-->
+<!--                    data-abide-->
+<!--                    novalidate-->
+<!--                >-->
                     <div
                         v-if="open"
                         class="grid-x grid-padding-x"
@@ -321,7 +321,9 @@
                         </div>
 
                     </div>
-                </form>
+
+<!--                </form>-->
+
             </fieldset>
         </template>
     </div>
