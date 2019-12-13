@@ -113,18 +113,24 @@
             addNewMetric(metric) {
                 this.addMetric(metric);
 
-                axios
-                    .get('/admin/properties', {
-                        params: {
-                            entity_id: this.entityId
-                        }
-                    })
-                    .then(response => {
-                        this.actualProperties = response.data;
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    });
+                let property = this.actualProperties.find(obj => obj.id == metric.property_id);
+                if (property) {
+                    property.metrics.push(metric);
+                }
+
+
+                // axios
+                //     .get('/admin/properties', {
+                //         params: {
+                //             entity_id: this.entityId
+                //         }
+                //     })
+                //     .then(response => {
+                //         this.actualProperties = response.data;
+                //     })
+                //     .catch(error => {
+                //         console.log(error)
+                //     });
 
             },
             openModalRemove(metric) {

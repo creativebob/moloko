@@ -416,21 +416,16 @@
                 this.unitId = null;
             },
             openForm() {
+		        let property = this.properties.find(obj => obj.id == this.propertyId);
+                if (property) {
+                    this.type = property.type;
 
-                axios
-                    .post('/admin/ajax_add_property', {
-                        id: this.propertyId,
-                        entity: this.entity
-                    })
-                    .then(response => {
-                        this.units = response.data.units;
-                        this.type = response.data.type;
+                    if (property.type !== 'list') {
+                        this.units = property.units_category.units;
+                    }
 
-                        this.open = true;
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    });
+                    this.open = true;
+                }
             },
             addValue() {
                 this.values.push(this.value);

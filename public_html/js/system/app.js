@@ -65399,19 +65399,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.metrics.splice(index, 1);
         },
         addNewMetric: function addNewMetric(metric) {
-            var _this = this;
-
             this.addMetric(metric);
 
-            axios.get('/admin/properties', {
-                params: {
-                    entity_id: this.entityId
-                }
-            }).then(function (response) {
-                _this.actualProperties = response.data;
-            }).catch(function (error) {
-                console.log(error);
+            var property = this.actualProperties.find(function (obj) {
+                return obj.id == metric.property_id;
             });
+            if (property) {
+                property.metrics.push(metric);
+            }
+
+            // axios
+            //     .get('/admin/properties', {
+            //         params: {
+            //             entity_id: this.entityId
+            //         }
+            //     })
+            //     .then(response => {
+            //         this.actualProperties = response.data;
+            //     })
+            //     .catch(error => {
+            //         console.log(error)
+            //     });
         },
         openModalRemove: function openModalRemove(metric) {
             this.deletingMetric = metric;
@@ -66067,17 +66075,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         openForm: function openForm() {
             var _this = this;
 
-            axios.post('/admin/ajax_add_property', {
-                id: this.propertyId,
-                entity: this.entity
-            }).then(function (response) {
-                _this.units = response.data.units;
-                _this.type = response.data.type;
-
-                _this.open = true;
-            }).catch(function (error) {
-                console.log(error);
+            var property = this.properties.find(function (obj) {
+                return obj.id == _this.propertyId;
             });
+            if (property) {
+                this.type = property.type;
+
+                if (property.type !== 'list') {
+                    this.units = property.units_category.units;
+                }
+
+                this.open = true;
+            }
         },
         addValue: function addValue() {
             this.values.push(this.value);
