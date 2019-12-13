@@ -31,9 +31,9 @@ class Estimate extends Model
         'stock_id',
 
         'company_id',
-	
+
 	    'date',
-        
+
         'number',
         'author_id',
         'draft',
@@ -44,6 +44,11 @@ class Estimate extends Model
 	    'discount_percent',
 
     ];
+
+    public function getCreatedAtAttribute($value)
+    {
+        return $value->format('d.m.Y');
+    }
 
     // Лид
     public function lead()
