@@ -63,6 +63,7 @@
           <th class="td-stage">Этап</th>
           <th class="td-challenge">Задачи</th>
           <th class="td-status">Статус</th>
+          <th class="td-delivered_at">Дата доставки</th>
           {{-- <th class="td-deadline_date">Дедлайн</th> --}}
 
           @if($right_lead_all_managers)
@@ -155,6 +156,14 @@
           <td class="td-status">
             @if($lead->estimate->is_saled) Чек закрыт @else Открыт @endif
           </td>
+
+           <td class="td-delivered_at">
+            @if(!empty($lead->delivered_at))
+              <span>{{ $lead->delivered_at->format('d.m.Y') }}</span><br>
+              <span class="tiny-text">{{ $lead->delivered_at->format('H:i') }}</span>
+            @endif
+          </td>
+
                 {{-- <td>
                     @if(!empty($lead->first_challenge->deadline_date))
                     <span class="">{{ $lead->first_challenge->deadline_date->format('d.m.Y') }}</span><br>

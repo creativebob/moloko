@@ -73,8 +73,9 @@ trait UserControllerTrait
         // Литера (Особая идентификационная отметка, например в номере договора)
         $user->liter = $request->liter;
 
-        $user->site_id = $site_id;
-
+        if($site){
+            $user->site_id = $site->id;  
+        }
 
         // Контактные данные: ----------------------------------------------------------
 
@@ -141,8 +142,9 @@ trait UserControllerTrait
         return $user;
     }
 
-    public function createUserByPhone($phone, $request = null, $new_company = null){
+    public function createUserByPhone($phone, $request = null, $site = null){
 
+        $new_company = $site->company;
         Log::info('Сработал трейт создания пользователя по номеру телефона');
 
         // Подготовка: -------------------------------------------------------------------------------------
@@ -171,7 +173,8 @@ trait UserControllerTrait
         // Компания и филиал ----------------------------------------------------------
         $user->company_id = $request->company_id ?? $user_auth->company->id ?? $new_company->id;
         $user->filial_id = $request->filial_id ?? $user_auth->filial_id ?? $new_company->filials->first()->id;
-
+        $user->site_id = $site->id;
+        
         $user->save();
 
         if($user) {
