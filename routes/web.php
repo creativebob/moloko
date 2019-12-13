@@ -282,12 +282,6 @@ Route::delete('/photo_delete/{id}', 'PhotoController@ajax_delete');
 // --------------------------------------- Склады -----------------------------------------------
 Route::resource('stocks', 'StockController')->middleware('auth');
 
-// --------------------------------------- Свойства -----------------------------------------------
-Route::post('/ajax_add_property', 'PropertyController@add_property')->middleware('auth');
-Route::resource('/properties', 'PropertyController')
-    ->only(['index'])
-    ->middleware('auth');
-
 
 // ---------------------------------------- Метрики -------------------------------------------------
 Route::get('/metrics', 'MetricController@store');

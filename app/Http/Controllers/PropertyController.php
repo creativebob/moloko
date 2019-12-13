@@ -15,34 +15,9 @@ class PropertyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_properties = operator_right('properties', false, 'index');
-        $answer_metrics = operator_right('metrics', false, 'index');
-
-        $entity_id = $request->entity_id;
-
-        $properties = Property::moderatorLimit($answer_properties)
-            ->companiesLimit($answer_properties)
-            ->authors($answer_properties)
-            ->systemItem($answer_properties)
-            ->template($answer_properties)
-            ->with(['metrics' => function ($query) use ($answer_metrics, $entity_id) {
-                $query->with('values')
-                    ->moderatorLimit($answer_metrics)
-                    ->companiesLimit($answer_metrics)
-                    ->authors($answer_metrics)
-                    ->systemItem($answer_metrics)
-                    ->whereHas('entities', function($q) use ($entity_id) {
-                        $q->where('id', $entity_id);
-                    });
-            }])
-            ->withCount('metrics')
-            ->orderBy('sort', 'asc')
-            ->get();
-
-        return response()->json($properties);
+        //
     }
 
     /**
@@ -111,40 +86,4 @@ class PropertyController extends Controller
         //
     }
 
-    // ---------------------------------------------- Ajax ----------------------------------------------------------
-
-    public function add_property(Request $request)
-    {
-        $property = Property::with('units_category.units')
-        ->findOrFail($request->id);
-
-        if ($property) {
-
-            if (isset($property->units_category->name)) {
-//                $units_list = $property->units_category->units->pluck('abbreviation', 'id');
-                $units_list = $property->units_category->units;
-            } else {
-                $units_list = null;
-            }
-            // echo $property;
-
-            return response()->json([
-                'type' => $property->type,
-                'units' => $units_list,
-            ]);
-
-//            return view('products.common.metrics.add_property', [
-//                'type' => $property->type,
-//                'units_list' => $units_list,
-//                'property_id' => $request->id,
-//                'entity' => $request->entity,
-//                'set_status' => $request->set_status
-//            ]);
-        } else {
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при добавлении свойства!'
-            ];
-        }
-    }
 }
