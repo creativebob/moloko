@@ -4,7 +4,8 @@
         <div
             class="dropdown-pane properties-dropdown"
             id="properties-dropdown"
-            data-dropdown data-position="bottom"
+            data-dropdown
+            data-position="bottom"
             data-alignment="center"
             data-close-on-click="true"
             v-show="!open"
@@ -479,10 +480,10 @@
                     axios
                         .post('/admin/metrics', data)
                         .then(response => {
-                            console.log(response.data);
                             this.$emit('add-new-metric', response.data);
-
                             this.resetMetricForm();
+
+                            // Foundation.reInit($('#pproperties-list'));
                         })
                         .catch(error => {
                             console.log(error)
@@ -491,11 +492,16 @@
             }
         },
         directives: {
+            // 'dropdown': {
+            //     bind: function (el) {
+            //         new Foundation.Dropdown($(el))
+            //     }
+            // },
             'abide': {
                 bind: function (el) {
                     new Foundation.Abide($(el))
                 }
-            }
+            },
         }
 	}
 </script>

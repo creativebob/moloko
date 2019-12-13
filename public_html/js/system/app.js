@@ -65979,6 +65979,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -66139,10 +66140,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 // console.log(data);
 
                 axios.post('/admin/metrics', data).then(function (response) {
-                    console.log(response.data);
                     _this2.$emit('add-new-metric', response.data);
-
                     _this2.resetMetricForm();
+
+                    // Foundation.reInit($('#pproperties-list'));
                 }).catch(function (error) {
                     console.log(error);
                 });
@@ -66150,6 +66151,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     directives: {
+        // 'dropdown': {
+        //     bind: function (el) {
+        //         new Foundation.Dropdown($(el))
+        //     }
+        // },
         'abide': {
             bind: function bind(el) {
                 new Foundation.Abide($(el));
