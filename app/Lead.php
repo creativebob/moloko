@@ -37,7 +37,7 @@ class Lead extends Model
     use Cachable;
 
     use Notifiable;
-    // use SoftDeletes;
+     use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -306,5 +306,18 @@ class Lead extends Model
     //     }
     //     return $value;
     // }
+
+
+    // this is a recommended way to declare event handlers
+    public static function boot() {
+        parent::boot();
+        self::deleting(function($lead) { // before delete() method call this
+            $lead->estimate->goods_items()->each(function($item) {
+                $item->delete();
+             });
+            $lead->estimate()->delete();
+            // do the rest of the cleanup...
+        });
+    }
 
 }

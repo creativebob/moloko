@@ -74,14 +74,23 @@ class LeadController extends Controller
         // Проверяем специфические права
         $lead_all_managers = extra_right('lead-all-managers');
 
-        $leads = Lead::with(
+        $leads = Lead::with([
             'choice',
             'lead_type',
             'lead_method',
             'stage',
             'main_phones',
-            'estimate.goods_items.goods.article'
-        )
+            'estimate' => function ($q) {
+                $q->with([
+                    'goods_items' => function ($q) {
+                        $q->with([
+                            'goods.article',
+                            'reserve'
+                        ]);
+                    }
+                ]);
+            },
+        ])
 
         // Если есть право смотреть лидов ВСЕХ менеджеров (true), то получаем еще данные менеджеров
         ->when($lead_all_managers, function($q){
@@ -544,7 +553,14 @@ class LeadController extends Controller
         $user = $request->user();
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $lead = Lead::withCount(['challenges' => function ($query) {
+        $lead = Lead::with([
+            'estimate' => function ($q) {
+                $q->with([
+                    'goods_items.reserve'
+                ]);
+            },
+        ])
+        ->withCount(['challenges' => function ($query) {
             $query->whereNull('status');
         }])
         ->withCount('claims')
