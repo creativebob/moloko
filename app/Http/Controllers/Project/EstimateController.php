@@ -20,12 +20,17 @@ class EstimateController extends Controller
      */
     public function index()
     {
-        $user = \Auth::user();
-//        dd($user);
-
-        $estimates = Estimate::with('goods_items')
-            ->whereHas('lead', function ($q) use ($user) {
-                $q->where('user_id', $user->id);
+        $estimates = Estimate::with([
+            'goods_items' => function ($q) {
+                $q->with([
+                    'goods.article.photo',
+                    'price_goods.currency'
+                ]);
+            },
+            'lead'
+        ])
+            ->whereHas('lead', function ($q) {
+                $q->where('user_id', auth()->user()->id);
             })
             ->get();
 //        dd($estimates);

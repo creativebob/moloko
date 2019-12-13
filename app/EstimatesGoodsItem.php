@@ -84,6 +84,11 @@ class EstimatesGoodsItem extends Model
         return $this->belongsTo(PricesGoods::class);
     }
 
+    public function price_goods()
+    {
+        return $this->belongsTo(PricesGoods::class, 'price_id');
+    }
+
     // Товар
     public function goods()
     {
