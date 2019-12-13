@@ -101,7 +101,7 @@ return [
             'path' => storage_path('logs/operations.log'),
             'level' => 'info',
         ],
-	
+
 	    'documents' => [
 		    'driver' => 'daily',
 		    'path' => storage_path('logs/documents.log'),
@@ -111,6 +111,12 @@ return [
         'personals' => [
             'driver' => 'daily',
             'path' => storage_path('logs/personals.log'),
+            'level' => 'info',
+        ],
+
+        'leads_from_project' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/leads_from_project.log'),
             'level' => 'info',
         ],
 
