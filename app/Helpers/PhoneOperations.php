@@ -96,7 +96,9 @@ function add_phones($request, $item) {
 // Функция нахождения экземпляра модели пользователя 
 // по номеру телефона (грязному)
 
-function check_user_by_phones($phone_search, $company_id = null) {
+function check_user_by_phones($phone_search, $site) {
+
+	$company_id = $site->company->id;
 
 	// Если не передан ID компании пытаемся его получить
 	if($company_id == null){
@@ -119,15 +121,33 @@ function check_user_by_phones($phone_search, $company_id = null) {
 	if(!empty($phone)){
 
 		// Получаем пользователя владельца телефона
-		$result = $phone->user_owner->first();
+		Log::info('Нашли пользователя (телей):');
+
+		// foreach($phone->user_owner as $owner){
+		// 	Log::info('Пользователь: ' . $owner->name);
+		// }
+
+		$result = $phone->user_owner->where('site_id', $site->id)->where('company_id', $company_id);
+
+		if(!empty($result)){
+
+			$user = $phone->user_owner->where('site_id', $site->id)->where('company_id', $company_id)->first();
+			Log::info($user->name ?? 'Имя не указано');
+
+		} else {
+			$user = null;
+		}
+
+		
+		// $result = $phone->user_owner->first();
 	} else {
 
 		// Так как не нашли, результат делаем нудевым
-		$result = null;
+		$user = null;
 	};
 	
 	// Отдаем результат
-	return $result;
+	return $user;
 }
 
 // Отправка СМС через API smsru

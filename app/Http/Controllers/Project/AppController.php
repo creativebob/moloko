@@ -170,6 +170,13 @@ class AppController extends Controller
 
         $site->load('notifications');
 
+        // $estimates = Estimate::with('goods_items')
+        //     ->whereHas('lead', function ($q) use ($user) {
+        //         $q->where('user_id', $user->id);
+        //     })
+        //     ->get()->sortByDesc('id');
+        $estimates = null;
+
         return view($site->alias.'.pages.cabinet.index', compact('site', 'page', 'estimates', 'user'));
     }
 
@@ -185,7 +192,7 @@ class AppController extends Controller
         if((isset($main_phone))&&(isset($access_code))){
 
             // Делаем запрос к базе данных
-            $user = check_user_by_phones($main_phone, $site->company->id);
+            $user = check_user_by_phones($main_phone, $site);
 
             // Зарегистрирован ли кто-нибудь по такому номеру?
             if($user != null){
@@ -197,15 +204,9 @@ class AppController extends Controller
 
                         if($user->access_code == $access_code){
 
-                            if($user->user_type == false){
-
                                 // Если проверка пройдена - АВТОРИЗУЕМ!
                                 Auth::loginUsingId($user->id);
                                 return redirect('/cabinet');
-
-                            } else {
-                                abort(403, 'Вы были близки к цели, но по каким то страннам обстоятельствам, мы все еще делим людей на своих и чужих. Так вот: вы чужой! Сорри.');
-                            }
 
                         } else {
                             abort(403, 'Код устарел или введен с ошибками');
@@ -239,12 +240,12 @@ class AppController extends Controller
         $company = $site->company;
 
         // Смотрим, есть ли пользователь с таким номером телефона в базе
-        $user = check_user_by_phones($phone, $company->id);
+        $user = check_user_by_phones($phone, $site);
         Log::info('Чекнули юзера в базе по номеру телефона:');
 
         // Если пользователь не найден - то создаем
         if($user == null){
-            $user = $this->createUserByPhone($phone, null, $company);
+            $user = $this->createUserByPhone($phone, null, $site);
             Log::info('Не нашли, и создали нового с ID: ' . $user->id);
         }
 

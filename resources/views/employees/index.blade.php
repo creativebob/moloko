@@ -38,7 +38,7 @@
                     <th class="td-phone">Телефон</th>
                     <th class="td-position">Название должности</th>
 
-                    @if (($employees->isNotEmpty() && $employees->first()->company->filials->count() > 1) || (Auth::user()->god == 1))
+                    @if ((Auth::user()->god == 1) || ($employees->isNotEmpty() && $employees->first()->company->filials->count() > 1))
                     <th class="td-filial">Филиал</th>
                     @endif
                     @if(Auth::user()->god == 1)<th class="td-getauth">Действие</th> @endif
