@@ -65982,7 +65982,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -66182,7 +66181,6 @@ var render = function() {
         "div",
         {
           directives: [
-            { name: "dropdown", rawName: "v-dropdown" },
             {
               name: "show",
               rawName: "v-show",

@@ -4,7 +4,6 @@
         <div
             class="dropdown-pane properties-dropdown"
             id="properties-dropdown"
-            v-dropdown
             data-dropdown
             data-position="bottom"
             data-alignment="center"
