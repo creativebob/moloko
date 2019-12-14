@@ -240,12 +240,13 @@ class AppController extends Controller
         $company = $site->company;
 
         // Смотрим, есть ли пользователь с таким номером телефона в базе
-        $user = check_user_by_phones($phone, $site);
+        $user = checkPhoneUserForSite($phone, $site);
         Log::info('Чекнули юзера в базе по номеру телефона:');
 
         // Если пользователь не найден - то создаем
         if($user == null){
-            $user = $this->createUserByPhone($phone, null, $site);
+
+            $user = $this->createUserByPhoneFromSite($phone, $site);
             Log::info('Не нашли, и создали нового с ID: ' . $user->id);
         }
 
@@ -253,7 +254,8 @@ class AppController extends Controller
         $access_code = rand(1000, 9999);
         $user->access_code = $access_code;
         $user->save();
-        Log::info('Сгенерироваи код и вписали юзеру');
+
+        Log::info('Сгенерировали код и вписали юзеру');
 
         if(session('time_get_access_code')){
 
@@ -264,7 +266,7 @@ class AppController extends Controller
                 // Пишем в сессию время отправки СМС
                 session(['time_get_access_code' => now()]);
                 $msg = 'Код для входа: ' . $access_code;
-                sendSms($company, $phone, $msg);
+                // sendSms($company, $phone, $msg);
             };
 
         } else {
@@ -273,8 +275,8 @@ class AppController extends Controller
                 session(['time_get_access_code' => now()]);
                 $msg = 'Код для входа: ' . $access_code;
 
-                Log::info('Просим функцию отправки СМС сообщения отправить этот код');
-                sendSms($company, $phone, $msg);
+                Log::info('Просим функцию отправки СМС сообщения отправить этот код: ' . $access_code);
+                // sendSms($company, $phone, $msg);
 
         }
 

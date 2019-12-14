@@ -154,6 +154,36 @@ function check_user_by_phones($phone_search, $site) {
 	return $user;
 }
 
+function checkPhoneUserForSite($phone_from_site, $site) {
+
+	if(!$site){abort('Функции не передан экзмепляр сайта');};
+	Log::info('Проверяем телефон пользователя - есть ли такой номер в базе именно для этого сайта?');
+
+	// Ищем телефон в базе телефонов
+	$phone = Phone::where('phone', cleanPhone($phone))->first();
+
+	if(!empty($phone)){
+
+		Log::info('Нашли телефон в общей базе');
+
+		$result = $phone->user_owner->where('site_id', $site->id)->where('company_id', $company_id);
+
+		if(!empty($result)){
+			Log::info('Нашли телефон в связке с текущим сайтом');
+
+			$user = $result->first();
+			Log::info($user->name ?? 'Имя не указано');
+
+		} else {
+			$user = null;
+			Log::info('А вот в связке с текущим сайтом - не нашли');
+		}
+
+	} else {$user = null;};
+	
+	return $user;
+}
+
 // Отправка СМС через API smsru
 function sendSms($company, $phone, $msg) {
 
