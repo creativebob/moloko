@@ -153,7 +153,7 @@
             {{-- Табы для сущности --}}
             @includeIf($page_info->entity->view_path . '.tabs_content')
 
-            {{ Form::close() }}
+
 
             @can('index', App\Metric::class)
                 @if($page_info->entity->metric)
@@ -164,6 +164,8 @@
                     </div>
                 @endif
             @endcan
+
+            {{ Form::close() }}
         </div>
     </div>
 </div>

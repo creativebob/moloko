@@ -59,7 +59,8 @@ trait UserControllerTrait
 
         // Компания и филиал ----------------------------------------------------------
         $user->company_id = $request->user()->company->id;
-        $user->filial_id = $request->filial_id ?? $user_auth->filial_id;
+//        $user->filial_id = $request->filial_id ?? $user_auth->filial_id;
+        $user->filial_id = auth()->user()->filial_id;
 
 
         // Данные человека ------------------------------------------------------------
@@ -74,7 +75,7 @@ trait UserControllerTrait
         $user->liter = $request->liter;
 
         if($site){
-            $user->site_id = $site->id;  
+            $user->site_id = $site->id;
         }
 
         // Контактные данные: ----------------------------------------------------------
@@ -174,7 +175,7 @@ trait UserControllerTrait
         $user->company_id = $request->company_id ?? $user_auth->company->id ?? $new_company->id;
         $user->filial_id = $request->filial_id ?? $user_auth->filial_id ?? $new_company->filials->first()->id;
         $user->site_id = $site->id;
-        
+
         $user->save();
 
         if($user) {
@@ -244,7 +245,7 @@ trait UserControllerTrait
 
         // Компания и филиал ----------------------------------------------------------
         $user->company_id = $request->user()->company->id;
-        $user->filial_id = $request->filial_id ?? $user_auth->filial_id;
+//        $user->filial_id = $request->filial_id ?? $user_auth->filial_id;
 
 
         // Данные человека ------------------------------------------------------------

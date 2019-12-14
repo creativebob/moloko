@@ -282,6 +282,8 @@ class CartController extends Controller
             // }
 
             $lead->save();
+
+            logs('leads_from_project')->info("============== Создан лид с сайта с id :[{$lead->id}], сайт:[{$this->site->domain}]  ===============================");
             // ------------------------------------------- Конец создаем лида ---------------------------------------------
 
             // Телефон
@@ -308,6 +310,8 @@ class CartController extends Controller
 
                 ]);
 
+                logs('leads_from_project')->info("Создана смета с id: [{$estimate->id}]");
+
                 $prices_goods_ids = array_keys($cart['prices']);
                 $prices_goods = PricesGoods::with('goods')
                     ->find($prices_goods_ids);
@@ -331,6 +335,7 @@ class CartController extends Controller
                 }
 
                 $estimate->goods_items()->saveMany($data);
+                logs('leads_from_project')->info("Записаны товары сметы");
                 // TODO - 15.11.19 - Скидка должна браться из ценовой политики
                 $discount_percent = 0;
 
@@ -451,6 +456,7 @@ class CartController extends Controller
 
             // Чистим корзину у пользователя
             Cookie::queue(Cookie::forget('cart'));
+            logs('leads_from_project')->info("Очищены куки");
 
             // Пишем в сессию пользователю данные нового лида
 
@@ -465,6 +471,9 @@ class CartController extends Controller
             // Пишем в сессию
             session(['confirmation' => $confirmation]);
 
+            logs('leads_from_project')->info("============== Создан лид с сайта ===============================
+            
+            ");
 
 
             return redirect()->route('project.confirmation');
