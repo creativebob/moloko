@@ -160,13 +160,13 @@ function checkPhoneUserForSite($phone_from_site, $site) {
 	Log::info('Проверяем телефон пользователя - есть ли такой номер в базе именно для этого сайта?');
 
 	// Ищем телефон в базе телефонов
-	$phone = Phone::where('phone', cleanPhone($phone))->first();
+	$phone = Phone::where('phone', cleanPhone($phone_from_site))->first();
 
 	if(!empty($phone)){
 
 		Log::info('Нашли телефон в общей базе');
 
-		$result = $phone->user_owner->where('site_id', $site->id)->where('company_id', $company_id);
+		$result = $phone->user_owner->where('site_id', $site->id)->where('company_id', $site->company->id);
 
 		if(!empty($result)){
 			Log::info('Нашли телефон в связке с текущим сайтом');

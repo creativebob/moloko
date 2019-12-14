@@ -266,7 +266,7 @@ class AppController extends Controller
                 // Пишем в сессию время отправки СМС
                 session(['time_get_access_code' => now()]);
                 $msg = 'Код для входа: ' . $access_code;
-                // sendSms($company, $phone, $msg);
+                sendSms($company, $phone, $msg);
             };
 
         } else {
@@ -276,7 +276,7 @@ class AppController extends Controller
                 $msg = 'Код для входа: ' . $access_code;
 
                 Log::info('Просим функцию отправки СМС сообщения отправить этот код: ' . $access_code);
-                // sendSms($company, $phone, $msg);
+                sendSms($company, $phone, $msg);
 
         }
 
