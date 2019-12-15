@@ -51,7 +51,7 @@ class ContainersCategory extends Model
         'seo_description',
         'parent_id',
         'photo_id',
-'display',
+        'display',
         'system',
         'moderation'
     ];
@@ -109,5 +109,14 @@ class ContainersCategory extends Model
     public function groups()
     {
         return $this->morphToMany(ArticlesGroup::class, 'entity', 'articles_group_entity');
+    }
+    
+    public function getNameWithParentAttribute()
+    {
+        if($this->parent_id != null){
+            return $this->parent->name . ' / ' . $this->name;
+        } else {
+            return $this->name;
+        }
     }
 }

@@ -118,4 +118,14 @@ class CatalogsServicesItem extends Model
             'price'
         ]);
     }
+        
+    public function getNameWithParentAttribute()
+    {
+        if($this->parent_id != null){
+            return $this->parent->name . ' / ' . $this->name;
+        } else {
+            return $this->name;
+        }
+    }
+    
 }

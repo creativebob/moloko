@@ -95,4 +95,13 @@ class ExpendablesCategory extends Model
         return $this->morphToMany(ArticlesGroup::class, 'entity', 'articles_group_entity');
     }
 
+    public function getNameWithParentAttribute()
+    {
+        if($this->parent_id != null){
+            return $this->parent->name . ' / ' . $this->name;
+        } else {
+            return $this->name;
+        }
+    }
+
 }

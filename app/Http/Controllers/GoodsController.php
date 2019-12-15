@@ -96,7 +96,7 @@ class GoodsController extends Controller
 //                ]);
 //            }
             ,
-            'prices.catalog'
+            'prices.catalog', 'prices.catalogs_item'
             // 'catalogs.site'
         ])
         ->moderatorLimit($answer)

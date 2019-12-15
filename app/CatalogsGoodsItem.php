@@ -142,4 +142,14 @@ use App\Scopes\Filters\BooklistFilter;
         {
             return $this->belongsTo(DisplayMode::class);
         }
+        
+	    public function getNameWithParentAttribute()
+	    {
+	        if($this->parent_id != null){
+	            return $this->parent->name . ' / ' . $this->name;
+	        } else {
+	            return $this->name;
+	        }
+	    }
+
 	}

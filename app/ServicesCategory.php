@@ -125,4 +125,13 @@ class ServicesCategory extends Model
         return $this->morphOne(Direction::class, 'category');
     }
 
+    public function getNameWithParentAttribute()
+    {
+        if($this->parent_id != null){
+            return $this->parent->name . ' / ' . $this->name;
+        } else {
+            return $this->name;
+        }
+    } 
+
 }
