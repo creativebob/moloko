@@ -45,7 +45,7 @@
         @endif
     </td>
 
-    <td class="td-catalogs_item">{{ $cur_prices_goods->catalogs_item->name }}</td>
+    <td class="td-catalogs_item">{{ $cur_prices_goods->catalogs_item->name_with_parent }}</td>
     <td class="td-price">
         @include('prices_goods.price_span')
 

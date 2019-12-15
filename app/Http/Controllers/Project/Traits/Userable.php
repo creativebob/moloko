@@ -22,7 +22,7 @@ trait Userable
         $phone_cleaned = cleanPhone($phone_from_site);
         $phone = Phone::firstOrCreate(['phone' => $phone_cleaned], ['crop' => substr($phone_cleaned, -4)]);
 
-        $user_number = User::all()->last()->id;
+        $user_number = User::order('id', 'desc')->all()->last()->id;
         $user_number = $user_number + 1;
 
         $user = new User;

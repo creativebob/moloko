@@ -29,7 +29,7 @@
         ({{ link_to_route('goods.index', $prices_service->articles_count, $parameters = ['prices_service_id' => $prices_service->id], $attributes = ['class' => 'filter_link light-text', 'title' => 'Перейти на список артикулов']) }}) --}}
 
     </td>
-    <td class="td-catalogs_item">{{ $prices_service->catalogs_item->name }}</td>
+    <td class="td-catalogs_item">{{ $prices_service->catalogs_item->name_with_parent }}</td>
     <td class="td-price">
         @include('prices_services.price_span')
 

@@ -12703,3 +12703,7 @@ tr:hover .button-to-reserve {
 .lead-estimate .td-amount {
   max-width: 70px;
 }
+
+.catalog-name {
+  color: #aaa;
+}

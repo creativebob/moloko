@@ -92,7 +92,9 @@
                     @if($page_info->alias == 'services')
                         <td class="td-catalog">
                             @foreach($item->prices as $price)
-                                <span>{{ $price->catalog->name }}: </span><span  data-tooltip class="top" tabindex="2" title="Действует с {{ $price->created_at->format('d.m.Y') }}">{{ $price->price }}
+                                <span class="catalog-name">{{ $price->catalog->name }}: </span>
+                                <span>{{ $price->catalogs_item->name_with_parent }} </span>
+                                <span  data-tooltip class="top" tabindex="2" title="Действует с {{ $price->created_at->format('d.m.Y') }}">{{ $price->price }}
 
                                     @if($item->process->unit_id == 32)
                                         @if($item->price_unit_id != 32)
