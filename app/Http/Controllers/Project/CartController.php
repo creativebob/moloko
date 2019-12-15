@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Telegram;
+use Telegram\Bot\Exceptions\TelegramResponseException;
 
 class CartController extends Controller
 {
@@ -446,10 +447,15 @@ class CartController extends Controller
                 foreach ($destinations as $destination) {
 
                     if (isset($destination->telegram)) {
-                        $response = Telegram::sendMessage([
-                            'chat_id' => $destination->telegram,
-                            'text' => $message
-                        ]);
+
+                        try {
+                            $response = Telegram::sendMessage([
+                                'chat_id' => $destination->telegram,
+                                'text' => $message
+                            ]);
+                        } catch (TelegramResponseException $exception) {
+                            // Юзера нет в боте, не отправляем ему мессагу
+                        }
                     }
                 }
             }
