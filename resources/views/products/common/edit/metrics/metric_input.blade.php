@@ -57,7 +57,9 @@
 	<div class="checkboxer-toggle" data-toggle="metric-{{ $metric->id }}-dropdown" data-name="">
 		<div class="checkboxer-title">
 			<span class="title">Список</span>
+            @if ($metric->is_required == 1)
 			<span class="form-error metric-list-error">Выберите минимум один пункт!</span>
+                @endif
 		</div>
 		<div class="checkboxer-button">
 			<span class="sprite icon-checkboxer"></span>
@@ -67,8 +69,7 @@
 
 <div class="dropdown-pane checkboxer-pane hover" data-position="bottom" data-alignment="left" id="metric-{{ $metric->id }}-dropdown" data-dropdown data-auto-focus="true" data-close-on-click="true" data-h-offset="-17" data-v-offset="2">
 
-
-	<ul class="checkbox checkbox-group" id="checkbox-group-{{ $metric->id }}">
+	<ul class="checkbox checkbox-group" id="checkbox-group-{{ $metric->id }}" data-required="{{ $metric->is_required }}">
 		@php
 		if (is_null($value)) {
 			$array = null;

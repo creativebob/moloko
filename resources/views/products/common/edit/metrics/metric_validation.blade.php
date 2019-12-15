@@ -81,13 +81,17 @@
 
         check(elem) {
 
-            let error = $(elem).closest('.checkbox-group').find("input:checkbox:checked").length;
+            let list = $(elem).closest('.checkbox-group');
+            if (list.data('required') == 1) {
+                let error = list.find("input:checkbox:checked").length;
 
-            if (error == 0) {
-                $('div[data-toggle=metric-' + this.id + '-dropdown]').find('.form-error').show();
-            } else {
-                $('div[data-toggle=metric-' + this.id + '-dropdown]').find('.form-error').hide();
-            };
+                if (error == 0) {
+                    $('div[data-toggle=metric-' + this.id + '-dropdown]').find('.form-error').show();
+                } else {
+                    $('div[data-toggle=metric-' + this.id + '-dropdown]').find('.form-error').hide();
+                };
+            }
+
 
             // $('#add-cur-goods').prop('disabled', error == 0);
         }

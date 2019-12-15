@@ -35,11 +35,13 @@
 
             // Проверка выбора значения чекбокса списка метрик
             let metricError = 0;
-            $(".checkbox-group").each(function(i) {
-                if ($(this).find("input:checkbox:checked").length == 0) {
-                    let id = $(this).closest('.dropdown-pane').attr('id');
-                    $('div[data-toggle=' + id + ']').find('.metric-list-error').show();
-                    metricError = metricError + 1;
+            $(".checkbox-group").each(function(item) {
+                if (item.data('required') == 1) {
+                    if ($(this).find("input:checkbox:checked").length == 0) {
+                        let id = $(this).closest('.dropdown-pane').attr('id');
+                        $('div[data-toggle=' + id + ']').find('.metric-list-error').show();
+                        metricError = metricError + 1;
+                    };
                 };
             });
 
