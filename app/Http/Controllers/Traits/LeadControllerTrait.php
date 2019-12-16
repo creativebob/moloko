@@ -118,12 +118,12 @@ trait LeadControllerTrait
         $choiceFromTag = getChoiceFromTag($request->choice_tag);
         $lead->choice_type = $choiceFromTag['type'];
         $lead->choice_id = $choiceFromTag['id'];
-		
+
         if (isset($request->delivery_date) || isset($request->delivery_time)) {
 	        $date = Carbon::createFromFormat('d.m.Y H:i', $request->delivery_date . ' ' . $request->delivery_time);
 	        $lead->delivered_at = $date;
         }
-		
+
 
         // Работаем с ПОЛЬЗОВАТЕЛЕМ лида ================================================================
 
@@ -138,7 +138,7 @@ trait LeadControllerTrait
 
             // Если нет: создаем нового пользователя по номеру телефона
             // используя трейт экспресс создание пользователя
-            $site = Site::findOrFail($lead)
+            $site = Site::findOrFail($lead);
             $user = $this->createUserByPhone($request->main_phone, null, null);
 
             $user->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
@@ -241,7 +241,7 @@ trait LeadControllerTrait
 
             $cart = json_decode(Cookie::get('cart'), true);
             $badget = $cart['sum'];
-            $count = $cart['count'];            
+            $count = $cart['count'];
         }
 
 
@@ -255,7 +255,7 @@ trait LeadControllerTrait
             if(empty($lead_name)){
                 $lead_name = $user->first_name . ' ' . $user->second_name;
             }
-            
+
             $phone = $user->main_phone->phone;
 
         // Если пользователь НЕ авторизован
@@ -294,7 +294,7 @@ trait LeadControllerTrait
         }
 
         // Конец работы с ПОЛЬЗОВАТЕЛЕМ для лида
-       
+
 
         // Создание ЛИДА ======================================================================
         $lead = new Lead;

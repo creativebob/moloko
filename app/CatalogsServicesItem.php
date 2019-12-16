@@ -56,7 +56,10 @@ class CatalogsServicesItem extends Model
         'color',
 
         'display_mode_id',
+        'directive_category_id',
+
         'is_controllable_mode',
+        'is_show_subcategory',
 
         'display',
         'system',
@@ -118,7 +121,7 @@ class CatalogsServicesItem extends Model
             'price'
         ]);
     }
-        
+
     public function getNameWithParentAttribute()
     {
         if($this->parent_id != null){
@@ -127,5 +130,5 @@ class CatalogsServicesItem extends Model
             return $this->name;
         }
     }
-    
+
 }

@@ -24,7 +24,12 @@ class EstimateController extends Controller
             'goods_items' => function ($q) {
                 $q->with([
                     'goods.article.photo',
-                    'price_goods.currency'
+                    'price_goods' => function ($q) {
+                        $q->with([
+                            'currency',
+                            'catalogs_item.directive_category:id,alias'
+                        ]);
+                    }
                 ]);
             },
             'lead'

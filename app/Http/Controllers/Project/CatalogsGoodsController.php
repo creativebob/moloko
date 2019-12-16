@@ -85,9 +85,9 @@ class CatalogsGoodsController extends Controller
             'items_public' => function ($q) {
                 $q->with([
                     'display_mode',
-                    'filters.values',
+                    'filters.values'
                 ]);
-            }
+            },
         ])
             ->whereHas('sites', function ($q) use ($site) {
                 $q->where('id', $site->id);
@@ -168,6 +168,7 @@ class CatalogsGoodsController extends Controller
                 ]);
             },
             'currency',
+            'catalogs_item.directive_category:id,alias'
         ])
             ->whereIn('catalogs_goods_item_id', $catalog_goods_items_ids)
             ->has('goods_public')

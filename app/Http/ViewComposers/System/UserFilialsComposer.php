@@ -8,7 +8,7 @@ class UserFilialsComposer
 {
 	public function compose(View $view)
 	{
-        $user_filials  = session('access.all_rights.index-prices_services-allow.filials');
+        $user_filials  = session('access.all_rights.index-prices_goods-allow.filials');
 
 		return $view->with(compact('user_filials'));
 	}

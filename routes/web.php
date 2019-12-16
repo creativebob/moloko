@@ -22,6 +22,9 @@ Route::get('/', 'AppController@enter');
 
 Route::any('/update_parser', 'AppController@parser');
 
+Route::get('/cache', 'AppController@cahche')->middleware('auth');
+Route::get('/clear', 'AppController@cahche_clear')->middleware('auth');
+
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
 

@@ -61,6 +61,26 @@ class AppController extends Controller
         return redirect()->route($alias.'.edit', $id);
     }
 
+    public function cahche()
+    {
+        \Artisan::call('optimize');
+        \Artisan::call('view:cache');
+
+        return "Кэш установлен.";
+    }
+
+    public function cahche_clear()
+    {
+        \Artisan::call('cache:clear');
+        \Artisan::call('modelCache:clear');
+        \Artisan::call('config:clear');
+        \Artisan::call('view:clear');
+        \Artisan::call('route:clear');
+//        \Artisan::call('backup:clean');
+
+        return "Кэш очищен.";
+    }
+
     // ------------------------------------------------ Ajax -------------------------------------------------
 
     // Сортировка
@@ -138,13 +158,23 @@ class AppController extends Controller
     public function parser()
     {
         Page::insert([
-            // Вложения
             [
-                'name' => 'Склады инструментов',
+                'name' => 'Продвижения',
                 'site_id' => 1,
-                'title' => 'Склады инструментов',
-                'description' => 'Склады инструментов',
-                'alias' => 'tools_stocks',
+                'title' => 'Продвижения',
+                'description' => 'Продвижения',
+                'alias' => 'promotions',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Рассылки',
+                'site_id' => 1,
+                'title' => 'Рассылки',
+                'description' => 'Рассылки',
+                'alias' => 'dispatches',
                 'company_id' => null,
                 'system' => true,
                 'author_id' => 1,
@@ -152,137 +182,166 @@ class AppController extends Controller
             ],
         ]);
 
-        echo "Создана страница Склады инструментов<br>";
+        echo 'Созданы страницы<br>';
 
-        Menu::insert([
-            //  Вложения
-            //  Инструменты
-            [
-                'name' => 'Инструменты',
-                'icon' => 'icon-tool',
-                'alias' => null,
-                'tag' => 'tools',
-                'parent_id' => null,
-                'page_id' => null,
-                'navigation_id' => 1,
-                'company_id' => null,
-                'system' => true,
-                'author_id' => 1,
-                'display' => true,
-                'sort' => 14,
-            ],
-
-            //  Помещения
-            [
-                'name' => 'Помещения',
-                'icon' => 'icon-room',
-                'alias' => null,
-                'tag' => 'rooms',
-                'parent_id' => null,
-                'page_id' => null,
-                'navigation_id' => 1,
-                'company_id' => null,
-                'system' => true,
-                'author_id' => 1,
-                'display' => true,
-                'sort' => 15,
-            ],
-
-        ]);
-
-        echo "Добавлены 2 главные категори меню<br>";
+//        Menu::insert([
+//            //  Вложения
+//            //  Инструменты
+//            [
+//                'name' => 'Инструменты',
+//                'icon' => 'icon-tool',
+//                'alias' => null,
+//                'tag' => 'tools',
+//                'parent_id' => null,
+//                'page_id' => null,
+//                'navigation_id' => 1,
+//                'company_id' => null,
+//                'system' => true,
+//                'author_id' => 1,
+//                'display' => true,
+//                'sort' => 14,
+//            ],
+//
+//            //  Помещения
+//            [
+//                'name' => 'Помещения',
+//                'icon' => 'icon-room',
+//                'alias' => null,
+//                'tag' => 'rooms',
+//                'parent_id' => null,
+//                'page_id' => null,
+//                'navigation_id' => 1,
+//                'company_id' => null,
+//                'system' => true,
+//                'author_id' => 1,
+//                'display' => true,
+//                'sort' => 15,
+//            ],
+//
+//        ]);
+//
+//        echo "Добавлены 2 главные категори меню<br>";
 
 
         $pages = Page::get();
         $menus = Menu::get();
 
-        $menu = Menu::where([
-            'navigation_id' => 1,
-            'tag' => 'tools'
-        ])->first();
-        $menu->update([
-            'parent_id' => $menus->where('icon', 'icon-tool')->first()->id,
-        ]);
+//        $menu = Menu::where([
+//            'navigation_id' => 1,
+//            'tag' => 'tools'
+//        ])->first();
+//        $menu->update([
+//            'parent_id' => $menus->where('icon', 'icon-tool')->first()->id,
+//        ]);
+//
+//        $menu = Menu::where([
+//            'navigation_id' => 1,
+//            'tag' => 'tools_categories'
+//        ])->first();
+//        $menu->update([
+//            'parent_id' => $menus->where('icon', 'icon-tool')->first()->id,
+//        ]);
 
-        $menu = Menu::where([
-            'navigation_id' => 1,
-            'tag' => 'tools_categories'
-        ])->first();
-        $menu->update([
-            'parent_id' => $menus->where('icon', 'icon-tool')->first()->id,
-        ]);
-
-        echo "Перенесены инструменты<br>";
+//        echo "Перенесены инструменты<br>";
 
         Menu::insert([
             [
-                'name' => 'Склады инструментов',
+                'name' => 'Продвижения',
                 'icon' => null,
-                'alias' => 'admin/tools_stocks',
-                'tag' => 'tools_stocks',
-                'parent_id' => $menus->where('icon', 'icon-tool')->first()->id,
-                'page_id' => $pages->where('alias', 'tools_stocks')->first()->id,
+                'alias' => 'admin/promotions',
+                'tag' => 'promotions',
+                'parent_id' => $menus->firstWhere('tag', 'marketings')->id,
+                'page_id' => $pages->firstWhere('alias', 'promotions')->id,
                 'navigation_id' => 1,
                 'company_id' => null,
                 'system' => true,
                 'author_id' => 1,
                 'display' => true,
-                'sort' => 1,
+                'sort' => 5,
+            ],
+
+            [
+                'name' => 'Рассылки',
+                'icon' => null,
+                'alias' => 'admin/dispatches',
+                'tag' => 'dispatches',
+                'parent_id' => $menus->firstWhere('tag', 'marketings')->id,
+                'page_id' => $pages->firstWhere('alias', 'dispatches')->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 5,
             ],
         ]);
 
-        echo "Добавлены слады инструментов<br>";
+        echo "Пункты меню<br>";
 
-        $menu = Menu::where([
-            'navigation_id' => 1,
-            'tag' => 'rooms'
-        ])->first();
-        $menu->update([
-            'parent_id' => $menus->where('icon', 'icon-room')->first()->id,
-        ]);
-
-        $menu = Menu::where([
-            'navigation_id' => 1,
-            'tag' => 'rooms_categories'
-        ])->first();
-        $menu->update([
-            'parent_id' => $menus->where('icon', 'icon-room')->first()->id,
-        ]);
-
-        $menu = Menu::where([
-            'navigation_id' => 1,
-            'tag' => 'stocks'
-        ])->first();
-        $menu->update([
-            'parent_id' => $menus->where('icon', 'icon-room')->first()->id,
-        ]);
-
-        echo "Перенесены комнаты и склады<br>";
+//        $menu = Menu::where([
+//            'navigation_id' => 1,
+//            'tag' => 'rooms'
+//        ])->first();
+//        $menu->update([
+//            'parent_id' => $menus->where('icon', 'icon-room')->first()->id,
+//        ]);
+//
+//        $menu = Menu::where([
+//            'navigation_id' => 1,
+//            'tag' => 'rooms_categories'
+//        ])->first();
+//        $menu->update([
+//            'parent_id' => $menus->where('icon', 'icon-room')->first()->id,
+//        ]);
+//
+//        $menu = Menu::where([
+//            'navigation_id' => 1,
+//            'tag' => 'stocks'
+//        ])->first();
+//        $menu->update([
+//            'parent_id' => $menus->where('icon', 'icon-room')->first()->id,
+//        ]);
+//
+//        echo "Перенесены комнаты и склады<br>";
 
 
         Entity::insert([
             [
-                'name' => 'Склад инструментов',
-                'alias' => 'tools_stocks',
-                'model' => 'ToolsStock',
+                'name' => 'Продвижения',
+                'alias' => 'promotions',
+                'model' => 'Promotion',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
                 'site' => 0,
-                'ancestor_id' => Entity::whereAlias('tools')->first(['id'])->id,
-                'view_path' => 'attachments_stocks',
-                'page_id' => $pages->firstWhere('alias', 'tools_stocks')->id,
+                'metric' => 0,
+                'view_path' => 'promotions',
+                'page_id' => $pages->firstWhere('alias', 'promotions')->id,
+            ],
+
+            [
+                'name' => 'Рассылки',
+                'alias' => 'dispatches',
+                'model' => 'Dispatch',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'dispatches',
+                'page_id' => $pages->firstWhere('alias', 'dispatches')->id,
             ],
         ]);
 
-        echo "СОздана сущность складов инструментов<br>";
+        echo 'Созданы сущности<br>';
 
 
         // Наваливание прав
 
         // Добавленным
         $entities = Entity::whereIn('alias', [
-            'tools_stocks',
+            'promotions',
+            'dispatches'
         ])
             ->get();
         // Всем

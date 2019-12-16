@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Telegram;
+use Telegram\Bot\Exceptions\TelegramResponseException;
 
 class CartController extends Controller
 {
@@ -219,7 +220,7 @@ class CartController extends Controller
                 if(!isset($request->main_phone)){abort(403, 'Не указан номер телефона!');}
 
                 // Получаем юзера если такой пользователь есть в базе по указанному номеру
-                $user = check_user_by_phones($request->main_phone);
+                $user = check_user_by_phones($request->main_phone, $this->site);
 
 
                 // Если нет, то создадим нового
@@ -227,7 +228,7 @@ class CartController extends Controller
 
                     // Если нет: создаем нового пользователя по номеру телефона
                     // используя трейт экспресс создание пользователя
-                    $user = $this->createUserByPhone($request->main_phone, null, $site->company);
+                    $user = $this->createUserByPhone($request->main_phone, null, $site);
 
                     // sendSms('79041248598', 'Данные для входа: ' . $user->access_code);
 
@@ -446,10 +447,15 @@ class CartController extends Controller
                 foreach ($destinations as $destination) {
 
                     if (isset($destination->telegram)) {
-                        $response = Telegram::sendMessage([
-                            'chat_id' => $destination->telegram,
-                            'text' => $message
-                        ]);
+
+                        try {
+                            $response = Telegram::sendMessage([
+                                'chat_id' => $destination->telegram,
+                                'text' => $message
+                            ]);
+                        } catch (TelegramResponseException $exception) {
+                            // Юзера нет в боте, не отправляем ему мессагу
+                        }
                     }
                 }
             }

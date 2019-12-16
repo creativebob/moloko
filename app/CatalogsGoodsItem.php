@@ -56,7 +56,10 @@ use App\Scopes\Filters\BooklistFilter;
             'color',
 
             'display_mode_id',
+            'directive_category_id',
+
             'is_controllable_mode',
+            'is_show_subcategory',
 
 			'display',
 			'system',
@@ -142,7 +145,12 @@ use App\Scopes\Filters\BooklistFilter;
         {
             return $this->belongsTo(DisplayMode::class);
         }
-        
+
+        public function directive_category()
+        {
+            return $this->belongsTo(UnitsCategory::class);
+        }
+
 	    public function getNameWithParentAttribute()
 	    {
 	        if($this->parent_id != null){

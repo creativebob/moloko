@@ -57,7 +57,8 @@ class PricesGoodsController extends Controller
         $page = $site->pages_public->where('alias', 'prices-goods')->first();
 
         $price_goods = PricesGoods::with([
-            'goods_public.article.raws'
+            'goods_public.article.raws',
+            'currency'
         ])
             ->where([
                 'display' => true
@@ -117,6 +118,7 @@ class PricesGoodsController extends Controller
 
             },
             'currency',
+            'catalogs_item.directive_category:id,alias'
         ])
             ->where([
                 'archive' => false,
