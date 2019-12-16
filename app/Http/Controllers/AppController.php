@@ -76,8 +76,7 @@ class AppController extends Controller
         \Artisan::call('config:clear');
         \Artisan::call('view:clear');
         \Artisan::call('route:clear');
-        \Artisan::call('backup:clean');
-
+//        \Artisan::call('backup:clean');
 
         return "Кэш очищен.";
     }
