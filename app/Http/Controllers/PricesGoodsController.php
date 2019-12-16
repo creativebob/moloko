@@ -39,7 +39,7 @@ class PricesGoodsController extends Controller
             return Redirect($filter_url);
         }
 
-        $user_filials = session('access.all_rights.index-prices_services-allow.filials');
+        $user_filials = session('access.all_rights.index-prices_goods-allow.filials');
 //        $user_filials = session('access.all_rights.index-leads-allow');
 
         // dd($request);
