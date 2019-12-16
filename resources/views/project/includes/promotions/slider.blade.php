@@ -35,7 +35,7 @@
 
         let promotion = window.localStorage.getItem('promotions') ?  window.localStorage.getItem('promotions') : window.localStorage.setItem('promotions', 'open');
 
-        if (promotion == 'open') {
+        if (window.localStorage.getItem('promotions') == 'open') {
             $('.wrap-slick').removeClass('hide-slide').removeClass('show-slide');
             $('.wrap-slick').addClass('show-slide');
 
