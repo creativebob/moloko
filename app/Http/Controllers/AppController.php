@@ -66,7 +66,7 @@ class AppController extends Controller
         \Artisan::call('optimize');
         \Artisan::call('view:cache');
 
-        return "Кэш Установлен.";
+        return "Кэш установлен.";
     }
 
     public function cahche_clear()
