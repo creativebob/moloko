@@ -61,6 +61,27 @@ class AppController extends Controller
         return redirect()->route($alias.'.edit', $id);
     }
 
+    public function cahche()
+    {
+        \Artisan::call('optimize');
+        \Artisan::call('view:cache');
+
+        return "Кэш Установлен.";
+    }
+
+    public function cahche_clear()
+    {
+        \Artisan::call('cache:clear');
+        \Artisan::call('modelCache:clear');
+        \Artisan::call('config:clear');
+        \Artisan::call('view:clear');
+        \Artisan::call('route:clear');
+        \Artisan::call('backup:clean');
+
+
+        return "Кэш очищен.";
+    }
+
     // ------------------------------------------------ Ajax -------------------------------------------------
 
     // Сортировка
