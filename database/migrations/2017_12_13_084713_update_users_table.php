@@ -52,6 +52,7 @@ class UpdateUsersTable extends Migration
             $table->integer('access_code')->nullable()->unsigned()->comment('Код доступа')->after('access_block');
 
             $table->bigInteger('site_id')->nullable()->unsigned()->comment('Id сайта')->after('access_code');
+            $table->foreign('site_id')->references('id')->on('sites');
 
             $table->bigInteger('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('site_id');
             $table->bigInteger('filial_id')->nullable()->unsigned()->comment('ID филиала компании')->after('company_id');
@@ -68,6 +69,7 @@ class UpdateUsersTable extends Migration
 
             $table->foreign('location_id')->references('id')->on('locations');
             $table->foreign('company_id')->references('id')->on('companies');
+
             $table->foreign('author_id')->references('id')->on('users');
             $table->foreign('filial_id')->references('id')->on('departments');
 
@@ -107,10 +109,13 @@ class UpdateUsersTable extends Migration
 
             $table->dropColumn('user_type');
             $table->dropColumn('access_block');
-            $table->dropColumn('access_code'); 
+            $table->dropColumn('access_code');
             $table->dropColumn('god');
             $table->dropColumn('moderation');
             // $table->dropColumn('sort');
+
+            $table->dropColumn('site_id');
+            $table->dropForeign('users_site_id_foreign');
 
             $table->dropForeign('users_location_id_foreign');
             $table->dropForeign('users_company_id_foreign');
