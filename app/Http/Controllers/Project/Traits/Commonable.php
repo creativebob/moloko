@@ -57,7 +57,7 @@ trait Commonable
             ->first();
 
             $this->site = $site;
-            $this->site->filial = $site->filials-first();
+            $this->site->filial = $site->filials->first();
         }
 
 
