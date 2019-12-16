@@ -14,6 +14,7 @@ use App\Http\ViewComposers\System\CitiesComposer;
 use App\Http\ViewComposers\System\CitySearchComposer;
 use App\Http\ViewComposers\System\ContainersCategoriesComposer;
 use App\Http\ViewComposers\System\ContainersComposer;
+use App\Http\ViewComposers\System\DirectiveCategoriesComposer;
 use App\Http\ViewComposers\System\DisplayModesComposer;
 use App\Http\ViewComposers\System\FiltersComposer;
 use App\Http\ViewComposers\System\NotificationsComposer;
@@ -354,6 +355,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.channels', ChannelsComposer::class);
 
         view()->composer('includes.selects.display_modes', DisplayModesComposer::class);
+        view()->composer('includes.selects.directive_categories', DirectiveCategoriesComposer::class);
 
         view()->composer('includes.lists.filters', FiltersComposer::class);
 

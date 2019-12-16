@@ -109,8 +109,18 @@
                             </div>
                             {!! Form::hidden('is_controllable_mode', 0) !!}
                             <div class="small-12 cell checkbox">
-                                {!! Form::checkbox('is_controllable_mode', 1, $catalogs_goods_item->is_controllable_mode, ['id' => 'is_controllable_mode-checkbox']) !!}
-                                <label for="is_controllable_mode-checkbox"><span>Разрешить смену отображения</span></label>
+                                {!! Form::checkbox('is_controllable_mode', 1, $catalogs_goods_item->is_controllable_mode, ['id' => 'checkbox-is_controllable_mode']) !!}
+                                <label for="checkbox-is_controllable_mode"><span>Разрешить смену отображения</span></label>
+                            </div>
+                            <div class="small-12 cell">
+                                <label>Выводить меру в качестве основной:
+                                    @include('includes.selects.directive_categories')
+                                </label>
+                            </div>
+                            {!! Form::hidden('is_show_subcategory', 0) !!}
+                            <div class="small-12 cell checkbox">
+                                {!! Form::checkbox('is_show_subcategory', 1, $catalogs_goods_item->is_show_subcategory, ['id' => 'checkbox-is_show_subcategory']) !!}
+                                <label for="checkbox-is_show_subcategory"><span>Отображать ВСЕ для субкатегорий</span></label>
                             </div>
                         </div>
                     </div>
