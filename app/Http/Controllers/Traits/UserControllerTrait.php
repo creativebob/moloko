@@ -145,6 +145,9 @@ trait UserControllerTrait
 
     public function createUserByPhone($phone, $request = null, $site = null){
 
+        if(isset($site)) {
+            $site->load('company');
+        }
         $new_company = $site->company;
         Log::info('Сработал трейт создания пользователя по номеру телефона');
 
