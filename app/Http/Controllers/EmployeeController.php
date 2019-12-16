@@ -239,7 +239,7 @@ class EmployeeController extends Controller
     {
         //Подключение политики
         $this->authorize(getmethod('create'), Employee::class);
-        $this->authorize(getmethod('create'), User::class);
+        // $this->authorize(getmethod('create'), User::class);
 
         // Создаем новый экземляр дилера
         $employee = new Employee;
@@ -273,7 +273,7 @@ class EmployeeController extends Controller
     public function store(UserStoreRequest $request)
     {
         // Подключение политики
-        $this->authorize(getmethod('create'), User::class);
+        $this->authorize(getmethod('create'), Employee::class);
 
         Log::info('Будем создавать сотрудника: все необходимые права есть');
 
@@ -328,7 +328,7 @@ class EmployeeController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $employee);
-        $this->authorize(getmethod(__FUNCTION__), $employee->user);
+        // $this->authorize(getmethod(__FUNCTION__), $employee->user);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
@@ -359,8 +359,8 @@ class EmployeeController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod('update'), $employee);
-        $this->authorize(getmethod('update'), $staffer);
-        $this->authorize(getmethod('update'), $user);
+        // $this->authorize(getmethod('update'), $staffer);
+        // $this->authorize(getmethod('update'), $user);
 
         Log::info('Будем редактировать сотрудника: все необходимые права есть');
 
