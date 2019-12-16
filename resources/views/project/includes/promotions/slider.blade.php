@@ -33,9 +33,9 @@
 @push('scripts')
     <script type="application/javascript">
 
-        let promotion = window.localStorage.getItem('promotions') ?  window.localStorage.getItem('promotions') : window.localStorage.setItem('promotions', 'open');
+        let promotion = window.sessionStorage.getItem('promotions') ?  window.sessionStorage.getItem('promotions') : window.sessionStorage.setItem('promotions', 'open');
 
-        if (window.localStorage.getItem('promotions') == 'open') {
+        if (window.sessionStorage.getItem('promotions') == 'open') {
             $('.wrap-slick').removeClass('hide-slide').removeClass('show-slide');
             $('.wrap-slick').addClass('show-slide');
 
@@ -51,9 +51,9 @@
             $('.wrap-slick').toggleClass('hide-slide show-slide');
 
             if ($('.wrap-slick').hasClass('hide-slide')) {
-                window.localStorage.setItem('promotions', 'close');
+                window.sessionStorage.setItem('promotions', 'close');
             } else {
-                window.localStorage.setItem('promotions', 'open');
+                window.sessionStorage.setItem('promotions', 'open');
             }
 
             $('#hider-promotions').toggleClass('hider-on');
