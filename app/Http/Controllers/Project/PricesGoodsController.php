@@ -118,6 +118,7 @@ class PricesGoodsController extends Controller
 
             },
             'currency',
+            'catalogs_item.directive_category:id,alias'
         ])
             ->where([
                 'archive' => false,
