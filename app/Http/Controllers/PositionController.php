@@ -139,8 +139,7 @@ class PositionController extends Controller
         if($position) {
 
             // Роли
-            if ($this->authorize(getmethod('index'), Role::class)) {
-
+            if (isset($request->roles)) {
                 $position->roles()->sync($request->roles);
             }
 
@@ -217,8 +216,7 @@ class PositionController extends Controller
 
             // Когда должность обновилась, обновляем пришедшие для нее роли
             // Роли
-            if ($this->authorize(getmethod('index'), Role::class)) {
-
+            if (isset($request->roles)) {
                 $position->roles()->sync($request->roles);
             }
             // if (isset($request->roles)) {
