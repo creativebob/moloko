@@ -87,7 +87,8 @@ class CatalogsGoodsController extends Controller
                     'display_mode',
                     'filters.values',
                 ]);
-            }
+            },
+            'directive_category'
         ])
             ->whereHas('sites', function ($q) use ($site) {
                 $q->where('id', $site->id);

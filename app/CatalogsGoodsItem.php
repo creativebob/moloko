@@ -146,6 +146,11 @@ use App\Scopes\Filters\BooklistFilter;
             return $this->belongsTo(DisplayMode::class);
         }
 
+        public function directive_category()
+        {
+            return $this->belongsTo(UnitsCategory::class);
+        }
+
 	    public function getNameWithParentAttribute()
 	    {
 	        if($this->parent_id != null){
