@@ -34,6 +34,7 @@ class CreatePhotoSettingsTable extends Migration
             $table->string('img_formats')->nullable()->comment('Допустимые форматы');
 
             $table->boolean('strict_mode')->default(0)->comment('Строгий режим загрузки изображений');
+            $table->integer('crop_mode')->default(1)->unsigned()->comment('Режим обрезки (изменения)');
 
             $table->integer('img_min_width')->nullable()->unsigned()->comment('Минимальная ширина изображения');
             $table->integer('img_min_height')->nullable()->unsigned()->comment('Минимальная высота изображения');

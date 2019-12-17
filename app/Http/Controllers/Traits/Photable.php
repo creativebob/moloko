@@ -114,7 +114,17 @@ trait Photable
                 // $item = Image::make($request->photo)->grab(1200, 795);
                 // $folder = Image::make($request->photo)->widen($settings['img_' . $value . '_width'])->crop($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
 
-                $folder = Image::make($request->photo)->fit($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
+
+                // Режим изменения фотографии
+                switch ($crop_mode = $settings['crop_mode']) {
+                    case 1: 
+                        $folder = Image::make($request->photo); 
+                        break;
+
+                    case 2: 
+                        $folder = Image::make($request->photo)->fit($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
+                        break;
+                }
 
                 $save_path = storage_path('app/public/' . $directory . '/' . $value);
                 if (!file_exists($save_path)) {
