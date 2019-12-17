@@ -93,6 +93,7 @@ trait LeadControllerTrait
         // Скрываем бога
         $user_auth_id = hideGod($user_auth);
 
+        $company = $user_auth->company;
         $company_id = $user_auth->company_id;
         $filial_id = $user_auth->staff->first()->filial_id;
 
@@ -128,7 +129,7 @@ trait LeadControllerTrait
         // Работаем с ПОЛЬЗОВАТЕЛЕМ лида ================================================================
 
         // Проверяем, есть ли в базе телефонов пользователь с таким номером
-        $user = check_user_by_phones($request->main_phone, null);
+        $user = checkPhoneUserForCompany($request->main_phone, $company);
         if($user != null){
 
             // Если есть: записываем в лида ID найденного в системе пользователя
@@ -138,8 +139,7 @@ trait LeadControllerTrait
 
             // Если нет: создаем нового пользователя по номеру телефона
             // используя трейт экспресс создание пользователя
-            $site = Site::findOrFail($lead);
-            $user = $this->createUserByPhone($request->main_phone, null, null);
+            $user = $this->createUserByPhone($request->main_phone, null, $company);
 
             $user->location_id = create_location($request, $country_id = 1, $city_id = 1, $address = null);
 
@@ -264,7 +264,7 @@ trait LeadControllerTrait
             if(!isset($request->main_phone)){abort(403, 'Не указан номер телефона!');}
 
             // Получаем юзера если такой пользователь есть в базе по указанному номеру
-            $user = check_user_by_phones($request->main_phone, null);
+            $user = checkPhoneUserForCompany($request->main_phone, $company);
 
 
             // Если нет, то создадим нового

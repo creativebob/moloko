@@ -145,12 +145,8 @@ trait UserControllerTrait
         return $user;
     }
 
-    public function createUserByPhone($phone, $request = null, $site = null){
+    public function createUserByPhone($phone, $request = null, $company){
 
-        if(isset($site)) {
-            $site->load('company');
-        }
-        $new_company = $site->company;
         Log::info('Сработал трейт создания пользователя по номеру телефона');
 
         // Подготовка: -------------------------------------------------------------------------------------
@@ -177,9 +173,9 @@ trait UserControllerTrait
         $user->user_type = 0;
 
         // Компания и филиал ----------------------------------------------------------
-        $user->company_id = $request->company_id ?? $user_auth->company->id ?? $new_company->id;
-        $user->filial_id = $request->filial_id ?? $user_auth->filial_id ?? $new_company->filials->first()->id;
-        $user->site_id = $site->id;
+        $user->company_id = $request->company_id ?? $user_auth->company->id ?? $company->id;
+        $user->filial_id = $request->filial_id ?? $user_auth->filial_id ?? $company->filials->first()->id;
+        $user->site_id = $company->sites->first()->id ?? null;
 
         $user->save();
 

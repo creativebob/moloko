@@ -93,65 +93,23 @@ function add_phones($request, $item) {
 }
 
 
-// Функция нахождения экземпляра модели пользователя 
-// по номеру телефона (грязному)
+// Функция поиска пользователя компании по номеру телефона
 
-function check_user_by_phones($phone_search, $site) {
+function checkPhoneUserForCompany($phone_search, $company) {
 
-	$company_id = $site->company->id;
+	Log::info('Функция поиска пользователя с указанным номером в рамках компании');
+	$phone = Phone::where('phone', cleanPhone($phone_search))->first();
 
-	// Если не передан ID компании пытаемся его получить
-	if($company_id == null){
-		if(Auth::user()){
-			$company_id = Auth::user()->company_id;
+	if($phone){
+		$users_owners = $phone->user_owner->where('company_id', Auth::user()->company_id);
+		if($users_owners){
+
+			$user = $users_owners->first();
+			Log::info('Нашли пользователей для компании: ' . $user->name ?? 'Имя не указано');
 		}
 	}
-
-	if($company_id == null){
-		abort(403, 'В хелпер очистки номера не передана компания!');
-	}
-
-	// Чистим телефон: приводим к исключительно числовому виду
-	$phone_search = cleanPhone($phone_search);
-
-	// Ищем телефон в базе телефонов
-	$phone = Phone::where('phone', $phone_search)
-	->first();
-
-	if(!empty($phone)){
-
-		// Получаем пользователя владельца телефона
-		Log::info('Нашли пользователя (телей):');
-
-		// foreach($phone->user_owner as $owner){
-		// 	Log::info('Пользователь: ' . $owner->name);
-		// }
-
-		if($site){
-			$result = $phone->user_owner->where('site_id', $site->id)->where('company_id', $company_id);
-		} else {
-			$result = $phone->user_owner->where('company_id', $company_id);
-		};
-
-		if(!empty($result)){
-
-			$user = $result->first();
-			Log::info($user->name ?? 'Имя не указано');
-
-		} else {
-			$user = null;
-		}
-
-		
-		// $result = $phone->user_owner->first();
-	} else {
-
-		// Так как не нашли, результат делаем нудевым
-		$user = null;
-	};
 	
-	// Отдаем результат
-	return $user;
+	return $user ?? null;
 }
 
 function checkPhoneUserForSite($phone_from_site, $site) {
