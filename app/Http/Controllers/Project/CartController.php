@@ -220,7 +220,7 @@ class CartController extends Controller
                 if(!isset($request->main_phone)){abort(403, 'Не указан номер телефона!');}
 
                 // Получаем юзера если такой пользователь есть в базе по указанному номеру
-                $user = check_user_by_phones($request->main_phone, $this->site);
+                $user = check_user_by_phones($request->main_phone, $site);
 
 
                 // Если нет, то создадим нового
@@ -263,7 +263,7 @@ class CartController extends Controller
             $lead->name = $lead_name;
             $lead->company_name = $company_name;
             $lead->private_status = $private_status;
-            $lead->location_id = create_location($request, $country_id = 1, $city_id = 1);
+            $lead->location_id = create_location($request, $country_id = 1, $site->filial->location->city_id);
 
             $lead->description = $description;
             $lead->stage_id = $request->stage_id ?? 2; // Этап: "обращение"" по умолчанию
@@ -375,6 +375,11 @@ class CartController extends Controller
 
             // Формируем сообщение
             $message = "Заказ с сайта: №" . $lead->id . "\r\n";
+
+            if ($site->filials->count() > 1) {
+                $message .= "Город: " . $site->filial->location->city->name . "\r\n";
+            }
+
             $message .= "Имя клиента: " . $lead->name . "\r\n";
             $message .= "Тел: " . decorPhone($phone) . "\r\n";
             if($lead->description){$message .= "Примечание: " . $lead->description . "\r\n";};

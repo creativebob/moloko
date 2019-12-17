@@ -19,7 +19,7 @@ class RedirectIfAuthenticated
     {
         if (Auth::guard($guard)->check()) {
 
-            return redirect('admin/users');
+            return redirect('admin/employees');
         }
 
         return $next($request);
