@@ -220,7 +220,7 @@ class CartController extends Controller
                 if(!isset($request->main_phone)){abort(403, 'Не указан номер телефона!');}
 
                 // Получаем юзера если такой пользователь есть в базе по указанному номеру
-                $user = check_user_by_phones($request->main_phone, $site);
+                $user = checkPhoneUserForSite($request->main_phone, $site);
 
 
                 // Если нет, то создадим нового
