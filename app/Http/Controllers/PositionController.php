@@ -139,7 +139,8 @@ class PositionController extends Controller
         if($position) {
 
             // Роли
-            if (isset($request->roles)) {
+            $roles = session('access.all_rights.index-roles-allow');
+            if ($roles) {
                 $position->roles()->sync($request->roles);
             }
 
@@ -216,7 +217,8 @@ class PositionController extends Controller
 
             // Когда должность обновилась, обновляем пришедшие для нее роли
             // Роли
-            if (isset($request->roles)) {
+            $roles = session('access.all_rights.index-roles-allow');
+            if ($roles) {
                 $position->roles()->sync($request->roles);
             }
             // if (isset($request->roles)) {

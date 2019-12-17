@@ -40,13 +40,13 @@
             <div class="small-12 cell">
                 <ul class="tabs-list" data-tabs id="tabs">
                     @can('index', App\Role::class)
-                    <li class="tabs-title is-active">
-                        <a href="#tab-roles" aria-selected="true">Роли</a>
+                    <li class="tabs-title">
+                        <a data-tabs-target="tab-roles" href="#tab-roles">Роли</a>
                     </li>
                     @endcan
 
-                    <li class="tabs-title">
-                        <a data-tabs-target="tab-notifications" href="#tab-notifications">Оповещения</a>
+                    <li class="tabs-title  is-active">
+                        <a href="#tab-notifications" aria-selected="true">Оповещения</a>
                     </li>
 
                     <li class="tabs-title">
@@ -54,7 +54,7 @@
                     </li>
 
                     <li class="tabs-title">
-                        <a data-tabs-target="tab-widgets" href="#wtab-idgets">Виджеты</a>
+                        <a data-tabs-target="tab-widgets" href="#tab-widgets">Виджеты</a>
                     </li>
                 </ul>
             </div>
@@ -63,7 +63,7 @@
 
                     <!-- Роли -->
                     @can('index', App\Role::class)
-                    <div class="tabs-panel is-active" id="tab-roles">
+                    <div class="tabs-panel" id="tab-roles">
                         <fieldset class="fieldset-access">
                             <legend>Настройка доступа</legend>
                             <div class="grid-x grid-padding-x">
@@ -76,7 +76,7 @@
                     @endcan
 
                     <!-- Оповещения -->
-                    <div class="tabs-panel" id="tab-notifications">
+                    <div class="tabs-panel is-active" id="tab-notifications">
                         <fieldset class="fieldset-access">
                             <legend>Настройка оповещений</legend>
                             <div class="grid-x grid-padding-x">
