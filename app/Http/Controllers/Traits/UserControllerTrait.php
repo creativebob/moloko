@@ -73,12 +73,7 @@ trait UserControllerTrait
 
         // Литера (Особая идентификационная отметка, например в номере договора)
         $user->liter = $request->liter;
-
-        if(isset($site)){
-            $user->site_id = $site->id;
-        } else {
-            $user->site_id = 1;
-        }
+        $user->site_id = $site_id;
 
         // Контактные данные: ----------------------------------------------------------
 
@@ -175,7 +170,6 @@ trait UserControllerTrait
         // Компания и филиал ----------------------------------------------------------
         $user->company_id = $request->company_id ?? $user_auth->company->id ?? $company->id;
         $user->filial_id = $request->filial_id ?? $user_auth->filial_id ?? $company->filials->first()->id;
-        $user->site_id = $company->sites->first()->id ?? null;
 
         $user->save();
 

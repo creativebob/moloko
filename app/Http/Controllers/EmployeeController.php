@@ -288,7 +288,7 @@ class EmployeeController extends Controller
 
         $staff = Staffer::with('position', 'department')->findOrFail($request->staff_id);
 
-        // Отдаем работу по созданию нового юзера трейту
+        // Отдаем работу по созданию нового юзера трейту, с указанием id сайта для привязки
         $user = $this->createUser($request, 1);
         $employment_date = $request->employment_date;
 

@@ -192,7 +192,7 @@ class AppController extends Controller
         if((isset($main_phone))&&(isset($access_code))){
 
             // Делаем запрос к базе данных
-            $user = check_user_by_phones($main_phone, $site);
+            $user = checkPhoneUserForSite($main_phone, $site);
 
             // Зарегистрирован ли кто-нибудь по такому номеру?
             if($user != null){
@@ -246,8 +246,30 @@ class AppController extends Controller
         // Если пользователь не найден - то создаем
         if($user == null){
 
-            $user = $this->createUserByPhoneFromSite($phone, $site);
-            Log::info('Не нашли, и создали нового с ID: ' . $user->id);
+            // Делаем дополнительный запрос к базе данных пользователей компании
+            $user = checkPhoneUserForCompany($main_phone, $site->company);
+
+            if($user != null){
+
+                if($user->site_id == null){
+
+                    Log::info('Нашли пользователя без привязки к сайту: ' . $user->id . ' . Сделали привязку к текущему';
+                    $user->site_id = $site->id;
+                    $user->save();
+
+                } else {
+
+                    $user = $this->createUserByPhoneFromSite($phone, $site);
+                    Log::info('Нашли пользователя в базе компании. Но для текущего сайта создаем отдельный аккаунт: ' . $user->id);                        
+
+                }
+
+            } else {
+
+                    $user = $this->createUserByPhoneFromSite($phone, $site);
+                    Log::info('Не нашли ни в каких базах. Создали полностью новый аккаунт: ' . $user->id);  
+            }
+
         }
 
         // Генерируем код доступа и записываем для пользователя
