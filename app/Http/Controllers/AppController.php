@@ -157,13 +157,13 @@ class AppController extends Controller
 
     public function parser()
     {
-        \Artisan::call('migrate');
-        echo 'Миграции<br>';
-
-        \Artisan::call('db:seed --class=ChannelsTableSeeder');
-        \Artisan::call('db:seed --class=TriggersTableSeeder');
-        \Artisan::call('db:seed --class=DisplayModesTableSeeder');
-        echo 'Сиды<br>';
+//        \Artisan::call('migrate');
+//        echo 'Миграции<br>';
+//
+//        \Artisan::call('db:seed --class=ChannelsTableSeeder');
+//        \Artisan::call('db:seed --class=TriggersTableSeeder');
+//        \Artisan::call('db:seed --class=DisplayModesTableSeeder');
+//        echo 'Сиды<br>';
 
         Page::insert([
             [
