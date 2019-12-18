@@ -118,7 +118,8 @@ class PricesGoodsController extends Controller
 
             },
             'currency',
-            'catalogs_item.directive_category:id,alias'
+            'catalogs_item.directive_category:id,alias',
+            'catalogs_item.parent'
         ])
             ->where([
                 'archive' => false,

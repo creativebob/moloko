@@ -37,7 +37,7 @@ class EstimateController extends Controller
             ->whereHas('lead', function ($q) {
                 $q->where('user_id', auth()->user()->id);
             })
-            ->get()->sortByDesc('id');
+            ->orderBy('id', 'desc')->get();
 //        dd($estimates);
 
         $site = $this->site;
