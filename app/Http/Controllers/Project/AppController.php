@@ -247,7 +247,8 @@ class AppController extends Controller
         if($user == null){
 
             // Делаем дополнительный запрос к базе данных пользователей компании
-            $user = checkPhoneUserForCompany($main_phone, $site->company);
+            Log::info('Делаем дополнительный запрос на поиск юзера в рамках компании');
+            $user = checkPhoneUserForCompany($phone, $site->company);
 
             if($user != null){
 

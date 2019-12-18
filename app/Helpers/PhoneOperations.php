@@ -101,7 +101,7 @@ function checkPhoneUserForCompany($phone_search, $company) {
 	$phone = Phone::where('phone', cleanPhone($phone_search))->first();
 
 	if($phone){
-		$users_owners = $phone->user_owner->where('company_id', Auth::user()->company_id);
+		$users_owners = $phone->user_owner->where('company_id', $company->id);
 		if($users_owners){
 
 			$user = $users_owners->first();
