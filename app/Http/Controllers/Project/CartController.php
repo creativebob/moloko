@@ -560,7 +560,10 @@ class CartController extends Controller
             $cart['count'] = $count;
 
             $result = Cookie::queue(Cookie::forever('cart', json_encode($cart)));
-            return response()->json($result);
+            return response()->json([
+                'success' => true,
+                'result' => $result
+            ]);
         } else {
             $result = Cookie::queue(Cookie::forget('cart'));
             return response()->json($result);
