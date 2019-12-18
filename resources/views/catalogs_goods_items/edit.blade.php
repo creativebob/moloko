@@ -114,7 +114,7 @@
                             </div>
                             <div class="small-12 cell">
                                 <label>Выводить меру в качестве основной:
-                                    @include('includes.selects.directive_categories')
+                                    @include('includes.selects.directive_categories', ['item' => $catalogs_goods_item])
                                 </label>
                             </div>
                             {!! Form::hidden('is_show_subcategory', 0) !!}
