@@ -57,7 +57,7 @@ Route::get('/telegram', 'AppController@telegram')->name('project.telegram');
 
 Route::post('/delivery_update', 'AppController@delivery_update')->name('project.delivery_update');
 
-Route::get('logout_siteuser', 'AppController@logout_siteuser')->name('project.logout_siteuser');
+Route::post('logout_siteuser', 'AppController@logout_siteuser')->name('project.logout_siteuser');
 
 Route::get('/cabinet', 'AppController@cabinet')->name('project.cabinet')->middleware('auth_usersite');
 Route::post('/update_profile', 'AppController@update_profile')->name('project.update_profile');
