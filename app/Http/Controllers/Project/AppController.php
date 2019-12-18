@@ -253,7 +253,7 @@ class AppController extends Controller
 
                 if($user->site_id == null){
 
-                    Log::info('Нашли пользователя без привязки к сайту: ' . $user->id . ' . Сделали привязку к текущему';
+                    Log::info('Нашли пользователя без привязки к сайту: ' . $user->id . ' . Сделали привязку к текущему');
                     $user->site_id = $site->id;
                     $user->save();
 
