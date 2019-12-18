@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Project\Traits\Commonable;
+use App\Http\Controllers\Project\Traits\Userable;
+
 use Carbon\Carbon;
 use App\Lead;
 use App\PricesGoods;
-
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
@@ -15,20 +16,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 
-// Подрубаем трейт записи и обновления
-use App\Http\Controllers\Traits\UserControllerTrait;
-
 class AppController extends Controller
 {
 
     use Commonable;
-    use UserControllerTrait;
+    use Userable;
 
     public function start(Request $request)
     {
         if (is_null($this->site)) {
             return view('project.pages.mains.main');
         } else {
+
             $site = $this->site;
 
             if (isset($site->start_url)) {
@@ -184,6 +183,8 @@ class AppController extends Controller
     public function site_user_login(Request $request)
     {
 
+        Log::info('Запущена функция авторизации пользователя. Проведем ряд проверок!');
+
         $site = $this->site;
         $access_code = $request->access_code;
         $main_phone = $request->main_phone;
@@ -206,6 +207,7 @@ class AppController extends Controller
 
                                 // Если проверка пройдена - АВТОРИЗУЕМ!
                                 Auth::loginUsingId($user->id);
+                                Log::info('Пользователь залогинился ==========================================================');
                                 return redirect('/cabinet');
 
                         } else {
@@ -233,6 +235,7 @@ class AppController extends Controller
     // Запрос на получение СМС кода на указанный телефон
     public function get_sms_code(Request $request)
     {
+
         Log::info('Пользователь запросил код доступа');
         $phone = cleanPhone($request->phone);
 
@@ -289,8 +292,15 @@ class AppController extends Controller
                 // Пишем в сессию время отправки СМС
                 session(['time_get_access_code' => now()]);
                 $msg = 'Код для входа: ' . $access_code;
+                
+                Log::info('Просим функцию отправки СМС сообщения отправить этот код' . $access_code);
                 sendSms($company, $phone, $msg);
-            };
+
+            } else{
+                
+                Log::info('Время еше не истекло. Оставшееся время, сек:' . $second_blocking);
+                Log::info('Код не был отправлен' . $access_code);
+            }
 
         } else {
 
@@ -300,7 +310,6 @@ class AppController extends Controller
 
                 Log::info('Просим функцию отправки СМС сообщения отправить этот код: ' . $access_code);
                 sendSms($company, $phone, $msg);
-
         }
 
         return 'ок';
