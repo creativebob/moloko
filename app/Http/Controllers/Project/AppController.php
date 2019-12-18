@@ -236,8 +236,8 @@ class AppController extends Controller
     public function get_sms_code(Request $request)
     {
 
-        Log::info('Пользователь запросил код доступа');
         $phone = cleanPhone($request->phone);
+        Log::info('Пришел запрос на код с номера: ' . $phone);
 
         $site = $this->site;
         $company = $site->company;
