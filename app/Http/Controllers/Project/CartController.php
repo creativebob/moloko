@@ -76,7 +76,18 @@ class CartController extends Controller
             'promotions' => function ($q) use ($filial_id) {
                 $q->with([
                     'prices_goods' => function ($q) use ($filial_id) {
-                        $q->with('goods.article.photo')
+                        $q->with([
+                            'goods_public' => function ($q) {
+                                $q->with([
+                                    'article.photo',
+                                    'metrics.values'
+                                ]);
+
+                            },
+                            'currency',
+                            'catalogs_item.directive_category:id,alias',
+                            'catalogs_item.parent'
+                        ])
                         ->where('filial_id', $filial_id);
                     }
                 ])
