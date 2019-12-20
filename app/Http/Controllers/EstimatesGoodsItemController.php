@@ -56,7 +56,7 @@ class EstimatesGoodsItemController extends Controller
         $success = true;
 
         // TODO - 20.12.19 - Костыль чтоб работала смета на лиде
-        if ($request->has('stock_id')) {
+        if ($request->stock_id != null) {
             $stock_id = $request->stock_id;
         } else {
             $stock_id = Estimate::findOrFail($request->estimate_id)->stock_id;
