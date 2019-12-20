@@ -76,7 +76,8 @@ class CartController extends Controller
             'promotions' => function ($q) use ($filial_id) {
                 $q->with([
                     'prices_goods' => function ($q) use ($filial_id) {
-                        $q->where('filial_id', $filial_id);
+                        $q->with('goods.article.photo')
+                        ->where('filial_id', $filial_id);
                     }
                 ])
                 ->where('is_upsale', true);
