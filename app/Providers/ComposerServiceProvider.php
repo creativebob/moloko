@@ -18,6 +18,7 @@ use App\Http\ViewComposers\System\DirectiveCategoriesComposer;
 use App\Http\ViewComposers\System\DisplayModesComposer;
 use App\Http\ViewComposers\System\FiltersComposer;
 use App\Http\ViewComposers\System\NotificationsComposer;
+use App\Http\ViewComposers\System\SitesWIthFilialsAndCatalogsComposer;
 use App\Http\ViewComposers\System\StocksComposer;
 use App\Http\ViewComposers\System\WidgetsComposer;
 use Illuminate\Support\Facades\View;
@@ -261,7 +262,8 @@ class ComposerServiceProvider extends ServiceProvider
             'includes.lists.filials',
             'menus.form'
         ], FilialsComposer::class);
-        // view()->composer('includes.selects.sectors', SectorsComposer::class);
+
+         view()->composer('system.pages.promotions.form', SitesWIthFilialsAndCatalogsComposer::class);
 
         view()->composer([
             'includes.selects.categories',

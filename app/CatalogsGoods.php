@@ -65,7 +65,7 @@ class CatalogsGoods extends Model
     {
         return $this->hasMany(CatalogsGoodsItem::class)->where('display', true);
     }
-    
+
     public function price_goods()
     {
         return $this->hasMany(PricesGoods::class);
@@ -91,6 +91,15 @@ class CatalogsGoods extends Model
 
     public function prices()
     {
-        return $this->hasManyThrough(PricesGoods::class, CatalogsGoodsItem::class);
+        return $this->hasMany(PricesGoods::class)
+            ->where([
+                'archive' => false,
+                'display' => true
+            ]);
     }
+
+//    public function prices()
+//    {
+//        return $this->hasManyThrough(PricesGoods::class, CatalogsGoodsItem::class);
+//    }
 }

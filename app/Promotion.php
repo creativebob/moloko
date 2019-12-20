@@ -95,6 +95,15 @@ class Promotion extends Model
         return $this->belongsToMany(Department::class, 'filial_promotion', 'promotion_id', 'filial_id');
     }
 
+    public function sites()
+    {
+        return $this->belongsToMany(Site::class, 'promotion_site', 'promotion_id', 'site_id')
+//            ->withPivot([
+//                'filial_id'
+//            ])
+            ;
+    }
+
     // Фото
     public function photo()
     {

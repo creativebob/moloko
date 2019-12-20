@@ -3,19 +3,43 @@
 namespace App\Http\ViewComposers\System;
 
 use App\CatalogsGoods;
+use App\Site;
 
 use Illuminate\View\View;
 
-class CatalogGoodsWithPricesComposer
+class SitesWIthFilialsAndCatalogsComposer
 {
 	public function compose(View $view)
 	{
 
+        // Список меню для сайта
+        $answer = operator_right('sites', false, 'index');
+
+        $sites = Site::with([
+            'catalogs_goods',
+//            'catalogs_goods.items_public.prices_public' => function ($q) {
+//                $q->with([
+//                    'goods.article',
+//                    'filial'
+//                ]);
+//            },
+            'filials'
+        ])
+            ->has('filials')
+            ->has('catalogs_goods')
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->whereNotNull('company_id')
+            // ->systemItem($answer) // Фильтр по системным записям
+            ->get();
+//        dd($sites);
+
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer_cg = operator_right('catalogs_goods', true, getmethod('index'));
+        $answer_cg = operator_right('catalogs_goods', false, getmethod('index'));
 
         $catalogs_goods = CatalogsGoods::with([
-            'items:id,catalogs_goods_id,name,photo_id,parent_id',
+            'items_public:id,catalogs_goods_id,name,photo_id,parent_id',
             'prices' => function ($q) {
                 $q->with([
                     'goods' => function($q) {
@@ -25,14 +49,14 @@ class CatalogGoodsWithPricesComposer
                                     'photo',
                                     'manufacturer'
                                 ])
-                                ->where('draft', false)
-                                ->select([
-                                    'id',
-                                    'name',
-                                    'photo_id',
-                                    'manufacturer_id',
-                                    'draft'
-                                ]);
+                                    ->where('draft', false)
+                                    ->select([
+                                        'id',
+                                        'name',
+                                        'photo_id',
+                                        'manufacturer_id',
+                                        'draft'
+                                    ]);
                             }
                         ])
                             ->where('archive', false)
@@ -40,7 +64,8 @@ class CatalogGoodsWithPricesComposer
                                 'id',
                                 'article_id',
                             ]);
-                    }
+                    },
+                    'filial'
                 ])
                     ->whereHas('goods', function ($q) {
                         $q->where('archive', false)
@@ -50,7 +75,6 @@ class CatalogGoodsWithPricesComposer
                     })
                     ->where([
                         'archive' => false,
-                        'filial_id' => \Auth::user()->StafferFilialId
                     ])
                     ->select([
                         'prices_goods.id',
@@ -62,24 +86,30 @@ class CatalogGoodsWithPricesComposer
                         'filial_id'
                     ]);
             },
+            'sites' => function ($q) {
+                $q->where('id', '!=', 1);
+            }
         ])
+            ->whereHas('sites', function ($q) {
+                $q->where('id', '!=', 1);
+            })
             ->moderatorLimit($answer_cg)
             ->companiesLimit($answer_cg)
             ->authors($answer_cg)
             ->filials($answer_cg)
-            ->whereHas('sites', function ($q) {
-                $q->whereId(1);
+            ->whereHas('sites', function ($q) use ($sites) {
+                $q->whereIn('id', $sites->pluck('id'));
             })
             ->get();
-//         dd($сatalogs_goods);
+//         dd($catalogs_goods);
 
         $catalogs_goods_items = [];
         $catalogs_goods_prices = [];
         foreach ($catalogs_goods as $catalog_goods) {
-            $catalogs_goods_items = array_merge($catalogs_goods_items, buildTreeArray($catalog_goods->items));
+            $catalogs_goods_items = array_merge($catalogs_goods_items, buildTreeArray($catalog_goods->items_public));
             $catalogs_goods_prices = array_merge($catalogs_goods_prices, $catalog_goods->prices->toArray());
         }
-//        dd($catalogs_goods_prices);
+//        dd($catalogs_goods->first()->prices);
 
         $catalogs_goods_data = [
             'catalogsGoods' => $catalogs_goods,
@@ -88,7 +118,8 @@ class CatalogGoodsWithPricesComposer
 
         ];
 
-        return $view->with(compact('catalogs_goods_data'));
+        return $view->with(compact('sites', 'catalogs_goods_data'));
+
     }
 
 }

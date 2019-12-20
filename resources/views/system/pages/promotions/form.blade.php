@@ -2,11 +2,15 @@
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active">
-                <a href="#options" aria-selected="true">Общая информация</a>
+                <a href="#tab-options" aria-selected="true">Общая информация</a>
             </li>
 
             <li class="tabs-title">
-                <a data-tabs-target="photos" href="#photos">Креативы</a>
+                <a data-tabs-target="tab-photos" href="#tab-photos">Креативы</a>
+            </li>
+
+            <li class="tabs-title">
+                <a data-tabs-target="tab-prices_goods" href="#tab-prices_goods">Товары</a>
             </li>
 
         </ul>
@@ -17,7 +21,7 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            <div class="tabs-panel is-active" id="options">
+            <div class="tabs-panel is-active" id="tab-options">
 
                 <div class="grid-x grid-padding-x">
 
@@ -65,10 +69,11 @@
 
                         <photo-upload-component :photo='@json($promotion->photo)'></photo-upload-component>
 
-                        <fieldset class="fieldset-access">
-                            <legend>Филиалы</legend>
-                            @include('includes.lists.filials')
-                        </fieldset>
+                        <sites-component
+                            :sites='@json($sites)'
+                            :promotion='@json($promotion)'
+
+                        ></sites-component>
 
                     </div>
 
@@ -81,7 +86,7 @@
                 </div>
             </div>
 
-            <div class="tabs-panel" id="photos">
+            <div class="tabs-panel" id="tab-photos">
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-5 cell">
@@ -92,6 +97,17 @@
                             <photo-upload-component :options='@json(['title' => 'Large', 'name' => 'large'])' :photo='@json($promotion->large)'></photo-upload-component>
                             <photo-upload-component :options='@json(['title' => 'Large X', 'name' => 'large_x'])' :photo='@json($promotion->large_x)'></photo-upload-component>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tabs-panel" id="tab-prices_goods">
+                <div class="grid-x grid-padding-x">
+
+                    <div class="small-12 cell">
+                        <catalogs-goods-component
+                            :catalogs-goods-data='@json($catalogs_goods_data)'
+                        ></catalogs-goods-component>
                     </div>
                 </div>
             </div>

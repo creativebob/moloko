@@ -22,16 +22,20 @@
 		props: {
 			options: {
 				type: Object,
-				default: {
-					title: 'Фотография',
-					name: 'photo',
+				default() {
+				    return {
+                        title: 'Фотография',
+                        name: 'photo',
+                    }
 				}
 			},
 			photo: {
 				type: Object,
-				default: {
-					path: '',
-				}
+                default() {
+                    return {
+                        path: '',
+                    }
+                }
 			},
 			// imageSrc: ''
 		},

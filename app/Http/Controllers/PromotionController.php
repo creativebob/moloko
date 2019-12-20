@@ -103,6 +103,7 @@ class PromotionController extends Controller
      */
     public function store(PromotionRequest $request)
     {
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -128,6 +129,9 @@ class PromotionController extends Controller
         $promotion->save();
 
         if ($promotion) {
+
+            $promotion->sites()->attach($request->sites);
+
             return redirect()->route('promotions.index');
         } else {
             abort(403, 'Ошибка записи сайта');
@@ -162,10 +166,21 @@ class PromotionController extends Controller
             'medium:id,name,path',
             'large:id,name,path',
             'large_x:id,name,path',
+            'sites' => function ($q) {
+                $q->with([
+                    'catalogs_goods.items_public.prices_public' => function ($q) {
+                        $q->with([
+                            'goods.article',
+                            'filial'
+                        ]);
+                    },
+                    'filials'
+                ]);
+            }
         ])
         ->moderatorLimit($answer)
             ->findOrFail($id);
-        // dd($promotion);
+//         dd($promotion);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $promotion);
@@ -185,6 +200,8 @@ class PromotionController extends Controller
      */
     public function update(PromotionRequest $request, $id)
     {
+
+//        dd($request->sites);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -221,6 +238,18 @@ class PromotionController extends Controller
         $result = $promotion->update($data);
 
         $promotion->filials()->sync($request->filials);
+
+//        if ($request->has('sites')) {
+//
+//            foreach ($request->sites as $site_id => $site) {
+//                foreach ($site['filials'] as $filial_id) {
+//                    $promotion->sites()->attach([$site_id => ['filial_id' => $filial_id]]);
+//                }
+//                $site_insert = [];
+//
+//            }
+//        }
+        $promotion->sites()->sync($request->sites);
 
         if ($result) {
             return redirect()->route('promotions.index');
