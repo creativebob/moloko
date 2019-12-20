@@ -91,7 +91,10 @@ class CartController extends Controller
                         ->where('filial_id', $filial_id);
                     }
                 ])
-                ->where('is_upsale', true);
+                    ->where('is_upsale', true)
+                    ->where('begin_date', '<=', today())
+                    ->where('end_date', '>=', today())
+                ;
             }
         ]);
         $page = $site->pages_public->firstWhere('alias', 'cart');
