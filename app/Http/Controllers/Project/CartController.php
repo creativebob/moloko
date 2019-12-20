@@ -69,6 +69,19 @@ class CartController extends Controller
         // dd($prices_goods);
 
         $site = $this->site;
+
+        // Грузим продвижения с отображением на корзине
+        $filial_id = $site->filial->id;
+        $site->load([
+            'promotions' => function ($q) use ($filial_id) {
+                $q->with([
+                    'prices_goods' => function ($q) use ($filial_id) {
+                        $q->where('filial_id', $filial_id);
+                    }
+                ])
+                ->where('is_upsale', true);
+            }
+        ]);
         $page = $site->pages_public->firstWhere('alias', 'cart');
         return view($site->alias.'.pages.cart.index', compact('site',  'page', 'prices_goods'));
     }

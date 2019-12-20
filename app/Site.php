@@ -132,4 +132,10 @@ class Site extends Model
         return $this->belongsToMany(Notification::class);
     }
 
+    // Акции
+    public function promotions()
+    {
+        return $this->hasMany(Promotion::class);
+    }
+
 }
