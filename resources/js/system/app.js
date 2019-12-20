@@ -54,7 +54,7 @@ Vue.component('search-lead-component', require('./components/search/SearchLeadCo
 Vue.component('search-cmv-component', require('./components/search/SearchCmvComponent'));
 
 Vue.component('sites-component', require('./components/promotions/SitesComponent'));
-Vue.component('catalog-goods-component', require('./components/promotions/CatalogGoodsComponent'));
+Vue.component('promotion-catalog-goods-component', require('./components/promotions/CatalogGoodsComponent'));
 
 // Vue.component('price-goods-price-component', require('./components/prices_goods/PriceGoodsPriceComponent.vue'));
 

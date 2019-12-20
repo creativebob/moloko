@@ -119,10 +119,10 @@
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 cell">
-                        <catalog-goods-component
+                        <promotion-catalog-goods-component
                             :catalogs-goods-data='@json($catalogs_goods_data)'
                             :prices-goods='@json($promotion->prices_goods)'
-                        ></catalog-goods-component>
+                        ></promotion-catalog-goods-component>
                     </div>
 
                     {!! Form::hidden('is_recommend', 0) !!}

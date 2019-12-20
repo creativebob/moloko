@@ -58075,7 +58075,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('search-lead-component', _
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('search-cmv-component', __webpack_require__(126));
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('sites-component', __webpack_require__(129));
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('catalog-goods-component', __webpack_require__(150));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('promotion-catalog-goods-component', __webpack_require__(132));
 
 // Vue.component('price-goods-price-component', require('./components/prices_goods/PriceGoodsPriceComponent.vue'));
 
@@ -68151,8 +68151,317 @@ if (false) {
 }
 
 /***/ }),
-/* 132 */,
-/* 133 */,
+/* 132 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(0)
+/* script */
+var __vue_script__ = __webpack_require__(133)
+/* template */
+var __vue_template__ = __webpack_require__(137)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/promotions/CatalogGoodsComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-60daa3f8", Component.options)
+  } else {
+    hotAPI.reload("data-v-60daa3f8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 133 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        'drilldown-component': __webpack_require__(134)
+    },
+    props: {
+        catalogsGoodsData: Object,
+        pricesGoods: Array
+    },
+    created: function created() {
+        if (this.pricesGoods.length) {
+            var store = this.$store;
+            this.pricesGoods.forEach(function (price) {
+                store.commit('ADD_PRICE', price);
+            });
+        }
+    },
+    data: function data() {
+        return {
+            siteId: this.$store.state.promotion.site.id,
+            // actualFilials: [],
+            filialId: this.catalogsGoodsData.filials[0].id,
+            catalogsGoods: this.catalogsGoodsData.catalogsGoods,
+            catalogsGoodsItems: this.catalogsGoodsData.catalogsGoodsItems,
+            catalogsGoodsPrices: this.catalogsGoodsData.catalogsGoodsPrices,
+            listPrices: [],
+            catalogName: ''
+        };
+    },
+
+    computed: {
+        catalogGoodsId: function catalogGoodsId() {
+            var _this = this;
+
+            if (this.catalogsGoods.length > 0) {
+                var catalogs = this.catalogsGoods.filter(function (catalog) {
+                    var found = catalog.sites.find(function (site) {
+                        return site.id == _this.siteId;
+                    });
+                    if (found) {
+                        return catalog;
+                    }
+                });
+
+                if (catalogs.length) {
+                    this.catalogName = catalogs[0].name;
+                    return catalogs[0].id;
+                } else {
+                    return 0;
+                }
+            } else {
+                return 0;
+            }
+        },
+        actualCatalogsGoodsItems: function actualCatalogsGoodsItems() {
+            var _this2 = this;
+
+            if (this.catalogGoodsId > 0) {
+                return this.catalogsGoodsItems.filter(function (catalogsItem) {
+                    return catalogsItem.catalogs_goods_id == _this2.catalogGoodsId;
+                });
+            } else {
+                return [];
+            }
+        },
+        pricesForSite: function pricesForSite() {
+            return this.$store.state.promotion.prices;
+        }
+    },
+    methods: {
+        getPricesForSite: function getPricesForSite(filialId) {
+            return this.$store.state.promotion.prices.filter(function (price) {
+                return price.filial_id == filialId;
+            });
+        },
+        resetPrices: function resetPrices() {
+            this.listPrices = [];
+        },
+        reInitMenu: function reInitMenu() {
+            this.$refs.drilldownComponent.reInit();
+
+            this.resetPrices();
+        },
+        getPrices: function getPrices(id) {
+            var _this3 = this;
+
+            this.listPrices = this.catalogsGoodsPrices.filter(function (price) {
+                return price.catalogs_goods_item_id === id && price.filial_id == _this3.filialId;
+            });
+        },
+        addPrice: function addPrice(price) {
+            var found = this.pricesForSite.find(function (obj) {
+                return obj.id == price.id;
+            });
+            if (!found) {
+                this.$store.commit('ADD_PRICE', price);
+            }
+        },
+        removePrice: function removePrice(priceId) {
+            this.$store.commit('REMOVE_PRICE', priceId);
+        }
+    },
+
+    filters: {
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return Number(value).toLocaleString();
+        }
+    }
+
+});
+
+/***/ }),
 /* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -68292,7 +68601,287 @@ if (false) {
 }
 
 /***/ }),
-/* 137 */,
+/* 137 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "grid-x grid-margin-x" }, [
+    _c("div", { staticClass: "small-12 medium-7 cell" }, [
+      _c("div", { staticClass: "grid-x grid-margin-x" }, [
+        _c("div", { staticClass: "small-12 medium-4 cell" }, [
+          _c("label", [
+            _vm._v("Филиал:\n                    "),
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.filialId,
+                    expression: "filialId"
+                  }
+                ],
+                on: {
+                  change: [
+                    function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.filialId = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    },
+                    _vm.resetPrices
+                  ]
+                }
+              },
+              _vm._l(_vm.catalogsGoodsData.filials, function(filial) {
+                return _c("option", { domProps: { value: filial.id } }, [
+                  _vm._v(_vm._s(filial.name))
+                ])
+              }),
+              0
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "grid-x" }, [
+        _c("div", { staticClass: "small-12 cell" }, [
+          _c("div", { staticClass: "grid-x grid-margin-x" }, [
+            _c(
+              "div",
+              { staticClass: "small-6 cell" },
+              [
+                _c("drilldown-component", {
+                  ref: "drilldownComponent",
+                  attrs: {
+                    "actual-catalogs-goods-items": _vm.actualCatalogsGoodsItems
+                  },
+                  on: { get: _vm.getPrices }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "small-6 cell" }, [
+              _c(
+                "ul",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.listPrices.length > 0,
+                      expression: "listPrices.length > 0"
+                    }
+                  ],
+                  staticClass: "small-12 cell products-list view-list"
+                },
+                _vm._l(_vm.listPrices, function(price) {
+                  return _c("li", [
+                    _c(
+                      "a",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.addPrice(price)
+                          }
+                        }
+                      },
+                      [
+                        _c(
+                          "div",
+                          { staticClass: "media-object stack-for-small" },
+                          [
+                            _vm._m(0, true),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "media-object-section cell" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "grid-x grid-margin-x" },
+                                  [
+                                    _c("div", { staticClass: "cell auto" }, [
+                                      _c("h4", [
+                                        _c(
+                                          "span",
+                                          { staticClass: "items-product-name" },
+                                          [
+                                            _vm._v(
+                                              _vm._s(price.goods.article.name)
+                                            )
+                                          ]
+                                        )
+                                      ])
+                                    ]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "cell shrink wrap-product-price"
+                                      },
+                                      [
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass: "items-product-price"
+                                          },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm._f("level")(
+                                                  _vm._f("roundToTwo")(
+                                                    price.price
+                                                  )
+                                                )
+                                              )
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "p",
+                                  { staticClass: "items-product-description" },
+                                  [_vm._v(_vm._s(price.goods.description))]
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  ])
+                }),
+                0
+              )
+            ])
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _vm.pricesForSite.length
+      ? _c("div", { staticClass: "small-12 medium-5 cell" }, [
+          _c(
+            "fieldset",
+            { staticClass: "fieldset-access" },
+            [
+              _c("legend", [_vm._v(_vm._s(_vm.catalogName))]),
+              _vm._v(" "),
+              _vm._l(_vm.catalogsGoodsData.filials, function(filial) {
+                return [
+                  _vm.getPricesForSite(filial.id).length
+                    ? _c("table", { staticClass: "hover unstriped" }, [
+                        _c("caption", [_vm._v(_vm._s(filial.name))]),
+                        _vm._v(" "),
+                        _vm._m(1, true),
+                        _vm._v(" "),
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.getPricesForSite(filial.id), function(
+                            price,
+                            index
+                          ) {
+                            return _c("tr", [
+                              _c("td", [_vm._v(_vm._s(index + 1))]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(
+                                  "\n                                    " +
+                                    _vm._s(price.goods.article.name) +
+                                    "\n                                    "
+                                ),
+                                _c("input", {
+                                  attrs: {
+                                    type: "hidden",
+                                    name: "prices_goods[]"
+                                  },
+                                  domProps: { value: price.id }
+                                })
+                              ]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(price.price))]),
+                              _vm._v(" "),
+                              _c("td", { staticClass: "td-delete" }, [
+                                _c("div", {
+                                  staticClass: "icon-delete sprite",
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.removePrice(price.id)
+                                    }
+                                  }
+                                })
+                              ])
+                            ])
+                          }),
+                          0
+                        )
+                      ])
+                    : _vm._e()
+                ]
+              })
+            ],
+            2
+          )
+        ])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "media-object-section items-product-img" },
+      [_c("div", { staticClass: "thumbnail" })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("№")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Название")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Цена")]),
+        _vm._v(" "),
+        _c("th")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-60daa3f8", module.exports)
+  }
+}
+
+/***/ }),
 /* 138 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -69047,602 +69636,6 @@ $(document).on('click', '.filter-close', function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 146 */,
-/* 147 */,
-/* 148 */,
-/* 149 */,
-/* 150 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(0)
-/* script */
-var __vue_script__ = __webpack_require__(151)
-/* template */
-var __vue_template__ = __webpack_require__(152)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/promotions/CatalogGoodsComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-60daa3f8", Component.options)
-  } else {
-    hotAPI.reload("data-v-60daa3f8", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 151 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    components: {
-        'drilldown-component': __webpack_require__(134)
-    },
-    props: {
-        catalogsGoodsData: Object,
-        pricesGoods: Array
-    },
-    created: function created() {
-        if (this.pricesGoods.length) {
-            var store = this.$store;
-            this.pricesGoods.forEach(function (price) {
-                store.commit('ADD_PRICE', price);
-            });
-        }
-    },
-    data: function data() {
-        return {
-            siteId: this.$store.state.promotion.site.id,
-            // actualFilials: [],
-            filialId: this.catalogsGoodsData.filials[0].id,
-            catalogsGoods: this.catalogsGoodsData.catalogsGoods,
-            catalogsGoodsItems: this.catalogsGoodsData.catalogsGoodsItems,
-            catalogsGoodsPrices: this.catalogsGoodsData.catalogsGoodsPrices,
-            listPrices: [],
-            catalogName: ''
-        };
-    },
-
-    computed: {
-        catalogGoodsId: function catalogGoodsId() {
-            var _this = this;
-
-            if (this.catalogsGoods.length > 0) {
-                var catalogs = this.catalogsGoods.filter(function (catalog) {
-                    var found = catalog.sites.find(function (site) {
-                        return site.id == _this.siteId;
-                    });
-                    if (found) {
-                        return catalog;
-                    }
-                });
-
-                if (catalogs.length) {
-                    this.catalogName = catalogs[0].name;
-                    return catalogs[0].id;
-                } else {
-                    return 0;
-                }
-            } else {
-                return 0;
-            }
-        },
-        actualCatalogsGoodsItems: function actualCatalogsGoodsItems() {
-            var _this2 = this;
-
-            if (this.catalogGoodsId > 0) {
-                return this.catalogsGoodsItems.filter(function (catalogsItem) {
-                    return catalogsItem.catalogs_goods_id == _this2.catalogGoodsId;
-                });
-            } else {
-                return [];
-            }
-        },
-        pricesForSite: function pricesForSite() {
-            return this.$store.state.promotion.prices;
-        }
-    },
-    methods: {
-        getPricesForSite: function getPricesForSite(filialId) {
-            return this.$store.state.promotion.prices.filter(function (price) {
-                return price.filial_id == filialId;
-            });
-        },
-        resetPrices: function resetPrices() {
-            this.listPrices = [];
-        },
-        reInitMenu: function reInitMenu() {
-            this.$refs.drilldownComponent.reInit();
-
-            this.resetPrices();
-        },
-        getPrices: function getPrices(id) {
-            var _this3 = this;
-
-            this.listPrices = this.catalogsGoodsPrices.filter(function (price) {
-                return price.catalogs_goods_item_id === id && price.filial_id == _this3.filialId;
-            });
-        },
-        addPrice: function addPrice(price) {
-            var found = this.pricesForSite.find(function (obj) {
-                return obj.id == price.id;
-            });
-            if (!found) {
-                this.$store.commit('ADD_PRICE', price);
-            }
-        },
-        removePrice: function removePrice(priceId) {
-            this.$store.commit('REMOVE_PRICE', priceId);
-        }
-    },
-
-    filters: {
-        roundToTwo: function roundToTwo(value) {
-            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-        },
-
-        // Создает разделители разрядов в строке с числами
-        level: function level(value) {
-            return Number(value).toLocaleString();
-        }
-    }
-
-});
-
-/***/ }),
-/* 152 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "grid-x grid-margin-x" }, [
-    _c("div", { staticClass: "small-12 medium-7 cell" }, [
-      _c("div", { staticClass: "grid-x grid-margin-x" }, [
-        _c("div", { staticClass: "small-12 medium-4 cell" }, [
-          _c("label", [
-            _vm._v("Филиал:\n                    "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.filialId,
-                    expression: "filialId"
-                  }
-                ],
-                on: {
-                  change: [
-                    function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.filialId = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    },
-                    _vm.resetPrices
-                  ]
-                }
-              },
-              _vm._l(_vm.catalogsGoodsData.filials, function(filial) {
-                return _c("option", { domProps: { value: filial.id } }, [
-                  _vm._v(_vm._s(filial.name))
-                ])
-              }),
-              0
-            )
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "grid-x" }, [
-        _c("div", { staticClass: "small-12 cell" }, [
-          _c("div", { staticClass: "grid-x grid-margin-x" }, [
-            _c(
-              "div",
-              { staticClass: "small-6 cell" },
-              [
-                _c("drilldown-component", {
-                  ref: "drilldownComponent",
-                  attrs: {
-                    "actual-catalogs-goods-items": _vm.actualCatalogsGoodsItems
-                  },
-                  on: { get: _vm.getPrices }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "small-6 cell" }, [
-              _c(
-                "ul",
-                {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: _vm.listPrices.length > 0,
-                      expression: "listPrices.length > 0"
-                    }
-                  ],
-                  staticClass: "small-12 cell products-list view-list"
-                },
-                _vm._l(_vm.listPrices, function(price) {
-                  return _c("li", [
-                    _c(
-                      "a",
-                      {
-                        on: {
-                          click: function($event) {
-                            return _vm.addPrice(price)
-                          }
-                        }
-                      },
-                      [
-                        _c(
-                          "div",
-                          { staticClass: "media-object stack-for-small" },
-                          [
-                            _vm._m(0, true),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "media-object-section cell" },
-                              [
-                                _c(
-                                  "div",
-                                  { staticClass: "grid-x grid-margin-x" },
-                                  [
-                                    _c("div", { staticClass: "cell auto" }, [
-                                      _c("h4", [
-                                        _c(
-                                          "span",
-                                          { staticClass: "items-product-name" },
-                                          [
-                                            _vm._v(
-                                              _vm._s(price.goods.article.name)
-                                            )
-                                          ]
-                                        )
-                                      ])
-                                    ]),
-                                    _vm._v(" "),
-                                    _c(
-                                      "div",
-                                      {
-                                        staticClass:
-                                          "cell shrink wrap-product-price"
-                                      },
-                                      [
-                                        _c(
-                                          "span",
-                                          {
-                                            staticClass: "items-product-price"
-                                          },
-                                          [
-                                            _vm._v(
-                                              _vm._s(
-                                                _vm._f("level")(
-                                                  _vm._f("roundToTwo")(
-                                                    price.price
-                                                  )
-                                                )
-                                              )
-                                            )
-                                          ]
-                                        )
-                                      ]
-                                    )
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "p",
-                                  { staticClass: "items-product-description" },
-                                  [_vm._v(_vm._s(price.goods.description))]
-                                )
-                              ]
-                            )
-                          ]
-                        )
-                      ]
-                    )
-                  ])
-                }),
-                0
-              )
-            ])
-          ])
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _vm.pricesForSite.length
-      ? _c("div", { staticClass: "small-12 medium-5 cell" }, [
-          _c(
-            "fieldset",
-            { staticClass: "fieldset-access" },
-            [
-              _c("legend", [_vm._v(_vm._s(_vm.catalogName))]),
-              _vm._v(" "),
-              _vm._l(_vm.catalogsGoodsData.filials, function(filial) {
-                return [
-                  _vm.getPricesForSite(filial.id).length
-                    ? _c("table", { staticClass: "hover unstriped" }, [
-                        _c("caption", [_vm._v(_vm._s(filial.name))]),
-                        _vm._v(" "),
-                        _vm._m(1, true),
-                        _vm._v(" "),
-                        _c(
-                          "tbody",
-                          _vm._l(_vm.getPricesForSite(filial.id), function(
-                            price,
-                            index
-                          ) {
-                            return _c("tr", [
-                              _c("td", [_vm._v(_vm._s(index + 1))]),
-                              _vm._v(" "),
-                              _c("td", [
-                                _vm._v(
-                                  "\n                                    " +
-                                    _vm._s(price.goods.article.name) +
-                                    "\n                                    "
-                                ),
-                                _c("input", {
-                                  attrs: {
-                                    type: "hidden",
-                                    name: "prices_goods[]"
-                                  },
-                                  domProps: { value: price.id }
-                                })
-                              ]),
-                              _vm._v(" "),
-                              _c("td", [_vm._v(_vm._s(price.price))]),
-                              _vm._v(" "),
-                              _c("td", { staticClass: "td-delete" }, [
-                                _c("div", {
-                                  staticClass: "icon-delete sprite",
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.removePrice(price.id)
-                                    }
-                                  }
-                                })
-                              ])
-                            ])
-                          }),
-                          0
-                        )
-                      ])
-                    : _vm._e()
-                ]
-              })
-            ],
-            2
-          )
-        ])
-      : _vm._e()
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "media-object-section items-product-img" },
-      [_c("div", { staticClass: "thumbnail" })]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("№")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Название")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Цена")]),
-        _vm._v(" "),
-        _c("th")
-      ])
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-60daa3f8", module.exports)
-  }
-}
 
 /***/ })
 /******/ ]);
