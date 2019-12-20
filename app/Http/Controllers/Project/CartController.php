@@ -228,7 +228,7 @@ class CartController extends Controller
 
                     // Если нет: создаем нового пользователя по номеру телефона
                     // используя трейт экспресс создание пользователя
-                    $user = $this->createUserByPhone($request->main_phone, null, $site);
+                    $user = $this->createUserByPhone($request->main_phone, null, $site->company);
 
                     // sendSms('79041248598', 'Данные для входа: ' . $user->access_code);
 

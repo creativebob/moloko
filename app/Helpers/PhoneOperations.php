@@ -102,8 +102,7 @@ function checkPhoneUserForCompany($phone_search, $company) {
 
 	if($phone){
 		$users_owners = $phone->user_owner->where('company_id', $company->id);
-		if($users_owners){
-
+		if($users_owners->first() !== null){
 			$user = $users_owners->first();
 			Log::info('Нашли пользователей для компании: ' . $user->name ?? 'Имя не указано');
 		}
@@ -126,7 +125,7 @@ function checkPhoneUserForSite($phone_from_site, $site) {
 
 		$result = $phone->user_owner->where('site_id', $site->id)->where('company_id', $site->company->id);
 
-		if(!empty($result)){
+		if($result->first() !== null){
 			Log::info('Нашли телефон в связке с текущим сайтом');
 
 			$user = $result->first();
