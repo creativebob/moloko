@@ -102,8 +102,9 @@ function checkPhoneUserForCompany($phone_search, $company) {
 
 	if($phone){
 		$users_owners = $phone->user_owner->where('company_id', $company->id);
-		if($users_owners){
+		if($users_owners->first() !== null){
 
+			dd($users_owners);
 			$user = $users_owners->first();
 			Log::info('Нашли пользователей для компании: ' . $user->name ?? 'Имя не указано');
 		}
