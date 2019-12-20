@@ -64248,7 +64248,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             catalogId: this.catalogsGoodsData.catalogsGoods[0].id,
             catalogs: this.catalogsGoodsData.catalogsGoods,
-            catalogsItems: this.catalogsGoodsData.сatalogsGoodsItems,
+            catalogsItems: this.catalogsGoodsData.catalogsGoodsItems,
             prices: this.catalogsGoodsData.catalogsGoodsPrices,
             listPrices: [],
             changeCatalogId: this.catalogsGoodsData.catalogsGoods[0].id
