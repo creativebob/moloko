@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Estimate;
 use App\EstimatesGoodsItem;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Traits\Reservable;
@@ -54,6 +55,13 @@ class EstimatesGoodsItemController extends Controller
     {
         $success = true;
 
+        // TODO - 20.12.19 - Костыль чтоб работала смета на лиде
+        if ($request->has('stock_id')) {
+            $stock_id = $request->stock_id;
+        } else {
+            $stock_id = Estimate::findOrFail($request->estimate_id)->stock_id;
+        }
+
         $price_goods = PricesGoods::findOrFail($request->price_id);
         $price_goods->load('product');
 
@@ -62,7 +70,7 @@ class EstimatesGoodsItemController extends Controller
                 'estimate_id' => $request->estimate_id,
                 'goods_id' => $price_goods->product->id,
                 'price_id' => $price_goods->id,
-                'stock_id' => $request->stock_id,
+                'stock_id' => $stock_id,
                 'price' => $price_goods->price,
                 'count' => 1,
                 'amount' => $price_goods->price
@@ -76,7 +84,7 @@ class EstimatesGoodsItemController extends Controller
                 'estimate_id' => $request->estimate_id,
                 'goods_id' => $price_goods->product->id,
                 'price_id' => $price_goods->id,
-                'stock_id' => $request->stock_id,
+                'stock_id' => $stock_id,
             ], [
                 'price' => $price_goods->price,
                 'count' => 1,
