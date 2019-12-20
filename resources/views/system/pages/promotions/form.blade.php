@@ -69,11 +69,18 @@
 
                         <photo-upload-component :photo='@json($promotion->photo)'></photo-upload-component>
 
-                        <sites-component
-                            :sites='@json($sites)'
-                            :promotion='@json($promotion)'
+                        <div class="small-6 cell">
+                            <label>Сайт:
+                                <sites-component
+                                    :sites='@json($sites)'
 
-                        ></sites-component>
+                                    @isset($promotion->site)
+                                    :site="{{ $promotion->site }}"
+                                    @endisset
+
+                                ></sites-component>
+                            </label>
+                        </div>
 
                     </div>
 
@@ -97,6 +104,13 @@
                             <photo-upload-component :options='@json(['title' => 'Large', 'name' => 'large'])' :photo='@json($promotion->large)'></photo-upload-component>
                             <photo-upload-component :options='@json(['title' => 'Large X', 'name' => 'large_x'])' :photo='@json($promotion->large_x)'></photo-upload-component>
                         </div>
+                        <div class="grid-x">
+                            {!! Form::hidden('is_slider', 0) !!}
+                            <div class="small-12 cell checkbox">
+                                {!! Form::checkbox('is_slider', 1, $promotion->is_slider, ['id' => 'checkbox-is_slider']) !!}
+                                <label for="checkbox-is_slider"><span>Отображать слайдер</span></label>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -105,9 +119,22 @@
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 cell">
-                        <catalogs-goods-component
+                        <catalog-goods-component
                             :catalogs-goods-data='@json($catalogs_goods_data)'
-                        ></catalogs-goods-component>
+                            :prices-goods='@json($promotion->prices_goods)'
+                        ></catalog-goods-component>
+                    </div>
+
+                    {!! Form::hidden('is_recommend', 0) !!}
+                    <div class="small-12 cell checkbox">
+                        {!! Form::checkbox('is_recommend', 1, $promotion->is_recommend, ['id' => 'checkbox-is_recommend']) !!}
+                        <label for="checkbox-is_recommend"><span>Отображать в рекомендациях</span></label>
+                    </div>
+
+                    {!! Form::hidden('is_upsale', 0) !!}
+                    <div class="small-12 cell checkbox">
+                        {!! Form::checkbox('is_upsale', 1, $promotion->is_upsale, ['id' => 'checkbox-is_upsale']) !!}
+                        <label for="checkbox-is_upsale"><span>Отображать в корзине</span></label>
                     </div>
                 </div>
             </div>

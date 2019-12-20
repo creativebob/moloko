@@ -59,7 +59,13 @@ class Promotion extends Model
         'end_date',
         'link',
 
+        'site_id',
+
         'photo_id',
+
+        'is_slider',
+        'is_recommend',
+        'is_upsale',
 
         'tiny',
         'small',
@@ -90,18 +96,19 @@ class Promotion extends Model
         return $this->getTable();
     }
 
-    public function filials()
+//    public function filials()
+//    {
+//        return $this->belongsToMany(Department::class, 'filial_promotion', 'promotion_id', 'filial_id');
+//    }
+
+    public function site()
     {
-        return $this->belongsToMany(Department::class, 'filial_promotion', 'promotion_id', 'filial_id');
+        return $this->belongsTo(Site::class);
     }
 
-    public function sites()
+    public function prices_goods()
     {
-        return $this->belongsToMany(Site::class, 'promotion_site', 'promotion_id', 'site_id')
-//            ->withPivot([
-//                'filial_id'
-//            ])
-            ;
+        return $this->belongsToMany(PricesGoods::class, 'promotion_price_goods', 'promotion_id', 'price_goods_id');
     }
 
     // Фото

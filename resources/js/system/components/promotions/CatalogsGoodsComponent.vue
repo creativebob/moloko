@@ -25,24 +25,7 @@
                     </label>
                 </div>
 
-                <div class="small-12 medium-4 cell">
-                    <label>Филиал:
-                        <select
-                            :disabled="!actualFilials.length"
-                            v-model="filialId"
-                            @change="resetPrices"
-                        >
-                            <option
-                                v-if="!actualFilials.length"
-                                value="0"
-                            >Выберите Филиал</option>
-                            <option
-                                v-for="filial in actualFilials"
-                                :value="filial.id"
-                            >{{ filial.name}}</option>
-                        </select>
-                    </label>
-                </div>
+
 
                 <div class="small-12 medium-4 cell">
                     <label>Каталог:
@@ -60,6 +43,25 @@
                                 :value="catalog.id"
 
                             >{{ catalog.name}}</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="small-12 medium-4 cell">
+                    <label>Филиал:
+                        <select
+                            :disabled="!actualFilials.length"
+                            v-model="filialId"
+                            @change="resetPrices"
+                        >
+                            <option
+                                v-if="!actualFilials.length"
+                                value="0"
+                            >Выберите Филиал</option>
+                            <option
+                                v-for="filial in actualFilials"
+                                :value="filial.id"
+                            >{{ filial.name}}</option>
                         </select>
                     </label>
                 </div>

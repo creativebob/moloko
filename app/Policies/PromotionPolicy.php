@@ -22,7 +22,7 @@ class PromotionPolicy
      */
 
     protected $entity_name = 'promotions';
-    protected $entity_dependence = true;
+    protected $entity_dependence = false;
 
     public function index(User $user)
     {

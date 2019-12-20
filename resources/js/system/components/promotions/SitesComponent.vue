@@ -9,27 +9,38 @@
 <!--        ></site-filials-component>-->
 <!--    </div>-->
 
-    <fieldset
-        class="fieldset-access"
+    <select
+        name="site_id"
+        v-model="siteId"
     >
-        <legend>Сайты</legend>
-        <ul>
-            <li
-                v-for="site in sites"
-                class="checkbox"
-            >
-                <input
-                    type="checkbox"
-                    :name="'sites[]'"
-                    :value="site.id"
-                    :id="'checkbox-site-' + site.id"
-                    @click="toggleSite(site, $event)"
-                    :checked="getSite(site.id)"
-                >
-                <label :for="'checkbox-site-' + site.id"><span>{{ site.name }}</span></label>
-            </li>
-        </ul>
-    </fieldset>
+        <option
+            v-for="site in sites"
+            :value="site.id"
+            @change="changeSite(site)"
+        >{{ site.name }}</option>
+    </select>
+
+<!--    <fieldset-->
+<!--        class="fieldset-access"-->
+<!--    >-->
+<!--        <legend>Сайты</legend>-->
+<!--        <ul>-->
+<!--            <li-->
+<!--                v-for="site in sites"-->
+<!--                class="checkbox"-->
+<!--            >-->
+<!--                <input-->
+<!--                    type="checkbox"-->
+<!--                    :name="'sites[]'"-->
+<!--                    :value="site.id"-->
+<!--                    :id="'checkbox-site-' + site.id"-->
+<!--                    @click="toggleSite(site, $event)"-->
+<!--                    :checked="getSite(site.id)"-->
+<!--                >-->
+<!--                <label :for="'checkbox-site-' + site.id"><span>{{ site.name }}</span></label>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </fieldset>-->
 
 
 
@@ -42,40 +53,53 @@
         // },
         props: {
             sites: Array,
-            promotion: Object,
+            site: {
+                type: Object,
+                default() {
+                    return {
+                        id: null
+                    }
+                }
+            }
         },
 		data() {
 			return {
-
+                siteId: this.sites[0] ? this.sites[0].id : null,
 			}
 		},
 
         created() {
-            if (this.promotion.sites.length) {
-                this.$store.commit('INIT_PROMOTION', this.promotion.sites);
+            if (this.sites.length) {
+                this.$store.commit('SET_SITE', this.sites[0]);
+            } else {
+
             }
+
         },
 
         methods: {
-            toggleSite(site, event) {
-                var checked = event.target.checked;
+            changeSite(site) {
 
-                if (checked === true) {
-                    this.$store.commit('ADD_SITE', site);
-                } else {
-                    this.$store.commit('REMOVE_SITE', site.id);
-                }
-            },
-            getSite(siteId) {
-                if (this.sites.length) {
-                    let found = this.promotion.sites.find(site => site.id == siteId);
-                    if (found) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
-            },
+            }
+            // toggleSite(site, event) {
+            //     var checked = event.target.checked;
+            //
+            //     if (checked === true) {
+            //         this.$store.commit('ADD_SITE', site);
+            //     } else {
+            //         this.$store.commit('REMOVE_SITE', site.id);
+            //     }
+            // },
+            // getSite(siteId) {
+            //     if (this.sites.length) {
+            //         let found = this.promotion.sites.find(site => site.id == siteId);
+            //         if (found) {
+            //             return true;
+            //         } else {
+            //             return false;
+            //         }
+            //     }
+            // },
         }
 	}
 </script>

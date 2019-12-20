@@ -3,6 +3,7 @@
 namespace App\Http\ViewComposers\System;
 
 use App\CatalogsGoods;
+use App\Department;
 use App\Site;
 
 use Illuminate\View\View;
@@ -111,10 +112,24 @@ class SitesWIthFilialsAndCatalogsComposer
         }
 //        dd($catalogs_goods->first()->prices);
 
+
+
+        $answer = operator_right('departments', true, 'index');
+        $filials = Department::moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->whereNull('filial_id')
+            ->get([
+                'id',
+                'name',
+            ]);
+//        dd($filials);
+
         $catalogs_goods_data = [
             'catalogsGoods' => $catalogs_goods,
             'catalogsGoodsItems' => $catalogs_goods_items,
-            'catalogsGoodsPrices' => $catalogs_goods_prices
+            'catalogsGoodsPrices' => $catalogs_goods_prices,
+            'filials' => $filials
 
         ];
 

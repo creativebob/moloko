@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePromotionSiteTable extends Migration
+class CreatePromotionPriceGoodsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,12 @@ class CreatePromotionSiteTable extends Migration
      */
     public function up()
     {
-        Schema::create('promotion_site', function (Blueprint $table) {
+        Schema::create('promotion_price_goods', function (Blueprint $table) {
             $table->bigInteger('promotion_id')->nullable()->unsigned()->comment('Id акции');
             $table->foreign('promotion_id')->references('id')->on('promotions');
 
-            $table->bigInteger('site_id')->nullable()->unsigned()->comment('Id сайта');
-            $table->foreign('site_id')->references('id')->on('sites');
-
-//            $table->bigInteger('filial_id')->nullable()->unsigned()->comment('Id филиала');
-//            $table->foreign('filial_id')->references('id')->on('departments');
+            $table->bigInteger('price_goods_id')->nullable()->unsigned()->comment('Id прайса товаров');
+            $table->foreign('price_goods_id')->references('id')->on('prices_goods');
         });
     }
 
@@ -32,6 +29,6 @@ class CreatePromotionSiteTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('promotion_site');
+        Schema::dropIfExists('promotion_price_goods');
     }
 }

@@ -110,8 +110,6 @@ class PromotionController extends Controller
         $data = $request->input();
         $promotion = Promotion::create($data);
 
-        $promotion->filials()->sync($request->filials);
-
         $promotion->photo_id = $this->getPhotoId($request, $promotion);
 
         $names = [
@@ -130,7 +128,7 @@ class PromotionController extends Controller
 
         if ($promotion) {
 
-            $promotion->sites()->attach($request->sites);
+            $promotion->prices_goods()->sync($request->prices_goods);
 
             return redirect()->route('promotions.index');
         } else {
@@ -166,17 +164,19 @@ class PromotionController extends Controller
             'medium:id,name,path',
             'large:id,name,path',
             'large_x:id,name,path',
-            'sites' => function ($q) {
-                $q->with([
-                    'catalogs_goods.items_public.prices_public' => function ($q) {
-                        $q->with([
-                            'goods.article',
-                            'filial'
-                        ]);
-                    },
-                    'filials'
-                ]);
-            }
+            'site',
+//            => function ($q) {
+//                $q->with([
+//                    'catalogs_goods.items_public.prices_public' => function ($q) {
+//                        $q->with([
+//                            'goods.article',
+//                            'filial'
+//                        ]);
+//                    },
+//                    'filials'
+//                ]);
+//            }
+            'prices_goods.goods.article'
         ])
         ->moderatorLimit($answer)
             ->findOrFail($id);
@@ -201,7 +201,7 @@ class PromotionController extends Controller
     public function update(PromotionRequest $request, $id)
     {
 
-//        dd($request->sites);
+//        dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -237,19 +237,7 @@ class PromotionController extends Controller
 
         $result = $promotion->update($data);
 
-        $promotion->filials()->sync($request->filials);
-
-//        if ($request->has('sites')) {
-//
-//            foreach ($request->sites as $site_id => $site) {
-//                foreach ($site['filials'] as $filial_id) {
-//                    $promotion->sites()->attach([$site_id => ['filial_id' => $filial_id]]);
-//                }
-//                $site_insert = [];
-//
-//            }
-//        }
-        $promotion->sites()->sync($request->sites);
+        $promotion->prices_goods()->sync($request->prices_goods);
 
         if ($result) {
             return redirect()->route('promotions.index');
