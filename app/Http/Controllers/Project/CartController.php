@@ -92,7 +92,7 @@ class CartController extends Controller
                     }
                 ])
                     ->where([
-                        'is_upsale', true,
+                        'is_upsale' => true,
                         'display' => true
                     ])
                     ->where('begin_date', '<=', today())
