@@ -36,6 +36,14 @@
                         </label>
 
                         <label>Стартовая ссылка
+                            {{ Form::text(('start_url'), $domain->start_url,
+                                [
+                                    'class' => 'varchar-field name-field',
+                                    'maxlength' => '255',
+                                    'autocomplete' => 'off',
+                                    'pattern'=>'[A-Za-zА-Яа-яЁё0-9\W\s]{3,255}',
+                                ]
+                                ) }}
                             @include('includes.inputs.name', ['name' => 'start_url', 'value' => $domain->start_url])
                         </label>
 
