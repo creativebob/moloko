@@ -10,11 +10,7 @@ class FilialComposer
 
     public function compose(View $view)
     {
-
-        $site = $view->site->load('filials');
-
-        $filial = $site->filials->first()->load('location.city');
-
+        $filial = $view->site->filial;
         return $view->with(compact('filial'));
     }
 
