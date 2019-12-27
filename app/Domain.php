@@ -56,6 +56,12 @@ class Domain extends Model
         'moderation'
     ];
 
+    // Сайт
+    public function site()
+    {
+        return $this->belongsTo(Site::class);
+    }
+
     // Филиалы
     public function filials()
     {
