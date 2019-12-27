@@ -364,14 +364,15 @@ class AppController extends Controller
         $catalog_goods = $old_catalog_goods->replicate();
         $catalog_goods->save();
 
-        $old_catalogs_goods_items = CatalogsGoodsItem::with([
-            'prices'
-        ])
+        $old_catalogs_goods_items = CatalogsGoodsItem::whereNull('parent_id')
         ->get();
+
         foreach ($old_catalogs_goods_items as $old_item) {
             $item = $old_item->replicate();
             $item->catalogs_goods_id = $catalog_goods->id;
             $item->save();
+
+            $old_item->load('prices');
 
             if ($old_item->prices) {
                 foreach ($old_item->prices as $old_price) {
@@ -379,6 +380,54 @@ class AppController extends Controller
                         $old_price->catalogs_goods_item_id = $item->id;
                         $old_price->catalogs_goods_id = $catalog_goods->id;
                         $old_price->save();
+                    }
+                }
+            }
+
+            $old_item->load('childs');
+
+            if ($old_item->childs) {
+                foreach ($old_item->childs as $old_child_1) {
+                    $child_item_1 = $old_child_1->replicate();
+                    $child_item_1->parent_id = $item->id;
+                    $child_item_1->category_id = $item->id;
+                    $child_item_1->catalogs_goods_id = $catalog_goods->id;
+                    $child_item_1->save();
+
+                    $old_child_1->load('prices');
+
+                    if ($old_child_1->prices) {
+                        foreach ($old_child_1->prices as $old_price) {
+                            if ($old_price->filial_id == 2) {
+                                $old_price->catalogs_goods_item_id = $child_item_1->id;
+                                $old_price->catalogs_goods_id = $catalog_goods->id;
+                                $old_price->save();
+                            }
+                        }
+                    }
+
+                    $old_child_1->load('childs');
+
+                    if ($old_child_1->childs) {
+                        foreach ($old_child_1->childs as $old_child_2) {
+                            $child_item_2 = $old_child_2->replicate();
+                            $child_item_2->parent_id = $child_item_1->id;
+                            $child_item_2->category_id = $item->id;
+                            $child_item_2->catalogs_goods_id = $catalog_goods->id;
+                            $child_item_2->save();
+
+                            $old_child_2->load('prices');
+
+                            if ($old_child_2->prices) {
+                                foreach ($old_child_2->prices as $old_price) {
+                                    if ($old_price->filial_id == 2) {
+                                        $old_price->catalogs_goods_item_id = $child_item_2->id;
+                                        $old_price->catalogs_goods_id = $catalog_goods->id;
+                                        $old_price->save();
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
