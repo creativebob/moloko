@@ -44,7 +44,7 @@
                                     'pattern'=>'[A-Za-zА-Яа-яЁё0-9\W\s]{3,255}',
                                 ]
                                 ) }}
-                            @include('includes.inputs.name', ['name' => 'start_url', 'value' => $domain->start_url])
+{{--                            @include('includes.inputs.name', ['name' => 'start_url', 'value' => $domain->start_url])--}}
                         </label>
 
                     </div>
