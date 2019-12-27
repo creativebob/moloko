@@ -20,8 +20,8 @@ class CatalogsGoodsComposer
                     ->orderBy('sort');
             }
         ])
-            ->whereHas('sites', function($q) use ($site) {
-                $q->where('id', $site->id);
+            ->whereHas('filials', function($q) use ($site) {
+                $q->where('id', $site->filial->id);
             })
             ->where([
                 'display' => true

@@ -30,8 +30,8 @@ class AppController extends Controller
 
             $site = $this->site;
 
-            if (isset($site->start_url)) {
-                return redirect($site->start_url);
+            if (isset($site->domain->start_url)) {
+                return redirect($site->domain->start_url);
             } else {
                 $page = $site->pages_public
                     ->where('alias', 'main')
@@ -264,14 +264,14 @@ class AppController extends Controller
                 } else {
 
                     $user = $this->createUserByPhoneFromSite($phone, $site);
-                    Log::info('Нашли пользователя в базе компании. Но для текущего сайта создаем отдельный аккаунт: ' . $user->id);                        
+                    Log::info('Нашли пользователя в базе компании. Но для текущего сайта создаем отдельный аккаунт: ' . $user->id);
 
                 }
 
             } else {
 
                     $user = $this->createUserByPhoneFromSite($phone, $site);
-                    Log::info('Не нашли ни в каких базах. Создали полностью новый аккаунт: ' . $user->id);  
+                    Log::info('Не нашли ни в каких базах. Создали полностью новый аккаунт: ' . $user->id);
             }
 
         }
@@ -292,12 +292,12 @@ class AppController extends Controller
                 // Пишем в сессию время отправки СМС
                 session(['time_get_access_code' => now()]);
                 $msg = 'Код для входа: ' . $access_code;
-                
+
                 Log::info('Просим функцию отправки СМС сообщения отправить этот код' . $access_code);
                 sendSms($company, $phone, $msg);
 
             } else{
-                
+
                 Log::info('Время еше не истекло. Оставшееся время, сек:' . $second_blocking);
                 Log::info('Код не был отправлен' . $access_code);
             }

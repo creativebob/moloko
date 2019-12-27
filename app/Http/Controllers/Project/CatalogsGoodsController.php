@@ -89,8 +89,8 @@ class CatalogsGoodsController extends Controller
                 ]);
             },
         ])
-            ->whereHas('sites', function ($q) use ($site) {
-                $q->where('id', $site->id);
+            ->whereHas('filials', function ($q) use ($site) {
+                $q->where('id', $site->filial->id);
             })
             ->where('slug', $catalog_slug)
             ->where(['display' => true])
