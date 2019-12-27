@@ -112,4 +112,9 @@ class Site extends Model
         return $this->hasMany(Promotion::class);
     }
 
+    public function domains()
+    {
+        return $this->hasMany(Domain::class);
+    }
+
 }
