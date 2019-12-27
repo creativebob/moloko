@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Action;
 use App\ActionEntity;
 use App\AttachmentsStock;
+use App\CatalogsGoods;
+use App\CatalogsGoodsItem;
 use App\Consignment;
 use App\ContainersStock;
 use App\EstimatesGoodsItem;
@@ -354,6 +356,36 @@ class AppController extends Controller
         }
 
         echo "Навалены права<br>";
+    }
+
+    public function roll_house_parser()
+    {
+        $old_catalog_goods = CatalogsGoods::first();
+        $catalog_goods = $old_catalog_goods->replicate();
+        $catalog_goods->save();
+
+        $old_catalogs_goods_items = CatalogsGoodsItem::with([
+            'prices'
+        ])
+        ->get();
+        foreach ($old_catalogs_goods_items as $old_item) {
+            $item = $old_item->replicate();
+            $item->catalogs_goods_id = $catalog_goods->id;
+            $item->save();
+
+            if ($old_item->prices) {
+                foreach ($old_item->prices as $old_price) {
+                    if ($old_price->filial_id == 2) {
+                        $old_price->catalogs_goods_item_id = $item->id;
+                        $old_price->catalogs_goods_id = $catalog_goods->id;
+                        $old_price->save();
+                    }
+                }
+            }
+        }
+
+        echo 'Гатова';
+
     }
 
 }
