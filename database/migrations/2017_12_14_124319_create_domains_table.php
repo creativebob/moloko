@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreatePluginsTable extends Migration
+class CreateDomainsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,14 @@ class CreatePluginsTable extends Migration
      */
     public function up()
     {
-        Schema::create('plugins', function (Blueprint $table) {
+        Schema::create('domains', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('domain')->nullable()->index()->comment('Домен сайта');
 
-            $table->bigInteger('domain_id')->unsigned()->nullable()->comment('Id домена');
-            $table->foreign('domain_id')->references('id')->on('domains');
+            $table->string('start_url')->nullable()->comment('Стартовая ссылка');
 
-            $table->bigInteger('account_id')->unsigned()->nullable()->comment('Id аккаунта');
-            $table->foreign('account_id')->references('id')->on('accounts');
-
-            $table->text('code')->nullable()->comment('Код');
+            $table->bigInteger('site_id')->unsigned()->nullable()->comment('Id сайта');
+            $table->foreign('site_id')->references('id')->on('sites');
 
 
             // Общие настройки
@@ -51,6 +49,6 @@ class CreatePluginsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('plugins');
+        Schema::dropIfExists('domains');
     }
 }

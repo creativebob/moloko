@@ -1007,6 +1007,12 @@ Route::post('/setbooklist', 'BooklistController@setbooklist')->middleware('auth'
 Route::get('/updatebooklist', 'BooklistController@setbooklist')->middleware('auth')->name('booklists.updatebooklist');
 
 Route::any('(:any)', 'SiteController@kek');
+
+
+// ----------------------------------------- Домены ----------------------------------------------
+Route::resource('/domains', 'DomainController');
+
+
 // ----------------------------------------- Сайты ----------------------------------------------
 Route::resource('/sites', 'SiteController');
 // Route::get('/sites/{id}/sections', 'SiteController@sections')->middleware('auth')->name('sites.sections');

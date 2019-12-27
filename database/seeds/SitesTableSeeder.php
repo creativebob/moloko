@@ -14,7 +14,6 @@ class SitesTableSeeder extends Seeder
 		 DB::table('sites')->insert([
         	[
 		        'name' => 'Crm System',
-		        'domain' => 'crmsystem.vkmars.ru',
                 'alias' => 'crmsystem',
 		        'company_id' => null,
                 'author_id' => 1,

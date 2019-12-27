@@ -30,14 +30,4 @@ class CatalogsGoodsObserver
         $this->setSlug($catalogs_goods);
     }
 
-    public function saved(CatalogsGoods $catalogs_goods)
-    {
-        $this->syncSites($catalogs_goods);
-    }
-
-    protected function syncSites(CatalogsGoods $catalogs_goods)
-    {
-        $request = request();
-        $catalogs_goods->sites()->sync($request->sites);
-    }
 }

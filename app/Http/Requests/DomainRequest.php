@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SiteRequest extends FormRequest
+class DomainRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,8 @@ class SiteRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
+            'domain' => 'required|string|max:255',
+            'site_id' => 'required|integer',
 
             'moderation' => 'integer|max:1|nullable',
             'system' => 'integer|max:1|nullable',

@@ -10,6 +10,7 @@ use App\ContainersCategory;
 use App\ContainersStock;
 
 use App\Dispatch;
+use App\Domain;
 use App\GoodsStock;
 
 
@@ -23,6 +24,7 @@ use App\Policies\ContainersCategoryPolicy;
 use App\Policies\ContainersStockPolicy;
 
 use App\Policies\DispatchPolicy;
+use App\Policies\DomainPolicy;
 use App\Policies\GoodsStockPolicy;
 use App\Policies\IndicatorPolicy;
 use App\Policies\MetricPolicy;
@@ -335,6 +337,7 @@ class AuthServiceProvider extends ServiceProvider
         Menu::class => MenuPolicy::class,
         Navigation::class => NavigationPolicy::class,
         Page::class => PagePolicy::class,
+        Domain::class => DomainPolicy::class,
         Site::class => SitePolicy::class,
         Promotion::class => PromotionPolicy::class,
         Dispatch::class => DispatchPolicy::class,

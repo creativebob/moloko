@@ -30,14 +30,4 @@ class CatalogsServiceObserver
         $this->setSlug($catalogs_service);
     }
 
-    public function saved(CatalogsService $catalogs_service)
-    {
-        $this->syncSites($catalogs_service);
-    }
-
-    protected function syncSites(CatalogsService $catalogs_service)
-    {
-        $request = request();
-        $catalogs_service->sites()->sync($request->sites);
-    }
 }

@@ -14,6 +14,8 @@ class CatalogsGoodsComposer
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('catalogs_goods', false, 'index');
 
+        // TODO - 25.12.19 - Нужна разбивка каталогово по филиалау пользователя
+
         // Главный запрос
         $catalogs_goods = CatalogsGoods::moderatorLimit($answer)
         ->companiesLimit($answer)

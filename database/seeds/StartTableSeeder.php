@@ -141,7 +141,6 @@ class StartTableSeeder extends Seeder
         Site::insert([
         	[
 		        'name' => 'Сайт',
-		        'domain' => 'site.ru',
                 'alias' => 'site',
 		        'company_id' => 1,
                 'author_id' => 4,
@@ -150,6 +149,8 @@ class StartTableSeeder extends Seeder
                 'api_token' => \Str::random(60),
         	],
         ]);
+
+
 
         Page::insert([
         	[
@@ -278,14 +279,10 @@ class StartTableSeeder extends Seeder
             ],
         ]);
 
-        DB::table('catalogs_goods_site')->insert([
+        DB::table('catalogs_goods_filial')->insert([
             [
                 'catalogs_goods_id' => 1,
-                'site_id' => 1,
-            ],
-            [
-                'catalogs_goods_id' => 1,
-                'site_id' => 2,
+                'filial_id' => 1,
             ],
         ]);
 
@@ -332,14 +329,10 @@ class StartTableSeeder extends Seeder
             ],
         ]);
 
-        DB::table('catalogs_service_site')->insert([
+        DB::table('catalogs_service_filial')->insert([
             [
                 'catalogs_service_id' => 1,
-                'site_id' => 1,
-            ],
-            [
-                'catalogs_service_id' => 1,
-                'site_id' => 2,
+                'filial_id' => 1,
             ],
         ]);
 

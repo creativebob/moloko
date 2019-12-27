@@ -917,6 +917,20 @@ Menu::insert([
 
     // Маркетинг
     [
+        'name' => 'Домены',
+        'icon' => null,
+        'alias' => 'admin/domains',
+        'tag' => 'domains',
+        'parent_id' => $menus->where('tag', 'marketings')->first()->id,
+        'page_id' => $pages->where('alias', 'domains')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 5,
+    ],
+    [
         'name' => 'Сайты',
         'icon' => null,
         'alias' => 'admin/sites',

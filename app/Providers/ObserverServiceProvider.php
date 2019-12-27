@@ -18,6 +18,7 @@ use App\Cost;
 use App\CostsHistory;
 use App\Direction;
 use App\Dispatch;
+use App\Domain;
 use App\Employee;
 use App\Estimate;
 use App\EstimatesGoodsItem;
@@ -44,6 +45,7 @@ use App\Observers\CostObserver;
 use App\Observers\CostsHistoryObserver;
 use App\Observers\DirectionObserver;
 use App\Observers\DispatchObserver;
+use App\Observers\DomainObserver;
 use App\Observers\EmployeeObserver;
 use App\Observers\EstimateObserver;
 use App\Observers\EstimatesGoodsItemObserver;
@@ -232,6 +234,7 @@ class ObserverServiceProvider extends ServiceProvider
 
 
         // Сайты
+        Domain::observe(DomainObserver::class);
         Site::observe(SiteObserver::class);
         Page::observe(PageObserver::class);
         Menu::observe(MenuObserver::class);

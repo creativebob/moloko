@@ -15,11 +15,23 @@ class AccountsComposer
         $answer = operator_right('accounts', false, 'index');
 
         // Главный запрос
-        $accounts = Account::moderatorLimit($answer)
+        $accounts = Account::with([
+            'source_service' => function ($q) {
+                $q->with([
+                    'source:id,name'
+                ])
+                ->select([
+                    'id',
+                    'name',
+                    'source_id'
+                ]);
+            }
+        ])
+        ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->get();
 
-        return $view->with('accounts', $accounts);
+        return $view->with(compact('accounts'));
     }
 
 }

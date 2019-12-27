@@ -45,7 +45,7 @@ class Plugin extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'site_id',
+        'domain_id',
         'account_id',
         'code',
 

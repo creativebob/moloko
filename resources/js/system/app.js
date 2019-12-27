@@ -47,6 +47,7 @@ Vue.component('select-stocks-component', require('./components/common/selects/Se
 
 Vue.component('photo-upload-component', require('./components/PhotoUploadComponent.vue'));
 Vue.component('metrics-categories-component', require('./components/metrics/categories/MetricsCategoriesComponent'));
+Vue.component('plugins-component', require('./components/plugins/PluginsComponent'));
 
 // Поиск
 Vue.component('search-city-component', require('./components/search/SearchCityComponent'));

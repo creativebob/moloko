@@ -237,6 +237,17 @@ class PagesTableSeeder extends Seeder
 
             // ------------------------- Маркетинг --------------------------------
             [
+                'name' => 'Домены',
+                'site_id' => 1,
+                'title' => 'Домены',
+                'description' => 'Домены',
+                'alias' => 'domains',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
                 'name' => 'Сайты',
                 'site_id' => 1,
                 'title' => 'Сайты компании',
@@ -863,7 +874,7 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
-            
+
             [
                 'name' => 'Товарные накладные',
                 'site_id' => 1,
@@ -886,7 +897,7 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
-            
+
             [
                 'name' => 'Показатели',
                 'site_id' => 1,

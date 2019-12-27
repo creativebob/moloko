@@ -74,9 +74,14 @@ class CatalogsServiceController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $data = $request->input();
-        $catalogs_service = (new $this->class())->create($data);
+        $catalog_service = CatalogsService::create($data);
 
-        if ($catalogs_service) {
+        if ($catalog_service) {
+
+            $departments = session('access.all_rights.index-departments-allow');
+            if ($departments) {
+                $catalog_service->filials()->sync($request->filials);
+            }
 
             return redirect()->route('catalogs_services.index');
 

@@ -37,9 +37,9 @@ class PluginController extends Controller
      */
     public function create()
     {
-        $plugin = new Plugin;
-        $site_id = request()->site_id;
-        return view('sites.plugins.modal', compact('plugin', 'site_id'));
+        $plugin = Plugin::make();
+        $domain_id = request()->domain_id;
+        return view('system.pages.domains.plugins.modal', compact('plugin', 'domain_id'));
     }
 
     /**
@@ -51,11 +51,23 @@ class PluginController extends Controller
     public function store(Request $request)
     {
         $data = $request->input();
-        $plugin = (new Plugin())->create($data);
+        $plugin = Plugin::create($data);
 
         if ($plugin) {
-            $plugin->load('account');
-            return view('sites.plugins.plugin', compact('plugin'));
+            $plugin->load([
+                'account.source_service' => function ($q) {
+                    $q->with([
+                        'source:id,name'
+                    ])
+                        ->select([
+                            'id',
+                            'name',
+                            'source_id'
+                        ]);
+                    }
+                ]);
+
+            return response()->json($plugin);
         }
     }
 
@@ -78,8 +90,7 @@ class PluginController extends Controller
      */
     public function edit($id)
     {
-        $plugin = Plugin::findOrFail($id);
-        return view('sites.plugins.modal', compact('plugin'));
+        //
     }
 
     /**
@@ -93,11 +104,25 @@ class PluginController extends Controller
     {
         $plugin = Plugin::findOrFail($id);
 
-        $data = $request->input();
+        $result = $plugin->update([
+            'code' => $request->code,
+        ]);
+//        dd($result);
 
-        $result = $plugin->update($data);
+        $plugin->load([
+            'account.source_service' => function ($q) {
+                $q->with([
+                    'source:id,name'
+                ])
+                    ->select([
+                        'id',
+                        'name',
+                        'source_id'
+                    ]);
+            }
+        ]);
 
-        return response()->json($result);
+        return response()->json($plugin);
     }
 
     /**
@@ -108,7 +133,8 @@ class PluginController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $result = Plugin::destroy($id);
+        return response()->json($result);
     }
 
     public function ajax_destroy($id)

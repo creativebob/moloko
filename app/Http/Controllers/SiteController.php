@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
-// Модели
 use App\Site;
 use App\Entity;
-
 use App\Filters\SiteFilter;
-
-// Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\SiteRequest;
 
 class SiteController extends Controller
 {
 
-    // Настройки контроллера
+    /**
+     * SiteController constructor.
+     * @param Site $site
+     */
     public function __construct(Site $site)
     {
         $this->middleware('auth');
@@ -80,7 +79,7 @@ class SiteController extends Controller
         ]);
     }
 
-    public function create(Request $request)
+    public function create()
     {
 
         // Подключение политики
@@ -100,8 +99,6 @@ class SiteController extends Controller
 
         $data = $request->input();
         $site = Site::create($data);
-
-        $site->filials()->sync($request->filials);
 
 //        if ($site) {
 //            return redirect()
@@ -153,8 +150,6 @@ class SiteController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $site);
 
-        $site->load('plugins');
-
         return view('sites.edit', [
             'site' => $site,
             'page_info' => pageInfo($this->entity_alias),
@@ -175,8 +170,6 @@ class SiteController extends Controller
 
         $data = $request->input();
         $result = $site->update($data);
-
-        $site->filials()->sync($request->filials);
 
 //        if ($result) {
 //            return redirect()

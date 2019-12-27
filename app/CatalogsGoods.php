@@ -71,10 +71,10 @@ class CatalogsGoods extends Model
         return $this->hasMany(PricesGoods::class);
     }
 
-    // Сайты
-    public function sites()
+    // Филиалы
+    public function filials()
     {
-        return $this->belongsToMany(Site::class, 'catalogs_goods_site');
+        return $this->belongsToMany(Department::class, 'catalogs_goods_filial', 'catalogs_goods_id', 'filial_id');
     }
 
     // Аавтор
@@ -102,4 +102,12 @@ class CatalogsGoods extends Model
 //    {
 //        return $this->hasManyThrough(PricesGoods::class, CatalogsGoodsItem::class);
 //    }
+
+    // this is a recommended way to declare event handlers
+    public static function boot() {
+        parent::boot();
+        self::deleting(function($catalogs_goods) { // before delete() method call this
+            $catalogs_goods->filials()->detach();
+        });
+    }
 }

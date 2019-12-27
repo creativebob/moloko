@@ -11,12 +11,12 @@
 
 @section('content-count')
 {{-- Количество элементов --}}
-{{ $sites->isNotEmpty() ? num_format($sites->total(), 0) : 0 }}
+{{ $domains->isNotEmpty() ? num_format($domains->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Site::class, 'type' => 'table'])
+@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Domain::class, 'type' => 'table'])
 @endsection
 
 @section('content')
@@ -25,16 +25,14 @@
 <div class="grid-x">
     <div class="small-12 cell">
 
-        <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="sites">
+        <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="domains">
 
             <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
                 <tr id="thead-content">
                     <th class="td-drop"></th>
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
-                    <th class="td-name">Название сайта</th>
-                    <th class="td-api-token">Api токен</th>
+                    <th class="td-domain">Домен</th>
                     <th class="td-company-name">Компания</th>
-                    <th class="td-edit">Изменить</th>
                     <th class="td-author">Автор</th>
                     <th class="td-control"></th>
                     <th class="td-delete"></th>
@@ -43,45 +41,44 @@
 
             <tbody data-tbodyId="1" class="tbody-width">
 
-                @if(isset($sites) && $sites->isNotEmpty())
-                @foreach($sites as $site)
+                @if(isset($domains) && $domains->isNotEmpty())
+                @foreach($domains as $domain)
 
-                <tr class="item @if($site->moderation == 1)no-moderation @endif" id="sites-{{ $site->id }}" data-name="{{ $site->name }}">
+                <tr class="item @if($domain->moderation == 1)no-moderation @endif" id="domains-{{ $domain->id }}" data-name="{{ $domain->name }}">
 
                     <td class="td-drop">
                         <div class="sprite icon-drop"></div>
                     </td>
                     <td class="td-checkbox checkbox">
-                        <input type="checkbox" class="table-check" name="" id="check-{{ $site->id }}"
+                        <input type="checkbox" class="table-check" name="" id="check-{{ $domain->id }}"
 
                         {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
                         @if(!empty($filter['booklist']['booklists']['default']))
                         {{-- Если в Booklist в массиве Default есть id-шник сущности, то отмечаем его как checked --}}
-                        @if (in_array($site->id, $filter['booklist']['booklists']['default'])) checked
+                        @if (in_array($domain->id, $filter['booklist']['booklists']['default'])) checked
                         @endif
                         @endif
 
                         >
-                        <label class="label-check" for="check-{{ $site->id }}"></label>
+                        <label class="label-check" for="check-{{ $domain->id }}"></label>
                     </td>
-                    <td class="td-name">
+                    <td class="td-domain">
 
-                        @can('update', $site)
-                            <a href="{{ route('sites.edit', $site->id) }}">{{ $site->name }}</a>
+                        @can('update', $domain)
+                            <a href="{{ route('domains.edit', $domain->id) }}">{{ $domain->domain }}</a>
                             @else
-                            {{ $site->name }}
+                            {{ $domain->domain }}
                         @endcan
 
                     </td>
-                    <td class="td-api-token">{{ $site->api_token }}</td>
                     <td class="td-company-id">
 
-                        {{-- {{ isset($site->company->name) ? $site->company->name : $site->system == null ? 'Шаблон' : 'Системная' }} --}}
-                        @if(isset($site->company->name))
-                        {{ $site->company->name }}
+                        {{-- {{ isset($domain->company->name) ? $domain->company->name : $domain->system == null ? 'Шаблон' : 'Системная' }} --}}
+                        @if(isset($domain->company->name))
+                        {{ $domain->company->name }}
                         @else
 
-                        @if($site->system == null)
+                        @if($domain->system == null)
                         Шаблон
                         @else Системная
                         @endif
@@ -89,29 +86,20 @@
                         @endif
 
                     </td>
-                    <td class="td-edit">
-
-                        @can('update', $site)
-                            <a href="{{ route('sites.show', $site->id) }}" class="tiny button">Разделы</a>
-                        @else
-                            {{ $site->name }}
-                        @endcan
-
-                    </td>
                     <td class="td-author">
 
-                        @if(isset($site->author->first_name))
-                        {{ $site->author->first_name . ' ' . $site->author->second_name }}
+                        @if(isset($domain->author->first_name))
+                        {{ $domain->author->first_name . ' ' . $domain->author->second_name }}
                         @endif
 
                     </td>
 
                     {{-- Элементы управления --}}
-                    @include('includes.control.table_td', ['item' => $site])
+                    @include('includes.control.table_td', ['item' => $domain])
 
                     <td class="td-delete">
 
-                       @include('includes.control.item_delete_table', ['item' => $site])
+                       @include('includes.control.item_delete_table', ['item' => $domain])
 
                     </td>
                 </tr>
@@ -128,8 +116,8 @@
 {{-- Pagination --}}
 <div class="grid-x" id="pagination">
     <div class="small-6 cell pagination-head">
-        <span class="pagination-title">Кол-во записей: {{ $sites->count() }}</span>
-        {{ $sites->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
+        <span class="pagination-title">Кол-во записей: {{ $domains->count() }}</span>
+        {{ $domains->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
     </div>
 </div>
 @endsection

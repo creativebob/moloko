@@ -67,8 +67,8 @@ class CatalogGoodsWithPricesComposer
             ->companiesLimit($answer_cg)
             ->authors($answer_cg)
             ->filials($answer_cg)
-            ->whereHas('sites', function ($q) {
-                $q->whereId(1);
+            ->whereHas('filials', function ($q) {
+                $q->where('id', auth()->user()->stafferFilialId);
             })
             ->get();
 //         dd($сatalogs_goods);

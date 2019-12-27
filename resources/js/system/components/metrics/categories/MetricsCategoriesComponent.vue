@@ -40,7 +40,7 @@
             ></metrics-component>
         </div>
 
-        <div class="reveal rev-small" id="modal-delete-metric" data-reveal>
+        <div class="reveal rev-small" id="modal-delete-metric" data-reveal data-close-on-click="false">
             <div class="grid-x">
                 <div class="small-12 cell modal-title">
                     <h5>Удаление метрики</h5>

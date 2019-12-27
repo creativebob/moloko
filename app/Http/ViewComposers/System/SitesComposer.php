@@ -17,12 +17,14 @@ class SitesComposer
         $sites = Site::moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
-        ->orWhereNull('company_id')
+//        ->orWhereNull('company_id')
         // ->systemItem($answer) // Фильтр по системным записям
-        ->get(['id', 'name']);
+        ->get([
+            'id',
+            'name'
+        ]);
 
-        return $view->with('sites', $sites);
+        return $view->with(compact('sites'));
 
     }
-
 }

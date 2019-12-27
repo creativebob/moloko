@@ -73,9 +73,14 @@ class CatalogsGoodsController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $data = $request->input();
-        $catalogs_goods = (new $this->class())->create($data);
+        $catalogs_goods = CatalogsGoods::create($data);
 
         if ($catalogs_goods) {
+
+            $departments = session('access.all_rights.index-departments-allow');
+            if ($departments) {
+                $catalogs_goods->filials()->sync($request->filials);
+            }
 
             return redirect()->route('catalogs_goods.index');
 
@@ -101,6 +106,8 @@ class CatalogsGoodsController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods);
 
+        $catalogs_goods->load('filials');
+
         // dd($catalogs_goods);
         return view('catalogs_goods.edit', [
             'catalogs_goods' => $catalogs_goods,
@@ -125,6 +132,11 @@ class CatalogsGoodsController extends Controller
 
         if ($result) {
 
+            $departments = session('access.all_rights.index-departments-allow');
+            if ($departments) {
+                $catalogs_goods->filials()->sync($request->filials);
+            }
+
             return redirect()->route('catalogs_goods.index');
 
         } else {
@@ -146,8 +158,6 @@ class CatalogsGoodsController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods);
 
-        $catalogs_goods->editor_id = hideGod($request->user());
-        $catalogs_goods->save();
 
         $catalogs_goods->delete();
 

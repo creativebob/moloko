@@ -237,9 +237,13 @@ class ComposerServiceProvider extends ServiceProvider
             'includes.selects.catalogs'
         ], CatalogsSelectComposer::class);
 
-        view()->composer('includes.lists.sites', SitesComposer::class);
+        view()->composer([
+            'includes.lists.sites',
+            'includes.selects.sites',
+        ], SitesComposer::class);
         view()->composer('includes.lists.site_menus', SiteMenusComposer::class);
-        view()->composer('sites.plugins.modal', AccountsComposer::class);
+
+        view()->composer('system.pages.domains.plugins', AccountsComposer::class);
 
 
         // Страницы сайта
@@ -303,6 +307,7 @@ class ComposerServiceProvider extends ServiceProvider
             'products.articles.goods.prices.catalogs',
             'leads.catalogs.modal_catalogs_goods'
         ], CatalogsGoodsComposer::class);
+
         view()->composer('products.articles.goods.prices.catalogs_items', CatalogsGoodsItemsComposer::class);
         view()->composer('products.articles.goods.prices.filials', FilialsForCatalogsGoodsComposer::class);
 

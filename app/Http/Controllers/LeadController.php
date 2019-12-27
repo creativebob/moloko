@@ -316,8 +316,8 @@ class LeadController extends Controller
         ->moderatorLimit($answer_cs)
         ->companiesLimit($answer_cs)
         ->authors($answer_cs)
-        ->whereHas('sites', function ($q) {
-            $q->whereId(1);
+        ->whereHas('filials', function ($q) {
+            $q->where('id', auth()->user()->stafferFilialId);
         })
         ->get();
 //         dd($catalogs_services);

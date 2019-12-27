@@ -5,12 +5,6 @@
                 <a href="#options" aria-selected="true">Общая информация</a>
             </li>
 
-            @if($site->exists)
-            <li class="tabs-title">
-                <a data-tabs-target="plugins" href="#plugins">Плагины</a>
-            </li>
-@endif
-
         </ul>
     </div>
 </div>
@@ -30,23 +24,6 @@
                             @include('includes.inputs.name', ['value' => $site->name, 'required' => true])
                         </label>
 
-                        <label>Домен сайта
-                            @include('includes.inputs.varchar', ['value' => $site->domain, 'name' => 'domain', 'required' => true, 'check' => true])
-                            <div class="sprite-input-right find-status" id="name-check"></div>
-                            <div class="item-error">Такой сайт уже существует!</div>
-                        </label>
-
-                        <label>Стартовая ссылка
-                            @include('includes.inputs.name', ['name' => 'start_url', 'value' => $site->start_url])
-                        </label>
-                    </div>
-
-                    <div class="small-12 medium-7 cell">
-
-                        <fieldset class="fieldset-access">
-                            <legend>Филиалы</legend>
-                            @include('includes.lists.filials')
-                        </fieldset>
                     </div>
 
                     {{-- Чекбоксы управления --}}
@@ -62,32 +39,6 @@
                 </div>
             </div>
 
-            @if($site->exists)
-            <div class="tabs-panel" id="plugins">
-                <div class="grid-x grid-padding-x">
-
-                    <div class="small-12 medium-5 cell">
-                        <a class="button" id="button-create-plugin">Добавить плагин</a>
-
-                        <table id="table-plugins">
-                            <thead>
-                            <tr>
-                                <th>Аккаунт</th>
-                                <th>Действия</th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-                            @forelse($site->plugins as $plugin)
-                            @include('sites.plugins.plugin')
-                                @empty
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            @endif
         </div>
     </div>
 </div>
@@ -97,6 +48,6 @@
 @include('includes.scripts.inputs-mask')
 @include('includes.scripts.check', ['entity' => 'sites'])
 
-@include('sites.scripts')
+{{--@include('sites.scripts')--}}
 @endpush
 

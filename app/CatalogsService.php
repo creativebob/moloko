@@ -68,10 +68,10 @@ class CatalogsService extends Model
         return $this->hasMany(PricesService::class);
     }
 
-    // Сайты
-    public function sites()
+    // Филиалы
+    public function filials()
     {
-        return $this->belongsToMany(Site::class, 'catalogs_service_site');
+        return $this->belongsToMany(Site::class, 'catalogs_service_filial', 'catalogs_service_id', 'filial_id');
     }
 
     // Аавтор
@@ -91,5 +91,13 @@ class CatalogsService extends Model
     {
         return $this->hasMany(CatalogsServicesItem::class)
         ->whereNull('parent_id');
+    }
+
+    // this is a recommended way to declare event handlers
+    public static function boot() {
+        parent::boot();
+        self::deleting(function($catalogs_service) { // before delete() method call this
+            $catalogs_service->filials()->detach();
+        });
     }
 }

@@ -211,4 +211,23 @@ class Department extends Model
         return $this->belongsToMany(Promotion::class, 'filial_promotion', 'filial_id', 'promotion_id');
     }
 
+    // Каталоги
+    // Товаров
+    public function catalogs_goods()
+    {
+        return $this->belongsToMany(CatalogsGoods::class, 'catalog_goods_filial');
+    }
+
+    // Услуг
+    public function catalogs_services()
+    {
+        return $this->belongsToMany(CatalogsService::class, 'catalog_service_filial');
+    }
+
+    // Домены
+    public function domains()
+    {
+        return $this->belongsToMany(Domain::class, 'domain_filial');
+    }
+
 }

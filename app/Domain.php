@@ -22,9 +22,8 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class Site extends Model
+class Domain extends Model
 {
-
     // Включаем кеш
     use Cachable;
 
@@ -43,20 +42,30 @@ class Site extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at'
+    ];
 
     protected $fillable = [
-        'name',
-
+        'domain',
+        'site_id',
+        'start_url',
 
         'display',
         'system',
         'moderation'
     ];
 
-    public function scopeFilter(Builder $builder, QueryFilter $filters)
+    // Филиалы
+    public function filials()
     {
-        return $filters->apply($builder);
+        return $this->belongsToMany(Department::class, 'domain_filial', 'domain_id', 'filial_id');
+    }
+
+    // Плагины
+    public function plugins()
+    {
+        return $this->hasMany(Plugin::class);
     }
 
     // Компания
@@ -70,46 +79,4 @@ class Site extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    // Страницы
-    public function pages()
-    {
-        return $this->hasMany(Page::class);
-    }
-
-    public function pages_public()
-    {
-        return $this->hasMany(Page::class)
-            ->where('display', true);
-    }
-
-    public function pages_display()
-    {
-        return $this->hasMany(Page::class)
-            ->where('display', true);
-    }
-
-    // Навигации
-    public function navigations()
-    {
-        return $this->hasMany(Navigation::class);
-    }
-
-    public function rubricators()
-    {
-        return $this->belongsToMany(Rubricator::class, 'rubricator_site');
-    }
-
-    // Оповещения
-    public function notifications()
-    {
-        return $this->belongsToMany(Notification::class);
-    }
-
-    // Акции
-    public function promotions()
-    {
-        return $this->hasMany(Promotion::class);
-    }
-
 }

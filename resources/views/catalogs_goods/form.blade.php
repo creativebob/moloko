@@ -9,9 +9,9 @@
             @include('includes.inputs.textarea', ['name' => 'description'])
         </label>
 
-        <fieldset>
-            <legend>Сайты</legend>
-            @include('includes.lists.sites', ['item' => $catalogs_goods])
+        <fieldset class="fieldset-access">
+            <legend>Филиалы</legend>
+            @include('includes.lists.filials')
         </fieldset>
 
         {{-- <label>Алиас

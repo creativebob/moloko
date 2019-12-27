@@ -157,32 +157,14 @@ class AppController extends Controller
 
     public function parser()
     {
-//        \Artisan::call('migrate');
-//        echo 'Миграции<br>';
-//
-//        \Artisan::call('db:seed --class=ChannelsTableSeeder');
-//        \Artisan::call('db:seed --class=TriggersTableSeeder');
-//        \Artisan::call('db:seed --class=DisplayModesTableSeeder');
-//        echo 'Сиды<br>';
 
         Page::insert([
             [
-                'name' => 'Продвижения',
+                'name' => 'Домены',
                 'site_id' => 1,
-                'title' => 'Продвижения',
-                'description' => 'Продвижения',
-                'alias' => 'promotions',
-                'company_id' => null,
-                'system' => true,
-                'author_id' => 1,
-                'display' => true,
-            ],
-            [
-                'name' => 'Рассылки',
-                'site_id' => 1,
-                'title' => 'Рассылки',
-                'description' => 'Рассылки',
-                'alias' => 'dispatches',
+                'title' => 'Домены',
+                'description' => 'Домены',
+                'alias' => 'domains',
                 'company_id' => null,
                 'system' => true,
                 'author_id' => 1,
@@ -254,27 +236,12 @@ class AppController extends Controller
 
         Menu::insert([
             [
-                'name' => 'Продвижения',
+                'name' => 'Домены',
                 'icon' => null,
-                'alias' => 'admin/promotions',
-                'tag' => 'promotions',
-                'parent_id' => $menus->firstWhere('tag', 'marketings')->id,
-                'page_id' => $pages->firstWhere('alias', 'promotions')->id,
-                'navigation_id' => 1,
-                'company_id' => null,
-                'system' => true,
-                'author_id' => 1,
-                'display' => true,
-                'sort' => 5,
-            ],
-
-            [
-                'name' => 'Рассылки',
-                'icon' => null,
-                'alias' => 'admin/dispatches',
-                'tag' => 'dispatches',
-                'parent_id' => $menus->firstWhere('tag', 'marketings')->id,
-                'page_id' => $pages->firstWhere('alias', 'dispatches')->id,
+                'alias' => 'admin/domains',
+                'tag' => 'domains',
+                'parent_id' => $menus->where('tag', 'marketings')->first()->id,
+                'page_id' => $pages->where('alias', 'domains')->first()->id,
                 'navigation_id' => 1,
                 'company_id' => null,
                 'system' => true,
@@ -315,30 +282,18 @@ class AppController extends Controller
 
         Entity::insert([
             [
-                'name' => 'Продвижения',
-                'alias' => 'promotions',
-                'model' => 'Promotion',
+                'name' => 'Домены',
+                'alias' => 'domains',
+                'model' => 'Domain',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 0,
-                'view_path' => 'promotions',
-                'page_id' => $pages->firstWhere('alias', 'promotions')->id,
+                'view_path' => 'domains',
+                'page_id' => $pages->firstWhere('alias', 'domains')->id,
             ],
 
-            [
-                'name' => 'Рассылки',
-                'alias' => 'dispatches',
-                'model' => 'Dispatch',
-                'rights' => true,
-                'system' => true,
-                'author_id' => 1,
-                'site' => 0,
-                'metric' => 0,
-                'view_path' => 'dispatches',
-                'page_id' => $pages->firstWhere('alias', 'dispatches')->id,
-            ],
         ]);
 
         echo 'Созданы сущности<br>';
@@ -348,8 +303,7 @@ class AppController extends Controller
 
         // Добавленным
         $entities = Entity::whereIn('alias', [
-            'promotions',
-            'dispatches'
+            'domains',
         ])
             ->get();
         // Всем
