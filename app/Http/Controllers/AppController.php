@@ -240,7 +240,7 @@ class AppController extends Controller
                 'icon' => null,
                 'alias' => 'admin/domains',
                 'tag' => 'domains',
-                'parent_id' => $menus->where('tag', 'marketings')->first()->id,
+                'parent_id' => $menus->where('tag', 'marketing')->first()->id,
                 'page_id' => $pages->where('alias', 'domains')->first()->id,
                 'navigation_id' => 1,
                 'company_id' => null,
