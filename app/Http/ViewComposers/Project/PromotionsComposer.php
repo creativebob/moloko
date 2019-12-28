@@ -13,6 +13,7 @@ class PromotionsComposer
         $site->filial->load([
             'promotions' => function ($q) {
                 $q->where('display', true)
+                    ->where('is_slider', true)
                     ->where('begin_date', '<=', now())
                     ->where('end_date', '>=', now())
                     ->orderBy('sort');
