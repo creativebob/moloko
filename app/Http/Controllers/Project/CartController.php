@@ -315,7 +315,7 @@ class CartController extends Controller
 
             $lead->save();
 
-            logs('leads_from_project')->info("============== Создан лид с сайта с id :[{$lead->id}], сайт:[{$this->site->domain}]  ===============================");
+            logs('leads_from_project')->info("============== Создан лид с сайта с id :[{$lead->id}], сайт:[{$this->site->domain->domain}]  ===============================");
             // ------------------------------------------- Конец создаем лида ---------------------------------------------
 
             // Телефон
@@ -407,7 +407,7 @@ class CartController extends Controller
             // Формируем сообщение
             $message = "Заказ с сайта: №" . $lead->id . "\r\n";
 
-            if ($site->filials->count() > 1) {
+            if ($site->domains->count() > 1) {
                 $message .= "Город: " . $site->filial->location->city->name . "\r\n";
             }
 
