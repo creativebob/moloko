@@ -113,7 +113,7 @@ class Promotion extends Model
 
     public function filials()
     {
-        return $this->belongsToMany(Department::class, 'promotion_filial', 'promotion_id', 'filial_id');
+        return $this->belongsToMany(Promotion::class, 'filial_promotion', 'promotion_id', 'filial_id');
     }
 
     // Фото
