@@ -47,6 +47,7 @@ class Site extends Model
 
     protected $fillable = [
         'name',
+        'alias',
 
 
         'display',

@@ -24,6 +24,10 @@
                             @include('includes.inputs.name', ['value' => $site->name, 'required' => true])
                         </label>
 
+                        <label>Алиас
+                            @include('includes.inputs.name', ['name' => 'alias', 'value' => $site->alias])
+                        </label>
+
                     </div>
 
                     {{-- Чекбоксы управления --}}

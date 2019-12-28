@@ -25,6 +25,7 @@ class SiteRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'alias' => 'nullable|string|max:255',
 
             'moderation' => 'integer|max:1|nullable',
             'system' => 'integer|max:1|nullable',
