@@ -43,7 +43,10 @@ class MenuObserver
 
     public function saving(Category $category)
     {
-        $this->setTag($category);
+        if (! $category->tag) {
+            $this->setTag($category);
+        }
+
         $this->setNewBlank($category);
     }
 
