@@ -7,7 +7,7 @@
                     <label>Филиал:
                         <select
                             v-model="filialId"
-                            @change="resetPrices"
+                            @change="reInitMenu"
                         >
                             <option
                                 v-for="filial in catalogsGoodsData.filials"
@@ -171,9 +171,9 @@
         },
         computed: {
             catalogGoodsId() {
-                if (this.catalogsGoods.length > 0) {
-                    let catalogs =  this.catalogsGoods.filter(catalog => {
-                        let found = catalog.sites.find(site => site.id == this.siteId)
+                if (this.catalogsGoods.length) {
+                    let catalogs = this.catalogsGoods.filter(catalog => {
+                        let found = catalog.filials.find(filial => filial.id == this.filialId);
                         if (found) {
                             return catalog;
                         }
@@ -185,6 +185,19 @@
                     } else {
                         return 0;
                     }
+                    // let catalogs =  this.catalogsGoods.filter(catalog => {
+                    //     let found = catalog.sites.find(site => site.id == this.siteId)
+                    //     if (found) {
+                    //         return catalog;
+                    //     }
+                    // });
+
+                    // if (catalogs.length) {
+                    //     this.catalogName = catalogs[0].name;
+                    //     return catalogs[0].id;
+                    // } else {
+                    //     return 0;
+                    // }
                 } else {
                     return 0;
                 }

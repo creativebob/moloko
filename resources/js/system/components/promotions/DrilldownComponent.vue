@@ -37,7 +37,7 @@
             reInit() {
                 let timerId = setTimeout(function() {
                     this.drilldown = Foundation.reInit($('#drilldown'));
-                }, 150);
+                }, 1);
             }
         },
         destroyed() {

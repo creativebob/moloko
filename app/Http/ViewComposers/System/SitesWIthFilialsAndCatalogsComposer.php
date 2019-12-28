@@ -75,13 +75,14 @@ class SitesWIthFilialsAndCatalogsComposer
                         'filial_id'
                     ]);
             },
+            'filials:id,name'
         ])
             ->moderatorLimit($answer_cg)
             ->companiesLimit($answer_cg)
             ->authors($answer_cg)
-            ->whereHas('filials', function($q) {
-                $q->where('id', auth()->user()->StafferFilialId);
-            })
+//            ->whereHas('filials', function($q) {
+//                $q->where('id', auth()->user()->StafferFilialId);
+//            })
             ->get();
 //         dd($catalogs_goods);
 
