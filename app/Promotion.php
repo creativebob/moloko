@@ -111,6 +111,11 @@ class Promotion extends Model
         return $this->belongsToMany(PricesGoods::class, 'promotion_price_goods', 'promotion_id', 'price_goods_id');
     }
 
+    public function filials()
+    {
+        return $this->belongsToMany(Department::class, 'promotion_filial', 'promotion_id', 'filial_id');
+    }
+
     // Фото
     public function photo()
     {

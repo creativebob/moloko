@@ -128,6 +128,11 @@ class PromotionController extends Controller
 
         if ($promotion) {
 
+            $filials = session('access.all_rights.index-departments-allow');
+            if ($filials) {
+                $promotion->filials()->sync($request->filials);
+            }
+
             $promotion->prices_goods()->sync($request->prices_goods);
 
             return redirect()->route('promotions.index');
@@ -236,6 +241,11 @@ class PromotionController extends Controller
         }
 
         $result = $promotion->update($data);
+
+        $filials = session('access.all_rights.index-departments-allow');
+        if ($filials) {
+            $promotion->filials()->sync($request->filials);
+        }
 
         $promotion->prices_goods()->sync($request->prices_goods);
 

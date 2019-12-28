@@ -82,6 +82,13 @@
                             </label>
                         </div>
 
+                        <div class="small-6 cell">
+                            <fieldset>
+                                <legend>Филиалы</legend>
+                                @include('includes.lists.filials')
+                            </fieldset>
+                        </div>
+
                     </div>
 
                     {{-- Чекбоксы управления --}}
