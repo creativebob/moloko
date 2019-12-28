@@ -16,22 +16,10 @@ class SitesWIthFilialsAndCatalogsComposer
         // Список меню для сайта
         $answer = operator_right('sites', false, 'index');
 
-        $sites = Site::with([
-            'catalogs_goods',
-//            'catalogs_goods.items_public.prices_public' => function ($q) {
-//                $q->with([
-//                    'goods.article',
-//                    'filial'
-//                ]);
-//            },
-            'filials'
-        ])
-            ->has('filials')
-            ->has('catalogs_goods')
+        $sites = Site::has('domains')
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
             ->authors($answer)
-            ->whereNotNull('company_id')
             // ->systemItem($answer) // Фильтр по системным записям
             ->get();
 //        dd($sites);
@@ -87,19 +75,12 @@ class SitesWIthFilialsAndCatalogsComposer
                         'filial_id'
                     ]);
             },
-            'sites' => function ($q) {
-                $q->where('id', '!=', 1);
-            }
         ])
-            ->whereHas('sites', function ($q) {
-                $q->where('id', '!=', 1);
-            })
             ->moderatorLimit($answer_cg)
             ->companiesLimit($answer_cg)
             ->authors($answer_cg)
-            ->filials($answer_cg)
-            ->whereHas('sites', function ($q) use ($sites) {
-                $q->whereIn('id', $sites->pluck('id'));
+            ->whereHas('filials', function($q) {
+                $q->where('id', auth()->user()->StafferFilialId);
             })
             ->get();
 //         dd($catalogs_goods);
@@ -111,7 +92,7 @@ class SitesWIthFilialsAndCatalogsComposer
             $catalogs_goods_prices = array_merge($catalogs_goods_prices, $catalog_goods->prices->toArray());
         }
 //        dd($catalogs_goods->first()->prices);
-
+        dd($catalogs_goods_prices);
 
 
         $answer = operator_right('departments', true, 'index');
