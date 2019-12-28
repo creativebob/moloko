@@ -92,7 +92,7 @@ class SitesWIthFilialsAndCatalogsComposer
             $catalogs_goods_prices = array_merge($catalogs_goods_prices, $catalog_goods->prices->toArray());
         }
 //        dd($catalogs_goods->first()->prices);
-        dd($catalogs_goods_prices);
+//        dd($catalogs_goods_prices);
 
 
         $answer = operator_right('departments', true, 'index');
