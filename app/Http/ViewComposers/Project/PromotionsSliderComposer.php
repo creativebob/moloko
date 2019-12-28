@@ -4,7 +4,7 @@ namespace App\Http\ViewComposers\Project;
 
 use Illuminate\View\View;
 
-class PromotionsComposer
+class PromotionsSliderComposer
 {
 
     public function compose(View $view)
