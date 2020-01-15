@@ -107,6 +107,8 @@ class CatalogsGoodsController extends Controller
             if($catalog_goods_items){
 
                 $page->title = $catalog_goods_items->title;
+                $page->description = $catalog_goods_items->seo_description;
+                
                 $catalog_goods_items->load('childs');
                 //dd($catalog_goods_items);
 
