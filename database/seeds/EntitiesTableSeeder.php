@@ -578,6 +578,18 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => $pages->firstWhere('alias', 'domains')->id,
             ],
 
+            [
+                'name' => 'Источники трафика',
+                'alias' => 'sources',
+                'model' => 'Source',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'sources',
+                'page_id' => $pages->firstWhere('alias', 'sources')->id,
+            ],
 
             // TODO - 04.06.19 - Чистка сущностей
             // [

@@ -303,6 +303,17 @@ class PagesTableSeeder extends Seeder
                 'display' => true,
             ],
             [
+                'name' => 'Источники трафика',
+                'site_id' => 1,
+                'title' => 'Источники трафика',
+                'description' => 'Источники трафика',
+                'alias' => 'sources',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],            
+            [
                 'name' => 'Социальные сети',
                 'site_id' => 1,
                 'title' => 'Социальные сети',

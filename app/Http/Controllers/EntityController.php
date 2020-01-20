@@ -114,79 +114,62 @@ class EntityController extends Controller
         // Наполняем сущность данными
         $user = Auth::user();
 
-        $entity = new entity;
-        $entity->name = $request->name;
-        $entity->alias = $request->alias;
-        $entity->model = $request->model;
+        // Вносим сущность в список сущностей, если такой сущности там не зарегистрировано
+        $entity = Entity::firstOrCreate(
+            ['model' => $request->model], 
+            [
+                'name' => $request->name,
+                'alias' => $request->alias,
+                'rights' => $request->rights,
+                'author_id' => 1,
+                'system' => 1,
+                'moderation' => $answer['automoderate'] ? 1:0,
+                'statistic' => $request->has('statistic'),
+                'dependence' => $request->has('dependence')
+            ]
+        );
 
-        $entity->rights = $request->rights;
-
-        // Вносим общие данные
-        $entity->author_id = 1;
-        $entity->system = 1;
-        $entity->moderation = 0;
-
-
-        $entity->statistic = $request->has('statistic');
-        $entity->dependence = $request->has('dependence');
-
-        // Если нет прав на создание полноценной записи - запись отправляем на модерацию
-        if($answer['automoderate'] == false){$entity->moderation = 1;};
-
-        // Пишем ID компании авторизованного пользователя
-        // if($user->company_id == null){
-        //     abort(403, 'Необходимо авторизоваться под компанией');
-        // };
-        // $entity->company_id = $user->company_id;
-
-        // Раскомментировать если требуется запись ID филиала авторизованного пользователя
-        // if($filial_id == null){abort(403, 'Операция невозможна. Вы не являетесь сотрудником!');};
-        // $entity->filial_id = $filial_id;
-
-        //  Тмц
-        // $this->tmc($request, $entity);
-
-        $entity->save();
+        dd($entity);
 
         // Настройки фотографий
-        setSettings($request, $entity);
+        // setSettings($request, $entity);
 
-        if($request->rights_minus == 0){
+        // if($request->rights_minus == 0){
 
-            // Генерируем права
-            $actions = Action::get();
-            $mass = [];
+        //     // Генерируем права
+        //     $actions = Action::get();
+        //     $mass = [];
 
-            foreach($actions as $action){
-                $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
-            };
-            DB::table('action_entity')->insert($mass);
-        }
+        //     foreach($actions as $action){
+        //         $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+        //     };
+        //     DB::table('action_entity')->insert($mass);
+        // }
 
-        $actionentities = Actionentity::where('entity_id', $entity->id)->get();
-        $mass = [];
+        // $actionentities = Actionentity::where('entity_id', $entity->id)->get();
+        // $mass = [];
 
-        foreach($actionentities as $actionentity){
+        // foreach($actionentities as $actionentity){
 
-            $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+        //     $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
 
-            $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
-        };
+        //     $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+        // };
 
-        DB::table('rights')->insert($mass);
+        // DB::table('rights')->insert($mass);
 
-        $actionentities = $actionentities->pluck('id')->toArray();
+        // $actionentities = $actionentities->pluck('id')->toArray();
 
-        // Получаем все существующие разрешения (allow)
-        $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+        // // Получаем все существующие разрешения (allow)
+        // $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
 
-        $mass = [];
-        // Генерируем права на полный доступ
-        foreach($rights as $right){
-            $mass[] = ['right_id' => $right->id, 'role_id' => 1, 'system' => 1];
-        };
+        // $mass = [];
+        // // Генерируем права на полный доступ
+        // foreach($rights as $right){
+        //     $mass[] = ['right_id' => $right->id, 'role_id' => 1, 'system' => 1];
+        // };
 
-        DB::table('right_role')->insert($mass);
+        // DB::table('right_role')->insert($mass);
 
         return redirect()->route('entities.index');
     }

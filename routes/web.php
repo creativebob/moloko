@@ -62,7 +62,8 @@ Route::get('/update_menus', 'ParserController@update_menus')->middleware('auth')
 // Route::get('/old_claims', 'ParserController@old_claims')->middleware('auth');
 // Route::get('/phone_parser', 'ParserController@phone_parser')->middleware('auth');
 // Route::get('/cac_parser', 'ParserController@challenges_active_count')->middleware('auth');
-Route::get('/choice_parser', 'ParserController@choice_parser')->middleware('auth');
+// Route::get('/choice_parser', 'ParserController@choice_parser')->middleware('auth');
+Route::get('/sort_catalog_parser', 'ParserController@sort_catalog_parser')->middleware('auth');
 
 // Route::get('/dadata', function() {
 //     $result = DadataSuggest::suggest("party", ["query"=>"солтысяк"]);
@@ -747,6 +748,12 @@ Route::resource('/accounts', 'AccountController')->middleware('auth');
 
 // Проверка на существование аккаунта
 Route::post('/accounts_check', 'AccountController@ajax_check')->middleware('auth');
+
+
+// ---------------------------------------- Источники --------------------------------------------
+
+// Основные методы
+Route::resource('/sources', 'SourceController')->middleware('auth');
 
 
 // --------------------------------------- Рекламные кампании -----------------------------------------------

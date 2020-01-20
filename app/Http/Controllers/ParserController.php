@@ -1048,4 +1048,22 @@ class ParserController extends Controller
 
     }
 
+    public function sort_catalog_parser()
+    {
+
+        $items = PricesGoods::all();
+        $items_filial_1 = $items->where('filial_id', 1);
+        $items_filial_2 = $items->where('filial_id', 2);
+
+        foreach($items_filial_1 as $item){
+            $new_item = $items_filial_2->where('goods_id', $item->goods_id)->first();
+            if($new_item){
+                 $new_item->sort = $item->sort;
+                $new_item->save();               
+            }
+        }
+
+        dd('Готово!');
+    }
+
 }
