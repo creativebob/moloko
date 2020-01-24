@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\CatalogsService;
 use App\PricesService;
 use Carbon\Carbon;
-
-// Валидация
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Cookie;
 
 class PricesServiceController extends Controller
 {
-    // Настройки контроллера
+    /**
+     * PricesServiceController constructor.
+     * @param PricesService $prices_service
+     */
     public function __construct(PricesService $prices_service)
     {
         $this->middleware('auth');
@@ -26,13 +27,23 @@ class PricesServiceController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param $catalog_id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index(Request $request, $catalog_id)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
+
+        // Включение контроля активного фильтра
+        $filter_url = autoFilter($request, $this->entity_alias);
+
+        if (($filter_url != null)&&($request->filter != 'active')) {
+            Cookie::queue(Cookie::forget('filter_' . $this->entity_alias));
+            return Redirect($filter_url);
+        }
 
         $user_filials = session('access.all_rights.index-prices_services-allow.filials');
 //        $user_filials = session('access.all_rights.index-leads-allow');
@@ -53,7 +64,16 @@ class PricesServiceController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $prices_services = PricesService::with([
-            'service.process',
+            'service' => function ($q) {
+                $q->with([
+                    'process' => function ($q) {
+                        $q->with([
+                            'unit',
+                            'group.unit'
+                        ]);
+                    }
+                ]);
+            },
             'catalog',
             'catalogs_item'
         ])
@@ -65,6 +85,20 @@ class PricesServiceController extends Controller
 //        })
         // ->moderatorLimit($answer)
          ->companiesLimit($answer)
+        ->booklistFilter($request)
+
+//        ->whereHas('catalogs_item', function($q) use ($request){
+//            $q->filter($request, 'author_id');
+//        })
+//
+//        ->whereHas('catalogs_item', function($q) use ($request){
+//            $q->filter($request, 'catalogs_services_item_id');
+//        })
+
+        ->whereHas('service.process', function($q){
+            $q->where('draft', false)
+                ->where('archive', false);
+        })
 //            ->filials($answer)
         // ->authors($answer)
         // ->systemItem($answer)
@@ -73,41 +107,49 @@ class PricesServiceController extends Controller
             'catalogs_service_id' => $catalog_id,
             'filial_id' => $filial_id,
         ])
-        ->paginate(30);
+        ->paginate(300);
 //         dd($prices_services);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        // $filter = setFilter($this->entity_alias, $request, [
-        //     'author',               // Автор записи
-        //     // 'services_category',    // Категория услуги
-        //     // 'services_product',     // Группа услуги
-        //     // 'date_interval',     // Дата обращения
-        //     'booklist'              // Списки пользователя
-        // ]);
+        $filter = setFilter($this->entity_alias, $request, [
+//            'author',                               // Автор записи
+//            'booklist',                             // Списки пользователя
+//            'catalogs_services_items'                  // Списки пользователя
+        ]);
 
+        // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
+
+        $catalog = CatalogsService::findOrFail($catalog_id);
+        $page_info->title = 'Прайс: ' . $catalog->name;
+        $page_info->name = 'Прайс: ' . $catalog->name;
 
         return view('prices_services.index', [
             'prices_services' => $prices_services,
             'page_info' => $page_info,
             'class' => $this->class,
             'entity' => $this->entity_alias,
-            // 'filter' => $filter,
+            'filter' => $filter,
             'nested' => null,
             'catalog_id' => $catalog_id,
-            'filial_id' => $filial_id
+            'catalog' => $catalog,
+            'filial_id' => $filial_id,
+            'catalog_services' => $catalog
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param $catalog_id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create(Request $request, $catalog_id)
     {
@@ -120,9 +162,6 @@ class PricesServiceController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
@@ -131,9 +170,6 @@ class PricesServiceController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -143,58 +179,82 @@ class PricesServiceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param $catalog_id
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Request $request, $catalog_id, $id)
     {
         $price = PricesService::findOrFail($id);
-
         return view('prices_services.price_edit', ['price' => $price->price]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param $catalog_id
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function update(Request $request, $catalog_id, $id)
     {
-        $prices_service = PricesService::findOrFail($id);
-        $price = $request->price;
+        $price_service = PricesService::findOrFail($id);
 
-        if ($prices_service->price == $price) {
-            return view('prices_services.price', ['prices_service' => $prices_service]);
-        } else {
-            $new_prices_service = $prices_service->replicate();
+        if ($request->price) {
 
-            $prices_service->update([
-                'archive' => true,
+            $price = $request->price;
+            if ($price_service->price == $price) {
+                return view('prices_services.price', ['prices_service' => $price_service]);
+            } else {
+                if ($price_service->price != $price) {
+
+                    $price_service->actual_price->update([
+                        'end_date' => now(),
+                    ]);
+
+                    $price_service->history()->create([
+                        'price' => $price,
+                    ]);
+
+                    $price_service->update([
+                        'price' => $price,
+                    ]);
+                }
+
+                // dd($price);
+                return view('prices_services.price', ['prices_service' => $price_service]);
+            }
+        }
+
+        if ($request->point) {
+            $point = $request->point;
+            $price_service->update([
+                'point' => $point,
             ]);
-            // dd($new_price);
-
-            $new_prices_service->price = $price;
-            $new_prices_service->save();
-
-            // dd($price);
-            return view('prices_services.price', ['prices_service' => $new_prices_service]);
+            return view('prices_services.price', ['prices_service' => $price_service]);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
      */
     public function destroy($id)
     {
         //
     }
 
-
+    /**
+     * Архивирование
+     *
+     * @param Request $request
+     * @param $catalog_id
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function archive(Request $request, $catalog_id, $id)
     {
         $user = $request->user();
@@ -215,7 +275,7 @@ class PricesServiceController extends Controller
                 'filial_id' => $filial_id
             ]);
         } else {
-            abort(403, 'Ошиька архивирования');
+            abort(403, 'Ошибка архивирования');
         }
     }
 
@@ -234,7 +294,7 @@ class PricesServiceController extends Controller
         }])
         ->find($prices_ids)
             ->keyBy('id');
-        
+
         foreach ($request->prices as $id => $price) {
             $prices_service = $prices_services[$id];
 
@@ -293,8 +353,39 @@ class PricesServiceController extends Controller
     public function ajax_store(Request $request)
     {
 
-        $data = $request->input();
-        $prices_service = (new PricesService())->create($data);
+        $prices_service = PricesService::firstOrNew([
+            'catalogs_services_item_id' => $request->catalogs_services_item_id,
+            'catalogs_service_id' => $request->catalogs_service_id,
+            'service_id' => $request->service_id,
+            'filial_id' => $request->filial_id,
+        ], [
+            'price' => $request->price
+        ]);
+
+        if ($prices_service->id) {
+            $prices_service->update([
+                'archive' => false
+            ]);
+
+            if ($prices_service->price != $request->price) {
+
+                $prices_service->actual_price->update([
+                    'end_date' => now(),
+                ]);
+
+                $prices_service->history()->create([
+                    'price' => $request->price,
+                ]);
+
+                $prices_service->update([
+                    'price' => $request->price,
+                ]);
+            }
+
+        } else {
+            $prices_service->save();
+        }
+
 
         return view('products.processes.services.prices.price', compact('prices_service'));
     }
@@ -311,9 +402,8 @@ class PricesServiceController extends Controller
 
         $prices_service = PricesService::findOrFail($request->id);
 
-        if ($prices_service->price == $request->price) {
-            return view('products.processes.services.prices.price', ['prices_service' => $prices_service]);
-        } else {
+        if ($prices_service->price != $request->price) {
+
             $prices_service->actual_price->update([
                 'end_date' => Carbon::now(),
             ]);
@@ -325,9 +415,8 @@ class PricesServiceController extends Controller
             $prices_service->update([
                 'price' => $request->price,
             ]);
-
-            return view('products.processes.services.prices.price', compact('prices_service'));
         }
+        return view('products.processes.services.prices.price', compact('prices_service'));
     }
 
     public function ajax_archive(Request $request)
@@ -338,6 +427,30 @@ class PricesServiceController extends Controller
             ->update([
             'archive' => true,
             'editor_id' => hideGod($user)
+        ]);
+        return response()->json($result);
+    }
+
+    public function ajax_status(Request $request)
+    {
+        $result = PricesService::findOrFail($request->id)->update([
+            'status' => $request->status
+        ]);
+        return response()->json($result);
+    }
+
+    public function ajax_hit(Request $request)
+    {
+        $result = PricesService::findOrFail($request->id)->update([
+            'is_hit' => $request->is_hit
+        ]);
+        return response()->json($result);
+    }
+
+    public function ajax_new(Request $request)
+    {
+        $result = PricesService::findOrFail($request->id)->update([
+            'is_new' => $request->is_new
         ]);
         return response()->json($result);
     }

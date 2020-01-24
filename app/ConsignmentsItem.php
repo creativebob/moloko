@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Models\Traits\Commonable;
+use App\Models\System\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -82,7 +82,7 @@ class ConsignmentsItem extends Model
         return $this->belongsTo(Stock::class);
     }
 
-    // 
+    //
     public function cmv()
     {
         return $this->morphTo();

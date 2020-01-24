@@ -3,7 +3,6 @@
 namespace App\Http\ViewComposers\System;
 
 use App\Property;
-
 use Illuminate\View\View;
 
 class PropertiesComposer
@@ -23,15 +22,15 @@ class PropertiesComposer
         ->template($answer_properties)
         ->with([
             'metrics' => function ($query) use ($answer_metrics, $entity_id) {
-            $query->with('values')
-            ->moderatorLimit($answer_metrics)
-            ->companiesLimit($answer_metrics)
-            ->authors($answer_metrics)
-            ->systemItem($answer_metrics)
-            ->whereHas('entities', function($q) use ($entity_id) {
-                $q->where('id', $entity_id);
-            });
-        },
+                $query->with('values')
+                ->moderatorLimit($answer_metrics)
+                ->companiesLimit($answer_metrics)
+                ->authors($answer_metrics)
+                ->systemItem($answer_metrics)
+                ->whereHas('entities', function($q) use ($entity_id) {
+                    $q->where('id', $entity_id);
+                });
+            },
             'units_category.units'
         ])
         ->withCount('metrics')

@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Models\System\Traits\Commonable;
+use App\Models\System\Traits\Processable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -30,6 +32,9 @@ class Workflow extends Model
 
     use Notifiable;
     use SoftDeletes;
+
+    use Commonable;
+    use Processable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -63,18 +68,6 @@ class Workflow extends Model
     public function category()
     {
         return $this->belongsTo(WorkflowsCategory::class);
-    }
-
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo(User::class);
     }
 
     // Состоит в составе

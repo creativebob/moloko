@@ -38,7 +38,9 @@ Vue.component('estimate-sale-button-component', require('./components/estimates/
 Vue.component('input-digit-component', require('./components/InputDigitComponent.vue'));
 Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
 Vue.component('rawcomposition-component', require('./components/RawCompositionComponent.vue'));
+
 Vue.component('articles-categories-with-groups-component', require('./components/ArticlesCategoriesWithGroupsComponent.vue'));
+Vue.component('processes-categories-with-groups-component', require('./components/ProcessesCategoriesWithGroupsComponent.vue'));
 
 
 Vue.component('catalog-goods-component', require('./components/catalogs/goods/CatalogGoodsComponent.vue'));
@@ -52,7 +54,9 @@ Vue.component('plugins-component', require('./components/plugins/PluginsComponen
 // Поиск
 Vue.component('search-city-component', require('./components/search/SearchCityComponent'));
 Vue.component('search-lead-component', require('./components/search/SearchLeadComponent'));
-Vue.component('search-cmv-component', require('./components/search/SearchCmvComponent'));
+Vue.component('search-articles-component', require('./components/search/SearchArticlesComponent'));
+Vue.component('search-processes-component', require('./components/search/SearchProcessesComponent'));
+Vue.component('search-prices-goods-component', require('./components/search/SearchPricesGoodsComponent'));
 
 Vue.component('sites-component', require('./components/promotions/SitesComponent'));
 Vue.component('promotion-catalog-goods-component', require('./components/promotions/CatalogGoodsComponent'));

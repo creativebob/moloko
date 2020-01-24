@@ -88,6 +88,24 @@ class PricesService extends Model
         return $this->belongsTo(Service::class);
     }
 
+    public function service_public()
+    {
+        return $this->belongsTo(Service::class, 'service_id')
+            ->with('process')
+            ->whereHas('process', function ($q) {
+                $q->with([
+                    'workflows'
+                ])
+                    ->where([
+                        'draft' => false
+                    ]);
+            })
+            ->where([
+                'display' => true,
+                'archive' => false,
+            ]);
+    }
+
     // История
     public function history()
     {
@@ -124,5 +142,54 @@ class PricesService extends Model
     public function currency()
     {
         return $this->belongsTo(Currency::class);
+    }
+
+    // Фильтр
+    public function scopeFilter($query)
+    {
+        if (request('price')) {
+            $price = request('price');
+            if (isset($price['min'])) {
+                $query->where('price', '>=', $price['min']);
+            }
+            if (isset($price['max'])) {
+                $query->where('price', '<=', $price['max']);
+            }
+            $query->orderBy('price');
+        }
+
+        if (request('length')) {
+            $weight = request('length');
+            $query->whereHas('service_public', function($q) use ($weight) {
+                $q->whereHas('process', function($q) use ($weight) {
+                    $q->where('length', '>=', $weight['min'] / 1000)
+                        ->where('length', '<=', $weight['max'] / 1000);
+                });
+            });
+        }
+
+        if (request('catalogs_services_item')) {
+            $catalogs_services_item = request('catalogs_services_item');
+            $query->where('catalogs_services_item_id', $catalogs_services_item);
+        }
+
+//        if (request('raws_articles_groups')) {
+//            $raws_articles_groups = request('raws_articles_groups');
+////		    dd($raws_articles_groups);
+//
+//            $query->whereHas('goods_public', function($q) use ($raws_articles_groups) {
+//                $q->whereHas('article', function($q) use ($raws_articles_groups) {
+//                    foreach($raws_articles_groups as $item){
+//                        $q->whereHas('attachments',function($q) use ($item) {
+//                            $q->whereHas('article', function ($q) use ($item) {
+//                                $q->where('articles_group_id', $item);
+//                            });
+//                        });
+//                    }
+//                });
+//            });
+//        }
+
+        return $query;
     }
 }

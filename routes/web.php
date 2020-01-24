@@ -24,8 +24,8 @@ Route::get('/update_parser', 'AppController@parser')->middleware('auth');
 
 Route::get('/roll_house_parser', 'AppController@roll_house_parser')->middleware('auth');
 
-Route::get('/cache', 'AppController@cahche')->middleware('auth');
-Route::get('/clear', 'AppController@cahche_clear')->middleware('auth');
+Route::get('/cache', 'AppController@cache')->middleware('auth');
+Route::get('/clear', 'AppController@cache_clear')->middleware('auth');
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
@@ -208,6 +208,7 @@ Route::get('/recalculate_categories/{entity}', 'AppController@recalculate_catego
 
 
 Route::get('/draft_article/{entity}/{id}', 'AppController@draft_article')->middleware('auth');
+Route::get('/draft_process/{entity}/{id}', 'AppController@draft_process')->middleware('auth');
 // --------------------------------------- Настройки -----------------------------------------------
 
 Route::any('/set_setting', 'SettingController@ajax_set_setting')->middleware('auth');
@@ -540,19 +541,19 @@ Route::resource('/services_categories', 'ServicesCategoryController')->middlewar
 Route::post('/services_category_check', 'ServicesCategoryController@ajax_check')->middleware('auth');
 
 
-// ---------------------------------- Услуги (Артикулы) -------------------------------------------
-
-Route::any('/services/create', 'ServiceController@create')->middleware('auth');
+// ---------------------------------- Услуги -------------------------------------------
 
 // Основные методы
-Route::resource('/services', 'ServiceController')->middleware('auth');
-// Route::get('/services/search/{text_fragment}', 'ServiceController@search')->middleware('auth');
-Route::post('/services/search/{text_fragment}', 'ServiceController@search')->middleware('auth');
+Route::resource('/services', 'ServiceController');
+// Поиск
+Route::post('/services/search/{text_fragment}', 'ServiceController@search');
 // Архивация
-Route::post('/services/archive/{id}', 'ServiceController@archive')->middleware('auth');
+Route::post('/services/archive/{id}', 'ServiceController@archive');
+// Дублирование
+Route::post('/services/replicate/{id}', 'ServiceController@replicate');
 // Фотки
-Route::any('/service/add_photo', 'ServiceController@add_photo')->middleware('auth');
-Route::post('/service/photos', 'ServiceController@photos')->middleware('auth');
+Route::any('/service/add_photo', 'ServiceController@add_photo');
+Route::post('/service/photos', 'ServiceController@photos');
 
 
 // -------------------------------- Категории рабочих процессов -------------------------------------------
@@ -569,15 +570,18 @@ Route::resource('/workflows_categories', 'WorkflowsCategoryController')->middlew
 // ---------------------------------- Рабочие процессы -------------------------------------------
 
 // Основные методы
-Route::resource('workflows', 'WorkflowController');
-
+Route::resource('/workflows', 'WorkflowController');
+// Поиск
+Route::post('/workflows/search/{text_fragment}', 'WorkflowController@search');
 // Архивация
-Route::post('/workflows/archive/{id}', 'WorkflowController@archive')->middleware('auth');
+Route::post('/workflows/archive/{id}', 'WorkflowController@archive');
+// Дублирование
+Route::post('/workflows/replicate/{id}', 'WorkflowController@replicate');
 // Фото
-Route::any('/workflow/add_photo', 'WorkflowController@add_photo')->middleware('auth');
-Route::post('/workflow/photos', 'WorkflowController@photos')->middleware('auth');
+Route::any('/workflow/add_photo', 'WorkflowController@add_photo');
+Route::post('/workflow/photos', 'WorkflowController@photos');
 
-Route::any('/workflows_create_mode', 'WorkflowController@ajax_change_create_mode')->middleware('auth');
+Route::any('/workflows_create_mode', 'WorkflowController@ajax_change_create_mode');
 
 // -------------------------------- Расходные материалы -------------------------------------------
 
@@ -1177,6 +1181,10 @@ Route::prefix('catalogs_services/{catalog_id}')->group(function () {
     Route::any('prices_services/ajax_store', 'PricesServiceController@ajax_store');
 
     Route::any('prices_services_sync', 'PricesServiceController@sync')->name('prices_services.sync');
+
+    Route::any('prices_services_status', 'PricesServiceController@ajax_status');
+    Route::any('prices_services_hit', 'PricesServiceController@ajax_hit');
+    Route::any('prices_services_new', 'PricesServiceController@ajax_new');
 
     Route::resource('prices_services', 'PricesServiceController');
 });

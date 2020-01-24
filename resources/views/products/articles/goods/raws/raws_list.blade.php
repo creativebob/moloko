@@ -9,9 +9,9 @@
 
 					@foreach($raws_category->raws as $raw)
 					<li class="checkbox">
-						{{ Form::checkbox(null, $raw->id, in_array($raw->id, $article->raws->pluck('id')->toArray()), ['class' => 'add-raw', 'id' => 'raw-' . $raw->id]) }}
+						{{ Form::checkbox(null, $raw->id, in_array($raw->id, $article->raws->pluck('id')->toArray()), ['class' => 'add-raw', 'id' => 'checkbox-raw-' . $raw->id]) }}
 						@if(isset($raw->article))
-							<label for="raw-{{ $raw->id }}">
+							<label for="checkbox-raw-{{ $raw->id }}">
 								<span>{{ $raw->article->name }}
 									@if($raw->portion_status)
 										<em class="raw-portion-item">- {{ $raw->portion_count }} {{ $raw->unit_portion->abbreviation }}</em>

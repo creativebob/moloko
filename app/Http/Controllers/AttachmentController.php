@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Attachment;
 use App\AttachmentsCategory;
-use App\Http\Controllers\Traits\Cmvable;
+
 use App\Http\Requests\AttachmentStoreRequest;
 use App\Http\Requests\AttachmentUpdateRequest;
 use App\Manufacturer;
@@ -28,7 +28,7 @@ class AttachmentController extends Controller
     }
 
     use Articlable;
-    use Cmvable;
+
 
     public function index(Request $request)
     {

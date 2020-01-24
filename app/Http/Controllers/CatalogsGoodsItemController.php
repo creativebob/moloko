@@ -9,11 +9,13 @@ use App\Http\Requests\CatalogsGoodsItemStoreRequest;
 use App\CatalogsGoodsItem;
 use Illuminate\Http\Request;
 
-
 class CatalogsGoodsItemController extends Controller
 {
 
-    // Настройки сконтроллера
+    /**
+     * CatalogsGoodsItemController constructor.
+     * @param CatalogsGoodsItem $catalogs_goods_item
+     */
     public function __construct(CatalogsGoodsItem $catalogs_goods_item)
     {
         $this->middleware('auth');
@@ -27,9 +29,16 @@ class CatalogsGoodsItemController extends Controller
 
     use Photable;
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @param $catalog_id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request, $catalog_id)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -81,19 +90,27 @@ class CatalogsGoodsItemController extends Controller
         return view('catalogs_goods_items.index', [
             'catalogs_goods_items' => $catalogs_goods_items,
             'page_info' => pageInfo($this->entity_alias),
+            'id' => $request->id,
             'catalog_id' => $catalog_id,
             'catalog_goods' => $catalog_goods
         ]);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param Request $request
+     * @param $catalog_id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function create(Request $request, $catalog_id)
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
-        // dd('lol');
 
         return view('system.common.accordions.create', [
-            'item' => new $this->class,
+            'item' => CatalogsGoods::make(),
             'entity' => $this->entity_alias,
             'title' => 'Добавление пункта каталога',
             'parent_id' => $request->parent_id,
@@ -102,9 +119,16 @@ class CatalogsGoodsItemController extends Controller
         ]);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param CatalogsGoodsItemStoreRequest $request
+     * @param $catalog_id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(CatalogsGoodsItemStoreRequest $request, $catalog_id)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -115,27 +139,37 @@ class CatalogsGoodsItemController extends Controller
         if ($catalogs_goods_item) {
 
             // Переадресовываем на index
-            return redirect()->route('catalogs_goods_items.index', [$catalog_id, 'id' => $catalogs_goods_item->id]);
+            return redirect()->route('catalogs_goods_items.index', ['catalog_id' => $catalog_id, 'id' => $catalogs_goods_item->id]);
 
         } else {
-
             $result = [
                 'error_status' => 1,
                 'error_message' => 'Ошибка при записи пункта каталога!'
             ];
-
         }
     }
 
-
+    /**
+     * Display the specified resource.
+     *
+     * @param $id
+     */
     public function show($id)
     {
         //
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Request $request
+     * @param $catalog_id
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function edit(Request $request, $catalog_id, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -155,9 +189,17 @@ class CatalogsGoodsItemController extends Controller
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param CatalogsGoodsItemUpdateRequest $request
+     * @param $catalog_id
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(CatalogsGoodsItemUpdateRequest $request, $catalog_id, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -177,7 +219,7 @@ class CatalogsGoodsItemController extends Controller
             $catalogs_goods_item->filters()->sync($request->filters);
 
             // Переадресовываем на index
-            return redirect()->route('catalogs_goods_items.index', [$catalog_id, 'id' => $catalogs_goods_item->id]);
+            return redirect()->route('catalogs_goods_items.index', ['catalog_id' => $catalog_id, 'id' => $catalogs_goods_item->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -186,9 +228,17 @@ class CatalogsGoodsItemController extends Controller
         }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Request $request
+     * @param $catalog_id
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function destroy(Request $request, $catalog_id, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -198,10 +248,6 @@ class CatalogsGoodsItemController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods_item);
-
-        // Скрываем бога
-        $catalogs_goods_item->editor_id = hideGod($request->user());
-        $catalogs_goods_item->save();
 
         $parent_id = $catalogs_goods_item->parent_id;
 

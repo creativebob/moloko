@@ -2,29 +2,23 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Http\Requests\ServiceStoreRequest;
+use App\Http\Requests\ServiceUpdateRequest;
 use App\Service;
 use App\ServicesCategory;
-use App\Process;
 use App\Manufacturer;
-
-// Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\ServiceRequest;
-use App\Http\Requests\ProcessRequest;
-
-// Куки
 use Illuminate\Support\Facades\Cookie;
-
-// Трейты
 use App\Http\Controllers\Traits\Processable;
-
 use Illuminate\Support\Facades\Log;
 
 class ServiceController extends Controller
 {
 
-    // Настройки сконтроллера
+    /**
+     * ServiceController constructor.
+     * @param Service $service
+     */
     public function __construct(Service $service)
     {
         $this->middleware('auth');
@@ -131,7 +125,6 @@ class ServiceController extends Controller
 
     public function create(Request $request)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -154,35 +147,32 @@ class ServiceController extends Controller
             // Описание ошибки
             $ajax_error = [];
             $ajax_error['title'] = "Обратите внимание!";
-            $ajax_error['text'] = "Для начала необходимо создать категории услуг. А уже потом будем добавлять рабочие услги. Ок?";
+            $ajax_error['text'] = "Для начала необходимо создать категории услуг. А уже потом будем добавлять услги. Ок?";
             $ajax_error['link'] = "/admin/services_categories";
             $ajax_error['title_link'] = "Идем в раздел категорий";
 
             return view('ajax_error', compact('ajax_error'));
         }
 
-        if ($request->user()->company_id != null) {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('manufacturers', false, 'index');
 
-            // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-            $answer = operator_right('manufacturers', false, 'index');
+        $manufacturers_count = Manufacturer::moderatorLimit($answer)
+        ->companiesLimit($answer)
+        ->systemItem($answer)
+        ->count();
 
-            $manufacturers_count = Manufacturer::moderatorLimit($answer)
-            ->companiesLimit($answer)
-            ->systemItem($answer)
-            ->count();
+        // Если нет производителей
+        if ($manufacturers_count == 0) {
 
-            // Если нет производителей
-            if ($manufacturers_count == 0) {
+            // Описание ошибки
+            // $ajax_error = [];
+            $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
+            $ajax_error['text'] = "Для начала необходимо добавить производителей. А уже потом будем добавлять рабочие процессы. Ок?";
+            $ajax_error['link'] = "/admin/manufacturers/create"; // Ссылка на кнопке
+            $ajax_error['title_link'] = "Идем в раздел производителей"; // Текст на кнопке
 
-                // Описание ошибки
-                // $ajax_error = [];
-                $ajax_error['title'] = "Обратите внимание!"; // Верхняя часть модалки
-                $ajax_error['text'] = "Для начала необходимо добавить производителей. А уже потом будем добавлять рабочие процессы. Ок?";
-                $ajax_error['link'] = "/admin/manufacturers/create"; // Ссылка на кнопке
-                $ajax_error['title_link'] = "Идем в раздел производителей"; // Текст на кнопке
-
-                return view('ajax_error', compact('ajax_error'));
-            }
+            return view('ajax_error', compact('ajax_error'));
         }
 
         return view('products.processes.common.create.create', [
@@ -190,14 +180,13 @@ class ServiceController extends Controller
             'title' => 'Добавление услуги',
             'entity' => $this->entity_alias,
             'category_entity' => 'services_categories',
+            'units_category_default' => 6,
+            'unit_default' => 32,
         ]);
     }
 
-    public function store(ProcessRequest $request)
+    public function store(ServiceStoreRequest $request)
     {
-
-//         dd($request);
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -212,10 +201,11 @@ class ServiceController extends Controller
 
             $data = $request->input();
             $data['process_id'] = $process->id;
-            $service = (new Service())->create($data);
+            $service = Service::create($data);
 
             if ($service) {
 
+                $services_category = $services_category->load('workflows:id');
                 $workflows = $services_category->workflows->pluck('id')->toArray();
                 $process->workflows()->sync($workflows);
 
@@ -265,13 +255,23 @@ class ServiceController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $service);
 
+        $service->load([
+            'process' => function ($q) {
+                $q->with([
+                    'unit',
+                    'workflows.process.group.unit',
+                    'workflows.category'
+                ]);
+            },
+            'metrics',
+            'prices'
+        ]);
+
         $process = $service->process;
         // dd($process);
 
-        $service->load('prices');
-
         // Получаем настройки по умолчанию
-        $settings = getSettings($this->entity_alias);
+        $settings = $this->getSettings($this->entity_alias);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
@@ -286,12 +286,12 @@ class ServiceController extends Controller
             'entity' => $this->entity_alias,
             'category_entity' => 'services_categories',
             'categories_select_name' => 'services_category_id',
+            'paginator_url' => url()->previous()
         ]);
     }
 
-    public function update(ProcessRequest $request, $id)
+    public function update(ServiceUpdateRequest $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -306,7 +306,6 @@ class ServiceController extends Controller
         $process = $service->process;
         // dd($process);
 
-
         $result = $this->updateProcess($request, $service);
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
@@ -319,26 +318,22 @@ class ServiceController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $service);
 
-            // // Каталоги
-            // $data = [];
-            // if (isset($request->catalogs_items)) {
+            // Метрики
+            if ($request->has('metrics')) {
+                // dd($request);
 
-            //     $user = $request->user();
-
-            //     foreach ($request->catalogs_items as $catalog_id => $items) {
-            //         foreach ($items as $item_id) {
-            //             $data[(int) $item_id] = [
-            //                 'catalogs_service_id' => $catalog_id,
-            //                 'price' => $process->price_default,
-            //                 'company_id' => $user->company_id,
-            //                 'filial_id' => $user->filial_id,
-            //                 'author_id' => hideGod($user),
-            //             ];
-            //         }
-            //     }
-            // }
-            // // dd($data);
-            // $service->prices()->sync($data);
+                $metrics_insert = [];
+                foreach ($request->metrics as $metric_id => $value) {
+                    if (is_array($value)) {
+                        $metrics_insert[$metric_id]['value'] = implode(',', $value);
+                    } else {
+//                        if (!is_null($value)) {
+                        $metrics_insert[$metric_id]['value'] = $value;
+//                        }
+                    }
+                }
+                $service->metrics()->syncWithoutDetaching($metrics_insert);
+            }
 
             // Если ли есть
             if ($request->cookie('backlink') != null) {
@@ -361,12 +356,12 @@ class ServiceController extends Controller
 
     public function archive(Request $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $service = Service::moderatorLimit($answer)->findOrFail($id);
+        $service = Service::moderatorLimit($answer)
+        ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $service);
@@ -382,11 +377,62 @@ class ServiceController extends Controller
             if ($service) {
                 return redirect()->route('services.index');
             } else {
-                abort(403, 'Ошибка при архивации сырья');
+                abort(403, 'Ошибка при архивации');
             }
         } else {
-            abort(403, 'Сырьё не найдено');
+            abort(403, 'Не найдено');
         }
+    }
+
+    public function replicate(Request $request, $id)
+    {
+        $service = Service::findOrFail($id);
+
+        $service->load('process');
+        $process = $service->process;
+        $new_process = $this->replicateProcess($request, $service);
+
+        $new_service = $service->replicate();
+        $new_service->process_id = $new_process->id;
+        $new_service->save();
+
+        $service->load('metrics');
+        if ($service->metrics->isNotEmpty()) {
+            $metrics_insert = [];
+            foreach ($service->metrics as $metric) {
+                $metrics_insert[$metric->id]['value'] = $metric->pivot->value;
+            }
+            $res = $new_service->metrics()->attach($metrics_insert);
+        }
+
+        if($process->kit) {
+            $process->load('services');
+            if ($process->services->isNotEmpty()) {
+                $services_insert = [];
+                foreach ($process->services as $service) {
+                    $services_insert[$service->id]['value'] = $service->pivot->value;
+                }
+                $res = $new_process->services()->attach($services_insert);
+            }
+        } else {
+            $process->load('workflows');
+            if ($process->workflows->isNotEmpty()) {
+                $workflows_insert = [];
+                foreach ($process->workflows as $workflow) {
+                    $workflows_insert[$workflow->id] = [
+                        'value' => $workflow->pivot->value,
+                        'useful' => $workflow->pivot->useful,
+                        'waste' => $workflow->pivot->waste,
+                        'leftover' => $workflow->pivot->leftover,
+                        'leftover_operation_id' => $workflow->pivot->leftover_operation_id,
+                    ];
+                }
+                $res = $new_process->workflows()->attach($workflows_insert);
+            }
+        }
+
+
+        return redirect()->route('services.index');
     }
 
     // --------------------------------------------- Ajax -------------------------------------------------

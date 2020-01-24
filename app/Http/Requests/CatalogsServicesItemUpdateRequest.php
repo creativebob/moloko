@@ -31,8 +31,9 @@ class CatalogsServicesItemUpdateRequest extends FormRequest
             'seo_description' => 'string|nullable',
             'parent_id' => 'integer|nullable',
 
+            'color' => 'string|max:7||nullable',
+
             'file' => 'max:'.$settings['img_max_size'].'|mimes:'.$settings['img_formats'].'|nullable',
-            'manufacturers.*' => 'integer|nullable',
 
             'display' => 'integer|max:1|nullable',
             'moderation' => 'integer|max:1|nullable',

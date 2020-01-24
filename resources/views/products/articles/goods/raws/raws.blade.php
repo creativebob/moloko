@@ -62,13 +62,10 @@
 					@endif
 
 				</tbody>
+
 				<tfoot>
 					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
+						<td colspan="5"></td>
 						<td>
 							<span class="total_raws_count_weight">0</span> <span>гр.</span>
 						</td>
@@ -81,10 +78,6 @@
 			</table>
 		</div>
 	</div>
-</div>
-<div class="small-12 medium-3 cell">
-
-
 </div>
 
 @push('scripts')

@@ -148,3 +148,22 @@ Breadcrumbs::register('prices_goods-index', function ($breadcrumbs, $catalog, $p
     $breadcrumbs->push($page_info->name);
 });
 
+// Статика для каталога услуг
+Breadcrumbs::register('catalogs_services-section-index', function ($breadcrumbs, $catalog, $page_info) {
+    $breadcrumbs->push('Прайсы услуг', route('catalogs_services.index'));
+    $breadcrumbs->push($catalog->name);
+});
+
+Breadcrumbs::register('catalogs_services-section-edit', function ($breadcrumbs, $catalog, $page_info, $item) {
+    $breadcrumbs->push('Прайсы услуг', route('catalogs_services.index'));
+    $breadcrumbs->push($catalog->name, route('catalogs_services.edit', $catalog->id));
+    $breadcrumbs->push($page_info->name, route($page_info->alias . '.index', $catalog->id));
+    $breadcrumbs->push($item->name);
+});
+
+Breadcrumbs::register('prices_services-index', function ($breadcrumbs, $catalog, $page_info) {
+    $breadcrumbs->push('Прайсы услуг', route('catalogs_services.index'));
+    $breadcrumbs->push($catalog->name, route('catalogs_services.edit', $catalog->id));
+    $breadcrumbs->push($page_info->name);
+});
+

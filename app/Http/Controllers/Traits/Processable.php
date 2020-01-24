@@ -15,44 +15,57 @@ use Illuminate\Support\Facades\Log;
 
 trait Processable
 {
-
     use Photable;
 
-    public function storeProcess(ProcessRequest $request, $category)
+    /**
+     * Запись процесса в бд
+     *
+     * @param ProcessRequest $request
+     * @param $category
+     * @return mixed
+     */
+    public function storeProcess($request, $category)
     {
+//        $user = $request->user();
+//        $user_id = $user->id;
+//        $company_id = $user->company_id;
 
-        $user = $request->user();
-        $user_id = $user->id;
-        $company_id = $user->company_id;
+        // TODO - 22.01.20 - При создании процесса не ищем похожую группу, а создаем новую (на Вкусняшке проблемы с дублированием имён)
 
-        // Смотрим пришедший режим группы товаров
+        // Смотрим пришедший режим группы процессов
         switch ($request->mode) {
 
             case 'mode-default':
-            $processes_group = ProcessesGroup::firstOrCreate([
-                'name' => $request->name,
-                'unit_id' => $request->unit_id,
-                'company_id' => $company_id,
-            ]);
+                //            $processes_group = ProcessesGroup::firstOrCreate([
+                //                'name' => $request->name,
+                //                'unit_id' => $request->unit_id,
+                //                'company_id' => $company_id,
+                //            ]);
 
-            // Пишем к группе связь с категорией
-            $category->groups()->syncWithoutDetaching($processes_group->id);
+                $data = $request->input();
+                $processes_group = ProcessesGroup::create($data);
 
+                // Пишем к группе связь с категорией
+                $category->groups()->syncWithoutDetaching($processes_group->id);
             break;
 
             case 'mode-add':
-            $processes_group = ProcessesGroup::firstOrCreate([
-                'name' => $request->group_name,
-                'unit_id' => $request->unit_id,
-                'company_id' => $company_id,
-            ]);
+//                $processes_group = ProcessesGroup::firstOrCreate([
+//                    'name' => $request->group_name,
+//                    'unit_id' => $request->unit_id,
+//                    'company_id' => $company_id,
+//                ]);
 
-            // Пишем к группе связь с категорией
-            $category->groups()->syncWithoutDetaching($processes_group->id);
+                $data = $request->input();
+                $data['name'] = $request->group_name;
+                $processes_group = ProcessesGroup::create($data);
+
+                // Пишем к группе связь с категорией
+                $category->groups()->syncWithoutDetaching($processes_group->id);
             break;
 
             case 'mode-select':
-            $processes_group = ProcessesGroup::findOrFail($request->group_id);
+                $processes_group = ProcessesGroup::findOrFail($request->group_id);
             break;
         }
 
@@ -63,29 +76,60 @@ trait Processable
         $data['processes_group_id'] = $processes_group->id;
         $data['processes_type_id'] = $category->processes_type_id;
 
-        // Смотрим статичную категорию id 3 (Время), если пришла она по переводим к выбранному коэффициенту
-        if ($data['units_category_id'] == 3) {
-            $unit = Unit::findOrFail($data['unit_id']);
-            $length = $unit->ratio;
-            $data['unit_id'] = null;
-        } else {
-            // Если нет, то умножаем пришедшую продолжительность на количество чего либо
-            $extra_unit = Unit::findOrFail($data['extra_unit_id']);
-            $length = $data['length'] * $extra_unit->ratio;
-            $data['unit_id'] = $data['extra_unit_id'];
+        if (isset($data['units_category_id'])) {
+
+            // Смотрим статичную категорию id 3 (Время), если пришла она по переводим к выбранному коэффициенту
+            if($data['units_category_id'] == 3) {
+
+                $unit = Unit::findOrFail($data['unit_id']);
+                $length = $unit->ratio;
+                $data['length'] = $length;
+
+//            } elseif ($data['units_category_id'] == 5) {
+//
+//                $unit = Unit::findOrFail($data['unit_id']);
+//                $volume = $unit->ratio;
+//                $data['volume'] = $volume;
+
+            } else {
+
+                // Если нет, то умножаем пришедший вес на количество чего либо
+                // $extra_unit = Unit::findOrFail($data['extra_unit_id']);
+
+
+                // Если не пришло кол-во веса, значит у пользователя его не запросили, так как планируеться измерять
+                // в единицах веса. Установим единицу!
+
+//                if(isset($data['weight'])){
+//                    $weight_unit = Unit::findOrFail($data['unit_weight_id']);
+//                    $weight = $data['weight'] * $weight_unit->ratio;
+//                    $data['weight'] = $weight;
+//                };
+//
+//                if(isset($data['volume'])){
+//                    $volume_unit = Unit::findOrFail($data['unit_volume_id']);
+//                    $volume = $data['volume'] * $volume_unit->ratio;
+//                    $data['volume'] = $volume;
+//                };
+            }
         }
         // dd($length);
-        $data['length'] = $length;
 
-        $process = (new Process())->create($data);
+        $process = Process::create($data);
         Log::channel('operations')
             ->info('Записали процесс c id: ' . $process->id);
 
         return $process;
     }
 
-
-    public function updateProcess(ProcessRequest $request, $item)
+    /**
+     * Изменение процесса в бд
+     *
+     * @param $request
+     * @param $item
+     * @return mixed
+     */
+    public function updateProcess($request, $item)
     {
 
         $process = $item->process;
@@ -119,24 +163,25 @@ trait Processable
                     if ($item->getTable() == 'services') {
 
                         if($process->kit) {
-                            $this->setServices($request, $process);
+                            $access = session('access.all_rights.index-services-allow');
+                            if ($access) {
+                                $process->services()->sync($request->services);
+                            }
                         } else {
-                            $this->setWorkflows($request, $process);
+                            $access = session('access.all_rights.index-workflows-allow');
+                            if ($access) {
+                                $process->workflows()->sync($request->workflows);
+                            }
                         }
-                    }
-
-                    if (isset($process->unit_id)) {
-                        $unit = Unit::findOrFail($process->unit_id);
-                        $length = $data['length'] * $unit->ratio;
-                        $data['length'] = $length;
                     }
                 }
 
                 $data['draft'] = $request->draft;
 
-                $data['photo_id'] = $this->getPhotoId($request, $process);
+                $photo_id = $this->getPhotoId($request, $process);
+                $data['photo_id'] = $photo_id;
 
-                // Если ошибок и совпадений нет, то обновляем артикул
+                // Если ошибок и совпадений нет, то обновляем процесс
                 $process->update($data);
 
                 return $process;
@@ -147,27 +192,109 @@ trait Processable
         }
     }
 
-    protected function setWorkflows($request, $process)
+    /**
+     * Дублирование процесса
+     *
+     * @param $request
+     * @param $item
+     * @return mixed
+     */
+    public function replicateProcess($request, $item)
     {
-        // Запись состава только для черновика
-        if ($process->draft) {
-            $process->workflows()->sync($request->workflows);
+
+        $process = $item->process;
+        $new_process = $process->replicate();
+        $new_process->name = $request->name;
+        $new_process->draft = true;
+
+
+        if ($request->cur_group == 0) {
+            $group = $process->group;
+
+            $data = $request->input();
+            $data['unit_id'] = $group->unit_id;
+            $data['units_category_id'] = $group->units_category_id;
+            $processs_group = ProcessesGroup::create($data);
+
+            // TODO - 23.09.19 - Изменения из за проблен на Вкусняшке
+//            $user = $request->user();
+//            $processs_group = ProcessesGroup::firstOrCreate([
+//                'name' => $request->name,
+//                'unit_id' => $group->unit_id,
+//                'units_category_id' => $group->units_category_id,
+//                'company_id' => $user->company_id,
+//            ]);
+            $new_process->processs_group_id = $processs_group->id;
+
+            $category = $item->category;
+            $category->groups()->syncWithoutDetaching($processs_group->id);
+        }
+
+        $new_process->photo_id = null;
+        $new_process->album_id = null;
+
+        $new_process->save();
+
+        if ($new_process) {
+
+            $photo_id = $this->replicatePhoto($process, $new_process);
+            $new_process->photo_id = $photo_id;
+//
+            $album_id = $this->replicateAlbumWithPhotos($process, $new_process);
+            $new_process->album_id = $album_id;
+
+            $new_process->save();
+
+            return $new_process;
         }
     }
 
-    protected function setServices($request, $process)
+    /**
+     * Поиск процесса
+     *
+     * @param $search
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function search($search)
     {
-        // Запись состава только для черновика
-        if ($process->draft) {
-            $process->services()->sync($request->services);
-        }
+
+        // Подключение политики
+//        $this->authorize('index',  $this->class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
+
+//        $search = $request->search;
+        $items = $this->class::with([
+            'process'
+        ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer) // Фильтр по системным записям
+            ->whereHas('process', function ($q) use ($search) {
+                $q->where('name', 'LIKE', '%' . $search . '%');
+            })
+            ->where('archive', false)
+            ->get([
+                'id',
+                'process_id'
+            ]);
+
+//        dd($items);
+
+        return response()->json($items);
     }
 
-    // Проверяем артикул при выводе из черновика
+    /**
+     * Проверяем процесс при выводе из черновика
+     *
+     * @param $data
+     * @return mixed
+     */
     protected function checkCoincidenceProcess($data)
     {
-
-        // dd($data);
+//         dd($data);
 
         $processes = Process::where([
             'processes_group_id' => $data['processes_group_id'],
@@ -243,7 +370,13 @@ trait Processable
         }
     }
 
-    // Проверки уже выведенного артикула
+    /**
+     * Проверки уже выведенного процесса
+     *
+     * @param $request
+     * @param $item
+     * @return mixed
+     */
     protected function checks($request, $item)
     {
 
@@ -271,7 +404,7 @@ trait Processable
                 // ПРиводим массив к виду с шаблона
                 $workflows = [];
                 foreach ($process->workflows as $wokrflow) {
-                    $workflows[$wokrflow_id]['value'] = $wokrflow->pivot->value;
+                    $workflows[$wokrflow->pivot->workflow_id]['value'] = $wokrflow->pivot->value;
                 }
                 // ksort($workflows);
                 $data['workflows'] = $workflows;
@@ -285,7 +418,13 @@ trait Processable
         }
     }
 
-    // Проверяем на совпадение имя артикула (не черновика)
+    /**
+     * Проверяем на совпадение имени процесса (не черновика)
+     *
+     * @param $request
+     * @param $item
+     * @return mixed
+     */
     protected function checkName($request, $item)
     {
         if (!$item->process->draft) {
@@ -304,7 +443,12 @@ trait Processable
         }
     }
 
-    // Проверяем на совпадение имя артикула (не черновика)
+    /**
+     * Смена категории
+     *
+     * @param $request
+     * @param $item
+     */
     protected function changeCategory($request, $item)
     {
 
@@ -326,7 +470,7 @@ trait Processable
             $model = 'App\\'.$entity->model;
 
             $new_category = $model::findOrFail($category_id);
-            $new_category->groups()->attach($request->articles_group_id);
+            $new_category->groups()->attach($request->processs_group_id);
 
             $item->update([
                 'category_id' => $category_id,

@@ -36,6 +36,7 @@
 
     <div class="small-12 cell">
         <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="{{ $entity }}">
+
             <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
                 <tr id="thead-content">
                     <th class="td-drop"></th>
@@ -61,14 +62,17 @@
                     <th class="td-archive"></th>
                 </tr>
             </thead>
+
             <tbody data-tbodyId="1" class="tbody-width">
                 @if($items->isNotEmpty())
 
                 @foreach($items as $item)
                 <tr class="item @if($item->moderation == 1)no-moderation @endif @if($item->article->draft) draft @endif" id="{{ $entity }}-{{ $item->id }}" data-name="{{ $item->article->name }}" data-entity="{{ $entity }}" data-id="{{ $item->id }}">
+
                     <td class="td-drop">
                         <div class="sprite icon-drop"></div>
                     </td>
+
                     <td class="td-checkbox checkbox">
                         <input type="checkbox" class="table-check" name="item_id" id="check-{{ $item->id }}"
                         {{-- Если в Booklist существует массив Default (отмеченные пользователем позиции на странице) --}}
@@ -80,14 +84,20 @@
                         >
                         <label class="label-check" for="check-{{ $item->id }}"></label>
                     </td>
+
                     <td class="td-photo">
                         <a href="/admin/{{ $entity }}/{{ $item->id }}/edit">
 {{--                            <img src="{!! route('get_photo', [$item->article_id, 'articles', 'small']) !!}">--}}
                             <img src="{{ getPhotoPathPlugEntity($item, 'small') }}" alt="{{ isset($item->article->photo_id) ? $item->article->name : 'Нет фото' }}">
                         </a>
                     </td>
+
                     <td class="td-name">
-                        <a href="/admin/{{ $entity }}/{{ $item->id }}/edit">{{ $item->article->name }}
+                        @can('update', $item)
+                            <a href="/admin/{{ $entity }}/{{ $item->id }}/edit">{{ $item->article->name }}
+                        @else
+                            {{ $item->article->name }}
+                        @endcan
                         @if ($item->article->kit == 1)</a><span class="tiny-text"> - Набор:
                             @if(isset($item->article->goods))
                                 {{ $item->article->goods->count() }}</span>
@@ -95,9 +105,11 @@
                         @endif
                         <br><span class="tiny-text">{{ $item->article->manufacturer->company->name ?? '' }}</span>
                     </td>
+
                     <td class="td-unit">
                         {{ $item->article->unit->abbreviation }}
                     </td>
+
                     <td class="td-weight">
 
                         @if($item->article->weight != 0)
@@ -112,6 +124,7 @@
 
                         <span class="tiny-text">Состав: </span><span title="Кол-во сырья в составе">{{ $item->article->raws->count() }}</span>
                     </td>
+
                     <td class="td-package">
                         @if($item->article->package_status == 1)
                             <span>Прием на склад: {{ $item->article->package_abbreviation }}</span>
@@ -127,11 +140,13 @@
                         @endif
 
                     </td>
+
                     <td class="td-attachments-photo">
                         @foreach($item->article->attachments as $attachment)
                             <img src="{{ getPhotoPathPlugEntity($attachment, 'small') }}">
                         @endforeach
                     </td>
+
                     <td class="td-category">
                         <a href="/admin/{{ $entity }}?category_id%5B%5D={{ $item->category->id }}" class="filter_link" title="Фильтровать">{{ $item->category->name_with_parent }}</a>
 
@@ -207,6 +222,7 @@
                             @endcan
                         @endif
                     </td>
+
                 </tr>
                 @endforeach
                 @endif
@@ -227,13 +243,9 @@
 
 
 @section('modals')
-<section id="modal"></section>
-
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-archive')
-
-@include('includes.modals.modal-replicate')
-
+    <section id="modal"></section>
+    @include('includes.modals.modal-archive')
+    @include('includes.modals.modal-replicate')
 @endsection
 
 @push('scripts')

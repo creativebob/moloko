@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Container;
 use App\ContainersCategory;
-use App\Http\Controllers\Traits\Cmvable;
+
 use App\Http\Requests\ContainerStoreRequest;
 use App\Http\Requests\ContainerUpdateRequest;
 use App\Manufacturer;
@@ -28,7 +28,7 @@ class ContainerController extends Controller
     }
 
     use Articlable;
-    use Cmvable;
+
 
     public function index(Request $request)
     {

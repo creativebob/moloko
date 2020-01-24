@@ -1,6 +1,8 @@
 <script type="application/javascript">
 
     var catalog_id = '{{ $catalog_id }}';
+    // Определяем сущность для работы
+    var entity = $('#content').data('entity-alias');
 
     $(function() {
 
@@ -102,6 +104,24 @@
         // ----------- Закрытие модалки -----------------------------------
         $(document).on('click', '.close-modal', function() {
             $(this).closest('.reveal-overlay').remove();
+        });
+
+        // ------------- Ловим нажатие на enter -------------
+        $(document).on('keydown', 'input[name=name]', function(event) {
+
+            if ((event.keyCode == 13) && (event.shiftKey == false)) { //если нажали Enter, то true
+
+                event.preventDefault();
+
+                var form = $('#form-create');
+                $('#add-category-button').prop('disabled', true);
+                $.post('/admin/catalogs_services/' + catalog_id + '/catalogs_services_items', form.serialize(), function(html) {
+                    form.closest('.reveal-overlay').remove();
+                    $('#content').html(html);
+                    Foundation.reInit($('#content'));
+                });
+            }
+
         });
 
     });

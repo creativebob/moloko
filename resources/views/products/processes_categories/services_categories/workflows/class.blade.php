@@ -40,7 +40,7 @@
             // Удаляем элемент со страницы
             $('#table-workflows-' + id).remove();
             // Убираем отмеченный чекбокс в списке
-            $('#workflow-' + id).prop('checked', false);
+            $('#checkbox-workflow-' + id).prop('checked', false);
         }
     }
 </script>

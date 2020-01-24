@@ -2,29 +2,23 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Http\Requests\WorkflowStoreRequest;
+use App\Http\Requests\WorkflowUpdateRequest;
 use App\Workflow;
 use App\WorkflowsCategory;
-use App\Process;
 use App\Manufacturer;
-
-// Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\WorkflowRequest;
-use App\Http\Requests\ProcessRequest;
-
-// Куки
 use Illuminate\Support\Facades\Cookie;
-
-// Трейты
 use App\Http\Controllers\Traits\Processable;
-
 use Illuminate\Support\Facades\Log;
 
 class WorkflowController extends Controller
 {
 
-    // Настройки сконтроллера
+    /**
+     * WorkflowController constructor.
+     * @param Workflow $workflow
+     */
     public function __construct(Workflow $workflow)
     {
         $this->middleware('auth');
@@ -131,7 +125,6 @@ class WorkflowController extends Controller
 
     public function create(Request $request)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -186,12 +179,13 @@ class WorkflowController extends Controller
             'title' => 'Добавление рабочего процесса',
             'entity' => $this->entity_alias,
             'category_entity' => 'workflows_categories',
+            'units_category_default' => 6,
+            'unit_default' => 32,
         ]);
     }
 
-    public function store(ProcessRequest $request)
+    public function store(WorkflowStoreRequest $request)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -206,7 +200,7 @@ class WorkflowController extends Controller
 
             $data = $request->input();
             $data['process_id'] = $process->id;
-            $workflow = (new Workflow())->create($data);
+            $workflow = Workflow::create($data);
 
             if ($workflow) {
 
@@ -258,11 +252,24 @@ class WorkflowController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $workflow);
 
+        $workflow->load([
+            'process' => function ($q) {
+                $q->with([
+                    'unit'
+                ]);
+            },
+            'category' => function ($q) {
+                $q->with([
+                    'metrics'
+                ]);
+            },
+        ]);
         $process = $workflow->process;
         // dd($process);
 
         // Получаем настройки по умолчанию
-        $settings = getSettings($this->entity_alias);
+        $settings = $this->getSettings($this->entity_alias);
+//        dd($settings);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
@@ -277,17 +284,20 @@ class WorkflowController extends Controller
             'entity' => $this->entity_alias,
             'category_entity' => 'workflows_categories',
             'categories_select_name' => 'workflows_category_id',
+            'workflow' => $workflow,
+            'paginator_url' => url()->previous()
         ]);
     }
 
-    public function update(ProcessRequest $request, $id)
+    public function update(WorkflowUpdateRequest $request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находится в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $workflow = Workflow::moderatorLimit($answer)
+        $workflow = Workflow::with('process')
+        ->moderatorLimit($answer)
         ->findOrFail($id);
         // dd($workflow);
 
@@ -297,23 +307,49 @@ class WorkflowController extends Controller
         $process = $workflow->process;
         // dd($process);
 
+        if ($process->draft) {
+            $workflow->serial = $request->serial;
+        }
+
         $result = $this->updateProcess($request, $workflow);
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
-            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-            $this->changeCategory($request, $workflow);
-
-            $workflow->serial = $request->serial;
             $workflow->display = $request->display;
             $workflow->system = $request->system;
             $workflow->save();
 
+            // ПЕРЕНОС ГРУППЫ В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
+            $this->changeCategory($request, $workflow);
+
+            $access = session('access.all_rights.index-metrics-allow');
+            if ($access) {
+                // Метрики
+                if ($request->has('metrics')) {
+                    // dd($request);
+
+                    $metrics_insert = [];
+                    foreach ($request->metrics as $metric_id => $value) {
+                        if (is_array($value)) {
+                            $metrics_insert[$metric_id]['value'] = implode(',', $value);
+                        } else {
+//                        if (!is_null($value)) {
+                            $metrics_insert[$metric_id]['value'] = $value;
+//                        }
+                        }
+                    }
+                    $workflow->metrics()->syncWithoutDetaching($metrics_insert);
+                }
+            }
 
             // Если ли есть
             if ($request->cookie('backlink') != null) {
                 $backlink = Cookie::get('backlink');
                 return Redirect($backlink);
+            }
+
+            if ($request->has('paginator_url')) {
+                return redirect($request->paginator_url);
             }
 
             return redirect()->route('workflows.index');
@@ -361,6 +397,41 @@ class WorkflowController extends Controller
         } else {
             abort(403, 'Рабочий процесс не найден');
         }
+    }
+
+    public function replicate(Request $request, $id)
+    {
+        $workflow = Workflow::findOrFail($id);
+
+        $workflow->load('process');
+        $process = $workflow->process;
+        $new_process = $this->replicateProcess($request, $workflow);
+
+        $new_workflow = $workflow->replicate();
+        $new_workflow->process_id = $new_process->id;
+        $new_workflow->save();
+
+        $workflow->load('metrics');
+        if ($workflow->metrics->isNotEmpty()) {
+            $metrics_insert = [];
+            foreach ($workflow->metrics as $metric) {
+                $metrics_insert[$metric->id]['value'] = $metric->pivot->value;
+            }
+            $res = $new_workflow->metrics()->attach($metrics_insert);
+        }
+
+        if($process->kit) {
+            $process->load('workflows');
+            if ($process->workflows->isNotEmpty()) {
+                $workflows_insert = [];
+                foreach ($process->workflows as $workflow) {
+                    $workflows_insert[$workflow->id]['value'] = $workflow->pivot->value;
+                }
+                $res = $new_process->workflows()->attach($workflows_insert);
+            }
+        }
+
+        return redirect()->route('workflows.index');
     }
 
     // --------------------------------------------- Ajax -------------------------------------------------

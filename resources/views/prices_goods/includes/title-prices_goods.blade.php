@@ -18,7 +18,7 @@
                 @endcan  --}}
 
             </div>
-            <div class="top-bar-right">   
+            <div class="top-bar-right">
 
                 @if (isset($filter))
                 <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>

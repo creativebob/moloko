@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Cookie;
 
 class PricesGoodsController extends Controller
 {
-    // Настройки контроллера
+    /**
+     * PricesGoodsController constructor.
+     * @param PricesGoods $prices_goods
+     */
     public function __construct(PricesGoods $prices_goods)
     {
         $this->middleware('auth');
@@ -20,14 +23,17 @@ class PricesGoodsController extends Controller
         $this->class = PricesGoods::class;
         $this->model = 'App\PricesGoods';
     }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param $catalog_id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index(Request $request, $catalog_id)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -58,8 +64,16 @@ class PricesGoodsController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $prices_goods = PricesGoods::with([
-            'goods.article.group.unit',
-            'goods.article.unit',
+            'goods' => function ($q) {
+                $q->with([
+                    'article' => function ($q) {
+                        $q->with([
+                           'unit',
+                           'group.unit'
+                        ]);
+                    }
+                ]);
+            },
             'catalog',
             'catalogs_item'
         ])
@@ -82,7 +96,8 @@ class PricesGoodsController extends Controller
             })
 
             ->whereHas('goods.article', function($q){
-                $q->where('draft', false)->where('archive', false);
+                $q->where('draft', false)
+                    ->where('archive', false);
             })
 
             // ->filials($answer)
@@ -133,8 +148,6 @@ class PricesGoodsController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -143,9 +156,6 @@ class PricesGoodsController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
@@ -154,9 +164,6 @@ class PricesGoodsController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  \App\PricesGoods  $pricesGoods
-     * @return \Illuminate\Http\Response
      */
     public function show(PricesGoods $pricesGoods)
     {
@@ -166,28 +173,30 @@ class PricesGoodsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\PricesGoods  $pricesGoods
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param $catalog_id
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Request $request, $catalog_id, $id)
     {
         $price = PricesGoods::findOrFail($id);
-
         return view('prices_goods.price_edit', ['price' => $price->price]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\PricesGoods  $pricesGoods
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param $catalog_id
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function update(Request $request, $catalog_id, $id)
     {
         $cur_price_goods = PricesGoods::findOrFail($id);
 
-        If ($request->price) {
+        if ($request->price) {
 
             $price = $request->price;
             if ($cur_price_goods->price == $price) {
@@ -226,8 +235,20 @@ class PricesGoodsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\PricesGoods  $pricesGoods
-     * @return \Illuminate\Http\Response
+     * @param $id
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+    /**
+     * Архивирование
+     *
+     * @param Request $request
+     * @param $catalog_id
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function archive(Request $request, $catalog_id, $id)
     {
@@ -244,12 +265,12 @@ class PricesGoodsController extends Controller
 
         if ($result) {
             // Переадресовываем на index
-            return redirect()->route('prices_services.index', [
+            return redirect()->route('prices_goods.index', [
                 'catalog_id' => $catalog_id,
                 'filial_id' => $filial_id
             ]);
         } else {
-            abort(403, 'Ошиька архивирования');
+            abort(403, 'Ошибка архивирования');
         }
     }
 

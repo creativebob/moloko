@@ -2,13 +2,11 @@
 
 @section('inhead')
 @include('includes.scripts.dropzone-inhead')
-{{-- @include('includes.scripts.fancybox-inhead')
-@include('includes.scripts.sortable-inhead') --}}
 @endsection
 
 @section('title', $title)
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $category->name))
+@section('breadcrumbs', Breadcrumbs::render('category', $category))
 
 @section('title-content')
 <div class="top-bar head-content">
@@ -25,18 +23,22 @@
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active">
-                <a href="#options" aria-selected="true">Общая информация</a>
+                <a href="#tab-options" aria-selected="true">Общая информация</a>
             </li>
 
-            @if($page_info->entity->metric)
+            @can('index', App\Metric::class)
+                @if($page_info->entity->metric)
+                    <li class="tabs-title">
+                        <a data-tabs-target="tab-metrics" href="#tab-metrics">Свойства</a>
+                    </li>
+                @endif
+            @endcan
+
+            @can('index', App\Site::class)
                 <li class="tabs-title">
-                    <a data-tabs-target="metrics" href="#metrics">Свойства</a>
+                    <a data-tabs-target="tab-site" href="#tab-site">Настройка для сайта</a>
                 </li>
-            @endif
-
-            <li class="tabs-title">
-                <a data-tabs-target="site" href="#site">Сайт</a>
-            </li>
+            @endcan
 
             {{-- Табы для сущности --}}
             @includeIf($page_info->entity->view_path . '.tabs')
@@ -53,7 +55,7 @@
             {{ method_field('PATCH') }}
 
             {{-- Общая информация --}}
-            <div class="tabs-panel is-active" id="options">
+            <div class="tabs-panel is-active" id="tab-options">
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-6 cell">
@@ -126,10 +128,10 @@
             </div>
 
             {{-- Сайт --}}
-            <div class="tabs-panel" id="site">
+            @can('index', App\Site::class)
+            <div class="tabs-panel" id="tab-site">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
-
                         <label>Описание:
                             {{ Form::textarea('description', $category->description, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
                         </label>
@@ -140,12 +142,15 @@
 
                     </div>
                     <div class="small-12 medium-6 cell">
-                        <label>Выберите аватар
-                            {{ Form::file('photo') }}
-                        </label>
-                        <div class="text-center">
-                            <img id="photo" src="{{ getPhotoPath($category) }}">
+                        <div class="grid-x">
+                            <photo-upload-component :photo='@json($category->photo)'></photo-upload-component>
                         </div>
+{{--                        <label>Выберите аватар--}}
+{{--                            {{ Form::file('photo') }}--}}
+{{--                        </label>--}}
+{{--                        <div class="text-center">--}}
+{{--                            <img id="photo" src="{{ getPhotoPath($category) }}">--}}
+{{--                        </div>--}}
                     </div>
 
                     {{-- Кнопка --}}
@@ -154,13 +159,17 @@
                     </div>
                 </div>
             </div>
+            @endcan
 
-            @if($page_info->entity->metric)
-                {{-- Свойства --}}
-                <div class="tabs-panel" id="metrics">
-                    @include('products.common.metrics.section')
-                </div>
-            @endif
+            {{-- Метрики --}}
+            @can('index', App\Metric::class)
+                @if($page_info->entity->metric)
+
+                    <div class="tabs-panel" id="tab-metrics">
+                        @include('products.common.metrics.page')
+                    </div>
+                @endif
+            @endcan
 
             {{-- Табы для сущности --}}
             @includeIf($page_info->entity->view_path . '.tabs_content')
@@ -169,23 +178,16 @@
         </div>
     </div>
 </div>
-
 @endsection
 
 @section('modals')
-@include('includes.modals.modal-metric-delete')
 @include('includes.modals.modal_item_delete')
 @endsection
 
 @push('scripts')
-
 @include('includes.scripts.inputs-mask')
-@include('includes.scripts.upload-file')
-{{-- @include('goods_categories.scripts') --}}
-
 @include('includes.scripts.ckeditor')
 
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check', ['id' => $category->id])
-
 @endpush

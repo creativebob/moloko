@@ -46,10 +46,4 @@ class ServicesCategoryObserver
     {
         $this->destroy($category);
     }
-
-    protected function syncWorkflows($category)
-    {
-        $request = request();
-        $category->workflows()->sync($request->workflows);
-    }
 }

@@ -11,7 +11,10 @@ use Illuminate\Http\Request;
 class RawsCategoryController extends Controller
 {
 
-    // Настройки сконтроллера
+    /**
+     * RawsCategoryController constructor.
+     * @param RawsCategory $raws_category
+     */
     public function __construct(RawsCategory $raws_category)
     {
         $this->middleware('auth');
@@ -25,6 +28,13 @@ class RawsCategoryController extends Controller
 
     use Photable;
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
 
@@ -81,6 +91,13 @@ class RawsCategoryController extends Controller
         );
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function create(Request $request)
     {
 
@@ -88,7 +105,7 @@ class RawsCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         return view('system.common.accordions.create', [
-            'item' => new $this->class,
+            'item' => RawsCategory::make(),
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории сырья',
             'parent_id' => $request->parent_id,
@@ -96,6 +113,13 @@ class RawsCategoryController extends Controller
         ]);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param RawsCategoryStoreRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(RawsCategoryStoreRequest $request)
     {
 
@@ -103,7 +127,7 @@ class RawsCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $data = $request->input();
-        $raws_category = (new $this->class())->create($data);
+        $raws_category = RawsCategory::create($data);
 
         if ($raws_category) {
             // Переадресовываем на index
@@ -116,11 +140,24 @@ class RawsCategoryController extends Controller
         }
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param $id
+     */
     public function show($id)
     {
         //
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function edit(Request $request, $id)
     {
 
@@ -131,7 +168,10 @@ class RawsCategoryController extends Controller
         $raws_category = RawsCategory::with([
             'manufacturers',
             'metrics' => function ($q) {
-                $q->with('unit', 'values');
+                $q->with([
+                    'unit',
+                    'values'
+                ]);
             },
         ])
         ->moderatorLimit($answer)
@@ -163,6 +203,14 @@ class RawsCategoryController extends Controller
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param RawsCategoryUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(RawsCategoryUpdateRequest $request, $id)
     {
 
@@ -182,7 +230,11 @@ class RawsCategoryController extends Controller
         if ($result) {
 
             $raws_category->manufacturers()->sync($request->manufacturers);
-            $raws_category->metrics()->sync($request->metrics);
+
+            $metrics = session('access.all_rights.index-metrics-allow');
+            if ($metrics) {
+                $raws_category->metrics()->sync($request->metrics);
+            }
 
            // Переадресовываем на index
             return redirect()->route('raws_categories.index', ['id' => $raws_category->id]);
@@ -194,6 +246,14 @@ class RawsCategoryController extends Controller
         }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function destroy(Request $request, $id)
     {
 
@@ -217,7 +277,7 @@ class RawsCategoryController extends Controller
 
         if ($raws_category) {
 
-                // Переадресовываем на index
+            // Переадресовываем на index
             return redirect()->route('raws_categories.index', ['id' => $parent_id]);
         } else {
             $result = [

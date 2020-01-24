@@ -2,8 +2,8 @@
 
 namespace App;
 
-use App\Models\Traits\Cmvable;
-use App\Models\Traits\Commonable;
+use App\Models\System\Traits\Articlable;
+use App\Models\System\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -33,7 +33,7 @@ class Container extends Model
     use SoftDeletes;
 
     use Commonable;
-    use Cmvable;
+    use Articlable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;

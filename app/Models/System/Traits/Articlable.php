@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models\Traits;
+namespace App\Models\System\Traits;
 
 use App\Article;
 use App\Cost;
 use App\Metric;
 use App\Unit;
 
-trait Cmvable
+trait Articlable
 {
 
     // Артикул
@@ -45,7 +45,7 @@ trait Cmvable
     {
         return $this->morphOne(Cost::class, 'cmv')->where('filial_id', \Auth::user()->stafferFilialId);
     }
-	
+
 //	public function costs()
 //	{
 //		return $this->morphMany(Cost::class, 'cmv');

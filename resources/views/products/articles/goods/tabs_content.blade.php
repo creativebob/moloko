@@ -1,5 +1,5 @@
 {{-- Каталоги --}}
-<div class="tabs-panel" id="catalogs">
+<div class="tabs-panel" id="tab-prices">
 	<div class="grid-x grid-padding-x">
 
 		<div class="small-12 medium-7 cell">
@@ -43,7 +43,7 @@
 							<input-digit-component name="margin" v-on:countchanged="changePrice" class="goods-margin-calc"></input-digit-component>
 						</div> --}}
 					</div>
-				</fieldset> 
+				</fieldset>
 			</div>
 		</div>
 
@@ -52,21 +52,21 @@
 
 {{--Состав--}}
 @if($article->kit)
-	<div class="tabs-panel" id="goods">
+	<div class="tabs-panel" id="tab-goods">
 		@include('products.articles.goods.goods.goods')
 	</div>
 	@else
 
-<div class="tabs-panel" id="raws">
+<div class="tabs-panel" id="tab-raws">
 @include('products.articles.goods.raws.raws')
 </div>
 	@endif
 
-<div class="tabs-panel" id="containers">
+<div class="tabs-panel" id="tab-containers">
 	@include('products.articles.goods.containers.containers')
 </div>
 
-<div class="tabs-panel" id="attachments">
+<div class="tabs-panel" id="tab-attachments">
 	@include('products.articles.goods.attachments.attachments')
 </div>
 

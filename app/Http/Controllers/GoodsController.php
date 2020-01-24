@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Goods;
 use App\GoodsCategory;
-use App\Http\Controllers\Traits\Cmvable;
+
 use App\Http\Requests\GoodsStoreRequest;
 use App\Http\Requests\GoodsUpdateRequest;
 use App\Manufacturer;
@@ -28,7 +28,7 @@ class GoodsController extends Controller
     }
 
     use Articlable;
-    use Cmvable;
+
 
     public function index(Request $request)
     {
@@ -298,7 +298,7 @@ class GoodsController extends Controller
             $data['price_unit_category_id'] = $data['units_category_id'];
             $data['price_unit_id'] = $data['unit_id'];
 
-            $cur_goods = (new Goods())->create($data);
+            $cur_goods = Goods::create($data);
 
             if ($cur_goods) {
 
@@ -375,7 +375,7 @@ class GoodsController extends Controller
 //        dd($dropzone);
 
         // Получаем настройки по умолчанию
-        $settings = getSettings($this->entity_alias);
+        $settings = $this->getSettings($this->entity_alias);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
@@ -404,9 +404,10 @@ class GoodsController extends Controller
         ->findOrFail($id);
         // dd($cur_goods);
 
-        $article = $cur_goods->article;
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $cur_goods);
+
+        $article = $cur_goods->article;
 
         $result = $this->updateArticle($request, $cur_goods);
         // Если результат не массив с ошибками, значит все прошло удачно
@@ -468,7 +469,6 @@ class GoodsController extends Controller
 
     public function archive(Request $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
 

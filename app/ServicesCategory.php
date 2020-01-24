@@ -132,6 +132,6 @@ class ServicesCategory extends Model
         } else {
             return $this->name;
         }
-    } 
+    }
 
 }

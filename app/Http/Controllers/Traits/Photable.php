@@ -14,13 +14,12 @@ trait Photable
 {
 
     /**
-     * Сохраняем загруженную фотографию и получаем ее id.
+     * Сохраняем загруженную фотографию (и удаляем прошлую) и получаем ее id.
      *
      * @param  $request
      * @param  $item
      * @return int
      */
-
     public function getPhotoId($request, $item)
     {
 
@@ -72,9 +71,10 @@ trait Photable
                     foreach (['small', 'medium', 'large', 'original'] as $value) {
                         Storage::disk('public')->delete($directory . '/' . $value . '/' . $photo->name);
                     }
+                    Storage::disk('public')->delete($directory . '/' . $photo->name);
                 }
             } else {
-                $photo = new Photo;
+                $photo = Photo::make();
             }
 
             $extension = $image->getClientOriginalExtension();
@@ -117,11 +117,11 @@ trait Photable
 
                 // Режим изменения фотографии
                 switch ($crop_mode = $settings['crop_mode']) {
-                    case 1: 
-                        $folder = Image::make($request->photo); 
+                    case 1:
+                        $folder = Image::make($request->photo);
                         break;
 
-                    case 2: 
+                    case 2:
                         $folder = Image::make($request->photo)->fit($settings['img_' . $value . '_width'], $settings['img_' . $value . '_height']);
                         break;
                 }
@@ -155,7 +155,7 @@ trait Photable
         $size = filesize($image) / 1024;
         // dd($size);
 
-        $settings = getSettings('albums');
+        $settings = $this->getSettings('albums');
 
         if ($width < $settings['img_min_width']) {
             abort(403, 'Ширина фотографии мала!');
@@ -196,19 +196,41 @@ trait Photable
         $directory = $album->company_id . '/media/albums/' . $album->id . '/img';
 
         // Сохранияем оригинал
-        $upload_success = $image->storeAs($directory . '/original', $image_name, 'public');
+//        $upload_success = $image->storeAs($directory . '/original', $image_name, 'public');
+        Storage::disk('public')
+            ->putFileAs($directory . '/original', $image, $image_name);
         // dd($upload_success);
 
         // Сохраняем small, medium и large
-        foreach (['small', 'medium', 'large'] as $value) {
-            // $item = Image::make($request->photo)->grab(1200, 795);
-            $folder = Image::make($request->photo)->widen($settings['img_' . $value . '_width']);
-            $save_path = storage_path('app/public/' . $directory . '/' . $value);
-            if (!file_exists($save_path)) {
-                mkdir($save_path, 0755);
-            }
-            $folder->save(storage_path('app/public/' . $directory . '/' . $value . '/' . $image_name));
+        foreach ([
+                     'small',
+                     'medium',
+                     'large'
+                 ] as $value) {
+
+            Storage::disk('public')
+                ->putFileAs($directory . '/' . $value, $image, $image_name);
+
         }
+
+        $upload_success = Storage::disk('public')->putFileAs(
+            $directory, $image, $image_name
+        );
+
+//        foreach (['small', 'medium', 'large'] as $value) {
+//
+//            $res = Storage::disk('public')->putFileAs(
+//                $directory, $image, $image_name
+//            );
+//            // $item = Image::make($request->photo)->grab(1200, 795);
+//            $folder = Image::make($request->photo)->widen($settings['img_' . $value . '_width']);
+//            $save_path = storage_path('app/public/' . $directory . '/' . $value);
+//            if (!file_exists($save_path)) {
+//                mkdir($save_path, 0755);
+//            }
+//            $folder->save(storage_path('app/public/' . $directory . '/' . $value . '/' . $image_name));
+//        }
+
 
         if (!isset($album->photo_id)) {
             $album->photo_id = $photo->id;
@@ -229,7 +251,6 @@ trait Photable
      * @param  $new_item
      * @return int
      */
-
     public function replicatePhoto($item, $new_item)
     {
 
@@ -249,15 +270,19 @@ trait Photable
 
             foreach ([
                 'original',
-                'small',
-                         'medium',
-                         'large'
-             ] as $value) {
+                 'small',
+                 'medium',
+                 'large'
+            ] as $value) {
 
                 Storage::disk('public')
                     ->copy($directory. '/' . $value . '/' . $photo->name, $new_directory. '/' . $value . '/' . $new_photo->name);
 
             }
+
+            Storage::disk('public')
+                ->copy($directory. '/' . $photo->name, $new_directory. '/' . $new_photo->name);
+
             return $new_photo->id;
         } else {
             return $item->photo_id;
@@ -271,7 +296,6 @@ trait Photable
      * @param  $new_item
      * @return int
      */
-
     public function replicateAlbumWithPhotos($item, $new_item)
     {
 
@@ -318,6 +342,9 @@ trait Photable
 
                 }
 
+                Storage::disk('public')
+                    ->copy($directory. '/' . $photo->name, $new_directory. '/' . $new_photo->name);
+
             }
             $new_album->photos()->attach($photos_insert);
 
@@ -327,7 +354,12 @@ trait Photable
         }
     }
 
-    // Настройки для фоток
+    /**
+     * Получаем настройки для фото
+     *
+     * @param $entity_alias
+     * @return array
+     */
     public function getSettings($entity_alias)
     {
 
@@ -362,9 +394,7 @@ trait Photable
         // dd($entity);
 
         $get_settings = $entity->photo_settings;
-
-        if (isset($get_settings)) {
-
+        if ($get_settings) {
             foreach ($settings as $key => $value) {
                 // Если есть ключ в пришедших настройках, то переписываем значение
                 if (isset($get_settings->$key)) {

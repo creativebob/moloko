@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Traits\Cmvable;
+
 use App\Http\Requests\RawStoreRequest;
 use App\Http\Requests\RawUpdateRequest;
 use App\Raw;
@@ -16,7 +16,10 @@ use App\Http\Controllers\Traits\Articlable;
 class RawController extends Controller
 {
 
-    // Настройки сконтроллера
+    /**
+     * RawController constructor.
+     * @param Raw $raw
+     */
     public function __construct(Raw $raw)
     {
         $this->middleware('auth');
@@ -28,7 +31,6 @@ class RawController extends Controller
     }
 
     use Articlable;
-    use Cmvable;
 
     public function index(Request $request)
     {
@@ -252,7 +254,7 @@ class RawController extends Controller
             $data['price_unit_category_id'] = $data['units_category_id'];
             $data['price_unit_id'] = $data['unit_id'];
 
-            $raw = (new Raw())->create($data);
+            $raw = Raw::create($data);
 
             if ($raw) {
 
@@ -326,7 +328,7 @@ class RawController extends Controller
 //        dd($dropzone);
 
         // Получаем настройки по умолчанию
-        $settings = getSettings($this->entity_alias);
+        $settings = $this->getSettings($this->entity_alias);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
@@ -389,26 +391,28 @@ class RawController extends Controller
 
             $raw->save();
 
-            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
+            // ПЕРЕНОС ГРУППЫ В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $raw);
 
-            // Метрики
-            if ($request->has('metrics')) {
-                // dd($request);
+            $access = session('access.all_rights.index-metrics-allow');
+            if ($access) {
+                // Метрики
+                if ($request->has('metrics')) {
+                    // dd($request);
 
-                $metrics_insert = [];
-                foreach ($request->metrics as $metric_id => $value) {
-                    if (is_array($value)) {
-                        $metrics_insert[$metric_id]['value'] = implode(',', $value);
-                    } else {
+                    $metrics_insert = [];
+                    foreach ($request->metrics as $metric_id => $value) {
+                        if (is_array($value)) {
+                            $metrics_insert[$metric_id]['value'] = implode(',', $value);
+                        } else {
 //                        if (!is_null($value)) {
                             $metrics_insert[$metric_id]['value'] = $value;
 //                        }
+                        }
                     }
+                    $raw->metrics()->syncWithoutDetaching($metrics_insert);
                 }
-                $raw->metrics()->syncWithoutDetaching($metrics_insert);
             }
-
 
             // Если ли есть
             if ($request->cookie('backlink') != null) {
@@ -422,7 +426,6 @@ class RawController extends Controller
 
             return redirect()->route('raws.index');
         } else {
-
             return back()
             ->withErrors($result)
             ->withInput();

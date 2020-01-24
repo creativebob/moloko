@@ -1,10 +1,14 @@
 @extends('layouts.app')
 
 @section('inhead')
+    @include('includes.scripts.dropzone-inhead')
+    @include('includes.scripts.fancybox-inhead')
+    @include('includes.scripts.sortable-inhead')
 
-@include('includes.scripts.dropzone-inhead')
-@include('includes.scripts.fancybox-inhead')
-@include('includes.scripts.sortable-inhead')
+    @if ($entity == 'services')
+        @include('includes.scripts.chosen-inhead')
+        @include('products.processes.services.workflows.class')
+    @endif
 
 @endsection
 
@@ -23,7 +27,7 @@
 @endsection
 
 @php
-$disabled = $process->draft == 0 ? true : null;
+    $disabled = $process->draft == 0 ? true : null;
 @endphp
 
 @section('content')
@@ -32,18 +36,18 @@ $disabled = $process->draft == 0 ? true : null;
         <ul class="tabs-list" data-tabs id="tabs">
 
             <li class="tabs-title is-active">
-                <a href="#options" aria-selected="true">Общая информация</a>
-            </li>
-
-            <li class="tabs-title">
-                <a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a>
+                <a href="#tab-options" aria-selected="true">Общая информация</a>
             </li>
 
             {{-- Табы для сущности --}}
             @includeIf($page_info->entity->view_path . '.tabs')
 
             <li class="tabs-title">
-                <a data-tabs-target="photos" href="#photos">Фотографии</a>
+                <a data-tabs-target="tab-photos" href="#tab-photos">Фотографии</a>
+            </li>
+
+            <li class="tabs-title">
+                <a data-tabs-target="tab-extra_options" href="#tab-extra_options">Опции</a>
             </li>
 
         </ul>
@@ -62,11 +66,12 @@ $disabled = $process->draft == 0 ? true : null;
                 'id' => 'form-edit'
             ]
             ) }}
-            {{ method_field('PATCH') }}
+            @method('PATCH')
 
+            {!! Form::hidden('paginator_url', $paginator_url ?? null) !!}
 
             {{-- Общая информация --}}
-            <div class="tabs-panel is-active" id="options">
+            <div class="tabs-panel is-active" id="tab-options">
 
                 {{-- Разделитель на первой вкладке --}}
                 <div class="grid-x grid-padding-x">
@@ -82,92 +87,91 @@ $disabled = $process->draft == 0 ? true : null;
                                     {{ Form::text('name', $process->name, ['required']) }}
                                 </label>
 
-                                <label>Группа
-                                    @include('includes.selects.processes_groups', [
-                                        'entity' => $category_entity,
-                                        'category_id' => $item->category->id,
-                                        'processes_group_id' => $process->processes_group_id
-                                    ]
-                                    )
-                                </label>
-
-                                <label>Категория
-                                    @include('includes.selects.categories', [
-                                        'category_entity' => $category_entity,
-                                        'category_id' => $item->category->id
-                                    ]
-                                    )
-                                </label>
+                                <processes-categories-with-groups-component :item="{{ $item }}" :process="{{ $process }}" :categories='@json($categories_tree)' :groups='@json($groups)'></processes-categories-with-groups-component>
 
                                 <label>Производитель
 
-
                                     @if ($item->category->manufacturers->isNotEmpty())
 
-                                    @template ($process)
-
-                                    {!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $process->manufacturer_id, [$disabled ? 'disabled' : '', 'placeholder' => 'Нет производителя']) !!}
+                                        {!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $process->manufacturer_id, [$disabled ? 'disabled' : '']) !!}
 
                                     @else
 
-                                    {!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $process->manufacturer_id, [$disabled ? 'disabled' : '']) !!}
-
-                                    @endtemplate
-
-                                    @else
-
-                                    @template ($process)
-
-                                    @include('includes.selects.manufacturers_with_placeholder', ['manufacturer_id' => $process->manufacturer_id, 'item' => $item])
-
-                                    @else
-
-                                    @include('includes.selects.manufacturers', ['manufacturer_id' => $process->manufacturer_id, 'item' => $item])
-
-                                    @endtemplate
+                                        @include('includes.selects.manufacturers', ['manufacturer_id' => $process->manufacturer_id, 'item' => $item])
 
                                     @endif
 
                                 </label>
 
+                                <div class="grid-x grid-margin-x">
+                                    <div class="small-12 medium-6 cell">
+                                        <label>Единица измерения
+                                            @include('products.processes.common.edit.select_units', [
+                                                'units_category_id' => $process->unit->category_id,
+                                                'disabled' => null,
+                                                'data' => $process->unit_id,
+                                            ])
+                                        </label>
+                                    </div>
+                                    {{-- <div class="small-12 medium-6 cell">
+                                        @isset ($process->unit_id)
+                                            @if($process->group->units_category_id != 2)
+                                                <label>Вес единицы, {{ $process->weight_unit->abbreviation }}
+                                                    {!! Form::number('weight', null, ['disabled' => ($process->draft == 1) ? null : true]) !!}
+                                                </label>
+                                            @else
+                                                {{ Form::hidden('weight', $process->weight) }}
+                                            @endif
+                                        @endisset
+                                    </div> --}}
+                                </div>
+
                                 <label>Тип процесса
                                     @include('includes.selects.processes_types')
                                 </label>
 
-                                <label>Еденица измерения
-                                    @include('products.processes.common.edit.select_units', [
-                                        'units_category_id' => $process->group->unit->category_id,
-                                        'disabled' => true,
-                                    ]
-                                    )
-                                </label>
-
-                                @isset($process->unit_id)
-
-                                <label>Продолжительность единицы ({{ $process->unit->abbreviation }})
-                                    {!! Form::number('length', null, ['disabled' => ($process->draft == 1) ? null : true]) !!}
-                                </label>
-
-                                @endisset
-
+                                {{-- Если указана ед. измерения - ШТ. --}}
+                                {{-- @if($item->getTable() == 'goods') --}}
+{{--                                @if($article->group->units_category_id == 6)--}}
+{{--                                    <div class="cell small-12 block-price-unit">--}}
+{{--                                        <fieldset class="minimal-fieldset">--}}
+{{--                                            <legend>Единица для определения цены</legend>--}}
+{{--                                            <div class="grid-x grid-margin-x">--}}
+{{--                                                <div class="small-12 medium-6 cell">--}}
+{{--                                                    @include('includes.selects.units_categories', [--}}
+{{--                                                        'default' => 6,--}}
+{{--                                                        'data' => $item->price_unit_category_id,--}}
+{{--                                                        'type' => 'article',--}}
+{{--                                                        'name' => 'price_unit_category_id',--}}
+{{--                                                        'id' => 'select-price-units_categories',--}}
+{{--                                                    ])--}}
+{{--                                                </div>--}}
+{{--                                                <div class="small-12 medium-6 cell">--}}
+{{--                                                    @include('includes.selects.units', [--}}
+{{--                                                        'default' => 32,--}}
+{{--                                                        'data' => $item->price_unit_id,--}}
+{{--                                                        'units_category_id' => $item->price_unit_category_id,--}}
+{{--                                                        'name' => 'price_unit_id',--}}
+{{--                                                        'id' => 'select-price-units',--}}
+{{--                                                    ])--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                        </fieldset>--}}
+{{--                                    </div>--}}
+{{--                                @endif--}}
+{{--                                --}}{{-- @endif --}}
                                 {!! Form::hidden('id', null, ['id' => 'item-id']) !!}
 
                             </div>
 
                             <div class="small-12 medium-6 cell">
-
                                 <div class="small-12 cell">
                                     <label>Фотография
                                         {{ Form::file('photo') }}
                                     </label>
-                                    <div class="text-center">
+                                    <div class="text-center wrap-article-photo">
                                         <img id="photo" src="{{ getPhotoPathPlugEntity($item) }}">
                                     </div>
-
-                                    <label>Видео
-                                        {{ Form::text('video_url', $process->video_url, []) }}
-                                    </label>
-
                                 </div>
                             </div>
                         </div>
@@ -175,12 +179,66 @@ $disabled = $process->draft == 0 ? true : null;
                     </div>
                     {{-- Конец левого блока на первой вкладке --}}
 
-
                     {{-- Правый блок на первой вкладке --}}
                     <div class="small-12 large-6 cell">
 
-                        <fieldset class="fieldset-access">
+                        <div class="grid-x">
+                            <div class="small-12 cell">
+                                <label>Описание
+                                    @include('includes.inputs.textarea', ['name' => 'description', 'value' => $process->description])
+                                </label>
+                            </div>
+                            @if($process->group->units_category_id != 3)
+                                <div class="cell small-12">
+                                    <div class="grid-x grid-margin-x">
+                                        <div class="small-12 medium-3 cell">
+                                            <label>Продолжительность
+                                                {!! Form::number('length', $process->weight_trans) !!}
+                                                {{-- ['disabled' => ($process->draft == 1) ? null : true]  --}}
+                                            </label>
+                                        </div>
+                                        <div class="small-12 medium-3 cell">
+                                            <label>Единица измерения
+                                                @include('products.processes.common.edit.select_units', [
+                                                    'field_name' => 'unit_weight_id',
+                                                    'units_category_id' => 3,
+                                                    'disabled' => null,
+                                                    'data' => $process->unit_weight_id ?? 7,
+                                                ])
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
 
+                        {{-- Метрики --}}
+                        @includeIf('products.processes.'.$item->getTable().'.metrics.metrics')
+                        @include('products.common.edit.metrics.metrics')
+
+
+                        <div id="item-inputs"></div>
+                        <div class="small-12 cell tabs-margin-top text-center">
+                            <div class="item-error" id="item-error">Такой артикул уже существует!<br>Измените значения!</div>
+                        </div>
+                        {{ Form::hidden('item_id', $item->id) }}
+                    </div>
+                    {{-- Конец правого блока на первой вкладке --}}
+
+                    {{-- Кнопка --}}
+                    <div class="small-12 cell tabs-button tabs-margin-top">
+                        {{ Form::submit('Редактировать', ['class' => 'button', 'id' => 'add-item']) }}
+                    </div>
+
+                </div>
+            </div>
+
+            {{-- Дополнительные опции --}}
+            <div class="tabs-panel" id="tab-extra_options">
+                <div class="grid-x grid-padding-x">
+                    <div class="small-12 medium-6 cell">
+
+                        <fieldset class="fieldset-access">
                             <legend>Артикул</legend>
 
                             <div class="grid-x grid-margin-x">
@@ -205,53 +263,110 @@ $disabled = $process->draft == 0 ? true : null;
                             </div>
                         </fieldset>
 
-                        <div class="grid-x">
-                            <div class="small-12 cell">
-                                <label>Описание
-                                    @include('includes.inputs.textarea', ['name' => 'description', 'value' => $process->description])
-                                </label>
+                        {{--	                        <fieldset class="fieldset-access">--}}
+                        {{--	                            <legend>Умолчания для стоимости</legend>--}}
+
+                        {{--	                            <div class="grid-x grid-margin-x">--}}
+                        {{--	                                <div class="small-12 medium-6 cell">--}}
+                        {{--	                                    <label>Себестоимость--}}
+                        {{--	                                        {{ Form::number('cost_default', null) }}--}}
+                        {{--	                                    </label>--}}
+                        {{--	                                </div>--}}
+                        {{--	                                <div class="small-12 medium-6 cell">--}}
+                        {{--	                                    <label>Цена за (<span id="unit">{{ ($article->package_status == false) ? $article->group->unit->abbreviation : 'порцию' }}</span>)--}}
+                        {{--	                                        {{ Form::number('price_default', null) }}--}}
+                        {{--	                                    </label>--}}
+                        {{--	                                </div>--}}
+                        {{--	                            </div>--}}
+                        {{--	                        </fieldset>--}}
+
+{{--                        @if(isset($raw))--}}
+{{--                            <fieldset class="fieldset-access">--}}
+{{--                                <legend>Умолчания для сырья</legend>--}}
+
+{{--                                <div class="grid-x grid-margin-x">--}}
+{{--                                    <div class="small-12 medium-6 cell">--}}
+{{--                                        <label>Еденица измерения--}}
+{{--                                            @include('products.articles.common.edit.select_units', [--}}
+{{--                                                'field_name' => 'unit_for_composition_id',--}}
+{{--                                                'units_category_id' => $article->unit->category_id,--}}
+{{--                                                'disabled' => null,--}}
+{{--                                                'data' => $raw->unit_for_composition_id ?? $raw->article->unit_id,--}}
+{{--                                            ])--}}
+{{--                                        </label>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="small-12 medium-6 cell">--}}
+
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </fieldset>--}}
+{{--                        @endif--}}
+
+{{--                        <fieldset class="fieldset package-fieldset" id="package-fieldset">--}}
+
+{{--                            <legend class="checkbox">--}}
+{{--                                {!! Form::checkbox('package_status', 1, $article->package_status, ['id' => 'package', $disabled ? 'disabled' : '']) !!}--}}
+{{--                                <label for="package">--}}
+{{--                                    <span id="package-change">Сформировать порцию для приема на склад</span>--}}
+{{--                                </label>--}}
+{{--                            </legend>--}}
+
+{{--                            <div class="grid-x grid-margin-x" id="package-block">--}}
+{{--                                --}}{{-- <div class="small-12 cell @if ($article->package_status == null) package-hide @endif">--}}
+{{--                                    <label>Имя&nbsp;порции--}}
+{{--                                        {{ Form::text('package_name', $article->package_name, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}--}}
+{{--                                    </label>--}}
+{{--                                </div> --}}
+{{--                                <div class="small-6 cell @if (!$article->package_status) package-hide @endif">--}}
+{{--                                    <label>Сокр.&nbsp;имя--}}
+{{--                                        {{ Form::text('package_abbreviation',  $article->package_abbreviation, ['class'=>'text-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}--}}
+{{--                                    </label>--}}
+{{--                                </div>--}}
+{{--                                <div class="small-6 cell @if (!$article->package_status) package-hide @endif">--}}
+{{--                                    <label>Кол-во,&nbsp;{{ $article->unit->abbreviation }}--}}
+{{--                                        {{ Form::text('package_count', $article->package_count, ['class'=>'digit-field name-field compact', 'maxlength'=>'40', 'autocomplete'=>'off', 'pattern'=>'[0-9\W\s]{0,10}', $disabled ? 'disabled' : ''], ['required']) }}--}}
+{{--                                        <div class="sprite-input-right find-status" id="name-check"></div>--}}
+{{--                                        <span class="form-error">Введите количество</span>--}}
+{{--                                    </label>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </fieldset>--}}
+
+                        @includeIf('products.processes.'.$item->getTable().'.fieldsets')
+
+                        <fieldset class="fieldset-access">
+                            <legend>Доступность</legend>
+                            {{-- Чекбокс черновика --}}
+                            {!! Form::hidden('draft', 0) !!}
+                            {{-- @if ($process->draft) --}}
+                            <div class="small-12 cell checkbox">
+                                {!! Form::checkbox('draft', 1, $process->draft, ['id' => 'checkbox-draft']) !!}
+                                <label for="checkbox-draft"><span>Черновик</span></label>
                             </div>
-                        </div>
-
-                        {{-- Метрики --}}
-                        {{-- @includeIf($item->getTable().'.metrics.metrics') --}}
+                            {{-- @endif --}}
 
 
-                        <div id="item-inputs"></div>
-                        <div class="small-12 cell tabs-margin-top text-center">
-                            <div class="item-error" id="item-error">Такой артикул уже существует!<br>Измените значения!</div>
-                        </div>
-                        {{ Form::hidden('item_id', $item->id) }}
+                            <div class="small-12 cell checkbox">
+                                {!! Form::hidden('serial', 0) !!}
+                                {!! Form::checkbox('serial', 1, $item->serial, ['id' => 'checkbox-serial']) !!}
+                                <label for="checkbox-serial"><span>Серийный номер</span></label>
+                            </div>
+
+                            {{-- Чекбоксы управления --}}
+                            @include('includes.control.checkboxes', ['item' => $item])
+                            <div class="small-12 cell ">
+                                <span id="composition-error" class="form-error"></span>
+                            </div>
+                        </fieldset>
+
+                        <fieldset class="fieldset-access">
+                            <legend>Дополнительное медиа</legend>
+                            <label>Видео
+                                {{ Form::text('video_url', $process->video_url, []) }}
+                            </label>
+                        </fieldset>
+
                     </div>
-                    {{-- Конец правого блока на первой вкладке --}}
-
-                    {{-- Чекбокс черновика --}}
-                    {!! Form::hidden('draft', 0) !!}
-                    @if ($process->draft == 1)
-                    <div class="small-12 cell checkbox">
-                        {!! Form::checkbox('draft', 1, $process->draft, ['id' => 'draft']) !!}
-                        <label for="draft"><span>Черновик</span></label>
-                    </div>
-                    @endif
-
-                    {{-- Серийный номер --}}
-                    <div class="small-12 cell checkbox">
-                        {!! Form::hidden('serial', 0) !!}
-                        {{ Form::checkbox('serial', 1, $item->serial, ['id' => 'serial']) }}
-                        <label for="serial"><span>Серийный номер</span></label>
-                    </div>
-
-                    {{-- Чекбоксы управления --}}
-                    @include('includes.control.checkboxes', ['item' => $item])
-                    <div class="small-12 cell ">
-                        <span id="composition-error" class="form-error"></span>
-                    </div>
-
-                    {{-- Кнопка --}}
-                    <div class="small-12 cell tabs-button tabs-margin-top">
-                        {{ Form::submit('Редактировать', ['class' => 'button', 'id' => 'add-item']) }}
-                    </div>
-
                 </div>
             </div>
 
@@ -286,7 +401,7 @@ $disabled = $process->draft == 0 ? true : null;
             {{ Form::close() }}
 
             {{-- Фотографии --}}
-            <div class="tabs-panel" id="photos">
+            <div class="tabs-panel" id="tab-photos">
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-7 cell">
@@ -304,14 +419,14 @@ $disabled = $process->draft == 0 ? true : null;
                         {!! Form::hidden('name', $process->name) !!}
                         {!! Form::hidden('id', $process->id) !!}
                         {!! Form::hidden('entity', 'processes') !!}
-                        {{-- {!! Form::hidden('album_id', $cur_goods->album_id) !!} --}}
+                        {!! Form::hidden('album_id', $item->album_id) !!}
 
                         {!! Form::close() !!}
 
                         <ul class="grid-x small-up-4 tabs-margin-top" id="photos-list">
 
                             @isset($process->album_id)
-                            @include('photos.photos', ['item' => $process])
+                            @include('photos.photos', ['album' => $process->album])
                             @endisset
 
                         </ul>

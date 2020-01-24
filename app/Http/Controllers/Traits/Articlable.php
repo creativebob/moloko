@@ -16,24 +16,24 @@ use Illuminate\Support\Facades\Log;
 
 trait Articlable
 {
-
     use Photable;
 
+    /**
+     * Запись артикула в бд
+     *
+     * @param $request
+     * @param $category
+     * @return mixed
+     */
     public function storeArticle($request, $category)
     {
 
-//        $user = $request->user();
-//        $user_id = $user->id;
-//        $company_id = $user->company_id;
-        // dd($request->input());
-
         // TODO - 23.09.19 - При создании артикула не ищем похожую группу, а создаем новую (на Вкусняшке проблемы с дублированием имён)
 
-        // Смотрим пришедший режим группы товаров
+        // Смотрим пришедший режим группы артикулов
         switch ($request->mode) {
 
             case 'mode-default':
-
 //                $articles_group = ArticlesGroup::firstOrCreate([
 //                    'name' => $request->name,
 //                    'unit_id' => $request->unit_id,
@@ -42,14 +42,13 @@ trait Articlable
 //                ]);
 
                 $data = $request->input();
-                $articles_group = (new ArticlesGroup())->create($data);
+                $articles_group = ArticlesGroup::create($data);
 
                 // Пишем к группе связь с категорией
                 $category->groups()->syncWithoutDetaching($articles_group->id);
             break;
 
             case 'mode-add':
-
 //                $articles_group = ArticlesGroup::firstOrCreate([
 //                    'name' => $request->group_name,
 //                    'unit_id' => $request->unit_id,
@@ -59,7 +58,7 @@ trait Articlable
 
                 $data = $request->input();
                 $data['name'] = $request->group_name;
-                $articles_group = (new ArticlesGroup())->create($data);
+                $articles_group = ArticlesGroup::create($data);
 
                 // Пишем к группе связь с категорией
                 $category->groups()->syncWithoutDetaching($articles_group->id);
@@ -74,7 +73,6 @@ trait Articlable
         ->info('Режим создания: ' . $request->mode . '. Записали или нашли группу артикулов c id: ' . $articles_group->id . ', в зависимости от режима. Связали с категорией.');
 
         $data = $request->input();
-
         $data['articles_group_id'] = $articles_group->id;
 
         if (isset($data['units_category_id'])) {
@@ -115,13 +113,20 @@ trait Articlable
             }
         }
 
-        $article = (new Article())->create($data);
+        $article = Article::create($data);
         Log::channel('operations')
         ->info('Записали артикул с id: ' . $article->id);
 
         return $article;
     }
 
+    /**
+     * Изменение артикула в бд
+     *
+     * @param $request
+     * @param $item
+     * @return int|mixed
+     */
     public function updateArticle($request, $item)
     {
 
@@ -146,25 +151,36 @@ trait Articlable
 
             $result = $this->checks($request, $item);
 
-
             if (is_array($result)) {
                 return $result;
             } else {
-
 
                 if ($article->draft) {
                     // Обновляем составы только для товаров в черновике
                     if ($item->getTable() == 'goods') {
 
                         if ($article->kit) {
-                            $this->setGoods($request, $article);
+                            $access = session('access.all_rights.index-goods-allow');
+                            if ($access) {
+                                $article->goods()->sync($request->goods);
+                            }
                         } else {
-                            $this->setRaws($request, $article);
+
+                            $access = session('access.all_rights.index-raws-allow');
+                            if ($access) {
+                                $article->raws()->sync($request->raws);
+                            }
                         }
 
-                        $this->setContainers($request, $article);
+                        $access = session('access.all_rights.index-containers-allow');
+                        if ($access) {
+                            $article->containers()->sync($request->containers);
+                        }
 
-                        $this->setAttachments($request, $article);
+                        $access = session('access.all_rights.index-attachments-allow');
+                        if ($access) {
+                            $article->attachments()->sync($request->attachments);
+                        }
                     }
 
                     // Устаревший код
@@ -173,15 +189,13 @@ trait Articlable
                     //     $weight = $data['weight'] * $unit->ratio;
                     //     $data['weight'] = $weight;
                     // }
-
-
                 }
 
-                $data['draft'] = request()->draft;
+                $data['draft'] = $request->draft;
                 // dd($data);
 
-                $result = $this->getPhotoId($request, $article);
-                $data['photo_id'] = $result;
+                $photo_id = $this->getPhotoId($request, $article);
+                $data['photo_id'] = $photo_id;
 
                 // Если ошибок и совпадений нет, то обновляем артикул
                 $article->update($data);
@@ -194,6 +208,13 @@ trait Articlable
         }
     }
 
+    /**
+     * Дублирование артикула
+     *
+     * @param $request
+     * @param $item
+     * @return mixed
+     */
     public function replicateArticle($request, $item)
     {
 
@@ -209,7 +230,7 @@ trait Articlable
             $data = $request->input();
             $data['unit_id'] = $group->unit_id;
             $data['units_category_id'] = $group->units_category_id;
-            $articles_group = (new ArticlesGroup())->create($data);
+            $articles_group = ArticlesGroup::create($data);
 
             // TODO - 23.09.19 - Изменения из за проблен на Вкусняшке
 //            $user = $request->user();
@@ -244,44 +265,52 @@ trait Articlable
         }
     }
 
-    protected function setRaws($request, $article)
+    /**
+     * Поиск артикула
+     *
+     * @param $search
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function search($search)
     {
-        // Запись состава сырья только для черновика
-        if ($article->draft) {
-            $article->raws()->sync($request->raws);
-        }
+
+        // Подключение политики
+//        $this->authorize('index',  $this->class);
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
+
+//        $search = $request->search;
+        $items = $this->class::with([
+            'article'
+        ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer) // Фильтр по системным записям
+            ->whereHas('article', function ($q) use ($search) {
+                $q->where('name', 'LIKE', '%' . $search . '%');
+            })
+            ->where('archive', false)
+            ->get([
+                'id',
+                'article_id'
+            ]);
+
+//        dd($items);
+
+        return response()->json($items);
     }
 
-    protected function setGoods($request, $article)
-    {
-        // Запись состава товаров только для черновика
-        if ($article->draft) {
-            $article->goods()->sync($request->goods);
-        }
-    }
-
-    protected function setContainers($request, $article)
-    {
-        // Запись состава упаковок только для черновика
-        if ($article->draft) {
-            $article->containers()->sync($request->containers);
-        }
-    }
-
-    protected function setAttachments($request, $article)
-    {
-        // Запись состава упаковок только для черновика
-        if ($article->draft) {
-            $article->attachments()->sync($request->attachments);
-        }
-    }
-
-    // Проверяем артикул при выводе из черновика
+    /**
+     * Проверяем артикул при выводе из черновика
+     *
+     * @param $data
+     * @return mixed
+     */
     protected function checkCoincidenceArticle($data)
     {
-
-        // dd($data);
-
+//         dd($data);
 
         $articles = Article::where([
             'articles_group_id' => $data['articles_group_id'],
@@ -359,7 +388,13 @@ trait Articlable
         }
     }
 
-    // Проверки уже выведенного артикула
+    /**
+     * Проверки уже выведенного артикула
+     *
+     * @param $request
+     * @param $item
+     * @return mixed
+     */
     protected function checks($request, $item)
     {
 
@@ -401,7 +436,13 @@ trait Articlable
         }
     }
 
-    // Проверяем на совпадение имя артикула (не черновика)
+    /**
+     * Проверяем на совпадение имени артикула (не черновика)
+     *
+     * @param $request
+     * @param $item
+     * @return mixed
+     */
     protected function checkName($request, $item)
     {
         if (!$item->article->draft) {
@@ -420,7 +461,12 @@ trait Articlable
         }
     }
 
-    // Проверяем на совпадение имя артикула (не черновика)
+    /**
+     * Смена категории
+     *
+     * @param $request
+     * @param $item
+     */
     protected function changeCategory($request, $item)
     {
 

@@ -1,12 +1,10 @@
-
 <tr class="item goods-composition-row" id="table-raws-{{ $raw->id }}" data-name="{{ $raw->article->name }}">
 	<td class="number_counter"></td>
-	<td>
 
-		{{ $raw->category->name }}
+	<td>{{ $raw->category->name }}</td>
 
-	</td>
 	<td>{{ $raw->article->name }}</td>
+
 	<td>
 		<div class="wrap-input-table">
 			{{-- КОЛИЧЕСТВО --}}
@@ -18,6 +16,7 @@
 			{{-- <span class="form-error">Введите количество</span> --}}
 		</div>
 	</td>
+
 	<td>
 		<div class="wrap-input-table">
 			{{-- ИСПОЛЬЗОВАНИЕ --}}
@@ -62,13 +61,15 @@
 			<span class="raw-weight-count" data-weight="{{ $raw->weight * 1000 }}" data-weight-count="{{ $raw->weight * 1000 * $count }}">{{ num_format($raw->weight * 1000 * $count, 0) }}</span>
 		<span>гр.</span>
 	</td>
+
 	<td>
-		@php 
+		@php
 			if(isset($raw->cost_portion)){$cost = $raw->cost_portion;} else {$cost = 0;};
 		@endphp
 			<span class="raw-cost-count" data-cost={{ $cost }} data-cost-count={{ $cost * $count }}>{{ num_format($cost * $count, 0) }}</span>
 		<span>руб.</span>
 	</td>
+
 	<td class="td-delete">
 		@empty($disabled)
 			<a class="icon-delete sprite" data-open="delete-item"></a>

@@ -2,7 +2,7 @@
 
 namespace App\Models\Project;
 
-use App\Models\Traits\Commonable;
+use App\Models\System\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 

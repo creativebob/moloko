@@ -2,8 +2,8 @@
 
 namespace App;
 
-use App\Models\Traits\Cmvable;
-use App\Models\Traits\Commonable;
+use App\Models\System\Traits\Articlable;
+use App\Models\System\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -36,7 +36,7 @@ class Goods extends Model
     use SoftDeletes;
 
     use Commonable;
-    use Cmvable;
+    use Articlable;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -81,7 +81,7 @@ class Goods extends Model
     public function getRestAttribute()
     {
         if(!empty($this->hasMany(GoodsStock::class, 'cmv_id')->where('filial_id', 1)->first())){
-            return $this->hasMany(GoodsStock::class, 'cmv_id')->where('filial_id', 1)->first()->free;  
+            return $this->hasMany(GoodsStock::class, 'cmv_id')->where('filial_id', 1)->first()->free;
         } else {
             return null;
         }
@@ -123,7 +123,7 @@ class Goods extends Model
         $metric = $this->metrics->where('name', $metric_name)->first();
 
         if(isset($metric)){
-            
+
             if($metric->property->type == 'list'){
                 return $metric->values->where('id', $metric->pivot->value)->first()->value;
             }
@@ -139,7 +139,7 @@ class Goods extends Model
         $metric = $this->metrics->where('id', $metric_id)->first();
 
         if(isset($metric)){
-            
+
             if($metric->property->type == 'list'){
                 return $metric->values->where('id', $metric->pivot->value)->first()->value;
             }

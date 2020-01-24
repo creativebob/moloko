@@ -2,36 +2,33 @@
 @include('products.processes_categories.services_categories.workflows.class')
 
 @if ($workflows_categories->isNotEmpty())
+    @foreach($workflows_categories as $workflows_category)
+        @if ($workflows_category->workflows->isNotEmpty())
+        <li>
+            <span class="parent" data-open="workflow_category-{{ $workflows_category->id }}">{{ $workflows_category->name }}</span>
+            <div class="checker-nested" id="workflow_category-{{ $workflows_category->id }}">
+                <ul class="checker">
 
-@foreach($workflows_categories as $workflows_category)
+                    @foreach($workflows_category->workflows as $workflow)
+                    <li class="checkbox">
+                        {{ Form::checkbox('workflows[]', $workflow->id, null, ['class' => 'change-workflow', 'id' => 'checkbox-workflow-'.$workflow->id]) }}
+                        <label for="checkbox-workflow-{{ $workflow->id }}">
+                            <span>{{ $workflow->process->name }}</span>
+                        </label>
+                    </li>
+                    @endforeach
 
-@if ($workflows_category->workflows->isNotEmpty())
-<li>
-	<span class="parent" data-open="workflow_category-{{ $workflows_category->id }}">{{ $workflows_category->name }}</span>
-	<div class="checker-nested" id="workflow_category-{{ $workflows_category->id }}">
-		<ul class="checker">
-
-			@foreach($workflows_category->workflows as $workflow)
-			<li class="checkbox">
-				{{ Form::checkbox('workflows[]', $workflow->id, null, ['class' => 'change-workflow', 'id' => 'workflow-'.$workflow->id]) }}
-				<label for="workflow-{{ $workflow->id }}">
-					<span>{{ $workflow->process->name }}</span>
-				</label>
-			</li>
-			@endforeach
-
-		</ul>
-	</div>
-</li>
-@endif
-
-@endforeach
-
+                </ul>
+            </div>
+        </li>
+        @endif
+    @endforeach
 @else
-<li>Ничего нет...</li>
+    <li>Ничего нет...</li>
 @endif
 
-<script type="application/javascript">
+@push('scripts')
+<script>
 
 	let workflows = new Workflows();
 
@@ -60,3 +57,4 @@
         $('#' + $(this).data('open')).show();
     });
 </script>
+@endpush

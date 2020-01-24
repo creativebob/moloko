@@ -40,8 +40,7 @@
             // Удаляем элемент со страницы
             $('#table-raws-' + id).remove();
             // Убираем отмеченный чекбокс в списке
-            $('#raw-' + id).prop('checked', false);
+            $('#checkbox-raw-' + id).prop('checked', false);
         }
-
     }
 </script>

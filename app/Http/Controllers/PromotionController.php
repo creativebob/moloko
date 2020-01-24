@@ -128,8 +128,8 @@ class PromotionController extends Controller
 
         if ($promotion) {
 
-            $filials = session('access.all_rights.index-departments-allow');
-            if ($filials) {
+            $access = session('access.all_rights.index-departments-allow');
+            if ($access) {
                 $promotion->filials()->sync($request->filials);
             }
 

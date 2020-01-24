@@ -72,6 +72,12 @@ class CatalogsServicesItem extends Model
 		return $this->belongsTo(CatalogsService::class, 'catalogs_service_id');
 	}
 
+    public function catalog_public()
+    {
+        return $this->belongsTo(CatalogsService::class, 'catalogs_service_id')
+            ->where('display', true);
+    }
+
     // Родитель
     public function parent()
     {
@@ -113,6 +119,16 @@ class CatalogsServicesItem extends Model
         return $this->hasMany(PricesService::class);
     }
 
+    public function prices_public()
+    {
+        return $this->hasMany(PricesService::class)
+            ->has('service_public')
+            ->where([
+                'display' => true,
+                'archive' => false
+            ]);
+    }
+
 	// Услуги каталога
     public function services()
     {
@@ -120,6 +136,22 @@ class CatalogsServicesItem extends Model
         ->withPivot([
             'price'
         ]);
+    }
+
+    // Фильтры
+    public function filters()
+    {
+        return $this->belongsToMany(Metric::class, 'filters_services', 'catalogs_services_item_id', 'metric_id');
+    }
+
+    public function display_mode()
+    {
+        return $this->belongsTo(DisplayMode::class);
+    }
+
+    public function directive_category()
+    {
+        return $this->belongsTo(UnitsCategory::class);
     }
 
     public function getNameWithParentAttribute()

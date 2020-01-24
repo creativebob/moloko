@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Traits;
+namespace App\Models\System\Traits;
 
 use App\Company;
 use App\User;

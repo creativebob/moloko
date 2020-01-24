@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Models\System\Traits\Commonable;
+use App\Models\System\Traits\Processable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -31,6 +33,9 @@ class Service extends Model
     use Notifiable;
     use SoftDeletes;
 
+    use Commonable;
+    use Processable;
+
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -53,13 +58,6 @@ class Service extends Model
         'moderation'
     ];
 
-
-    // Артикул
-    public function article()
-    {
-        return $this->belongsTo(Article::class);
-    }
-
     // Процесс
     public function process()
     {
@@ -70,18 +68,6 @@ class Service extends Model
     public function category()
     {
         return $this->belongsTo(ServicesCategory::class);
-    }
-
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo(User::class);
     }
 
     // Пункты каталога

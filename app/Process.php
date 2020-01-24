@@ -59,18 +59,22 @@ class Process extends Model
 
         'manufacturer_id',
 
+        'kit',
+
         'cost_default',
         'cost_mode',
         'price_default',
         'price_mode',
         'price_rule_id',
 
-        'draft',
-        'length',
-        'unit_id',
-
-        'kit',
         'video_url',
+
+        'length',
+
+        'photo_id',
+
+        'draft',
+        'unit_id',
 
         'display',
         'system',

@@ -63,7 +63,21 @@ class AppController extends Controller
         return redirect()->route($alias.'.edit', $id);
     }
 
-    public function cahche()
+    public function draft_process($alias, $id)
+    {
+        $entity = Entity::whereAlias($alias)->first(['model']);
+        $model = 'App\\'.$entity->model;
+
+        $item = $model::findOrFail($id);
+
+        $item->process->update([
+            'draft' => true
+        ]);
+
+        return redirect()->route($alias.'.edit', $id);
+    }
+
+    public function cache()
     {
         \Artisan::call('optimize');
         \Artisan::call('view:cache');
@@ -71,7 +85,7 @@ class AppController extends Controller
         return "Кэш установлен.";
     }
 
-    public function cahche_clear()
+    public function cache_clear()
     {
         \Artisan::call('cache:clear');
         \Artisan::call('modelCache:clear');

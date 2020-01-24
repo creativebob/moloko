@@ -112,6 +112,8 @@ function inPickMeUp($date) {
 // Принимает 11 значное число: номер телефона Возвращает строку: Удобочитаемый номер телефона со скобочками и дефисом
 function decorPhone($value) {
 
+    $result = null;
+
     if (strlen($value) == 11 ) {
         if(mb_substr($value, 0, 4) == "8395"){
             $rest1 = mb_substr($value, 5, 2); // возвращает "abcd"

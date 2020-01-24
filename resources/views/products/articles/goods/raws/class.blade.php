@@ -9,7 +9,7 @@
             var id = $(elem).val();
 
             if ($(elem).prop('checked') == true) {
-                
+
                 // Если нужно добавить
                 $.post('/admin/ajax_get_raw', {
                     id: id,
@@ -39,9 +39,9 @@
             // Удаляем элемент со страницы
             $('#table-raws-' + id).remove();
             // Убираем отмеченный чекбокс в списке метрик
-            $('#raw-' + id).prop('checked', false);
+            $('#checkbox-raw-' + id).prop('checked', false);
 
-            this.totalRawsCount(); 
+            this.totalRawsCount();
         }
 
         fill(elem) {

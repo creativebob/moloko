@@ -15,7 +15,10 @@ use Illuminate\Support\Str;
 class CatalogsGoodsController extends Controller
 {
 
-    // Настройки сконтроллера
+    /**
+     * CatalogsGoodsController constructor.
+     * @param CatalogsGoods $catalogs_goods
+     */
     public function __construct(CatalogsGoods $catalogs_goods)
     {
         $this->middleware('auth');
@@ -26,9 +29,15 @@ class CatalogsGoodsController extends Controller
         $this->model = 'App\CatalogsGoods';
     }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -54,21 +63,33 @@ class CatalogsGoodsController extends Controller
         ]);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function create(Request $request)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         return view('catalogs_goods.create', [
-            'catalogs_goods' => new $this->class,
+            'catalogs_goods' => CatalogsGoods::make(),
             'page_info' => pageInfo($this->entity_alias),
         ]);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param CatalogsGoodsRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(CatalogsGoodsRequest $request)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -89,14 +110,26 @@ class CatalogsGoodsController extends Controller
         }
     }
 
-    public function show(Request $request)
+    /**
+     * Display the specified resource.
+     *
+     * @param $id
+     */
+    public function show($id)
     {
         //
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function edit(Request $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -115,9 +148,16 @@ class CatalogsGoodsController extends Controller
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param CatalogsGoodsRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(CatalogsGoodsRequest $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -144,20 +184,28 @@ class CatalogsGoodsController extends Controller
         }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function destroy(Request $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $catalogs_goods = CatalogsGoods::with(['items'])
+        $catalogs_goods = CatalogsGoods::with([
+            'items'
+        ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods);
-
 
         $catalogs_goods->delete();
 
@@ -172,8 +220,14 @@ class CatalogsGoodsController extends Controller
 
     // ------------------------------------------------ Ajax -------------------------------------------------
 
-    // Проверка наличия в базе
-    public function ajax_check (Request $request, $alias)
+    /**
+     * Проверка наличия в базе
+     *
+     * @param Request $request
+     * @param $alias
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function ajax_check(Request $request, $alias)
     {
 
         // Получаем авторизованного пользователя
@@ -191,7 +245,11 @@ class CatalogsGoodsController extends Controller
         return response()->json($result_count);
     }
 
-    public function get_catalog ($id)
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function get_catalog($id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)

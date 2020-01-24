@@ -15,6 +15,10 @@
         ><label class="label-check" for="check-{{ $prices_service->id }}"></label>
     </td>
 
+    <td class="td-photo tiny">
+        <img src="{{ getPhotoPathPlugEntity($prices_service->goods, 'small') }}" alt="{{ isset($prices_service->service->process->photo_id) ? $prices_service->service->process->name : 'Нет фото' }}">
+    </td>
+
     <td class="td-name">
         {{ $prices_service->service->process->name }}
         {{-- @can('update', $prices_service)
@@ -28,8 +32,22 @@
         %5B%5D
         ({{ link_to_route('goods.index', $prices_service->articles_count, $parameters = ['prices_service_id' => $prices_service->id], $attributes = ['class' => 'filter_link light-text', 'title' => 'Перейти на список артикулов']) }}) --}}
 
+        <br><span class="tiny-text">{{ $prices_service->service->category->name }}</span>
+
     </td>
+
+    <td class="td-unit">
+        {{ $prices_service->service->process->group->unit->abbreviation }}
+    </td>
+
+    <td class="td-length">
+{{--        @if($prices_service->service->process->group->unit_id != 12)--}}
+{{--            {{ num_format($prices_service->service->process->length / $cur_prices_goods->goods->article->unit_weight->ratio, 0) }} {{ $cur_prices_goods->goods->article->unit_weight->abbreviation }}--}}
+{{--        @endif--}}
+    </td>
+
     <td class="td-catalogs_item">{{ $prices_service->catalogs_item->name_with_parent }}</td>
+
     <td class="td-price">
         @include('prices_services.price_span')
 
@@ -59,8 +77,33 @@
 
     </td>
 
+    <td class="td-point">
+        @include('prices_services.price_point')
+    </td>
+
+    <td class="td-price-status">
+        <button type="button" class="hollow tiny button price_services-status
+            @if($prices_service->status == 1) show @else hide @endif
+            ">
+            @if($prices_service->status == 1) Не оказывается @else Доступна @endif</button>
+    </td>
+
+    <td class="td-hit">
+        <button type="button" class="hollow tiny button price_services-hit
+            @if($prices_service->is_hit == 1) hit @endif
+            ">
+            @if($prices_service->is_hit == 1) Хит продаж @else Обычный @endif</button>
+    </td>
+
+    <td class="td-new">
+        <button type="button" class="hollow tiny button price_services-new
+            @if($prices_service->is_new == 1) new @endif
+            ">
+            @if($prices_service->is_new == 1) Новинка @else Обычный @endif</button>
+    </td>
+
     {{-- Элементы управления --}}
-    {{-- @include('includes.control.table_td', ['item' => $prices_service]) --}}
+     @include('includes.control.table_td', ['item' => $prices_service])
 
     <td class="td-delete">
 

@@ -6,7 +6,7 @@
 
 @section('title', $page_info->name)
 
-{{-- @section('breadcrumbs', Breadcrumbs::render('index', $page_info)) --}}
+@section('breadcrumbs', Breadcrumbs::render('catalogs_services-section-index', $catalog_service,  $page_info))
 
 @section('content-count')
 {{-- Количество элементов --}}
@@ -50,25 +50,19 @@
 @endsection
 
 @section('modals')
-<section id="modal"></section>
-{{-- Модалка удаления ajax --}}
-@include('includes.modals.modal-delete-ajax')
+    <section id="modal"></section>
+    {{-- Модалка удаления ajax --}}
+    @include('includes.modals.modal-delete-ajax')
 @endsection
 
 @push('scripts')
-
     @include('includes.scripts.sortable-menu-script')
-
-{{-- Скрипты --}}
-@include('catalogs_services_items.scripts')
-
-{{-- Скрипт подсветки многоуровневого меню --}}
-@include('includes.scripts.multilevel-menu-active-scripts')
-
-{{-- Скрипт отображения на сайте --}}
-@include('includes.scripts.ajax-display')
-
-{{-- Скрипт системной записи --}}
-@include('includes.scripts.ajax-system')
-
+    {{-- Скрипты --}}
+    @include('catalogs_services_items.scripts')
+    {{-- Скрипт подсветки многоуровневого меню --}}
+    @include('includes.scripts.multilevel-menu-active-scripts')
+    {{-- Скрипт отображения на сайте --}}
+    @include('includes.scripts.ajax-display')
+    {{-- Скрипт системной записи --}}
+    @include('includes.scripts.ajax-system')
 @endpush

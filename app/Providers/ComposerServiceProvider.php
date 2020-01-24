@@ -18,6 +18,7 @@ use App\Http\ViewComposers\System\DirectiveCategoriesComposer;
 use App\Http\ViewComposers\System\DisplayModesComposer;
 use App\Http\ViewComposers\System\FiltersComposer;
 use App\Http\ViewComposers\System\NotificationsComposer;
+use App\Http\ViewComposers\System\ProcessesCategoriesWithGroupsComposer;
 use App\Http\ViewComposers\System\SitesWIthFilialsAndCatalogsComposer;
 use App\Http\ViewComposers\System\StocksComposer;
 use App\Http\ViewComposers\System\WidgetsComposer;
@@ -194,6 +195,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('products.processes.common.edit.select_units', UnitsProcessesComposer::class);
 
         view()->composer('products.articles.common.edit.edit', ArticlesCategoriesWithGroupsComposer::class);
+        view()->composer('products.processes.common.edit.edit', ProcessesCategoriesWithGroupsComposer::class);
+
         view()->composer('system.pages.consignments.edit', ArticlesCategoriesWithItemsComposer::class);
         view()->composer('system.pages.productions.edit', ArticlesCategoriesWithItemsComposerForManufacturer::class);
 

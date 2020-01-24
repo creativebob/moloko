@@ -1,13 +1,13 @@
 <li class="tabs-title">
-	<a data-tabs-target="catalogs" href="#catalogs">Каталоги</a>
+	<a data-tabs-target="tab-prices" href="#tab-prices">Расположение в прайсах</a>
 </li>
 
-@if($process->set)
+@if($process->kit)
 	<li class="tabs-title">
-		<a data-tabs-target="services" href="#services">Услуги</a>
+		<a data-tabs-target="tab-services" href="#tab-services">Услуги</a>
 	</li>
-	@else
-<li class="tabs-title">
-	<a data-tabs-target="workflows" href="#workflows">Рабочие процессы</a>
-</li>
-	@endif
+@else
+    <li class="tabs-title">
+        <a data-tabs-target="tab-workflows" href="#tab-workflows">Рабочие процессы</a>
+    </li>
+@endif

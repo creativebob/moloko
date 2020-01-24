@@ -39,6 +39,7 @@
     <td class="td-unit">
         {{ $cur_prices_goods->goods->article->group->unit->abbreviation }}
     </td>
+
     <td class="td-weight">
         @if($cur_prices_goods->goods->article->group->unit_id != 8)
             {{ num_format($cur_prices_goods->goods->article->weight / $cur_prices_goods->goods->article->unit_weight->ratio, 0) }} {{ $cur_prices_goods->goods->article->unit_weight->abbreviation }}
@@ -46,6 +47,7 @@
     </td>
 
     <td class="td-catalogs_item">{{ $cur_prices_goods->catalogs_item->name_with_parent }}</td>
+
     <td class="td-price">
         @include('prices_goods.price_span')
 
@@ -77,12 +79,14 @@
     <td class="td-point">
         @include('prices_goods.price_point')
     </td>
+
     <td class="td-price-status">
         <button type="button" class="hollow tiny button price_goods-status
             @if($cur_prices_goods->status == 1) show @else hide @endif
         ">
             @if($cur_prices_goods->status == 1) Продано @else Доступен @endif</button>
     </td>
+
     <td class="td-hit">
         <button type="button" class="hollow tiny button price_goods-hit
             @if($cur_prices_goods->is_hit == 1) hit @endif

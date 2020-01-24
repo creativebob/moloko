@@ -25,10 +25,10 @@
     <div class="small-12 cell">
         <ul class="tabs-list" data-tabs id="tabs">
             <li class="tabs-title is-active">
-                <a href="#options" aria-selected="true">Общая информация</a>
+                <a href="#tab-options" aria-selected="true">Общая информация</a>
             </li>
             <li class="tabs-title">
-                <a data-tabs-target="site" href="#site">Настройка для сайта</a>
+                <a data-tabs-target="tab-site" href="#tab-site">Настройка для сайта</a>
             </li>
             <li class="tabs-title">
                 <a data-tabs-target="tab-filters" href="#tab-filters">Фильтры</a>
@@ -41,11 +41,11 @@
     <div class="small-12 cell tabs-margin-top">
         <div class="tabs-content" data-tabs-content="tabs">
 
-            {{ Form::model($catalogs_goods_item, ['route' => ['catalogs_goods_items.update', 'catalog_id' => $catalog_id, $catalogs_goods_item->id], 'data-abide', 'novalidate', 'files' => 'true']) }}
-            {{ method_field('PATCH') }}
+            {!! Form::model($catalogs_goods_item, ['route' => ['catalogs_goods_items.update', 'catalog_id' => $catalog_id, $catalogs_goods_item->id], 'data-abide', 'novalidate', 'files' => 'true']) !!}
+            @method('PATCH')
 
             {{-- Общая информация --}}
-            <div class="tabs-panel is-active" id="options">
+            <div class="tabs-panel is-active" id="tab-options">
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-6 cell">
@@ -82,8 +82,9 @@
                 </div>
             </div>
 
+            @can('index', App\Site::class)
             {{-- Сайт --}}
-            <div class="tabs-panel" id="site">
+            <div class="tabs-panel" id="tab-site">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
                         <div class="grid-x grid-padding-x">
@@ -144,6 +145,7 @@
                     </div>
                 </div>
             </div>
+            @endcan
 
             {{-- Фильтры --}}
             <div class="tabs-panel" id="tab-filters">
@@ -165,7 +167,7 @@
                 </div>
             </div>
 
-            {{ Form::close() }}
+            {!! Form::close() !!}
         </div>
     </div>
 </div>
@@ -173,19 +175,14 @@
 @endsection
 
 @section('modals')
-@include('includes.modals.modal-metric-delete')
-@include('includes.modals.modal_item_delete')
+    @include('includes.modals.modal-metric-delete')
+    @include('includes.modals.modal_item_delete')
 @endsection
 
 @push('scripts')
-
-@include('includes.scripts.inputs-mask')
-@include('includes.scripts.upload-file')
-{{-- @include('goods_categories.scripts') --}}
-
-@include('includes.scripts.ckeditor')
-
-{{-- Проверка поля на существование --}}
-@include('includes.scripts.check', ['id' => $catalogs_goods_item->id])
-
+    @include('includes.scripts.inputs-mask')
+    @include('includes.scripts.upload-file')
+    @include('includes.scripts.ckeditor')
+    {{-- Проверка поля на существование --}}
+    @include('includes.scripts.check', ['id' => $catalogs_goods_item->id])
 @endpush

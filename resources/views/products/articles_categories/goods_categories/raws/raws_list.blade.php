@@ -2,38 +2,35 @@
 @include('products.articles_categories.goods_categories.raws.class')
 
 @if ($raws_categories->isNotEmpty())
+    @foreach($raws_categories as $raws_category)
+        @if ($raws_category->raws->isNotEmpty())
+        <li>
+            <span class="parent" data-open="raws_category-{{ $raws_category->id }}">{{ $raws_category->name }}</span>
+            <div class="checker-nested" id="raws_category-{{ $raws_category->id }}">
+                <ul class="checker">
 
-@foreach($raws_categories as $raws_category)
+                    @foreach($raws_category->raws as $raw)
+                    <li class="checkbox">
+                        {{ Form::checkbox('raws[]', $raw->id, null, ['class' => 'change-raw', 'id' => 'checkbox-raw-'.$raw->id]) }}
+                        @if(isset($raw->article))
+                            <label for="checkbox-raw-{{ $raw->id }}">
+                                <span>{{ $raw->article->name }}</span>
+                            </label>
+                        @endif
+                    </li>
+                    @endforeach
 
-@if ($raws_category->raws->isNotEmpty())
-<li>
-	<span class="parent" data-open="raws_category-{{ $raws_category->id }}">{{ $raws_category->name }}</span>
-	<div class="checker-nested" id="raws_category-{{ $raws_category->id }}">
-		<ul class="checker">
-
-			@foreach($raws_category->raws as $raw)
-			<li class="checkbox">
-				{{ Form::checkbox('raws[]', $raw->id, null, ['class' => 'change-raw', 'id' => 'raw-'.$raw->id]) }}
-				@if(isset($raw->article))
-					<label for="raw-{{ $raw->id }}">
-						<span>{{ $raw->article->name }}</span>
-					</label>
-				@endif
-			</li>
-			@endforeach
-
-		</ul>
-	</div>
-</li>
-@endif
-
-@endforeach
-
+                </ul>
+            </div>
+        </li>
+        @endif
+    @endforeach
 @else
-<li>Ничего нет...</li>
+    <li>Ничего нет...</li>
 @endif
 
-<script type="application/javascript">
+@push('scripts')
+<script>
 
 	let raws = new Raws();
 
@@ -62,3 +59,4 @@
         $('#' + $(this).data('open')).show();
     });
 </script>
+@endpush

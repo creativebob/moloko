@@ -1,1 +1,1 @@
-<span>{{ $prices_service->price }}</span>
+<span>{{ num_format($prices_service->price, 0) }}</span>

@@ -4,7 +4,7 @@ namespace App\Models\Project;
 
 use App\EstimatesGoodsItem;
 use App\Lead;
-use App\Models\Traits\Commonable;
+use App\Models\System\Traits\Commonable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;

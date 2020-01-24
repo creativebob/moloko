@@ -10,6 +10,14 @@
 
 			<div class="grid-x grid-margin-x">
 
+                <div class="small-12 cell">
+                    <label>Название
+                        @include('includes.inputs.string', ['value' => null, 'name' => 'name', 'required' => true, 'data' => 'autofocus-target'])
+                        <div class="item-error">Названия процесса и группы процессов не должны совпадать!</div>
+                        <script>$('input[autofocus-target]').focus();</script>
+                    </label>
+                </div>
+
 				<div class="small-12 cell">
 
 					<label>Категория
@@ -24,61 +32,50 @@
 					@include('products.common.create.create_modes.mode_default')
 				</div>
 
-				<div class="small-12 cell">
-					<label>Название
-						@include('includes.inputs.string', ['value' => null, 'name' => 'name', 'required' => true])
-						<div class="item-error">Названия процесса и группы процессов не должны совпадать!</div>
-					</label>
-				</div>
+                <div class="small-12 cell">
+                    Измеряется в (<span id="unit-change" class="unit-change"></span>)
+                </div><br><br>
 
 				<div class="small-12 cell">
 					<div class="grid-x grid-margin-x" id="units-block">
-						<div class="small-12 medium-6 cell">
-							@include('includes.selects.units_categories', ['default' => 6, 'type' => 'process'])
-						</div>
+                        <div class="small-12 medium-6 cell">
+                            @include('includes.selects.units_categories', ['default' => $units_category_default, 'type' => 'process'])
+                        </div>
 
-						<div class="small-12 medium-6 cell">
-							@include('includes.selects.units', ['default' => 32, 'units_category_id' => 6])
-						</div>
+                        <div class="small-12 medium-6 cell">
+                            @include('includes.selects.units', ['default' => $unit_default, 'units_category_id' => $units_category_default])
+                        </div>
 					</div>
 
                     <div class="grid-x grid-margin-x" id="extra-units-block">
-                        <div class="small-12 medium-6 cell">
-                            <label>Введите продолжительность
-                            {!! Form::number('length', null, []) !!}
-                            </label>
-                        </div>
+{{--                        <div class="small-12 medium-6 cell">--}}
+{{--                            <label>Введите продолжительность--}}
+{{--                            {!! Form::number('length', null, []) !!}--}}
+{{--                            </label>--}}
+{{--                        </div>--}}
 
-                        <div class="small-12 medium-6 cell">
-                            @include('includes.selects.units_extra', ['default' => 14, 'units_category_id' => 3])
-                        </div>
+{{--                        <div class="small-12 medium-6 cell">--}}
+{{--                            @include('includes.selects.units_extra', ['default' => 14, 'units_category_id' => 3])--}}
+{{--                        </div>--}}
                     </div>
 				</div>
 
-				<div class="small-10 medium-4 cell">
-					Измеряется в (<span id="unit-change" class="unit-change"></span>)
 
-{{--					<label>Себестоимость за (<span id="unit-change" class="unit-change"></span>)--}}
-{{--						--}}{{-- @include('includes.scripts.class.digitfield')--}}
-{{--						@include('includes.inputs.digit', ['name' => 'price_default', 'value' => null, 'decimal_place' => 2]) --}}
-{{--						{{ Form::number('price_default') }}--}}
-{{--					</label>--}}
-				</div>
 			</div>
 
 			@includeIf($entity.'.create')
 
-			<div class="small-12 cell checkbox set-status">
-				{{ Form::checkbox('kit', 1, null, ['id' => 'kit']) }}
-				<label for="kit"><span>Набор</span></label>
-			</div>
+            <div class="small-12 cell checkbox set-status">
+                {{ Form::hidden('kit', 0) }}
+                {{ Form::checkbox('kit', 1, null, ['id' => 'checkbox-kit']) }}
+                <label for="checkbox-kit"><span>Набор</span></label>
+            </div>
 
-			<div class="small-12 cell checkbox">
-				{{ Form::checkbox('quickly', 1, null, ['id' => 'quickly', 'checked']) }}
-				<label for="quickly"><span>Быстрое добавление</span></label>
-			</div>
-
-			@include('includes.control.checkboxes', ['item' => $item])
+            <div class="small-12 cell checkbox">
+                {{ Form::hidden('quickly', 0) }}
+                {{ Form::checkbox('quickly', 1, null, ['id' => 'checkbox-quickly', 'checked']) }}
+                <label for="checkbox-quickly"><span>Быстрое добавление</span></label>
+            </div>
 
 		</div>
 	</div>

@@ -139,10 +139,17 @@ class GoodsCategoryController extends Controller
             //     $q->with('unit', 'values');
             // },
             'metrics' => function ($q) {
-                $q->with('unit', 'values');
+                $q->with([
+                    'unit',
+                    'values'
+                ]);
             },
-            'raws.article.group.unit',
-            'raws.category',
+            'raws' => function ($q) {
+                $q->with([
+                    'category',
+                    'article.group.unit'
+                ]);
+            },
             // 'compositions.product.unit',
             // 'compositions',
             'manufacturers',
@@ -204,8 +211,15 @@ class GoodsCategoryController extends Controller
         if ($result) {
 
             $goods_category->manufacturers()->sync($request->manufacturers);
-            $goods_category->metrics()->sync($request->metrics);
-            $goods_category->raws()->sync($request->raws);
+            $metrics = session('access.all_rights.index-metrics-allow');
+            if ($metrics) {
+                $goods_category->metrics()->sync($request->metrics);
+            }
+
+            $raws = session('access.all_rights.index-raws-allow');
+            if ($raws) {
+                $goods_category->raws()->sync($request->raws);
+            }
 
             // Переадресовываем на index
             return redirect()->route('goods_categories.index', ['id' => $goods_category->id]);

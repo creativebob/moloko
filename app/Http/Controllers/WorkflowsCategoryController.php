@@ -11,7 +11,10 @@ use Illuminate\Http\Request;
 class WorkflowsCategoryController extends Controller
 {
 
-    // Настройки сконтроллера
+    /**
+     * WorkflowsCategoryController constructor.
+     * @param WorkflowsCategory $workflows_category
+     */
     public function __construct(WorkflowsCategory $workflows_category)
     {
         $this->middleware('auth');
@@ -25,6 +28,13 @@ class WorkflowsCategoryController extends Controller
 
     use Photable;
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
 
@@ -82,6 +92,13 @@ class WorkflowsCategoryController extends Controller
         );
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function create(Request $request)
     {
 
@@ -89,7 +106,7 @@ class WorkflowsCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         return view('system.common.accordions.create', [
-            'item' => new $this->class,
+            'item' => WorkflowsCategory::make(),
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории рабочих процессов',
             'parent_id' => $request->parent_id,
@@ -97,6 +114,13 @@ class WorkflowsCategoryController extends Controller
         ]);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param WorkflowsCategoryStoreRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(WorkflowsCategoryStoreRequest $request)
     {
 
@@ -104,7 +128,7 @@ class WorkflowsCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $data = $request->input();
-        $workflows_category = (new $this->class())->create($data);
+        $workflows_category = WorkflowsCategory::create($data);
 
         if ($workflows_category) {
             // Переадресовываем на index
@@ -117,11 +141,24 @@ class WorkflowsCategoryController extends Controller
         }
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param $id
+     */
     public function show($id)
     {
         //
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function edit(Request $request, $id)
     {
 
@@ -131,6 +168,12 @@ class WorkflowsCategoryController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $workflows_category = WorkflowsCategory::with([
             'manufacturers',
+            'metrics' => function ($q) {
+                $q->with([
+                    'unit',
+                    'values'
+                ]);
+            },
         ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
@@ -162,6 +205,14 @@ class WorkflowsCategoryController extends Controller
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param WorkflowsCategoryUpdateRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(WorkflowsCategoryUpdateRequest $request, $id)
     {
 
@@ -181,7 +232,11 @@ class WorkflowsCategoryController extends Controller
         if ($result) {
 
             $workflows_category->manufacturers()->sync($request->manufacturers);
-            $workflows_category->metrics()->sync($request->metrics);
+
+            $metrics = session('access.all_rights.index-metrics-allow');
+            if ($metrics) {
+                $workflows_category->metrics()->sync($request->metrics);
+            }
 
            // Переадресовываем на index
             return redirect()->route('workflows_categories.index', ['id' => $workflows_category->id]);
@@ -193,6 +248,14 @@ class WorkflowsCategoryController extends Controller
         }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function destroy(Request $request, $id)
     {
 
@@ -210,17 +273,12 @@ class WorkflowsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $workflows_category);
 
-        // Скрываем бога
-        $workflows_category->editor_id = hideGod($request->user());
-        $workflows_category->save();
-
         $parent_id = $workflows_category->parent_id;
 
         $workflows_category->delete();
 
         if ($workflows_category) {
-
-                // Переадресовываем на index
+            // Переадресовываем на index
             return redirect()->route('workflows_categories.index', ['id' => $parent_id]);
         } else {
             $result = [

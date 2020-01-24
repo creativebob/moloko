@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 trait Commonable
 {
 
-    public function __construct()
+    public function __construct(Request $request)
     {
 
         $domain = Domain::with([
@@ -23,7 +23,7 @@ trait Commonable
             },
             'filials.location.city'
         ])
-            ->where('domain', request()->getHost())
+            ->where('domain', $request->getHost())
             ->first();
 //        dd($domain);
 
@@ -31,6 +31,25 @@ trait Commonable
             $this->site = $domain->site;
             $this->site->domain = $domain;
             $this->site->filial = $domain->filials->first();
+
+            // Ловим utm метки
+            if (isset($request->utm_source)) {
+                Cookie::queue('utm_source', $request->utm_source, 60*60*24);
+            }
+            if (isset($request->utm_term)) {
+                Cookie::queue('utm_term', $request->utm_term, 60*60*24);
+            }
+            if (isset($request->utm_content)) {
+                Cookie::queue('utm_content', $request->utm_content, 60*60*24);
+            }
+            if (isset($request->utm_campaign)) {
+                Cookie::queue('utm_campaign', $request->utm_campaign, 60*60*24);
+            }
+            if (isset($request->utm_medium)) {
+                Cookie::queue('utm_medium', $request->utm_medium, 60*60*24);
+            }
+        } else {
+            abort(404, 'Сайт не существует');
         }
 
 //        $domain = request()->getHost();

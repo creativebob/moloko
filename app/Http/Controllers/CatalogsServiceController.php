@@ -15,7 +15,10 @@ use Illuminate\Support\Str;
 class CatalogsServiceController extends Controller
 {
 
-    // Настройки сконтроллера
+    /**
+     * CatalogsServiceController constructor.
+     * @param CatalogsService $catalogs_service
+     */
     public function __construct(CatalogsService $catalogs_service)
     {
         $this->middleware('auth');
@@ -26,9 +29,15 @@ class CatalogsServiceController extends Controller
         $this->model = 'App\CatalogsService';
     }
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -36,7 +45,7 @@ class CatalogsServiceController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $catalogs_services = CatalogsService::with([
-            'price_services.service.article',
+            'price_services.service.process',
             'author',
         ])
         ->moderatorLimit($answer)
@@ -55,21 +64,33 @@ class CatalogsServiceController extends Controller
         ]);
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function create(Request $request)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         return view('catalogs_services.create', [
-            'catalogs_service' => new $this->class,
+            'catalogs_service' => CatalogsService::make(),
             'page_info' => pageInfo($this->entity_alias),
         ]);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param CatalogsServiceRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(CatalogsServiceRequest $request)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -90,14 +111,26 @@ class CatalogsServiceController extends Controller
         }
     }
 
-    public function show(Request $request, $id)
+    /**
+     * Display the specified resource.
+     *
+     * @param $id
+     */
+    public function show($id)
     {
         //
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function edit(Request $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -107,6 +140,8 @@ class CatalogsServiceController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_service);
 
+        $catalogs_service->load('filials');
+
         // dd($catalogs_service);
         return view('catalogs_services.edit', [
             'catalogs_service' => $catalogs_service,
@@ -114,9 +149,16 @@ class CatalogsServiceController extends Controller
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param CatalogsServiceRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(CatalogsServiceRequest $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -131,6 +173,11 @@ class CatalogsServiceController extends Controller
 
         if ($result) {
 
+            $departments = session('access.all_rights.index-departments-allow');
+            if ($departments) {
+                $catalogs_service->filials()->sync($request->filials);
+            }
+
             return redirect()->route('catalogs_services.index');
 
         } else {
@@ -138,22 +185,28 @@ class CatalogsServiceController extends Controller
         }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function destroy(Request $request, $id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $catalogs_service = CatalogsService::with(['items'])
+        $catalogs_service = CatalogsService::with([
+            'items'
+        ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_service);
-
-        $catalogs_service->editor_id = hideGod($request->user());
-        $catalogs_service->save();
 
         $catalogs_service->delete();
 
@@ -166,12 +219,15 @@ class CatalogsServiceController extends Controller
         }
     }
 
-
-
-
     // ------------------------------------------------ Ajax -------------------------------------------------
 
-    // Проверка наличия в базе
+    /**
+     * Проверка наличия в базе
+     *
+     * @param Request $request
+     * @param $alias
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function ajax_check (Request $request, $alias)
     {
 

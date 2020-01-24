@@ -26,22 +26,33 @@ Route::get('/catalogs-goods/{all}', 'CatalogsGoodsController@show')
 Route::get('/prices-goods/search/{text}', 'PricesGoodsController@search')
     ->name('project.prices_goods.search');
 Route::resource('/prices-goods', 'PricesGoodsController')
-    ->only(['show'])
+    ->only([
+        'show'
+    ])
     ->names('project.prices_goods');
 
 Route::any('/update_cookies', 'CartController@update_cookies')->name('project.update_cookies');
 Route::get('/check_prices', 'CartController@check_prices')->name('project.check_prices');
 
 Route::resource('/cart', 'CartController')
-    ->only(['index', 'store'])
+    ->only([
+        'index',
+        'store'
+    ])
     ->names('project.cart');
 
 Route::resource('/estimates', 'EstimateController')
-    ->only(['index', 'show'])
+    ->only([
+        'index',
+        'show'
+    ])
     ->names('project.estimates');
 
 Route::resource('/promotions', 'PromotionController')
-    ->only(['index', 'show'])
+    ->only([
+        'index',
+        'show'
+    ])
     ->names('project.promotions');
 
 Route::get('/goods-composition/{id}/', 'AppController@goods_composition')->name('project.goods_composition');
@@ -57,7 +68,8 @@ Route::get('/telegram', 'AppController@telegram')->name('project.telegram');
 
 Route::post('/delivery_update', 'AppController@delivery_update')->name('project.delivery_update');
 
-Route::post('logout_siteuser', 'AppController@logout_siteuser')->name('project.logout_siteuser');
+Route::post('logout_siteuser', 'AppController@logout_siteuser')
+    ->name('project.logout_siteuser');
 
 Route::get('/cabinet', 'AppController@cabinet')->name('project.cabinet')->middleware('auth_usersite');
 Route::post('/update_profile', 'AppController@update_profile')->name('project.update_profile');

@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('inhead')
-@include('includes.scripts.dropzone-inhead')
-@include('includes.scripts.fancybox-inhead')
-@include('includes.scripts.sortable-inhead')
-@include('products.articles.goods.raws.class')
-@include('products.articles.goods.containers.class')
+    @include('includes.scripts.dropzone-inhead')
+    @include('includes.scripts.fancybox-inhead')
+    @include('includes.scripts.sortable-inhead')
 
-@if ($entity == 'goods')
-@include('includes.scripts.chosen-inhead')
-@include('products.articles.goods.attachments.class')
-@endif
+    @if ($entity == 'goods')
+        @include('includes.scripts.chosen-inhead')
+        @include('products.articles.goods.attachments.class')
+        @include('products.articles.goods.raws.class')
+        @include('products.articles.goods.containers.class')
+    @endif
 
 @endsection
 
@@ -38,18 +38,18 @@
 		<ul class="tabs-list" data-tabs id="tabs">
 
 			<li class="tabs-title is-active">
-				<a href="#options" aria-selected="true">Общая информация</a>
+				<a href="#tab-options" aria-selected="true">Общая информация</a>
 			</li>
 
 			{{-- Табы для сущности --}}
 			@includeIf($page_info->entity->view_path . '.tabs')
 
 			<li class="tabs-title">
-				<a data-tabs-target="photos" href="#photos">Фотографии</a>
+				<a data-tabs-target="tab-photos" href="#tab-photos">Фотографии</a>
 			</li>
 
 			<li class="tabs-title">
-				<a data-tabs-target="extra-options" href="#extra-options">Опции</a>
+				<a data-tabs-target="tab-extra_options" href="#tab-extra_options">Опции</a>
 			</li>
 
 		</ul>
@@ -68,13 +68,12 @@
 				'id' => 'form-edit'
 			]
 			) }}
-			{{ method_field('PATCH') }}
+            @method('PATCH')
 
             {!! Form::hidden('paginator_url', $paginator_url ?? null) !!}
 
-
 			{{-- Общая информация --}}
-			<div class="tabs-panel is-active" id="options">
+			<div class="tabs-panel is-active" id="tab-options">
 
 				{{-- Разделитель на первой вкладке --}}
 				<div class="grid-x grid-padding-x">
@@ -180,7 +179,6 @@
 					</div>
 					{{-- Конец левого блока на первой вкладке --}}
 
-
 					{{-- Правый блок на первой вкладке --}}
 					<div class="small-12 large-6 cell">
 
@@ -257,7 +255,7 @@
 			</div>
 
 			{{-- Дополнительные опции --}}
-			<div class="tabs-panel" id="extra-options">
+			<div class="tabs-panel" id="tab-extra_options">
 				<div class="grid-x grid-padding-x">
 					<div class="small-12 medium-6 cell">
 
@@ -400,7 +398,7 @@
 			{{ Form::close() }}
 
 			{{-- Фотографии --}}
-			<div class="tabs-panel" id="photos">
+			<div class="tabs-panel" id="tab-photos">
 				<div class="grid-x grid-padding-x">
 
 					<div class="small-12 medium-7 cell">
@@ -418,7 +416,7 @@
 						{!! Form::hidden('name', $article->name) !!}
 						{!! Form::hidden('id', $article->id) !!}
 						{!! Form::hidden('entity', 'articles') !!}
-						 {!! Form::hidden('album_id', $item->album_id) !!}
+						{!! Form::hidden('album_id', $item->album_id) !!}
 
 						{!! Form::close() !!}
 {{--							<dropzone-component :dropzone="{{ $dropzone }}"></dropzone-component>--}}

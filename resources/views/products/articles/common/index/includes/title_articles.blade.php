@@ -52,7 +52,7 @@
                 @endif
 
 
-                <search-cmv-component alias="{{ $page_info->alias }}"></search-cmv-component>
+                <search-articles-component alias="{{ $page_info->alias }}"></search-articles-component>
 {{--                <input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />--}}
                 {{-- <button type="button" class="icon-search sprite button"></button> --}}
 

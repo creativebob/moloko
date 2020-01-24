@@ -10,6 +10,7 @@ use App\Lead;
 use App\Models\Project\Estimate;
 use App\Models\Project\EstimatesGoodsItem;
 use App\PricesGoods;
+use App\Source;
 use App\Stock;
 use App\User;
 use Illuminate\Support\Facades\Cookie;
@@ -296,6 +297,29 @@ class CartController extends Controller
             $lead->private_status = $private_status;
             $lead->location_id = create_location($request, $country_id = 1, $site->filial->location->city_id);
 
+            // Ловим utm метки
+            if ($request->cookie('utm_source') != null) {
+                $utm_source = "\r\nПлощадка: " . $request->cookie('utm_source');
+                $lead->source_id = Source::where('utm', $request->cookie('utm_source'))->value('id');
+            } else {
+                $utm_source = '';
+            }
+
+            if ($request->cookie('utm_term') != null) {
+                $utm_term = "\r\nКлиент искал: " . $request->cookie('utm_term') != null;
+                $lead->utm_term = $request->cookie('utm_term') != null;
+            } else {
+                $utm_term = '';
+            }
+
+            if ($request->cookie('utm_content') != null) {
+                $lead->utm_content = $request->cookie('utm_content');
+            }
+
+            if ($request->cookie('utm_campaign') != null) {
+                $lead->campaign_id = $request->cookie('utm_campaign');
+            }
+
             $lead->description = $description;
             $lead->stage_id = $request->stage_id ?? 2; // Этап: "обращение"" по умолчанию
             $lead->badget = $badget ?? 0;
@@ -457,6 +481,14 @@ class CartController extends Controller
             if ($request->has('card')) {
                 $card = $request->card == 1 ? 'по карте' : 'наличный расчет';
                 $message .= "Оплата: {$card}\r\n";
+            }
+
+            $message .= "\r\n";
+            if ($utm_source) {
+                $message .= $utm_source . "\r\n";
+            }
+            if ($utm_term) {
+                $message .= $utm_term . "\r\n";
             }
 
             $lead->notes()->create([

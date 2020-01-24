@@ -2,8 +2,6 @@
 
 @section('inhead')
 @include('includes.scripts.dropzone-inhead')
-{{-- @include('includes.scripts.fancybox-inhead')
-@include('includes.scripts.sortable-inhead') --}}
 @endsection
 
 @section('title', $title)
@@ -119,8 +117,8 @@
                 </div>
             </div>
 
-            @can('index', App\Site::class)
             {{-- Сайт --}}
+            @can('index', App\Site::class)
             <div class="tabs-panel" id="tab-site">
                 <div class="grid-x grid-padding-x">
                     <div class="small-12 medium-6 cell">
@@ -134,12 +132,15 @@
 
                     </div>
                     <div class="small-12 medium-6 cell">
-                        <label>Выберите аватар
-                            {{ Form::file('photo') }}
-                        </label>
-                        <div class="text-center">
-                            <img id="photo" src="{{ getPhotoPath($category) }}">
+                        <div class="grid-x">
+                            <photo-upload-component :photo='@json($category->photo)'></photo-upload-component>
                         </div>
+{{--                        <label>Выберите аватар--}}
+{{--                            {{ Form::file('photo') }}--}}
+{{--                        </label>--}}
+{{--                        <div class="text-center">--}}
+{{--                            <img id="photo" src="{{ getPhotoPath($category) }}">--}}
+{{--                        </div>--}}
                     </div>
 
                     {{-- Кнопка --}}
@@ -150,14 +151,9 @@
             </div>
             @endcan
 
-            {{-- Табы для сущности --}}
-            @includeIf($page_info->entity->view_path . '.tabs_content')
-
-
-
+            {{-- Метрики --}}
             @can('index', App\Metric::class)
                 @if($page_info->entity->metric)
-                    {{-- Свойства --}}
                     <div class="tabs-panel" id="tab-metrics">
                         @include('products.common.metrics.page')
                         {{--                @include('products.common.metrics.section')--}}
@@ -165,26 +161,23 @@
                 @endif
             @endcan
 
+            {{-- Табы для сущности --}}
+            @includeIf($page_info->entity->view_path . '.tabs_content')
+
             {{ Form::close() }}
         </div>
     </div>
 </div>
-
 @endsection
 
 @section('modals')
-{{--@include('includes.modals.modal-metric-delete')--}}
 @include('includes.modals.modal_item_delete')
 @endsection
 
 @push('scripts')
-
 @include('includes.scripts.inputs-mask')
-@include('includes.scripts.upload-file')
-
 @include('includes.scripts.ckeditor')
 
 {{-- Проверка поля на существование --}}
 @include('includes.scripts.check', ['id' => $category->id])
-
 @endpush

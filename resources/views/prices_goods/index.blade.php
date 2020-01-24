@@ -6,7 +6,7 @@
 
 @section('title', $page_info->name)
 
-@section('breadcrumbs', Breadcrumbs::render('prices_goods-index', $catalog_goods,  $page_info))
+@section('breadcrumbs', Breadcrumbs::render('prices_goods-index', $catalog_goods, $page_info))
 
 @section('content-count')
 	{{-- Количество элементов --}}
@@ -17,7 +17,7 @@
 
 	{{-- Таблица --}}
 	{{-- @include('includes.title-content', ['page_info' => $page_info, 'class' => App\PricesGoods::class, 'type' => 'table']) --}}
-    @include('prices_goods.includes.title-articles', ['page_info' => $page_info, 'class' => $class])
+    @include('prices_goods.includes.title-prices_goods', ['page_info' => $page_info, 'class' => $class])
 @endsection
 
 
@@ -94,7 +94,7 @@
 @endsection
 
 @section('modals')
-@include('includes.modals.modal_price_delete')
+    @include('includes.modals.modal_price_delete')
 @endsection
 
 @push('scripts')

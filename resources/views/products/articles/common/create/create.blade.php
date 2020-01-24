@@ -1,5 +1,3 @@
-
-
 <div class="reveal" id="modal-create" data-reveal data-close-on-click="false">
 	<div class="grid-x">
 		<div class="small-12 cell modal-title">
@@ -49,7 +47,7 @@
 						</div>
 					</div>
 
-					
+
                     <div class="grid-x grid-margin-x" id="extra-units-block">
                     	{{--
 
@@ -62,9 +60,9 @@
                         <div class="small-12 medium-6 cell">
                             @include('includes.selects.units', [
 
-	                            'default' => 8, 
-	                            'units_category_id' => 2, 
-	                            'name' => 'weight_unit_id', 
+	                            'default' => 8,
+	                            'units_category_id' => 2,
+	                            'name' => 'weight_unit_id',
 	                            'id' => 'select_weight_units'
                             ])
                         </div>
@@ -77,10 +75,10 @@
 
                         <div class="small-12 medium-6 cell">
                             @include('includes.selects.units', [
-                            
-	                            'default' => 30, 
-	                            'units_category_id' => 5, 
-	                            'name' => 'volume_unit_id', 
+
+	                            'default' => 30,
+	                            'units_category_id' => 5,
+	                            'name' => 'volume_unit_id',
 	                            'id' => 'select_volume_units'
                             ])
                         </div>
@@ -96,14 +94,14 @@
 
 			<div class="small-12 cell checkbox set-status">
 				{{ Form::hidden('kit', 0) }}
-				{{ Form::checkbox('kit', 1, null, ['id' => 'kit']) }}
-				<label for="kit"><span>Набор</span></label>
+				{{ Form::checkbox('kit', 1, null, ['id' => 'checkbox-kit']) }}
+				<label for="checkbox-kit"><span>Набор</span></label>
 			</div>
 
 			<div class="small-12 cell checkbox">
 				{{ Form::hidden('quickly', 0) }}
-				{{ Form::checkbox('quickly', 1, null, ['id' => 'quickly', 'checked']) }}
-				<label for="quickly"><span>Быстрое добавление</span></label>
+				{{ Form::checkbox('quickly', 1, null, ['id' => 'checkbox-quickly', 'checked']) }}
+				<label for="checkbox-quickly"><span>Быстрое добавление</span></label>
 			</div>
 
 		</div>
