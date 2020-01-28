@@ -63,7 +63,8 @@ class CatalogsGoods extends Model
     // Публичные пункты
     public function items_public()
     {
-        return $this->hasMany(CatalogsGoodsItem::class)->where('display', true);
+        return $this->hasMany(CatalogsGoodsItem::class)
+            ->where('display', true);
     }
 
     public function price_goods()

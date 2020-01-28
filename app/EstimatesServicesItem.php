@@ -81,6 +81,11 @@ class EstimatesServicesItem extends Model
         return $this->belongsTo(PricesService::class);
     }
 
+    public function price_service()
+    {
+        return $this->belongsTo(PricesService::class, 'price_id');
+    }
+
     // Услуга
     public function service()
     {

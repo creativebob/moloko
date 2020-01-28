@@ -44,6 +44,7 @@ Vue.component('processes-categories-with-groups-component', require('./component
 
 
 Vue.component('catalog-goods-component', require('./components/catalogs/goods/CatalogGoodsComponent.vue'));
+Vue.component('catalog-services-component', require('./components/catalogs/services/CatalogServicesComponent.vue'));
 Vue.component('lead-badget-component', require('./components/LeadBadgetComponent.vue'));
 Vue.component('select-stocks-component', require('./components/common/selects/SelectStocksComponent.vue'));
 

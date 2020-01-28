@@ -219,7 +219,7 @@ class LeadController extends Controller
                     },
                     'services_items' => function ($q) {
                         $q->with([
-                            'product.article',
+                            'product.process',
                         ]);
                     },
                 ]);
@@ -281,54 +281,12 @@ class LeadController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_cs = operator_right('catalogs_services', false, getmethod('index'));
 
-        $catalogs_services = CatalogsService::with([
-            'items' => function ($q) use ($filial_id) {
-            $q->with([
-                'prices' => function ($q) use ($filial_id) {
-                    $q->with([
-                        'product' => function($q) {
-	                        $q->with([
-		                        'process' => function ($q) {
-			                        $q->with([
-				                        'photo',
-				                        'manufacturer'
-			                        ])
-			                        ->where('draft', false);
-		                        }
-
-	                        ])
-                                ->whereHas('process', function ($q) {
-                                    $q->where('draft', false);
-                                })
-                                ->where('archive', false);
-                        }
-                    ])
-                        ->whereHas('product', function ($q) {
-                            $q->where('archive', false);
-                        })
-                        ->where('filial_id', $filial_id)
-                    ->where('archive', false);
-                },
-                'childs'
-            ]);
-            }
-        ])
-        ->moderatorLimit($answer_cs)
-        ->companiesLimit($answer_cs)
-        ->authors($answer_cs)
-        ->whereHas('filials', function ($q) {
-            $q->where('id', auth()->user()->stafferFilialId);
-        })
-        ->get();
-//         dd($catalogs_services);
-
-        $catalog_services = $catalogs_services->first();
         // dd($catalog_service);
 
         $paginator_url = url()->previous();
 
 
-        return view('leads.edit', compact('lead', 'page_info', 'choices', 'catalog_services', 'paginator_url'));
+        return view('leads.edit', compact('lead', 'page_info', 'choices', 'paginator_url'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)

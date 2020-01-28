@@ -8,6 +8,7 @@ use App\Http\ViewComposers\System\ArticlesCategoriesWithItemsComposer;
 use App\Http\ViewComposers\System\ArticlesCategoriesWithItemsComposerForManufacturer;
 use App\Http\ViewComposers\System\AttachmentsComposer;
 use App\Http\ViewComposers\System\CatalogGoodsWithPricesComposer;
+use App\Http\ViewComposers\System\CatalogServicesWithPricesComposer;
 use App\Http\ViewComposers\System\ChannelsComposer;
 use App\Http\ViewComposers\System\ChargesComposer;
 use App\Http\ViewComposers\System\CitiesComposer;
@@ -315,6 +316,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('products.articles.goods.prices.filials', FilialsForCatalogsGoodsComposer::class);
 
         view()->composer('leads.form', CatalogGoodsWithPricesComposer::class);
+        view()->composer('leads.form', CatalogServicesWithPricesComposer::class);
 
         view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
         view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);
