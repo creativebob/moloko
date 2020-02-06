@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Project;
 
+use App\Campaign;
 use App\Http\Controllers\Project\Traits\Commonable;
 use App\Http\Controllers\Traits\EstimateControllerTrait;
 use App\Http\Controllers\Traits\LeadControllerTrait;
@@ -301,15 +302,11 @@ class CartController extends Controller
             if ($request->cookie('utm_source') != null) {
                 $utm_source = "\r\nПлощадка: " . $request->cookie('utm_source');
                 $lead->source_id = Source::where('utm', $request->cookie('utm_source'))->value('id');
-            } else {
-                $utm_source = '';
             }
 
             if ($request->cookie('utm_term') != null) {
                 $utm_term = "\r\nКлиент искал: " . $request->cookie('utm_term') != null;
                 $lead->utm_term = $request->cookie('utm_term') != null;
-            } else {
-                $utm_term = '';
             }
 
             if ($request->cookie('utm_content') != null) {
@@ -317,7 +314,7 @@ class CartController extends Controller
             }
 
             if ($request->cookie('utm_campaign') != null) {
-                $lead->campaign_id = $request->cookie('utm_campaign');
+                $lead->campaign_id = Campaign::where('external', $request->cookie('utm_campaign'))->value('id');
             }
 
             $lead->description = $description;

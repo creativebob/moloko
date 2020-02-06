@@ -42,8 +42,8 @@ class CreateLeadsTable extends Migration
             $table->bigInteger('site_id')->nullable()->unsigned()->comment('Сайт');
             $table->foreign('site_id')->references('id')->on('sites');
 
-            $table->bigInteger('sourse_id')->nullable()->unsigned()->comment('Источник лида');
-            $table->foreign('sourse_id')->references('id')->on('sources');
+            $table->bigInteger('source_id')->nullable()->unsigned()->comment('Источник лида');
+            $table->foreign('source_id')->references('id')->on('sources');
 
             $table->bigInteger('medium_id')->nullable()->unsigned()->comment('Тип трафика');
             $table->foreign('medium_id')->references('id')->on('mediums');
@@ -86,7 +86,7 @@ class CreateLeadsTable extends Migration
             $table->integer('old_case_number')->nullable()->unsigned()->comment('Номер обращения из другой базы');
 
             $table->integer('draft')->nullable()->unsigned()->comment('Черновик - удаляется по графику');
-	
+
 	        $table->timestamp('delivered_at')->nullable()->comment('Дата доставки');
 
 
