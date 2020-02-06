@@ -68,10 +68,13 @@ const moduleEstimate = {
         SET_STOCK_ID(state, stockId) {
             state.stockId = stockId;
         },
+        ADD_PAYMENT(state, payment) {
+            state.estimate.payments.push(payment);
+        }
     },
     actions: {
         ADD_GOODS_ITEM_TO_ESTIMATE({ state }, priceId) {
-            if (state.estimate.is_saled === 0) {
+            if (state.estimate.is_saled === 0 && state.estimate.is_produced === 0) {
                 axios
                     .post('/admin/estimates_goods_items', {
                         estimate_id: state.estimate.id,
@@ -101,7 +104,7 @@ const moduleEstimate = {
             }
         },
         ADD_SERVICES_ITEM_TO_ESTIMATE({ state }, priceId) {
-            if (state.estimate.is_saled === 0) {
+            if (state.estimate.is_saled === 0 && state.estimate.is_produced === 0) {
                 axios
                     .post('/admin/estimates_services_items', {
                         estimate_id: state.estimate.id,
@@ -167,7 +170,7 @@ const moduleEstimate = {
     getters: {
         goodsItemsAmount: state => {
             let amount = 0;
-            if (state.goodsItems.length > 0) {
+            if (state.goodsItems.length) {
                 state.goodsItems.forEach(function(item) {
                     return amount += Number(item.amount)
                 });
@@ -185,7 +188,7 @@ const moduleEstimate = {
         },
         servicesItemsAmount: state => {
             let amount = 0;
-            if (state.servicesItems.length > 0) {
+            if (state.servicesItems.length) {
                 state.servicesItems.forEach(function(item) {
                     return amount += Number(item.amount)
                 });
@@ -202,10 +205,19 @@ const moduleEstimate = {
             return total;
         },
         estimateAmount: state => {
-            return state.estimate.amount;
+            return parseInt(state.estimate.amount);
         },
         estimateTotal: state => {
-            return state.estimate.total
+            return parseInt(state.estimate.total);
+        },
+        paymentsAmount: state => {
+            let amount = 0;
+            if (state.estimate.payments.length) {
+                state.estimate.payments.forEach(function(item) {
+                    return amount += Number(item.amount)
+                });
+            }
+            return amount;
         }
     }
 };

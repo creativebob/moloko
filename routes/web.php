@@ -659,8 +659,13 @@ Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->mi
 
 // --------------------------------------- Расчеты -----------------------------------------------
 
+// Производство
+Route::patch('/estimates/{id}/produce', 'EstimateController@produce');
+
 // Продажа
 Route::patch('/estimates/{id}/saling', 'EstimateController@saling');
+
+// Резервирование
 Route::post('/estimates/{id}/reserving', 'EstimateController@reserving');
 Route::post('/estimates/{id}/unreserving', 'EstimateController@unreserving');
 
@@ -681,6 +686,10 @@ Route::any('/estimate_items_edit/{id}', 'EstimatesItemController@ajax_edit')->mi
 
 // Route::delete('/workflows/{id}', 'EstimateController@ajax_destroy_composition')->middleware('auth');
 // Route::any('/estimates_items/add', 'EstimateController@ajax_add')->middleware('auth');
+
+// --------------------------------------- Платежи -----------------------------------------------
+// Основные методы
+Route::resource('/payments', 'PaymentController');
 
 // --------------------------------------- Заказы -----------------------------------------------
 

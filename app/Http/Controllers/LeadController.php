@@ -222,14 +222,19 @@ class LeadController extends Controller
                             'product.process',
                         ]);
                     },
+                    'payments.type',
+                    'lead.client.contract'
                 ]);
             },
+            'client.contract',
             'lead_method',
             'choice' => function ($query) {
                 $query->orderBy('created_at', 'asc');
-            }, 'notes' => function ($query) {
+            },
+            'notes' => function ($query) {
                 $query->orderBy('created_at', 'desc');
-            }, 'challenges' => function ($query) {
+            },
+            'challenges' => function ($query) {
                 $query->with('challenge_type')
                 ->whereNull('status')
                 ->orderBy('deadline_date', 'asc');
@@ -242,6 +247,8 @@ class LeadController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->moderatorLimit($answer)
         ->findOrFail($id);
+
+//        dd($lead->estimate);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);

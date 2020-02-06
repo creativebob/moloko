@@ -105,6 +105,12 @@ class Client extends Model
         return $this->hasMany('App\Lead', 'client_id');
     }
 
+    // Получаем клиента
+    public function contract()
+    {
+        return $this->hasOne(ContractsClient::class);
+    }
+
 
 
 }

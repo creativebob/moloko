@@ -19,6 +19,7 @@ use App\Http\ViewComposers\System\DirectiveCategoriesComposer;
 use App\Http\ViewComposers\System\DisplayModesComposer;
 use App\Http\ViewComposers\System\FiltersComposer;
 use App\Http\ViewComposers\System\NotificationsComposer;
+use App\Http\ViewComposers\System\PaymentsTypesComposer;
 use App\Http\ViewComposers\System\ProcessesCategoriesWithGroupsComposer;
 use App\Http\ViewComposers\System\SitesWIthFilialsAndCatalogsComposer;
 use App\Http\ViewComposers\System\StocksComposer;
@@ -219,6 +220,7 @@ class ComposerServiceProvider extends ServiceProvider
             'includes.selects.stocks',
             'leads.form'
         ], StocksComposer::class);
+        view()->composer('leads.form', PaymentsTypesComposer::class);
 
         // Conflict: то, что осталось в нижней части
         // view()->composer(['includes.selects.manufacturers', 'includes.lists.manufacturers'], ManufacturersComposer::class);

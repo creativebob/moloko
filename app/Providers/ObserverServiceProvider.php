@@ -14,6 +14,7 @@ use App\ConsignmentsItem;
 use App\Container;
 use App\ContainersCategory;
 use App\ContainersStock;
+use App\ContractsClient;
 use App\Cost;
 use App\CostsHistory;
 use App\Direction;
@@ -41,6 +42,7 @@ use App\Observers\ConsignmentsItemObserver;
 use App\Observers\ContainerObserver;
 use App\Observers\ContainersCategoryObserver;
 use App\Observers\ContainersStockObserver;
+use App\Observers\ContractsClientObserver;
 use App\Observers\CostObserver;
 use App\Observers\CostsHistoryObserver;
 use App\Observers\DirectionObserver;
@@ -58,6 +60,7 @@ use App\Observers\MenuObserver;
 use App\Observers\MetricObserver;
 use App\Observers\OffObserver;
 use App\Observers\PageObserver;
+use App\Observers\PaymentObserver;
 use App\Observers\PhotoObserver;
 use App\Observers\PluginObserver;
 use App\Observers\PositionObserver;
@@ -80,6 +83,7 @@ use App\Observers\VectorObserver;
 use App\Observers\WorkflowsCategoryObserver;
 use App\Off;
 use App\Page;
+use App\Payment;
 use App\Photo;
 use App\Plugin;
 use App\Position;
@@ -226,6 +230,11 @@ class ObserverServiceProvider extends ServiceProvider
 
         Cost::observe(CostObserver::class);
         CostsHistory::observe(CostsHistoryObserver::class);
+
+        // Договора
+        ContractsClient::observe(ContractsClientObserver::class);
+
+        Payment::observe(PaymentObserver::class);
 
         // Новости
         Rubricator::observe(RubricatorObserver::class);

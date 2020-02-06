@@ -205,9 +205,11 @@
                     <a data-tabs-target="content-panel-claims" href="#content-panel-claims">Рекламации</a>
                 </li>
                 @endcan --}}
-
-                <li class="tabs-title"><a href="#content-panel-payments" aria-selected="true">Оплата</a></li>
-
+                @if($lead->estimate->is_produced == 1)
+                    <li class="tabs-title">
+                        <a href="#tab-payments" aria-selected="true">Оплата</a>
+                    </li>
+                @endif
 
                 {{-- <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li> --}}
                 <li class="tabs-title" id="tab-attribution">
@@ -342,14 +344,8 @@
                     </div> --}}
 
                     {{-- ФАКТ ОПЛАТЫ --}}
-                    <div class="tabs-panel" id="content-panel-payments">
-                        <div class="grid-x grid-padding-x">
-                            <div class="cell small-4">
-                                <label>Сумма:
-                                    @include('includes.inputs.digit', ['name' => 'payment', 'value' => num_format($lead->payment, 2), 'decimal_place'=>2])
-                                </label>
-                            </div>
-                        </div>
+                    <div class="tabs-panel" id="tab-payments">
+                        <payments-component :document='@json($lead->estimate)' :payments-types='@json($payments_types)' cur-date="{{ now() }}"></payments-component>
                     </div>
 
                     {{-- АТТРИБУЦИЯ --}}
@@ -467,6 +463,10 @@
             @else
             {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }}
             @endcan
+        </div>
+
+        <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
+            <estimate-production-button-component></estimate-production-button-component>
         </div>
 
         <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">

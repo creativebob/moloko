@@ -7,8 +7,6 @@ class DatabaseSeeder extends Seeder
 
     public function run()
     {
-
-
         // Локации
         // $this->call(LocationsTableSeeder::class);
 
@@ -105,6 +103,7 @@ class DatabaseSeeder extends Seeder
         $this->call(NotificationSiteTableSeeder::class);
 
         $this->call(LeftoverOperationsTableSeeder::class);
+        $this->call(PaymentsTypesTableSeeder::class);
 
         // Справочные сиды: фамилии и имена
         $this->call(FirstNamesTableSeeder::class);
