@@ -299,11 +299,13 @@ class CartController extends Controller
             $lead->location_id = create_location($request, $country_id = 1, $site->filial->location->city_id);
 
             // Ловим utm метки
+            $utm_source = null;
             if ($request->cookie('utm_source') != null) {
                 $utm_source = "\r\nПлощадка: " . $request->cookie('utm_source');
                 $lead->source_id = Source::where('utm', $request->cookie('utm_source'))->value('id');
             }
 
+            $utm_term = null;
             if ($request->cookie('utm_term') != null) {
                 $utm_term = "\r\nКлиент искал: " . $request->cookie('utm_term') != null;
                 $lead->utm_term = $request->cookie('utm_term') != null;
