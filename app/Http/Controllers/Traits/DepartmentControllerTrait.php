@@ -43,18 +43,10 @@ trait DepartmentControllerTrait
 
         }
 
-        public function createDirector($company, $department, $user, $request = null)
+        public function createDirector($company, $department, $user)
         {
 
-            // Подготовка: -------------------------------------------------------------------------------------
-
-            // Получаем данные для авторизованного пользователя
-            // $user_auth = $request->user();
-
-            // Скрываем бога
-            // $user_auth_id = hideGod($user_auth);
-            // $company_auth_id = $user_auth->company_id;
-
+            Log::info('В трейт создания директора пришла компания: ' . $company->name);
             $staffer = new Staffer;
             $staffer->user_id = $user->id;
             $staffer->position_id = 1; // Директор
@@ -72,7 +64,7 @@ trait DepartmentControllerTrait
             $employee->employment_date = Carbon::today()->format('Y-m-d');
             $employee->author_id = 1; // Робот
             $employee->save();
-            Log::info('Сохраняем должность. Устраиваем юзера.');
+            Log::info('Сохраняем должность. Устраиваем юзера в штат компании с ID: ' . $employee->company_id);
 
             $position = $user->staff->first()->position;
             $position_id = $position->id;

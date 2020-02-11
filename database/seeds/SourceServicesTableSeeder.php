@@ -16,7 +16,9 @@ class SourceServicesTableSeeder extends Seeder
 
     	$yandex_id = Source::where('utm', 'yandex')->first()->id;
     	$google_id = Source::where('utm', 'google')->first()->id;
-        $sms_id = Source::where('utm', 'sms')->first()->id;
+		$sms_id = Source::where('utm', 'sms')->first()->id;
+		$facebook_id = Source::where('utm', 'facebook')->first()->id;
+		$vk_id = Source::where('utm', 'vk')->first()->id;
 
         SourceService::insert([
         	[
@@ -67,7 +69,28 @@ class SourceServicesTableSeeder extends Seeder
                 'domain' => 'sms.ru',
                 'author_id' => 1,
                 'source_id' => $sms_id,
-            ],
+			],
+        	[
+		        'name' => 'Web Мастер',
+		        'alias' => 'webmaster',
+		        'domain' => 'webmaster.yandex.ru',
+                'author_id' => 1,
+                'source_id' => $yandex_id,
+        	],			
+        	[
+		        'name' => 'Facebook Pixel',
+		        'alias' => 'facebookpixel',
+		        'domain' => 'facebook.com',
+                'author_id' => 1,
+                'source_id' => $facebook_id,
+        	],
+        	[
+		        'name' => 'VK Pixel',
+		        'alias' => 'vkpixel',
+		        'domain' => 'vk.com',
+                'author_id' => 1,
+                'source_id' => $vk_id,
+        	],
         ]);
     }
 }
