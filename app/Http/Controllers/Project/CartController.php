@@ -307,8 +307,8 @@ class CartController extends Controller
 
             $utm_term = null;
             if ($request->cookie('utm_term') != null) {
-                $utm_term = "\r\nКлиент искал: " . $request->cookie('utm_term') != null;
-                $lead->utm_term = $request->cookie('utm_term') != null;
+                $utm_term = "\r\nКлиент искал: " . $request->cookie('utm_term');
+                $lead->utm_term = $request->cookie('utm_term');
             }
 
             if ($request->cookie('utm_content') != null) {
