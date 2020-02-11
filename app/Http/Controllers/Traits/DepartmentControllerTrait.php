@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Traits;
 
 // Модели
 use App\User;
+use App\Company;
 use App\Department;
 use App\Staffer;
 use App\Employee;
@@ -45,8 +46,13 @@ trait DepartmentControllerTrait
 
         public function createDirector($company, $department, $user)
         {
+            Log::info('Компания id: ' . $company->id . ';');
+            Log::info('Отдел id: ' . $department->id . ';');
+            Log::info('Пользователь id: ' . $user->id . ';');
 
-            Log::info('В трейт создания директора пришла компания: ' . $company->name);
+            // dd(Company::where('id', $company->id)->get());
+
+            Log::info('В трейт создания директора пришла компания: ' . $company->name . ' с ID: ' . $company->id);
             $staffer = new Staffer;
             $staffer->user_id = $user->id;
             $staffer->position_id = 1; // Директор
@@ -63,8 +69,20 @@ trait DepartmentControllerTrait
             $employee->user_id = $user->id;
             $employee->employment_date = Carbon::today()->format('Y-m-d');
             $employee->author_id = 1; // Робот
+
+            Log::info($employee);
+
             $employee->save();
-            Log::info('Сохраняем должность. Устраиваем юзера в штат компании с ID: ' . $employee->company_id);
+            $employee = Employee::where('id', $employee->id)->first();
+
+            Log::info($employee);
+
+            Log::info('Сохраняем сотрудника:');
+            Log::info('Устроен в компанию с id: ' . $employee->company_id . ';');
+            Log::info('Устроен на вакансию с id: ' . $employee->staffer_id . ';');
+            Log::info('Его пользовательский id: ' . $employee->user_id . ';');
+
+            Log::info('Сохраняем должность. Устраиваем юзера в штат компании с ID: ' . $company->id);
 
             $position = $user->staff->first()->position;
             $position_id = $position->id;
