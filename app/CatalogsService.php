@@ -63,6 +63,13 @@ class CatalogsService extends Model
         return $this->hasMany(CatalogsServicesItem::class);
     }
 
+    // Публичные пункты
+    public function items_public()
+    {
+        return $this->hasMany(CatalogsServicesItem::class)
+            ->where('display', true);
+    }
+
     public function price_services()
     {
         return $this->hasMany(PricesService::class);
@@ -84,6 +91,15 @@ class CatalogsService extends Model
     public function photo()
     {
         return $this->belongsTo(Photo::class);
+    }
+
+    public function prices()
+    {
+        return $this->hasMany(PricesService::class)
+            ->where([
+                'archive' => false,
+                'display' => true
+            ]);
     }
 
     // Главные

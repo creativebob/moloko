@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\Client;
+use App\ContractsClient;
 use App\Entity;
 use App\Http\Controllers\Traits\Offable;
 use App\Http\Controllers\Traits\Reservable;
@@ -116,13 +118,13 @@ class EstimateController extends Controller
     }
 
     /**
-     * Продажа сметы
+     * Производство сметы
      *
      * @param Request $request
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function saling(Request $request, $id)
+    public function produce(Request $request, $id)
     {
 
         // ГЛАВНЫЙ ЗАПРОС:
@@ -226,7 +228,7 @@ class EstimateController extends Controller
                 }
 
                 Log::channel('documents')
-                    ->info('========================================== НАЧАЛО ПРОДАЖИ СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
+                    ->info('========================================== НАЧАЛО ПРОИЗВОДТСВА СМЕТЫ, ID: ' . $estimate->id . ' ==============================================');
 
                 $estimate->goods_items->load('document');
 
@@ -255,24 +257,83 @@ class EstimateController extends Controller
                         'amount' => $amount,
                         'discount' => $discount,
                         'total' => $total,
-                        'is_saled' => true,
+                        'is_produced' => true,
                     ];
                 }
                 $estimate->update($data);
 
                 Log::channel('documents')
-                    ->info('Продана смета c id: ' . $estimate->id);
+                    ->info('Произведена смета c id: ' . $estimate->id);
                 Log::channel('documents')
-                    ->info('========================================== КОНЕЦ ПРОДАЖИ СМЕТЫ ==============================================
+                    ->info('========================================== КОНЕЦ ПРОИЗВОДТСВА СМЕТЫ ==============================================
                 
                 ');
 
+                // TODO - 06.02.20 - Временная запись клиента и договора
+                $client = new Client;
+                $client->clientable_id = $estimate->lead->user_id;
+                $client->clientable_type = 'App\User';
+                $client->company_id = $request->user()->company_id;
+                $client->save();
+
+                $estimate->lead->update([
+                   'client_id' =>  $client->id
+                ]);
+
+                $data = [
+                    'client_id' => $client->id,
+                    'date' => now()->format('d.m.Y'),
+                    'amount' => $total,
+                    'debit' => $total,
+                ];
+                $contracts_client = ContractsClient::create($data);
+                $contracts_client->update([
+                    'number' => $contracts_client->id
+                ]);
+
+                return redirect()
+                    ->route('leads.edit', $estimate->lead_id)
+                    ->with(['success' => 'Успешно произведено']);
+
             } else {
-                abort(403, 'Смета пуста');
+                return back()
+                    ->withErrors(['msg' => 'Смета пуста'])
+                    ->withInput();
+//                abort(403, 'Смета пуста');
             }
         }
 
-        return redirect()->route('leads.index');
+//        return redirect()->route('leads.index');
+    }
+
+    /**
+     * Продажа сметы
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function saling(Request $request, $id)
+    {
+        // ГЛАВНЫЙ ЗАПРОС:
+        $estimate = Estimate::findOrFail($id);
+
+        if ($estimate->is_saled == 0) {
+            $estimate->update([
+                'is_saled' => true,
+            ]);
+
+            return redirect()
+                ->route('leads.edit', $estimate->lead_id)
+                ->with(['success' => 'Успешно продано']);
+
+        } else {
+            return back()
+                ->withErrors(['msg' => 'Смета продана'])
+                ->withInput();
+        }
+
+//        return redirect()->route('leads.index');
     }
 
     public function reserving(Request $request, $id)

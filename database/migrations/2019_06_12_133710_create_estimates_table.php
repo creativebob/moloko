@@ -21,7 +21,7 @@ class CreateEstimatesTable extends Migration
 
             $table->bigInteger('client_id')->unsigned()->nullable()->comment('Id клиента');
             $table->foreign('client_id')->references('id')->on('users');
-	
+
 	        $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id филиала');
 	        $table->foreign('filial_id')->references('id')->on('departments');
 
@@ -42,6 +42,7 @@ class CreateEstimatesTable extends Migration
             // $table->decimal('discount_total', 12, 4)->default(0)->comment('Итоговая сумма всех скидок');
 
             $table->boolean('draft')->default(0)->unsigned()->comment('Черновик');
+            $table->boolean('is_produced')->default(0)->comment('Произведено');
             $table->boolean('is_saled')->default(0)->comment('Продано');
 
             // Общие настройки

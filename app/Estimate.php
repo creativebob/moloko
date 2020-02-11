@@ -64,6 +64,8 @@ class Estimate extends Model
         'description',
         'author_id',
         'draft',
+
+        'is_produced',
         'is_saled',
 
         'amount',
@@ -110,5 +112,11 @@ class Estimate extends Model
     public function reserves()
     {
         return $this->morphMany(Reserve::class, 'document');
+    }
+
+    // Платежи
+    public function payments()
+    {
+        return $this->morphMany(Payment::class, 'document');
     }
 }

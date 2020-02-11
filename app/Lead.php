@@ -69,6 +69,8 @@ class Lead extends Model
         'name',
 	    'delivered_at',
 
+        'client_id',
+
         'display',
         'system',
         'moderation'

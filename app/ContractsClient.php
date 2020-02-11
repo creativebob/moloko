@@ -14,6 +14,7 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
+use App\Scopes\Traits\SuppliersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
@@ -21,14 +22,14 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 // Фильтры
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
-use App\Scopes\Filters\DateIntervalFilter;
 
-class EstimatesServicesItem extends Model
+class ContractsClient extends Model
 {
     // Включаем кеш
     use Cachable;
 
-    // use SoftDeletes;
+    use Notifiable;
+    use SoftDeletes;
 
     use Commonable;
 
@@ -39,62 +40,24 @@ class EstimatesServicesItem extends Model
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
+    use SuppliersTraitScopes;
 
     // Фильтры
     use Filter;
     use BooklistFilter;
-    use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
     protected $fillable = [
-        'estimate_id',
-        'price_id',
-        'service_id',
+        'date',
+        'number',
 
-        'company_id',
-        'author_id',
+        'client_id',
 
-        'count',
-        'price',
-
+        'debit',
+        'paid',
         'amount',
 
         'display',
         'system',
         'moderation'
     ];
-
-    // Смета
-    public function estimate()
-    {
-        return $this->belongsTo(Estimate::class);
-    }
-
-    public function document()
-    {
-        return $this->belongsTo(Estimate::class, 'estimate_id');
-    }
-
-    // Прайс
-    public function price()
-    {
-        return $this->belongsTo(PricesService::class);
-    }
-
-    public function price_service()
-    {
-        return $this->belongsTo(PricesService::class, 'price_id');
-    }
-
-    // Услуга
-    public function service()
-    {
-        return $this->belongsTo(Service::class);
-    }
-
-    public function product()
-    {
-        return $this->belongsTo(Service::class, 'service_id');
-    }
-
 }

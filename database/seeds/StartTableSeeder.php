@@ -12,6 +12,7 @@ use App\Manufacturer;
 use App\Supplier;
 
 use App\Site;
+use App\Domain;
 use App\Page;
 use App\Navigation;
 use App\Menu;
@@ -150,7 +151,10 @@ class StartTableSeeder extends Seeder
         	],
         ]);
 
-
+        Domain::insert([
+            'domain' => 'crmsystem.local',
+            'site_id' => 1
+        ]);
 
         Page::insert([
         	[

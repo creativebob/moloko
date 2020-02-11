@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateConsignmentsTable extends Migration
+class CreateContractsClientsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,28 +13,19 @@ class CreateConsignmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('consignments', function (Blueprint $table) {
+        Schema::create('contracts_clients', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id отдела');
-            $table->foreign('filial_id')->references('id')->on('departments');
+            $table->bigInteger('client_id')->unsigned()->nullable()->comment('Id клиента');
+            $table->foreign('client_id')->references('id')->on('clients');
 
-            $table->string('name')->nullable()->comment('Короткое название накладной');
-            $table->text('description')->nullable()->comment('Описание');
+            $table->date('date')->nullable()->comment('Дата');
+            $table->string('number')->index()->nullable()->comment('Номер');
 
-            $table->date('receipt_date')->nullable()->comment('Дата приема');
-            $table->string('number')->index()->nullable()->comment('Номер накладной');
-
-            $table->bigInteger('supplier_id')->unsigned()->nullable()->comment('Id поставщика');
-            $table->foreign('supplier_id')->references('id')->on('suppliers');
-
-            $table->bigInteger('stock_id')->nullable()->unsigned()->comment('Id склада');
-            $table->foreign('stock_id')->references('id')->on('stocks');
+            $table->decimal('debit', 12, 4)->default(0)->comment('Сумма долга клиента');
+            $table->decimal('paid', 12, 4)->default(0)->comment('Оплаченная сумма');
 
             $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
-	        $table->boolean('draft')->default(1)->comment('Черновик');
-            $table->boolean('is_posted')->default(0)->comment('Оприходовано');
-
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
@@ -52,7 +43,6 @@ class CreateConsignmentsTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 
@@ -63,6 +53,6 @@ class CreateConsignmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('consignments');
+        Schema::dropIfExists('contracts_clients');
     }
 }

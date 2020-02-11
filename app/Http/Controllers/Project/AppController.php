@@ -31,7 +31,7 @@ class AppController extends Controller
             $site = $this->site;
 
             if (isset($site->domain->start_url)) {
-                return redirect($site->domain->start_url);
+                return redirect($site->domain->start_url . $request->getRequestUri());
             } else {
                 $page = $site->pages_public
                     ->where('alias', 'main')

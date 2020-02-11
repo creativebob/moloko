@@ -34,6 +34,8 @@ Vue.component('production-component', require('./components/productions/Producti
 Vue.component('estimate-init-component', require('./components/estimates/EstimateInitComponent.vue'));
 Vue.component('estimate-component', require('./components/estimates/EstimateComponent.vue'));
 Vue.component('estimate-sale-button-component', require('./components/estimates/EstimateSaleButtonComponent.vue'));
+Vue.component('estimate-production-button-component', require('./components/estimates/EstimateProductionButtonComponent.vue'));
+Vue.component('payments-component', require('./components/PaymentsComponent.vue'));
 
 Vue.component('input-digit-component', require('./components/InputDigitComponent.vue'));
 Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
@@ -44,6 +46,7 @@ Vue.component('processes-categories-with-groups-component', require('./component
 
 
 Vue.component('catalog-goods-component', require('./components/catalogs/goods/CatalogGoodsComponent.vue'));
+Vue.component('catalog-services-component', require('./components/catalogs/services/CatalogServicesComponent.vue'));
 Vue.component('lead-badget-component', require('./components/LeadBadgetComponent.vue'));
 Vue.component('select-stocks-component', require('./components/common/selects/SelectStocksComponent.vue'));
 

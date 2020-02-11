@@ -8,6 +8,7 @@ use App\Http\ViewComposers\System\ArticlesCategoriesWithItemsComposer;
 use App\Http\ViewComposers\System\ArticlesCategoriesWithItemsComposerForManufacturer;
 use App\Http\ViewComposers\System\AttachmentsComposer;
 use App\Http\ViewComposers\System\CatalogGoodsWithPricesComposer;
+use App\Http\ViewComposers\System\CatalogServicesWithPricesComposer;
 use App\Http\ViewComposers\System\ChannelsComposer;
 use App\Http\ViewComposers\System\ChargesComposer;
 use App\Http\ViewComposers\System\CitiesComposer;
@@ -18,6 +19,7 @@ use App\Http\ViewComposers\System\DirectiveCategoriesComposer;
 use App\Http\ViewComposers\System\DisplayModesComposer;
 use App\Http\ViewComposers\System\FiltersComposer;
 use App\Http\ViewComposers\System\NotificationsComposer;
+use App\Http\ViewComposers\System\PaymentsTypesComposer;
 use App\Http\ViewComposers\System\ProcessesCategoriesWithGroupsComposer;
 use App\Http\ViewComposers\System\SitesWIthFilialsAndCatalogsComposer;
 use App\Http\ViewComposers\System\StocksComposer;
@@ -218,6 +220,7 @@ class ComposerServiceProvider extends ServiceProvider
             'includes.selects.stocks',
             'leads.form'
         ], StocksComposer::class);
+        view()->composer('leads.form', PaymentsTypesComposer::class);
 
         // Conflict: то, что осталось в нижней части
         // view()->composer(['includes.selects.manufacturers', 'includes.lists.manufacturers'], ManufacturersComposer::class);
@@ -315,6 +318,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('products.articles.goods.prices.filials', FilialsForCatalogsGoodsComposer::class);
 
         view()->composer('leads.form', CatalogGoodsWithPricesComposer::class);
+        view()->composer('leads.form', CatalogServicesWithPricesComposer::class);
 
         view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
         view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);

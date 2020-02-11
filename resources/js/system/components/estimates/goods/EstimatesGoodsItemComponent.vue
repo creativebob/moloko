@@ -1,12 +1,12 @@
 <template>
     <tr
-            class="item"
-            :id="'estimates_goods_items-' + item.id"
-            :data-name="item.product.article.name"
-            :data-price_id="item.price_id"
-            :data-count="item.count"
-            :data-price="item.price">
-<!--        <td>{{ index + 1 }}</td>-->
+        class="item"
+        :id="'estimates_goods_items-' + item.id"
+        :data-name="item.product.article.name"
+        :data-price_id="item.price_id"
+        :data-count="item.count"
+        :data-price="item.price">
+        <!--        <td>{{ index + 1 }}</td>-->
         <td>
             {{ item.product.article.name }}
             <span class="icon-comment"></span>
@@ -14,15 +14,15 @@
         <td>{{ item.stock.name }}</td>
         <td>{{ item.price | roundToTwo | level }}</td>
 
-<!--        <td>{{ item.count }}</td>-->
+        <!--        <td>{{ item.count }}</td>-->
         <td @click="checkChangeCount">
             <template v-if="isChangeCount">
                 <input
-                        @keydown.enter.prevent="updateItem"
-                        type="number"
-                        v-focus
-                        @focusout="changeCount = false"
-                        v-model="count"
+                    @keydown.enter.prevent="updateItem"
+                    type="number"
+                    v-focus
+                    @focusout="changeCount = false"
+                    v-model="count"
                 >
             </template>
             <template v-else="changeCount">{{ item.count | roundToTwo | level }}</template>
@@ -31,32 +31,32 @@
         <td class="td-amount"><a class="button green-button" data-open="price-set">{{ item.amount | roundToTwo | level }}</a></td>
         <td class="td-delete">
             <div
-                    v-if="!this.isSaled"
-                    @click="openModalRemoveItem"
-                    class="icon-delete sprite"
-                    data-open="delete-estimates_item"
+                v-if="!this.isSaled"
+                @click="openModalRemoveItem"
+                class="icon-delete sprite"
+                data-open="delete-estimates_goods_item"
             ></div>
         </td>
         <td class="td-action">
             <div
-                    v-if="!isSaled"
-                    :class="isReservedClass"
+                v-if="!isSaled"
+                :class="isReservedClass"
             >
                 <span
-                        v-if="!isReserved"
-                        @click="reserveEstimateGoodsItem"
-                        class="button-to-reserve"
-                        title="Позицию в резерв!"
+                    v-if="!isReserved"
+                    @click="reserveEstimateItem"
+                    class="button-to-reserve"
+                    title="Позицию в резерв!"
                 ></span>
                 <span
-                        v-else
-                        @click="unreserveEstimateGoodsItem"
-                        class="button-to-reserve unreserve"
-                        title="Снять с резерва!"
+                    v-else
+                    @click="unreserveEstimateItem"
+                    class="button-to-reserve unreserve"
+                    title="Снять с резерва!"
                 ></span>
                 <span
-                        v-if="reservedCount > 0"
-                        class="reserved-count"
+                    v-if="reservedCount > 0"
+                    class="reserved-count"
                 >{{ reservedCount | roundToTwo | level }}</span>
             </div>
         </td>
@@ -65,7 +65,6 @@
 
 <script>
     export default {
-        name: 'estimates-goods-item-component',
         props: {
             item: Object,
             index: Number,
@@ -90,7 +89,6 @@
                 set (value) {
                     this.countInput = Number(value)
                 }
-
             },
             isReservedClass() {
                 if (this.item.reserve !== null) {
@@ -116,22 +114,22 @@
                 }
                 return 0;
             },
-        //     isChangeCost() {
-        //         if (this.changeCost) {
-        //             this.changeCount = false
-        //         }
-        //         return this.changeCost
-        //     },
-        //     unitAbbreviation() {
-        //         let abbr;
-        //         if (this.item.cmv.article.package_status === 1) {
-        //             abbr = this.item.cmv.article.package_abbreviation;
-        //         } else {
-        //             abbr = this.item.cmv.article.unit.abbreviation;
-        //         }
-        //         return abbr;
-        //     }
-        //
+            //     isChangeCost() {
+            //         if (this.changeCost) {
+            //             this.changeCount = false
+            //         }
+            //         return this.changeCost
+            //     },
+            //     unitAbbreviation() {
+            //         let abbr;
+            //         if (this.item.cmv.article.package_status === 1) {
+            //             abbr = this.item.cmv.article.package_abbreviation;
+            //         } else {
+            //             abbr = this.item.cmv.article.unit.abbreviation;
+            //         }
+            //         return abbr;
+            //     }
+            //
         },
         methods: {
             openModalRemoveItem() {
@@ -178,7 +176,7 @@
             //             console.log(error)
             //         });
             // },
-            reserveEstimateGoodsItem() {
+            reserveEstimateItem() {
                 axios
                     .post('/admin/estimates_goods_items/' + this.item.id + '/reserving')
                     .then(response => {
@@ -191,7 +189,7 @@
                         console.log(error)
                     });
             },
-            unreserveEstimateGoodsItem() {
+            unreserveEstimateItem() {
                 axios
                     .post('/admin/estimates_goods_items/' + this.item.id + '/unreserving')
                     .then(response => {
@@ -212,12 +210,10 @@
                 }
             }
         },
-
         filters: {
             roundToTwo: function (value) {
                 return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
             },
-
             // Создает разделители разрядов в строке с числами
             level: function (value) {
                 return Number(value).toLocaleString();

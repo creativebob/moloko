@@ -3,10 +3,9 @@
         <input
                 v-if="isShow"
                 type="submit"
-                value="Продать"
+                value="Произвести"
                 class="button"
-                @click="saleEstimate"
-                :disabled="!isDisabled"
+                @click="produceEstimate"
         >
 
 </template>
@@ -20,17 +19,14 @@
         },
         computed: {
             isShow() {
-                return this.estimate.is_produced === 1 && this.estimate.is_saled === 0;
+                return (this.estimate.is_produced === 0) && (this.$store.state.estimate.goodsItems.length > 0 || this.$store.state.estimate.servicesItems.length > 0);
             },
-            isDisabled() {
-                return this.$store.getters.paymentsAmount >= this.$store.getters.estimateTotal;
-            }
         },
         methods: {
 
-            saleEstimate() {
+            produceEstimate() {
                 if (this.isShow) {
-                        $('form').attr('action', '/admin/estimates/' + this.estimate.id + '/saling');
+                    $('form').attr('action', '/admin/estimates/' + this.estimate.id + '/produce');
                 }
             },
         }

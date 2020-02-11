@@ -191,9 +191,9 @@
                 @endcan
 
                 @can('create', App\Estimate::class)
-                    @isset($catalog_services)
+                    @isset($catalogs_services_data)
                         <li class="tabs-title">
-                            <a data-tabs-target="content-panel-catalog-services" href="#content-panel-catalog-services">Услуги</a>
+                            <a data-tabs-target="tab-catalog-services" href="#tab-catalog-services">Услуги</a>
                         </li>
                     @endisset
                 @endcan
@@ -205,9 +205,11 @@
                     <a data-tabs-target="content-panel-claims" href="#content-panel-claims">Рекламации</a>
                 </li>
                 @endcan --}}
-
-                <li class="tabs-title"><a href="#content-panel-payments" aria-selected="true">Оплата</a></li>
-
+                @if($lead->estimate->is_produced == 1)
+                    <li class="tabs-title">
+                        <a href="#tab-payments" aria-selected="true">Оплата</a>
+                    </li>
+                @endif
 
                 {{-- <li class="tabs-title"><a href="#content-panel-measurements" aria-selected="true">Замеры</a></li> --}}
                 <li class="tabs-title" id="tab-attribution">
@@ -268,91 +270,9 @@
 
                 {{-- КАТАЛОГ УСЛУГ --}}
                 @can('index', App\CatalogsService::class)
-                    @isset($catalog_services)
-                    <div class="tabs-panel" id="content-panel-catalog-services">
-                        <div class="grid-x grid-padding-x">
-
-                            {{-- ВЫВОД ПУНКТОВ КАТАЛОГА --}}
-                            <div class="shrink cell catalog-bar">
-                                <div class="grid-x grid-padding-x">
-
-                                    {{-- ПОИСК ПО УСЛУГАМ --}}
-                                    <div class="small-12 cell search-in-catalog-panel">
-                                        <label class="label-icon">
-                                            <input type="text" name="search" placeholder="Поиск" maxlength="25" autocomplete="off">
-                                            <div class="sprite-input-left icon-search"></div>
-                                            <span class="form-error">Обязательно нужно логиниться!</span>
-                                        </label>
-                                    </div>
-
-                                    {{-- СПИСОК ПУНКТОВ КАТАЛОГА --}}
-
-                                    <div class="small-12 cell search-in-catalog-panel">
-
-                                        @include('leads.catalogs.catalogs_items', ['catalog' => $catalog_services, 'type' => 'services'])
-
-                                    </div>
-                                </div>
-                            </div>
-
-                            {{-- ВЫВОД ПРОЦЕССОВ (УСЛУГ) --}}
-                            <div class="auto cell">
-                                <div class="grid-x grid-padding-x">
-
-                                    {{-- ПАНЕЛЬ УПРАВЛЕНИЯ ОТОБРАЖЕНИЕМ --}}
-                                    <div class="small-12 cell view-settings-panel">
-                                        <div class="one-icon-16 icon-view-list icon-button active" id="toggler-view-list"></div>
-                                        <div class="one-icon-16 icon-view-block icon-button" id="toggler-view-block"></div>
-                                        <div class="one-icon-16 icon-view-card icon-button" id="toggler-view-card"></div>
-                                        <div class="one-icon-16 icon-view-setting icon-button" id="open-setting-view"></div>
-                                    </div>
-
-                                    {{-- ВЫВОД УСЛУГ --}}
-                                    <div id="block-prices_services">
-                                    @foreach ($catalog_services->items as $item)
-                                        <ul class="small-12 cell products-list view-list" id="block-catalog_services_item-{{ $item->id }}">
-                                            @foreach($item->prices as $prices_service)
-                                                <li>
-                                                    <a class="add-to-estimate" data-price_id="{{ $prices_service->id }}" data-serial="{{ $prices_service->service->serial }}" data-type="services">
-
-                                                        <div class="media-object stack-for-small">
-                                                            <div class="media-object-section items-product-img" >
-                                                                <div class="thumbnail">
-                                                                    <img src="{{ getPhotoPath($prices_service->service->process, 'small') }}">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="media-object-section cell">
-
-                                                                <div class="grid-x grid-margin-x">
-                                                                    <div class="cell auto">
-                                                                        <h4>
-                                                                            <span class="items-product-name">{{ $prices_service->service->process->name }}</span>
-                                                                            @if($prices_service->service->process->manufacturer)
-                                                                                <span class="items-product-manufacturer"> ({{ $prices_service->service->process->manufacturer->name ?? '' }})</span>
-                                                                            @endif
-                                                                        </h4>
-                                                                    </div>
-
-                                                                    <div class="cell shrink wrap-product-price">
-
-                                                                        <span class="items-product-price">{{ num_format($prices_service->price, 0) }}</span>
-                                                                    </div>
-                                                                </div>
-                                                                <p class="items-product-description">{{ $prices_service->service->description }}</p>
-                                                            </div>
-                                                        </div>
-
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                        @endforeach
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
+                    @isset($catalogs_goods_data)
+                    <div class="tabs-panel" id="tab-catalog-services">
+                        <catalog-services-component :catalogs-services-data='@json($catalogs_services_data)'></catalog-services-component>
                     </div>
                     @endisset
                 @endcan
@@ -424,14 +344,8 @@
                     </div> --}}
 
                     {{-- ФАКТ ОПЛАТЫ --}}
-                    <div class="tabs-panel" id="content-panel-payments">
-                        <div class="grid-x grid-padding-x">
-                            <div class="cell small-4">
-                                <label>Сумма:
-                                    @include('includes.inputs.digit', ['name' => 'payment', 'value' => num_format($lead->payment, 2), 'decimal_place'=>2])
-                                </label>
-                            </div>
-                        </div>
+                    <div class="tabs-panel" id="tab-payments">
+                        <payments-component :document='@json($lead->estimate)' :payments-types='@json($payments_types)' cur-date="{{ now() }}"></payments-component>
                     </div>
 
                     {{-- АТТРИБУЦИЯ --}}
@@ -549,6 +463,10 @@
             @else
             {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }}
             @endcan
+        </div>
+
+        <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
+            <estimate-production-button-component></estimate-production-button-component>
         </div>
 
         <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">

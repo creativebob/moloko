@@ -23,9 +23,8 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 use App\Scopes\Filters\DateIntervalFilter;
 
-class Consignment extends Model
+class Payment extends Model
 {
-
     // Включаем кеш
 //    use Cachable;
 
@@ -46,63 +45,42 @@ class Consignment extends Model
 
     protected $dates = [
         'deleted_at',
-        'receipt_date'
+        'date'
     ];
 
     protected $fillable = [
-        'supplier_id',
-        'name',
-        'description',
+        'payments_type_id',
         'amount',
-        'receipt_date',
-        'number',
-        'stock_id',
-        'author_id',
-        'draft',
-	    'is_posted',
+        'date',
+
+        'contract_id',
+        'contract_type',
+
+        'document_id',
+        'document_type',
+
+        'date',
+        'date',
 
         'display',
         'system',
         'moderation'
     ];
 
-    public function setReceiptDateAttribute($value)
+    public function setDateAttribute($value)
     {
-        $this->attributes['receipt_date'] = Carbon::createFromFormat('d.m.Y', $value);
+        $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $value);
     }
 
-    // Компания
-    public function company()
+    // Тип
+    public function type()
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(PaymentsType::class, 'payments_type_id');
     }
 
-    // public function filials()
-    // {
-    //     return $this->hasMany('App\Department')->where('filial_status', 1);
-    // }
-
-    // Автор
-    public function author()
+    // Договор
+    public function contract()
     {
-        return $this->belongsTo(User::class);
-    }
-
-    // Поставщик
-    public function supplier()
-    {
-        return $this->belongsTo(Supplier::class);
-    }
-
-    // Склад
-    public function stock()
-    {
-        return $this->belongsTo(Stock::class);
-    }
-
-    // Позиции в смете
-    public function items()
-    {
-        return $this->hasMany(ConsignmentsItem::class);
+        return $this->morphTo();
     }
 }

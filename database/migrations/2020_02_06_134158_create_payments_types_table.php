@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateAlignsTable extends Migration
+class CreatePaymentsTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateAlignsTable extends Migration
      */
     public function up()
     {
-        Schema::create('aligns', function (Blueprint $table) {
+        Schema::create('payments_types', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->string('name')->index()->comment('Название');
-            $table->string('tag')->nullable()->comment('Тэг');
+//            $table->string('tag')->nullable()->comment('Тэг');
 
         });
     }
@@ -29,6 +29,6 @@ class CreateAlignsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('aligns');
+        Schema::dropIfExists('payments_types');
     }
 }

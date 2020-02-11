@@ -12,7 +12,10 @@ use Illuminate\Http\Request;
 class EstimatesGoodsItemController extends Controller
 {
 
-    // Настройки сконтроллера
+    /**
+     * EstimatesGoodsItemController constructor.
+     * @param EstimatesGoodsItem $estimates_goods_item
+     */
     public function __construct(EstimatesGoodsItem $estimates_goods_item)
     {
         $this->middleware('auth');
@@ -48,8 +51,8 @@ class EstimatesGoodsItemController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -106,18 +109,16 @@ class EstimatesGoodsItemController extends Controller
                 }
             } else {
                 $estimates_goods_item->save();
-
             }
         }
 
-        $result = [];
         if ($success) {
             $estimates_goods_item->load([
                 'product.article',
                 'reserve',
                 'stock:id,name'
             ]);
-            $this->estimateUpdate($estimates_goods_item);
+            $this->estimateUpdate($estimates_goods_item->estimate);
 
             $result = [
                 'success' => $success,
@@ -128,7 +129,6 @@ class EstimatesGoodsItemController extends Controller
                 'success' => $success,
             ];
         }
-
 
         return response()->json($result);
     }
@@ -164,7 +164,6 @@ class EstimatesGoodsItemController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $estimates_goods_item = EstimatesGoodsItem::findOrFail($id);
         // dd($estimates_goods_item);
 
@@ -178,7 +177,7 @@ class EstimatesGoodsItemController extends Controller
             'reserve',
             'stock:id,name'
         ]);
-	    $this->estimateUpdate($estimates_goods_item);
+	    $this->estimateUpdate($estimates_goods_item->estimate);
 
         return response()->json($estimates_goods_item);
     }
@@ -204,46 +203,53 @@ class EstimatesGoodsItemController extends Controller
             $this->unreserve($estimates_goods_item);
             $result = $estimates_goods_item->delete();
             Log::channel('documents')
-                ->info('========================================== КОНЕЦ УДАЛЕНИЯУНКТА СМЕТЫ, ИМЕЮЩЕГО РЕЗЕРВ ==============================================
+                ->info('========================================== КОНЕЦ УДАЛЕНИЯ ПУНКТА СМЕТЫ, ИМЕЮЩЕГО РЕЗЕРВ ==============================================
                 
                 ');
         } else {
             $result = $estimates_goods_item->forceDelete();
         }
 
-	    $this->estimateUpdate($estimates_goods_item);
+	    $this->estimateUpdate($estimates_goods_item->estimate);
 //        $result = EstimatesGoodsItem::destroy($id);
         return response()->json($result);
     }
 
-	public function estimateUpdate($item)
-	{
-		$estimate = $item->estimate;
-		$estimate->load('goods_items');
+    public function estimateUpdate($estimate)
+    {
+        $estimate->load([
+            'goods_items',
+            'services_items'
+        ]);
 
-		if ($estimate->goods_items->isNotEmpty()) {
+        $amount = 0;
+        if ($estimate->services_items->isNotEmpty()) {
+            $amount += $estimate->services_items->sum('amount');
+        }
+        if ($estimate->goods_items->isNotEmpty()) {
+            $amount += $estimate->goods_items->sum('amount');
+        }
 
-			$amount = $estimate->goods_items->sum('amount');
-			$discount = (($amount * $estimate->discount_percent) / 100);
-			$total = ($amount - $discount);
+        if ($amount > 0) {
+            $discount = (($amount * $estimate->discount_percent) / 100);
+            $total = ($amount - $discount);
 
-			$data = [
-				'amount' => $amount,
-				'discount' => $discount,
-				'total' => $total
-			];
-		} else {
-			$data = [
-				'amount' => 0,
-				'discount' => 0,
-				'total' => 0
-			];
-		}
+            $data = [
+                'amount' => $amount,
+                'discount' => $discount,
+                'total' => $total
+            ];
 
-		$estimate->update($data);
+        } else {
+            $data = [
+                'amount' => 0,
+                'discount' => 0,
+                'total' => 0
+            ];
+        }
 
-//		return $estimate;
-	}
+        $estimate->update($data);
+    }
 
     public function reserving(Request $request, $id)
     {
