@@ -97,7 +97,7 @@ class AccountController extends Controller
         $account->alias = $request->alias;
 
         $account->login = $request->login;
-        $account->password = bcrypt($request->password);
+        $account->password = $request->password;
 
         $account->api_token = $request->api_token;
         $account->secret = $request->secret;
@@ -192,7 +192,7 @@ class AccountController extends Controller
 
         // Если пришел не пустой пароль
         if (isset($request->password)) {
-            $account->password = bcrypt($request->password);
+            $account->password = $request->password;
         }
 
         $account->api_token = $request->api_token;
