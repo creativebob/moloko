@@ -3120,6 +3120,11 @@ a#task-toggle{
             max-width: 70px;
         }
 
+        td.td-seo-description{
+            max-width: 200px;
+            padding: 1rem 0.2rem;
+        }
+
         .is-stuck {
             background-color: $body-bg-color;
 
