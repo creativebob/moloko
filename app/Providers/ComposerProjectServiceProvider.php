@@ -75,7 +75,10 @@ class ComposerProjectServiceProvider extends ServiceProvider
 
 
 
-                view()->composer('project.includes.staff.list', StaffComposer::class);
+                view()->composer([
+                    'project.includes.staff.list',
+                    'project.includes.staff.section',
+                ], StaffComposer::class);
                 view()->composer('project.includes.schedules.worktime_filial_today', WorktimeFilialTodayComposer::class);
                 view()->composer('project.includes.plugins.list', PluginsComposer::class);
 
