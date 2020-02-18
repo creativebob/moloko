@@ -149,6 +149,7 @@ class CompanyController extends Controller
 
         // Отдаем работу по созданию новой компании трейту
         $new_company = $this->createCompany($request);
+        $new_company->save();
 
         // Следом автоматически создаем первый филиал у компании
         $new_department = $this->createFirstDepartment($new_company, $request);
@@ -185,6 +186,7 @@ class CompanyController extends Controller
 
         // Создаем штатную единицу директора и устраиваем на нее юзера
         $employee = $this->createDirector($new_company, $new_department, $new_user);
+        Log::info('Вот директор: ' . $employee);
 
         return redirect('/admin/companies');
     }

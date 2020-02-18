@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Traits;
 use App\Company;
 use App\Manufacturer;
 use App\Supplier;
+use Illuminate\Support\Facades\Log;
 
 // Транслитерация
 use Illuminate\Support\Str;
@@ -12,8 +13,7 @@ use Illuminate\Support\Str;
 trait CompanyControllerTrait
 {
 
-	public function createCompany($request)
-    {
+	public function createCompany($request){
 
         // Подготовка: -------------------------------------------------------------------------------------
 
@@ -24,14 +24,17 @@ trait CompanyControllerTrait
         $user_auth_id = hideGod($user_auth);
         $auth_company_id = $user_auth->company_id;
 
+        Log::info('Создание компании');
 
-
-
+        Log::info('Для начала проверим, есть ли в базе компаний компания с ИНН?');
         $company = Company::where('inn', $request->inn)->whereNotNull('inn')->first();
+
+        Log::info('Результат зароса: ' . $company);
+        
         if(empty($company)){
+            Log::info('Видим, что такой компании нет. Будем создавать');
 
             $company = new Company;
-
             $company->name = $request->company_name ?? $request->name;
 
             if(isset($request->alias)){
@@ -91,11 +94,12 @@ trait CompanyControllerTrait
             }
 
 	        $company->save();
-
+            Log::info('Создали!');
         }
 
         // Если запись удачна - будем записывать связи
         if($company){
+            Log::info('В итоге имеем компанию: ' . $company->name);
 
             add_phones($request, $company);
             addBankAccount($request, $company);
@@ -141,13 +145,10 @@ trait CompanyControllerTrait
             }
 
 
-
-
         } else {
 
             abort(403, 'Ошибка записи компании');
         };
-
 
         return $company;
     }
@@ -302,6 +303,5 @@ trait CompanyControllerTrait
 
         }
     }
-
 
 }

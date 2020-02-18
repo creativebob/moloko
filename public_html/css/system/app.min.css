@@ -11855,6 +11855,11 @@ a#task-toggle {
   max-width: 70px;
 }
 
+.content .content-table td.td-seo-description {
+  max-width: 200px;
+  padding: 1rem 0.2rem;
+}
+
 .content .content-table .is-stuck {
   background-color: #eeeeee;
 }

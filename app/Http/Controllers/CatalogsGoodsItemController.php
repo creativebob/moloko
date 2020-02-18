@@ -8,6 +8,7 @@ use App\Http\Requests\CatalogsGoodsItemUpdateRequest;
 use App\Http\Requests\CatalogsGoodsItemStoreRequest;
 use App\CatalogsGoodsItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CatalogsGoodsItemController extends Controller
 {
@@ -39,6 +40,7 @@ class CatalogsGoodsItemController extends Controller
      */
     public function index(Request $request, $catalog_id)
     {
+        
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -86,13 +88,20 @@ class CatalogsGoodsItemController extends Controller
 
         $catalog_goods = CatalogsGoods::findOrFail($catalog_id);
 
+        // Стандартный шаблон для отображения
+        $view_name = 'catalogs_goods_items.index';
+
+        // Если передан аттрибут seo, то отдаем на другой шаблон
+        if($request->seo == 'true'){$view_name = 'catalogs_goods_items.seo';}
+
         // Отдаем на шаблон
-        return view('catalogs_goods_items.index', [
+        return view($view_name, [
             'catalogs_goods_items' => $catalogs_goods_items,
             'page_info' => pageInfo($this->entity_alias),
             'id' => $request->id,
             'catalog_id' => $catalog_id,
-            'catalog_goods' => $catalog_goods
+            'catalog_goods' => $catalog_goods,
+            'user' => Auth::user(),
         ]);
     }
 

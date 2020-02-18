@@ -97,27 +97,30 @@
                                 <label>Описание:
                                     {{ Form::textarea('description', $catalogs_goods_item->description, ['id'=>'content-ckeditor', 'autocomplete'=>'off', 'size' => '10x3']) }}
                                 </label>
+                                <br>
                             </div>
                             <div class="small-12 cell">
                                 <label>Description для сайта
                                     @include('includes.inputs.textarea', ['value' => $catalogs_goods_item->seo_description, 'name' => 'seo_description'])
                                 </label>
                             </div>
-                            <div class="small-12 cell">
+                            <div class="small-6 cell">
                                 <label>Режим отображения
                                     @include('includes.selects.display_modes')
                                 </label>
                             </div>
+                            <div class="small-6 cell">
+                                <label>Выводить меру в качестве основной:
+                                    @include('includes.selects.directive_categories', ['item' => $catalogs_goods_item])
+                                </label>
+                            </div>
+
                             {!! Form::hidden('is_controllable_mode', 0) !!}
                             <div class="small-12 cell checkbox">
                                 {!! Form::checkbox('is_controllable_mode', 1, $catalogs_goods_item->is_controllable_mode, ['id' => 'checkbox-is_controllable_mode']) !!}
                                 <label for="checkbox-is_controllable_mode"><span>Разрешить смену отображения</span></label>
                             </div>
-                            <div class="small-12 cell">
-                                <label>Выводить меру в качестве основной:
-                                    @include('includes.selects.directive_categories', ['item' => $catalogs_goods_item])
-                                </label>
-                            </div>
+
                             {!! Form::hidden('is_show_subcategory', 0) !!}
                             <div class="small-12 cell checkbox">
                                 {!! Form::checkbox('is_show_subcategory', 1, $catalogs_goods_item->is_show_subcategory, ['id' => 'checkbox-is_show_subcategory']) !!}
