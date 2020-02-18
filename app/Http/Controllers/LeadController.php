@@ -250,6 +250,12 @@ class LeadController extends Controller
 
 //        dd($lead->estimate);
 
+        dd(Lead::with('estimate')
+            ->has('estimate')
+            ->toBase()
+            ->take(3)
+            ->get());
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
 
