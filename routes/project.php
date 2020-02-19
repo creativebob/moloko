@@ -28,6 +28,7 @@ Route::get('/prices-goods/search/{text}', 'PricesGoodsController@search')
     ->name('project.prices_goods.search');
 Route::resource('/prices-goods', 'PricesGoodsController')
     ->only([
+        'index',
         'show'
     ])
     ->names('project.prices_goods');

@@ -17,9 +17,24 @@ class PricesGoodsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($url)
+    public function index()
     {
-        //
+        $site = $this->site;
+        $page = $site->pages_public->where('alias', 'prices-goods')->first();
+
+        $prices_goods = PricesGoods::with([
+            'goods_public.article',
+            'currency'
+        ])
+            ->has('goods_public')
+            ->where([
+                'company_id' => $site->company_id,
+                'display' => true,
+                'archive' => false,
+            ])
+            ->get();
+
+        return view($site->alias.'.pages.prices_goods.index', compact('site',  'page', 'prices_goods'));
     }
 
     /**
