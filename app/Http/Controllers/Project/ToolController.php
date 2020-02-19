@@ -19,13 +19,13 @@ class ToolController extends Controller
      */
     public function index()
     {
-        $site = $this->site;
-
-        $page = $site->pages_public
-            ->where('alias', 'tools')
-            ->first();
-
-        return view($site->alias.'.pages.tools.index', compact('site',  'page'));
+//        $site = $this->site;
+//
+//        $page = $site->pages_public
+//            ->where('alias', 'tools')
+//            ->first();
+//
+//        return view($site->alias.'.pages.tools.index', compact('site',  'page'));
     }
 
     /**

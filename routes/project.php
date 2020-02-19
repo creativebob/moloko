@@ -93,7 +93,6 @@ Route::get('/{page_alias}', 'AppController@dynamic_pages')->name('project.dynami
 // Оборудование
 Route::resource('/tools', 'ToolController')
     ->only([
-        'index',
         'show'
     ])
     ->names('project.tools');
