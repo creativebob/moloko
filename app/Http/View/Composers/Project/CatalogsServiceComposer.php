@@ -2,6 +2,7 @@
 
 namespace App\Http\View\Composers\Project;
 
+use App\CatalogsService;
 use Illuminate\View\View;
 
 class CatalogsServiceComposer
@@ -9,32 +10,26 @@ class CatalogsServiceComposer
 	public function compose(View $view)
 	{
 
-	    $site = $view->site->load([
-	        'catalogs_services' => function ($q) {
-                $q->with([
-                    'items'
-                ])
-                ->where([
-                    'display' => true
-                ])
-                ->orderBy('sort');
+        $site = $view->site;
+
+        $catalog_services = CatalogsService::with([
+            'items' => function ($q) {
+                $q->withCount('prices_public')
+                    ->where('display', true)
+                    ->orderBy('sort');
             }
-        ]);
+        ])
+            ->whereHas('filials', function($q) use ($site) {
+                $q->where('id', $site->filial->id);
+            })
+            ->where([
+                'display' => true
+            ])
+            ->orderBy('sort')
+            ->first();
+//        dd($catalog_services);
 
-        $catalogs_service = $site->catalogs_services->first();
-//        dd($catalogs_service);
-
-        if (is_null($catalogs_service)) {
-            $catalogs_services_items = null;
-        } else {
-            $catalogs_services_items = buildSidebarTree($catalogs_service->items);
-        }
-
-
-
-//        dd($catalogs_services_items);
-
-        return $view->with(compact('catalogs_services_items'));
+        return $view->with(compact('catalog_services'));
     }
 
 }
