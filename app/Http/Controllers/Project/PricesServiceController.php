@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Project;
 
 use App\Http\Controllers\Project\Traits\Commonable;
-use App\Models\Project\PricesGoods;
+use App\Models\Project\PricesService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class PricesGoodsController extends Controller
+class PricesServiceController extends Controller
 {
 
     use Commonable;
@@ -17,7 +17,7 @@ class PricesGoodsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($url)
+    public function index()
     {
         //
     }
@@ -54,10 +54,10 @@ class PricesGoodsController extends Controller
 
         $site = $this->site;
 
-        $page = $site->pages_public->where('alias', 'prices-goods')->first();
+        $page = $site->pages_public->where('alias', 'prices-services')->first();
 
-        $price_goods = PricesGoods::with([
-            'goods_public.article.raws',
+        $price_service = PricesService::with([
+            'service_public.article.raws',
             'currency'
         ])
             ->where([
@@ -65,11 +65,11 @@ class PricesGoodsController extends Controller
             ])
             ->findOrFail($id);
 
-        // dd($price_goods->goods_public->article->containers);
+        // dd($price_service->service_public->article->containers);
 
-        $page->title = $price_goods->goods_public->article->name;
+        $page->title = $price_service->service_public->process->name;
 
-        return view($site->alias.'.pages.prices_goods.index', compact('site',  'page', 'price_goods'));
+        return view($site->alias.'.pages.prices_services.index', compact('site',  'page', 'price_service'));
     }
 
     /**
@@ -109,10 +109,10 @@ class PricesGoodsController extends Controller
     public function search($search)
     {
 
-        $items = PricesGoods::with([
-            'goods_public' => function ($q) {
+        $items = PricesService::with([
+            'service_public' => function ($q) {
                 $q->with([
-                    'article.photo',
+                    'process.photo',
                     'metrics.values'
                 ]);
 
@@ -127,8 +127,8 @@ class PricesGoodsController extends Controller
                 'filial_id' => $this->site->filial->id,
                 'display' => true,
             ])
-            ->whereHas('goods_public', function($q) use ($search) {
-                $q->whereHas('article', function ($q) use ($search) {
+            ->whereHas('service_public', function($q) use ($search) {
+                $q->whereHas('process', function ($q) use ($search) {
                     $q->where('name', 'LIKE', '%' . $search . '%')
                         ->where([
                             'draft' => false,
@@ -136,7 +136,7 @@ class PricesGoodsController extends Controller
                         ]);
                 })
                 ->where([
-                    'draft' => false,
+                    'archive' => false,
                     'display' => true,
                 ]);
             })
