@@ -33,6 +33,11 @@ Route::resource('/prices-goods', 'PricesGoodsController')
     ->names('project.prices_goods');
 
 // Услуги
+
+Route::get('/catalogs-services/{catalog_slug}/{all}', 'CatalogsServicesItemController@show')
+    ->where('all', '.*')
+    ->name('project.catalogs_services_items.show');
+
 Route::get('/catalogs-services/{all}', 'CatalogsServiceController@show')
     ->where('all', '.*')
     ->name('project.catalogs_services.show');
