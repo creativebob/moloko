@@ -3,24 +3,25 @@
 namespace App\Providers;
 
 use App\Domain;
-use App\Http\ViewComposers\Project\CartComposer;
-use App\Http\ViewComposers\Project\CatalogsGoodsItemsFilterComposer;
-use App\Http\ViewComposers\Project\DepartmentsComposer;
-use App\Http\ViewComposers\Project\CatalogsServiceComposer;
-use App\Http\ViewComposers\Project\CatalogsGoodsComposer;
-use App\Http\ViewComposers\Project\DisplayModesComposer;
-use App\Http\ViewComposers\Project\FilialComposer;
-use App\Http\ViewComposers\Project\NavigationsComposer;
-use App\Http\ViewComposers\Project\PricesGoodsPriceFilterComposer;
-use App\Http\ViewComposers\Project\PricesGoodsRawsArticlesGroupsFilterComposer;
-use App\Http\ViewComposers\Project\PricesGoodsWeightFilterComposer;
-use App\Http\ViewComposers\Project\StaffComposer;
-use App\Http\ViewComposers\Project\ClientsCompaniesListComposer;
-use App\Http\ViewComposers\Project\ManufacturersListComposer;
-use App\Http\ViewComposers\Project\NewsComposer;
-use App\Http\ViewComposers\Project\PromotionsSliderComposer;
-use App\Http\ViewComposers\Project\WorktimeFilialTodayComposer;
-use App\Http\ViewComposers\Project\PluginsComposer;
+use App\Http\View\Composers\Project\CartComposer;
+use App\Http\View\Composers\Project\CatalogsGoodsItemsFilterComposer;
+use App\Http\View\Composers\Project\DepartmentsComposer;
+use App\Http\View\Composers\Project\CatalogsServiceComposer;
+use App\Http\View\Composers\Project\CatalogsGoodsComposer;
+use App\Http\View\Composers\Project\DisplayModesComposer;
+use App\Http\View\Composers\Project\FilialComposer;
+use App\Http\View\Composers\Project\NavigationsComposer;
+use App\Http\View\Composers\Project\PricesGoodsPriceFilterComposer;
+use App\Http\View\Composers\Project\PricesGoodsRawsArticlesGroupsFilterComposer;
+use App\Http\View\Composers\Project\PricesGoodsWeightFilterComposer;
+use App\Http\View\Composers\Project\StaffComposer;
+use App\Http\View\Composers\Project\ClientsCompaniesListComposer;
+use App\Http\View\Composers\Project\ManufacturersListComposer;
+use App\Http\View\Composers\Project\NewsComposer;
+use App\Http\View\Composers\Project\PromotionsSliderComposer;
+use App\Http\View\Composers\Project\ToolsCategoriesWithToolsComposer;
+use App\Http\View\Composers\Project\WorktimeFilialTodayComposer;
+use App\Http\View\Composers\Project\PluginsComposer;
 
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -60,6 +61,7 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 view()->composer([
                     'project.includes.catalogs_services.accordion',
                     'project.includes.catalogs_services.menu_one_level',
+                    'project.includes.catalogs_services.sidebar',
                 ], CatalogsServiceComposer::class);
 
                 view()->composer([
@@ -75,7 +77,10 @@ class ComposerProjectServiceProvider extends ServiceProvider
 
 
 
-                view()->composer('project.includes.staff.list', StaffComposer::class);
+                view()->composer([
+                    'project.includes.staff.section',
+                    'project.includes.staff.list',
+                ], StaffComposer::class);
                 view()->composer('project.includes.schedules.worktime_filial_today', WorktimeFilialTodayComposer::class);
                 view()->composer('project.includes.plugins.list', PluginsComposer::class);
 
@@ -96,6 +101,9 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 view()->composer([
                     $alias . '.pages.catalogs_goods.index'
                 ], DisplayModesComposer::class);
+
+                view()->composer('project.includes.tools_categories.sidebar_with_items', ToolsCategoriesWithToolsComposer::class);
+
             }
         }
     }

@@ -17,6 +17,7 @@ Route::get('/', 'AppController@start')->name('project.start');
 // Смена города
 Route::get('/change_city/{alias}', 'AppController@change_city')->name('project.change_city');
 
+// Товары
 Route::get('/catalogs-goods/{all}', 'CatalogsGoodsController@show')
     ->where('all', '.*')
     ->name('project.catalogs_goods.show');
@@ -27,9 +28,28 @@ Route::get('/prices-goods/search/{text}', 'PricesGoodsController@search')
     ->name('project.prices_goods.search');
 Route::resource('/prices-goods', 'PricesGoodsController')
     ->only([
+        'index',
         'show'
     ])
     ->names('project.prices_goods');
+
+// Услуги
+
+Route::get('/catalogs-services/{catalog_slug}/{all}', 'CatalogsServicesItemController@show')
+    ->where('all', '.*')
+    ->name('project.catalogs_services_items.show');
+
+Route::get('/catalogs-services/{all}', 'CatalogsServiceController@show')
+    ->where('all', '.*')
+    ->name('project.catalogs_services.show');
+
+Route::get('/prices-services/search/{text}', 'PricesServiceController@search')
+    ->name('project.prices_services.search');
+Route::resource('/prices-services', 'PricesServiceController')
+    ->only([
+        'show'
+    ])
+    ->names('project.prices_services');
 
 Route::any('/update_cookies', 'CartController@update_cookies')->name('project.update_cookies');
 Route::get('/check_prices', 'CartController@check_prices')->name('project.check_prices');
@@ -75,3 +95,10 @@ Route::get('/cabinet', 'AppController@cabinet')->name('project.cabinet')->middle
 Route::post('/update_profile', 'AppController@update_profile')->name('project.update_profile');
 
 Route::get('/{page_alias}', 'AppController@dynamic_pages')->name('project.dynamic_pages');
+
+// Оборудование
+Route::resource('/tools', 'ToolController')
+    ->only([
+        'show'
+    ])
+    ->names('project.tools');

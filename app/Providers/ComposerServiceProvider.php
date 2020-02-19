@@ -2,141 +2,141 @@
 
 namespace App\Providers;
 
-use App\Http\ViewComposers\System\AccountsComposer;
-use App\Http\ViewComposers\System\ArticlesCategoriesWithGroupsComposer;
-use App\Http\ViewComposers\System\ArticlesCategoriesWithItemsComposer;
-use App\Http\ViewComposers\System\ArticlesCategoriesWithItemsComposerForManufacturer;
-use App\Http\ViewComposers\System\AttachmentsComposer;
-use App\Http\ViewComposers\System\CatalogGoodsWithPricesComposer;
-use App\Http\ViewComposers\System\CatalogServicesWithPricesComposer;
-use App\Http\ViewComposers\System\ChannelsComposer;
-use App\Http\ViewComposers\System\ChargesComposer;
-use App\Http\ViewComposers\System\CitiesComposer;
-use App\Http\ViewComposers\System\CitySearchComposer;
-use App\Http\ViewComposers\System\ContainersCategoriesComposer;
-use App\Http\ViewComposers\System\ContainersComposer;
-use App\Http\ViewComposers\System\DirectiveCategoriesComposer;
-use App\Http\ViewComposers\System\DisplayModesComposer;
-use App\Http\ViewComposers\System\FiltersComposer;
-use App\Http\ViewComposers\System\NotificationsComposer;
-use App\Http\ViewComposers\System\PaymentsTypesComposer;
-use App\Http\ViewComposers\System\ProcessesCategoriesWithGroupsComposer;
-use App\Http\ViewComposers\System\SitesWIthFilialsAndCatalogsComposer;
-use App\Http\ViewComposers\System\StocksComposer;
-use App\Http\ViewComposers\System\WidgetsComposer;
+use App\Http\View\Composers\System\AccountsComposer;
+use App\Http\View\Composers\System\ArticlesCategoriesWithGroupsComposer;
+use App\Http\View\Composers\System\ArticlesCategoriesWithItemsComposer;
+use App\Http\View\Composers\System\ArticlesCategoriesWithItemsComposerForManufacturer;
+use App\Http\View\Composers\System\AttachmentsComposer;
+use App\Http\View\Composers\System\CatalogGoodsWithPricesComposer;
+use App\Http\View\Composers\System\CatalogServicesWithPricesComposer;
+use App\Http\View\Composers\System\ChannelsComposer;
+use App\Http\View\Composers\System\ChargesComposer;
+use App\Http\View\Composers\System\CitiesComposer;
+use App\Http\View\Composers\System\CitySearchComposer;
+use App\Http\View\Composers\System\ContainersCategoriesComposer;
+use App\Http\View\Composers\System\ContainersComposer;
+use App\Http\View\Composers\System\DirectiveCategoriesComposer;
+use App\Http\View\Composers\System\DisplayModesComposer;
+use App\Http\View\Composers\System\FiltersComposer;
+use App\Http\View\Composers\System\NotificationsComposer;
+use App\Http\View\Composers\System\PaymentsTypesComposer;
+use App\Http\View\Composers\System\ProcessesCategoriesWithGroupsComposer;
+use App\Http\View\Composers\System\SitesWIthFilialsAndCatalogsComposer;
+use App\Http\View\Composers\System\StocksComposer;
+use App\Http\View\Composers\System\WidgetsComposer;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
-use App\Http\ViewComposers\System\SidebarComposer;
-use App\Http\ViewComposers\System\SectorsSelectComposer;
+use App\Http\View\Composers\System\SidebarComposer;
+use App\Http\View\Composers\System\SectorsSelectComposer;
 
-use App\Http\ViewComposers\System\StagesComposer;
+use App\Http\View\Composers\System\StagesComposer;
 
-use App\Http\ViewComposers\System\CountriesComposer;
+use App\Http\View\Composers\System\CountriesComposer;
 
-use App\Http\ViewComposers\System\FilialsForUserComposer;
-use App\Http\ViewComposers\System\DepartmentsForUserComposer;
+use App\Http\View\Composers\System\FilialsForUserComposer;
+use App\Http\View\Composers\System\DepartmentsForUserComposer;
 
-use App\Http\ViewComposers\System\UserFilialsComposer;
-use App\Http\ViewComposers\System\CatalogsServicesItemsForFilialComposer;
+use App\Http\View\Composers\System\UserFilialsComposer;
+use App\Http\View\Composers\System\CatalogsServicesItemsForFilialComposer;
 
-use App\Http\ViewComposers\System\RolesComposer;
+use App\Http\View\Composers\System\RolesComposer;
 
-use App\Http\ViewComposers\System\LegalFormsSelectComposer;
-use App\Http\ViewComposers\System\CheckerComposer;
+use App\Http\View\Composers\System\LegalFormsSelectComposer;
+use App\Http\View\Composers\System\CheckerComposer;
 
-use App\Http\ViewComposers\System\LoyaltiesComposer;
+use App\Http\View\Composers\System\LoyaltiesComposer;
 
-use App\Http\ViewComposers\System\UnitsCategoriesComposer;
-use App\Http\ViewComposers\System\UnitsComposer;
-use App\Http\ViewComposers\System\UnitsArticleComposer;
-use App\Http\ViewComposers\System\UnitsProcessesComposer;
+use App\Http\View\Composers\System\UnitsCategoriesComposer;
+use App\Http\View\Composers\System\UnitsComposer;
+use App\Http\View\Composers\System\UnitsArticleComposer;
+use App\Http\View\Composers\System\UnitsProcessesComposer;
 
-use App\Http\ViewComposers\System\SourceWithSourceServicesComposer;
-use App\Http\ViewComposers\System\SourceServicesComposer;
-use App\Http\ViewComposers\System\PeriodsComposer;
-use App\Http\ViewComposers\System\BooklistTypesComposer;
+use App\Http\View\Composers\System\SourceWithSourceServicesComposer;
+use App\Http\View\Composers\System\SourceServicesComposer;
+use App\Http\View\Composers\System\PeriodsComposer;
+use App\Http\View\Composers\System\BooklistTypesComposer;
 
-use App\Http\ViewComposers\System\ManufacturersComposer;
+use App\Http\View\Composers\System\ManufacturersComposer;
 
-use App\Http\ViewComposers\System\SupplierSelectComposer;
-use App\Http\ViewComposers\System\ContragentsComposer;
+use App\Http\View\Composers\System\SupplierSelectComposer;
+use App\Http\View\Composers\System\ContragentsComposer;
 
-use App\Http\ViewComposers\System\CategoriesSelectComposer;
-use App\Http\ViewComposers\System\GoodsModesComposer;
-use App\Http\ViewComposers\System\RawsModesComposer;
+use App\Http\View\Composers\System\CategoriesSelectComposer;
+use App\Http\View\Composers\System\GoodsModesComposer;
+use App\Http\View\Composers\System\RawsModesComposer;
 
-use App\Http\ViewComposers\System\CatalogsSelectComposer;
+use App\Http\View\Composers\System\CatalogsSelectComposer;
 
-use App\Http\ViewComposers\System\AccordionsComposer;
-use App\Http\ViewComposers\System\MenuViewComposer;
-use App\Http\ViewComposers\System\DepartmentsComposer;
-use App\Http\ViewComposers\System\DepartmentsViewComposer;
-use App\Http\ViewComposers\System\FilialsComposer;
-// use App\Http\ViewComposers\System\SectorsComposer;
+use App\Http\View\Composers\System\AccordionsComposer;
+use App\Http\View\Composers\System\MenuViewComposer;
+use App\Http\View\Composers\System\DepartmentsComposer;
+use App\Http\View\Composers\System\DepartmentsViewComposer;
+use App\Http\View\Composers\System\FilialsComposer;
+// use App\Http\View\Composers\System\SectorsComposer;
 
-use App\Http\ViewComposers\System\CategoriesComposer;
+use App\Http\View\Composers\System\CategoriesComposer;
 
-use App\Http\ViewComposers\System\GoodsCategoriesComposer;
-use App\Http\ViewComposers\System\RawsCategoriesComposer;
-use App\Http\ViewComposers\System\GoodsProductsComposer;
-use App\Http\ViewComposers\System\RawsProductsComposer;
-use App\Http\ViewComposers\System\AlbumsCategoriesSelectComposer;
-use App\Http\ViewComposers\System\AlbumsComposer;
+use App\Http\View\Composers\System\GoodsCategoriesComposer;
+use App\Http\View\Composers\System\RawsCategoriesComposer;
+use App\Http\View\Composers\System\GoodsProductsComposer;
+use App\Http\View\Composers\System\RawsProductsComposer;
+use App\Http\View\Composers\System\AlbumsCategoriesSelectComposer;
+use App\Http\View\Composers\System\AlbumsComposer;
 
-use App\Http\ViewComposers\System\AlignsComposer;
-use App\Http\ViewComposers\System\NavigationsCategoriesSelectComposer;
-use App\Http\ViewComposers\System\MenusSelectComposer;
+use App\Http\View\Composers\System\AlignsComposer;
+use App\Http\View\Composers\System\NavigationsCategoriesSelectComposer;
+use App\Http\View\Composers\System\MenusSelectComposer;
 
-use App\Http\ViewComposers\System\IndicatorsCategoriesSelectComposer;
-use App\Http\ViewComposers\System\DirectionsComposer;
+use App\Http\View\Composers\System\IndicatorsCategoriesSelectComposer;
+use App\Http\View\Composers\System\DirectionsComposer;
 
-use App\Http\ViewComposers\System\UsersComposer;
-use App\Http\ViewComposers\System\StaffComposer;
-use App\Http\ViewComposers\System\EmptyStaffComposer;
-use App\Http\ViewComposers\System\PositionsComposer;
-use App\Http\ViewComposers\System\PropertiesComposer;
+use App\Http\View\Composers\System\UsersComposer;
+use App\Http\View\Composers\System\StaffComposer;
+use App\Http\View\Composers\System\EmptyStaffComposer;
+use App\Http\View\Composers\System\PositionsComposer;
+use App\Http\View\Composers\System\PropertiesComposer;
 
-use App\Http\ViewComposers\System\SitesComposer;
-use App\Http\ViewComposers\System\SiteMenusComposer;
-use App\Http\ViewComposers\System\PagesComposer;
+use App\Http\View\Composers\System\SitesComposer;
+use App\Http\View\Composers\System\SiteMenusComposer;
+use App\Http\View\Composers\System\PagesComposer;
 
-use App\Http\ViewComposers\System\CategoriesDrilldownComposer;
+use App\Http\View\Composers\System\CategoriesDrilldownComposer;
 
-use App\Http\ViewComposers\System\EntitiesStatisticsSelectComposer;
+use App\Http\View\Composers\System\EntitiesStatisticsSelectComposer;
 
-use App\Http\ViewComposers\System\CatalogsServicesComposer;
-use App\Http\ViewComposers\System\CatalogsServicesItemsComposer;
-use App\Http\ViewComposers\System\FilialsForCatalogsServicesComposer;
+use App\Http\View\Composers\System\CatalogsServicesComposer;
+use App\Http\View\Composers\System\CatalogsServicesItemsComposer;
+use App\Http\View\Composers\System\FilialsForCatalogsServicesComposer;
 
-use App\Http\ViewComposers\System\CatalogsGoodsComposer;
-use App\Http\ViewComposers\System\CatalogsGoodsItemsComposer;
-use App\Http\ViewComposers\System\FilialsForCatalogsGoodsComposer;
+use App\Http\View\Composers\System\CatalogsGoodsComposer;
+use App\Http\View\Composers\System\CatalogsGoodsItemsComposer;
+use App\Http\View\Composers\System\FilialsForCatalogsGoodsComposer;
 
-use App\Http\ViewComposers\System\CatalogsTypesComposer;
+use App\Http\View\Composers\System\CatalogsTypesComposer;
 
-use App\Http\ViewComposers\System\ArticlesGroupsComposer;
-use App\Http\ViewComposers\System\ProcessesGroupsComposer;
+use App\Http\View\Composers\System\ArticlesGroupsComposer;
+use App\Http\View\Composers\System\ProcessesGroupsComposer;
 
-use App\Http\ViewComposers\System\RawsComposer;
-use App\Http\ViewComposers\System\GoodsComposer;
-use App\Http\ViewComposers\System\TmcComposer;
+use App\Http\View\Composers\System\RawsComposer;
+use App\Http\View\Composers\System\GoodsComposer;
+use App\Http\View\Composers\System\TmcComposer;
 
-use App\Http\ViewComposers\System\WorkflowsComposer;
-use App\Http\ViewComposers\System\ServicesComposer;
+use App\Http\View\Composers\System\WorkflowsComposer;
+use App\Http\View\Composers\System\ServicesComposer;
 
-use App\Http\ViewComposers\System\LeftoverOperationsComposer;
+use App\Http\View\Composers\System\LeftoverOperationsComposer;
 
-use App\Http\ViewComposers\System\ProcessesTypesComposer;
+use App\Http\View\Composers\System\ProcessesTypesComposer;
 
-use App\Http\ViewComposers\System\RoomsComposer;
+use App\Http\View\Composers\System\RoomsComposer;
 
-use App\Http\ViewComposers\System\RubricatorsComposer;
-use App\Http\ViewComposers\System\RubricatorsItemsComposer;
+use App\Http\View\Composers\System\RubricatorsComposer;
+use App\Http\View\Composers\System\RubricatorsItemsComposer;
 
 
-use App\Http\ViewComposers\System\ListChallengesComposer;
-use App\Http\ViewComposers\System\LeadMethodsComposer;
+use App\Http\View\Composers\System\ListChallengesComposer;
+use App\Http\View\Composers\System\LeadMethodsComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {

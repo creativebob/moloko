@@ -31,7 +31,7 @@ class ServicesCategoryUpdateRequest extends FormRequest
             'seo_description' => 'string|nullable',
             'parent_id' => 'integer|nullable',
 
-            'processes_type_id' => 'required|integer|max:1',
+            'processes_type_id' => 'required|integer',
 
             'file' => 'max:'.$settings['img_max_size'].'|mimes:'.$settings['img_formats'].'|nullable',
 

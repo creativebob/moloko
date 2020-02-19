@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\CatalogsGoods;
+use App\CatalogsService;
 use App\Http\Controllers\Project\Traits\Commonable;
-use App\Models\Project\PricesGoods;
+use App\Models\Project\PricesService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class CatalogsGoodsController extends Controller
+class CatalogsServiceController extends Controller
 {
 
     use Commonable;
@@ -78,10 +78,10 @@ class CatalogsGoodsController extends Controller
 
         $site = $this->site;
 
-        $page = $site->pages_public->where('alias', 'catalogs-goods')->first();
+        $page = $site->pages_public->where('alias', 'catalogs-services')->first();
 
         // Получаем полный прайс со всеми доступными разделами
-        $catalog_goods = CatalogsGoods::with([
+        $catalog_services = CatalogsService::with([
             'items_public' => function ($q) {
                 $q->with([
                     'display_mode',
@@ -97,28 +97,30 @@ class CatalogsGoodsController extends Controller
             ->first();
 
             // Проверим, а доступен ли каталог товаров. Если нет, то кидаем ошибку
-            if(!$catalog_goods){abort(403, 'Доступ к прайсу товаров компании ограничен. Согласен, это довольно странно...'); }
+            if (! $catalog_services) {
+                abort(403, 'Доступ к прайсу товаров компании ограничен. Согласен, это довольно странно...');
+            }
             if($catalog_item_slug){
 
             // Получаем разделы прайса ограниченный slug'ом
-            $catalog_goods_items = $catalog_goods->items_public->where('slug', $catalog_item_slug)->first();
-            // dd($catalog_goods_items);
+            $catalog_services_items = $catalog_services->items_public->where('slug', $catalog_item_slug)->first();
+            // dd($catalog_services_items);
 
-            if($catalog_goods_items){
+            if($catalog_services_items){
 
-                $page->title = $catalog_goods_items->title;
-                $page->description = $catalog_goods_items->seo_description;
+                $page->title = $catalog_services_items->title;
+                $page->description = $catalog_services_items->seo_description;
 
-                $catalog_goods_items->load('childs');
-                //dd($catalog_goods_items);
+                $catalog_services_items->load('childs');
+                //dd($catalog_services_items);
 
-                $sub_menu = $catalog_goods->items_public->where('slug', getFirstSlug($catalog_item_slug))->first();
+                $sub_menu = $catalog_services->items_public->where('slug', getFirstSlug($catalog_item_slug))->first();
                 $sub_menu->load('childs');
                 $sub_menu_ids = $sub_menu->childs->pluck('id');
 
                 // Получаем id всех доступных на сайте разделов прайса,
                 // чтобы далее не заниматься повторным перебором при получении товаров
-                $catalog_goods_items_ids = $catalog_goods->items_public->where('slug', $catalog_item_slug)->pluck('id');
+                $catalog_services_items_ids = $catalog_services->items_public->where('slug', $catalog_item_slug)->pluck('id');
 
 
             } else {
@@ -130,40 +132,24 @@ class CatalogsGoodsController extends Controller
         } else {
 
             // Получаем все доступные разделы прайса
-            $catalog_goods_items = $catalog_goods->items_public;
+            $catalog_services_items = $catalog_services->items_public;
             $page->title = 'Все товары';
-            $catalog_goods_items_ids = $catalog_goods->items_public->pluck('id');
+            $catalog_services_items_ids = $catalog_services->items_public->pluck('id');
         }
 
 
         if($sub_menu_ids){
             if(getFirstSlug($catalog_item_slug) == $catalog_item_slug){
-                $catalog_goods_items_ids = $catalog_goods_items_ids->merge($sub_menu_ids);
+                $catalog_services_items_ids = $catalog_services_items_ids->merge($sub_menu_ids);
             }
         }
 
-        $prices_goods = PricesGoods::with([
-            'goods_public' => function ($q) {
+        $prices_services = PricesService::with([
+            'service_public' => function ($q) {
                 $q->with([
-                    'article' => function ($q) {
+                    'process' => function ($q) {
                         $q->with([
                             'photo',
-                            'raws' => function ($q) {
-                                $q->with([
-                                    'article.unit',
-                                    'metrics'
-                                ]);
-                            },
-                            'attachments' => function ($q) {
-                                $q->with([
-                                    'article.unit',
-                                ]);
-                            },
-                            'containers' => function ($q) {
-                                $q->with([
-                                    'article.unit',
-                                ]);
-                            },
                         ]);
                     },
                     'metrics',
@@ -172,34 +158,18 @@ class CatalogsGoodsController extends Controller
             'currency',
             'catalogs_item.directive_category:id,alias'
         ])
-            ->whereIn('catalogs_goods_item_id', $catalog_goods_items_ids)
-            ->has('goods_public')
+            ->whereIn('catalogs_services_item_id', $catalog_services_items_ids)
+            ->has('service_public')
             ->where([
                 'display' => true,
                 'archive' => false,
                 'filial_id' => $this->site->filial->id
             ])
-            ->filter(request())
+//            ->filter(request())
             ->orderBy('sort', 'asc')
             ->paginate(16);
 
-        // Перебор и дописывание агрегаций
-        // Нужен способ проще!
-        // foreach($prices_goods as $price_goods){
-        //     $price_goods->sweets = $price_goods->goods_public->article->raws->filter(function ($value, $key) {
-        //         if(isset($value->metrics->where('name', 'Тип сырья')->first()->pivot->value)){
-        //             return $value->metrics->where('name', 'Тип сырья')->first()->pivot->value == 1;
-        //         }
-        //     });
-
-        //     $price_goods->addition = $price_goods->goods_public->article->raws->filter(function ($value, $key) {
-        //         if(isset($value->metrics->where('name', 'Тип сырья')->first()->pivot->value)){
-        //             return $value->metrics->where('name', 'Тип сырья')->first()->pivot->value == 2;
-        //         }
-        //     });
-        // }
-
-        return view($site->alias.'.pages.catalogs_goods.index', compact('site',  'page', 'request', 'catalog_goods_items', 'prices_goods', 'catalog_goods', 'main_slug', 'sub_menu'));
+        return view($site->alias.'.pages.catalogs_services.index', compact('site',  'page', 'request', 'catalog_services_items', 'prices_services', 'catalog_services', 'main_slug', 'sub_menu'));
     }
 
     /**
