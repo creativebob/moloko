@@ -60,6 +60,7 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 view()->composer([
                     'project.includes.catalogs_services.accordion',
                     'project.includes.catalogs_services.menu_one_level',
+                    'project.includes.catalogs_services.sidebar',
                 ], CatalogsServiceComposer::class);
 
                 view()->composer([
