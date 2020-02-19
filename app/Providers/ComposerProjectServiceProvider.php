@@ -19,6 +19,7 @@ use App\Http\View\Composers\Project\ClientsCompaniesListComposer;
 use App\Http\View\Composers\Project\ManufacturersListComposer;
 use App\Http\View\Composers\Project\NewsComposer;
 use App\Http\View\Composers\Project\PromotionsSliderComposer;
+use App\Http\View\Composers\Project\ToolsCategoriesWithToolsComposer;
 use App\Http\View\Composers\Project\WorktimeFilialTodayComposer;
 use App\Http\View\Composers\Project\PluginsComposer;
 
@@ -100,6 +101,9 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 view()->composer([
                     $alias . '.pages.catalogs_goods.index'
                 ], DisplayModesComposer::class);
+
+                view()->composer('project.includes.tools_categories.sidebar_with_items', ToolsCategoriesWithToolsComposer::class);
+
             }
         }
     }

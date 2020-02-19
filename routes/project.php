@@ -89,3 +89,11 @@ Route::get('/cabinet', 'AppController@cabinet')->name('project.cabinet')->middle
 Route::post('/update_profile', 'AppController@update_profile')->name('project.update_profile');
 
 Route::get('/{page_alias}', 'AppController@dynamic_pages')->name('project.dynamic_pages');
+
+// Оборудование
+Route::resource('/tools', 'ToolController')
+    ->only([
+        'index',
+        'show'
+    ])
+    ->names('project.tools');

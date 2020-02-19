@@ -9,15 +9,17 @@ class CatalogsServiceComposer
 	public function compose(View $view)
 	{
 
-	    $site = $view->site->load(['catalogs_services' => function ($q) {
-            $q->with([
-                'items'
-            ])
+	    $site = $view->site->load([
+	        'catalogs_services' => function ($q) {
+                $q->with([
+                    'items'
+                ])
                 ->where([
-                    'display' => 1
+                    'display' => true
                 ])
                 ->orderBy('sort');
-        }]);
+            }
+        ]);
 
         $catalogs_service = $site->catalogs_services->first();
 //        dd($catalogs_service);
