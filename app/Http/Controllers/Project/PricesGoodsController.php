@@ -19,6 +19,7 @@ class PricesGoodsController extends Controller
      */
     public function index()
     {
+        // TODO - 19.02.20 - Статичный метод для виан дизеля
         $site = $this->site;
         $page = $site->pages_public->where('alias', 'prices-goods')->first();
 
