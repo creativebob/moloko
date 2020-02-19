@@ -27,8 +27,12 @@ class PricesGoodsController extends Controller
             'currency'
         ])
             ->has('goods_public')
+            ->whereHas('catalog', function ($q) use ($site) {
+                $q->whereHas('filials', function ($q) use ($site) {
+                    $q->where('id', $site->filial->id);
+                });
+            })
             ->where([
-                'company_id' => $site->company_id,
                 'display' => true,
                 'archive' => false,
             ])
