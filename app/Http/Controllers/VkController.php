@@ -15,7 +15,7 @@ class VkController extends Controller
 			// 'user_id' => $user_id,
 			// 'fields' => 'bdate',
 			'v' => '5.87',
-			'access_token' => 'c00b07cd68ea2c334ca77eac4763c313587e4f553461b2acf32568d4cd59abf5e35f3db2f3759fefdf30e',
+			'access_token' => '',
 
 
 			'owner_id' => '-roll.house.restaurant',
@@ -29,11 +29,6 @@ class VkController extends Controller
 		);
 
 		$get_params = http_build_query($request_params);
-
-
-
-
-
 
 		dd($result);
 		// echo($result -> response[0] -> bdate);
