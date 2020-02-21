@@ -154,11 +154,14 @@ class PricesGoodsController extends Controller
             ])
             ->whereHas('goods_public', function($q) use ($search) {
                 $q->whereHas('article', function ($q) use ($search) {
-                    $q->where('name', 'LIKE', '%' . $search . '%')
-                        ->where([
-                            'draft' => false,
-                            'display' => true,
-                        ]);
+                    $q->where([
+                        'draft' => false,
+                        'display' => true,
+                    ])
+                        ->where(function ($q) use ($search) {
+                            $q->where('name', 'LIKE', '%' . $search . '%')
+                            ->orWhere('exernal', 'LIKE', '%' . $search . '%');
+                        });
                 })
                 ->where([
                     'draft' => false,
