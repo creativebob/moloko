@@ -13,7 +13,8 @@ class CitiesTableSeeder extends Seeder
     {
         DB::table('cities')->insert([
         	[
-		        'name' => 'Иркутск',
+                'name' => 'Иркутск',
+                'prepositional_case' => 'Иркутске',
                 'alias' => 'irkutsk',
 		        'region_id' => 1,
 		        'code' => 83952,
@@ -23,6 +24,7 @@ class CitiesTableSeeder extends Seeder
         	],
             [
                 'name' => 'Ангарск',
+                'prepositional_case' => 'Ангарске',
                 'alias' => 'angarsk',
                 'region_id' => 1,
                 'code' => 83955,
@@ -32,6 +34,7 @@ class CitiesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Братск',
+                'prepositional_case' => 'Братске',
                 'alias' => 'bratsk',
                     'region_id' => 1,
                 'code' => 83953,
@@ -41,6 +44,7 @@ class CitiesTableSeeder extends Seeder
             ],
             [
                 'name' => 'Усолье-Сибирское',
+                'prepositional_case' => 'Усолье-Сибирском',   
                 'alias' => 'usole-sibirskoe',
                 'region_id' => 1,
                 'code' => 839543,

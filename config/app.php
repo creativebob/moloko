@@ -172,6 +172,7 @@ return [
         // Те, что подключаем сами, ручками )))
         Collective\Html\HtmlServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        morphos\MorphosBladeProvider::class,
 
         // ElForastero\Transliterate\TransliterationServiceProvider::class,
 
