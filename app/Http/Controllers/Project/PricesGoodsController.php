@@ -24,7 +24,12 @@ class PricesGoodsController extends Controller
         $page = $site->pages_public->where('alias', 'prices-goods')->first();
 
         $prices_goods = PricesGoods::with([
-            'goods_public.article',
+            'goods_public.article' => function ($q) {
+                $q->with([
+                    'photo',
+                   'manufacturer.company',
+                ]);
+            },
             'currency'
         ])
             ->has('goods_public')
