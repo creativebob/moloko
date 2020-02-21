@@ -27,7 +27,7 @@ class PricesGoodsController extends Controller
             'goods_public.article' => function ($q) {
                 $q->with([
                     'photo',
-                   'manufacturer.company',
+                    'manufacturer.company',
                 ]);
             },
             'currency'
