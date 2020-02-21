@@ -8,12 +8,12 @@ class ManufacturersListComposer
 {
 	public function compose(View $view)
 	{
-        $company = $view->site->company->load('manufacturers', function ($q) {
+        $company = $view->site->company->load(['manufacturers' => function ($q) {
             $q->with([
                 'attachments.article'
             ])
                 ->where('display', true);
-        });
+        }]);
 
         return $view->with('manufacturers_list', $company->manufacturers);
 //        $company = $view->site->company->load('manufacturers.attachments.article');
