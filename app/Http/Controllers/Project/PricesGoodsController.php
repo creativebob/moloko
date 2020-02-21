@@ -137,7 +137,12 @@ class PricesGoodsController extends Controller
         $items = PricesGoods::with([
             'goods_public' => function ($q) {
                 $q->with([
-                    'article.photo',
+                    'article' => function ($q) {
+                        $q->with([
+                           'photo',
+                           'manufacturer.company'
+                        ]);
+                    },
                     'metrics.values'
                 ]);
 
