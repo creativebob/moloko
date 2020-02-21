@@ -160,7 +160,7 @@ class PricesGoodsController extends Controller
                     ])
                         ->where(function ($q) use ($search) {
                             $q->where('name', 'LIKE', '%' . $search . '%')
-                            ->orWhere('exernal', 'LIKE', '%' . $search . '%');
+                            ->orWhere('external', 'LIKE', '%' . $search . '%');
                         });
                 })
                 ->where([
