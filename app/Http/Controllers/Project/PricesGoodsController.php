@@ -164,7 +164,7 @@ class PricesGoodsController extends Controller
                         });
                 })
                 ->where([
-                    'draft' => false,
+                    'archive' => false,
                     'display' => true,
                 ]);
             })
