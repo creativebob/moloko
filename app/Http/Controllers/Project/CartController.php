@@ -611,7 +611,8 @@ class CartController extends Controller
 //                $cartGood = json_decode($cartGood, true);
 
                 $cart['prices'][$cartGood['id']] = [
-                    'count' => $cartGood['quantity']
+                    'count' => $cartGood['quantity'],
+                    'price' => $cartGood['price'],
                 ];
 
                 $sum += $cartGood['totalPrice'];
