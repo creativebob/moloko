@@ -24,7 +24,12 @@ class PricesGoodsController extends Controller
         $page = $site->pages_public->where('alias', 'prices-goods')->first();
 
         $prices_goods = PricesGoods::with([
-            'goods_public.article',
+            'goods_public.article' => function ($q) {
+                $q->with([
+                    'photo',
+                    'manufacturer.company',
+                ]);
+            },
             'currency'
         ])
             ->has('goods_public')
@@ -132,7 +137,12 @@ class PricesGoodsController extends Controller
         $items = PricesGoods::with([
             'goods_public' => function ($q) {
                 $q->with([
-                    'article.photo',
+                    'article' => function ($q) {
+                        $q->with([
+                           'photo',
+                           'manufacturer.company'
+                        ]);
+                    },
                     'metrics.values'
                 ]);
 
@@ -149,14 +159,17 @@ class PricesGoodsController extends Controller
             ])
             ->whereHas('goods_public', function($q) use ($search) {
                 $q->whereHas('article', function ($q) use ($search) {
-                    $q->where('name', 'LIKE', '%' . $search . '%')
-                        ->where([
-                            'draft' => false,
-                            'display' => true,
-                        ]);
+                    $q->where([
+                        'draft' => false,
+                        'display' => true,
+                    ])
+                        ->where(function ($q) use ($search) {
+                            $q->where('name', 'LIKE', '%' . $search . '%')
+                            ->orWhere('external', 'LIKE', '%' . $search . '%');
+                        });
                 })
                 ->where([
-                    'draft' => false,
+                    'archive' => false,
                     'display' => true,
                 ]);
             })

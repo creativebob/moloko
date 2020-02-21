@@ -1,1 +1,1 @@
-@include($site->alias . '.pages.partials.staff')
+@include($site->alias . '.pages.partials.sections.staff')

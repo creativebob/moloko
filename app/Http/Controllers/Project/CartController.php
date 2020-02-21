@@ -611,7 +611,8 @@ class CartController extends Controller
 //                $cartGood = json_decode($cartGood, true);
 
                 $cart['prices'][$cartGood['id']] = [
-                    'count' => $cartGood['quantity']
+                    'count' => $cartGood['quantity'],
+                    'price' => $cartGood['price'],
                 ];
 
                 $sum += $cartGood['totalPrice'];
@@ -656,8 +657,9 @@ class CartController extends Controller
 
     public function check_prices(Request $request)
     {
-        if (Cookie::get('cart') !== null) {
+        $result['success'] = true;
 
+        if (Cookie::get('cart') !== null) {
 
             $cart = json_decode(Cookie::get('cart'), true);
 
@@ -668,20 +670,17 @@ class CartController extends Controller
                 $prices_goods = PricesGoods::with('goods.article.photo', 'currency')
                     ->find($prices_ids);
 
-                $result = [];
                 foreach ($prices_goods as $price_goods) {
                     if ($price_goods->price != $prices[$price_goods->id]['price']) {
                         $result['changes'][] = $price_goods;
                     }
                 }
-                if(count($result) > 0) {
+                if (isset($result['changes'])) {
                     $result['success'] = false;
-                } else {
-                    $result['success'] = true;
                 }
             }
-            return response()->json($result);
         }
+        return response()->json($result);
     }
 
 }

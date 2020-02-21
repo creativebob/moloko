@@ -89,11 +89,17 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 view()->composer('project.includes.catalogs_goods.filters.raws_articles_groups', PricesGoodsRawsArticlesGroupsFilterComposer::class);
                 view()->composer('project.includes.catalogs_goods.filters.catalogs_goods_items', CatalogsGoodsItemsFilterComposer::class);
 
-                view()->composer('project.includes.clients.companies_list', ClientsCompaniesListComposer::class);
+                view()->composer([
+                    'project.includes.clients.companies_list',
+                    'project.includes.clients.section'
+                ], ClientsCompaniesListComposer::class);
 
                 view()->composer('project.includes.promotions.slider', PromotionsSliderComposer::class);
 
-                view()->composer('project.includes.manufacturers.list', ManufacturersListComposer::class);
+                view()->composer([
+                    'project.includes.manufacturers.list',
+                    'project.includes.manufacturers.section'
+                ], ManufacturersListComposer::class);
 
 //                view()->composer($alias. '.layouts.headers.includes.cart', CartComposer::class);
                 view()->composer($alias. '.pages.contacts.index', FilialComposer::class);
