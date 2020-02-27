@@ -176,6 +176,12 @@ trait Processable
                     }
                 }
 
+                 if (isset($process->unit_id)) {
+                     $unit = Unit::findOrFail($process->unit_id);
+                     $length = $data['length'] * $unit->ratio;
+                     $data['length'] = $length;
+                 }
+
                 $data['draft'] = $request->draft;
 
                 $photo_id = $this->getPhotoId($request, $process);
