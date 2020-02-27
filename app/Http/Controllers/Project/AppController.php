@@ -356,6 +356,15 @@ class AppController extends Controller
         return view($site->alias.'.pages.confirmation.index', compact('site', 'page', 'company'));
     }
 
+    public function success(Request $request)
+    {
+
+        $site = $this->site;
+        $page = $site->pages_public->firstWhere('alias', 'success');
+
+        return view($site->alias.'.pages.success.index', compact('site', 'page'));
+    }
+
     public function get_access_code(Request $request)
     {
 
