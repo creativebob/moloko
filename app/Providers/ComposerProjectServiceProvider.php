@@ -20,6 +20,7 @@ use App\Http\View\Composers\Project\ManufacturersListComposer;
 use App\Http\View\Composers\Project\NewsComposer;
 use App\Http\View\Composers\Project\PromotionsSliderComposer;
 use App\Http\View\Composers\Project\ToolsCategoriesWithToolsComposer;
+use App\Http\View\Composers\Project\VendorsComposer;
 use App\Http\View\Composers\Project\WorktimeFilialTodayComposer;
 use App\Http\View\Composers\Project\PluginsComposer;
 
@@ -100,6 +101,10 @@ class ComposerProjectServiceProvider extends ServiceProvider
                     'project.includes.manufacturers.list',
                     'project.includes.manufacturers.section'
                 ], ManufacturersListComposer::class);
+
+                view()->composer([
+                    'project.includes.vendors.section'
+                ], VendorsComposer::class);
 
 //                view()->composer($alias. '.layouts.headers.includes.cart', CartComposer::class);
                 view()->composer($alias. '.pages.contacts.index', FilialComposer::class);
