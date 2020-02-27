@@ -26,6 +26,8 @@ class PhotoSettingsTableSeeder extends Seeder
                 'photo_settings_id' => null,
                 'photo_settings_type' => null,
 
+                'crop_mode' => 2,
+
                 'img_small_width' => 150,  // Ширина маленького изображения
                 'img_small_height' => 99,  // Высота маленького изображения
                 'img_medium_width' => 440,  // Ширина среднего изображения
