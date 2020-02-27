@@ -79,7 +79,7 @@ Route::get('/goods-composition/{id}/', 'AppController@goods_composition')->name(
 
 Route::post('/site_user_login', 'AppController@site_user_login')->name('project.site_user_login');
 Route::get('/confirmation', 'AppController@confirmation')->name('project.confirmation');
-Route::post('/success', 'AppController@success')->name('project.success');
+Route::post('/success', 'AppController@success')->name('project.success.store');
 
 // Генерация access_code и отправка его на телефон пользователя
 Route::post('/get_access_code', 'AppController@get_access_code')->name('project.get_access_code');
