@@ -238,6 +238,11 @@ class Company extends Model
         return $this->hasMany('App\Manufacturer', 'company_id');
     }
 
+    public function vendors()
+    {
+        return $this->hasMany(Vendor::class, 'company_id');
+    }
+
     // Производитель
     public function manufactured($company_id = null)
     {
@@ -354,6 +359,8 @@ class Company extends Model
         if($ms == null) {$value = false;} else {$value = true;};
         return $value;
     }
+
+
 
     public function setBirthdayCompanyAttribute($value)
     {

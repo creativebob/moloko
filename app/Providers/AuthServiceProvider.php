@@ -37,6 +37,7 @@ use App\Policies\PromotionPolicy;
 use App\Policies\RawsStockPolicy;
 use App\Policies\SchedulePolicy;
 use App\Policies\ToolsStockPolicy;
+use App\Policies\VendorPolicy;
 use App\PricesGoods;
 use App\ProcessesGroup;
 use App\Consignment;
@@ -112,6 +113,7 @@ use App\PricesService;
 use App\Policies\PricesServicePolicy;
 
 // Рабочие процессы
+use App\Vendor;
 use App\WorkflowsCategory;
 use App\Policies\WorkflowsCategoryPolicy;
 use App\Workflow;
@@ -307,6 +309,7 @@ class AuthServiceProvider extends ServiceProvider
         Application::class => ApplicationPolicy::class,
 
         Manufacturer::class => ManufacturerPolicy::class,
+        Vendor::class => VendorPolicy::class,
         Dealer::class => DealerPolicy::class,
         Client::class => ClientPolicy::class,
         Bank::class => BankPolicy::class,

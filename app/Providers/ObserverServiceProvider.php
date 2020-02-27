@@ -80,6 +80,7 @@ use App\Observers\SectorObserver;
 use App\Observers\ServicesCategoryObserver;
 use App\Observers\StafferObserver;
 use App\Observers\VectorObserver;
+use App\Observers\VendorObserver;
 use App\Observers\WorkflowsCategoryObserver;
 use App\Off;
 use App\Page;
@@ -103,6 +104,7 @@ use App\Sector;
 use App\ServicesCategory;
 use App\Staffer;
 use App\Vector;
+use App\Vendor;
 use App\WorkflowsCategory;
 use Illuminate\Support\ServiceProvider;
 use App\RawsCategory;
@@ -275,6 +277,9 @@ class ObserverServiceProvider extends ServiceProvider
         Sector::observe(SectorObserver::class);
 
         Favourite::observe(FavouriteObserver::class);
+
+        // Внешние
+        Vendor::observe(VendorObserver::class);
     }
 
     /**

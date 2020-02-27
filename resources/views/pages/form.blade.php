@@ -23,6 +23,10 @@
             <div class="item-error">Такая страница уже существует!</div>
         </label>
 
+        <label>Видео
+            {{ Form::text('video_url', $page->video_url, []) }}
+        </label>
+
         <label>Контент:
             {{ Form::textarea('content', $page->content, ['id' => 'content-ckeditor', 'autocomplete' => 'off', 'size' => '10x3']) }}
         </label>

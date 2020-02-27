@@ -69,6 +69,10 @@ class Process extends Model
 
         'video_url',
 
+        'content',
+        'seo_description',
+        'keywords',
+
         'length',
 
         'photo_id',

@@ -164,6 +164,11 @@
                         <label for="is_partner-checkbox"><span>Партнер</span></label>
                     </div>
 
+                    <div class="small-12 cell checkbox">
+                        {{ Form::checkbox('is_partner', 1, $supplier->is_partner, ['id' => 'is_partner-checkbox']) }}
+                        <label for="is_partner-checkbox"><span>Партнер</span></label>
+                    </div>
+
                     <div class="small-12 medium-6 cell checkbox">
                         {{ Form::checkbox('preorder', 1, $supplier->preorder, ['id' => 'preorder-checkbox']) }}
                         <label for="preorder-checkbox"><span>Предзаказ</span></label>
@@ -397,12 +402,20 @@
                                     <label for="manufacturer_self"><span>Производитель</span></label>
                                 </div>
                                 @endif
+
+                                    @if(isset($supplier))
+                                        <div class="small-12 cell checkbox">
+                                            {!! Form::hidden('is_vendor', 0) !!}
+                                            {!! Form::checkbox('is_vendor', 1, isset($supplier->vendor), ['id' => 'checkbox-is_vendor']) !!}
+                                            <label for="checkbox-is_vendor"><span>Продавец</span></label>
+                                        </div>
+                                    @endif
+
                             @endif
                         @endif
                     @endcan
 
                     {{-- Предлагаем добавить компанию в поставщики, если, конечно, создаем ее не из под страницы создания поставщиков --}}
-
                     @can('index', App\Supplier::class)
                         @if(empty($supplier))
                             @if(isset($company->supplier_self) && (Auth::user()->company_id != null))
@@ -412,6 +425,7 @@
                                     <label for="supplier_self"><span>Поставщик</span></label>
                                 </div>
                                 @endif
+
                             @endif
                         @endif
                     @endcan

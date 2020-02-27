@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreatePagesTable extends Migration
+class CreateVendorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,26 +13,19 @@ class CreatePagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pages', function (Blueprint $table) {
+        Schema::create('vendors', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->bigInteger('site_id')->unsigned()->nullable()->comment('Id сайта');
-            $table->foreign('site_id')->references('id')->on('sites');
+            $table->bigInteger('supplier_id')->nullable()->unsigned()->comment('ID поставщика');
+            $table->foreign('supplier_id')->references('id')->on('suppliers');
 
-            $table->string('name')->index()->comment('Название страницы');
-            $table->string('title')->index()->comment('Title для страницы');
-            $table->string('subtitle')->nullable()->comment('Подзаголовок для страницы');
-            $table->string('alias')->index()->comment('Алиас');
-            $table->string('slug')->index()->nullable()->comment('Слаг');
+            $table->bigInteger('discount')->nullable()->unsigned()->comment('Скидка');
+            $table->text('description')->nullable()->comment('Описание');
 
-            $table->text('description')->nullable()->comment('Description для страницы');
-            $table->text('content')->nullable()->comment('Контент страницы');
+            $table->string('status')->nullable()->comment('Наш статус');
 
-            $table->string('video_url')->nullable()->comment('Ссылка на видео');
-
-            $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Фотография');
-            $table->foreign('photo_id')->references('id')->on('photos');
-
+            $table->boolean('is_partner')->default(0)->comment('Статус партнера');
+            $table->boolean('archive')->default(0)->comment('Статус архива');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
@@ -60,6 +53,6 @@ class CreatePagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pages');
+        Schema::dropIfExists('vendors');
     }
 }

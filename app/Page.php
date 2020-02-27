@@ -54,6 +54,8 @@ class Page extends Model
         'content',
         'alias',
 
+        'video_url',
+
         'display',
         'system',
         'moderation'

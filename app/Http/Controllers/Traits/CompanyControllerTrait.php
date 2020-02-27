@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Traits;
 use App\Company;
 use App\Manufacturer;
 use App\Supplier;
+use App\Vendor;
 use Illuminate\Support\Facades\Log;
 
 // Транслитерация
@@ -30,7 +31,7 @@ trait CompanyControllerTrait
         $company = Company::where('inn', $request->inn)->whereNotNull('inn')->first();
 
         Log::info('Результат зароса: ' . $company);
-        
+
         if(empty($company)){
             Log::info('Видим, что такой компании нет. Будем создавать');
 
@@ -144,6 +145,12 @@ trait CompanyControllerTrait
                 $supplier->save();
             }
 
+            if ($request->is_vendor == 1) {
+                $vendor = Vendor::create([
+                    'supplier_id' => $company->id
+                ]);
+            }
+
 
         } else {
 
@@ -154,7 +161,7 @@ trait CompanyControllerTrait
     }
 
 
-    public function updateCompany($request, $company){
+    public function updateCompany($request, $company, $entity){
 
 
         // Подготовка: -------------------------------------------------------------------------------------
@@ -297,6 +304,34 @@ trait CompanyControllerTrait
 
                     // dd("Записали себя поставщиком!");
             }
+
+            // Проверка на обновление отношения
+            $vendor = Vendor::where('company_id', auth()->user()->company_id)
+                ->where('supplier_id', $entity->id)
+                ->first();
+
+            if ($request->is_vendor) {
+                if ($vendor) {
+                    if ($vendor->archive) {
+                        // Восстанавливаем связь из архива
+                        $vendor->update([
+                            'archive' => false
+                        ]);
+                    }
+                } else {
+                    $vendor = Vendor::create([
+                        'supplier_id' => $entity->id
+                    ]);
+                }
+            } else {
+
+                if ($vendor) {
+                    $vendor->update([
+                        'archive' => true
+                    ]);
+                }
+            }
+
 
 
 

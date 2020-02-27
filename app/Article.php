@@ -68,6 +68,10 @@ class Article extends Model
 
         'video_url',
 
+        'content',
+        'seo_description',
+        'keywords',
+
         'package_status',
         'package_name',
         'package_abbreviation',

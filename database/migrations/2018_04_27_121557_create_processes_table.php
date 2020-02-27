@@ -51,6 +51,10 @@ class CreateProcessesTable extends Migration
 
             $table->string('video_url')->nullable()->comment('Ссылка на видео');
 
+            $table->text('content')->nullable()->comment('Описание');
+            $table->text('seo_description')->nullable()->comment('Описание для сайта');
+            $table->text('keywords')->nullable()->comment('Ключевые слова');
+
             $table->integer('length')->unsigned()->nullable()->comment('Продолжительность (сек)');
 
             $table->bigInteger('unit_id')->nullable()->unsigned()->comment('Id единицы измерения');

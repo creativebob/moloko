@@ -189,7 +189,10 @@ class SupplierController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $supplier = Supplier::moderatorLimit($answer)
+        $supplier = Supplier::with([
+            'vendor'
+        ])
+        ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->findOrFail($id);
@@ -213,6 +216,7 @@ class SupplierController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
+
 
         return view('suppliers.edit', compact('supplier', 'page_info'));
     }
@@ -264,13 +268,13 @@ class SupplierController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $company);
 
         // Отдаем работу по редактировнию компании трейту
-        $this->updateCompany($request, $supplier->company);
+        $this->updateCompany($request, $supplier->company, $supplier);
 
         // Обновление информации по поставщику:
         $supplier->description_supplier = $request->description_supplier;
         $supplier->preorder = $request->preorder ?? 0;
         $supplier->is_partner = $request->has('is_partner');
-        
+
         $supplier->save();
 
         return redirect('/admin/suppliers');

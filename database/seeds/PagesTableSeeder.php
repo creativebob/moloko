@@ -175,6 +175,17 @@ class PagesTableSeeder extends Seeder
                 'display' => true,
             ],
             [
+                'name' => 'Дилеры',
+                'site_id' => 1,
+                'title' => 'Дилеры',
+                'description' => 'Дилеры',
+                'alias' => 'dealers',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
                 'name' => 'Производители',
                 'site_id' => 1,
                 'title' => 'Производители',
@@ -186,16 +197,17 @@ class PagesTableSeeder extends Seeder
                 'display' => true,
             ],
             [
-                'name' => 'Дилеры',
+                'name' => 'Продавцы',
                 'site_id' => 1,
-                'title' => 'Дилеры',
-                'description' => 'Дилеры',
-                'alias' => 'dealers',
+                'title' => 'Продавцы',
+                'description' => 'Продавцы',
+                'alias' => 'vendors',
                 'company_id' => null,
                 'system' => true,
                 'author_id' => 1,
                 'display' => true,
             ],
+
             [
                 'name' => 'Банки',
                 'site_id' => 1,
@@ -312,7 +324,7 @@ class PagesTableSeeder extends Seeder
                 'system' => true,
                 'author_id' => 1,
                 'display' => true,
-            ],            
+            ],
             [
                 'name' => 'Социальные сети',
                 'site_id' => 1,

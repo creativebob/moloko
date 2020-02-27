@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +14,7 @@ use App\Scopes\Traits\SystemItemTraitScopes;
 use App\Scopes\Traits\FilialsTraitScopes;
 use App\Scopes\Traits\TemplateTraitScopes;
 use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\SuppliersTraitScopes;
+use App\Scopes\Traits\ManufacturersTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
@@ -23,15 +24,16 @@ use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 // use App\Scopes\Filters\DateIntervalFilter;
 
-class Supplier extends Model
+class Vendor extends Model
 {
-
     // Включаем кеш
     use Cachable;
 
+    use Commonable;
+
     use Notifiable;
     use SoftDeletes;
-
+    //
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -39,47 +41,28 @@ class Supplier extends Model
     use FilialsTraitScopes;
     use TemplateTraitScopes;
     use ModeratorLimitTraitScopes;
-    use SuppliersTraitScopes;
+    use ManufacturersTraitScopes;
 
     // Фильтры
     use Filter;
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    // protected $dates = ['deleted_at'];
     protected $fillable = [
         'company_id',
         'supplier_id',
+
+        'archive',
 
         'display',
         'system',
         'moderation'
     ];
 
-    // Получаем компанию.
-    public function company()
-    {
-        return $this->belongsTo('App\Company', 'supplier_id');
-    }
 
-    // Получаем автора
-    public function author()
+    // Поставщик
+    public function supplier()
     {
-        return $this->belongsTo('App\User', 'author_id');
+        return $this->belongsTo(Supplier::class);
     }
-
-    // Производители
-    public function manufacturers()
-    {
-        return $this->belongsToMany('App\Manufacturer', 'manufacturer_supplier', 'supplier_id', 'manufacturer_id');
-    }
-
-    // Продавец
-    public function vendor()
-    {
-        return $this->hasOne(Vendor::class, 'supplier_id')
-            ->where('company_id', auth()->user()->company_id)
-            ->where('archive', false);
-    }
-
 }

@@ -52,6 +52,12 @@
 				<a data-tabs-target="tab-extra_options" href="#tab-extra_options">Опции</a>
 			</li>
 
+            @can('index', App\Site::class)
+                <li class="tabs-title">
+                    <a data-tabs-target="tab-site" href="#tab-site">Настройка для сайта</a>
+                </li>
+            @endcan
+
 		</ul>
 	</div>
 </div>
@@ -395,6 +401,28 @@
 			{{-- Табы для сущности --}}
 			@includeIf($page_info->entity->view_path . '.tabs_content')
 
+            {{-- Сайт --}}
+            @can('index', App\Site::class)
+                <div class="tabs-panel" id="tab-site">
+                    <div class="grid-x grid-padding-x">
+                        <div class="small-12 medium-6 cell">
+                            <label>Описание:
+                                {{ Form::textarea('content', $article->content, ['id' => 'content-ckeditor', 'autocomplete' => 'off', 'size' => '10x3']) }}
+                            </label>
+
+                            <label>Description
+                                @include('includes.inputs.textarea', ['value' => $article->seo_description, 'name' => 'seo_description'])
+                            </label>
+
+                            <label>Keywords
+                                @include('includes.inputs.textarea', ['value' => $article->keywords, 'name' => 'keywords'])
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+            @endcan
+
 			{{ Form::close() }}
 
 			{{-- Фотографии --}}
@@ -528,6 +556,7 @@
 
 	@include('includes.scripts.inputs-mask')
 	@include('includes.scripts.upload-file')
+    @include('includes.scripts.ckeditor')
 
 	@include('includes.scripts.dropzone', [
 		'settings' => $settings,

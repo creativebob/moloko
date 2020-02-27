@@ -48,6 +48,10 @@ class CreateArticlesTable extends Migration
 
             $table->string('video_url')->nullable()->comment('Ссылка на видео');
 
+            $table->text('content')->nullable()->comment('Описание');
+            $table->text('seo_description')->nullable()->comment('Описание для сайта');
+            $table->text('keywords')->nullable()->comment('Ключевые слова');
+
             $table->boolean('package_status')->default(0)->unsigned()->comment('Статус компоновки');
             $table->string('package_name')->nullable()->comment('Имя компоновки');
             $table->string('package_abbreviation')->nullable()->comment('Сокращение имени компоновки');

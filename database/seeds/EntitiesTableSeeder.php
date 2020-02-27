@@ -787,6 +787,18 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => $pages->firstWhere('alias', 'clients')->id,
             ],
             [
+                'name' => 'Дилеры',
+                'alias' => 'dealers',
+                'model' => 'Dealer',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
+                'view_path' => 'dealers',
+                'page_id' => $pages->firstWhere('alias', 'dealers')->id,
+            ],
+            [
                 'name' => 'Производители',
                 'alias' => 'manufacturers',
                 'model' => 'Manufacturer',
@@ -799,17 +811,18 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => $pages->firstWhere('alias', 'manufacturers')->id,
             ],
             [
-                'name' => 'Дилеры',
-                'alias' => 'dealers',
-                'model' => 'Dealer',
+                'name' => 'Продавцы',
+                'alias' => 'vendors',
+                'model' => 'Vendor',
                 'rights' => true,
                 'system' => true,
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('companies')->first(['id'])->id,
-                'view_path' => 'dealers',
-                'page_id' => $pages->firstWhere('alias', 'dealers')->id,
+                'view_path' => 'vendors',
+                'page_id' => $pages->firstWhere('alias', 'vendors')->id,
             ],
+
 
             [
                 'name' => 'Отделы',
