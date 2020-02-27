@@ -10,7 +10,7 @@ class VendorsComposer
 	{
         $company = $view->site->company->load(['vendors' => function ($q) {
             $q->with([
-                'supplier.company'
+                'supplier.company.photo'
             ])
                 ->where('display', true)
                 ->where('archive', false);
