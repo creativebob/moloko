@@ -161,7 +161,7 @@ trait CompanyControllerTrait
     }
 
 
-    public function updateCompany($request, $company, $entity){
+    public function updateCompany($request, $company, $entity = null){
 
 
         // Подготовка: -------------------------------------------------------------------------------------
@@ -305,32 +305,35 @@ trait CompanyControllerTrait
                     // dd("Записали себя поставщиком!");
             }
 
-            // Проверка на обновление отношения
-            $vendor = Vendor::where('company_id', auth()->user()->company_id)
-                ->where('supplier_id', $entity->id)
-                ->first();
+            if ($entity) {
+                // Проверка на обновление отношения
+                $vendor = Vendor::where('company_id', auth()->user()->company_id)
+                    ->where('supplier_id', $entity->id)
+                    ->first();
 
-            if ($request->is_vendor) {
-                if ($vendor) {
-                    if ($vendor->archive) {
-                        // Восстанавливаем связь из архива
-                        $vendor->update([
-                            'archive' => false
+                if ($request->is_vendor) {
+                    if ($vendor) {
+                        if ($vendor->archive) {
+                            // Восстанавливаем связь из архива
+                            $vendor->update([
+                                'archive' => false
+                            ]);
+                        }
+                    } else {
+                        $vendor = Vendor::create([
+                            'supplier_id' => $entity->id
                         ]);
                     }
                 } else {
-                    $vendor = Vendor::create([
-                        'supplier_id' => $entity->id
-                    ]);
-                }
-            } else {
 
-                if ($vendor) {
-                    $vendor->update([
-                        'archive' => true
-                    ]);
+                    if ($vendor) {
+                        $vendor->update([
+                            'archive' => true
+                        ]);
+                    }
                 }
             }
+
 
 
 

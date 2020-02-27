@@ -53,6 +53,8 @@ class Vendor extends Model
         'supplier_id',
 
         'archive',
+        'status',
+        'description',
 
         'display',
         'system',

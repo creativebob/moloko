@@ -19,6 +19,13 @@
                 <a data-tabs-target="content-panel-supplier" href="#content-panel-supplier">Информация о поставщике</a>
             </li>
             @endif
+
+            @isset($vendor)
+                <li class="tabs-title">
+                    <a data-tabs-target="tab-vendor" href="#tab-vendor">Информация о продаце</a>
+                </li>
+            @endisset
+
             @if(!empty($client))
             <li class="tabs-title">
                 <a data-tabs-target="content-panel-client" href="#content-panel-client">О клиенте</a>
@@ -183,6 +190,34 @@
                 </div>
             </div>
             <!-- Конец блока поставщика -->
+            @endif
+
+            {{-- Блок продавца --}}
+            @if(!empty($vendor))
+                <div class="tabs-panel" id="tab-vendor">
+                    <div class="grid-x grid-padding-x">
+
+                        <div class="small-12 cell checkbox">
+                            {!! Form::hidden('is_partner', 0) !!}
+                            {!! Form::checkbox('is_partner', 1, $vendor->is_partner, ['id' => 'is_partner-checkbox']) !!}
+                            <label for="is_partner-checkbox"><span>Партнер</span></label>
+                        </div>
+
+
+                        <div class="small-12 medium-6 cell">
+                            <label>Наш статус
+                                {!! Form::text('status', $vendor->status) !!}
+                            </label>
+                        </div>
+
+
+                        <div class="small-12 medium-6 cell">
+                            <label>Комментарий к продавцу
+                                @include('includes.inputs.textarea', ['name'=>'description', 'value'=>$vendor->description])
+                            </label>
+                        </div>
+                    </div>
+                </div>
             @endif
 
             @if(!empty($client))
