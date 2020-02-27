@@ -55,6 +55,14 @@
                         @include('includes.inputs.phone', ['value' => isset($department->main_phone->phone) ? $department->main_phone->phone : null, 'name' => 'main_phone'])
                     </label>
 
+                    @if (count($department->extra_phones) > 0)
+                        @foreach ($department->extra_phones as $extra_phone)
+                            @include('includes.extra-phone', ['extra_phone' => $extra_phone])
+                        @endforeach
+                    @else
+                        @include('includes.extra-phone')
+                    @endif
+
                     <label>Почта
                         @include('includes.inputs.email', ['value' => $department->email, 'name' => 'email'])
                     </label>

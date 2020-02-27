@@ -74,9 +74,19 @@
        <label>Адрес
            @include('includes.inputs.address', ['value' => isset($department->location->address) ? $department->location->address : null, 'name'=>'address'])
        </label>
+
        <label>Телефон
            @include('includes.inputs.phone', ['value' => isset($department->main_phone->phone) ? $department->main_phone->phone : null, 'name' => 'main_phone', 'required' => isset($parent_id) ? null : true])
        </label>
+
+         @if (count($department->extra_phones) > 0)
+             @foreach ($department->extra_phones as $extra_phone)
+                 @include('includes.extra-phone', ['extra_phone' => $extra_phone])
+             @endforeach
+         @else
+             @include('includes.extra-phone')
+         @endif
+
              <label>Почта
                  @include('includes.inputs.email', ['value' => $department->email, 'name' => 'email'])
              </label>

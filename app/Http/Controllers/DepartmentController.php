@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 // Модели
 use App\Department;
 use App\City;
+use App\Http\Controllers\System\Traits\Phonable;
 use App\Position;
 use App\Staffer;
 use App\Page;
@@ -41,6 +42,7 @@ class DepartmentController extends Controller
 
     // Подключаем трейт перезаписи списк отделов (филиалов) в сессии пользователя
     use RewriteSessionDepartments;
+    use Phonable;
 
     public function index(Request $request)
     {
@@ -184,8 +186,9 @@ class DepartmentController extends Controller
             // Расписание
             setSchedule($request, $department);
 
-            // Телефон
-            add_phones($request, $department);
+            // Телефоны
+            $this->savePhones($department);
+//            add_phones($request, $department);
 
             // Перезаписываем сессию: меняем список филиалов и отделов на новый
             $this->RSDepartments($user);
@@ -264,7 +267,9 @@ class DepartmentController extends Controller
             setSchedule($request, $department);
 
             // Телефон
-            add_phones($request, $department);
+            $this->savePhones($department);
+//            add_phones($request, $department);
+
             // Переадресовываем на index
             return redirect()->route('departments.index', ['id' => $department->id, 'item' => $this->entity_alias]);
         } else {
