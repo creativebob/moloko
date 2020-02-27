@@ -102,3 +102,9 @@ Route::resource('/tools', 'ToolController')
         'show'
     ])
     ->names('project.tools');
+
+Route::resource('/forms', 'FormController')
+    ->only([
+        'store',
+    ])
+    ->names('project.forms');
