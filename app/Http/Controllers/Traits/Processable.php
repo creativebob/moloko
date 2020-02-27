@@ -176,8 +176,8 @@ trait Processable
                     }
                 }
 
-                 if (isset($process->unit_id)) {
-                     $unit = Unit::findOrFail($process->unit_id);
+                 if (isset($request->unit_id)) {
+                     $unit = Unit::findOrFail($request->unit_id);
                      $length = $data['length'] * $unit->ratio;
                      $data['length'] = $length;
                  }
