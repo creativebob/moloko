@@ -27,6 +27,10 @@
             {{ Form::text('video_url', $page->video_url, []) }}
         </label>
 
+        <label>Блок видео
+            @include('includes.inputs.textarea', ['name' => 'video'])
+        </label>
+
         <label>Контент:
             {{ Form::textarea('content', $page->content, ['id' => 'content-ckeditor', 'autocomplete' => 'off', 'size' => '10x3']) }}
         </label>

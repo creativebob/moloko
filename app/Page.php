@@ -55,6 +55,7 @@ class Page extends Model
         'alias',
 
         'video_url',
+        "video",
 
         'display',
         'system',
