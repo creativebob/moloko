@@ -29,7 +29,7 @@ class CreatePagesTable extends Migration
             $table->text('content')->nullable()->comment('Контент страницы');
 
             $table->string('video_url')->nullable()->comment('Ссылка на видео');
-            $table->string('video')->nullable()->comment('Код вставки видео');
+            $table->text('video')->nullable()->comment('Код вставки видео');
 
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Фотография');
             $table->foreign('photo_id')->references('id')->on('photos');
