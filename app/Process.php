@@ -115,6 +115,16 @@ class Process extends Model
             ]);
     }
 
+    // Должности
+    public function positions()
+    {
+        return $this->belongsToMany(Position::class, 'process_position')
+//            ->withPivot([
+//                'value',
+//            ])
+            ;
+    }
+
     // Состав (набор)
     // public function set_compositions()
     // {

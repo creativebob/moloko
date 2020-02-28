@@ -56,6 +56,10 @@
                 </li>
             @endcan
 
+            <li class="tabs-title">
+                <a data-tabs-target="tab-positions" href="#tab-positions">Должности</a>
+            </li>
+
         </ul>
     </div>
 </div>
@@ -421,6 +425,20 @@
                                 @include('includes.inputs.textarea', ['value' => $process->keywords, 'name' => 'keywords'])
                             </label>
 
+                        </div>
+                    </div>
+                </div>
+            @endcan
+
+            {{-- Должности --}}
+            @can('index', App\Position::class)
+                <div class="tabs-panel" id="tab-positions">
+                    <div class="grid-x grid-padding-x">
+                        <div class="small-12 medium-3 cell">
+                            <fieldset>
+                                <legend>Должности</legend>
+                                @include('includes.lists.positions')
+                            </fieldset>
                         </div>
                     </div>
                 </div>

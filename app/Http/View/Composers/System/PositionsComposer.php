@@ -3,10 +3,9 @@
 namespace App\Http\View\Composers\System;
 
 use App\Position;
-
 use Illuminate\View\View;
 
-class positionsComposer
+class PositionsComposer
 {
 	public function compose(View $view)
 	{
@@ -22,7 +21,7 @@ class positionsComposer
 		->template($answer) // Выводим шаблоны в список
 		->get();
 
-		return $view->with('positions', $positions);
+		return $view->with(compact('positions'));
 
 		  //       // Смотрим на наличие должности в данном филиале, в массиве устанавливаем id должностей, которых не может быть более 1ой
 				// $direction = Staffer::where(['position_id' => 1, 'filial_id' => $filial_id])->moderatorLimit($answer_staff)->count();
