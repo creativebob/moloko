@@ -10,6 +10,7 @@ class ProvidersComposer
     {
         $prices_services = $view->prices_services;
 
+        // TODO - 28.02.20 - Костыль дял вывода исполнителей услуг
         $collect = [];
         foreach($prices_services as $price_service) {
             $price_service->service_public->process->load('positions.staff');
