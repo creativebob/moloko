@@ -248,7 +248,8 @@ class FormController extends Controller
             $site = $this->site;
             $page = $site->pages_public->firstWhere('alias', 'success');
 
-            return view($site->alias.'.pages.success.index', compact('site', 'page'));
+            return redirect()->route('project.success');
+//            return view($site->alias.'.pages.success.index', compact('site', 'page'));
         } else {
             return redirect()->route('project.start');
         }
