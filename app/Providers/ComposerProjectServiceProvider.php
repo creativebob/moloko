@@ -14,6 +14,7 @@ use App\Http\View\Composers\Project\NavigationsComposer;
 use App\Http\View\Composers\Project\PricesGoodsPriceFilterComposer;
 use App\Http\View\Composers\Project\PricesGoodsRawsArticlesGroupsFilterComposer;
 use App\Http\View\Composers\Project\PricesGoodsWeightFilterComposer;
+use App\Http\View\Composers\Project\ProvidersComposer;
 use App\Http\View\Composers\Project\StaffComposer;
 use App\Http\View\Composers\Project\ClientsCompaniesListComposer;
 use App\Http\View\Composers\Project\ManufacturersListComposer;
@@ -114,6 +115,8 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 ], DisplayModesComposer::class);
 
                 view()->composer('project.includes.tools_categories.sidebar_with_items', ToolsCategoriesWithToolsComposer::class);
+
+                view()->composer('project.includes.prices_services.providers', ProvidersComposer::class);
 
             }
         }
