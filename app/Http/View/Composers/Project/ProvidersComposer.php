@@ -16,12 +16,11 @@ class ProvidersComposer
 
             foreach($price_service->service_public->process->positions as $position) {
                 foreach($position->staff as $staffer) {
-                    $collect[] = $staffer;
+                    $collect[] = $staffer->load('user.photo');
                 }
             }
         }
         $providers = collect($collect)->unique();
-        $providers->load('user.photo');
         return $view->with(compact('providers'));
     }
 }
