@@ -2,22 +2,16 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\Campaign;
 use App\Http\Controllers\Project\Traits\Commonable;
 use App\Http\Controllers\Traits\EstimateControllerTrait;
 use App\Http\Controllers\Traits\LeadControllerTrait;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Lead;
 use App\Models\Project\Estimate;
-use App\Models\Project\EstimatesGoodsItem;
-use App\PricesGoods;
-use App\Source;
 use App\Stock;
 use App\User;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Telegram;
 use Telegram\Bot\Exceptions\TelegramResponseException;
 
@@ -195,7 +189,7 @@ class FormController extends Controller
             $lead->save();
 
             // Формируем сообщение
-            $message = "Заказ звонка с сайта.\r\n";
+            $message = "Заказ с сайта: №" . $lead->id . "\r\n";
 
             if ($site->domains->count() > 1) {
                 $message .= "Город: " . $site->filial->location->city->name . "\r\n";
