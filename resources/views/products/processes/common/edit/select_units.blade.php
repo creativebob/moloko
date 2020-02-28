@@ -1,1 +1,1 @@
-{!! Form::select('unit_id', $units->pluck('name', 'id'), $process->group->unit_id, ['id' => 'select-units', isset($disabled) ? 'disabled' : '']) !!}
+{!! Form::select($name ?? 'unit_id', $units->pluck('name', 'id'), $value ?? 12, ['id' => 'select-units', isset($disabled) ? 'disabled' : '']) !!}

@@ -181,8 +181,8 @@ trait Processable
                     }
                 }
 
-                 if (isset($request->unit_id)) {
-                     $unit = Unit::findOrFail($request->unit_id);
+                 if ($request->has('unit_length_id')) {
+                     $unit = Unit::findOrFail($request->unit_length_id);
                      $length = $data['length'] * $unit->ratio;
                      $data['length'] = $length;
                  }

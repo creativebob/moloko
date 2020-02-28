@@ -118,8 +118,7 @@
                                         <label>Единица измерения
                                             @include('products.processes.common.edit.select_units', [
                                                 'units_category_id' => $process->unit->category_id,
-                                                'disabled' => null,
-                                                'data' => $process->unit_id,
+                                                'value' => $process->unit_id,
                                             ])
                                         </label>
                                     </div>
@@ -198,22 +197,20 @@
                                     @include('includes.inputs.textarea', ['name' => 'description', 'value' => $process->description])
                                 </label>
                             </div>
-                            @if($process->group->units_category_id != 3)
+                            @if($process->unit->category_id != 3)
                                 <div class="cell small-12">
                                     <div class="grid-x grid-margin-x">
                                         <div class="small-12 medium-3 cell">
                                             <label>Продолжительность
-                                                {!! Form::number('length', $process->weight_trans) !!}
-                                                {{-- ['disabled' => ($process->draft == 1) ? null : true]  --}}
+                                                {!! Form::number('length', $process->lengthTrans) !!}
                                             </label>
                                         </div>
                                         <div class="small-12 medium-3 cell">
                                             <label>Единица измерения
-                                                @include('products.processes.common.edit.select_units', [
-                                                    'field_name' => 'unit_weight_id',
+                                                 @include('products.processes.common.edit.select_units', [
+                                                    'name' => 'unit_length_id',
                                                     'units_category_id' => 3,
-                                                    'disabled' => null,
-                                                    'data' => $process->unit_weight_id ?? 7,
+                                                     'value' => $process->unit_length_id,
                                                 ])
                                             </label>
                                         </div>

@@ -65,6 +65,7 @@ class CatalogsServicesItemController extends Controller
                             'process' => function ($q) {
                                 $q->with([
                                     'photo',
+                                    'unit_length'
                                 ]);
                             },
                             'metrics',

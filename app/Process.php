@@ -74,6 +74,7 @@ class Process extends Model
         'keywords',
 
         'length',
+        'unit_length_id',
 
         'photo_id',
 
@@ -173,14 +174,24 @@ class Process extends Model
         return $this->belongsTo(Unit::class);
     }
 
+    // Еденица измерения продолжительности
+    public function unit_length()
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
 
     // Продолжительность
-    public function getLengthAttribute($value)
+    public function getLengthTransAttribute($value)
     {
         if (isset($this->unit_id)) {
-            $length = $value / $this->unit->ratio;
+            if(isset($this->unit_length_id)){
+                $length = $this->length / $this->unit_length->ratio;
+            } else {
+                $length = $this->length / $this->unit->ratio;
+            }
         } else {
-            $length = $value / $this->group->unit->ratio;
+            $length = $this->length / $this->group->unit->ratio;
         }
 
         return $length;

@@ -258,7 +258,9 @@ class ServiceController extends Controller
         $service->load([
             'process' => function ($q) {
                 $q->with([
+                    'group',
                     'unit',
+                    'unit_length',
                     'workflows.process.group.unit',
                     'workflows.category'
                 ]);
@@ -266,6 +268,7 @@ class ServiceController extends Controller
             'metrics',
             'prices'
         ]);
+//        dd($service);
 
         $process = $service->process;
         // dd($process);

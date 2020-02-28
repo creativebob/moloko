@@ -24,9 +24,10 @@ class ProcessRequest extends FormRequest
     public function rules()
     {
         return [
-            'category_id' => 'string|nullable',
-            'unit_id' => 'string|nullable',
-            'extra_unit_id' => 'string|nullable',
+            'category_id' => 'integer|nullable',
+            'unit_id' => 'integer|nullable',
+            'unit_length_id' => 'integer|nullable',
+            'extra_unit_id' => 'integer|nullable',
 
             'name' => 'required|string|max:255',
             'description' => 'string|nullable',

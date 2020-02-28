@@ -55,10 +55,12 @@ class CreateProcessesTable extends Migration
             $table->text('seo_description')->nullable()->comment('Описание для сайта');
             $table->text('keywords')->nullable()->comment('Ключевые слова');
 
-            $table->integer('length')->unsigned()->nullable()->comment('Продолжительность (сек)');
-
             $table->bigInteger('unit_id')->nullable()->unsigned()->comment('Id единицы измерения');
             $table->foreign('unit_id')->references('id')->on('units');
+
+            $table->integer('length')->unsigned()->nullable()->comment('Продолжительность (сек)');
+            $table->bigInteger('unit_length_id')->nullable()->unsigned()->comment('Id единица измерения продолжительности');
+            $table->foreign('unit_length_id')->references('id')->on('units');
 
             // $table->boolean('portion_status')->default(0)->unsigned()->comment('Статус порции');
             // $table->string('portion_name')->nullable()->comment('Имя порции');

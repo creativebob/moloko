@@ -365,6 +365,7 @@ class GoodsController extends Controller
             'metrics',
             'prices'
         ]);
+//        dd($cur_goods);
 
         $article = $cur_goods->article;
 
