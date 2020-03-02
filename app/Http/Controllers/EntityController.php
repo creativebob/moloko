@@ -116,8 +116,9 @@ class EntityController extends Controller
 
         // Вносим сущность в список сущностей, если такой сущности там не зарегистрировано
         $entity = Entity::firstOrCreate(
-            ['model' => $request->model], 
             [
+                'model' => $request->model
+            ], [
                 'name' => $request->name,
                 'alias' => $request->alias,
                 'rights' => $request->rights,

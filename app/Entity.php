@@ -49,6 +49,7 @@ class Entity extends Model
     protected $fillable = [
         'name',
         'alias',
+        'model',
 
         'display',
         'system',
