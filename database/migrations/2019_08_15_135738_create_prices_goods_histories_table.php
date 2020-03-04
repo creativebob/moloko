@@ -21,6 +21,9 @@ class CreatePricesGoodsHistoriesTable extends Migration
 
             $table->decimal('price', 12, 4)->comment('Цена');
 
+            $table->bigInteger('currency_id')->nullable()->unsigned()->comment('Id валюты');
+            $table->foreign('currency_id')->references('id')->on('currencies');
+
             $table->timestamp('begin_date')->nullable()->comment('Дата и время начала');
             $table->timestamp('end_date')->nullable()->comment('Дата и время окончания');
 

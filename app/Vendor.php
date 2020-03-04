@@ -67,4 +67,9 @@ class Vendor extends Model
     {
         return $this->belongsTo(Supplier::class);
     }
+
+    public function getVendoredAttribute()
+    {
+        return $this->company_id == auth()->user()->company_id && $this->archive == false;
+    }
 }

@@ -811,7 +811,7 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => $pages->firstWhere('alias', 'manufacturers')->id,
             ],
             [
-                'name' => 'Продавцы',
+                'name' => 'Вендоры',
                 'alias' => 'vendors',
                 'model' => 'Vendor',
                 'rights' => true,

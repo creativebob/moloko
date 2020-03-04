@@ -24,6 +24,7 @@ class PricesServiceObserver
     {
         $prices_service->history()->create([
             'price' => $prices_service->price,
+            'currency_id' => $prices_service->currency_id,
         ]);
     }
 

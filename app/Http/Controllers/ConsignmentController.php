@@ -42,7 +42,7 @@ class ConsignmentController extends Controller
         $consignments = Consignment::with([
         	'author',
 	        'items'
-        
+
         ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -73,7 +73,7 @@ class ConsignmentController extends Controller
 
         return view('system.pages.consignments.index', compact('consignments', 'page_info', 'filter'));
     }
-    
+
     public function create()
     {
         // Подключение политики
@@ -116,7 +116,8 @@ class ConsignmentController extends Controller
                         ]);
                     },
                     'entity:id,name,alias',
-                    'manufacturer.company'
+                    'manufacturer.company',
+                    'currency'
                 ]);
             },
         ])
@@ -256,13 +257,13 @@ class ConsignmentController extends Controller
 
         return response()->json($data);
     }
-    
+
 	public function posting(ConsignmentUpdateRequest $request, $id)
 	{
-		
+
 		// Получаем из сессии необходимые данные (Функция находиться в Helpers)
 		$answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('update'));
-		
+
 		// ГЛАВНЫЙ ЗАПРОС:
 		$consignment = Consignment::moderatorLimit($answer)
 			->authors($answer)
@@ -328,22 +329,22 @@ class ConsignmentController extends Controller
 
         return redirect()->route('consignments.index');
 	}
-	
+
 	public function unpost($id)
 	{
-		
+
 		// Получаем из сессии необходимые данные (Функция находиться в Helpers)
 		$answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('update'));
-		
+
 		// ГЛАВНЫЙ ЗАПРОС:
 		$consignment = Consignment::moderatorLimit($answer)
 			->authors($answer)
 			->systemItem($answer)
 			->findOrFail($id);
-		
+
 		// Подключение политики
 		$this->authorize(getmethod('update'), $consignment);
-		
+
 		$consignment->load([
 			'items' => function($q) {
 				$q->with([
@@ -357,53 +358,53 @@ class ConsignmentController extends Controller
 			},
 		]);
 //		dd($consignment);
-		
+
 		if ($consignment->items->isNotEmpty()) {
-			
+
 			Log::channel('documents')
 				->info('========================================== НАЧАЛО ОТМЕНЫ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================');
-			
+
 			$grouped_items = $consignment->items->groupBy('entity.alias');
 //			dd($grouped_items);
-			
+
 			foreach ($grouped_items as $alias => $items) {
 				$entity = Entity::where('alias', $alias.'_stocks')->first();
 				$model = 'App\\'.$entity->model;
-				
+
 				foreach ($items as $item) {
                     Log::channel('documents')
                         ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() .' ' . $item->id . ' ===');
-					
+
 					// Склад
 					$stock = $item->cmv->stock;
-					
+
 					Log::channel('documents')
 						->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
-					
+
 					$stock_count = $stock->count;
-					
+
 					Log::channel('documents')
 						->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
-					
+
 					$stock->count -= $item->count;
 					$stock->weight -= ($item->cmv->article->weight * $item->count);
 					$stock->volume -= ($item->cmv->article->volume * $item->count);
 					$stock->save();
-					
+
 					Log::channel('documents')
 						->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
-					
+
 					// Себестоимость
 					$cost = $item->cmv->cost;
-					
+
 					Log::channel('documents')
 						->info('Существует себестоимость c id: ' . $cost->id);
 					Log::channel('documents')
 						->info('Значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
-					
+
 					// Получаем из сессии необходимые данные
 					$answer = operator_right('consignments_items', true, 'index');
-					
+
 					$min = ConsignmentsItem::moderatorLimit($answer)
 						->companiesLimit($answer)
 					->where([
@@ -440,42 +441,42 @@ class ConsignmentController extends Controller
 					$cost->average = $average;
 					$cost->save();
 //					dd($cost);
-					
+
 					Log::channel('documents')
 						->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
 
                     Log::channel('documents')
                         ->info('=== КОНЕЦ ПЕРЕБОРА ПУНКТА ===
                         ');
-					
+
 				}
 			}
-			
+
 			$consignment->update([
 				'is_posted' => false,
 				'amount' => $this->getAmount($consignment)
 			]);
-			
+
 			Log::channel('documents')
 				->info('Откат оприходования накладной c id: ' . $consignment->id);
 			Log::channel('documents')
 				->info('========================================== КОНЕЦ ОТМЕНЫ ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ ==============================================
 				
 				');
-			
+
 			return redirect()->route('consignments.index');
 		} else {
 			abort(403, 'Накладная пуста');
 		}
 	}
-	
+
 	public function reposting(Request $request)
 	{
 		// Подключение политики
 		$this->authorize(getmethod('index'), $this->class);
 
         set_time_limit(60*10);
-		
+
 		// Получаем из сессии необходимые данные (Функция находиться в Helpers)
 		$answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('index'));
 

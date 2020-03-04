@@ -155,6 +155,8 @@ class SupplierController extends Controller
 
         $supplier->save();
 
+        $supplier->company->currencies()->sync($request->currencies);
+
         return redirect('/admin/suppliers');
     }
 
@@ -276,6 +278,8 @@ class SupplierController extends Controller
         $supplier->is_partner = $request->has('is_partner');
 
         $supplier->save();
+
+        $supplier->company->currencies()->sync($request->currencies);
 
         return redirect('/admin/suppliers');
     }

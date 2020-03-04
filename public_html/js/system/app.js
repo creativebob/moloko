@@ -34220,13 +34220,13 @@ window._ = __webpack_require__(6);
  */
 
 try {
-    // window.Popper = require('popper.js').default;
-    window.$ = window.jQuery = __webpack_require__(3);
+  // window.Popper = require('popper.js').default;
+  window.$ = window.jQuery = __webpack_require__(3);
 
-    __webpack_require__(7);
-    __webpack_require__(18);
+  __webpack_require__(7);
+  __webpack_require__(18);
 
-    __webpack_require__(22); // 'foundation.min' can also be used if you like
+  __webpack_require__(22); // 'foundation.min' can also be used if you like
 } catch (e) {}
 
 /**
@@ -34248,9 +34248,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
 /**
@@ -76133,6 +76133,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	components: {
@@ -76141,7 +76157,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	},
 	props: {
 		consignment: Object,
-		selectData: Object
+		selectData: Object,
+		currencies: {
+			type: Array,
+			default: [{
+				id: 1,
+				name: 'Рубль'
+			}]
+		}
 	},
 	data: function data() {
 		return {
@@ -76165,7 +76188,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			// Производители
 			manufacturers: this.selectData.manufacturers,
 			itemManufacturer: null,
-			manufacturer_id: null
+			manufacturerId: null,
+
+			// Валюте
+			currencyId: this.currencies[0].id
 		};
 	},
 
@@ -76214,7 +76240,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 			return this.manufacturers.filter(function (item) {
 				if (item.id === _this3.itemManufacturer) {
-					_this3.manufacturer_id = item.id;
+					_this3.manufacturerId = item.id;
 					return item;
 				}
 			});
@@ -76292,10 +76318,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					entity_id: this.entity_id,
 					count: this.count,
 					cost: this.cost,
-					manufacturer_id: this.manufacturer_id
+					manufacturer_id: this.manufacturerId,
+					currency_id: this.currencyId
 				}).then(function (response) {
 					_this6.items.push(response.data);
-				}, this.id = null, this.count = null, this.cost = null, this.change = true, this.manufacturer_id = null, this.itemManufacturer = null).catch(function (error) {
+				}, this.id = null, this.count = null, this.cost = null, this.change = true, this.manufacturerId = null, this.itemManufacturer = null).catch(function (error) {
 					console.log(error);
 				});
 			}
@@ -77001,6 +77028,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'consignments-item-component',
@@ -77220,6 +77248,8 @@ var render = function() {
       2
     ),
     _vm._v(" "),
+    _c("td", [_vm._v(_vm._s(_vm.item.currency.abbreviation))]),
+    _vm._v(" "),
     _c("td", [
       _vm._v(_vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.amount))))
     ]),
@@ -77268,6 +77298,8 @@ var render = function() {
         _c("th", [_vm._v("Ед. изм.:")]),
         _vm._v(" "),
         _c("th", [_vm._v("Цена:")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Валюта:")]),
         _vm._v(" "),
         _c("th", [_vm._v("Сумма:")]),
         _vm._v(" "),
@@ -77380,8 +77412,8 @@ var render = function() {
                                     {
                                       name: "model",
                                       rawName: "v-model",
-                                      value: _vm.manufacturer_id,
-                                      expression: "manufacturer_id"
+                                      value: _vm.manufacturerId,
+                                      expression: "manufacturerId"
                                     }
                                   ],
                                   attrs: { name: "entity_id" },
@@ -77398,7 +77430,7 @@ var render = function() {
                                             "_value" in o ? o._value : o.value
                                           return val
                                         })
-                                      _vm.manufacturer_id = $event.target
+                                      _vm.manufacturerId = $event.target
                                         .multiple
                                         ? $$selectedVal
                                         : $$selectedVal[0]
@@ -77470,6 +77502,59 @@ var render = function() {
                   }
                 })
               ]),
+              _vm._v(" "),
+              _c(
+                "td",
+                [
+                  _vm.currencies.length > 1
+                    ? _c("label", [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.currencyId,
+                                expression: "currencyId"
+                              }
+                            ],
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.currencyId = $event.target.multiple
+                                  ? $$selectedVal
+                                  : $$selectedVal[0]
+                              }
+                            }
+                          },
+                          _vm._l(_vm.currencies, function(currency) {
+                            return _c(
+                              "option",
+                              { domProps: { value: currency.id } },
+                              [_vm._v(_vm._s(currency.name))]
+                            )
+                          }),
+                          0
+                        )
+                      ])
+                    : [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(_vm.currencies[0].name) +
+                            "\n                    "
+                        )
+                      ]
+                ],
+                2
+              ),
               _vm._v(" "),
               _c("td", [
                 _c("span", [
@@ -80515,6 +80600,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -80522,6 +80624,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: {
         document: Object,
         paymentsTypes: Array,
+        currencies: {
+            type: Array,
+            default: [{
+                id: 1,
+                name: 'Рубль'
+            }]
+        },
         curDate: String
     },
 
@@ -80530,6 +80639,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             saled: this.document.is_saled,
             amount: 0,
             paymentsTypeId: this.paymentsTypes[0].id,
+            currencyId: this.currencies[0].id,
             date: __WEBPACK_IMPORTED_MODULE_0_moment___default()(String(this.curDate)).format('DD.MM.YYYY'),
             payments: this.document.payments
         };
@@ -80545,12 +80655,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        changeDate: function changeDate(date) {
+            alert(date);
+            this.date = date;
+        },
         addPayment: function addPayment() {
             var _this = this;
 
             var data = {
                 amount: this.amount,
                 payments_type_id: this.paymentsTypeId,
+                currency_id: this.currencyId,
                 date: this.date,
 
                 contract_id: this.document.lead.client.contract.id,
@@ -80559,7 +80674,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 document_id: this.document.id,
                 document_type: 'App\\Estimate'
             };
-            // console.log(data);
+            console.log(data);
 
             axios.post('/admin/payments', data).then(function (response) {
                 var payment = response.data;
@@ -80904,6 +81019,50 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
+            _vm.currencies.length > 1
+              ? _c("div", { staticClass: "cell small-3" }, [
+                  _c("label", [
+                    _vm._v("Валюта:\n                    "),
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.currencyId,
+                            expression: "currencyId"
+                          }
+                        ],
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.currencyId = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          }
+                        }
+                      },
+                      _vm._l(_vm.currencies, function(currency) {
+                        return _c(
+                          "option",
+                          { domProps: { value: currency.id } },
+                          [_vm._v(_vm._s(currency.name))]
+                        )
+                      }),
+                      0
+                    )
+                  ])
+                ])
+              : _vm._e(),
+            _vm._v(" "),
             _c("div", { staticClass: "cell small-3" }, [
               _c("label", [
                 _vm._v("Тип платежа:\n                    "),
@@ -80967,6 +81126,9 @@ var render = function() {
                   },
                   domProps: { value: _vm.date },
                   on: {
+                    change: function($event) {
+                      return _vm.changeDate($event.value)
+                    },
                     input: function($event) {
                       if ($event.target.composing) {
                         return
@@ -81003,7 +81165,7 @@ var render = function() {
     _vm._v(" "),
     _vm.payments.length
       ? _c("div", { staticClass: "cell small-12" }, [
-          _c("table", [
+          _c("table", { staticClass: "unstriped" }, [
             _vm._m(0),
             _vm._v(" "),
             _c(
@@ -81020,7 +81182,9 @@ var render = function() {
                     _vm._v(
                       _vm._s(
                         _vm._f("level")(_vm._f("roundToTwo")(payment.amount))
-                      )
+                      ) +
+                        " " +
+                        _vm._s(payment.currency.abbreviation)
                     )
                   ])
                 ])

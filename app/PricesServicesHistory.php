@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\System\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,6 +25,8 @@ use App\Scopes\Filters\DateIntervalFilter;
 
 class PricesServicesHistory extends Model
 {
+
+    use Commonable;
     // Включаем кеш
     use Cachable;
 
@@ -50,6 +53,7 @@ class PricesServicesHistory extends Model
 
     protected $fillable = [
         'price',
+        'currency_id',
         'prices_service_id',
 
         'begin_date',
@@ -64,17 +68,5 @@ class PricesServicesHistory extends Model
     public function prices_service()
     {
         return $this->belongsTo(PricesService::class);
-    }
-
-    // Компания
-    public function company()
-    {
-        return $this->belongsTo(Company::class);
-    }
-
-    // Автор
-    public function author()
-    {
-        return $this->belongsTo(User::class);
     }
 }

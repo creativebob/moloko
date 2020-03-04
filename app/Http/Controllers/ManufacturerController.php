@@ -158,6 +158,8 @@ class ManufacturerController extends Controller
 
         $manufacturer->save();
 
+        $manufacturer->company->currencies()->sync($request->currencies);
+
         return redirect('/admin/manufacturers');
     }
 
@@ -247,8 +249,10 @@ class ManufacturerController extends Controller
         // Запись информации по производителю:
         $manufacturer->description_manufacturer = $request->description_manufacturer;
         $manufacturer->is_partner = $request->has('is_partner');
-        
+
         $manufacturer->save();
+
+        $manufacturer->company->currencies()->sync($request->currencies);
 
         return redirect('/admin/manufacturers');
     }

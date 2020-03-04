@@ -358,6 +358,7 @@ class PricesServiceController extends Controller
             'catalogs_service_id' => $request->catalogs_service_id,
             'service_id' => $request->service_id,
             'filial_id' => $request->filial_id,
+            'currency_id' => $request->currency_id,
         ], [
             'price' => $request->price
         ]);
@@ -375,6 +376,7 @@ class PricesServiceController extends Controller
 
                 $prices_service->history()->create([
                     'price' => $request->price,
+                    'currency_id' => $prices_service->currency_id,
                 ]);
 
                 $prices_service->update([
@@ -410,6 +412,7 @@ class PricesServiceController extends Controller
 
             $prices_service->history()->create([
                 'price' => $request->price,
+                'currency_id' => $prices_service->currency_id,
             ]);
 
             $prices_service->update([

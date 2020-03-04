@@ -35,8 +35,9 @@
             <template v-else="changeCost">{{ item.cost | roundToTwo | level }}</template>
         </td>
 
+        <td>{{ item.currency.abbreviation }}</td>
+
         <td>{{ item.amount | roundToTwo | level }}</td>
-        <!--			<td>{{ item.vat_rate }}</td>-->
         <!--			<td>{{ item.amount_vat }}</td>-->
         <!--			<td>{{ item.total }}</td>-->
         <td

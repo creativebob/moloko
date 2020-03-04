@@ -7,7 +7,7 @@
 				<div class="grid-x grid-margin-x" id="price-units-block">
 					<div class="small-12 medium-3 cell">
 						@include('includes.selects.units_categories', [
-						'default' => 6, 
+						'default' => 6,
 						'type' => 'article',
 						'name' => 'price-units_category_id',
 						'id' => 'select-price-units_categories',
@@ -63,6 +63,26 @@
 				</label>
 				<span class="form-error">Введите цену!</span>
 			</div>
+
+            @php
+                $currencies = auth()->user()->company->currencies;
+            @endphp
+
+            @if($currencies->isNotEmpty())
+                @if($currencies->count() > 1)
+                    <div class="medium-3 cell">
+                        <label>Валюта
+                            {!! Form::select('currency_id', $currencies->pluck('name', 'id'), $currencies->first()->id, ['required']) !!}
+                        </label>
+                        <span class="form-error">Введите цену!</span>
+                    </div>
+                @else
+                    {!! Form::hidden('currency_id', $currencies->first()->id) !!}
+                @endif
+            @else
+                {!! Form::hidden('currency_id', 1) !!}
+            @endif
+
 		</div>
 		<div class="grid-x grid-padding-x">
 			<div class="medium-3 cell">

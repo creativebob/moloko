@@ -51,6 +51,9 @@ class Payment extends Model
     protected $fillable = [
         'payments_type_id',
         'amount',
+
+        'currency_id',
+
         'date',
 
         'contract_id',
@@ -58,9 +61,6 @@ class Payment extends Model
 
         'document_id',
         'document_type',
-
-        'date',
-        'date',
 
         'display',
         'system',
@@ -82,5 +82,11 @@ class Payment extends Model
     public function contract()
     {
         return $this->morphTo();
+    }
+
+    // Валюта
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
     }
 }

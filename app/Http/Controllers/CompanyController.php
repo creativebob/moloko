@@ -188,6 +188,9 @@ class CompanyController extends Controller
         $employee = $this->createDirector($new_company, $new_department, $new_user);
         Log::info('Вот директор: ' . $employee);
 
+
+        $new_company->currencies()->sync($request->currencies);
+
         return redirect('/admin/companies');
     }
 
@@ -275,6 +278,8 @@ class CompanyController extends Controller
 
         // Отдаем работу по редактировнию компании трейту
         $this->updateCompany($request, $company);
+
+        $company->currencies()->sync($request->currencies);
 
         return redirect('/admin/companies');
     }

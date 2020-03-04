@@ -25,6 +25,24 @@
 		</label>
 		<span class="form-error">Введите цену!</span>
 	</div>
+    @php
+        $currencies = auth()->user()->company->currencies;
+    @endphp
+
+    @if($currencies->isNotEmpty())
+        @if($currencies->count() > 1)
+            <div class="medium-3 cell">
+                <label>Валюта
+                    {!! Form::select('currency_id', $currencies->pluck('name', 'id'), $currencies->first()->id, ['required']) !!}
+                </label>
+                <span class="form-error">Введите цену!</span>
+            </div>
+        @else
+            {!! Form::hidden('currency_id', $currencies->first()->id) !!}
+        @endif
+    @else
+        {!! Form::hidden('currency_id', 1) !!}
+    @endif
 	<div class="medium-3 cell">
 		<button class="button" id="button-store-prices_service">Добавить</button>
 	</div>

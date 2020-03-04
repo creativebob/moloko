@@ -136,7 +136,7 @@
 
 
 								{{-- Если указана ед. измерения - ШТ. --}}
-								{{-- @if($item->getTable() == 'goods') --}}
+								 @if($item->getTable() == 'goods')
 									@if($article->group->units_category_id == 6)
 										<div class="cell small-12 block-price-unit">
 											<fieldset class="minimal-fieldset">
@@ -164,8 +164,10 @@
 											</fieldset>
 										</div>
 									@endif
-								{{-- @endif --}}
+								 @endif
 								{!! Form::hidden('id', null, ['id' => 'item-id']) !!}
+
+
 
 
 							</div>
@@ -216,6 +218,7 @@
 									</div>
 								</div>
 							@endif
+
 							@if($article->group->units_category_id != 5)
 								<div class="cell small-12">
 									<div class="grid-x grid-margin-x">
@@ -242,6 +245,7 @@
 						{{-- Метрики --}}
 						@includeIf('products.articles.'.$item->getTable().'.metrics.metrics')
 						@include('products.common.edit.metrics.metrics')
+
 
 
 						<div id="item-inputs"></div>
@@ -398,6 +402,8 @@
 			</div>
 
 
+
+
 			{{-- Табы для сущности --}}
 			@includeIf($page_info->entity->view_path . '.tabs_content')
 
@@ -424,6 +430,8 @@
             @endcan
 
 			{{ Form::close() }}
+
+
 
 			{{-- Фотографии --}}
 			<div class="tabs-panel" id="tab-photos">
@@ -464,6 +472,7 @@
 
 					</div>
 				</div>
+
 			</div>
 
 		</div>
@@ -551,7 +560,7 @@
 
 	@include('products.articles.common.edit.change_articles_groups_script')
 	@include('products.articles.common.edit.change_packages_script', [
-		'package_unit' => $article->group->unit->abbreviation
+		'package_unit' => $article->unit->abbreviation
 	])
 
 	@include('includes.scripts.inputs-mask')

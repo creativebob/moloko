@@ -9,6 +9,8 @@ use App\AttachmentsStock;
 use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\CatalogsService;
+use App\Client;
+use App\Company;
 use App\Consignment;
 use App\ConsignmentsItem;
 use App\Container;
@@ -37,6 +39,8 @@ use App\Observers\AttachmentsStockObserver;
 use App\Observers\CatalogsGoodsItemObserver;
 use App\Observers\CatalogsGoodsObserver;
 use App\Observers\CatalogsServiceObserver;
+use App\Observers\ClientObserver;
+use App\Observers\CompanyObserver;
 use App\Observers\ConsignmentObserver;
 use App\Observers\ConsignmentsItemObserver;
 use App\Observers\ContainerObserver;
@@ -157,6 +161,8 @@ class ObserverServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        Company::observe(CompanyObserver::class);
 
         // Пользователь
         User::observe(UserObserver::class);
@@ -280,6 +286,9 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Внешние
         Vendor::observe(VendorObserver::class);
+
+        // Внутренние
+        Client::observe(ClientObserver::class);
     }
 
     /**

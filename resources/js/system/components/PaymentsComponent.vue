@@ -15,6 +15,22 @@
                     </label>
                 </div>
 
+                <div
+                    v-if="currencies.length > 1"
+                    class="cell small-3"
+                >
+                    <label>Валюта:
+                        <select
+                            v-model="currencyId"
+                        >
+                            <option
+                                v-for="currency in currencies"
+                                :value="currency.id"
+                            >{{ currency.name }}</option>
+                        </select>
+                    </label>
+                </div>
+
                 <div class="cell small-3">
                     <label>Тип платежа:
                         <select
@@ -37,6 +53,7 @@
                             pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}"
                             required
                             v-model="date"
+                            @change="changeDate($event.value)"
                         >
                         <span class="form-error">Выберите дату!</span>
                     </label>
@@ -56,7 +73,7 @@
             class="cell small-12"
             v-if="payments.length"
         >
-            <table>
+            <table class="unstriped">
                 <thead>
                     <tr>
                         <th>Дата</th>
@@ -71,7 +88,7 @@
                     >
                         <td>{{ payment.date | formatDate}}</td>
                         <td>{{ payment.type.name }}</td>
-                        <td>{{ payment.amount | roundToTwo | level }}</td>
+                        <td>{{ payment.amount | roundToTwo | level }} {{ payment.currency.abbreviation }}</td>
                     </tr>
                 </tbody>
 
@@ -94,6 +111,15 @@
 		props: {
 			document: Object,
             paymentsTypes: Array,
+            currencies: {
+			    type: Array,
+                default: [
+                    {
+                        id: 1,
+                        name: 'Рубль',
+                    },
+                ]
+            },
             curDate: String
 		},
 
@@ -102,6 +128,7 @@
                 saled: this.document.is_saled,
                 amount: 0,
                 paymentsTypeId: this.paymentsTypes[0].id,
+                currencyId: this.currencies[0].id,
                 date: moment(String(this.curDate)).format('DD.MM.YYYY'),
                 payments: this.document.payments
             }
@@ -116,11 +143,16 @@
             }
         },
         methods: {
+            changeDate(date) {
+                alert(date);
+                this.date = date;
+            },
             addPayment() {
 
                 let data = {
                     amount: this.amount,
                     payments_type_id: this.paymentsTypeId,
+                    currency_id: this.currencyId,
                     date: this.date,
 
                     contract_id: this.document.lead.client.contract.id,
@@ -129,7 +161,7 @@
                     document_id: this.document.id,
                     document_type: 'App\\Estimate'
                 };
-                // console.log(data);
+                console.log(data);
 
                 axios
                     .post('/admin/payments', data)
@@ -142,7 +174,6 @@
                     .catch(error => {
                         console.log(error)
                     });
-
             }
         },
 

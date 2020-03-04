@@ -20,7 +20,7 @@ class ConsignmentsItemController extends Controller
     {
         //
     }
-    
+
     public function create()
     {
         //
@@ -34,7 +34,8 @@ class ConsignmentsItemController extends Controller
         $consignment_item->load([
             'cmv.article.unit',
             'entity:id,name,alias',
-            'manufacturer.company'
+            'manufacturer.company',
+            'currency'
         ]);
 
         return response()->json($consignment_item);
@@ -59,7 +60,8 @@ class ConsignmentsItemController extends Controller
 
         $consignment_item->load([
             'cmv.article.unit',
-            'entity:id,name,alias'
+            'entity:id,name,alias',
+            'currency'
         ]);
 
         return response()->json($consignment_item);

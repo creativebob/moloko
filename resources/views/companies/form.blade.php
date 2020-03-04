@@ -192,7 +192,7 @@
             <!-- Конец блока поставщика -->
             @endif
 
-            {{-- Блок продавца --}}
+            {{-- Блок вендора --}}
             @if(!empty($vendor))
                 <div class="tabs-panel" id="tab-vendor">
                     <div class="grid-x grid-padding-x">
@@ -271,6 +271,16 @@
 
                         {{-- Подключаем банковские аккаунты --}}
                         @include('includes.bank_accounts.fieldset', ['company' => $company])
+
+                    </div>
+
+                    <div class="small-12 cell">
+
+                        <fieldset>
+                            <legend>Валюты</legend>
+                            @include('includes.lists.currencies')
+                        </fieldset>
+
 
                     </div>
 
@@ -427,6 +437,8 @@
                     </div>
 
 
+
+
                     {{-- Предлагаем добавить компанию в производители, если, конечно, создаем ее не из под страницы создания производителей --}}
                     @can('index', App\Manufacturer::class)
                         @if(empty($manufacturer))
@@ -438,13 +450,7 @@
                                 </div>
                                 @endif
 
-                                    @if(isset($supplier))
-                                        <div class="small-12 cell checkbox">
-                                            {!! Form::hidden('is_vendor', 0) !!}
-                                            {!! Form::checkbox('is_vendor', 1, isset($supplier->vendor), ['id' => 'checkbox-is_vendor']) !!}
-                                            <label for="checkbox-is_vendor"><span>Продавец</span></label>
-                                        </div>
-                                    @endif
+
 
                             @endif
                         @endif
@@ -455,14 +461,34 @@
                         @if(empty($supplier))
                             @if(isset($company->supplier_self) && (Auth::user()->company_id != null))
                                 @if($company->supplier_self == false)
-                                <div class="small-12 cell checkbox">
-                                    {{ Form::checkbox('supplier_self', 1, $company->supplier_self, ['id' => 'supplier_self']) }}
-                                    <label for="supplier_self"><span>Поставщик</span></label>
-                                </div>
+                                    <div class="small-12 cell checkbox">
+                                        {{ Form::checkbox('supplier_self', 1, $company->supplier_self, ['id' => 'supplier_self']) }}
+                                        <label for="supplier_self"><span>Поставщик</span></label>
+                                    </div>
                                 @endif
 
                             @endif
                         @endif
+                    @endcan
+
+                    @can('index', App\Vendor::class)
+
+                        @if(isset($supplier))
+                            <div class="small-12 cell checkbox">
+                                {!! Form::hidden('is_vendor', 0) !!}
+                                {!! Form::checkbox('is_vendor', 1, isset($supplier->vendor), ['id' => 'checkbox-is_vendor']) !!}
+                                <label for="checkbox-is_vendor"><span>Вендор</span></label>
+                            </div>
+                        @endif
+
+                        @if(isset($vendor))
+                            <div class="small-12 cell checkbox">
+                                {!! Form::hidden('is_vendor', 0) !!}
+                                {!! Form::checkbox('is_vendor', 1, $vendor->vendored, ['id' => 'checkbox-is_vendor']) !!}
+                                <label for="checkbox-is_vendor"><span>Вендор</span></label>
+                            </div>
+                        @endif
+
                     @endcan
 
                         {{-- Чекбоксы управления --}}

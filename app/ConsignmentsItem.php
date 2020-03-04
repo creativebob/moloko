@@ -55,6 +55,9 @@ class ConsignmentsItem extends Model
         'count',
         'cost',
 	    'amount',
+
+        'currency_id',
+
         'entity_id',
         'manufacturer_id',
 
@@ -103,6 +106,12 @@ class ConsignmentsItem extends Model
     public function manufacturer()
     {
         return $this->belongsTo(Manufacturer::class);
+    }
+
+    // Валюта
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
     }
 
 }

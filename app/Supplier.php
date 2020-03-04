@@ -74,7 +74,7 @@ class Supplier extends Model
         return $this->belongsToMany('App\Manufacturer', 'manufacturer_supplier', 'supplier_id', 'manufacturer_id');
     }
 
-    // Продавец
+    // Вендор
     public function vendor()
     {
         return $this->hasOne(Vendor::class, 'supplier_id')

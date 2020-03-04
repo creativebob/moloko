@@ -15,6 +15,7 @@ use App\Http\View\Composers\System\CitiesComposer;
 use App\Http\View\Composers\System\CitySearchComposer;
 use App\Http\View\Composers\System\ContainersCategoriesComposer;
 use App\Http\View\Composers\System\ContainersComposer;
+use App\Http\View\Composers\System\CurrenciesComposer;
 use App\Http\View\Composers\System\DirectiveCategoriesComposer;
 use App\Http\View\Composers\System\DisplayModesComposer;
 use App\Http\View\Composers\System\FiltersComposer;
@@ -375,6 +376,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.directive_categories', DirectiveCategoriesComposer::class);
 
         view()->composer('includes.lists.filters', FiltersComposer::class);
+
+        view()->composer('includes.lists.currencies', CurrenciesComposer::class);
 
 
     }

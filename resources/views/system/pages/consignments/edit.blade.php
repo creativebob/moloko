@@ -100,7 +100,15 @@
         </div>
     </div>
 
-    <consignment-component :consignment='@json($consignment)' :select-data='@json($articles_categories_with_items_data)'></consignment-component>
+    <consignment-component
+        :consignment='@json($consignment)'
+        :select-data='@json($articles_categories_with_items_data)'
+
+        @if (auth()->user()->company->currencies->isNotEmpty())
+            :currencies='@json(auth()->user()->company->currencies)'
+        @endif
+
+    ></consignment-component>
 
     <div class="small-4 small-offset-4 medium-2 medium-offset-0 align-center cell tabs-button tabs-margin-top">
         {{ Form::submit('Редактировать', ['class' => 'button']) }}

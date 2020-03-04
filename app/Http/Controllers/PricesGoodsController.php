@@ -352,6 +352,7 @@ class PricesGoodsController extends Controller
             'catalogs_goods_id' => $request->catalogs_goods_id,
             'goods_id' => $request->goods_id,
             'filial_id' => $request->filial_id,
+            'currency_id' => $request->currency_id,
         ], [
             'price' => $request->price
         ]);
@@ -369,6 +370,7 @@ class PricesGoodsController extends Controller
 
                 $cur_price_goods->history()->create([
                     'price' => $request->price,
+                    'currency_id' => $cur_price_goods->currency_id,
                 ]);
 
                 $cur_price_goods->update([
@@ -403,6 +405,7 @@ class PricesGoodsController extends Controller
 
             $cur_price_goods->history()->create([
                 'price' => $request->price,
+                'currency_id' => $cur_price_goods->currency_id,
             ]);
 
             $cur_price_goods->update([
@@ -418,9 +421,9 @@ class PricesGoodsController extends Controller
 
         $result = PricesGoods::findOrFail($request->id)
             ->update([
-            'archive' => true,
-            'editor_id' => hideGod($user)
-        ]);
+                'archive' => true,
+                'editor_id' => hideGod($user)
+            ]);
         return response()->json($result);
     }
 

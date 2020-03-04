@@ -10,6 +10,7 @@
 				<th>Кол-во:</th>
 				<th>Ед. изм.:</th>
 				<th>Цена:</th>
+                <th>Валюта:</th>
 				<th>Сумма:</th>
 	<!--			<th>% НДС:</th>-->
 	<!--			<th>НДС:</th>-->
@@ -69,7 +70,7 @@
 						<template v-else>
 							<select
 
-									v-model="manufacturer_id"
+									v-model="manufacturerId"
 									name="entity_id"
 							>
 								<option
@@ -98,6 +99,21 @@
 					>
 <!--					<input-digit-component name="cost" :value="cost" v-on:countchanged="changeCost"></input-digit-component>-->
 				</td>
+                <td>
+                    <label v-if="currencies.length > 1">
+                        <select
+                            v-model="currencyId"
+                        >
+                            <option
+                                v-for="currency in currencies"
+                                :value="currency.id"
+                            >{{ currency.name }}</option>
+                        </select>
+                    </label>
+                    <template v-else>
+                        {{ currencies[0].name }}
+                    </template>
+                </td>
 				<td>
 					<span>{{ totalItemSum | roundToTwo }}</span>
 				</td>
@@ -143,7 +159,16 @@
 		},
 		props: {
 			consignment: Object,
-			selectData: Object
+			selectData: Object,
+            currencies: {
+			    type: Array,
+                default: [
+                    {
+                        id: 1,
+                        name: 'Рубль',
+                    }
+                ],
+            }
 		},
 		data() {
 			return {
@@ -167,7 +192,10 @@
 				// Производители
 				manufacturers: this.selectData.manufacturers,
 				itemManufacturer: null,
-				manufacturer_id: null
+				manufacturerId: null,
+
+                // Валюте
+                currencyId: this.currencies[0].id,
 			}
 		},
 		computed: {
@@ -208,7 +236,7 @@
 			manufacturer() {
 				return this.manufacturers.filter(item => {
 					if (item.id === this.itemManufacturer) {
-						this.manufacturer_id = item.id;
+						this.manufacturerId = item.id;
 						return item;
 					}
 
@@ -286,7 +314,8 @@
 							entity_id: this.entity_id,
 							count: this.count,
 							cost: this.cost,
-							manufacturer_id: this.manufacturer_id,
+							manufacturer_id: this.manufacturerId,
+                            currency_id: this.currencyId,
 						})
 						.then(response => {
 								this.items.push(response.data)
@@ -295,7 +324,7 @@
 								this.count = null,
 								this.cost = null,
 								this.change = true,
-								this.manufacturer_id = null,
+								this.manufacturerId = null,
 								this.itemManufacturer = null,
 
 						)

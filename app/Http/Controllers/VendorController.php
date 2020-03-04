@@ -166,6 +166,8 @@ class VendorController extends Controller
 
         $vendor->save();
 
+        $vendor->supplier->company->currencies()->sync($request->currencies);
+
         return redirect()->route('vendors.index');
     }
 
@@ -263,6 +265,8 @@ class VendorController extends Controller
 
         $data = $request->input();
         $vendor->update($data);
+
+        $vendor->supplier->company->currencies()->sync($request->currencies);
 
         return redirect()->route('vendors.index');
     }

@@ -4,14 +4,14 @@
 @include('includes.scripts.class.city_search')
 @endsection
 
-@section('title', 'Новый продавец')
+@section('title', 'Новый вендор')
 
 @section('breadcrumbs', Breadcrumbs::render('create', $page_info))
 
 @section('title-content')
 	<div class="top-bar head-content">
     <div class="top-bar-left">
-       <h2 class="header-content">ДОБАВЛЕНИЕ НОВОГО ПРОДАВЦА</h2>
+       <h2 class="header-content">ДОБАВЛЕНИЕ НОВОГО ВЕНДОРА</h2>
     </div>
     <div class="top-bar-right">
     </div>
@@ -21,7 +21,7 @@
 @section('content')
 
   {{ Form::open(['route' => 'vendors.store', 'data-abide', 'novalidate', 'class' => 'form-check-city', 'files' => 'true']) }}
-    @include('companies.form', ['submitButtonText' => 'Добавить продавца', 'param' => ''])
+    @include('companies.form', ['submitButtonText' => 'Добавить вендора', 'param' => ''])
   {{ Form::close() }}
 
 @endsection

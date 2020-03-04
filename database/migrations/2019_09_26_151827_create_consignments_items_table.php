@@ -26,10 +26,13 @@ class CreateConsignmentsItemsTable extends Migration
 
             $table->bigInteger('manufacturer_id')->unsigned()->nullable()->comment('Id производителя');
             $table->foreign('manufacturer_id')->references('id')->on('manufacturers');
-	
+
 	        $table->decimal('count', 12,4)->default(0)->comment('Количество');
             $table->decimal('cost', 12, 4)->default(0)->comment('Цена за единицу');
             $table->decimal('amount', 16, 8)->default(0)->comment('Сумма');
+
+            $table->bigInteger('currency_id')->nullable()->unsigned()->comment('Id валюты');
+            $table->foreign('currency_id')->references('id')->on('currencies');
 
             $table->integer('vat_rate')->nullable()->comment('Размер налога НДС');
             $table->integer('amount_vat')->nullable()->comment('Сумма НДС');
@@ -44,7 +47,7 @@ class CreateConsignmentsItemsTable extends Migration
             $table->bigInteger('entity_id')->nullable()->unsigned()->comment('Id сущности ТМЦ');
             $table->foreign('entity_id')->references('id')->on('entities');
 
-            
+
             // Общие настройки
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->boolean('display')->default(1)->comment('Отображение на сайте');

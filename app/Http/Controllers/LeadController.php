@@ -222,7 +222,12 @@ class LeadController extends Controller
                             'product.process',
                         ]);
                     },
-                    'payments.type',
+                    'payments' => function ($q) {
+                        $q->with([
+                           'type',
+                           'currency'
+                        ]);
+                    },
                     'lead.client.contract'
                 ]);
             },

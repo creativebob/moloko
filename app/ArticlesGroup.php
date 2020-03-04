@@ -49,9 +49,8 @@ class ArticlesGroup extends Model
     protected $fillable = [
         'name',
         'photo_id',
-        'stauts',
+        'status',
         'description',
-        'unit_id',
         'units_category_id',
         'rule_id',
         'album_id',

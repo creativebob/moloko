@@ -412,4 +412,10 @@ class Company extends Model
         return $this->belongsToMany(Rubricator::class, 'rubricator_site');
     }
 
+    // Валюты
+    public function currencies()
+    {
+        return $this->belongsToMany(Currency::class);
+    }
+
 }

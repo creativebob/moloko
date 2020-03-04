@@ -1146,7 +1146,7 @@ Menu::insert([
         'sort' => null,
     ],
     [
-        'name' => 'Продавцы',
+        'name' => 'Вендоры',
         'icon' => null,
         'alias' => 'admin/vendors',
         'tag' => 'vendors',

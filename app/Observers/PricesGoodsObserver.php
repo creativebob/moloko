@@ -24,6 +24,7 @@ class PricesGoodsObserver
     {
         $prices_goods->history()->create([
             'price' => $prices_goods->price,
+            'currency_id' => $prices_goods->currency_id,
         ]);
     }
 

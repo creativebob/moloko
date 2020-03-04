@@ -197,10 +197,10 @@ class PagesTableSeeder extends Seeder
                 'display' => true,
             ],
             [
-                'name' => 'Продавцы',
+                'name' => 'Вендоры',
                 'site_id' => 1,
-                'title' => 'Продавцы',
-                'description' => 'Продавцы',
+                'title' => 'Вендоры',
+                'description' => 'Вендоры',
                 'alias' => 'vendors',
                 'company_id' => null,
                 'system' => true,

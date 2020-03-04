@@ -22,8 +22,8 @@ class CreateProcessesGroupsTable extends Migration
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
             $table->foreign('photo_id')->references('id')->on('photos');
 
-            $table->bigInteger('unit_id')->nullable()->unsigned()->comment('Id единицы измерения');
-            $table->foreign('unit_id')->references('id')->on('units');
+            $table->bigInteger('units_category_id')->nullable()->unsigned()->comment('Id категории единицы измерения');
+            $table->foreign('units_category_id')->references('id')->on('units_categories');
 
             $table->integer('rule_id')->nullable()->unsigned()->comment('Id правила определения цены');
             // $table->foreign('rule_id')->references('id')->on('rules');

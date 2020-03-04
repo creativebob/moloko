@@ -37,7 +37,10 @@ class PaymentController extends Controller
     {
         $data = $request->input();
         $payment = Payment::create($data);
-        $payment->load('type');
+        $payment->load([
+            'type',
+            'currency'
+        ]);
         return response()->json($payment);
     }
 
