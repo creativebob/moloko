@@ -392,7 +392,7 @@
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
-                                    <label>Цена за (<span id="unit">{{ $process->group->unit->abbreviation }}</span>)
+                                    <label>Цена за (<span id="unit">{{ $process->unit->abbreviation }}</span>)
                                         {{ Form::number('price_default', null) }}
                                     </label>
                                 </div>
