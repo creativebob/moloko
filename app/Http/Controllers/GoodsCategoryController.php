@@ -171,7 +171,7 @@ class GoodsCategoryController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        $settings = getSettings($this->entity_alias);
+        $settings = getPhotoSettings($this->entity_alias);
 
         // При добавлении метрики отдаем ajax новый список свойст и метрик
         if ($request->ajax()) {

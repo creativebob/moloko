@@ -9,13 +9,14 @@ class CatalogGoodsWithPricesComposer
 {
 	public function compose(View $view)
 	{
+	    $settings = $view->settings;
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer_cg = operator_right('catalogs_goods', true, getmethod('index'));
 
         $catalogs_goods = CatalogsGoods::with([
             'items:id,catalogs_goods_id,name,photo_id,parent_id',
-            'prices' => function ($q) {
+            'prices' => function ($q) use ($settings) {
                 $q->with([
                     'goods' => function($q) {
                         $q->with([
@@ -34,42 +35,54 @@ class CatalogGoodsWithPricesComposer
                                 ]);
                             }
                         ])
-                            ->where('archive', false)
-                            ->select([
-                                'id',
-                                'article_id',
-                            ]);
+                        ->where('archive', false)
+                        ->select([
+                            'id',
+                            'article_id',
+                        ]);
                     }
                 ])
-                    ->whereHas('goods', function ($q) {
-                        $q->where('archive', false)
-                            ->whereHas('article', function ($q) {
-                                $q->where('draft', false);
-                            });
+                ->whereHas('goods', function ($q) use ($settings) {
+                    $q->when($settings->firstWhere('alias', 'sale-for-order'), function ($q) {
+                        $q->where('is_ordered', true);
                     })
-                    ->where([
-                        'archive' => false,
-                        'filial_id' => \Auth::user()->StafferFilialId
-                    ])
-                    ->select([
-                        'prices_goods.id',
-                        'archive',
-                        'prices_goods.catalogs_goods_id',
-                        'catalogs_goods_item_id',
-                        'price',
-                        'goods_id',
-                        'filial_id'
-                    ]);
+                    ->when($settings->firstWhere('alias', 'sale-for-production'), function ($q) {
+                        $q->where('is_produced', true);
+                    })
+                    ->when($settings->firstWhere('alias', 'sale-from-stock'), function ($q) {
+                        $q->whereHas('stocks', function ($q) {
+                            $q->where('filial_id', auth()->user()->StafferFilialId)
+                            ->where('free', '>', 0);
+                        });
+                    })
+                    ->where('archive', false)
+                    ->whereHas('article', function ($q) {
+                        $q->where('draft', false);
+                    });
+                })
+                ->where([
+                    'archive' => false,
+                    'filial_id' => \Auth::user()->StafferFilialId
+                ])
+                ->select([
+                    'prices_goods.id',
+                    'archive',
+                    'prices_goods.catalogs_goods_id',
+                    'catalogs_goods_item_id',
+                    'price',
+                    'goods_id',
+                    'filial_id'
+                ]);
             },
         ])
-            ->moderatorLimit($answer_cg)
-            ->companiesLimit($answer_cg)
-            ->authors($answer_cg)
-            ->filials($answer_cg)
-            ->whereHas('filials', function ($q) {
-                $q->where('id', auth()->user()->stafferFilialId);
-            })
-            ->get();
+        ->moderatorLimit($answer_cg)
+        ->companiesLimit($answer_cg)
+        ->authors($answer_cg)
+        ->filials($answer_cg)
+        ->whereHas('filials', function ($q) {
+            $q->where('id', auth()->user()->stafferFilialId);
+        })
+        ->get();
 //         dd($сatalogs_goods);
 
         $catalogs_goods_items = [];

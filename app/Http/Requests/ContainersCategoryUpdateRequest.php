@@ -23,7 +23,7 @@ class ContainersCategoryUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $settings = getSettings('containers_categories');
+        $settings = getPhotoSettings('containers_categories');
 
         return [
             'name' => 'required|string|max:255',

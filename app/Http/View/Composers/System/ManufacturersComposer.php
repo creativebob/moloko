@@ -16,12 +16,18 @@ class ManufacturersComposer
         $answer = operator_right('manufacturers', false, 'index');
 
         // Главный запрос
-        $manufacturers = Manufacturer::with('company')
+        $manufacturers = Manufacturer::with([
+            'company:id,name'
+        ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         // ->toBase()
-        ->get();
-        // dd($manufacturers);
+        ->get([
+            'id',
+            'company_id',
+            'manufacturer_id'
+        ]);
+//         dd($manufacturers);
         // dd($company->$name);
 
         return $view->with(compact('manufacturers'));

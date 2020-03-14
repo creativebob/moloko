@@ -142,7 +142,7 @@ class StockGoodsController extends Controller
         ->get();
 
         if ($result_search->count()) {
-            
+
             $entity_alias = $this->entity_alias;
             return view('includes.search', compact('result_search', 'entity_alias'));
         } else {
@@ -248,7 +248,7 @@ class StockGoodsController extends Controller
             'raws.category'
         ]);
 
-        $dropzone = getSettings($this->entity_alias);
+        $dropzone = getPhotoSettings($this->entity_alias);
 //      dd($settings);
 
         $dropzone['id'] = $article->id;

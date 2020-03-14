@@ -23,7 +23,7 @@ class ExpendablesCategoryUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $settings = getSettings('expendables_categories');
+        $settings = getPhotoSettings('expendables_categories');
 
         return [
             'name' => 'required|string|max:255',

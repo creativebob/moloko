@@ -7,7 +7,7 @@
             <thead>
             <tr>
                 <th>Наименование</th>
-                <th>Склад</th>
+                <th v-if="settings.length">Склад</th>
                 <th>Цена</th>
                 <th>Кол-во</th>
                 <!--                                        <th>Себестоимость</th>
@@ -15,23 +15,23 @@
                                                             <th>Наценка</th> -->
                 <th class="th-amount">Сумма</th>
                 <th class="th-delete"></th>
-                <th class="th-action">
-                    <template
-                        v-if="!isSaled"
-                    >
-                        <span
-                            v-if="isReserved"
-                            @click="unreserveEstimateItems"
-                            class="button-to-reserve"
-                            title="Снять все с резерва!"
-                        ></span>
-                        <span
-                            v-else
-                            @click="reserveEstimateItems"
-                            class="button-to-reserve"
-                            title="Зарезервировать все!"
-                        ></span>
-                    </template>
+                <th
+                    v-if="settings.length && isRegistered"
+                    class="th-action"
+                >
+
+                    <span
+                        v-if="isReserved"
+                        @click="unreserveEstimateItems"
+                        class="button-to-reserve"
+                        title="Снять все с резерва!"
+                    ></span>
+                    <span
+                        v-else
+                        @click="reserveEstimateItems"
+                        class="button-to-reserve"
+                        title="Зарезервировать все!"
+                    ></span>
 
                 </th>
             </tr>
@@ -43,7 +43,9 @@
                     :item="item"
                     :index="index"
                     :key="item.id"
-                    :is-saled="isSaled"
+                    :is-registered="isRegistered"
+                    :settings="settings"
+                    :stocks="stocks"
                     @open-modal-remove="openModal(item, index)"
                     @update="updateItem"
                 ></estimates-goods-item-component>
@@ -100,6 +102,8 @@
         },
         props: {
             items: Array,
+            settings: Array,
+            stocks: Array,
         },
         data() {
             return {
@@ -113,7 +117,7 @@
                 itemName: null,
                 itemIndex: null,
 
-                isSaled: this.$store.state.estimate.estimate.is_saled === 1,
+                isRegistered: this.$store.state.estimate.estimate.is_registered === 1,
             }
         },
         computed: {

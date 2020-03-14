@@ -213,4 +213,17 @@ class StockController extends Controller
             abort(403, 'Ошибка при удалении альбома');
         }
     }
+
+    public function count()
+    {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $stocks_count = Stock::moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->systemItem($answer)
+            ->count();
+
+        return response()->json($stocks_count);
+    }
 }

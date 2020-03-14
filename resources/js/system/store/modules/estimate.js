@@ -1,7 +1,6 @@
 const moduleEstimate = {
     state: {
         estimate: null,
-        stockId: null,
         goodsItems: [],
         servicesItems: [],
     },
@@ -65,21 +64,17 @@ const moduleEstimate = {
 
             this.commit('UPDATE_ESTIMATE');
         },
-        SET_STOCK_ID(state, stockId) {
-            state.stockId = stockId;
-        },
         ADD_PAYMENT(state, payment) {
             state.estimate.payments.push(payment);
         }
     },
     actions: {
         ADD_GOODS_ITEM_TO_ESTIMATE({ state }, priceId) {
-            if (state.estimate.is_saled === 0 && state.estimate.is_produced === 0) {
+            if (state.estimate.is_registered === 0) {
                 axios
                     .post('/admin/estimates_goods_items', {
                         estimate_id: state.estimate.id,
                         price_id: priceId,
-                        stock_id: state.stockId
                     })
                     .then(response => {
                         if (response.data.success) {
@@ -104,7 +99,7 @@ const moduleEstimate = {
             }
         },
         ADD_SERVICES_ITEM_TO_ESTIMATE({ state }, priceId) {
-            if (state.estimate.is_saled === 0 && state.estimate.is_produced === 0) {
+            if (state.estimate.is_registered === 0) {
                 axios
                     .post('/admin/estimates_services_items', {
                         estimate_id: state.estimate.id,
@@ -133,7 +128,7 @@ const moduleEstimate = {
             }
         },
         REMOVE_GOODS_ITEM_FROM_ESTIMATE({ state }, itemId) {
-            if (state.estimate.is_saled === 0) {
+            if (state.estimate.is_registered === 0) {
                 axios
                     .delete('/admin/estimates_goods_items/' + itemId)
                     .then(response => {
@@ -150,7 +145,7 @@ const moduleEstimate = {
             }
         },
         REMOVE_SERVICES_ITEM_FROM_ESTIMATE({ state }, itemId) {
-            if (state.estimate.is_saled === 0) {
+            if (state.estimate.is_registered === 0) {
                 axios
                     .delete('/admin/estimates_services_items/' + itemId)
                     .then(response => {

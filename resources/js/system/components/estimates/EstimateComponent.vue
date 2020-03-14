@@ -2,7 +2,11 @@
 
 	<div>
         <template v-if="goodsList.length > 0">
-            <estimates-goods-items-component :items="goodsList"></estimates-goods-items-component>
+            <estimates-goods-items-component
+                :items="goodsList"
+                :settings="settings"
+                :stocks="stocks"
+            ></estimates-goods-items-component>
         </template>
 
         <template v-if="servicesList.length > 0">
@@ -22,6 +26,16 @@
 			'estimates-goods-items-component': require('./goods/EstimatesGoodsItemsComponent.vue'),
             'estimates-services-items-component': require('./services/EstimatesServicesItemsComponent.vue')
 		},
+        props: {
+            estimate: Object,
+            settings: Array,
+            stocks: Array,
+        },
+        created: function () {
+            this.$store.commit('SET_ESTIMATE', this.estimate);
+            this.$store.commit('SET_GOODS_ITEMS', this.estimate.goods_items);
+            this.$store.commit('SET_SERVICES_ITEMS', this.estimate.services_items);
+        },
 		data() {
 			return {
 				//
@@ -36,14 +50,9 @@
                 itemServices: null,
                 itemServicesName: null,
                 itemServicesIndex: null,
-
-				isSaled: this.$store.state.estimate.estimate.is_saled === 1,
 			}
 		},
 		computed: {
-			estimate() {
-				return this.$store.state.estimate.estimate;
-			},
 			goodsList() {
 				return this.$store.state.estimate.goodsItems;
 			},
@@ -59,9 +68,6 @@
 		},
 
 		methods: {
-
-
-
             openModalServices(item, index) {
                 this.itemServicesIndex = index;
                 this.itemServices = item;

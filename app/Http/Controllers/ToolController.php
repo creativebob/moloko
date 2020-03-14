@@ -255,7 +255,7 @@ class ToolController extends Controller
         // dd($article);
 
         // Получаем настройки по умолчанию
-        $settings = getSettings($this->entity_alias);
+        $settings = getPhotoSettings($this->entity_alias);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);

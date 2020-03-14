@@ -47,6 +47,18 @@ class PagesTableSeeder extends Seeder
                 'display' => true,
             ],
 
+            [
+                'name' => 'Настройки',
+                'site_id' => 1,
+                'title' => 'Настройки',
+                'description' => 'Настройки',
+                'alias' => 'settings',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+
 
             // ----------------- Основной блок (База) ------------------------
 

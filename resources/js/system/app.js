@@ -31,19 +31,21 @@ Vue.use(Vuex);
 Vue.component('consignment-component', require('./components/consignments/ConsignmentComponent.vue'));
 Vue.component('production-component', require('./components/productions/ProductionComponent.vue'));
 
-Vue.component('estimate-init-component', require('./components/estimates/EstimateInitComponent.vue'));
 Vue.component('estimate-component', require('./components/estimates/EstimateComponent.vue'));
+Vue.component('estimate-register-button-component', require('./components/estimates/EstimateRegisterButtonComponent.vue'));
 Vue.component('estimate-sale-button-component', require('./components/estimates/EstimateSaleButtonComponent.vue'));
 Vue.component('estimate-production-button-component', require('./components/estimates/EstimateProductionButtonComponent.vue'));
 Vue.component('payments-component', require('./components/PaymentsComponent.vue'));
 
 Vue.component('input-digit-component', require('./components/InputDigitComponent.vue'));
 Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
-Vue.component('rawcomposition-component', require('./components/RawCompositionComponent.vue'));
 
+// ТМЦ
 Vue.component('articles-categories-with-groups-component', require('./components/ArticlesCategoriesWithGroupsComponent.vue'));
-Vue.component('processes-categories-with-groups-component', require('./components/ProcessesCategoriesWithGroupsComponent.vue'));
+Vue.component('manufacturers-component', require('./components/MAnufacturersComponent.vue'));
 
+// Услуги
+Vue.component('processes-categories-with-groups-component', require('./components/ProcessesCategoriesWithGroupsComponent.vue'));
 
 Vue.component('catalog-goods-component', require('./components/catalogs/goods/CatalogGoodsComponent.vue'));
 Vue.component('catalog-services-component', require('./components/catalogs/services/CatalogServicesComponent.vue'));
@@ -63,6 +65,8 @@ Vue.component('search-prices-goods-component', require('./components/search/Sear
 
 Vue.component('sites-component', require('./components/promotions/SitesComponent'));
 Vue.component('promotion-catalog-goods-component', require('./components/promotions/CatalogGoodsComponent'));
+
+Vue.component('settings-stocks-component', require('./components/settings/SettingsStocksComponent'));
 
 // Vue.component('price-goods-price-component', require('./components/prices_goods/PriceGoodsPriceComponent.vue'));
 

@@ -307,6 +307,49 @@ class EstimateController extends Controller
     }
 
     /**
+     * Регистрация сметы
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function registering($id)
+    {
+        // ГЛАВНЫЙ ЗАПРОС:
+        $estimate = Estimate::findOrFail($id);
+
+        if ($estimate->is_registered == 0) {
+
+            // Пишем склады при оформлении
+            $settings = getSettings();
+            if ($settings) {
+
+                $estimate->load([
+                    'goods_items'
+                ]);
+
+                if ($estimate->goods_items->isNotEmpty()) {
+
+                }
+            }
+
+            $estimate->update([
+                'is_registered' => true,
+            ]);
+
+            return redirect()
+                ->route('leads.edit', $estimate->lead_id)
+                ->with(['success' => 'Успешно оформлено']);
+
+        } else {
+            return back()
+                ->withErrors(['msg' => 'Смета оформлена'])
+                ->withInput();
+        }
+
+//        return redirect()->route('leads.index');
+    }
+
+    /**
      * Продажа сметы
      *
      * @param Request $request

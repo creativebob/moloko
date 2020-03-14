@@ -11,7 +11,21 @@
             {{ item.product.article.name }}
             <span class="icon-comment"></span>
         </td>
-        <td>{{ item.stock.name }}</td>
+
+        <td v-if="settings.length && stocks.length">
+            <select
+                name="stock_id"
+                v-model="stockId"
+            >
+                <option v-for="stock in stocks"
+                    :value="stock.id"
+                >{{ stock.name }}</option>
+            </select>
+        </td>
+        <td v-else>
+            {{ item.stock.name }}
+        </td>
+
         <td>{{ item.price | roundToTwo | level }}</td>
 
         <!--        <td>{{ item.count }}</td>-->
@@ -28,18 +42,25 @@
             <template v-else="changeCount">{{ item.count | roundToTwo | level }}</template>
         </td>
 
-        <td class="td-amount"><a class="button green-button" data-open="price-set">{{ item.amount | roundToTwo | level }}</a></td>
+        <td class="td-amount">
+            <a
+                class="button green-button"
+                :data-open="'modal-estimates_goods_item-' + item.id"
+            >{{ item.amount | roundToTwo | level }}</a>
+        </td>
         <td class="td-delete">
             <div
-                v-if="!this.isSaled"
+                v-if="!isRegistered"
                 @click="openModalRemoveItem"
                 class="icon-delete sprite"
                 data-open="delete-estimates_goods_item"
             ></div>
         </td>
-        <td class="td-action">
+        <td
+            v-if="settings.length && isRegistered"
+            class="td-action"
+        >
             <div
-                v-if="!isSaled"
                 :class="isReservedClass"
             >
                 <span
@@ -60,6 +81,120 @@
                 >{{ reservedCount | roundToTwo | level }}</span>
             </div>
         </td>
+
+        <div
+            class="reveal"
+            :id="'modal-estimates_goods_item-' + item.id"
+            data-reveal
+            data-close-on-click="false"
+        >
+            <div class="grid-x">
+                <div class="small-12 cell modal-title">
+                    <h5>Настройка позиции</h5>
+                </div>
+            </div>
+
+            <div class="grid-x grid-padding-x align-center modal-content inputs">
+                <div class="small-12 cell">
+
+                    <div class="grid-x grid-margin-x">
+
+                        <div class="small-12 cell">
+                            <label>Закупочная цена единицы, руб
+
+                            </label>
+                        </div>
+
+                        <div class="small-12 medium-12 cell">
+                            <fieldset>
+                                <legend>Наценка:</legend>
+                                <div class="grid-x grid-margin-x">
+                                    <div class="small-12 medium-6 cell">
+                                        <label>Наценка, %
+
+                                        </label>
+                                    </div>
+                                    <div class="small-12 medium-6 cell">
+                                        <label>Наценка, руб
+
+                                        </label>
+                                    </div>
+
+                                    <hr>
+
+                                    <div class="small-12 medium-6 cell">
+                                        <label>Допфикс наценка, %
+
+                                        </label>
+                                    </div>
+                                    <div class="small-12 medium-6 cell">
+                                        <label>Допфикс наценка, руб
+
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+
+                        <div class="small-12 medium-12 cell">
+                            <fieldset>
+                                <legend>Скидка:</legend>
+                                <div class="grid-x grid-margin-x">
+                                    <div class="small-12 medium-6 cell">
+                                        <label>Скидка, %
+
+                                        </label>
+                                    </div>
+                                    <div class="small-12 medium-6 cell">
+                                        <label>Скидка, руб
+
+                                        </label>
+                                    </div>
+
+                                    <div class="small-12 medium-6 cell">
+                                        <label>Допфикс скидка, %
+
+                                        </label>
+                                    </div>
+                                    <div class="small-12 medium-6 cell">
+                                        <label>Допфикс скидка, руб
+
+                                        </label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+
+                        <div class="small-12 medium-6 cell">
+                            <label>Цена единицы, руб
+
+                            </label>
+                        </div>
+                        <div class="small-12 medium-6 cell">
+                            <label>Количество, единиц
+
+                            </label>
+                        </div>
+
+                        <div class="small-12 cell">
+                            <label>Итоговая стоимость по позиции, руб
+
+                            </label>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="grid-x align-center">
+                <div class="small-6 medium-4 cell">
+                    <button class="button modal-button"></button>
+                </div>
+            </div>
+            <div data-close class="icon-close-modal sprite close-modal add-item"></div>
+        </div>
     </tr>
 </template>
 
@@ -68,7 +203,9 @@
         props: {
             item: Object,
             index: Number,
-            isSaled: Boolean,
+            isRegistered: Boolean,
+            settings: Array,
+            stocks: Array,
         },
         data() {
             return {
@@ -76,6 +213,14 @@
                 cost: Number(this.item.cost),
                 changeCount: false,
                 changeCost: false,
+                stockId: null,
+            }
+        },
+        mounted() {
+            if(this.settings.length && this.stocks.length && this.item.stock_id === null) {
+                this.stockId = this.stocks[0].id;
+            } else {
+                this.stockId = this.item.stock_id;
             }
         },
         computed: {
@@ -137,13 +282,13 @@
             },
             checkChangeCount() {
                 if (this.item.product.serial === 0) {
-                    if (!this.isSaled) {
+                    if (!this.isRegistered) {
                         this.changeCount = !this.changeCount
                     }
                 }
             },
             // checkChangeCost() {
-            //     if (!this.isSaled) {
+            //     if (!this.isRegistered) {
             //         this.changeCost = !this.changeCost
             //     }
             // },

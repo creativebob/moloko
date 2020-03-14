@@ -370,13 +370,13 @@ class GoodsController extends Controller
         $article = $cur_goods->article;
 
         // Получаем настройки по умолчанию
-//        $dropzone = getSettings($this->entity_alias);
+//        $dropzone = getPhotoSettings($this->entity_alias);
 //        $dropzone['id'] = $article->id;
 //        $dropzone['entity'] = $article->getTable();
 //        dd($dropzone);
 
         // Получаем настройки по умолчанию
-        $settings = $this->getSettings($this->entity_alias);
+        $settings = $this->getPhotoSettings($this->entity_alias);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
@@ -414,16 +414,14 @@ class GoodsController extends Controller
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
-            $cur_goods->serial = $request->serial;
-            $cur_goods->display = $request->display;
-            $cur_goods->system = $request->system;
-
-            // if($article->draft) {
-                $cur_goods->price_unit_id = $request->price_unit_id;
-                $cur_goods->price_unit_category_id = $request->price_unit_category_id;
-            // }
-
-            $cur_goods->save();
+            $data = $request->input();
+            if ($request->has('is_produced')) {
+                $data['is_ordered'] = 0;
+            }
+            if ($request->has('is_ordered')) {
+                $data['is_produced'] = 0;
+            }
+            $cur_goods->update($data);
 
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $cur_goods);

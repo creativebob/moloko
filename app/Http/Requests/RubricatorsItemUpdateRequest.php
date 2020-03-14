@@ -23,7 +23,7 @@ class RubricatorsItemUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $settings = getSettings('rubricators_items');
+        $settings = getPhotoSettings('rubricators_items');
 
         return [
             'name' => 'required|string|max:255',

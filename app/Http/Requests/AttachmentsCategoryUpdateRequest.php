@@ -23,7 +23,7 @@ class AttachmentsCategoryUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $settings = getSettings('attachments_categories');
+        $settings = getPhotoSettings('attachments_categories');
 
         return [
             'name' => 'required|string|max:255',

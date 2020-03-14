@@ -287,7 +287,8 @@ Route::delete('/photo_delete/{id}', 'PhotoController@ajax_delete');
 // Route::resource('/places', 'PlaceController')->middleware('auth');
 
 // --------------------------------------- Склады -----------------------------------------------
-Route::resource('stocks', 'StockController')->middleware('auth');
+Route::post('/stocks/count', 'StockController@count')->name('stocks.count');
+Route::resource('/stocks', 'StockController');
 
 
 // ---------------------------------------- Метрики -------------------------------------------------
@@ -657,7 +658,10 @@ Route::post('/leads_add_note', 'LeadController@ajax_add_note')->middleware('auth
 Route::post('/leads/autofind/{phone}', 'LeadController@ajax_autofind_phone')->middleware('auth');
 
 
-// --------------------------------------- Расчеты -----------------------------------------------
+// --------------------------------------- Расчеты (Сметы) -----------------------------------------------
+
+// Регистрация
+Route::patch('/estimates/{id}/registering', 'EstimateController@registering');
 
 // Производство
 Route::patch('/estimates/{id}/produce', 'EstimateController@produce');

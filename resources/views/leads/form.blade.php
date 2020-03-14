@@ -91,9 +91,8 @@
                     <div class="tabs-panel is-active" id="content-panel-order">
 
                         <div class="grid-x grid-margin-x">
-                            <estimate-init-component :estimate='@json($lead->estimate)'></estimate-init-component>
                             <div class="small-12 medium-12 large-12 cell">
-                                <estimate-component></estimate-component>
+                                @include('leads.estimate')
                             </div>
                         </div>
                     </div>
@@ -182,21 +181,21 @@
                     <a href="#content-panel-notes" aria-selected="true">События</a>
                 </li>
 
-                @can('create', App\Estimate::class)
-                    @isset($catalogs_goods_data)
+                @if(! $lead->estimate->is_registered)
+                    @can('create', App\Estimate::class)
                         <li class="tabs-title">
                             <a data-tabs-target="tab-catalog-goods" href="#tab-catalog-goods">Товары</a>
                         </li>
-                    @endisset
-                @endcan
+                    @endcan
+                @endif
 
-                @can('create', App\Estimate::class)
-                    @isset($catalogs_services_data)
+                @if(! $lead->estimate->is_registered)
+                    @can('create', App\Estimate::class)
                         <li class="tabs-title">
                             <a data-tabs-target="tab-catalog-services" href="#tab-catalog-services">Услуги</a>
                         </li>
-                    @endisset
-                @endcan
+                    @endcan
+                @endif
 
                 {{-- <li class="tabs-title"><a href="#content-panel-documents" aria-selected="true">Документы</a></li> --}}
 
@@ -205,7 +204,7 @@
                     <a data-tabs-target="content-panel-claims" href="#content-panel-claims">Рекламации</a>
                 </li>
                 @endcan --}}
-                @if($lead->estimate->is_produced == 1)
+                @if($lead->estimate->is_registered)
                     <li class="tabs-title">
                         <a href="#tab-payments" aria-selected="true">Оплата</a>
                     </li>
@@ -259,23 +258,23 @@
                 </div>
 
                 {{-- КАТАЛОГ ТОВАРОВ --}}
-                @can('index', App\CatalogsGoods::class)
-                    @isset($catalogs_goods_data)
-                    <div class="tabs-panel" id="tab-catalog-goods">
-                        <catalog-goods-component :catalogs-goods-data='@json($catalogs_goods_data)'></catalog-goods-component>
-                    </div>
-                    @endisset
-                @endcan
+                @if(! $lead->estimate->is_registered)
+                    @can('index', App\CatalogsGoods::class)
+                        <div class="tabs-panel" id="tab-catalog-goods">
+                            @include('leads.catalogs.catalogs_goods')
+                        </div>
+                    @endcan
+                @endif
                 {{-- КОНЕЦ КАТАЛОГ ТОВАРОВ --}}
 
                 {{-- КАТАЛОГ УСЛУГ --}}
-                @can('index', App\CatalogsService::class)
-                    @isset($catalogs_goods_data)
-                    <div class="tabs-panel" id="tab-catalog-services">
-                        <catalog-services-component :catalogs-services-data='@json($catalogs_services_data)'></catalog-services-component>
-                    </div>
-                    @endisset
-                @endcan
+                @if(! $lead->estimate->is_registered)
+                    @can('index', App\CatalogsService::class)
+                        <div class="tabs-panel" id="tab-catalog-services">
+                            @include('leads.catalogs.catalogs_services')
+                        </div>
+                    @endcan
+                @endif
                 {{-- КОНЕЦ КАТАЛОГ УСЛУГ --}}
 
 
@@ -344,18 +343,20 @@
                     </div> --}}
 
                     {{-- ФАКТ ОПЛАТЫ --}}
-                    <div class="tabs-panel" id="tab-payments">
-                        <payments-component
-                            :document='@json($lead->estimate)'
-                            :payments-types='@json($payments_types)'
-                            cur-date="{{ now() }}"
+                    @if($lead->estimate->is_registered)
+                        <div class="tabs-panel" id="tab-payments">
+                            <payments-component
+                                :document='@json($lead->estimate)'
+                                :payments-types='@json($payments_types)'
+                                cur-date="{{ now() }}"
 
-                            @if (auth()->user()->company->currencies->isNotEmpty())
-                            :currencies='@json(auth()->user()->company->currencies)'
-                            @endif
+                                @if(auth()->user()->company->currencies->isNotEmpty())
+                                :currencies='@json(auth()->user()->company->currencies)'
+                                @endif
 
-                        ></payments-component>
-                    </div>
+                            ></payments-component>
+                        </div>
+                    @endif
 
                     {{-- АТТРИБУЦИЯ --}}
                     <div class="tabs-panel" id="content-panel-attribution">
@@ -412,10 +413,10 @@
                                                     $disabled = true;
                                                 }
                                                 @endphp
-                                                @if ($stocks->isNotEmpty())
-                                                <select-stocks-component :stock-id="{{ $lead->estimate->stock_id }}" :stocks='@json($stocks)'></select-stocks-component>
+{{--                                                @if ($stocks->isNotEmpty())--}}
+{{--                                                <select-stocks-component :stock-id="{{ $lead->estimate->stock_id }}" :stocks='@json($stocks)'></select-stocks-component>--}}
 {{--                                                @include('includes.selects.stocks', ['stock_id' => $lead->estimate->stock_id, 'disabled' =>  $disabled])--}}
-                                                    @endif
+{{--                                                    @endif--}}
                                             </td>
                                             <td></td>
                                         </tr>
@@ -475,8 +476,12 @@
         </div>
 
         <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-            <estimate-production-button-component></estimate-production-button-component>
+            <estimate-register-button-component></estimate-register-button-component>
         </div>
+
+{{--        <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">--}}
+{{--            <estimate-production-button-component></estimate-production-button-component>--}}
+{{--        </div>--}}
 
         <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
             <estimate-sale-button-component></estimate-sale-button-component>

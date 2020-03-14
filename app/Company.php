@@ -418,4 +418,10 @@ class Company extends Model
         return $this->belongsToMany(Currency::class);
     }
 
+    // Настройки
+    public function settings()
+    {
+        return $this->morphToMany(Setting::class, 'entity', 'settingable');
+    }
+
 }

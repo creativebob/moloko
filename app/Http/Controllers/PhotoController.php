@@ -93,7 +93,7 @@ class PhotoController extends Controller
             'photo' => new $this->class,
             'page_info' => pageInfo($this->entity_alias),
             'parent_page_info' => pageInfo('albums'),
-            'settings' => getSettings($this->entity_alias),
+            'settings' => getPhotoSettings($this->entity_alias),
             'album' => Album::moderatorLimit(operator_right('alias', false, getmethod('index')))
             ->whereAlias($alias)
             ->first(),

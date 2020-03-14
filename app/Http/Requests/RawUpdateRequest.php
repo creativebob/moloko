@@ -10,7 +10,7 @@ class RawUpdateRequest extends FormRequest
 
     public function __construct()
     {
-        $this->settings = $this->getSettings('raws');
+        $this->settings = $this->getPhotoSettings('raws');
     }
 
     use Photable;

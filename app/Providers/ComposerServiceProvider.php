@@ -22,6 +22,7 @@ use App\Http\View\Composers\System\FiltersComposer;
 use App\Http\View\Composers\System\NotificationsComposer;
 use App\Http\View\Composers\System\PaymentsTypesComposer;
 use App\Http\View\Composers\System\ProcessesCategoriesWithGroupsComposer;
+use App\Http\View\Composers\System\SettingsComposer;
 use App\Http\View\Composers\System\SitesWIthFilialsAndCatalogsComposer;
 use App\Http\View\Composers\System\StocksComposer;
 use App\Http\View\Composers\System\WidgetsComposer;
@@ -213,13 +214,14 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer([
             'includes.selects.manufacturers',
             'includes.selects.manufacturers_with_placeholder',
-            'includes.lists.manufacturers'
+            'includes.lists.manufacturers',
+            'products.articles.common.edit.manufacturers'
         ], ManufacturersComposer::class);
 
         view()->composer('includes.selects.suppliers', SupplierSelectComposer::class);
         view()->composer([
             'includes.selects.stocks',
-            'leads.form'
+            'leads.estimate'
         ], StocksComposer::class);
         view()->composer('leads.form', PaymentsTypesComposer::class);
 
@@ -321,8 +323,8 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('products.articles.goods.prices.catalogs_items', CatalogsGoodsItemsComposer::class);
         view()->composer('products.articles.goods.prices.filials', FilialsForCatalogsGoodsComposer::class);
 
-        view()->composer('leads.form', CatalogGoodsWithPricesComposer::class);
-        view()->composer('leads.form', CatalogServicesWithPricesComposer::class);
+        view()->composer('leads.catalogs.catalogs_goods', CatalogGoodsWithPricesComposer::class);
+        view()->composer('leads.catalogs.catalogs_services', CatalogServicesWithPricesComposer::class);
 
         view()->composer('includes.selects.articles_groups', ArticlesGroupsComposer::class);
         view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);
@@ -379,7 +381,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.lists.currencies', CurrenciesComposer::class);
 
-
+        view()->composer('system.common.includes.settings.list', SettingsComposer::class);
     }
 
     public function register()

@@ -162,15 +162,10 @@ class LeadController extends Controller
         // Создаем смету для лида
 
         // TODO - 24.10.19 - Скидка должна браться из ценовой политики
-        // TODO - 15.11.19 - Склад должен браться из настроек, пока берем первый по филиалу
-
-        $stock_id = Stock::where('filial_id', $lead->filial_id)->value('id');
-//        dd($stock_id);
 
         $estimate = Estimate::make([
             'filial_id' => $lead->filial_id,
             'discount_percent' => 0,
-            'stock_id' => $stock_id
         ]);
 
         $result = $lead->estimate()->save($estimate);
@@ -297,8 +292,9 @@ class LeadController extends Controller
 
         $paginator_url = url()->previous();
 
+        $settings = auth()->user()->company->settings;
 
-        return view('leads.edit', compact('lead', 'page_info', 'choices', 'paginator_url'));
+        return view('leads.edit', compact('lead', 'page_info', 'choices', 'paginator_url', 'settings'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
@@ -321,9 +317,9 @@ class LeadController extends Controller
         // Отдаем работу по редактировнию лида трейту
         $this->updateLead($request, $lead);
 
-        $lead->estimate->update([
-           'stock_id' => $request->stock_id
-        ]);
+//        $lead->estimate->update([
+//           'stock_id' => $request->stock_id
+//        ]);
 
         if ($request->has('paginator_url')) {
             return redirect($request->paginator_url);

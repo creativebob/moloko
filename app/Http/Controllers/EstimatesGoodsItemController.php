@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Estimate;
 use App\EstimatesGoodsItem;
+use App\Stock;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Traits\Reservable;
 use App\PricesGoods;
@@ -57,12 +58,22 @@ class EstimatesGoodsItemController extends Controller
     public function store(Request $request)
     {
         $success = true;
+        $stock_id = null;
 
-        // TODO - 20.12.19 - Костыль чтоб работала смета на лиде
-        if ($request->stock_id != null) {
-            $stock_id = $request->stock_id;
-        } else {
-            $stock_id = Estimate::findOrFail($request->estimate_id)->stock_id;
+        // Если включены настройки для складов, то проверяем сколько складов в системе, и если один, то берем его id
+        $settings = getSettings();
+        if ($settings->isNotEmpty()) {
+            $stocks = Stock::where('filial_id', auth()->user()->stafferFilialId)
+                ->get([
+                    'id',
+                    'filial_id'
+                ]);
+
+            if ($stocks) {
+                if ($stocks->count() == 1) {
+                    $stock_id = $stocks->first()->id;
+                }
+            }
         }
 
         $price_goods = PricesGoods::findOrFail($request->price_id);

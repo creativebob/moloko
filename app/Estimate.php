@@ -55,7 +55,6 @@ class Estimate extends Model
         'lead_id',
         'client_id',
 	    'filial_id',
-        'stock_id',
 
         'company_id',
 
@@ -65,6 +64,7 @@ class Estimate extends Model
         'author_id',
         'draft',
 
+        'is_registered',
         'is_produced',
         'is_saled',
 

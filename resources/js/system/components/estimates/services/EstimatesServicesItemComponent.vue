@@ -30,7 +30,7 @@
         <td class="td-amount"><a class="button green-button" data-open="price-set">{{ item.amount | roundToTwo | level }}</a></td>
         <td class="td-delete">
             <div
-                v-if="!this.isSaled"
+                v-if="!this.isRegistered"
                 @click="openModalRemoveItem"
                 class="icon-delete sprite"
                 data-open="delete-estimates_services_item"
@@ -47,7 +47,7 @@
         props: {
             item: Object,
             index: Number,
-            isSaled: Boolean,
+            isRegistered: Boolean,
         },
         data() {
             return {
@@ -77,7 +77,7 @@
             },
             checkChangeCount() {
                 if (this.item.product.serial === 0) {
-                    if (!this.isSaled) {
+                    if (!this.isRegistered) {
                         this.changeCount = !this.changeCount
                     }
                 }

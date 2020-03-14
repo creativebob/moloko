@@ -74813,8 +74813,8 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(177);
-__webpack_require__(309);
-module.exports = __webpack_require__(310);
+__webpack_require__(312);
+module.exports = __webpack_require__(313);
 
 
 /***/ }),
@@ -74826,7 +74826,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(178);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store_index_js__ = __webpack_require__(303);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store_index_js__ = __webpack_require__(306);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -74860,17 +74860,20 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('consignment-component', __webpack_require__(179));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('production-component', __webpack_require__(190));
 
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('estimate-init-component', __webpack_require__(196));
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('estimate-component', __webpack_require__(199));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('estimate-component', __webpack_require__(196));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('estimate-register-button-component', __webpack_require__(211));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('estimate-sale-button-component', __webpack_require__(214));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('estimate-production-button-component', __webpack_require__(217));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('payments-component', __webpack_require__(220));
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('input-digit-component', __webpack_require__(175));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('dropzone-component', __webpack_require__(226));
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('rawcomposition-component', __webpack_require__(235));
 
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('articles-categories-with-groups-component', __webpack_require__(238));
+// ТМЦ
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('articles-categories-with-groups-component', __webpack_require__(235));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('manufacturers-component', __webpack_require__(238));
+
+// Услуги
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('processes-categories-with-groups-component', __webpack_require__(241));
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('catalog-goods-component', __webpack_require__(244));
@@ -74892,6 +74895,8 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('search-prices-goods-compo
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('sites-component', __webpack_require__(294));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('promotion-catalog-goods-component', __webpack_require__(297));
 
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('settings-stocks-component', __webpack_require__(303));
+
 // Vue.component('price-goods-price-component', require('./components/prices_goods/PriceGoodsPriceComponent.vue'));
 
 /**
@@ -74911,9 +74916,9 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 __webpack_require__(46);
 
 // Наши скрипты
-__webpack_require__(306);
-__webpack_require__(307);
-__webpack_require__(308);
+__webpack_require__(309);
+__webpack_require__(310);
+__webpack_require__(311);
 
 // window.CKEDITOR_BASEPATH = 'node_modules/ckeditor/';
 // require('ckeditor');
@@ -78341,96 +78346,7 @@ var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(197)
 /* template */
-var __vue_template__ = __webpack_require__(198)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/estimates/EstimateInitComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-52abd0fa", Component.options)
-  } else {
-    hotAPI.reload("data-v-52abd0fa", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 197 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        estimate: Object
-    },
-    created: function created() {
-        this.$store.commit('SET_ESTIMATE', this.estimate);
-        this.$store.commit('SET_GOODS_ITEMS', this.estimate.goods_items);
-        this.$store.commit('SET_SERVICES_ITEMS', this.estimate.services_items);
-    }
-});
-
-/***/ }),
-/* 198 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div")
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-52abd0fa", module.exports)
-  }
-}
-
-/***/ }),
-/* 199 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(200)
-/* template */
-var __vue_template__ = __webpack_require__(213)
+var __vue_template__ = __webpack_require__(210)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -78469,7 +78385,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 200 */
+/* 197 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -78492,121 +78408,130 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	components: {
-		'estimates-goods-items-component': __webpack_require__(201),
-		'estimates-services-items-component': __webpack_require__(207)
-	},
-	data: function data() {
-		return {
-			//
-			id: null,
+				components: {
+								'estimates-goods-items-component': __webpack_require__(198),
+								'estimates-services-items-component': __webpack_require__(204)
+				},
+				props: {
+								estimate: Object,
+								settings: Array,
+								stocks: Array
+				},
+				created: function created() {
+								this.$store.commit('SET_ESTIMATE', this.estimate);
+								this.$store.commit('SET_GOODS_ITEMS', this.estimate.goods_items);
+								this.$store.commit('SET_SERVICES_ITEMS', this.estimate.services_items);
+				},
+				data: function data() {
+								return {
+												//
+												id: null,
 
-			cost: null,
+												cost: null,
 
-			itemGoods: null,
-			itemGoodsName: null,
-			itemGoodsIndex: null,
+												itemGoods: null,
+												itemGoodsName: null,
+												itemGoodsIndex: null,
 
-			itemServices: null,
-			itemServicesName: null,
-			itemServicesIndex: null,
+												itemServices: null,
+												itemServicesName: null,
+												itemServicesIndex: null
+								};
+				},
 
-			isSaled: this.$store.state.estimate.estimate.is_saled === 1
-		};
-	},
+				computed: {
+								goodsList: function goodsList() {
+												return this.$store.state.estimate.goodsItems;
+								},
+								servicesList: function servicesList() {
+												return this.$store.state.estimate.servicesItems;
+								},
+								estimateAmount: function estimateAmount() {
+												return this.$store.getters.estimateAmount;
+								},
+								estimateTotal: function estimateTotal() {
+												return this.$store.getters.estimateTotal;
+								}
+				},
 
-	computed: {
-		estimate: function estimate() {
-			return this.$store.state.estimate.estimate;
-		},
-		goodsList: function goodsList() {
-			return this.$store.state.estimate.goodsItems;
-		},
-		servicesList: function servicesList() {
-			return this.$store.state.estimate.servicesItems;
-		},
-		estimateAmount: function estimateAmount() {
-			return this.$store.getters.estimateAmount;
-		},
-		estimateTotal: function estimateTotal() {
-			return this.$store.getters.estimateTotal;
-		}
-	},
+				methods: {
+								openModalServices: function openModalServices(item, index) {
+												this.itemServicesIndex = index;
+												this.itemServices = item;
+												this.itemServicesName = item.product.process.name;
+								},
 
-	methods: {
-		openModalServices: function openModalServices(item, index) {
-			this.itemServicesIndex = index;
-			this.itemServices = item;
-			this.itemServicesName = item.product.process.name;
-		},
-
-		// changeCost: function(value) {
-		// 	this.cost = value;
-		// },
-		// checkChange: function () {
-		// 	this.change = false;
-		// },
-		// setId: function (id) {
-		// 	this.id = id;
-		// 	if (id != null) {
-		// 		this.categoriesItems.filter(item => {
-		// 			if (item.id === id && item.entity_id === this.entity_id) {
-		//
-		// 				// Смотрим в чем принимать
-		// 				if (item.article.package_status === 1) {
-		// 					this.itemUnit = item.article.package_abbreviation;
-		// 				} else {
-		// 					this.itemUnit = item.article.unit.abbreviation;
-		// 				}
-		//
-		// 				// Смотрим производителя
-		// 				if (item.article.manufacturer_id != null) {
-		// 					this.itemManufacturer = item.article.manufacturer_id;
-		// 				}
-		// 			}
-		// 		});
-		// 	} else {
-		// 		this.itemUnit = null;
-		// 		this.itemManufacturer = null;
-		// 	}
-		// },
+								// changeCost: function(value) {
+								// 	this.cost = value;
+								// },
+								// checkChange: function () {
+								// 	this.change = false;
+								// },
+								// setId: function (id) {
+								// 	this.id = id;
+								// 	if (id != null) {
+								// 		this.categoriesItems.filter(item => {
+								// 			if (item.id === id && item.entity_id === this.entity_id) {
+								//
+								// 				// Смотрим в чем принимать
+								// 				if (item.article.package_status === 1) {
+								// 					this.itemUnit = item.article.package_abbreviation;
+								// 				} else {
+								// 					this.itemUnit = item.article.unit.abbreviation;
+								// 				}
+								//
+								// 				// Смотрим производителя
+								// 				if (item.article.manufacturer_id != null) {
+								// 					this.itemManufacturer = item.article.manufacturer_id;
+								// 				}
+								// 			}
+								// 		});
+								// 	} else {
+								// 		this.itemUnit = null;
+								// 		this.itemManufacturer = null;
+								// 	}
+								// },
 
 
-		updateServicesItem: function updateServicesItem(item) {
-			this.$store.commit('UPDATE_SERVICES_ITEM', item);
-		},
+								updateServicesItem: function updateServicesItem(item) {
+												this.$store.commit('UPDATE_SERVICES_ITEM', item);
+								},
 
-		deleteServicesItem: function deleteServicesItem() {
-			this.$store.dispatch('REMOVE_SERVICES_ITEM_FROM_ESTIMATE', this.itemServices.id);
-			$('#delete-estimates_services_item').foundation('close');
-		}
-	},
+								deleteServicesItem: function deleteServicesItem() {
+												this.$store.dispatch('REMOVE_SERVICES_ITEM_FROM_ESTIMATE', this.itemServices.id);
+												$('#delete-estimates_services_item').foundation('close');
+								}
+				},
 
-	filters: {
-		roundToTwo: function roundToTwo(value) {
-			return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-		},
+				filters: {
+								roundToTwo: function roundToTwo(value) {
+												return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+								},
 
-		// Создает разделители разрядов в строке с числами
-		level: function level(value) {
-			return Number(value).toLocaleString();
-		}
-	}
+								// Создает разделители разрядов в строке с числами
+								level: function level(value) {
+												return Number(value).toLocaleString();
+								}
+				}
 
 });
 
 /***/ }),
-/* 201 */
+/* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(202)
+var __vue_script__ = __webpack_require__(199)
 /* template */
-var __vue_template__ = __webpack_require__(206)
+var __vue_template__ = __webpack_require__(203)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -78645,11 +78570,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 202 */
+/* 199 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
 //
 //
 //
@@ -78748,10 +78675,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
-        'estimates-goods-item-component': __webpack_require__(203)
+        'estimates-goods-item-component': __webpack_require__(200)
     },
     props: {
-        items: Array
+        items: Array,
+        settings: Array,
+        stocks: Array
     },
     data: function data() {
         return {
@@ -78765,7 +78694,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             itemName: null,
             itemIndex: null,
 
-            isSaled: this.$store.state.estimate.estimate.is_saled === 1
+            isRegistered: this.$store.state.estimate.estimate.is_registered === 1
         };
     },
 
@@ -78896,15 +78825,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 203 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(204)
+var __vue_script__ = __webpack_require__(201)
 /* template */
-var __vue_template__ = __webpack_require__(205)
+var __vue_template__ = __webpack_require__(202)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -78943,11 +78872,146 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 204 */
+/* 201 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -79018,15 +79082,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: {
         item: Object,
         index: Number,
-        isSaled: Boolean
+        isRegistered: Boolean,
+        settings: Array,
+        stocks: Array
     },
     data: function data() {
         return {
             countInput: Number(this.item.count),
             cost: Number(this.item.cost),
             changeCount: false,
-            changeCost: false
+            changeCost: false,
+            stockId: null
         };
+    },
+    mounted: function mounted() {
+        if (this.settings.length && this.stocks.length && this.item.stock_id === null) {
+            this.stockId = this.stocks[0].id;
+        } else {
+            this.stockId = this.item.stock_id;
+        }
     },
 
     computed: {
@@ -79073,14 +79147,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         checkChangeCount: function checkChangeCount() {
             if (this.item.product.serial === 0) {
-                if (!this.isSaled) {
+                if (!this.isRegistered) {
                     this.changeCount = !this.changeCount;
                 }
             }
         },
 
         // checkChangeCost() {
-        //     if (!this.isSaled) {
+        //     if (!this.isRegistered) {
         //         this.changeCost = !this.changeCost
         //     }
         // },
@@ -79156,7 +79230,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 205 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -79183,7 +79257,47 @@ var render = function() {
         _c("span", { staticClass: "icon-comment" })
       ]),
       _vm._v(" "),
-      _c("td", [_vm._v(_vm._s(_vm.item.stock.name))]),
+      _vm.settings.length && _vm.stocks.length
+        ? _c("td", [
+            _c(
+              "select",
+              {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.stockId,
+                    expression: "stockId"
+                  }
+                ],
+                attrs: { name: "stock_id" },
+                on: {
+                  change: function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.stockId = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  }
+                }
+              },
+              _vm._l(_vm.stocks, function(stock) {
+                return _c("option", { domProps: { value: stock.id } }, [
+                  _vm._v(_vm._s(stock.name))
+                ])
+              }),
+              0
+            )
+          ])
+        : _c("td", [
+            _vm._v("\n        " + _vm._s(_vm.item.stock.name) + "\n    ")
+          ]),
       _vm._v(" "),
       _c("td", [
         _vm._v(_vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))))
@@ -79244,7 +79358,7 @@ var render = function() {
           "a",
           {
             staticClass: "button green-button",
-            attrs: { "data-open": "price-set" }
+            attrs: { "data-open": "modal-estimates_goods_item-" + _vm.item.id }
           },
           [
             _vm._v(
@@ -79255,7 +79369,7 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("td", { staticClass: "td-delete" }, [
-        !this.isSaled
+        !_vm.isRegistered
           ? _c("div", {
               staticClass: "icon-delete sprite",
               attrs: { "data-open": "delete-estimates_goods_item" },
@@ -79264,9 +79378,9 @@ var render = function() {
           : _vm._e()
       ]),
       _vm._v(" "),
-      _c("td", { staticClass: "td-action" }, [
-        !_vm.isSaled
-          ? _c("div", { class: _vm.isReservedClass }, [
+      _vm.settings.length && _vm.isRegistered
+        ? _c("td", { staticClass: "td-action" }, [
+            _c("div", { class: _vm.isReservedClass }, [
               !_vm.isReserved
                 ? _c("span", {
                     staticClass: "button-to-reserve",
@@ -79289,12 +79403,183 @@ var render = function() {
                   ])
                 : _vm._e()
             ])
-          : _vm._e()
-      ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "reveal",
+          attrs: {
+            id: "modal-estimates_goods_item-" + _vm.item.id,
+            "data-reveal": "",
+            "data-close-on-click": "false"
+          }
+        },
+        [
+          _vm._m(0),
+          _vm._v(" "),
+          _vm._m(1),
+          _vm._v(" "),
+          _vm._m(2),
+          _vm._v(" "),
+          _c("div", {
+            staticClass: "icon-close-modal sprite close-modal add-item",
+            attrs: { "data-close": "" }
+          })
+        ]
+      )
     ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "grid-x" }, [
+      _c("div", { staticClass: "small-12 cell modal-title" }, [
+        _c("h5", [_vm._v("Настройка позиции")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "grid-x grid-padding-x align-center modal-content inputs"
+      },
+      [
+        _c("div", { staticClass: "small-12 cell" }, [
+          _c("div", { staticClass: "grid-x grid-margin-x" }, [
+            _c("div", { staticClass: "small-12 cell" }, [
+              _c("label", [
+                _vm._v(
+                  "Закупочная цена единицы, руб\n\n                        "
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "small-12 medium-12 cell" }, [
+              _c("fieldset", [
+                _c("legend", [_vm._v("Наценка:")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "grid-x grid-margin-x" }, [
+                  _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                    _c("label", [
+                      _vm._v(
+                        "Наценка, %\n\n                                    "
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                    _c("label", [
+                      _vm._v(
+                        "Наценка, руб\n\n                                    "
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("hr"),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                    _c("label", [
+                      _vm._v(
+                        "Допфикс наценка, %\n\n                                    "
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                    _c("label", [
+                      _vm._v(
+                        "Допфикс наценка, руб\n\n                                    "
+                      )
+                    ])
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "small-12 medium-12 cell" }, [
+              _c("fieldset", [
+                _c("legend", [_vm._v("Скидка:")]),
+                _vm._v(" "),
+                _c("div", { staticClass: "grid-x grid-margin-x" }, [
+                  _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                    _c("label", [
+                      _vm._v(
+                        "Скидка, %\n\n                                    "
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                    _c("label", [
+                      _vm._v(
+                        "Скидка, руб\n\n                                    "
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                    _c("label", [
+                      _vm._v(
+                        "Допфикс скидка, %\n\n                                    "
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                    _c("label", [
+                      _vm._v(
+                        "Допфикс скидка, руб\n\n                                    "
+                      )
+                    ])
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "small-12 medium-6 cell" }, [
+              _c("label", [
+                _vm._v("Цена единицы, руб\n\n                        ")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "small-12 medium-6 cell" }, [
+              _c("label", [
+                _vm._v("Количество, единиц\n\n                        ")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "small-12 cell" }, [
+              _c("label", [
+                _vm._v(
+                  "Итоговая стоимость по позиции, руб\n\n                        "
+                )
+              ])
+            ])
+          ])
+        ])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "grid-x align-center" }, [
+      _c("div", { staticClass: "small-6 medium-4 cell" }, [
+        _c("button", { staticClass: "button modal-button" })
+      ])
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -79305,7 +79590,7 @@ if (false) {
 }
 
 /***/ }),
-/* 206 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -79326,7 +79611,7 @@ var render = function() {
           _c("tr", [
             _c("th", [_vm._v("Наименование")]),
             _vm._v(" "),
-            _c("th", [_vm._v("Склад")]),
+            _vm.settings.length ? _c("th", [_vm._v("Склад")]) : _vm._e(),
             _vm._v(" "),
             _c("th", [_vm._v("Цена")]),
             _vm._v(" "),
@@ -79336,28 +79621,21 @@ var render = function() {
             _vm._v(" "),
             _c("th", { staticClass: "th-delete" }),
             _vm._v(" "),
-            _c(
-              "th",
-              { staticClass: "th-action" },
-              [
-                !_vm.isSaled
-                  ? [
-                      _vm.isReserved
-                        ? _c("span", {
-                            staticClass: "button-to-reserve",
-                            attrs: { title: "Снять все с резерва!" },
-                            on: { click: _vm.unreserveEstimateItems }
-                          })
-                        : _c("span", {
-                            staticClass: "button-to-reserve",
-                            attrs: { title: "Зарезервировать все!" },
-                            on: { click: _vm.reserveEstimateItems }
-                          })
-                    ]
-                  : _vm._e()
-              ],
-              2
-            )
+            _vm.settings.length && _vm.isRegistered
+              ? _c("th", { staticClass: "th-action" }, [
+                  _vm.isReserved
+                    ? _c("span", {
+                        staticClass: "button-to-reserve",
+                        attrs: { title: "Снять все с резерва!" },
+                        on: { click: _vm.unreserveEstimateItems }
+                      })
+                    : _c("span", {
+                        staticClass: "button-to-reserve",
+                        attrs: { title: "Зарезервировать все!" },
+                        on: { click: _vm.reserveEstimateItems }
+                      })
+                ])
+              : _vm._e()
           ])
         ]),
         _vm._v(" "),
@@ -79366,7 +79644,13 @@ var render = function() {
           _vm._l(_vm.items, function(item, index) {
             return _c("estimates-goods-item-component", {
               key: item.id,
-              attrs: { item: item, index: index, "is-saled": _vm.isSaled },
+              attrs: {
+                item: item,
+                index: index,
+                "is-registered": _vm.isRegistered,
+                settings: _vm.settings,
+                stocks: _vm.stocks
+              },
               on: {
                 "open-modal-remove": function($event) {
                   return _vm.openModal(item, index)
@@ -79498,15 +79782,15 @@ if (false) {
 }
 
 /***/ }),
-/* 207 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(208)
+var __vue_script__ = __webpack_require__(205)
 /* template */
-var __vue_template__ = __webpack_require__(212)
+var __vue_template__ = __webpack_require__(209)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -79545,7 +79829,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 208 */
+/* 205 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -79627,7 +79911,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
-        'estimates-services-item-component': __webpack_require__(209)
+        'estimates-services-item-component': __webpack_require__(206)
     },
     props: {
         items: Array
@@ -79644,7 +79928,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             itemName: null,
             itemIndex: null,
 
-            isSaled: this.$store.state.estimate.estimate.is_saled === 1
+            isRegistered: this.$store.state.estimate.estimate.is_registered === 1
         };
     },
 
@@ -79703,15 +79987,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 209 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(210)
+var __vue_script__ = __webpack_require__(207)
 /* template */
-var __vue_template__ = __webpack_require__(211)
+var __vue_template__ = __webpack_require__(208)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -79750,7 +80034,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 210 */
+/* 207 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -79804,7 +80088,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: {
         item: Object,
         index: Number,
-        isSaled: Boolean
+        isRegistered: Boolean
     },
     data: function data() {
         return {
@@ -79836,7 +80120,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         checkChangeCount: function checkChangeCount() {
             if (this.item.product.serial === 0) {
-                if (!this.isSaled) {
+                if (!this.isRegistered) {
                     this.changeCount = !this.changeCount;
                 }
             }
@@ -79879,7 +80163,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 211 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -79976,7 +80260,7 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("td", { staticClass: "td-delete" }, [
-        !this.isSaled
+        !this.isRegistered
           ? _c("div", {
               staticClass: "icon-delete sprite",
               attrs: { "data-open": "delete-estimates_services_item" },
@@ -80000,7 +80284,7 @@ if (false) {
 }
 
 /***/ }),
-/* 212 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -80024,7 +80308,11 @@ var render = function() {
           _vm._l(_vm.items, function(item, index) {
             return _c("estimates-services-item-component", {
               key: item.id,
-              attrs: { item: item, index: index, "is-saled": _vm.isSaled },
+              attrs: {
+                item: item,
+                index: index,
+                "is-registered": _vm.isRegistered
+              },
               on: {
                 "open-modal-remove": function($event) {
                   return _vm.openModal(item, index)
@@ -80176,7 +80464,7 @@ if (false) {
 }
 
 /***/ }),
-/* 213 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -80189,7 +80477,11 @@ var render = function() {
       _vm.goodsList.length > 0
         ? [
             _c("estimates-goods-items-component", {
-              attrs: { items: _vm.goodsList }
+              attrs: {
+                items: _vm.goodsList,
+                settings: _vm.settings,
+                stocks: _vm.stocks
+              }
             })
           ]
         : _vm._e(),
@@ -80223,6 +80515,123 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-66d7c2ac", module.exports)
+  }
+}
+
+/***/ }),
+/* 211 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(212)
+/* template */
+var __vue_template__ = __webpack_require__(213)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/estimates/EstimateRegisterButtonComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5ca34f96", Component.options)
+  } else {
+    hotAPI.reload("data-v-5ca34f96", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 212 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            estimate: this.$store.state.estimate.estimate
+        };
+    },
+
+    computed: {
+        isShow: function isShow() {
+            return this.estimate.is_registered === 0 && (this.$store.state.estimate.goodsItems.length > 0 || this.$store.state.estimate.servicesItems.length > 0);
+        },
+        isDisabled: function isDisabled() {
+            return this.estimate.is_registered === 1;
+        }
+    },
+    methods: {
+        registerEstimate: function registerEstimate() {
+            if (this.isShow) {
+                $('form').attr('action', '/admin/estimates/' + this.estimate.id + '/registering');
+            }
+        }
+    }
+});
+
+/***/ }),
+/* 213 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm.isShow
+    ? _c("input", {
+        staticClass: "button",
+        attrs: { type: "submit", value: "Оформить", disabled: _vm.isDisabled },
+        on: { click: _vm.registerEstimate }
+      })
+    : _vm._e()
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5ca34f96", module.exports)
   }
 }
 
@@ -80302,7 +80711,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     computed: {
         isShow: function isShow() {
-            return this.estimate.is_produced === 1 && this.estimate.is_saled === 0;
+            return this.estimate.is_registered === 1 && this.estimate.is_saled === 0;
         },
         isDisabled: function isDisabled() {
             return this.$store.getters.paymentsAmount >= this.$store.getters.estimateTotal;
@@ -80626,10 +81035,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         paymentsTypes: Array,
         currencies: {
             type: Array,
-            default: [{
-                id: 1,
-                name: 'Рубль'
-            }]
+            default: function _default() {
+                return [{
+                    id: 1,
+                    name: 'Рубль'
+                }];
+            }
         },
         curDate: String
     },
@@ -82259,211 +82670,6 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/system/components/RawCompositionComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-18210e18", Component.options)
-  } else {
-    hotAPI.reload("data-v-18210e18", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 236 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-	data: function data() {
-		return {
-			value: 1
-		};
-	},
-
-	props: {
-		raw: Object,
-		disabled: Boolean,
-		value: {
-			type: Number,
-			default: 0
-		}
-	}
-});
-
-/***/ }),
-/* 237 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "tr",
-    { staticClass: "item", attrs: { id: "table-raws-", "data-name": "" } },
-    [
-      _c("td"),
-      _vm._v(" "),
-      _c("td", [_vm._v(_vm._s(_vm.raw.article.name))]),
-      _vm._v(" "),
-      _vm._m(0),
-      _vm._v(" "),
-      _c("td"),
-      _vm._v(" "),
-      _c("td"),
-      _vm._v(" "),
-      _c("td"),
-      _vm._v(" "),
-      _c("td"),
-      _vm._v(" "),
-      _c("td", { staticClass: "td-delete" }, [
-        _c("a", {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.disabled,
-              expression: "disabled"
-            }
-          ],
-          staticClass: "icon-delete sprite",
-          attrs: { "data-open": "delete-item" }
-        })
-      ])
-    ]
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("div", { staticClass: "wrap-input-table" }, [
-        _c("input", {
-          staticClass:
-            "digit-field name-field compact w12 padding-to-placeholder raw-value",
-          attrs: {
-            type: "text",
-            autocomplete: "off",
-            pattern: "[0-9\\W\\s]{0,10}",
-            placeholder: "0",
-            maxlength: "7",
-            required: ""
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { staticClass: "text-to-placeholder" }),
-        _vm._v(" "),
-        _c("div", {
-          staticClass: "sprite-input-right find-status",
-          attrs: { id: "name-check" }
-        }),
-        _vm._v(" "),
-        _c("span", { staticClass: "form-error" }, [
-          _vm._v("Введите количество")
-        ])
-      ])
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-18210e18", module.exports)
-  }
-}
-
-/***/ }),
-/* 238 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(239)
-/* template */
-var __vue_template__ = __webpack_require__(240)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
 Component.options.__file = "resources/js/system/components/ArticlesCategoriesWithGroupsComponent.vue"
 
 /* hot reload */
@@ -82486,7 +82692,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 239 */
+/* 236 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -82622,7 +82828,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 240 */
+/* 237 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -82732,6 +82938,263 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-a8b6683a", module.exports)
+  }
+}
+
+/***/ }),
+/* 238 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(239)
+/* template */
+var __vue_template__ = __webpack_require__(240)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/MAnufacturersComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-996c77dc", Component.options)
+  } else {
+    hotAPI.reload("data-v-996c77dc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 239 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        item: Object,
+        manufacturers: Array
+    },
+    data: function data() {
+        return {
+            manufacturerId: this.item.article.manufacturer_id
+        };
+    },
+
+    computed: {
+        isProduced: function isProduced() {
+            var companyId = this.item.company_id,
+                manufacturerId = this.manufacturerId;
+            var manufacturer = this.manufacturers.find(function (item) {
+                return item.id == manufacturerId;
+            });
+
+            if (manufacturer) {
+                if (manufacturer.manufacturer_id == companyId) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+});
+
+/***/ }),
+/* 240 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "grid-x" }, [
+    _c("div", { staticClass: "small-12 cell" }, [
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.manufacturerId,
+              expression: "manufacturerId"
+            }
+          ],
+          attrs: { name: "manufacturer_id" },
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.manufacturerId = $event.target.multiple
+                ? $$selectedVal
+                : $$selectedVal[0]
+            }
+          }
+        },
+        [
+          _c("option", { domProps: { value: null } }, [_vm._v("Любой")]),
+          _vm._v(" "),
+          _vm._l(_vm.manufacturers, function(manufacturer) {
+            return _c("option", { domProps: { value: manufacturer.id } }, [
+              _vm._v(_vm._s(manufacturer.company.name))
+            ])
+          })
+        ],
+        2
+      )
+    ]),
+    _vm._v(" "),
+    _vm.isProduced
+      ? _c("div", { staticClass: "small-12 cell checkbox" }, [
+          _c("input", {
+            attrs: { type: "hidden", name: "is_produced", value: "0" }
+          }),
+          _vm._v(" "),
+          _c("input", {
+            attrs: {
+              id: "checkbox-is_produced",
+              name: "is_produced",
+              type: "checkbox",
+              value: "1"
+            },
+            domProps: { checked: _vm.item.is_produced == 1 }
+          }),
+          _vm._v(" "),
+          _vm._m(0)
+        ])
+      : _c("div", { staticClass: "small-12 cell checkbox" }, [
+          _c("input", {
+            attrs: { type: "hidden", name: "is_ordered", value: "0" }
+          }),
+          _vm._v(" "),
+          _c("input", {
+            attrs: {
+              id: "checkbox-is_ordered",
+              name: "is_ordered",
+              type: "checkbox",
+              value: "1"
+            },
+            domProps: { checked: _vm.item.is_ordered == 1 }
+          }),
+          _vm._v(" "),
+          _vm._m(1)
+        ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "checkbox-is_produced" } }, [
+      _c("span", [_vm._v("Производится")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "checkbox-is_ordered" } }, [
+      _c("span", [_vm._v("Под заказ")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-996c77dc", module.exports)
   }
 }
 
@@ -89697,11 +90160,201 @@ if (false) {
 
 /***/ }),
 /* 303 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(304)
+/* template */
+var __vue_template__ = __webpack_require__(305)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/settings/SettingsStocksComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-76be9aa8", Component.options)
+  } else {
+    hotAPI.reload("data-v-76be9aa8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 304 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_estimate__ = __webpack_require__(304);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__modules_promotion__ = __webpack_require__(305);
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        settings: Array,
+        item: Object
+    },
+    data: function data() {
+        return {
+            error: false,
+            itemSettings: this.item.settings
+        };
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        // this.checkStocksCount();
+
+        axios.post('/admin/stocks/count').then(function (response) {
+            var count = response.data;
+            if (count === 0) {
+                _this.error = true;
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
+    },
+
+    computed: {
+        checkDisabled: function checkDisabled() {
+            return this.error;
+        }
+    },
+    methods: {
+        // checkStocksCount() {
+        //     if (this.error === false) {
+        //
+        //     }
+        // },
+        checkChecked: function checkChecked(id) {
+            var setting = null;
+            if (this.itemSettings.length) {
+                setting = this.itemSettings.find(function (setting) {
+                    return setting.id == id;
+                });
+            }
+            if (setting) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+});
+
+/***/ }),
+/* 305 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("fieldset", [
+    _c("legend", [_vm._v("Настройки для продажи")]),
+    _vm._v(" "),
+    _c(
+      "ul",
+      _vm._l(_vm.settings, function(setting) {
+        return _c("li", { staticClass: "checkbox" }, [
+          _c("input", {
+            attrs: {
+              type: "checkbox",
+              name: "settings[]",
+              id: "checkbox-setting-" + setting.id,
+              disabled: _vm.checkDisabled
+            },
+            domProps: {
+              value: setting.id,
+              checked: _vm.checkChecked(setting.id)
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "checkbox-setting-" + setting.id } }, [
+            _c("span", [_vm._v(_vm._s(setting.name))])
+          ])
+        ])
+      }),
+      0
+    ),
+    _vm._v(" "),
+    _vm.error
+      ? _c("p", [_vm._v("В компании не заведены склады, заведите их!")])
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-76be9aa8", module.exports)
+  }
+}
+
+/***/ }),
+/* 306 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_estimate__ = __webpack_require__(307);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__modules_promotion__ = __webpack_require__(308);
 
 
 
@@ -89718,14 +90371,13 @@ var store = {
 /* harmony default export */ __webpack_exports__["a"] = (store);
 
 /***/ }),
-/* 304 */
+/* 307 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 var moduleEstimate = {
     state: {
         estimate: null,
-        stockId: null,
         goodsItems: [],
         servicesItems: []
     },
@@ -89793,9 +90445,6 @@ var moduleEstimate = {
 
             this.commit('UPDATE_ESTIMATE');
         },
-        SET_STOCK_ID: function SET_STOCK_ID(state, stockId) {
-            state.stockId = stockId;
-        },
         ADD_PAYMENT: function ADD_PAYMENT(state, payment) {
             state.estimate.payments.push(payment);
         }
@@ -89806,11 +90455,10 @@ var moduleEstimate = {
 
             var state = _ref.state;
 
-            if (state.estimate.is_saled === 0 && state.estimate.is_produced === 0) {
+            if (state.estimate.is_registered === 0) {
                 axios.post('/admin/estimates_goods_items', {
                     estimate_id: state.estimate.id,
-                    price_id: priceId,
-                    stock_id: state.stockId
+                    price_id: priceId
                 }).then(function (response) {
                     if (response.data.success) {
                         var item = response.data.item,
@@ -89838,7 +90486,7 @@ var moduleEstimate = {
 
             var state = _ref2.state;
 
-            if (state.estimate.is_saled === 0 && state.estimate.is_produced === 0) {
+            if (state.estimate.is_registered === 0) {
                 axios.post('/admin/estimates_services_items', {
                     estimate_id: state.estimate.id,
                     price_id: priceId
@@ -89869,7 +90517,7 @@ var moduleEstimate = {
 
             var state = _ref3.state;
 
-            if (state.estimate.is_saled === 0) {
+            if (state.estimate.is_registered === 0) {
                 axios.delete('/admin/estimates_goods_items/' + itemId).then(function (response) {
                     if (response.data > 0) {
                         var index = state.goodsItems.findIndex(function (obj) {
@@ -89889,7 +90537,7 @@ var moduleEstimate = {
 
             var state = _ref4.state;
 
-            if (state.estimate.is_saled === 0) {
+            if (state.estimate.is_registered === 0) {
                 axios.delete('/admin/estimates_services_items/' + itemId).then(function (response) {
                     if (response.data > 0) {
                         var index = state.servicesItems.findIndex(function (obj) {
@@ -89963,7 +90611,7 @@ var moduleEstimate = {
 /* harmony default export */ __webpack_exports__["a"] = (moduleEstimate);
 
 /***/ }),
-/* 305 */
+/* 308 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -90003,7 +90651,7 @@ var modulePromotion = {
 /* harmony default export */ __webpack_exports__["a"] = (modulePromotion);
 
 /***/ }),
-/* 306 */
+/* 309 */
 /***/ (function(module, exports) {
 
 // Валидируем кнопку при клике
@@ -90016,7 +90664,7 @@ window.submitAjax = function (id) {
 };
 
 /***/ }),
-/* 307 */
+/* 310 */
 /***/ (function(module, exports) {
 
 // Умолчания глобальные
@@ -90529,7 +91177,7 @@ $(window).resize(function () {
 // });
 
 /***/ }),
-/* 308 */
+/* 311 */
 /***/ (function(module, exports) {
 
 function checkFilter() {
@@ -90567,13 +91215,13 @@ $(document).on('click', '.filter-close', function () {
 });
 
 /***/ }),
-/* 309 */
+/* 312 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 310 */
+/* 313 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

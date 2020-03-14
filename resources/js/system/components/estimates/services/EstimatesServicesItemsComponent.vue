@@ -22,7 +22,7 @@
                 :item="item"
                 :index="index"
                 :key="item.id"
-                :is-saled="isSaled"
+                :is-registered="isRegistered"
                 @open-modal-remove="openModal(item, index)"
                 @update="updateItem"
             ></estimates-services-item-component>
@@ -92,7 +92,7 @@
                 itemName: null,
                 itemIndex: null,
 
-                isSaled: this.$store.state.estimate.estimate.is_saled === 1,
+                isRegistered: this.$store.state.estimate.estimate.is_registered === 1,
             }
         },
         computed: {

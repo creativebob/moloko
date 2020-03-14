@@ -591,6 +591,19 @@ class EntitiesTableSeeder extends Seeder
                 'page_id' => $pages->firstWhere('alias', 'sources')->id,
             ],
 
+             [
+                 'name' => 'Настройки',
+                 'alias' => 'settings',
+                 'model' => 'Setting',
+                 'rights' => true,
+                 'system' => true,
+                 'author_id' => 1,
+                 'site' => 0,
+                 'metric' => 0,
+                 'view_path' => 'settings',
+                 'page_id' => $pages->firstWhere('alias', 'settings')->id,
+             ],
+
             // TODO - 04.06.19 - Чистка сущностей
             // [
             //     'name' => 'Правила',
@@ -670,17 +683,7 @@ class EntitiesTableSeeder extends Seeder
             //     'view_path' => 'locations',
             //     'page_id' => null,
             // ],
-            // [
-            //     'name' => 'Настройки',
-            //     'alias' => 'settings',
-            //     'model' => 'Setting',
-            //     'rights' => false,
-            //     'system' => true,
-            //     'author_id' => 1,
-            //     'site' => 0,
-            //     'view_path' => 'settings',
-            //     'page_id' => null,
-            // ],
+
             // [
             //     'name' => 'Значения',
             //     'alias' => 'values',

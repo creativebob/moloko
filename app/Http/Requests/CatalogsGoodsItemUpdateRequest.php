@@ -23,7 +23,7 @@ class CatalogsGoodsItemUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $settings = getSettings('catalogs_goods_items');
+        $settings = getPhotoSettings('catalogs_goods_items');
 
         return [
             'name' => 'required|string|max:255',

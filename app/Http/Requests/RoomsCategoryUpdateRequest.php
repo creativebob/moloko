@@ -23,7 +23,7 @@ class RoomsCategoryUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $settings = getSettings('rooms_categories');
+        $settings = getPhotoSettings('rooms_categories');
 
         return [
             'name' => 'required|string|max:255',

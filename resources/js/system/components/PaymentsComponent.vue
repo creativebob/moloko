@@ -113,12 +113,14 @@
             paymentsTypes: Array,
             currencies: {
 			    type: Array,
-                default: [
-                    {
-                        id: 1,
-                        name: 'Рубль',
-                    },
-                ]
+                default() {
+			        return [
+                        {
+                            id: 1,
+                            name: 'Рубль',
+                        },
+                    ]
+                }
             },
             curDate: String
 		},

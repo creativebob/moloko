@@ -23,7 +23,7 @@ class ToolsCategoryUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $settings = getSettings('tools_categories');
+        $settings = getPhotoSettings('tools_categories');
 
         return [
             'name' => 'required|string|max:255',

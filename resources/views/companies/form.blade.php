@@ -37,6 +37,13 @@
             <li class="tabs-title"><a data-tabs-target="content-panel-4" href="#content-panel-4">График работы</a></li>
             <li class="tabs-title"><a data-tabs-target="content-panel-brand" href="#content-panel-brand">Брендирование</a></li>
             <li class="tabs-title"><a data-tabs-target="content-panel-5" href="#content-panel-5">Настройка</a></li>
+
+            @can('index', App\Setting::class)
+                <li class="tabs-title">
+                    <a data-tabs-target="tab-settings" href="#tab-settings">Настройки работы</a>
+                </li>
+            @endcan
+
         </ul>
     </div>
 </div>
@@ -193,7 +200,7 @@
             @endif
 
             {{-- Блок вендора --}}
-            @if(!empty($vendor))
+            @isset($vendor))
                 <div class="tabs-panel" id="tab-vendor">
                     <div class="grid-x grid-padding-x">
 
@@ -218,7 +225,7 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            @endisset
 
             @if(!empty($client))
 
@@ -397,6 +404,16 @@
                 </div>
             </div>
 
+            {{-- Настройки продаж --}}
+            @can('index', App\Setting::class)
+                <div class="tabs-panel" id="tab-settings">
+                    <div class="grid-x grid-padding-x">
+                        <div class="cell small-12">
+                            @include('system.common.includes.settings.list', ['item' => $company])
+                        </div>
+                    </div>
+                </div>
+            @endcan
 
             <!-- Настройки -->
             <div class="tabs-panel" id="content-panel-5">

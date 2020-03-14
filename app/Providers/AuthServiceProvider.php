@@ -36,6 +36,7 @@ use App\Policies\ProductionPolicy;
 use App\Policies\PromotionPolicy;
 use App\Policies\RawsStockPolicy;
 use App\Policies\SchedulePolicy;
+use App\Policies\SettingPolicy;
 use App\Policies\ToolsStockPolicy;
 use App\Policies\VendorPolicy;
 use App\PricesGoods;
@@ -45,6 +46,7 @@ use App\Production;
 use App\Promotion;
 use App\RawsStock;
 use App\Schedule;
+use App\Setting;
 use App\ToolsStock;
 use App\User;
 use App\RightsRole;
@@ -279,6 +281,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         'App\Model' => 'App\Policies\ModelPolicy',
+
+        Setting::class => SettingPolicy::class,
 
 
         // Артикулы

@@ -34,7 +34,7 @@ trait Photable
             $size = filesize($image) / 1024;
             // dd($size);
 
-            $settings = $this->getSettings($item->getTable());
+            $settings = $this->getPhotoSettings($item->getTable());
 
             if ($width < $settings['img_min_width']) {
                 abort(403, 'Ширина изображения должна быть не менее ' . $settings['img_min_width'] . 'px.');
@@ -155,7 +155,7 @@ trait Photable
         $size = filesize($image) / 1024;
         // dd($size);
 
-        $settings = $this->getSettings('albums');
+        $settings = $this->getPhotoSettings('albums');
 
         if ($width < $settings['img_min_width']) {
             abort(403, 'Ширина фотографии мала!');
@@ -360,7 +360,7 @@ trait Photable
      * @param $entity_alias
      * @return array
      */
-    public function getSettings($entity_alias)
+    public function getPhotoSettings($entity_alias)
     {
 
         // Вытаскиваем настройки из конфига
@@ -554,7 +554,7 @@ trait Photable
             $size = filesize($image)/1024;
             // dd($size);
 
-//                $settings = getSettings($item->getTable());
+//                $settings = getPhotoSettings($item->getTable());
 //
 //                if ($width < $settings['img_min_width']) {
 //                    abort(403, 'Ширина фотографии мала!');
@@ -635,7 +635,7 @@ trait Photable
             $size = filesize($image)/1024;
             // dd($size);
 
-//                $settings = getSettings($item->getTable());
+//                $settings = getPhotoSettings($item->getTable());
 //
 //                if ($width < $settings['img_min_width']) {
 //                    abort(403, 'Ширина фотографии мала!');

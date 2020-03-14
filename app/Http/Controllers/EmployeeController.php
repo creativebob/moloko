@@ -56,9 +56,17 @@ class EmployeeController extends Controller
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
-        $employees = Employee::with(['company.filials', 'staffer' => function($q) {
-            $q->with('position', 'filial', 'department');
-        }, 'user.main_phones'])
+        $employees = Employee::with([
+            'company.filials',
+            'staffer' => function($q) {
+                $q->with([
+                    'position',
+                    'filial',
+                    'department'
+                ]);
+            },
+            'user.main_phones'
+        ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
 

@@ -20,7 +20,7 @@
         },
         computed: {
             isShow() {
-                return this.estimate.is_produced === 1 && this.estimate.is_saled === 0;
+                return this.estimate.is_registered === 1 && this.estimate.is_saled === 0;
             },
             isDisabled() {
                 return this.$store.getters.paymentsAmount >= this.$store.getters.estimateTotal;

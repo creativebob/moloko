@@ -23,7 +23,7 @@ class AlbumsCategoryUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $settings = getSettings('raws_categories');
+        $settings = getPhotoSettings('raws_categories');
 
         return [
             'name' => 'required|string|max:255',

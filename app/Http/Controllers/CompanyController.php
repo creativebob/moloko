@@ -190,6 +190,7 @@ class CompanyController extends Controller
 
 
         $new_company->currencies()->sync($request->currencies);
+        $new_company->settings()->sync($request->settings);
 
         return redirect('/admin/companies');
     }
@@ -226,9 +227,11 @@ class CompanyController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $company = Company::with(
+        $company = Company::with([
             'extra_phones',
-            'bank_accounts.bank')
+            'bank_accounts.bank',
+            'settings'
+        ])
         ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
@@ -280,6 +283,7 @@ class CompanyController extends Controller
         $this->updateCompany($request, $company);
 
         $company->currencies()->sync($request->currencies);
+        $company->settings()->sync($request->settings);
 
         return redirect('/admin/companies');
     }

@@ -295,26 +295,29 @@ class GetAccessController extends Controller
             $access['settings']['entities_list'] = $entities_list;
 
             // Пишем настройки пользователя
-            $settings = Setting::where('user_id', $user->id)->get();
-
-            // dd($settings);
-
-            $conditions = [];
-
-            if ($settings) {
-
-                foreach ($settings as $setting) {
-                    $conditions['conditions'][$setting->key] = $setting->value;
-                }
-
-                // dd($user_settings);
-
-
-            }
+//            $settings = Setting::where('user_id', $user->id)->get();
+//
+//            // dd($settings);
+//
+//            $conditions = [];
+//
+//            if ($settings) {
+//
+//                foreach ($settings as $setting) {
+//                    $conditions['conditions'][$setting->key] = $setting->value;
+//                }
+//
+//                // dd($user_settings);
+//
+//
+//            }
 
 
             // Перезаписываем сессию
-            session(['access' => $access, 'conditions' => $conditions]);
+            session([
+                'access' => $access,
+//                'conditions' => $conditions
+            ]);
 
 
 

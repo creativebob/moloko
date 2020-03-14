@@ -31,6 +31,9 @@ class CreateGoodsTable extends Migration
             $table->boolean('archive')->default(0)->unsigned()->comment('Статус архива');
             $table->boolean('serial')->default(0)->unsigned()->comment('Серийный номер');
 
+            $table->boolean('is_produced')->default(0)->comment('Производится');
+            $table->boolean('is_ordered')->default(0)->comment('Под заказ');
+
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');

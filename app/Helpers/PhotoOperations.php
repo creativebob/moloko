@@ -115,7 +115,7 @@ function savePhoto($request, $item) {
         $size = filesize($image)/1024;
         // dd($size);
 
-        $settings = getSettings($item->getTable());
+        $settings = getPhotoSettings($item->getTable());
 
         if ($width < $settings['img_min_width']) {
             abort(403, 'Ширина фотографии мала!');
@@ -196,7 +196,7 @@ function savePhotoInAlbum($request, $album) {
     $size = filesize($image)/1024;
     // dd($size);
 
-    $settings = getSettings('albums');
+    $settings = getPhotoSettings('albums');
 
     if ($width < $settings['img_min_width']) {
         abort(403, 'Ширина фотографии мала!');
@@ -264,7 +264,7 @@ function savePhotoInAlbum($request, $album) {
 }
 
 // Настройки для фоток
-function getSettings($entity_alias, $album_id = null) {
+function getPhotoSettings($entity_alias, $album_id = null) {
 
     // Вытаскиваем настройки из конфига
     $settings = config('photo_settings');
@@ -353,7 +353,7 @@ function setSettings($request, $item) {
 function getPhotoPath($item, $size = 'medium') {
 
     if(isset($item->photo_id)) {
-    
+
         if ($item->getTable() == 'companies') {
             $path = "/storage/" . $item->id . "/media/" . $item->getTable() . "/" . $item->id . "/img/" . $size . "/" . $item->photo->name;
         } else {

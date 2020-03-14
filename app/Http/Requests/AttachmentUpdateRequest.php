@@ -10,7 +10,7 @@ class AttachmentUpdateRequest extends FormRequest
 
     public function __construct()
     {
-        $this->settings = $this->getSettings('attachments');
+        $this->settings = $this->getPhotoSettings('attachments');
     }
 
     use Photable;

@@ -117,6 +117,12 @@ class Department extends Model
         return $this->hasMany('App\Staffer');
     }
 
+    // Склады
+    public function Stocks()
+    {
+        return $this->hasMany(Stock::class);
+    }
+
     // // Получаем вложенные отделы
     // public function childs()
     // {

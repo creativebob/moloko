@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Seeder;
 
-use App\Entity;
 use App\PhotoSetting;
 
 class PhotoSettingsTableSeeder extends Seeder

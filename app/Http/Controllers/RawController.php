@@ -322,13 +322,13 @@ class RawController extends Controller
         // dd($article);
 
         // Получаем настройки по умолчанию
-//        $dropzone = getSettings($this->entity_alias);
+//        $dropzone = getPhotoSettings($this->entity_alias);
 //        $dropzone['id'] = $article->id;
 //        $dropzone['entity'] = $article->getTable();
 //        dd($dropzone);
 
         // Получаем настройки по умолчанию
-        $settings = $this->getSettings($this->entity_alias);
+        $settings = $this->getPhotoSettings($this->entity_alias);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);

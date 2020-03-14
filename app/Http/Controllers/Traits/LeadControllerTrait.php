@@ -109,7 +109,8 @@ trait LeadControllerTrait
         // $lead->private_status = $request->private_status;
 
         $lead->stage_id = $request->stage_id ?? 2; // Этап: "обращение"" по умолчанию
-        $lead->badget = cleanDigit($request->badget);
+//        dd($request);
+//        $lead->badget = cleanDigit($request->badget);
 //        $lead->payment = cleanDigit($request->payment);
         $lead->lead_method_id = $request->lead_method ?? 1; // Способ обращения: "звонок"" по умолчанию
         $lead->draft = NULL;

@@ -274,7 +274,7 @@ class ServiceController extends Controller
         // dd($process);
 
         // Получаем настройки по умолчанию
-        $settings = $this->getSettings($this->entity_alias);
+        $settings = $this->getPhotoSettings($this->entity_alias);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);

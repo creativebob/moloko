@@ -10,7 +10,7 @@ class ContainerUpdateRequest extends FormRequest
 
     public function __construct()
     {
-        $this->settings = $this->getSettings('containers');
+        $this->settings = $this->getPhotoSettings('containers');
     }
 
     use Photable;

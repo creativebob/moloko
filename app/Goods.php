@@ -58,6 +58,9 @@ class Goods extends Model
         'price_unit_category_id',
         'price_unit_id',
 
+        'is_produced',
+        'is_ordered',
+
         'archive',
         'serial',
 

@@ -268,7 +268,7 @@ class WorkflowController extends Controller
         // dd($process);
 
         // Получаем настройки по умолчанию
-        $settings = $this->getSettings($this->entity_alias);
+        $settings = $this->getPhotoSettings($this->entity_alias);
 //        dd($settings);
 
         // Инфо о странице

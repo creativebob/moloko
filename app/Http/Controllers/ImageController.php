@@ -61,7 +61,7 @@ class ImageController extends Controller
             $size = filesize($image)/1024;
             // dd($size);
 
-            $settings = getSettings($item->getTable());
+            $settings = getPhotoSettings($item->getTable());
 
             if ($width < $settings['img_min_width']) {
                 abort(403, 'Ширина фотографии мала!');

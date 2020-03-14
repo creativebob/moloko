@@ -101,11 +101,16 @@
 
 									@if ($item->category->manufacturers->isNotEmpty())
 
-										{!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $article->manufacturer_id, [$disabled ? 'disabled' : '']) !!}
+                                        <manufacturers-component
+                                            :item='@json($item)'
+                                            :manufacturers='@json($item->category->manufacturers)'
+                                            disabled="{{ $disabled }}"
+                                        ></manufacturers-component>
+{{--										{!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $article->manufacturer_id, [$disabled ? 'disabled' : '']) !!}--}}
 
 									@else
 
-										@include('includes.selects.manufacturers', ['manufacturer_id' => $article->manufacturer_id, 'item' => $item])
+										@include('products.articles.common.edit.manufacturers')
 
 									@endif
 

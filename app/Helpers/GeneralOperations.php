@@ -22,16 +22,16 @@ use GuzzleHttp\Client;
 
 // Получает экземпляр текущего сайта
 function getSite() {
-    
-        $request = request();
-        $domain = $request->getHost();
-        $site = Site::where('domain', $domain)
-            ->with([
-                'pages_public',
-                'filials'
-            ])
-            ->first();
-        return $site;
+
+    $request = request();
+    $domain = $request->getHost();
+    $site = Site::where('domain', $domain)
+        ->with([
+            'pages_public',
+            'filials'
+        ])
+        ->first();
+    return $site;
 }
 
 
@@ -259,22 +259,60 @@ function isDomainAvailible($domain)
 
 function create_location($request, $country_id = null, $city_id = null, $address = null) {
 
-        // Значения по умолчанию
-        $country_id_default = 1; // Страна: Россия
-        $city_id_default = 1; // Город: Иркутск
-        $address_default = null; // Адрес: не указываем
-        $zip_code_default = null; // Адрес: не указываем
+    // Значения по умолчанию
+    $country_id_default = 1; // Страна: Россия
+    $city_id_default = 1; // Город: Иркутск
+    $address_default = null; // Адрес: не указываем
+    $zip_code_default = null; // Адрес: не указываем
 
-        $country_id = $country_id ?? $request->country_id ?? $country_id_default;
-        $city_id = $city_id ?? $request->city_id ??  $city_id_default;
-        $address = $address ?? $request->address ?? $address_default;
-        $zip_code = $request->zip_code ?? $zip_code_default;
+    $country_id = $country_id ?? $request->country_id ?? $country_id_default;
+    $city_id = $city_id ?? $request->city_id ??  $city_id_default;
+    $address = $address ?? $request->address ?? $address_default;
+    $zip_code = $request->zip_code ?? $zip_code_default;
 
-        // Скрываем бога
-        $user_id = hideGod($request->user());
+    // Скрываем бога
+    $user_id = hideGod($request->user());
 
-        // Ищем или создаем локацию
-        $location = Location::with('city')
+    // Ищем или создаем локацию
+    $location = Location::with('city')
+    ->firstOrCreate(compact(
+        'country_id',
+        'city_id',
+        'address',
+        'zip_code'
+    ), [
+        'author_id' => $user_id
+    ]);
+
+    yandexGeocoder($location);
+//        dd($location);
+
+    $location_id = $location->id;
+    return $location_id;
+}
+
+// Обновление
+function update_location($request, $item) {
+
+// Обновляем локацию
+    $item_location = $item->location;
+// Проверяем страну, так как ее мы пока не выбираем
+    if (isset($request->country_id)) {
+        $country_id = ($item_location->country_id != $request->country_id) ? $request->country_id : $item_location->country_id;
+    } else {
+        $country_id = $item_location->country_id;
+    }
+
+    $city_id = ($item_location->city_id != $request->city_id) ? $city_id = $request->city_id : $item_location->city_id;
+    $address = ($item_location->address != $request->address) ? $address = $request->address : $item_location->address;
+
+    $zip_code = ($item_location->zip_code != $request->zip_code) ? $zip_code = $request->zip_code : $item_location->zip_code;
+
+// Скрываем бога
+    $user_id = hideGod($request->user());
+
+// Ищем или создаем локацию
+    $location = Location::with('city')
         ->firstOrCreate(compact(
             'country_id',
             'city_id',
@@ -284,72 +322,32 @@ function create_location($request, $country_id = null, $city_id = null, $address
             'author_id' => $user_id
         ]);
 
-        yandexGeocoder($location);
 //        dd($location);
 
-        $location_id = $location->id;
-        return $location_id;
+// Если пришла другая локация, то переписываем
+    if ($item->location_id != $location->id) {
+        $item->location_id = $location->id;
+
+        yandexGeocoder($location);
     }
+
+    return $item;
+
+}
+
 
 // Обновление
-    function update_location($request, $item) {
-
-    // Обновляем локацию
-        $item_location = $item->location;
-    // Проверяем страну, так как ее мы пока не выбираем
-        if (isset($request->country_id)) {
-            $country_id = ($item_location->country_id != $request->country_id) ? $request->country_id : $item_location->country_id;
-        } else {
-            $country_id = $item_location->country_id;
-        }
-
-        $city_id = ($item_location->city_id != $request->city_id) ? $city_id = $request->city_id : $item_location->city_id;
-        $address = ($item_location->address != $request->address) ? $address = $request->address : $item_location->address;
-
-        $zip_code = ($item_location->zip_code != $request->zip_code) ? $zip_code = $request->zip_code : $item_location->zip_code;
-
-    // Скрываем бога
-        $user_id = hideGod($request->user());
-
-    // Ищем или создаем локацию
-        $location = Location::with('city')
-            ->firstOrCreate(compact(
-                'country_id',
-                'city_id',
-                'address',
-                'zip_code'
-            ), [
-                'author_id' => $user_id
-            ]);
-
-//        dd($location);
-
-    // Если пришла другая локация, то переписываем
-        if ($item->location_id != $location->id) {
-            $item->location_id = $location->id;
-
-            yandexGeocoder($location);
-        }
-
-        return $item;
-
-    }
-
-
-    // Обновление
-    function addBankAccount($request, $company) {
-
-
+function addBankAccount($request, $company) {
     // Пришли ли с запросом имя банка, его БИК и рассчетный счет клиента,
     // которые так необходимы для создания нового аккаунта?
-        if((isset($request->bank_bic))&&(isset($request->bank_name))&&(isset($request->account_settlement))){
+    if((isset($request->bank_bic))&&(isset($request->bank_name))&&(isset($request->account_settlement))){
 
         // Сохраняем в переменную наш БИК
-            $bic = $request->bank_bic;
-            $country_id = 1; // Россия
-            $city_id = null; // 
-            $address = null;
-            $legal_form_id = 4; // ПАО
+        $bic = $request->bank_bic;
+        $country_id = 1; // Россия
+        $city_id = null; //
+        $address = null;
+        $legal_form_id = 4; // ПАО
 
         // Проверяем существуют ли у пользователя такие счета в указанном банке
         $cur_bank_account = BankAccount::whereNull('archive')
@@ -438,7 +436,6 @@ function setSchedule($request, $company) {
     return true;
 }
 
-
 // Обновление
 function setProcessesType($request, $company) {
 
@@ -452,8 +449,6 @@ function setProcessesType($request, $company) {
     return true;
 }
 
-
-
 // Обновление набора ролей
 function setRoles($request, $user) {
 
@@ -461,40 +456,40 @@ function setRoles($request, $user) {
     // Выполняем, только если данные пришли не из userfrofile!
     if(!isset($request->users_edit_mode)){
 
-      if (isset($request->access)) {
+        if (isset($request->access)) {
 
-         $delete = RoleUser::whereUser_id($user->id)->delete();
-         $mass = [];
-         foreach ($request->access as $string) {
+             $delete = RoleUser::whereUser_id($user->id)->delete();
+             $mass = [];
+             foreach ($request->access as $string) {
 
-            $item = explode(',', $string);
+                $item = explode(',', $string);
 
-            if ($item[2] == 'null') {
-               $position = null;
-           } else {
-               $position = $item[2];
+                if ($item[2] == 'null') {
+                   $position = null;
+               } else {
+                   $position = $item[2];
+               }
+
+               $mass[] = [
+                   'role_id' => $item[0],
+                   'department_id' => $item[1],
+                   'user_id' => $user->id,
+                   'position_id' => $position,
+               ];
            }
 
-           $mass[] = [
-               'role_id' => $item[0],
-               'department_id' => $item[1],
-               'user_id' => $user->id,
-               'position_id' => $position,
-           ];
-       }
-
-       DB::table('role_user')->insert($mass);
+           DB::table('role_user')->insert($mass);
 
 			// Успешно
-       return true;
+            return true;
 
-   } else {
+        } else {
 
 			// Если удалили последнюю роль для должности и пришел пустой массив
-     $delete = RoleUser::whereUser_id($user->id)->delete();
+            $delete = RoleUser::whereUser_id($user->id)->delete();
 
 			// Успешно
-     return true;
+            return true;
         }
     }
 }
@@ -503,28 +498,33 @@ function setRoles($request, $user) {
 // Вписывание пользователю ролей из должности
 function setRolesFromPosition($position, $department, $user) {
 
-            $position->load('roles');
-            $insert_array = [];
-            foreach ($position->roles as $role) {
-                $insert_array[$role->id] = [
-                    'department_id' => $department->id,
-                    'position_id' => $position->id,
-                ];
-            }
+    $position->load('roles');
+    $insert_array = [];
+    foreach ($position->roles as $role) {
+        $insert_array[$role->id] = [
+            'department_id' => $department->id,
+            'position_id' => $position->id,
+        ];
+    }
 
-            $user->roles()->attach($insert_array);
-            Log::info('Записали роли для юзера.');
+    $user->roles()->attach($insert_array);
+    Log::info('Записали роли для юзера.');
 }
 
 // Отправка почты
 function sendEmail($to_name, $to_email, $data) {
 
-        // $to_name = 'Лехе Солтысяку';
-        // $to_email = 'creativebob@yandex.ru';
-        // $data = array('name'=>"Алексей", "body" => "Выполнен вхыод на страницу Компании");
-        Mail::send('template_mails.simple', $data, function($message) use ($to_name, $to_email) {
-            $message->to($to_email, $to_name)->subject('Тестирование отправки почты');
-            $message->from('creativebobtwo@gmail.com','Artisans Web');
-        });
+    // $to_name = 'Лехе Солтысяку';
+    // $to_email = 'creativebob@yandex.ru';
+    // $data = array('name'=>"Алексей", "body" => "Выполнен вхыод на страницу Компании");
+    Mail::send('template_mails.simple', $data, function($message) use ($to_name, $to_email) {
+        $message->to($to_email, $to_name)->subject('Тестирование отправки почты');
+        $message->from('creativebobtwo@gmail.com','Artisans Web');
+    });
 
+}
+
+function getSettings()
+{
+    return auth()->user()->company->settings;
 }

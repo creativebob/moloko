@@ -10,7 +10,7 @@ class GoodsUpdateRequest extends FormRequest
 
     public function __construct()
     {
-        $this->settings = $this->getSettings('goods');
+        $this->settings = $this->getPhotoSettings('goods');
     }
 
     use Photable;
@@ -34,6 +34,9 @@ class GoodsUpdateRequest extends FormRequest
     {
           return [
               'category_id' => 'required|integer',
+
+              'is_produced' => 'integer|max:1|nullable',
+              'is_ordered' => 'integer|max:1|nullable',
 
               'display' => 'integer|max:1|nullable',
               'moderation' => 'integer|max:1|nullable',
