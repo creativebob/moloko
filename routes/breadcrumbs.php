@@ -167,3 +167,25 @@ Breadcrumbs::register('prices_services-index', function ($breadcrumbs, $catalog,
     $breadcrumbs->push($page_info->name);
 });
 
+// Статика для портфолио
+Breadcrumbs::register('portfolio-section-index', function ($breadcrumbs, $portfolio, $page_info) {
+    $breadcrumbs->push('Портфолио', route('portfolios.index'));
+    $breadcrumbs->push($portfolio->name, route('portfolios.edit', $portfolio->id));
+    $breadcrumbs->push($page_info->name, route($page_info->alias . '.index', $portfolio->id));
+});
+
+Breadcrumbs::register('portfolio-section-create', function ($breadcrumbs, $portfolio, $page_info) {
+    $breadcrumbs->push('Портфолио', route('portfolios.index'));
+    $breadcrumbs->push($portfolio->name, route('portfolios.edit', $portfolio->id));
+    $breadcrumbs->push($page_info->name, route($page_info->alias . '.index', $portfolio->id));
+    $breadcrumbs->push('Добавление');
+});
+
+Breadcrumbs::register('portfolio-section-edit', function ($breadcrumbs, $portfolio, $page_info, $item) {
+    $breadcrumbs->push('Портфолио', route('portfolios.index'));
+    $breadcrumbs->push($portfolio->name, route('portfolios.edit', $portfolio->id));
+    $breadcrumbs->push($page_info->name, route($page_info->alias . '.index', $portfolio->id));
+    $breadcrumbs->push($item->name);
+});
+
+

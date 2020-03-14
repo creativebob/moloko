@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\ArticlesGroup;
 
 
+use App\BusinessCase;
 use App\Container;
 use App\ContainersCategory;
 use App\ContainersStock;
@@ -19,6 +20,7 @@ use App\Metric;
 use App\Order;
 use App\Policies\ArticlesGroupPolicy;
 
+use App\Policies\BusinessCasePolicy;
 use App\Policies\ContainerPolicy;
 use App\Policies\ContainersCategoryPolicy;
 use App\Policies\ContainersStockPolicy;
@@ -29,6 +31,7 @@ use App\Policies\GoodsStockPolicy;
 use App\Policies\IndicatorPolicy;
 use App\Policies\MetricPolicy;
 use App\Policies\OrderPolicy;
+use App\Policies\PortfolioPolicy;
 use App\Policies\PricesGoodsPolicy;
 use App\Policies\ProcessesGroupPolicy;
 use App\Policies\ConsignmentPolicy;
@@ -39,6 +42,7 @@ use App\Policies\SchedulePolicy;
 use App\Policies\SettingPolicy;
 use App\Policies\ToolsStockPolicy;
 use App\Policies\VendorPolicy;
+use App\Portfolio;
 use App\PricesGoods;
 use App\ProcessesGroup;
 use App\Consignment;
@@ -305,7 +309,7 @@ class AuthServiceProvider extends ServiceProvider
 
 
         User::class => UserPolicy::class,
-        RightsRole::class => RightsRolePolicy::class,
+//        RightsRole::class => RightsRolePolicy::class,
         Company::class => CompanyPolicy::class,
         ExtraRequisite::class => ExtraRequisitePolicy::class,
 
@@ -329,11 +333,11 @@ class AuthServiceProvider extends ServiceProvider
 
         Account::class => AccountPolicy::class,
         Post::class => PostPolicy::class,
-        SocialNetwork::class => SocialNetworkPolicy::class,
+//        SocialNetwork::class => SocialNetworkPolicy::class,
         Campaign::class => CampaignPolicy::class,
 
         Plan::class => PlanPolicy::class,
-        Salary::class => SalaryPolicy::class,
+//        Salary::class => SalaryPolicy::class,
 
         Position::class => PositionPolicy::class,
         Region::class => RegionPolicy::class,
@@ -419,6 +423,9 @@ class AuthServiceProvider extends ServiceProvider
         Stage::class => StagePolicy::class,
         Feedback::class => FeedbackPolicy::class,
 
+        // Портфолио
+        Portfolio::class => PortfolioPolicy::class,
+        BusinessCase::class => BusinessCasePolicy::class,
     ];
 
     public function boot()

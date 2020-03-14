@@ -592,17 +592,30 @@ class EntitiesTableSeeder extends Seeder
             ],
 
              [
-                 'name' => 'Настройки',
-                 'alias' => 'settings',
-                 'model' => 'Setting',
-                 'rights' => true,
-                 'system' => true,
-                 'author_id' => 1,
-                 'site' => 0,
-                 'metric' => 0,
-                 'view_path' => 'settings',
-                 'page_id' => $pages->firstWhere('alias', 'settings')->id,
-             ],
+                'name' => 'Настройки',
+                'alias' => 'settings',
+                'model' => 'Setting',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'system/pages/settings',
+                'page_id' => $pages->firstWhere('alias', 'settings')->id,
+            ],
+
+            [
+                'name' => 'Портфолио',
+                'alias' => 'portfolios',
+                'model' => 'Portfolio',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'system/pages/portfolios',
+                'page_id' => $pages->firstWhere('alias', 'portfolios')->id,
+            ],
 
             // TODO - 04.06.19 - Чистка сущностей
             // [
@@ -1080,6 +1093,18 @@ class EntitiesTableSeeder extends Seeder
                 'ancestor_id' => Entity::whereAlias('processes_groups')->first(['id'])->id,
                 'view_path' => 'processes',
                 'page_id' => null,
+            ],
+            [
+                'name' => 'Кейсы',
+                'alias' => 'business_cases',
+                'model' => 'BusinessCase',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('portfolios')->first(['id'])->id,
+                'view_path' => 'system/pages/business_cases',
+                'page_id' => $pages->firstWhere('alias', 'business_cases')->id,
             ],
         ]);
 

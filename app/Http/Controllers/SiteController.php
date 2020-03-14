@@ -23,7 +23,6 @@ class SiteController extends Controller
         $this->model = 'App\Site';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-
     }
 
     public function index(Request $request, SiteFilter $filters)

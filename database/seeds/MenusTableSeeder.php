@@ -1059,6 +1059,21 @@ Menu::insert([
         'sort' => 5,
     ],
 
+    [
+        'name' => 'Портфолио',
+        'icon' => null,
+        'alias' => 'admin/portfolios',
+        'tag' => 'portfolios',
+        'parent_id' => $menus->where('tag', 'marketings')->first()->id,
+        'page_id' => $pages->where('alias', 'portfolios')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 5,
+    ],
+
 
     // Справочники
     [

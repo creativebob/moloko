@@ -1216,6 +1216,17 @@ Route::resource('/promotions', 'PromotionController');
 Route::resource('/dispatches', 'DispatchController');
 
 
+// --------------------------- Портфолио -------------------------------------
+// Основные методы
+Route::resource('/portfolios', 'PortfolioController');
+
+Route::prefix('portfolios/{portfolio_id}')->group(function () {
+
+    // --------------------------------------- Кейсы ---------------------------------------------
+    // Основные методы
+    Route::resource('/business_cases', 'BusinessCaseController');
+});
+
 
 //Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');
 //Route::any('catalogs_goods_items/prices', 'CatalogsGoodsItemController@get_prices');

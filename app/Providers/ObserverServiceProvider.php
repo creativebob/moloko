@@ -6,6 +6,7 @@ use App\ArticlesGroup;
 use App\Attachment;
 use App\AttachmentsCategory;
 use App\AttachmentsStock;
+use App\BusinessCase;
 use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\CatalogsService;
@@ -36,6 +37,7 @@ use App\Observers\ArticlesGroupObserver;
 use App\Observers\AttachmentObserver;
 use App\Observers\AttachmentsCategoryObserver;
 use App\Observers\AttachmentsStockObserver;
+use App\Observers\BusinessCaseObserver;
 use App\Observers\CatalogsGoodsItemObserver;
 use App\Observers\CatalogsGoodsObserver;
 use App\Observers\CatalogsServiceObserver;
@@ -67,6 +69,7 @@ use App\Observers\PageObserver;
 use App\Observers\PaymentObserver;
 use App\Observers\PhotoObserver;
 use App\Observers\PluginObserver;
+use App\Observers\PortfolioObserver;
 use App\Observers\PositionObserver;
 use App\Observers\PricesGoodsHistoryObserver;
 use App\Observers\PricesGoodsObserver;
@@ -91,6 +94,7 @@ use App\Page;
 use App\Payment;
 use App\Photo;
 use App\Plugin;
+use App\Portfolio;
 use App\Position;
 use App\PricesGoods;
 use App\PricesGoodsHistory;
@@ -289,6 +293,10 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Внутренние
         Client::observe(ClientObserver::class);
+
+        // Портфолио
+        Portfolio::observe(PortfolioObserver::class);
+        BusinessCase::observe(BusinessCaseObserver::class);
     }
 
     /**

@@ -370,6 +370,28 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
+            [
+                'name' => 'Портфолио',
+                'site_id' => 1,
+                'title' => 'Портфолио',
+                'description' => 'Портфолио',
+                'alias' => 'portfolios',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Кейсы',
+                'site_id' => 1,
+                'title' => 'Кейсы',
+                'description' => 'Кейсы',
+                'alias' => 'business_cases',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
 
             // Альбомы
             [
