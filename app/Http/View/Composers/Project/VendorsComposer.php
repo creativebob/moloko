@@ -2,20 +2,23 @@
 
 namespace App\Http\View\Composers\Project;
 
+use App\Vendor;
 use Illuminate\View\View;
 
 class VendorsComposer
 {
 	public function compose(View $view)
 	{
-        $company = $view->site->company->load(['vendors' => function ($q) {
-            $q->with([
-                'supplier.company.photo'
-            ])
-                ->where('display', true)
-                ->where('archive', false);
-        }]);
+	    $vendors = Vendor::with([
+            'supplier.company.photo'
+        ])
+        ->where([
+            'company_id' => $view->site->company_id,
+            'display' => true,
+            'archive' => false,
+        ])
+        ->get();
 
-        return $view->with('vendors', $company->vendors);
+        return $view->with(compact('vendors'));
     }
 }
