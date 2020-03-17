@@ -27,6 +27,9 @@ class Service extends Model
         'category_id',
         'process_id',
 
+        'archive',
+        'serial',
+
         'display',
         'system',
         'moderation'
