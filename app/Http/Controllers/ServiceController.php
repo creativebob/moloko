@@ -83,8 +83,8 @@ class ServiceController extends Controller
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->template($answer)
+        ->systemItem($answer)
+//        ->template($answer)
         ->booklistFilter($request)
         ->filter($request, 'author_id')
         // ->filter($request, 'services_category_id', 'process.product')
