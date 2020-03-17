@@ -154,15 +154,11 @@ class FormController extends Controller
             $phones = add_phones($request, $lead);
             // $lead = update_location($request, $lead);
 
-            // TODO - 15.11.19 - Склад должен браться из настроек, пока берем первый по филиалу
-            $stock_id = Stock::where('filial_id', $lead->filial_id)->value('id');
-
             // Находим или создаем заказ для лида
             $estimate = Estimate::create([
                 'lead_id' => $lead->id,
                 'filial_id' => $lead->filial_id,
                 'company_id' => $lead->company_id,
-                'stock_id' => $stock_id,
                 'date' => now()->format('Y-m-d'),
                 'number' => $lead->case_number,
                 'author_id' => $lead->author_id,
