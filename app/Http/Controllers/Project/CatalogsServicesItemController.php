@@ -66,7 +66,7 @@ class CatalogsServicesItemController extends Controller
                                 $q->with([
                                     'photo',
                                     'unit_length',
-                                    'positions.staff.user.photo'
+                                    'positions.actual_staff.user.photo'
                                 ]);
                             },
                             'metrics',

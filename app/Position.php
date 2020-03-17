@@ -70,13 +70,19 @@ class Position extends Model
 
     public function employees()
     {
-        return $this->hasMany(App::class);
+        return $this->hasMany(Employee::class);
     }
 
     // Получаем должность.
     public function staff()
     {
         return $this->hasMany(Staffer::class);
+    }
+
+    public function actual_staff()
+    {
+        return $this->hasMany(Staffer::class)
+            ->whereNotNull('user_id');
     }
 
     // Получаем роли.
