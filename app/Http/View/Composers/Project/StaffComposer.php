@@ -18,7 +18,8 @@ class StaffComposer
             'display' => true,
             'filial_id' => $view->site->filial->id
         ])
-            ->whereNotNull('user_id');
+            ->whereNotNull('user_id')
+            ->get();
        // dd($staff);
 
         return $view->with(compact('staff'));
