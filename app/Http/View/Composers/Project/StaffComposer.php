@@ -15,7 +15,8 @@ class StaffComposer
                 'user.photo',
                 'position:id,name'
             ])
-            ->where('display', true);
+            ->where('display', true)
+            ->whereNotNull('user_id');
         }]);
 
         $staff = $site->company->staff;

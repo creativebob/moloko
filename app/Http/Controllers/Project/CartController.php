@@ -350,19 +350,14 @@ class CartController extends Controller
             if(isset($cart)){
 //                $estimate = $this->createEstimateFromCart($cart, $lead);
 
-                // TODO - 15.11.19 - Склад должен браться из настроек, пока берем первый по филиалу
-                $stock_id = Stock::where('filial_id', $lead->filial_id)->value('id');
-
                 // Находим или создаем заказ для лида
                 $estimate = Estimate::create([
                     'lead_id' => $lead->id,
                     'filial_id' => $lead->filial_id,
                     'company_id' => $lead->company->id,
-                    'stock_id' => $stock_id,
                     'date' => now()->format('Y-m-d'),
                     'number' => $lead->case_number,
                     'author_id' => $lead->author_id,
-
                 ]);
 
                 logs('leads_from_project')->info("Создана смета с id: [{$estimate->id}]");
@@ -371,13 +366,30 @@ class CartController extends Controller
                 $prices_goods = PricesGoods::with('goods')
                     ->find($prices_goods_ids);
 
+                $stock_id = null;
+                // Если включены настройки для складов, то проверяем сколько складов в системе, и если один, то берем его id
+                $settings = $this->site->company->settings;
+                if ($settings->isNotEmpty()) {
+                    $stocks = Stock::where('filial_id', $lead->filial_id)
+                        ->get([
+                            'id',
+                            'filial_id'
+                        ]);
+
+                    if ($stocks) {
+                        if ($stocks->count() == 1) {
+                            $stock_id = $stocks->first()->id;
+                        }
+                    }
+                }
+
                 $data = [];
                 foreach ($prices_goods as $price_goods) {
                     $data[] = new EstimatesGoodsItem([
                         'goods_id' => $price_goods->goods->id,
 
                         'price_id' => $price_goods->id,
-                        'stock_id' => $estimate->stock_id,
+                        'stock_id' => $stock_id,
 
                         'company_id' => $lead->company->id,
                         'author_id' => 1,
