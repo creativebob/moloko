@@ -37,11 +37,11 @@
     </td>
 
     <td class="td-unit">
-        {{ $prices_service->service->process->group->unit->abbreviation }}
+        {{ $prices_service->service->process->unit->abbreviation }}
     </td>
 
     <td class="td-length">
-{{--        @if($prices_service->service->process->group->unit_id != 12)--}}
+{{--        @if($prices_service->service->process->unit_id != 12)--}}
 {{--            {{ num_format($prices_service->service->process->length / $cur_prices_goods->goods->article->unit_weight->ratio, 0) }} {{ $cur_prices_goods->goods->article->unit_weight->abbreviation }}--}}
 {{--        @endif--}}
     </td>

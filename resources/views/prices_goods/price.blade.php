@@ -37,11 +37,11 @@
     </td>
 
     <td class="td-unit">
-        {{ $cur_prices_goods->goods->article->group->unit->abbreviation }}
+        {{ $cur_prices_goods->goods->article->unit->abbreviation }}
     </td>
 
     <td class="td-weight">
-        @if($cur_prices_goods->goods->article->group->unit_id != 8)
+        @if($cur_prices_goods->goods->article->unit_id != 8)
             {{ num_format($cur_prices_goods->goods->article->weight / $cur_prices_goods->goods->article->unit_weight->ratio, 0) }} {{ $cur_prices_goods->goods->article->unit_weight->abbreviation }}
         @endif
     </td>
