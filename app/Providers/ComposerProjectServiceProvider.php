@@ -26,6 +26,7 @@ use App\Http\View\Composers\Project\WorktimeComposer;
 use App\Http\View\Composers\Project\WorktimeFilialTodayComposer;
 use App\Http\View\Composers\Project\PluginsComposer;
 
+use App\Http\View\Composers\Project\WorktimeTodayComposer;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
