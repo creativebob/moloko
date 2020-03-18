@@ -225,20 +225,20 @@ trait Processable
             $data = $request->input();
             $data['unit_id'] = $group->unit_id;
             $data['units_category_id'] = $group->units_category_id;
-            $processs_group = ProcessesGroup::create($data);
+            $processes_group = ProcessesGroup::create($data);
 
             // TODO - 23.09.19 - Изменения из за проблен на Вкусняшке
 //            $user = $request->user();
-//            $processs_group = ProcessesGroup::firstOrCreate([
+//            $processes_group = ProcessesGroup::firstOrCreate([
 //                'name' => $request->name,
 //                'unit_id' => $group->unit_id,
 //                'units_category_id' => $group->units_category_id,
 //                'company_id' => $user->company_id,
 //            ]);
-            $new_process->processs_group_id = $processs_group->id;
+            $new_process->processes_group_id = $processes_group->id;
 
             $category = $item->category;
-            $category->groups()->syncWithoutDetaching($processs_group->id);
+            $category->groups()->syncWithoutDetaching($processes_group->id);
         }
 
         $new_process->photo_id = null;
@@ -481,7 +481,7 @@ trait Processable
             $model = 'App\\'.$entity->model;
 
             $new_category = $model::findOrFail($category_id);
-            $new_category->groups()->attach($request->processs_group_id);
+            $new_category->groups()->attach($request->processes_group_id);
 
             $item->update([
                 'category_id' => $category_id,

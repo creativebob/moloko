@@ -1,7 +1,7 @@
 <td class="td-control">
 
         @isset($replicate)
-                <div title="Клонировать" class="icon-clone black sprite" data-open="modal-replicate"></div>
+            <div title="Клонировать" class="icon-clone black sprite" data-open="modal-replicate"></div>
         @endisset
 
         {{-- Отображение на сайте --}}
@@ -23,7 +23,7 @@
 
         {{-- Системный статус --}}
         @can ('system', $item)
-        
+
         @switch($item)
 
         @case($item->system == 1 && $item->company_id == null)

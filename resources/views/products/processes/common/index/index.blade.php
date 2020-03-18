@@ -62,7 +62,7 @@
                 @if($items->isNotEmpty())
 
                 @foreach($items as $item)
-                <tr class="item @if($item->moderation == 1)no-moderation @endif @if($item->process->draft) draft @endif" id="{{ $entity }}-{{ $item->id }}" data-name="{{ $item->process->name }}">
+                <tr class="item @if($item->moderation == 1)no-moderation @endif @if($item->process->draft) draft @endif" id="{{ $entity }}-{{ $item->id }}" data-name="{{ $item->process->name }}"  data-entity="{{ $entity }}" data-id="{{ $item->id }}">
 
                     <td class="td-drop">
                         <div class="sprite icon-drop"></div>
