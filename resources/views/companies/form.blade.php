@@ -234,7 +234,7 @@
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-12 cell">
-                        @include('includes.selects.loyalties', ['value'=>$client->loyalty_id])
+                        @include('includes.selects.loyalties', ['value' => isset($client->loyalty_id) ? $client->loyalty_id : 4])
                     </div>
 
                     <div class="small-12 medium-12 cell">

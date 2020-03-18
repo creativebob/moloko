@@ -210,7 +210,8 @@
                                                  @include('products.processes.common.edit.select_units', [
                                                     'name' => 'unit_length_id',
                                                     'units_category_id' => 3,
-                                                     'value' => $process->unit_length_id,
+                                                    'value' => $process->unit_length_id,
+                                                    'disabled' => null,
                                                 ])
                                             </label>
                                         </div>

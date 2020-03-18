@@ -1,16 +1,16 @@
 <?php
-	
+
 	namespace App\Http\View\Composers\Project;
 	use Illuminate\View\View;
 
 // Куки
 	use Illuminate\Support\Facades\Cookie;
-	
+
 	class WorktimesComposer
 	{
 		public function compose(View $view)
 		{
-			
+
 			$site = $view->site->load(['filials' => function ($q) {
 				$q->with([
 					'location.city',
@@ -23,11 +23,11 @@
 			}]);
 
 //         dd($site);
-			
+
 			// TODO - 22.01.19 - Решили пока вытаскивать первый филиал, при развитии будем углубляться и перерабатывать
 			$filial = $site->filials->first();
 //         dd($filial);
-			
+
 			$worktimes = [];
 			foreach ($filial->schedules[0]->worktimes as $worktime) {
 				// dd($worktime);
@@ -35,7 +35,7 @@
 				$worktimes[$worktime->weekday]['worktime_end'] = secToTime($worktime->worktime_begin + $worktime->worktime_interval);
 			}
 //         dd($worktimes);
-			
+
 			$days = [
 				'1' => 'Понедельник',
 				'2' => 'Вторник',
@@ -46,8 +46,8 @@
 				'7' => 'Воскресенье',
 			];
 //        dd($days);
-			
+
 			return $view->with(compact('worktimes', 'days'));
 		}
-		
+
 	}

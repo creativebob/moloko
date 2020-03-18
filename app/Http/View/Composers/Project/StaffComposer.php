@@ -19,6 +19,7 @@ class StaffComposer
             'filial_id' => $view->site->filial->id
         ])
             ->whereNotNull('user_id')
+            ->orderBy('sort')
             ->get();
        // dd($staff);
 

@@ -174,11 +174,11 @@ trait Processable
                             }
                         }
                     }
+                }
 
-                    $access = session('access.all_rights.index-positions-allow');
-                    if ($access) {
-                        $process->positions()->sync($request->positions);
-                    }
+                $access = session('access.all_rights.index-positions-allow');
+                if ($access) {
+                    $process->positions()->sync($request->positions);
                 }
 
                  if ($request->has('unit_length_id')) {

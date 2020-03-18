@@ -22,6 +22,7 @@ use App\Http\View\Composers\Project\NewsComposer;
 use App\Http\View\Composers\Project\PromotionsSliderComposer;
 use App\Http\View\Composers\Project\ToolsCategoriesWithToolsComposer;
 use App\Http\View\Composers\Project\VendorsComposer;
+use App\Http\View\Composers\Project\WorktimeComposer;
 use App\Http\View\Composers\Project\WorktimeFilialTodayComposer;
 use App\Http\View\Composers\Project\PluginsComposer;
 
@@ -84,6 +85,7 @@ class ComposerProjectServiceProvider extends ServiceProvider
                     'project.includes.staff.list',
                 ], StaffComposer::class);
                 view()->composer('project.includes.schedules.worktime_filial_today', WorktimeFilialTodayComposer::class);
+                view()->composer('project.includes.worktimes.today', WorktimeComposer::class);
                 view()->composer('project.includes.plugins.list', PluginsComposer::class);
 
                 view()->composer('project.includes.catalogs_goods.filters.price', PricesGoodsPriceFilterComposer::class);
