@@ -7,15 +7,16 @@ class WorktimeComposer
 {
     public function compose(View $view)
     {
-        // Смотрим филиал
+        $site = $view->site;
         $worktimes = [];
 
-        if (isset($view->site->filial->worktime))
+        if (isset($site->company->worktime)) {
+            $worktimes = $view->site->company->worktime;
+        }
+        if (isset($site->filial->worktime)) {
+            $worktimes = $view->site->filial->worktime;
+        }
 
-        return $view->with(compact('worktime'));
-
-//        $worktimes = $view->site->filial->worktime;
-//        return $view->with(compact('worktimes'));
+        return $view->with(compact('worktimes'));
     }
-
 }
