@@ -21,7 +21,7 @@
         </label>
 
         <label>Описание
-            @include('includes.inputs.textarea', ['name' => 'description'])
+            @include('includes.inputs.textarea', ['name' => 'description', 'value' => $position->description])
         </label>
 
         @if (auth()->user()->god)
