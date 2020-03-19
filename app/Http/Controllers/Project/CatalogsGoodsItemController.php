@@ -57,15 +57,14 @@ class CatalogsGoodsItemController extends Controller
         // Получаем полный прайс со всеми доступными разделами
         $catalogs_goods_item = CatalogsGoodsItem::with([
             'catalog',
-            'prices' => function ($q) use ($site) {
+            'prices_public' => function ($q) use ($site) {
                 $q->with([
-                    'service_public' => function ($q) {
+                    'goods_public' => function ($q) {
                         $q->with([
-                            'process' => function ($q) {
+                            'article' => function ($q) {
                                 $q->with([
                                     'photo',
-                                    'unit_length',
-                                    'positions.actual_staff.user.photo'
+                                    'manufacturer.company',
                                 ]);
                             },
                             'metrics',
@@ -73,7 +72,7 @@ class CatalogsGoodsItemController extends Controller
                     },
                     'currency',
                 ])
-                    ->has('service_public')
+                    ->has('goods_public')
                     ->where([
                         'display' => true,
                         'archive' => false,
