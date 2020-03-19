@@ -12,19 +12,19 @@
             <span class="icon-comment"></span>
         </td>
 
-        <td v-if="settings.length && stocks.length">
-            <select
-                name="stock_id"
-                v-model="stockId"
-            >
-                <option v-for="stock in stocks"
-                    :value="stock.id"
-                >{{ stock.name }}</option>
-            </select>
-        </td>
-        <td v-else>
-            {{ item.stock.name }}
-        </td>
+<!--        <td v-if="settings.length && stocks.length">-->
+<!--            <select-->
+<!--                name="stock_id"-->
+<!--                v-model="stockId"-->
+<!--            >-->
+<!--                <option v-for="stock in stocks"-->
+<!--                    :value="stock.id"-->
+<!--                >{{ stock.name }}</option>-->
+<!--            </select>-->
+<!--        </td>-->
+<!--        <td v-else>-->
+<!--            {{ item.stock.name }}-->
+<!--        </td>-->
 
         <td>{{ item.price | roundToTwo | level }}</td>
 

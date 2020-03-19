@@ -7,7 +7,7 @@
             <thead>
             <tr>
                 <th>Наименование</th>
-                <th v-if="settings.length">Склад</th>
+<!--                <th v-if="settings.length">Склад</th>-->
                 <th>Цена</th>
                 <th>Кол-во</th>
                 <!--                                        <th>Себестоимость</th>
