@@ -72,6 +72,7 @@ class ComposerProjectServiceProvider extends ServiceProvider
                     'project.includes.catalogs_goods.accordion',
                     'project.includes.catalogs_goods.menu',
                     'project.includes.catalogs_goods.images_menu',
+                    'project.includes.catalogs_goods.sidebar',
                     $alias . '.layouts.navigations.nav_catalogs_goods',
                 ], CatalogsGoodsComposer::class);
 

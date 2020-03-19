@@ -18,6 +18,12 @@ Route::get('/', 'AppController@start')->name('project.start');
 Route::get('/change_city/{alias}', 'AppController@change_city')->name('project.change_city');
 
 // Товары
+Route::get('/catalogs-goods/{catalog_slug}/{all}', 'CatalogsGoodsItemController@show')
+    ->where('all', '.*')
+    ->only([
+        'show'
+    ])
+    ->name('project.catalogs_goods_items.show');
 Route::get('/catalogs-goods/{all}', 'CatalogsGoodsController@show')
     ->where('all', '.*')
     ->name('project.catalogs_goods.show');
@@ -33,10 +39,13 @@ Route::resource('/prices-goods', 'PricesGoodsController')
     ])
     ->names('project.prices_goods');
 
-// Услуги
 
+// Услуги
 Route::get('/catalogs-services/{catalog_slug}/{all}', 'CatalogsServicesItemController@show')
     ->where('all', '.*')
+    ->only([
+        'show'
+    ])
     ->name('project.catalogs_services_items.show');
 
 Route::get('/catalogs-services/{all}', 'CatalogsServiceController@show')
