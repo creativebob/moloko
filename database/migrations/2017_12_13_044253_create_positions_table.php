@@ -16,11 +16,13 @@ class CreatePositionsTable extends Migration
         Schema::create('positions', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->string('name')->index()->comment('Название должности');
+            $table->string('name')->index()->comment('Название');
+
+            $table->text('description')->nullable()->comment('Описание');
 
             $table->bigInteger('page_id')->unsigned()->nullable()->comment('Id страницы приземления');
             $table->foreign('page_id')->references('id')->on('pages');
-            
+
             $table->boolean('direction')->default(0)->unsigned()->comment('Руководящая должность');
 
             $table->bigInteger('sector_id')->nullable()->unsigned()->comment('Id сектора');

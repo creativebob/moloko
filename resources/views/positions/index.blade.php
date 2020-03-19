@@ -32,6 +32,7 @@
           <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
           <th class="td-name">Название должности</th>
+            <th class="td-description">Описание</th>
           <th class="td-page">Alias страницы</th>
 
           <th class="td-control"></th>
@@ -65,6 +66,7 @@
             </a>
             @endcan
           </td>
+            <td class="td-description">{{ $position->description }}</td>
           <td class="td-page">{{ $position->page->alias }}</td>
 
           {{-- Элементы управления --}}

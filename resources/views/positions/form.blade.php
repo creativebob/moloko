@@ -15,9 +15,13 @@
         </div>
         @endif
         <!-- Должность -->
-        <label>Название должности
-            @include('includes.inputs.name', ['value'=>$position->name, 'name'=>'name', 'required' => true])
+        <label>Название
+            @include('includes.inputs.name', ['value' => $position->name, 'required' => true])
             <span class="form-error">Уж постарайтесь, введите хотя бы 3 символа!</span>
+        </label>
+
+        <label>Описание
+            @include('includes.inputs.textarea', ['name' => 'description'])
         </label>
 
         @if (auth()->user()->god)

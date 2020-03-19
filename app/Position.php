@@ -49,6 +49,8 @@ class Position extends Model
 
     protected $fillable = [
         'name',
+        'description',
+
         'page_id',
         'sector_id',
         'direct_status',
@@ -64,7 +66,7 @@ class Position extends Model
     {
         return $this->belongsTo(Page::class)
             ->withDefault([
-                'alias' => 'Нет страницы'
+                'alias' => 'Страница не выбрана'
             ]);
     }
 
