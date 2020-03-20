@@ -61,6 +61,7 @@ class EstimatesServicesItemController extends Controller
                 'estimate_id' => $request->estimate_id,
                 'service_id' => $prices_service->product->id,
                 'price_id' => $prices_service->id,
+                'currency_id' => $prices_service->currency_id,
                 'price' => $prices_service->price,
                 'count' => 1,
                 'amount' => $prices_service->price
@@ -76,7 +77,8 @@ class EstimatesServicesItemController extends Controller
             ], [
                 'price' => $prices_service->price,
                 'count' => 1,
-                'amount' => $prices_service->price
+                'amount' => $prices_service->price,
+                'currency_id' => $prices_service->currency_id,
             ]);
 
             if ($estimates_services_item->id) {

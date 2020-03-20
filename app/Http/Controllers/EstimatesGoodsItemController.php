@@ -84,6 +84,7 @@ class EstimatesGoodsItemController extends Controller
                 'estimate_id' => $request->estimate_id,
                 'goods_id' => $price_goods->product->id,
                 'price_id' => $price_goods->id,
+                'currency_id' => $price_goods->currency_id,
                 'stock_id' => $stock_id,
                 'price' => $price_goods->price,
                 'count' => 1,
@@ -102,7 +103,8 @@ class EstimatesGoodsItemController extends Controller
             ], [
                 'price' => $price_goods->price,
                 'count' => 1,
-                'amount' => $price_goods->price
+                'amount' => $price_goods->price,
+                'currency_id' => $price_goods->currency_id,
             ]);
 
             if ($estimates_goods_item->id) {

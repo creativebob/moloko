@@ -101,7 +101,11 @@
 
                         <div class="small-12 cell">
                             <label>Закупочная цена единицы, руб
-
+                                <input-digit-component
+                                    name="cost"
+                                    :value="item.cost"
+                                    :decimal_place="2"
+                                ></input-digit-component>
                             </label>
                         </div>
 
@@ -111,12 +115,20 @@
                                 <div class="grid-x grid-margin-x">
                                     <div class="small-12 medium-6 cell">
                                         <label>Наценка, %
-
+                                            <input-digit-component
+                                                name="margin_percent"
+                                                :value="item.margin_percent"
+                                                :decimal_place="4"
+                                            ></input-digit-component>
                                         </label>
                                     </div>
                                     <div class="small-12 medium-6 cell">
                                         <label>Наценка, руб
-
+                                            <input-digit-component
+                                                name="margin_currency"
+                                                :value="item.margin_currency"
+                                                :decimal_place="2"
+                                            ></input-digit-component>
                                         </label>
                                     </div>
 
@@ -124,12 +136,20 @@
 
                                     <div class="small-12 medium-6 cell">
                                         <label>Допфикс наценка, %
-
+                                            <input-digit-component
+                                                name="extra_margin_percent"
+                                                :value="item.extra_margin_percent"
+                                                :decimal_place="4"
+                                            ></input-digit-component>
                                         </label>
                                     </div>
                                     <div class="small-12 medium-6 cell">
                                         <label>Допфикс наценка, руб
-
+                                            <input-digit-component
+                                                name="extra_margin_currency"
+                                                :value="item.extra_margin_currency"
+                                                :decimal_place="2"
+                                            ></input-digit-component>
                                         </label>
                                     </div>
                                 </div>
@@ -143,23 +163,39 @@
                                 <div class="grid-x grid-margin-x">
                                     <div class="small-12 medium-6 cell">
                                         <label>Скидка, %
-
+                                            <input-digit-component
+                                                name="discount_percent"
+                                                :value="item.discount_percent"
+                                                :decimal_place="4"
+                                            ></input-digit-component>
                                         </label>
                                     </div>
                                     <div class="small-12 medium-6 cell">
                                         <label>Скидка, руб
-
+                                            <input-digit-component
+                                                name="discount_currency"
+                                                :value="item.discount_currency"
+                                                :decimal_place="2"
+                                            ></input-digit-component>
                                         </label>
                                     </div>
 
                                     <div class="small-12 medium-6 cell">
                                         <label>Допфикс скидка, %
-
+                                            <input-digit-component
+                                                name="extra_discount_percent"
+                                                :value="item.extra_discount_percent"
+                                                :decimal_place="4"
+                                            ></input-digit-component>
                                         </label>
                                     </div>
                                     <div class="small-12 medium-6 cell">
                                         <label>Допфикс скидка, руб
-
+                                            <input-digit-component
+                                                name="extra_discount_currency"
+                                                :value="item.extra_discount_currency"
+                                                :decimal_place="2"
+                                            ></input-digit-component>
                                         </label>
                                     </div>
                                 </div>
@@ -169,28 +205,45 @@
 
                         <div class="small-12 medium-6 cell">
                             <label>Цена единицы, руб
-
+                                <input-digit-component
+                                    name="price"
+                                    :value="item.price"
+                                    :decimal_place="2"
+                                ></input-digit-component>
                             </label>
                         </div>
                         <div class="small-12 medium-6 cell">
                             <label>Количество, единиц
-
+                                <input-digit-component
+                                    name="count"
+                                    :value="item.count"
+                                ></input-digit-component>
                             </label>
                         </div>
 
                         <div class="small-12 cell">
                             <label>Итоговая стоимость по позиции, руб
-
+                                <input-digit-component
+                                    name="amount"
+                                    :value="item.amount"
+                                    :decimal_place="2"
+                                ></input-digit-component>
                             </label>
                         </div>
 
+                    </div>
+
+                    <div class="grid-x grid-margin-x">
+                        <div class="small-12 cell">
+                            Склад:
+                        </div>
                     </div>
 
                 </div>
             </div>
             <div class="grid-x align-center">
                 <div class="small-6 medium-4 cell">
-                    <button class="button modal-button"></button>
+                    <button class="button modal-button">Сохранить</button>
                 </div>
             </div>
             <div data-close class="icon-close-modal sprite close-modal add-item"></div>
@@ -200,6 +253,9 @@
 
 <script>
     export default {
+        components: {
+            'input-digit-component': require('../../../../common/components/inputs/DigitComponent.vue')
+        },
         props: {
             item: Object,
             index: Number,
@@ -361,7 +417,12 @@
             },
             // Создает разделители разрядов в строке с числами
             level: function (value) {
-                return Number(value).toLocaleString();
+                return parseInt(value).toLocaleString();
+            },
+
+            // Отбраcывает дробную часть в строке с числами
+            onlyInteger(value) {
+                return Math.floor(value);
             },
         },
     }

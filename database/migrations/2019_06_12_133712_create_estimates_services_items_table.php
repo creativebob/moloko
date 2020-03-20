@@ -25,6 +25,9 @@ class CreateEstimatesServicesItemsTable extends Migration
             $table->bigInteger('price_id')->unsigned()->nullable()->comment('Id прайса');
             $table->foreign('price_id')->references('id')->on('prices_services');
 
+            $table->bigInteger('currency_id')->nullable()->unsigned()->comment('Id валюты');
+            $table->foreign('currency_id')->references('id')->on('currencies');
+
             $table->bigInteger('service_id')->unsigned()->nullable()->comment('Id услуги');
             $table->foreign('service_id')->references('id')->on('services');
 
@@ -51,7 +54,7 @@ class CreateEstimatesServicesItemsTable extends Migration
             $table->decimal('profit', 12, 4)->nullable()->comment('Прибыль');
 
             // Общие настройки
-            
+
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 

@@ -78671,6 +78671,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -78825,13 +78826,932 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 /* 200 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed: Error: ENOENT: no such file or directory, open 'D:\\OSPanel\\domains\\crmsystem.local\\resources\\js\\system\\components\\estimates\\goods\\EstimatesGoodsItemComponent.vue'");
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(201)
+/* template */
+var __vue_template__ = __webpack_require__(202)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/estimates/goods/EstimatesGoodsItemComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5bd6175b", Component.options)
+  } else {
+    hotAPI.reload("data-v-5bd6175b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
 
 /***/ }),
-/* 201 */,
-/* 202 */,
+/* 201 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        'input-digit-component': __webpack_require__(318)
+    },
+    props: {
+        item: Object,
+        index: Number,
+        isRegistered: Boolean,
+        settings: Array,
+        stocks: Array
+    },
+    data: function data() {
+        return {
+            countInput: Number(this.item.count),
+            cost: Number(this.item.cost),
+            changeCount: false,
+            changeCost: false,
+            stockId: null
+        };
+    },
+    mounted: function mounted() {
+        if (this.settings.length && this.stocks.length && this.item.stock_id === null) {
+            this.stockId = this.stocks[0].id;
+        } else {
+            this.stockId = this.item.stock_id;
+        }
+    },
+
+    computed: {
+        isChangeCount: function isChangeCount() {
+            return this.changeCount;
+        },
+
+        count: {
+            get: function get() {
+                return Number(this.item.count);
+            },
+            set: function set(value) {
+                this.countInput = Number(value);
+            }
+        },
+        isReservedClass: function isReservedClass() {
+            if (this.item.reserve !== null) {
+                if (this.item.reserve.count > 0) {
+                    return 'wrap-reserved-info active';
+                }
+            }
+            return 'wrap-reserved-info';
+        },
+        isReserved: function isReserved() {
+            if (this.item.reserve !== null) {
+                if (this.item.reserve.count > 0) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        reservedCount: function reservedCount() {
+            if (this.item.reserve !== null) {
+                if (this.item.reserve.count > 0) {
+                    return this.item.reserve.count;
+                }
+            }
+            return 0;
+        }
+    },
+    methods: {
+        openModalRemoveItem: function openModalRemoveItem() {
+            this.$emit('open-modal-remove', this.item);
+        },
+        checkChangeCount: function checkChangeCount() {
+            if (this.item.product.serial === 0) {
+                if (!this.isRegistered) {
+                    this.changeCount = !this.changeCount;
+                }
+            }
+        },
+
+        // checkChangeCost() {
+        //     if (!this.isRegistered) {
+        //         this.changeCost = !this.changeCost
+        //     }
+        // },
+        updateItem: function updateItem() {
+            var _this = this;
+
+            this.changeCount = false;
+            // this.changeCost = false;
+            axios.patch('/admin/estimates_goods_items/' + this.item.id, {
+                count: Number(this.countInput)
+                // cost: Number(this.cost)
+            }).then(function (response) {
+                _this.$emit('update', response.data);
+                _this.countInput = Number(response.data.count);
+                // this.cost = Number(response.data.cost);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        // deleteItem: function() {
+        //     axios
+        //         .delete('/admin/consignments_items/' + this.item.id)
+        //         .then(response => {
+        //             if(response.data > 0) {
+        //                 this.$emit('remove');
+        //             }
+        //         })
+        //         .catch(error => {
+        //             console.log(error)
+        //         });
+        // },
+        reserveEstimateItem: function reserveEstimateItem() {
+            var _this2 = this;
+
+            axios.post('/admin/estimates_goods_items/' + this.item.id + '/reserving').then(function (response) {
+                if (response.data.msg !== null) {
+                    alert(response.data.msg);
+                }
+                _this2.$emit('update', response.data.item);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+        unreserveEstimateItem: function unreserveEstimateItem() {
+            var _this3 = this;
+
+            axios.post('/admin/estimates_goods_items/' + this.item.id + '/unreserving').then(function (response) {
+                if (response.data.msg !== null) {
+                    alert(response.data.msg);
+                }
+                _this3.$emit('update', response.data.item);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    },
+    directives: {
+        focus: {
+            inserted: function inserted(el) {
+                el.focus();
+            }
+        }
+    },
+    filters: {
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return parseInt(value).toLocaleString();
+        },
+
+        // Отбраcывает дробную часть в строке с числами
+        onlyInteger: function onlyInteger(value) {
+            return Math.floor(value);
+        }
+    }
+});
+
+/***/ }),
+/* 202 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "tr",
+    {
+      staticClass: "item",
+      attrs: {
+        id: "estimates_goods_items-" + _vm.item.id,
+        "data-name": _vm.item.product.article.name,
+        "data-price_id": _vm.item.price_id,
+        "data-count": _vm.item.count,
+        "data-price": _vm.item.price
+      }
+    },
+    [
+      _c("td", [
+        _vm._v(
+          "\n            " +
+            _vm._s(_vm.item.product.article.name) +
+            "\n            "
+        ),
+        _c("span", { staticClass: "icon-comment" })
+      ]),
+      _vm._v(" "),
+      _c("td", [
+        _vm._v(_vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))))
+      ]),
+      _vm._v(" "),
+      _c(
+        "td",
+        { on: { click: _vm.checkChangeCount } },
+        [
+          _vm.isChangeCount
+            ? [
+                _c("input", {
+                  directives: [
+                    { name: "focus", rawName: "v-focus" },
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.count,
+                      expression: "count"
+                    }
+                  ],
+                  attrs: { type: "number" },
+                  domProps: { value: _vm.count },
+                  on: {
+                    keydown: function($event) {
+                      if (
+                        !$event.type.indexOf("key") &&
+                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                      ) {
+                        return null
+                      }
+                      $event.preventDefault()
+                      return _vm.updateItem($event)
+                    },
+                    focusout: function($event) {
+                      _vm.changeCount = false
+                    },
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.count = $event.target.value
+                    }
+                  }
+                })
+              ]
+            : [
+                _vm._v(
+                  _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.count)))
+                )
+              ]
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c("td", { staticClass: "td-amount" }, [
+        _c(
+          "a",
+          {
+            staticClass: "button green-button",
+            attrs: { "data-open": "modal-estimates_goods_item-" + _vm.item.id }
+          },
+          [
+            _vm._v(
+              _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.amount)))
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("td", { staticClass: "td-delete" }, [
+        !_vm.isRegistered
+          ? _c("div", {
+              staticClass: "icon-delete sprite",
+              attrs: { "data-open": "delete-estimates_goods_item" },
+              on: { click: _vm.openModalRemoveItem }
+            })
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _vm.settings.length && _vm.isRegistered
+        ? _c("td", { staticClass: "td-action" }, [
+            _c("div", { class: _vm.isReservedClass }, [
+              !_vm.isReserved
+                ? _c("span", {
+                    staticClass: "button-to-reserve",
+                    attrs: { title: "Позицию в резерв!" },
+                    on: { click: _vm.reserveEstimateItem }
+                  })
+                : _c("span", {
+                    staticClass: "button-to-reserve unreserve",
+                    attrs: { title: "Снять с резерва!" },
+                    on: { click: _vm.unreserveEstimateItem }
+                  }),
+              _vm._v(" "),
+              _vm.reservedCount > 0
+                ? _c("span", { staticClass: "reserved-count" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(_vm._f("roundToTwo")(_vm.reservedCount))
+                      )
+                    )
+                  ])
+                : _vm._e()
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "reveal",
+          attrs: {
+            id: "modal-estimates_goods_item-" + _vm.item.id,
+            "data-reveal": "",
+            "data-close-on-click": "false"
+          }
+        },
+        [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "grid-x grid-padding-x align-center modal-content inputs"
+            },
+            [
+              _c("div", { staticClass: "small-12 cell" }, [
+                _c("div", { staticClass: "grid-x grid-margin-x" }, [
+                  _c("div", { staticClass: "small-12 cell" }, [
+                    _c(
+                      "label",
+                      [
+                        _vm._v(
+                          "Закупочная цена единицы, руб\n                                "
+                        ),
+                        _c("input-digit-component", {
+                          attrs: {
+                            name: "cost",
+                            value: _vm.item.cost,
+                            decimal_place: 2
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 medium-12 cell" }, [
+                    _c("fieldset", [
+                      _c("legend", [_vm._v("Наценка:")]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "grid-x grid-margin-x" }, [
+                        _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                          _c(
+                            "label",
+                            [
+                              _vm._v(
+                                "Наценка, %\n                                            "
+                              ),
+                              _c("input-digit-component", {
+                                attrs: {
+                                  name: "margin_percent",
+                                  value: _vm.item.margin_percent,
+                                  decimal_place: 4
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                          _c(
+                            "label",
+                            [
+                              _vm._v(
+                                "Наценка, руб\n                                            "
+                              ),
+                              _c("input-digit-component", {
+                                attrs: {
+                                  name: "margin_currency",
+                                  value: _vm.item.margin_currency,
+                                  decimal_place: 2
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("hr"),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                          _c(
+                            "label",
+                            [
+                              _vm._v(
+                                "Допфикс наценка, %\n                                            "
+                              ),
+                              _c("input-digit-component", {
+                                attrs: {
+                                  name: "extra_margin_percent",
+                                  value: _vm.item.extra_margin_percent,
+                                  decimal_place: 4
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                          _c(
+                            "label",
+                            [
+                              _vm._v(
+                                "Допфикс наценка, руб\n                                            "
+                              ),
+                              _c("input-digit-component", {
+                                attrs: {
+                                  name: "extra_margin_currency",
+                                  value: _vm.item.extra_margin_currency,
+                                  decimal_place: 2
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ])
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 medium-12 cell" }, [
+                    _c("fieldset", [
+                      _c("legend", [_vm._v("Скидка:")]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "grid-x grid-margin-x" }, [
+                        _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                          _c(
+                            "label",
+                            [
+                              _vm._v(
+                                "Скидка, %\n                                            "
+                              ),
+                              _c("input-digit-component", {
+                                attrs: {
+                                  name: "discount_percent",
+                                  value: _vm.item.discount_percent,
+                                  decimal_place: 4
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                          _c(
+                            "label",
+                            [
+                              _vm._v(
+                                "Скидка, руб\n                                            "
+                              ),
+                              _c("input-digit-component", {
+                                attrs: {
+                                  name: "discount_currency",
+                                  value: _vm.item.discount_currency,
+                                  decimal_place: 2
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                          _c(
+                            "label",
+                            [
+                              _vm._v(
+                                "Допфикс скидка, %\n                                            "
+                              ),
+                              _c("input-digit-component", {
+                                attrs: {
+                                  name: "extra_discount_percent",
+                                  value: _vm.item.extra_discount_percent,
+                                  decimal_place: 4
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                          _c(
+                            "label",
+                            [
+                              _vm._v(
+                                "Допфикс скидка, руб\n                                            "
+                              ),
+                              _c("input-digit-component", {
+                                attrs: {
+                                  name: "extra_discount_currency",
+                                  value: _vm.item.extra_discount_currency,
+                                  decimal_place: 2
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ])
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                    _c(
+                      "label",
+                      [
+                        _vm._v(
+                          "Цена единицы, руб\n                                "
+                        ),
+                        _c("input-digit-component", {
+                          attrs: {
+                            name: "price",
+                            value: _vm.item.price,
+                            decimal_place: 2
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 medium-6 cell" }, [
+                    _c(
+                      "label",
+                      [
+                        _vm._v(
+                          "Количество, единиц\n                                "
+                        ),
+                        _c("input-digit-component", {
+                          attrs: { name: "count", value: _vm.item.count }
+                        })
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "small-12 cell" }, [
+                    _c(
+                      "label",
+                      [
+                        _vm._v(
+                          "Итоговая стоимость по позиции, руб\n                                "
+                        ),
+                        _c("input-digit-component", {
+                          attrs: {
+                            name: "amount",
+                            value: _vm.item.amount,
+                            decimal_place: 2
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm._m(1)
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _vm._m(2),
+          _vm._v(" "),
+          _c("div", {
+            staticClass: "icon-close-modal sprite close-modal add-item",
+            attrs: { "data-close": "" }
+          })
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "grid-x" }, [
+      _c("div", { staticClass: "small-12 cell modal-title" }, [
+        _c("h5", [_vm._v("Настройка позиции")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "grid-x grid-margin-x" }, [
+      _c("div", { staticClass: "small-12 cell" }, [
+        _vm._v("\n                            Склад:\n                        ")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "grid-x align-center" }, [
+      _c("div", { staticClass: "small-6 medium-4 cell" }, [
+        _c("button", { staticClass: "button modal-button" }, [
+          _vm._v("Сохранить")
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5bd6175b", module.exports)
+  }
+}
+
+/***/ }),
 /* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -78914,7 +79834,7 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _c("td", { attrs: { colspan: "2" } })
+            _c("td", { attrs: { colspan: "1" } })
           ]),
           _vm._v(" "),
           _vm.discountPercent > 0
@@ -78937,7 +79857,7 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", { attrs: { colspan: "2" } })
+                _c("td", { attrs: { colspan: "1" } })
               ])
             : _vm._e()
         ])
@@ -90465,6 +91385,244 @@ $(document).on('click', '.filter-close', function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 314 */,
+/* 315 */,
+/* 316 */,
+/* 317 */,
+/* 318 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(319)
+/* template */
+var __vue_template__ = __webpack_require__(320)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/common/components/inputs/DigitComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4ce5439a", Component.options)
+  } else {
+    hotAPI.reload("data-v-4ce5439a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 319 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	props: {
+		name: String,
+		limitMax: {
+			type: Number,
+			default: 99999999
+		},
+		rate: {
+			default: 0
+		},
+		value: {
+			type: Number,
+			default: 0
+		},
+		decimalPlace: {
+			type: Number,
+			default: 0
+		}
+	},
+	data: function data() {
+		return {
+			point_status: false,
+			limit_status: false,
+			reg_rate: /^(\d+)(\.{1})(\d{3,})$/,
+			count_item: this.value
+		};
+	},
+
+
+	// created: function(){
+	// 	this.count_item = this.value;
+	// },
+	computed: {
+		myrate: function myrate() {
+			return this.rate * 1;
+		},
+		change: function change() {
+			if (this.value !== this.count_item) {
+				this.count_item = this.value;
+			}
+			return this.count_item;
+		}
+	},
+	methods: {
+		checkAfter: function checkAfter(event) {
+
+			if (event.key == 'Backspace' || event.key == 'ArrowLeft' || event.key == 'ArrowRight') {} else {
+
+				if (this.count_item == '0') {
+					if (event.key == '0') {
+						event.preventDefault();
+					}
+
+					if (/[1-9]/.test(event.key)) {
+						this.count_item = event.key;
+						event.preventDefault();
+					}
+				}
+
+				if (this.myrate == 2) {
+
+					this.limit_status = this.reg_rate.test(this.count_item);
+					this.point_status = /[\.]/.test(this.count_item);
+					if (this.point_status == true) {
+						if (this.limit_status == false) {
+							if (!/[0-9]/.test(event.key)) {
+								event.preventDefault();
+							}
+						} else {
+							event.preventDefault();
+						}
+					} else {
+						if (!/[0-9\x2e]/.test(event.key)) {
+							event.preventDefault();
+						}
+					};
+				} else {
+					if (!/[0-9]/.test(event.key)) {
+						event.preventDefault();
+					}
+				}
+
+				if (this.count_item * 1 > this.limit_max * 1) {
+					event.preventDefault();
+					// this.count_item = this.limit_max;
+				}
+			};
+		},
+		checkBefore: function checkBefore(event) {
+
+			if (this.count_item == '.') {
+				this.count_item = '0.';
+			}
+
+			this.limit_status = this.reg_rate.test(this.count_item);
+			if (this.count_item * 1 > this.limit_max * 1) {
+				this.sliceLastChar();
+			}
+			if (this.limit_status == true) {
+				this.sliceLastChar();
+			}
+			this.$emit('countchanged', this.count_item);
+		},
+		sliceLastChar: function sliceLastChar() {
+			this.count_item = this.count_item.slice(0, -1);
+		}
+	},
+
+	filters: {
+		roundToTwo: function roundToTwo(value) {
+			return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+		},
+		// Создает разделители разрядов в строке с числами
+		level: function level(value) {
+			return Number(value).toLocaleString();
+		}
+	}
+});
+
+/***/ }),
+/* 320 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("input", {
+    directives: [
+      {
+        name: "model",
+        rawName: "v-model",
+        value: _vm.count_item,
+        expression: "count_item"
+      }
+    ],
+    attrs: { type: "text", name: _vm.name },
+    domProps: { value: _vm.count_item },
+    on: {
+      keydown: function($event) {
+        return _vm.checkAfter($event)
+      },
+      keyup: function($event) {
+        return _vm.checkBefore($event)
+      },
+      input: [
+        function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.count_item = $event.target.value
+        },
+        function($event) {
+          return _vm.$emit("myinput", $event.target.value)
+        }
+      ]
+    }
+  })
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4ce5439a", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

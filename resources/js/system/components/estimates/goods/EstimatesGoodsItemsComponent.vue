@@ -55,12 +55,12 @@
                 <tr>
                     <td colspan="4" class="text-right">Итого:</td>
                     <td>{{ itemsAmount | roundToTwo | level }}</td>
-                    <td colspan="2"></td>
+                    <td colspan="1"></td>
                 </tr>
                 <tr v-if="discountPercent > 0">
                     <td colspan="4" class="text-right">Итого со скидкой ({{ discountPercent }}%):</td>
                     <td>{{ itemsTotal | roundToTwo | level }}</td>
-                    <td colspan="2"></td>
+                    <td colspan="1"></td>
                 </tr>
             </tfoot>
 

@@ -25,6 +25,9 @@ class CreateEstimatesGoodsItemsTable extends Migration
             $table->bigInteger('price_id')->unsigned()->nullable()->comment('Id прайса');
             $table->foreign('price_id')->references('id')->on('prices_goods');
 
+            $table->bigInteger('currency_id')->nullable()->unsigned()->comment('Id валюты');
+            $table->foreign('currency_id')->references('id')->on('currencies');
+
             $table->bigInteger('goods_id')->unsigned()->nullable()->comment('Id товара');
             $table->foreign('goods_id')->references('id')->on('goods');
 
