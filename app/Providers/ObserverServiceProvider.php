@@ -86,6 +86,7 @@ use App\Observers\RoomsCategoryObserver;
 use App\Observers\SectorObserver;
 use App\Observers\ServicesCategoryObserver;
 use App\Observers\StafferObserver;
+use App\Observers\SupplierObserver;
 use App\Observers\VectorObserver;
 use App\Observers\VendorObserver;
 use App\Observers\WorkflowsCategoryObserver;
@@ -111,6 +112,7 @@ use App\RoomsCategory;
 use App\Sector;
 use App\ServicesCategory;
 use App\Staffer;
+use App\Supplier;
 use App\Vector;
 use App\Vendor;
 use App\WorkflowsCategory;
@@ -289,6 +291,7 @@ class ObserverServiceProvider extends ServiceProvider
         Favourite::observe(FavouriteObserver::class);
 
         // Внешние
+        Supplier::observe(SupplierObserver::class);
         Vendor::observe(VendorObserver::class);
 
         // Внутренние

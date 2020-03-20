@@ -7,6 +7,7 @@ use App\Http\Controllers\Traits\CompanyControllerTrait;
 use App\Http\Controllers\Traits\Photable;
 use App\Http\Requests\CompanyRequest;
 use App\Http\Requests\VendorRequest;
+use App\Supplier;
 use App\Vendor;
 use Illuminate\Http\Request;
 
@@ -152,21 +153,24 @@ class VendorController extends Controller
         // Скрываем бога
         $user_id = hideGod($user);
 
-        $vendor = new Vendor;
 
         // Отдаем работу по созданию новой компании трейту
-        $new_company = $this->createCompany($request);
+        $company = $this->createCompany($request);
 
-        $vendor->company_id = $request->user()->company->id;
-        $vendor->vendor_id = $new_company->id;
+        $company->currencies()->sync($request->currencies);
 
-        // Запись информации по производителю:
-        $vendor->description_vendor = $request->description_vendor;
-        $vendor->is_partner = $request->has('is_partner');
+        // Создаем связь
+        $supplier = Supplier::create([
+            'company_id' => auth()->user()->company->id,
+            'supplier_id' => $company->id
+        ]);
 
-        $vendor->save();
-
-        $vendor->supplier->company->currencies()->sync($request->currencies);
+        $vendor = Vendor::create([
+            'company_id' => auth()->user()->company->id,
+            'supplier_id' => $supplier->id,
+            'description' => $request->description,
+            'status' => $request->status
+        ]);
 
         return redirect()->route('vendors.index');
     }
