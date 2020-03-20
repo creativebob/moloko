@@ -491,7 +491,6 @@ Route::any('/ajax_articles_groups_set_status', 'ArticlesGroupController@ajax_set
 // Route::any('/goods/create', 'GoodsController@create')->middleware('auth');
 
 Route::get('/goods/search/{search}', 'GoodsController@search');
-//
 // Фотки
 Route::any('/goods/add_photo', 'GoodsController@add_photo')->middleware('auth');
 Route::post('/goods/photos', 'GoodsController@photos')->middleware('auth');
@@ -544,6 +543,7 @@ Route::post('/services_category_check', 'ServicesCategoryController@ajax_check')
 
 // ---------------------------------- Услуги -------------------------------------------
 
+Route::get('/services/search/{search}', 'ServiceController@search');
 // Основные методы
 Route::resource('/services', 'ServiceController');
 // Поиск

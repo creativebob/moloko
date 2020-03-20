@@ -134,11 +134,11 @@
                                 <span>{{ $price->catalogs_item->name_with_parent }} </span>
                                 <span  data-tooltip class="top" tabindex="2" title="Действует с {{ $price->created_at->format('d.m.Y') }}">{{ num_format($price->price, 2) }}
 
-                                    @if($item->process->unit_id == 32)
-                                        @if($item->price_unit_id != 32)
-                                            <span class='tiny-text'>за {{ $item->price_unit->abbreviation ?? '' }}</span>
-                                        @endif
-                                    @endif
+{{--                                    @if($item->process->unit_id == 32)--}}
+{{--                                        @if($item->price_unit_id != 32)--}}
+{{--                                            <span class='tiny-text'>за {{ $item->price_unit->abbreviation ?? '' }}</span>--}}
+{{--                                        @endif--}}
+{{--                                    @endif--}}
 
                                 </span>
                                 <br>
@@ -220,36 +220,4 @@
     'group_entity' => 'processes_groups'
 ]
 )
-
-<script>
-    // Дублирование
-    $(document).on('click', '[data-open="modal-replicate"]', function() {
-        // находим описание сущности, id и название удаляемого элемента в родителе
-        let parent = $(this).closest('.item'),
-            entity = parent.data('entity'),
-            id = parent.data('id'),
-            name = parent.data('name');
-
-        $('.title-replicate').text(name);
-        // $('.delete-button').attr('id', 'del-' + type + '-' + id);
-        $('#form-replicate').attr('action', '/admin/' + entity + '/replicate/' + id);
-    });
-
-    $(document).on('click', '#modal-replicate [data-close]', function() {
-        $('input[name="name"]').val('');
-    });
-
-    // $(document).on('click', '.button-replicate', function(event) {
-    //     let form = $(this).closest('form'),
-    //         id = form.attr('id');
-    //
-    //     form.foundation('validateForm');
-    //     let valid = $('#' + id + ' .is-invalid-input').length;
-    //     let result = valid == 0;
-    //     if (!result) {
-    //         event.preventDefault();
-    //     }
-    // });
-</script>
-
 @endpush

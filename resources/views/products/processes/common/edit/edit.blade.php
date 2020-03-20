@@ -136,7 +136,7 @@
                                 </div>
 
                                 <label>Тип процесса
-                                    @include('includes.selects.processes_types')
+                                    @include('includes.selects.processes_types', ['processes_type_id' => $process->processes_type_id])
                                 </label>
 
                                 {{-- Если указана ед. измерения - ШТ. --}}

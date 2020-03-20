@@ -63,7 +63,8 @@ class PositionController extends Controller
             'author',
             'page',
             'roles',
-            'company'
+            'company',
+            'staff'
         ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
@@ -320,10 +321,15 @@ class PositionController extends Controller
         $answer = operator_right($this->entity_alias, true, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $position = Position::moderatorLimit($answer)->findOrFail($id);
+        $position = Position::moderatorLimit($answer)
+            ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $position);
+
+        $position->load([
+            'staff'
+        ]);
 
         // Поулчаем авторизованного пользователя
         $user = $request->user();

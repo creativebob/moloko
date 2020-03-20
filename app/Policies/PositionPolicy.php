@@ -35,17 +35,21 @@ class PositionPolicy
     }
 
     public function update(User $user, Position $model)
-    { 
+    {
         $result = $this->getstatus($this->entity_name, $model, 'update', $this->entity_dependence);
         return $result;
     }
 
     public function delete(User $user, Position $model)
     {
+        if ($model->staff->isNotEmpty()) {
+            return false;
+        }
+
         $result = $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
         return $result;
     }
-    
+
     public function moderator(User $user, Position $model)
     {
         $result = $this->getstatus($this->entity_name, $model, 'moderator', $this->entity_dependence);
@@ -69,7 +73,7 @@ class PositionPolicy
         $result = $this->getstatus($this->entity_name, $model, 'system', $this->entity_dependence);
         return $result;
     }
-    
+
     public function god(User $user)
     {
         if(Auth::user()->god){return true;} else {return false;};

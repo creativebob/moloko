@@ -393,6 +393,7 @@ class ServiceController extends Controller
 
         $service->load('process');
         $process = $service->process;
+
         $new_process = $this->replicateProcess($request, $service);
 
         $new_service = $service->replicate();
@@ -406,6 +407,11 @@ class ServiceController extends Controller
                 $metrics_insert[$metric->id]['value'] = $metric->pivot->value;
             }
             $res = $new_service->metrics()->attach($metrics_insert);
+        }
+
+        $process->load('positions');
+        if ($process->positions->isNotEmpty()) {
+            $res = $new_process->positions()->attach($process->positions->pluck('id'));
         }
 
         if($process->kit) {

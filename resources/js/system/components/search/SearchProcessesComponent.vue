@@ -15,7 +15,7 @@
                 <ul class="search-result-list">
 
                     <li v-for="(item, index) in results">
-                        <a :href="'/admin/' + this.entity + '/' + item.id + '/edit'">{{ item.article.name }}</a>
+                        <a :href="'/admin/' + this.entity + '/' + item.id + '/edit'">{{ item.process.name }}</a>
                     </li>
 
                 </ul>

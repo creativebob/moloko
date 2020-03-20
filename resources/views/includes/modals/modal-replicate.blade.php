@@ -6,11 +6,9 @@
     </div>
   </div>
   <div class="grid-x align-center modal-content">
-    <div class="small-10 cell text-center inputs">
-      <p>Дублируем "<span class="title-replicate"></span>", вы уверены?</p>
-      <br>
+    <div class="small-10 cell inputs">
       <label>Новое имя
-        <input type="text" form="form-replicate" name="name" required autofocus>
+        <input type="text" form="form-replicate" name="name" required autofocus id="input-replicate-name">
       </label>
     </div>
     <div class="small-10 cell checkbox">
@@ -32,3 +30,24 @@
   <div data-close class="icon-close-modal sprite close-modal remove-modal"></div>
 </div>
 {{-- Конец модалки добавления в архив с refresh --}}
+
+@push('scripts')
+    <script>
+        // Дублирование
+        $(document).on('click', '[data-open="modal-replicate"]', function() {
+            // находим описание сущности, id и название удаляемого элемента в родителе
+            let parent = $(this).closest('.item'),
+                entity = parent.data('entity'),
+                id = parent.data('id'),
+                name = parent.data('name');
+
+            $('#input-replicate-name').val(name + ' (Копия)');
+            // $('.delete-button').attr('id', 'del-' + type + '-' + id);
+            $('#form-replicate').attr('action', '/admin/' + entity + '/replicate/' + id);
+        });
+
+        $(document).on('click', '#modal-replicate [data-close]', function() {
+            $('input[name="name"]').val('');
+        });
+    </script>
+@endpush
