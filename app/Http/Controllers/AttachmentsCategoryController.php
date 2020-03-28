@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\AttachmentsCategoryUpdateRequest;
-use App\Http\Requests\AttachmentsCategoryStoreRequest;
+use App\Http\Requests\System\AttachmentsCategoryUpdateRequest;
+use App\Http\Requests\System\AttachmentsCategoryStoreRequest;
 use App\AttachmentsCategory;
 use Illuminate\Http\Request;
 
@@ -20,7 +20,7 @@ class AttachmentsCategoryController extends Controller
         $this->model = 'App\AttachmentsCategory';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-        $this->type = 'edit';
+        $this->type = 'page';
     }
 
     use Photable;
@@ -51,7 +51,7 @@ class AttachmentsCategoryController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('system.common.accordions.categories_list',
+            return view('system.common.categories.index.categories_list',
                 [
                     'items' => $attachments_categories,
                     'entity' => $this->entity_alias,
@@ -65,7 +65,7 @@ class AttachmentsCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('system.common.accordions.index',
+        return view('system.common.categories.index.index',
             [
                 'items' => $attachments_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -87,7 +87,7 @@ class AttachmentsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('system.common.accordions.create', [
+        return view('system.common.categories.create.modal.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории вложений',

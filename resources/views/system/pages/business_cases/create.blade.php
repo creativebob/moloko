@@ -14,7 +14,7 @@
 @endsection
 
 @section('content')
-    {{ Form::open(['route' => ['business_cases.store', $portfolio->id], 'data-abide', 'novalidate', 'files'=>'true']) }}
+    {{ Form::open(['route' => ['business_cases.store', $portfolio->id], 'data-abide', 'novalidate', 'files' => 'true']) }}
         @include('system.pages.business_cases.form', ['submit_text' => 'Добавить'])
     {{ Form::close() }}
 @endsection

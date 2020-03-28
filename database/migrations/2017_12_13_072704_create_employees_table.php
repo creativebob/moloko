@@ -43,7 +43,6 @@ class CreateEmployeesTable extends Migration
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

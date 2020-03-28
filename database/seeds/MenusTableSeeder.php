@@ -1,6 +1,6 @@
 <?php
 
-use App\Observers\Traits\CategoriesTrait;
+use App\Observers\System\Traits\Categorable;
 use Illuminate\Database\Seeder;
 use App\Menu;
 use App\Page;
@@ -8,7 +8,7 @@ use App\Page;
 class MenusTableSeeder extends Seeder
 {
 
-    use CategoriesTrait;
+    use Categorable;
 
     public function run()
     {
@@ -673,6 +673,36 @@ Menu::insert([
         'display' => true,
         'sort' => null,
     ],
+    [
+        'name' => 'Категории выполненных работы',
+        'icon' => null,
+        'alias' => 'admin/outcomes_categories',
+        'tag' => 'outcomes_categories',
+        'parent_id' => $menus->where('tag', 'productions')->first()->id,
+        'page_id' => $pages->where('alias', 'outcomes_categories')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 4,
+    ],
+    [
+        'name' => 'Выполненные работы',
+        'icon' => null,
+        'alias' => 'admin/outcomes',
+        'tag' => 'outcomes',
+        'parent_id' => $menus->where('tag', 'productions')->first()->id,
+        'page_id' => $pages->where('alias', 'outcomes')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 5,
+    ],
+
+    // Сырье
     [
         'name' => 'Сырьё',
         'icon' => null,

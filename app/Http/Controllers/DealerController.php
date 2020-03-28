@@ -28,10 +28,10 @@ use Illuminate\Support\Facades\Auth;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\CompanyRequest;
-use App\Http\Requests\UserStoreRequest;
-use App\Http\Requests\UserUpdateRequest;
-use App\Http\Requests\SupplierRequest;
+use App\Http\Requests\System\CompanyRequest;
+use App\Http\Requests\System\UserStoreRequest;
+use App\Http\Requests\System\UserUpdateRequest;
+use App\Http\Requests\System\SupplierRequest;
 
 // Общие классы
 use Illuminate\Support\Facades\Log;
@@ -166,7 +166,7 @@ class DealerController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-	
+
 	    $auth_user = Auth::user();
 
         return view('dealers.create_dealer_user', compact('user', 'dealer', 'page_info', 'auth_user'));

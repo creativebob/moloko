@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RoomStoreRequest;
-use App\Http\Requests\RoomUpdateRequest;
+use App\Http\Requests\System\RoomStoreRequest;
+use App\Http\Requests\System\RoomUpdateRequest;
 use App\Room;
 use App\RoomsCategory;
 use App\Manufacturer;

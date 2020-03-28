@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 
-use App\Http\Requests\RawStoreRequest;
-use App\Http\Requests\RawUpdateRequest;
+use App\Http\Requests\System\RawStoreRequest;
+use App\Http\Requests\System\RawUpdateRequest;
 use App\Raw;
 use App\RawsCategory;
 use App\Manufacturer;

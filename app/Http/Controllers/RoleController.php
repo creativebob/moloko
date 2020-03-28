@@ -13,7 +13,7 @@ use App\Entity;
 use App\RoleUser;
 use App\ActionEntity;
 
-use App\Http\Requests\RoleRequest;
+use App\Http\Requests\System\RoleRequest;
 use App\Http\Controllers\Session;
 
 // Модели которые отвечают за работу с правами + политики
@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\DB;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\UpdateUser;
+use App\Http\Requests\System\UpdateUser;
 
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
@@ -64,7 +64,7 @@ class RoleController extends Controller
         // Получаем авторизованного пользователя
         $user = Auth::user();
 
-        // Определяем количество разрешений 
+        // Определяем количество разрешений
         $counts_directive_array = [];
 
         foreach ($roles as $role) {
@@ -242,7 +242,7 @@ class RoleController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -269,7 +269,7 @@ class RoleController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -315,7 +315,7 @@ class RoleController extends Controller
         // Создаем массив который будет содержать данные на отображение всех чекбоксов
         // с учетом прав пользователя, и с учетом прав редактируемой роли
 
-        // Инициируем пустой массив для хранения данных построчно. 
+        // Инициируем пустой массив для хранения данных построчно.
         // Данные будут выводитья путем разового перебора этого массива
         $main_mass = [];
 
@@ -356,7 +356,7 @@ class RoleController extends Controller
         // Наполняем массив данными:
         foreach($entities as $entity){
 
-            // Перебираем все операции действий в системе 
+            // Перебираем все операции действий в системе
             foreach($actions as $action){
 
                 // РАБОТАЕМ С РАЗРЕШЕНИЯМИ: -----------------------------------------------------------------------------------------------
@@ -397,19 +397,19 @@ class RoleController extends Controller
 
                 // Формируем строку с данными для чекбоксов на одну сущность
                 $boxes[] = [
-                    'action_method' => $box_allow_name, 
-                    'action_id' => $action->id, 
-                    'action_name' => $action->name, 
-                    'entity_id' => $entity->id, 
-                    'status_box' => $status_box, 
-                    'right_id' => $right_id, 
-                    'checked' => $checked, 
+                    'action_method' => $box_allow_name,
+                    'action_id' => $action->id,
+                    'action_name' => $action->name,
+                    'entity_id' => $entity->id,
+                    'status_box' => $status_box,
+                    'right_id' => $right_id,
+                    'checked' => $checked,
                     'disabled' => $disabled
                 ];
 
                 // РАБОТАЕМ С ЗАПРЕТАМИ: -------------------------------------------------------------------------------------------------------
 
-                //Получаем ID текущего права (Чекбокс над которым прохдит операция) 
+                //Получаем ID текущего права (Чекбокс над которым прохдит операция)
                 $right_id = $allrights_array[$box_deny_name];
 
                 // Если запись существует, пишем 1, если нет, то 0
@@ -435,13 +435,13 @@ class RoleController extends Controller
 
                 // Формируем строку с данными для чекбоксов на одну сущность
                 $boxes_deny[] = [
-                    'action_method' => $box_deny_name, 
-                    'action_id' => $action->id, 
-                    'action_name' => $action->name, 
-                    'entity_id' => $entity->id, 
-                    'status_box' => $status_box, 
-                    'right_id' => $right_id, 
-                    'checked' => $checked, 
+                    'action_method' => $box_deny_name,
+                    'action_id' => $action->id,
+                    'action_name' => $action->name,
+                    'entity_id' => $entity->id,
+                    'status_box' => $status_box,
+                    'right_id' => $right_id,
+                    'checked' => $checked,
                     'disabled' => $disabled
                 ];
 
@@ -486,7 +486,7 @@ class RoleController extends Controller
         if(
             (($role->system == null)&&($role->company_id != null)&&($user->god == null))|| // ОБЫЧНАЯ ДЛЯ ПОЛЬЗОВАТЕЛЯ
             (($role->system == null)&&($user->god == 1))
-        ){  
+        ){
 
             // СОЗДАНИЕ СВЯЗИ - НАЗНАЧЕНИЕ ПРАВА НА РОЛЬ:
             // Для начала проверим, не работаем ли мы с системной или шаблонной ролью

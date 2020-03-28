@@ -2,9 +2,9 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Scopes для главного запроса
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
@@ -28,8 +28,6 @@ class Employee extends Model
     // Включаем кеш
     use Cachable;
 
-    use SoftDeletes;
-
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -44,7 +42,6 @@ class Employee extends Model
     use DateIntervalFilter;
 
     protected $dates = [
-        'deleted_at',
         'employment_date',
         'dismissal_date'
     ];
@@ -52,8 +49,9 @@ class Employee extends Model
     protected $fillable = [
         'staffer_id',
         'user_id',
-        'company_id',
+
         'employment_date',
+
         'dismissal_date',
         'dismissal_description',
 
@@ -61,6 +59,16 @@ class Employee extends Model
         'system',
         'moderation'
     ];
+
+    public function setEmploymentDateAttribute($value)
+    {
+        $this->attributes['employment_date'] = Carbon::createFromFormat('d.m.Y', $value);
+    }
+
+    public function setDismissalDateAttribute($value)
+    {
+        $this->attributes['dismissal_date'] = Carbon::createFromFormat('d.m.Y', $value);
+    }
 
     // Получаем вакансию для сотрудников.
     public function staffer()
@@ -86,34 +94,5 @@ class Employee extends Model
         return $this->belongsTo('App\User', 'author_id');
     }
 
-    // --------------------------------------- Запросы -----------------------------------------
-    // public function getIndex($request, $answer, $user)
-    // {
-    //     return $this->moderatorLimit($answer)
-    //     ->companiesLimit($answer)
-
-    //     // Так как сущность не филиала зависимая, но по факту
-    //     // все таки зависимая через staff, то делаем нестандартную фильтрацию (прямо в запросе)
-    //     ->when($answer['dependence'] == true, function ($query) use ($user) {
-    //         return $query->whereHas('staffer', function($q) use ($user){
-    //             $q->where('filial_id', $user->filial_id);
-    //         });
-    //     })
-
-    //     // ->authors($answer)
-    //     ->systemItem($answer) // Фильтр по системным записям
-    //     ->booklistFilter($request)
-    //     ->filter($request, 'position_id', 'staffer')
-    //     ->filter($request, 'department_id', 'staffer')
-    //     ->dateIntervalFilter($request, 'date_employment')
-    //     ->orderBy('moderation', 'desc')
-    //     ->orderBy('sort', 'asc')
-    //     ->paginate(30);
-    // }
-
-    // public function getItem($id, $answer)
-    // {
-    //     return $this->moderatorLimit($answer)->findOrFail($id);
-    // }
 
 }

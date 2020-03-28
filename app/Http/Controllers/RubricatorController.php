@@ -7,7 +7,7 @@ use App\Rubricator;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\RubricatorRequest;
+use App\Http\Requests\System\RubricatorRequest;
 
 class RubricatorController extends Controller
 {

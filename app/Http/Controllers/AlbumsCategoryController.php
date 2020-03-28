@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\AlbumsCategoryUpdateRequest;
-use App\Http\Requests\AlbumsCategoryStoreRequest;
+use App\Http\Requests\System\AlbumsCategoryUpdateRequest;
+use App\Http\Requests\System\AlbumsCategoryStoreRequest;
 use App\AlbumsCategory;
 use Illuminate\Http\Request;
 
@@ -46,7 +46,7 @@ class AlbumsCategoryController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('system.common.accordions.categories_list',
+            return view('system.common.categories.index.categories_list',
                 [
                     'items' => $albums_categories,
                     'entity' => $this->entity_alias,
@@ -60,7 +60,7 @@ class AlbumsCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('system.common.accordions.index',
+        return view('system.common.categories.index.index',
             [
                 'items' => $albums_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -82,7 +82,7 @@ class AlbumsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('system.common.accordions.create', [
+        return view('system.common.categories.create.modal.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории альбомов',
@@ -125,7 +125,7 @@ class AlbumsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $albums_category);
 
-        return view('system.common.accordions.edit', [
+        return view('system.common.categories.edit', [
             'item' => $albums_category,
             'entity' => $this->entity_alias,
             'title' => 'Редактирование категории альбомов',

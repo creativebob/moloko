@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
-// use App\Http\Requests\UpdateUser;
+// use App\Http\Requests\System\UpdateUser;
 
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;

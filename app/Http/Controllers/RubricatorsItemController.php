@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\RubricatorsItemUpdateRequest;
-use App\Http\Requests\RubricatorsItemStoreRequest;
+use App\Http\Requests\System\RubricatorsItemUpdateRequest;
+use App\Http\Requests\System\RubricatorsItemStoreRequest;
 use App\RubricatorsItem;
 use Illuminate\Http\Request;
 
@@ -62,7 +62,7 @@ class RubricatorsItemController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('system.common.accordions.categories_list',
+            return view('system.common.categories.index.categories_list',
                 [
                     'items' => $rubricators_items,
                     'entity' => $this->entity_alias,
@@ -88,7 +88,7 @@ class RubricatorsItemController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('system.common.accordions.create', [
+        return view('system.common.categories.create.modal.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление рубрики',
@@ -140,7 +140,7 @@ class RubricatorsItemController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $rubricators_item);
 
-        return view('system.common.accordions.edit', [
+        return view('system.common.categories.edit', [
             'item' => $rubricators_item,
             'entity' => $this->entity_alias,
             'title' => 'Редактирование рубрики',

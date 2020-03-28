@@ -46,6 +46,10 @@ class StafferPolicy
             return false;
         }
 
+        if ($model->actual_employees->isNotEmpty()) {
+            return false;
+        }
+
         return $this->getstatus($this->entity_name, $model, 'delete', $this->entity_dependence);
     }
 

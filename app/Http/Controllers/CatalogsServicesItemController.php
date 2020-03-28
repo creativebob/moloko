@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\CatalogsServicesItemUpdateRequest;
-use App\Http\Requests\CatalogsServicesItemStoreRequest;
+use App\Http\Requests\System\CatalogsServicesItemUpdateRequest;
+use App\Http\Requests\System\CatalogsServicesItemStoreRequest;
 use App\CatalogsServicesItem;
 use App\CatalogsService;
 use Illuminate\Http\Request;
@@ -24,7 +24,7 @@ class CatalogsServicesItemController extends Controller
         $this->model = 'App\CatalogsServicesItem';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-        $this->type = 'edit';
+        $this->type = 'page';
     }
 
     use Photable;
@@ -71,7 +71,7 @@ class CatalogsServicesItemController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('system.common.accordions.categories_list',
+            return view('system.common.categories.index.categories_list',
                 [
                     'items' => $catalogs_services_items,
                     'entity' => $this->entity_alias,
@@ -109,7 +109,7 @@ class CatalogsServicesItemController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('system.common.accordions.create', [
+        return view('system.common.categories.create.modal.create', [
             'item' => CatalogsService::make(),
             'entity' => $this->entity_alias,
             'title' => 'Добавление пункта каталога',

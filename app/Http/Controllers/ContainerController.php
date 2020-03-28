@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Container;
 use App\ContainersCategory;
 
-use App\Http\Requests\ContainerStoreRequest;
-use App\Http\Requests\ContainerUpdateRequest;
+use App\Http\Requests\System\ContainerStoreRequest;
+use App\Http\Requests\System\ContainerUpdateRequest;
 use App\Manufacturer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;

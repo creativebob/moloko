@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\EntityRequest;
+use App\Http\Requests\System\EntityRequest;
 
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;

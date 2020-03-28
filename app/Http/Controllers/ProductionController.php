@@ -9,7 +9,7 @@ use App\Stock;
 use Illuminate\Support\Facades\Log;
 use App\Cost;
 use App\Entity;
-use App\Http\Requests\ProductionUpdateRequest;
+use App\Http\Requests\System\ProductionUpdateRequest;
 use App\Off;
 use App\Production;
 use App\ProductionsItem;
@@ -555,7 +555,7 @@ class ProductionController extends Controller
 
         return redirect()->route('productions.index');
     }
-    
+
     public function unproduced($id)
     {
 
@@ -612,7 +612,7 @@ class ProductionController extends Controller
 //		dd($production);
 
         if ($production->items->isNotEmpty()) {
-	
+
 	        Log::channel('documents')
 		        ->info('========================================== ОТМЕНА НАРЯДА ПРОИЗВОДСТВА ==============================================');
 
@@ -622,7 +622,7 @@ class ProductionController extends Controller
             foreach ($grouped_items as $alias => $items) {
                 $entity = Entity::where('alias', $alias.'_stocks')->first();
                 $model = 'App\\'.$entity->model;
-	
+
 	            foreach ($items as $item) {
                     Log::channel('documents')
                         ->info('=== ПЕРЕБИРАЕМ ПУНКТ ' . $item->getTable() .' ' . $item->id . ' ===');
@@ -687,31 +687,31 @@ class ProductionController extends Controller
 
                     Log::channel('documents')
                         ->info('=== КОНЕЦ ПЕРЕБОРА СПИСАНИЯ И ПРИХОДОВАНИЯ СОСТАВА ===');
-		
+
 		            Log::channel('documents')
 			            ->info('=== СПИСАНИЕ ' . $item->cmv->getTable() . ' ' . $item->cmv->id . ' ===');
-		            
+
 		            // Склад
 		            $stock = $item->cmv->stock;
-		
+
 		            Log::channel('documents')
 			            ->info('Существует склад ' . $stock->getTable() . ' c id: ' . $stock->id);
 		            Log::channel('documents')
 			            ->info('Значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
-		
+
 		            $stock_count = $stock->count;
-		
+
 		            $stock->count -= $item->count;
 		            $stock->weight -= ($item->cmv->article->weight * $item->count);
 		            $stock->volume -= ($item->cmv->article->volume * $item->count);
 		            $stock->save();
-		
+
 		            Log::channel('documents')
 			            ->info('Обновлены значения count: ' . $stock->count . ', weight: ' . $stock->weight . ', volume: ' . $stock->volume);
-		
+
 		            // Себестоимость
 		            $cost = $item->cmv->cost;
-		
+
 		            Log::channel('documents')
 			            ->info('Существует себестоимость c id: ' . $cost->id);
 		            Log::channel('documents')
@@ -763,7 +763,7 @@ class ProductionController extends Controller
 
 		            $cost->update($data_cost);
 //					dd($cost);
-		
+
 		            Log::channel('documents')
 			            ->info('Обновлены значения min: ' . $cost->min . ', max: ' . $cost->max . ', average: ' . $cost->average);
 		            Log::channel('documents')
@@ -786,7 +786,7 @@ class ProductionController extends Controller
             $production->update([
                 'is_produced' => false
             ]);
-	
+
 	        Log::channel('documents')
 		        ->info('Отменен наряд c id: ' . $production->id);
 	        Log::channel('documents')

@@ -10,7 +10,7 @@ use App\Phone;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\ClaimRequest;
+use App\Http\Requests\System\ClaimRequest;
 
 // Политики
 use App\Policies\ClaimPolicy;

@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Auth;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\RequestBooklist;
+use App\Http\Requests\System\RequestBooklist;
 
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Log;
@@ -300,11 +300,11 @@ class BooklistController extends Controller
                 // Убиваем все элементы в List_items
                 $items_booklists = List_item::where('booklist_id', $request->booklist_id_send)->whereIn('item_entity', $booklists_default)->delete();
 
-            };       
+            };
 
         };
 
-        $value = []; 
+        $value = [];
         $value = addBooklist($value, $request, $request->entity_alias);
         $name = 'booklist';
 
@@ -315,7 +315,7 @@ class BooklistController extends Controller
     public function updatebooklist(Request $request)
     {
 
-        $value = []; 
+        $value = [];
         $value = addBooklist($value, $request, $request->entity_alias);
         $name = 'booklist';
 

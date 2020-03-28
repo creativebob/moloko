@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Traits;
 
 // Модели
+use App\Position;
 use App\User;
 use App\Company;
 use App\Department;
 use App\Staffer;
 use App\Employee;
+use DB;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
@@ -52,10 +54,30 @@ trait DepartmentControllerTrait
 
             // dd(Company::where('id', $company->id)->get());
 
+            // Создаем должность директора и валим ей права
+            $position = Position::create([
+                [
+                    'name' => 'Директор',
+                    'page_id' => 12,
+                    'direction' => true,
+                    'company_id' => $company->id,
+                    'system' => false,
+                    'author_id' => 1,
+                    'sector_id' => null,
+                ],
+            ]);
+
+            DB::table('position_role')->insert([
+                [
+                    'position_id' => $position->id,
+                    'role_id' => 2
+                ],
+            ]);
+
             Log::info('В трейт создания директора пришла компания: ' . $company->name . ' с ID: ' . $company->id);
             $staffer = new Staffer;
             $staffer->user_id = $user->id;
-            $staffer->position_id = 1; // Директор
+            $staffer->position_id = $position->id;
             $staffer->department_id = $department->id;
             $staffer->filial_id = $department->id;
             $staffer->company_id = $company->id;
@@ -89,7 +111,7 @@ trait DepartmentControllerTrait
 
             // Прописываем роли из должности для юзера
             setRolesFromPosition($position, $department, $user);
-            
+
             return $employee;
         }
     }

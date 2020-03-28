@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\WorkflowsCategoryUpdateRequest;
-use App\Http\Requests\WorkflowsCategoryStoreRequest;
+use App\Http\Requests\System\WorkflowsCategoryUpdateRequest;
+use App\Http\Requests\System\WorkflowsCategoryStoreRequest;
 use App\WorkflowsCategory;
 use Illuminate\Http\Request;
 
@@ -23,7 +23,7 @@ class WorkflowsCategoryController extends Controller
         $this->model = 'App\WorkflowsCategory';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-        $this->type = 'edit';
+        $this->type = 'page';
     }
 
     use Photable;
@@ -62,7 +62,7 @@ class WorkflowsCategoryController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('system.common.accordions.categories_list',
+            return view('system.common.categories.index.categories_list',
                 [
                     'items' => $workflows_categories,
                     'entity' => $this->entity_alias,
@@ -76,7 +76,7 @@ class WorkflowsCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('system.common.accordions.index',
+        return view('system.common.categories.index.index',
             [
                 'items' => $workflows_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -105,7 +105,7 @@ class WorkflowsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('system.common.accordions.create', [
+        return view('system.common.categories.create.modal.create', [
             'item' => WorkflowsCategory::make(),
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории рабочих процессов',

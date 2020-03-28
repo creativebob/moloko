@@ -613,8 +613,21 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'metric' => 0,
-                'view_path' => 'system/pages/portfolios',
+                'view_path' => 'system.pages.portfolios',
                 'page_id' => $pages->firstWhere('alias', 'portfolios')->id,
+            ],
+
+            [
+                'name' => 'Категории выполненных работ',
+                'alias' => 'outcomes_categories',
+                'model' => 'OutcomesCategory',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'system.pages.outcomes_categories',
+                'page_id' => $pages->firstWhere('alias', 'outcomes_categories')->id,
             ],
 
             // TODO - 04.06.19 - Чистка сущностей
@@ -1094,6 +1107,19 @@ class EntitiesTableSeeder extends Seeder
                 'view_path' => 'processes',
                 'page_id' => null,
             ],
+
+            [
+                'name' => 'Разделы портфолио',
+                'alias' => 'portfolios_items',
+                'model' => 'PortfoliosItem',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('portfolios')->first(['id'])->id,
+                'view_path' => 'system.pages.portfolios_items',
+                'page_id' => $pages->firstWhere('alias', 'portfolios_items')->id,
+            ],
             [
                 'name' => 'Кейсы',
                 'alias' => 'business_cases',
@@ -1103,8 +1129,21 @@ class EntitiesTableSeeder extends Seeder
                 'author_id' => 1,
                 'site' => 0,
                 'ancestor_id' => Entity::whereAlias('portfolios')->first(['id'])->id,
-                'view_path' => 'system/pages/business_cases',
+                'view_path' => 'system.pages.business_cases',
                 'page_id' => $pages->firstWhere('alias', 'business_cases')->id,
+            ],
+
+            [
+                'name' => 'Выполненные работы',
+                'alias' => 'outcomes',
+                'model' => 'Outcome',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('outcomes_categories')->first(['id'])->id,
+                'view_path' => 'system.pages.outcomes',
+                'page_id' => $pages->firstWhere('alias', 'outcomes')->id,
             ],
         ]);
 

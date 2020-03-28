@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\PortfolioRequest;
+use App\Http\Requests\System\PortfolioRequest;
 use App\Portfolio;
 use Illuminate\Http\Request;
 
@@ -47,7 +47,7 @@ class PortfolioController extends Controller
         $portfolios = Portfolio::with([
             'author',
             'company',
-            'cases',
+            'items',
         ])
             // ->withCount('pages')
             ->moderatorLimit($answer)
@@ -214,20 +214,20 @@ class PortfolioController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $portfolio = Portfolio::with([
-            'cases',
+            'items',
         ])
             ->moderatorLimit($answer)
             ->findOrFail($id);
 
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $portfolio);
-
-        $portfolio->delete();
-
         if ($portfolio) {
+            // Подключение политики
+            $this->authorize(getmethod(__FUNCTION__), $portfolio);
+
+            $portfolio->delete();
+
             return redirect()->route('portfolios.index');
         } else {
-            abort(403, 'Ошибка при удалении');
+            abort(403, 'Не найдено');
         }
     }
 }

@@ -25,7 +25,6 @@ Route::get('/update_parser', 'AppController@parser')->middleware('auth');
 Route::get('/roll_house_parser', 'AppController@roll_house_parser')->middleware('auth');
 
 Route::get('/cache', 'AppController@cache')->middleware('auth');
-Route::get('/clear', 'AppController@cache_clear')->middleware('auth');
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
@@ -1001,33 +1000,47 @@ Route::any('/ajax_get_filials_for_catalogs_goods', 'DepartmentController@ajax_ge
 
 
 // ----------------------------------------- Должности --------------------------------------------
-
+// Архивация
+Route::post('/positions/archive/{id}', 'PositionController@archive');
 // Основные методы
-Route::resource('/positions', 'PositionController')->middleware('auth');
+Route::resource('/positions', 'PositionController')
+    ->except([
+        'show',
+        'destroy'
+    ]);
 // Список отделов филиала и доступных должностей
-Route::post('/positions_list', 'PositionController@positions_list')->middleware('auth');
+Route::post('/positions_list', 'PositionController@positions_list');
 
 
 // -------------------------------------- Штат компании ---------------------------------------------
-
+// Архивация
+Route::post('/staff/archive/{id}', 'StafferController@archive');
 // Основные методы
-Route::resource('/staff', 'StafferController');
+Route::resource('/staff', 'StafferController')
+    ->except([
+        'show',
+        'destroy'
+    ]);
 
 
-// --------------------------------------- Сотрудники ---------------------------------------------
-
+// --------------------------------------- Сотрудники --------------------------------------------
+// Уволенные
+Route::get('/employees/dismissal', 'EmployeeController@dismissal')
+    ->name('employees.dismissal');
 // Основные методы
-Route::get('/employees/dismissal', 'EmployeeController@dismissal')->middleware('auth');
-
-Route::resource('/employees', 'EmployeeController')->middleware('auth');
+Route::resource('/employees', 'EmployeeController')
+    ->except([
+        'show',
+        'destroy'
+    ]);
 
 // Увольнение
-Route::post('/employee_dismiss_modal', 'EmployeeController@ajax_employee_dismiss_modal')->middleware('auth');
-Route::post('/employee_dismiss', 'EmployeeController@ajax_employee_dismiss')->middleware('auth');
+Route::post('/employee_dismiss_modal', 'EmployeeController@ajax_employee_dismiss_modal');
+Route::post('/employee_dismiss', 'EmployeeController@ajax_employee_dismiss');
 
 // Трудоустройство
-Route::post('/employee_employment_modal', 'EmployeeController@ajax_employee_employment_modal')->middleware('auth');
-Route::post('/employee_employment', 'EmployeeController@ajax_employee_employment')->middleware('auth');
+Route::post('/employee_employment_modal', 'EmployeeController@ajax_employee_employment_modal');
+Route::post('/employee_employment', 'EmployeeController@ajax_employee_employment');
 
 
 // ------------------------------------------ Списки -----------------------------------------------
@@ -1216,11 +1229,29 @@ Route::resource('/promotions', 'PromotionController');
 Route::resource('/dispatches', 'DispatchController');
 
 
+// --------------------------- Категории выполненных работ -------------------------------------
+// Текущая добавленная/удаленная категория
+Route::any('/outcomes_categories', 'OutcomesCategoryController@index');
+// Основные методы
+Route::resource('/outcomes_categories', 'OutcomesCategoryController');
+
+
+// --------------------------- Выполненные работы -------------------------------------
+// Основные методы
+Route::resource('/outcomes', 'OutcomeController');
+
+
 // --------------------------- Портфолио -------------------------------------
 // Основные методы
 Route::resource('/portfolios', 'PortfolioController');
 
-Route::prefix('portfolios/{portfolio_id}')->group(function () {
+Route::prefix('/portfolios/{portfolio_id}')->group(function () {
+
+    // --------------------------------------- Разделы портфолио ---------------------------------------------
+    // Текущий добавленный/удаленный пункт
+    Route::any('/portfolios_items', 'PortfoliosItemController@index');
+    // Основные методы
+    Route::resource('/portfolios_items', 'PortfoliosItemController');
 
     // --------------------------------------- Кейсы ---------------------------------------------
     // Основные методы

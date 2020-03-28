@@ -1,5 +1,6 @@
 <?php
 
+use App\Position;
 use Illuminate\Database\Seeder;
 
 use App\Company;
@@ -107,6 +108,25 @@ class StartTableSeeder extends Seeder
 
         $user = User::where('login', 'testovik')->first();
         $user->phones()->attach(1, ['main' => 1]);
+
+        Position::insert([
+            [
+                'name' => 'Директор',
+                'page_id' => 12,
+                'direction' => true,
+                'company_id' => 1,
+                'system' => false,
+                'author_id' => 1,
+                'sector_id' => null,
+            ],
+        ]);
+
+        DB::table('position_role')->insert([
+            [
+                'position_id' => 1,
+                'role_id' => 2
+            ],
+        ]);
 
         Staffer::insert([
             [

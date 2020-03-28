@@ -28,6 +28,8 @@ class CreatePositionsTable extends Migration
             $table->bigInteger('sector_id')->nullable()->unsigned()->comment('Id сектора');
             $table->foreign('sector_id')->references('id')->on('sectors');
 
+            $table->boolean('archive')->default(0)->unsigned()->comment('Архив');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
@@ -44,7 +46,6 @@ class CreatePositionsTable extends Migration
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

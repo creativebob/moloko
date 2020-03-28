@@ -1,3 +1,3 @@
-<select name="parent_id">
+<select name="{{ $name ?? 'parent_id' }}">
 	{!! $items_list !!}
 </select>

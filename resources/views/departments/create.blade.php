@@ -165,7 +165,7 @@
 
       @isset($parent_id)
       <label>Расположение
-       @include('includes.selects.categories_select', ['id' => $department->id, 'parent_id' => $parent_id])
+       @include('includes.selects.categories_select', ['id' => $department->id, 'parent_id' => $parent_id, 'name' => 'department_id'] )
    </label>
    @endisset
 

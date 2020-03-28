@@ -12,7 +12,7 @@ use App\PhotoSetting;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\PageRequest;
+use App\Http\Requests\System\PageRequest;
 
 // Транслитерация
 use Illuminate\Support\Str;

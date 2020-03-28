@@ -35,7 +35,7 @@
             @if ($rubricators_items->isNotEmpty())
 
             {{-- Шаблон вывода и динамического обновления --}}
-            @include('system.common.accordions.categories_list', [
+            @include('system.common.categories.index.categories_list', [
                 'items' => $rubricators_items,
                 'class' => App\RubricatorsItem::class,
                 'entity' => 'rubricators_items',

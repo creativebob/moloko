@@ -20,7 +20,7 @@ use App\Http\Controllers\Traits\RewriteSessionDepartments;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\DepartmentRequest;
+use App\Http\Requests\System\DepartmentRequest;
 
 // Специфические классы
 use Illuminate\Support\Facades\Storage;
@@ -59,26 +59,30 @@ class DepartmentController extends Controller
         // ГЛАВНЫЙ ЗАПРОС
         // -----------------------------------------------------------------------------------------------------------------------
 
-        $departments = Department::with(['staff' => function ($query) use ($answer_staff, $answer_positions) {
-            $query->with([
-                'user',
-                'position' => function ($q) use ($answer_positions) {
-                $q->moderatorLimit($answer_positions)
-                    ->companiesLimit($answer_positions)
-                    ->authors($answer_positions)
-                    ->systemItem($answer_positions) // Фильтр по системным записям
-                    ->template($answer_positions) // Выводим шаблоны альбомов
-                    ->orderBy('moderation', 'desc')
-                    ->orderBy('sort', 'asc');
-            }])
-            ->moderatorLimit($answer_staff)
-            ->companiesLimit($answer_staff)
-            ->filials($answer_staff) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-            ->authors($answer_staff)
-            ->systemItem($answer_staff) // Фильтр по системным записям
-            ->orderBy('moderation', 'desc')
-            ->orderBy('sort', 'asc');
-        }])
+        $departments = Department::with([
+            'staff' => function ($query) use ($answer_staff, $answer_positions) {
+                $query->with([
+                    'user',
+                    'position' => function ($q) use ($answer_positions) {
+                        $q->moderatorLimit($answer_positions)
+                            ->companiesLimit($answer_positions)
+                            ->authors($answer_positions)
+                            ->systemItem($answer_positions) // Фильтр по системным записям
+                            ->template($answer_positions) // Выводим шаблоны альбомов
+                            ->orderBy('moderation', 'desc')
+                            ->orderBy('sort', 'asc');
+                    }
+                ])
+                ->moderatorLimit($answer_staff)
+                ->companiesLimit($answer_staff)
+                ->filials($answer_staff) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+                ->authors($answer_staff)
+                ->systemItem($answer_staff) // Фильтр по системным записям
+                ->where('archive', false)
+                ->orderBy('moderation', 'desc')
+                ->orderBy('sort', 'asc');
+            }
+        ])
         ->withCount('staff')
         ->moderatorLimit($answer_departments)
         ->companiesLimit($answer_departments)

@@ -58,6 +58,7 @@ Vue.component('plugins-component', require('./components/plugins/PluginsComponen
 
 // Поиск
 Vue.component('search-city-component', require('./components/search/SearchCityComponent'));
+Vue.component('search-client-component', require('./components/search/SearchClientComponent'));
 Vue.component('search-lead-component', require('./components/search/SearchLeadComponent'));
 Vue.component('search-articles-component', require('./components/search/SearchArticlesComponent'));
 Vue.component('search-processes-component', require('./components/search/SearchProcessesComponent'));

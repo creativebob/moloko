@@ -1,1 +1,1 @@
-{{ Form::select('staff_id', $staff->pluck('position.name', 'id'), null, ['placeholder' => 'Выберите должность']) }}
+{{ Form::select('staffer_id', $staff->pluck('position.name', 'id'), null, ['placeholder' => 'Выберите должность']) }}

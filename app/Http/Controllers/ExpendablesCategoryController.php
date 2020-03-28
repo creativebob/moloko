@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\ExpendablesCategoryUpdateRequest;
-use App\Http\Requests\ExpendablesCategoryStoreRequest;
+use App\Http\Requests\System\ExpendablesCategoryUpdateRequest;
+use App\Http\Requests\System\ExpendablesCategoryStoreRequest;
 use App\ExpendablesCategory;
 use Illuminate\Http\Request;
 
@@ -48,7 +48,7 @@ class ExpendablesCategoryController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('system.common.accordions.categories_list',
+            return view('system.common.categories.index.categories_list',
                 [
                     'items' => $expendables_categories,
                     'entity' => $this->entity_alias,
@@ -62,7 +62,7 @@ class ExpendablesCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('system.common.accordions.index',
+        return view('system.common.categories.index.index',
             [
                 'items' => $expendables_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -84,7 +84,7 @@ class ExpendablesCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('system.common.accordions.create', [
+        return view('system.common.categories.create.modal.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории расходников',

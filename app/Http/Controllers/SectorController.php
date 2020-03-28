@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SectorUpdateRequest;
-use App\Http\Requests\SectorStoreRequest;
+use App\Http\Requests\System\SectorUpdateRequest;
+use App\Http\Requests\System\SectorStoreRequest;
 use App\Sector;
 use Illuminate\Http\Request;
 
@@ -44,7 +44,7 @@ class SectorController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('system.common.accordions.categories_list',
+            return view('system.common.categories.index.categories_list',
                 [
                     'items' => $sectors,
                     'entity' => $this->entity_alias,
@@ -58,7 +58,7 @@ class SectorController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('system.common.accordions.index',
+        return view('system.common.categories.index.index',
             [
                 'items' => $sectors,
                 'page_info' => pageInfo($this->entity_alias),
@@ -80,7 +80,7 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('system.common.accordions.create', [
+        return view('system.common.categories.create.modal.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление сектора',
@@ -126,7 +126,7 @@ class SectorController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $sector);
 
-        return view('system.common.accordions.edit', [
+        return view('system.common.categories.edit', [
             'item' => $sector,
             'entity' => $this->entity_alias,
             'title' => 'Редактирование сектора',

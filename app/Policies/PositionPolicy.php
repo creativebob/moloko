@@ -42,7 +42,11 @@ class PositionPolicy
 
     public function delete(User $user, Position $model)
     {
-        if ($model->staff->isNotEmpty()) {
+        if (empty($model->company_id)) {
+            return false;
+        }
+
+        if ($model->actual_staff->isNotEmpty()) {
             return false;
         }
 

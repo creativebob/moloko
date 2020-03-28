@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\CatalogsGoods;
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\CatalogsGoodsItemUpdateRequest;
-use App\Http\Requests\CatalogsGoodsItemStoreRequest;
+use App\Http\Requests\System\CatalogsGoodsItemUpdateRequest;
+use App\Http\Requests\System\CatalogsGoodsItemStoreRequest;
 use App\CatalogsGoodsItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +25,7 @@ class CatalogsGoodsItemController extends Controller
         $this->model = 'App\CatalogsGoodsItem';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-        $this->type = 'edit';
+        $this->type = 'page';
     }
 
     use Photable;
@@ -40,7 +40,7 @@ class CatalogsGoodsItemController extends Controller
      */
     public function index(Request $request, $catalog_id)
     {
-        
+
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -73,7 +73,7 @@ class CatalogsGoodsItemController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('system.common.accordions.categories_list',
+            return view('system.common.categories.index.categories_list',
                 [
                     'items' => $catalogs_goods_items,
                     'entity' => $this->entity_alias,
@@ -118,7 +118,7 @@ class CatalogsGoodsItemController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('system.common.accordions.create', [
+        return view('system.common.categories.create.modal.create', [
             'item' => CatalogsGoods::make(),
             'entity' => $this->entity_alias,
             'title' => 'Добавление пункта каталога',

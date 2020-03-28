@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Domain;
 use App\Entity;
 use Illuminate\Http\Request;
-use App\Http\Requests\DomainRequest;
+use App\Http\Requests\System\DomainRequest;
 use Illuminate\Support\Facades\View;
 
 class DomainController extends Controller

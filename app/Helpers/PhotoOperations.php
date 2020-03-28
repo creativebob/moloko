@@ -267,28 +267,48 @@ function savePhotoInAlbum($request, $album) {
 function getPhotoSettings($entity_alias, $album_id = null) {
 
     // Вытаскиваем настройки из конфига
-    $settings = config('photo_settings');
+    $settings = PhotoSetting::whereNull('company_id')
+        ->first();
+
+    if (! $settings) {
+        // Умолчания на случай, если нет доступа к базе (Для формирования autoload)
+        $settings = [];
+        $settings['img_small_width'] = 0;
+        $settings['img_small_height'] = 0;
+        $settings['img_medium_width'] = 0;
+        $settings['img_medium_height'] = 0;
+        $settings['img_large_width'] = 0;
+        $settings['img_large_height'] = 0;
+
+        $settings['img_formats'] = 0;
+        $settings['strict_mode'] = 0;
+
+        $settings['img_min_width'] = 0;
+        $settings['img_min_height'] = 0;
+        $settings['img_max_size'] = 0;
+    }
 
     // dd($settings);
 
     $entity = Entity::with('photo_settings')
-    ->whereAlias($entity_alias)
-    ->first();
+        ->whereAlias($entity_alias)
+        ->first();
 
     // dd($entity);
 
     $get_settings = $entity->photo_settings;
-
-    if (isset($get_settings)) {
-
+    if ($get_settings) {
         foreach ($settings as $key => $value) {
             // Если есть ключ в пришедших настройках, то переписываем значение
-            if(isset($get_settings->$key)) {
+            if (isset($get_settings->$key)) {
                 $settings[$key] = $get_settings->$key;
             }
         }
     }
     // dd($get_settings);
+//    dd($settings);
+
+    return $settings;
 
     return $settings;
 }

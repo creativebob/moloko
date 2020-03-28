@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Cookie;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\CompanyRequest;
+use App\Http\Requests\System\CompanyRequest;
 
 // Прочие необходимые классы
 use Illuminate\Support\Facades\Storage;

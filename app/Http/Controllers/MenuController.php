@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\MenuUpdateRequest;
-use App\Http\Requests\MenuStoreRequest;
+use App\Http\Requests\System\MenuUpdateRequest;
+use App\Http\Requests\System\MenuStoreRequest;
 use App\Menu;
 use App\Navigation;
 use App\Site;
@@ -48,7 +48,7 @@ class MenuController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('system.common.accordions.categories_list',
+            return view('system.common.categories.index.categories_list',
                 [
                     'items' => $menus,
                     'entity' => $this->entity_alias,

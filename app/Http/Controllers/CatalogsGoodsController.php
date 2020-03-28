@@ -7,7 +7,7 @@ use App\CatalogsGoods;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\CatalogsGoodsRequest;
+use App\Http\Requests\System\CatalogsGoodsRequest;
 
 // Транслитерация
 use Illuminate\Support\Str;

@@ -8,7 +8,7 @@ use App\Room;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\StockRequest;
+use App\Http\Requests\System\StockRequest;
 
 class StockController extends Controller
 {

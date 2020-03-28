@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 // Валидация
 use App\Plugin;
 use Illuminate\Http\Request;
-use App\Http\Requests\PluginRequest;
+use App\Http\Requests\System\PluginRequest;
 
 class PluginController extends Controller
 {

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ServiceStoreRequest;
-use App\Http\Requests\ServiceUpdateRequest;
+use App\Http\Requests\System\ServiceStoreRequest;
+use App\Http\Requests\System\ServiceUpdateRequest;
 use App\Service;
 use App\ServicesCategory;
 use App\Manufacturer;

@@ -8,7 +8,7 @@ use App\GoodsCategory;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\GoodsProductRequest;
+use App\Http\Requests\System\GoodsProductRequest;
 
 // Общие классы
 use Illuminate\Support\Facades\Cookie;

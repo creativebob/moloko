@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\BusinessCase;
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\BusinessCaseRequest;
+use App\Http\Requests\System\BusinessCaseRequest;
 use App\Portfolio;
 
 class BusinessCaseController extends Controller
@@ -17,6 +17,7 @@ class BusinessCaseController extends Controller
 
     /**
      * BusinessCaseController constructor.
+     *
      * @param BusinessCase $business_case
      */
     public function __construct(BusinessCase $business_case)

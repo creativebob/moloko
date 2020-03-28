@@ -108,9 +108,9 @@ return [
 		    'level' => 'info',
 	    ],
 
-        'personals' => [
+        'hr' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/personals.log'),
+            'path' => storage_path('logs/hr.log'),
             'level' => 'info',
         ],
 

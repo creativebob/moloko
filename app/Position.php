@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Scopes для главного запроса
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
@@ -29,8 +28,6 @@ class Position extends Model
 
     // Включаем кеш
     use Cachable;
-
-    use SoftDeletes;
 
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
@@ -82,6 +79,12 @@ class Position extends Model
     }
 
     public function actual_staff()
+    {
+        return $this->hasMany(Staffer::class)
+            ->where('archive', false);
+    }
+
+    public function vacancies()
     {
         return $this->hasMany(Staffer::class)
             ->whereNotNull('user_id');

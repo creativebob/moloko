@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\MetricStoreRequest;
+use App\Http\Requests\System\MetricStoreRequest;
 use App\Metric;
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ class MetricController extends Controller
         $this->model = 'App\Metric';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-        $this->type = 'edit';
+        $this->type = 'page';
     }
 
     public function index()

@@ -6,7 +6,7 @@ use App\Site;
 use App\Entity;
 use App\Filters\SiteFilter;
 use Illuminate\Http\Request;
-use App\Http\Requests\SiteRequest;
+use App\Http\Requests\System\SiteRequest;
 
 class SiteController extends Controller
 {

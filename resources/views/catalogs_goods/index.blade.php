@@ -43,7 +43,7 @@
 	                    <th class="td-description">Описание</th>
 
 	                    @can('index', App\CatalogsGoodsItem::class)
-	                        <th class="td-tree">Дерево</th>
+	                        <th class="td-catalogs_goods_items">Дерево</th>
 	                    @endcan
 
 	                    @can('index', App\PricesGoods::class)
@@ -80,8 +80,9 @@
 	                    </td>
 	                    <td class="td-alias">{{ $cur_catalogs_goods->alias }}</td>
 	                    <td class="td-description">{{ $cur_catalogs_goods->description }}</td>
+
 	                    @can('index', App\CatalogsGoodsItem::class)
-	                        <td class="td-tree">
+	                        <td class="td-catalogs_goods_items">
 								<a href="{{ route('catalogs_goods_items.index', $cur_catalogs_goods->id) }}" class="icon-category sprite"></a>
 	                        </td>
 	                    @endcan

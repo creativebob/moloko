@@ -15,7 +15,7 @@ use App\City;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\StageRequest;
+use App\Http\Requests\System\StageRequest;
 
 // Политика
 use App\Policies\ExtraRequisitePolicy;

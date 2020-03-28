@@ -20,7 +20,7 @@
 
         var nested = item.data('nested');
 
-        action = item.hasClass("icon-system-unlock") ? 'lock' : 'unlock';
+        let action = item.hasClass("icon-system-unlock") ? 1 : 0;
 
         // Ajax
         $.post('/admin/system', {
@@ -30,7 +30,7 @@
         }, function (system) {
             // Если нет ошибки
             if (system == true) {
-                if (action == 'lock') {
+                if (action == 1) {
                     item.removeClass('icon-system-unlock');
                     item.addClass('icon-system-lock');
 

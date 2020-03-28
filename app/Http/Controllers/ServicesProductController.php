@@ -14,7 +14,7 @@ use App\List_item;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\ServicesProductRequest;
+use App\Http\Requests\System\ServicesProductRequest;
 
 // Политика
 use App\Policies\ServicesProductPolicy;

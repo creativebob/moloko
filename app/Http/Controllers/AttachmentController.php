@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Attachment;
 use App\AttachmentsCategory;
 
-use App\Http\Requests\AttachmentStoreRequest;
-use App\Http\Requests\AttachmentUpdateRequest;
+use App\Http\Requests\System\AttachmentStoreRequest;
+use App\Http\Requests\System\AttachmentUpdateRequest;
 use App\Manufacturer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;

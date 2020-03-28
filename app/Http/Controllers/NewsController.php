@@ -6,7 +6,7 @@ use App\Http\Controllers\Traits\Photable;
 use App\News;
 use App\RubricatorsItem;
 use Illuminate\Http\Request;
-use App\Http\Requests\NewsRequest;
+use App\Http\Requests\System\NewsRequest;
 use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller

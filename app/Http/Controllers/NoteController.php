@@ -7,7 +7,7 @@ use App\Note;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\NoteRequest;
+use App\Http\Requests\System\NoteRequest;
 
 
 class NoteController extends Controller

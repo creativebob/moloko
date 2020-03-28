@@ -8,7 +8,7 @@ use App\Entity;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\ProcessesGroupRequest;
+use App\Http\Requests\System\ProcessesGroupRequest;
 
 class ProcessesGroupController extends Controller
 {

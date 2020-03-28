@@ -18,7 +18,7 @@ class CreateStaffTable extends Migration
 
             $table->bigInteger('user_id')->unsigned()->nullable()->comment('Id пользователя');
             $table->foreign('user_id')->references('id')->on('users');
-            
+
             $table->bigInteger('position_id')->unsigned()->nullable()->comment('Id должности');
             $table->foreign('position_id')->references('id')->on('positions');
 
@@ -29,6 +29,8 @@ class CreateStaffTable extends Migration
             $table->foreign('filial_id')->references('id')->on('departments');
 
             $table->decimal('rate', 10, 2)->nullable()->default(1)->comment('Ставка');
+
+            $table->boolean('archive')->default(0)->unsigned()->comment('Архив');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
@@ -45,7 +47,6 @@ class CreateStaffTable extends Migration
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

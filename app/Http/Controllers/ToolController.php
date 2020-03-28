@@ -10,8 +10,8 @@ use App\Manufacturer;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\ToolRequest;
-use App\Http\Requests\ArticleStoreRequest;
+use App\Http\Requests\System\ToolRequest;
+use App\Http\Requests\System\ArticleStoreRequest;
 
 // Куки
 use Illuminate\Support\Facades\Cookie;

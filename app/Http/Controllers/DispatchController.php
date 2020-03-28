@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Dispatch;
-use App\Http\Requests\DispatchRequest;
+use App\Http\Requests\System\DispatchRequest;
 use Illuminate\Http\Request;
 
 class DispatchController extends Controller

@@ -9,7 +9,9 @@
         // let entity_alias = $('#content').data('entity-alias');
         let entity_alias = item.closest('.item').attr('id').split('-')[0];
 
-        action = item.hasClass("icon-display-hide") ? 'show' : 'hide';
+        let action = item.hasClass("icon-display-hide") ? 1 : 0;
+
+        // alert(id + ' ' + action + ' ' + entity_alias);
 
         // Ajax
         $.post('/admin/display', {
@@ -19,7 +21,7 @@
         }, function (display) {
             // Если нет ошибки
             if (display == true) {
-                if (action == 'show') {
+                if (action == 1) {
                     item.removeClass('icon-display-hide');
                     item.addClass('icon-display-show')
                 } else {

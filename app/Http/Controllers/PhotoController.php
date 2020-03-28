@@ -10,7 +10,7 @@ use App\Entity;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\PhotoRequest;
+use App\Http\Requests\System\PhotoRequest;
 
 // Подключаем фасады
 

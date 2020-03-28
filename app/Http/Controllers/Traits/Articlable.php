@@ -6,11 +6,11 @@ use App\Article;
 use App\ArticlesGroup;
 use App\Entity;
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\ArticleUpdateRequest;
+use App\Http\Requests\System\ArticleUpdateRequest;
 use App\Unit;
 
 // Валидация
-use App\Http\Requests\ArticleStoreRequest;
+use App\Http\Requests\System\ArticleStoreRequest;
 
 use Illuminate\Support\Facades\Log;
 

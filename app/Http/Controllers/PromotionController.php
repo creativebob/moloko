@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\PromotionRequest;
+use App\Http\Requests\System\PromotionRequest;
 use App\Promotion;
 use Illuminate\Http\Request;
 

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\ToolsCategoryUpdateRequest;
-use App\Http\Requests\ToolsCategoryStoreRequest;
+use App\Http\Requests\System\ToolsCategoryUpdateRequest;
+use App\Http\Requests\System\ToolsCategoryStoreRequest;
 use App\ToolsCategory;
 use Illuminate\Http\Request;
 
@@ -21,7 +21,7 @@ class ToolsCategoryController extends Controller
         $this->model = 'App\ToolsCategory';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-        $this->type = 'edit';
+        $this->type = 'page';
     }
 
     use Photable;
@@ -53,7 +53,7 @@ class ToolsCategoryController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('system.common.accordions.categories_list',
+            return view('system.common.categories.index.categories_list',
                 [
                     'items' => $tools_categories,
                     'entity' => $this->entity_alias,
@@ -67,7 +67,7 @@ class ToolsCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('system.common.accordions.index',
+        return view('system.common.categories.index.index',
             [
                 'items' => $tools_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -89,7 +89,7 @@ class ToolsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('system.common.accordions.create', [
+        return view('system.common.categories.create.modal.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории инструментов',

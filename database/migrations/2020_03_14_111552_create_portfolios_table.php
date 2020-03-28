@@ -17,9 +17,13 @@ class CreatePortfoliosTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name')->index()->comment('Название');
-            $table->text('description')->nullable()->comment('Описание');
+            $table->string('alias')->index()->nullable()->comment('Алиас');
+            $table->string('slug')->index()->nullable()->comment('Слаг');
 
-            $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id аватара');
+            $table->text('description')->nullable()->comment('Описание');
+            $table->text('seo_description')->nullable()->comment('Описание для сайта');
+
+            $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
             $table->foreign('photo_id')->references('id')->on('photos');
 
             // Общие настройки

@@ -10,7 +10,7 @@ use App\City;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\CityRequest;
+use App\Http\Requests\System\CityRequest;
 
 // Транслитерация
 use Illuminate\Support\Str;

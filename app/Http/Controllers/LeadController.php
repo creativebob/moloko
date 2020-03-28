@@ -23,8 +23,8 @@ use App\CatalogsGoods;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\LeadRequest;
-use App\Http\Requests\MyStageRequest;
+use App\Http\Requests\System\LeadRequest;
+use App\Http\Requests\System\MyStageRequest;
 
 
 // Специфические классы

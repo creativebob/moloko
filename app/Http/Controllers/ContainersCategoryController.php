@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\ContainersCategoryUpdateRequest;
-use App\Http\Requests\ContainersCategoryStoreRequest;
+use App\Http\Requests\System\ContainersCategoryUpdateRequest;
+use App\Http\Requests\System\ContainersCategoryStoreRequest;
 use App\ContainersCategory;
 use Illuminate\Http\Request;
 
@@ -20,7 +20,7 @@ class ContainersCategoryController extends Controller
         $this->model = 'App\ContainersCategory';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-        $this->type = 'edit';
+        $this->type = 'page';
     }
 
     use Photable;
@@ -51,7 +51,7 @@ class ContainersCategoryController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('system.common.accordions.categories_list',
+            return view('system.common.categories.index.categories_list',
                 [
                     'items' => $containers_categories,
                     'entity' => $this->entity_alias,
@@ -65,7 +65,7 @@ class ContainersCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('system.common.accordions.index',
+        return view('system.common.categories.index.index',
             [
                 'items' => $containers_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -87,7 +87,7 @@ class ContainersCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('system.common.accordions.create', [
+        return view('system.common.categories.create.modal.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории упаковок',

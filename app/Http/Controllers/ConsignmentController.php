@@ -11,7 +11,7 @@ use App\Consignment;
 use App\ConsignmentsItem;
 use App\Cost;
 use App\Entity;
-use App\Http\Requests\ConsignmentUpdateRequest;
+use App\Http\Requests\System\ConsignmentUpdateRequest;
 use Illuminate\Http\Request;
 
 class ConsignmentController extends Controller

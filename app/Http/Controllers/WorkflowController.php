@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\WorkflowStoreRequest;
-use App\Http\Requests\WorkflowUpdateRequest;
+use App\Http\Requests\System\WorkflowStoreRequest;
+use App\Http\Requests\System\WorkflowUpdateRequest;
 use App\Workflow;
 use App\WorkflowsCategory;
 use App\Manufacturer;

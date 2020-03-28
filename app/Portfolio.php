@@ -29,9 +29,14 @@ class Portfolio extends Model
         return $this->belongsTo(Photo::class);
     }
 
-    // Кейсы
-    public function cases()
+    public function items()
     {
-        return $this->hasMany(BusinessCase::class);
+        return $this->hasMany(PortfoliosItem::class);
     }
+
+    // Кейсы
+//    public function cases()
+//    {
+//        return $this->hasMany(BusinessCase::class);
+//    }
 }

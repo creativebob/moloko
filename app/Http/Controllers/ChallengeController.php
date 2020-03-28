@@ -12,7 +12,7 @@ use App\Priority;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\ChallengeRequest;
+use App\Http\Requests\System\ChallengeRequest;
 
 // Политика
 use App\Policies\ChallengePolicy;

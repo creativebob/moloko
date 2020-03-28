@@ -2,34 +2,20 @@
 
 namespace App\Http\Controllers;
 
-// Подключаем модели
-use App\Staffer;
-use App\Employee;
+
 use App\User;
-
-use App\Page;
-use App\Site;
-use App\Company;
-use App\Department;
-use App\RoleUser;
-use App\Worktime;
-use App\ScheduleEntity;
-use App\Schedule;
-
-// Валидация
-use App\Http\Requests\StafferRequest;
-use App\Http\Requests\EmployeeRequest;
-
-// Подключаем фасады
+use App\Http\Requests\System\StafferRequest;
+use App\Staffer;
+use App\Http\Requests\System\EmployeeRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class StafferController extends Controller
 {
 
-    // Настройки сконтроллера
+    /**
+     * StafferController constructor
+     * @param Staffer $staffer
+     */
     public function __construct(Staffer $staffer)
     {
         $this->middleware('auth');
@@ -40,7 +26,13 @@ class StafferController extends Controller
         $this->entity_dependence = true;
     }
 
-
+    /**
+     * Отображение списка ресурсов
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
 
@@ -53,14 +45,35 @@ class StafferController extends Controller
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
         // dd($answer);
 
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
-        $staff = $this->staffer->getIndex($request, $answer);
-        // dd($staff);
+//        $staff = $this->staffer->getIndex($request, $answer);
+        $staff = Staffer::with([
+            'filial',
+            'department',
+            'user.main_phones',
+            'position',
+            'employee',
+            'company.filials',
+            'actual_employees'
+        ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->filials($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->booklistFilter($request)
+            ->where('archive', false)
+            ->filter($request, 'position_id')
+            ->filter($request, 'department_id')
+            ->dateIntervalFilter($request, 'date_employment')
+            ->orderBy('moderation', 'desc')
+            ->orderBy('sort', 'asc')
+            ->paginate(30);
+//         dd($staff);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
@@ -72,57 +85,80 @@ class StafferController extends Controller
             'date_interval',        // Дата
             'booklist'              // Списки пользователя
         ]);
-
         // Окончание фильтра -----------------------------------------------------------------------------------------
-
-        // dd($staff);
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('staff.index', compact('staff', 'page_info', 'filter'));
+        return view('system.pages.hr.staff.index', compact('staff', 'page_info', 'filter'));
     }
 
+    /**
+     * Показать форму для создания нового ресурса
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function create()
     {
         return redirect()->action('DepartmentController@index');
     }
 
+    /**
+     * Сохранение только что созданного ресурса в хранилище
+     *
+     * @param StafferRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(StafferRequest $request)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $data = $request->input();
-        $data['department_id'] = $data['parent_id'];
         $staffer = Staffer::create($data);
 
         if ($staffer) {
 
         // Переадресовываем на index
+//            return redirect()->route('staff.index');
             return redirect()->route('departments.index', [
                 'id' => $staffer->id,
                 'item' => $this->entity_alias
             ]);
         } else {
-            abort(403, 'Ошибка при записи штата!');
+            abort(403, 'Ошибка при записи');
         }
     }
 
+    /**
+     * Отображение указанного ресурса
+     *
+     * @param $id
+     */
     public function show($id)
     {
         //
     }
 
-    public function edit(Request $request, $id)
+    /**
+     * Показать форму для редактирования указанного ресурса
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit($id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $staffer = Staffer::with(['position', 'schedules.worktimes', 'employee'])
+        $staffer = Staffer::with([
+            'position',
+            'schedules.worktimes',
+            'employee'
+        ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
@@ -132,12 +168,19 @@ class StafferController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('staff.edit', compact('staffer', 'page_info'));
+        return view('system.pages.hr.staff.edit', compact('staffer', 'page_info'));
     }
 
+    /**
+     * Обновление указанного ресурса в хранилище
+     *
+     * @param EmployeeRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(EmployeeRequest $request, $id)
     {
-
         // Получаем авторизованного пользователя
         $user = $request->user();
 
@@ -164,8 +207,9 @@ class StafferController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $staffer);
 
-        Log::channel('personals')
-            ->info("============== ОБНОВЛЕНИЕ {$staffer->getTable()} с id: {$staffer->id} ========");
+        // TODO - 26.03.20 - Возмножно этот функционал останется только в employees
+
+        logs('hr') ->info("============== ОБНОВЛЕНИЕ {$staffer->getTable()} с id: {$staffer->id} ========");
 
         // Если на должность назначен сотрудник
         if (isset($staffer->employee)) {
@@ -179,8 +223,7 @@ class StafferController extends Controller
                 $employee->save();
             }
 
-            Log::channel('personals')
-                ->info("На staffer: {$staffer->id} назнанчен сотрудник {$user->name}");
+            logs('hr')->info("На staffer: {$staffer->id} назнанчен сотрудник {$user->name}");
 
         } else {
 
@@ -214,8 +257,7 @@ class StafferController extends Controller
 //            dd($notifications);
             $user->notifications()->attach($notifications);
 
-            Log::channel('personals')
-                ->info("На staffer: {$staffer->id} назнанчен сотрудник {$user->name}");
+            logs('hr')->info("На staffer: {$staffer->id} назнанчен сотрудник {$user->name}");
 
         }
 
@@ -241,8 +283,7 @@ class StafferController extends Controller
             // Освобождаем штат
             $staffer->user_id = null;
 
-            Log::channel('personals')
-                ->info("C staffer: {$staffer->id} уволен сотрудник {$user->name}");
+            logs('hr')->info("C staffer: {$staffer->id} уволен сотрудник {$user->name}");
 
         }
 
@@ -251,8 +292,7 @@ class StafferController extends Controller
 
         $staffer->save();
 
-        Log::channel('personals')
-            ->info("============== ЗАВЕРШЕНО ОБНОВЛЕНИЕ {$staffer->getTable()} с id: {$staffer->id} ========
+        logs('hr')->info("============== ЗАВЕРШЕНО ОБНОВЛЕНИЕ {$staffer->getTable()} с id: {$staffer->id} ========
             
             ");
 
@@ -263,30 +303,50 @@ class StafferController extends Controller
         }
     }
 
-    public function destroy(Request $request, $id)
+    /**
+     * Удаление указанного ресурса из хранилища
+     *
+     * @param $id
+     */
+    public function destroy($id)
     {
+        //
+    }
 
+    /**
+     * Архивация указанного ресурса
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function archive($id)
+    {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $staffer = Staffer::with('user')->moderatorLimit($answer)->findOrFail($id);
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $staffer);
-
-        // Удаляем должность из отдела с обновлением
-        // Находим филиал и отдел
-        $staffer->editor_id = hideGod($request->user());
-        $staffer->save();
-
-        $parent_id = $staffer->department_id;
-
-        $staffer = Staffer::destroy($id);
+        $staffer = Staffer::with([
+            'actual_employees'
+        ])
+        ->moderatorLimit($answer)
+            ->findOrFail($id);
 
         if ($staffer) {
-            return redirect()->route('departments.index', ['id' => $parent_id, 'item' => 'departments']);
+            // Подключение политики
+            $this->authorize('delete', $staffer);
+
+            $staffer->archive = true;
+            $staffer->editor_id = hideGod(auth()->user());
+            $staffer->save();
+
+            if ($staffer) {
+                return redirect()->route('staff.index');
+            } else {
+                abort(403, 'Ошибка при архивации');
+            }
         } else {
-            abort(403, 'Ошибка при удалении штата');
+            abort(403, 'Не найдено');
         }
     }
 }

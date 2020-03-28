@@ -9,7 +9,7 @@ use App\Direction;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\IndicatorRequest;
+use App\Http\Requests\System\IndicatorRequest;
 
 class IndicatorController extends Controller
 {

@@ -10,7 +10,7 @@ use App\User;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\BankAccountRequest;
+use App\Http\Requests\System\BankAccountRequest;
 
 // Политика
 use App\Policies\BankAccountPolicy;

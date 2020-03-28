@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\RoomsCategoryUpdateRequest;
-use App\Http\Requests\RoomsCategoryStoreRequest;
+use App\Http\Requests\System\RoomsCategoryUpdateRequest;
+use App\Http\Requests\System\RoomsCategoryStoreRequest;
 use App\RoomsCategory;
 use Illuminate\Http\Request;
 
@@ -21,7 +21,7 @@ class RoomsCategoryController extends Controller
         $this->model = 'App\RoomsCategory';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-        $this->type = 'edit';
+        $this->type = 'page';
     }
 
     use Photable;
@@ -54,7 +54,7 @@ class RoomsCategoryController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('system.common.accordions.categories_list',
+            return view('system.common.categories.index.categories_list',
                 [
                     'items' => $rooms_categories,
                     'entity' => $this->entity_alias,
@@ -68,7 +68,7 @@ class RoomsCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('system.common.accordions.index',
+        return view('system.common.categories.index.index',
             [
                 'items' => $rooms_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -90,7 +90,7 @@ class RoomsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('system.common.accordions.create', [
+        return view('system.common.categories.create.modal.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории помещений',

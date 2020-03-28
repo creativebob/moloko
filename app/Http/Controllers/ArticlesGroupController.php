@@ -8,7 +8,7 @@ use App\Entity;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\ArticlesGroupRequest;
+use App\Http\Requests\System\ArticlesGroupRequest;
 
 class ArticlesGroupController extends Controller
 {

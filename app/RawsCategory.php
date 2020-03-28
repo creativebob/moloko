@@ -49,6 +49,7 @@ class RawsCategory extends Model
         'name',
         'description',
         'seo_description',
+
         'parent_id',
         'photo_id',
 
@@ -68,13 +69,13 @@ class RawsCategory extends Model
     {
         return $this->hasMany(RawsCategory::class, 'parent_id');
     }
-	
+
 //	public function childCategories()
 //	{
 //		return $this->hasMany(RawsCategory::class, 'parent_id')
 //			->with('childs');
 //	}
-		
+
 		// Компания
     public function company()
     {

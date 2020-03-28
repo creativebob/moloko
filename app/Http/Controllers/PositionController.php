@@ -2,36 +2,20 @@
 
 namespace App\Http\Controllers;
 
-// Модели
-use App\Position;
-use App\Page;
 use App\User;
-use App\Role;
 use App\Staffer;
-use App\PositionRole;
-use App\Sector;
 use App\Notification;
-use App\Charge;
-use App\Widget;
-
-// Валидация
+use App\Http\Requests\System\PositionRequest;
+use App\Position;
 use Illuminate\Http\Request;
-use App\Http\Requests\PositionRequest;
-
-// Политика
-use App\Policies\PostionPolicy;
-
-// Общие классы
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cookie;
-
-// На удаление
-use Illuminate\Support\Facades\Auth;
 
 class PositionController extends Controller
 {
 
-    // Настройки сконтроллера
+    /**
+     * PositionController constructor
+     * @param Position $position
+     */
     public function __construct(Position $position)
     {
         $this->middleware('auth');
@@ -42,6 +26,13 @@ class PositionController extends Controller
         $this->entity_dependence = false;
     }
 
+    /**
+     * Отображение списка ресурсов
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
 
@@ -64,16 +55,17 @@ class PositionController extends Controller
             'page',
             'roles',
             'company',
-            'staff'
+            'actual_staff'
         ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
         ->authors($answer)
         ->systemItem($answer) // Фильтр по системным записям
-        ->template($answer) // Выводим шаблоны в список
+//        ->template($answer)
         ->booklistFilter($request)
         // ->filter($request, 'author_id')
+        ->where('archive', false)
         ->filter($request, 'company_id')
         ->orderBy('moderation', 'desc')
         ->orderBy('sort', 'asc')
@@ -95,53 +87,47 @@ class PositionController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('positions.index', compact('positions', 'page_info', 'filter'));
+        return view('system.pages.hr.positions.index', compact('positions', 'page_info', 'filter'));
     }
 
-    public function create(Request $request)
+    /**
+     * Показать форму для создания нового ресурса
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function create()
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Position::class);
 
         $position = Position::make();
 
-        // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('positions.create', compact('position', 'page_info'));
+        return view('system.pages.hr.positions.create', compact('position', 'page_info'));
     }
 
+    /**
+     * Сохранение только что созданного ресурса в хранилище
+     *
+     * @param PositionRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(PositionRequest $request)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), Position::class);
 
-        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
-
-        // Получаем данные для авторизованного пользователя
-        $user = $request->user();
-
-        if ($user->god == 1) {
-            $user_id = 1;
-        } else {
-            $user_id = $user->id;
-        };
-
-        $company_id = $user->company_id;
-
-        // Создаем новую должность
-        $data = $request->input();
+        $data = $request->validated();
         $position = Position::create($data);
 
-        // Если должность записалась
-        if($position) {
+        if ($position) {
 
             // Роли
-            $roles = session('access.all_rights.index-roles-allow');
-            if ($roles) {
+            $roles_access = session('access.all_rights.index-roles-allow');
+            if ($roles_access) {
                 $position->roles()->sync($request->roles);
             }
 
@@ -154,26 +140,36 @@ class PositionController extends Controller
             // Виджеты
             $position->widgets()->sync($request->widgets);
 
-
             return redirect()->route('positions.index');
         } else {
-            abort(403, 'Ошибка записи должности');
+            abort(403, 'Ошибка записи');
         }
     }
 
+    /**
+     * Отображение указанного ресурса
+     *
+     * @param $id
+     */
     public function show($id)
     {
-    //
+        //
     }
 
-    public function edit(Request $request, $id)
+    /**
+     * Показать форму для редактирования указанного ресурса
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function edit($id)
     {
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $position = Position::moderatorLimit($answer)->findOrFail($id);
+        $position = Position::moderatorLimit($answer)
+            ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $position);
@@ -181,54 +177,41 @@ class PositionController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('positions.edit', compact('position', 'page_info'));
+        return view('system.pages.hr.positions.edit', compact('position', 'page_info'));
     }
 
+    /**
+     * Обновление указанного ресурса в хранилище
+     *
+     * @param PositionRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(PositionRequest $request, $id)
     {
-
-        // Получаем авторизованного пользователя
-        $user = $request->user();
-
-        if ($user->god == 1) {
-            $user_id = 1;
-        } else {
-            $user_id = $user->id;
-        };
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $position = Position::moderatorLimit($answer)->findOrFail($id);
+        $position = Position::moderatorLimit($answer)
+            ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $position);
 
-        // Выбираем существующие роли для должности на данный момент
-        $position_roles = $position->roles;
-
-        // Перезаписываем данные
-
-        $data = $request->input();
+        $data = $request->validated();
         $result = $position->update($data);
 
-        // Если записалось
         if ($result) {
 
-            // Когда должность обновилась, обновляем пришедшие для нее роли
             // Роли
-            $roles = session('access.all_rights.index-roles-allow');
-            if ($roles) {
+            $roles_access = session('access.all_rights.index-roles-allow');
+            if ($roles_access) {
                 $position->roles()->sync($request->roles);
             }
-            // if (isset($request->roles)) {
-            //     $position->roles()->sync($request->roles);
-            // } else {
-            //     // Если удалили последнюю роль для должности и пришел пустой массив
-            //     $position->roles()->detach();
-            // }
 
+            // TODO - 26.03.20 - Блок с оповещениями, вынес в вопросы
             // Смотрим оповещения
             if (isset($request->notifications)) {
                 $notifications_sync = $position->notifications()->sync($request->notifications);
@@ -289,6 +272,7 @@ class PositionController extends Controller
                 // dd($notifications_message);
 
             }
+
             if (isset($notifications_message)) {
                 $destinations = $users->where('telegram_id', '!=', null);
                 if (isset($destinations)) {
@@ -302,123 +286,59 @@ class PositionController extends Controller
             // Виджеты
             $position->widgets()->sync($request->widgets);
 
-            // $users = User::whereHas('staff', function ($q) {
-            //     $q->whereHas('position', function ($q) {
-            //         $q->with('notifications')->where('id', $position->id);
-            //     });
-            // })->get();
-
             return redirect()->route('positions.index');
         } else {
-            abort(403, 'Ошибка записи должности');
+            abort(403, 'Ошибка обновления');
         }
     }
 
-    public function destroy(Request $request, $id)
+    /**
+     * Удаление указанного ресурса из хранилища
+     *
+     * @param $id
+     */
+    public function destroy($id)
     {
+        //
+    }
 
+    /**
+     * Архивация указанного ресурса
+     *
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function archive($id)
+    {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_alias, true, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, 'delete');
 
-        // ГЛАВНЫЙ ЗАПРОС:
-        $position = Position::moderatorLimit($answer)
+        $position = Position::with([
+            'actual_staff'
+        ])
+            ->moderatorLimit($answer)
             ->findOrFail($id);
 
-        // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $position);
+        if ($position) {
+            // Подключение политики
+            $this->authorize('delete', $position);
 
-        $position->load([
-            'staff'
-        ]);
-
-        // Поулчаем авторизованного пользователя
-        $user = $request->user();
-
-        if (isset($position)) {
-
-            $position->editor_id = $user->id;
+            $position->archive = true;
+            $position->editor_id = hideGod(auth()->user());
             $position->save();
 
-            // Удаляем должность с обновлением
-            $position = Position::destroy($id);
-
             if ($position) {
-                return redirect('/admin/positions');
+                return redirect()->route('positions.index');
             } else {
-                abort(403, 'Ошибка при удалении должности');
-            };
+                abort(403, 'Ошибка при архивации');
+            }
         } else {
-
-            abort(403, 'Должность не найдена');
+            abort(403, 'Не найдено');
         }
     }
 
-    // Сортировка
-    public function ajax_sort(Request $request)
-    {
-
-        $i = 1;
-
-        foreach ($request->positions as $item) {
-            Position::where('id', $item)->update(['sort' => $i]);
-            $i++;
-        }
-    }
-
-    // Системная запись
-    public function ajax_system(Request $request)
-    {
-
-        if ($request->action == 'lock') {
-            $system = 1;
-        } else {
-            $system = null;
-        }
-
-        $item = Position::where('id', $request->id)->update(['system' => $system]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении статуса системной записи!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
-    // Отображение на сайте
-    public function ajax_display(Request $request)
-    {
-
-        if ($request->action == 'hide') {
-            $display = null;
-        } else {
-            $display = 1;
-        }
-
-        $item = Position::where('id', $request->id)->update(['display' => $display]);
-
-        if ($item) {
-
-            $result = [
-                'error_status' => 0,
-            ];
-        } else {
-
-            $result = [
-                'error_status' => 1,
-                'error_message' => 'Ошибка при обновлении отображения на сайте!'
-            ];
-        }
-        echo json_encode($result, JSON_UNESCAPED_UNICODE);
-    }
-
+    // Надо посмотреть используется ли
     public function positions_list(Request $request)
     {
 

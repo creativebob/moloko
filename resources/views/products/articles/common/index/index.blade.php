@@ -262,7 +262,7 @@
 {{-- Скрипт чекбоксов --}}
 @include('includes.scripts.checkbox-control')
 
-{{-- Скрипт модалки удаления --}}
+{{-- Скрипт модалки архивации --}}
 @include('includes.scripts.modal-archive-script')
 
 {{-- @include('includes.scripts.inputs-mask') --}}

@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Scopes для главного запроса
 use App\Scopes\Traits\CompaniesLimitTraitScopes;
@@ -28,8 +27,6 @@ class Staffer extends Model
     // Включаем кеш
     use Cachable;
 
-    use SoftDeletes;
-
     // Включаем Scopes
     use CompaniesLimitTraitScopes;
     use AuthorsTraitScopes;
@@ -44,12 +41,18 @@ class Staffer extends Model
     use DateIntervalFilter;
 
     protected $table = 'staff';
+
     protected $dates = ['deleted_at'];
+
     protected $fillable = [
         'user_id',
         'position_id',
         'department_id',
         'filial_id',
+
+        'display',
+        'system',
+        'moderation'
     ];
 
     // Отдел должности.
@@ -80,6 +83,12 @@ class Staffer extends Model
     public function employees()
     {
         return $this->hasMany(Employee::class);
+    }
+
+    public function actual_employees()
+    {
+        return $this->hasMany(Employee::class)
+            ->whereNull('dismissal_date');
     }
 
     // Текущий сотрудник
@@ -136,13 +145,21 @@ class Staffer extends Model
     // --------------------------------------- Запросы -----------------------------------------
     public function getIndex($request, $answer)
     {
-        return $this->with('filial', 'department', 'user.main_phones', 'position', 'employee', 'company.filials')
+        return $this->with([
+            'filial',
+            'department',
+            'user.main_phones',
+            'position',
+            'employee',
+            'company.filials'
+        ])
         ->moderatorLimit($answer)
         ->companiesLimit($answer)
         ->filials($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->booklistFilter($request)
+        ->where('archive', false)
         ->filter($request, 'position_id')
         ->filter($request, 'department_id')
         ->dateIntervalFilter($request, 'date_employment')

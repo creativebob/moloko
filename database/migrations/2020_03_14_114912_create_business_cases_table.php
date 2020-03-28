@@ -19,8 +19,8 @@ class CreateBusinessCasesTable extends Migration
             $table->string('name')->index()->comment('Название');
             $table->text('description')->nullable()->comment('Описание');
 
-            $table->bigInteger('portfolio_id')->unsigned()->nullable()->comment('Id портфолио');
-            $table->foreign('portfolio_id')->references('id')->on('portfolios');
+            $table->bigInteger('portfolios_item_id')->unsigned()->nullable()->comment('Id портфолио');
+            $table->foreign('portfolios_item_id')->references('id')->on('portfolios');
 
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id аватара');
             $table->foreign('photo_id')->references('id')->on('photos');

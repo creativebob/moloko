@@ -55,7 +55,7 @@ class PortfolioPolicy
             return false;
         }
 
-        if ($model->cases->count() > 0) {
+        if ($model->items->count() > 0) {
             return false;
         }
 

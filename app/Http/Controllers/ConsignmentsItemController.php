@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\ConsignmentsItem;
-use App\Http\Requests\ConsignmentsItemStoreRequest;
-use App\Http\Requests\ConsignmentsItemUpdateRequest;
+use App\Http\Requests\System\ConsignmentsItemStoreRequest;
+use App\Http\Requests\System\ConsignmentsItemUpdateRequest;
 use Illuminate\Http\Request;
 
 class ConsignmentsItemController extends Controller

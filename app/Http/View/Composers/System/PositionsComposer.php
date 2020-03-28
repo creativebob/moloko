@@ -9,17 +9,15 @@ class PositionsComposer
 {
 	public function compose(View $view)
 	{
-
-        // Список пользователей
 		$answer = operator_right('positions', false, 'index');
 
 		$positions = Position::moderatorLimit($answer)
-		->companiesLimit($answer)
-		->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-		->authors($answer)
-		->systemItem($answer) // Фильтр по системным записям
-		->template($answer) // Выводим шаблоны в список
-		->get();
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->where('archive', false)
+    //		->template($answer)
+            ->get();
 
 		return $view->with(compact('positions'));
 

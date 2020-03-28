@@ -8,7 +8,7 @@ use App\Navigation;
 // Валидация
 use App\Site;
 use Illuminate\Http\Request;
-use App\Http\Requests\NavigationRequest;
+use App\Http\Requests\System\NavigationRequest;
 
 class NavigationController extends Controller
 {

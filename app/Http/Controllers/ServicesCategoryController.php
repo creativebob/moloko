@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\ServicesCategoryUpdateRequest;
-use App\Http\Requests\ServicesCategoryStoreRequest;
+use App\Http\Requests\System\ServicesCategoryUpdateRequest;
+use App\Http\Requests\System\ServicesCategoryStoreRequest;
 use App\ServicesCategory;
 use Illuminate\Http\Request;
 
@@ -23,7 +23,7 @@ class ServicesCategoryController extends Controller
         $this->model = 'App\ServicesCategory';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-        $this->type = 'edit';
+        $this->type = 'page';
     }
 
     use Photable;
@@ -63,7 +63,7 @@ class ServicesCategoryController extends Controller
 
         // Отдаем Ajax
         if ($request->ajax()) {
-            return view('system.common.accordions.categories_list',
+            return view('system.common.categories.index.categories_list',
                 [
                     'items' => $services_categories,
                     'entity' => $this->entity_alias,
@@ -77,7 +77,7 @@ class ServicesCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('system.common.accordions.index',
+        return view('system.common.categories.index.index',
             [
                 'items' => $services_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -106,7 +106,7 @@ class ServicesCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('system.common.accordions.create', [
+        return view('system.common.categories.create.modal.create', [
             'item' => new $this->class,
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории услуг',

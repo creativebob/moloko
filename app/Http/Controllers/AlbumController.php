@@ -15,7 +15,7 @@ use App\Role;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\AlbumRequest;
+use App\Http\Requests\System\AlbumRequest;
 
 // Общие классы
 use Illuminate\Support\Facades\Cookie;

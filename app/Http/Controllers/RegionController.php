@@ -10,7 +10,7 @@ use App\Policies\RegionPolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 // Валидация
-use App\Http\Requests\RegionRequest;
+use App\Http\Requests\System\RegionRequest;
 use App\Http\Controllers\Session;
 
 class RegionController extends Controller
@@ -146,7 +146,7 @@ echo json_encode($data, JSON_UNESCAPED_UNICODE);
   */
   public function get_vk_region(RegionRequest $request)
   {
-    $region = $request->region; 
+    $region = $request->region;
     $request_params = [
         'country_id' => '1',
         'q' => $region,
@@ -184,7 +184,7 @@ public function ajax_sort(Request $request)
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -211,7 +211,7 @@ public function ajax_sort(Request $request)
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [

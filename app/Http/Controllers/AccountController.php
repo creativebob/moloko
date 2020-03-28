@@ -7,7 +7,7 @@ use App\Account;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\AccountRequest;
+use App\Http\Requests\System\AccountRequest;
 
 
 class AccountController extends Controller

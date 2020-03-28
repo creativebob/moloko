@@ -36,8 +36,8 @@
                     </th>
                     <th class="td-name">Название</th>
 
-                    @can('index', App\BusinessCase::class)
-                        <th class="td-business_cases">Кейсы</th>
+                    @can('index', App\PortfoliosItem::class)
+                        <th class="td-portfolios_items">Дерево</th>
                     @endcan
 
                     <th class="td-author">Автор</th>
@@ -78,9 +78,9 @@
 
                     </td>
 
-                    @can('index', App\BusinessCase::class)
-                        <td class="td-business_cases">
-                            <a href="{{ route('business_cases.index', $portfolio->id) }}" class="tiny button">Кейсы</a>
+                    @can('index', App\PortfoliosItem::class)
+                        <td class="td-portfolios_items">
+                            <a href="{{ route('portfolios_items.index', $portfolio->id) }}" class="icon-category sprite"></a>
                         </td>
                     @endcan
                     <td class="td-author">

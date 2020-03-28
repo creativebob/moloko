@@ -26,8 +26,8 @@ use Illuminate\Support\Facades\Auth;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\CompanyRequest;
-use App\Http\Requests\SupplierRequest;
+use App\Http\Requests\System\CompanyRequest;
+use App\Http\Requests\System\SupplierRequest;
 
 // Общие классы
 use Illuminate\Support\Facades\Log;

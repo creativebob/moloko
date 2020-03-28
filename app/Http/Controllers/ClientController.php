@@ -37,11 +37,11 @@ use Illuminate\Support\Facades\Auth;
 // Запросы и их валидация
 use Illuminate\Http\Request;
 
-use App\Http\Requests\CompanyRequest;
-use App\Http\Requests\ClientRequest;
-use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\System\CompanyRequest;
+use App\Http\Requests\System\ClientRequest;
+use App\Http\Requests\System\UserStoreRequest;
 
-use App\Http\Requests\SupplierRequest;
+use App\Http\Requests\System\SupplierRequest;
 
 // Общие классы
 use Illuminate\Support\Facades\Log;
@@ -161,7 +161,7 @@ class ClientController extends Controller
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);
-    
+
         $auth_user = Auth::user();
 
         return view('clients.create_client_user', compact('user', 'client', 'page_info', 'auth_user'));

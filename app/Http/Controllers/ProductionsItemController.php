@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProductionsItemStoreRequest;
-use App\Http\Requests\ProductionsItemUpdateRequest;
+use App\Http\Requests\System\ProductionsItemStoreRequest;
+use App\Http\Requests\System\ProductionsItemUpdateRequest;
 use App\ProductionsItem;
 use Illuminate\Http\Request;
 

@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Goods;
 use App\GoodsCategory;
 
-use App\Http\Requests\GoodsStoreRequest;
-use App\Http\Requests\GoodsUpdateRequest;
+use App\Http\Requests\System\GoodsStoreRequest;
+use App\Http\Requests\System\GoodsUpdateRequest;
 use App\Manufacturer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;

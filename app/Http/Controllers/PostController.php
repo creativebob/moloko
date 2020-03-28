@@ -14,7 +14,7 @@ use App\PhotoSetting;
 
 // Валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\PostRequest;
+use App\Http\Requests\System\PostRequest;
 
 // Политика
 use App\Policies\PostPolicy;

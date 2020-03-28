@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Traits\Photable;
-use App\Http\Requests\RawsCategoryUpdateRequest;
-use App\Http\Requests\RawsCategoryStoreRequest;
+use App\Http\Requests\System\CategoryStoreRequest;
+use App\Http\Requests\System\RawsCategoryUpdateRequest;
+use App\Http\Requests\System\RawsCategoryStoreRequest;
 use App\RawsCategory;
 use Illuminate\Http\Request;
 
@@ -23,13 +24,13 @@ class RawsCategoryController extends Controller
         $this->model = 'App\RawsCategory';
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = false;
-        $this->type = 'edit';
+        $this->type = 'page';
     }
 
     use Photable;
 
     /**
-     * Display a listing of the resource.
+     * Отображение списка ресурсов
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -37,7 +38,6 @@ class RawsCategoryController extends Controller
      */
     public function index(Request $request)
     {
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -61,7 +61,7 @@ class RawsCategoryController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('system.common.accordions.categories_list',
+            return view('system.common.categories.index.categories_list',
                 [
                     'items' => $raws_categories,
                     'entity' => $this->entity_alias,
@@ -75,7 +75,7 @@ class RawsCategoryController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('system.common.accordions.index',
+        return view('system.common.categories.index.index',
             [
                 'items' => $raws_categories,
                 'page_info' => pageInfo($this->entity_alias),
@@ -92,7 +92,7 @@ class RawsCategoryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -104,7 +104,7 @@ class RawsCategoryController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('system.common.accordions.create', [
+        return view('system.common.categories.create.modal.create', [
             'item' => RawsCategory::make(),
             'entity' => $this->entity_alias,
             'title' => 'Добавление категории сырья',
@@ -114,19 +114,19 @@ class RawsCategoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение только что созданного ресурса в хранилище
      *
      * @param RawsCategoryStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function store(RawsCategoryStoreRequest $request)
+    public function store(CategoryStoreRequest $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        $data = $request->input();
+        $data = $request->validated();
         $raws_category = RawsCategory::create($data);
 
         if ($raws_category) {
@@ -141,7 +141,7 @@ class RawsCategoryController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса
      *
      * @param $id
      */
@@ -151,7 +151,7 @@ class RawsCategoryController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса
      *
      * @param Request $request
      * @param $id
@@ -204,7 +204,7 @@ class RawsCategoryController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище
      *
      * @param RawsCategoryUpdateRequest $request
      * @param $id
@@ -247,7 +247,7 @@ class RawsCategoryController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища
      *
      * @param Request $request
      * @param $id

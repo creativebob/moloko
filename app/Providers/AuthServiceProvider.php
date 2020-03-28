@@ -18,6 +18,8 @@ use App\GoodsStock;
 use App\Indicator;
 use App\Metric;
 use App\Order;
+use App\Outcome;
+use App\OutcomesCategory;
 use App\Policies\ArticlesGroupPolicy;
 
 use App\Policies\BusinessCasePolicy;
@@ -31,7 +33,10 @@ use App\Policies\GoodsStockPolicy;
 use App\Policies\IndicatorPolicy;
 use App\Policies\MetricPolicy;
 use App\Policies\OrderPolicy;
+use App\Policies\OutcomePolicy;
+use App\Policies\OutcomesCategoryPolicy;
 use App\Policies\PortfolioPolicy;
+use App\Policies\PortfoliosItemPolicy;
 use App\Policies\PricesGoodsPolicy;
 use App\Policies\ProcessesGroupPolicy;
 use App\Policies\ConsignmentPolicy;
@@ -43,6 +48,7 @@ use App\Policies\SettingPolicy;
 use App\Policies\ToolsStockPolicy;
 use App\Policies\VendorPolicy;
 use App\Portfolio;
+use App\PortfoliosItem;
 use App\PricesGoods;
 use App\ProcessesGroup;
 use App\Consignment;
@@ -423,8 +429,13 @@ class AuthServiceProvider extends ServiceProvider
         Stage::class => StagePolicy::class,
         Feedback::class => FeedbackPolicy::class,
 
+        // Выполненные работы
+        OutcomesCategory::class => OutcomesCategoryPolicy::class,
+        Outcome::class => OutcomePolicy::class,
+
         // Портфолио
         Portfolio::class => PortfolioPolicy::class,
+        PortfoliosItem::class => PortfoliosItemPolicy::class,
         BusinessCase::class => BusinessCasePolicy::class,
     ];
 

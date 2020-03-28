@@ -9,7 +9,7 @@ use App\Indicator;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\PlanRequest;
+use App\Http\Requests\System\PlanRequest;
 
 
 class PlanController extends Controller

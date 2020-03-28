@@ -33,11 +33,11 @@
             @if ($catalogs_services_items->isNotEmpty())
 
             {{-- Шаблон вывода и динамического обновления --}}
-            @include('system.common.accordions.categories_list', [
+            @include('system.common.categories.index.categories_list', [
                 'items' => $catalogs_services_items,
                 'class' => App\CatalogsServicesItem::class,
                 'entity' => 'catalogs_services_items',
-                'type' => 'edit'
+                'type' => 'page'
             ]
             )
 

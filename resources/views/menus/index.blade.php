@@ -33,7 +33,7 @@
             @if ($menus->isNotEmpty())
 
             {{-- Шаблон вывода и динамического обновления --}}
-            @include('system.common.accordions.categories_list', [
+            @include('system.common.categories.index.categories_list', [
                 'items' => $menus,
                 'class' => App\Menu::class,
                 'entity' => 'menus',

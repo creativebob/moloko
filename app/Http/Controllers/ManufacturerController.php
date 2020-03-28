@@ -28,8 +28,8 @@ use Illuminate\Support\Facades\Auth;
 
 // Запросы и их валидация
 use Illuminate\Http\Request;
-use App\Http\Requests\CompanyRequest;
-use App\Http\Requests\ManufacturerRequest;
+use App\Http\Requests\System\CompanyRequest;
+use App\Http\Requests\System\ManufacturerRequest;
 
 // Общие классы
 use Illuminate\Support\Facades\Log;

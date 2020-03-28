@@ -26,10 +26,17 @@ Route::group(['prefix' => '/v1',
     Route::resource('cities', 'CityController');
 
     Route::post('dropzone', 'PhotoController@store');
-	
+
 	Route::get('/categories_select/{entity}', 'AppController@categories_select');
     Route::get('/categories/{category_entity}', 'AppController@categories_index');
-	
+
+
+
+    Route::group(['prefix' => '/search'], function () {
+        Route::get('/clients/{search}', 'ClientController@search');
+
+    });
+
 
 //    Route::apiResource('prices_goods', 'PricesGoodsController');
 });
