@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Action;
+use App\ActionEntity;
+use App\CatalogsGoods;
+use App\CatalogsGoodsItem;
 use App\OldLead;
 use App\OldLocation;
 use App\Lead;
@@ -14,6 +18,7 @@ use App\Menu;
 
 use App\Company;
 use App\Department;
+use App\Right;
 use App\User;
 use App\Phone;
 
@@ -24,10 +29,363 @@ use App\EntityPage;
 use App\Location;
 use Carbon\Carbon;
 
+use DB;
 use Illuminate\Http\Request;
 
 class ParserController extends Controller
 {
+
+    /**
+     * Парсер для обновления
+     */
+    public function parser()
+    {
+
+        Page::insert([
+            [
+                'name' => 'Разделы портфолио',
+                'site_id' => 1,
+                'title' => 'Разделы портфолио',
+                'description' => 'Разделы портфолио',
+                'alias' => 'portfolios_items',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Категории выполненных работ',
+                'site_id' => 1,
+                'title' => 'Категории выполненных работ',
+                'description' => 'Категории выполненных работ',
+                'alias' => 'outcomes_categories',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+            [
+                'name' => 'Выполненные работы',
+                'site_id' => 1,
+                'title' => 'Выполненные работы',
+                'description' => 'Выполненные работы',
+                'alias' => 'outcomes',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+        ]);
+
+        echo 'Созданы страницы<br>';
+
+//        Menu::insert([
+//            //  Вложения
+//            //  Инструменты
+//            [
+//                'name' => 'Инструменты',
+//                'icon' => 'icon-tool',
+//                'alias' => null,
+//                'tag' => 'tools',
+//                'parent_id' => null,
+//                'page_id' => null,
+//                'navigation_id' => 1,
+//                'company_id' => null,
+//                'system' => true,
+//                'author_id' => 1,
+//                'display' => true,
+//                'sort' => 14,
+//            ],
+//
+//            //  Помещения
+//            [
+//                'name' => 'Помещения',
+//                'icon' => 'icon-room',
+//                'alias' => null,
+//                'tag' => 'rooms',
+//                'parent_id' => null,
+//                'page_id' => null,
+//                'navigation_id' => 1,
+//                'company_id' => null,
+//                'system' => true,
+//                'author_id' => 1,
+//                'display' => true,
+//                'sort' => 15,
+//            ],
+//
+//        ]);
+//
+//        echo "Добавлены 2 главные категори меню<br>";
+
+
+        $pages = Page::get();
+        $menus = Menu::get();
+
+//        $menu = Menu::where([
+//            'navigation_id' => 1,
+//            'tag' => 'tools'
+//        ])->first();
+//        $menu->update([
+//            'parent_id' => $menus->where('icon', 'icon-tool')->first()->id,
+//        ]);
+//
+//        $menu = Menu::where([
+//            'navigation_id' => 1,
+//            'tag' => 'tools_categories'
+//        ])->first();
+//        $menu->update([
+//            'parent_id' => $menus->where('icon', 'icon-tool')->first()->id,
+//        ]);
+
+//        echo "Перенесены инструменты<br>";
+
+        Menu::insert([
+            [
+                'name' => 'Категории выполненных работы',
+                'icon' => null,
+                'alias' => 'admin/outcomes_categories',
+                'tag' => 'outcomes_categories',
+                'parent_id' => $menus->where('tag', 'productions')->first()->id,
+                'page_id' => $pages->where('alias', 'outcomes_categories')->first()->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 4,
+            ],
+            [
+                'name' => 'Выполненные работы',
+                'icon' => null,
+                'alias' => 'admin/outcomes',
+                'tag' => 'outcomes',
+                'parent_id' => $menus->where('tag', 'productions')->first()->id,
+                'page_id' => $pages->where('alias', 'outcomes')->first()->id,
+                'navigation_id' => 1,
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+                'sort' => 5,
+            ],
+        ]);
+
+        echo "Пункты меню<br>";
+
+//        $menu = Menu::where([
+//            'navigation_id' => 1,
+//            'tag' => 'rooms'
+//        ])->first();
+//        $menu->update([
+//            'parent_id' => $menus->where('icon', 'icon-room')->first()->id,
+//        ]);
+//
+//        $menu = Menu::where([
+//            'navigation_id' => 1,
+//            'tag' => 'rooms_categories'
+//        ])->first();
+//        $menu->update([
+//            'parent_id' => $menus->where('icon', 'icon-room')->first()->id,
+//        ]);
+//
+//        $menu = Menu::where([
+//            'navigation_id' => 1,
+//            'tag' => 'stocks'
+//        ])->first();
+//        $menu->update([
+//            'parent_id' => $menus->where('icon', 'icon-room')->first()->id,
+//        ]);
+//
+//        echo "Перенесены комнаты и склады<br>";
+
+
+        Entity::insert([
+            [
+                'name' => 'Категории выполненных работ',
+                'alias' => 'outcomes_categories',
+                'model' => 'OutcomesCategory',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'metric' => 0,
+                'view_path' => 'system.pages.outcomes_categories',
+                'page_id' => $pages->firstWhere('alias', 'outcomes_categories')->id,
+            ],
+        ]);
+
+
+        Entity::insert([
+            [
+                'name' => 'Разделы портфолио',
+                'alias' => 'portfolios_items',
+                'model' => 'PortfoliosItem',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('portfolios')->first(['id'])->id,
+                'view_path' => 'system.pages.portfolios_items',
+                'page_id' => $pages->firstWhere('alias', 'portfolios_items')->id,
+            ],
+            [
+                'name' => 'Выполненные работы',
+                'alias' => 'outcomes',
+                'model' => 'Outcome',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('outcomes_categories')->first(['id'])->id,
+                'view_path' => 'system.pages.outcomes',
+                'page_id' => $pages->firstWhere('alias', 'outcomes')->id,
+            ],
+
+        ]);
+
+        echo 'Созданы сущности<br>';
+
+
+        // Наваливание прав
+
+        // Добавленным
+        $entities = Entity::whereIn('alias', [
+            'portfolios_items',
+            'outcomes_categories',
+            'outcomes',
+        ])
+            ->get();
+        // Всем
+//        $entities = Entity::get();
+
+        foreach($entities as $entity) {
+            // Генерируем права
+            $actions = Action::get();
+            $mass = [];
+
+            foreach($actions as $action){
+                $mass[] = ['action_id' => $action->id, 'entity_id' => $entity->id, 'alias_action_entity' => $action->method . '-' . $entity->alias];
+            };
+            DB::table('action_entity')->insert($mass);
+
+            $actionentities = ActionEntity::where('entity_id', $entity->id)->get();
+            $mass = [];
+
+            foreach($actionentities as $actionentity){
+
+                $mass[] = ['name' => "Разрешение на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'allow', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-allow'];
+
+                $mass[] = ['name' => "Запрет на " . $actionentity->action->action_name . " " . $actionentity->entity->entity_name, 'object_entity' => $actionentity->id, 'category_right_id' => 1, 'company_id' => null, 'system' => true, 'directive' => 'deny', 'action_id' => $actionentity->action_id, 'alias_right' => $actionentity->alias_action_entity . '-deny'];
+            };
+
+            DB::table('rights')->insert($mass);
+
+            $actionentities = $actionentities->pluck('id')->toArray();
+
+            // Получаем все существующие разрешения (allow)
+            $rights = Right::whereIn('object_entity', $actionentities)->where('directive', 'allow')->get();
+
+            $mass = [];
+            // Генерируем права на полный доступ
+            foreach($rights as $right){
+                $mass[] = ['right_id' => $right->id, 'role_id' => 1, 'system' => 1];
+            };
+
+            DB::table('right_role')->insert($mass);
+
+            $mass = null;
+            $mass = [];
+            foreach($rights as $right){
+                $mass[] = ['right_id' => $right->id, 'role_id' => 2, 'system' => 1];
+            };
+
+            DB::table('right_role')->insert($mass);
+        }
+
+        echo "Навалены права<br>";
+    }
+
+    /**
+     * Парсер каталогов для РХ
+     */
+    public function roll_house_parser()
+    {
+        $old_catalog_goods = CatalogsGoods::first();
+        $catalog_goods = $old_catalog_goods->replicate();
+        $catalog_goods->save();
+
+        $old_catalogs_goods_items = CatalogsGoodsItem::whereNull('parent_id')
+            ->get();
+
+        foreach ($old_catalogs_goods_items as $old_item) {
+            $item = $old_item->replicate();
+            $item->catalogs_goods_id = $catalog_goods->id;
+            $item->save();
+
+            $old_item->load('prices');
+
+            if ($old_item->prices) {
+                foreach ($old_item->prices as $old_price) {
+                    if ($old_price->filial_id == 2) {
+                        $old_price->catalogs_goods_item_id = $item->id;
+                        $old_price->catalogs_goods_id = $catalog_goods->id;
+                        $old_price->save();
+                    }
+                }
+            }
+
+            $old_item->load('childs');
+
+            if ($old_item->childs) {
+                foreach ($old_item->childs as $old_child_1) {
+                    $child_item_1 = $old_child_1->replicate();
+                    $child_item_1->parent_id = $item->id;
+                    $child_item_1->category_id = $item->id;
+                    $child_item_1->catalogs_goods_id = $catalog_goods->id;
+                    $child_item_1->save();
+
+                    $old_child_1->load('prices');
+
+                    if ($old_child_1->prices) {
+                        foreach ($old_child_1->prices as $old_price) {
+                            if ($old_price->filial_id == 2) {
+                                $old_price->catalogs_goods_item_id = $child_item_1->id;
+                                $old_price->catalogs_goods_id = $catalog_goods->id;
+                                $old_price->save();
+                            }
+                        }
+                    }
+
+                    $old_child_1->load('childs');
+
+                    if ($old_child_1->childs) {
+                        foreach ($old_child_1->childs as $old_child_2) {
+                            $child_item_2 = $old_child_2->replicate();
+                            $child_item_2->parent_id = $child_item_1->id;
+                            $child_item_2->category_id = $item->id;
+                            $child_item_2->catalogs_goods_id = $catalog_goods->id;
+                            $child_item_2->save();
+
+                            $old_child_2->load('prices');
+
+                            if ($old_child_2->prices) {
+                                foreach ($old_child_2->prices as $old_price) {
+                                    if ($old_price->filial_id == 2) {
+                                        $old_price->catalogs_goods_item_id = $child_item_2->id;
+                                        $old_price->catalogs_goods_id = $catalog_goods->id;
+                                        $old_price->save();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        echo 'Гатова';
+
+    }
 
     public function update_menus(Request $request)
     {
@@ -120,27 +478,6 @@ class ParserController extends Controller
 
     }
 
-    // public function city(Request $request)
-    // {
-    //     $leads = Lead::whereHas('location', function ($q) {
-    //         $q->whereNull('address');
-    //     })
-    //     ->get();
-
-    //     foreach ($leads as $lead) {
-    //         $location = Location::firstOrCreate(['address' => $lead->location->address, 'city_id' => $lead->location->city_id, 'country_id' => 1], ['author_id' => 1]);
-
-    //         if ($location->id != $lead->location_id) {
-    //             $lead->location()->forceDelete();
-
-    //             $lead->location_id = $location->id;
-    //             $lead->save();
-    //         }
-    //     }
-    //     dd('Гатова');
-
-    // }
-
     public function geoposition_locations(Request $request)
     {
         $locations = Location::with('city')->whereNull('answer_count')->get();
@@ -192,7 +529,6 @@ class ParserController extends Controller
         dd('Гатова');
 
     }
-
 
     public function challenges_active_count()
     {
@@ -853,8 +1189,6 @@ class ParserController extends Controller
 
     }
 
-
-
     /**
      * Store a newly created resource in storage.
      *
@@ -939,7 +1273,6 @@ class ParserController extends Controller
         //
     }
 
-
     public function andrey(Request $request)
     {
         $leads = Lead::where('manager_id', 5)->update(['manager_id' => 7]);
@@ -954,7 +1287,6 @@ class ParserController extends Controller
         $leads = Lead::whereNull('lead_type_id')->update(['lead_type_id' => 1]);
         dd('Заебца!');
     }
-
 
     public function old_claims(Request $request)
     {
@@ -1059,7 +1391,7 @@ class ParserController extends Controller
             $new_item = $items_filial_2->where('goods_id', $item->goods_id)->first();
             if($new_item){
                  $new_item->sort = $item->sort;
-                $new_item->save();               
+                $new_item->save();
             }
         }
 
