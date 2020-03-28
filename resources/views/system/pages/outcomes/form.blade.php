@@ -60,7 +60,11 @@
                             </div>
 
                             <div class="small-12 cell">
-                                <search-client-component :client='@json($outcome->client)'></search-client-component>
+                                <search-client-component
+                                    @isset($outcome->client)
+                                        :client='@json($outcome->client)'
+                                    @endisset
+                                ></search-client-component>
                             </div>
 
                             <div class="small-12 cell">
