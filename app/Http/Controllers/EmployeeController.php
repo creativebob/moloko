@@ -189,7 +189,22 @@ class EmployeeController extends Controller
         // Скрываем бога
         $user_id = hideGod($user_auth);
 
-        $staff = Staffer::with('position', 'department')->findOrFail($request_user->staffer_id);
+        $staff = Staffer::with([
+            'position',
+            'department'
+        ])->findOrFail($request_user->staffer_id);
+    
+        logs('hr')
+            ->info("Занимаем должность");
+    
+        // Проверяем: свободна ли ставка  =====================================================
+        logs('hr')->info('Проверяем: свободна ли ставка?');
+    
+        if ($staff->user_id != null) {
+            abort(403, "Ставка не свободна!");
+        } else {
+            logs('hr')->info('Ставка свободна!');
+        };
 
         // Отдаем работу по созданию нового юзера трейту, с указанием id сайта для привязки
         $user = $this->createUser($request_user, 1);
@@ -201,17 +216,7 @@ class EmployeeController extends Controller
         $data['user_id'] = $user->id;
         $employee = Employee::create($data);
 
-        logs('hr')
-            ->info("Занимаем должность");
-
-        // Проверяем: свободна ли ставка  =====================================================
-        logs('hr')->info('Проверяем: свободна ли ставка?');
-
-        if ($staff->user_id != null) {
-            abort(403, "Ставка не свободна!");
-        } else {
-            logs('hr')->info('Ставка свободна!');
-        };
+        
 
         $staff->update([
             'user_id' => $user->id
@@ -580,9 +585,9 @@ class EmployeeController extends Controller
     {
 
         // Подключение политики
-//        $this->authorize(getmethod('create'), Employee::class);
-//        $this->authorize(getmethod('update'), $staff);
-//        $this->authorize(getmethod('update'), $user);
+        $this->authorize(getmethod('create'), Employee::class);
+        $this->authorize(getmethod('update'), $staff);
+        $this->authorize(getmethod('update'), $user);
 
 
 
