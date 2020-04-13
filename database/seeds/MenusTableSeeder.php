@@ -674,7 +674,7 @@ Menu::insert([
         'sort' => null,
     ],
     [
-        'name' => 'Категории выполненных работы',
+        'name' => 'Категории выполненных работ',
         'icon' => null,
         'alias' => 'admin/outcomes_categories',
         'tag' => 'outcomes_categories',

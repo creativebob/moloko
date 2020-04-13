@@ -15,10 +15,10 @@ class CreateProcessPositionTable extends Migration
     {
         Schema::create('process_position', function (Blueprint $table) {
             $table->bigInteger('process_id')->nullable()->unsigned()->comment('Id процесса');
-            $table->foreign('process_id')->references('id')->on('processes');
+//            $table->foreign('process_id')->references('id')->on('processes');
 
             $table->bigInteger('position_id')->nullable()->unsigned()->comment('Id должности');
-            $table->foreign('position_id')->references('id')->on('positions');
+//            $table->foreign('position_id')->references('id')->on('positions');
         });
     }
 

@@ -20,20 +20,20 @@ class CreateOutcomesTable extends Migration
             $table->text('description')->nullable()->comment('Описание');
 
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id аватара');
-            $table->foreign('photo_id')->references('id')->on('photos');
+//            $table->foreign('photo_id')->references('id')->on('photos');
 
             $table->bigInteger('category_id')->nullable()->unsigned()->comment('Id категории');
-            $table->foreign('category_id')->references('id')->on('outcomes_categories');
+//            $table->foreign('category_id')->references('id')->on('outcomes_categories');
 
             $table->date('begin_date')->index()->comment('Дата начала');
             $table->date('end_date')->nullable()->index()->comment('Дата окончания');
 
             $table->bigInteger('client_id')->nullable()->unsigned()->comment('Id клиента');
-            $table->foreign('client_id')->references('id')->on('clients');
+//            $table->foreign('client_id')->references('id')->on('clients');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
-            $table->foreign('company_id')->references('id')->on('companies');
+//            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->boolean('display')->default(1)->comment('Отображение на сайте');
@@ -41,7 +41,7 @@ class CreateOutcomesTable extends Migration
             $table->boolean('moderation')->default(0)->comment('Модерация');
 
             $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-            $table->foreign('author_id')->references('id')->on('users');
+//            $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 

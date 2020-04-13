@@ -16,7 +16,7 @@ use App\Scopes\Traits\ModeratorLimitTraitScopes;
 
 // Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
-    
+
 
 // Фильтры
 // use App\Scopes\Filters\Filter;
@@ -48,17 +48,20 @@ class Role extends Model
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
-        'id', 
-        'role_name', 
-        'role_description', 
+        'id',
+        'role_name',
+        'role_description',
         'category_right_id',
 
         'display',
         'system',
-        'moderation'
+        'moderation',
+
+        // TODO - 13.04.20 - Удалить, разлочено для обновы
+        'company_id'
     ];
 
-    public function users()   
+    public function users()
     {
         return $this->belongsToMany('App\User')->withPivot('department_id');
     }

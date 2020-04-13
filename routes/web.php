@@ -20,6 +20,9 @@ Auth::routes();
 // Вход в панель управления
 Route::get('/', 'AppController@enter');
 
+// Обновления системы
+Route::get('/updates/130420', 'System\UpdateController@update130420');
+
 Route::get('/update_parser', 'ParserController@parser')->middleware('auth');
 
 Route::get('/roll_house_parser', 'ParserController@roll_house_parser')->middleware('auth');

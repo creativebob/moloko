@@ -54,7 +54,10 @@ class Position extends Model
 
         'display',
         'system',
-        'moderation'
+        'moderation',
+
+        // TODO - 13.04.20 - Удалить, разлочено для обновы
+        'company_id'
     ];
 
     // Получаем районы и города области.

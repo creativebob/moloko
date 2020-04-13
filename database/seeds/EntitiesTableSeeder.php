@@ -1120,18 +1120,6 @@ class EntitiesTableSeeder extends Seeder
                 'view_path' => 'system.pages.portfolios_items',
                 'page_id' => $pages->firstWhere('alias', 'portfolios_items')->id,
             ],
-            [
-                'name' => 'Кейсы',
-                'alias' => 'business_cases',
-                'model' => 'BusinessCase',
-                'rights' => true,
-                'system' => true,
-                'author_id' => 1,
-                'site' => 0,
-                'ancestor_id' => Entity::whereAlias('portfolios')->first(['id'])->id,
-                'view_path' => 'system.pages.business_cases',
-                'page_id' => $pages->firstWhere('alias', 'business_cases')->id,
-            ],
 
             [
                 'name' => 'Выполненные работы',
@@ -1269,6 +1257,18 @@ class EntitiesTableSeeder extends Seeder
                 'ancestor_id' => Entity::whereAlias('tools')->first(['id'])->id,
                 'view_path' => 'goods_stocks',
                 'page_id' => $pages->firstWhere('alias', 'tools_stocks')->id,
+            ],
+            [
+                'name' => 'Кейсы',
+                'alias' => 'business_cases',
+                'model' => 'BusinessCase',
+                'rights' => true,
+                'system' => true,
+                'author_id' => 1,
+                'site' => 0,
+                'ancestor_id' => Entity::whereAlias('portfolios_items')->first(['id'])->id,
+                'view_path' => 'system.pages.business_cases',
+                'page_id' => $pages->firstWhere('alias', 'business_cases')->id,
             ],
 
         ]);
