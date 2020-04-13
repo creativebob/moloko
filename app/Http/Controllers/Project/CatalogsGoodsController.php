@@ -183,22 +183,6 @@ class CatalogsGoodsController extends Controller
             ->orderBy('sort', 'asc')
             ->paginate(16);
 
-        // Перебор и дописывание агрегаций
-        // Нужен способ проще!
-        // foreach($prices_goods as $price_goods){
-        //     $price_goods->sweets = $price_goods->goods_public->article->raws->filter(function ($value, $key) {
-        //         if(isset($value->metrics->where('name', 'Тип сырья')->first()->pivot->value)){
-        //             return $value->metrics->where('name', 'Тип сырья')->first()->pivot->value == 1;
-        //         }
-        //     });
-
-        //     $price_goods->addition = $price_goods->goods_public->article->raws->filter(function ($value, $key) {
-        //         if(isset($value->metrics->where('name', 'Тип сырья')->first()->pivot->value)){
-        //             return $value->metrics->where('name', 'Тип сырья')->first()->pivot->value == 2;
-        //         }
-        //     });
-        // }
-
         return view($site->alias.'.pages.catalogs_goods.index', compact('site',  'page', 'request', 'catalog_goods_items', 'prices_goods', 'catalog_goods', 'main_slug', 'sub_menu'));
     }
 

@@ -17,15 +17,13 @@ Route::get('/', 'AppController@start')->name('project.start');
 // Смена города
 Route::get('/change_city/{alias}', 'AppController@change_city')->name('project.change_city');
 
+
 // Товары
 Route::get('/catalogs-goods/{catalog_slug}/{all}', 'CatalogsGoodsItemController@show')
     ->where('all', '.*')
     ->name('project.catalogs_goods_items.show');
-Route::get('/catalogs-goods/{all}', 'CatalogsGoodsController@show')
-    ->where('all', '.*')
+Route::get('/catalogs-goods/{catalog_slug}', 'CatalogsGoodsController@show')
     ->name('project.catalogs_goods.show');
-//Route::get('/catalogs-goods/{catalog_slug}/{catalog_item_slug}', 'AppController@catalogs_goods')->name('project.catalogs_goods');
-//Route::get('/catalogs-services/{catalog_slug}/{catalog_item_slug}', 'AppController@catalogs_services')->name('project.catalogs_services');
 
 Route::get('/prices-goods/search/{text}', 'PricesGoodsController@search')
     ->name('project.prices_goods.search');
@@ -42,8 +40,7 @@ Route::get('/catalogs-services/{catalog_slug}/{all}', 'CatalogsServicesItemContr
     ->where('all', '.*')
     ->name('project.catalogs_services_items.show');
 
-Route::get('/catalogs-services/{all}', 'CatalogsServiceController@show')
-    ->where('all', '.*')
+Route::get('/catalogs-services/{catalog_slug}', 'CatalogsServiceController@show')
     ->name('project.catalogs_services.show');
 
 Route::get('/prices-services/search/{text}', 'PricesServiceController@search')
@@ -54,8 +51,10 @@ Route::resource('/prices-services', 'PricesServiceController')
     ])
     ->names('project.prices_services');
 
-Route::any('/update_cookies', 'CartController@update_cookies')->name('project.update_cookies');
-Route::get('/check_prices', 'CartController@check_prices')->name('project.check_prices');
+Route::any('/update_cookies', 'CartController@update_cookies')
+    ->name('project.update_cookies');
+Route::get('/check_prices', 'CartController@check_prices')
+    ->name('project.check_prices');
 
 Route::resource('/cart', 'CartController')
     ->only([

@@ -50,7 +50,7 @@ class CatalogsGoodsItemController extends Controller
      */
     public function show(Request $request, $catalog_slug, $slug)
     {
-        // TODO - 19.02.20 - Решение для простотра раздела каталога
+        // TODO - 19.02.20 - Решение для просмотра раздела каталога
         $site = $this->site;
         $page = $site->pages_public->where('alias', 'catalogs-goods-item')->first();
 
