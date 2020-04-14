@@ -35,7 +35,7 @@ class UpdateController extends Controller
         Page::insert([
             [
                 'name' => 'Каталог товаров',
-                'site_id' => 1,
+                'site_id' => 2,
                 'title' => 'Все товары',
                 'description' => 'Все товары',
                 'alias' => 'catalogs-goods',
