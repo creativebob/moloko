@@ -34,22 +34,21 @@ class UpdateController extends Controller
 
         Page::insert([
             [
-                'name' => 'Вендоры',
+                'name' => 'Каталог товаров',
                 'site_id' => 1,
-                'title' => 'Вендоры',
-                'description' => 'Вендоры',
-                'alias' => 'vendors',
-                'company_id' => null,
-                'system' => true,
-                'author_id' => 1,
+                'title' => 'Все товары',
+                'description' => 'Все товары',
+                'alias' => 'catalogs-goods',
+                'company_id' => 1,
+                'author_id' => 4,
                 'display' => true,
             ],
         ]);
-        echo "<strong>Обновление 13.04.20 завершено</strong>";
+        echo "<strong>Добавлена страница для сайта Вкусняшки - каталог товаров</strong>";
 
         $this->setCache();
 
-        echo "<strong>Обновление 13.04.20 завершено</strong>";
+        echo "<strong>Обновление завершено</strong>";
     }
 
     /**

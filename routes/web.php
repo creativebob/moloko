@@ -22,6 +22,7 @@ Route::get('/', 'AppController@enter');
 
 // Обновления системы
 Route::get('/updates/130420', 'System\UpdateController@update_130420');
+Route::get('/updates/vkusnyashka', 'System\UpdateController@update_vkusnyashka');
 
 Route::get('/update_parser', 'ParserController@parser')->middleware('auth');
 
