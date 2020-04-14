@@ -21,7 +21,7 @@ Auth::routes();
 Route::get('/', 'AppController@enter');
 
 // Обновления системы
-Route::get('/updates/130420', 'System\UpdateController@update130420');
+Route::get('/updates/rollhouse', 'System\UpdateController@update_rollhouse');
 
 Route::get('/update_parser', 'ParserController@parser')->middleware('auth');
 

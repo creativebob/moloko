@@ -26,19 +26,10 @@ class UpdateController extends Controller
     }
 
     /**
-     * Обновление 13.04.20
+     * Обновление РХ
      */
-    public function update130420()
+    public function update_rollhouse()
     {
-
-        \Artisan::call('migrate');
-        echo "Раскатаны основные миграции<br><br>";
-
-        \Artisan::call('migrate --path=/database/migrations/updates/2020_04_13_144433_update_130420_tables.php');
-        echo "Раскатаны миграции обновления<br><br>";
-
-        \Artisan::call('db:seed --class=SettingsTableSeeder');
-        echo "Засидирована таблица settings<br><br>";
 
         Position::whereNull('company_id')
             ->update([
