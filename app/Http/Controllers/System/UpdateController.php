@@ -395,7 +395,7 @@ class UpdateController extends Controller
 
         $this->setCache();
 
-        echo "<strong>Обновление РХ завершено</strong>";
+        echo "<strong>Обновление 13.04.20 завершено</strong>";
     }
 
     /**
