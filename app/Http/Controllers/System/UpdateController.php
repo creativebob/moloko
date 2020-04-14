@@ -26,10 +26,47 @@ class UpdateController extends Controller
     }
 
     /**
-     * Обновление РХ
+     * Обновление Вкусняшки
      */
-    public function update_rollhouse()
+    public function update_vkusnyashka()
     {
+        $this->clearCache();
+
+        Page::insert([
+            [
+                'name' => 'Вендоры',
+                'site_id' => 1,
+                'title' => 'Вендоры',
+                'description' => 'Вендоры',
+                'alias' => 'vendors',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
+        ]);
+        echo "<strong>Обновление 13.04.20 завершено</strong>";
+
+        $this->setCache();
+
+        echo "<strong>Обновление 13.04.20 завершено</strong>";
+    }
+
+    /**
+     * Обновление 130420
+     */
+    public function update_130420()
+    {
+        $this->clearCache();
+
+        Page::where([
+            'site_id' => 2,
+            'alias' => 'catalogs-goods'
+        ])
+            ->update([
+               'alias' => 'catalogs-goods-items'
+            ]);
+        echo "Переимеенован алиас страницы раздела каталога<br><br>";
 
         Position::whereNull('company_id')
             ->update([
@@ -356,6 +393,31 @@ class UpdateController extends Controller
 
         echo "Добавлены права на сущности:<br>vendors<br>settings<br>portfolios<br>portfolios_items<br>business_cases<br>outcomes_categories<br>outcomes<br><br>";
 
-        echo "<strong>Обновление 13.04.20 завершено</strong>";
+        $this->setCache();
+
+        echo "<strong>Обновление РХ завершено</strong>";
+    }
+
+    /**
+     * Очистка кеша
+     */
+    public function clearCache()
+    {
+        \Artisan::call('cache:clear');
+        \Artisan::call('modelCache:clear');
+        \Artisan::call('config:clear');
+        \Artisan::call('view:clear');
+        \Artisan::call('route:clear');
+        echo "Очищен кэш<br><br>";
+    }
+
+    /**
+     * Установка кеша
+     */
+    public function setCache()
+    {
+        \Artisan::call('optimize');
+        \Artisan::call('view:cache');
+        echo "Кэш установлен<br><br>";
     }
 }

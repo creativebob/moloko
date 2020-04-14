@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdateRollhouseTables extends Migration
+class Update130420Tables extends Migration
 {
     /**
      * Run the migrations.
