@@ -129,6 +129,16 @@ use App\Scopes\Filters\BooklistFilter;
 				]);
 		}
 
+        public function childs_prices_public()
+        {
+            return $this->hasManyThrough(PricesGoods::class, CatalogsGoodsItem::class, 'parent_id', 'catalogs_goods_item_id')
+                ->has('goods_public')
+                ->where([
+                    'prices_goods.display' => true,
+                    'prices_goods.archive' => false
+                ]);
+        }
+
 		// Товары каталога
 		public function goods()
 		{

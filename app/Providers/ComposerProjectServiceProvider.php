@@ -115,7 +115,7 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 view()->composer($alias. '.pages.contacts.index', FilialComposer::class);
 
                 view()->composer([
-                    $alias . '.pages.catalogs_goods.index'
+                    $alias . '.pages.catalogs_goods_items.index'
                 ], DisplayModesComposer::class);
 
                 view()->composer('project.includes.tools_categories.sidebar_with_items', ToolsCategoriesWithToolsComposer::class);
