@@ -44,7 +44,7 @@ class UpdateController extends Controller
                 'display' => true,
             ],
         ]);
-        echo "<strong>Добавлена страница для сайта Вкусняшки - каталог товаров</strong>";
+        echo "Добавлена страница для сайта Вкусняшки - каталог товаров<br><br>";
 
         $this->setCache();
 
