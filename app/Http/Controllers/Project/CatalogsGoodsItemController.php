@@ -55,6 +55,7 @@ class CatalogsGoodsItemController extends Controller
         $page = $site->pages_public->where('alias', 'catalogs-goods-items')->first();
 
         // Получаем полный прайс со всеми доступными разделами
+        // Получаем полный раздел со всеми прайсами
         $catalogs_goods_item = CatalogsGoodsItem::with([
             'catalog',
             'prices_public' => function ($q) use ($site) {
@@ -64,20 +65,41 @@ class CatalogsGoodsItemController extends Controller
                             'article' => function ($q) {
                                 $q->with([
                                     'photo',
+                                    'unit',
+                                    'unit_weight',
+                                    'manufacturer.company',
                                     'raws' => function ($q) {
                                         $q->with([
-                                            'article.unit',
+                                            'article' => function ($q) {
+                                                $q->with([
+                                                    'unit',
+                                                    'photo',
+                                                    'manufacturer.company'
+                                                ]);
+                                            },
                                             'metrics'
                                         ]);
                                     },
                                     'attachments' => function ($q) {
                                         $q->with([
-                                            'article.unit',
+                                            'article' => function ($q) {
+                                                $q->with([
+//                                                    'unit',
+                                                    'photo',
+                                                    'manufacturer.company'
+                                                ]);
+                                            },
                                         ]);
                                     },
                                     'containers' => function ($q) {
                                         $q->with([
-                                            'article.unit',
+                                            'article' => function ($q) {
+                                                $q->with([
+//                                                    'unit',
+                                                    'photo',
+                                                    'manufacturer.company'
+                                                ]);
+                                            },
                                         ]);
                                     },
                                 ]);
@@ -86,23 +108,19 @@ class CatalogsGoodsItemController extends Controller
                         ]);
                     },
                     'currency',
-                    'catalogs_item.directive_category:id,alias',
-                    'currency',
                 ])
                     ->has('goods_public')
+                    ->public()
                     ->where([
-                        'display' => true,
-                        'archive' => false,
                         'filial_id' => $site->filial->id
                     ])
                     ->orderBy('sort', 'asc');
             },
             'display_mode',
             'filters.values',
-            'childs'
-//            'directive_category:id,alias',
-//            'display_mode',
-//            'filters.values'
+            'directive_category:id,alias',
+            'childs',
+
         ])
             ->whereHas('catalog', function ($q) use ($site, $catalog_slug) {
                 $q->where('slug', $catalog_slug)
@@ -115,6 +133,7 @@ class CatalogsGoodsItemController extends Controller
                 'display' => true
             ])
             ->first();
+//        dd($catalogs_goods_item);
 
         // TODO - 14.04.20 - Уже ближе к универсальности, н овсе равно пока заточено под РХ
         if ($catalogs_goods_item->level > 1) {
