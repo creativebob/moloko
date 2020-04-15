@@ -54,63 +54,6 @@ class CatalogsGoodsItemController extends Controller
             abort(403, 'Доступ к прайсу товаров компании ограничен. Согласен, это довольно странно...');
         }
 
-        // TODO - 14.04.20 - Уже ближе к универсальности, н овсе равно пока заточено под РХ
-//        if ($catalogs_goods_item->level > 1) {
-//            $catalogs_goods_item->load([
-//                'category' => function ($q) {
-//                    $q->with([
-//                        'childs'
-//                    ]);
-//                }
-//            ]);
-//        } else {
-//            $catalogs_goods_item->load([
-//                'childs_prices_public' => function ($q) use ($site) {
-//                    $q->with([
-//                        'goods_public' => function ($q) {
-//                            $q->with([
-//                                'article' => function ($q) {
-//                                    $q->with([
-//                                        'photo',
-//                                        'raws' => function ($q) {
-//                                            $q->with([
-//                                                'article.unit',
-//                                                'metrics'
-//                                            ]);
-//                                        },
-//                                        'attachments' => function ($q) {
-//                                            $q->with([
-//                                                'article.unit',
-//                                            ]);
-//                                        },
-//                                        'containers' => function ($q) {
-//                                            $q->with([
-//                                                'article.unit',
-//                                            ]);
-//                                        },
-//                                    ]);
-//                                },
-//                                'metrics',
-//                            ]);
-//                        },
-//                        'currency',
-//                        'catalogs_item.directive_category:id,alias',
-//                        'currency',
-//                    ])
-//                        ->has('goods_public')
-//                        ->where([
-//                            'prices_goods.display' => true,
-//                            'prices_goods.archive' => false,
-//                            'prices_goods.filial_id' => $site->filial->id
-//                        ])
-//                        ->orderBy('sort', 'asc');
-//                }
-//            ]);
-//        }
-
-//        dd($catalogs_goods_item);
-
-
 //        // Получаем полный прайс со всеми доступными разделами
 //        $catalog_goods = CatalogsGoods::with([
 //            'items_public' => function ($q) {

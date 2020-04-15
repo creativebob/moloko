@@ -14,6 +14,7 @@ use App\Http\View\Composers\Project\ClientsCompaniesListComposer;
 use App\Http\View\Composers\Project\ManufacturersListComposer;
 use App\Http\View\Composers\Project\NewsComposer;
 use App\Http\View\Composers\Project\PromotionsSliderComposer;
+use App\Http\View\Composers\Project\SubCatalogsGoodsItemsComposer;
 use App\Http\View\Composers\Project\ToolsCategoriesWithToolsComposer;
 use App\Http\View\Composers\Project\VendorsComposer;
 use App\Http\View\Composers\Project\WorktimeFilialTodayComposer;
@@ -52,6 +53,8 @@ class ComposerProjectServiceProvider extends ServiceProvider
             'project.includes.catalogs_goods.sidebar',
             'project.includes.catalogs_goods.nav_catalog_goods'
         ], CatalogsGoodsComposer::class);
+
+        view()->composer('project.includes.catalogs_goods_items.sub_catalogs_goods_items', SubCatalogsGoodsItemsComposer::class);
 
         view()->composer([
             'project.includes.news.images'
@@ -95,9 +98,7 @@ class ComposerProjectServiceProvider extends ServiceProvider
 //                view()->composer($alias. '.layouts.headers.includes.cart', CartComposer::class);
 //                view()->composer($alias. '.pages.contacts.index', FilialComposer::class);
 
-        view()->composer([
-            'project.includes.display_modes.section'
-        ], DisplayModesComposer::class);
+        view()->composer('project.includes.display_modes.section', DisplayModesComposer::class);
 
         view()->composer('project.includes.tools_categories.sidebar_with_items', ToolsCategoriesWithToolsComposer::class);
 
