@@ -97,7 +97,7 @@ class PricesGoods extends Model
 
         if (request('weight')) {
             $weight = request('weight');
-            $query->whereHas('goods_public', function($q) use ($weight) {
+            $query->whereHas('goods', function($q) use ($weight) {
                 $q->whereHas('article', function($q) use ($weight) {
                     $q->where('weight', '>=', $weight['min'] / 1000)
                         ->where('weight', '<=', $weight['max'] / 1000);
@@ -114,7 +114,7 @@ class PricesGoods extends Model
             $raws_articles_groups = request('raws_articles_groups');
 //		    dd($raws_articles_groups);
 
-            $query->whereHas('goods_public', function($q) use ($raws_articles_groups) {
+            $query->whereHas('goods', function($q) use ($raws_articles_groups) {
                 $q->whereHas('article', function($q) use ($raws_articles_groups) {
                     foreach($raws_articles_groups as $item){
                         $q->whereHas('attachments',function($q) use ($item) {
