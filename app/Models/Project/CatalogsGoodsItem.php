@@ -36,13 +36,13 @@ class CatalogsGoodsItem extends Model
         return $this->belongsTo(CatalogsGoodsItem::class);
     }
 
-    // Прайс
+    // Прайсы
     public function prices()
     {
         return $this->hasMany(PricesGoods::class)
-            ->has('goods')
-            ->dipslay()
-            ->archive();
+            ->display()
+            ->archive()
+            ->has('goods');
     }
 
     public function childs_prices_public()
