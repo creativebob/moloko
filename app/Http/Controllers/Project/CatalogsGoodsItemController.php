@@ -33,7 +33,10 @@ class CatalogsGoodsItemController extends Controller
         $page = $site->pages_public->where('alias', 'catalogs-goods-items')->first();
 
         // Получаем полный раздел со всеми прайсами
-        $catalogs_goods_item = CatalogsGoodsItem::where('slug', $slug)
+        $catalogs_goods_item = CatalogsGoodsItem::with([
+                'prices'
+            ])
+            ->where('slug', $slug)
             ->whereHas('catalog', function ($q) use ($site, $catalog_slug) {
                 $q->where('slug', $catalog_slug)
                     ->whereHas('filials', function ($q) use ($site) {
