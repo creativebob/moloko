@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Project;
 
-use App\CatalogsGoods;
 use App\Http\Controllers\Project\Traits\Commonable;
-use Illuminate\Http\Request;
+use App\Models\Project\CatalogsGoods;
 use App\Http\Controllers\Controller;
 
 class CatalogsGoodsController extends Controller
@@ -23,27 +22,6 @@ class CatalogsGoodsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  string  $url
@@ -55,87 +33,13 @@ class CatalogsGoodsController extends Controller
         $page = $site->pages_public->where('alias', 'catalogs-goods')->first();
 
         // Получаем полный прайс со всеми доступными разделами
-        $catalog_goods = CatalogsGoods::with([
-//            'items_public' => function ($q) use ($site) {
-//                $q->with([
-//                    'display_mode',
-//                    'filters.values',
-//                    'directive_category:id,alias',
-//                    'childs',
-//                ]);
-//            },
-            'prices' => function ($q) use ($site) {
-                $q->with([
-                    'goods_public' => function ($q) {
-                        $q->with([
-                            'article' => function ($q) {
-                                $q->with([
-                                    'photo',
-                                    'unit',
-                                    'unit_weight',
-                                    'manufacturer.company',
-                                    'raws' => function ($q) {
-                                        $q->with([
-                                            'article' => function ($q) {
-                                                $q->with([
-                                                    'unit',
-                                                    'photo',
-                                                    'manufacturer.company'
-                                                ]);
-                                            },
-                                            'metrics'
-                                        ]);
-                                    },
-                                    'attachments' => function ($q) {
-                                        $q->with([
-                                            'article' => function ($q) {
-                                                $q->with([
-//                                                    'unit',
-                                                    'photo',
-                                                    'manufacturer.company'
-                                                ]);
-                                            },
-                                        ]);
-                                    },
-                                    'containers' => function ($q) {
-                                        $q->with([
-                                            'article' => function ($q) {
-                                                $q->with([
-//                                                    'unit',
-                                                    'photo',
-                                                    'manufacturer.company'
-                                                ]);
-                                            },
-                                        ]);
-                                    },
-                                ]);
-                            },
-                            'metrics',
-                        ]);
-                    },
-                    'currency',
-                ])
-                    ->has('goods_public')
-                    ->public()
-                    ->filter()
-                    ->where([
-                        'filial_id' => $site->filial->id
-                    ])
-                    ->orderBy('sort', 'asc');
-            },
-        ])
+        $catalog_goods = CatalogsGoods::where('slug', $slug)
             ->whereHas('filials', function ($q) use ($site) {
                 $q->where('id', $site->filial->id);
             })
-            ->where('slug', $slug)
-            ->where([
-                'display' => true
-            ])
+            ->display()
             ->first();
 //        dd($catalog_goods);
-
-
-//        dd($catalog_goods->prices());
 
         // Проверим, а доступен ли каталог товаров. Если нет, то кидаем ошибку
         if ($catalog_goods) {
@@ -228,37 +132,4 @@ class CatalogsGoodsController extends Controller
 //            ->paginate(16);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

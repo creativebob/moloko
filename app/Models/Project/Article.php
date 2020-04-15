@@ -11,6 +11,15 @@ class Article extends Model
     use Publicable;
     use Cachable;
 
+    protected $with = [
+        'photo',
+        'unit',
+        'unit_weight',
+
+        // TODO - 15.04.20 - Костыль для вкусняшки (пока еще не разведены запросы для пагинации и общей кучи)
+        'attachments.article.photo',
+    ];
+
     // Группа
     public function group()
     {

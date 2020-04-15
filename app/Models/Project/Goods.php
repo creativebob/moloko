@@ -11,12 +11,17 @@ class Goods extends Model
     use Publicable;
     use Cachable;
 
+    protected $with = [
+        'article'
+    ];
+
     // Артикул
     public function article()
     {
         return $this->belongsTo(Article::class)
-            ->display()
-            ->archive();
+//            ->display()
+            ->draft()
+            ;
     }
 
     // Геттер: Функция получения веса в кг. учитывая все надстройки и переопределения в еденицах измерения

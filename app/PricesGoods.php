@@ -1,163 +1,87 @@
 <?php
 
-namespace App;
+namespace App\Models\Project;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Scopes для главного запроса
-use App\Scopes\Traits\CompaniesLimitTraitScopes;
-use App\Scopes\Traits\AuthorsTraitScopes;
-use App\Scopes\Traits\SystemItemTraitScopes;
-use App\Scopes\Traits\FilialsTraitScopes;
-use App\Scopes\Traits\TemplateTraitScopes;
-use App\Scopes\Traits\ModeratorLimitTraitScopes;
-use App\Scopes\Traits\SuppliersTraitScopes;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use App\Models\Project\Traits\Publicable;
+use Illuminate\Database\Eloquent\Model;
 
-// Фильтры
-use App\Scopes\Filters\Filter;
-use App\Scopes\Filters\BooklistFilter;
 
 class PricesGoods extends Model
 {
-    // Включаем кеш
+    use Publicable;
     use Cachable;
-
-    use Notifiable;
-    use SoftDeletes;
-
-    // Включаем Scopes
-    use CompaniesLimitTraitScopes;
-    use AuthorsTraitScopes;
-    use SystemItemTraitScopes;
-    use FilialsTraitScopes;
-    use TemplateTraitScopes;
-    use ModeratorLimitTraitScopes;
-    use SuppliersTraitScopes;
-
-    // Фильтры
-    use Filter;
-    use BooklistFilter;
 
     protected $table = 'prices_goods';
 
-    protected $fillable = [
-        'catalogs_goods_item_id',
-        'catalogs_goods_id',
-        'goods_id',
-        'filial_id',
-        'price',
-        'archive',
-
-        'currency_id',
-        'point',
-
-        'status',
-        'is_hit',
-        'is_new',
-
-        'display',
-        'system',
-        'moderation'
-    ];
-
+    protected $with = ['goods'];
 
     // Каталог
     public function catalog()
     {
-        return $this->belongsTo(CatalogsGoods::class, 'catalogs_goods_id');
+        return $this->belongsTo(CatalogsGoods::class, 'catalogs_goods_id')
+            ->display();
     }
 
-    // Пункты каталога
+    // Раздел
     public function catalogs_item()
     {
-        return $this->belongsTo(CatalogsGoodsItem::class, 'catalogs_goods_item_id');
-    }
-
-    public function catalogs_item_public()
-    {
         return $this->belongsTo(CatalogsGoodsItem::class, 'catalogs_goods_item_id')
-            ->where('display', true);
+            ->display();
     }
 
     // Филиал
     public function filial()
     {
-        return $this->belongsTo(Department::class);
+        return $this->belongsTo('App\Department');
     }
 
-    // Товар
+    // Товары
     public function goods()
     {
-        return $this->belongsTo(Goods::class);
-    }
-
-    public function goods_public()
-    {
-        return $this->belongsTo(Goods::class, 'goods_id')
-            ->with('article')
-            ->whereHas('article', function ($q) {
-                $q->with([
-                    'raws'
-                ])
-                    ->where([
-                        'draft' => false
-                    ]);
-            })
-            ->where([
-                'display' => true,
-                'archive' => false,
-            ]);
+        return $this->belongsTo(Goods::class)
+            ->display()
+            ->archive()
+            ->has('article')
+            ;
     }
 
     // История
     public function history()
     {
-        return $this->hasMany(PricesGoodsHistory::class, 'prices_goods_id');
+        return $this->hasMany('App\PricesGoodsHistory', 'prices_goods_id');
     }
 
     // Актуальная цена
     public function actual_price()
     {
-        return $this->hasOne(PricesGoodsHistory::class, 'prices_goods_id')
+        return $this->hasOne('App\PricesGoodsHistory', 'prices_goods_id')
             ->whereNull('end_date');
     }
 
     // Предок
     public function ancestor()
     {
-        return $this->belongsTo(PricesGoods::class);
+        return $this->belongsTo('App\PricesGoods');
     }
 
     // Последователь
     public function follower()
     {
-        return $this->hasOne(PricesGoods::class, 'ancestor_id')
+        return $this->hasOne('App\PricesGoods', 'ancestor_id')
             ->where('archive', false);
     }
 
     // Общее отношение для товаров и услуг
     public function product()
     {
-        return $this->belongsTo(Goods::class, 'goods_id');
+        return $this->belongsTo('App\Goods', 'goods_id');
     }
 
     // Валюта
     public function currency()
     {
-        return $this->belongsTo(Currency::class);
-    }
-
-    public function scopePublic($query)
-    {
-        $query->where([
-            'display' => true,
-            'archive' => false
-        ]);
+        return $this->belongsTo('App\Currency');
     }
 
     // Фильтр
@@ -176,7 +100,7 @@ class PricesGoods extends Model
 
         if (request('weight')) {
             $weight = request('weight');
-            $query->whereHas('goods_public', function($q) use ($weight) {
+            $query->whereHas('goods', function($q) use ($weight) {
                 $q->whereHas('article', function($q) use ($weight) {
                     $q->where('weight', '>=', $weight['min'] / 1000)
                         ->where('weight', '<=', $weight['max'] / 1000);
@@ -193,7 +117,7 @@ class PricesGoods extends Model
             $raws_articles_groups = request('raws_articles_groups');
 //		    dd($raws_articles_groups);
 
-            $query->whereHas('goods_public', function($q) use ($raws_articles_groups) {
+            $query->whereHas('goods', function($q) use ($raws_articles_groups) {
                 $q->whereHas('article', function($q) use ($raws_articles_groups) {
                     foreach($raws_articles_groups as $item){
                         $q->whereHas('attachments',function($q) use ($item) {
@@ -209,9 +133,4 @@ class PricesGoods extends Model
         return $query;
     }
 
-
-//    public function scopeFilter(Builder $builder, QueryFilter $filters)
-//    {
-//        return $filters->apply($builder);
-//    }
 }

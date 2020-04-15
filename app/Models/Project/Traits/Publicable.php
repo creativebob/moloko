@@ -10,8 +10,13 @@ trait Publicable
         $query->where('display', $value);
     }
 
-    public function scopeArchive($query, $value = true)
+    public function scopeArchive($query, $value = false)
     {
         $query->where('archive', $value);
+    }
+
+    public function scopeDraft($query, $value = false)
+    {
+        $query->where('draft', $value);
     }
 }
