@@ -18,7 +18,21 @@ trait Commonable
                 $q->with([
                     'pages_public',
                     'company',
-                    'domains.filials'
+                    'domains.filials',
+                    'navigations' => function ($q) {
+                        $q->with([
+                            'align',
+                            'menus' => function ($q) {
+                                $q->with([
+                                    'page'
+                                ])
+                                ->where('display', true)
+                                ->orderBy('sort');
+                            }
+                        ])
+                        ->where('display', true)
+                        ->orderBy('sort');
+                    }
                 ]);
             },
             'filials.location.city'
