@@ -12,6 +12,7 @@ use App\Http\View\Composers\Project\DisplayModesComposer;
 use App\Http\View\Composers\Project\FilialComposer;
 use App\Http\View\Composers\Project\NavigationByAlignComposer;
 use App\Http\View\Composers\Project\NavigationsComposer;
+use App\Http\View\Composers\Project\PricesGoodsFilterComposer;
 use App\Http\View\Composers\Project\PricesGoodsPriceFilterComposer;
 use App\Http\View\Composers\Project\PricesGoodsRawsArticlesGroupsFilterComposer;
 use App\Http\View\Composers\Project\PricesGoodsWeightFilterComposer;
@@ -93,10 +94,17 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 view()->composer('project.includes.worktimes.today', WorktimeTodayComposer::class);
                 view()->composer('project.includes.plugins.list', PluginsComposer::class);
 
-                view()->composer('project.includes.catalogs_goods.filters.price', PricesGoodsPriceFilterComposer::class);
-                view()->composer('project.includes.catalogs_goods.filters.weight', PricesGoodsWeightFilterComposer::class);
-                view()->composer('project.includes.catalogs_goods.filters.raws_articles_groups', PricesGoodsRawsArticlesGroupsFilterComposer::class);
-                view()->composer('project.includes.catalogs_goods.filters.catalogs_goods_items', CatalogsGoodsItemsFilterComposer::class);
+//                view()->composer('project.includes.catalogs_goods.filters.price', PricesGoodsPriceFilterComposer::class);
+//                view()->composer('project.includes.catalogs_goods.filters.weight', PricesGoodsWeightFilterComposer::class);
+//                view()->composer('project.includes.catalogs_goods.filters.raws_articles_groups', PricesGoodsRawsArticlesGroupsFilterComposer::class);
+//                view()->composer('project.includes.catalogs_goods.filters.catalogs_goods_items', CatalogsGoodsItemsFilterComposer::class);
+
+                view()->composer([
+                    'project.includes.catalogs_goods.filters.price',
+                    'project.includes.catalogs_goods.filters.weight',
+                    'project.includes.catalogs_goods.filters.raws_articles_groups',
+                    'project.includes.catalogs_goods.filters.catalogs_goods_items',
+                ], PricesGoodsFilterComposer::class);
 
                 view()->composer([
                     'project.includes.clients.companies_list',
