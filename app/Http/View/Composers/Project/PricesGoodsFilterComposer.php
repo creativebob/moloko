@@ -20,14 +20,48 @@ class PricesGoodsFilterComposer
 
         $catalog_goods_items_ids = $view->catalog_goods->items_public->pluck('id');
 
-        $prices_goods = PricesGoods::with('goods_public')
-            ->whereIn('catalogs_goods_item_id', $catalog_goods_items_ids)
-            ->has('goods_public')
-            ->public()
-            ->get([
-                'price',
-                'catalogs_goods_item_id'
-            ]);
+        $prices_goods = PricesGoods::with(['goods_public' => function ($q) {
+                $q->with([
+                    'article' => function($q) {
+                        $q->with([
+                            'attachments' => function($q) {
+                                $q->with([
+                                    'article' => function ($q) {
+                                        $q->with([
+                                            'group:name'
+                                        ])
+                                            ->select([
+                                                'id',
+                                                'articles_group_id'
+                                            ]);
+                                    }
+                                ])
+                                    ->select([
+                                        'id',
+                                        'article_id'
+                                    ]);
+                            }
+                        ])
+                        ->select([
+                            'id',
+                            'weight'
+                        ]);
+                    }
+                ])
+                ->select([
+                    'id',
+                    'article_id'
+                ]);
+            }
+        ])
+        ->whereIn('catalogs_goods_item_id', $catalog_goods_items_ids)
+        ->has('goods_public')
+        ->public()
+        ->get([
+            'goods_id',
+            'price',
+            'catalogs_goods_item_id',
+        ]);
 
         // Фильтр цены
         $price['step'] = 100;
@@ -47,20 +81,20 @@ class PricesGoodsFilterComposer
         $weight['max'] = intval(($articles->max('weight_gram')*100)/100);
 
         // Группы вложений
-        $attachments_groups = [];
+        $articles_groups = [];
         foreach ($prices_goods as $price_goods) {
             $article = $price_goods->goods_public->article;
 
             if ($article->attachments->isNotEmpty()) {
                 foreach ($article->attachments as $attachment) {
-                    $attachments_groups[] = $attachment->article->group;
+                    $articles_groups[] = $attachment->article->group;
                 }
             }
         }
 
-        $attachments_groups = collect($attachments_groups)->unique();
-        $attachments_groups = $attachments_groups->sortBy('name');
+        $articles_groups = collect($articles_groups)->unique();
+        $articles_groups = $articles_groups->sortBy('name');
 
-        return $view->with(compact('price', 'weight', 'attachments_groups', 'catalogs_goods_items'));
+        return $view->with(compact('price', 'weight', 'articles_groups', 'catalogs_goods_items'));
     }
 }
