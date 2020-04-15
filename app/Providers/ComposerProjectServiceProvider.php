@@ -10,6 +10,7 @@ use App\Http\View\Composers\Project\CatalogsServiceComposer;
 use App\Http\View\Composers\Project\CatalogsGoodsComposer;
 use App\Http\View\Composers\Project\DisplayModesComposer;
 use App\Http\View\Composers\Project\FilialComposer;
+use App\Http\View\Composers\Project\NavigationByAlignComposer;
 use App\Http\View\Composers\Project\NavigationsComposer;
 use App\Http\View\Composers\Project\PricesGoodsPriceFilterComposer;
 use App\Http\View\Composers\Project\PricesGoodsRawsArticlesGroupsFilterComposer;
@@ -61,6 +62,8 @@ class ComposerProjectServiceProvider extends ServiceProvider
                     $alias . '.layouts.navigations.nav',
                     'project.includes.menus.menu'
                 ], NavigationsComposer::class);
+
+                view()->composer('project.includes.navigations.navigation_by_align', NavigationByAlignComposer::class);
 
                 view()->composer([
                     'project.includes.catalogs_services.accordion',
