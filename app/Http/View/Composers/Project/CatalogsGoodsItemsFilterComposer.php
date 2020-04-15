@@ -9,8 +9,11 @@ class CatalogsGoodsItemsFilterComposer
 {
     public function compose(View $view)
     {
+        $catalog_goods = $view->catalog_goods->load([
+            'items_public'
+        ]);
+        $catalogs_goods_items = $catalog_goods->items_public->pluck('name', 'id');
 
-        $catalogs_goods_items = $view->catalog_goods_items->pluck('name', 'id');
         return $view->with(compact('catalogs_goods_items'));
     }
 

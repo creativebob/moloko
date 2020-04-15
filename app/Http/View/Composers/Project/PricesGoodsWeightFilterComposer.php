@@ -11,14 +11,14 @@ class PricesGoodsWeightFilterComposer
     public function compose(View $view)
     {
 
-        $catalog_goods_items_ids = $view->catalog_goods_items->pluck('id');
+        $catalog_goods = $view->catalog_goods->load([
+            'items_public'
+        ]);
+        $catalog_goods_items_ids = $view->catalog_goods->items_public->pluck('id');
 
         $prices_goods = PricesGoods::whereIn('catalogs_goods_item_id', $catalog_goods_items_ids)
             ->has('goods_public')
-            ->where([
-                'display' => true,
-                'archive' => false
-            ])
+            ->public()
             ->get([
                 'price',
                 'catalogs_goods_item_id',

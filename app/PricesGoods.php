@@ -152,6 +152,14 @@ class PricesGoods extends Model
         return $this->belongsTo(Currency::class);
     }
 
+    public function scopePublic($query)
+    {
+        $query->where([
+            'display' => true,
+            'archive' => false
+        ]);
+    }
+
     // Фильтр
     public function scopeFilter($query)
     {
