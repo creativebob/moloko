@@ -60,17 +60,67 @@ class CatalogsGoodsController extends Controller
             'items_public' => function ($q) use ($site) {
                 $q->with([
                     'prices_public' => function ($q) use ($site) {
-                        $q->has('goods_public')
+                        $q->with([
+                            'goods_public' => function ($q) {
+                                $q->with([
+                                    'article' => function ($q) {
+                                        $q->with([
+                                            'photo',
+                                            'unit',
+                                            'unit_weight',
+                                            'manufacturer.company',
+                                            'raws' => function ($q) {
+                                                $q->with([
+                                                    'article' => function ($q) {
+                                                        $q->with([
+                                                            'unit',
+                                                            'photo',
+                                                            'manufacturer.company'
+                                                        ]);
+                                                    },
+                                                    'metrics'
+                                                ]);
+                                            },
+                                            'attachments' => function ($q) {
+                                                $q->with([
+                                                    'article' => function ($q) {
+                                                        $q->with([
+//                                                    'unit',
+                                                            'photo',
+                                                            'manufacturer.company'
+                                                        ]);
+                                                    },
+                                                ]);
+                                            },
+                                            'containers' => function ($q) {
+                                                $q->with([
+                                                    'article' => function ($q) {
+                                                        $q->with([
+//                                                    'unit',
+                                                            'photo',
+                                                            'manufacturer.company'
+                                                        ]);
+                                                    },
+                                                ]);
+                                            },
+                                        ]);
+                                    },
+                                    'metrics',
+                                ]);
+                            },
+                            'currency',
+                        ])
+                            ->has('goods_public')
+                            ->public()
                             ->where([
-                                'display' => true,
-                                'archive' => false,
-                                'filial_id' => $this->site->filial->id
+                                'filial_id' => $site->filial->id
                             ])
-                            ->filter(request())
                             ->orderBy('sort', 'asc');
                     },
                     'display_mode',
-                    'filters.values'
+                    'filters.values',
+                    'directive_category:id,alias',
+                    'childs',
                 ]);
             },
         ])
@@ -78,7 +128,9 @@ class CatalogsGoodsController extends Controller
                 $q->where('id', $site->filial->id);
             })
             ->where('slug', $slug)
-            ->where(['display' => true])
+            ->where([
+                'display' => true
+            ])
             ->first();
 //        dd($catalog_goods);
 
