@@ -49,9 +49,14 @@ class CatalogsGoodsItem extends Model
     public function childs_prices()
     {
         return $this->hasManyThrough(PricesGoods::class, CatalogsGoodsItem::class, 'parent_id', 'catalogs_goods_item_id')
-            ->display()
-            ->archive()
+            ->display(true, 'prices_goods')
+            ->archive(false, 'prices_goods')
             ->has('goods');
+    }
+
+    public function directive_category()
+    {
+        return $this->belongsTo('App\UnitsCategory');
     }
 
     public function getNameWithParentAttribute()

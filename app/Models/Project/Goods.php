@@ -24,6 +24,13 @@ class Goods extends Model
             ;
     }
 
+    // Метрики
+    public function metrics()
+    {
+        return $this->morphToMany('App\Metric', 'entity', 'entity_metric_value')
+            ->withPivot('value');
+    }
+
     // Геттер: Функция получения веса в кг. учитывая все надстройки и переопределения в еденицах измерения
     public function getWeightAttribute()
     {

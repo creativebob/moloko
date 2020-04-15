@@ -5,18 +5,39 @@ namespace App\Models\Project\Traits;
 
 trait Publicable
 {
-    public function scopeDisplay($query, $value = true)
+    /**
+     * Скопа display
+     *
+     * @param $query
+     * @param bool $value
+     * @param null $table
+     */
+    public function scopeDisplay($query, $value = true, $table = null)
     {
-        $query->where('display', $value);
+        $query->where(isset($table) ? "{$table}.display" : 'display', $value);
     }
 
-    public function scopeArchive($query, $value = false)
+    /**
+     * Скопа archive
+     *
+     * @param $query
+     * @param bool $value
+     * @param null $table
+     */
+    public function scopeArchive($query, $value = false, $table = null)
     {
-        $query->where('archive', $value);
+        $query->where(isset($table) ? "{$table}.archive" : 'archive', $value);
     }
 
-    public function scopeDraft($query, $value = false)
+    /**
+     * Скопа draft
+     *
+     * @param $query
+     * @param bool $value
+     * @param null $table
+     */
+    public function scopeDraft($query, $value = false, $table = null)
     {
-        $query->where('draft', $value);
+        $query->where(isset($table) ? "{$table}.draft" : 'draft', $value);
     }
 }
