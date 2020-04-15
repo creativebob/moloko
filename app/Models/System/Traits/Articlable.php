@@ -15,6 +15,11 @@ trait Articlable
     {
         return $this->belongsTo(Article::class);
     }
+    public function article_public()
+    {
+        return $this->belongsTo(Article::class)
+            ->where('display', true);
+    }
 
     public function core()
     {

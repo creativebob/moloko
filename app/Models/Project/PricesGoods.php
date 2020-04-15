@@ -2,40 +2,30 @@
 
 namespace App\Models\Project;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use App\Models\Project\Traits\Publicable;
+use Illuminate\Database\Eloquent\Model;
+
 
 class PricesGoods extends Model
 {
-    // Включаем кеш
+    use Publicable;
     use Cachable;
 
-    use Notifiable;
-    use SoftDeletes;
-
     protected $table = 'prices_goods';
-
 
     // Каталог
     public function catalog()
     {
-        return $this->belongsTo('App\CatalogsGoods', 'catalogs_goods_id');
+        return $this->belongsTo(CatalogsGoods::class, 'catalogs_goods_id')
+            ->display();
     }
 
-    // Пункты каталога
+    // Раздел
     public function catalogs_item()
     {
-        return $this->belongsTo('App\CatalogsGoodsItem', 'catalogs_goods_item_id');
-    }
-
-    public function catalogs_item_public()
-    {
-        return $this->belongsTo('App\CatalogsGoodsItem', 'catalogs_goods_item_id')
-            ->where('display', true);
+        return $this->belongsTo(CatalogsGoodsItem::class, 'catalogs_goods_item_id')
+            ->display();
     }
 
     // Филиал
@@ -44,28 +34,13 @@ class PricesGoods extends Model
         return $this->belongsTo('App\Department');
     }
 
-    // Товар
+    // Товары
     public function goods()
     {
-        return $this->belongsTo('App\Goods');
-    }
-
-    public function goods_public()
-    {
-        return $this->belongsTo('App\Goods', 'goods_id')
-            ->with('article')
-            ->whereHas('article', function ($q) {
-                $q->with([
-                    'raws'
-                ])
-                    ->where([
-                        'draft' => false
-                    ]);
-            })
-            ->where([
-                'display' => true,
-                'archive' => false,
-            ]);
+        return $this->belongsTo(Goods::class, 'goods_id')
+            ->display()
+            ->archive()
+            ->has('article');
     }
 
     // История
