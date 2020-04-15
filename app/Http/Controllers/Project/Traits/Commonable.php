@@ -22,13 +22,13 @@ trait Commonable
                     'navigations' => function ($q) {
                         $q->with([
                             'align',
-                            'menus' => function ($q) {
-                                $q->with([
-                                    'page'
-                                ])
-                                ->where('display', true)
-                                ->orderBy('sort');
-                            }
+//                            'menus' => function ($q) {
+//                                $q->with([
+//                                    'page'
+//                                ])
+//                                ->where('display', true)
+//                                ->orderBy('sort');
+//                            }
                         ])
                         ->where('display', true)
                         ->orderBy('sort');

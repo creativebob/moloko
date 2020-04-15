@@ -11,7 +11,17 @@ class NavigationByAlignComposer
         $align = $view->align ?? null;
         $filial_id = $view->site->filial->id;
 
-        $navigation = $view->site->navigations->where('align.tag', $align)->first();
+        $navigation = $view->site->navigations->where('align.tag', $align)->first()->load([
+            'menus' => function ($q) use ($filial_id) {
+                $q->with([
+                    'page'
+                ])
+                    ->whereNull('filial_id')
+                    ->orWhere('filial_id', $filial_id)
+                    ->where('display', true)
+                    ->orderBy('sort');
+            }
+        ]);
 
         return $view->with(compact('navigation'));
     }
