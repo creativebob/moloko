@@ -12,7 +12,8 @@ class Goods extends Model
     use Cachable;
 
     protected $with = [
-        'article'
+        'article',
+        'metrics'
     ];
 
     // Артикул

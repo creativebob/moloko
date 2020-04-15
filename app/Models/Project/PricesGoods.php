@@ -15,7 +15,9 @@ class PricesGoods extends Model
     protected $table = 'prices_goods';
 
     protected $with = [
-        'goods'
+        'goods',
+        'catalogs_item',
+        'currency'
     ];
 
     // Каталог

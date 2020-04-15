@@ -34,8 +34,9 @@ class CatalogsGoodsItemController extends Controller
 
         // Получаем полный раздел со всеми прайсами
         $catalogs_goods_item = CatalogsGoodsItem::with([
-                'prices'
-            ])
+            'prices',
+            'directive_category:id,alias',
+        ])
             ->where('slug', $slug)
             ->whereHas('catalog', function ($q) use ($site, $catalog_slug) {
                 $q->where('slug', $catalog_slug)
