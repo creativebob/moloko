@@ -34,6 +34,17 @@ use Carbon\Carbon;
 
 class GetAccessController extends Controller
 {
+
+    /**
+     * Вход в систему
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function enter()
+    {
+        return view('layouts.enter');
+    }
+
     public function set(Request $request)
     {
 

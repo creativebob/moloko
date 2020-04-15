@@ -20,16 +20,6 @@ class AppController extends Controller
     use Categorable;
 
     /**
-     * Вход в систему
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function enter()
-    {
-        return view('layouts.enter');
-    }
-
-    /**
      * Перерасчет уровней и слагов для категорий выбранной сущности
      *
      * @param $entity_alias
@@ -91,25 +81,6 @@ class AppController extends Controller
         ]);
 
         return redirect()->route($alias.'.edit', $id);
-    }
-
-    /**
-     * Очистка и установка кеша
-     *
-     * @return string
-     */
-    public function cache()
-    {
-        \Artisan::call('cache:clear');
-        \Artisan::call('modelCache:clear');
-        \Artisan::call('config:clear');
-        \Artisan::call('view:clear');
-        \Artisan::call('route:clear');
-
-        \Artisan::call('optimize');
-        \Artisan::call('view:cache');
-
-        return "Кэш очищен и установлен.";
     }
 
     // ------------------------------------------------ Ajax -------------------------------------------------

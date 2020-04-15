@@ -18,17 +18,24 @@ Route::get('/cities-test', 'CityController@test');
 Auth::routes();
 
 // Вход в панель управления
-Route::get('/', 'AppController@enter');
+Route::get('/', 'GetAccessController@enter');
+Route::any('getaccess', 'GetAccessController@set')
+    ->middleware('auth')
+    ->name('getaccess.set');
+
+// Кеширование
+Route::get('/cache', 'System\CacheController@cache');
+Route::get('/clear_cache', 'System\CacheController@clearCache');
+Route::get('/set_cache', 'System\CacheController@setCache');
 
 // Обновления системы
 Route::get('/updates/130420', 'System\UpdateController@update_130420');
 Route::get('/updates/vkusnyashka', 'System\UpdateController@update_vkusnyashka');
 
+// Парсеры
 Route::get('/update_parser', 'ParserController@parser')->middleware('auth');
-
 Route::get('/roll_house_parser', 'ParserController@roll_house_parser')->middleware('auth');
 
-Route::get('/cache', 'AppController@cache')->middleware('auth');
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');
@@ -37,7 +44,7 @@ Route::get('/img/{item_id}/{entity}/{size?}', 'ImageController@show')->name('get
 //    ->where('path', '.*')
 ;
 Route::get('/home', 'HomeController@index')->name('home');
-Route::any('getaccess', 'GetAccessController@set')->middleware('auth')->name('getaccess.set');
+
 
 
 // ----------------------------- Рабочий стол -------------------------------------

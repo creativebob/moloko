@@ -30,7 +30,6 @@ class UpdateController extends Controller
      */
     public function update_vkusnyashka()
     {
-        $this->clearCache();
 
         Page::insert([
             [
@@ -46,8 +45,6 @@ class UpdateController extends Controller
         ]);
         echo "Добавлена страница для сайта Вкусняшки - каталог товаров<br><br>";
 
-        $this->setCache();
-
         echo "<strong>Обновление завершено</strong>";
     }
 
@@ -56,8 +53,6 @@ class UpdateController extends Controller
      */
     public function update_130420()
     {
-        $this->clearCache();
-
         Page::where([
             'site_id' => 2,
             'alias' => 'catalogs-goods'
@@ -392,31 +387,6 @@ class UpdateController extends Controller
 
         echo "Добавлены права на сущности:<br>vendors<br>settings<br>portfolios<br>portfolios_items<br>business_cases<br>outcomes_categories<br>outcomes<br><br>";
 
-        $this->setCache();
-
         echo "<strong>Обновление 13.04.20 завершено</strong>";
-    }
-
-    /**
-     * Очистка кеша
-     */
-    public function clearCache()
-    {
-        \Artisan::call('cache:clear');
-        \Artisan::call('modelCache:clear');
-        \Artisan::call('config:clear');
-        \Artisan::call('view:clear');
-        \Artisan::call('route:clear');
-        echo "Очищен кэш<br><br>";
-    }
-
-    /**
-     * Установка кеша
-     */
-    public function setCache()
-    {
-        \Artisan::call('optimize');
-        \Artisan::call('view:cache');
-        echo "Кэш установлен<br><br>";
     }
 }
