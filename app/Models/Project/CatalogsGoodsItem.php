@@ -45,14 +45,13 @@ class CatalogsGoodsItem extends Model
             ->has('goods');
     }
 
-    public function childs_prices_public()
+
+    public function childs_prices()
     {
         return $this->hasManyThrough(PricesGoods::class, CatalogsGoodsItem::class, 'parent_id', 'catalogs_goods_item_id')
-            ->has('goods_public')
-            ->where([
-                'prices_goods.display' => true,
-                'prices_goods.archive' => false
-            ]);
+            ->display()
+            ->archive()
+            ->has('goods');
     }
 
     public function getNameWithParentAttribute()
