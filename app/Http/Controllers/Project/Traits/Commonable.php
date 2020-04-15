@@ -18,7 +18,7 @@ trait Commonable
                 $q->with([
                     'pages_public',
                     'company',
-                    'domains.filials',
+                    'domains.filials.location.city',
                     'navigations' => function ($q) {
                         $q->with([
                             'align',
@@ -35,7 +35,7 @@ trait Commonable
                     }
                 ]);
             },
-            'filials.location.city'
+//            'filials.location.city'
         ])
             ->where('domain', $request->getHost())
             ->first();
