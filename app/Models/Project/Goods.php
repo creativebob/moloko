@@ -13,7 +13,7 @@ class Goods extends Model
 
     protected $with = [
         'article',
-        'metrics'
+        'metrics.values'
     ];
 
     // Артикул

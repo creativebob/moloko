@@ -54,6 +54,12 @@ class CatalogsGoodsItem extends Model
             ->has('goods');
     }
 
+    // Фильтры
+    public function filters()
+    {
+        return $this->belongsToMany('App\Metric', 'filters_goods', 'catalogs_goods_item_id', 'metric_id');
+    }
+
     public function directive_category()
     {
         return $this->belongsTo('App\UnitsCategory');

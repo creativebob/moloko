@@ -36,6 +36,7 @@ class CatalogsGoodsItemController extends Controller
         $catalogs_goods_item = CatalogsGoodsItem::with([
             'prices',
             'directive_category:id,alias',
+            'filters.values'
         ])
             ->where('slug', $slug)
             ->whereHas('catalog', function ($q) use ($site, $catalog_slug) {
