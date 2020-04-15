@@ -60,7 +60,8 @@ class ComposerProjectServiceProvider extends ServiceProvider
 //                ], DepartmentsComposer::class);
 
                 view()->composer([
-                    $alias . '.layouts.navigations.nav',
+//                    $alias. '.layouts.navigations.nav',
+
                     'project.includes.menus.menu'
                 ], NavigationsComposer::class);
 
@@ -77,7 +78,7 @@ class ComposerProjectServiceProvider extends ServiceProvider
                     'project.includes.catalogs_goods.menu',
                     'project.includes.catalogs_goods.images_menu',
                     'project.includes.catalogs_goods.sidebar',
-                    $alias . '.layouts.navigations.nav_catalogs_goods',
+//                    $alias . '.layouts.navigations.nav_catalogs_goods',
                 ], CatalogsGoodsComposer::class);
 
                 view()->composer([
@@ -100,10 +101,11 @@ class ComposerProjectServiceProvider extends ServiceProvider
 //                view()->composer('project.includes.catalogs_goods.filters.catalogs_goods_items', CatalogsGoodsItemsFilterComposer::class);
 
                 view()->composer([
-                    'project.includes.catalogs_goods.filters.price',
-                    'project.includes.catalogs_goods.filters.weight',
-                    'project.includes.catalogs_goods.filters.raws_articles_groups',
-                    'project.includes.catalogs_goods.filters.catalogs_goods_items',
+//                    'project.includes.catalogs_goods.filters.price',
+//                    'project.includes.catalogs_goods.filters.weight',
+//                    'project.includes.catalogs_goods.filters.raws_articles_groups',
+//                    'project.includes.catalogs_goods.filters.catalogs_goods_items',
+                    'project.includes.prices_goods.sidebar_filters'
                 ], PricesGoodsFilterComposer::class);
 
                 view()->composer([
@@ -123,10 +125,10 @@ class ComposerProjectServiceProvider extends ServiceProvider
                 ], VendorsComposer::class);
 
 //                view()->composer($alias. '.layouts.headers.includes.cart', CartComposer::class);
-                view()->composer($alias. '.pages.contacts.index', FilialComposer::class);
+//                view()->composer($alias. '.pages.contacts.index', FilialComposer::class);
 
                 view()->composer([
-                    $alias . '.pages.catalogs_goods_items.index'
+//                    $alias . '.pages.catalogs_goods_items.index'
                 ], DisplayModesComposer::class);
 
                 view()->composer('project.includes.tools_categories.sidebar_with_items', ToolsCategoriesWithToolsComposer::class);

@@ -57,7 +57,7 @@ class CatalogsGoodsItemController extends Controller
         // Получаем полный прайс со всеми доступными разделами
         // Получаем полный раздел со всеми прайсами
         $catalogs_goods_item = CatalogsGoodsItem::with([
-            'catalog',
+//            'catalog',
             'prices_public' => function ($q) use ($site) {
                 $q->with([
                     'goods_public' => function ($q) {
