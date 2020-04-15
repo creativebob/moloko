@@ -17,8 +17,8 @@ class NavigationByAlignComposer
                     'page'
                 ])
                     ->where('display', true)
-                    ->where(function ($query) use ($filial_id) {
-                        $query->where('filial_id', null)->orWhere('filial_id', $filial_id);
+                    ->where(function ($q) use ($filial_id) {
+                        $q->where('filial_id', null)->orWhere('filial_id', $filial_id);
                     })
                     ->orderBy('sort');
             }
