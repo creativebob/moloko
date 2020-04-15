@@ -24,9 +24,9 @@ Route::any('getaccess', 'GetAccessController@set')
     ->name('getaccess.set');
 
 // Кеширование
-Route::get('/cache', 'System\CacheController@cache');
-Route::get('/clear_cache', 'System\CacheController@clearCache');
 Route::get('/set_cache', 'System\CacheController@setCache');
+Route::get('/clear_cache', 'System\CacheController@clearCache');
+Route::get('/recache', 'System\CacheController@reCache');
 
 // Обновления системы
 Route::get('/updates/130420', 'System\UpdateController@update_130420');

@@ -30,7 +30,6 @@ class UpdateController extends Controller
      */
     public function update_vkusnyashka()
     {
-
         Page::insert([
             [
                 'name' => 'Каталог товаров',
