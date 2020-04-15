@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Project;
 
 use App\CatalogsGoods;
 use App\Http\Controllers\Project\Traits\Commonable;
-use App\Models\Project\PricesGoods;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -57,71 +56,72 @@ class CatalogsGoodsController extends Controller
 
         // Получаем полный прайс со всеми доступными разделами
         $catalog_goods = CatalogsGoods::with([
-            'items_public' => function ($q) use ($site) {
+//            'items_public' => function ($q) use ($site) {
+//                $q->with([
+//                    'display_mode',
+//                    'filters.values',
+//                    'directive_category:id,alias',
+//                    'childs',
+//                ]);
+//            },
+            'prices' => function ($q) use ($site) {
                 $q->with([
-                    'prices_public' => function ($q) use ($site) {
+                    'goods_public' => function ($q) {
                         $q->with([
-                            'goods_public' => function ($q) {
+                            'article' => function ($q) {
                                 $q->with([
-                                    'article' => function ($q) {
+                                    'photo',
+                                    'unit',
+                                    'unit_weight',
+                                    'manufacturer.company',
+                                    'raws' => function ($q) {
                                         $q->with([
-                                            'photo',
-                                            'unit',
-                                            'unit_weight',
-                                            'manufacturer.company',
-                                            'raws' => function ($q) {
+                                            'article' => function ($q) {
                                                 $q->with([
-                                                    'article' => function ($q) {
-                                                        $q->with([
-                                                            'unit',
-                                                            'photo',
-                                                            'manufacturer.company'
-                                                        ]);
-                                                    },
-                                                    'metrics'
+                                                    'unit',
+                                                    'photo',
+                                                    'manufacturer.company'
                                                 ]);
                                             },
-                                            'attachments' => function ($q) {
+                                            'metrics'
+                                        ]);
+                                    },
+                                    'attachments' => function ($q) {
+                                        $q->with([
+                                            'article' => function ($q) {
                                                 $q->with([
-                                                    'article' => function ($q) {
-                                                        $q->with([
 //                                                    'unit',
-                                                            'photo',
-                                                            'manufacturer.company'
-                                                        ]);
-                                                    },
-                                                ]);
-                                            },
-                                            'containers' => function ($q) {
-                                                $q->with([
-                                                    'article' => function ($q) {
-                                                        $q->with([
-//                                                    'unit',
-                                                            'photo',
-                                                            'manufacturer.company'
-                                                        ]);
-                                                    },
+                                                    'photo',
+                                                    'manufacturer.company'
                                                 ]);
                                             },
                                         ]);
                                     },
-                                    'metrics',
+                                    'containers' => function ($q) {
+                                        $q->with([
+                                            'article' => function ($q) {
+                                                $q->with([
+//                                                    'unit',
+                                                    'photo',
+                                                    'manufacturer.company'
+                                                ]);
+                                            },
+                                        ]);
+                                    },
                                 ]);
                             },
-                            'currency',
-                        ])
-                            ->has('goods_public')
-                            ->public()
-                            ->where([
-                                'filial_id' => $site->filial->id
-                            ])
-                            ->orderBy('sort', 'asc');
+                            'metrics',
+                        ]);
                     },
-                    'display_mode',
-                    'filters.values',
-                    'directive_category:id,alias',
-                    'childs',
-                ]);
+                    'currency',
+                ])
+                    ->has('goods_public')
+                    ->public()
+                    ->filter()
+                    ->where([
+                        'filial_id' => $site->filial->id
+                    ])
+                    ->orderBy('sort', 'asc');
             },
         ])
             ->whereHas('filials', function ($q) use ($site) {
@@ -133,6 +133,9 @@ class CatalogsGoodsController extends Controller
             ])
             ->first();
 //        dd($catalog_goods);
+
+
+//        dd($catalog_goods->prices());
 
         // Проверим, а доступен ли каталог товаров. Если нет, то кидаем ошибку
         if ($catalog_goods) {
