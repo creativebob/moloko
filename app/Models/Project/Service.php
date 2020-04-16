@@ -13,7 +13,7 @@ class Service extends Model
 
     protected $with = [
         'process',
-        'metrics'
+//        'metrics'
     ];
 
     // Процесс

@@ -12,7 +12,7 @@ class Process extends Model
     use Cachable;
 
     protected $with = [
-        'photo',
+//        'photo',
         'unit',
         'unit_length',
     ];
