@@ -315,6 +315,8 @@ class ParserController extends Controller
 
     /**
      * Парсер метрик товаров для РХ
+     *
+     * @return string
      */
     public function parserRhGoodsMetrics()
     {
@@ -327,12 +329,14 @@ class ParserController extends Controller
             $insert[] = [
                 'goods_id' => $metric->entity_id,
                 'metric_id' => $metric->metric_id,
-                'value' => $metric->value_id,
+                'value' => $metric->value,
             ];
         }
 
         \DB::table('goods_metric')
             ->insert($insert);
+
+        return 'Гатова';
     }
 
     /**

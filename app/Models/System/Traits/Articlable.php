@@ -29,7 +29,7 @@ trait Articlable
     // Метрики
     public function metrics()
     {
-        return $this->morphToMany(Metric::class, 'entity', 'entity_metric_value')
+        return $this->belongsToMany('App\Metric', 'goods_metric')
             ->withPivot('value');
     }
 
