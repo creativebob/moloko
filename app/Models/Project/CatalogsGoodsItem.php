@@ -11,6 +11,10 @@ class CatalogsGoodsItem extends Model
     use Publicable;
     use Cachable;
 
+    protected $with = [
+        'directive_category'
+    ];
+
     // Каталог
     public function catalog()
     {
