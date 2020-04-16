@@ -23,8 +23,7 @@ class Goods extends Model
     {
         return $this->belongsTo(Article::class)
 //            ->display()
-            ->draft()
-            ;
+            ->draft();
     }
 
     // Метрики

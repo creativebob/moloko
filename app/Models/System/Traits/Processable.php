@@ -2,23 +2,23 @@
 
 namespace App\Models\System\Traits;
 
-use App\Article;
 use App\Cost;
 use App\Metric;
+use App\Process;
 use App\Unit;
 
 trait Processable
 {
 
-    // Артикул
-    public function article()
+    // Процесс
+    public function process()
     {
-        return $this->belongsTo(Article::class);
+        return $this->belongsTo(Process::class);
     }
 
     public function core()
     {
-        return $this->belongsTo(Article::class, 'article_id');
+        return $this->belongsTo(Process::class, 'article_id');
     }
 
     // Метрики

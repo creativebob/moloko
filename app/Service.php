@@ -35,12 +35,6 @@ class Service extends Model
         'moderation'
     ];
 
-    // Процесс
-    public function process()
-    {
-        return $this->belongsTo(Process::class);
-    }
-
     // Категория
     public function category()
     {

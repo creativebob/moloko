@@ -2,37 +2,33 @@
 
 namespace App\Models\Project;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-// Подключаем кеш
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use App\Models\Project\Traits\Publicable;
+use Illuminate\Database\Eloquent\Model;
 
 class PricesService extends Model
 {
-    // Включаем кеш
+    use Publicable;
     use Cachable;
 
-    use Notifiable;
-    use SoftDeletes;
+    protected $with = [
+        'service',
+        'catalogs_item',
+        'currency'
+    ];
 
     // Каталог
     public function catalog()
     {
-        return $this->belongsTo('App\CatalogsService', 'catalogs_service_id');
+        return $this->belongsTo(CatalogsService::class, 'catalogs_service_id')
+            ->display();
     }
 
-    // Пункты каталога
+    // Раздел
     public function catalogs_item()
     {
-        return $this->belongsTo('App\CatalogsServicesItem', 'catalogs_services_item_id');
-    }
-
-    public function catalogs_item_public()
-    {
-        return $this->belongsTo('App\CatalogsServicesItem', 'catalogs_services_item_id')
-            ->where('display', true);
+        return $this->belongsTo(CatalogsServicesItem::class, 'catalogs_services_item_id')
+            ->display();
     }
 
     // Филиал
@@ -41,28 +37,13 @@ class PricesService extends Model
         return $this->belongsTo('App\Department');
     }
 
-    // Товар
+    // Услуга
     public function service()
     {
-        return $this->belongsTo('App\Service');
-    }
-
-    public function service_public()
-    {
-        return $this->belongsTo('App\Service', 'service_id')
-            ->with('process')
-//            ->whereHas('process', function ($q) {
-//                $q->with([
-//                    'raws'
-//                ])
-//                    ->where([
-//                        'draft' => false
-//                    ]);
-//            })
-            ->where([
-                'display' => true,
-                'archive' => false,
-            ]);
+        return $this->belongsTo(Service::class, 'goods_id')
+            ->display()
+            ->archive()
+            ->has('process');
     }
 
     // История

@@ -40,7 +40,7 @@ class PricesGoods extends Model
         return $this->belongsTo('App\Department');
     }
 
-    // Товары
+    // Товар
     public function goods()
     {
         return $this->belongsTo(Goods::class, 'goods_id')

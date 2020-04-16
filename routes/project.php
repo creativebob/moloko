@@ -12,16 +12,20 @@
 */
 
 // Первый запуск
-Route::get('/', 'AppController@start')->name('project.start');
+Route::get('/', 'AppController@start')
+    ->name('project.start');
+
 
 // Смена города
-Route::get('/change_city/{alias}', 'AppController@change_city')->name('project.change_city');
+Route::get('/change_city/{alias}', 'AppController@change_city')
+    ->name('project.change_city');
 
 
 // Товары
-Route::get('/catalogs-goods/{catalog_slug}/{all}', 'CatalogsGoodsItemController@show')
-    ->where('all', '.*')
+Route::get('/catalogs-goods/{catalog_slug}/{slug}', 'CatalogsGoodsItemController@show')
+    ->where('slug', '.*')
     ->name('project.catalogs_goods_items.show');
+
 Route::get('/catalogs-goods/{catalog_slug}', 'CatalogsGoodsController@show')
     ->name('project.catalogs_goods.show');
 
@@ -36,8 +40,8 @@ Route::resource('/prices-goods', 'PricesGoodsController')
 
 
 // Услуги
-Route::get('/catalogs-services/{catalog_slug}/{all}', 'CatalogsServicesItemController@show')
-    ->where('all', '.*')
+Route::get('/catalogs-services/{catalog_slug}/{slug}', 'CatalogsServicesItemController@show')
+    ->where('slug', '.*')
     ->name('project.catalogs_services_items.show');
 
 Route::get('/catalogs-services/{catalog_slug}', 'CatalogsServiceController@show')
@@ -47,10 +51,13 @@ Route::get('/prices-services/search/{text}', 'PricesServiceController@search')
     ->name('project.prices_services.search');
 Route::resource('/prices-services', 'PricesServiceController')
     ->only([
+        'index',
         'show'
     ])
     ->names('project.prices_services');
 
+
+// Остальные
 Route::any('/update_cookies', 'CartController@update_cookies')
     ->name('project.update_cookies');
 Route::get('/check_prices', 'CartController@check_prices')
@@ -83,6 +90,7 @@ Route::post('/site_user_login', 'AppController@site_user_login')->name('project.
 Route::get('/confirmation', 'AppController@confirmation')->name('project.confirmation');
 Route::post('/success', 'AppController@success')->name('project.success');
 
+
 // Генерация access_code и отправка его на телефон пользователя
 Route::post('/get_access_code', 'AppController@get_access_code')->name('project.get_access_code');
 Route::post('/get_sms_code', 'AppController@get_sms_code')->name('project.get_sms_code');
@@ -98,6 +106,7 @@ Route::get('/cabinet', 'AppController@cabinet')->name('project.cabinet')->middle
 Route::post('/update_profile', 'AppController@update_profile')->name('project.update_profile');
 
 Route::get('/{page_alias}', 'AppController@dynamic_pages')->name('project.dynamic_pages');
+
 
 // Оборудование
 Route::resource('/tools', 'ToolController')
