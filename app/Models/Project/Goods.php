@@ -13,8 +13,10 @@ class Goods extends Model
 
     protected $with = [
         'article',
-        'metrics.values'
+        'metrics'
     ];
+
+    protected $morphClass = 'goods';
 
     // Артикул
     public function article()

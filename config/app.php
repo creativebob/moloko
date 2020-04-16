@@ -191,6 +191,8 @@ return [
 
         App\Providers\ComposerServiceProvider::class,
         App\Providers\ObserverServiceProvider::class,
+        App\Providers\MorphServiceProvider::class,
+
         App\Providers\ComposerProjectServiceProvider::class,
 
     ],
