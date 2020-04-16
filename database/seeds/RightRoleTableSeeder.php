@@ -23,8 +23,8 @@ class RightRoleTableSeeder extends Seeder
         // Генерируем права на полный доступ
         foreach($rights as $right){
             $mass[] = ['right_id' => $right->id, 'role_id' => 1, 'system' => 1];
-            $mass[] = ['right_id' => $right->id, 'role_id' => 2, 'system' => 1];
-            $mass[] = ['right_id' => $right->id, 'role_id' => 3, 'system' => 1];
+//            $mass[] = ['right_id' => $right->id, 'role_id' => 2, 'system' => 1];
+//            $mass[] = ['right_id' => $right->id, 'role_id' => 3, 'system' => 1];
         };
 
         DB::table('right_role')->insert($mass);

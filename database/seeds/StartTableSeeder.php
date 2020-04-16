@@ -1,6 +1,6 @@
 <?php
 
-use App\Position;
+use App\Right;
 use Illuminate\Database\Seeder;
 
 use App\Company;
@@ -31,6 +31,9 @@ use App\RoomsCategory;
 
 use App\ServicesCategory;
 use App\WorkflowsCategory;
+
+use App\Position;
+use App\Role;
 
 use Carbon\Carbon;
 
@@ -120,6 +123,26 @@ class StartTableSeeder extends Seeder
                 'sector_id' => null,
             ],
         ]);
+
+        Role::insert([
+            [
+                'name' => 'Директор',
+                'company_id' => 1,
+                'system' => false,
+                'author_id' => 1
+            ],
+        ]);
+
+        $rights = Right::where('directive', 'allow')->get();
+        // $rights = Right::get();
+        $mass = [];
+
+        // Генерируем права на полный доступ
+        foreach($rights as $right) {
+            $mass[] = ['right_id' => $right->id, 'role_id' => 2, 'system' => 1];
+        };
+        DB::table('right_role')->insert($mass);
+
 
         DB::table('position_role')->insert([
             [

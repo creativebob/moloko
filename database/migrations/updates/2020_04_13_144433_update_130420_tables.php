@@ -108,6 +108,10 @@ class Update130420Tables extends Migration
             $table->foreign('currency_id')->references('id')->on('currencies');
         });
 
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('name')->nullable()->index()->comment('Имя')->after('patronymic');
+        });
+
         // TODO - 13.04.20 - На РХ это поле есть
 //        Schema::table('cities', function (Blueprint $table) {
 //            $table->string('prepositional_case')->nullable()->comment('Название в предложном падеже');
@@ -255,6 +259,10 @@ class Update130420Tables extends Migration
         Schema::table('estimates_services_items', function (Blueprint $table) {
             $table->dropForeign('estimates_services_items_currency_id_foreign');
             $table->dropColumn('currency_id');
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('name');
         });
 
 //        Schema::table('cities', function (Blueprint $table) {

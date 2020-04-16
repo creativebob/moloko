@@ -36,6 +36,14 @@ class ParserController extends Controller
 {
 
     /**
+     * ParserController constructor.
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
      * Парсер для обновления
      */
     public function parser()
@@ -306,9 +314,31 @@ class ParserController extends Controller
     }
 
     /**
+     * Парсер метрик товаров для РХ
+     */
+    public function parserRhGoodsMetrics()
+    {
+        $metrics = \DB::table('entity_metric_value')
+            ->where('entity_type', 'App\Goods')
+            ->get();
+
+        $insert = [];
+        foreach($metrics as $metric) {
+            $insert[] = [
+                'goods_id' => $metric->entity_id,
+                'metric_id' => $metric->metric_id,
+                'value' => $metric->value_id,
+            ];
+        }
+
+        \DB::table('goods_metric')
+            ->insert($insert);
+    }
+
+    /**
      * Парсер каталогов для РХ
      */
-    public function roll_house_parser()
+    public function parserRollhouseCatalogs()
     {
         $old_catalog_goods = CatalogsGoods::first();
         $catalog_goods = $old_catalog_goods->replicate();

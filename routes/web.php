@@ -33,8 +33,9 @@ Route::get('/updates/130420', 'System\UpdateController@update_130420');
 Route::get('/updates/vkusnyashka', 'System\UpdateController@update_vkusnyashka');
 
 // Парсеры
-Route::get('/update_parser', 'ParserController@parser')->middleware('auth');
-Route::get('/roll_house_parser', 'ParserController@roll_house_parser')->middleware('auth');
+Route::get('/update_parser', 'ParserController@parser');
+Route::get('/roll_house_parser', 'ParserController@roll_house_parser');
+Route::get('/parser_rh_goods_metrics', 'ParserController@parserRhGoodsMetrics');
 
 
 // Всякая хрень для проверки

@@ -13,42 +13,42 @@ class RolesTableSeeder extends Seeder
     {
         DB::table('roles')->insert([
         	[
-                'name' => 'Полный доступ', 
-                'company_id' => null, 
-                'system' => false,
-                'author_id' => 1
-            ], 
-            [
-                'name' => 'Директор', 
-                'company_id' => null, 
-                'system' => false,
-                'author_id' => 1
-            ], 
-            [
-                'name' => 'Менеджер', 
-                'company_id' => null, 
-                'system' => false,
-                'author_id' => 1
-            ], 
-            [
-                'name' => 'Маркетолог', 
-                'company_id' => null, 
-                'system' => false,
-                'author_id' => 1
-            ], 
-            [
-                'name' => 'Управляющий персоналом', 
-                'company_id' => null, 
+                'name' => 'Полный доступ',
+                'company_id' => null,
                 'system' => false,
                 'author_id' => 1
             ],
+//            [
+//                'name' => 'Директор',
+//                'company_id' => null,
+//                'system' => false,
+//                'author_id' => 1
+//            ],
+//            [
+//                'name' => 'Менеджер',
+//                'company_id' => null,
+//                'system' => false,
+//                'author_id' => 1
+//            ],
+//            [
+//                'name' => 'Маркетолог',
+//                'company_id' => null,
+//                'system' => false,
+//                'author_id' => 1
+//            ],
+//            [
+//                'name' => 'Управляющий персоналом',
+//                'company_id' => null,
+//                'system' => false,
+//                'author_id' => 1
+//            ],
             // [
-            //        'name' => 'Администратор', 
-            //        'company_id' => null, 
+            //        'name' => 'Администратор',
+            //        'company_id' => null,
             //        'system' => false,
             //        'author_id' => 1
-            //    ], 
- 
+            //    ],
+
         ]);
     }
 }

@@ -20,7 +20,9 @@ class UpdateUsersTable extends Migration
             $table->string('second_name', 20)->nullable()->index()->comment('Фамилия')->after('first_name');
             $table->string('patronymic', 20)->nullable()->index()->comment('Отчество')->after('second_name');
 
-            $table->integer('sex')->unsigned()->comment('Пол')->default(1)->after('patronymic');
+            $table->string('name')->nullable()->index()->comment('Имя')->after('patronymic');
+
+            $table->integer('sex')->unsigned()->comment('Пол')->default(1)->after('name');
             $table->date('birthday')->nullable()->comment('Дата рождения')->after('sex');
 
             $table->bigInteger('phone')->unique()->nullable()->comment('Телефон')->after('birthday');

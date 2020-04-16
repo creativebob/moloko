@@ -44,6 +44,74 @@ class User extends Authenticatable
     use BooklistFilter;
     // use DateIntervalFilter;
 
+    protected $dates = [
+        'deleted_at'
+    ];
+
+    protected $fillable = [
+        'login',
+        'email',
+        'password',
+        'nickname',
+
+        'first_name',
+        'second_name',
+        'patronymic',
+        'name',
+        'sex',
+        'birthday',
+
+        'phone',
+        'extra_phone',
+        'telegram_id',
+        'city_id',
+        'address',
+
+        'orgform_status',
+        // 'company_name',
+        'user_inn',
+        // 'kpp',
+        // 'account_settlement',
+        // 'account_correspondent',
+        // 'bank',
+
+        'passport_number',
+        'passport_released',
+        'passport_date',
+        'passport_address',
+
+        'specialty',
+        'about',
+        'degree',
+
+        'user_type',
+        'lead_id',
+        'employee_id',
+        'access_block',
+        'company_id',
+        'filial_id',
+        'moderation',
+        'photo_id',
+
+        'display',
+        'system',
+        'moderation'
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
     // // Фильтрация по городу
     // public function scopeUserFilter($query, $request)
     // {
@@ -96,6 +164,12 @@ class User extends Authenticatable
         }
     }
 
+    public function setNameAttribute() {
+        $name = isset($this->attributes['first_name']) ? $this->attributes['first_name'] : '';
+        $name .= isset($this->attributes['second_name']) ? ' ' . $this->attributes['second_name'] : '';
+        $this->attributes['name'] = $name;
+    }
+
     public function getBirthdayAttribute($value) {
         if($value == Null){
             return $value;
@@ -117,10 +191,10 @@ class User extends Authenticatable
     }
 
     // Склеиваем имя и фамилию для юзера и выводим при обращении через name
-    public function getNameAttribute($value) {
-        $value = $this->first_name . ' ' . $this->second_name;
-        return $value;
-    }
+//    public function getNameAttribute($value) {
+//        $value = $this->first_name . ' ' . $this->second_name;
+//        return $value;
+//    }
 
     // Склеиваем имя и фамилию для юзера и выводим при обращении через name
     public function getNameReverseAttribute($value) {
@@ -159,69 +233,6 @@ class User extends Authenticatable
 
     //     return $result;
     // }
-
-    protected $dates = ['deleted_at'];
-    protected $fillable = [
-        'login',
-        'email',
-        'password',
-        'nickname',
-
-        'first_name',
-        'second_name',
-        'patronymic',
-        'sex',
-        'birthday',
-
-        'phone',
-        'extra_phone',
-        'telegram_id',
-        'city_id',
-        'address',
-
-        'orgform_status',
-        // 'company_name',
-        'user_inn',
-        // 'kpp',
-        // 'account_settlement',
-        // 'account_correspondent',
-        // 'bank',
-
-        'passport_number',
-        'passport_released',
-        'passport_date',
-        'passport_address',
-
-        'specialty',
-        'about',
-        'degree',
-
-        'user_type',
-        'lead_id',
-        'employee_id',
-        'access_block',
-        'company_id',
-        'filial_id',
-        'moderation',
-        'photo_id',
-
-        'display',
-        'system',
-        'moderation'
-    ];
-
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
 
     // Получаем компанию.
     public function company()
