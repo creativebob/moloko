@@ -12,16 +12,15 @@ trait Commonable
 
     public function __construct(Request $request)
     {
+        $domain = $request->getHost();
 
-        $domain = Domain::with([
-            'site' => function ($q) {
+        $site = Site::with([
+            'pages_public',
+            'company',
+            'domains.filials.location.city',
+            'navigations' => function ($q) {
                 $q->with([
-                    'pages_public',
-                    'company',
-                    'domains.filials.location.city',
-                    'navigations' => function ($q) {
-                        $q->with([
-                            'align',
+                    'align',
 //                            'menus' => function ($q) {
 //                                $q->with([
 //                                    'page'
@@ -29,22 +28,21 @@ trait Commonable
 //                                ->where('display', true)
 //                                ->orderBy('sort');
 //                            }
-                        ])
-                        ->where('display', true)
-                        ->orderBy('sort');
-                    }
-                ]);
-            },
-//            'filials.location.city'
+                ])
+                    ->where('display', true)
+                    ->orderBy('sort');
+            }
         ])
-            ->where('domain', $request->getHost())
+            ->whereHas('domains', function ($q) use ($domain) {
+                $q->where('domain', request()->getHost());
+            })
             ->first();
-//        dd($domain);
+//        dd($site);
 
-        if ($domain) {
-            $this->site = $domain->site;
-            $this->site->domain = $domain;
-            $this->site->filial = $domain->filials->first();
+        if ($site) {
+            $this->site = $site;
+            $this->site->domain = $site->domains->firstWhere('domain', $domain);
+            $this->site->filial = $this->site->domain->filials->first();
 
             // Ловим utm метки
             if (isset($request->utm_source)) {
