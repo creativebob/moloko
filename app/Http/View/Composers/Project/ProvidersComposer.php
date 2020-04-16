@@ -15,7 +15,7 @@ class ProvidersComposer
             // TODO - 28.02.20 - Костыль дял вывода исполнителей услуг
             $collect = [];
             foreach($prices_services as $price_service) {
-                foreach($price_service->service_public->process->positions as $position) {
+                foreach($price_service->service->process->positions as $position) {
                     foreach($position->actual_staff as $staffer) {
                         $collect[] = $staffer;
                     }
