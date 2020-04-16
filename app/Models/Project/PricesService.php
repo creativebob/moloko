@@ -40,7 +40,7 @@ class PricesService extends Model
     // Услуга
     public function service()
     {
-        return $this->belongsTo(Service::class, 'goods_id')
+        return $this->belongsTo(Service::class, 'service_id')
             ->display()
             ->archive()
             ->has('process');
