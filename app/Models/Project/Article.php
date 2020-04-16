@@ -16,6 +16,9 @@ class Article extends Model
         'unit',
         'unit_weight',
 
+        // TODO - 16.04.20 - Используется пока на ВД
+        'manufacturer.company',
+
         // TODO - 15.04.20 - Костыль для вкусняшки (пока еще не разведены запросы для пагинации и общей кучи)
         'attachments.article.photo',
     ];

@@ -24,7 +24,7 @@ class PricesGoodsController extends Controller
         $page = $site->pages_public->where('alias', 'prices-goods')->first();
 
         $prices_goods = PricesGoods::with([
-            'goods_public.article' => function ($q) {
+            'goods.article' => function ($q) {
                 $q->with([
                     'photo',
                     'manufacturer.company',
@@ -32,7 +32,7 @@ class PricesGoodsController extends Controller
             },
             'currency'
         ])
-            ->has('goods_public')
+            ->has('goods')
             ->whereHas('catalog', function ($q) use ($site) {
                 $q->whereHas('filials', function ($q) use ($site) {
                     $q->where('id', $site->filial->id);
@@ -82,7 +82,7 @@ class PricesGoodsController extends Controller
         $page = $site->pages_public->where('alias', 'prices-goods')->first();
 
         $price_goods = PricesGoods::with([
-            'goods_public.article.raws',
+            'goods.article.raws',
             'currency'
         ])
             ->where([
@@ -90,9 +90,9 @@ class PricesGoodsController extends Controller
             ])
             ->findOrFail($id);
 
-        // dd($price_goods->goods_public->article->containers);
+        // dd($price_goods->goods->article->containers);
 
-        $page->title = $price_goods->goods_public->article->name;
+        $page->title = $price_goods->goods->article->name;
 
         return view($site->alias.'.pages.prices_goods.index', compact('site',  'page', 'price_goods'));
     }
@@ -135,21 +135,12 @@ class PricesGoodsController extends Controller
     {
 
         $items = PricesGoods::with([
-            'goods_public' => function ($q) {
+            'catalogs_item' => function ($q) {
                 $q->with([
-                    'article' => function ($q) {
-                        $q->with([
-                           'photo',
-                           'manufacturer.company'
-                        ]);
-                    },
-                    'metrics.values'
+                    'directive_category:id,alias',
+                    'parent'
                 ]);
-
-            },
-            'currency',
-            'catalogs_item.directive_category:id,alias',
-            'catalogs_item.parent'
+            }
         ])
             ->where([
                 'archive' => false,
@@ -157,7 +148,7 @@ class PricesGoodsController extends Controller
                 'filial_id' => $this->site->filial->id,
                 'display' => true,
             ])
-            ->whereHas('goods_public', function($q) use ($search) {
+            ->whereHas('goods', function($q) use ($search) {
                 $q->whereHas('article', function ($q) use ($search) {
                     $q->where([
                         'draft' => false,
@@ -165,13 +156,13 @@ class PricesGoodsController extends Controller
                     ])
                         ->where(function ($q) use ($search) {
                             $q->where('name', 'LIKE', '%' . $search . '%')
-                            ->orWhere('external', 'LIKE', '%' . $search . '%');
+                                ->orWhere('external', 'LIKE', '%' . $search . '%');
                         });
                 })
-                ->where([
-                    'archive' => false,
-                    'display' => true,
-                ]);
+                    ->where([
+                        'archive' => false,
+                        'display' => true,
+                    ]);
             })
             ->get();
 
