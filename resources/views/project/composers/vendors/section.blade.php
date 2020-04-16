@@ -1,1 +1,1 @@
-@include($site->alias . '.pages.partials.sections.vendors')
+@include($site->alias . '.composers.vendors.section')

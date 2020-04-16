@@ -1,1 +1,1 @@
-@include($site->alias . '.pages.partials.prices_goods.sidebar_filters')
+@include($site->alias . '.composers.prices_goods.sidebar_filters')

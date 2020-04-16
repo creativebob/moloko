@@ -1,1 +1,1 @@
-@include($site->alias . '.pages.partials.navigations.navigation_by_align')
+@include($site->alias . '.composers.navigations.navigation_by_align')

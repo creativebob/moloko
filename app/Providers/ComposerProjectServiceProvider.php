@@ -27,83 +27,59 @@ class ComposerProjectServiceProvider extends ServiceProvider
 
     public function boot()
     {
-//                view()->composer([
-//                    $alias . '.layouts.headers.header',
-//                    $alias . '.layouts.footers.footer',
-//                ], DepartmentsComposer::class);
+        view()->composer( 'project.composers.menus.menu', NavigationsComposer::class);
+        view()->composer('project.composers.navigations.navigation_by_align', NavigationByAlignComposer::class);
 
         view()->composer([
-//                    $alias. '.layouts.navigations.nav',
-
-            'project.includes.menus.menu'
-        ], NavigationsComposer::class);
-
-        view()->composer('project.includes.navigations.navigation_by_align', NavigationByAlignComposer::class);
-
-        view()->composer([
-            'project.includes.catalogs_services.accordion',
-            'project.includes.catalogs_services.menu_one_level',
-            'project.includes.catalogs_services.sidebar',
+            'project.composers.catalogs_services.accordion',
+            'project.composers.catalogs_services.menu_one_level',
+            'project.composers.catalogs_services.sidebar',
         ], CatalogsServiceComposer::class);
 
         view()->composer([
-            'project.includes.catalogs_goods.accordion',
-            'project.includes.catalogs_goods.menu',
-            'project.includes.catalogs_goods.images_menu',
-            'project.includes.catalogs_goods.sidebar',
-            'project.includes.catalogs_goods.nav_catalog_goods'
+            'project.composers.catalogs_goods.accordion',
+            'project.composers.catalogs_goods.menu',
+            'project.composers.catalogs_goods.images_menu',
+            'project.composers.catalogs_goods.sidebar',
+            'project.composers.catalogs_goods.nav_catalog_goods'
         ], CatalogsGoodsComposer::class);
 
-        view()->composer('project.includes.catalogs_goods_items.sub_catalogs_goods_items', SubCatalogsGoodsItemsComposer::class);
+        view()->composer('project.composers.catalogs_goods_items.sub_catalogs_goods_items', SubCatalogsGoodsItemsComposer::class);
 
         view()->composer([
-            'project.includes.news.images'
+            'project.composers.news.images'
         ], NewsComposer::class);
 
-
-
         view()->composer([
-            'project.includes.staff.section',
-            'project.includes.staff.list',
+            'project.composers.staff.section',
+            'project.composers.staff.list',
         ], StaffComposer::class);
-        view()->composer('project.includes.schedules.worktime_filial_today', WorktimeFilialTodayComposer::class);
-        view()->composer('project.includes.worktimes.today', WorktimeTodayComposer::class);
-        view()->composer('project.includes.plugins.list', PluginsComposer::class);
 
-//                view()->composer('project.includes.catalogs_goods.filters.price', PricesGoodsPriceFilterComposer::class);
-//                view()->composer('project.includes.catalogs_goods.filters.weight', PricesGoodsWeightFilterComposer::class);
-//                view()->composer('project.includes.catalogs_goods.filters.raws_articles_groups', PricesGoodsRawsArticlesGroupsFilterComposer::class);
-//                view()->composer('project.includes.catalogs_goods.filters.catalogs_goods_items', CatalogsGoodsItemsFilterComposer::class);
+        view()->composer('project.composers.schedules.worktime_filial_today', WorktimeFilialTodayComposer::class);
+        view()->composer('project.composers.worktimes.today', WorktimeTodayComposer::class);
+        view()->composer('project.composers.plugins.list', PluginsComposer::class);
+
+        view()->composer('project.composers.prices_goods.sidebar_filters', PricesGoodsFilterComposer::class);
 
         view()->composer([
-            'project.includes.prices_goods.sidebar_filters'
-        ], PricesGoodsFilterComposer::class);
-
-        view()->composer([
-            'project.includes.clients.companies_list',
-            'project.includes.clients.section'
+            'project.composers.clients.companies_list',
+            'project.composers.clients.section'
         ], ClientsCompaniesListComposer::class);
 
-        view()->composer('project.includes.promotions.slider', PromotionsSliderComposer::class);
+        view()->composer('project.composers.promotions.slider', PromotionsSliderComposer::class);
 
         view()->composer([
-            'project.includes.manufacturers.list',
-            'project.includes.manufacturers.section'
+            'project.composers.manufacturers.list',
+            'project.composers.manufacturers.section'
         ], ManufacturersListComposer::class);
 
         view()->composer([
-            'project.includes.vendors.section'
+            'project.composers.vendors.section'
         ], VendorsComposer::class);
 
-//                view()->composer($alias. '.layouts.headers.includes.cart', CartComposer::class);
-//                view()->composer($alias. '.pages.contacts.index', FilialComposer::class);
-
-        view()->composer('project.includes.display_modes.section', DisplayModesComposer::class);
-
-        view()->composer('project.includes.tools_categories.sidebar_with_items', ToolsCategoriesWithToolsComposer::class);
-
-        view()->composer('project.includes.prices_services.providers', ProvidersComposer::class);
-
+        view()->composer('project.composers.display_modes.section', DisplayModesComposer::class);
+        view()->composer('project.composers.tools_categories.sidebar_with_items', ToolsCategoriesWithToolsComposer::class);
+        view()->composer('project.composers.prices_services.providers', ProvidersComposer::class);
     }
 
     public function register()

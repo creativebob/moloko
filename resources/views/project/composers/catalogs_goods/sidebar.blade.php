@@ -1,1 +1,1 @@
-@include($site->alias . '.pages.partials.sidebars.catalog_goods.sidebar')
+@include($site->alias . '.composers.catalogs_goods.sidebar')
