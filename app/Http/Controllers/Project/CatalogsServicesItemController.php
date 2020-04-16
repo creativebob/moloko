@@ -23,27 +23,6 @@ class CatalogsServicesItemController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  string  $url
@@ -51,9 +30,8 @@ class CatalogsServicesItemController extends Controller
      */
     public function show(Request $request, $catalog_slug, $slug)
     {
-        // TODO - 19.02.20 - Решение для простотра раздела каталога
         $site = $this->site;
-        $page = $site->pages_public->where('alias', 'catalogs-services-item')->first();
+        $page = $site->pages_public->where('alias', 'catalogs-services-items')->first();
 
         // Получаем полный прайс со всеми доступными разделами
         $catalogs_services_item = CatalogsServicesItem::with([
@@ -100,43 +78,9 @@ class CatalogsServicesItemController extends Controller
 
         // Проверим, а доступен ли каталог товаров. Если нет, то кидаем ошибку
         if ($catalogs_services_item) {
-            return view($site->alias.'.pages.catalogs_services_item.index', compact('site',  'page', 'request', 'catalogs_services_item'));
+            return view($site->alias.'.pages.catalogs_services_items.index', compact('site',  'page', 'request', 'catalogs_services_item'));
         } else {
             abort(403, 'Доступ к прайсу товаров компании ограничен. Согласен, это довольно странно...');
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
