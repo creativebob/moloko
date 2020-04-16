@@ -70,11 +70,11 @@
                     <td class="td-position">
 
                         @can('update', $staffer)
-                        <a href="/admin/staff/{{ $staffer->id }}/edit">{{ isset($staffer->user) ? $staffer->user->name : 'Вакансия' }} ( {{ $staffer->position->name }} )</a>
+                            <a href="/admin/staff/{{ $staffer->id }}/edit">{{ $staffer->position->name }} ( {{ isset($staffer->user) ? $staffer->user->name : 'Вакансия' }} )</a>
                         @endcan
 
                         @cannot('update', $staffer)
-                            {{ isset($staffer->user) ? $staffer->user->name : 'Вакансия' }} ( {{ $staffer->position->name }} )
+                            {{ $staffer->position->name }} ( {{ isset($staffer->user) ? $staffer->user->name : 'Вакансия' }} )
                         @endcannot
 
                     </td>

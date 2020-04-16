@@ -37,4 +37,11 @@ class UserObserver
     {
         // $this->destroy($user);
     }
+
+//    public function saving(User $user)
+//    {
+//        $request = request();
+//        $name = $request->get('first_name', '') . ' ' . $request->get('second_name', '');
+//        $user->name = $name;
+//    }
 }

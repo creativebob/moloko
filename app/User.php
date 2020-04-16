@@ -164,11 +164,11 @@ class User extends Authenticatable
         }
     }
 
-    public function setNameAttribute() {
-        $name = isset($this->attributes['first_name']) ? $this->attributes['first_name'] : '';
-        $name .= isset($this->attributes['second_name']) ? ' ' . $this->attributes['second_name'] : '';
-        $this->attributes['name'] = $name;
-    }
+//    public function setNameAttribute() {
+//        $name = isset($this->attributes['first_name']) ? $this->attributes['first_name'] : '';
+//        $name .= isset($this->attributes['second_name']) ? ' ' . $this->attributes['second_name'] : '';
+//        $this->attributes['name'] = $name;
+//    }
 
     public function getBirthdayAttribute($value) {
         if($value == Null){

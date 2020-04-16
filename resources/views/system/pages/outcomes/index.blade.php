@@ -9,13 +9,11 @@
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('content-count')
-{{-- Количество элементов --}}
-{{ $outcomes->isNotEmpty() ? num_format($outcomes->total(), 0) : 0 }}
+    {{ $outcomes->isNotEmpty() ? num_format($outcomes->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')
-{{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\outcome::class, 'type' => 'table'])
+    @include('system.pages.outcomes.includes.title')
 @endsection
 
 @section('content')

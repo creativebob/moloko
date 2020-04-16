@@ -12,6 +12,7 @@ use App\PhotoSetting;
 use App\Position;
 use App\Right;
 use App\Role;
+use App\User;
 use DB;
 
 class UpdateController extends Controller
@@ -67,12 +68,31 @@ class UpdateController extends Controller
             ]);
         echo "Проставлена компания должностям<br><br>";
 
+        $page_id = Page::where('alias', 'dashboard')->value('id');
+        $positions = Position::where('system', false)->update([
+            'page_id' => $page_id
+        ]);
+
+        echo "Должностям проставлен dashboard<br><br>";
+
         Role::whereNull('company_id')
             ->where('id', '!=', 1)
             ->update([
                 'company_id' => 1
             ]);
         echo "Проставлена компания ролям, кроме роли полный доступ<br><br>";
+
+        $users = User::whereNull('name')
+            ->get();
+
+        foreach($users as $user) {
+            $cur_user = $user;
+            $cur_user->name = $cur_user->first_name . ' ' . $cur_user->second_name;
+//            dd($user);
+            $cur_user->save();
+        }
+
+        echo "Пользователям проставлено поле name<br><br>";
 
         PhotoSetting::where('id', 1)->update([
             'img_max_size' => 12000,

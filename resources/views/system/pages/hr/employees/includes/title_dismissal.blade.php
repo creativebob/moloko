@@ -10,9 +10,9 @@
                     </span>
                 </h2>
 
-                @can('create', App\Employee::class)
-                    <a href="{{ route('employees.create') }}" class="icon-add sprite top" data-tooltip tabindex="2" title="Добавить позицию"></a>
-                @endcan
+{{--                @can('create', App\Employee::class)--}}
+{{--                    <a href="{{ route('employees.create') }}" class="icon-add sprite top" data-tooltip tabindex="2" title="Добавить позицию"></a>--}}
+{{--                @endcan--}}
 
             </div>
             <div class="top-bar-right">
@@ -60,12 +60,9 @@
 
             {{-- Дополнительные кнопки --}}
             <div class="black-button-group small-12 cell">
-                @isset($dismissed_count)
-                    <a class="button tiny hollow right dismissed" href="{{ route('employees.dismissal') }}">Уволенные сотрудники: {{ $dismissed_count }}</a>
-                    <a class="button tiny hollow right alert" href="{{ route('departments.index') }}">Структура</a>
-                @else
+                @if($employees_active_count > 0)
                     <a class="button tiny hollow right dismissed" href="{{ route('employees.index') }}">Действующие сотрудники</a>
-                @endisset
+                @endif
             </div>
 
 

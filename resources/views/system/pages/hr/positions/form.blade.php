@@ -24,11 +24,11 @@
             @include('includes.inputs.textarea', ['name' => 'description', 'value' => $position->description])
         </label>
 
-        @if (auth()->user()->god)
-        <label>Страница должности:
-            @include('includes.selects.pages', ['site_id' => 1])
-        </label>
-        @endif
+{{--        @if (auth()->user()->god)--}}
+{{--        <label>Страница должности:--}}
+{{--            @include('includes.selects.pages', ['site_id' => 1])--}}
+{{--        </label>--}}
+{{--        @endif--}}
 
         {{-- Чекбоксы управления --}}
         @include('includes.control.checkboxes', ['item' => $position])

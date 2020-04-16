@@ -19,7 +19,7 @@
 @endsection
 
 @section('title-content')
-    @include('system.pages.hr.employees.includes.title')
+    @include('system.pages.hr.employees.includes.title_active')
 @endsection
 
 @section('content')

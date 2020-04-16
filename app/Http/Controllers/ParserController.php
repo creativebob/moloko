@@ -18,7 +18,9 @@ use App\Menu;
 
 use App\Company;
 use App\Department;
+use App\Position;
 use App\Right;
+use App\Role;
 use App\User;
 use App\Phone;
 
@@ -41,6 +43,151 @@ class ParserController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    /**
+     * Парсер имен для пользователей, id страницы для должностей
+     *
+     * @return string
+     */
+    public function parser_130420()
+    {
+        $users = User::whereNull('name')
+            ->get();
+
+        foreach($users as $user) {
+            $cur_user = $user;
+            $cur_user->name = $cur_user->first_name . ' ' . $cur_user->second_name;
+//            dd($user);
+            $cur_user->save();
+        }
+
+        echo "Пользователям проставлено поле name<br><br>";
+
+        $page_id = Page::where('alias', 'dashboard')->value('id');
+        $positions = Position::where('system', false)->update([
+            'page_id' => $page_id
+        ]);
+
+        echo "Должностям проставлен dashboard<br><br>";
+
+        $roles = Role::whereNyll('company_id')
+            ->where('id', '!=', 1)
+            ->update([
+                'company_id' => 1
+            ]);
+        echo "Ролям проставлена компания<br><br>";
+
+        return "Парсинг закончен";
+
+    }
+
+    /**
+     * Парсер метрик товаров для РХ
+     *
+     * @return string
+     */
+    public function parserRhGoodsMetrics()
+    {
+        $metrics = \DB::table('entity_metric_value')
+            ->where('entity_type', 'App\Goods')
+            ->get();
+
+        $insert = [];
+        foreach($metrics as $metric) {
+            $insert[] = [
+                'goods_id' => $metric->entity_id,
+                'metric_id' => $metric->metric_id,
+                'value' => $metric->value,
+            ];
+        }
+
+        \DB::table('goods_metric')
+            ->insert($insert);
+
+        return 'Гатова';
+    }
+
+    /**
+     * Парсер каталогов для РХ
+     */
+    public function parserRollhouseCatalogs()
+    {
+        $old_catalog_goods = CatalogsGoods::first();
+        $catalog_goods = $old_catalog_goods->replicate();
+        $catalog_goods->save();
+
+        $old_catalogs_goods_items = CatalogsGoodsItem::whereNull('parent_id')
+            ->get();
+
+        foreach ($old_catalogs_goods_items as $old_item) {
+            $item = $old_item->replicate();
+            $item->catalogs_goods_id = $catalog_goods->id;
+            $item->save();
+
+            $old_item->load('prices');
+
+            if ($old_item->prices) {
+                foreach ($old_item->prices as $old_price) {
+                    if ($old_price->filial_id == 2) {
+                        $old_price->catalogs_goods_item_id = $item->id;
+                        $old_price->catalogs_goods_id = $catalog_goods->id;
+                        $old_price->save();
+                    }
+                }
+            }
+
+            $old_item->load('childs');
+
+            if ($old_item->childs) {
+                foreach ($old_item->childs as $old_child_1) {
+                    $child_item_1 = $old_child_1->replicate();
+                    $child_item_1->parent_id = $item->id;
+                    $child_item_1->category_id = $item->id;
+                    $child_item_1->catalogs_goods_id = $catalog_goods->id;
+                    $child_item_1->save();
+
+                    $old_child_1->load('prices');
+
+                    if ($old_child_1->prices) {
+                        foreach ($old_child_1->prices as $old_price) {
+                            if ($old_price->filial_id == 2) {
+                                $old_price->catalogs_goods_item_id = $child_item_1->id;
+                                $old_price->catalogs_goods_id = $catalog_goods->id;
+                                $old_price->save();
+                            }
+                        }
+                    }
+
+                    $old_child_1->load('childs');
+
+                    if ($old_child_1->childs) {
+                        foreach ($old_child_1->childs as $old_child_2) {
+                            $child_item_2 = $old_child_2->replicate();
+                            $child_item_2->parent_id = $child_item_1->id;
+                            $child_item_2->category_id = $item->id;
+                            $child_item_2->catalogs_goods_id = $catalog_goods->id;
+                            $child_item_2->save();
+
+                            $old_child_2->load('prices');
+
+                            if ($old_child_2->prices) {
+                                foreach ($old_child_2->prices as $old_price) {
+                                    if ($old_price->filial_id == 2) {
+                                        $old_price->catalogs_goods_item_id = $child_item_2->id;
+                                        $old_price->catalogs_goods_id = $catalog_goods->id;
+                                        $old_price->save();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        echo 'Гатова';
+
     }
 
     /**
@@ -311,114 +458,6 @@ class ParserController extends Controller
         }
 
         echo "Навалены права<br>";
-    }
-
-    /**
-     * Парсер метрик товаров для РХ
-     *
-     * @return string
-     */
-    public function parserRhGoodsMetrics()
-    {
-        $metrics = \DB::table('entity_metric_value')
-            ->where('entity_type', 'App\Goods')
-            ->get();
-
-        $insert = [];
-        foreach($metrics as $metric) {
-            $insert[] = [
-                'goods_id' => $metric->entity_id,
-                'metric_id' => $metric->metric_id,
-                'value' => $metric->value,
-            ];
-        }
-
-        \DB::table('goods_metric')
-            ->insert($insert);
-
-        return 'Гатова';
-    }
-
-    /**
-     * Парсер каталогов для РХ
-     */
-    public function parserRollhouseCatalogs()
-    {
-        $old_catalog_goods = CatalogsGoods::first();
-        $catalog_goods = $old_catalog_goods->replicate();
-        $catalog_goods->save();
-
-        $old_catalogs_goods_items = CatalogsGoodsItem::whereNull('parent_id')
-            ->get();
-
-        foreach ($old_catalogs_goods_items as $old_item) {
-            $item = $old_item->replicate();
-            $item->catalogs_goods_id = $catalog_goods->id;
-            $item->save();
-
-            $old_item->load('prices');
-
-            if ($old_item->prices) {
-                foreach ($old_item->prices as $old_price) {
-                    if ($old_price->filial_id == 2) {
-                        $old_price->catalogs_goods_item_id = $item->id;
-                        $old_price->catalogs_goods_id = $catalog_goods->id;
-                        $old_price->save();
-                    }
-                }
-            }
-
-            $old_item->load('childs');
-
-            if ($old_item->childs) {
-                foreach ($old_item->childs as $old_child_1) {
-                    $child_item_1 = $old_child_1->replicate();
-                    $child_item_1->parent_id = $item->id;
-                    $child_item_1->category_id = $item->id;
-                    $child_item_1->catalogs_goods_id = $catalog_goods->id;
-                    $child_item_1->save();
-
-                    $old_child_1->load('prices');
-
-                    if ($old_child_1->prices) {
-                        foreach ($old_child_1->prices as $old_price) {
-                            if ($old_price->filial_id == 2) {
-                                $old_price->catalogs_goods_item_id = $child_item_1->id;
-                                $old_price->catalogs_goods_id = $catalog_goods->id;
-                                $old_price->save();
-                            }
-                        }
-                    }
-
-                    $old_child_1->load('childs');
-
-                    if ($old_child_1->childs) {
-                        foreach ($old_child_1->childs as $old_child_2) {
-                            $child_item_2 = $old_child_2->replicate();
-                            $child_item_2->parent_id = $child_item_1->id;
-                            $child_item_2->category_id = $item->id;
-                            $child_item_2->catalogs_goods_id = $catalog_goods->id;
-                            $child_item_2->save();
-
-                            $old_child_2->load('prices');
-
-                            if ($old_child_2->prices) {
-                                foreach ($old_child_2->prices as $old_price) {
-                                    if ($old_price->filial_id == 2) {
-                                        $old_price->catalogs_goods_item_id = $child_item_2->id;
-                                        $old_price->catalogs_goods_id = $catalog_goods->id;
-                                        $old_price->save();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        echo 'Гатова';
-
     }
 
     public function update_menus(Request $request)

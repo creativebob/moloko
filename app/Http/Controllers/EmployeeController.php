@@ -121,7 +121,7 @@ class EmployeeController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('system.pages.hr.employees.index', compact('employees', 'page_info', 'filter', 'dismissed_count'));
+        return view('system.pages.hr.employees.index', compact('employees', 'page_info', 'filter'));
     }
 
     /**
@@ -193,13 +193,13 @@ class EmployeeController extends Controller
             'position',
             'department'
         ])->findOrFail($request_user->staffer_id);
-    
+
         logs('hr')
             ->info("Занимаем должность");
-    
+
         // Проверяем: свободна ли ставка  =====================================================
         logs('hr')->info('Проверяем: свободна ли ставка?');
-    
+
         if ($staff->user_id != null) {
             abort(403, "Ставка не свободна!");
         } else {
@@ -216,7 +216,7 @@ class EmployeeController extends Controller
         $data['user_id'] = $user->id;
         $employee = Employee::create($data);
 
-        
+
 
         $staff->update([
             'user_id' => $user->id
@@ -454,9 +454,15 @@ class EmployeeController extends Controller
         // -------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------
-        $employees = Employee::with(['company.filials', 'staffer' => function($q) {
-            $q->with('position', 'filial', 'department');
-        }, 'user.main_phones'])
+        $employees = Employee::with([
+                'company.filials', 'staffer' => function($q) {
+                    $q->with([
+                        'position',
+                        'filial',
+                        'department'
+                    ]);
+                }, 'user.main_phones'
+            ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)
             // ->whereIn('user_id', $staff_id_mass)
@@ -509,6 +515,7 @@ class EmployeeController extends Controller
 
         $page_info->title = 'Уволенные сотрудники';
         $page_info->name = 'Уволенные сотрудники';
+
         return view('system.pages.hr.employees.dismissal', compact('employees', 'page_info', 'filter'));
     }
 

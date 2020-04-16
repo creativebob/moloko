@@ -211,74 +211,77 @@ class PositionController extends Controller
                 $position->roles()->sync($request->roles);
             }
 
+            // Оповещения
+            $position->notifications()->sync($request->notifications);
+
             // TODO - 26.03.20 - Блок с оповещениями, вынес в вопросы
             // Смотрим оповещения
-            if (isset($request->notifications)) {
-                $notifications_sync = $position->notifications()->sync($request->notifications);
-                // dd($notifications_sync);
-
-                if ((count($notifications_sync['attached']) > 0) || (count($notifications_sync['detached']) > 0)) {
-                    $users = User::whereHas('staff.position', function ($q) use ($position) {
-                        $q->whereId($position->id);
-                    })->get();
-
-                    $notifications_message = "Изменения в оповещениях:\r\n\r\n";
-
-                    if (count($notifications_sync['attached']) > 0) {
-                        $notifications_message .= "Вам стали доступны оповещения:\r\n";
-                        $notifications = Notification::findOrFail($notifications_sync['attached']);
-                        foreach ($notifications as $notification) {
-                            $notifications_message .= "   ".$notification->name."\r\n";
-                        }
-                    }
-
-                    if (count($notifications_sync['detached']) > 0) {
-                        $notifications_message .= "Вам больше недоступны оповещения:\r\n";
-                        $notifications = Notification::findOrFail($notifications_sync['detached']);
-                        foreach ($notifications as $notification) {
-                            $notifications_message .= "   ".$notification->name."\r\n";
-                        }
-
-                        // $delete = $position->staff();
-                        // Удаляем отключенные оповещения у пользователей
-                        foreach ($users as $user) {
-                            $user->notifications()->detach($notifications_sync['detached']);
-                        }
-                        // dd($users->whereNotNull('telegram_id'));
-                    }
-                    $notifications_message .= "\r\nОзнакомиться с изменениями можно на вкладке \"Мой профиль\"\r\n";
-
-                    // dd($notifications_message);
-                }
-
-            } else {
-
-                // Если удалили последнее оповещение для должности и пришел пустой массив
-                $res = $position->notifications()->detach();
-                if ($res > 0) {
-                    $notifications_message = "Изменения в оповещениях:\r\n\r\n";
-                    $notifications_message .= "Вы больше не имеете доступ ни к одному из оповещений.\r\n";
-
-                    $users = User::whereHas('staff.position', function ($q) use ($position) {
-                        $q->whereId($position->id);
-                    })->get();
-                        // $delete = $position->staff();
-                        // Удаляем отключенные оповещения у пользователей
-                    foreach ($users as $user) {
-                        $user->notifications()->detach();
-                    }
-
-                }
-                // dd($notifications_message);
-
-            }
-
-            if (isset($notifications_message)) {
-                $destinations = $users->where('telegram_id', '!=', null);
-                if (isset($destinations)) {
-                    send_message($destinations, $notifications_message);
-                }
-            }
+//            if (isset($request->notifications)) {
+//                $notifications_sync = $position->notifications()->sync($request->notifications);
+//                // dd($notifications_sync);
+//
+//                if ((count($notifications_sync['attached']) > 0) || (count($notifications_sync['detached']) > 0)) {
+//                    $users = User::whereHas('staff.position', function ($q) use ($position) {
+//                        $q->whereId($position->id);
+//                    })->get();
+//
+//                    $notifications_message = "Изменения в оповещениях:\r\n\r\n";
+//
+//                    if (count($notifications_sync['attached']) > 0) {
+//                        $notifications_message .= "Вам стали доступны оповещения:\r\n";
+//                        $notifications = Notification::findOrFail($notifications_sync['attached']);
+//                        foreach ($notifications as $notification) {
+//                            $notifications_message .= "   ".$notification->name."\r\n";
+//                        }
+//                    }
+//
+//                    if (count($notifications_sync['detached']) > 0) {
+//                        $notifications_message .= "Вам больше недоступны оповещения:\r\n";
+//                        $notifications = Notification::findOrFail($notifications_sync['detached']);
+//                        foreach ($notifications as $notification) {
+//                            $notifications_message .= "   ".$notification->name."\r\n";
+//                        }
+//
+//                        // $delete = $position->staff();
+//                        // Удаляем отключенные оповещения у пользователей
+//                        foreach ($users as $user) {
+//                            $user->notifications()->detach($notifications_sync['detached']);
+//                        }
+//                        // dd($users->whereNotNull('telegram_id'));
+//                    }
+//                    $notifications_message .= "\r\nОзнакомиться с изменениями можно на вкладке \"Мой профиль\"\r\n";
+//
+//                    // dd($notifications_message);
+//                }
+//
+//            } else {
+//
+//                // Если удалили последнее оповещение для должности и пришел пустой массив
+//                $res = $position->notifications()->detach();
+//                if ($res > 0) {
+//                    $notifications_message = "Изменения в оповещениях:\r\n\r\n";
+//                    $notifications_message .= "Вы больше не имеете доступ ни к одному из оповещений.\r\n";
+//
+//                    $users = User::whereHas('staff.position', function ($q) use ($position) {
+//                        $q->whereId($position->id);
+//                    })->get();
+//                        // $delete = $position->staff();
+//                        // Удаляем отключенные оповещения у пользователей
+//                    foreach ($users as $user) {
+//                        $user->notifications()->detach();
+//                    }
+//
+//                }
+//                // dd($notifications_message);
+//
+//            }
+//
+//            if (isset($notifications_message)) {
+//                $destinations = $users->where('telegram_id', '!=', null);
+//                if (isset($destinations)) {
+//                    send_message($destinations, $notifications_message);
+//                }
+//            }
 
             // Обязанности
             $position->charges()->sync($request->charges);

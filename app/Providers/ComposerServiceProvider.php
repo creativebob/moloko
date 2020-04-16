@@ -13,11 +13,14 @@ use App\Http\View\Composers\System\ChannelsComposer;
 use App\Http\View\Composers\System\ChargesComposer;
 use App\Http\View\Composers\System\CitiesComposer;
 use App\Http\View\Composers\System\CitySearchComposer;
+use App\Http\View\Composers\System\ClientsCountComposer;
 use App\Http\View\Composers\System\ContainersCategoriesComposer;
 use App\Http\View\Composers\System\ContainersComposer;
 use App\Http\View\Composers\System\CurrenciesComposer;
 use App\Http\View\Composers\System\DirectiveCategoriesComposer;
 use App\Http\View\Composers\System\DisplayModesComposer;
+use App\Http\View\Composers\System\EmployeesActiveCountComposer;
+use App\Http\View\Composers\System\EmployeesDismissalCountComposer;
 use App\Http\View\Composers\System\FiltersComposer;
 use App\Http\View\Composers\System\NotificationsComposer;
 use App\Http\View\Composers\System\PaymentsTypesComposer;
@@ -382,6 +385,14 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.lists.currencies', CurrenciesComposer::class);
 
         view()->composer('system.common.includes.settings.list', SettingsComposer::class);
+
+        // Сотрудники
+        view()->composer('system.pages.hr.employees.includes.title_active', EmployeesDismissalCountComposer::class);
+        view()->composer('system.pages.hr.employees.includes.title_dismissal', EmployeesActiveCountComposer::class);
+
+        // ВЫполненные работы
+        view()->composer('system.pages.outcomes.includes.title', ClientsCountComposer::class);
+
     }
 
     public function register()
