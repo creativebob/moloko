@@ -15,14 +15,16 @@ class WorktimeTodayComposer
             $worktimes = $view->site->filial->worktime;
         }
 
-        if ($worktimes[date('N')]['begin'] && $worktimes[date('N')]['end']) {
-            $worktime = $worktimes[date('N')]['begin'] . ' - ' . $worktimes[date('N')]['end'];
-        } else {
-            if (isset($site->company->worktime)) {
-                $worktimes = $view->site->company->worktime;
+        if (count($worktimes)) {
+            if ($worktimes[date('N')]['begin'] && $worktimes[date('N')]['end']) {
+                $worktime = $worktimes[date('N')]['begin'] . ' - ' . $worktimes[date('N')]['end'];
+            } else {
+                if (isset($site->company->worktime)) {
+                    $worktimes = $view->site->company->worktime;
 
-                if ($worktimes[date('N')]['begin'] && $worktimes[date('N')]['end']) {
-                    $worktime = $worktimes[date('N')]['begin'] . ' - ' . $worktimes[date('N')]['end'];
+                    if ($worktimes[date('N')]['begin'] && $worktimes[date('N')]['end']) {
+                        $worktime = $worktimes[date('N')]['begin'] . ' - ' . $worktimes[date('N')]['end'];
+                    }
                 }
             }
         }

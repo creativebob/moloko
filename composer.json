@@ -18,7 +18,7 @@
         "genealabs/laravel-model-caching": "*",
         "intervention/image": "^2.5",
         "intervention/imagecache": "^2.4",
-        "irazasyed/telegram-bot-sdk": "^3.0",
+        "irazasyed/telegram-bot-sdk": "dev-master",
         "laracasts/utilities": "^3.0",
         "laravel/framework": "^6.0",
         "laravel/helpers": "^1.1",
@@ -55,7 +55,7 @@
         },
         "files": [
             "app/Helpers/HtmlOperations.php",
-            "app/Helpers/StringOperation.php", 
+            "app/Helpers/StringOperation.php",
             "app/Helpers/SessionOperation.php",
             "app/Helpers/PhotoOperations.php",
             "app/Helpers/PageInfo.php",
