@@ -71,7 +71,7 @@ class ParserController extends Controller
 
         echo "Должностям проставлен dashboard<br><br>";
 
-        $roles = Role::whereNyll('company_id')
+        $roles = Role::whereNull('company_id')
             ->where('id', '!=', 1)
             ->update([
                 'company_id' => 1
