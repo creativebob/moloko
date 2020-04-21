@@ -61,7 +61,7 @@
             {{-- Дополнительные кнопки --}}
             <div class="black-button-group small-12 cell">
                 @if($employees_dismissal_count > 0)
-                    <a class="button tiny hollow right dismissed" href="{{ route('employees.dismissal') }}">Уволенные сотрудники: {{ $dismissed_count }}</a>
+                    <a class="button tiny hollow right dismissed" href="{{ route('employees.dismissal') }}">Уволенные сотрудники: {{ $employees_dismissal_count }}</a>
                     <a class="button tiny hollow right alert" href="{{ route('departments.index') }}">Структура</a>
                 @endif
             </div>
