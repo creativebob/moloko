@@ -71,6 +71,7 @@ class CartController extends Controller
         // dd($prices_goods);
 
         $site = $this->site;
+        $page = $site->pages_public->firstWhere('alias', 'cart');
 
         // Грузим продвижения с отображением на корзине
         $filial_id = $site->filial->id;
@@ -102,7 +103,7 @@ class CartController extends Controller
                 ;
             }
         ]);
-        $page = $site->pages_public->firstWhere('alias', 'cart');
+
         return view($site->alias.'.pages.cart.index', compact('site',  'page', 'prices_goods'));
     }
 

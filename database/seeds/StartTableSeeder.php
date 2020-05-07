@@ -98,7 +98,7 @@ class StartTableSeeder extends Seeder
                 'site_id' => 1,
                 'company_id' => 1,
                 'god' => null,
-                'site_id' => 1,
+                'name' => 'Сотрудник Первый',
                 'system' => false,
                 'author_id' => null,
                 'moderation' => false,

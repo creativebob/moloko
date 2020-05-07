@@ -13,9 +13,9 @@ class ClientObserver
 
     public function creating(Client $client)
     {
-        // TODO - 04.03.20 - display false для клиентов, поеп закооментил методы, раскомментить при рефакторе контроллера
+        // TODO - 04.03.20 - display false для клиентов, пока закооментил методы, раскомментить при рефакторе контроллера
         $client->display = false;
-//        $this->store($client);
+        $this->store($client);
     }
 
     public function updating(Client $client)

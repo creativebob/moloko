@@ -11,6 +11,8 @@ use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\CatalogsService;
 use App\Client;
+use App\ClientsBlacklist;
+use App\ClientsLoyalitiesScore;
 use App\Company;
 use App\Consignment;
 use App\ConsignmentsItem;
@@ -42,6 +44,8 @@ use App\Observers\System\CatalogsGoodsItemObserver;
 use App\Observers\System\CatalogsGoodsObserver;
 use App\Observers\System\CatalogsServiceObserver;
 use App\Observers\System\ClientObserver;
+use App\Observers\System\ClientsBlacklistObserver;
+use App\Observers\System\ClientsLoyalitiesScoreObserver;
 use App\Observers\System\CompanyObserver;
 use App\Observers\System\ConsignmentObserver;
 use App\Observers\System\ConsignmentsItemObserver;
@@ -304,6 +308,8 @@ class ObserverServiceProvider extends ServiceProvider
 
         // Внутренние
         Client::observe(ClientObserver::class);
+        ClientsLoyalitiesScore::observe(ClientsLoyalitiesScoreObserver::class);
+        ClientsBlacklist::observe(ClientsBlacklistObserver::class);
 
         // Выполненные работы
         OutcomesCategory::observe(OutcomesCategoryObserver::class);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
+use App\ClientsLoyalitiesScore;
 use App\Http\Controllers\Traits\Photable;
 use App\User;
 use App\Department;
@@ -563,7 +564,10 @@ class ClientController extends Controller
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $client = Client::moderatorLimit($answer)
+        $client = Client::with([
+            'loyality_score'
+        ])
+        ->moderatorLimit($answer)
         ->authors($answer)
         ->systemItem($answer)
         ->findOrFail($id);
@@ -677,6 +681,34 @@ class ClientController extends Controller
         $client->loyalty_id = $request->loyalty_id;
 
         $client->save();
+
+        $client->load('loyality_score');
+        if (isset($request->loyality_score)) {
+            if (isset($client->loyality_score)) {
+                if ($client->loyality_score->loyality_score != $request->loyality_score)
+                    $client->loyalities_scores()->create([
+                        'loyality_score' => $request->loyality_score
+                    ]);
+            } else {
+                $client->loyalities_scores()->create([
+                    'loyality_score' => $request->loyality_score
+                ]);
+            }
+
+        }
+
+        $client->load('actual_blacklist');
+        if (isset($client->actual_blacklist)) {
+            if ($request->is_blacklist == 0) {
+                $client->actual_blacklist->update([
+                    'end_date' => today(),
+                ]);
+            }
+        } else {
+            if ($request->is_blacklist == 1) {
+                $client->blacklists()->create();
+            }
+        }
 
         return redirect('/admin/clients');
     }

@@ -46,15 +46,11 @@
 
                 <div class="cell small-3">
                     <label>Дата:
-                        <input
-                            type="text"
-                            class="date-field"
-                            autocomplete="off"
-                            pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}"
-                            required
-                            v-model="date"
-                            @change="changeDate($event.value)"
-                        >
+                        <pickmeup-component
+                            :cur-date="curDate"
+                            :required="true"
+                            @change="changeDate"
+                        ></pickmeup-component>
                         <span class="form-error">Выберите дату!</span>
                     </label>
                 </div>
@@ -108,6 +104,10 @@
     import moment from 'moment'
 
 	export default {
+        components: {
+            'pickmeup-component': require('./common/PickmeupComponent.vue'),
+        },
+
 		props: {
 			document: Object,
             paymentsTypes: Array,
@@ -146,7 +146,6 @@
         },
         methods: {
             changeDate(date) {
-                alert(date);
                 this.date = date;
             },
             addPayment() {
@@ -163,7 +162,7 @@
                     document_id: this.document.id,
                     document_type: 'App\\Estimate'
                 };
-                console.log(data);
+                // console.log(data);
 
                 axios
                     .post('/admin/payments', data)
@@ -188,7 +187,6 @@
             level: function (value) {
                 return Number(value).toLocaleString();
             },
-
             formatDate: function (value) {
                 if (value) {
                     return moment(String(value)).format('DD.MM.YYYY')

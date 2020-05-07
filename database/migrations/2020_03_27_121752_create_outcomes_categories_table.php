@@ -24,17 +24,17 @@ class CreateOutcomesCategoriesTable extends Migration
             $table->text('seo_description')->nullable()->comment('Описание для сайта');
 
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Id фото (аватар)');
-//            $table->foreign('photo_id')->references('id')->on('photos');
+            $table->foreign('photo_id')->references('id')->on('photos');
 
             $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id родителя');
-//            $table->foreign('parent_id')->references('id')->on('outcomes_categories');
+            $table->foreign('parent_id')->references('id')->on('outcomes_categories');
 
             $table->bigInteger('category_id')->unsigned()->nullable()->comment('Id категории');
-//            $table->foreign('category_id')->references('id')->on('outcomes_categories');
+            $table->foreign('category_id')->references('id')->on('outcomes_categories');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
-//            $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->boolean('display')->default(1)->comment('Отображение на сайте');
@@ -42,7 +42,7 @@ class CreateOutcomesCategoriesTable extends Migration
             $table->boolean('moderation')->default(0)->comment('Модерация');
 
             $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-//            $table->foreign('author_id')->references('id')->on('users');
+            $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 

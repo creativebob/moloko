@@ -20,8 +20,7 @@
         },
         computed: {
             isShow() {
-                //  && (this.$store.state.estimate.goodsItems.length > 0 || this.$store.state.estimate.servicesItems.length > 0)
-                return this.estimate.is_registered === 0;
+                return this.estimate.is_registered === 0 && (this.$store.state.estimate.goodsItems.length > 0 || this.$store.state.estimate.servicesItems.length > 0);
             },
             isDisabled() {
                 return this.estimate.is_registered === 1;

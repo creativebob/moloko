@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVendorsTable extends Migration
+class CreateClientsBlacklistsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,23 +13,21 @@ class CreateVendorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('vendors', function (Blueprint $table) {
+        Schema::create('clients_blacklists', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->bigInteger('supplier_id')->nullable()->unsigned()->comment('ID поставщика');
-            $table->foreign('supplier_id')->references('id')->on('suppliers');
+            $table->bigInteger('client_id')->unsigned()->nullable()->comment('Id клиента');
+//            $table->foreign('client_id')->references('id')->on('clients');
 
-            $table->bigInteger('discount')->nullable()->unsigned()->comment('Скидка');
+            $table->date('begin_date')->comment('Дата начала');
+            $table->date('end_date')->nullable()->comment('Дата окончания');
+
             $table->text('description')->nullable()->comment('Описание');
 
-            $table->string('status')->nullable()->comment('Наш статус');
-
-            $table->boolean('is_partner')->default(0)->comment('Статус партнера');
-            $table->boolean('archive')->default(0)->comment('Статус архива');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
-            $table->foreign('company_id')->references('id')->on('companies');
+//            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->boolean('display')->default(1)->comment('Отображение на сайте');
@@ -37,7 +35,7 @@ class CreateVendorsTable extends Migration
             $table->boolean('moderation')->default(0)->comment('Модерация');
 
             $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-            $table->foreign('author_id')->references('id')->on('users');
+//            $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 
@@ -53,6 +51,6 @@ class CreateVendorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vendors');
+        Schema::dropIfExists('clients_blacklists');
     }
 }

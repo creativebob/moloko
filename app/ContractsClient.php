@@ -20,6 +20,10 @@ class ContractsClient extends Model
 
     use Commonable;
 
+    protected $dates = [
+        'date',
+    ];
+
     protected $fillable = [
         'date',
         'number',

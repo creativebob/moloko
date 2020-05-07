@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateClientsTable extends Migration
+class CreateClientsLoyalitiesScoresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,18 @@ class CreateClientsTable extends Migration
      */
     public function up()
     {
-        Schema::create('clients', function (Blueprint $table) {
+        Schema::create('clients_loyalities_scores', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->morphs('clientable');
+            $table->bigInteger('client_id')->unsigned()->nullable()->comment('Id клиента');
+//            $table->foreign('client_id')->references('id')->on('clients');
 
-            $table->text('description')->nullable()->comment('Описание клиента');
+            $table->tinyInteger('loyality_score')->unsigned()->nullable()->comment('Пользовательская оценка');
 
-            $table->bigInteger('loyalty_id')->nullable()->unsigned()->default(4)->comment('Id лояльности');
-            $table->foreign('loyalty_id')->references('id')->on('loyalties');
-
-            $table->boolean('archive')->default(0)->comment('Статус архива');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
-            $table->foreign('company_id')->references('id')->on('companies');
+//            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
             $table->boolean('display')->default(1)->comment('Отображение на сайте');
@@ -35,13 +32,12 @@ class CreateClientsTable extends Migration
             $table->boolean('moderation')->default(0)->comment('Модерация');
 
             $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
-            $table->foreign('author_id')->references('id')->on('users');
+//            $table->foreign('author_id')->references('id')->on('users');
 
             $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
 
             $table->timestamps();
             $table->softDeletes();
-
         });
     }
 
@@ -52,6 +48,6 @@ class CreateClientsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('clients');
+        Schema::dropIfExists('clients_loyalities_scores');
     }
 }

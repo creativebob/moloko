@@ -18,7 +18,7 @@ class CreateSettingableTable extends Migration
             $table->morphs('entity');
 
             $table->bigInteger('setting_id')->nullable()->unsigned()->comment('Id настройки');
-//            $table->foreign('setting_id')->references('id')->on('settings');
+            $table->foreign('setting_id')->references('id')->on('settings');
 
         });
     }

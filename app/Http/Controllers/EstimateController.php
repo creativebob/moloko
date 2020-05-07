@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-// Модели
 use App\Client;
 use App\ContractsClient;
-use App\Entity;
+use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\Traits\Offable;
 use App\Http\Controllers\Traits\Reservable;
 use App\Http\Controllers\Traits\UserControllerTrait;
+use App\Http\Requests\System\LeadRequest;
 use Illuminate\Support\Facades\Log;
 use App\Estimate;
 use App\Http\Controllers\Traits\LeadControllerTrait;
@@ -34,6 +34,7 @@ class EstimateController extends Controller
     use LeadControllerTrait;
     use Offable;
     use Reservable;
+    use Clientable;
 
     public function index(Request $request)
     {
@@ -49,7 +50,7 @@ class EstimateController extends Controller
 
         $estimates = Estimate::with([
             'client.clientable',
-            'items',
+            'goods_items',
             'author'
         ])
         ->moderatorLimit($answer)
@@ -312,12 +313,33 @@ class EstimateController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function registering($id)
+    public function registering(LeadRequest $request, $id)
     {
         // ГЛАВНЫЙ ЗАПРОС:
-        $estimate = Estimate::findOrFail($id);
+        $estimate = Estimate::with([
+            'lead',
+            'goods_items'
+        ])
+        ->findOrFail($id);
 
         if ($estimate->is_registered == 0) {
+
+            // Отдаем работу по редактировнию лида трейту
+            $this->updateLead($request, $estimate->lead);
+
+            logs('documents')->info("========================================== НАЧАЛО РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
+
+            // Обновляем смету
+            $amount = 0;
+            $discount = 0;
+            $total = 0;
+
+            if ($estimate->goods_items->isNotEmpty()) {
+
+                $amount = $estimate->goods_items->sum('amount');
+                $discount = (($amount * $estimate->discount_percent) / 100);
+                $total = ($amount - $discount);
+            }
 
             // Пишем склады при оформлении
             $settings = getSettings();
@@ -332,9 +354,33 @@ class EstimateController extends Controller
                 }
             }
 
-            $estimate->update([
-                'is_registered' => true,
+            // Ищем или создаем клиента
+            $client = $this->checkClientUser($estimate->lead->user_id);
+
+            if (is_null($client->source_id)) {
+                $client->update([
+                    'source_id' => $estimate->lead->source_id
+                ]);
+            }
+
+            $estimate->lead->update([
+                'client_id' =>  $client->id
             ]);
+
+            $contracts_client = ContractsClient::create([
+                'client_id' => $client->id
+            ]);
+
+            $estimate->update([
+                'client_id' => $client->id,
+                'is_registered' => true,
+                'registered_date' => today(),
+                'amount' => $amount,
+                'discount' => $discount,
+                'total' => $total,
+            ]);
+
+            logs('documents')->info("========================================== КОНЕЦ РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
 
             return redirect()
                 ->route('leads.edit', $estimate->lead_id)
@@ -342,11 +388,9 @@ class EstimateController extends Controller
 
         } else {
             return back()
-                ->withErrors(['msg' => 'Смета оформлена'])
+                ->withErrors(['msg' => 'Смета уже оформлена'])
                 ->withInput();
         }
-
-//        return redirect()->route('leads.index');
     }
 
     /**
@@ -356,12 +400,20 @@ class EstimateController extends Controller
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function saling(Request $request, $id)
+    public function saling($id)
     {
         // ГЛАВНЫЙ ЗАПРОС:
-        $estimate = Estimate::findOrFail($id);
+        $estimate = Estimate::with([
+            'lead',
+            'client'
+        ])
+        ->findOrFail($id);
 
         if ($estimate->is_saled == 0) {
+
+            // Обновляем показатели клиента
+            $this->setIndicators($estimate);
+
             $estimate->update([
                 'is_saled' => true,
             ]);

@@ -6,31 +6,28 @@ use App\Action;
 use App\ActionEntity;
 use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
+use App\ContractsClient;
+use App\Http\Controllers\System\Traits\Clientable;
 use App\OldLead;
 use App\OldLocation;
 use App\Lead;
-use App\Note;
 use App\Choice;
-use App\City;
 use App\Challenge;
 use App\Claim;
 use App\Menu;
-
 use App\Company;
 use App\Department;
 use App\Position;
 use App\Right;
 use App\Role;
+use App\Staffer;
 use App\User;
 use App\Phone;
-
 use App\Page;
 use App\Entity;
 use App\EntityPage;
-
 use App\Location;
 use Carbon\Carbon;
-
 use DB;
 use Illuminate\Http\Request;
 
@@ -43,6 +40,106 @@ class ParserController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    use Clientable;
+
+    public function parserLeadClient()
+    {
+        set_time_limit(0);
+
+        // ГЛАВНЫЙ ЗАПРОС:
+        $leads = Lead::with([
+            'estimate.goods_items'
+        ])
+            ->whereHas('estimate', function ($q) {
+                $q->where('is_registered', false);
+            })
+            ->orderBy('id')
+            ->get();
+
+//            dd($leads->count());
+
+        foreach($leads as $lead) {
+
+            $manager = Staffer::findOrFail(6);
+
+            $lead->manager_id = $manager->user_id;
+
+            // Если номер пуст и планируется назначение на сотрудника, а не бота - то генерируем номер!
+            if($lead->case_number == NULL){
+
+                // Формируем номера обращения
+                $lead_number = getLeadNumbers($manager, $lead);
+                $lead->case_number = $lead_number['case'];
+                $lead->serial_number = $lead_number['serial'];
+            }
+
+            $lead->editor_id = auth()->user()->id;
+            $lead->save();
+
+            $estimate = $lead->estimate;
+
+            if ($estimate->is_registered == 0) {
+
+                logs('documents')->info("========================================== НАЧАЛО РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
+
+                // Обновляем смету
+                $amount = 0;
+                $discount = 0;
+                $total = 0;
+
+                if ($estimate->goods_items->isNotEmpty()) {
+
+                    $amount = $estimate->goods_items->sum('amount');
+                    $discount = (($amount * $estimate->discount_percent) / 100);
+                    $total = ($amount - $discount);
+                }
+
+                // Ищем или создаем клиента
+                $client = $this->checkClientUser($estimate->lead->user_id);
+
+
+                if (is_null($client->source_id)) {
+                    $client->update([
+                        'source_id' => $estimate->lead->source_id
+                    ]);
+                }
+
+                $estimate->lead->update([
+                    'client_id' =>  $client->id
+                ]);
+
+                $contracts_client = ContractsClient::create([
+                    'client_id' => $client->id
+                ]);
+
+                $estimate->update([
+                    'client_id' => $client->id,
+                    'is_registered' => true,
+                    'registered_date' => $estimate->created_at,
+                    'amount' => $amount,
+                    'discount' => $discount,
+                    'total' => $total,
+                ]);
+
+                logs('documents')->info("========================================== КОНЕЦ РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
+
+                if ($estimate->is_saled == 0) {
+
+                    // Обновляем показатели клиента
+                    $this->setIndicators($estimate);
+
+                    $estimate->update([
+                        'is_saled' => true,
+                    ]);
+
+                }
+
+            }
+        }
+
+        return 'У лидов закрыты сметы и созданы клиенты';
     }
 
     /**

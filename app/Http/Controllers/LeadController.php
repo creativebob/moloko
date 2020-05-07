@@ -297,7 +297,7 @@ class LeadController extends Controller
         return view('leads.edit', compact('lead', 'page_info', 'choices', 'paginator_url', 'settings'));
     }
 
-    public function update(LeadRequest $request, MyStageRequest $my_request,  $id)
+    public function update(LeadRequest $request, MyStageRequest $my_request, $id)
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)

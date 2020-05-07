@@ -2,11 +2,8 @@
 
 namespace App\Console;
 
-use App\Lead;
-use App\User;
-
-use Carbon\Carbon;
-
+use App\Console\Commands\ClientsIndicatorsDay;
+use App\Console\Commands\ClientsIndicatorsReport;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -18,8 +15,19 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\ReportDay',
+//        'App\Console\Commands\ClientsIndicatorsDay',
+//        'App\Console\Commands\ClientsIndicatorsReport',
     ];
+
+    /**
+     * Get the timezone that should be used by default for scheduled events.
+     *
+     * @return \DateTimeZone|string|null
+     */
+    protected function scheduleTimezone()
+    {
+        return config('app.timezone');
+    }
 
     /**
      * Define the application's command schedule.
@@ -30,10 +38,18 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
 
+        // Ежедневные показатели клиентской базы
+        $schedule->command(ClientsIndicatorsDay::class)
+            ->dailyAt('03:00');
+
+        // Ежемесячные показатели клиентской базы
+        $schedule->command(ClientsIndicatorsReport::class)
+            ->monthlyOn(1, '04:00');
+
         // Ежедневный отчет
-        $schedule->command('report:day')
-        ->dailyAt('18:30')
-        ->timezone('Asia/Irkutsk');
+//        $schedule->command('report:day')
+//        ->dailyAt('18:30')
+//        ->timezone('Asia/Irkutsk');
     }
 
     /**

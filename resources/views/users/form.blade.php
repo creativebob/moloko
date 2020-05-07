@@ -13,7 +13,7 @@
 
             @if(!empty($client))
             <li class="tabs-title">
-                <a data-tabs-target="content-panel-client" href="#content-panel-client">О клиенте</a>
+                <a data-tabs-target="tab-client" href="#tab-client">О клиенте</a>
             </li>
             @endif
 
@@ -146,18 +146,47 @@
             @if(!empty($client))
 
             <!-- Блок клиента -->
-            <div class="tabs-panel" id="content-panel-client">
+            <div class="tabs-panel" id="tab-client">
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-12 cell">
-                        @include('includes.selects.loyalties', ['value'=>$client->loyalty_id])
+                        @include('includes.selects.loyalties', ['value' => $client->loyalty_id])
                     </div>
+
+                    <div class="small-12 medium-6 cell">
+                        <label>Оценка работы клиентом:
+                            {!! Form::select('loyality_score', [
+                            '1' => '1',
+                            '2' => '2',
+                            '3' => '3',
+                            '4' => '4',
+                            '5' => '5',
+                            '6' => '6',
+                            '7' => '7',
+                            '8' => '8',
+                            '9' => '9',
+                            '10' => '10',
+                            ], optional($client->loyality_score)->loyality_score,
+                             ['placeholder' => isset($client->loyality_score) ? null : 'Не указано']
+                             ) !!}
+                        </label>
+                    </div>
+
+                    <div class="small-12 medium-6 cell checkbox">
+                        {!! Form::hidden('is_blacklist', 0) !!}
+                        {{ Form::checkbox('is_blacklist', 1, isset($client->actual_blacklist), ['id' => 'checkbox-is_blacklist']) }}
+                        <label for="checkbox-is_blacklist"><span>В чёрном списке</span></label>
+                    </div>
+
+
 
                     <div class="small-12 medium-12 cell">
                         <label>Комментарий к клиенту
                             @include('includes.inputs.textarea', ['name'=>'description_client', 'value'=>$client->description])
                         </label>
                     </div>
+
+
                 </div>
             </div>
             <!-- Конец блока клиента -->

@@ -120,6 +120,12 @@ return [
             'level' => 'info',
         ],
 
+        'clients' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/clients.log'),
+            'level' => 'info',
+        ],
+
     ],
 
 ];

@@ -28,6 +28,9 @@
 // ----------------------- Подключаем шрифты ----------------------------------------
 @import "./partials/fonts";
 
+// ------------------------ Pickmeup ----------------------------------------
+@import "./partials/pickmeup";
+
 // ----------------------- Спрайты ----------------------------------------------
 @import "./partials/sprites_16";
 @import "./partials/sprites_32";
@@ -439,14 +442,6 @@ a, a:focus {
 p {
     line-height: 1.4;
 }
-
-// --------------  Настройка календаря -------------------------------------------------------
-
-.pickmeup
-{
-    z-index: 1010;
-}
-
 
 // ---------------  Блокировка, чтоб не прыгало ничего при прогрузке страницы -----------------
 .block-refresh {
@@ -3432,7 +3427,7 @@ a#task-toggle{
             border-radius: 2px;
 
             &:hover{
-                background-color: #ddd; 
+                background-color: #ddd;
             }
 
         }
@@ -3444,7 +3439,7 @@ a#task-toggle{
             padding-left: 0.6rem;
             padding-right: 0.6rem;
             color: $medium-gray;
-            background-color: $white; 
+            background-color: $white;
         }
 
     }
@@ -4141,7 +4136,7 @@ em.raw-portion-item{
         margin-left: 2rem;
         max-width: 300px;
 
-        
+
         .goods-margin-calc{
             width: 50px;
         }

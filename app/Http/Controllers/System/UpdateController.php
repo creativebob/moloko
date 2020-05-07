@@ -27,29 +27,31 @@ class UpdateController extends Controller
     }
 
     /**
-     * Обновление Вкусняшки
+     * Обновление 210420
+     *
+     * Переименование миграций, т.к. клиенты стали ссылаться на источник
+     *
      */
-    public function update_vkusnyashka()
+    public function update()
     {
-        Page::insert([
-            [
-                'name' => 'Каталог товаров',
-                'site_id' => 2,
-                'title' => 'Все товары',
-                'description' => 'Все товары',
-                'alias' => 'catalogs-goods',
-                'company_id' => 1,
-                'author_id' => 4,
-                'display' => true,
-            ],
+        \DB::table('migrations')->where('migration', '2018_07_31_100846_create_clients_table')->update([
+            'migration' => '2018_08_16_040846_create_clients_table'
         ]);
-        echo "Добавлена страница для сайта Вкусняшки - каталог товаров<br><br>";
+        echo "В миграциях переименована таблица клиентов<br>";
 
-        echo "<strong>Обновление завершено</strong>";
+        \DB::table('migrations')->where('migration', '2018_08_01_000000_create_dealers_table')->update([
+            'migration' => '2018_08_16_050000_create_dealers_table'
+        ]);
+        echo "В миграциях переименована таблица дилеров<br><br>";
+
+
+        echo "<strong>Обновление 21.04.20 завершено</strong>";
     }
 
     /**
      * Обновление 130420
+     *
+     * Приведение проектов к единому виду, проставление компании должностям и ролям, генерация имени юзера, добавление сущностей
      */
     public function update_130420()
     {
@@ -407,5 +409,27 @@ class UpdateController extends Controller
         echo "Добавлены права на сущности:<br>vendors<br>settings<br>portfolios<br>portfolios_items<br>business_cases<br>outcomes_categories<br>outcomes<br><br>";
 
         echo "<strong>Обновление 13.04.20 завершено</strong>";
+    }
+
+    /**
+     * Обновление Вкусняшки
+     */
+    public function update_vkusnyashka()
+    {
+        Page::insert([
+            [
+                'name' => 'Каталог товаров',
+                'site_id' => 2,
+                'title' => 'Все товары',
+                'description' => 'Все товары',
+                'alias' => 'catalogs-goods',
+                'company_id' => 1,
+                'author_id' => 4,
+                'display' => true,
+            ],
+        ]);
+        echo "Добавлена страница для сайта Вкусняшки - каталог товаров<br><br>";
+
+        echo "<strong>Обновление завершено</strong>";
     }
 }

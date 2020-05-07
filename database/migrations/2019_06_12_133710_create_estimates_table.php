@@ -39,7 +39,10 @@ class CreateEstimatesTable extends Migration
             // $table->decimal('discount_total', 12, 4)->default(0)->comment('Итоговая сумма всех скидок');
 
             $table->boolean('draft')->default(0)->unsigned()->comment('Черновик');
+
             $table->boolean('is_registered')->default(0)->comment('Оформлено');
+            $table->date('registered_date')->nullable()->comment('Дата оформления');
+
             $table->boolean('is_produced')->default(0)->comment('Произведено');
             $table->boolean('is_saled')->default(0)->comment('Продано');
 

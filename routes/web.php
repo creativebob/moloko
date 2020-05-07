@@ -29,15 +29,19 @@ Route::get('/clear_cache', 'System\CacheController@clearCache');
 Route::get('/recache', 'System\CacheController@reCache');
 
 // Обновления системы
-Route::get('/updates/130420', 'System\UpdateController@update_130420');
+Route::get('/update', 'System\UpdateController@update');
 Route::get('/updates/vkusnyashka', 'System\UpdateController@update_vkusnyashka');
 
 // Парсеры
 Route::get('/update_parser', 'ParserController@parser');
 Route::get('/roll_house_parser', 'ParserController@roll_house_parser');
 Route::get('/parser_rh_goods_metrics', 'ParserController@parserRhGoodsMetrics');
-Route::get('/parser/130420', 'ParserController@parser_130420');
+Route::get('/parsers/130420', 'ParserController@parser_130420');
 
+Route::get('/parsers/lead_client', 'ParserController@parserLeadClient');
+
+// Тесты
+Route::get('/test', 'System\TestController@test');
 
 // Всякая хрень для проверки
 // Route::resource('/site_api', 'ApiController');

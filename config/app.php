@@ -70,7 +70,7 @@ return [
     */
 
     // 'timezone' => 'UTC',
-    'timezone' => 'Asia/Irkutsk',
+    'timezone' => env('TIMEZONE', 'Asia/Irkutsk'),
 
 
     /*

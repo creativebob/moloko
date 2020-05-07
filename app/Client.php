@@ -46,10 +46,41 @@ class Client extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    // protected $dates = ['deleted_at'];
+     protected $dates = [
+         'first_order_date',
+         'last_order_date',
+         'deleted_at'
+     ];
+
     protected $fillable = [
-        'company_id',
-        'client_id',
+        'clientable_id',
+        'clientable_type',
+
+        'source_id',
+        'loyality_score',
+        'is_blacklist',
+
+        'is_lost',
+
+        'activity',
+        'abc',
+        'xyz',
+        'abcxyz',
+        'rfm',
+
+        'first_order_date',
+        'last_order_date',
+
+        'orders_count',
+        'lifetime',
+        'purchase_frequency',
+        'ait',
+        'customer_equity',
+        'average_order_value',
+        'customer_value',
+        'ltv',
+        'use_promo_count',
+        'promo_rate',
 
         'display',
         'system',
@@ -99,6 +130,11 @@ class Client extends Model
         return $this->hasMany('App\Estimate', 'client_id');
     }
 
+    public function estimates()
+    {
+        return $this->hasMany(Estimate::class);
+    }
+
     // Получаем лиды
     public function leads()
     {
@@ -109,6 +145,28 @@ class Client extends Model
     public function contract()
     {
         return $this->hasOne(ContractsClient::class);
+    }
+
+    // Пользовательские оценки
+    public function loyalities_scores()
+    {
+        return $this->hasMany(ClientsLoyalitiesScore::class);
+    }
+    public function loyality_score()
+    {
+        return $this->hasOne(ClientsLoyalitiesScore::class)
+            ->latest();
+    }
+
+    // Чёрный список
+    public function blacklists()
+    {
+        return $this->hasMany(ClientsBlacklist::class);
+    }
+    public function actual_blacklist()
+    {
+        return $this->hasOne(ClientsBlacklist::class)
+            ->whereNull('end_date');
     }
 
 

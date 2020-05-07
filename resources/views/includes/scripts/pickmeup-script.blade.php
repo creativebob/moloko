@@ -1,11 +1,15 @@
-<link rel="stylesheet" href="/js/plugins/pickmeup/css/pickmeup.css">
-<script type="application/javascript" src="/js/plugins/pickmeup/js/jquery.pickmeup.js"></script>
-<script type="application/javascript" src="/js/plugins/pickmeup/js/demo.js"></script>
+{{--<script type="application/javascript" src="/js/plugins/pickmeup/js/jquery.pickmeup.js"></script>--}}
+<script>
 
-<script type="application/javascript">
+    pickmeup('.date-field', {
+        position : "bottom",
+        format	: 'd.m.Y',
+        hide_on_select : true,
+        locale : 'ru'
+    });
   // Прикручиваем календарь
-  $('.date-field').pickmeup({
-    position : "bottom",
-    hide_on_select : true
-  });
+  // $('.date-field').pickmeup({
+  //   position : "bottom",
+  //   hide_on_select : true
+  // });
 </script>

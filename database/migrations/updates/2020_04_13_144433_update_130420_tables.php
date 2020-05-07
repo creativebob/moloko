@@ -112,53 +112,13 @@ class Update130420Tables extends Migration
             $table->string('name')->nullable()->index()->comment('Имя')->after('patronymic');
         });
 
-        // TODO - 13.04.20 - На РХ это поле есть
-//        Schema::table('cities', function (Blueprint $table) {
-//            $table->string('prepositional_case')->nullable()->comment('Название в предложном падеже');
-//        });
-
-        // TODO - 13.04.20 - Связь можно создать только с нововставленными таблицами, либо если вставляется поле, т оего можно привязать к уже существующим
-//        Schema::table('company_currency', function (Blueprint $table) {
-//            $table->foreign('company_id')->references('id')->on('companies');
-//            $table->foreign('currency_id')->references('id')->on('currencies');
-//        });
-
-//        Schema::table('vendors', function (Blueprint $table) {
-//            $table->foreign('supplier_id')->references('id')->on('suppliers');
-//            $table->foreign('company_id')->references('id')->on('companies');
-//            $table->foreign('author_id')->references('id')->on('users');
-//        });
-//        Schema::table('process_position', function (Blueprint $table) {
-//            $table->foreign('process_id')->references('id')->on('processes');
-//            $table->foreign('position_id')->references('id')->on('positions');
-//        });
-//        Schema::table('settingable', function (Blueprint $table) {
-//            $table->foreign('setting_id')->references('id')->on('settings');
-//        });
-//        Schema::table('portfolios', function (Blueprint $table) {
-//            $table->string('alias')->nullable()->comment('Алиас');
-//            $table->string('slug')->nullable()->comment('Слаг');
-//            $table->text('seo_description')->nullable()->comment('Описание для сайта');
-
-//            $table->foreign('photo_id')->references('id')->on('photos');
-//            $table->foreign('company_id')->references('id')->on('companies');
-//            $table->foreign('author_id')->references('id')->on('users');
-//        });
         Schema::table('portfolios_items', function (Blueprint $table) {
             $table->foreign('portfolio_id')->references('id')->on('portfolios');
-//            $table->foreign('photo_id')->references('id')->on('photos');
             $table->foreign('parent_id')->references('id')->on('portfolios_items');
             $table->foreign('category_id')->references('id')->on('portfolios_items');
-//            $table->foreign('display_mode_id')->references('id')->on('display_modes');
-//            $table->foreign('directive_category_id')->references('id')->on('units_categories');
-//            $table->foreign('company_id')->references('id')->on('companies');
-//            $table->foreign('author_id')->references('id')->on('users');
         });
         Schema::table('business_cases', function (Blueprint $table) {
             $table->foreign('portfolios_item_id')->references('id')->on('portfolios');
-//            $table->foreign('photo_id')->references('id')->on('photos');
-//            $table->foreign('company_id')->references('id')->on('companies');
-//            $table->foreign('author_id')->references('id')->on('users');
         });
     }
 
@@ -265,51 +225,13 @@ class Update130420Tables extends Migration
             $table->dropColumn('name');
         });
 
-//        Schema::table('cities', function (Blueprint $table) {
-//            $table->dropColumn('prepositional_case');
-//        });
-
-//        Schema::table('company_currency', function (Blueprint $table) {
-//            $table->dropForeign('company_currency_company_id_foreign');
-//            $table->dropForeign('company_currency_currency_id_foreign');
-//        });
-
-//        Schema::table('vendors', function (Blueprint $table) {
-//            $table->dropForeign('vendors_supplier_id_foreign');
-//            $table->dropForeign('vendors_company_id_foreign');
-//            $table->dropForeign('vendors_author_id_foreign');
-//        });
-//        Schema::table('process_position', function (Blueprint $table) {
-//            $table->dropForeign('process_position_process_id_foreign');
-//            $table->dropForeign('process_position_position_id_foreign');
-//        });
-//        Schema::table('settingable', function (Blueprint $table) {
-//            $table->dropForeign('settingable_setting_id_foreign');
-//        });
-//        Schema::table('portfolios', function (Blueprint $table) {
-//            $table->dropColumn('alias');
-//            $table->dropColumn('slug');
-//            $table->dropColumn('seo_description');
-
-//            $table->dropForeign('portfolios_photo_id_foreign');
-//            $table->dropForeign('portfolios_company_id_foreign');
-//            $table->dropForeign('portfolios_author_id_foreign');
-//        });
         Schema::table('portfolios_items', function (Blueprint $table) {
             $table->dropForeign('portfolios_items_portfolio_id_foreign');
-//            $table->dropForeign('portfolios_items_photo_id_foreign');
             $table->dropForeign('portfolios_items_parent_id_foreign');
             $table->dropForeign('portfolios_items_category_id_foreign');
-//            $table->dropForeign('portfolios_items_display_mode_id_foreign');
-//            $table->dropForeign('portfolios_items_directive_category_id_foreign');
-//            $table->dropForeign('portfolios_items_company_id_foreign');
-//            $table->dropForeign('portfolios_items_author_id_foreign');
         });
         Schema::table('business_cases', function (Blueprint $table) {
             $table->dropForeign('business_cases_portfolios_item_id_foreign');
-//            $table->dropForeign('business_cases_photo_id_foreign');
-//            $table->dropForeign('business_cases_company_id_foreign');
-//            $table->dropForeign('business_cases_author_id_foreign');
         });
     }
 }
