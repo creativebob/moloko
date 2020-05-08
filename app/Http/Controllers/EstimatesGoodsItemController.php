@@ -76,11 +76,14 @@ class EstimatesGoodsItemController extends Controller
             }
         }
 
-        $price_goods = PricesGoods::findOrFail($request->price_id);
-        $price_goods->load('product');
+        $price_goods = PricesGoods::with([
+            'product.article'
+        ])
+        ->findOrFail($request->price_id);
 
         if ($price_goods->product->serial == 1) {
-            $estimates_goods_item = EstimatesGoodsItem::create([
+
+            $data = [
                 'estimate_id' => $request->estimate_id,
                 'goods_id' => $price_goods->product->id,
                 'price_id' => $price_goods->id,
@@ -88,13 +91,17 @@ class EstimatesGoodsItemController extends Controller
                 'stock_id' => $stock_id,
                 'price' => $price_goods->price,
                 'count' => 1,
-                'amount' => $price_goods->price
-            ]);
+                'cost' => $price_goods->product->article->cost_default,
+                'amount' => $price_goods->price,
+                'margin_currency' => $price_goods->price - $price_goods->product->article->cost_default,
+            ];
+
+            $onePercent = $data['amount'] / 100;
+            $data['margin_percent'] = ($data['cost'] / $onePercent);
+
+            $estimates_goods_item = EstimatesGoodsItem::create($data);
 
         } else {
-
-            // TODO - 28.10.19 - Проверка при добавлении при множественном клике в смете, уйдет с Vue
-
             $estimates_goods_item = EstimatesGoodsItem::firstOrNew([
                 'estimate_id' => $request->estimate_id,
                 'goods_id' => $price_goods->product->id,
@@ -103,22 +110,31 @@ class EstimatesGoodsItemController extends Controller
             ], [
                 'price' => $price_goods->price,
                 'count' => 1,
+                'cost' => $price_goods->product->article->cost_default,
                 'amount' => $price_goods->price,
+                'margin_currency' => $price_goods->price - $price_goods->product->article->cost_default,
                 'currency_id' => $price_goods->currency_id,
             ]);
+
+            $onePercent = $estimates_goods_item->amount / 100;
+            $estimates_goods_item->margin_percent = ($estimates_goods_item->cost / $onePercent);
 
             if ($estimates_goods_item->id) {
 
                 if ($estimates_goods_item->price != $price_goods->price) {
                     $success = false;
                 } else {
-                    $count = $estimates_goods_item->count + 1;
-                    $amount = $count * $estimates_goods_item->price;
 
-                    $estimates_goods_item->update([
-                        'count' => $count,
-                        'amount' => $amount
-                    ]);
+                    $data['count'] = $estimates_goods_item->count + 1;
+                    $data['amount'] = $data['count'] * $estimates_goods_item->price;
+                    $data['cost'] = $data['count'] * $price_goods->product->article->cost_default;
+
+                    $data['margin_currency'] = $data['amount'] - $data['cost'];
+
+                    $onePercent = $data['amount'] / 100;
+                    $data['margin_percent'] = ($data['cost'] / $onePercent);
+
+                    $estimates_goods_item->update($data);
                 }
             } else {
                 $estimates_goods_item->save();
@@ -177,12 +193,22 @@ class EstimatesGoodsItemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $estimates_goods_item = EstimatesGoodsItem::findOrFail($id);
+        $estimates_goods_item = EstimatesGoodsItem::with([
+            'product.article'
+        ])
+        ->findOrFail($id);
         // dd($estimates_goods_item);
 
-        $result = $estimates_goods_item->update([
-            'count' => $request->count,
-        ]);
+        $data['count'] = $request->count;
+        $data['amount'] = $estimates_goods_item->price *  $data['count'];
+        $data['cost'] = $data['count'] * $estimates_goods_item->product->article->cost_default;
+
+        $data['margin_currency'] = $data['amount'] - $data['cost'];
+
+        $onePercent = $data['amount'] / 100;
+        $data['margin_percent'] = ($data['cost'] / $onePercent);
+
+        $result = $estimates_goods_item->update($data);
 //        dd($result);
 
         $estimates_goods_item->load([
@@ -236,28 +262,42 @@ class EstimatesGoodsItemController extends Controller
         ]);
 
         $amount = 0;
+        $cost = 0;
         if ($estimate->services_items->isNotEmpty()) {
             $amount += $estimate->services_items->sum('amount');
+            $cost += $estimate->services_items->sum('cost');
         }
         if ($estimate->goods_items->isNotEmpty()) {
             $amount += $estimate->goods_items->sum('amount');
+            $cost += $estimate->goods_items->sum('cost');
         }
 
         if ($amount > 0) {
             $discount = (($amount * $estimate->discount_percent) / 100);
             $total = ($amount - $discount);
 
+            $margin_currency = $total - $cost;
+
+            $onePercent = $total / 100;
+            $margin_percent = ($cost / $onePercent);
+
             $data = [
                 'amount' => $amount,
                 'discount' => $discount,
-                'total' => $total
+                'total' => $total,
+                'cost' => $cost,
+                'margin_currency' => $margin_currency,
+                'margin_percent' => $margin_percent,
             ];
 
         } else {
             $data = [
                 'amount' => 0,
                 'discount' => 0,
-                'total' => 0
+                'total' => 0,
+                'cost' => 0,
+                'margin_currency' => 0,
+                'margin_percent' => 0,
             ];
         }
 

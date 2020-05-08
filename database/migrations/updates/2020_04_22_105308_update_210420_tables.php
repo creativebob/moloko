@@ -48,6 +48,10 @@ class Update210420Tables extends Migration
         });
 
         Schema::table('estimates', function (Blueprint $table) {
+            $table->integer('cost')->default(0)->comment('Себестоимость')->after('number');
+            $table->decimal('margin_percent', 10, 2)->default(0)->comment('Процент маржи')->after('total');
+            $table->decimal('margin_currency', 10, 2)->default(0)->comment('Сумма маржи')->after('margin_percent');
+
             $table->date('registered_date')->nullable()->comment('Дата оформления')->after('is_registered');
         });
     }
@@ -90,7 +94,12 @@ class Update210420Tables extends Migration
         });
 
         Schema::table('estimates', function (Blueprint $table) {
-            $table->dropColumn('is_registered');
+            $table->dropColumn([
+                'cost',
+                'margin_percent',
+                'margin_currency',
+                'is_registered',
+            ]);
         });
     }
 }

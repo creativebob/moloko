@@ -363,7 +363,8 @@ class GoodsController extends Controller
                 ]);
             },
             'metrics',
-            'prices'
+            'prices',
+            'category.manufacturers.company'
         ]);
 //        dd($cur_goods);
 

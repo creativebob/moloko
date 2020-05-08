@@ -18,6 +18,8 @@ class EstimatesGoodsItem extends Model
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'estimate_id',
+        'currency_id',
+
         'price_id',
         'goods_id',
         'stock_id',
@@ -27,6 +29,10 @@ class EstimatesGoodsItem extends Model
 
         'count',
         'price',
+
+        'cost',
+        'margin_percent',
+        'margin_currency',
 
         'amount',
 

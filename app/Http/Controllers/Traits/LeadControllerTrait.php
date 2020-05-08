@@ -82,7 +82,6 @@ trait LeadControllerTrait
     }
 
 	public function updateLead($request, $lead, $answer = null){
-
         // Подготовка: -------------------------------------------------------------------------------------
 
         // Получаем данные для авторизованного пользователя
@@ -121,11 +120,11 @@ trait LeadControllerTrait
         $lead->choice_type = $choiceFromTag['type'];
         $lead->choice_id = $choiceFromTag['id'];
 
-        if (isset($request->delivery_date) || isset($request->delivery_time)) {
+        // TODO - 08.05.20 - Теперь приходит дата доставки, т.к. перевел даты на компонент, поэтому пока проверка на время, в дальнейшем дата вообще переедет
+        if (isset($request->delivery_date) && isset($request->delivery_time)) {
 	        $date = Carbon::createFromFormat('d.m.Y H:i', $request->delivery_date . ' ' . $request->delivery_time);
 	        $lead->delivered_at = $date;
         }
-
 
         // Работаем с ПОЛЬЗОВАТЕЛЕМ лида ================================================================
 
@@ -159,6 +158,8 @@ trait LeadControllerTrait
 
         };
 
+
+
         // Конец работы с ПОЛЬЗОВАТЕЛЕМ лида ==============================================================
 
         // Телефон
@@ -174,6 +175,8 @@ trait LeadControllerTrait
 
         // Модерируем (Временно)
         if($answer['automoderate']){$lead->moderation = null;};
+
+
 
         $lead->save();
 

@@ -31,10 +31,15 @@ class CreateEstimatesTable extends Migration
 
             $table->string('number')->nullable()->comment('Номер сметы');
 
+            $table->integer('cost')->default(0)->comment('Себестоимость');
+
             $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
             $table->decimal('discount', 12, 4)->default(0)->comment('Скидка на заказ');
             $table->decimal('discount_percent', 5, 2)->default(0)->comment('Процент скидки');
             $table->decimal('total', 12, 4)->default(0)->comment('Итоговая сумма по заказу');
+
+            $table->decimal('margin_percent', 10, 2)->default(0)->comment('Процент маржи');
+            $table->decimal('margin_currency', 10, 2)->default(0)->comment('Сумма маржи');
 
             // $table->decimal('discount_total', 12, 4)->default(0)->comment('Итоговая сумма всех скидок');
 

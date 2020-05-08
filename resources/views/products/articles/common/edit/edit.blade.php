@@ -98,22 +98,23 @@
 								<articles-categories-with-groups-component :item="{{ $item }}" :article="{{ $article }}" :categories='@json($categories_tree)' :groups='@json($groups)'></articles-categories-with-groups-component>
 
 								<label>Производитель
-
-									@if ($item->category->manufacturers->isNotEmpty())
-
-                                        <manufacturers-component
-                                            :item='@json($item)'
-                                            :manufacturers='@json($item->category->manufacturers)'
-                                            disabled="{{ $disabled }}"
-                                        ></manufacturers-component>
-{{--										{!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $article->manufacturer_id, [$disabled ? 'disabled' : '']) !!}--}}
-
-									@else
-
-										@include('products.articles.common.edit.manufacturers')
-
-									@endif
-
+                                    @if ($item->category->manufacturers->isNotEmpty())
+                                        @if($item->getTable() == 'goods')
+                                            <manufacturers-component
+                                                :item='@json($item)'
+                                                :manufacturers='@json($item->category->manufacturers)'
+                                                disabled="{{ $disabled }}"
+                                            ></manufacturers-component>
+                                        @else
+                                            {!! Form::select('manufacturer_id', $item->category->manufacturers->pluck('company.name', 'id'), $article->manufacturer_id, [$disabled ? 'disabled' : '']) !!}
+                                        @endif
+                                    @else
+                                        @if($item->getTable() == 'goods')
+                                            @include('products.articles.common.edit.manufacturers')
+                                        @else
+                                            @include('includes.selects.manufacturers')
+                                        @endif
+                                    @endif
 								</label>
 
 								<div class="grid-x grid-margin-x">
@@ -299,22 +300,22 @@
 							</div>
 						</fieldset>
 
-{{--	                        <fieldset class="fieldset-access">--}}
-{{--	                            <legend>Умолчания для стоимости</legend>--}}
+	                        <fieldset class="fieldset-access">
+	                            <legend>Умолчания для стоимости</legend>
 
-{{--	                            <div class="grid-x grid-margin-x">--}}
-{{--	                                <div class="small-12 medium-6 cell">--}}
-{{--	                                    <label>Себестоимость--}}
-{{--	                                        {{ Form::number('cost_default', null) }}--}}
-{{--	                                    </label>--}}
-{{--	                                </div>--}}
+	                            <div class="grid-x grid-margin-x">
+	                                <div class="small-12 medium-6 cell">
+	                                    <label>Себестоимость
+	                                        {{ Form::number('cost_default', null) }}
+	                                    </label>
+	                                </div>
 {{--	                                <div class="small-12 medium-6 cell">--}}
 {{--	                                    <label>Цена за (<span id="unit">{{ ($article->package_status == false) ? $article->group->unit->abbreviation : 'порцию' }}</span>)--}}
 {{--	                                        {{ Form::number('price_default', null) }}--}}
 {{--	                                    </label>--}}
 {{--	                                </div>--}}
-{{--	                            </div>--}}
-{{--	                        </fieldset>--}}
+	                            </div>
+	                        </fieldset>
 
 						@if(isset($raw))
 							<fieldset class="fieldset-access">

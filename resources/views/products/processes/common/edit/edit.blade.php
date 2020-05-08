@@ -271,22 +271,22 @@
                             </div>
                         </fieldset>
 
-                        {{--	                        <fieldset class="fieldset-access">--}}
-                        {{--	                            <legend>Умолчания для стоимости</legend>--}}
+                        <fieldset class="fieldset-access">
+                            <legend>Умолчания для стоимости</legend>
 
-                        {{--	                            <div class="grid-x grid-margin-x">--}}
-                        {{--	                                <div class="small-12 medium-6 cell">--}}
-                        {{--	                                    <label>Себестоимость--}}
-                        {{--	                                        {{ Form::number('cost_default', null) }}--}}
-                        {{--	                                    </label>--}}
-                        {{--	                                </div>--}}
-                        {{--	                                <div class="small-12 medium-6 cell">--}}
-                        {{--	                                    <label>Цена за (<span id="unit">{{ ($article->package_status == false) ? $article->group->unit->abbreviation : 'порцию' }}</span>)--}}
-                        {{--	                                        {{ Form::number('price_default', null) }}--}}
-                        {{--	                                    </label>--}}
-                        {{--	                                </div>--}}
-                        {{--	                            </div>--}}
-                        {{--	                        </fieldset>--}}
+                            <div class="grid-x grid-margin-x">
+                                <div class="small-12 medium-6 cell">
+                                    <label>Себестоимость
+                                        {{ Form::number('cost_default', null) }}
+                                    </label>
+                                </div>
+{{--                                <div class="small-12 medium-6 cell">--}}
+{{--                                    <label>Цена за (<span id="unit">{{ ($article->package_status == false) ? $article->group->unit->abbreviation : 'порцию' }}</span>)--}}
+{{--                                        {{ Form::number('price_default', null) }}--}}
+{{--                                    </label>--}}
+{{--                                </div>--}}
+                            </div>
+                        </fieldset>
 
 {{--                        @if(isset($raw))--}}
 {{--                            <fieldset class="fieldset-access">--}}

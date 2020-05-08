@@ -33,6 +33,8 @@ class Estimate extends Model
         'company_id',
 
         'number',
+        'cost',
+
         'date',
         'description',
         'author_id',
@@ -46,6 +48,10 @@ class Estimate extends Model
 
         'amount',
         'total',
+
+        'margin_percent',
+        'margin_currency',
+
         'discount',
         'discount_percent',
 

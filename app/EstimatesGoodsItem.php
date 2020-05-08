@@ -35,6 +35,10 @@ class EstimatesGoodsItem extends Model
         'count',
         'price',
 
+        'cost',
+        'margin_percent',
+        'margin_currency',
+
         'amount',
 
         'is_reserved',

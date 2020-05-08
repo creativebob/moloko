@@ -35,11 +35,17 @@ class Estimate extends Model
 	    'date',
 
         'number',
+        'cost',
+
         'author_id',
         'draft',
         'is_saled',
 	    'amount',
 	    'total',
+
+        'margin_percent',
+        'margin_currency',
+
 	    'discount',
 	    'discount_percent',
 

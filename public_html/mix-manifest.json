@@ -1,8 +1,8 @@
 {
-    "/js/system/app.js": "/js/system/app.js?id=e0f59aeaa25699664c9e",
-    "/css/system/app.css": "/css/system/app.css?id=0e9c176cc4d4f881fc38",
-    "/css/project/app.css": "/css/project/app.css?id=b4390fdc674d11545c2a",
-    "/js/project/app.js": "/js/project/app.js?id=ee120c3e16149d94c158",
-    "/css/system/app.min.css": "/css/system/app.min.css?id=0e9c176cc4d4f881fc38",
-    "/css/project/app.min.css": "/css/project/app.min.css?id=b4390fdc674d11545c2a"
+    "/js/system/app.js": "/js/system/app.js",
+    "/css/system/app.css": "/css/system/app.css",
+    "/css/project/app.css": "/css/project/app.css",
+    "/js/project/app.js": "/js/project/app.js",
+    "/css/system/app.min.css": "/css/system/app.min.css",
+    "/css/project/app.min.css": "/css/project/app.min.css"
 }
