@@ -10,6 +10,7 @@ use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Lead;
 use App\Models\Project\Estimate;
 use App\Models\Project\EstimatesGoodsItem;
+use App\Models\Project\Promotion;
 use App\PricesGoods;
 use App\Source;
 use App\Stock;
@@ -71,40 +72,36 @@ class CartController extends Controller
         // dd($prices_goods);
 
         $site = $this->site;
-        $page = $site->pages_public->firstWhere('alias', 'cart');
 
         // Грузим продвижения с отображением на корзине
         $filial_id = $site->filial->id;
-        $site->load([
-            'promotions' => function ($q) use ($filial_id) {
+
+        $promotions = Promotion::with([
+            'prices_goods' => function ($q) use ($filial_id) {
                 $q->with([
-                    'prices_goods' => function ($q) use ($filial_id) {
-                        $q->with([
-                            'goods_public' => function ($q) {
-                                $q->with([
-                                    'article.photo',
-                                    'metrics.values'
-                                ]);
-
-                            },
-                            'currency',
-                            'catalogs_item.directive_category:id,alias',
-                            'catalogs_item.parent'
-                        ])
-                        ->where('filial_id', $filial_id);
-                    }
+                    'goods',
+                    'currency',
+                    'catalogs_item.directive_category:id,alias',
+                    'catalogs_item.parent'
                 ])
-                    ->where([
-                        'is_upsale' => true,
-                        'display' => true
-                    ])
-                    ->where('begin_date', '<=', today())
-                    ->where('end_date', '>=', today())
-                ;
+                    ->where('filial_id', $filial_id);
             }
-        ]);
+        ])
+            ->where([
+                'site_id' => $site->id,
+                'is_upsale' => true,
+                'display' => true
+            ])
+            ->whereHas('filials', function($q) use ($filial_id) {
+                $q->where('id', $filial_id);
+            })
+            ->where('begin_date', '<=', today())
+            ->where('end_date', '>=', today())
+            ->get();
 
-        return view($site->alias.'.pages.cart.index', compact('site',  'page', 'prices_goods'));
+        $page = $site->pages_public->firstWhere('alias', 'cart');
+
+        return view($site->alias.'.pages.cart.index', compact('site',  'page', 'prices_goods', 'promotions'));
     }
 
     /**
@@ -266,7 +263,7 @@ class CartController extends Controller
 
                     // sendSms('79041248598', 'Данные для входа: ' . $user->access_code);
 
-                    $user->location_id = create_location($request, $country_id = 1, $site->filial->location->city_id);
+                    $user->location_id = create_location($request, $country_id = 1, $city_id = 1);
 
                     $user->first_name = $first_name;
                     $user->second_name = $second_name;
@@ -325,6 +322,7 @@ class CartController extends Controller
             $lead->badget = $badget ?? 0;
             $lead->lead_method_id = 2; // Способ обращения: "звонок"" по умолчанию
             $lead->draft = null;
+            $lead->site_id = $site->id;
 
             $lead->author_id = 1;
 //        $lead->editor_id = 1;
@@ -356,7 +354,7 @@ class CartController extends Controller
                     'lead_id' => $lead->id,
                     'filial_id' => $lead->filial_id,
                     'company_id' => $lead->company->id,
-                    'date' => today(),
+                    'date' => now()->format('Y-m-d'),
                     'number' => $lead->case_number,
                     'author_id' => $lead->author_id,
                 ]);
@@ -364,7 +362,7 @@ class CartController extends Controller
                 logs('leads_from_project')->info("Создана смета с id: [{$estimate->id}]");
 
                 $prices_goods_ids = array_keys($cart['prices']);
-                $prices_goods = PricesGoods::with('goods.article')
+                $prices_goods = PricesGoods::with('goods')
                     ->find($prices_goods_ids);
 
                 $stock_id = null;
@@ -384,13 +382,9 @@ class CartController extends Controller
                     }
                 }
 
-                $estimatesGoodsItemsInsert = [];
+                $data = [];
                 foreach ($prices_goods as $price_goods) {
-
-                    $count = $cart['prices'][$price_goods->id]['count'];
-
-                    $data = [
-                        'currency_id' => 1,
+                    $data[] = new EstimatesGoodsItem([
                         'goods_id' => $price_goods->goods->id,
 
                         'price_id' => $price_goods->id,
@@ -400,22 +394,13 @@ class CartController extends Controller
                         'author_id' => 1,
 
                         'price' => $price_goods->price,
-                        'count' => $count,
+                        'count' => $cart['prices'][$price_goods->id]['count'],
 
-                        'cost' => $price_goods->goods->article->cost_default * $count,
-                        'amount' => $count * $price_goods->price,
-                        'total' => $count * $price_goods->price,
-                    ];
-
-                    $data['margin_currency'] = $data['total'] - $data['cost'];
-
-                    $onePercent = $data['total'] / 100;
-                    $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
-
-                    $estimatesGoodsItemsInsert[] = EstimatesGoodsItem::make($data);
+                        'amount' => $cart['prices'][$price_goods->id]['count'] * $price_goods->price
+                    ]);
                 }
 
-                $estimate->goods_items()->saveMany($estimatesGoodsItemsInsert);
+                $estimate->goods_items()->saveMany($data);
                 logs('leads_from_project')->info("Записаны товары сметы");
                 // TODO - 15.11.19 - Скидка должна браться из ценовой политики
                 $discount_percent = 0;
@@ -428,13 +413,6 @@ class CartController extends Controller
                 $estimate->total = $total;
                 $estimate->discount = $discount;
                 $estimate->discount_percent = $discount_percent;
-
-                $estimate->cost = $estimate->goods_items->sum('cost');
-                $estimate->margin_currency = $estimate->amount - $estimate->cost;
-
-                $onePercent =  $estimate->total / 100;
-                $estimate->margin_percent = ($estimate->cost / $onePercent);
-
                 $estimate->save();
 
                 // TODO - 23.10.19 - Сделать адекватное сохранение в корзине
@@ -496,10 +474,6 @@ class CartController extends Controller
                 $message .= "Скидка: " . num_format($estimate->discount, 0) . ' руб.' . "\r\n";
             }
 
-            $message .= "\r\n";
-            // Маржа
-            $message .= "Сумма маржи: " . num_format($estimate->margin_currency, 0) . ' руб.' . "\r\n";
-            $message .= "Процент маржи: " . $estimate->margin_percent . '%.' . "\r\n";
             $message .= "\r\n";
 
             // Ролл Хаус
@@ -582,7 +556,7 @@ class CartController extends Controller
             session(['confirmation' => $confirmation]);
 
             logs('leads_from_project')->info("============== Создан лид с сайта ===============================
-            
+
             ");
 
 

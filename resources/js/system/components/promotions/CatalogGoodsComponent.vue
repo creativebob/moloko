@@ -98,45 +98,49 @@
                         v-if="getPricesForSite(filial.id).length"
                         class="hover unstriped"
                     >
-                    <caption>{{ filial.name }}</caption>
-                    <thead>
+                        <caption>{{ filial.name }}</caption>
+                        <thead>
                         <tr>
                             <th>№</th>
                             <th>Название</th>
                             <th>Цена</th>
                             <th></th>
                         </tr>
-                    </thead>
+                        </thead>
 
-                    <tbody>
+                        <tbody>
 
-                            <tr
-                                v-for="(price, index) in getPricesForSite(filial.id)"
-                            >
-                                    <td>{{ index + 1}}</td>
-                                    <td>
-                                        {{ price.goods.article.name }}
-                                        <input
-                                            type="hidden"
-                                            name="prices_goods[]"
-                                            :value="price.id"
-                                        >
-                                    </td>
-                                    <td>{{ price.price }}</td>
-                                    <td class="td-delete">
-                                        <div
-                                            @click="removePrice(price.id)"
-                                            class="icon-delete sprite"
-                                        ></div>
-                                    </td>
+                        <tr
+                            v-for="(price, index) in getPricesForSite(filial.id)"
+                        >
+                            <td>{{ index + 1}}</td>
+                            <td>
+                                {{ price.goods.article.name }}
+                            </td>
+                            <td>{{ price.price }}</td>
+                            <td class="td-delete">
+                                <div
+                                    @click="removePrice(price.id)"
+                                    class="icon-delete sprite"
+                                ></div>
+                            </td>
 
-                            </tr>
+                        </tr>
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
                 </template>
             </fieldset>
         </div>
+
+        <tempalate v-if="pricesIds.length">
+            <input
+                v-for="priceId in pricesIds"
+                type="hidden"
+                name="prices_goods[]"
+                :value="priceId"
+            >
+        </tempalate>
     </div>
 </template>
 
@@ -152,9 +156,9 @@
         created() {
             if (this.pricesGoods.length) {
                 var store = this.$store;
-               this.pricesGoods.forEach(function(price) {
-                   store.commit('ADD_PRICE', price);
-               })
+                this.pricesGoods.forEach(function(price) {
+                    store.commit('ADD_PRICE', price);
+                })
             }
         },
         data() {
@@ -211,14 +215,17 @@
                 }
             },
             pricesForSite() {
-                return this.$store.state.promotion.prices;
+                return this.$store.state.promotion.prices.filter(price => price.catalogs_goods_id == this.catalogGoodsId);
+            },
+            pricesIds() {
+                var ids = [];
+                this.$store.state.promotion.prices.forEach(price => ids.push(price.id));
+                return ids;
             }
         },
         methods: {
             getPricesForSite(filialId) {
-                return this.$store.state.promotion.prices.filter(price => {
-                    return price.filial_id == filialId;
-                });
+                return this.$store.state.promotion.prices.filter(price => price.filial_id == filialId && price.catalogs_goods_id == this.catalogGoodsId);
             },
             resetPrices() {
                 this.listPrices = [];
