@@ -15,10 +15,13 @@ class WidgetsTableSeeder extends Seeder
         	[
 		        'name' => 'Нагрузка на отдел продаж',
 		        'description' => 'Статистика по задачам на менеджеров',
-		        'tag' => 'sales-department-burden',       
-                'author_id' => 1,
-        	]
-
+		        'tag' => 'sales_department_burden',
+        	],
+            [
+                'name' => 'Показатели клиентской базы',
+                'description' => 'Показатели клиентской базы',
+                'tag' => 'clients_indicators',
+            ],
         ]);
     }
 }

@@ -62,11 +62,21 @@
 </div>
 	@endif
 
-<div class="tabs-panel" id="tab-containers">
-	@include('products.articles.goods.containers.containers')
-</div>
+@can('index', App\Container::class)
+    <div class="tabs-panel" id="tab-containers">
+        @include('products.articles.goods.containers.containers')
+    </div>
+@endcan
 
-<div class="tabs-panel" id="tab-attachments">
-	@include('products.articles.goods.attachments.attachments')
-</div>
+@can('index', App\Attachment::class)
+    <div class="tabs-panel" id="tab-attachments">
+        @include('products.articles.goods.attachments.attachments')
+    </div>
+@endcan
+
+@can('index', App\Goods::class)
+    <div class="tabs-panel" id="tab-related">
+        @include('products.articles.goods.related.related', ['id' => $item->id])
+    </div>
+@endcan
 

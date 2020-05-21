@@ -327,11 +327,15 @@ Route::post('/ajax_get_article_inputs', 'ArticleController@get_inputs')->middlew
 Route::post('/ajax_get_category_raw', 'RawController@ajax_get_category_raw')->middleware('auth');
 Route::post('/ajax_get_raw', 'RawController@ajax_get_raw')->middleware('auth');
 
-Route::any('/ajax_get_container', 'ContainerController@ajax_get_container')->middleware('auth');
+Route::any('/ajax_get_related', 'GoodsController@ajax_get_related');
 
 Route::any('/ajax_get_attachment', 'AttachmentController@ajax_get_attachment')->middleware('auth');
 
 Route::any('/ajax_get_goods', 'GoodsController@ajax_get_goods')->middleware('auth');
+
+Route::post('/ajax_get_goods', 'GoodsController@ajax_get_goods')->middleware('auth');
+
+
 
 Route::post('/ajax_get_category_workflow', 'WorkflowController@ajax_get_category_workflow')->middleware('auth');
 Route::post('/ajax_get_workflow', 'WorkflowController@ajax_get_workflow')->middleware('auth');
@@ -389,16 +393,16 @@ Route::resource('/containers_categories', 'ContainersCategoryController');
 Route::get('/containers/search/{search}', 'ContainerController@search');
 // Основные методы
 Route::resource('/containers', 'ContainerController');
-Route::post('/containers/search/{text_fragment}', 'СontainerController@search');
+Route::post('/containers/search/{text_fragment}', 'ContainerController@search');
 // Дублирование
 Route::post('/containers/replicate/{id}', 'ContainerController@replicate');
 // Архивация
 Route::post('/containers/archive/{id}', 'ContainerController@archive');
 // Фото
-Route::any('/container/add_photo', 'СontainerController@add_photo');
-Route::post('/container/photos', 'СontainerController@photos');
+Route::any('/container/add_photo', 'ContainerController@add_photo');
+Route::post('/container/photos', 'ContainerController@photos');
 
-Route::any('/containers_create_mode', 'СontainerController@ajax_change_create_mode');
+Route::any('/containers_create_mode', 'ContainerController@ajax_change_create_mode');
 
 
 // ---------------------------------- Склады упаковок -------------------------------------------
@@ -1274,6 +1278,10 @@ Route::prefix('/portfolios/{portfolio_id}')->group(function () {
     // Основные методы
     Route::resource('/business_cases', 'BusinessCaseController');
 });
+
+
+// ---------------------- Показатели клиентской базы -----------------------
+Route::post('/clients_indicators/compute', 'System\Widgets\ClientsIndicatorController@computeIndicatorsForMonth');
 
 
 //Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');

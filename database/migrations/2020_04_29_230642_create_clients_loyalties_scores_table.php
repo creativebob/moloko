@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateClientsLoyalitiesScoresTable extends Migration
+class CreateClientsLoyaltiesScoresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateClientsLoyalitiesScoresTable extends Migration
      */
     public function up()
     {
-        Schema::create('clients_loyalities_scores', function (Blueprint $table) {
+        Schema::create('clients_loyalties_scores', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->bigInteger('client_id')->unsigned()->nullable()->comment('Id клиента');
 //            $table->foreign('client_id')->references('id')->on('clients');
 
-            $table->tinyInteger('loyality_score')->unsigned()->nullable()->comment('Пользовательская оценка');
+            $table->tinyInteger('loyalty_score')->unsigned()->nullable()->comment('Пользовательская оценка');
 
 
             // Общие настройки
@@ -48,6 +48,6 @@ class CreateClientsLoyalitiesScoresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('clients_loyalities_scores');
+        Schema::dropIfExists('clients_loyalties_scores');
     }
 }

@@ -14,7 +14,7 @@ class Update210420Tables extends Migration
     public function up()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->tinyInteger('loyality_score')->unsigned()->nullable()->comment('Пользовательская оценка')->after('loyality_id');
+            $table->tinyInteger('loyalty_score')->unsigned()->nullable()->comment('Пользовательская оценка')->after('loyalty_id');
 
             $table->boolean('is_lost')->default(0)->comment('Потерянный')->after('loyalty_id');
             $table->boolean('is_vip')->default(0)->comment('VIP-статус')->after('is_lost');
@@ -54,6 +54,29 @@ class Update210420Tables extends Migration
 
             $table->date('registered_date')->nullable()->comment('Дата оформления')->after('is_registered');
         });
+
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropColumn('birthday_company');
+            $table->date('foundation_date')->nullable()->comment('Дата основания')->after('seo_description');
+        });
+
+        Schema::table('widgets', function (Blueprint $table) {
+            $table->dropForeign('widgets_company_id_foreign');
+            $table->dropForeign('widgets_author_id_foreign');
+
+            $table->dropColumn([
+                'company_id',
+                'sort',
+                'display',
+                'system',
+                'moderation',
+                'author_id',
+                'editor_id',
+                'created_at',
+                'updated_at',
+                'deleted_at',
+            ]);
+        });
     }
 
     /**
@@ -84,7 +107,7 @@ class Update210420Tables extends Migration
                 'ltv',
                 'use_promo_count',
                 'promo_rate',
-                'loyality_score',
+                'loyalty_score',
                 'rfm',
                 'abc',
                 'xyz',
@@ -100,6 +123,29 @@ class Update210420Tables extends Migration
                 'margin_currency',
                 'is_registered',
             ]);
+        });
+
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropColumn('foundation_date');
+            $table->date('birthday_company')->nullable()->comment('Дата рождения компании')->after('seo_description');
+        });
+
+        Schema::table('widgets', function (Blueprint $table) {
+            $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
+
+            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
+            $table->boolean('display')->default(1)->comment('Отображение на сайте');
+            $table->boolean('system')->default(0)->comment('Системная запись');
+            $table->boolean('moderation')->default(0)->comment('Модерация');
+
+            $table->bigInteger('author_id')->nullable()->unsigned()->comment('Id создателя записи');
+            $table->foreign('author_id')->references('id')->on('users');
+
+            $table->integer('editor_id')->nullable()->unsigned()->comment('Id редактора записи');
+
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 }

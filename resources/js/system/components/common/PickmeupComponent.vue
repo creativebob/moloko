@@ -6,23 +6,32 @@
         pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}"
         :required="isRequired"
         v-model="date"
+        :name="name"
     >
 </template>
 
 <script>
     import moment from 'moment'
 
-	export default {
-		props: {
-            curDate: {
+    export default {
+        props: {
+            name: {
+                type: String,
+                default: null
+            },
+            value: {
+                type: String,
+                default: null
+            },
+            today: {
                 type: String,
                 default: null
             },
             required: {
                 type: Boolean,
                 default: false
-            }
-		},
+            },
+        },
 
         mounted() {
 
@@ -32,24 +41,24 @@
                 locale : 'ru'
             });
 
-            var $vm = this;
-            $('.pickmeup-field').on('pickmeup-change', function (e) {
-                // console.log(e.detail.formatted_date);
-                // console.log(e.detail.date);
-                $vm.date = e.detail.formatted_date;
-                $vm.$emit('change', $vm.date);
-            });
+            if (this.value) {
+                this.date = moment(String(this.value)).format('DD.MM.YYYY');
+            } else {
+                if (this.today) {
+                    this.date = moment(String(this.today)).format('DD.MM.YYYY');
+                }
+            }
         },
 
         data() {
             return {
-                date: moment(String(this.curDate)).format('DD.MM.YYYY'),
+                date: moment(String(this.today)).format('DD.MM.YYYY'),
             }
         },
 
         computed: {
-		    isRequired() {
-		        return this.required;
+            isRequired() {
+                return this.required;
             }
         },
 
@@ -60,5 +69,5 @@
                 }
             },
         },
-	}
+    }
 </script>

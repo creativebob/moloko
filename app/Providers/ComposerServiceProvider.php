@@ -25,6 +25,7 @@ use App\Http\View\Composers\System\FiltersComposer;
 use App\Http\View\Composers\System\NotificationsComposer;
 use App\Http\View\Composers\System\PaymentsTypesComposer;
 use App\Http\View\Composers\System\ProcessesCategoriesWithGroupsComposer;
+use App\Http\View\Composers\System\RelatedComposer;
 use App\Http\View\Composers\System\SettingsComposer;
 use App\Http\View\Composers\System\SitesWIthFilialsAndCatalogsComposer;
 use App\Http\View\Composers\System\StocksComposer;
@@ -346,8 +347,13 @@ class ComposerServiceProvider extends ServiceProvider
         ], AttachmentsComposer::class);
 
         view()->composer([
-            'products.articles.goods.goods.goods_list'
+            'products.articles.goods.goods.goods_list',
         ], GoodsComposer::class);
+
+        view()->composer([
+            'products.articles_categories.goods_categories.related.related',
+            'products.articles.goods.related.related'
+        ], RelatedComposer::class);
 
         view()->composer([
             'products.processes_categories.services_categories.workflows.workflows_list',

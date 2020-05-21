@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Reports\System;
 
 use App\Client;
 use App\ClientsIndicator;
@@ -8,46 +8,22 @@ use App\Company;
 use App\Estimate;
 use App\Unit;
 use Carbon\Carbon;
-use Illuminate\Console\Command;
 
-class ClientsIndicatorsReport extends Command
+class ClientsIndicatorsReport
 {
     /**
-     * The name and signature of the console command.
+     * Получение показателей клиентской базы
      *
-     * @var string
+     * @param null $date
+     * @param null $companyId
+     * @return mixed
      */
-    protected $signature = 'clients-indicators:report
-                            {startDate? : Дата начала отчёта}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Расчёт показателей общей клиентской базы за период';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
-    {
+    public static function getIndicators($date = null, $companyId = null) {
         set_time_limit(0);
 
         // Месяц
         $unit = Unit::findOrFail(17);
 
-        $date = $this->argument('startDate');
         if (! $date) {
             // Если крон
             $date = today()->subMonth()->toDateString();
@@ -72,7 +48,7 @@ class ClientsIndicatorsReport extends Command
                     $q->where('registered_date', '<', $endDate);
                 },
                 'actual_blacklist',
-                'loyality_score'
+                'loyalty_score'
             ])
             ->withCount([
                 'estimates' => function ($q) use ($endDate) {
@@ -85,6 +61,9 @@ class ClientsIndicatorsReport extends Command
             //            ->when($authUser, function ($q) use ($authUser) {
             //                $q->where('company_id', $authUser->company_id);
             //            })
+            ->when($companyId, function ($q) use ($companyId) {
+                $q->where('company_id', $companyId);
+            })
             ->get()
             ->groupBy('company_id');
 //        dd($groupedClients);
@@ -100,34 +79,42 @@ class ClientsIndicatorsReport extends Command
 
             $company = Company::findOrFail($companyId);
 
-            $clientsIndicator = ClientsIndicator::where([
+            $clientsIndicator = ClientsIndicator::firstOrNew([
                 'start_date' => $data['start_date'],
                 'unit_id' => $data['unit_id'],
                 'company_id' => $data['company_id']
-            ])
-                ->first();
+            ]);
 
-            if ($clientsIndicator) {
-                logs('clients')->info("Отчет по показателям от {$startDate->format('d.m.Y')} на период: {$unit->name} для компании {$company->name} уже существует.");
-                $clientsIndicators[] = $clientsIndicator;
-                //                return $clientsIndicator;
-                //                abort(403, "Отчет за {$clientsIndicator->start_date->format('d.m.Y')} уже существует в бд.");
-            } else {
+//            if ($clientsIndicator) {
+//                logs('clients')->info("Отчет по показателям от {$startDate->format('d.m.Y')} на период: {$unit->name} для компании {$company->name} уже существует.");
+//                $clientsIndicators[] = $clientsIndicator;
+//                //                return $clientsIndicator;
+//                //                abort(403, "Отчет за {$clientsIndicator->start_date->format('d.m.Y')} уже существует в бд.");
+//            } else {
                 $data['count'] = $clients->count();
 
 //                dd($clients->first()->estimates->last());
                 $activeClients = $clients->filter(function ($client) use ($endDatePeriodActive) {
-                    return $client->estimates->last()->registered_date >= $endDatePeriodActive;
+//                    if ($client->estimates->last() == null) {
+//                        dd($client);
+//                    }
+                    if ($client->estimates->last() != null) {
+                        return $client->estimates->last()->registered_date >= $endDatePeriodActive;
+                    }
                 });
                 $data['active_count'] = $activeClients->count();
 
                 $activeClientsPrevious = $clients->filter(function ($client) use ($startDate, $startDatePeriodActive) {
-                    return $client->first_order_date < $startDate && $client->estimates->last()->registered_date >= $startDatePeriodActive;
+                    if ($client->estimates->last() != null) {
+                        return $client->first_order_date < $startDate && $client->estimates->last()->registered_date >= $startDatePeriodActive;
+                    }
                 });
                 $data['active_previous_count'] = $activeClientsPrevious->count();
 
                 $lostClients = $clients->filter(function ($client) use ($startDatePeriodActive, $endDatePeriodActive) {
-                    return $client->estimates->last()->registered_date < $endDatePeriodActive;
+                    if ($client->estimates->last() != null) {
+                        return $client->estimates->last()->registered_date < $endDatePeriodActive;
+                    }
                 });
                 $data['lost_count'] = $lostClients->count();
 
@@ -137,7 +124,9 @@ class ClientsIndicatorsReport extends Command
                 $data['new_clients_period_count'] = $clients->where('first_order_date', '>=', $startDate)->where('first_order_date', '<', $endDate)->count();
 
                 $lostClientsPeriod = $clients->filter(function ($client) use ($startDatePeriodActive, $endDatePeriodActive) {
-                    return $client->estimates->last()->registered_date >= $startDatePeriodActive && $client->estimates->last()->registered_date < $endDatePeriodActive;
+                    if ($client->estimates->last() != null) {
+                        return $client->estimates->last()->registered_date >= $startDatePeriodActive && $client->estimates->last()->registered_date < $endDatePeriodActive;
+                    }
                 });
                 $data['lost_clients_period_count'] = $lostClientsPeriod->count();
 
@@ -146,12 +135,20 @@ class ClientsIndicatorsReport extends Command
                 }
 
 
+                if ($data['active_previous_count'] > 0) {
+                    $data['customer_retention_rate'] = ($data['active_count'] - $data['new_clients_period_count']) / $data['active_previous_count'];
+                    $data['churn_rate'] = $data['lost_clients_period_count'] / $data['active_previous_count'];
+                } else {
+                    $data['customer_retention_rate'] = 1;
+                    $data['churn_rate'] = 0;
+                }
 
-                $data['customer_retention_rate'] = ($data['active_count'] - $data['new_clients_period_count']) / $data['active_previous_count'];
-                $data['churn_rate'] = $data['lost_clients_period_count'] / $data['active_previous_count'];
+
 
                 $customersPeriod = $clients->filter(function ($client) use ($startDate, $endDate) {
-                    return $client->estimates->last()->registered_date >= $startDate && $client->estimates->last()->registered_date < $endDate;
+                    if ($client->estimates->last() != null) {
+                        return $client->estimates->last()->registered_date >= $startDate && $client->estimates->last()->registered_date < $endDate;
+                    }
                 });
                 $data['customers_period_count'] = $customersPeriod->count();
 
@@ -217,7 +214,7 @@ class ClientsIndicatorsReport extends Command
                 $data['ltv_period'] = $data['lifetime'] * $data['average_order_value_period'] * $data['purchase_frequency_period'];
                 $data['customer_equity'] = $data['ltv'] * $data['active_count'];
 
-                $loyalityClients = $activeClients->whereNotNull('loyality_score');
+                $loyalityClients = $activeClients->whereNotNull('loyalty_score');
 
                 if ($loyalityClients->isNotEmpty()) {
                     $loyalityClientsCount = $loyalityClients->count();
@@ -225,10 +222,10 @@ class ClientsIndicatorsReport extends Command
                     $detractorsCount = 0;
 
                     foreach ($loyalityClients as $loyalityClient) {
-                        if ($loyalityClient->loyality_score->loyality_score < 7) {
+                        if ($loyalityClient->loyalty_score->loyalty_score < 7) {
                             $detractorsCount++;
                         }
-                        if ($loyalityClient->loyality_score->loyality_score > 8) {
+                        if ($loyalityClient->loyalty_score->loyalty_score > 8) {
                             $promotersCount++;
                         }
                     }
@@ -241,20 +238,19 @@ class ClientsIndicatorsReport extends Command
                     $data['nps'] = 0;
                 }
 
-
 //                dd($data);
+            if ($clientsIndicator->id) {
+                $clientsIndicator->update($data);
+            } else {
                 $clientsIndicator = ClientsIndicator::create($data);
-
-                logs('clients')->info("Сформирован отчет по показателям клиентской базы от {$startDate->format('d.m.Y')} на период: {$unit->name}, для компании: {$company->name}");
-                $clientsIndicators[] = $clientsIndicator;
-                //                return $clientsIndicator;
             }
 
 
-//        $res = \Artisan::call('clients-indicators:report');
-//        dd($res);
+                logs('clients')->info("Сформирован отчет по показателям клиентской базы от {$startDate->format('d.m.Y')} на период: {$unit->name}, для компании: {$company->name}");
+//            }
         }
 
-//        dd($clientsIndicators);
+        $result['success'] = true;
+        return $result;
     }
 }

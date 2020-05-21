@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 // Модели
-use App\ClientsLoyalitiesScore;
+use App\ClientsLoyaltiesScore;
 use App\Http\Controllers\Traits\Photable;
 use App\User;
 use App\Department;
@@ -565,7 +565,7 @@ class ClientController extends Controller
 
         // ГЛАВНЫЙ ЗАПРОС:
         $client = Client::with([
-            'loyality_score'
+            'loyalty_score'
         ])
         ->moderatorLimit($answer)
         ->authors($answer)
@@ -682,16 +682,16 @@ class ClientController extends Controller
 
         $client->save();
 
-        $client->load('loyality_score');
-        if (isset($request->loyality_score)) {
-            if (isset($client->loyality_score)) {
-                if ($client->loyality_score->loyality_score != $request->loyality_score)
-                    $client->loyalities_scores()->create([
-                        'loyality_score' => $request->loyality_score
+        $client->load('loyalty_score');
+        if (isset($request->loyalty_score)) {
+            if (isset($client->loyalty_score)) {
+                if ($client->loyalty_score->loyalty_score != $request->loyalty_score)
+                    $client->loyalties_scores()->create([
+                        'loyalty_score' => $request->loyalty_score
                     ]);
             } else {
-                $client->loyalities_scores()->create([
-                    'loyality_score' => $request->loyality_score
+                $client->loyalties_scores()->create([
+                    'loyalty_score' => $request->loyalty_score
                 ]);
             }
 

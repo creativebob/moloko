@@ -14,6 +14,7 @@ class ClientsIndicator extends Model
     use SoftDeletes;
     use Commonable;
 
+
     protected $dates = [
         'start_date',
     ];

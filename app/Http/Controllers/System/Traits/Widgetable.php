@@ -1,78 +1,47 @@
 <?php
 
-namespace App\Http\Controllers\Traits\Widgets;
+namespace App\Http\Controllers\System\Traits;
+use App\ClientsIndicator;
 use App\Lead;
 use App\User;
 
-trait WidgetsTrait
+trait Widgetable
 {
-
-    public function addWidgets($widgets){
-
-    	// Инициируем контейнер виджета, если он пуст
-
-    	foreach ($widgets as $widget_tag) {
-
-    		switch ($widget_tag) {
-    			case 'sales-department-burden':
-                $this->salesDepartmentBurden();
-                break;
-
-                case 'marketing-info':
-                $this->marketingInfo();
-                break;
-
-                default:
-    				# code...
-                break;
-            }
-
-        }
-
-    	// Пишем в контейнер дополнительные настройки
-    	// Количество виджетов
-    	// $this->widgets_total['count'] = count($this->widgets_total);
-
-    }
-
-
-
-	// --------------------------------------------------------------------------------------------------------
-	// ВИДЖЕТ: НАГРУЗКА НА ОТДЕЛ ПРОДАЖ -----------------------------------------------------------------------
-	// --------------------------------------------------------------------------------------------------------
-
-    public function salesDepartmentBurden(){
-
-		// Формируем информацию о виджете
-        $result['widget_info'] = $this->all_widgets['sales-department-burden'];
-
+    /**
+     * Нагрузка на отдел продаж
+     *
+     * @return mixed
+     */
+    public function salesDepartmentBurden()
+    {
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('leads', true, 'index');
 
         $leads = Lead::whereNotIn('stage_id', [13, 14, 1, 12])
-        ->manager($this->request->user())
+        ->manager(request()->user())
         ->whereNull('draft')
         ->pluck('manager_id');
 
         $managers = $leads->unique()->toArray();
         // dd($managers);
 
-        $users = User::withCount(['leads' => function($q) {
-            $q
-            ->whereNotIn('stage_id', [13, 14, 1, 12])
-            ->whereNull('draft');
-        },
-        'challenges_work', 
-        'challenges_today',
-        'challenges_tomorrow',
-        'challenges_aftertomorrow',
-        'challenges_week',
-        'challenges_future', 
-        'challenges_last',
-        'badget',
-    	'leads_without_challenges',
-    	'leads_cancel',
-    	'leads_control'])
+        $users = User::withCount([
+            'leads' => function($q) {
+                $q->whereNotIn('stage_id', [13, 14, 1, 12])
+                ->whereNull('draft');
+            },
+            'challenges_work',
+            'challenges_today',
+            'challenges_tomorrow',
+            'challenges_aftertomorrow',
+            'challenges_week',
+            'challenges_future',
+            'challenges_last',
+            'badget',
+            'leads_without_challenges',
+            'leads_cancel',
+            'leads_control'
+        ])
         ->whereIn('id', $managers)
         ->orderBy('leads_count', 'desc')
         ->get();
@@ -81,11 +50,11 @@ trait WidgetsTrait
         //     $q
         //     ->whereNotIn('stage_id', [13, 14, 1, 12])
         //     ->whereNull('draft');
-        // }, 
+        // },
         // 'budget'])
         // ->get();
 
- 
+
  		// dd($users);
 
         $lead_work = [];
@@ -144,27 +113,62 @@ trait WidgetsTrait
         // dd($lead_work);
 
         $result['data'] = $lead_work;
-
-        $this->widgets_total['sales-department-burden'] = $result;
+        return $result;
     }
 
-	// --------------------------------------------------------------------------------------------------------
+    /**
+     * Показатели клиентской базы за год
+     *
+     * @return mixed
+     */
+    public function clientsIndicators()
+    {
 
+        $curYear = (int) today()->format('Y');
 
+        $groupedClientsIndicatorsCurYear = ClientsIndicator::where('company_id', auth()->user()->company_id)
+            ->orderBy('start_date')
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->start_date->format('Y');
+            });
 
-	// --------------------------------------------------------------------------------------------------------
-	// ВИДЖЕТ: ИНФОРМАЦИЯ О МАРКЕТИНГНЕ -----------------------------------------------------------------------
-	// --------------------------------------------------------------------------------------------------------
+//        dd($groupedClientsIndicatorsCurYear);
+        $result['data'][$curYear] = [];
+        foreach($groupedClientsIndicatorsCurYear as $year => $clientsIndicatorsMonth) {
+            foreach($clientsIndicatorsMonth as $clientsIndicatorMonth) {
+                $result['data'][$year][$clientsIndicatorMonth->start_date->format('n')] = $clientsIndicatorMonth;
+            }
+        }
 
-    public function marketingInfo(){
+        if (isset(auth()->user()->company->foundation_date)) {
+            $startYear = (int) auth()->user()->company->foundation_date->format('Y');
 
-		// Формируем данные для виджета
-      $result = Department::first();
+//            dd($startYear, $curYear);
 
-      $this->widgets_total['marketing-info'] = $result;
-  }
+            $yearsList = [];
+            for ($i = $startYear; $i <= $curYear; $i++) {
+                $yearsList[] = $i;
+            }
+//            dd($yearsList);
+        } else {
+            $yearsList[] = $curYear;
+        }
 
-	// --------------------------------------------------------------------------------------------------------
+        $result['yearsList'] = $yearsList;
 
+        return $result;
+    }
 
+    /**
+     * Информация о маркетинге
+     */
+//    public function marketingInfo()
+//    {
+//
+//		// Формируем данные для виджета
+//      $result = Department::first();
+//
+//      $this->widgetsTotal['marketing-info'] = $result;
+//  }
 }

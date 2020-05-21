@@ -2,60 +2,87 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-
-use App\Http\Controllers\Traits\Widgets\WidgetsTrait;
-
-use App\Http\Controllers\Session;
-use App\Scopes\ModerationScope;
-
-// Модели которые отвечают за работу с правами + политики
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Auth;
-
-// Запросы и их валидация
-use Illuminate\Http\Request;
-
-// Прочие необходимые классы
-use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\System\Traits\Widgetable;
+use App\Classes\ClientsIndicators;
 
 class DashboardController extends Controller
 {
 
-    // Подключаем построители виджетов
-    use WidgetsTrait;
+    protected $entityAlias;
+    protected $widgetsTotal;
+    protected $allWidgets;
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'dashboard';
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->entityAlias = 'dashboard';
+        $this->widgetsTotal = [];
+        $this->allWidgets = null;
+    }
 
-    // Инициируем контейнер виджета
-    protected $widgets_total = [];
-    protected $all_widgets = null;
-    protected $request = null;
+    use Widgetable;
 
-    public function index(Request $request)
+    /**
+     * Отображение виджетов на рабочем столе
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index()
     {
 
-        $this->request = $request;
+        $user = auth()->user()->load([
+            'staff.position.widgets'
+        ]);
 
-        // Формируем информацию о виджете
-        $user = User::with('staff.position.widgets')->findOrFail($request->user()->id);
+        $widgets = [];
 
         // Если пользователь устроен на должность
         if(isset($user->staff->first()->position)){
 
-            $this->all_widgets = $user->staff->first()->position->widgets->keyBy('tag');
-            $widgets_list = $this->all_widgets->pluck('tag', 'id')->toArray();
-
-            // Генерируем виджеты
-            $this->addWidgets($widgets_list);
-            $widgets = $this->widgets_total;      
+            $widgets = $user->staff->first()->position->widgets;
         }
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entityAlias);
+//        dd($widgets);
 
-        return view('dashboard', compact('page_info', 'widgets'));
+        return view('system.pages.dashboard.index', compact('page_info', 'widgets'));
+    }
+
+    /**
+     * Получаем виджеты
+     *
+     * @param $widgets
+     */
+    public function getWidgets($widget)
+    {
+
+        foreach ($this->allWidgets->pluck('tag', 'id')->toArray() as $widgetTag) {
+
+            switch ($widgetTag) {
+                case 'sales-department-burden':
+                    $this->widgetsTotal['sales-department-burden'] = $this->salesDepartmentBurden();
+                    break;
+
+                case 'clients-indicators':
+                    $this->widgetsTotal['clients-indicators'] = $this->clientsIndicators();
+                    break;
+
+//                case 'marketing-info':
+//                    $this->marketingInfo();
+//                    break;
+
+                default:
+                    # code...
+                    break;
+            }
+
+        }
+
+        // Пишем в контейнер дополнительные настройки
+        // Количество виджетов
+        // $this->widgetsTotal['count'] = count($this->widgetsTotal);
+
     }
 
 }

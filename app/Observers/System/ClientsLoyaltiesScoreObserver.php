@@ -2,15 +2,15 @@
 
 namespace App\Observers\System;
 
-use App\ClientsLoyalitiesScore;
+use App\ClientsLoyaltiesScore;
 use App\Observers\System\Traits\Commonable;
 
-class ClientsLoyalitiesScoreObserver
+class ClientsLoyaltiesScoreObserver
 {
 
     use Commonable;
 
-    public function creating(ClientsLoyalitiesScore $clientsLoyaltiesScore)
+    public function creating(ClientsLoyaltiesScore $clientsLoyaltiesScore)
     {
         $this->store($clientsLoyaltiesScore);
     }

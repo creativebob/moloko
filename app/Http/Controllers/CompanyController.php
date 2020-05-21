@@ -251,6 +251,7 @@ class CompanyController extends Controller
     public function update(CompanyRequest $request, $id)
     {
 
+
         // Получаем авторизованного пользователя
         $user = $request->user();
 

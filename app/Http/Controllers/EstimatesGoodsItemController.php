@@ -94,10 +94,11 @@ class EstimatesGoodsItemController extends Controller
                 'cost' => $price_goods->product->article->cost_default,
                 'amount' => $price_goods->price,
                 'margin_currency' => $price_goods->price - $price_goods->product->article->cost_default,
+                'total' => $price_goods->price,
             ];
 
-            $onePercent = $data['amount'] / 100;
-            $data['margin_percent'] = ($data['cost'] / $onePercent);
+            // $onePercent = $data['amount'] / 100;
+            $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
 
             $estimates_goods_item = EstimatesGoodsItem::create($data);
 
@@ -114,10 +115,11 @@ class EstimatesGoodsItemController extends Controller
                 'amount' => $price_goods->price,
                 'margin_currency' => $price_goods->price - $price_goods->product->article->cost_default,
                 'currency_id' => $price_goods->currency_id,
+                'total' => $price_goods->price,
             ]);
 
-            $onePercent = $estimates_goods_item->amount / 100;
-            $estimates_goods_item->margin_percent = ($estimates_goods_item->cost / $onePercent);
+//            $onePercent = $estimates_goods_item->amount / 100;
+            $estimates_goods_item->margin_percent = ($estimates_goods_item->margin_currency / $estimates_goods_item->amount * 100);
 
             if ($estimates_goods_item->id) {
 
@@ -126,13 +128,14 @@ class EstimatesGoodsItemController extends Controller
                 } else {
 
                     $data['count'] = $estimates_goods_item->count + 1;
-                    $data['amount'] = $data['count'] * $estimates_goods_item->price;
                     $data['cost'] = $data['count'] * $price_goods->product->article->cost_default;
+                    $data['amount'] = $data['count'] * $estimates_goods_item->price;
+                    $data['total'] = $data['count'] * $estimates_goods_item->price;
 
-                    $data['margin_currency'] = $data['amount'] - $data['cost'];
+                    $data['margin_currency'] = $data['total'] - $data['cost'];
 
-                    $onePercent = $data['amount'] / 100;
-                    $data['margin_percent'] = ($data['cost'] / $onePercent);
+//                    $onePercent = $data['amount'] / 100;
+                    $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
 
                     $estimates_goods_item->update($data);
                 }
@@ -187,8 +190,8 @@ class EstimatesGoodsItemController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\EstimatesGoodsItem  $estimatesItem
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\EstimatesGoodsItem $estimatesItem
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -200,13 +203,14 @@ class EstimatesGoodsItemController extends Controller
         // dd($estimates_goods_item);
 
         $data['count'] = $request->count;
-        $data['amount'] = $estimates_goods_item->price *  $data['count'];
         $data['cost'] = $data['count'] * $estimates_goods_item->product->article->cost_default;
+        $data['amount'] = $estimates_goods_item->price * $data['count'];
+        $data['total'] = $estimates_goods_item->price * $data['count'];
 
-        $data['margin_currency'] = $data['amount'] - $data['cost'];
+        $data['margin_currency'] = $data['total'] - $data['cost'];
 
-        $onePercent = $data['amount'] / 100;
-        $data['margin_percent'] = ($data['cost'] / $onePercent);
+//        $onePercent = $data['amount'] / 100;
+        $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
 
         $result = $estimates_goods_item->update($data);
 //        dd($result);
@@ -261,15 +265,19 @@ class EstimatesGoodsItemController extends Controller
             'services_items'
         ]);
 
-        $amount = 0;
         $cost = 0;
+        $amount = 0;
+//        $total = 0;
+
         if ($estimate->services_items->isNotEmpty()) {
-            $amount += $estimate->services_items->sum('amount');
             $cost += $estimate->services_items->sum('cost');
+            $amount += $estimate->services_items->sum('amount');
+//            $total += $estimate->services_items->sum('total');
         }
         if ($estimate->goods_items->isNotEmpty()) {
-            $amount += $estimate->goods_items->sum('amount');
             $cost += $estimate->goods_items->sum('cost');
+            $amount += $estimate->goods_items->sum('amount');
+//            $total += $estimate->goods_items->sum('total');
         }
 
         if ($amount > 0) {
@@ -278,24 +286,24 @@ class EstimatesGoodsItemController extends Controller
 
             $margin_currency = $total - $cost;
 
-            $onePercent = $total / 100;
-            $margin_percent = ($cost / $onePercent);
+//            $onePercent = $total / 100;
+            $margin_percent = ($margin_currency / $total * 100);
 
             $data = [
+                'cost' => $cost,
                 'amount' => $amount,
                 'discount' => $discount,
                 'total' => $total,
-                'cost' => $cost,
                 'margin_currency' => $margin_currency,
                 'margin_percent' => $margin_percent,
             ];
 
         } else {
             $data = [
+                'cost' => 0,
                 'amount' => 0,
                 'discount' => 0,
                 'total' => 0,
-                'cost' => 0,
                 'margin_currency' => 0,
                 'margin_percent' => 0,
             ];

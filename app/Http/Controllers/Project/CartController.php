@@ -266,7 +266,7 @@ class CartController extends Controller
 
                     // sendSms('79041248598', 'Данные для входа: ' . $user->access_code);
 
-                    $user->location_id = create_location($request, $country_id = 1, $city_id = 1);
+                    $user->location_id = create_location($request, $country_id = 1, $site->filial->location->city_id);
 
                     $user->first_name = $first_name;
                     $user->second_name = $second_name;
@@ -403,14 +403,14 @@ class CartController extends Controller
                         'count' => $count,
 
                         'cost' => $price_goods->goods->article->cost_default * $count,
-
                         'amount' => $count * $price_goods->price,
+                        'total' => $count * $price_goods->price,
                     ];
 
-                    $data['margin_currency'] = $data['amount'] - $data['cost'];
+                    $data['margin_currency'] = $data['total'] - $data['cost'];
 
-                    $onePercent = $data['amount'] / 100;
-                    $data['margin_percent'] = ($data['cost'] / $onePercent);
+                    $onePercent = $data['total'] / 100;
+                    $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
 
                     $estimatesGoodsItemsInsert[] = EstimatesGoodsItem::make($data);
                 }

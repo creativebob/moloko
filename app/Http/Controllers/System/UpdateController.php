@@ -5,6 +5,7 @@ namespace App\Http\Controllers\System;
 use App\Action;
 use App\ActionEntity;
 use App\Entity;
+use App\EstimatesGoodsItem;
 use App\Http\Controllers\Controller;
 use App\Menu;
 use App\Page;
@@ -13,6 +14,7 @@ use App\Position;
 use App\Right;
 use App\Role;
 use App\User;
+use App\Widget;
 use DB;
 
 class UpdateController extends Controller
@@ -27,7 +29,7 @@ class UpdateController extends Controller
     }
 
     /**
-     * Обновление 210420
+     * Обновление 21.04.20
      *
      * Переименование миграций, т.к. клиенты стали ссылаться на источник
      *
@@ -44,12 +46,40 @@ class UpdateController extends Controller
         ]);
         echo "В миграциях переименована таблица дилеров<br><br>";
 
+        Widget::where('tag', 'sales-department-burden')->update([
+           'tag' => 'sales_department_burden'
+        ]);
+        echo "Обновлен тег виджета нагружки отдела продаж<br><br>";
+
+        Widget::insert([
+            'name' => 'Показатели клиентской базы',
+            'description' => 'Показатели клиентской базы',
+            'tag' => 'clients_indicators',
+        ]);
+        echo "Добавлен виджет показателей клиентской базы<br><br>";
+
+        set_time_limit(0);
+
+        $estimatesGoodsItems = EstimatesGoodsItem::whereNull('total')
+            ->get();
+        foreach ($estimatesGoodsItems as $estimatesGoodsItem) {
+            if($estimatesGoodsItem->discount_percent) {
+                $estimatesGoodsItem->discount_currency = ($estimatesGoodsItem->amount * $estimatesGoodsItem->discount_percent / 100);
+                $estimatesGoodsItem->total = $estimatesGoodsItem->amount - $estimatesGoodsItem->discount_currency;
+            } else {
+                $estimatesGoodsItem->discount_percent = 0;
+                $estimatesGoodsItem->discount_currency = 0;
+                $estimatesGoodsItem->total = $estimatesGoodsItem->amount;
+            }
+            $estimatesGoodsItem->save();
+        }
+        echo "В пунктах сметы проставлены скидки и тотал<br><br>";
 
         echo "<strong>Обновление 21.04.20 завершено</strong>";
     }
 
     /**
-     * Обновление 130420
+     * Обновление 13.04.20
      *
      * Приведение проектов к единому виду, проставление компании должностям и ролям, генерация имени юзера, добавление сущностей
      */

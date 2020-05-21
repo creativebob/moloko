@@ -2,7 +2,7 @@
 	<td>{{ $raw->category->name }}</td>
 	<td>{{ $raw->article->name }}</td>
 	<td>{{ $raw->article->description }}</td>
-	<td>{{ $raw->article->group->unit->abbreviation }}</td>
+	<td>{{ $raw->article->unit->abbreviation }}</td>
 	<td class="td-delete">
 		<a class="icon-delete sprite" data-open="delete-item"></a>
 	</td>

@@ -155,7 +155,7 @@
 
                     <div class="small-12 medium-6 cell">
                         <label>Оценка работы клиентом:
-                            {!! Form::select('loyality_score', [
+                            {!! Form::select('loyalty_score', [
                             '1' => '1',
                             '2' => '2',
                             '3' => '3',
@@ -166,8 +166,8 @@
                             '8' => '8',
                             '9' => '9',
                             '10' => '10',
-                            ], optional($client->loyality_score)->loyality_score,
-                             ['placeholder' => isset($client->loyality_score) ? null : 'Не указано']
+                            ], optional($client->loyalty_score)->loyalty_score,
+                             ['placeholder' => isset($client->loyalty_score) ? null : 'Не указано']
                              ) !!}
                         </label>
                     </div>

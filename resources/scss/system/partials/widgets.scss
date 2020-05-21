@@ -1,0 +1,34 @@
+.table-clients_indicators {
+
+    th:not(:first-child):not(.disabled) {
+        cursor: pointer;
+
+        &:hover {
+            color: green;
+        }
+    }
+
+    .disabled {
+        opacity: 0.5;
+    }
+
+    .current {
+        color: red;
+    }
+
+    th {
+        position: relative;
+
+        .icon-load {
+            position: absolute;
+            display: block;
+            vertical-align: middle;
+            bottom: 7px;
+            right: 5px;
+            width: 16px;
+            height: 16px;
+            transition: 0.5s ease opacity;
+        }
+
+    }
+}

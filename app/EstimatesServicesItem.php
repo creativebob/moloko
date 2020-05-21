@@ -37,6 +37,7 @@ class EstimatesServicesItem extends Model
         'margin_currency',
 
         'amount',
+        'total',
 
         'display',
         'system',

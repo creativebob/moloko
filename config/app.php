@@ -190,6 +190,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         App\Providers\ComposerServiceProvider::class,
+        App\Providers\WidgetServiceProvider::class,
         App\Providers\ObserverServiceProvider::class,
         App\Providers\MorphServiceProvider::class,
 

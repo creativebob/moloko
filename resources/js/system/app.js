@@ -42,7 +42,10 @@ Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'
 
 // ТМЦ
 Vue.component('articles-categories-with-groups-component', require('./components/ArticlesCategoriesWithGroupsComponent.vue'));
-Vue.component('manufacturers-component', require('./components/MAnufacturersComponent.vue'));
+Vue.component('manufacturers-component', require('./components/ManufacturersComponent.vue'));
+
+Vue.component('related-category-component', require('./components/products/articles_categories/goods_categories/related/RelatedComponent.vue'));
+Vue.component('related-component', require('./components/products/articles/goods/related/RelatedComponent.vue'));
 
 // Услуги
 Vue.component('processes-categories-with-groups-component', require('./components/ProcessesCategoriesWithGroupsComponent.vue'));
@@ -70,6 +73,11 @@ Vue.component('promotion-catalog-goods-component', require('./components/promoti
 Vue.component('settings-stocks-component', require('./components/settings/SettingsStocksComponent'));
 
 // Vue.component('price-goods-price-component', require('./components/prices_goods/PriceGoodsPriceComponent.vue'));
+
+Vue.component('pickmeup-component', require('./components/common/PickmeupComponent'));
+
+// Виджеты
+Vue.component('clients-indicators-component', require('./components/widgets/ClientsIndicatorsComponent'));
 
 
 /**

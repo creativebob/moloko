@@ -7,14 +7,14 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ClientsLoyalitiesScore extends Model
+class ClientsLoyaltiesScore extends Model
 {
     use Cachable;
     use SoftDeletes;
     use Commonable;
 
     protected $fillable = [
-        'loyality_score',
+        'loyalty_score',
     ];
 
     // Клиент

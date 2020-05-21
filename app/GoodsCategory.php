@@ -112,6 +112,11 @@ class GoodsCategory extends Model
         return $this->belongsToMany(Raw::class, 'preset_raw');
     }
 
+    public function related()
+    {
+        return $this->belongsToMany(Goods::class, 'preset_related');
+    }
+
     // Производители
     public function manufacturers()
     {
@@ -129,7 +134,7 @@ class GoodsCategory extends Model
     {
         return $this->morphToMany(ArticlesGroup::class, 'entity', 'articles_group_entity');
     }
- 
+
     public function getNameWithParentAttribute()
     {
         if($this->parent_id != null){
@@ -137,5 +142,5 @@ class GoodsCategory extends Model
         } else {
             return $this->name;
         }
-    }   
+    }
 }

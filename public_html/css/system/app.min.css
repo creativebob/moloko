@@ -9426,6 +9426,38 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   display: none;
 }
 
+.table-clients_indicators th:not(:first-child):not(.disabled) {
+  cursor: pointer;
+}
+
+.table-clients_indicators th:not(:first-child):not(.disabled):hover {
+  color: green;
+}
+
+.table-clients_indicators .disabled {
+  opacity: 0.5;
+}
+
+.table-clients_indicators .current {
+  color: red;
+}
+
+.table-clients_indicators th {
+  position: relative;
+}
+
+.table-clients_indicators th .icon-load {
+  position: absolute;
+  display: block;
+  vertical-align: middle;
+  bottom: 7px;
+  right: 5px;
+  width: 16px;
+  height: 16px;
+  -webkit-transition: 0.5s ease opacity;
+  transition: 0.5s ease opacity;
+}
+
 a.has-tip {
   position: relative;
   display: inline-block;

@@ -302,10 +302,16 @@ class GoodsController extends Controller
 
             if ($cur_goods) {
 
-                $goods_category = $goods_category->load('raws:id');
+                $goods_category = $goods_category->load([
+                    'raws:id',
+                    'related:id'
+                ]);
 
                 $raws = $goods_category->raws->pluck('id')->toArray();
                 $article->raws()->sync($raws);
+
+                $related = $goods_category->related->pluck('id')->toArray();
+                $cur_goods->related()->sync($related);
 
                 // Пишем куки состояния
                 // $mass = [
@@ -364,6 +370,12 @@ class GoodsController extends Controller
             },
             'metrics',
             'prices',
+            'related' => function ($q) {
+                $q->with([
+                   'category',
+                   'article.unit'
+                ]);
+            },
             'category.manufacturers.company'
         ]);
 //        dd($cur_goods);
@@ -427,6 +439,8 @@ class GoodsController extends Controller
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $cur_goods);
 
+            $cur_goods->related()->sync($request->related);
+
             // Метрики
             if ($request->has('metrics')) {
                 // dd($request);
@@ -485,6 +499,9 @@ class GoodsController extends Controller
 
             $cur_goods->editor_id = hideGod($request->user());
             $cur_goods->save();
+
+            $cur_goods->relating()->detach();
+            $cur_goods->relatingCategory()->detach();
 
             if ($cur_goods) {
                 return redirect()->route('goods.index');
@@ -584,12 +601,23 @@ class GoodsController extends Controller
     public function ajax_get_goods(Request $request)
     {
         $cur_goods = Goods::with([
-            'article.group.unit',
+            'article.unit',
             'category'
         ])
             ->find($request->id);
 
         return view('products.articles.goods.goods.goods_input', compact('cur_goods'));
+    }
+
+    public function ajax_get_related(Request $request)
+    {
+        $cur_goods = Goods::with([
+            'article.unit',
+            'category'
+        ])
+            ->findOrFail($request->id);
+
+        return response()->json($cur_goods);
     }
 
 }

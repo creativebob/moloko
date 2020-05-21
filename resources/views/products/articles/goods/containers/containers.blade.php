@@ -43,54 +43,55 @@
 			</div>
 		</div>
 
-		<div class="small-12 cell">
+        <div class="grid-x grid-padding-x">
+            <div class="small-12 cell">
+                {{-- Упаковка --}}
+                <table class="table-compositions">
 
-			{{-- Состав --}}
-			<table class="table-compositions">
+                    <thead>
+                        <tr>
+                            <th>п/п</th>
+                            <th>Категория:</th>
+                            <th>Продукт:</th>
+                            <th>Кол-во:</th>
+                            <th>Использование:</th>
+                            {{-- <th>Отход:</th>
+                            <th>Остаток:</th>
+                            <th>Операция над остатком:</th> --}}
+                            <th>Вес</th>
+                            <th>Себестоимость</th>
+                            <th></th>
+                        </tr>
+                    </thead>
 
-				<thead>
-					<tr>
-						<th>п/п</th>
-						<th>Категория:</th>
-						<th>Продукт:</th>
-						<th>Кол-во:</th>
-						<th>Использование:</th>
-						{{-- <th>Отход:</th>
-						<th>Остаток:</th>
-						<th>Операция над остатком:</th> --}}
-						<th>Вес</th>
-						<th>Себестоимость</th>
-						<th></th>
-					</tr>
-				</thead>
+                    <tbody id="table-containers">
 
-				<tbody id="table-containers">
+                        @if ($article->containers->isNotEmpty())
+                            @foreach ($article->containers as $container)
+                                @include ('products.articles.goods.containers.container_input', $container)
+                            @endforeach
+                        @endif
 
-					@if ($article->containers->isNotEmpty())
-						@foreach ($article->containers as $container)
-							@include ('products.articles.goods.containers.container_input', $container)
-						@endforeach
-					@endif
-
-				</tbody>
-				<tfoot>
-					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td>
-							<span class="total_containers_count_weight">0</span> <span>гр.</span>
-						</td>
-						<td>
-							<span class="total_containers_count_cost">0</span> <span>руб.</span>
-						</td>
-						<td></td>
-					</tr>
-				</tfoot>
-			</table>
-		</div>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <span class="total_containers_count_weight">0</span> <span>гр.</span>
+                            </td>
+                            <td>
+                                <span class="total_containers_count_cost">0</span> <span>руб.</span>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
 	</div>
 </div>
 <div class="small-12 medium-3 cell">

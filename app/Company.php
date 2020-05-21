@@ -49,11 +49,13 @@ class Company extends Model
     use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $model_name = ['company'];
+    protected $model_name = [
+        'company'
+    ];
 
     protected $dates = [
         'deleted_at',
-        'birthday_company'
+        'foundation_date'
     ];
 
     protected $fillable = [
@@ -65,7 +67,7 @@ class Company extends Model
         'location_id',
         'sector_id',
         'legal_form_id',
-        'birthday_company',
+        'foundation_date',
 	    'photo_id',
 
         'display',
@@ -362,12 +364,12 @@ class Company extends Model
 
 
 
-    public function setBirthdayCompanyAttribute($value)
+    public function setFoundationDateAttribute($value)
     {
         if (isset($value)) {
-            $this->attributes['birthday_company'] = Carbon::createFromFormat('d.m.Y', $value);
+            $this->attributes['foundation_date'] = Carbon::createFromFormat('d.m.Y', $value);
         } else {
-            $this->attributes['birthday_company'] = null;
+            $this->attributes['foundation_date'] = null;
         }
     }
 

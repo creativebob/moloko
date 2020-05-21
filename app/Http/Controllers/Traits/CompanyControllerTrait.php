@@ -70,7 +70,7 @@ trait CompanyControllerTrait
             $company->external_control = $request->has('external_control');
             $company->seo_description = $request->seo_description;
             $company->about = $request->about;
-            $company->birthday_company = $request->birthday_company;
+            $company->foundation_date = $request->foundation_date;
 
             $result = cleanNameLegalForm($request->company_name);
             $company->legal_form_id = $result ? $result['legal_form_id'] : $request->legal_form_id ?? 1;
@@ -216,7 +216,7 @@ trait CompanyControllerTrait
         $company->external_control = $request->has('external_control');
         $company->seo_description = $request->seo_description;
         $company->about = $request->about;
-        $company->birthday_company = $request->birthday_company;
+        $company->foundation_date = $request->foundation_date;
 
 	    // Cохраняем или обновляем фото
 	    $photo_id = $this->getPhotoId($request, $company);

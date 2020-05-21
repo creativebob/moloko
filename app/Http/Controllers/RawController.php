@@ -527,7 +527,7 @@ class RawController extends Controller
 
         $raw = Raw::with([
             'unit_portion',
-            'article.group.unit',
+            'article.unit',
             'article.unit_weight',
             'category'
         ])

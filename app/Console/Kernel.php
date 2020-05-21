@@ -3,7 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\ClientsIndicatorsDay;
-use App\Console\Commands\ClientsIndicatorsReport;
+use App\Console\Commands\ClientsIndicatorsCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -43,7 +43,7 @@ class Kernel extends ConsoleKernel
             ->dailyAt('03:00');
 
         // Ежемесячные показатели клиентской базы
-        $schedule->command(ClientsIndicatorsReport::class)
+        $schedule->command(ClientsIndicatorsCommand::class)
             ->monthlyOn(1, '04:00');
 
         // Ежедневный отчет

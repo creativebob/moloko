@@ -12,10 +12,20 @@
 	</li>
 @endif
 
-<li class="tabs-title">
-	<a data-tabs-target="tab-containers" href="#tab-containers">Упаковка</a>
-</li>
+@can('index', App\Container::class)
+    <li class="tabs-title">
+        <a data-tabs-target="tab-containers" href="#tab-containers">Упаковка</a>
+    </li>
+@endcan
 
-<li class="tabs-title">
-	<a data-tabs-target="tab-attachments" href="#tab-attachments">Вложения</a>
-</li>
+@can('index', App\Attachment::class)
+    <li class="tabs-title">
+        <a data-tabs-target="tab-attachments" href="#tab-attachments">Вложения</a>
+    </li>
+@endcan
+
+@can('index', App\Goods::class)
+    <li class="tabs-title">
+        <a data-tabs-target="tab-related" href="#tab-related">Сопутствующие</a>
+    </li>
+@endcan

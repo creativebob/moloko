@@ -105,7 +105,7 @@ class GoodsCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $data = $request->input();
-        $goods_category = (new $this->class())->create($data);
+        $goods_category = GoodsCategory::create($data);
 
         if ($goods_category) {
             // Переадресовываем на index
@@ -147,7 +147,13 @@ class GoodsCategoryController extends Controller
             'raws' => function ($q) {
                 $q->with([
                     'category',
-                    'article.group.unit'
+                    'article.unit'
+                ]);
+            },
+            'related' => function ($q) {
+                $q->with([
+                    'category',
+                    'article.unit'
                 ]);
             },
             // 'compositions.product.unit',
@@ -193,8 +199,6 @@ class GoodsCategoryController extends Controller
 
     public function update(GoodsCategoryUpdateRequest $request, $id)
     {
-        // TODO -- На 15.06.18 нет нормального решения отправки фотографий по ajax с методом "PATCH"
-
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
@@ -219,6 +223,12 @@ class GoodsCategoryController extends Controller
             $raws = session('access.all_rights.index-raws-allow');
             if ($raws) {
                 $goods_category->raws()->sync($request->raws);
+            }
+
+            // TODO - 12.05.12 - В дальнейшем может понадобиться проверка на архивность товаров (если в процессе работы кто то внес их в архив)
+            $raws = session('access.all_rights.index-goods-allow');
+            if ($raws) {
+                $goods_category->related()->sync($request->related);
             }
 
             // Переадресовываем на index

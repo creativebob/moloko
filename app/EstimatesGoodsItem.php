@@ -40,6 +40,7 @@ class EstimatesGoodsItem extends Model
         'margin_currency',
 
         'amount',
+        'total',
 
         'is_reserved',
 

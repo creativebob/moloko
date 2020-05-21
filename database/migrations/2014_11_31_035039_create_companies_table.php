@@ -45,7 +45,8 @@ class CreateCompaniesTable extends Migration
 
             $table->text('about')->nullable()->comment('Информация о компании');
             $table->text('seo_description')->nullable()->comment('Описание для сайта');
-            $table->date('birthday_company')->nullable()->comment('Дата рождения компании');
+
+            $table->date('foundation_date')->nullable()->comment('Дата основания');
 
             $table->bigInteger('external_id')->nullable()->unsigned()->comment('Внешний id компании');
 

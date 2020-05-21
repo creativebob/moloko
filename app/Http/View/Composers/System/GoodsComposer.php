@@ -20,8 +20,7 @@ class GoodsComposer
         //     'parent_id'
         // ];
 
-        $goods_categories = GoodsCategory::
-        with([
+        $goods_categories = GoodsCategory::with([
             'goods' => function ($q) {
                 $q->with([
                     'article' => function ($q) {
@@ -34,8 +33,7 @@ class GoodsComposer
                     ->where('archive', false);
             }
         ])
-        ->
-        whereHas('goods', function ($q) {
+        ->whereHas('goods', function ($q) {
             $q->whereHas('article', function ($q) {
                 $q->where([
                     'draft' => false,

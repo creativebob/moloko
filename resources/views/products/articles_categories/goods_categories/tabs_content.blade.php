@@ -4,3 +4,9 @@
 </div>
 @endcan
 
+@can('index', App\Goods::class)
+<div class="tabs-panel" id="tab-related">
+    @include('products.articles_categories.goods_categories.related.related', ['category' => $category])
+</div>
+@endcan
+

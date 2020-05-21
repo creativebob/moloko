@@ -105,7 +105,7 @@
 
 	export default {
         components: {
-            'pickmeup-component': require('./common/PickmeupComponent.vue'),
+            'pickmeup-component': require('./common/PickmeupChildComponent.vue'),
         },
 
 		props: {

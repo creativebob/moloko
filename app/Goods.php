@@ -80,6 +80,21 @@ class Goods extends Model
         return $this->belongsTo(Unit::class, 'price_unit_id');
     }
 
+    public function related()
+    {
+        return $this->belongsToMany(Goods::class, 'goods_related', 'goods_id', 'related_id');
+    }
+
+    public function relating()
+    {
+        return $this->belongsToMany(Goods::class, 'goods_related', 'related_id','goods_id');
+    }
+
+    public function relatingCategory()
+    {
+        return $this->belongsToMany(GoodsCategory::class, 'preset_related', 'goods_id', 'goods_category_id');
+    }
+
     // Рабочие процессы
     public function workflows()
     {

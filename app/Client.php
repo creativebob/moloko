@@ -57,7 +57,7 @@ class Client extends Model
         'clientable_type',
 
         'source_id',
-        'loyality_score',
+        'loyalty_score',
         'is_blacklist',
 
         'is_lost',
@@ -148,13 +148,13 @@ class Client extends Model
     }
 
     // Пользовательские оценки
-    public function loyalities_scores()
+    public function loyalties_scores()
     {
-        return $this->hasMany(ClientsLoyalitiesScore::class);
+        return $this->hasMany(ClientsLoyaltiesScore::class);
     }
-    public function loyality_score()
+    public function loyalty_score()
     {
-        return $this->hasOne(ClientsLoyalitiesScore::class)
+        return $this->hasOne(ClientsLoyaltiesScore::class)
             ->latest();
     }
 

@@ -317,7 +317,11 @@
 
                     <div class="small-6 medium-3 cell">
                         <label>Дата рождения компании
-                            @include('includes.inputs.date', ['name'=>'birthday_company', 'value'=> isset($company->birthday_company) ? $company->birthday_company->format('d.m.Y') : null ])
+                            <pickmeup-component
+                                name="foundation_date"
+                                value="{{ $company->foundation_date }}"
+                            ></pickmeup-component>
+{{--                            @include('includes.inputs.date', ['name' => 'foundation_date', 'value' => isset($company->birthday_company) ? $company->birthday_company->format('d.m.Y') : null ])--}}
                         </label>
                     </div>
                     <div class="small-6 cell">
