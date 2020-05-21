@@ -75,7 +75,7 @@ class UpdateController extends Controller
         }
         echo "В пунктах сметы проставлены скидки и тотал<br><br>";
 
-        echo "<strong>Обновление 21.04.20 завершено</strong>";
+        return "<strong>Обновление 21.04.20 завершено</strong>";
     }
 
     /**
