@@ -83932,8 +83932,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -83964,6 +83962,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        activeRelatedGoods: function activeRelatedGoods(categoryId) {
+            return this.relatedGoods.filter(function (related) {
+                return related.category_id === categoryId;
+            });
+        },
         check: function check() {
             var _this = this;
 
@@ -84405,31 +84408,30 @@ var render = function() {
                           _c(
                             "ul",
                             { staticClass: "checker" },
-                            _vm._l(_vm.relatedGoods, function(curGoods) {
-                              return _c(
-                                "li",
-                                { staticClass: "checkbox" },
-                                [
-                                  curGoods.category_id === relatedCategory.id
-                                    ? [
-                                        _c("checkbox-related-component", {
-                                          attrs: {
-                                            "cur-goods": curGoods,
-                                            "start-checked": _vm.checked(
-                                              curGoods.id
-                                            )
-                                          },
-                                          on: {
-                                            add: _vm.addRelated,
-                                            del: _vm.deleteRelated
-                                          }
-                                        })
-                                      ]
-                                    : _vm._e()
-                                ],
-                                2
-                              )
-                            }),
+                            _vm._l(
+                              _vm.activeRelatedGoods(relatedCategory.id),
+                              function(curGoods) {
+                                return _c(
+                                  "li",
+                                  { staticClass: "checkbox" },
+                                  [
+                                    _c("checkbox-related-component", {
+                                      attrs: {
+                                        "cur-goods": curGoods,
+                                        "start-checked": _vm.checked(
+                                          curGoods.id
+                                        )
+                                      },
+                                      on: {
+                                        add: _vm.addRelated,
+                                        del: _vm.deleteRelated
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              }
+                            ),
                             0
                           )
                         ]
@@ -84688,8 +84690,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -84720,6 +84720,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        activeRelatedGoods: function activeRelatedGoods(categoryId) {
+            return this.relatedGoods.filter(function (related) {
+                return related.category_id === categoryId;
+            });
+        },
         check: function check() {
             var _this = this;
 
@@ -85107,32 +85112,30 @@ var render = function() {
                                 _c(
                                   "ul",
                                   { staticClass: "checker" },
-                                  _vm._l(_vm.relatedGoods, function(curGoods) {
-                                    return _c(
-                                      "li",
-                                      { staticClass: "checkbox" },
-                                      [
-                                        curGoods.category_id ===
-                                        relatedCategory.id
-                                          ? [
-                                              _c("checkbox-related-component", {
-                                                attrs: {
-                                                  "cur-goods": curGoods,
-                                                  "start-checked": _vm.checked(
-                                                    curGoods.id
-                                                  )
-                                                },
-                                                on: {
-                                                  add: _vm.addRelated,
-                                                  del: _vm.deleteRelated
-                                                }
-                                              })
-                                            ]
-                                          : _vm._e()
-                                      ],
-                                      2
-                                    )
-                                  }),
+                                  _vm._l(
+                                    _vm.activeRelatedGoods(relatedCategory.id),
+                                    function(curGoods) {
+                                      return _c(
+                                        "li",
+                                        { staticClass: "checkbox" },
+                                        [
+                                          _c("checkbox-related-component", {
+                                            attrs: {
+                                              "cur-goods": curGoods,
+                                              "start-checked": _vm.checked(
+                                                curGoods.id
+                                              )
+                                            },
+                                            on: {
+                                              add: _vm.addRelated,
+                                              del: _vm.deleteRelated
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      )
+                                    }
+                                  ),
                                   0
                                 )
                               ]
@@ -92072,6 +92075,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -92151,13 +92158,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         pricesForSite: function pricesForSite() {
-            return this.$store.state.promotion.prices;
+            var _this3 = this;
+
+            return this.$store.state.promotion.prices.filter(function (price) {
+                return price.catalogs_goods_id == _this3.catalogGoodsId;
+            });
+        },
+        pricesIds: function pricesIds() {
+            var ids = [];
+            this.$store.state.promotion.prices.forEach(function (price) {
+                return ids.push(price.id);
+            });
+            return ids;
         }
     },
     methods: {
         getPricesForSite: function getPricesForSite(filialId) {
+            var _this4 = this;
+
             return this.$store.state.promotion.prices.filter(function (price) {
-                return price.filial_id == filialId;
+                return price.filial_id == filialId && price.catalogs_goods_id == _this4.catalogGoodsId;
             });
         },
         resetPrices: function resetPrices() {
@@ -92169,10 +92189,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.resetPrices();
         },
         getPrices: function getPrices(id) {
-            var _this3 = this;
+            var _this5 = this;
 
             this.listPrices = this.catalogsGoodsPrices.filter(function (price) {
-                return price.catalogs_goods_item_id === id && price.filial_id == _this3.filialId;
+                return price.catalogs_goods_item_id === id && price.filial_id == _this5.filialId;
             });
         },
         addPrice: function addPrice(price) {
@@ -92348,241 +92368,257 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "grid-x grid-margin-x" }, [
-    _c("div", { staticClass: "small-12 medium-7 cell" }, [
-      _c("div", { staticClass: "grid-x grid-margin-x" }, [
-        _c("div", { staticClass: "small-12 medium-4 cell" }, [
-          _c("label", [
-            _vm._v("Филиал:\n                    "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.filialId,
-                    expression: "filialId"
-                  }
-                ],
-                on: {
-                  change: [
-                    function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.filialId = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    },
-                    _vm.reInitMenu
-                  ]
-                }
-              },
-              _vm._l(_vm.catalogsGoodsData.filials, function(filial) {
-                return _c("option", { domProps: { value: filial.id } }, [
-                  _vm._v(_vm._s(filial.name))
-                ])
-              }),
-              0
-            )
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "grid-x" }, [
-        _c("div", { staticClass: "small-12 cell" }, [
-          _c("div", { staticClass: "grid-x grid-margin-x" }, [
-            _c(
-              "div",
-              { staticClass: "small-6 cell" },
-              [
-                _c("drilldown-component", {
-                  ref: "drilldownComponent",
-                  attrs: {
-                    "actual-catalogs-goods-items": _vm.actualCatalogsGoodsItems
-                  },
-                  on: { get: _vm.getPrices }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "small-6 cell" }, [
+  return _c(
+    "div",
+    { staticClass: "grid-x grid-margin-x" },
+    [
+      _c("div", { staticClass: "small-12 medium-7 cell" }, [
+        _c("div", { staticClass: "grid-x grid-margin-x" }, [
+          _c("div", { staticClass: "small-12 medium-4 cell" }, [
+            _c("label", [
+              _vm._v("Филиал:\n                    "),
               _c(
-                "ul",
+                "select",
                 {
                   directives: [
                     {
-                      name: "show",
-                      rawName: "v-show",
-                      value: _vm.listPrices.length > 0,
-                      expression: "listPrices.length > 0"
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.filialId,
+                      expression: "filialId"
                     }
                   ],
-                  staticClass: "small-12 cell products-list view-list"
-                },
-                _vm._l(_vm.listPrices, function(price) {
-                  return _c("li", [
-                    _c(
-                      "a",
-                      {
-                        on: {
-                          click: function($event) {
-                            return _vm.addPrice(price)
-                          }
-                        }
+                  on: {
+                    change: [
+                      function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.filialId = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
                       },
-                      [
-                        _c(
-                          "div",
-                          { staticClass: "media-object stack-for-small" },
-                          [
-                            _vm._m(0, true),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "media-object-section cell" },
-                              [
-                                _c(
-                                  "div",
-                                  { staticClass: "grid-x grid-margin-x" },
-                                  [
-                                    _c("div", { staticClass: "cell auto" }, [
-                                      _c("h4", [
-                                        _c(
-                                          "span",
-                                          { staticClass: "items-product-name" },
-                                          [
-                                            _vm._v(
-                                              _vm._s(price.goods.article.name)
-                                            )
-                                          ]
-                                        )
-                                      ])
-                                    ]),
-                                    _vm._v(" "),
-                                    _c(
-                                      "div",
-                                      {
-                                        staticClass:
-                                          "cell shrink wrap-product-price"
-                                      },
-                                      [
-                                        _c(
-                                          "span",
-                                          {
-                                            staticClass: "items-product-price"
-                                          },
-                                          [
-                                            _vm._v(
-                                              _vm._s(
-                                                _vm._f("level")(
-                                                  _vm._f("roundToTwo")(
-                                                    price.price
-                                                  )
-                                                )
-                                              )
-                                            )
-                                          ]
-                                        )
-                                      ]
-                                    )
-                                  ]
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "p",
-                                  { staticClass: "items-product-description" },
-                                  [_vm._v(_vm._s(price.goods.description))]
-                                )
-                              ]
-                            )
-                          ]
-                        )
-                      ]
-                    )
+                      _vm.reInitMenu
+                    ]
+                  }
+                },
+                _vm._l(_vm.catalogsGoodsData.filials, function(filial) {
+                  return _c("option", { domProps: { value: filial.id } }, [
+                    _vm._v(_vm._s(filial.name))
                   ])
                 }),
                 0
               )
             ])
           ])
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _vm.pricesForSite.length
-      ? _c("div", { staticClass: "small-12 medium-5 cell" }, [
-          _c(
-            "fieldset",
-            { staticClass: "fieldset-access" },
-            [
-              _c("legend", [_vm._v(_vm._s(_vm.catalogName))]),
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "grid-x" }, [
+          _c("div", { staticClass: "small-12 cell" }, [
+            _c("div", { staticClass: "grid-x grid-margin-x" }, [
+              _c(
+                "div",
+                { staticClass: "small-6 cell" },
+                [
+                  _c("drilldown-component", {
+                    ref: "drilldownComponent",
+                    attrs: {
+                      "actual-catalogs-goods-items":
+                        _vm.actualCatalogsGoodsItems
+                    },
+                    on: { get: _vm.getPrices }
+                  })
+                ],
+                1
+              ),
               _vm._v(" "),
-              _vm._l(_vm.catalogsGoodsData.filials, function(filial) {
-                return [
-                  _vm.getPricesForSite(filial.id).length
-                    ? _c("table", { staticClass: "hover unstriped" }, [
-                        _c("caption", [_vm._v(_vm._s(filial.name))]),
-                        _vm._v(" "),
-                        _vm._m(1, true),
-                        _vm._v(" "),
-                        _c(
-                          "tbody",
-                          _vm._l(_vm.getPricesForSite(filial.id), function(
-                            price,
-                            index
-                          ) {
-                            return _c("tr", [
-                              _c("td", [_vm._v(_vm._s(index + 1))]),
+              _c("div", { staticClass: "small-6 cell" }, [
+                _c(
+                  "ul",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.listPrices.length > 0,
+                        expression: "listPrices.length > 0"
+                      }
+                    ],
+                    staticClass: "small-12 cell products-list view-list"
+                  },
+                  _vm._l(_vm.listPrices, function(price) {
+                    return _c("li", [
+                      _c(
+                        "a",
+                        {
+                          on: {
+                            click: function($event) {
+                              return _vm.addPrice(price)
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "div",
+                            { staticClass: "media-object stack-for-small" },
+                            [
+                              _vm._m(0, true),
                               _vm._v(" "),
-                              _c("td", [
-                                _vm._v(
-                                  "\n                                    " +
-                                    _vm._s(price.goods.article.name) +
-                                    "\n                                    "
-                                ),
-                                _c("input", {
-                                  attrs: {
-                                    type: "hidden",
-                                    name: "prices_goods[]"
-                                  },
-                                  domProps: { value: price.id }
-                                })
-                              ]),
-                              _vm._v(" "),
-                              _c("td", [_vm._v(_vm._s(price.price))]),
-                              _vm._v(" "),
-                              _c("td", { staticClass: "td-delete" }, [
-                                _c("div", {
-                                  staticClass: "icon-delete sprite",
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.removePrice(price.id)
-                                    }
-                                  }
-                                })
-                              ])
-                            ])
-                          }),
-                          0
-                        )
-                      ])
-                    : _vm._e()
-                ]
-              })
-            ],
-            2
-          )
+                              _c(
+                                "div",
+                                { staticClass: "media-object-section cell" },
+                                [
+                                  _c(
+                                    "div",
+                                    { staticClass: "grid-x grid-margin-x" },
+                                    [
+                                      _c("div", { staticClass: "cell auto" }, [
+                                        _c("h4", [
+                                          _c(
+                                            "span",
+                                            {
+                                              staticClass: "items-product-name"
+                                            },
+                                            [
+                                              _vm._v(
+                                                _vm._s(price.goods.article.name)
+                                              )
+                                            ]
+                                          )
+                                        ])
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass:
+                                            "cell shrink wrap-product-price"
+                                        },
+                                        [
+                                          _c(
+                                            "span",
+                                            {
+                                              staticClass: "items-product-price"
+                                            },
+                                            [
+                                              _vm._v(
+                                                _vm._s(
+                                                  _vm._f("level")(
+                                                    _vm._f("roundToTwo")(
+                                                      price.price
+                                                    )
+                                                  )
+                                                )
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "p",
+                                    {
+                                      staticClass: "items-product-description"
+                                    },
+                                    [_vm._v(_vm._s(price.goods.description))]
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    ])
+                  }),
+                  0
+                )
+              ])
+            ])
+          ])
         ])
-      : _vm._e()
-  ])
+      ]),
+      _vm._v(" "),
+      _vm.pricesForSite.length
+        ? _c("div", { staticClass: "small-12 medium-5 cell" }, [
+            _c(
+              "fieldset",
+              { staticClass: "fieldset-access" },
+              [
+                _c("legend", [_vm._v(_vm._s(_vm.catalogName))]),
+                _vm._v(" "),
+                _vm._l(_vm.catalogsGoodsData.filials, function(filial) {
+                  return [
+                    _vm.getPricesForSite(filial.id).length
+                      ? _c("table", { staticClass: "hover unstriped" }, [
+                          _c("caption", [_vm._v(_vm._s(filial.name))]),
+                          _vm._v(" "),
+                          _vm._m(1, true),
+                          _vm._v(" "),
+                          _c(
+                            "tbody",
+                            _vm._l(_vm.getPricesForSite(filial.id), function(
+                              price,
+                              index
+                            ) {
+                              return _c("tr", [
+                                _c("td", [_vm._v(_vm._s(index + 1))]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(price.goods.article.name) +
+                                      "\n                        "
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(price.price))]),
+                                _vm._v(" "),
+                                _c("td", { staticClass: "td-delete" }, [
+                                  _c("div", {
+                                    staticClass: "icon-delete sprite",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.removePrice(price.id)
+                                      }
+                                    }
+                                  })
+                                ])
+                              ])
+                            }),
+                            0
+                          )
+                        ])
+                      : _vm._e()
+                  ]
+                })
+              ],
+              2
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.pricesIds.length
+        ? _c(
+            "tempalate",
+            _vm._l(_vm.pricesIds, function(priceId) {
+              return _c("input", {
+                attrs: { type: "hidden", name: "prices_goods[]" },
+                domProps: { value: priceId }
+              })
+            }),
+            0
+          )
+        : _vm._e()
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {

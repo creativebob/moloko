@@ -103,17 +103,15 @@
                                 <ul class="checker">
 
                                     <li
-                                        v-for="curGoods in relatedGoods"
+                                        v-for="curGoods in activeRelatedGoods(relatedCategory.id)"
                                         class="checkbox"
                                     >
-                                        <template v-if="curGoods.category_id === relatedCategory.id">
-                                            <checkbox-related-component
-                                                :cur-goods="curGoods"
-                                                @add="addRelated"
-                                                @del="deleteRelated"
-                                                :start-checked="checked(curGoods.id)"
-                                            ></checkbox-related-component>
-                                        </template>
+                                        <checkbox-related-component
+                                            :cur-goods="curGoods"
+                                            @add="addRelated"
+                                            @del="deleteRelated"
+                                            :start-checked="checked(curGoods.id)"
+                                        ></checkbox-related-component>
                                     </li>
 
                                 </ul>
@@ -158,6 +156,9 @@
             }
         },
         methods: {
+            activeRelatedGoods(categoryId) {
+                return this.relatedGoods.filter(related => related.category_id === categoryId);
+            },
             check() {
                 if (this.text.length >= 2) {
                     this.results = this.relatedGoods.filter(item => {
