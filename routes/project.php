@@ -105,6 +105,25 @@ Route::post('logout_siteuser', 'AppController@logout_siteuser')
 Route::get('/cabinet', 'AppController@cabinet')->name('project.cabinet')->middleware('auth_usersite');
 Route::post('/update_profile', 'AppController@update_profile')->name('project.update_profile');
 
+
+// ---------------------- Лайки ------------------------------
+Route::resource('/likes_prices_goods', 'LikesPricesGoodsController')
+    ->only([
+        'store',
+        'destroy'
+    ]);
+
+
+// --------------------- Избранное -----------------------------
+Route::resource('/favorites_goods', 'FavoritesGoodsController')
+    ->only([
+        'index',
+        'store',
+        'destroy'
+    ])
+    ->names('project.favorites_goods');
+
+
 Route::get('/{page_alias}', 'AppController@dynamic_pages')->name('project.dynamic_pages');
 
 

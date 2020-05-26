@@ -33,6 +33,12 @@ class Goods extends Model
             ->withPivot('value');
     }
 
+    public function prices()
+    {
+        return $this->hasMany(PricesGoods::class)
+            ->archive();
+    }
+
     // Геттер: Функция получения веса в кг. учитывая все надстройки и переопределения в еденицах измерения
     public function getWeightAttribute()
     {

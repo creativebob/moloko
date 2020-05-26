@@ -458,6 +458,16 @@ class User extends Authenticatable
         return $this->hasMany('App\Lead', 'manager_id')->whereNotIn('stage_id', [13, 14, 1, 12]);
     }
 
+    public function likesGoods()
+    {
+        return $this->belongsToMany('App\Models\Project\PricesGoods', 'like_prices_goods', 'user_id', 'prices_goods_id');
+    }
+
+    public function favoritesGoods()
+    {
+        return $this->belongsToMany('App\Models\Project\Goods', 'favorite_goods', 'user_id', 'goods_id');
+    }
+
 
 
 
