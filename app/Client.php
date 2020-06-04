@@ -58,6 +58,9 @@ class Client extends Model
 
         'source_id',
         'loyalty_score',
+
+        'is_vip',
+        'is_vip_abc',
         'is_blacklist',
 
         'is_lost',

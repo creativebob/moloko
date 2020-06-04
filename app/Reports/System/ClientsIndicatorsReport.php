@@ -15,29 +15,48 @@ class ClientsIndicatorsReport
      * Получение показателей клиентской базы
      *
      * @param null $date
+     * @param string $period
      * @param null $companyId
      * @return mixed
      */
-    public static function getIndicators($date = null, $companyId = null) {
+    public static function getIndicators($date = null, $period = 'month', $companyId = null) {
         set_time_limit(0);
 
-        // Месяц
-        $unit = Unit::findOrFail(17);
-
+        // Если крон
         if (! $date) {
-            // Если крон
             $date = today()->subMonth()->toDateString();
         }
 
-        $startDate = Carbon::create($date);
+        switch ($period) {
+            case 'month':
+                // Месяц
+                // TODO - 29.04.20 - Добавить алиасы к units
+                $unit = Unit::findOrFail(17);
 
-        // TODO - 29.04.20 - Добавить алиасы к units
-        $endDate = Carbon::create($date)->addMonth();
+                $startDate = Carbon::create($date);
+                $endDate = Carbon::create($date)->addMonth();
 
-        $startDatePeriodActive = Carbon::create($date)->subYear();
-        $endDatePeriodActive = Carbon::create($date)->addMonth()->subYear();
+                $startDatePeriodActive = Carbon::create($date)->subYear();
+                $endDatePeriodActive = Carbon::create($date)->addMonth()->subYear();
 
-        $daysInPeriod = $startDate->diffInDays($endDate);
+                $daysInPeriod = $startDate->diffInDays($endDate);
+                break;
+
+            case 'year':
+                // Год
+                // TODO - 29.04.20 - Добавить алиасы к units
+                $unit = Unit::findOrFail(20);
+
+                $startDate = Carbon::create($date);
+                $endDate = Carbon::create($date)->addYear();
+
+                $startDatePeriodActive = Carbon::create($date)->subYear();
+                $endDatePeriodActive = Carbon::create($date);
+
+                $daysInPeriod = $startDate->diffInDays($endDate);
+                break;
+        }
+
 //        dd($startDate, $endDate, $unit, $startDatePeriodActive, $endDatePeriodActive);
 
         $groupedClients = Client::where('first_order_date', '<', $endDate)
@@ -70,7 +89,7 @@ class ClientsIndicatorsReport
 
         $data = [];
         $data['start_date'] = $startDate;
-        $data['unit_id'] = 17;
+        $data['unit_id'] = $unit->id;
         $data['author_id'] = 1;
 
         $clientsIndicators = [];

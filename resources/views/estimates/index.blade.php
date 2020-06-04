@@ -36,6 +36,8 @@
                     <th class="td-date">Дата заказа</th>
                     <th class="td-amount">Сумма</th>
                     <th class="td-payment">Оплачено</th>
+                    <th class="td-margin_currency">Маржа</th>
+                    <th class="td-margin_percent">% маржи</th>
                     <th class="td-stage">Этап</th>
                     <th class="td-loyalty">Лояльность</th>
                     <th class="td-delete"></th>
@@ -65,9 +67,11 @@
                     {{ $estimate->client->clientable->name }}
                 </a>
                 <br>
-                <span class="tiny-text">
-                    {{ $estimate->client->clientable->location->city->name }}, {{ $estimate->client->clientable->location->address }}
-                </span>
+                @isset($estimate->client->clientable->location)
+                    <span class="tiny-text">
+                        {{ $estimate->client->clientable->location->city->name }}, {{ $estimate->client->clientable->location->address }}
+                    </span>
+                @endisset
                 <td class="td-phone">
                     {{ isset($estimate->client->clientable->main_phone->phone) ? decorPhone($estimate->client->clientable->main_phone->phone) : 'Номер не указан' }}
                     @if($estimate->client->clientable->email)<br><span class="tiny-text">{{ $estimate->client->clientable->email ?? '' }}</span>@endif
@@ -85,6 +89,10 @@
                 <td class="td-payment">{{ num_format($estimate->payment, 0) }}
                   <br><span class="tiny-text">{{ num_format($estimate->amount - $estimate->payment, 0) }}</span>
               </td>
+
+                  <td class="td-margin_currency">{{ num_format($estimate->margin_currency, 0) }}</td>
+                  <td class="td-margin_percent">{{ num_format($estimate->margin_percent, 0) }}</td>
+
               <td class="td-stage">{{ $estimate->lead->stage->name }}</td>
               <td class="td-loyalty">{{ $estimate->client->loyalty->name }}</td>
               <td class="td-delete">

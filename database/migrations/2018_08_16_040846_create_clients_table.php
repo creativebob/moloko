@@ -25,6 +25,7 @@ class CreateClientsTable extends Migration
 
             $table->boolean('is_lost')->default(0)->comment('Потерянный');
             $table->boolean('is_vip')->default(0)->comment('VIP-статус');
+            $table->boolean('is_vip_abc')->default(0)->comment('VIP-статус по вычислениям');
             $table->boolean('is_blacklist')->default(0)->comment('В черном списке');
 
             $table->bigInteger('source_id')->nullable()->unsigned()->default(4)->comment('Id первого источника');

@@ -49,22 +49,23 @@ class EstimateController extends Controller
         // -------------------------------------------------------------------------------------------
 
         $estimates = Estimate::with([
-            'client.clientable',
+            'client.clientable.location',
             'goods_items',
             'author'
         ])
-        ->moderatorLimit($answer)
-        ->companiesLimit($answer)
-        // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->authors($answer)
-        ->systemItem($answer) // Фильтр по системным записям
-        ->where('draft', false)
-        ->whereNotNull('client_id')
-        ->booklistFilter($request)  // Фильтр по спискам
-        ->filter($request, 'client_id')
-        ->orderBy('sort', 'asc')
-        ->paginate(30);
-        // dd($estimates);
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
+            ->authors($answer)
+            ->systemItem($answer) // Фильтр по системным записям
+            ->where('draft', false)
+            ->where('is_registered', true)
+//        ->whereNotNull('client_id')
+            ->booklistFilter($request)  // Фильтр по спискам
+            ->filter($request, 'client_id')
+            ->orderBy('sort', 'asc')
+            ->paginate(30);
+//         dd($estimates);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------

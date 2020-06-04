@@ -44,6 +44,48 @@ class ParserController extends Controller
 
     use Clientable;
 
+    /**
+     * Удаление локаций с Иркутском для РХ и проставка всем юзерам, у которых нет локаций
+     * @return string
+     */
+    public function parserUserLocation()
+    {
+        $users = User::with([
+            'userLeads',
+            'location'
+        ])
+            ->where('site_id', 2)
+            ->has('userLeads')
+            ->get();
+
+        foreach($users as $user) {
+            $lead = $user->userLeads->last();
+
+            if (isset($user->location)) {
+                if ($user->location->city_id == 1) {
+                    $user->location()->forceDelete();
+                    $user->update([
+                        'location_id' => $lead->location_id
+                    ]);
+                }
+            } else {
+                $user->update([
+                    'location_id' => $lead->location_id
+                ]);
+            }
+
+        }
+
+
+        return "Удалены локации у пользователей с городом Иркутск и проставлены пользователям (тем, у кого не было, или был город Иркутск) локации с последнего лида";
+
+    }
+
+    /**
+     * Парсер оформления смет, создания клиентов
+     *
+     * @return string
+     */
     public function parserLeadClient()
     {
         set_time_limit(0);
@@ -63,6 +105,16 @@ class ParserController extends Controller
         foreach($leads as $lead) {
 
             $manager = Staffer::findOrFail(6);
+
+            // Ищем или создаем клиента
+            $client = $this->checkClientUser($lead->user_id);
+
+
+            if (is_null($client->source_id)) {
+                $client->update([
+                    'source_id' => $lead->source_id
+                ]);
+            }
 
             $lead->manager_id = $manager->user_id;
 
@@ -96,15 +148,7 @@ class ParserController extends Controller
                     $total = ($amount - $discount);
                 }
 
-                // Ищем или создаем клиента
-                $client = $this->checkClientUser($estimate->lead->user_id);
 
-
-                if (is_null($client->source_id)) {
-                    $client->update([
-                        'source_id' => $estimate->lead->source_id
-                    ]);
-                }
 
                 $estimate->lead->update([
                     'client_id' =>  $client->id

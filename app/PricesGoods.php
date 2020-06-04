@@ -160,6 +160,11 @@ class PricesGoods extends Model
         ]);
     }
 
+    public function likes()
+    {
+        return $this->belongsToMany(User::class, 'like_prices_goods', 'prices_goods_id','user_id');
+    }
+
     // Фильтр
     public function scopeFilter($query)
     {

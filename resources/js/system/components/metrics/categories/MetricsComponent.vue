@@ -21,6 +21,7 @@
                             <span
                                 class="parent"
                                 :data-open="'property-' + property.id"
+                                @click="openMetrics('property-' + property.id)"
                             >{{ property.name }}</span>
                             <div
                                 class="checker-nested"
@@ -381,6 +382,12 @@
             },
         },
         methods: {
+            openMetrics(id) {
+                // Скрываем все состав
+                $('.checker-nested').hide();
+                // Показываем нужную
+                $('#' + id).show();
+            },
 		    changeMetric(metric, event) {
                 if (event.target.checked === true) {
                     this.$emit('add-metric', metric);

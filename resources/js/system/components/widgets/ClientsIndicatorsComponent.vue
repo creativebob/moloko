@@ -4,7 +4,7 @@
             <template v-if="yearsList.length > 1">
                 <select
                     v-model="year"
-                    @change="getIndicatorsForYear"
+                    @change="changeIndicatorsForYear"
                     :disabled="disabledSelect"
                 >
                     <option
@@ -23,10 +23,18 @@
                             @click="getIndicatorsForMonth(month.number)"
                             :class="[{disabled : isDisabled(month.number)}, {current : curMonth == month.number && curYear == year}]"
                             class="loading"
-                        >{{ month.name }}
+                        >
+                            {{ month.name }}
                             <div v-if="month.loading" class="sprite-input-right icon-load"></div>
                         </th>
                     </template>
+                    <th
+                        class="border-left loading"
+                        @click="getIndicatorsForYear()"
+                    >
+                        Год
+                        <div v-if="loadingYear" class="sprite-input-right icon-load"></div>
+                    </th>
                 </tr>
             </thead>
 
@@ -34,9 +42,15 @@
                 <tr v-for="item in data">
                     <td class="right-border">{{ item.name }}</td>
                     <template v-for="month in months">
-                        <td v-if="curIndicators[month.number]">{{ curIndicators[month.number][item.alias] }}</td>
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number][item.alias] }}</td>
+                            <td v-else>0</td>
+                        </template>
                         <td v-else>0</td>
                     </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear[item.alias] }}</td>
+                    <td v-else class="border-left">0</td>
                 </tr>
             </tbody>
 
@@ -257,13 +271,17 @@
                 year: this.curYear,
                 indicators: this.clientsIndicators,
                 loading: false,
-                disabledSelect: false
+                loadingYear: false,
+                disabledSelect: false,
             }
         },
         computed: {
-            curIndicators() {
-                return this.indicators[this.year];
-            }
+            curIndicatorsMonth() {
+                return this.indicators[this.year].months;
+            },
+            curIndicatorsYear() {
+                return this.indicators[this.year].year;
+            },
         },
         methods: {
             isDisabled(month) {
@@ -273,36 +291,29 @@
                     return false;
                 }
             },
-            getIndicatorsForYear() {
+            changeIndicatorsForYear() {
                 if(! this.indicators[this.year]) {
                     Vue.set(this.indicators, this.year, {});
-
-                    // axios
-                    //     .post('/admin/clients_indicators/year', {
-                    //         year: this.year
-                    //     })
-                    //     .then(response => {
-                    //
-                    //     })
-                    //     .catch(error => {
-                    //         console.log(error)
-                    //     });
                 }
             },
             getIndicatorsForMonth(number) {
                 if (! this.isDisabled(number)) {
                     var year = this.year;
                     var month = this.months.find(obj => obj.number == number);
-                    console.log(month);
+                    // console.log(month);
                     month.loading = true;
                     this.disabledSelect = true;
                     axios
-                        .post('/admin/clients_indicators/compute', {
+                        .post('/admin/clients_indicators/compute/month', {
                             month: number,
                             year: year
                         })
                         .then(response => {
-                            Vue.set(this.indicators[year], number, response.data);
+                            // console.log(response.data);
+                            if (! this.indicators[year].months) {
+                                 Vue.set(this.indicators[year], 'months', {});
+                            }
+                            Vue.set(this.indicators[year].months, number, response.data);
                             month.loading = false;
                             this.disabledSelect = false;
                         })
@@ -312,6 +323,25 @@
                             this.disabledSelect = false;
                         });
                 }
+            },
+            getIndicatorsForYear() {
+                var year = this.year;
+                this.loadingYear = true;
+                this.disabledSelect = true;
+                axios
+                    .post('/admin/clients_indicators/compute/year', {
+                        year: year
+                    })
+                    .then(response => {
+                        Vue.set(this.indicators[year], 'year', response.data);
+                        this.loadingYear = false;
+                        this.disabledSelect = false;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        this.loadingYear = false;
+                        this.disabledSelect = false;
+                    });
             },
         }
     }

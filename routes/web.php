@@ -39,6 +39,7 @@ Route::get('/parser_rh_goods_metrics', 'ParserController@parserRhGoodsMetrics');
 Route::get('/parsers/130420', 'ParserController@parser_130420');
 
 Route::get('/parsers/lead_client', 'ParserController@parserLeadClient');
+Route::get('/parsers/user_location', 'ParserController@parserUserLocation');
 
 // Тесты
 Route::get('/test', 'System\TestController@test');
@@ -1281,7 +1282,8 @@ Route::prefix('/portfolios/{portfolio_id}')->group(function () {
 
 
 // ---------------------- Показатели клиентской базы -----------------------
-Route::post('/clients_indicators/compute', 'System\Widgets\ClientsIndicatorController@computeIndicatorsForMonth');
+Route::post('/clients_indicators/compute/month', 'System\Widgets\ClientsIndicatorController@computeIndicatorsForMonth');
+Route::any('/clients_indicators/compute/year', 'System\Widgets\ClientsIndicatorController@computeIndicatorsForYear');
 
 
 //Route::any('catalogs_services_items/prices', 'CatalogsServicesItemController@get_prices');

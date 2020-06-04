@@ -67,6 +67,8 @@ class User extends Authenticatable
         'city_id',
         'address',
 
+        'location_id',
+
         'orgform_status',
         // 'company_name',
         'user_inn',
@@ -444,6 +446,12 @@ class User extends Authenticatable
     public function leads()
     {
         return $this->hasMany('App\Lead', 'manager_id');
+    }
+
+    // Лиды
+    public function userLeads()
+    {
+        return $this->hasMany('App\Lead');
     }
 
     // Клиент

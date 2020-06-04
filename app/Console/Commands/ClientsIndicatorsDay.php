@@ -204,7 +204,7 @@ class ClientsIndicatorsDay extends Command
                     $data['abcxyz'] = $data['abc'] . $data['xyz'];
                 }
 
-                $data['is_vip'] = false;
+                $data['is_vip_abc'] = false;
 
 //                dd($data);
                 $client->update($data);
@@ -223,7 +223,7 @@ class ClientsIndicatorsDay extends Command
                     }
 
                     CLient::whereIn('id', $vipIds)->update([
-                        'is_vip' => true
+                        'is_vip_abc' => true
                     ]);
 
                     // TODO - 28.04.20 - Снятие отметки vip

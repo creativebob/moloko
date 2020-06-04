@@ -20,11 +20,18 @@ class ClientsIndicatorsComposer
 
 //        dd($groupedClientsIndicatorsCurYear);
         $data['data'][$curYear] = [];
-        foreach($groupedClientsIndicatorsCurYear as $year => $clientsIndicatorsMonth) {
-            foreach($clientsIndicatorsMonth as $clientsIndicatorMonth) {
-                $data['data'][$year][$clientsIndicatorMonth->start_date->format('n')] = $clientsIndicatorMonth;
+        foreach($groupedClientsIndicatorsCurYear as $year => $clientsIndicators) {
+            foreach($clientsIndicators as $clientsIndicator) {
+                if ($clientsIndicator->unit_id == 17) {
+                    $data['data'][$year]['months'][$clientsIndicator->start_date->format('n')] = $clientsIndicator;
+                }
+                if ($clientsIndicator->unit_id == 20) {
+                    $data['data'][$year]['year'] = $clientsIndicator;
+                }
+
             }
         }
+//        dd($data);
 
         if (isset(auth()->user()->company->foundation_date)) {
             $startYear = (int) auth()->user()->company->foundation_date->format('Y');

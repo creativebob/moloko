@@ -231,6 +231,8 @@ class ClientController extends Controller
         $client->description = $request->description_client;
         $client->loyalty_id = $request->loyalty_id;
 
+        $client->is_vip = $request->is_vip;
+
         $client->save();
 
         return redirect('/admin/clients');
@@ -679,6 +681,8 @@ class ClientController extends Controller
         // Обновление информации по клиенту:
         $client->description = $request->description_client;
         $client->loyalty_id = $request->loyalty_id;
+
+        $client->is_vip = $request->is_vip;
 
         $client->save();
 

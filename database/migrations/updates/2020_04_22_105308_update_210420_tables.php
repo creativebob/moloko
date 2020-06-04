@@ -18,7 +18,8 @@ class Update210420Tables extends Migration
 
             $table->boolean('is_lost')->default(0)->comment('Потерянный')->after('loyalty_id');
             $table->boolean('is_vip')->default(0)->comment('VIP-статус')->after('is_lost');
-            $table->boolean('is_blacklist')->default(0)->comment('В черном списке')->after('is_vip');
+            $table->boolean('is_vip_abc')->default(0)->comment('VIP-статус по вычислениям')->after('is_vip');
+            $table->boolean('is_blacklist')->default(0)->comment('В черном списке')->after('is_vip_abc');
 
             $table->bigInteger('source_id')->nullable()->unsigned()->default(4)->comment('Id первого источника')->after('is_blacklist');
             $table->foreign('source_id')->references('id')->on('sources');
@@ -93,6 +94,7 @@ class Update210420Tables extends Migration
             $table->dropColumn([
                 'is_lost',
                 'is_vip',
+                'is_vip_abc',
                 'is_blacklist',
                 'source_id',
                 'first_order_date',

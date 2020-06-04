@@ -20,33 +20,38 @@ class ClientsIndicatorController extends Controller
     {
         $companyId = auth()->user()->company_id;
 
-        $res = ClientsIndicatorsReport::getIndicators("{$request->year}-{$request->month}-01", $companyId);
+        $res = ClientsIndicatorsReport::getIndicators("{$request->year}-{$request->month}-01", 'month', $companyId);
 
         if ($res['success']) {
             $clientsIndicatorsForMonth = ClientsIndicator::whereYear('start_date', $request->year)
                 ->whereMonth('start_date', $request->month)
                 ->where('company_id', $companyId)
+                ->where('unit_id', 17)
                 ->first();
 
             return response()->json($clientsIndicatorsForMonth);
         }
     }
-//
-//    public function getIndicatorsForYear(Request $request)
-//    {
-//        $companyId = auth()->user()->company_id;
-//
-//        $clientsIndicatorsForYear = ClientsIndicator::whereYear('start_date', $request->year)
-//            ->where('company_id', $companyId)
-//            ->orderBy('start_date')
-//            ->get();
-//
-//        $data = [];
-//        foreach($clientsIndicatorsForYear as $clientsIndicatorMonth) {
-//            $result['data'][$request->year][$clientsIndicatorMonth->start_date->format('n')] = $clientsIndicatorMonth;
-//        }
-////        dd($data);
-//
-//        return response()->json($data);
-//    }
+
+    /**
+     * Рассчет клиентских показателей за определенный год
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function computeIndicatorsForYear(Request $request)
+    {
+        $companyId = auth()->user()->company_id;
+
+        $res = ClientsIndicatorsReport::getIndicators("{$request->year}-01-01", 'year', $companyId);
+
+        if ($res['success']) {
+            $clientsIndicatorsForYear = ClientsIndicator::whereYear('start_date', $request->year)
+                ->where('company_id', $companyId)
+                ->where('unit_id', 20)
+                ->first();
+
+            return response()->json($clientsIndicatorsForYear);
+        }
+    }
 }

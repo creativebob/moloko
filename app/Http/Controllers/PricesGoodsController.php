@@ -77,6 +77,7 @@ class PricesGoodsController extends Controller
             'catalog',
             'catalogs_item'
         ])
+            ->withCount('likes')
 //        ->whereHas('service', function ($q) {
 //            $q->whereHas('process', function ($q) {
 //                $q->where('draft', false);

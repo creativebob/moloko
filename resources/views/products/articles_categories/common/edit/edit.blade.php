@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('inhead')
-@include('includes.scripts.dropzone-inhead')
+    @include('includes.scripts.dropzone-inhead')
 @endsection
 
 @section('title', $title)
@@ -162,7 +162,7 @@
             @endcan
 
             {{-- Табы для сущности --}}
-            @includeIf($page_info->entity->view_path . '.tabs_content')
+            @includeIf("{$page_info->entity->view_path}.tabs_content")
 
             {{ Form::close() }}
         </div>
@@ -171,13 +171,13 @@
 @endsection
 
 @section('modals')
-@include('includes.modals.modal_item_delete')
+    @include('includes.modals.modal_item_delete')
 @endsection
 
 @push('scripts')
-@include('includes.scripts.inputs-mask')
-@include('includes.scripts.ckeditor')
+    @include('includes.scripts.inputs-mask')
+    @include('includes.scripts.ckeditor')
 
-{{-- Проверка поля на существование --}}
-@include('includes.scripts.check', ['id' => $category->id])
+    {{-- Проверка поля на существование --}}
+    @include('includes.scripts.check', ['id' => $category->id])
 @endpush

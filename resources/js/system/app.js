@@ -44,8 +44,7 @@ Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'
 Vue.component('articles-categories-with-groups-component', require('./components/ArticlesCategoriesWithGroupsComponent.vue'));
 Vue.component('manufacturers-component', require('./components/ManufacturersComponent.vue'));
 
-Vue.component('related-category-component', require('./components/products/articles_categories/goods_categories/related/RelatedComponent.vue'));
-Vue.component('related-component', require('./components/products/articles/goods/related/RelatedComponent.vue'));
+Vue.component('related-component', require('./components/products/common/articles/related/RelatedComponent.vue'));
 
 // Услуги
 Vue.component('processes-categories-with-groups-component', require('./components/ProcessesCategoriesWithGroupsComponent.vue'));

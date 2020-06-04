@@ -263,7 +263,7 @@ class CartController extends Controller
 
                     // sendSms('79041248598', 'Данные для входа: ' . $user->access_code);
 
-                    $user->location_id = create_location($request, $country_id = 1, $city_id = 1);
+                    $user->location_id = create_location($request, 1, $site->filial->location->city_id);
 
                     $user->first_name = $first_name;
                     $user->second_name = $second_name;
@@ -294,7 +294,7 @@ class CartController extends Controller
             $lead->name = $lead_name;
             $lead->company_name = $company_name;
             $lead->private_status = $private_status;
-            $lead->location_id = create_location($request, $country_id = 1, $site->filial->location->city_id);
+            $lead->location_id = create_location($request, 1, $site->filial->location->city_id);
 
             // Ловим utm метки
             $utm_source = null;

@@ -73,7 +73,11 @@
                                         v-for="relatedCategory in relatedCategories"
                                     >
                                         <span class="parent" :data-open="'related_category-' + relatedCategory.id">{{ relatedCategory.name }}</span>
-                                        <div class="checker-nested" :id="'related_category-' + relatedCategory.id">
+                                        <div
+                                            class="checker-nested"
+                                            :id="'related_category-' + relatedCategory.id"
+                                            @click="openRelated('related_category-' + relatedCategory.id)"
+                                        >
                                             <ul class="checker">
 
                                                 <li
@@ -168,7 +172,7 @@
         computed: {
             status() {
                 let result;
-                if (this.error) {
+                if (this.text) {
                     result = 'sprite-16 icon-error'
                 }
                 return result;
@@ -211,15 +215,13 @@
                 this.search = false;
                 this.results = [];
 
-                if (this.text.length > 2) {
+                if (this.text && this.text.length > 2) {
                     this.check();
                 }
             },
             clear() {
-                if (this.error) {
-                    this.text = null;
-                    this.reset();
-                }
+                this.text = null;
+                this.reset();
             },
             addFromSearch(id) {
                 // console.log('Клик по пришедшим данным, добавляем в инпут');
@@ -251,6 +253,12 @@
                 } else {
                     return false
                 }
+            },
+            openRelated(id) {
+                // Скрываем все состав
+                $('.checker-nested').hide();
+                // Показываем нужную
+                $('#' + id).show();
             },
             addRelated(id) {
                 var itemId = id,

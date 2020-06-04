@@ -101,6 +101,8 @@
             @if($cur_prices_goods->is_new == 1) Новинка @else Обычный @endif</button>
     </td>
 
+    <td class="td-likes">{{ $cur_prices_goods->likes_count }}</td>
+
     {{-- Элементы управления --}}
     @include('includes.control.table_td', ['item' => $cur_prices_goods])
 

@@ -178,6 +178,12 @@
                         <label for="checkbox-is_blacklist"><span>В чёрном списке</span></label>
                     </div>
 
+                    <div class="small-12 medium-6 cell checkbox">
+                        {!! Form::hidden('is_vip', 0) !!}
+                        {{ Form::checkbox('is_vip', 1, $client->is_vip, ['id' => 'checkbox-is_vip']) }}
+                        <label for="checkbox-is_vip"><span>VIP</span></label>
+                    </div>
+
 
 
                     <div class="small-12 medium-12 cell">

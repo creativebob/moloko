@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
-{{--@section('inhead')--}}
-{{--@endsection--}}
+@section('title', $page_info->name)
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 

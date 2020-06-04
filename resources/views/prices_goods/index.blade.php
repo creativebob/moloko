@@ -63,6 +63,7 @@
                     <th class="td-price-status">Статус</th>
                     <th class="td-hit">Хит</th>
                     <th class="td-new">Новинка</th>
+                    <th class="td-likes">Лайки</th>
                     <th class="td-control"></th>
                     <th class="td-delete"></th>
                 </tr>
