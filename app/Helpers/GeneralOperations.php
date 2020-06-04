@@ -275,12 +275,12 @@ function create_location($request, $country_id = null, $city_id = null, $address
 
     // Ищем или создаем локацию
     $location = Location::with('city')
-        ->firstOrCreate([
+        ->firstOrCreate(compact(
             'country_id',
             'city_id',
             'address',
             'zip_code'
-        ], [
+        ), [
             'author_id' => $user_id
         ]);
 
