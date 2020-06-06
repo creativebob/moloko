@@ -68,8 +68,8 @@
                         name="horizontal"
                         autocomplete="off"
                         size="10x3"
+                        :value="promotion.horizontal"
                     ></textarea>
-    <!--                @include('includes.inputs.textarea', ['name' => 'description', 'value' => $promotion->horizontal])-->
                 </label>
             </div>
             <div class="cell small-12">
@@ -78,8 +78,8 @@
                         name="vertical"
                         autocomplete="off"
                         size="10x3"
+                        :value="promotion.vertical"
                     ></textarea>
-    <!--                @include('includes.inputs.textarea', ['name' => 'description', 'value' => $promotion->vertical])-->
                 </label>
             </div>
             <div class="cell small-12">
@@ -88,24 +88,27 @@
                         name="square"
                         autocomplete="off"
                         size="10x3"
+                        :value="promotion.square"
                     ></textarea>
-    <!--                @include('includes.inputs.textarea', ['name' => 'description', 'value' => $promotion->square])-->
                 </label>
             </div>
         </div>
 
         <div class="small-12 cell checkbox">
-            <!--            {!! Form::checkbox('is_slider', 1, $promotion->is_slider, ['id' => 'checkbox-is_slider']) !!}-->
+            <input
+                type="hidden"
+                name="is_slider"
+                value="0"
+            >
             <input
                 type="checkbox"
                 name="is_slider"
                 value="1"
                 id="checkbox-is_slider"
+                :checked="promotion.is_slider == 1"
             >
             <label for="checkbox-is_slider"><span>Отображать слайдер</span></label>
         </div>
-
-
 
 
     </div>
@@ -123,7 +126,3 @@
         },
     }
 </script>
-
-<style scoped>
-
-</style>
