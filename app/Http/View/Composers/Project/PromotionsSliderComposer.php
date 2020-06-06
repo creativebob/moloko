@@ -14,6 +14,7 @@ class PromotionsSliderComposer
         $param = optional($view)->param;
 
         $promotions = Promotion::company($site->company_id)
+            ->site($site->id)
             ->where('is_slider', true)
             ->where('begin_date', '<=', today())
             ->where('end_date', '>=', today())
@@ -34,6 +35,7 @@ class PromotionsSliderComposer
             })
             ->orderBy('sort')
             ->get();
+//        dd($promotions);
 
         return $view->with(compact('promotions'));
     }
