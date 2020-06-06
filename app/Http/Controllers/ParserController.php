@@ -50,34 +50,43 @@ class ParserController extends Controller
      */
     public function parserUserLocation()
     {
+        set_time_limit(0);
+
         $users = User::with([
             'userLeads',
-            'location'
+            'location',
+            'filial'
         ])
             ->where('site_id', 2)
-            ->has('userLeads')
             ->get();
 
         foreach($users as $user) {
-            $lead = $user->userLeads->last();
 
-            if (isset($user->location)) {
-                if ($user->location->city_id == 1) {
-                    $user->location()->forceDelete();
+            if ($user->userLeads->isNotEmpty()) {
+                $lead = $user->userLeads->last();
+
+                if (isset($user->location)) {
+                    if ($user->location->city_id == 1) {
+                        $user->location()->forceDelete();
+                        $user->update([
+                            'location_id' => $lead->location_id
+                        ]);
+                    }
+                } else {
                     $user->update([
                         'location_id' => $lead->location_id
                     ]);
                 }
+
             } else {
+                $location_id = create_location(request(), 1, $user->filial->location->city_id);
                 $user->update([
-                    'location_id' => $lead->location_id
+                    'location_id' => $location_id
                 ]);
             }
-
         }
 
-
-        return "Удалены локации у пользователей с городом Иркутск и проставлены пользователям (тем, у кого не было, или был город Иркутск) локации с последнего лида";
+        return "Удалены локации у пользователей с городом Иркутск и проставлены пользователям (тем, у кого не было, или был город Иркутск) локации с последнего лида, у кого нет лидов проставлены локации(город из филиала)";
 
     }
 

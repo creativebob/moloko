@@ -34,8 +34,8 @@
                     <th class="td-photo">Фото</th>
                     <th class="td-name">Название</th>
                     <th class="td-description">Описание</th>
-                    <th class="td-begin-date">Дата начала</th>
-                    <th class="td-end-date">Дата окончания</th>
+                    <th class="td-begin_date">Дата начала</th>
+                    <th class="td-end_date">Дата окончания</th>
                     <th class="td-link">Ссылка</th>
                     <th class="td-author">Автор</th>
                     <th class="td-control"></th>
@@ -79,11 +79,11 @@
                     <td class="td-description">
                         {{ $promotion->description }}
                     </td>
-                    <td class="td-begin-date">
+                    <td class="td-begin_date">
                         {{ $promotion->begin_date->format('d.m.Y') }}
                     </td>
-                    <td class="td-begin-date">
-                        {{ $promotion->end_date->format('d.m.Y') }}
+                    <td class="td-end_date">
+                        {{ optional($promotion->end_date)->format('d.m.Y') }}
                     </td>
                     <td class="td-link">
                         <a href="{{ $promotion->link }}">{{ $promotion->link }}</a>

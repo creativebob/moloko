@@ -40,6 +40,10 @@
                             @include('includes.inputs.name', ['name' => 'link', 'value' => $promotion->link])
                         </label>
 
+                        <label>Триггер
+                            @include('includes.inputs.name', ['name' => 'trigger', 'value' => $promotion->trigger])
+                        </label>
+
                         <div class="grid-x grid-padding-x">
                             <div class="small-6 cell">
                                 <label>Начало публикации
@@ -89,6 +93,8 @@
                             </fieldset>
                         </div>
 
+
+
                     </div>
 
                     {{-- Чекбоксы управления --}}
@@ -104,21 +110,14 @@
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-5 cell">
-                        <div class="grid-x">
-                            <photo-upload-component :options='@json(['title' => 'Tiny', 'name' => 'tiny'])' :photo='@json($promotion->tiny)'></photo-upload-component>
-                            <photo-upload-component :options='@json(['title' => 'Small', 'name' => 'small'])' :photo='@json($promotion->small)'></photo-upload-component>
-                            <photo-upload-component :options='@json(['title' => 'Medium', 'name' => 'medium'])' :photo='@json($promotion->medium)'></photo-upload-component>
-                            <photo-upload-component :options='@json(['title' => 'Large', 'name' => 'large'])' :photo='@json($promotion->large)'></photo-upload-component>
-                            <photo-upload-component :options='@json(['title' => 'Large X', 'name' => 'large_x'])' :photo='@json($promotion->large_x)'></photo-upload-component>
-                        </div>
-                        <div class="grid-x">
-                            {!! Form::hidden('is_slider', 0) !!}
-                            <div class="small-12 cell checkbox">
-                                {!! Form::checkbox('is_slider', 1, $promotion->is_slider, ['id' => 'checkbox-is_slider']) !!}
-                                <label for="checkbox-is_slider"><span>Отображать слайдер</span></label>
-                            </div>
-                        </div>
+                        <promotion-component
+                            :promotion='@json($promotion)'
+                        ></promotion-component>
                     </div>
+
+                    <div class="small-12 medium-7 cell">
+                    </div>
+
                 </div>
             </div>
 

@@ -242,6 +242,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\Company');
     }
 
+    public function filial()
+    {
+        return $this->belongsTo('App\Department');
+    }
+
     // Получаем роли
     public function roles()
     {

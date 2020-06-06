@@ -72,11 +72,15 @@
                                     <li
                                         v-for="relatedCategory in relatedCategories"
                                     >
-                                        <span class="parent" :data-open="'related_category-' + relatedCategory.id">{{ relatedCategory.name }}</span>
+                                        <span
+                                            class="parent"
+                                            :data-open="'related_category-' + relatedCategory.id"
+                                            @click="openRelated('related_category-' + relatedCategory.id)"
+                                        >{{ relatedCategory.name }}</span>
                                         <div
                                             class="checker-nested"
                                             :id="'related_category-' + relatedCategory.id"
-                                            @click="openRelated('related_category-' + relatedCategory.id)"
+
                                         >
                                             <ul class="checker">
 

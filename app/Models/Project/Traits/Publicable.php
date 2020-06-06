@@ -1,12 +1,11 @@
 <?php
 
-
 namespace App\Models\Project\Traits;
 
 trait Publicable
 {
     /**
-     * Скопа display
+     * Проверка display
      *
      * @param $query
      * @param bool $value
@@ -18,7 +17,7 @@ trait Publicable
     }
 
     /**
-     * Скопа archive
+     * Проверка archive
      *
      * @param $query
      * @param bool $value
@@ -30,7 +29,7 @@ trait Publicable
     }
 
     /**
-     * Скопа draft
+     * Проверка draft
      *
      * @param $query
      * @param bool $value
@@ -39,5 +38,17 @@ trait Publicable
     public function scopeDraft($query, $value = false, $table = null)
     {
         $query->where(isset($table) ? "{$table}.draft" : 'draft', $value);
+    }
+
+    /**
+     * Проверка moderation
+     *
+     * @param $query
+     * @param bool $value
+     * @param null $table
+     */
+    public function scopeModeration($query, $value = false, $table = null)
+    {
+        $query->where(isset($table) ? "{$table}.moderation" : 'moderation', $value);
     }
 }

@@ -67,6 +67,9 @@ Vue.component('search-processes-component', require('./components/search/SearchP
 Vue.component('search-prices-goods-component', require('./components/search/SearchPricesGoodsComponent'));
 
 Vue.component('sites-component', require('./components/promotions/SitesComponent'));
+
+// Продвижения
+Vue.component('promotion-component', require('./components/promotions/PromotionComponent'));
 Vue.component('promotion-catalog-goods-component', require('./components/promotions/CatalogGoodsComponent'));
 
 Vue.component('settings-stocks-component', require('./components/settings/SettingsStocksComponent'));

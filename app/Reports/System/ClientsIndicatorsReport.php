@@ -114,26 +114,23 @@ class ClientsIndicatorsReport
 
 //                dd($clients->first()->estimates->last());
                 $activeClients = $clients->filter(function ($client) use ($endDatePeriodActive) {
-//                    if ($client->estimates->last() == null) {
-//                        dd($client);
-//                    }
-                    if ($client->estimates->last() != null) {
+//                    if ($client->estimates->last() != null) {
                         return $client->estimates->last()->registered_date >= $endDatePeriodActive;
-                    }
+//                    }
                 });
                 $data['active_count'] = $activeClients->count();
 
                 $activeClientsPrevious = $clients->filter(function ($client) use ($startDate, $startDatePeriodActive) {
-                    if ($client->estimates->last() != null) {
+//                    if ($client->estimates->last() != null) {
                         return $client->first_order_date < $startDate && $client->estimates->last()->registered_date >= $startDatePeriodActive;
-                    }
+//                    }
                 });
                 $data['active_previous_count'] = $activeClientsPrevious->count();
 
                 $lostClients = $clients->filter(function ($client) use ($startDatePeriodActive, $endDatePeriodActive) {
-                    if ($client->estimates->last() != null) {
+//                    if ($client->estimates->last() != null) {
                         return $client->estimates->last()->registered_date < $endDatePeriodActive;
-                    }
+//                    }
                 });
                 $data['lost_count'] = $lostClients->count();
 
@@ -143,9 +140,9 @@ class ClientsIndicatorsReport
                 $data['new_clients_period_count'] = $clients->where('first_order_date', '>=', $startDate)->where('first_order_date', '<', $endDate)->count();
 
                 $lostClientsPeriod = $clients->filter(function ($client) use ($startDatePeriodActive, $endDatePeriodActive) {
-                    if ($client->estimates->last() != null) {
+//                    if ($client->estimates->last() != null) {
                         return $client->estimates->last()->registered_date >= $startDatePeriodActive && $client->estimates->last()->registered_date < $endDatePeriodActive;
-                    }
+//                    }
                 });
                 $data['lost_clients_period_count'] = $lostClientsPeriod->count();
 
@@ -162,12 +159,10 @@ class ClientsIndicatorsReport
                     $data['churn_rate'] = 0;
                 }
 
-
-
                 $customersPeriod = $clients->filter(function ($client) use ($startDate, $endDate) {
-                    if ($client->estimates->last() != null) {
+//                    if ($client->estimates->last() != null) {
                         return $client->estimates->last()->registered_date >= $startDate && $client->estimates->last()->registered_date < $endDate;
-                    }
+//                    }
                 });
                 $data['customers_period_count'] = $customersPeriod->count();
 

@@ -2,13 +2,14 @@
 
 namespace App\Models\Project;
 
+use App\Models\Project\Traits\Commonable;
 use App\Models\Project\Traits\Publicable;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 class Promotion extends Model
 {
+    use Commonable;
     use Publicable;
     use Cachable;
 
@@ -18,7 +19,6 @@ class Promotion extends Model
         'begin_date',
         'end_date'
     ];
-
 
     public function prices_goods()
     {

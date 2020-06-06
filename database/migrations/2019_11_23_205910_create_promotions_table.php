@@ -25,6 +25,8 @@ class CreatePromotionsTable extends Migration
             $table->date('begin_date')->index()->comment('Дата начала');
             $table->date('end_date')->nullable()->index()->comment('Дата окончания');
 
+            $table->char('mode', 1)->comment('Режим');
+
             $table->bigInteger('photo_id')->nullable()->unsigned()->comment('Фото');
             $table->foreign('photo_id')->references('id')->on('photos');
 
@@ -42,6 +44,12 @@ class CreatePromotionsTable extends Migration
 
             $table->bigInteger('large_x_id')->nullable()->unsigned()->comment('large_x');
             $table->foreign('large_x_id')->references('id')->on('photos');
+
+            $table->text('horizontal')->nullable()->comment('horizontal');
+            $table->text('vertical')->nullable()->comment('vertical');
+            $table->text('square')->nullable()->comment('square');
+
+            $table->string('trigger')->nullable()->comment('Триггер для отображения');
 
             $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id филиала');
             $table->foreign('filial_id')->references('id')->on('departments');

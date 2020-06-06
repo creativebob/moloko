@@ -40,11 +40,19 @@ class Promotion extends Model
         'is_recommend',
         'is_upsale',
 
+        'mode',
+
         'tiny',
         'small',
         'medium',
         'large',
         'large_x',
+
+        'horizontal',
+        'vertical',
+        'square',
+
+        'trigger',
 
         'display',
         'system',
@@ -86,7 +94,7 @@ class Promotion extends Model
 
     public function filials()
     {
-        return $this->belongsToMany(Promotion::class, 'filial_promotion', 'promotion_id', 'filial_id');
+        return $this->belongsToMany(Department::class, 'filial_promotion', 'promotion_id', 'filial_id');
     }
 
     // Фото

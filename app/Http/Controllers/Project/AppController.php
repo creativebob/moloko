@@ -279,6 +279,9 @@ class AppController extends Controller
         // Генерируем код доступа и записываем для пользователя
         $access_code = rand(1000, 9999);
         $user->access_code = $access_code;
+
+        $user->location_id = create_location($request, 1, $site->filial->location->city_id);
+
         $user->save();
 
         Log::info('Сгенерировали код и вписали юзеру');
