@@ -21,7 +21,7 @@ class PromotionsSliderComposer
             ->whereHas('filials', function($q) use ($site) {
                 $q->where('id', $site->filial->id);
             })
-            ->whereNull('trigger')
+            ->whereNull('prom')
             ->when($param, function ($q) use ($site, $param) {
                 $q->orWhere(function($q) use ($site, $param) {
                     $q->display()
@@ -29,7 +29,7 @@ class PromotionsSliderComposer
                         ->whereHas('filials', function($q) use ($site) {
                             $q->where('id', $site->filial->id);
                         })
-                        ->whereIn('trigger', $param);
+                        ->whereIn('prom', $param);
                 });
             })
             ->orderBy('sort')

@@ -49,7 +49,7 @@ class CreatePromotionsTable extends Migration
             $table->text('vertical')->nullable()->comment('vertical');
             $table->text('square')->nullable()->comment('square');
 
-            $table->string('trigger')->nullable()->comment('Триггер для отображения');
+            $table->string('prom')->nullable()->comment('Триггер для отображения');
 
             $table->bigInteger('filial_id')->unsigned()->nullable()->comment('Id филиала');
             $table->foreign('filial_id')->references('id')->on('departments');

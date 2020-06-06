@@ -84,7 +84,7 @@ class Update210420Tables extends Migration
             $table->text('horizontal')->nullable()->comment('horizontal')->after('large_x_id');
             $table->text('vertical')->nullable()->comment('vertical')->after('horizontal');
             $table->text('square')->nullable()->comment('square')->after('vertical');
-            $table->string('trigger')->nullable()->comment('Триггер для отображения')->after('square');
+            $table->string('prom')->nullable()->comment('Триггер для отображения')->after('square');
         });
     }
 
@@ -164,7 +164,7 @@ class Update210420Tables extends Migration
                 'horizontal',
                 'vertical',
                 'square',
-                'trigger',
+                'prom',
             ]);
         });
     }

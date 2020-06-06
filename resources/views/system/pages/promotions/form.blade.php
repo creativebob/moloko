@@ -41,7 +41,7 @@
                         </label>
 
                         <label>Триггер
-                            @include('includes.inputs.name', ['name' => 'trigger', 'value' => $promotion->trigger])
+                            @include('includes.inputs.name', ['name' => 'prom', 'value' => $promotion->prom])
                         </label>
 
                         <div class="grid-x grid-padding-x">

@@ -52,7 +52,7 @@ class Promotion extends Model
         'vertical',
         'square',
 
-        'trigger',
+        'prom',
 
         'display',
         'system',
