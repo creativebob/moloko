@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('inhead')
-    @include('includes.scripts.pickmeup-inhead')
-@endsection
-
 @section('title', 'Редактировать продвижение')
 
 @section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $promotion))

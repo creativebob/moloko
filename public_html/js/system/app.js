@@ -74813,8 +74813,8 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(177);
-__webpack_require__(334);
-module.exports = __webpack_require__(335);
+__webpack_require__(337);
+module.exports = __webpack_require__(338);
 
 
 /***/ }),
@@ -74826,7 +74826,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vuex__ = __webpack_require__(178);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store_index_js__ = __webpack_require__(328);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__store_index_js__ = __webpack_require__(331);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -74898,17 +74898,17 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('search-prices-goods-compo
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('sites-component', __webpack_require__(309));
 
 // Продвижения
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('promotion-component', __webpack_require__(340));
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('promotion-catalog-goods-component', __webpack_require__(312));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('promotion-component', __webpack_require__(312));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('promotion-catalog-goods-component', __webpack_require__(315));
 
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('settings-stocks-component', __webpack_require__(318));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('settings-stocks-component', __webpack_require__(321));
 
 // Vue.component('price-goods-price-component', require('./components/prices_goods/PriceGoodsPriceComponent.vue'));
 
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('pickmeup-component', __webpack_require__(321));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('pickmeup-component', __webpack_require__(324));
 
 // Виджеты
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('clients-indicators-component', __webpack_require__(324));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('clients-indicators-component', __webpack_require__(327));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -74916,7 +74916,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('clients-indicators-compon
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-window.pickmeup = __webpack_require__(327);
+window.pickmeup = __webpack_require__(330);
 
 pickmeup.defaults.locales['ru'] = {
   days: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
@@ -74940,9 +74940,9 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 __webpack_require__(46);
 
 // Наши скрипты
-__webpack_require__(331);
-__webpack_require__(332);
-__webpack_require__(333);
+__webpack_require__(334);
+__webpack_require__(335);
+__webpack_require__(336);
 
 // window.CKEDITOR_BASEPATH = 'node_modules/ckeditor/';
 // require('ckeditor');
@@ -91183,7 +91183,406 @@ var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(313)
 /* template */
-var __vue_template__ = __webpack_require__(317)
+var __vue_template__ = __webpack_require__(314)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/promotions/PromotionComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-946d3adc", Component.options)
+  } else {
+    hotAPI.reload("data-v-946d3adc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 313 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        promotion: Object
+    },
+    data: function data() {
+        return {
+            mode: 'photo'
+        };
+    }
+});
+
+/***/ }),
+/* 314 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "grid-x" }, [
+    _c("div", { staticClass: "small-12 cell radiobutton" }, [
+      _vm._v("Режим"),
+      _c("br"),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.mode,
+            expression: "mode"
+          }
+        ],
+        attrs: {
+          type: "radio",
+          name: "mode",
+          value: "photo",
+          id: "radiobutton-photo"
+        },
+        domProps: { checked: _vm._q(_vm.mode, "photo") },
+        on: {
+          change: function($event) {
+            _vm.mode = "photo"
+          }
+        }
+      }),
+      _vm._v(" "),
+      _vm._m(0),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.mode,
+            expression: "mode"
+          }
+        ],
+        attrs: {
+          type: "radio",
+          name: "mode",
+          value: "video",
+          id: "radiobutton-video"
+        },
+        domProps: { checked: _vm._q(_vm.mode, "video") },
+        on: {
+          change: function($event) {
+            _vm.mode = "video"
+          }
+        }
+      }),
+      _vm._v(" "),
+      _vm._m(1)
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.mode == "photo",
+            expression: "mode == 'photo'"
+          }
+        ],
+        staticClass: "grid-x"
+      },
+      [
+        _c("photo-upload-component", {
+          attrs: {
+            options: { title: "Tiny", name: "tiny" },
+            photo: _vm.promotion.tiny
+          }
+        }),
+        _vm._v(" "),
+        _c("photo-upload-component", {
+          attrs: {
+            options: { title: "Small", name: "small" },
+            photo: _vm.promotion.small
+          }
+        }),
+        _vm._v(" "),
+        _c("photo-upload-component", {
+          attrs: {
+            options: { title: "Medium", name: "medium" },
+            photo: _vm.promotion.medium
+          }
+        }),
+        _vm._v(" "),
+        _c("photo-upload-component", {
+          attrs: {
+            options: { title: "Large", name: "large" },
+            photo: _vm.promotion.large
+          }
+        }),
+        _vm._v(" "),
+        _c("photo-upload-component", {
+          attrs: {
+            options: { title: "Large X", name: "large_x" },
+            photo: _vm.promotion.large_x
+          }
+        }),
+        _vm._v(" "),
+        _c("input", {
+          attrs: { type: "hidden", name: "is_slider", value: "0" }
+        })
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.mode == "video",
+            expression: "mode == 'video'"
+          }
+        ],
+        staticClass: "grid-x"
+      },
+      [
+        _c("div", { staticClass: "cell small-12" }, [
+          _c("label", [
+            _vm._v("Горизонтальное\n                "),
+            _c("textarea", {
+              attrs: { name: "horizontal", autocomplete: "off", size: "10x3" },
+              domProps: { value: _vm.promotion.horizontal }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "cell small-12" }, [
+          _c("label", [
+            _vm._v("Вертикальное\n                "),
+            _c("textarea", {
+              attrs: { name: "vertical", autocomplete: "off", size: "10x3" },
+              domProps: { value: _vm.promotion.vertical }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "cell small-12" }, [
+          _c("label", [
+            _vm._v("Квадратное\n                "),
+            _c("textarea", {
+              attrs: { name: "square", autocomplete: "off", size: "10x3" },
+              domProps: { value: _vm.promotion.square }
+            })
+          ])
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "small-12 cell checkbox" }, [
+      _c("input", { attrs: { type: "hidden", name: "is_slider", value: "0" } }),
+      _vm._v(" "),
+      _c("input", {
+        attrs: {
+          type: "checkbox",
+          name: "is_slider",
+          value: "1",
+          id: "checkbox-is_slider"
+        },
+        domProps: { checked: _vm.promotion.is_slider == 1 }
+      }),
+      _vm._v(" "),
+      _vm._m(2)
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "radiobutton-photo" } }, [
+      _c("span", [_vm._v("Фото")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "radiobutton-video" } }, [
+      _c("span", [_vm._v("Видео")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { attrs: { for: "checkbox-is_slider" } }, [
+      _c("span", [_vm._v("Отображать слайдер")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-946d3adc", module.exports)
+  }
+}
+
+/***/ }),
+/* 315 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(316)
+/* template */
+var __vue_template__ = __webpack_require__(320)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -91222,7 +91621,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 313 */
+/* 316 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -91376,7 +91775,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
-        'drilldown-component': __webpack_require__(314)
+        'drilldown-component': __webpack_require__(317)
     },
     props: {
         catalogsGoodsData: Object,
@@ -91516,15 +91915,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 314 */
+/* 317 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(315)
+var __vue_script__ = __webpack_require__(318)
 /* template */
-var __vue_template__ = __webpack_require__(316)
+var __vue_template__ = __webpack_require__(319)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -91563,7 +91962,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 315 */
+/* 318 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -91616,7 +92015,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 316 */
+/* 319 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -91655,7 +92054,7 @@ if (false) {
 }
 
 /***/ }),
-/* 317 */
+/* 320 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -91952,15 +92351,15 @@ if (false) {
 }
 
 /***/ }),
-/* 318 */
+/* 321 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(319)
+var __vue_script__ = __webpack_require__(322)
 /* template */
-var __vue_template__ = __webpack_require__(320)
+var __vue_template__ = __webpack_require__(323)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -91999,7 +92398,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 319 */
+/* 322 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -92091,7 +92490,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 320 */
+/* 323 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -92142,15 +92541,15 @@ if (false) {
 }
 
 /***/ }),
-/* 321 */
+/* 324 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(322)
+var __vue_script__ = __webpack_require__(325)
 /* template */
-var __vue_template__ = __webpack_require__(323)
+var __vue_template__ = __webpack_require__(326)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -92189,7 +92588,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 322 */
+/* 325 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -92249,7 +92648,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            date: __WEBPACK_IMPORTED_MODULE_0_moment___default()(String(this.today)).format('DD.MM.YYYY')
+            date: ''
         };
     },
 
@@ -92270,7 +92669,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 323 */
+/* 326 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -92311,15 +92710,15 @@ if (false) {
 }
 
 /***/ }),
-/* 324 */
+/* 327 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(325)
+var __vue_script__ = __webpack_require__(328)
 /* template */
-var __vue_template__ = __webpack_require__(326)
+var __vue_template__ = __webpack_require__(329)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -92358,7 +92757,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 325 */
+/* 328 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -92662,7 +93061,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 326 */
+/* 329 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -92846,7 +93245,7 @@ if (false) {
 }
 
 /***/ }),
-/* 327 */
+/* 330 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -92892,12 +93291,12 @@ c.join("</div><div>")+"</div></nav></div>"},instance_content_template:function(a
 
 
 /***/ }),
-/* 328 */
+/* 331 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_estimate__ = __webpack_require__(329);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__modules_promotion__ = __webpack_require__(330);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_estimate__ = __webpack_require__(332);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__modules_promotion__ = __webpack_require__(333);
 
 
 
@@ -92914,7 +93313,7 @@ var store = {
 /* harmony default export */ __webpack_exports__["a"] = (store);
 
 /***/ }),
-/* 329 */
+/* 332 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -93154,7 +93553,7 @@ var moduleEstimate = {
 /* harmony default export */ __webpack_exports__["a"] = (moduleEstimate);
 
 /***/ }),
-/* 330 */
+/* 333 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -93194,7 +93593,7 @@ var modulePromotion = {
 /* harmony default export */ __webpack_exports__["a"] = (modulePromotion);
 
 /***/ }),
-/* 331 */
+/* 334 */
 /***/ (function(module, exports) {
 
 // Валидируем кнопку при клике
@@ -93207,7 +93606,7 @@ window.submitAjax = function (id) {
 };
 
 /***/ }),
-/* 332 */
+/* 335 */
 /***/ (function(module, exports) {
 
 // Умолчания глобальные
@@ -93720,7 +94119,7 @@ $(window).resize(function () {
 // });
 
 /***/ }),
-/* 333 */
+/* 336 */
 /***/ (function(module, exports) {
 
 function checkFilter() {
@@ -93758,424 +94157,16 @@ $(document).on('click', '.filter-close', function () {
 });
 
 /***/ }),
-/* 334 */
+/* 337 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 335 */
+/* 338 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 336 */,
-/* 337 */,
-/* 338 */,
-/* 339 */,
-/* 340 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(345)
-/* template */
-var __vue_template__ = __webpack_require__(347)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/promotions/PromotionComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-946d3adc", Component.options)
-  } else {
-    hotAPI.reload("data-v-946d3adc", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 341 */,
-/* 342 */,
-/* 343 */,
-/* 344 */,
-/* 345 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        promotion: Object
-    },
-    data: function data() {
-        return {
-            mode: 'photo'
-        };
-    }
-});
-
-/***/ }),
-/* 346 */,
-/* 347 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "grid-x" }, [
-    _c("div", { staticClass: "small-12 cell radiobutton" }, [
-      _vm._v("Режим"),
-      _c("br"),
-      _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.mode,
-            expression: "mode"
-          }
-        ],
-        attrs: {
-          type: "radio",
-          name: "mode",
-          value: "photo",
-          id: "radiobutton-photo"
-        },
-        domProps: { checked: _vm._q(_vm.mode, "photo") },
-        on: {
-          change: function($event) {
-            _vm.mode = "photo"
-          }
-        }
-      }),
-      _vm._v(" "),
-      _vm._m(0),
-      _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.mode,
-            expression: "mode"
-          }
-        ],
-        attrs: {
-          type: "radio",
-          name: "mode",
-          value: "video",
-          id: "radiobutton-video"
-        },
-        domProps: { checked: _vm._q(_vm.mode, "video") },
-        on: {
-          change: function($event) {
-            _vm.mode = "video"
-          }
-        }
-      }),
-      _vm._v(" "),
-      _vm._m(1)
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.mode == "photo",
-            expression: "mode == 'photo'"
-          }
-        ],
-        staticClass: "grid-x"
-      },
-      [
-        _c("photo-upload-component", {
-          attrs: {
-            options: { title: "Tiny", name: "tiny" },
-            photo: _vm.promotion.tiny
-          }
-        }),
-        _vm._v(" "),
-        _c("photo-upload-component", {
-          attrs: {
-            options: { title: "Small", name: "small" },
-            photo: _vm.promotion.small
-          }
-        }),
-        _vm._v(" "),
-        _c("photo-upload-component", {
-          attrs: {
-            options: { title: "Medium", name: "medium" },
-            photo: _vm.promotion.medium
-          }
-        }),
-        _vm._v(" "),
-        _c("photo-upload-component", {
-          attrs: {
-            options: { title: "Large", name: "large" },
-            photo: _vm.promotion.large
-          }
-        }),
-        _vm._v(" "),
-        _c("photo-upload-component", {
-          attrs: {
-            options: { title: "Large X", name: "large_x" },
-            photo: _vm.promotion.large_x
-          }
-        }),
-        _vm._v(" "),
-        _c("input", {
-          attrs: { type: "hidden", name: "is_slider", value: "0" }
-        })
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.mode == "video",
-            expression: "mode == 'video'"
-          }
-        ],
-        staticClass: "grid-x"
-      },
-      [
-        _c("div", { staticClass: "cell small-12" }, [
-          _c("label", [
-            _vm._v("Горизонтальное\n                "),
-            _c("textarea", {
-              attrs: { name: "horizontal", autocomplete: "off", size: "10x3" },
-              domProps: { value: _vm.promotion.horizontal }
-            })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "cell small-12" }, [
-          _c("label", [
-            _vm._v("Вертикальное\n                "),
-            _c("textarea", {
-              attrs: { name: "vertical", autocomplete: "off", size: "10x3" },
-              domProps: { value: _vm.promotion.vertical }
-            })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "cell small-12" }, [
-          _c("label", [
-            _vm._v("Квадратное\n                "),
-            _c("textarea", {
-              attrs: { name: "square", autocomplete: "off", size: "10x3" },
-              domProps: { value: _vm.promotion.square }
-            })
-          ])
-        ])
-      ]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "small-12 cell checkbox" }, [
-      _c("input", { attrs: { type: "hidden", name: "is_slider", value: "0" } }),
-      _vm._v(" "),
-      _c("input", {
-        attrs: {
-          type: "checkbox",
-          name: "is_slider",
-          value: "1",
-          id: "checkbox-is_slider"
-        },
-        domProps: { checked: _vm.promotion.is_slider == 1 }
-      }),
-      _vm._v(" "),
-      _vm._m(2)
-    ])
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { attrs: { for: "radiobutton-photo" } }, [
-      _c("span", [_vm._v("Фото")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { attrs: { for: "radiobutton-video" } }, [
-      _c("span", [_vm._v("Видео")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { attrs: { for: "checkbox-is_slider" } }, [
-      _c("span", [_vm._v("Отображать слайдер")])
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-946d3adc", module.exports)
-  }
-}
 
 /***/ })
 /******/ ]);

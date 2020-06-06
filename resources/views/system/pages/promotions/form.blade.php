@@ -47,21 +47,20 @@
                         <div class="grid-x grid-padding-x">
                             <div class="small-6 cell">
                                 <label>Начало публикации
-                                    @include('includes.inputs.date', [
-                                        'name' => 'begin_date',
-                                        'value' => isset($promotion->begin_date) ? $promotion->begin_date->format('d.m.Y') : '',
-                                        'required' => true
-                                    ]
-                                    )
+                                    <pickmeup-component
+                                        name="begin_date"
+                                        value="{{ optional($promotion->begin_date)->format('d.m.Y') }}"
+                                        :required="true"
+                                    ></pickmeup-component>
                                 </label>
                             </div>
                             <div class="small-6 cell">
                                 <label>Окончание публикации
-                                    @include('includes.inputs.date', [
-                                        'name' => 'end_date',
-                                        'value' => isset($promotion->end_date) ? $promotion->end_date->format('d.m.Y') : ''
-                                    ]
-                                    )
+                                    <pickmeup-component
+                                        name="end_date"
+                                        value="{{ optional($promotion->end_date)->format('d.m.Y') }}"
+{{--                                        today="{{ today()->format('d.m.Y') }}"--}}
+                                    ></pickmeup-component>
                                 </label>
                             </div>
                         </div>

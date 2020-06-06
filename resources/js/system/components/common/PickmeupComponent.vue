@@ -52,7 +52,7 @@
 
         data() {
             return {
-                date: moment(String(this.today)).format('DD.MM.YYYY'),
+                date: '',
             }
         },
 
