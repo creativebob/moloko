@@ -628,27 +628,32 @@ class CartController extends Controller
         $sum = 0;
         $count = 0;
         if ($request->has('cartGoods')) {
-            $result = Cookie::queue(Cookie::forget('cart'));
-            foreach($request->cartGoods as $cartGood) {
-//                $cartGood = json_decode($cartGood, true);
+            if (count($request->cartGoods) > 0) {
+                $result = Cookie::queue(Cookie::forget('cart'));
+                foreach($request->cartGoods as $cartGood) {
+    //                $cartGood = json_decode($cartGood, true);
 
-                $cart['prices'][$cartGood['id']] = [
-                    'count' => $cartGood['quantity'],
-                    'price' => $cartGood['price'],
-                ];
+                    $cart['prices'][$cartGood['id']] = [
+                        'count' => $cartGood['quantity'],
+                        'price' => $cartGood['price'],
+                    ];
 
-                $sum += $cartGood['totalPrice'];
-                $count += $cartGood['quantity'];
+                    $sum += $cartGood['totalPrice'];
+                    $count += $cartGood['quantity'];
+                }
+
+                $cart['sum'] = $sum;
+                $cart['count'] = $count;
+
+                $result = Cookie::queue(Cookie::forever('cart', json_encode($cart)));
+                return response()->json([
+                    'success' => true,
+                    'result' => $result
+                ]);
+            } else {
+                $result = Cookie::queue(Cookie::forget('cart'));
+                return response()->json($result);
             }
-
-            $cart['sum'] = $sum;
-            $cart['count'] = $count;
-
-            $result = Cookie::queue(Cookie::forever('cart', json_encode($cart)));
-            return response()->json([
-                'success' => true,
-                'result' => $result
-            ]);
         } else {
             $result = Cookie::queue(Cookie::forget('cart'));
             return response()->json($result);
