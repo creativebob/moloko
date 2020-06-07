@@ -59,6 +59,7 @@
                                     <pickmeup-component
                                         name="end_date"
                                         value="{{ $promotion->end_date }}"
+                                        :required="true"
                                     ></pickmeup-component>
                                 </label>
                             </div>

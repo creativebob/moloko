@@ -121,7 +121,7 @@
         },
         data() {
             return {
-                mode: 'photo',
+                mode: this.promotion.mode,
             }
         },
     }

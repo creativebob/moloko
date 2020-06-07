@@ -42,11 +42,11 @@ class Promotion extends Model
 
         'mode',
 
-        'tiny',
-        'small',
-        'medium',
-        'large',
-        'large_x',
+        'tiny_id',
+        'small_id',
+        'medium_id',
+        'large_id',
+        'large_x_id',
 
         'horizontal',
         'vertical',

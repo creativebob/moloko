@@ -60,6 +60,10 @@ trait Commonable
             if (isset($request->utm_medium)) {
                 Cookie::queue('utm_medium', $request->utm_medium, 60*60*24);
             }
+
+            if (isset($request->prom)) {
+                Cookie::queue('prom', $request->prom, 60*60*24);
+            }
         } else {
             abort(404, 'Сайт не существует');
         }

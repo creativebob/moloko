@@ -27,10 +27,10 @@ class PromotionRequest extends FormRequest
         return [
 
             'name' => 'required|string|max:255',
-            'description' => 'string|nullable',
+            'description' => 'nullable|string',
 
-            'begin_date' => 'date|after:01.01.2018',
-            'end_date' => 'date|after:01.01.2018|nullable',
+            'begin_date' => 'required|date|after:01.01.2018',
+            'end_date' => 'required|date|after_or_equal:begin_date',
 
             'moderation' => 'integer|max:1',
             'system' => 'integer|max:1',

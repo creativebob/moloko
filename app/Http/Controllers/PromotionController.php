@@ -227,17 +227,25 @@ class PromotionController extends Controller
         $data = $request->input();
         $data['photo_id'] = $this->getPhotoId($request, $promotion);;
 
-        $names = [
-            'tiny',
-            'small',
-            'medium',
-            'large',
-            'large_x',
-        ];
+        switch ($data['mode']) {
+            case 'photo':
+                $names = [
+                    'tiny',
+                    'small',
+                    'medium',
+                    'large',
+                    'large_x',
+                ];
 
-        foreach ($names as $name) {
-            $column = $name . '_id';
-            $data[$column] = $this->savePhoto($request, $promotion, $name);
+                foreach ($names as $name) {
+                    $column = $name . '_id';
+                    $data[$column] = $this->savePhoto($request, $promotion, $name);
+                }
+                break;
+
+            case 'video':
+
+                break;
         }
 
         $result = $promotion->update($data);
