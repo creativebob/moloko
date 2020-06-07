@@ -11,7 +11,8 @@ class PromotionsSliderComposer
     public function compose(View $view)
     {
         $site = $view->site;
-        $param = optional($view)->param;
+        $prom = request()->prom;
+//        dd($prom);
 
         $promotions = Promotion::company($site->company_id)
             ->site($site->id)
@@ -23,14 +24,14 @@ class PromotionsSliderComposer
                 $q->where('id', $site->filial->id);
             })
             ->whereNull('prom')
-            ->when($param, function ($q) use ($site, $param) {
-                $q->orWhere(function($q) use ($site, $param) {
+            ->when($prom, function ($q) use ($site, $prom) {
+                $q->orWhere(function($q) use ($site, $prom) {
                     $q->display()
                         ->company($site->company_id)
                         ->whereHas('filials', function($q) use ($site) {
                             $q->where('id', $site->filial->id);
                         })
-                        ->whereIn('prom', $param);
+                        ->whereIn('prom', $prom);
                 });
             })
             ->orderBy('sort')
