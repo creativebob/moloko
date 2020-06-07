@@ -62,7 +62,7 @@ trait Commonable
             }
 
             if (isset($request->prom)) {
-                Cookie::queue('prom', $request->prom, 60*60*24);
+                Cookie::queue('prom', json_encode($request->prom), 60*60*24);
             }
         } else {
             abort(404, 'Сайт не существует');

@@ -11,7 +11,7 @@ class PromotionsSliderComposer
     public function compose(View $view)
     {
         $site = $view->site;
-        $prom = \Cookie::get('prom');
+        $prom = json_decode(\Cookie::get('prom'), true);
 //        dd($prom);
 
         $promotions = Promotion::company($site->company_id)
