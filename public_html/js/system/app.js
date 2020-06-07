@@ -74926,7 +74926,7 @@ pickmeup.defaults.locales['ru'] = {
   monthsShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
 };
 
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.pickmeup = window.pickmeup;
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$pickmeup = window.pickmeup;
 
 // Vuex хранилище
 
@@ -92614,13 +92614,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: {
         name: {
             type: String,
-            default: null
+            default: 'date'
         },
         value: {
-            type: String,
-            default: null
-        },
-        today: {
             type: String,
             default: null
         },
@@ -92628,14 +92624,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: Boolean,
             default: false
         }
+        // today: {
+        //     type: String,
+        //     default: null
+        // },
     },
 
     mounted: function mounted() {
 
-        this.pickmeup('.pickmeup-field', {
+        this.$pickmeup("input[name='" + this.name + "']", {
+            position: "bottom",
             format: 'd.m.Y',
             hide_on_select: true,
-            locale: 'ru'
+            locale: 'ru',
+            default_date: this.required
         });
 
         if (this.value) {
@@ -92653,11 +92655,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
 
-    computed: {
-        isRequired: function isRequired() {
-            return this.required;
-        }
-    },
+    // computed: {
+    //     isRequired() {
+    //         return this.required;
+    //     }
+    // },
 
     filters: {
         formatDate: function formatDate(value) {
@@ -92680,12 +92682,12 @@ var render = function() {
     directives: [
       { name: "model", rawName: "v-model", value: _vm.date, expression: "date" }
     ],
-    staticClass: "pickmeup-field",
+    staticClass: "date-field",
     attrs: {
       type: "text",
       autocomplete: "off",
       pattern: "[0-9]{2}.[0-9]{2}.[0-9]{4}",
-      required: _vm.isRequired,
+      required: _vm.required,
       name: _vm.name
     },
     domProps: { value: _vm.date },

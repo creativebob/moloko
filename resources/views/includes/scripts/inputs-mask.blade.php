@@ -1,5 +1,5 @@
-<script type="application/javascript" src="/js/system/jquery.maskedinput.js"></script>
-<script type="application/javascript">
+<script src="/js/system/jquery.maskedinput.js"></script>
+<script>
 
   jQuery(function($) {
     // --------------------------------- Буквы --------------------------

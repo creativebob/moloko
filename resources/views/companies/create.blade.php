@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('inhead')
-  @include('includes.scripts.pickmeup-inhead')
-@endsection
-
 @section('title', 'Новая компания')
 
 @section('breadcrumbs', Breadcrumbs::render('create', $page_info))
@@ -28,7 +24,6 @@
 
 @section('scripts')
   @include('includes.scripts.inputs-mask')
-  @include('includes.scripts.pickmeup-script')
   @include('companies.scripts')
 
   <script type="application/javascript">

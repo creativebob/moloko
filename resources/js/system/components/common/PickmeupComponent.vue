@@ -1,10 +1,10 @@
 <template>
     <input
         type="text"
-        class="pickmeup-field"
+        class="date-field"
         autocomplete="off"
         pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}"
-        :required="isRequired"
+        :required="required"
         v-model="date"
         :name="name"
     >
@@ -17,13 +17,9 @@
         props: {
             name: {
                 type: String,
-                default: null
+                default: 'date'
             },
             value: {
-                type: String,
-                default: null
-            },
-            today: {
                 type: String,
                 default: null
             },
@@ -31,14 +27,20 @@
                 type: Boolean,
                 default: false
             },
+            // today: {
+            //     type: String,
+            //     default: null
+            // },
         },
 
         mounted() {
 
-            this.pickmeup('.pickmeup-field', {
+            this.$pickmeup("input[name='" + this.name + "']", {
+                position : "bottom",
                 format	: 'd.m.Y',
                 hide_on_select : true,
-                locale : 'ru'
+                locale : 'ru',
+                default_date : this.required
             });
 
             if (this.value) {
@@ -56,11 +58,11 @@
             }
         },
 
-        computed: {
-            isRequired() {
-                return this.required;
-            }
-        },
+        // computed: {
+        //     isRequired() {
+        //         return this.required;
+        //     }
+        // },
 
         filters: {
             formatDate: function (value) {

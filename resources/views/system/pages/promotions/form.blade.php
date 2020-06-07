@@ -49,7 +49,7 @@
                                 <label>Начало публикации
                                     <pickmeup-component
                                         name="begin_date"
-                                        value="{{ optional($promotion->begin_date)->format('d.m.Y') }}"
+                                        value="{{ $promotion->begin_date }}"
                                         :required="true"
                                     ></pickmeup-component>
                                 </label>
@@ -58,8 +58,7 @@
                                 <label>Окончание публикации
                                     <pickmeup-component
                                         name="end_date"
-                                        value="{{ optional($promotion->end_date)->format('d.m.Y') }}"
-{{--                                        today="{{ today()->format('d.m.Y') }}"--}}
+                                        value="{{ $promotion->end_date }}"
                                     ></pickmeup-component>
                                 </label>
                             </div>
@@ -91,9 +90,6 @@
                                 @include('includes.lists.filials')
                             </fieldset>
                         </div>
-
-
-
                     </div>
 
                     {{-- Чекбоксы управления --}}
@@ -149,22 +145,6 @@
 
 
 @push('scripts')
-@include('includes.scripts.inputs-mask')
-@include('includes.scripts.pickmeup-script')
-{{--<script>--}}
-{{--    function readURL(input) {--}}
-{{--        if (input.files && input.files[0]) {--}}
-{{--            var reader = new FileReader();--}}
-{{--            reader.onload = function (e) {--}}
-{{--                $('#photo').attr('src', e.target.result);--}}
-{{--                // createDraggable();--}}
-{{--            };--}}
-{{--            reader.readAsDataURL(input.files[0]);--}}
-{{--        }--}}
-{{--    }--}}
-{{--    $("input[name='photo']").change(function () {--}}
-{{--        readURL(this);--}}
-{{--    });--}}
-{{--</script>--}}
+    @include('includes.scripts.inputs-mask')
 @endpush
 

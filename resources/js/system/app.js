@@ -88,7 +88,7 @@ Vue.component('clients-indicators-component', require('./components/widgets/Clie
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-window.pickmeup  = require('pickmeup');
+window.pickmeup = require('pickmeup');
 
 pickmeup.defaults.locales['ru'] = {
     days: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
@@ -98,7 +98,7 @@ pickmeup.defaults.locales['ru'] = {
     monthsShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек']
 };
 
-Vue.prototype.pickmeup = window.pickmeup;
+Vue.prototype.$pickmeup = window.pickmeup;
 
 // Vuex хранилище
 import store from './store/index.js';

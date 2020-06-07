@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('inhead')
-    @include('includes.scripts.pickmeup-inhead')
-@endsection
-
 @section('title', 'Редактировать компанию')
 
 @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $company->name))
@@ -34,7 +30,6 @@
 @section('scripts')
     @include('companies.scripts')
     @include('includes.scripts.inputs-mask')
-    @include('includes.scripts.pickmeup-script')
     @include('includes.scripts.modal-delete-script')
     @include('includes.scripts.extra-phone')
     @include('includes.bank_accounts.bank-account-script', ['id' => $company->id])
