@@ -83961,6 +83961,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -84339,7 +84340,15 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm._m(1),
+            _c("div", { staticClass: "cell small-2" }, [
+              _c("div", { staticClass: "text-center" }, [
+                _c("div", {
+                  staticClass: "sprite-input-right sprite-16 icon-select",
+                  attrs: { "data-toggle": "dropdown-related" },
+                  on: { click: _vm.clear }
+                })
+              ])
+            ]),
             _vm._v(" "),
             _c(
               "div",
@@ -84437,7 +84446,7 @@ var render = function() {
       _c("div", { staticClass: "grid-x grid-padding-x" }, [
         _c("div", { staticClass: "small-12 cell" }, [
           _c("table", { staticClass: "table-compositions" }, [
-            _vm._m(2),
+            _vm._m(1),
             _vm._v(" "),
             _c(
               "tbody",
@@ -84541,19 +84550,6 @@ var staticRenderFns = [
         ])
       ]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "cell small-2" }, [
-      _c("div", { staticClass: "text-center" }, [
-        _c("div", {
-          staticClass: "sprite-input-right sprite-16 icon-select",
-          attrs: { "data-toggle": "dropdown-related" }
-        })
-      ])
-    ])
   },
   function() {
     var _vm = this
@@ -91348,9 +91344,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: {
         promotion: Object
     },
+    mounted: function mounted() {
+        if (this.promotion.mode) {
+            this.mode = this.promotion.mode;
+        } else {
+            this.mode = 'photo';
+        }
+    },
     data: function data() {
         return {
-            mode: this.promotion.mode
+            mode: null
         };
     }
 });

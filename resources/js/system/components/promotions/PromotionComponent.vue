@@ -119,9 +119,16 @@
         props: {
             promotion: Object,
         },
+        mounted() {
+            if (this.promotion.mode) {
+                this.mode = this.promotion.mode;
+            } else {
+                this.mode = 'photo';
+            }
+        },
         data() {
             return {
-                mode: this.promotion.mode,
+                mode: null,
             }
         },
     }

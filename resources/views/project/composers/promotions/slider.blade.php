@@ -4,16 +4,20 @@
             <div class="cell small-12 block-actions single-item">
                 @foreach($promotions as $promotion)
                     <div class="item-slide">
-                        <a href="{{ $promotion->link }}">
-                            <picture>
-                                <source media="(max-width: 420px)" srcset="{{ $promotion->tiny->path }} 420w" sizes="100vw">
-                                <source media="(max-width: 800px)" srcset="{{ $promotion->small->path }} 800w" sizes="100vw">
-                                <source media="(max-width: 1024px)" srcset="{{ $promotion->medium->path }} 1024w" sizes="100vw">
-                                <source media="(max-width: 1280px)" srcset="{{ $promotion->large->path }} 1280w" sizes="100vw">
-                                <source media="(max-width: 2000px)" srcset="{{ $promotion->large_x->path }} 2000w" sizes="200vw">
-                                <img srcset="{{ $promotion->medium->path }} 1024w">
-                            </picture>
-                        </a>
+                        @if($promotion->mode == 'photo')
+                            <a href="{{ $promotion->link }}">
+                                <picture>
+                                    <source media="(max-width: 420px)" srcset="{{ $promotion->tiny->path }} 420w" sizes="100vw">
+                                    <source media="(max-width: 800px)" srcset="{{ $promotion->small->path }} 800w" sizes="100vw">
+                                    <source media="(max-width: 1024px)" srcset="{{ $promotion->medium->path }} 1024w" sizes="100vw">
+                                    <source media="(max-width: 1280px)" srcset="{{ $promotion->large->path }} 1280w" sizes="100vw">
+                                    <source media="(max-width: 2000px)" srcset="{{ $promotion->large_x->path }} 2000w" sizes="200vw">
+                                    <img srcset="{{ $promotion->medium->path }} 1024w">
+                                </picture>
+                            </a>
+                        @else
+                            {!! $promotion->horizontal !!}
+                        @endif
                     </div>
                 @endforeach
             </div>

@@ -61,6 +61,7 @@
                                 <div
                                     class="sprite-input-right sprite-16 icon-select"
                                     data-toggle="dropdown-related"
+                                    @click="clear"
                                 ></div>
                             </div>
                         </div>
