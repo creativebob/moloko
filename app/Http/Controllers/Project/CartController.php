@@ -484,7 +484,7 @@ class CartController extends Controller
 
             $message .= "\r\n";
             // Маржа
-            $message .= "Маржинальность: " . num_format($estimate->margin_currency, 0) . " руб. ({$estimate->margin_percent}%)\r\n";
+            $message .= "Маржинальность: " . num_format($estimate->margin_currency, 0) . " руб. (" . round($estimate->margin_percent, 2) . "%)\r\n";
             $message .= "\r\n";
 
             // Ролл Хаус
