@@ -31,6 +31,9 @@ class PromotionsSliderComposer
                         ->whereHas('filials', function($q) use ($site) {
                             $q->where('id', $site->filial->id);
                         })
+                        ->where('is_slider', true)
+                        ->where('begin_date', '<=', today())
+                        ->where('end_date', '>=', today())
                         ->whereIn('prom', $prom);
                 });
             })
