@@ -39,6 +39,13 @@ class Goods extends Model
             ->archive();
     }
 
+    public function related()
+    {
+        return $this->belongsToMany(Goods::class, 'goods_related', 'goods_id', 'related_id')
+            ->display()
+            ->archive();
+    }
+
     // Геттер: Функция получения веса в кг. учитывая все надстройки и переопределения в еденицах измерения
     public function getWeightAttribute()
     {

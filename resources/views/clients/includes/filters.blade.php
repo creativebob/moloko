@@ -213,11 +213,11 @@
         </div>
 
         <div class="cell small-12 medium-6">
-            <arrayer-component
+            <lister-component
                 name="rfm"
                 title="RFM"
                 :items='@json(request()->rfm)'
-            ></arrayer-component>
+            ></lister-component>
         </div>
 
         <div class="cell small-12 medium-6">
@@ -257,4 +257,9 @@
 </div>
 
 
-
+<script>
+    import ListerComponent from "../../../js/system/components/common/ListerComponent";
+    export default {
+        components: {ListerComponent}
+    }
+</script>

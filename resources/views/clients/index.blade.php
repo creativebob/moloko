@@ -10,7 +10,6 @@
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
 @section('exсel')
-{{--    {{ dd(request()->input()) }}--}}
     <a href="{{ route('clients.excel', request()->input()) }}" class="button tiny">Экспорт</a>
 @endsection
 
