@@ -17,21 +17,21 @@ class SubCatalogsGoodsItemsComposer
         if ($catalogs_goods_item->level == 1) {
             $site = $view->site;
 
-            $catalogs_goods_item->load([
-                'catalog',
-            ]);
+//            $catalogs_goods_item->load([
+//                'catalog',
+//            ]);
 
             $parent = $catalogs_goods_item;
 
         } else {
-            $catalogs_goods_item->load([
-                'parent' => function ($q) {
-                    $q->with([
-                        'childs',
-                        'catalog'
-                    ]);
-                }
-            ]);
+//            $catalogs_goods_item->load([
+//                'parent' => function ($q) {
+//                    $q->with([
+//                        'childs',
+//                        'catalog'
+//                    ]);
+//                }
+//            ]);
 
             $parent = $catalogs_goods_item->parent;
         }

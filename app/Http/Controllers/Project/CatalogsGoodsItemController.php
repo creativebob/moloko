@@ -65,7 +65,8 @@ class CatalogsGoodsItemController extends Controller
                     });
             },
             'directive_category:id,alias',
-            'filters.values'
+            'filters.values',
+            'catalog'
         ])
             ->where('slug', $slug)
             ->whereHas('catalog', function ($q) use ($site, $catalog_slug) {
