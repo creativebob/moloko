@@ -33,9 +33,24 @@ class CatalogsGoodsItemController extends Controller
         $page = $site->pages_public->where('alias', 'catalogs-goods-items')->first();
 
         // Получаем полный раздел со всеми прайсами
+        // TODO - 09.06.20 - Нужно какое то условие или настройка какие прайсы грузить (самого раздела, или вложенных в него)
         $catalogs_goods_item = CatalogsGoodsItem::with([
             'prices',
             'prices.goods.related' => function ($q) use ($catalog_slug) {
+                $q->with([
+                    'prices' => function ($q) use ($catalog_slug) {
+                        $q->whereHas('catalog', function ($q) use ($catalog_slug) {
+                            $q->where('slug', $catalog_slug);
+                        });
+                    }
+                ])
+                    ->whereHas('prices', function ($q) use ($catalog_slug) {
+                        $q->whereHas('catalog', function ($q) use ($catalog_slug) {
+                            $q->where('slug', $catalog_slug);
+                        });
+                    });
+            },
+            'childs_prices.goods.related' => function ($q) use ($catalog_slug) {
                 $q->with([
                     'prices' => function ($q) use ($catalog_slug) {
                         $q->whereHas('catalog', function ($q) use ($catalog_slug) {

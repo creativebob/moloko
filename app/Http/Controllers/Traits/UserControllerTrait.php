@@ -171,6 +171,8 @@ trait UserControllerTrait
         $user->company_id = $request->company_id ?? $user_auth->company->id ?? $company->id;
         $user->filial_id = $request->filial_id ?? $user_auth->filial_id ?? $company->filials->first()->id;
 
+        $user->name = $user->first_name . ' ' . $user->second_name;
+
         $user->save();
 
         if($user) {

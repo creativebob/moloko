@@ -39,9 +39,9 @@
           <th class="td-address">Адрес</th>
           <th class="td-phone">Телефон</th>
           <th class="td-leads-count">Кол-во обращений</th>
-          <th class="td-orders-count">Кол-во заказов</th>
-          <th class="td-badget">Сумма</th>
-          <th class="td-time-frame">Срок</th>
+          <th class="td-orders_count">Кол-во заказов</th>
+          <th class="td-customer_equity">Клиентский капитал</th>
+          <th class="td-activity">Динамика активности</th>
           <th class="td-loyalty">Лояльность</th>
           <th class="td-access">Доступ к ЛК</th>
           <th class="td-control"></th>
@@ -78,6 +78,8 @@
                 {{ $client->clientable->name }} ({{ $client->clientable->legal_form->name ?? '' }})
               </a>
             @endif
+                <br>
+                <span class="tiny-text">{{ $client->clientable->email }}</span>
 
           </td>
 
@@ -85,9 +87,9 @@
           <td class="td-phone">{{ isset($client->clientable->main_phone->phone) ? decorPhone($client->clientable->main_phone->phone) : 'Номер не указан' }}</td>
 
           <td class="td-leads-count">@if(!empty($client->leads)){{ $client->leads->count() }} @endif </td>
-          <td class="td-orders-count">@if(!empty($client->orders)){{ $client->orders->count() }} @endif </td>
-          <td class="td-badget">{{-- $client->badget_count ?? ' ... ' --}} </td>
-          <td class="td-time-frame">{{ $client->time_frame ?? ' ... ' }}</td>
+          <td class="td-orders_count">{{ $client->orders_count }}</td>
+          <td class="td-customer_equity">{{ num_format($client->customer_equity, 0) }} </td>
+          <td class="td-activity">{{ $client->activity }}</td>
           <td class="td-loyalty">{{ $client->loyalty->name ?? ' ... ' }}</td>
           <td class="td-access">{{-- $client->access ?? ' ... ' --}} </td>
 

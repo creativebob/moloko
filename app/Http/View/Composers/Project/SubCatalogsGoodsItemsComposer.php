@@ -18,7 +18,6 @@ class SubCatalogsGoodsItemsComposer
             $site = $view->site;
 
             $catalogs_goods_item->load([
-                'childs_prices',
                 'catalog',
             ]);
 
