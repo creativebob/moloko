@@ -84,10 +84,10 @@ class Update210420Tables extends Migration
             $table->string('prom')->nullable()->comment('Триггер для отображения')->after('square');
         });
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('birthday');
-            $table->date('birthday_date')->nullable()->comment('Дата рождения')->after('sex');
-        });
+//        Schema::table('users', function (Blueprint $table) {
+//            $table->dropColumn('birthday');
+//            $table->date('birthday_date')->nullable()->comment('Дата рождения')->after('sex');
+//        });
     }
 
     /**
@@ -168,9 +168,9 @@ class Update210420Tables extends Migration
             ]);
         });
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('birthday_date');
-            $table->date('birthday')->nullable()->comment('Дата рождения')->after('sex');
-        });
+//        Schema::table('users', function (Blueprint $table) {
+//            $table->dropColumn('birthday_date');
+//            $table->date('birthday')->nullable()->comment('Дата рождения')->after('sex');
+//        });
     }
 }

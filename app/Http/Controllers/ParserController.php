@@ -195,6 +195,27 @@ class ParserController extends Controller
         return 'У лидов закрыты сметы и созданы клиенты';
     }
 
+    public function parserUserName()
+    {
+        $users = User::get();
+
+        foreach ($users as $user) {
+            $user->save([
+                'name' => 'lol'
+            ]);
+//            $cur_user = $user;
+//            if (isset($cur_user->first_name) || isset($cur_user->second_name)) {
+//                $cur_user->name = $cur_user->first_name . ' ' . $cur_user->second_name;
+//            } else {
+//                $cur_user->name = $cur_user->login;
+//            }
+//
+//            $cur_user->save();
+//            dd($cur_user);
+        }
+        echo "Пользователям проставлено поле name<br><br>";
+    }
+
     /**
      * Парсер имен для пользователей, id страницы для должностей
      *

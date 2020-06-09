@@ -10085,10 +10085,6 @@ span.wrap-label-checkboxer {
   overflow-y: auto;
 }
 
-.checkboxer-pane::-webkit-scrollbar {
-  width: 0.5rem;
-}
-
 .checkboxer-button {
   width: 34px;
   position: absolute;
