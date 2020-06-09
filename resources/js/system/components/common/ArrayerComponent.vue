@@ -94,7 +94,6 @@
                 }
                 return result;
             },
-
         },
         methods: {
             focusInput() {

@@ -316,13 +316,11 @@
                     --}}
 
                     <div class="small-6 medium-3 cell">
-                        <label>Дата рождения компании
-                            <pickmeup-component
-                                name="foundation_date"
-                                value="{{ $company->foundation_date }}"
-                            ></pickmeup-component>
-{{--                            @include('includes.inputs.date', ['name' => 'foundation_date', 'value' => isset($company->birthday_company) ? $company->birthday_company->format('d.m.Y') : null ])--}}
-                        </label>
+                        <pickmeup-component
+                            name="foundation_date"
+                            title="Дата основания"
+                            value="{{ $company->foundation_date }}"
+                        ></pickmeup-component>
                     </div>
                     <div class="small-6 cell">
 

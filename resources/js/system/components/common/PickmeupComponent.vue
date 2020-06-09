@@ -1,13 +1,21 @@
 <template>
-    <input
-        type="text"
-        class="date-field"
-        autocomplete="off"
-        pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}"
-        :required="required"
-        v-model="date"
-        :name="name"
-    >
+    <label class="label-icon">{{ title }}
+        <input
+            type="text"
+            class="date-field"
+            autocomplete="off"
+            pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}"
+            :required="required"
+            v-model="date"
+            :name="name"
+        >
+<!--        <div-->
+<!--            class="sprite-input-right"-->
+<!--            :class="status"-->
+<!--            @click="clear"-->
+<!--        >-->
+        </div>
+    </label>
 </template>
 
 <script>
@@ -18,6 +26,10 @@
             name: {
                 type: String,
                 default: 'date'
+            },
+            title: {
+                type: String,
+                default: 'Дата'
             },
             value: {
                 type: String,
@@ -51,11 +63,33 @@
                 }
             }
         },
+        computed: {
+            status() {
+                let result;
+                if (this.date) {
+                    result = 'sprite-16 icon-error'
+                }
+                return result;
+            },
+
+        },
 
         data() {
             return {
                 date: '',
             }
+        },
+        methods: {
+            // setDate(value) {
+            //     this.date = value;
+            //
+            // :value="date"
+            // @input="setDate($event.target.value)"
+            // @change="setDate($event.target.value)"
+            // },
+            clear() {
+                this.date = '';
+            },
         },
 
         // computed: {

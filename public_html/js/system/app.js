@@ -93302,6 +93302,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -93310,6 +93318,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         name: {
             type: String,
             default: 'date'
+        },
+        title: {
+            type: String,
+            default: 'Дата'
         },
         value: {
             type: String,
@@ -93343,12 +93355,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         }
     },
+
+    computed: {
+        status: function status() {
+            var result = void 0;
+            if (this.date) {
+                result = 'sprite-16 icon-error';
+            }
+            return result;
+        }
+    },
+
     data: function data() {
         return {
             date: ''
         };
     },
 
+    methods: {
+        // setDate(value) {
+        //     this.date = value;
+        //
+        // :value="date"
+        // @input="setDate($event.target.value)"
+        // @change="setDate($event.target.value)"
+        // },
+        clear: function clear() {
+            this.date = '';
+        }
+    },
 
     // computed: {
     //     isRequired() {
@@ -93373,28 +93408,36 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("input", {
-    directives: [
-      { name: "model", rawName: "v-model", value: _vm.date, expression: "date" }
-    ],
-    staticClass: "date-field",
-    attrs: {
-      type: "text",
-      autocomplete: "off",
-      pattern: "[0-9]{2}.[0-9]{2}.[0-9]{4}",
-      required: _vm.required,
-      name: _vm.name
-    },
-    domProps: { value: _vm.date },
-    on: {
-      input: function($event) {
-        if ($event.target.composing) {
-          return
+  return _c("label", { staticClass: "label-icon" }, [
+    _vm._v(_vm._s(_vm.title) + "\n        "),
+    _c("input", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.date,
+          expression: "date"
         }
-        _vm.date = $event.target.value
+      ],
+      staticClass: "date-field",
+      attrs: {
+        type: "text",
+        autocomplete: "off",
+        pattern: "[0-9]{2}.[0-9]{2}.[0-9]{4}",
+        required: _vm.required,
+        name: _vm.name
+      },
+      domProps: { value: _vm.date },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.date = $event.target.value
+        }
       }
-    }
-  })
+    })
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

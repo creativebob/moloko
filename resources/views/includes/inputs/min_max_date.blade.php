@@ -3,31 +3,29 @@
 
     <div class="grid-x grid-margin-x">
 
-        <div class="cell small-6">
-            @php
-                $nameMin = "{$name}_min";
-                $nameMax = "{$name}_max";
-            @endphp
+        @php
+            $nameMin = "{$name}_min";
+            $nameMax = "{$name}_max";
+        @endphp
 
-            <label class="ininput">от:
-                <pickmeup-component
-                    name="{{ $nameMin }}"
-                    @isset(request()->$nameMin)
-                    value="{{ \Carbon\Carbon::createFromFormat('d.m.Y', request()->$nameMin) }}"
-                    @endisset
-                ></pickmeup-component>
-            </label>
+        <div class="cell small-6">
+            <pickmeup-component
+                name="{{ $nameMin }}"
+                title="от:"
+                @isset(request()->$nameMin)
+                value="{{ \Carbon\Carbon::createFromFormat('d.m.Y', request()->$nameMin) }}"
+                @endisset
+            ></pickmeup-component>
         </div>
 
         <div class="cell small-6">
-            <label class="ininput">до:
-                <pickmeup-component
-                    name="{{ $nameMax }}"
-                    @isset(request()->$nameMax)
-                    value="{{ \Carbon\Carbon::createFromFormat('d.m.Y', request()->$nameMax) }}"
-                    @endisset
-                ></pickmeup-component>
-            </label>
+            <pickmeup-component
+                name="{{ $nameMax }}"
+                title="до:"
+                @isset(request()->$nameMax)
+                value="{{ \Carbon\Carbon::createFromFormat('d.m.Y', request()->$nameMax) }}"
+                @endisset
+            ></pickmeup-component>
         </div>
 
     </div>

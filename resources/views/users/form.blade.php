@@ -222,13 +222,11 @@
 			<div class="tabs-panel" id="content-panel-2">
 				<div class="grid-x grid-padding-x">
 					<div class="small-5 medium-4 cell">
-						<label>Дата рождения
-                                <pickmeup-component
-                                    name="birthday_date"
-                                    value="{{ $user->birthday_date }}"
-                                ></pickmeup-component>
-{{--							@include('includes.inputs.date', ['name'=>'birthday_date', 'value'=>$user->birthday_date])--}}
-						</label>
+                        <pickmeup-component
+                            name="birthday_date"
+                            title="Дата рождения"
+                            value="{{ $user->birthday_date }}"
+                        ></pickmeup-component>
 					</div>
 					<div class="small-6 small-offset-1 medium-6 medium-offset-2 cell radiobutton">Пол<br>
 
