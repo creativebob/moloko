@@ -37,6 +37,9 @@ Vue.component('estimate-sale-button-component', require('./components/estimates/
 Vue.component('estimate-production-button-component', require('./components/estimates/EstimateProductionButtonComponent.vue'));
 Vue.component('payments-component', require('./components/PaymentsComponent.vue'));
 
+Vue.component('checkboxer-component', require('./components/common/CheckboxerComponent'));
+Vue.component('arrayer-component', require('./components/common/ArrayerComponent'));
+
 Vue.component('input-digit-component', require('./components/InputDigitComponent.vue'));
 Vue.component('dropzone-component', require('./components/DropzoneComponent.vue'));
 

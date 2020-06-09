@@ -69,7 +69,7 @@ trait UserControllerTrait
         $user->second_name = $request->second_name;
         $user->patronymic = $request->patronymic;
         $user->sex = $request->sex ?? 1;
-        $user->birthday = $request->birthday;
+        $user->birthday_date = $request->birthday_date;
 
         // Литера (Особая идентификационная отметка, например в номере договора)
         $user->liter = $request->liter;
@@ -249,7 +249,7 @@ trait UserControllerTrait
         $user->second_name = $request->second_name;
         $user->patronymic = $request->patronymic;
         $user->sex = $request->sex ?? 1;
-        $user->birthday = $request->birthday;
+        $user->birthday_date = $request->birthday_date;
 
         // Литера (Особая идентификационная отметка, например в номере договора)
         $user->liter = $request->liter;

@@ -14,14 +14,11 @@ class Update210420Tables extends Migration
     public function up()
     {
         Schema::table('clients', function (Blueprint $table) {
-            $table->tinyInteger('loyalty_score')->unsigned()->nullable()->comment('Пользовательская оценка')->after('loyalty_id');
-
             $table->boolean('is_lost')->default(0)->comment('Потерянный')->after('loyalty_id');
             $table->boolean('is_vip')->default(0)->comment('VIP-статус')->after('is_lost');
             $table->boolean('is_vip_abc')->default(0)->comment('VIP-статус по вычислениям')->after('is_vip');
-            $table->boolean('is_blacklist')->default(0)->comment('В черном списке')->after('is_vip_abc');
 
-            $table->bigInteger('source_id')->nullable()->unsigned()->default(4)->comment('Id первого источника')->after('is_blacklist');
+            $table->bigInteger('source_id')->nullable()->unsigned()->default(4)->comment('Id первого источника')->after('is_vip_abc');
             $table->foreign('source_id')->references('id')->on('sources');
 
             $table->date('first_order_date')->nullable()->comment('Дата первого заказа')->after('source_id');
@@ -86,6 +83,11 @@ class Update210420Tables extends Migration
             $table->text('square')->nullable()->comment('square')->after('vertical');
             $table->string('prom')->nullable()->comment('Триггер для отображения')->after('square');
         });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('birthday');
+            $table->date('birthday_date')->nullable()->comment('Дата рождения')->after('sex');
+        });
     }
 
     /**
@@ -103,7 +105,6 @@ class Update210420Tables extends Migration
                 'is_lost',
                 'is_vip',
                 'is_vip_abc',
-                'is_blacklist',
                 'source_id',
                 'first_order_date',
                 'last_order_date',
@@ -117,7 +118,6 @@ class Update210420Tables extends Migration
                 'ltv',
                 'use_promo_count',
                 'promo_rate',
-                'loyalty_score',
                 'rfm',
                 'abc',
                 'xyz',
@@ -166,6 +166,11 @@ class Update210420Tables extends Migration
                 'square',
                 'prom',
             ]);
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('birthday_date');
+            $table->date('birthday')->nullable()->comment('Дата рождения')->after('sex');
         });
     }
 }

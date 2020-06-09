@@ -1,5 +1,5 @@
 <?php
-namespace App\Exports;
+namespace App\Exports\Sheets;
 
 use App\Article;
 use Maatwebsite\Excel\Concerns\FromCollection;

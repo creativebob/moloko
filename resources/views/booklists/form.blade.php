@@ -100,7 +100,7 @@
           <div class="grid-x grid-padding-x">
             <div class="small-5 medium-4 cell">
               <label>Дата рождения
-              {{ Form::text('birthday', $user->birthday, ['class'=>'birthday-field date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
+              {{ Form::text('birthday_date', $user->birthday_date, ['class'=>'birthday-field date-field', 'pattern'=>'[0-9]{2}.[0-9]{2}.[0-9]{4}', 'autocomplete'=>'off']) }}
               </label>
             </div>
             <div class="small-6 small-offset-1 medium-6 medium-offset-2 cell radiobutton">Пол<br>

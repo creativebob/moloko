@@ -13,6 +13,7 @@ use App\Http\View\Composers\System\ChannelsComposer;
 use App\Http\View\Composers\System\ChargesComposer;
 use App\Http\View\Composers\System\CitiesComposer;
 use App\Http\View\Composers\System\CitySearchComposer;
+use App\Http\View\Composers\System\ClientsCitiesComposer;
 use App\Http\View\Composers\System\ClientsCountComposer;
 use App\Http\View\Composers\System\ContainersCategoriesComposer;
 use App\Http\View\Composers\System\ContainersComposer;
@@ -28,6 +29,7 @@ use App\Http\View\Composers\System\ProcessesCategoriesWithGroupsComposer;
 use App\Http\View\Composers\System\RelatedComposer;
 use App\Http\View\Composers\System\SettingsComposer;
 use App\Http\View\Composers\System\SitesWIthFilialsAndCatalogsComposer;
+use App\Http\View\Composers\System\SourcesComposer;
 use App\Http\View\Composers\System\StocksComposer;
 use App\Http\View\Composers\System\WidgetsComposer;
 use Illuminate\Support\Facades\View;
@@ -398,6 +400,13 @@ class ComposerServiceProvider extends ServiceProvider
 
         // ВЫполненные работы
         view()->composer('system.pages.outcomes.includes.title', ClientsCountComposer::class);
+
+
+        // Фильтры
+
+        // Клиенты
+        view()->composer('clients.includes.filters', SourcesComposer::class);
+        view()->composer('clients.includes.filters', ClientsCitiesComposer::class);
 
     }
 

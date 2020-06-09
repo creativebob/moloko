@@ -2,14 +2,10 @@
 
 namespace App\Exports;
 
-// use Maatwebsite\Excel\Concerns\FromCollection;
-// use Maatwebsite\Excel\Concerns\FromQuery;
+use App\Exports\Sheets\ArticlesSheet;
 use Maatwebsite\Excel\Concerns\Exportable;
-
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-
-
 
 class ArticlesExport implements WithMultipleSheets, ShouldAutoSize
 {

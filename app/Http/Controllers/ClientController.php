@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-// Модели
+use App\Exports\ClientsExport;
+use Maatwebsite\Excel\Facades\Excel;
 use App\ClientsLoyaltiesScore;
 use App\Http\Controllers\Traits\Photable;
 use App\User;
@@ -61,9 +62,18 @@ use App\Http\Controllers\Traits\DepartmentControllerTrait;
 class ClientController extends Controller
 {
 
-    // Сущность над которой производит операции контроллер
-    protected $entity_name = 'clients';
-    protected $entity_dependence = false;
+    /**
+     * ClientController constructor.
+     * @param Client $client
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+        $this->class = Client::class;
+        $this->model = 'App\Client';
+        $this->entity_alias = with(new $this->class)->getTable();
+        $this->entity_dependence = false;
+    }
 
     // Подключаем трейт записи и обновления компании
     use CompanyControllerTrait;
@@ -75,7 +85,7 @@ class ClientController extends Controller
     public function index(Request $request)
     {
 
-        $filter_url = autoFilter($request, $this->entity_name);
+        $filter_url = autoFilter($request, $this->entity_alias);
         if(($filter_url != null)&&($request->filter != 'active')){return Redirect($filter_url);};
 
         // Подключение политики
@@ -85,33 +95,40 @@ class ClientController extends Controller
         $user = $request->user();
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // -------------------------------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
         // -------------------------------------------------------------------------------------------------------------
 
-        $clients = Client::with('author', 'clientable.main_phones', 'loyalty', 'leads')
+        $clients = Client::with([
+            'author',
+            'clientable.main_phones',
+            'loyalty',
+            'leads'
+        ])
         // ->withCount(['orders' => function($q) {
         //     $q->whereNull('draft');
         // }])
-        ->companiesLimit($answer)
+            ->companiesLimit($answer)
         // ->filials($answer) // $filials должна существовать только для зависимых от филиала, иначе $filials должна null
-        ->moderatorLimit($answer)
-        ->authors($answer)
-        ->systemItem($answer)
+            ->moderatorLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->whereNotNull('first_order_date')
+            ->filters()
         // ->filter($request, 'city_id', 'location')
         // ->filter($request, 'sector_id')
-        ->booklistFilter($request)
-        ->orderBy('moderation', 'desc')
-        ->orderBy('id', 'desc')
-        ->paginate(30);
+            ->booklistFilter($request)
+            ->orderBy('moderation', 'desc')
+            ->orderBy('id', 'desc')
+            ->paginate(30);
 
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
 
-        $filter = setFilter($this->entity_name, $request, [
+        $filter = setFilter($this->entity_alias, $request, [
             // 'city',                 // Город
             // 'sector',               // Направление деятельности
             'booklist'              // Списки пользователя
@@ -122,9 +139,9 @@ class ClientController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
-        return view('clients.index', compact('clients', 'page_info', 'filter', 'user'));
+        return view('clients.index', compact('clients', 'page_info', 'user'));
     }
 
     public function createClientCompany(Request $request)
@@ -141,7 +158,7 @@ class ClientController extends Controller
         $company = new Company;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         return view('clients.create_client_company', compact('company', 'client', 'page_info'));
 
@@ -161,7 +178,7 @@ class ClientController extends Controller
         $user = new User;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
         $auth_user = Auth::user();
 
@@ -177,7 +194,7 @@ class ClientController extends Controller
         $this->authorize(getmethod('store'), Company::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('store'));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('store'));
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -211,7 +228,7 @@ class ClientController extends Controller
         $this->authorize(getmethod('store'), User::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod('store'));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod('store'));
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -508,7 +525,7 @@ class ClientController extends Controller
         $this->authorize(getmethod(__FUNCTION__), Company::class);
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
@@ -548,7 +565,7 @@ class ClientController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $dealer = Dealer::moderatorLimit($answer)->findOrFail($id);
@@ -563,7 +580,7 @@ class ClientController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $client = Client::with([
@@ -578,7 +595,7 @@ class ClientController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $client);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $page_info = pageInfo($this->entity_alias);
 
 
         // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
@@ -628,8 +645,9 @@ class ClientController extends Controller
 
     public function update(SupplierRequest $request, $id)
     {
+//        dd($request);
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $client = Client::moderatorLimit($answer)
@@ -722,7 +740,7 @@ class ClientController extends Controller
     {
 
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
-        $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
         $client = Client::moderatorLimit($answer)->findOrFail($id);
@@ -762,6 +780,12 @@ class ClientController extends Controller
             return 0;
         } else {
             return $company->name;};
+    }
+
+    public function excel()
+    {
+        return Excel::download(new ClientsExport(), 'Клиенты.xlsx');
+
     }
 
 }

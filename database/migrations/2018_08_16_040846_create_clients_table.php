@@ -26,7 +26,6 @@ class CreateClientsTable extends Migration
             $table->boolean('is_lost')->default(0)->comment('Потерянный');
             $table->boolean('is_vip')->default(0)->comment('VIP-статус');
             $table->boolean('is_vip_abc')->default(0)->comment('VIP-статус по вычислениям');
-            $table->boolean('is_blacklist')->default(0)->comment('В черном списке');
 
             $table->bigInteger('source_id')->nullable()->unsigned()->default(4)->comment('Id первого источника');
             $table->foreign('source_id')->references('id')->on('sources');
@@ -46,8 +45,6 @@ class CreateClientsTable extends Migration
 
             $table->integer('use_promo_count')->unsigned()->default(0)->comment('Кол-во заказов по акции');
             $table->decimal('promo_rate', 6, 2)->default(0)->comment('Коэффициент использования промоакций');
-
-
 
             $table->smallInteger('rfm')->unsigned()->nullable()->comment('RFM-анализ');
             $table->char('abc', 1)->nullable()->comment('ABC-анализ');

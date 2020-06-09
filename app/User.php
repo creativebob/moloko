@@ -45,7 +45,8 @@ class User extends Authenticatable
     // use DateIntervalFilter;
 
     protected $dates = [
-        'deleted_at'
+        'deleted_at',
+        'birthday_date'
     ];
 
     protected $fillable = [
@@ -59,7 +60,7 @@ class User extends Authenticatable
         'patronymic',
         'name',
         'sex',
-        'birthday',
+        'birthday_date',
 
         'phone',
         'extra_phone',
@@ -147,12 +148,10 @@ class User extends Authenticatable
     // }
 
     // КОНЕЦ БЛОКА ОПИСАНИЯ ФИЛЬТРОВ
-    public function setBirthdayAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('.', $value);
-            $this->attributes['birthday'] = $date_parts[2].'-'.$date_parts[1].'-'.$date_parts[0];
+    public function setBirthdayDateAttribute($value)
+    {
+        if (isset($value)) {
+            $this->attributes['birthday_date'] = Carbon::createFromFormat('d.m.Y', $value);
         }
     }
 
@@ -172,15 +171,15 @@ class User extends Authenticatable
 //        $this->attributes['name'] = $name;
 //    }
 
-    public function getBirthdayAttribute($value) {
-        if($value == Null){
-            return $value;
-        } else {
-            $date_parts = explode('-', $value);
-            $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
-            return $value;
-        }
-    }
+//    public function getBirthdayDateAttribute($value) {
+//        if($value == Null){
+//            return $value;
+//        } else {
+//            $date_parts = explode('-', $value);
+//            $value = $date_parts[2].'.'.$date_parts[1].'.'.$date_parts[0];
+//            return $value;
+//        }
+//    }
 
     public function getPassportDateAttribute($value) {
         if($value == Null){

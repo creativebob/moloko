@@ -12885,3 +12885,42 @@ tr:hover .button-to-reserve {
 .catalog-name {
   color: #aaa;
 }
+
+.arrayer .title {
+  font-family: "calibri";
+  font-size: 0.8rem;
+  color: #666666;
+}
+
+.arrayer ul li {
+  border: 1px solid blue;
+  border-radius: 3px;
+  padding: 5px;
+  cursor: pointer;
+  margin-right: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.arrayer ul li:last-child {
+  margin-right: 0;
+}
+
+.arrayer ul li .remove {
+  position: relative;
+  top: -5px;
+}
+
+.arrayer ul li .remove:hover {
+  color: red;
+}
+
+.arrayer .reset {
+  font-family: "calibri";
+  font-size: 0.8rem;
+  color: #666666;
+  cursor: pointer;
+}
+
+.arrayer .reset:hover {
+  color: blue;
+}

@@ -32,7 +32,7 @@ class UserStoreRequest extends FormRequest
             'patronymic' => 'string|max:255|nullable',
 
             // 'sex' => 'nullable',
-            'birthday' => 'date|after:01.01.1940|nullable',
+            'birthday_date' => 'date|after:01.01.1940|nullable',
 
             // 'main_phone' => 'string|max:17|required',
             // 'extra_phones.*' => 'string|max:17|nullable',

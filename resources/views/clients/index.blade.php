@@ -9,6 +9,11 @@
 
 @section('breadcrumbs', Breadcrumbs::render('index', $page_info))
 
+@section('exсel')
+{{--    {{ dd(request()->input()) }}--}}
+    <a href="{{ route('clients.excel', request()->input()) }}" class="button tiny">Экспорт</a>
+@endsection
+
 @section('content-count')
 {{-- Количество элементов --}}
   @if(!empty($clients))
@@ -18,7 +23,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Client::class, 'type' => 'table'])
+@include('clients.includes.title')
 @endsection
 
 @section('content')
@@ -116,30 +121,27 @@
 @endsection
 
 @section('modals')
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete')
-
-{{-- Модалка удаления с refresh --}}
-@include('includes.modals.modal-delete-ajax')
-
+    {{-- Модалка удаления с refresh --}}
+    @include('includes.modals.modal-delete')
+    {{-- Модалка удаления с refresh --}}
+    @include('includes.modals.modal-delete-ajax')
 @endsection
 
-@section('scripts')
-{{-- Скрипт сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.tablesorter-script')
-@include('includes.scripts.sortable-table-script')
+@push('scripts')
+    {{-- Скрипт сортировки и перетаскивания для таблицы --}}
+    @include('includes.scripts.tablesorter-script')
+    @include('includes.scripts.sortable-table-script')
 
-{{-- Скрипт отображения на сайте --}}
-@include('includes.scripts.ajax-display')
+    {{-- Скрипт отображения на сайте --}}
+    @include('includes.scripts.ajax-display')
 
-{{-- Скрипт системной записи --}}
-@include('includes.scripts.ajax-system')
+    {{-- Скрипт системной записи --}}
+    @include('includes.scripts.ajax-system')
 
-{{-- Скрипт чекбоксов --}}
-@include('includes.scripts.checkbox-control')
+    {{-- Скрипт чекбоксов --}}
+    @include('includes.scripts.checkbox-control')
 
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-script')
-@include('includes.scripts.delete-ajax-script')
-
-@endsection
+    {{-- Скрипт модалки удаления --}}
+    @include('includes.scripts.modal-delete-script')
+    @include('includes.scripts.delete-ajax-script')
+@endpush

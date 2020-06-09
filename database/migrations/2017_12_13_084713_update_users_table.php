@@ -23,9 +23,9 @@ class UpdateUsersTable extends Migration
             $table->string('name')->nullable()->index()->comment('Имя')->after('patronymic');
 
             $table->integer('sex')->unsigned()->comment('Пол')->default(1)->after('name');
-            $table->date('birthday')->nullable()->comment('Дата рождения')->after('sex');
+            $table->date('birthday_date')->nullable()->comment('Дата рождения')->after('sex');
 
-            $table->bigInteger('phone')->unique()->nullable()->comment('Телефон')->after('birthday');
+            $table->bigInteger('phone')->unique()->nullable()->comment('Телефон')->after('birthday_date');
             $table->bigInteger('extra_phone')->nullable()->comment('Дополнительный телефон')->after('phone');
             $table->bigInteger('telegram')->unsigned()->unique()->nullable()->comment('Telegram')->after('extra_phone');
 
@@ -92,7 +92,7 @@ class UpdateUsersTable extends Migration
             $table->dropColumn('second_name');
             $table->dropColumn('patronymic');
             $table->dropColumn('sex');
-            $table->dropColumn('birthday');
+            $table->dropColumn('birthday_date');
 
             $table->dropColumn('phone');
             $table->dropColumn('extra_phone');

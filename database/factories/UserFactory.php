@@ -51,7 +51,7 @@ $factory->define(User::class, function (Faker $faker) use ($companies_count, $fi
         $second_name = $surnames->random()->surname_female;
 
     };
-	
+
 
     return [
         'login' => $faker->unique()->userName,
@@ -63,7 +63,7 @@ $factory->define(User::class, function (Faker $faker) use ($companies_count, $fi
 
         'nickname' => $faker->userName,
         'sex' => $first_names_random->gender,
-        'birthday' => $faker->dateTimeBetween('-80 years', '-18 years')->format('d.m.Y'),
+        'birthday_date' => $faker->dateTimeBetween('-80 years', '-18 years')->format('d.m.Y'),
 
         'user_inn' => $faker->unique()->regexify("[0-9]{12}"),
         'passport_address' => $faker->address,
