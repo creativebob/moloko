@@ -5,11 +5,13 @@ namespace App\Models\Project;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use App\Models\Project\Traits\Publicable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Process extends Model
 {
     use Publicable;
     use Cachable;
+    use SoftDeletes;
 
     protected $with = [
 //        'photo',

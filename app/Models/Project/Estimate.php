@@ -4,6 +4,7 @@ namespace App\Models\Project;
 
 use App\EstimatesGoodsItem;
 use App\Lead;
+use App\Models\Project\Traits\Publicable;
 use App\Models\System\Traits\Commonable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -14,10 +15,9 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 class Estimate extends Model
 {
-
-    // Включаем кеш
+    
+    use Publicable;
     use Cachable;
-
     use SoftDeletes;
 
     protected $dates = [

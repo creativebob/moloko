@@ -6,12 +6,14 @@ use App\Models\Project\Traits\Commonable;
 use App\Models\Project\Traits\Publicable;
 use Illuminate\Database\Eloquent\Model;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Promotion extends Model
 {
     use Commonable;
     use Publicable;
     use Cachable;
+    use SoftDeletes;
 
 
     protected $dates = [

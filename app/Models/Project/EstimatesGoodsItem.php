@@ -2,18 +2,19 @@
 
 namespace App\Models\Project;
 
+use App\Models\Project\Traits\Publicable;
 use App\Models\System\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EstimatesGoodsItem extends Model
 {
-    // Включаем кеш
-    use Cachable;
-
-    // use SoftDeletes;
-
+    
+    use Publicable;
     use Commonable;
+    use Cachable;
+    use SoftDeletes;
 
     protected $dates = ['deleted_at'];
     protected $fillable = [
