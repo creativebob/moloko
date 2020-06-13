@@ -24,14 +24,16 @@ class SubCatalogsGoodsItemsComposer
             $parent = $catalogs_goods_item;
 
         } else {
-//            $catalogs_goods_item->load([
-//                'parent' => function ($q) {
-//                    $q->with([
-//                        'childs',
-//                        'catalog'
-//                    ]);
-//                }
-//            ]);
+            $catalogs_goods_item->load([
+                'parent' => function ($q) {
+                    $q->with([
+                        'childs' => function ($q) {
+                            $q->orderBy('sort');
+                        },
+                        'catalog'
+                    ]);
+                }
+            ]);
 
             $parent = $catalogs_goods_item->parent;
         }
