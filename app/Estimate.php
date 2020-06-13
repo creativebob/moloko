@@ -45,6 +45,8 @@ class Estimate extends Model
 
         'is_produced',
         'is_saled',
+        
+        'is_dismissed',
 
         'amount',
         'total',

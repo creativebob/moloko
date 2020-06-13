@@ -6,8 +6,11 @@ use App\Action;
 use App\ActionEntity;
 use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
+use App\Client;
 use App\ContractsClient;
+use App\Estimate;
 use App\Http\Controllers\System\Traits\Clientable;
+use App\Http\Controllers\Traits\UserControllerTrait;
 use App\OldLead;
 use App\OldLocation;
 use App\Lead;
@@ -17,6 +20,7 @@ use App\Claim;
 use App\Menu;
 use App\Company;
 use App\Department;
+use App\Payment;
 use App\Position;
 use App\Right;
 use App\Role;
@@ -30,6 +34,7 @@ use App\Location;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
+use App\Models\System\External\User as ParseUser;
 
 class ParserController extends Controller
 {
@@ -43,6 +48,330 @@ class ParserController extends Controller
     }
 
     use Clientable;
+    use UserControllerTrait;
+    
+    public function parserOldRhBase(Request $request)
+    {
+    
+        set_time_limit(0);
+        
+        $oldUsers = ParseUser::whereIn('branch_id', [3, 2])
+//            ->has('checks')
+            ->with([
+                'checks'
+            ])
+            ->orderByDesc('id')
+        ->get();
+    
+        $user_number = User::count();
+        $user_number = $user_number + 1;
+        $user_auth = \Auth::user();
+        $company_id = 1;
+        
+        foreach($oldUsers->take(200) as $oldUser) {
+            
+            $phone = Phone::where('phone', $oldUser->phone)
+                ->with('user_owner.client')
+                ->has('user_owner')
+                ->first();
+            
+            if ($phone) {
+                if ($)
+                $user = $phone->phone->user_owner->first();
+    
+                dd($user);
+                $user->save();
+                
+                if ($user->client) {
+                
+                }
+            } else {
+    
+                if ($oldUser->branch_id) {
+                    $city_id = ($oldUser->branch_id == 3) ? 2 : 4;
+                } else {
+                    $city_id = 2;
+                }
+                $filial_id = ($city_id == 2) ? 1 : 2;
+
+                $user = new User;
+                $user->login = 'user_'.$user_number;
+                $user->password = bcrypt(str_random(12));
+                $user->access_code = rand(1000, 9999);
+
+                $res = getNameUser($oldUser->name);
+                $user->first_name = $res['first_name'];
+                $user->second_name = $res['second_name'];
+                $user->patronymic = $res['patronymic'];
+                $user->sex = $res['gender'];
+
+                $user->access_block = 0;
+                $user->user_type = 0;
+
+                // Компания и филиал ----------------------------------------------------------
+                $user->company_id = auth()->user()->company_id;
+                $user->filial_id = $filial_id;
+
+                if ($oldUser->birthday){
+                    $user->birthday_date = Carbon::parse($oldUser->birthday)->format('d.m.Y');
+                }
+
+                $request->address = $oldUser->address;
+                $user->location_id = create_location($request, 1, $city_id);
+
+                $user->site_id = 2;
+                $user->email = $oldUser->email;
+
+                $user->author_id = auth()->user()->id;
+
+                $user->created_at = $oldUser->created;
+                $user->save(['timestamps' => false]);
+
+                if ($user) {
+
+                    // Если номера нет, пишем или ищем новый и создаем связь
+                    $new_phone = Phone::firstOrCreate(
+                        ['phone' => cleanPhone($oldUser->phone)
+                        ], [
+                        'crop' => substr(cleanPhone($oldUser->phone), -4),
+                    ]);
+
+                    $user->phones()->attach($new_phone->id, ['main' => 1]);
+
+                    $user_number++;
+
+                    $client = Client::make([
+                        'description' => $oldUser->desc,
+                        'discount' => ($oldUser->discount) ? $oldUser->discount : 0,
+                        'points' => ($oldUser->rh) ? $oldUser->rh : 0,
+
+                    ]);
+
+                    $user->client()->save($client);
+
+                    $client = $user->client;
+
+                    $client->created_at = $oldUser->created;
+                    $client->save(['timestamps' => false]);
+
+                }
+            
+            }
+    
+            if ($oldUser->checks->isNotEmpty()) {
+                foreach($oldUser->checks as $check) {
+            
+                    if ($check->branch_id) {
+                        $city_id = ($check->branch_id == 3) ? 2 : 4;
+                    } else {
+                        $city_id = 2;
+                    }
+                    $filial_id = ($city_id == 2) ? 1 : 2;
+            
+                    $lead = new Lead;
+            
+                    // Добавляем локацию
+                    $request->address = $check->address;
+                    $lead->location_id = create_location($request, 1, $city_id);
+            
+                    $lead->company_id = $company_id;
+                    $lead->filial_id = $filial_id;
+                    $lead->name = $user->name;
+                    $lead->company_name = NULL;
+            
+                    $lead->draft = ($check->progress == 2) ? 0 : 1;
+                    $lead->author_id = hideGod($user_auth);
+            
+                    // TODO - 10.06.20 - Менеджер пока Серебро
+                    $lead->manager_id = 4;
+            
+                    $lead->client_id = $client->id;
+                    $lead->stage_id = ($check->progress == 2) ? 12 : 2;
+                    $lead->lead_type_id = 1;
+            
+                    // TODO - 10.06.20 - Менеджер пока серебро
+                    $lead->lead_method_id = ($check->table) ? 3 : 1;
+                    $lead->display = 1;
+            
+                    $lead->badget = $check->summa;
+                    $lead->created_at = $check->created;
+//                        dd($lead);
+                    $lead->save(['timestamps' => false]);
+            
+                    $lead_number = getLeadNumbers($user_auth, $lead);
+                    $lead->case_number = $check->id;
+                    $lead->serial_number = $lead_number['serial'];
+            
+                    $lead->save(['timestamps' => false]);
+            
+                    if ($lead) {
+                        $lead->phones()->attach($new_phone->id, ['main' => 1]);
+                    }
+            
+                    $estimate = Estimate::make([
+                        'lead_id' => $lead->id,
+                        'client_id' => $client->id,
+                        'filial_id' => $lead->filial_id,
+                
+                        'discount' => 0,
+                        'discount_percent' => 0,
+                
+                        'margin_currency' => 0,
+                        'margin_percent' => 0,
+                
+                        'amount' => $check->summa,
+                        'total' => $check->summa,
+                
+                        'number' => $lead->case_number,
+                        'date' => Carbon::parse($check->created)->format('d.m.Y'),
+                        'registered_date' => $check->created,
+                
+                        'company_id' => $company_id,
+                        'author_id' => hideGod($user_auth)
+                    ]);
+            
+                    $estimate->is_dismissed = ($check->progress == 2) ? 0 : 1;
+                    $estimate->is_registered = 1;
+                    $estimate->is_saled = 1;
+            
+                    $estimate->created_at = $check->created;
+            
+                    $estimate->save(['timestamps' => false]);
+            
+                    $contracts_client = ContractsClient::make([
+                        'client_id' => $client->id,
+                        'date' => $check->created,
+                        'number' => $lead->case_number,
+                        'amount' => $check->summa,
+                        'company_id' => $company_id,
+                        'author_id' => hideGod($user_auth)
+                    ]);
+            
+                    $contracts_client->created_at = $check->created;
+                    $contracts_client->save(['timestamps' => false]);
+            
+                    if ($check->cash) {
+                        if ($check->cash > 0) {
+                            $payment = Payment::make([
+                                'contract_id' => $contracts_client->id,
+                                'contract_type' => 'App\ContractsClient',
+                                'document_id' => $estimate->id,
+                                'document_type' => 'App\Estimate',
+                                'payments_type_id' => 1,
+                                'amount' => $check->cash,
+                                'date' => Carbon::parse($check->created)->format('d.m.Y'),
+                                'currency_id' => 1,
+                                'company_id' => $company_id,
+                                'author_id' => hideGod($user_auth),
+                    
+                            ]);
+                            $payment->created_at = $check->created;
+                            $payment->save(['timestamps' => false]);
+                        }
+                    }
+            
+                    if ($check->cashless) {
+                        if ($check->cashless > 0) {
+                            $payment = Payment::make([
+                                'contract_id' => $contracts_client->id,
+                                'contract_type' => 'App\ContractsClient',
+                                'document_id' => $estimate->id,
+                                'document_type' => 'App\Estimate',
+                                'payments_type_id' => 2,
+                                'amount' => $check->cashless,
+                                'date' => Carbon::parse($check->created)->format('d.m.Y'),
+                                'currency_id' => 1,
+                                'company_id' => $company_id,
+                                'author_id' => hideGod($user_auth),
+                    
+                            ]);
+                            $payment->created_at = $check->created;
+                            $payment->save(['timestamps' => false]);
+                        }
+                    }
+            
+                }
+            } else {
+                // Создаем пустое обращение
+        
+                $lead = new Lead;
+        
+                // Добавляем локацию
+                $request->address = optional($user->location)->address;
+                $lead->location_id = create_location($request, 1, $city_id);
+        
+                $lead->company_id = $company_id;
+                $lead->filial_id = $filial_id;
+                $lead->name = $user->name;
+                $lead->company_name = NULL;
+        
+                $lead->draft = 0;
+                $lead->author_id = hideGod($user_auth);
+        
+                // TODO - 10.06.20 - Менеджер пока Серебро
+                $lead->manager_id = 4;
+        
+                $lead->client_id = $client->id;
+                $lead->stage_id = 13;
+                $lead->lead_type_id = 1;
+        
+                // TODO - 10.06.20 - Менеджер пока серебро
+                $lead->lead_method_id = 1;
+                $lead->display = 1;
+        
+                $lead->badget = 0;
+                $lead->created_at = $oldUser->created;
+//                        dd($lead);
+                $lead->save(['timestamps' => false]);
+        
+                $lead_number = getLeadNumbers($user_auth, $lead);
+                $lead->case_number = $lead_number['case'];
+                $lead->serial_number = $lead_number['serial'];
+        
+                $lead->save(['timestamps' => false]);
+        
+                if ($lead) {
+                    $lead->phones()->attach($new_phone->id, ['main' => 1]);
+                }
+        
+                $estimate = Estimate::make([
+                    'lead_id' => $lead->id,
+                    'client_id' => $client->id,
+                    'filial_id' => $lead->filial_id,
+            
+                    'discount' => 0,
+                    'discount_percent' => 0,
+            
+                    'margin_currency' => 0,
+                    'margin_percent' => 0,
+            
+                    'amount' => 0,
+                    'total' => 0,
+            
+                    'number' => $lead->case_number,
+                    'date' => Carbon::parse($oldUser->created)->format('d.m.Y'),
+                    'registered_date' => $oldUser->created,
+            
+                    'company_id' => $company_id,
+                    'author_id' => hideGod($user_auth)
+                ]);
+        
+                $estimate->is_dismissed = 0;
+                $estimate->is_registered = 0;
+                $estimate->is_saled = 0;
+        
+                $estimate->created_at = $oldUser->created;
+        
+                $estimate->save(['timestamps' => false]);
+            }
+            
+            
+            
+        }
+//        dd($users->count());
+        
+        return 'Гатова';
+    }
 
     /**
      * Удаление локаций с Иркутском для РХ и проставка всем юзерам, у которых нет локаций

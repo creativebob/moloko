@@ -18,7 +18,7 @@ class Update210420Tables extends Migration
             $table->boolean('is_vip')->default(0)->comment('VIP-статус')->after('is_lost');
             $table->boolean('is_vip_abc')->default(0)->comment('VIP-статус по вычислениям')->after('is_vip');
 
-            $table->bigInteger('source_id')->nullable()->unsigned()->default(4)->comment('Id первого источника')->after('is_vip_abc');
+            $table->bigInteger('source_id')->nullable()->unsigned()->comment('Id первого источника')->after('is_vip_abc');
             $table->foreign('source_id')->references('id')->on('sources');
 
             $table->date('first_order_date')->nullable()->comment('Дата первого заказа')->after('source_id');
@@ -43,6 +43,9 @@ class Update210420Tables extends Migration
             $table->char('abcxyz', 2)->nullable()->comment('Комбинация ABC и XYZ анализов')->after('xyz');
 
             $table->char('activity', 4)->nullable()->comment('Динамика активности')->after('abcxyz');
+    
+            $table->integer('discount')->default(0)->comment('Скидка')->after('activity');
+            $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('discount');
         });
 
         Schema::table('estimates', function (Blueprint $table) {
@@ -51,6 +54,8 @@ class Update210420Tables extends Migration
             $table->decimal('margin_currency', 10, 2)->default(0)->comment('Сумма маржи')->after('margin_percent');
 
             $table->date('registered_date')->nullable()->comment('Дата оформления')->after('is_registered');
+    
+            $table->boolean('is_dismissed')->default(0)->comment('Отменено')->after('registered_date');
         });
 
         Schema::table('companies', function (Blueprint $table) {
@@ -123,6 +128,8 @@ class Update210420Tables extends Migration
                 'xyz',
                 'abcxyz',
                 'activity',
+                'discount',
+                'points',
             ]);
         });
 
@@ -132,6 +139,7 @@ class Update210420Tables extends Migration
                 'margin_percent',
                 'margin_currency',
                 'is_registered',
+                'is_dismissed'
             ]);
         });
 

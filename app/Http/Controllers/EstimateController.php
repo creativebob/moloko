@@ -369,7 +369,8 @@ class EstimateController extends Controller
             ]);
 
             $contracts_client = ContractsClient::create([
-                'client_id' => $client->id
+                'client_id' => $client->id,
+                'amount' => $total,
             ]);
 
             $estimate->update([

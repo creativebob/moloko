@@ -27,7 +27,7 @@ class CreateClientsTable extends Migration
             $table->boolean('is_vip')->default(0)->comment('VIP-статус');
             $table->boolean('is_vip_abc')->default(0)->comment('VIP-статус по вычислениям');
 
-            $table->bigInteger('source_id')->nullable()->unsigned()->default(4)->comment('Id первого источника');
+            $table->bigInteger('source_id')->nullable()->unsigned()->comment('Id первого источника');
             $table->foreign('source_id')->references('id')->on('sources');
 
             $table->date('first_order_date')->nullable()->comment('Дата первого заказа');
@@ -52,6 +52,9 @@ class CreateClientsTable extends Migration
             $table->char('abcxyz', 2)->nullable()->comment('Комбинация ABC и XYZ анализов');
 
             $table->char('activity', 4)->nullable()->comment('Динамика активности');
+    
+            $table->integer('discount')->default(0)->comment('Скидка');
+            $table->integer('points')->default(0)->comment('Внутренняя валюта');
 
             $table->boolean('archive')->default(0)->comment('Статус архива');
 
