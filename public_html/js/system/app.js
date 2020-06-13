@@ -74867,7 +74867,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('estimate-production-butto
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('payments-component', __webpack_require__(223));
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('checkboxer-component', __webpack_require__(230));
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('lister-component', __webpack_require__(349));
+__WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('lister-component', __webpack_require__(233));
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('input-digit-component', __webpack_require__(175));
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('dropzone-component', __webpack_require__(238));
@@ -82574,9 +82574,329 @@ if (false) {
 }
 
 /***/ }),
-/* 233 */,
-/* 234 */,
-/* 235 */,
+/* 233 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(234)
+/* template */
+var __vue_template__ = __webpack_require__(235)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/system/components/common/ListerComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5d6cb165", Component.options)
+  } else {
+    hotAPI.reload("data-v-5d6cb165", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 234 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        name: {
+            type: String,
+            default: null
+        },
+        title: {
+            type: String,
+            default: null
+        },
+        items: {
+            type: Array,
+            default: []
+        }
+    },
+    mounted: function mounted() {
+        if (this.items) {
+            this.currentItems = this.items;
+        }
+    },
+    data: function data() {
+        return {
+            value: '',
+            currentItems: []
+        };
+    },
+
+    computed: {
+        status: function status() {
+            var result = void 0;
+            if (this.value) {
+                result = 'sprite-16 icon-error';
+            }
+            return result;
+        }
+    },
+    methods: {
+        focusInput: function focusInput() {
+            this.$refs.enter.focus();
+        },
+        checkInput: function checkInput(event) {
+            if (this.value.length <= 2) {
+                if (/[1-5]/.test(event.key)) {
+
+                    return true;
+                } else {
+                    event.preventDefault();
+                }
+            } else {
+                event.preventDefault();
+            }
+        },
+        addItem: function addItem() {
+            var _this = this;
+
+            if (this.value.length > 2) {
+                if (!this.currentItems) {
+                    this.currentItems = [];
+                }
+                var found = this.currentItems.find(function (item) {
+                    return item == _this.value;
+                });
+                if (!found) {
+                    this.currentItems.push(this.value);
+                }
+                this.value = '';
+            }
+        },
+        editItem: function editItem(index) {
+            this.value = this.currentItems[index];
+            this.currentItems.splice(index, 1);
+            this.$refs.enter.focus();
+        },
+        removeItem: function removeItem(index) {
+            this.currentItems.splice(index, 1);
+        },
+        reset: function reset() {
+            this.currentItems = [];
+        },
+        clear: function clear() {
+            this.value = '';
+        }
+    }
+});
+
+/***/ }),
+/* 235 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "grid-x" }, [
+    _c("div", { staticClass: "cell small-12 arrayer" }, [
+      _c("span", { staticClass: "title", on: { click: _vm.focusInput } }, [
+        _vm._v(_vm._s(_vm.title))
+      ]),
+      _vm._v(" "),
+      _c(
+        "ul",
+        { staticClass: "menu" },
+        _vm._l(_vm.currentItems, function(item, index) {
+          return _c("li", [
+            _c("input", {
+              attrs: { type: "hidden", name: _vm.name + "[]" },
+              domProps: { value: item }
+            }),
+            _vm._v(" "),
+            _c(
+              "span",
+              {
+                on: {
+                  click: function($event) {
+                    return _vm.editItem(index)
+                  }
+                }
+              },
+              [_vm._v(_vm._s(item))]
+            ),
+            _vm._v(" "),
+            _c(
+              "span",
+              {
+                staticClass: "remove",
+                on: {
+                  click: function($event) {
+                    return _vm.removeItem(index)
+                  }
+                }
+              },
+              [_vm._v("x")]
+            )
+          ])
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _vm.currentItems.length
+        ? _c("div", { staticClass: "reset", on: { click: _vm.reset } }, [
+            _vm._v("Очистить")
+          ])
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "cell small-12 input-group" }, [
+      _c("div", { staticClass: "input-icon" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.value,
+              expression: "value"
+            }
+          ],
+          ref: "enter",
+          staticClass: "input-group-field",
+          attrs: { type: "text" },
+          domProps: { value: _vm.value },
+          on: {
+            keydown: function($event) {
+              if (
+                !$event.type.indexOf("key") &&
+                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+              ) {
+                return null
+              }
+              $event.preventDefault()
+              return _vm.addItem($event)
+            },
+            keypress: function($event) {
+              return _vm.checkInput($event)
+            },
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.value = $event.target.value
+            }
+          }
+        }),
+        _vm._v(" "),
+        _c("div", {
+          staticClass: "sprite-input-right",
+          class: _vm.status,
+          on: { click: _vm.clear }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "input-group-button" }, [
+        _c("a", { staticClass: "button", on: { click: _vm.addItem } }, [
+          _vm._v("Добавить")
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5d6cb165", module.exports)
+  }
+}
+
+/***/ }),
 /* 236 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -94587,333 +94907,6 @@ $(document).on('click', '.filter-close', function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 345 */,
-/* 346 */,
-/* 347 */,
-/* 348 */,
-/* 349 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(350)
-/* template */
-var __vue_template__ = __webpack_require__(351)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/system/components/common/ListerComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5d6cb165", Component.options)
-  } else {
-    hotAPI.reload("data-v-5d6cb165", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 350 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        name: {
-            type: String,
-            default: null
-        },
-        title: {
-            type: String,
-            default: null
-        },
-        items: {
-            type: Array,
-            default: []
-        }
-    },
-    mounted: function mounted() {
-        if (this.items) {
-            this.currentItems = this.items;
-        }
-    },
-    data: function data() {
-        return {
-            value: '',
-            currentItems: []
-        };
-    },
-
-    computed: {
-        status: function status() {
-            var result = void 0;
-            if (this.value) {
-                result = 'sprite-16 icon-error';
-            }
-            return result;
-        }
-    },
-    methods: {
-        focusInput: function focusInput() {
-            this.$refs.enter.focus();
-        },
-        checkInput: function checkInput(event) {
-            if (this.value.length <= 2) {
-                if (/[1-5]/.test(event.key)) {
-
-                    return true;
-                } else {
-                    event.preventDefault();
-                }
-            } else {
-                event.preventDefault();
-            }
-        },
-        addItem: function addItem() {
-            var _this = this;
-
-            if (this.value.length > 2) {
-                if (!this.currentItems) {
-                    this.currentItems = [];
-                }
-                var found = this.currentItems.find(function (item) {
-                    return item == _this.value;
-                });
-                if (!found) {
-                    this.currentItems.push(this.value);
-                }
-                this.value = '';
-            }
-        },
-        editItem: function editItem(index) {
-            this.value = this.currentItems[index];
-            this.currentItems.splice(index, 1);
-            this.$refs.enter.focus();
-        },
-        removeItem: function removeItem(index) {
-            this.currentItems.splice(index, 1);
-        },
-        reset: function reset() {
-            this.currentItems = [];
-        },
-        clear: function clear() {
-            this.value = '';
-        }
-    }
-});
-
-/***/ }),
-/* 351 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "grid-x" }, [
-    _c("div", { staticClass: "cell small-12 arrayer" }, [
-      _c("span", { staticClass: "title", on: { click: _vm.focusInput } }, [
-        _vm._v(_vm._s(_vm.title))
-      ]),
-      _vm._v(" "),
-      _c(
-        "ul",
-        { staticClass: "menu" },
-        _vm._l(_vm.currentItems, function(item, index) {
-          return _c("li", [
-            _c("input", {
-              attrs: { type: "hidden", name: _vm.name + "[]" },
-              domProps: { value: item }
-            }),
-            _vm._v(" "),
-            _c(
-              "span",
-              {
-                on: {
-                  click: function($event) {
-                    return _vm.editItem(index)
-                  }
-                }
-              },
-              [_vm._v(_vm._s(item))]
-            ),
-            _vm._v(" "),
-            _c(
-              "span",
-              {
-                staticClass: "remove",
-                on: {
-                  click: function($event) {
-                    return _vm.removeItem(index)
-                  }
-                }
-              },
-              [_vm._v("x")]
-            )
-          ])
-        }),
-        0
-      ),
-      _vm._v(" "),
-      _vm.currentItems.length
-        ? _c("div", { staticClass: "reset", on: { click: _vm.reset } }, [
-            _vm._v("Очистить")
-          ])
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "cell small-12 input-group" }, [
-      _c("div", { staticClass: "input-icon" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.value,
-              expression: "value"
-            }
-          ],
-          ref: "enter",
-          staticClass: "input-group-field",
-          attrs: { type: "text" },
-          domProps: { value: _vm.value },
-          on: {
-            keydown: function($event) {
-              if (
-                !$event.type.indexOf("key") &&
-                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-              ) {
-                return null
-              }
-              $event.preventDefault()
-              return _vm.addItem($event)
-            },
-            keypress: function($event) {
-              return _vm.checkInput($event)
-            },
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.value = $event.target.value
-            }
-          }
-        }),
-        _vm._v(" "),
-        _c("div", {
-          staticClass: "sprite-input-right",
-          class: _vm.status,
-          on: { click: _vm.clear }
-        })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "input-group-button" }, [
-        _c("a", { staticClass: "button", on: { click: _vm.addItem } }, [
-          _vm._v("Добавить")
-        ])
-      ])
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-5d6cb165", module.exports)
-  }
-}
 
 /***/ })
 /******/ ]);

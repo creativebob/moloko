@@ -14,7 +14,7 @@ class EstimateObserver
     public function creating(Estimate $estimate)
     {
         $this->store($estimate);
-        $estimate->date = now()->format('d.m.Y');
+//        $estimate->date = now()->format('d.m.Y');
     }
 
     public function updating(Estimate $estimate)

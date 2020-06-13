@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Action;
 use App\ActionEntity;
+use App\Article;
 use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\Client;
@@ -11,6 +12,7 @@ use App\ContractsClient;
 use App\Estimate;
 use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\Traits\UserControllerTrait;
+use App\Models\System\External\Price;
 use App\OldLead;
 use App\OldLocation;
 use App\Lead;
@@ -49,12 +51,29 @@ class ParserController extends Controller
 
     use Clientable;
     use UserControllerTrait;
-    
+
+    public function parserExternalId()
+    {
+        $prices = Price::get();
+        $articles = Article::get();
+        $count = 0;
+        foreach($prices as $price) {
+            $article = $articles->firstWhere('name', $price->name);
+            if ($article) {
+                $article->update([
+                    'external' => $price->id
+                ]);
+                $count++;
+            }
+        }
+        echo "{$count} артикулам проставлен внешний id";
+    }
+
     public function parserOldRhBase(Request $request)
     {
-    
+
         set_time_limit(0);
-        
+
         $oldUsers = ParseUser::whereIn('branch_id', [3, 2])
 //            ->has('checks')
             ->with([
@@ -62,31 +81,31 @@ class ParserController extends Controller
             ])
             ->orderByDesc('id')
         ->get();
-    
+
         $user_number = User::count();
         $user_number = $user_number + 1;
         $user_auth = \Auth::user();
         $company_id = 1;
-        
+
         foreach($oldUsers->take(200) as $oldUser) {
-            
+
             $phone = Phone::where('phone', $oldUser->phone)
                 ->with('user_owner.client')
                 ->has('user_owner')
                 ->first();
-            
+
             if ($phone) {
-                if ($)
+//                if ($)
                 $user = $phone->phone->user_owner->first();
-    
+
                 dd($user);
                 $user->save();
-                
+
                 if ($user->client) {
-                
+
                 }
             } else {
-    
+
                 if ($oldUser->branch_id) {
                     $city_id = ($oldUser->branch_id == 3) ? 2 : 4;
                 } else {
@@ -155,89 +174,89 @@ class ParserController extends Controller
                     $client->save(['timestamps' => false]);
 
                 }
-            
+
             }
-    
+
             if ($oldUser->checks->isNotEmpty()) {
                 foreach($oldUser->checks as $check) {
-            
+
                     if ($check->branch_id) {
                         $city_id = ($check->branch_id == 3) ? 2 : 4;
                     } else {
                         $city_id = 2;
                     }
                     $filial_id = ($city_id == 2) ? 1 : 2;
-            
+
                     $lead = new Lead;
-            
+
                     // Добавляем локацию
                     $request->address = $check->address;
                     $lead->location_id = create_location($request, 1, $city_id);
-            
+
                     $lead->company_id = $company_id;
                     $lead->filial_id = $filial_id;
                     $lead->name = $user->name;
                     $lead->company_name = NULL;
-            
+
                     $lead->draft = ($check->progress == 2) ? 0 : 1;
                     $lead->author_id = hideGod($user_auth);
-            
+
                     // TODO - 10.06.20 - Менеджер пока Серебро
                     $lead->manager_id = 4;
-            
+
                     $lead->client_id = $client->id;
                     $lead->stage_id = ($check->progress == 2) ? 12 : 2;
                     $lead->lead_type_id = 1;
-            
+
                     // TODO - 10.06.20 - Менеджер пока серебро
                     $lead->lead_method_id = ($check->table) ? 3 : 1;
                     $lead->display = 1;
-            
+
                     $lead->badget = $check->summa;
                     $lead->created_at = $check->created;
 //                        dd($lead);
                     $lead->save(['timestamps' => false]);
-            
+
                     $lead_number = getLeadNumbers($user_auth, $lead);
                     $lead->case_number = $check->id;
                     $lead->serial_number = $lead_number['serial'];
-            
+
                     $lead->save(['timestamps' => false]);
-            
+
                     if ($lead) {
                         $lead->phones()->attach($new_phone->id, ['main' => 1]);
                     }
-            
+
                     $estimate = Estimate::make([
                         'lead_id' => $lead->id,
                         'client_id' => $client->id,
                         'filial_id' => $lead->filial_id,
-                
+
                         'discount' => 0,
                         'discount_percent' => 0,
-                
+
                         'margin_currency' => 0,
                         'margin_percent' => 0,
-                
+
                         'amount' => $check->summa,
                         'total' => $check->summa,
-                
+
                         'number' => $lead->case_number,
                         'date' => Carbon::parse($check->created)->format('d.m.Y'),
                         'registered_date' => $check->created,
-                
+
                         'company_id' => $company_id,
                         'author_id' => hideGod($user_auth)
                     ]);
-            
+
                     $estimate->is_dismissed = ($check->progress == 2) ? 0 : 1;
                     $estimate->is_registered = 1;
                     $estimate->is_saled = 1;
-            
+
                     $estimate->created_at = $check->created;
-            
+
                     $estimate->save(['timestamps' => false]);
-            
+
                     $contracts_client = ContractsClient::make([
                         'client_id' => $client->id,
                         'date' => $check->created,
@@ -246,10 +265,10 @@ class ParserController extends Controller
                         'company_id' => $company_id,
                         'author_id' => hideGod($user_auth)
                     ]);
-            
+
                     $contracts_client->created_at = $check->created;
                     $contracts_client->save(['timestamps' => false]);
-            
+
                     if ($check->cash) {
                         if ($check->cash > 0) {
                             $payment = Payment::make([
@@ -263,13 +282,13 @@ class ParserController extends Controller
                                 'currency_id' => 1,
                                 'company_id' => $company_id,
                                 'author_id' => hideGod($user_auth),
-                    
+
                             ]);
                             $payment->created_at = $check->created;
                             $payment->save(['timestamps' => false]);
                         }
                     }
-            
+
                     if ($check->cashless) {
                         if ($check->cashless > 0) {
                             $payment = Payment::make([
@@ -283,93 +302,93 @@ class ParserController extends Controller
                                 'currency_id' => 1,
                                 'company_id' => $company_id,
                                 'author_id' => hideGod($user_auth),
-                    
+
                             ]);
                             $payment->created_at = $check->created;
                             $payment->save(['timestamps' => false]);
                         }
                     }
-            
+
                 }
             } else {
                 // Создаем пустое обращение
-        
+
                 $lead = new Lead;
-        
+
                 // Добавляем локацию
                 $request->address = optional($user->location)->address;
                 $lead->location_id = create_location($request, 1, $city_id);
-        
+
                 $lead->company_id = $company_id;
                 $lead->filial_id = $filial_id;
                 $lead->name = $user->name;
                 $lead->company_name = NULL;
-        
+
                 $lead->draft = 0;
                 $lead->author_id = hideGod($user_auth);
-        
+
                 // TODO - 10.06.20 - Менеджер пока Серебро
                 $lead->manager_id = 4;
-        
+
                 $lead->client_id = $client->id;
                 $lead->stage_id = 13;
                 $lead->lead_type_id = 1;
-        
+
                 // TODO - 10.06.20 - Менеджер пока серебро
                 $lead->lead_method_id = 1;
                 $lead->display = 1;
-        
+
                 $lead->badget = 0;
                 $lead->created_at = $oldUser->created;
 //                        dd($lead);
                 $lead->save(['timestamps' => false]);
-        
+
                 $lead_number = getLeadNumbers($user_auth, $lead);
                 $lead->case_number = $lead_number['case'];
                 $lead->serial_number = $lead_number['serial'];
-        
+
                 $lead->save(['timestamps' => false]);
-        
+
                 if ($lead) {
                     $lead->phones()->attach($new_phone->id, ['main' => 1]);
                 }
-        
+
                 $estimate = Estimate::make([
                     'lead_id' => $lead->id,
                     'client_id' => $client->id,
                     'filial_id' => $lead->filial_id,
-            
+
                     'discount' => 0,
                     'discount_percent' => 0,
-            
+
                     'margin_currency' => 0,
                     'margin_percent' => 0,
-            
+
                     'amount' => 0,
                     'total' => 0,
-            
+
                     'number' => $lead->case_number,
                     'date' => Carbon::parse($oldUser->created)->format('d.m.Y'),
                     'registered_date' => $oldUser->created,
-            
+
                     'company_id' => $company_id,
                     'author_id' => hideGod($user_auth)
                 ]);
-        
+
                 $estimate->is_dismissed = 0;
                 $estimate->is_registered = 0;
                 $estimate->is_saled = 0;
-        
+
                 $estimate->created_at = $oldUser->created;
-        
+
                 $estimate->save(['timestamps' => false]);
             }
-            
-            
-            
+
+
+
         }
 //        dd($users->count());
-        
+
         return 'Гатова';
     }
 
