@@ -50,6 +50,8 @@ class CreateEstimatesTable extends Migration
 
             $table->boolean('is_produced')->default(0)->comment('Произведено');
             $table->boolean('is_saled')->default(0)->comment('Продано');
+    
+            $table->boolean('is_dismissed')->default(0)->comment('Отменено');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

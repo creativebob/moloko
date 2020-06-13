@@ -56,6 +56,10 @@ class Client extends Model
     protected $fillable = [
         'clientable_id',
         'clientable_type',
+    
+        'description',
+        'discount',
+        'points',
 
         'source_id',
         'loyalty_score',

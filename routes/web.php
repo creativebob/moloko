@@ -41,6 +41,7 @@ Route::get('/parsers/130420', 'ParserController@parser_130420');
 Route::get('/parsers/lead_client', 'ParserController@parserLeadClient');
 Route::get('/parsers/user_location', 'ParserController@parserUserLocation');
 Route::get('/parsers/user_name', 'ParserController@parserUserName');
+Route::get('/parsers/roll_house', 'ParserController@parserOldRhBase');
 
 // Тесты
 Route::get('/test', 'System\TestController@test');
