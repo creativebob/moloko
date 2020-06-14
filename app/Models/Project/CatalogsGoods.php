@@ -19,7 +19,8 @@ class CatalogsGoods extends Model
     public function items()
     {
         return $this->hasMany(CatalogsGoodsItem::class)
-            ->display();
+            ->display()
+            ->orderBy('sort');
     }
 
     // Прайсы
@@ -28,7 +29,8 @@ class CatalogsGoods extends Model
         return $this->hasMany(PricesGoods::class)
             ->display()
             ->archive()
-            ->has('goods');
+            ->has('goods')
+            ->orderBy('sort');
     }
 
     // Филиалы

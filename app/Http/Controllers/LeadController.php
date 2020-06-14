@@ -419,6 +419,11 @@ class LeadController extends Controller
 
         $results = Lead::where('case_number', $search)
             ->orWhere('name', 'LIKE', '%' . $search . '%')
+            ->orWhereHas('phones', function($q) use ($search) {
+                $q->where('phone', $search)
+                    ->orWhere('crop', $search);
+               })
+            ->orderBy('created_at')
             ->get();
 
         return response()->json($results);
