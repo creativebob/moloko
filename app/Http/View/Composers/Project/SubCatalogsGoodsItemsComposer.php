@@ -16,27 +16,23 @@ class SubCatalogsGoodsItemsComposer
         $parent = null;
         if ($catalogs_goods_item->level == 1) {
             $site = $view->site;
-        
-            $catalogs_goods_item->load([
-                'catalog',
-                'childs' => function ($q) {
-                    $q->orderBy('sort');
-                }
-            ]);
-        
+
+//            $catalogs_goods_item->load([
+//                'catalog',
+//                'childs'
+//            ]);
+
             $parent = $catalogs_goods_item;
-        
+
         } else {
-            $catalogs_goods_item->load([
-                'parent' => function ($q) {
-                    $q->with([
-                        'catalog',
-                        'childs' => function ($q) {
-                            $q->orderBy('sort');
-                        }
-                    ]);
-                }
-            ]);
+//            $catalogs_goods_item->load([
+//                'parent' => function ($q) {
+//                    $q->with([
+//                        'catalog',
+//                        'childs'
+//                    ]);
+//                }
+//            ]);
 
             $parent = $catalogs_goods_item->parent;
         }

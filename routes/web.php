@@ -43,6 +43,8 @@ Route::get('/parsers/user_location', 'ParserController@parserUserLocation');
 Route::get('/parsers/user_name', 'ParserController@parserUserName');
 Route::get('/parsers/roll_house', 'ParserController@parserOldRhBase');
 Route::get('/parsers/external_id', 'ParserController@parserExternalId');
+Route::get('/parsers/external_categories', 'ParserController@parserExternalCategories');
+Route::get('/parsers/external_goods', 'ParserController@parserExternalGoods');
 
 // Тесты
 Route::get('/test', 'System\TestController@test');

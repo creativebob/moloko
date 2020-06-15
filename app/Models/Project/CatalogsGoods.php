@@ -20,7 +20,7 @@ class CatalogsGoods extends Model
     {
         return $this->hasMany(CatalogsGoodsItem::class)
             ->display()
-            ->orderBy('sort');
+            ->sort();
     }
 
     // Прайсы
@@ -30,7 +30,7 @@ class CatalogsGoods extends Model
             ->display()
             ->archive()
             ->has('goods')
-            ->orderBy('sort');
+            ->sort();
     }
 
     // Филиалы

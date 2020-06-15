@@ -5,14 +5,18 @@ namespace App\Http\Controllers;
 use App\Action;
 use App\ActionEntity;
 use App\Article;
+use App\ArticlesGroup;
 use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
 use App\Client;
 use App\ContractsClient;
 use App\Estimate;
+use App\Goods;
+use App\GoodsCategory;
 use App\Http\Controllers\System\Traits\Clientable;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Models\System\External\Price;
+use App\Models\System\External\PricesType;
 use App\OldLead;
 use App\OldLocation;
 use App\Lead;
@@ -27,6 +31,7 @@ use App\Position;
 use App\Right;
 use App\Role;
 use App\Staffer;
+use App\Unit;
 use App\User;
 use App\Phone;
 use App\Page;
@@ -52,8 +57,167 @@ class ParserController extends Controller
     use Clientable;
     use UserControllerTrait;
 
+    public function parserExternalGoods()
+    {
+        set_time_limit(0);
+
+        // Срощенные id категорий товаров
+        $categoriesIds = [
+            1 => 2,
+            2 => 1,
+            3 => 3,
+            4 => 5,
+            5 => 6,
+            7 => 8,
+            12 => 7,
+            13 => 17,
+            14 => 18,
+            16 => 9,
+            17 => 11,
+            19 => 31,
+            21 => 20,
+            22 => 40,
+            23 => 41,
+            24 => 30,
+            26 => 25,
+            27 => 42,
+            28 => 27,
+            29 => 29,
+            30 => 28,
+            31 => 36,
+            32 => 37,
+            34 => 38,
+            35 => 25,
+            37 => 44,
+            38 => 43,
+            39 => 39,
+            40 => 4,
+            41 => 32,
+        ];
+
+        $total = 0;
+
+        $prices = Price::get();
+//        $goods = Goods::get();
+        $articles = Article::get();
+
+        $goodsCategories = GoodsCategory::get();
+
+        foreach($prices as $price) {
+            $article = $articles->firstWhere('external', $price->id);
+            if ($article) {
+                // Если у нас уже есть такой товар с проставленным внешним id
+
+            } else {
+                // если нет, то заводим
+
+//                dd($categoriesIds);
+
+                if (array_key_exists($price->price_type_id, $categoriesIds)) {
+                    // Если id категории товара есть в нашем массиве
+                    $goodsCategory = $goodsCategories->firstWhere('id', $categoriesIds[$price->price_type_id]);
+                    if ($goodsCategory) {
+                        // Если найдена категория, создаем товар и крепим его к прайсам
+
+//                        dd($price);
+
+
+
+                        // Создаем группу
+                        $articlesGroup = ArticlesGroup::create([
+                            'name' => $price->name,
+                            'units_category_id' => 6,
+                        ]);
+
+                        // Пишем к группе связь с категорией
+                        $goodsCategory->groups()->syncWithoutDetaching($articlesGroup->id);
+
+                        $newArticle = Article::create([
+                            'name' => $price->name,
+                            'articles_group_id' => $articlesGroup->id,
+                            'external' => $price->id,
+                            'unit_weight_id' => 7,
+                            'weight' => $price->weight / 1000,
+                            'unit_volume_id' => 30,
+                            'volume' => 0,
+                            'unit_id' => 32,
+                            'manufacturer_id' => 1,
+                            'cost_default' => $price->cost,
+                            'draft' => false
+                        ]);
+
+                        $curGoods = Goods::create([
+                            'article_id' => $newArticle->id,
+                            'price_unit_category_id' => 6,
+                            'price_unit_id' => 32,
+                            'category_id' => $goodsCategory->id
+                        ]);
+
+                        $total++;
+
+//                        dd($newArticle);
+                    } else {
+                        // Если не найдена
+                    }
+                }
+            }
+        }
+
+        return "Создано {$total} товаров";
+    }
+
+    public function parserExternalCategories()
+    {
+        set_time_limit(0);
+
+        $categoriesIds = [
+            1 => 2,
+            2 => 1,
+            3 => 3,
+            4 => 5,
+            5 => 6,
+            7 => 8,
+            12 => 7,
+            13 => 17,
+            14 => 18,
+            16 => 9,
+            17 => 11,
+            19 => 31,
+            21 => 20,
+            22 => 40,
+            23 => 41,
+            24 => 30,
+            26 => 25,
+            27 => 42,
+            28 => 27,
+            29 => 29,
+            30 => 28,
+            31 => 36,
+            32 => 37,
+            34 => 38,
+            35 => 25,
+            37 => 44,
+            38 => 43,
+            39 => 39,
+            40 => 4,
+            41 => 32,
+        ];
+
+        $oldCategories = PricesType::get();
+        $categories = GoodsCategory::get();
+
+        $msg = "Сопоставление категорий:<br>";
+        $msg .= "Старая/Новая:<br>";
+        foreach($categoriesIds as $oldId => $categoryId) {
+            $msg .= $oldCategories->firstWhere('id', $oldId)->name . " / " . $categories->firstWhere('id', $categoryId)->name . "<br>";
+        }
+
+        return $msg;
+    }
+
     public function parserExternalId()
     {
+        set_time_limit(0);
         $prices = Price::get();
         $articles = Article::get();
         $count = 0;
@@ -66,7 +230,7 @@ class ParserController extends Controller
                 $count++;
             }
         }
-        echo "{$count} артикулам проставлен внешний id";
+        return "{$count} артикулам проставлен внешний id";
     }
 
     public function parserOldRhBase(Request $request)

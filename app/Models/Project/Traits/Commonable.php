@@ -28,4 +28,16 @@ trait Commonable
         $query->where(isset($table) ? "{$table}.site_id" : 'site_id', $siteId);
     }
 
+    /**
+     * Сортировка
+     *
+     * @param $query
+     * @param string $param
+     * @param null $table
+     */
+    public function scopeSort($query, $param = 'asc', $table = null)
+    {
+        $query->orderBy(isset($table) ? "{$table}.sort" : 'sort', $param);
+    }
+
 }

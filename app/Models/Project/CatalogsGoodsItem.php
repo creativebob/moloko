@@ -35,7 +35,7 @@ class CatalogsGoodsItem extends Model
     {
         return $this->hasMany(CatalogsGoodsItem::class, 'parent_id')
             ->display()
-            ->orderBy('sort');
+            ->sort();
     }
 
     // Главный
@@ -51,7 +51,7 @@ class CatalogsGoodsItem extends Model
             ->display()
             ->archive()
             ->has('goods')
-            ->orderBy('sort');
+            ->sort();
     }
 
 
@@ -61,7 +61,7 @@ class CatalogsGoodsItem extends Model
             ->display(true, 'prices_goods')
             ->archive(false, 'prices_goods')
             ->has('goods')
-            ->orderBy('sort');
+            ->sort();
     }
 
     // Фильтры
