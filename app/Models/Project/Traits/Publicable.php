@@ -51,4 +51,16 @@ trait Publicable
     {
         $query->where(isset($table) ? "{$table}.moderation" : 'moderation', $value);
     }
+
+    /**
+     * Сортировка
+     *
+     * @param $query
+     * @param string $param
+     * @param null $table
+     */
+    public function scopeSort($query, $value = 'asc', $table = null)
+    {
+        $query->orderBy(isset($table) ? "{$table}.sort" : 'sort', $value);
+    }
 }
