@@ -11,7 +11,7 @@ class ArticleObserver
     public function creating(Article $article)
     {
 
-//        $article->draft = true;
+        $article->draft = true;
         $request = request();
 
         $user = $request->user();

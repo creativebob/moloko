@@ -120,9 +120,6 @@ class ParserController extends Controller
                         // Если найдена категория, создаем товар и крепим его к прайсам
 
 //                        dd($price);
-
-
-
                         // Создаем группу
                         $articlesGroup = ArticlesGroup::create([
                             'name' => $price->name,
@@ -154,8 +151,6 @@ class ParserController extends Controller
                         ]);
 
                         $total++;
-
-//                        dd($newArticle);
                     } else {
                         // Если не найдена
                     }
