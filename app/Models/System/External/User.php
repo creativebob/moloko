@@ -8,7 +8,10 @@ class User extends Model
 {
     protected $table = 'clients_clients';
     protected $connection = 'mysql2';
-    
+    protected $dates = [
+        'created'
+    ];
+
     public function checks()
     {
         return $this->hasMany(Check::class, 'client_id');

@@ -89,7 +89,9 @@ class Article extends Model
 
         'display',
         'system',
-        'moderation'
+        'moderation',
+
+        'created_at'
     ];
 
     // Группа

@@ -6,6 +6,7 @@ use App\Action;
 use App\ActionEntity;
 use App\CatalogsGoods;
 use App\CatalogsGoodsItem;
+use App\GoodsCategory;
 use App\Menu;
 use App\Page;
 use App\Right;
@@ -18,6 +19,30 @@ use Illuminate\Http\Request;
 class AppController extends Controller
 {
     use Categorable;
+
+    public function resaveCategoriesGroups()
+    {
+
+        $goodsCategories = GoodsCategory::with([
+            'goods.article'
+        ])
+        ->get();
+
+        $count = 0;
+        foreach ($goodsCategories as $goodsCategory) {
+            $goodsCategory->groups()->detach();
+
+            $insert = [];
+            foreach($goodsCategory->goods as $curGoods) {
+                $insert[] = $curGoods->article->articles_group_id;
+            }
+
+            $goodsCategory->groups()->attach($insert);
+            $count++;
+        }
+        return "Перепривязаны группы артикулов у {$count} категорий";
+
+    }
 
     /**
      * Перерасчет уровней и слагов для категорий выбранной сущности

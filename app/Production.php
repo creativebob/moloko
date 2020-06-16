@@ -44,7 +44,11 @@ class Production extends Model
     use BooklistFilter;
     use DateIntervalFilter;
 
-    protected $dates = ['deleted_at', 'receipt_date'];
+    protected $dates = [
+        'deleted_at',
+        'receipt_date'
+    ];
+
     protected $fillable = [
         'manufacturer_id',
         'name',
@@ -103,7 +107,7 @@ class Production extends Model
     {
         return $this->hasMany(ProductionsItem::class);
     }
-	
+
 	// Списания
 	public function offs()
 	{

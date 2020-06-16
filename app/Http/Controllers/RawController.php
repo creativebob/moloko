@@ -386,13 +386,12 @@ class RawController extends Controller
 
         if (!is_array($result)) {
 
-            $raw->display = $request->display;
-            $raw->system = $request->system;
-
-            $raw->save();
-
             // ПЕРЕНОС ГРУППЫ В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $raw);
+
+            $raw->display = $request->display;
+            $raw->system = $request->system;
+            $raw->save();
 
             $access = session('access.all_rights.index-metrics-allow');
             if ($access) {

@@ -352,13 +352,12 @@ class ContainerController extends Controller
 
         if (!is_array($result)) {
 
-            $container->display = $request->display;
-            $container->system = $request->system;
-
-            $container->save();
-
             // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
             $this->changeCategory($request, $container);
+
+            $container->display = $request->display;
+            $container->system = $request->system;
+            $container->save();
 
             // Метрики
             if ($request->has('metrics')) {

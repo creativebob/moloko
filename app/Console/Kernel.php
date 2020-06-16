@@ -2,8 +2,8 @@
 
 namespace App\Console;
 
-use App\Console\Commands\ClientsIndicatorsDay;
-use App\Console\Commands\ClientsIndicatorsCommand;
+use App\Console\Commands\System\ClientsIndicatorsDay;
+use App\Console\Commands\System\ClientsIndicatorsCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 

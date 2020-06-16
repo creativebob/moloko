@@ -427,6 +427,9 @@ class GoodsController extends Controller
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
+            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
+            $this->changeCategory($request, $cur_goods);
+
             $data = $request->input();
             if ($request->has('is_produced')) {
                 $data['is_ordered'] = 0;
@@ -434,10 +437,8 @@ class GoodsController extends Controller
             if ($request->has('is_ordered')) {
                 $data['is_produced'] = 0;
             }
-            $cur_goods->update($data);
 
-            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-            $this->changeCategory($request, $cur_goods);
+            $cur_goods->update($data);
 
             $cur_goods->related()->sync($request->related);
 

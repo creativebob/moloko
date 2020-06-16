@@ -8,5 +8,7 @@ class Price extends Model
 {
     protected $table = 'prices_prices';
     protected $connection = 'mysql2';
-
+    protected $dates = [
+        'created'
+    ];
 }

@@ -469,7 +469,6 @@ trait Articlable
      */
     protected function changeCategory($request, $item)
     {
-
         // Получаем выбранную категорию со страницы (то, что указал пользователь)
         $category_id = $request->category_id;
 

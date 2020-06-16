@@ -43,7 +43,7 @@ class Update210420Tables extends Migration
             $table->char('abcxyz', 2)->nullable()->comment('Комбинация ABC и XYZ анализов')->after('xyz');
 
             $table->char('activity', 4)->nullable()->comment('Динамика активности')->after('abcxyz');
-    
+
             $table->integer('discount')->default(0)->comment('Скидка')->after('activity');
             $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('discount');
         });
@@ -54,8 +54,12 @@ class Update210420Tables extends Migration
             $table->decimal('margin_currency', 10, 2)->default(0)->comment('Сумма маржи')->after('margin_percent');
 
             $table->date('registered_date')->nullable()->comment('Дата оформления')->after('is_registered');
-    
+
             $table->boolean('is_dismissed')->default(0)->comment('Отменено')->after('registered_date');
+        });
+
+        Schema::table('estimates_goods_items', function (Blueprint $table) {
+            $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('amount');
         });
 
         Schema::table('companies', function (Blueprint $table) {
@@ -89,10 +93,10 @@ class Update210420Tables extends Migration
             $table->string('prom')->nullable()->comment('Триггер для отображения')->after('square');
         });
 
-//        Schema::table('users', function (Blueprint $table) {
-//            $table->dropColumn('birthday');
-//            $table->date('birthday_date')->nullable()->comment('Дата рождения')->after('sex');
-//        });
+        Schema::table('leads', function (Blueprint $table) {
+            $table->boolean('is_create_parse')->default(0)->comment('Создан парсером')->after('delivered_at');
+            $table->boolean('is_link_parse')->default(0)->comment('Связан парсером со сметой')->after('is_create_parse');
+        });
     }
 
     /**
@@ -143,6 +147,10 @@ class Update210420Tables extends Migration
             ]);
         });
 
+        Schema::table('estimates_goods_items', function (Blueprint $table) {
+            $table->dropColumn('points');
+        });
+
         Schema::table('companies', function (Blueprint $table) {
             $table->dropColumn('foundation_date');
             $table->date('birthday_company')->nullable()->comment('Дата рождения компании')->after('seo_description');
@@ -176,9 +184,11 @@ class Update210420Tables extends Migration
             ]);
         });
 
-//        Schema::table('users', function (Blueprint $table) {
-//            $table->dropColumn('birthday_date');
-//            $table->date('birthday')->nullable()->comment('Дата рождения')->after('sex');
-//        });
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn([
+                'is_create_parse',
+                'is_link_parse',
+            ]);
+        });
     }
 }

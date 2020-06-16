@@ -352,13 +352,13 @@ class AttachmentController extends Controller
 
         if (!is_array($result)) {
 
+            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
+            $this->changeCategory($request, $attachment);
+
             $attachment->display = $request->display;
             $attachment->system = $request->system;
 
             $attachment->save();
-
-            // ПЕРЕНОС ГРУППЫ ТОВАРА В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-            $this->changeCategory($request, $attachment);
 
             // Метрики
             if ($request->has('metrics')) {

@@ -38,13 +38,16 @@ Route::get('/roll_house_parser', 'ParserController@roll_house_parser');
 Route::get('/parser_rh_goods_metrics', 'ParserController@parserRhGoodsMetrics');
 Route::get('/parsers/130420', 'ParserController@parser_130420');
 
-Route::get('/parsers/lead_client', 'ParserController@parserLeadClient');
-Route::get('/parsers/user_location', 'ParserController@parserUserLocation');
-Route::get('/parsers/user_name', 'ParserController@parserUserName');
-Route::get('/parsers/roll_house', 'ParserController@parserOldRhBase');
-Route::get('/parsers/external_id', 'ParserController@parserExternalId');
-Route::get('/parsers/external_categories', 'ParserController@parserExternalCategories');
-Route::get('/parsers/external_goods', 'ParserController@parserExternalGoods');
+
+// Ролл Хаус (парсинг старой базы)
+Route::get('/roll_house/lead_client', 'System\External\RollHouseController@leadClient');
+Route::get('/roll_house/user_location', 'System\External\RollHouseController@userLocation');
+Route::get('/roll_house/user_name', 'System\External\RollHouseController@puserName');
+Route::get('/roll_house/old_base', 'System\External\RollHouseController@oldBase');
+Route::get('/roll_house/external_id', 'System\External\RollHouseController@externalId');
+Route::get('/roll_house/external_categories', 'System\External\RollHouseController@externalCategories');
+Route::get('/roll_house/external_goods', 'System\External\RollHouseController@externalGoods');
+Route::get('/roll_house/external_prices', 'System\External\RollHouseController@externalPrices');
 
 // Тесты
 Route::get('/test', 'System\TestController@test');
@@ -227,6 +230,8 @@ Route::post('/display', 'AppController@ajax_display')->middleware('auth');
 Route::post('/check', 'AppController@ajax_check')->middleware('auth');
 // Пересчитать уровни категорий
 Route::get('/recalculate_categories/{entity}', 'AppController@recalculate_categories')->middleware('auth');
+// Пересохраниение связи категории с группой (пока категории товаров)
+Route::get('/resave_categories_groups', 'AppController@resaveCategoriesGroups');
 
 
 Route::get('/draft_article/{entity}/{id}', 'AppController@draft_article')->middleware('auth');

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EstimatesGoodsItem extends Model
 {
-    
+
     use Publicable;
     use Commonable;
     use Cachable;
@@ -30,14 +30,26 @@ class EstimatesGoodsItem extends Model
 
         'count',
         'price',
-
         'cost',
+        'points',
+
+        'amount',
+
         'margin_percent',
         'margin_currency',
 
-        'amount',
+        'discount_percent',
+        'discount_currency',
+
+        'extra_margin_percent',
+        'extra_margin_currency',
+
+        'extra_discount_percent',
+        'extra_discount_currency',
+
         'total',
 
+        'profit',
     ];
 
     // Смета

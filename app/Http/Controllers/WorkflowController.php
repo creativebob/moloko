@@ -315,12 +315,12 @@ class WorkflowController extends Controller
         // Если результат не массив с ошибками, значит все прошло удачно
         if (!is_array($result)) {
 
+            // ПЕРЕНОС ГРУППЫ В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
+            $this->changeCategory($request, $workflow);
+
             $workflow->display = $request->display;
             $workflow->system = $request->system;
             $workflow->save();
-
-            // ПЕРЕНОС ГРУППЫ В ДРУГУЮ КАТЕГОРИЮ ПОЛЬЗОВАТЕЛЕМ
-            $this->changeCategory($request, $workflow);
 
             $access = session('access.all_rights.index-metrics-allow');
             if ($access) {

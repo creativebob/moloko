@@ -2,16 +2,18 @@
 
 namespace App\Observers\System;
 
+use App\Observers\System\Traits\Commonable;
 use App\User;
-
-// use App\Observers\System\Traits\CommonTrait;
 
 class UserObserver
 {
-    // use CommonTrait;
+    use Commonable;
 
     public function creating(User $user)
     {
+
+         $this->store($user);
+
         $request = request();
 
         // Если не пришли имя, фамилия и отчество, парсим их из $request->name

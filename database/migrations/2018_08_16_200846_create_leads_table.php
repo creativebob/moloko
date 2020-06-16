@@ -89,6 +89,9 @@ class CreateLeadsTable extends Migration
 
 	        $table->timestamp('delivered_at')->nullable()->comment('Дата доставки');
 
+            $table->boolean('is_create_parse')->default(0)->comment('Создан парсером');
+            $table->boolean('is_link_parse')->default(0)->comment('Связан парсером со сметой');
+
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
