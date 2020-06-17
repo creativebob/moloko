@@ -15,7 +15,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 
 class Estimate extends Model
 {
-    
+
     use Publicable;
     use Cachable;
     use SoftDeletes;
@@ -31,13 +31,13 @@ class Estimate extends Model
         'stock_id',
 
         'company_id',
+        'author_id',
 
 	    'date',
 
         'number',
         'cost',
 
-        'author_id',
         'draft',
         'is_saled',
 	    'amount',
@@ -48,7 +48,6 @@ class Estimate extends Model
 
 	    'discount',
 	    'discount_percent',
-
     ];
 
     // Лид

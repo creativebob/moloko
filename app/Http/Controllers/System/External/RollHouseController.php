@@ -38,6 +38,15 @@ class RollHouseController extends Controller
     use Clientable;
     use UserControllerTrait;
 
+    public function setCompanyId()
+    {
+        $res = EstimatesGoodsItem::whereNull('company_id')->update([
+            'company_id' => 1
+        ]);
+        return "{$res} проставлено";
+
+    }
+
 
     /**
      * Проверка соответствия категорий товаров
@@ -284,6 +293,7 @@ class RollHouseController extends Controller
 
         foreach ($prices as $price) {
             dd($price);
+            // TODO - 16.06.20 - Выбрать артикулы без прайсов (которые добавили парсером сегодня)
             $article = Article::with([
                 'cur_goods.category'
             ])

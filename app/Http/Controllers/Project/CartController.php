@@ -390,6 +390,7 @@ class CartController extends Controller
                         'goods_id' => $price_goods->goods->id,
                         'price_id' => $price_goods->id,
                         'author_id' => 1,
+                        'company_id' => $estimate->company_id,
                         'price' => $price_goods->price,
                         'count' => $count,
                         'cost' => $price_goods->goods->article->cost_default * $count,

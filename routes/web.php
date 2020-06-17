@@ -48,6 +48,7 @@ Route::get('/roll_house/external_id', 'System\External\RollHouseController@exter
 Route::get('/roll_house/external_categories', 'System\External\RollHouseController@externalCategories');
 Route::get('/roll_house/external_goods', 'System\External\RollHouseController@externalGoods');
 Route::get('/roll_house/external_prices', 'System\External\RollHouseController@externalPrices');
+Route::get('/roll_house/set_company_id', 'System\External\RollHouseController@setCompanyId');
 
 // Тесты
 Route::get('/test', 'System\TestController@test');
