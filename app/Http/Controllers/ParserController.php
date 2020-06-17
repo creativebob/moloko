@@ -57,6 +57,12 @@ class ParserController extends Controller
     use Clientable;
     use UserControllerTrait;
 
+    public function test()
+    {
+        $article = \App\Models\System\External\Article::first();
+        dd($article);
+    }
+
     /**
      * Парсер имен для пользователей, id страницы для должностей
      *

@@ -148,6 +148,7 @@ class PricesGoodsController extends Controller
                 'filial_id' => $this->site->filial->id,
                 'display' => true,
             ])
+            // TODO - 17.06.20 - Нужна проверка на display у всех родителей раздела (если они есть), видимо рекусия
             ->whereHas('catalogs_item', function ($q) {
                 $q->whereHas('parent', function ($q) {
                     $q->where('display', true);

@@ -38,6 +38,8 @@ Route::get('/roll_house_parser', 'ParserController@roll_house_parser');
 Route::get('/parser_rh_goods_metrics', 'ParserController@parserRhGoodsMetrics');
 Route::get('/parsers/130420', 'ParserController@parser_130420');
 
+Route::get('/parsers/test', 'ParserController@test');
+
 
 // Ролл Хаус (парсинг старой базы)
 Route::get('/roll_house/lead_client', 'System\External\RollHouseController@leadClient');
