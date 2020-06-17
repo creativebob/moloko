@@ -4,6 +4,7 @@ namespace App\Http\Controllers\System\External;
 
 use App\Article;
 use App\ArticlesGroup;
+use App\CatalogsGoodsItem;
 use App\Client;
 use App\ContractsClient;
 use App\Estimate;
@@ -289,43 +290,173 @@ class RollHouseController extends Controller
     {
         set_time_limit(0);
 
+        $catalogsGoodsItemsIds = [
+            1 => [
+                1 => 1,
+                12 => 12,
+                39 => 12,
+                40 => 13,
+                41 => 13,
+                2 => 2,
+                51 => 64,
+                14 => 14,
+                15 => 15,
+                3 => 3,
+                4 => 4,
+                5 => 5,
+                6 => 6,
+                7 => 7,
+                8 => 8,
+                16 => 16,
+                17 => 17,
+                18 => 18,
+                19 => 19,
+                20 => 20,
+                21 => 21,
+                22 => 22,
+                23 => 23,
+                24 => 24,
+                9 => 9,
+                37 => 87,
+                38 => 66,
+                10 => 10,
+                31 => 55,
+                32 => 54,
+                33 => 56,
+                34 => 58,
+                35 => 57,
+                26 => 68,
+                27 => 69,
+                28 => 71,
+                29 => 70,
+                30 => 72,
+                36 => 73,
+                11 => 11,
+                25 => 51,
+                49 => 74,
+                50 => 75,
+                42 => 78,
+                46 => 79,
+                43 => 80,
+                45 => 81,
+                47 => 82,
+                44 => 83,
+                48 => 85,
+                53 => 84,
+                52 => 49,
+            ],
+            2 => [
+                1 => 25,
+                12 => 26,
+                39 => 26,
+                40 => 27,
+                41 => 27,
+                2 => 28,
+                51 => 65,
+                14 => 30,
+                15 => 31,
+                3 => 29,
+                4 => 32,
+                5 => 33,
+                6 => 34,
+                7 => 35,
+                8 => 36,
+                16 => 37,
+                17 => 38,
+                18 => 39,
+                19 => 40,
+                20 => 41,
+                21 => 42,
+                22 => 43,
+                23 => 44,
+                24 => 45,
+                9 => 46,
+                37 => 94,
+                38 => 67,
+                10 => 47,
+                31 => 61,
+                32 => 62,
+                33 => 60,
+                34 => 59,
+                35 => 63,
+                26 => 88,
+                27 => 89,
+                28 => 91,
+                29 => 90,
+                30 => 92,
+                36 => 93,
+                11 => 48,
+                25 => 52,
+                49 => 76,
+                50 => 77,
+                42 => 95,
+                46 => 96,
+                43 => 97,
+                45 => 98,
+                47 => 99,
+                44 => 100,
+                48 => 102,
+                53 => 101,
+                52 => 50,
+            ]
+        ];
+
         $prices = Price::get();
 
+        $count = 0;
+        $countArchive = 0;
+
         foreach ($prices as $price) {
-            dd($price);
+//            dd($price);
             // TODO - 16.06.20 - Выбрать артикулы без прайсов (которые добавили парсером сегодня)
             $article = Article::with([
-                'cur_goods.category'
+                'cur_goods'
             ])
-            ->where('external', (string) $price->id)
-//                ->whereHas('cur_goods', function ($q) {
-//                    $q->where('archive', false);
-//                })
+                ->where('external', (string) $price->id)
+                ->whereHas('cur_goods', function ($q) {
+                    $q->doesnthave('prices');
+                })
                 ->first();
             if ($article) {
                 // Если у нас уже есть такой товар с проставленным внешним id
-                dd($article);
-
                 $curGoods = $article->cur_goods;
 
+
                 foreach([1,2] as $filialId) {
-                    $cur_price_goods = PricesGoods::create([
-                        'catalogs_goods_item_id' => $catalogGoodsItem->id,
-                        'catalogs_goods_id' => $catalogGoodsItem->catalogs_goods_id,
-                        'goods_id' => $curGoods->id,
-                        'filial_id' => $filialId,
-                        'currency_id' => 1,
-                        'price' => $price->cost,
-                        'point' => $price->rh,
-                        'is_hit' => isset($price->hit),
-                    ]);
+                    $catalogGoodsItemId = $catalogsGoodsItemsIds[$filialId][$curGoods->category_id];
+//                    dd($catalogGoodsItemId);
+                    $catalogGoodsItem = CatalogsGoodsItem::find($catalogGoodsItemId);
+//                    dd($catalogGoodsItem);
+
+                    if ($catalogGoodsItem) {
+                        $cur_price_goods = PricesGoods::create([
+                            'catalogs_goods_item_id' => $catalogGoodsItem->id,
+                            'catalogs_goods_id' => $catalogGoodsItem->catalogs_goods_id,
+                            'goods_id' => $curGoods->id,
+                            'filial_id' => $filialId,
+                            'currency_id' => 1,
+                            'price' => $price->cost,
+                            'point' => $price->rh ?? 0,
+                            'is_hit' => isset($price->hit),
+                        ]);
+
+                        $cur_price_goods->update([
+                           'display' => false
+                        ]);
+
+                        if ($curGoods-> archive == 1) {
+                            $countArchive++;
+                        } else {
+                            $count++;
+                        }
+                    } else {
+                        echo $catalogGoodsItemId . "<br>";
+                    }
                 }
             }
         }
 
-
-
-        return "<br>артикулам проставлен внешний id";
+        return "Прайсы готовы. Товаров в архиве {$countArchive} / 2, Без архива {$count} / 2, всего " . ($count + $countArchive) . "/ 2";
     }
 
     /**

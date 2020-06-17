@@ -148,6 +148,15 @@ class PricesGoodsController extends Controller
                 'filial_id' => $this->site->filial->id,
                 'display' => true,
             ])
+            ->whereHas('catalogs_item', function ($q) {
+                $q->whereHas('parent', function ($q) {
+                    $q->where('display', true);
+                })
+                    ->where('display', true);
+            })
+            ->whereHas('catalog', function ($q) {
+                $q->where('display', true);
+            })
             ->whereHas('goods', function($q) use ($search) {
                 $q->whereHas('article', function ($q) use ($search) {
                     $q->where([
