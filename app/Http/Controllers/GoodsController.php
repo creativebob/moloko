@@ -117,8 +117,123 @@ class GoodsController extends Controller
         ->orderBy('moderation', 'desc')
         ->orderBy('id', 'desc')
         ->paginate(30);
+//         dd($goods);
 
-        // dd($goods);
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+
+        $filter = setFilter($this->entity_alias, $request, [
+            'author',               // Автор записи
+            'goods_category',       // Категория товара
+            'articles_group',    // Группа артикула
+            'booklist'              // Списки пользователя
+        ]);
+
+        // Окончание фильтра -----------------------------------------------------------------------------------------
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_alias);
+
+        return view('products.articles.common.index.index', [
+            'items' => $goods,
+            'page_info' => $page_info,
+            'class' => $this->class,
+            'entity' => $this->entity_alias,
+            'category_entity' => 'goods_categories',
+            'filter' => $filter,
+        ]);
+    }
+
+    public function archives(Request $request)
+    {
+
+        // Подключение политики
+        $this->authorize('index', $this->class);
+
+        // Включение контроля активного фильтра
+        $filter_url = autoFilter($request, $this->entity_alias);
+
+        if (($filter_url != null)&&($request->filter != 'active')) {
+            Cookie::queue(Cookie::forget('filter_' . $this->entity_alias));
+            return Redirect($filter_url);
+        }
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        // -----------------------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // -----------------------------------------------------------------------------------------------------------------------------
+
+        $columns = [
+            'id',
+            'article_id',
+            'category_id',
+            'price_unit_id',
+            'author_id',
+            'company_id',
+            'display',
+            'system',
+        ];
+
+        $goods = Goods::with([
+            'author',
+            'price_unit',
+            'company',
+            'article' => function ($q) {
+                $q->with([
+                    'photo',
+                    'goods.article',
+                    'manufacturer.company',
+                    'unit',
+                    'unit_weight',
+                    'unit_volume',
+                    'group.unit',
+                    'raws.article',
+                    'attachments.article',
+                    'containers.article'
+                ]);
+                // ->select([
+                //     'id',
+                //     'name',
+                //     'articles_group_id',
+                //     'photo_id',
+                //     'company_id'
+                // ]);
+            },
+            'cost',
+            'category'
+//            => function ($q) {
+//                $q->select([
+//                    'id',
+//                    'name'
+//                ]);
+//            }
+            ,
+            'prices.catalog', 'prices.catalogs_item'
+            // 'catalogs.site'
+        ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer)
+            ->booklistFilter($request)
+            ->filter($request, 'author_id')
+
+            ->whereHas('article', function($q) use ($request){
+                $q->filter($request, 'articles_group_id');
+            })
+
+            ->filter($request, 'category_id')
+            // ->filter($request, 'goods_product_id', 'article')
+            ->where('archive', true)
+//        ->select($columns)
+            ->orderBy('moderation', 'desc')
+            ->orderBy('id', 'desc')
+            ->paginate(30);
+//         dd($goods);
+
         // -----------------------------------------------------------------------------------------------------------
         // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------
@@ -369,7 +484,14 @@ class GoodsController extends Controller
                 ]);
             },
             'metrics',
-            'prices',
+            'prices' => function ($q) {
+                $q->with([
+                    'catalog',
+                    'catalogs_item.parent.parent',
+                    'filial',
+                    'currency'
+                ]);
+            },
             'related' => function ($q) {
                 $q->with([
                    'category',
@@ -469,7 +591,12 @@ class GoodsController extends Controller
                 return redirect($request->paginator_url);
             }
 
-            return redirect()->route('goods.index');
+            if ($cur_goods->archive) {
+                return redirect()->route('goods.archives');
+            } else {
+                return redirect()->route('goods.index');
+            }
+
         } else {
             return back()
             ->withErrors($result)

@@ -375,6 +375,10 @@ Route::resource('/raws_categories', 'RawsCategoryController');
 
 Route::get('/raws/search/{search}', 'RawController@search');
 
+// Просмотр архивных
+Route::get('/raws/archives', 'RawController@archives')
+    ->name('raws.archives');
+
 // Основные методы
 Route::resource('/raws', 'RawController');
 // Route::get('/raws/search/{text_fragment}', 'RawController@search')->middleware('auth');
@@ -405,6 +409,11 @@ Route::resource('/containers_categories', 'ContainersCategoryController');
 // ---------------------------------- Упаковки (Артикулы) -------------------------------------------
 
 Route::get('/containers/search/{search}', 'ContainerController@search');
+
+// Просмотр архивных
+Route::get('/containers/archives', 'ContainerController@archives')
+    ->name('containers.archives');
+
 // Основные методы
 Route::resource('/containers', 'ContainerController');
 Route::post('/containers/search/{text_fragment}', 'ContainerController@search');
@@ -436,6 +445,10 @@ Route::resource('/attachments_categories', 'AttachmentsCategoryController');
 
 Route::get('/attachments/search/{search}', 'AttachmentController@search');
 
+// Просмотр архивных
+Route::get('/attachments/archives', 'AttachmentController@archives')
+    ->name('attachments.archives');
+
 // Основные методы
 Route::resource('/attachments', 'AttachmentController');
 Route::post('/attachments/search/{text_fragment}', 'AttachmentController@search');
@@ -465,6 +478,10 @@ Route::resource('/tools_categories', 'ToolsCategoryController')->middleware('aut
 
 // ---------------------------------- Инструменты-------------------------------------------
 
+// Просмотр архивных
+Route::get('/tools/archives', 'ToolController@archives')
+    ->name('tools.archives');
+
 // Основные методы
 Route::resource('/tools', 'ToolController');
 
@@ -481,6 +498,10 @@ Route::any('/tools_create_mode', 'ToolController@ajax_change_create_mode')->midd
 Route::resource('/tools_stocks', 'ToolsStockController');
 
 // ---------------------------------- Помещения -------------------------------------------
+
+// Просмотр архивных
+Route::get('/rooms/archives', 'RoomController@archives')
+    ->name('rooms.archives');
 
 // Основные методы
 Route::resource('/rooms', 'RoomController');
@@ -526,24 +547,29 @@ Route::any('/ajax_articles_groups_set_status', 'ArticlesGroupController@ajax_set
 
 Route::get('/goods/search/{search}', 'GoodsController@search');
 // Фотки
-Route::any('/goods/add_photo', 'GoodsController@add_photo')->middleware('auth');
-Route::post('/goods/photos', 'GoodsController@photos')->middleware('auth');
+Route::any('/goods/add_photo', 'GoodsController@add_photo');
+Route::post('/goods/photos', 'GoodsController@photos');
+
+// Просмотр архивных
+Route::get('/goods/archives', 'GoodsController@archives')
+    ->name('goods.archives');
 
 // Основные методы
 Route::resource('/goods', 'GoodsController');
-Route::post('/goods/search/{text_fragment}', 'GoodsController@search')->middleware('auth');
+Route::post('/goods/search/{text_fragment}', 'GoodsController@search');
 // Дублирование
 Route::post('/goods/replicate/{id}', 'GoodsController@replicate');
 // Архивация
-Route::post('/goods/archive/{id}', 'GoodsController@archive')->middleware('auth');
+Route::post('/goods/archive/{id}', 'GoodsController@archive');
+
 
 // Отображение на сайте
-Route::post('/goods_sync', 'GoodsController@ajax_sync')->middleware('auth');
+Route::post('/goods_sync', 'GoodsController@ajax_sync');
 
-Route::any('/goods_check', 'GoodsController@ajax_check')->middleware('auth');
+Route::any('/goods_check', 'GoodsController@ajax_check');
 
 // Отображение на сайте
-Route::any('/goods_categories_get_products', 'GoodsController@ajax_get_products')->middleware('auth');
+Route::any('/goods_categories_get_products', 'GoodsController@ajax_get_products');
 
 
 

@@ -31,10 +31,6 @@ class TestController extends Controller
      */
     public function test()
     {
-
-
-        $res = \Artisan::call('clients-indicators:report 2020-01-01');
-        dd($res == 0);
-//        return Excel::download(new ArticlesExport, 'Товары для себестоимости.xlsx');
+        dd(__METHOD__);
     }
 }

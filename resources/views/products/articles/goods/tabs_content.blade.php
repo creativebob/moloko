@@ -3,28 +3,29 @@
 	<div class="grid-x grid-padding-x">
 
 		<div class="small-12 medium-7 cell">
-			@include('products.articles.goods.prices.catalogs')
+            @include('products.articles.goods.prices.prices')
 
-			<table class="table-compositions">
-				<thead>
-				<tr>
-					<th>Каталог:</th>
-					<th>Пункт:</th>
-					<th>Филиал:</th>
-					<th>Цена:</th>
-					<th></th>
-				</tr>
-				</thead>
-				<tbody id="table-prices">
+{{--            @include('products.articles.goods.prices.catalogs')--}}
+{{--			<table class="table-compositions">--}}
+{{--				<thead>--}}
+{{--				<tr>--}}
+{{--					<th>Каталог:</th>--}}
+{{--					<th>Пункт:</th>--}}
+{{--					<th>Филиал:</th>--}}
+{{--					<th>Цена:</th>--}}
+{{--					<th></th>--}}
+{{--				</tr>--}}
+{{--				</thead>--}}
+{{--				<tbody id="table-prices">--}}
 
-				@if ($item->prices->isNotEmpty())
-					@foreach ($item->prices as $price)
-						@include('products.articles.goods.prices.price', ['cur_price_goods' => $price])
-					@endforeach
-				@endif
+{{--				@if ($item->prices->isNotEmpty())--}}
+{{--					@foreach ($item->prices as $price)--}}
+{{--						@include('products.articles.goods.prices.price', ['cur_price_goods' => $price])--}}
+{{--					@endforeach--}}
+{{--				@endif--}}
 
-				</tbody>
-			</table>
+{{--				</tbody>--}}
+{{--			</table>--}}
 		</div>
 
 		<div class="small-12 medium-5 cell cmv-indicators">

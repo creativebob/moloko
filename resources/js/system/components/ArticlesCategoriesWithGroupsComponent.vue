@@ -42,9 +42,9 @@
 <script>
     export default {
 		mounted() {
-			this.getCategoriesList(this.categories)
-			this.setGroup()
-			this.getGroupsList()
+			this.getCategoriesList(this.categories);
+			this.setGroup();
+			this.getGroupsList();
 		},
 		data() {
 			return {

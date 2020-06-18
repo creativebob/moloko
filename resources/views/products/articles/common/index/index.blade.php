@@ -20,7 +20,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('products.articles.common.index.includes.title_articles', ['page_info' => $page_info, 'class' => $class])
+@include('products.articles.common.index.includes.title', ['page_info' => $page_info, 'class' => $class])
 @endsection
 
 @section('content')

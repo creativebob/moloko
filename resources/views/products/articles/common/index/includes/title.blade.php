@@ -96,13 +96,16 @@
                 </div>
             </div>
 
-            {{-- Дополнительные кнопки приходящие с контроллера --}}
+            {{-- Дополнительные кнопки --}}
             <div class="black-button-group small-12 cell">
-                @if(isset($add_buttons))
-                    @foreach($add_buttons as $add_button)
-                        <a class="button tiny hollow right {{ $add_button['class'] }}" href="{{ $add_button['href'] }}">{{ $add_button['text'] }}</a>
-                    @endforeach
-                @endif
+                @isset($archivesCount)
+                    @if($archivesCount > 0)
+                        <a class="button tiny hollow right dismissed" href="{{ route("{$entity}.archives") }}">Архив: {{ $archivesCount }}</a>
+                    @endif
+                @else
+                    <a class="button tiny hollow right dismissed" href="{{ route("{$entity}.index") }}">Обычные</a>
+                @endisset
+
             </div>
 
 

@@ -84,6 +84,9 @@ Vue.component('pickmeup-component', require('./components/common/PickmeupCompone
 // Виджеты
 Vue.component('clients-indicators-component', require('./components/widgets/ClientsIndicatorsComponent'));
 
+// Прайсы
+Vue.component('prices-goods-component', require('./components/products/common/articles/prices/PricesGoodsComponent'));
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

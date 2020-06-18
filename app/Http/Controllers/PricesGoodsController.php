@@ -383,8 +383,16 @@ class PricesGoodsController extends Controller
             $cur_price_goods->save();
         }
 
+        $cur_price_goods->load([
+            'catalog',
+            'catalogs_item.parent.parent',
+            'filial',
+            'currency'
+        ]);
 
-        return view('products.articles.goods.prices.price', compact('cur_price_goods'));
+
+        return response()->json($cur_price_goods);
+//        return view('products.articles.goods.prices.price', compact('cur_price_goods'));
     }
 
     public function ajax_edit(Request $request, $catalog_id)
@@ -413,7 +421,9 @@ class PricesGoodsController extends Controller
                 'price' => $request->price,
             ]);
         }
-        return view('products.articles.goods.prices.price', compact('cur_price_goods'));
+
+        return response()->json($cur_price_goods);
+//        return view('products.articles.goods.prices.price', compact('cur_price_goods'));
     }
 
     public function ajax_archive(Request $request)

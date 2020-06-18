@@ -118,6 +118,87 @@ class ToolController extends Controller
         ]);
     }
 
+    public function archives(Request $request)
+    {
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
+
+        // Включение контроля активного фильтра
+        // $filter_url = autoFilter($request, $this->entity_alias);
+        // if (($filter_url != null)&&($request->filter != 'active')) {
+        //     Cookie::queue(Cookie::forget('filter_' . $this->entity_alias));
+        //     return Redirect($filter_url);
+        // }
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        // dd($answer);
+
+        // -------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // -------------------------------------------------------------------------------------------------------------
+
+        $columns = [
+            'id',
+            'article_id',
+            'category_id',
+            'author_id',
+            'company_id',
+            'display',
+            'system'
+        ];
+
+        $tools = Tool::with([
+            'author',
+            'company',
+            'article' => function ($q) {
+                $q->with([
+                    'group',
+                    'photo'
+                ]);
+            },
+            'category:id,name',
+        ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer) // Фильтр по системным записям
+            ->booklistFilter($request)
+            ->filter($request, 'author_id')
+            ->where('archive', true)
+//        ->select($columns)
+            ->orderBy('moderation', 'desc')
+            ->orderBy('sort', 'asc')
+            ->paginate(30);
+        // dd($tools);
+
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+
+        $filter = setFilter($this->entity_alias, $request, [
+            'author',               // Автор записи
+            // 'tools_category',    // Категория услуги
+            // 'tools_product',     // Группа услуги
+            // 'date_interval',     // Дата обращения
+            'booklist'              // Списки пользователя
+        ]);
+        // dd($filter);
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_alias);
+
+        return view('products.articles.common.index.index', [
+            'items' => $tools,
+            'page_info' => $page_info,
+            'class' => $this->class,
+            'entity' => $this->entity_alias,
+            'category_entity' => 'tools_categories',
+            'filter' => $filter,
+        ]);
+    }
+
     public function create(Request $request)
     {
 
@@ -309,7 +390,11 @@ class ToolController extends Controller
                 return Redirect($backlink);
             }
 
-            return redirect()->route('tools.index');
+            if ($tool->archive) {
+                return redirect()->route('tools.archives');
+            } else {
+                return redirect()->route('tools.index');
+            }
         } else {
             return back()
             ->withErrors($result)

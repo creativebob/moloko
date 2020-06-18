@@ -144,6 +144,120 @@ class AttachmentController extends Controller
         ]);
     }
 
+    public function archives(Request $request)
+    {
+
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $this->class);
+
+        // Включение контроля активного фильтра
+        $filter_url = autoFilter($request, $this->entity_alias);
+
+        if (($filter_url != null)&&($request->filter != 'active')) {
+            Cookie::queue(Cookie::forget('filter_' . $this->entity_alias));
+            return Redirect($filter_url);
+        }
+
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+        // dd($answer);
+
+        // -------------------------------------------------------------------------------------------------------------
+        // ГЛАВНЫЙ ЗАПРОС
+        // -------------------------------------------------------------------------------------------------------------
+
+        $columns = [
+            'id',
+            'article_id',
+            'category_id',
+            'price_unit_id',
+            'price_unit_category_id',
+
+            'portion_status',
+            'portion_name',
+            'portion_abbreviation',
+            'unit_portion_id',
+            'portion_count',
+
+            'author_id',
+            'company_id',
+            'display',
+            'system',
+            'unit_for_composition_id'
+        ];
+
+
+        $attachments = Attachment::with([
+            'author',
+            'company',
+            'in_cleans',
+            'in_drafts',
+            'compositions.cur_goods',
+            'article' => function ($q) {
+                $q->with([
+                    'group',
+                    'photo',
+                    'unit',
+                    'unit_weight',
+                    'unit_volume'
+                ]);
+            },
+            'category'
+//            => function ($q) {
+//                $q->select([
+//                    'id',
+//                    'name'
+//                ]);
+//            }
+            ,
+        ])
+            ->moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->authors($answer)
+            ->systemItem($answer) // Фильтр по системным записям
+            ->booklistFilter($request)
+            ->filter($request, 'author_id')
+
+            ->whereHas('article', function($q) use ($request){
+                $q->filter($request, 'articles_group_id');
+            })
+
+            ->filter($request, 'category_id')
+
+            ->where('archive', true)
+//            ->select($columns)
+            ->orderBy('moderation', 'desc')
+            ->orderBy('id', 'desc')
+            ->paginate(30);
+        // dd($attachments);
+
+
+        // -----------------------------------------------------------------------------------------------------------
+        // ФОРМИРУЕМ СПИСКИ ДЛЯ ФИЛЬТРА ------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------
+
+        $filter = setFilter($this->entity_alias, $request, [
+            'author',               // Автор записи
+//            'attachments_category',  // Категория вложений
+            'articles_group',       // Группа артикула
+            'booklist'              // Списки пользователя
+        ]);
+
+        // Окончание фильтра -----------------------------------------------------------------------------------------
+
+        // Инфо о странице
+        $page_info = pageInfo($this->entity_alias);
+
+        return view('products.articles.common.index.index', [
+            'items' => $attachments,
+            'page_info' => $page_info,
+            'class' => $this->class,
+            'entity' => $this->entity_alias,
+            'category_entity' => 'attachments_categories',
+            'filter' => $filter,
+        ]);
+    }
+
     public function create(Request $request)
     {
 
@@ -387,7 +501,11 @@ class AttachmentController extends Controller
                 return redirect($request->paginator_url);
             }
 
-            return redirect()->route('attachments.index');
+            if ($attachment->archive) {
+                return redirect()->route('attachments.archives');
+            } else {
+                return redirect()->route('attachments.index');
+            }
         } else {
 
             return back()

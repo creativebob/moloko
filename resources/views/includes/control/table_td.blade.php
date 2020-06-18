@@ -5,7 +5,7 @@
         @endisset
 
         {{-- Отображение на сайте --}}
-        @can ('display', $item)
+        @can('display', $item)
         @display ($item)
         <div class="icon-display-show black sprite" data-open="item-display"></div>
         @else

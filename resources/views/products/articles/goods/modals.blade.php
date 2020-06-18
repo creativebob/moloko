@@ -1,1 +1,1 @@
-@include('includes.modals.modal_price_delete')
+{{--@include('includes.modals.modal_price_delete')--}}

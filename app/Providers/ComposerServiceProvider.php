@@ -9,12 +9,14 @@ use App\Http\View\Composers\System\ArticlesCategoriesWithItemsComposerForManufac
 use App\Http\View\Composers\System\AttachmentsComposer;
 use App\Http\View\Composers\System\CatalogGoodsWithPricesComposer;
 use App\Http\View\Composers\System\CatalogServicesWithPricesComposer;
+use App\Http\View\Composers\System\CatalogsGoodsWithFilialsComposer;
 use App\Http\View\Composers\System\ChannelsComposer;
 use App\Http\View\Composers\System\ChargesComposer;
 use App\Http\View\Composers\System\CitiesComposer;
 use App\Http\View\Composers\System\CitySearchComposer;
 use App\Http\View\Composers\System\ClientsCitiesComposer;
 use App\Http\View\Composers\System\ClientsCountComposer;
+use App\Http\View\Composers\System\CmvArchivesCountComposer;
 use App\Http\View\Composers\System\ContainersCategoriesComposer;
 use App\Http\View\Composers\System\ContainersComposer;
 use App\Http\View\Composers\System\CurrenciesComposer;
@@ -325,6 +327,7 @@ class ComposerServiceProvider extends ServiceProvider
             'products.articles.goods.prices.catalogs',
             'leads.catalogs.modal_catalogs_goods'
         ], CatalogsGoodsComposer::class);
+        view()->composer('products.articles.goods.prices.prices', CatalogsGoodsWithFilialsComposer::class);
 
         view()->composer('products.articles.goods.prices.catalogs_items', CatalogsGoodsItemsComposer::class);
         view()->composer('products.articles.goods.prices.filials', FilialsForCatalogsGoodsComposer::class);
@@ -407,6 +410,9 @@ class ComposerServiceProvider extends ServiceProvider
         // Клиенты
         view()->composer('clients.includes.filters', SourcesComposer::class);
         view()->composer('clients.includes.filters', ClientsCitiesComposer::class);
+
+        // ТМЦ
+        view()->composer('products.articles.common.index.includes.title', CmvArchivesCountComposer::class);
 
     }
 

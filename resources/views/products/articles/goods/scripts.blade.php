@@ -70,58 +70,6 @@
             // $(this).trigger('click');
         });
 
-        // Мягкое удаление с refresh
-        $(document).on('click', '[data-open="delete-price"]', function() {
-
-            // находим описание сущности, id и название удаляемого элемента в родителе
-            var parent = $(this).closest('.item');
-            var entity = parent.attr('id').split('-')[0];
-            var id = parent.attr('id').split('-')[1];
-            var name = parent.data('name');
-            $('.title-price').text(name);
-            $('.button-delete-price').attr('id', entity + '-' + id);
-        });
-
-        $(document).on('click', '.button-delete-price', function(event) {
-            event.preventDefault();
-
-            var buttons = $('.button');
-            var entity = $(this).attr('id').split('-')[0];
-            var id = $(this).attr('id').split('-')[1];
-
-            var catalog_id = $('#' + entity + '-' + id).data('catalog_id');
-
-            $.post('/admin/catalogs_goods/' + catalog_id + '/prices_goods/' + id + '/archive', function (data) {
-                if (data == true) {
-
-                    $('#' + entity + '-' + id).remove();
-                    // $('#item-delete-ajax').foundation('close');
-                    $('.delete-button').removeAttr('id');
-                    buttons.prop('disabled', false);
-
-                    checkPrice();
-                } else {
-                    // Выводим ошибку на страницу
-                    alert(data);
-                };
-            });
-        });
-
-
-        // Получение пунктов выбранного каталога
-        $(document).on('change', '#select-catalogs', function() {
-            getFilials();
-
-            $.post('/admin/catalogs_goods/' + $(this).val() + '/get_catalogs_goods_items', function(html) {
-                $('#select-catalogs_items').html(html);
-            });
-
-            checkPrice();
-        });
-
-        $(document).on('change', '#select-catalogs_items', function() {
-            checkPrice();
-        });
 
         checkPrice();
 
@@ -179,78 +127,6 @@
             }
         };
 
-        $(document).on('focus', '#form-prices_goods input[name=price]', function(event) {
-            $('#form-prices_goods .form-error').hide();
-        });
-
-        // Добавление в прайс
-        $(document).on('click', '#button-store-prices_goods', function(event) {
-            event.preventDefault();
-
-            $(this).prop('disabled', true);
-
-            let catalog_id = $('#select-catalogs').val();
-
-            if ($('#form-prices_goods input[name=price]').val() == '') {
-                $('#form-prices_goods .form-error').show();
-            } else {
-                $.post('/admin/catalogs_goods/' + catalog_id + '/prices_goods/ajax_store', $('#form-prices_goods :input').serialize(), function(html) {
-                    $('#table-prices').append(html);
-                    checkPrice();
-                });
-            }
-        });
-
-        $(document).on('click', '#table-prices .price span', function(event) {
-            event.preventDefault();
-
-            var parent = $(this).closest('.item');
-            var id = parent.attr('id').split('-')[1];
-
-
-            $.get('/admin/catalogs_goods/' + parent.data('catalog_id') + '/edit_prices_goods', {
-                id: id,
-            }, function(html) {
-                $('#cur_price_goods-' + id + ' .price').html(html);
-            });
-        });
-
-        // При изменении цены ловим enter
-        $(document).on('keydown', '#table-prices .price [name=price]', function(event) {
-
-            var parent = $(this).closest('.item');
-            var id = parent.attr('id').split('-')[1];
-
-            // если нажали Enter, то true
-            if ((event.keyCode == 13) && (event.shiftKey == false)) {
-                event.preventDefault();
-                // event.stopPropagation();
-                $.ajax({
-                    url: '/admin/catalogs_goods/' + parent.data('catalog_id') + '/update_prices_goods',
-                    type: "PATCH",
-                    data: {
-                        id: id,
-                        price: $(this).val()
-                    },
-                    success: function(html){
-                            $('#table-prices #cur_price_goods-' + id).replaceWith(html);
-
-                    }
-                });
-            };
-        });
-
-        // При потере фокуса при редактировании возвращаем обратно
-        $(document).on('focusout', '#table-prices .price input[name=price]', function(event) {
-            event.preventDefault();
-
-            var parent = $(this).closest('.item');
-            var id = parent.attr('id').split('-')[1];
-
-            $.get('/admin/catalogs_goods/' + parent.data('catalog_id')+ '/get_prices_goods/' + id, function(html) {
-                 $('#cur_price_goods-' + id + ' .price').html(html);
-            });
-        });
     });
 
 
