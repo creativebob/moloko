@@ -94437,38 +94437,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         checkDisabled: function checkDisabled() {
             var _this2 = this;
 
-            //
-            // // Снимаем всем филиалам блокировку
-            // $("#select-filials option").each(function(index) {
-            //     $(this).prop('disabled', false);
-            // });
-
             this.error = false;
 
             if (this.prices.length) {
-                // console.log(this.disabledFilials);
                 var $vm = this;
                 this.disabledFilials.forEach(function (disabled) {
                     if (disabled[0] == _this2.catalogId && disabled[1] == _this2.catalogItem.id && disabled[2] == _this2.filialId) {
                         $vm.error = true;
-                        // alert(this.filialId);
-                        // $('#select-filials option[value=' + this.filialId + ']').prop('disabled', true);
                     }
                 });
             }
-
-            // // Ставим ее нужным
-            // $("#table-prices tr[data-catalogs_item_id=" + this.catalogId + "]").each(function(index) {
-            //     if (this.filialId == '' || this.filialId == null) {
-            //         $('#select-filials option').prop('disabled', true);
-            //     } else {
-            //         $('#select-filials option[value=' + $(this).data('filial_id') + ']').prop('disabled', true);
-            //     }
-            //
-            // });
-
-            // // Выделяем первый не заблокированный
-            // $('#select-filials option:not([disabled]):first').prop('selected', true);
         },
         changeCatalog: function changeCatalog() {
             var _this3 = this;
