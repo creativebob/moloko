@@ -7,6 +7,7 @@
             @add="addItem"
             :prices="prices"
             :disabled-filials="disabledFilials"
+            ref="childComponent"
         ></price-store-component>
 
         <table
@@ -121,6 +122,7 @@
                             this.prices.splice(index, 1);
                             buttons.prop('disabled', false);
                             $('#delete-price_goods').foundation('close');
+                            this.$refs.childComponent.checkDisabled();
                         }
                     })
                     .catch(error => {

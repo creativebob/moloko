@@ -209,16 +209,19 @@
                 //     $(this).prop('disabled', false);
                 // });
 
-                // console.log(this.disabledFilials);
-                var $vm = this;
-                $vm.error = false;
-                this.disabledFilials.forEach(disabled => {
-                   if (disabled[0] == this.catalogId && disabled[1] == this.catalogItem.id && disabled[2] == this.filialId) {
-                       $vm.error = true;
-                       // alert(this.filialId);
-                       // $('#select-filials option[value=' + this.filialId + ']').prop('disabled', true);
-                   }
-                });
+                this.error = false;
+
+                if (this.prices.length) {
+                    // console.log(this.disabledFilials);
+                    var $vm = this;
+                    this.disabledFilials.forEach(disabled => {
+                       if (disabled[0] == this.catalogId && disabled[1] == this.catalogItem.id && disabled[2] == this.filialId) {
+                           $vm.error = true;
+                           // alert(this.filialId);
+                           // $('#select-filials option[value=' + this.filialId + ']').prop('disabled', true);
+                       }
+                    });
+                }
 
                 // // Ставим ее нужным
                 // $("#table-prices tr[data-catalogs_item_id=" + this.catalogId + "]").each(function(index) {
