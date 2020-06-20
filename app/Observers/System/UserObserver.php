@@ -7,12 +7,12 @@ use App\User;
 
 class UserObserver
 {
-    use Commonable;
+//    use Commonable;
 
     public function creating(User $user)
     {
 
-         $this->store($user);
+//         $this->store($user);
 
         $request = request();
 

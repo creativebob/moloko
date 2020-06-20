@@ -48,6 +48,7 @@ class Client extends Model
     // use DateIntervalFilter;
 
      protected $dates = [
+         'created_at',
          'first_order_date',
          'last_order_date',
          'deleted_at'
@@ -56,7 +57,7 @@ class Client extends Model
     protected $fillable = [
         'clientable_id',
         'clientable_type',
-    
+
         'description',
         'discount',
         'points',
@@ -92,7 +93,9 @@ class Client extends Model
 
         'display',
         'system',
-        'moderation'
+        'moderation',
+
+        'created_at'
     ];
 
     // Получаем автора

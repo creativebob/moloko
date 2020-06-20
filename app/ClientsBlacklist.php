@@ -20,7 +20,9 @@ class ClientsBlacklist extends Model
 
     protected $fillable = [
         'begin_date',
-        'end_date'
+        'end_date',
+
+        'description'
     ];
 
     // Клиент

@@ -38,6 +38,13 @@ class CreateEstimatesTable extends Migration
             $table->decimal('discount_percent', 5, 2)->default(0)->comment('Процент скидки');
             $table->decimal('total', 12, 4)->default(0)->comment('Итоговая сумма по заказу');
 
+            $table->decimal('discount_items_currency', 10, 2)->default(0)->comment('Сумма скидки по позициям');
+
+            $table->decimal('surplus', 12, 4)->default(0)->comment('Излишек оплаты');
+            $table->decimal('losses_from_points', 12, 4)->default(0)->comment('Потери от поинтов');
+
+            $table->integer('points')->default(0)->comment('Внутренняя валюта');
+
             $table->decimal('margin_percent', 10, 2)->default(0)->comment('Процент маржи');
             $table->decimal('margin_currency', 10, 2)->default(0)->comment('Сумма маржи');
 
@@ -48,10 +55,14 @@ class CreateEstimatesTable extends Migration
             $table->boolean('is_registered')->default(0)->comment('Оформлено');
             $table->date('registered_date')->nullable()->comment('Дата оформления');
 
+            $table->boolean('is_main')->default(1)->comment('Главная');
+
             $table->boolean('is_produced')->default(0)->comment('Произведено');
             $table->boolean('is_saled')->default(0)->comment('Продано');
-    
+
             $table->boolean('is_dismissed')->default(0)->comment('Отменено');
+
+            $table->integer('external')->default(0)->comment('Внешний id');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

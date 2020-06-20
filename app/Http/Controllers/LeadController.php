@@ -166,6 +166,7 @@ class LeadController extends Controller
         $estimate = Estimate::make([
             'filial_id' => $lead->filial_id,
             'discount_percent' => 0,
+            'is_main' => true
         ]);
 
         $result = $lead->estimate()->save($estimate);
@@ -209,7 +210,8 @@ class LeadController extends Controller
                         $q->with([
                             'product.article',
                             'reserve',
-                            'stock:id,name'
+                            'stock:id,name',
+                            'price_goods'
                         ]);
                     },
                     'services_items' => function ($q) {

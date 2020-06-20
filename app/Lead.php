@@ -288,7 +288,13 @@ class Lead extends Model
     // Заказы
     public function estimate()
     {
-        return $this->hasOne(Estimate::class);
+        return $this->hasOne(Estimate::class)
+            ->where('is_main', true);
+    }
+
+    public function estimates()
+    {
+        return $this->hasMany(Estimate::class);
     }
 
     // Основной заказ

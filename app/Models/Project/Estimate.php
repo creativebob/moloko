@@ -39,7 +39,10 @@ class Estimate extends Model
         'cost',
 
         'draft',
+
         'is_saled',
+        'is_main',
+
 	    'amount',
 	    'total',
 

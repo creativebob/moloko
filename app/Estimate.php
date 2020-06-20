@@ -45,8 +45,16 @@ class Estimate extends Model
 
         'is_produced',
         'is_saled',
-        
-        'is_dismissed',
+
+        'is_main',
+
+        'external',
+        'losses_from_points',
+
+        'surplus',
+        'points',
+
+        'discount_items_currency',
 
         'amount',
         'total',

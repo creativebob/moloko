@@ -52,10 +52,20 @@ class Update210420Tables extends Migration
             $table->decimal('cost', 10, 2)->default(0)->comment('Себестоимость')->after('number');
             $table->decimal('margin_percent', 10, 2)->default(0)->comment('Процент маржи')->after('total');
             $table->decimal('margin_currency', 10, 2)->default(0)->comment('Сумма маржи')->after('margin_percent');
+            $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('margin_percent');
+
+            $table->decimal('discount_items_currency', 10, 2)->default(0)->comment('Сумма скидки по позициям')->after('points');
+
+            $table->decimal('surplus', 12, 4)->default(0)->comment('Излишек оплаты')->after('discount_items_currency');
+            $table->decimal('losses_from_points', 12, 4)->default(0)->comment('Потери от поинтов')->after('surplus');
 
             $table->date('registered_date')->nullable()->comment('Дата оформления')->after('is_registered');
 
-            $table->boolean('is_dismissed')->default(0)->comment('Отменено')->after('registered_date');
+            $table->boolean('is_main')->default(1)->comment('Главная')->after('registered_date');
+
+            $table->boolean('is_dismissed')->default(0)->comment('Отменено')->after('is_main');
+
+            $table->integer('external')->default(0)->comment('Внешний id')->after('is_dismissed');
         });
 
         Schema::table('estimates_goods_items', function (Blueprint $table) {
@@ -143,7 +153,12 @@ class Update210420Tables extends Migration
                 'margin_percent',
                 'margin_currency',
                 'is_registered',
-                'is_dismissed'
+                'is_dismissed',
+                'is_main',
+                'external',
+                'losses_from_points',
+                'points',
+                'surplus'
             ]);
         });
 

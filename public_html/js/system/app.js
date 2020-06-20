@@ -79585,7 +79585,12 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("td", [
-        _vm._v(_vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))))
+        _vm._v(
+          _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))) + " "
+        ),
+        _vm.item.price_goods.point > 0
+          ? _c("span", [_vm._v("(" + _vm._s(_vm.item.price_goods.point) + ")")])
+          : _vm._e()
       ]),
       _vm._v(" "),
       _c(

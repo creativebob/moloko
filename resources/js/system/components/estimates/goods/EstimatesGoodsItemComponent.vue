@@ -26,7 +26,7 @@
 <!--            {{ item.stock.name }}-->
 <!--        </td>-->
 
-        <td>{{ item.price | roundToTwo | level }}</td>
+        <td>{{ item.price | roundToTwo | level }} <span v-if="item.price_goods.point > 0">({{ item.price_goods.point }})</span></td>
 
         <!--        <td>{{ item.count }}</td>-->
         <td @click="checkChangeCount">

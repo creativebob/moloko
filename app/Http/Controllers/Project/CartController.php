@@ -357,6 +357,7 @@ class CartController extends Controller
                     'date' => today(),
                     'number' => $lead->case_number,
                     'author_id' => $lead->author_id,
+                    'is_main' => true
                 ]);
 
                 logs('leads_from_project')->info("Создана смета с id: [{$estimate->id}]");
