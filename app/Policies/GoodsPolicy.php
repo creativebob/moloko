@@ -55,7 +55,7 @@ class GoodsPolicy
             return false;
         }
 
-        if ($model->prices->isNotEmpty()) {
+        if ($model->in_kits->isNotEmpty()) {
             return false;
         }
 

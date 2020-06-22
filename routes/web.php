@@ -345,6 +345,8 @@ Route::any('/ajax_get_related', 'GoodsController@ajax_get_related');
 
 Route::any('/ajax_get_attachment', 'AttachmentController@ajax_get_attachment')->middleware('auth');
 
+Route::any('/ajax_get_container', 'ContainerController@ajax_get_container')->middleware('auth');
+
 Route::any('/ajax_get_goods', 'GoodsController@ajax_get_goods')->middleware('auth');
 
 Route::post('/ajax_get_goods', 'GoodsController@ajax_get_goods')->middleware('auth');

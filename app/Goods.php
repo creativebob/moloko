@@ -107,6 +107,11 @@ class Goods extends Model
         return $this->morphMany(OrderComposition::class, 'order_compositions');
     }
 
+    public function in_kits()
+    {
+        return $this->belongsToMany(Article::class, 'article_goods', 'goods_id', 'article_id');
+    }
+
     public function getMetricByName($metric_name){
 
         $metric = $this->metrics->where('name', $metric_name)->first();

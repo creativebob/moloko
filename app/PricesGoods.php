@@ -165,6 +165,11 @@ class PricesGoods extends Model
         return $this->belongsToMany(User::class, 'like_prices_goods', 'prices_goods_id','user_id');
     }
 
+    public function promotions()
+    {
+        return $this->belongsToMany(PricesGoods::class, 'promotion_price_goods', 'price_goods_id', 'promotion_id');
+    }
+
     // Фильтр
     public function scopeFilter($query)
     {

@@ -96,7 +96,8 @@ class GoodsController extends Controller
 //                ]);
 //            }
             ,
-            'prices.catalog', 'prices.catalogs_item'
+            'prices.catalog', 'prices.catalogs_item',
+            'in_kits'
             // 'catalogs.site'
         ])
         ->moderatorLimit($answer)
@@ -630,6 +631,16 @@ class GoodsController extends Controller
 
             $cur_goods->relating()->detach();
             $cur_goods->relatingCategory()->detach();
+
+            foreach($cur_goods->prices as $price) {
+
+                $price->promotions()->detach();
+
+                $price->update([
+                    'archive' => true,
+                    'editor_id' => hideGod($request->user())
+                ]);
+            }
 
             if ($cur_goods) {
                 return redirect()->route('goods.index');
