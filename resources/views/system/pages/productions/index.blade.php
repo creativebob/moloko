@@ -30,6 +30,7 @@
                 <tr id="thead-content">
                     <th class="td-drop"></th>
                     <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
+                    <th class="td-number">№</th>
                     <th class="td-receipt_date">Дата</th>
                     {{-- <th class="td-number">Номер</th> --}}
                     {{-- <th class="td-supplier-name">Поставщик</th> --}}
@@ -65,13 +66,15 @@
 
                     </td>
 
+                    <td class="td-number">{{ $production->number }}</td>
+
                     <td class="td-receipt_date">
                         <a href="/admin/{{ $production->getTable() }}/{{ $production->id }}/edit">
                         <span>{{ isset($production->receipt_date) ? $production->receipt_date->format('d.m.Y') : null }}</span></a>
                     </td>
 
 
-                    <td class="td-number">
+                    <td class="td-stock">
                         {{ optional($production->stock)->name }}
                         <br><span class="tiny-text"></span>
                     </td>
@@ -97,7 +100,7 @@
                     <td class="td-description">
 
                         @can('view', $production)
-                        
+
                             <span data-toggle="dropdown-{{ $production->id }}">{{ $production->name ?? '' }}</span>
                             <div class="dropdown-pane bottom right" id="dropdown-{{ $production->id }}" data-dropdown data-hover="true" data-hover-pane="true">
                               {!! $production->description ?? '' !!}
