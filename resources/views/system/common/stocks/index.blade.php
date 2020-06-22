@@ -62,7 +62,7 @@
                 @if($stocks->isNotEmpty())
                 @foreach($stocks as $stock)
 
-                <tr class="item @if($stock->moderation == 1)no-moderation @endif" id="stocks-{{ $stock->id }}" data-name="{{ $stock->name }}">
+                <tr class="item @if($stock->moderation == 1)no-moderation @endif @if($stock->cmv->archive == 1) archive-cmv @endif" id="stocks-{{ $stock->id }}" data-name="{{ $stock->name }}">
                     <td class="td-drop">
                         <div class="sprite icon-drop"></div>
                     </td>

@@ -148,7 +148,7 @@ class ContainerController extends Controller
     {
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $this->class);
+        $this->authorize(getmethod('index'), $this->class);
 
         // Включение контроля активного фильтра
         $filter_url = autoFilter($request, $this->entity_alias);

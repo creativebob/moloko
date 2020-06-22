@@ -100,7 +100,7 @@ class Update210420Tables extends Migration
         });
 
         Schema::table('promotions', function (Blueprint $table) {
-            $table->char('mode', 1)->comment('Режим')->after('end_date');
+            $table->char('mode', 11)->comment('Режим')->after('end_date');
             $table->text('horizontal')->nullable()->comment('horizontal')->after('large_x_id');
             $table->text('vertical')->nullable()->comment('vertical')->after('horizontal');
             $table->text('square')->nullable()->comment('square')->after('vertical');
