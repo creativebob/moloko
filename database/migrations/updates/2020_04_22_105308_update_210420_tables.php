@@ -72,6 +72,10 @@ class Update210420Tables extends Migration
             $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('amount');
         });
 
+        Schema::table('estimates_services_items', function (Blueprint $table) {
+            $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('amount');
+        });
+
         Schema::table('companies', function (Blueprint $table) {
             $table->dropColumn('birthday_company');
             $table->date('foundation_date')->nullable()->comment('Дата основания')->after('seo_description');
@@ -163,6 +167,10 @@ class Update210420Tables extends Migration
         });
 
         Schema::table('estimates_goods_items', function (Blueprint $table) {
+            $table->dropColumn('points');
+        });
+
+        Schema::table('estimates_services_items', function (Blueprint $table) {
             $table->dropColumn('points');
         });
 
