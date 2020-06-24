@@ -10,6 +10,7 @@ use App\Estimate;
 use App\EstimatesGoodsItem;
 use App\Exports\LeadsExport;
 use App\Http\Controllers\Controller;
+use App\Lead;
 use App\Unit;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Facades\Excel;

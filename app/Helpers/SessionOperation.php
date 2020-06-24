@@ -6,7 +6,9 @@
 
         // Получаем сессию
         $session  = session('access');
-        if(!isset($session)){abort(403, 'Нет сессии!');};
+        if (!isset($session)) {
+//            abort(403, 'Нет сессии!');
+        };
 
         if($session['user_info']['user_status'] == null){
 
@@ -134,7 +136,9 @@
 
             // Получаем сессию
             $session  = session('access');
-            if(!isset($session)){abort(403, 'Нет сессии!');};
+            if (!isset($session)) {
+//                abort(403, 'Нет сессии!');
+            };
 
             if(isset($session['all_rights'][$method . '-'. $entity_name .'-allow'][$type_list])) {
 
@@ -177,7 +181,9 @@
 
                 // Получаем список отделов для бога
                 // dd($session['company_info'][$type_list]);
-                if(!isset($session['company_info'][$type_list])){abort(403, 'Необходимо создать филиал');};
+                if(!isset($session['company_info'][$type_list])) {
+//                    abort(403, 'Необходимо создать филиал');
+                };
                 $departments = $session['company_info'][$type_list];
             };
         };
@@ -258,7 +264,9 @@
 
             // Получаем сессию
             $session  = session('access');
-            if(!isset($session)){abort(403, 'Нет сессии!');};
+            if(!isset($session)) {
+//                abort(403, 'Нет сессии!');
+            };
 
             if(empty($session['user_info']['extra_rights'])) {
                 $result = false;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\System\Parser;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -95,7 +95,9 @@ class Client extends Model
         'system',
         'moderation',
 
-        'created_at'
+        'created_at',
+        'company_id',
+        'author_id'
     ];
 
     // Получаем автора

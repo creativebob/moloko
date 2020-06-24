@@ -64,6 +64,8 @@ class CreateEstimatesTable extends Migration
 
             $table->integer('external')->default(0)->comment('Внешний id');
 
+            $table->boolean('is_create_parse')->default(0)->comment('Создана парсером');
+
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');

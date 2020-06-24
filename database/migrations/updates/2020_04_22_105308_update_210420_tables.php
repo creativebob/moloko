@@ -66,6 +66,8 @@ class Update210420Tables extends Migration
             $table->boolean('is_dismissed')->default(0)->comment('Отменено')->after('is_main');
 
             $table->integer('external')->default(0)->comment('Внешний id')->after('is_dismissed');
+
+            $table->boolean('is_create_parse')->default(0)->comment('Создана парсером')->after('external');
         });
 
         Schema::table('estimates_goods_items', function (Blueprint $table) {
@@ -162,7 +164,8 @@ class Update210420Tables extends Migration
                 'external',
                 'losses_from_points',
                 'points',
-                'surplus'
+                'surplus',
+                'is_create_parse'
             ]);
         });
 

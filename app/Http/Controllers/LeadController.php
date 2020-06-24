@@ -197,6 +197,7 @@ class LeadController extends Controller
 
         $lead = Lead::with([
             'location.city',
+            'user',
             'main_phones',
             'extra_phones',
             'medium',
@@ -249,8 +250,7 @@ class LeadController extends Controller
         ->systemItem($answer) // Фильтр по системным записям
         ->moderatorLimit($answer)
         ->findOrFail($id);
-
-//        dd($lead->estimate);
+//        dd($lead);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);

@@ -147,8 +147,10 @@ class EstimatesGoodsItemController extends Controller
         if ($success) {
             $estimates_goods_item->load([
                 'product.article',
+                'price_goods',
                 'reserve',
-                'stock:id,name'
+                'stock:id,name',
+
             ]);
             $this->estimateUpdate($estimates_goods_item->estimate);
 
@@ -217,8 +219,9 @@ class EstimatesGoodsItemController extends Controller
 
         $estimates_goods_item->load([
             'product.article',
+            'price_goods',
             'reserve',
-            'stock:id,name'
+            'stock:id,name',
         ]);
 	    $this->estimateUpdate($estimates_goods_item->estimate);
 

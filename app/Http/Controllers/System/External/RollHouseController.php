@@ -479,12 +479,24 @@ class RollHouseController extends Controller
 //            ->has('checks')
             ->with([
                 'checks' => function ($q) {
-                    $q->whereDate('created', '>', '2016-03-03');
+                    $q->whereDate('created', '>', '2016-03-03')
+                    ->whereNull('employer_id')
+                    ->where(function ($q) {
+                        $q->where('reject', 2)
+                            ->orWhereNull('reject');
+                    })
+//                        ->where('reject', '!==', 1)
+                    ;
                 }
             ])
             ->where('is_parse', false)
+//            ->where('phone', 89086504979)
+            ->get()
 //            ->orderByDesc('id')
-            ->get();
+//            ->get()
+            ->random(10);
+//         ;
+//        dd($oldUsers);
 
         $authUser = auth()->user();
         $companyId = 1;
@@ -496,7 +508,7 @@ class RollHouseController extends Controller
             ->where('archive', false)
             ->get();
 
-        foreach($oldUsers->take(5) as $oldUser) {
+        foreach($oldUsers as $oldUser) {
 
             // Смотрим телефон в нашей БД
             $phone = Phone::where('phone', $oldUser->phone)
@@ -584,8 +596,6 @@ class RollHouseController extends Controller
                 }
             }
 
-
-
             // Пишем смс оповещение
             if (is_null($oldUser->sms_deny)) {
                 $user->notifications()->sync([3]);
@@ -639,7 +649,10 @@ class RollHouseController extends Controller
 
                             // Если не отмененный заказ
                             if ($check->progress == 2) {
-                                $lead = Lead::whereDate('created_at', $check->created)
+                                $lead = Lead::with([
+                                        'estimates'
+                                    ])
+                                    ->whereDate('created_at', $check->created)
                                     ->where('stage_id', 13)
                                     ->whereHas('estimates', function ($q) {
                                         $q->where('is_dismissed', true);
@@ -648,9 +661,13 @@ class RollHouseController extends Controller
                                     ->first();
 
                                 if ($lead) {
-                                    $lead->estimates->update([
-                                        'is_main' => false
-                                    ]);
+//                                    dd($lead);
+                                    foreach($lead->estimates as $estimate) {
+                                        $estimate->update([
+                                            'is_main' => false
+                                        ]);
+                                    }
+
                                 } else {
                                     $lead = new Lead;
 
@@ -660,7 +677,7 @@ class RollHouseController extends Controller
 
                                     $lead->company_id = $companyId;
                                     $lead->filial_id = $filial_id;
-                                    $lead->name = $user->name;
+                                    $lead->name = ($user->name == '' || $user->name == ' ' || is_null($user->name)) ? null : $user->name;
                                     $lead->company_name = NULL;
 
                                     $lead->draft = null;
@@ -700,7 +717,10 @@ class RollHouseController extends Controller
                                 }
 
                             } else {
-                                $lead = Lead::whereDate('created_at', $check->created)
+                                $lead = Lead::with([
+                                        'estimates'
+                                    ])
+                                    ->whereDate('created_at', $check->created)
                                     ->where('stage_id', 13)
                                     ->whereHas('estimates', function ($q) {
                                         $q->where('is_dismissed', true);
@@ -709,9 +729,11 @@ class RollHouseController extends Controller
                                     ->first();
 
                                 if ($lead) {
-                                    $lead->estimates->update([
-                                        'is_main' => false
-                                    ]);
+                                    foreach($lead->estimates as $estimate) {
+                                        $estimate->update([
+                                            'is_main' => false
+                                        ]);
+                                    }
                                 } else {
                                     $lead = new Lead;
 
@@ -721,7 +743,7 @@ class RollHouseController extends Controller
 
                                     $lead->company_id = $companyId;
                                     $lead->filial_id = $filial_id;
-                                    $lead->name = $user->name;
+                                    $lead->name = ($user->name == '' || $user->name == ' ' || is_null($user->name)) ? null : $user->name;
                                     $lead->company_name = NULL;
 
                                     $lead->draft = null;
@@ -795,6 +817,10 @@ class RollHouseController extends Controller
 
                                 ]);
 
+                                if ($check->progress != 2) {
+                                    echo "Сметы [{$estimate->id}] должна быть списана - {$estimate->is_dismissed}, в старой базе - {$check->dismissed}<br>";
+                                }
+
                                 // Сохраняем состав сметы
                                 $check->load('consists.price');
 
@@ -862,6 +888,8 @@ class RollHouseController extends Controller
                                 } else {
                                     echo "У сметы [{$estimate->id}] сходится состав<br>";
                                 }
+
+
 
                                 // Обновляем смету
                                 $estimate->load([
@@ -945,7 +973,7 @@ class RollHouseController extends Controller
                                         }
 
                                     } else {
-                                        return "В смете [{$estimate->id}] наш total больше чем его summa<br>";
+                                        echo "В смете [{$estimate->id}] наш total больше чем его summa<br>";
                                     }
                                 }
 
@@ -1026,6 +1054,8 @@ class RollHouseController extends Controller
                         }
                     }
                 }
+            } else {
+                echo "У юзера {$oldUser->id} нет заказов<br>";
             }
 
             $oldUser->is_parse = true;

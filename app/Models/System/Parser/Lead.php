@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\System\Parser;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -71,11 +71,13 @@ class Lead extends Model
 
         'client_id',
 
-        'draft',
-
         'display',
         'system',
-        'moderation'
+        'moderation',
+
+        'created_at',
+        'company_id',
+        'author_id'
     ];
 
     // Получаем компанию.

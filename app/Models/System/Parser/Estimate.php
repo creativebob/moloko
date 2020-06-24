@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\System\Parser;
 
 use App\Models\System\Traits\Commonable;
 use Carbon\Carbon;
@@ -68,7 +68,11 @@ class Estimate extends Model
 
         'display',
         'system',
-        'moderation'
+        'moderation',
+
+        'created_at',
+        'company_id',
+        'author_id'
     ];
 
     public function setDateAttribute($value)
