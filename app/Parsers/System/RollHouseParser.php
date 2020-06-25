@@ -745,7 +745,8 @@ class RollHouseParser
         }
 //        dd($users->count());
 
-        return 'Гатова';
+//        return 'Гатова';
+        echo 'Гатова';
 
         $destinations = [293282078,228265675];
 
