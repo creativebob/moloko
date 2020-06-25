@@ -307,7 +307,7 @@ class RollHouseParser
                         $lead->created_at = $check->created;
 
                         $needDelivery = 1;
-                        if ($check->table == 99 || (is_null($check->table) && is_null($check->address))) {
+                        if (isset($check->table)) {
                             $needDelivery = 0;
                         }
                         $lead->need_delivery = $needDelivery;
