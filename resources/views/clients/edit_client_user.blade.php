@@ -7,7 +7,7 @@
 
 @section('title', 'Редактировать клиента')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $client->clientable->name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $client->clientable->name ?? 'Имя не указано'))
 
 @section('title-content')
 <div class="top-bar head-content">

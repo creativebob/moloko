@@ -590,6 +590,7 @@ class ClientController extends Controller
         ->authors($answer)
         ->systemItem($answer)
         ->findOrFail($id);
+//        dd($client);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $client);
@@ -635,6 +636,8 @@ class ClientController extends Controller
             ->findOrFail($user_id);
 
             $this->authorize(getmethod(__FUNCTION__), $user);
+
+//            dd($client);
 
             return view('clients.edit_client_user', compact('client', 'user', 'page_info'));
         }

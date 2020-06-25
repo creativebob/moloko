@@ -69,6 +69,9 @@ class Lead extends Model
         'name',
 	    'delivered_at',
 
+        'order_amount_base',
+        'need_delivery',
+
         'client_id',
 
         'draft',

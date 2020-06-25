@@ -64,7 +64,7 @@
                 <td class="td-name">
 
                   <a href="/admin/estimates?client_id%5B%5D={{ $estimate->client->id }}" class="filter_link" title="Фильтровать">
-                    {{ $estimate->client->clientable->name }}
+                    {{ $estimate->client->clientable->name ?? 'Имя не указано' }}
                 </a>
                 <br>
                 @isset($estimate->client->clientable->location)

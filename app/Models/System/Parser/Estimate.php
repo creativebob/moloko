@@ -52,6 +52,8 @@ class Estimate extends Model
         'external',
         'losses_from_points',
 
+        'certificate_amount',
+
         'surplus',
         'points',
 

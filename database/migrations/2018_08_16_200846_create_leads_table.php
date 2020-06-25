@@ -25,6 +25,8 @@ class CreateLeadsTable extends Migration
             $table->decimal('badget', 12, 2)->default(0)->comment('Предполагаемая сумма сделки');
             $table->decimal('payment', 12, 4)->default(0)->comment('Оплата по лиду');
 
+            $table->decimal('order_amount_base', 12, 4)->default(0)->comment('Сумма первоначального заказа');
+
             $table->string('company_name', 80)->nullable()->index()->comment('Имя компании лида');
 
             $table->string('case_number', 20)->nullable()->index()->comment('Номер обращения по правилам компании');
@@ -91,6 +93,8 @@ class CreateLeadsTable extends Migration
 
             $table->boolean('is_create_parse')->default(0)->comment('Создан парсером');
             $table->boolean('is_link_parse')->default(0)->comment('Связан парсером со сметой');
+
+            $table->boolean('need_delivery')->default(0)->comment('Нужна доставка');
 
 
             // Общие настройки

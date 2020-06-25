@@ -36,8 +36,13 @@ class EstimatesGoodsItem extends Model
         'price',
 
         'cost',
+        'points',
+
         'margin_percent',
         'margin_currency',
+
+        'discount_percent',
+        'discount_currency',
 
         'amount',
         'total',
@@ -46,11 +51,7 @@ class EstimatesGoodsItem extends Model
 
         'display',
         'system',
-        'moderation',
-
-        'created_at',
-        'company_id',
-        'author_id'
+        'moderation'
     ];
 
     // Смета

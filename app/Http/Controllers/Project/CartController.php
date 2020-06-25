@@ -295,6 +295,7 @@ class CartController extends Controller
             $lead->company_name = $company_name;
             $lead->private_status = $private_status;
             $lead->location_id = create_location($request, 1, $site->filial->location->city_id);
+            $lead->need_delivery = $request->get('need_delivery', 0);
 
             // Ловим utm метки
             $utm_source = null;
@@ -427,6 +428,7 @@ class CartController extends Controller
 
                 // TODO - 23.10.19 - Сделать адекватное сохранение в корзине
                 $lead->badget = $total;
+                $lead->order_amount_base = $total;
                 $lead->save();
 
             }
@@ -496,9 +498,9 @@ class CartController extends Controller
             if ($request->has('comment')) {
                 $message .= "Комментарий: {$request->comment}\r\n";
             };
-            if ($request->has('pickup')) {
-                $pickup = $request->pickup == 1 ? 'самовывоз' : 'да';
-                $message .= "Доставка: {$pickup}\r\n";
+            if ($request->has('need_delivery')) {
+                $need_delivery = $request->need_delivery == 1 ? 'да' : 'самовывоз';
+                $message .= "Доставка: {$need_delivery}\r\n";
             }
 
             if ($request->has('card')) {

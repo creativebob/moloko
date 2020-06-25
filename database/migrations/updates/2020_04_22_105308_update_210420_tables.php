@@ -56,7 +56,9 @@ class Update210420Tables extends Migration
 
             $table->decimal('discount_items_currency', 10, 2)->default(0)->comment('Сумма скидки по позициям')->after('points');
 
-            $table->decimal('surplus', 12, 4)->default(0)->comment('Излишек оплаты')->after('discount_items_currency');
+            $table->decimal('certificate_amount', 12, 2)->default(0)->comment('Сумма оплаченная по сертификатам')->after('discount_items_currency');
+
+            $table->decimal('surplus', 12, 4)->default(0)->comment('Излишек оплаты')->after('certificate_amount');
             $table->decimal('losses_from_points', 12, 4)->default(0)->comment('Потери от поинтов')->after('surplus');
 
             $table->date('registered_date')->nullable()->comment('Дата оформления')->after('is_registered');
@@ -112,6 +114,8 @@ class Update210420Tables extends Migration
         Schema::table('leads', function (Blueprint $table) {
             $table->boolean('is_create_parse')->default(0)->comment('Создан парсером')->after('delivered_at');
             $table->boolean('is_link_parse')->default(0)->comment('Связан парсером со сметой')->after('is_create_parse');
+            $table->decimal('order_amount_base', 12, 4)->default(0)->comment('Сумма первоначального заказа')->after('is_link_parse');
+            $table->boolean('need_delivery')->default(0)->comment('Нужна доставка')->after('order_amount_base');
         });
     }
 
@@ -165,7 +169,8 @@ class Update210420Tables extends Migration
                 'losses_from_points',
                 'points',
                 'surplus',
-                'is_create_parse'
+                'is_create_parse',
+                'certificate_amount'
             ]);
         });
 
@@ -210,10 +215,12 @@ class Update210420Tables extends Migration
             ]);
         });
 
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('leads', function (Blueprint $table) {
             $table->dropColumn([
                 'is_create_parse',
                 'is_link_parse',
+                'order_amount_base',
+                'need_delivery',
             ]);
         });
     }

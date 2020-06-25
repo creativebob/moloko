@@ -14,7 +14,7 @@ use App\Models\System\Parser\EstimatesGoodsItem;
 use App\Models\System\RollHouse\Check;
 use App\Models\System\RollHouse\Client as ParseClient;
 use App\Models\System\Parser\Payment;
-use App\Models\System\Parser\Phone;
+use App\Models\System\Parser\Phone as ParsePhone;
 use App\Models\System\Parser\PricesGoods;
 
 use Carbon\Carbon;
@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 
 use App\Lead;
 use App\User;
+use App\Phone;
 
 class RollHouseParser
 {
@@ -56,7 +57,6 @@ class RollHouseParser
         define("USOLYE", 2);
 
         $oldClients = ParseClient::whereIn('branch_id', [ANGARSK, USOLYE])
-//            ->has('checks')
             ->with([
                 'checks' => function ($q) {
                     $q->whereDate('created', '>', '2016-03-03')
@@ -71,12 +71,8 @@ class RollHouseParser
                 }
             ])
             ->where('is_parse', false)
-//            ->where('phone', 89086504979)
-//            ->orderByDesc('id')
+            ->limit(500)
             ->get();
-//
-//            ->random(10);
-//         ;
 //        dd($oldClients);
 
         define("COMPANY", 1);
@@ -199,7 +195,10 @@ class RollHouseParser
 
                 } else {
                     // Сохраняем пользователя как клиента, т.к. у него есть заказы в старой базе
-                    $client = Client::make([
+                    $client = Client::create([
+                        'clientable_id' => $user->id,
+                        'clientable_type' => 'App\User',
+
                         'description' => $oldClient->desc,
                         'discount' => $oldClient->discount ?? 0,
                         'points' => $oldClient->rh ?? 0,
@@ -209,10 +208,6 @@ class RollHouseParser
                         'display' => true
                     ]);
 
-                    $user->client()->save($client);
-
-                    $user->load('client');
-                    $client = $user->client;
                     $client->created_at = $oldClient->created;
                     $client->save([
                         'timestamps' => false
@@ -243,7 +238,7 @@ class RollHouseParser
                         $filial_id = ($city_id == 2) ? 1 : 2;
 
                         // Дата до запуска и стол (не сайт)
-                        if ($check->created < $dateCheck || isset($check->table)) {
+                        if (isset($check->table) && $check->table != 99) {
 
                             // Если не отмененный заказ
                             if ($check->progress == 2) {
@@ -283,6 +278,7 @@ class RollHouseParser
                                     // TODO - 10.06.20 - Менеджер пока Серебро
                                     $lead->manager_id = 4;
 
+                                    $lead->user_id = $user->id;
                                     $lead->client_id = $client->id;
                                     $lead->stage_id = ($check->progress == 2) ? 12 : 13;
                                     $lead->lead_type_id = 1;
@@ -291,6 +287,12 @@ class RollHouseParser
 
                                     $lead->badget = $check->summa;
                                     $lead->created_at = $check->created;
+
+                                    $needDelivery = 1;
+                                    if ($check->table == 99 || (is_null($check->table) && is_null($check->address))) {
+                                        $needDelivery = 0;
+                                    }
+                                    $lead->need_delivery = $needDelivery;
 
                                     $lead->company_id = COMPANY;
                                     $lead->author_id = AUTHOR;
@@ -359,6 +361,7 @@ class RollHouseParser
                                     // TODO - 10.06.20 - Менеджер пока Серебро
                                     $lead->manager_id = 4;
 
+                                    $lead->user_id = $user->id;
                                     $lead->client_id = $client->id;
                                     $lead->stage_id = ($check->progress == 2) ? 12 : 13;
                                     $lead->lead_type_id = 1;
@@ -367,6 +370,12 @@ class RollHouseParser
 
                                     $lead->badget = $check->summa;
                                     $lead->created_at = $check->created;
+
+                                    $needDelivery = 1;
+                                    if ($check->table == 99 || (is_null($check->table) && is_null($check->address))) {
+                                        $needDelivery = 0;
+                                    }
+                                    $lead->need_delivery = $needDelivery;
 
                                     $lead->company_id = COMPANY;
                                     $lead->author_id = AUTHOR;
@@ -431,6 +440,8 @@ class RollHouseParser
 
                                     'external' => $check->id,
 
+                                    'certificate_amount' => $check->certs ?? 0,
+
                                     'company_id' => COMPANY,
                                     'author_id' => AUTHOR,
                                     'display' => true
@@ -480,7 +491,7 @@ class RollHouseParser
                                             'display' => true
                                         ];
 
-                                        $data['discount_percent'] = $consist->discont;
+                                        $data['discount_percent'] = is_null($consist->discont) ? 0 : $consist->discont;
                                         $data['discount_currency'] = ($data['amount'] / 100) * $data['discount_percent'];
 
                                         if ($data['points'] > 0) {
@@ -528,7 +539,10 @@ class RollHouseParser
                                 if ($estimate->goods_items->isNotEmpty()) {
                                     $cost += $estimate->goods_items->sum('cost');
                                     $amount += $estimate->goods_items->sum('amount');
+
                                     $total += $estimate->goods_items->sum('total');
+                                    $total -= $estimate->certificate_amount;
+
                                     $points += $estimate->goods_items->sum('points');
                                     $discount_items_currency += $estimate->goods_items->sum('discount_currency');
                                 }
@@ -607,6 +621,7 @@ class RollHouseParser
 
                                 if ($estimate->is_dismissed == 0) {
 //                                    $this->setIndicators($estimate);
+                                    $estimate->load('client');
                                     $client = $estimate->client;
                                     $data = [];
 
@@ -781,18 +796,39 @@ class RollHouseParser
                     })
                     ->first();
 //            dd($phone);
+                $res = isset($phone) ? 'да' : 'нет';
+                echo "Найден телефон [{$res}]\r\n";
 
                 if ($phone) {
 //                dd($oldClient);
+
+                    $curUser = $phone->user_owner->first();
+                    $phone = $curUser->main_phone;
                     // Если найден, проверяем есть ли user
-                    $user = $phone->user_owner->first();
+                    $user = ParseUser::find($curUser->id);
+
+                    echo "По телефону найден user [{$user->id}]\r\n";
 
                     if ($user) {
+                        if ($user->name == '' || $user->name == ' ' || is_null($user->name)) {
+                            $res = getNameUser($oldClient->name);
+                            $user->first_name = $res['first_name'];
+                            $user->second_name = $res['second_name'];
+                            $user->patronymic = $res['patronymic'];
+                            $user->sex = $res['gender'];
+
+                            $user->name = $oldClient->name;
+
+                            $user->save();
+
+                            echo "Обновлены данные user [{$user->id}]\r\n";
+                        }
+
 //                    dd($user);
 //                    $user->save();
                     }
 
-                    $phone = $user->main_phone;
+
 
                 } else {
                     // если телефона нет в нашей БД, заводим юзера
@@ -859,6 +895,7 @@ class RollHouseParser
                         $phone = $new_phone;
 
                     }
+                    echo "Создан user [{$user->id}]\r\n";
                 }
 
                 // Пишем смс оповещение
@@ -866,9 +903,13 @@ class RollHouseParser
                     $user->notifications()->sync([3]);
                 }
 
-                $user->load('client');
-                if (isset($user->client)) {
-                    $client = $user->client;
+                $curUser = User::find($user->id);
+                $curUser->load('client');
+
+                $curClient = $curUser->client;
+
+                if (isset($curClient)) {
+                    $client = Client::find($curClient->id);
 
                     $client->update([
                         'description' => $oldClient->desc,
@@ -876,9 +917,14 @@ class RollHouseParser
                         'points' => $oldClient->rh ?? 0,
                     ]);
 
+                    echo "Найден клиент [{$client->id}]\r\n";
+
                 } else {
                     // Сохраняем пользователя как клиента, т.к. у него есть заказы в старой базе
-                    $client = Client::make([
+                    $client = Client::create([
+                        'clientable_id' => $user->id,
+                        'clientable_type' => 'App\User',
+
                         'description' => $oldClient->desc,
                         'discount' => $oldClient->discount ?? 0,
                         'points' => $oldClient->rh ?? 0,
@@ -888,25 +934,24 @@ class RollHouseParser
                         'display' => true
                     ]);
 
-                    $user->client()->save($client);
-
-                    $user->load('client');
-                    $client = $user->client;
                     $client->created_at = $oldClient->created;
                     $client->save([
                         'timestamps' => false
                     ]);
 
-                    if ($oldClient->state == 1) {
-                        $client->blacklists()->create([
-                            'description' => $oldClient->desc,
-                            'begin_date' => $oldClient->updated,
+                    echo "Создан клиент [{$client->id}]\r\n";
 
-                            'company_id' => COMPANY,
-                            'author_id' => AUTHOR,
-                            'display' => true
-                        ]);
-                    }
+                }
+
+                if ($oldClient->state == 1) {
+                    $client->blacklists()->create([
+                        'description' => $oldClient->desc,
+                        'begin_date' => $oldClient->updated,
+
+                        'company_id' => COMPANY,
+                        'author_id' => AUTHOR,
+                        'display' => true
+                    ]);
                 }
 
                 $estimate = Estimate::where('external', $check->id)
@@ -920,7 +965,7 @@ class RollHouseParser
                     $filial_id = ($city_id == 2) ? 1 : 2;
 
                     // стол (не сайт)
-                    if (isset($check->table)) {
+                    if (isset($check->table) && $check->table != 99) {
 
                         // Если не отмененный заказ
                         $lead = new ParseLead;
@@ -996,7 +1041,36 @@ class RollHouseParser
                             $lead = $leads->first();
                             $lead->load('estimate.goods_items');
 
+                            // TODO - 10.06.20 - Менеджер пока Серебро
+                            $lead->manager_id = 4;
                             $lead->case_number = $check->id;
+
+                            $leadsCount = ParseLead::where([
+                                'company_id' => COMPANY,
+                                'filial_id' => $filial_id
+                            ])
+                                ->where('lead_type_id', 1)
+                                ->whereDate('created_at', $lead->created_at)
+                                ->count();
+                            $lead->serial_number = $leadsCount + 1;
+
+                            $lead->client_id = $client->id;
+
+                            if ($lead->name == 'Клиент не указал имя' || $lead->name == 'Клиент не указал имя ') {
+                                $lead->name = ($user->name == '' || $user->name == ' ' || is_null($user->name)) ? null : $user->name;
+                            }
+
+                            $needDelivery = 1;
+                            if ($check->table == 99 || (is_null($check->table) && is_null($check->address))) {
+                                $needDelivery = 0;
+                            }
+                            $lead->need_delivery = $needDelivery;
+
+                            $lead->badget = $check->summa;
+
+                            $lead->stage_id = ($check->progress == 2) ? 12 : 13;
+                            $lead->order_amount_base = $lead->estimate->total;
+
                             $lead->save([
                                 'timestamps' => false
                             ]);
@@ -1016,7 +1090,7 @@ class RollHouseParser
 
                             $lead->filial_id = $filial_id;
                             $lead->name = ($user->name == '' || $user->name == ' ' || is_null($user->name)) ? null : $user->name;
-                            $lead->company_name = NULL;
+                            $lead->company_name = null;
 
                             $lead->draft = null;
                             $lead->author_id = 1;
@@ -1024,6 +1098,7 @@ class RollHouseParser
                             // TODO - 10.06.20 - Менеджер пока Серебро
                             $lead->manager_id = 4;
 
+                            $lead->user_id = $user->id;
                             $lead->client_id = $client->id;
                             $lead->stage_id = ($check->progress == 2) ? 12 : 13;
                             $lead->lead_type_id = 1;
@@ -1032,6 +1107,12 @@ class RollHouseParser
 
                             $lead->badget = $check->summa;
                             $lead->created_at = $check->created;
+
+                            $needDelivery = 1;
+                            if ($check->table == 99 || (is_null($check->table) && is_null($check->address))) {
+                                $needDelivery = 0;
+                            }
+                            $lead->need_delivery = $needDelivery;
 
                             $lead->company_id = COMPANY;
                             $lead->author_id = AUTHOR;
@@ -1051,7 +1132,7 @@ class RollHouseParser
                                 'filial_id' => $filial_id
                             ])
                                 ->where('lead_type_id', 1)
-                                ->whereDate('created_at', $check->created)
+                                ->whereDate('created_at', $lead->created_at)
                                 ->count();
                             $lead->serial_number = $leadsCount + 1;
 
@@ -1069,7 +1150,36 @@ class RollHouseParser
                             $lead = $leads->first();
                             $lead->load('estimate.goods_items');
 
+                            // TODO - 10.06.20 - Менеджер пока Серебро
+                            $lead->manager_id = 4;
                             $lead->case_number = $check->id;
+
+                            $leadsCount = ParseLead::where([
+                                'company_id' => COMPANY,
+                                'filial_id' => $filial_id
+                            ])
+                                ->where('lead_type_id', 1)
+                                ->whereDate('created_at', $lead->created_at)
+                                ->count();
+                            $lead->serial_number = $leadsCount + 1;
+
+                            $lead->client_id = $client->id;
+
+                            $needDelivery = 1;
+                            if ($check->table == 99 || (is_null($check->table) && is_null($check->address))) {
+                                $needDelivery = 0;
+                            }
+                            $lead->need_delivery = $needDelivery;
+
+                            if ($lead->name == 'Клиент не указал имя' || $lead->name == 'Клиент не указал имя ') {
+                                $lead->name = ($user->name == '' || $user->name == ' ' || is_null($user->name)) ? null : $user->name;
+                            }
+
+                            $lead->stage_id = ($check->progress == 2) ? 12 : 13;
+                            $lead->order_amount_base = $lead->estimate->total;
+
+                            $lead->badget = $check->summa;
+
                             $lead->save([
                                 'timestamps' => false
                             ]);
@@ -1087,7 +1197,7 @@ class RollHouseParser
                 if ($lead) {
                     $estimate = Estimate::create([
                         'lead_id' => $lead->id,
-                        'client_id' => $client->id,
+                        'client_id' => $lead->client_id,
                         'filial_id' => $lead->filial_id,
 
                         'discount' => 0,
@@ -1112,6 +1222,8 @@ class RollHouseParser
                         'timestamps' => false,
 
                         'external' => $check->id,
+
+                        'certificate_amount' => $check->certs ?? 0,
 
                         'is_create_parse' => true,
 
@@ -1171,7 +1283,7 @@ class RollHouseParser
                                 'display' => true
                             ];
 
-                            $data['discount_percent'] = $consist->discont;
+                            $data['discount_percent'] = is_null($consist->discont) ? 0 : $consist->discont;
                             $data['discount_currency'] = ($data['amount'] / 100) * $data['discount_percent'];
 
                             if ($data['points'] > 0) {
@@ -1219,7 +1331,10 @@ class RollHouseParser
                     if ($estimate->goods_items->isNotEmpty()) {
                         $cost += $estimate->goods_items->sum('cost');
                         $amount += $estimate->goods_items->sum('amount');
+
                         $total += $estimate->goods_items->sum('total');
+                        $total -= $estimate->certificate_amount;
+
                         $points += $estimate->goods_items->sum('points');
                         $discount_items_currency += $estimate->goods_items->sum('discount_currency');
                     }
@@ -1298,6 +1413,7 @@ class RollHouseParser
 
                     if ($estimate->is_dismissed == 0) {
 //                                    $this->setIndicators($estimate);
+                        $estimate->load('client');
                         $client = $estimate->client;
                         $data = [];
 
@@ -1396,13 +1512,13 @@ class RollHouseParser
 
             }
 
-            Lead::where([
-                'is_create_parse' => false,
-                'is_link_parse' => false
-            ])
-                ->update([
-                    'draft' => true
-                ]);
+//            Lead::where([
+//                'is_create_parse' => false,
+//                'is_link_parse' => false
+//            ])
+//                ->update([
+//                    'draft' => true
+//                ]);
         }
     }
 }

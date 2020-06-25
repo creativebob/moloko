@@ -49,6 +49,8 @@ class Estimate extends Model
         'is_main',
         'is_create_parse',
 
+        'certificate_amount',
+
         'external',
         'losses_from_points',
 

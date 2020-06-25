@@ -81,7 +81,7 @@ class Phone extends Model
 	// Пользователь владелец номера
 	public function user_owner()
 	{
-		return $this->morphedByMany(User::class, 'phone_entity');
+		return $this->morphedByMany('App\User', 'phone_entity', 'phone_entities');
 	}
 
 }

@@ -36,8 +36,14 @@ class EstimatesGoodsItem extends Model
         'price',
 
         'cost',
+        'points',
+
         'margin_percent',
         'margin_currency',
+
+        'discount_percent',
+        'discount_currency',
+
 
         'amount',
         'total',

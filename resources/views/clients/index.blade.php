@@ -71,7 +71,7 @@
 
             @if($client->clientable_type == 'App\User')
               <a href="clients/{{ $client->id }}/edit">
-                {{ $client->clientable->name }}
+                {{ $client->clientable->name ?? 'Имя не указано' }}
               </a>
             @else
               <a href="clients/{{ $client->id }}/edit">
