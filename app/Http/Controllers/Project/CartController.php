@@ -272,6 +272,7 @@ class CartController extends Controller
                     $user->site_id = $site->id;
 
                     // Компания и филиал
+                    $user->author_id = 1;
                     $user->company_id = $company->id;
                     $user->filial_id = $filial_id;
                     $user->save();

@@ -52,9 +52,6 @@ class RollHouseParser
 
         $request = request();
 
-//        $this->externalId();
-//        $this->externalGoods();
-
         define("ANGARSK", 3);
         define("USOLYE", 2);
 
@@ -68,21 +65,18 @@ class RollHouseParser
                             $q->where('reject', 2)
                                 ->orWhereNull('reject');
                         })
-//                        ->where('reject', '!==', 1)
-                    ;
+                        ->where('progress', '!=', 1);
                 }
             ])
-//            ->where('is_parse', false)
-                ->where('discont', '>', 0)
-//            ->limit(5)
+            ->where('is_parse', false)
+//            ->where('id', '>', 4000)
+//                ->where('discont', '>', 0)
+            ->limit(1000)
             ->get();
 //        dd($oldClients);
 
         define("COMPANY", 1);
         define("AUTHOR", 1);
-
-        $authUser = auth()->user();
-        $dateCheck = Carbon::create('2019-12-17');
 
         $pricesGoods = PricesGoods::with([
             'goods.article'
@@ -120,13 +114,11 @@ class RollHouseParser
                     $user->sex = $res['gender'];
 
                     $user->name = $oldClient->name;
-
-                    $user->external = $oldClient->id;
-
-                    $user->save();
-
+                    
                     echo "Обновлены данные user [{$user->id}]\r\n";
                 }
+                $user->external = $oldClient->id;
+                $user->save();
 
             } else {
                 // если телефона нет в нашей БД, заводим юзера
@@ -193,7 +185,6 @@ class RollHouseParser
                     $curUser->phones()->attach($new_phone->id, ['main' => 1]);
 
                     $phone = $new_phone;
-
                 }
             }
 
@@ -261,506 +252,394 @@ class RollHouseParser
 
             if ($oldClient->checks->isNotEmpty()) {
                 foreach($oldClient->checks as $check) {
-
-                    $estimate = Estimate::where('external', $check->id)
+                    
+                    if ($check->branch_id) {
+                        $city_id = ($check->branch_id == ANGARSK) ? 2 : 4;
+                    } else {
+                        $city_id = 2;
+                    }
+                    $filial_id = ($city_id == 2) ? 1 : 2;
+                    
+                    $lead = ParseLead::with([
+                        'estimates'
+                    ])
+                        ->whereDate('created_at', $check->created)
+                        ->where('stage_id', 13)
+                        ->whereHas('estimates', function ($q) {
+                            $q->where('is_dismissed', true);
+                        })
+                        ->where('client_id', $client->id)
                         ->first();
-                    if (! $estimate) {
-                        if ($check->branch_id) {
-                            $city_id = ($check->branch_id == ANGARSK) ? 2 : 4;
-                        } else {
-                            $city_id = 2;
-                        }
-                        $filial_id = ($city_id == 2) ? 1 : 2;
 
-                        // Дата до запуска и стол (не сайт)
-                        if (isset($check->table) && $check->table != 99) {
-
-                            // Если не отмененный заказ
-                            if ($check->progress == 2) {
-                                $lead = ParseLead::with([
-                                    'estimates'
-                                ])
-                                    ->whereDate('created_at', $check->created)
-                                    ->where('stage_id', 13)
-                                    ->whereHas('estimates', function ($q) {
-                                        $q->where('is_dismissed', true);
-                                    })
-                                    ->where('client_id', $client->id)
-                                    ->first();
-
-                                if ($lead) {
+                    if ($lead) {
 //                                    dd($lead);
-                                    foreach($lead->estimates as $estimate) {
-                                        $estimate->update([
-                                            'is_main' => false
-                                        ]);
-                                    }
+                        foreach($lead->estimates as $estimate) {
+                            $estimate->update([
+                                'is_main' => false
+                            ]);
+                        }
 
-                                } else {
-                                    $lead = new ParseLead;
+                    } else {
+                        $lead = new ParseLead;
 
-                                    // Добавляем локацию
-                                    $request->address = $check->address;
-                                    $lead->location_id = create_location($request, 1, $city_id);
+                        // Добавляем локацию
+                        $request->address = $check->address;
+                        $lead->location_id = create_location($request, 1, $city_id);
 
-                                    $lead->filial_id = $filial_id;
-                                    $lead->name = ($user->name == '' || $user->name == ' ' || is_null($user->name)) ? null : $user->name;
-                                    $lead->company_name = NULL;
+                        $lead->filial_id = $filial_id;
+                        $lead->name = ($user->name == '' || $user->name == ' ' || is_null($user->name)) ? null : $user->name;
+                        $lead->company_name = NULL;
 
-                                    $lead->draft = null;
-                                    $lead->author_id = 1;
+                        $lead->draft = null;
+                        $lead->author_id = 1;
 
-                                    // TODO - 10.06.20 - Менеджер пока Серебро
-                                    $lead->manager_id = 4;
+                        // TODO - 10.06.20 - Менеджер пока Серебро
+                        $lead->manager_id = 4;
 
-                                    $lead->user_id = $user->id;
-                                    $lead->client_id = $client->id;
-                                    $lead->stage_id = ($check->progress == 2) ? 12 : 13;
-                                    $lead->lead_type_id = 1;
+                        $lead->user_id = $user->id;
+                        $lead->client_id = $client->id;
+                        $lead->stage_id = ($check->progress == 2) ? 12 : 13;
+                        $lead->lead_type_id = 1;
 
-                                    $lead->lead_method_id = ($check->table) ? 3 : 1;
+                        $lead->lead_method_id = (isset($check->table) && ($check->table != 99)) ? 3 : 1;
 
-                                    $lead->badget = $check->summa;
-                                    $lead->created_at = $check->created;
+                        $lead->badget = $check->summa;
+                        $lead->created_at = $check->created;
 
-                                    $needDelivery = 1;
-                                    if ($check->table == 99 || (is_null($check->table) && is_null($check->address))) {
-                                        $needDelivery = 0;
-                                    }
-                                    $lead->need_delivery = $needDelivery;
+                        $needDelivery = 1;
+                        if ($check->table == 99 || (is_null($check->table) && is_null($check->address))) {
+                            $needDelivery = 0;
+                        }
+                        $lead->need_delivery = $needDelivery;
 
-                                    $lead->company_id = COMPANY;
-                                    $lead->author_id = AUTHOR;
-                                    $lead->display = true;
+                        $lead->company_id = COMPANY;
+                        $lead->author_id = AUTHOR;
+                        $lead->display = true;
 
-                                    $lead->is_create_parse = true;
+                        $lead->is_create_parse = true;
 //                                $lead->is_link_parse = true;
 //                        dd($lead);
-                                    $lead->save([
-                                        'timestamps' => false
-                                    ]);
+                        $lead->save([
+                            'timestamps' => false
+                        ]);
 
-                                    $lead->case_number = $check->id;
+                        $lead->case_number = $check->id;
 
-                                    $leadsCount = ParseLead::where([
-                                            'company_id' => COMPANY,
-                                            'filial_id' => $filial_id
-                                        ])
-                                        ->where('lead_type_id', 3)
-                                        ->whereDate('created_at', $check->created)
-                                        ->count();
-                                    $lead->serial_number = $leadsCount + 1;
+                        $leadsCount = ParseLead::where([
+                                'company_id' => COMPANY,
+                                'filial_id' => $filial_id
+                            ])
+                            ->where('lead_type_id', 1)
+                            ->whereDate('created_at', $check->created)
+                            ->count();
+                        $lead->serial_number = $leadsCount + 1;
 
-                                    $lead->save([
-                                        'timestamps' => false
-                                    ]);
+                        $lead->save([
+                            'timestamps' => false
+                        ]);
 
-                                    if ($lead) {
-                                        $curLead = Lead::find($lead->id);
-                                        $curLead->phones()->attach($phone->id, ['main' => 1]);
+                        if ($lead) {
+                            $curLead = Lead::find($lead->id);
+                            $curLead->phones()->attach($phone->id, ['main' => 1]);
+                        }
+                    }
+
+                    if ($lead) {
+                        $estimate = Estimate::create([
+                            'lead_id' => $lead->id,
+                            'client_id' => $lead->client_id,
+                            'filial_id' => $lead->filial_id,
+
+                            'discount' => 0,
+                            'discount_percent' => 0,
+
+                            'margin_currency' => 0,
+                            'margin_percent' => 0,
+
+                            'amount' => $check->summa,
+                            'total' => $check->summa,
+
+                            'number' => $lead->case_number,
+                            'date' => $check->created->format('d.m.Y'),
+                            'registered_date' => $check->created,
+
+                            'is_main' => 1,
+                            'is_dismissed' => ($check->progress == 2) ? 0 : 1,
+                            'is_registered' => 1,
+                            'is_saled' => 1,
+
+                            'created_at' => $check->created,
+                            'timestamps' => false,
+
+                            'is_create_parse' => true,
+
+                            'external' => $check->id,
+
+                            'certificate_amount' => $check->certs ?? 0,
+
+                            'company_id' => COMPANY,
+                            'author_id' => AUTHOR,
+                            'display' => true
+
+                        ]);
+
+                        if ($check->progress != 2) {
+                            echo "Сметы [{$estimate->id}] должна быть списана - {$estimate->is_dismissed}, в старой базе - {$check->dismissed}\r\n";
+                        }
+
+                        // Сохраняем состав сметы
+                        $check->load('consists.price');
+
+                        $estimatesGoodsItemsInsert = [];
+                        $consistCount = 0;
+                        foreach ($check->consists as $consist) {
+
+                            $prices = $pricesGoods->filter(function ($price) use ($consist, $lead){
+                                if ($price->filial_id == $lead->filial_id) {
+                                    if ($price->goods->article->external == $consist->price_id) {
+                                        return $price;
                                     }
                                 }
+                            });
 
-                            } else {
-                                $lead = ParseLead::with([
-                                    'estimates'
-                                ])
-                                    ->whereDate('created_at', $check->created)
-                                    ->where('stage_id', 13)
-                                    ->whereHas('estimates', function ($q) {
-                                        $q->where('is_dismissed', true);
-                                    })
-                                    ->where('client_id', $client->id)
-                                    ->first();
-
-                                if ($lead) {
-                                    foreach($lead->estimates as $estimate) {
-                                        $estimate->update([
-                                            'is_main' => false
-                                        ]);
-                                    }
-                                } else {
-                                    $lead = new ParseLead;
-
-                                    // Добавляем локацию
-                                    $request->address = $check->address;
-                                    $lead->location_id = create_location($request, 1, $city_id);
-
-                                    $lead->filial_id = $filial_id;
-                                    $lead->name = ($user->name == '' || $user->name == ' ' || is_null($user->name)) ? null : $user->name;
-                                    $lead->company_name = NULL;
-
-                                    $lead->draft = null;
-                                    $lead->author_id = 1;
-
-                                    // TODO - 10.06.20 - Менеджер пока Серебро
-                                    $lead->manager_id = 4;
-
-                                    $lead->user_id = $user->id;
-                                    $lead->client_id = $client->id;
-                                    $lead->stage_id = ($check->progress == 2) ? 12 : 13;
-                                    $lead->lead_type_id = 1;
-
-                                    $lead->lead_method_id = ($check->table) ? 3 : 1;
-
-                                    $lead->badget = $check->summa;
-                                    $lead->created_at = $check->created;
-
-                                    $needDelivery = 1;
-                                    if ($check->table == 99 || (is_null($check->table) && is_null($check->address))) {
-                                        $needDelivery = 0;
-                                    }
-                                    $lead->need_delivery = $needDelivery;
-
-                                    $lead->company_id = COMPANY;
-                                    $lead->author_id = AUTHOR;
-                                    $lead->display = true;
-
-                                    $lead->is_create_parse = true;
-//                                $lead->is_link_parse = true;
-//                        dd($lead);
-                                    $lead->save([
-                                        'timestamps' => false
-                                    ]);
-
-                                    $lead->case_number = $check->id;
-                                    $leadsCount = ParseLead::where([
-                                        'company_id' => COMPANY,
-                                        'filial_id' => $filial_id
-                                    ])
-                                        ->where('lead_type_id', 3)
-                                        ->whereDate('created_at', $check->created)
-                                        ->count();
-                                    $lead->serial_number = $leadsCount + 1;
-
-                                    $lead->save([
-                                        'timestamps' => false
-                                    ]);
-
-                                    if ($lead) {
-                                        $curLead = Lead::find($lead->id);
-                                        $curLead->phones()->attach($phone->id, ['main' => 1]);
-                                    }
+                            if ($prices->isNotEmpty()) {
+                                if ($prices->count() > 1) {
+                                    echo "Несколько артикулов с external {$consist->price_id}\r\n";
                                 }
-                            }
+                                $priceGoods = $prices->first();
+                                $count = $consist->count;
+                                $data = [
+                                    'currency_id' => 1,
+                                    'goods_id' => $priceGoods->goods->id,
+                                    'price_id' => $priceGoods->id,
+                                    'price' => $consist->summa ?? 0,
+                                    'count' => $count ?? 0,
+                                    'cost' => $priceGoods->goods->article->cost_default * $count,
+                                    'amount' => $count * $consist->summa,
+                                    'points' => $consist->rh ?? 0,
 
-                            if ($lead) {
-                                $estimate = Estimate::create([
-                                    'lead_id' => $lead->id,
-                                    'client_id' => $client->id,
-                                    'filial_id' => $lead->filial_id,
-
-                                    'discount' => 0,
-                                    'discount_percent' => 0,
-
-                                    'margin_currency' => 0,
-                                    'margin_percent' => 0,
-
-                                    'amount' => $check->summa,
-                                    'total' => $check->summa,
-
-                                    'number' => $lead->case_number,
-                                    'date' => $check->created->format('d.m.Y'),
-                                    'registered_date' => $check->created,
-
-                                    'is_main' => 1,
-                                    'is_dismissed' => ($check->progress == 2) ? 0 : 1,
-                                    'is_registered' => 1,
-                                    'is_saled' => 1,
-
-                                    'created_at' => $check->created,
+                                    'created_at' => $consist->created,
                                     'timestamps' => false,
-
-                                    'is_create_parse' => true,
-
-                                    'external' => $check->id,
-
-                                    'certificate_amount' => $check->certs ?? 0,
 
                                     'company_id' => COMPANY,
                                     'author_id' => AUTHOR,
                                     'display' => true
+                                ];
 
-                                ]);
+                                $data['discount_percent'] = is_null($consist->discont) ? 0 : $consist->discont;
+                                $data['discount_currency'] = ($data['amount'] / 100) * $data['discount_percent'];
 
-                                if ($check->progress != 2) {
-                                    echo "Сметы [{$estimate->id}] должна быть списана - {$estimate->is_dismissed}, в старой базе - {$check->dismissed}\r\n";
+                                if ($data['points'] > 0) {
+                                    $data['total'] = 0;
+                                } else {
+                                    $data['total'] = $data['amount'] - $data['discount_currency'];
                                 }
 
-                                // Сохраняем состав сметы
-                                $check->load('consists.price');
 
-                                $estimatesGoodsItemsInsert = [];
-                                $consistCount = 0;
-                                foreach ($check->consists as $consist) {
+                                $data['margin_currency'] = $data['total'] - $data['cost'];
+                                if ($data['total'] > 0) {
+                                    $data['margin_percent'] = ($data['margin_currency'] / $data['total']) * 100;
+                                } else {
+                                    $data['margin_percent'] = 0;
+                                }
 
-                                    $prices = $pricesGoods->filter(function ($price) use ($consist, $lead){
-                                        if ($price->filial_id == $lead->filial_id) {
-                                            if ($price->goods->article->external == $consist->price_id) {
-                                                return $price;
-                                            }
-                                        }
-                                    });
-
-                                    if ($prices->isNotEmpty()) {
-                                        if ($prices->count() > 1) {
-                                            echo "Несколько артикулов с external {$consist->price_id}\r\n";
-                                        }
-                                        $priceGoods = $prices->first();
-                                        $count = $consist->count;
-                                        $data = [
-                                            'currency_id' => 1,
-                                            'goods_id' => $priceGoods->goods->id,
-                                            'price_id' => $priceGoods->id,
-                                            'price' => $consist->summa ?? 0,
-                                            'count' => $count ?? 0,
-                                            'cost' => $priceGoods->goods->article->cost_default * $count,
-                                            'amount' => $count * $consist->summa,
-                                            'points' => $consist->rh ?? 0,
-
-                                            'created_at' => $consist->created,
-                                            'timestamps' => false,
-
-                                            'company_id' => COMPANY,
-                                            'author_id' => AUTHOR,
-                                            'display' => true
-                                        ];
-
-                                        $data['discount_percent'] = is_null($consist->discont) ? 0 : $consist->discont;
-                                        $data['discount_currency'] = ($data['amount'] / 100) * $data['discount_percent'];
-
-                                        if ($data['points'] > 0) {
-                                            $data['total'] = 0;
-                                        } else {
-                                            $data['total'] = $data['amount'] - $data['discount_currency'];
-                                        }
-
-
-                                        $data['margin_currency'] = $data['total'] - $data['cost'];
-                                        if ($data['total'] > 0) {
-                                            $data['margin_percent'] = ($data['margin_currency'] / $data['total']) * 100;
-                                        } else {
-                                            $data['margin_percent'] = 0;
-                                        }
-
-                                        $estimatesGoodsItemsInsert[] = EstimatesGoodsItem::make($data);
+                                $estimatesGoodsItemsInsert[] = EstimatesGoodsItem::make($data);
 //                                dd($estimatesGoodsItemsInsert);
-                                    }
+                            }
 
-                                    $consistCount++;
-                                }
+                            $consistCount++;
+                        }
 
-                                $estimate->goods_items()->saveMany($estimatesGoodsItemsInsert);
-                                $estimate->load('goods_items');
-                                if ($estimate->goods_items->count() != $check->consists->count()) {
-                                    echo "У сметы [{$estimate->id}] не сходится состав, у нас {$estimate->goods_items->count()}, у него {$check->consists->count()}\r\n";
-                                } else {
-                                    echo "У сметы [{$estimate->id}] сходится состав\r\n";
-                                }
+                        $estimate->goods_items()->saveMany($estimatesGoodsItemsInsert);
+                        $estimate->load('goods_items');
+                        if ($estimate->goods_items->count() != $check->consists->count()) {
+                            echo "У сметы [{$estimate->id}] не сходится состав, у нас {$estimate->goods_items->count()}, у него {$check->consists->count()}\r\n";
+                        } else {
+                            echo "У сметы [{$estimate->id}] сходится состав\r\n";
+                        }
+                        
+                        // Обновляем смету
+                        $estimate->load([
+                            'goods_items',
+                        ]);
 
+                        $cost = 0;
+                        $amount = 0;
+                        $total = 0;
+                        $points = 0;
+                        $discount_items_currency = 0;
 
+                        if ($estimate->goods_items->isNotEmpty()) {
+                            $cost += $estimate->goods_items->sum('cost');
+                            $amount += $estimate->goods_items->sum('amount');
+                            $total += $estimate->goods_items->sum('total');
+                            $points += $estimate->goods_items->sum('points');
+                            $discount_items_currency += $estimate->goods_items->sum('discount_currency');
+                        }
 
-                                // Обновляем смету
-                                $estimate->load([
-                                    'goods_items',
-                                ]);
+                        if ($amount > 0) {
+                            $discount = (($amount * $estimate->discount_percent) / 100);
 
-                                $cost = 0;
-                                $amount = 0;
-                                $total = 0;
-                                $points = 0;
-                                $discount_items_currency = 0;
+                            $margin_currency = $total - $cost;
 
-                                if ($estimate->goods_items->isNotEmpty()) {
-                                    $cost += $estimate->goods_items->sum('cost');
-                                    $amount += $estimate->goods_items->sum('amount');
+                            if ($total > 0) {
+                                $margin_percent = ($margin_currency / $total * 100);
+                            } else {
+                                $margin_percent = 0;
+                            }
 
-                                    $total += $estimate->goods_items->sum('total');
-                                    $total -= $estimate->certificate_amount;
+                            $data = [
+                                'cost' => $cost,
+                                'amount' => $amount,
+                                'discount' => $discount,
+                                'total' => $total,
+                                'points' => $points,
+                                'discount_items_currency' => $discount_items_currency,
+                                'margin_currency' => $margin_currency,
+                                'margin_percent' => $margin_percent,
+                                'timestamps' => false
+                            ];
 
-                                    $points += $estimate->goods_items->sum('points');
-                                    $discount_items_currency += $estimate->goods_items->sum('discount_currency');
-                                }
+                        } else {
+                            $data = [
+                                'cost' => 0,
+                                'amount' => 0,
+                                'discount' => 0,
+                                'total' => 0,
+                                'points' => 0,
+                                'discount_items_currency' => 0,
+                                'margin_currency' => 0,
+                                'margin_percent' => 0,
+                                'timestamps' => false
+                            ];
+                        }
 
-                                if ($amount > 0) {
-                                    $discount = (($amount * $estimate->discount_percent) / 100);
+                        $estimate->update($data);
 
-                                    $margin_currency = $total - $cost;
+                        $estimate->save([
+                            'created_at' => $check->created,
+                            'timestamps' => false
+                        ]);
 
-                                    if ($total > 0) {
-                                        $margin_percent = ($margin_currency / $total * 100);
-                                    } else {
-                                        $margin_percent = 0;
-                                    }
+                        if ($check->summa != $estimate->total) {
+                            echo "Не совпала сумма на смете {$estimate->id}: Наша - {$estimate->total}, Его - {$check->summa}\r\n";
 
-                                    $data = [
-                                        'cost' => $cost,
-                                        'amount' => $amount,
-                                        'discount' => $discount,
-                                        'total' => $total,
-                                        'points' => $points,
-                                        'discount_items_currency' => $discount_items_currency,
-                                        'margin_currency' => $margin_currency,
-                                        'margin_percent' => $margin_percent,
+                            if ($check->summa > $estimate->total) {
+                                $losses = ($check->summa - $estimate->total);
+
+                                if ($estimate->points > 0) {
+                                    $estimate->losses_from_points = $losses;
+                                    $estimate->save([
                                         'timestamps' => false
-                                    ];
-
+                                    ]);
                                 } else {
-                                    $data = [
-                                        'cost' => 0,
-                                        'amount' => 0,
-                                        'discount' => 0,
-                                        'total' => 0,
-                                        'points' => 0,
-                                        'discount_items_currency' => 0,
-                                        'margin_currency' => 0,
-                                        'margin_percent' => 0,
-                                        'timestamps' => false
-                                    ];
-                                }
-
-                                $estimate->update($data);
-
-                                $estimate->save([
-                                    'created_at' => $check->created,
-                                    'timestamps' => false
-                                ]);
-
-                                if ($check->summa != $estimate->total) {
-                                    echo "Не совпала сумма на смете {$estimate->id}: Наша - {$estimate->total}, Его - {$check->summa}\r\n";
-
-                                    if ($check->summa > $estimate->total) {
-                                        $losses = ($check->summa - $estimate->total);
-
-                                        if ($estimate->points > 0) {
-                                            $estimate->losses_from_points = $losses;
-                                            $estimate->save([
-                                                'timestamps' => false
-                                            ]);
-                                        } else {
-                                            $estimate->surplus = $losses;
-                                            $estimate->save([
-                                                'timestamps' => false
-                                            ]);
-                                        }
-
-                                    } else {
-                                        echo "В смете [{$estimate->id}] наш total больше чем его summa\r\n";
-                                    }
-                                }
-
-                                $diff = $check->summa - ($check->cash + $check->cashless);
-                                if ($diff != 0) {
-                                    echo "В смете [{$estimate->id}] разница между оплатой и суммой заказа = {$diff}\r\n";
-                                }
-
-                                if ($estimate->is_dismissed == 0) {
-//                                    $this->setIndicators($estimate);
-                                    $estimate->load('client');
-                                    $client = $estimate->client;
-                                    $data = [];
-
-                                    $data['first_order_date'] = isset($client->first_order_date) ? Carbon::parse($client->first_order_date) : Carbon::parse($estimate->created_at);
-                                    $data['last_order_date'] = Carbon::parse($estimate->created_at);
-                                    $data['orders_count'] = $client->orders_count + 1;
-
-                                    // TODO - 23.04.20 - Если разница меньше 1 месяца, то вписываем 1 месяц в секундах
-                                    $diffInMonths = $data['first_order_date']->diffInMonths($data['last_order_date']);
-                                    if ($diffInMonths == 0) {
-                                        $diffInMonths = 1;
-                                    }
-                                    $data['lifetime'] = $diffInMonths;
-
-                                    $data['purchase_frequency'] = $data['orders_count'] / $data['lifetime'];
-                                    $data['ait'] = 1 / $data['purchase_frequency'];
-
-                                    $total = Estimate::where([
-                                        'client_id' => $client->id,
-                                        'is_saled' => true
-                                    ])
-                                        ->sum('total');
-                                    $data['customer_equity'] = $total + $estimate->total;
-
-                                    $data['average_order_value'] = $data['customer_equity'] / $data['orders_count'];
-                                    $data['customer_value'] = $data['average_order_value'] * $data['purchase_frequency'];
-
-                                    // TODO - 22.04.20 - Lifetime перевести в месяца
-                                    $data['ltv'] = $data['lifetime'] * $data['average_order_value'] * $data['purchase_frequency'];
-
-                                    // TODO - 22.04.20 - Пока нет промоакций
-                                    $data['use_promo_count'] = 0;
-                                    $data['promo_rate'] = $data['use_promo_count'] / $data['orders_count'];
-
-                                    $client->update($data);
-
-                                    // Создаем договор
-                                    $contracts_client = ContractsClient::create([
-                                        'client_id' => $client->id,
-                                        'date' => $check->created,
-                                        'number' => $lead->case_number,
-                                        'amount' => $estimate->total,
-                                        'created_at' => $check->created,
+                                    $estimate->surplus = $losses;
+                                    $estimate->save([
                                         'timestamps' => false
                                     ]);
                                 }
 
-                                if ($check->progress == 2) {
-                                    // Фиксируем платежи
-                                    if ($check->cash) {
-                                        if ($check->cash > 0) {
-                                            $payment = Payment::create([
-                                                'contract_id' => $contracts_client->id,
-                                                'contract_type' => 'App\ContractsClient',
-                                                'document_id' => $estimate->id,
-                                                'document_type' => 'App\Estimate',
-                                                'payments_type_id' => 1,
-                                                'amount' => $check->cash,
-                                                'date' => $check->created->format('d.m.Y'),
-                                                'currency_id' => 1,
-                                                'created_at' => $check->created,
-                                                'timestamps' => false,
+                            } else {
+                                echo "В смете [{$estimate->id}] наш total больше чем его summa\r\n";
+                            }
+                        }
 
-                                                'company_id' => COMPANY,
-                                                'author_id' => AUTHOR,
-                                                'display' => true
-                                            ]);
-                                        }
-                                    }
+                        $diff = $check->summa - ($check->cash + $check->cashless);
+                        if ($diff != 0) {
+                            echo "В смете [{$estimate->id}] разница между оплатой и суммой заказа = {$diff}\r\n";
+                        }
 
-                                    if ($check->cashless) {
-                                        if ($check->cashless > 0) {
-                                            $payment = Payment::create([
-                                                'contract_id' => $contracts_client->id,
-                                                'contract_type' => 'App\ContractsClient',
-                                                'document_id' => $estimate->id,
-                                                'document_type' => 'App\Estimate',
-                                                'payments_type_id' => 2,
-                                                'amount' => $check->cashless,
-                                                'date' => Carbon::parse($check->created)->format('d.m.Y'),
-                                                'currency_id' => 1,
-                                                'created_at' => $check->created,
-                                                'timestamps' => false,
+                        if ($estimate->is_dismissed == 0) {
+//                                    $this->setIndicators($estimate);
+                            $estimate->load('client');
+                            $client = $estimate->client;
+                            $data = [];
 
-                                                'company_id' => COMPANY,
-                                                'author_id' => AUTHOR,
-                                                'display' => true
-                                            ]);
-                                        }
-                                    }
+                            $data['first_order_date'] = isset($client->first_order_date) ? Carbon::parse($client->first_order_date) : Carbon::parse($estimate->created_at);
+                            $data['last_order_date'] = Carbon::parse($estimate->created_at);
+                            $data['orders_count'] = $client->orders_count + 1;
+
+                            // TODO - 23.04.20 - Если разница меньше 1 месяца, то вписываем 1 месяц в секундах
+                            $diffInMonths = $data['first_order_date']->diffInMonths($data['last_order_date']);
+                            if ($diffInMonths == 0) {
+                                $diffInMonths = 1;
+                            }
+                            $data['lifetime'] = $diffInMonths;
+
+                            $data['purchase_frequency'] = $data['orders_count'] / $data['lifetime'];
+                            $data['ait'] = 1 / $data['purchase_frequency'];
+
+                            $total = Estimate::where([
+                                'client_id' => $client->id,
+                                'is_saled' => true
+                            ])
+                                ->sum('total');
+                            $data['customer_equity'] = $total + $estimate->total;
+
+                            $data['average_order_value'] = $data['customer_equity'] / $data['orders_count'];
+                            $data['customer_value'] = $data['average_order_value'] * $data['purchase_frequency'];
+
+                            // TODO - 22.04.20 - Lifetime перевести в месяца
+                            $data['ltv'] = $data['lifetime'] * $data['average_order_value'] * $data['purchase_frequency'];
+
+                            // TODO - 22.04.20 - Пока нет промоакций
+                            $data['use_promo_count'] = 0;
+                            $data['promo_rate'] = $data['use_promo_count'] / $data['orders_count'];
+
+                            $client->update($data);
+
+                            // Создаем договор
+                            $contracts_client = ContractsClient::create([
+                                'client_id' => $client->id,
+                                'date' => $check->created,
+                                'number' => $lead->case_number,
+                                'amount' => $estimate->total,
+                                'created_at' => $check->created,
+                                'timestamps' => false
+                            ]);
+                        }
+
+                        if ($check->progress == 2) {
+                            // Фиксируем платежи
+                            if ($check->cash) {
+                                if ($check->cash > 0) {
+                                    $payment = Payment::create([
+                                        'contract_id' => $contracts_client->id,
+                                        'contract_type' => 'App\ContractsClient',
+                                        'document_id' => $estimate->id,
+                                        'document_type' => 'App\Estimate',
+                                        'payments_type_id' => 1,
+                                        'amount' => $check->cash,
+                                        'date' => $check->created->format('d.m.Y'),
+                                        'currency_id' => 1,
+                                        'created_at' => $check->created,
+                                        'timestamps' => false,
+
+                                        'company_id' => COMPANY,
+                                        'author_id' => AUTHOR,
+                                        'display' => true
+                                    ]);
                                 }
                             }
 
-                        } else {
-                            // Дата больше запуска системы и заказ не стол а с сайта - сращиваем
-                            $leads = ParseLead::whereDate('created_at', $check->created)
-                                ->where('is_create_parse', false)
-                                ->get();
-//                            dd($leads);
+                            if ($check->cashless) {
+                                if ($check->cashless > 0) {
+                                    $payment = Payment::create([
+                                        'contract_id' => $contracts_client->id,
+                                        'contract_type' => 'App\ContractsClient',
+                                        'document_id' => $estimate->id,
+                                        'document_type' => 'App\Estimate',
+                                        'payments_type_id' => 2,
+                                        'amount' => $check->cashless,
+                                        'date' => Carbon::parse($check->created)->format('d.m.Y'),
+                                        'currency_id' => 1,
+                                        'created_at' => $check->created,
+                                        'timestamps' => false,
 
-                            if ($leads) {
-                                if($leads->count() == 1) {
-                                    $lead = $leads->first();
-
+                                        'company_id' => COMPANY,
+                                        'author_id' => AUTHOR,
+                                        'display' => true
+                                    ]);
                                 }
                             }
                         }
@@ -1381,10 +1260,7 @@ class RollHouseParser
                     if ($estimate->goods_items->isNotEmpty()) {
                         $cost += $estimate->goods_items->sum('cost');
                         $amount += $estimate->goods_items->sum('amount');
-
                         $total += $estimate->goods_items->sum('total');
-                        $total -= $estimate->certificate_amount;
-
                         $points += $estimate->goods_items->sum('points');
                         $discount_items_currency += $estimate->goods_items->sum('discount_currency');
                     }
