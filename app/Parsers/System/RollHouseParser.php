@@ -73,7 +73,7 @@ class RollHouseParser
                 }
             ])
             ->where('is_parse', false)
-            ->limit(500)
+            ->limit(0)
             ->get();
 //        dd($oldClients);
 
