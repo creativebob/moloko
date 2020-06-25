@@ -12,6 +12,7 @@ use App\Exports\LeadsExport;
 use App\Http\Controllers\Controller;
 use App\Lead;
 use App\Models\System\Parser\Phone;
+use App\Models\System\RollHouse\Client as ParseClient;
 use App\Unit;
 use App\User;
 use Carbon\Carbon;
@@ -34,6 +35,11 @@ class TestController extends Controller
      */
     public function test()
     {
-        dd(__METHOD__);
+
+        $count = Client::where([
+            'orders_count' == 0,
+            ''
+        ])
+//        dd(__METHOD__);
     }
 }

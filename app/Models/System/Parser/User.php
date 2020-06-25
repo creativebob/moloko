@@ -62,6 +62,8 @@ class User extends Authenticatable
         'sex',
         'birthday_date',
 
+        'external',
+
         'phone',
         'extra_phone',
         'telegram_id',

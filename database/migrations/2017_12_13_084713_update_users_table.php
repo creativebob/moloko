@@ -57,9 +57,11 @@ class UpdateUsersTable extends Migration
             $table->foreign('site_id')->references('id')->on('sites');
 
             $table->bigInteger('company_id')->nullable()->unsigned()->comment('Компания пользователя')->after('site_id');
-            $table->bigInteger('filial_id')->nullable()->unsigned()->comment('ID филиала компании')->after('company_id');
+            $table->bigInteger('filial_id')->nullable()->unsigned()->comment('ID филиала компании');
 
-            $table->integer('god')->nullable()->unsigned()->comment('Божественное право')->default(null)->after('company_id');
+            $table->integer('external')->nullable()->comment('Внешний id')->after('filial_id');
+
+            $table->integer('god')->nullable()->unsigned()->comment('Божественное право')->default(null)->after('external');
             $table->boolean('moderation')->default(0)->comment('Модерация');
 
             $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');

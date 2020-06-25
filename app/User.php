@@ -55,6 +55,8 @@ class User extends Authenticatable
         'password',
         'nickname',
 
+        'external',
+
         'first_name',
         'second_name',
         'patronymic',

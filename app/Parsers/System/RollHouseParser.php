@@ -72,8 +72,9 @@ class RollHouseParser
                     ;
                 }
             ])
-            ->where('is_parse', false)
-            ->limit(5000)
+//            ->where('is_parse', false)
+                ->where('discont', '>', 0)
+//            ->limit(5)
             ->get();
 //        dd($oldClients);
 
@@ -106,15 +107,26 @@ class RollHouseParser
 
             if ($phone) {
 //                dd($oldClient);
+                $curUser = $phone->user_owner->first();
+                $phone = $curUser->main_phone;
                 // Если найден, проверяем есть ли user
-                $user = $phone->user_owner->first();
+                $user = ParseUser::find($curUser->id);
 
-                if ($user) {
-//                    dd($user);
-//                    $user->save();
+                if ($user->name == '' || $user->name == ' ' || is_null($user->name)) {
+                    $res = getNameUser($oldClient->name);
+                    $user->first_name = $res['first_name'];
+                    $user->second_name = $res['second_name'];
+                    $user->patronymic = $res['patronymic'];
+                    $user->sex = $res['gender'];
+
+                    $user->name = $oldClient->name;
+
+                    $user->external = $oldClient->id;
+
+                    $user->save();
+
+                    echo "Обновлены данные user [{$user->id}]\r\n";
                 }
-
-                $phone = $user->main_phone;
 
             } else {
                 // если телефона нет в нашей БД, заводим юзера
@@ -142,6 +154,8 @@ class RollHouseParser
                 $user->sex = $res['gender'];
 
                 $user->name = $oldClient->name;
+
+                $user->external = $oldClient->id;
 
                 $user->access_block = 0;
                 $user->user_type = 0;
@@ -188,21 +202,38 @@ class RollHouseParser
                 $user->notifications()->sync([3]);
             }
 
-            if ($oldClient->checks->isNotEmpty()) {
+            $user->load('client');
 
-                $user->load('client');
+            if (isset($user->client)) {
+                $client = $user->client;
 
-                if (isset($user->client)) {
-                    $client = $user->client;
+                $client = Client::update([
+                    'description' => $oldClient->desc,
+                    'discount' => $oldClient->discont ?? 0,
+                    'points' => $oldClient->rh ?? 0,
+                ]);
 
-                } else {
-                    // Сохраняем пользователя как клиента, т.к. у него есть заказы в старой базе
+                if ($oldClient->state == 1) {
+                    $client->blacklists()->create([
+                        'description' => $oldClient->desc,
+                        'begin_date' => $oldClient->updated,
+
+                        'company_id' => COMPANY,
+                        'author_id' => AUTHOR,
+                        'display' => true
+                    ]);
+                }
+
+            } else {
+                // Если у пользователя есть заказы или есть скидка - заводим его как клиента
+                if (($oldClient->discont > 0 && (! is_null($oldClient->discont))) || $oldClient->checks->isNotEmpty()) {
+                    // Сохраняем пользователя как клиента
                     $client = Client::create([
                         'clientable_id' => $user->id,
                         'clientable_type' => 'App\User',
 
                         'description' => $oldClient->desc,
-                        'discount' => $oldClient->discount ?? 0,
+                        'discount' => $oldClient->discont ?? 0,
                         'points' => $oldClient->rh ?? 0,
 
                         'company_id' => COMPANY,
@@ -226,7 +257,9 @@ class RollHouseParser
                         ]);
                     }
                 }
+            }
 
+            if ($oldClient->checks->isNotEmpty()) {
                 foreach($oldClient->checks as $check) {
 
                     $estimate = Estimate::where('external', $check->id)
@@ -832,6 +865,8 @@ class RollHouseParser
 
                             $user->name = $oldClient->name;
 
+                            $user->external = $oldClient->id;
+
                             $user->save();
 
                             echo "Обновлены данные user [{$user->id}]\r\n";
@@ -869,6 +904,8 @@ class RollHouseParser
                     $user->sex = $res['gender'];
 
                     $user->name = $oldClient->name;
+
+                    $user->external = $oldClient->id;
 
                     $user->access_block = 0;
                     $user->user_type = 0;
@@ -926,7 +963,7 @@ class RollHouseParser
 
                     $client->update([
                         'description' => $oldClient->desc,
-                        'discount' => $oldClient->discount ?? 0,
+                        'discount' => $oldClient->discont ?? 0,
                         'points' => $oldClient->rh ?? 0,
                     ]);
 
@@ -939,7 +976,7 @@ class RollHouseParser
                         'clientable_type' => 'App\User',
 
                         'description' => $oldClient->desc,
-                        'discount' => $oldClient->discount ?? 0,
+                        'discount' => $oldClient->discont ?? 0,
                         'points' => $oldClient->rh ?? 0,
 
                         'company_id' => COMPANY,

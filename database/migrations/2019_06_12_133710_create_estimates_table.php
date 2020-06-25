@@ -51,8 +51,6 @@ class CreateEstimatesTable extends Migration
             $table->decimal('margin_percent', 10, 2)->default(0)->comment('Процент маржи');
             $table->decimal('margin_currency', 10, 2)->default(0)->comment('Сумма маржи');
 
-
-
             // $table->decimal('discount_total', 12, 4)->default(0)->comment('Итоговая сумма всех скидок');
 
             $table->boolean('draft')->default(0)->unsigned()->comment('Черновик');
@@ -67,7 +65,7 @@ class CreateEstimatesTable extends Migration
 
             $table->boolean('is_dismissed')->default(0)->comment('Отменено');
 
-            $table->integer('external')->default(0)->comment('Внешний id');
+            $table->integer('external')->nullable()->comment('Внешний id');
 
             $table->boolean('is_create_parse')->default(0)->comment('Создана парсером');
 

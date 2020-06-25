@@ -117,6 +117,10 @@ class Update210420Tables extends Migration
             $table->decimal('order_amount_base', 12, 4)->default(0)->comment('Сумма первоначального заказа')->after('is_link_parse');
             $table->boolean('need_delivery')->default(0)->comment('Нужна доставка')->after('order_amount_base');
         });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->integer('external')->nullable()->comment('Внешний id')->after('filial_id');
+        });
     }
 
     /**
@@ -221,6 +225,12 @@ class Update210420Tables extends Migration
                 'is_link_parse',
                 'order_amount_base',
                 'need_delivery',
+            ]);
+        });
+
+        Schema::table('leads', function (Blueprint $table) {
+            $table->dropColumn([
+                'external',
             ]);
         });
     }
