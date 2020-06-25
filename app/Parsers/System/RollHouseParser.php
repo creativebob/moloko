@@ -23,6 +23,8 @@ use Illuminate\Http\Request;
 use App\Lead;
 use App\User;
 use App\Phone;
+use Telegram;
+use Telegram\Bot\Exceptions\TelegramResponseException;
 
 class RollHouseParser
 {
@@ -744,6 +746,16 @@ class RollHouseParser
 //        dd($users->count());
 
         return 'Гатова';
+
+        $destinations = [293282078,228265675];
+
+        // Отправляем на каждый telegram
+        foreach ($destinations as $destination) {
+            $response = Telegram::sendMessage([
+                'chat_id' => $destination,
+                'text' => 'Порция пропаршена'
+            ]);
+        }
     }
 
     /**
