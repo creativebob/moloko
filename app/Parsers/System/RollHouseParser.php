@@ -41,6 +41,16 @@ class RollHouseParser
     public static function fullParser()
     {
         set_time_limit(0);
+    
+        $destinations = [293282078,228265675];
+    
+        // Отправляем на каждый telegram
+        foreach ($destinations as $destination) {
+            $response = Telegram::sendMessage([
+                'chat_id' => $destination,
+                'text' => 'Парсинг начат'
+            ]);
+        }
 
 //        ParseClient::where('is_parse', true)->update([
 //            'is_parse' => false
@@ -71,7 +81,7 @@ class RollHouseParser
             ->where('is_parse', false)
 //            ->where('id', '>', 4000)
 //                ->where('discont', '>', 0)
-            ->limit(1000)
+//            ->limit(0)
             ->get();
 //        dd($oldClients);
 
@@ -666,7 +676,7 @@ class RollHouseParser
         foreach ($destinations as $destination) {
             $response = Telegram::sendMessage([
                 'chat_id' => $destination,
-                'text' => 'Порция пропаршена'
+                'text' => 'Парсинг кончат'
             ]);
         }
     }
