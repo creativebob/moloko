@@ -75,7 +75,8 @@ class RollHouseParser
                             $q->where('reject', 2)
                                 ->orWhereNull('reject');
                         })
-                        ->where('progress', '!=', 1);
+                        ->where('progress', '!=', 1)
+                        ->where('is_parse', false);
                 }
             ])
             ->where('is_parse', false)
