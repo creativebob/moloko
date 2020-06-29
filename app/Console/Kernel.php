@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        'App\Console\Commands\System\TestCommand',
 //        'App\Console\Commands\ClientsIndicatorsDay',
 //        'App\Console\Commands\ClientsIndicatorsReport',
     ];
@@ -40,24 +41,25 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // Тестовая команда
-        $schedule->command(TestCommand::class)
-            ->everyMinute();
+        $schedule->command('system:test')
+            ->everyMinute()
+            ->timezone('Asia/Irkutsk');
 
-        if (config('app.clients_indicators')) {
-            // Ежедневные показатели клиентской базы
-            $schedule->command(ClientsIndicatorsDay::class)
-                ->dailyAt('03:00');
-
-            // Ежемесячные показатели клиентской базы
-            $schedule->command(ClientsIndicatorsCommand::class)
-                ->monthlyOn(1, '04:00');
-        }
-
-        if (config('app.roll_house_parser')) {
-            // Парсер лидов для РХ
-            $schedule->command(RollHouseCommand::class)
-                ->everyMinute();
-        }
+//        if (config('app.clients_indicators')) {
+//            // Ежедневные показатели клиентской базы
+//            $schedule->command(ClientsIndicatorsDay::class)
+//                ->dailyAt('03:00');
+//
+//            // Ежемесячные показатели клиентской базы
+//            $schedule->command(ClientsIndicatorsCommand::class)
+//                ->monthlyOn(1, '04:00');
+//        }
+//
+//        if (config('app.roll_house_parser')) {
+//            // Парсер лидов для РХ
+//            $schedule->command(RollHouseCommand::class)
+//                ->everyMinute();
+//        }
 
         // Ежедневный отчет
 //        $schedule->command('report:day')
