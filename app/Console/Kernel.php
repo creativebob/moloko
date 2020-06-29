@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\System\ClientsIndicatorsDay;
 use App\Console\Commands\System\ClientsIndicatorsCommand;
 use App\Console\Commands\System\Parsers\RollHouseCommand;
+use App\Console\Commands\System\Parsers\TestCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Telegram;
@@ -39,6 +40,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // Тестовая команда
+        $schedule->command(TestCommand::class)
+            ->everyMinute();
+
         if (config('app.clients_indicators')) {
             // Ежедневные показатели клиентской базы
             $schedule->command(ClientsIndicatorsDay::class)
@@ -54,12 +59,6 @@ class Kernel extends ConsoleKernel
             $schedule->command(RollHouseCommand::class)
                 ->everyMinute();
         }
-
-        $response = Telegram::sendMessage([
-            'chat_id' => 228265675,
-            'text' => 'Крон бро, clients_indicators = ' . config('app.clients_indicators')
-        ]);
-
 
         // Ежедневный отчет
 //        $schedule->command('report:day')
