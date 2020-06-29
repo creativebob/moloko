@@ -261,4 +261,10 @@ return [
     // 'telegram_bot_token' => env('TELEGRAM_BOT_TOKEN'),
     'lead_number_logic' => env('LEAD_NUMBER_LOGIC', 'simple'),
 
+    // Показатели по клиентской базе
+    'clients_indicators' => env('CLIENTS_INDICATORS', false),
+
+    // Парсер лидов для РХ
+    'roll_house_parser' => env('ROLL_HOUSE_PARSER', false),
+
 ];

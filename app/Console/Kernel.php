@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\System\ClientsIndicatorsDay;
 use App\Console\Commands\System\ClientsIndicatorsCommand;
+use App\Console\Commands\System\Parsers\RollHouseCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -37,14 +38,21 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        if (config('app.clients_indicators')) {
+            // Ежедневные показатели клиентской базы
+            $schedule->command(ClientsIndicatorsDay::class)
+                ->dailyAt('03:00');
 
-        // Ежедневные показатели клиентской базы
-        $schedule->command(ClientsIndicatorsDay::class)
-            ->dailyAt('03:00');
+            // Ежемесячные показатели клиентской базы
+            $schedule->command(ClientsIndicatorsCommand::class)
+                ->monthlyOn(1, '04:00');
+        }
 
-        // Ежемесячные показатели клиентской базы
-        $schedule->command(ClientsIndicatorsCommand::class)
-            ->monthlyOn(1, '04:00');
+        if (config('app.roll_house_parser')) {
+            // Парсер лидов для РХ
+            $schedule->command(RollHouseCommand::class)
+                ->everyMinute();
+        }
 
         // Ежедневный отчет
 //        $schedule->command('report:day')
