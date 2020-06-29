@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\System\Parsers;
+namespace App\Console\Commands\System;
 
 use App\Parsers\System\RollHouseParser;
 use Illuminate\Console\Command;
@@ -13,7 +13,7 @@ class TestCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'test';
+    protected $signature = 'system:test';
 
     /**
      * The console command description.

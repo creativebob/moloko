@@ -5,10 +5,9 @@ namespace App\Console;
 use App\Console\Commands\System\ClientsIndicatorsDay;
 use App\Console\Commands\System\ClientsIndicatorsCommand;
 use App\Console\Commands\System\Parsers\RollHouseCommand;
-use App\Console\Commands\System\Parsers\TestCommand;
+use App\Console\Commands\System\TestCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Telegram;
 
 class Kernel extends ConsoleKernel
 {
