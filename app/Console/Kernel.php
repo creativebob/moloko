@@ -57,7 +57,7 @@ class Kernel extends ConsoleKernel
 
         $response = Telegram::sendMessage([
             'chat_id' => 228265675,
-            'text' => 'Крон бро, clients_indicators = ' . config('app.clients_indicators');
+            'text' => 'Крон бро, clients_indicators = ' . config('app.clients_indicators')
         ]);
 
 
