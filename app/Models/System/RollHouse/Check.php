@@ -26,4 +26,14 @@ class Check extends Model
     {
         return $this->belongsTo(Client::class);
     }
+
+    public function admin()
+    {
+        return $this->belongsTo(AuthCustomuser::class);
+    }
+
+    public function employer()
+    {
+        return $this->belongsTo(Employeer::class);
+    }
 }
