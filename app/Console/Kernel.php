@@ -7,6 +7,7 @@ use App\Console\Commands\System\ClientsIndicatorsCommand;
 use App\Console\Commands\System\Parsers\RollHouseCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Telegram;
 
 class Kernel extends ConsoleKernel
 {
@@ -53,6 +54,12 @@ class Kernel extends ConsoleKernel
             $schedule->command(RollHouseCommand::class)
                 ->everyMinute();
         }
+
+        $response = Telegram::sendMessage([
+            'chat_id' => 228265675,
+            'text' => 'Крон бро, clients_indicators = ' . config('app.clients_indicators');
+        ]);
+
 
         // Ежедневный отчет
 //        $schedule->command('report:day')
