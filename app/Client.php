@@ -28,7 +28,7 @@ class Client extends Model
 {
 
     // Включаем кеш
-    use Cachable;
+//    use Cachable;
 
     use Notifiable;
     use SoftDeletes;
@@ -120,9 +120,10 @@ class Client extends Model
     public function clientable()
     {
         return $this->morphTo()
-            ->withDefault([
-                'name' => 'Имя не указано'
-            ]);
+//            ->withDefault([
+//                'name' => 'Имя не указано'
+//            ])
+            ;
     }
 
 

@@ -319,7 +319,7 @@ class User extends Authenticatable
     // Получаем локацию пользователя
     public function location()
     {
-        return $this->belongsTo('App\Location');
+        return $this->belongsTo(Location::class);
     }
 
     // Получаем задачи

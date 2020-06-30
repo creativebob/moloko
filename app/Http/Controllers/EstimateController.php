@@ -61,10 +61,10 @@ class EstimateController extends Controller
             ->where('draft', false)
             ->where('is_registered', true)
 //        ->whereNotNull('client_id')
-            ->booklistFilter($request)  // Фильтр по спискам
-                ->filters()
+//            ->booklistFilter($request)  // Фильтр по спискам
 //            ->filter($request, 'client_id')
-            ->orderBy('sort', 'asc')
+            ->filters()
+            ->orderBy('sort')
             ->paginate(30);
 //         dd($estimates);
 

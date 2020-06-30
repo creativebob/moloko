@@ -120,7 +120,7 @@ class Estimate extends Model
     public function scopeFilters($query)
     {
 
-        if (! is_null(request('client_id'))) {
+        if (request('client_id')) {
             $query->where('client_id', request('client_id'));
         }
 
