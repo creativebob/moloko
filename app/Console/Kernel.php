@@ -41,7 +41,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // Тестовая команда
-        $schedule->command('system:test')
+        $schedule->command(TestCommand::class)
             ->everyMinute()
             ->timezone('Asia/Irkutsk');
 

@@ -37,9 +37,11 @@ class TestCommand extends Command
      */
     public function handle()
     {
+
+        $res = config('app.clients_indicators');
         $response = Telegram::sendMessage([
             'chat_id' => 228265675,
-            'text' => 'Крон бро, clients_indicators = ' . config('app.clients_indicators')
+            'text' => "Крон бро, clients_indicators = {$res}"
         ]);
     }
 }
