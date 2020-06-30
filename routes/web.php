@@ -935,6 +935,9 @@ Route::resource('/dealers', 'DealerController')->middleware('auth');
 
 // ------------------------------------ Клиенты ----------------------------------------------------------
 
+// Поиск
+Route::get('/clients/search/{text}', 'ClientController@search');
+
 // Основные методы
 Route::patch('/create_client', 'ClientController@ajax_create');
 Route::any('/store_client', 'ClientController@ajax_store');

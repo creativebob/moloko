@@ -87,7 +87,13 @@
           <td class="td-phone">{{ isset($client->clientable->main_phone->phone) ? decorPhone($client->clientable->main_phone->phone) : 'Номер не указан' }}</td>
 
           <td class="td-leads-count">@if(!empty($client->leads)){{ $client->leads->count() }} @endif </td>
-          <td class="td-orders_count">{{ $client->orders_count }}</td>
+            <td class="td-orders_count">
+                @if($client->orders_count > 0)
+                    <a  href="{{ route('estimates.index', ['client_id' => $client->id]) }}" class="filter_link" title="Заказы">{{ $client->orders_count }}</a>
+                @else
+                    {{ $client->orders_count }}
+                @endif
+            </td>
           <td class="td-customer_equity">{{ num_format($client->customer_equity, 0) }} </td>
           <td class="td-activity">{{ $client->activity }}</td>
           <td class="td-loyalty">{{ $client->loyalty->name ?? ' ... ' }}</td>
@@ -115,8 +121,9 @@
 {{-- Pagination --}}
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
+{{--      {{ dd(Request::all()) }}--}}
     <span class="pagination-title">Кол-во записей: {{ $clients->count() }}</span>
-    {{ $clients->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
+    {{ $clients->appends(Request::all())->links() }}
   </div>
 </div>
 @endsection

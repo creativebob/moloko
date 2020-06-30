@@ -25,6 +25,7 @@ class Estimate extends Model
         'date',
         'registered_date',
     ];
+
     protected $fillable = [
         'lead_id',
         'client_id',
@@ -113,5 +114,16 @@ class Estimate extends Model
     public function payments()
     {
         return $this->morphMany(Payment::class, 'document');
+    }
+
+    // Фильтр
+    public function scopeFilters($query)
+    {
+
+        if (! is_null(request('client_id'))) {
+            $query->where('client_id', request('client_id'));
+        }
+
+        return $query;
     }
 }

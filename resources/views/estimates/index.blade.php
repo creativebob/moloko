@@ -63,7 +63,7 @@
                 </td>
                 <td class="td-name">
 
-                  <a href="/admin/estimates?client_id%5B%5D={{ $estimate->client->id }}" class="filter_link" title="Фильтровать">
+                  <a href="/admin/estimates?client_id={{ $estimate->client_id }}" class="filter_link" title="Фильтровать">
                     {{ $estimate->client->clientable->name ?? 'Имя не указано' }}
                 </a>
                 <br>
@@ -114,7 +114,7 @@
 <div class="grid-x" id="pagination">
   <div class="small-6 cell pagination-head">
     <span class="pagination-title">Кол-во записей: {{ $estimates->count() }}</span>
-    {{ $estimates->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
+    {{ $estimates->appends(Request::all())->links() }}
 </div>
 </div>
 

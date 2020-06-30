@@ -775,6 +775,26 @@ class ClientController extends Controller
         }
     }
 
+    public function search(Request $request, $search)
+    {
+
+        $results = Client::with([
+            'clientable'
+        ])
+            ->whereHasMorph('clientable', [User::class, Company::class], function ($q) use ($search) {
+            $q->where('name', 'LIKE', '%' . $search . '%')
+                ->orWhereHas('phones', function($q) use ($search) {
+                    $q->where('phone', $search)
+                        ->orWhere('crop', $search);
+                });
+        })
+
+            ->orderBy('created_at')
+            ->get();
+
+        return response()->json($results);
+    }
+
     public function checkcompany(Request $request)
     {
         $company = Company::where('inn', $request->inn)->first();

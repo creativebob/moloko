@@ -62,12 +62,17 @@ Vue.component('metrics-categories-component', require('./components/metrics/cate
 Vue.component('plugins-component', require('./components/plugins/PluginsComponent'));
 
 // Поиск
+
+Vue.component('search-index-component', require('./components/search/SearchIndexComponent'));
+
 Vue.component('search-city-component', require('./components/search/SearchCityComponent'));
-Vue.component('search-client-component', require('./components/search/SearchClientComponent'));
-Vue.component('search-lead-component', require('./components/search/SearchLeadComponent'));
+Vue.component('search-leads-component', require('./components/search/SearchLeadsComponent'));
+Vue.component('search-clients-component', require('./components/search/SearchClientsComponent'));
 Vue.component('search-articles-component', require('./components/search/SearchArticlesComponent'));
 Vue.component('search-processes-component', require('./components/search/SearchProcessesComponent'));
 Vue.component('search-prices-goods-component', require('./components/search/SearchPricesGoodsComponent'));
+
+Vue.component('search-client-component', require('./components/search/SearchClientComponent'));
 
 Vue.component('sites-component', require('./components/promotions/SitesComponent'));
 

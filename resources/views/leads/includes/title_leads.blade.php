@@ -34,7 +34,7 @@
                     <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
                 @endif
 
-                    <search-lead-component></search-lead-component>
+                    <search-leads-component></search-leads-component>
                 {{-- <button type="button" class="icon-search sprite button"></button> --}}
 
             </div>

@@ -255,11 +255,3 @@
 {{--		@include('includes.inputs.booklister', ['name'=>'booklist', 'value'=>$filter])--}}
 	</div>
 </div>
-
-
-<script>
-    import ListerComponent from "../../../js/system/components/common/ListerComponent";
-    export default {
-        components: {ListerComponent}
-    }
-</script>

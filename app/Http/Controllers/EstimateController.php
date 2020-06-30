@@ -62,7 +62,8 @@ class EstimateController extends Controller
             ->where('is_registered', true)
 //        ->whereNotNull('client_id')
             ->booklistFilter($request)  // Фильтр по спискам
-            ->filter($request, 'client_id')
+                ->filters()
+//            ->filter($request, 'client_id')
             ->orderBy('sort', 'asc')
             ->paginate(30);
 //         dd($estimates);
@@ -82,7 +83,7 @@ class EstimateController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        return view('estimates.index', compact('estimates', 'page_info', 'filter'));
+        return view('estimates.index', compact('estimates', 'page_info'));
     }
 
 

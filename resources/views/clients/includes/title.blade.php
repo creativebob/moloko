@@ -30,8 +30,9 @@
                 @if(count(request()->input())) filtration-active @endif
                     "></a>
 
-                <input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />
-                {{-- <button type="button" class="icon-search sprite button"></button> --}}
+                <search-clients-component
+                    entity="clients"
+                ></search-clients-component>
 
             </div>
 
@@ -42,8 +43,7 @@
 
         <div id="port-result-search">
         </div>
-        {{-- Подключаем стандартный ПОИСК --}}
-        @include('includes.scripts.search-script')
+
 
         <div class="grid-x">
             <div class="small-12 cell filters fieldset-filters" id="filters">
@@ -54,13 +54,12 @@
                 </div>
                 <div class="grid-padding-x">
                     <div class="small-12 cell">
-                        {{ Form::open(['route' => 'clients.index', 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
+                        {{ Form::open(['route' => 'clients.index', 'data-abide', 'novalidate', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
                         @include('clients.includes.filters')
 
                         <div class="small-12 cell text-center">
                             {{ Form::submit('Фильтрация', ['class'=>'button']) }}
-                            <input hidden name="filter" value="active">
                         </div>
                         {{ Form::close() }}
                     </div>

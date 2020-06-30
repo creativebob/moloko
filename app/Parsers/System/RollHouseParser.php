@@ -689,6 +689,8 @@ class RollHouseParser
     {
         set_time_limit(0);
 
+        $start = now();
+
         define("ANGARSK", 3);
         define("USOLYE", 2);
         define("COMPANY", 1);
@@ -719,15 +721,7 @@ class RollHouseParser
 
         if ($checks->isNotEmpty()) {
 
-            $destinations = [293282078,228265675];
-
-            // Отправляем на каждый telegram
-            foreach ($destinations as $destination) {
-                $response = Telegram::sendMessage([
-                    'chat_id' => $destination,
-                    'text' => 'Парсинг смет начат'
-                ]);
-            }
+            $msg = "Найдены новые обращения, парсим.\r\nId лидов:\r\n";
 
             foreach($checks as $check) {
                 $oldClient = $check->client;
@@ -872,6 +866,7 @@ class RollHouseParser
 
                 } else {
                     // Сохраняем пользователя как клиента, т.к. у него есть заказы в старой базе
+                    // TODO - 30.06.20 - Вставлоять source_id
                     $client = Client::create([
                         'clientable_id' => $user->id,
                         'clientable_type' => 'App\User',
@@ -1144,6 +1139,7 @@ class RollHouseParser
                     $lead = $estimate->lead;
                     echo "Id лида со сметой, имеющей external: [{$lead->id}]\r\n";
                 }
+                $msg .= "[{$lead->id}] - " . ($lead->name ?? 'Имя не указано') . "\r\n";
 
                 if ($lead) {
                     $estimate = Estimate::create([
@@ -1468,14 +1464,24 @@ class RollHouseParser
 //                    'draft' => true
 //                ]);
 
-            $destinations = [293282078,228265675];
+            $msg .= "\r\n";
+            $msg .= "Начало: " . $start->format('d.m.Y H:i:s') . "\r\n";
+            $msg .= "Окончание: " . now()->format('d.m.Y H:i:s');
 
+            $destinations = [
+                293282078,
+                228265675
+            ];
             // Отправляем на каждый telegram
             foreach ($destinations as $destination) {
-                $response = Telegram::sendMessage([
-                    'chat_id' => $destination,
-                    'text' => 'Парсинг смет кончат'
-                ]);
+                try {
+                    $response = Telegram::sendMessage([
+                        'chat_id' => $destination,
+                        'text' => $msg
+                    ]);
+                } catch (TelegramResponseException $exception) {
+                    // Юзера нет в боте, не отправляем ему мессагу
+                }
             }
         }
     }

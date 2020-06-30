@@ -16,8 +16,8 @@ class UpdateUsersTable extends Migration
         Schema::table('users', function(Blueprint $table) {
 
             $table->string('nickname', 80)->nullable()->index()->comment('Псевдоним')->after('password');
-            $table->string('first_name', 20)->nullable()->index()->comment('Полное имя')->after('nickname');
-            $table->string('second_name', 20)->nullable()->index()->comment('Фамилия')->after('first_name');
+            $table->string('first_name', 30)->nullable()->index()->comment('Полное имя')->after('nickname');
+            $table->string('second_name', 30)->nullable()->index()->comment('Фамилия')->after('first_name');
             $table->string('patronymic', 20)->nullable()->index()->comment('Отчество')->after('second_name');
 
             $table->string('name')->nullable()->index()->comment('Имя')->after('patronymic');

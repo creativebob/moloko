@@ -146,7 +146,8 @@ class Client extends Model
 
     public function estimates()
     {
-        return $this->hasMany(Estimate::class);
+        return $this->hasMany(Estimate::class)
+            ->where('is_dismissed', false);
     }
 
     // Получаем лиды
