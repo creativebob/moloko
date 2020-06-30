@@ -689,16 +689,6 @@ class RollHouseParser
     {
         set_time_limit(0);
 
-        $destinations = [293282078,228265675];
-
-        // Отправляем на каждый telegram
-        foreach ($destinations as $destination) {
-            $response = Telegram::sendMessage([
-                'chat_id' => $destination,
-                'text' => 'Парсинг смет начат'
-            ]);
-        }
-
         define("ANGARSK", 3);
         define("USOLYE", 2);
         define("COMPANY", 1);
@@ -728,6 +718,16 @@ class RollHouseParser
             ->get();
 
         if ($checks->isNotEmpty()) {
+
+            $destinations = [293282078,228265675];
+
+            // Отправляем на каждый telegram
+            foreach ($destinations as $destination) {
+                $response = Telegram::sendMessage([
+                    'chat_id' => $destination,
+                    'text' => 'Парсинг смет начат'
+                ]);
+            }
 
             foreach($checks as $check) {
                 $oldClient = $check->client;
@@ -1467,16 +1467,16 @@ class RollHouseParser
 //                ->update([
 //                    'draft' => true
 //                ]);
-        }
 
-        $destinations = [293282078,228265675];
+            $destinations = [293282078,228265675];
 
-        // Отправляем на каждый telegram
-        foreach ($destinations as $destination) {
-            $response = Telegram::sendMessage([
-                'chat_id' => $destination,
-                'text' => 'Парсинг смет кончат'
-            ]);
+            // Отправляем на каждый telegram
+            foreach ($destinations as $destination) {
+                $response = Telegram::sendMessage([
+                    'chat_id' => $destination,
+                    'text' => 'Парсинг смет кончат'
+                ]);
+            }
         }
     }
 }
