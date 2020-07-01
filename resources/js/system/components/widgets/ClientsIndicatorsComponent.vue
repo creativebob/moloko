@@ -343,6 +343,20 @@
                         this.disabledSelect = false;
                     });
             },
-        }
+        },
+        filters: {
+            roundToTwo: function (value) {
+                return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+            },
+            // Создает разделители разрядов в строке с числами
+            level: function (value) {
+                return parseInt(value).toLocaleString();
+            },
+
+            // Отбраcывает дробную часть в строке с числами
+            onlyInteger(value) {
+                return Math.floor(value);
+            },
+        },
     }
 </script>

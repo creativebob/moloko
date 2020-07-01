@@ -94273,6 +94273,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.disabledSelect = false;
             });
         }
+    },
+    filters: {
+        roundToTwo: function roundToTwo(value) {
+            return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+        },
+        // Создает разделители разрядов в строке с числами
+        level: function level(value) {
+            return parseInt(value).toLocaleString();
+        },
+
+        // Отбраcывает дробную часть в строке с числами
+        onlyInteger: function onlyInteger(value) {
+            return Math.floor(value);
+        }
     }
 });
 

@@ -79,7 +79,7 @@ class ClientsIndicatorsDay extends Command
 
             foreach ($clients as $client) {
                 if (isset($client->last_order_date)) {
-                    $data['is_lost'] = ($client->last_order_date < today()->subYear());
+                    $data['is_lost'] = ($client->last_order_date <= today()->subYear());
                 }
 
                 $period = 90;

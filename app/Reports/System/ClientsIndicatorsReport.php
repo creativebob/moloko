@@ -59,19 +59,22 @@ class ClientsIndicatorsReport
 
 //        dd($startDate, $endDate, $unit, $startDatePeriodActive, $endDatePeriodActive);
 
-        $groupedClients = Client::where('first_order_date', '<', $endDate)
-            ->where('orders_count', '>', 0)
-            ->has('estimates')
+        $groupedClients = Client::where('orders_count', '>', 0)
+            ->where('first_order_date', '<', $endDate)
+//            ->has('estimates')
             ->with([
                 'estimates' => function ($q) use ($endDate) {
-                    $q->where('registered_date', '<', $endDate);
+                    $q->whereNotNull('registered_date')
+                        ->where('registered_date', '<', $endDate)
+                        ->orderBy('created_at');
                 },
                 'actual_blacklist',
                 'loyalty_score'
             ])
             ->withCount([
                 'estimates' => function ($q) use ($endDate) {
-                    $q->where('registered_date', '<', $endDate);
+                    $q->whereNotNull('registered_date')
+                        ->where('registered_date', '<', $endDate);
                 }
             ])
 //            ->whereHas('estimates', function($q)  use ($endDate) {
@@ -115,7 +118,7 @@ class ClientsIndicatorsReport
 //                dd($clients->first()->estimates->last());
                 $activeClients = $clients->filter(function ($client) use ($endDatePeriodActive) {
 //                    if ($client->estimates->last() != null) {
-                        return $client->estimates->last()->registered_date >= $endDatePeriodActive;
+                        return $client->estimates->last()->registered_date > $endDatePeriodActive;
 //                    }
                 });
                 $data['active_count'] = $activeClients->count();
@@ -129,7 +132,7 @@ class ClientsIndicatorsReport
 
                 $lostClients = $clients->filter(function ($client) use ($startDatePeriodActive, $endDatePeriodActive) {
 //                    if ($client->estimates->last() != null) {
-                        return $client->estimates->last()->registered_date < $endDatePeriodActive;
+                        return $client->estimates->last()->registered_date <= $endDatePeriodActive;
 //                    }
                 });
                 $data['lost_count'] = $lostClients->count();
