@@ -202,8 +202,13 @@
             @include('includes.inputs.min_max', ['name' => 'customer_value', 'title' => 'Ценность клиента'])
         </div>
 
-        <div class="cell small-12 medium-6">
-            @include('includes.inputs.min_max', ['name' => 'ltv', 'title' => 'Пожизненная ценность'])
+        <div class="cell small-12 medium-6 checkbox checkboxer">
+            <checkboxer-component
+                name="cities"
+                title="Город"
+                :items='@json($cities)'
+                :checkeds='@json(request()->cities)'
+            ></checkboxer-component>
         </div>
 
         <div class="cell small-12 medium-6">
@@ -232,13 +237,8 @@
             @include('includes.inputs.min_max_date', ['name' => 'birthday_date', 'title' => 'День рождения'])
         </div>
 
-        <div class="cell small-12 medium-6 checkbox checkboxer">
-            <checkboxer-component
-                name="cities"
-                title="Город"
-                :items='@json($cities)'
-                :checkeds='@json(request()->cities)'
-            ></checkboxer-component>
+        <div class="cell small-12 medium-6">
+            @include('includes.inputs.min_max_date', ['name' => 'estimate_date', 'title' => 'Дата заказа'])
         </div>
 
         <div class="cell small-12 medium-6">

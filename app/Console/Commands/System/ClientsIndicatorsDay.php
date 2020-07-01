@@ -44,6 +44,7 @@ class ClientsIndicatorsDay extends Command
         $groupedClients = Client::with([
             'estimates'
         ])
+            ->where('orders_count', '>', 0)
             ->get()
             ->groupBy('company_id');
 

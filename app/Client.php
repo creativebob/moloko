@@ -272,12 +272,12 @@ class Client extends Model
             $query->where('customer_value', '<=', request('customer_value_max'));
         }
 
-        if (request('ltv_min')) {
-            $query->where('ltv', '>=', request('ltv_min'));
-        }
-        if (request('ltv_max')) {
-            $query->where('ltv', '<=', request('ltv_max'));
-        }
+//        if (request('ltv_min')) {
+//            $query->where('ltv', '>=', request('ltv_min'));
+//        }
+//        if (request('ltv_max')) {
+//            $query->where('ltv', '<=', request('ltv_max'));
+//        }
 
         if (request('first_order_date_min')) {
             $query->whereDate('first_order_date', '>=', Carbon::createFromFormat('d.m.Y', request()->first_order_date_min));
@@ -307,6 +307,18 @@ class Client extends Model
                 [User::class],
                 function ($q) {
                 $q->whereDate('birthday_date', '<=', Carbon::createFromFormat('d.m.Y', request()->birthday_date_max));
+            });
+        }
+
+        // TODO - 01.07.20 - Фильтруем по дате регистрации, нужно фильтровать по дате продажи
+        if (request('estimate_date_min')) {
+            $query->whereHas('estimates', function ($q) {
+                $q->whereDate('registered_date', '>=', Carbon::createFromFormat('d.m.Y', request()->estimate_date_min));
+            });
+        }
+        if (request('estimate_date_max')) {
+            $query->whereHas('estimates', function ($q) {
+                $q->whereDate('registered_date', '<=', Carbon::createFromFormat('d.m.Y', request()->estimate_date_max));
             });
         }
 

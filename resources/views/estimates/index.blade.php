@@ -38,8 +38,7 @@
                     <th class="td-payment">Оплачено</th>
                     <th class="td-margin_currency">Маржа</th>
                     <th class="td-margin_percent">% маржи</th>
-                    <th class="td-stage">Этап</th>
-                    <th class="td-loyalty">Лояльность</th>
+                    <th class="td-status">Статус</th>
                     <th class="td-delete"></th>
                 </tr>
             </thead>
@@ -93,8 +92,7 @@
                   <td class="td-margin_currency">{{ num_format($estimate->margin_currency, 0) }}</td>
                   <td class="td-margin_percent">{{ num_format($estimate->margin_percent, 0) }}</td>
 
-              <td class="td-stage">{{ $estimate->lead->stage->name }}</td>
-              <td class="td-loyalty">{{ $estimate->client->loyalty->name }}</td>
+              <td class="td-stage">{{ ($estimate->is_dissmissed == 1) ? 'Списана' : 'Оформлена' }}</td>
               <td class="td-delete">
                   {{-- @if ($estimate->system !== 1)
                   @can('delete', $estimate)
