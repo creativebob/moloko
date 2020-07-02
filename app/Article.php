@@ -67,6 +67,7 @@ class Article extends Model
         'price_rule_id',
 
         'video_url',
+        'video',
 
         'content',
         'seo_description',

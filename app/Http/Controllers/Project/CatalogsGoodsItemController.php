@@ -35,7 +35,21 @@ class CatalogsGoodsItemController extends Controller
         // Получаем полный раздел со всеми прайсами
         // TODO - 09.06.20 - Нужно какое то условие или настройка какие прайсы грузить (самого раздела, или вложенных в него)
         $catalogs_goods_item = CatalogsGoodsItem::with([
-            'prices',
+
+            // TODO - 02.07.20 - Используется на РХ
+            'prices' => function ($q) use ($slug) {
+                $q->with([
+                    'goods.article.goods' => function ($q) use ($slug) {
+                        $q->whereHas('prices', function ($q) use ($slug) {
+                            $q->where('display', true)
+                                ->whereHas('catalogs_item', function ($q) use ($slug) {
+                                $q->where('slug', $slug);
+                            });
+                        });
+                    }
+                ]);
+            },
+
             'prices.goods.related' => function ($q) use ($catalog_slug) {
                 $q->with([
                     'prices' => function ($q) use ($catalog_slug) {

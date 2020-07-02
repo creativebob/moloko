@@ -398,9 +398,13 @@
 
 						<fieldset class="fieldset-access">
 							<legend>Дополнительное медиа</legend>
-								<label>Видео
+								<label>ссылка на видео
 									{{ Form::text('video_url', $article->video_url, []) }}
 								</label>
+
+                                <label>Видео
+                                    @include('includes.inputs.textarea', ['name' => 'video', 'value' => $article->video])
+                                </label>
 						</fieldset>
 
 					</div>

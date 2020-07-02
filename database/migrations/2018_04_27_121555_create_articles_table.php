@@ -47,6 +47,7 @@ class CreateArticlesTable extends Migration
             $table->foreign('photo_id')->references('id')->on('photos');
 
             $table->string('video_url')->nullable()->comment('Ссылка на видео');
+            $table->text('video')->nullable()->comment('Видео');
 
             $table->text('content')->nullable()->comment('Описание');
             $table->text('seo_description')->nullable()->comment('Описание для сайта');

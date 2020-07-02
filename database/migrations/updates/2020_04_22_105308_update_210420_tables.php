@@ -122,6 +122,10 @@ class Update210420Tables extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->integer('external')->nullable()->comment('Внешний id')->after('filial_id');
         });
+
+        Schema::table('articles', function (Blueprint $table) {
+            $table->text('video')->nullable()->comment('Видео')->after('video_url');
+        });
     }
 
     /**
@@ -233,6 +237,12 @@ class Update210420Tables extends Migration
         Schema::table('leads', function (Blueprint $table) {
             $table->dropColumn([
                 'external',
+            ]);
+        });
+
+        Schema::table('articles', function (Blueprint $table) {
+            $table->dropColumn([
+                'video',
             ]);
         });
     }
