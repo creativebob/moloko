@@ -162,7 +162,6 @@ class AppController extends Controller
     {
 
         $user = $request->user();
-        $estimates = null;
 
         $site = $this->site;
         $page = $site->pages_public->firstWhere('alias', 'cabinet');

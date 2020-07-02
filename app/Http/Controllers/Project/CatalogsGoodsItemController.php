@@ -35,23 +35,27 @@ class CatalogsGoodsItemController extends Controller
         // Получаем полный раздел со всеми прайсами
         // TODO - 09.06.20 - Нужно какое то условие или настройка какие прайсы грузить (самого раздела, или вложенных в него)
         $catalogs_goods_item = CatalogsGoodsItem::with([
+
+            // TODO - 02.07.20 - Используется на РХ
             'prices.goods.related' => function ($q) use ($catalog_slug) {
                 $q->with([
                     'prices' => function ($q) use ($catalog_slug) {
                         $q->with([
                             'catalogs_item.parent'
                         ])
-                        ->where('display', true)
-                        ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                            $q->where('slug', $catalog_slug);
-                        });
+                            ->where('display', true)
+                            ->where('archive', false)
+                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
+                                $q->where('slug', $catalog_slug);
+                            });
                     }
                 ])
                     ->whereHas('prices', function ($q) use ($catalog_slug) {
                         $q->where('display', true)
-                        ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                            $q->where('slug', $catalog_slug);
-                        });
+                            ->where('archive', false)
+                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
+                                $q->where('slug', $catalog_slug);
+                            });
                     });
             },
             'childs_prices.goods.related' => function ($q) use ($catalog_slug) {
@@ -61,18 +65,21 @@ class CatalogsGoodsItemController extends Controller
                             'catalogs_item.parent'
                         ])
                             ->where('display', true)
+                            ->where('archive', false)
                             ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                            $q->where('slug', $catalog_slug);
-                        });
+                                $q->where('slug', $catalog_slug);
+                            });
                     }
                 ])
                     ->whereHas('prices', function ($q) use ($catalog_slug) {
                         $q->where('display', true)
-                        ->whereHas('catalog', function ($q) use ($catalog_slug) {
-                            $q->where('slug', $catalog_slug);
-                        });
+                            ->where('archive', false)
+                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
+                                $q->where('slug', $catalog_slug);
+                            });
                     });
             },
+
             'directive_category:id,alias',
             'filters.values',
             'catalog'
