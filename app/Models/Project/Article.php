@@ -18,17 +18,29 @@ class Article extends Model
         'unit',
         'unit_weight',
 
-        // TODO - 16.04.20 - Используется пока на ВД
+        // TODO - 16.04.20 - Используется на ВД
         'manufacturer.company',
 
-        // TODO - 15.04.20 - Костыль для вкусняшки (пока еще не разведены запросы для пагинации и общей кучи)
+        // TODO - 15.04.20 - Используется на Вкусняшке (пока еще не разведены запросы для пагинации и общей кучи)
         'attachments.article.photo',
+
+        // TODO - 02.07.20 - Используется на РХ
+        'goods.article',
     ];
 
     // Группа
     public function group()
     {
         return $this->belongsTo('App\ArticlesGroup', 'articles_group_id');
+    }
+
+    // Товары из которых состоит текущий артикул (Набор товаров)
+    public function goods()
+    {
+        return $this->belongsToMany(Goods::class, 'article_goods')
+            ->withPivot([
+                'value'
+            ]);
     }
 
     // Состав
