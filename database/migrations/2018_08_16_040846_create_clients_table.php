@@ -52,8 +52,10 @@ class CreateClientsTable extends Migration
             $table->char('abcxyz', 2)->nullable()->comment('Комбинация ABC и XYZ анализов');
 
             $table->char('activity', 4)->nullable()->comment('Динамика активности');
-    
+
             $table->integer('discount')->default(0)->comment('Скидка');
+            $table->integer('discount_dynamic')->default(0)->comment('Скидка динамическая');
+
             $table->integer('points')->default(0)->comment('Внутренняя валюта');
 
             $table->boolean('archive')->default(0)->comment('Статус архива');

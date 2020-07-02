@@ -45,7 +45,8 @@ class Update210420Tables extends Migration
             $table->char('activity', 4)->nullable()->comment('Динамика активности')->after('abcxyz');
 
             $table->integer('discount')->default(0)->comment('Скидка')->after('activity');
-            $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('discount');
+            $table->integer('discount_dynamic')->default(0)->comment('Скидка динамическая')->after('discount');
+            $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('discount_dynamic');
         });
 
         Schema::table('estimates', function (Blueprint $table) {
@@ -157,6 +158,7 @@ class Update210420Tables extends Migration
                 'abcxyz',
                 'activity',
                 'discount',
+                'discount_dynamic',
                 'points',
             ]);
         });

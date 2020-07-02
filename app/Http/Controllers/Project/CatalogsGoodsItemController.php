@@ -39,7 +39,10 @@ class CatalogsGoodsItemController extends Controller
             'prices.goods.related' => function ($q) use ($catalog_slug) {
                 $q->with([
                     'prices' => function ($q) use ($catalog_slug) {
-                        $q->whereHas('catalog', function ($q) use ($catalog_slug) {
+                        $q->with([
+                            'catalogs_item.parent'
+                        ])
+                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
                             $q->where('slug', $catalog_slug);
                         });
                     }
@@ -53,7 +56,10 @@ class CatalogsGoodsItemController extends Controller
             'childs_prices.goods.related' => function ($q) use ($catalog_slug) {
                 $q->with([
                     'prices' => function ($q) use ($catalog_slug) {
-                        $q->whereHas('catalog', function ($q) use ($catalog_slug) {
+                        $q->with([
+                            'catalogs_item.parent'
+                        ])
+                            ->whereHas('catalog', function ($q) use ($catalog_slug) {
                             $q->where('slug', $catalog_slug);
                         });
                     }

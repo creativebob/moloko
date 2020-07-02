@@ -39,6 +39,9 @@ class ClientsIndicatorsReport
                 $startDatePeriodActive = Carbon::create($date)->subYear();
                 $endDatePeriodActive = Carbon::create($date)->addMonth()->subYear();
 
+                $startDatePreviousPeriodActive = Carbon::create($date)->subYear()->subMonth();
+                $endDatePreviousPeriodActive = $startDatePeriodActive;
+
                 $daysInPeriod = $startDate->diffInDays($endDate);
                 break;
 
@@ -53,6 +56,9 @@ class ClientsIndicatorsReport
                 $startDatePeriodActive = Carbon::create($date)->subYear();
                 $endDatePeriodActive = Carbon::create($date);
 
+//                $startDatePreviousPeriodActive = Carbon::create($date)->subYear()->subMonth();
+//                $endDatePreviousPeriodActive = $startDatePeriodActive;
+
                 $daysInPeriod = $startDate->diffInDays($endDate);
                 break;
         }
@@ -60,6 +66,7 @@ class ClientsIndicatorsReport
 //        dd($startDate, $endDate, $unit, $startDatePeriodActive, $endDatePeriodActive);
 
         $groupedClients = Client::where('orders_count', '>', 0)
+            ->whereNotNull('first_order_date')
             ->where('first_order_date', '<', $endDate)
 //            ->has('estimates')
             ->with([
@@ -123,12 +130,14 @@ class ClientsIndicatorsReport
                 });
                 $data['active_count'] = $activeClients->count();
 
-                $activeClientsPrevious = $clients->filter(function ($client) use ($startDate, $startDatePeriodActive) {
+                // Находим активных клиентов в предыдущем периоде
+                $activeClientsPrevious = $clients->filter(function ($client) use ($startDate, $endDatePreviousPeriodActive) {
 //                    if ($client->estimates->last() != null) {
-                        return $client->first_order_date < $startDate && $client->estimates->last()->registered_date >= $startDatePeriodActive;
+                        return $client->first_order_date < $startDate && $client->estimates->where('registered_date', '<', $startDate)->last()->registered_date > $endDatePreviousPeriodActive;
 //                    }
                 });
                 $data['active_previous_count'] = $activeClientsPrevious->count();
+                logs('clients')->info("Количество клиентов которые были действующими в предыдущий период (с {$startDatePreviousPeriodActive} по {$endDatePreviousPeriodActive}): {$activeClientsPrevious->count()}");
 
                 $lostClients = $clients->filter(function ($client) use ($startDatePeriodActive, $endDatePeriodActive) {
 //                    if ($client->estimates->last() != null) {
@@ -149,8 +158,10 @@ class ClientsIndicatorsReport
                 });
                 $data['lost_clients_period_count'] = $lostClientsPeriod->count();
 
-                if (($data['active_previous_count'] + $data['new_clients_period_count']) != $data['active_count']) {
-                    logs('clients')->info("Отчет по показателям от {$startDate->format('d.m.Y')} на период: {$unit->name} для компании {$company->name}: ОБНАРУЖЕНО НЕСООТВЕТСТВИЕ КЛИЕНТОВ!");
+                if (($data['active_previous_count'] + $data['new_clients_period_count'] - $data['lost_clients_period_count']) != $data['active_count']) {
+                    logs('clients')->info("Отчет по показателям от {$startDate->format('d.m.Y')} на период: {$unit->name} для компании {$company->name}: ОБНАРУЖЕНО НЕСООТВЕТСТВИЕ КЛИЕНТОВ!
+                        Активные на предыдущий период: [{$data['active_previous_count']}], новые: [{$data['new_clients_period_count']}], потерянные: [{$data['lost_clients_period_count']}], активные на конец: [{$data['active_count']}]
+                    ");
                 }
 
 
