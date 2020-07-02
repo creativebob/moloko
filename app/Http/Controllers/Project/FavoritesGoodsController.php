@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Project;
 
+use App\Goods;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Project\Traits\Commonable;
 use Illuminate\Http\Request;
@@ -69,7 +70,17 @@ class FavoritesGoodsController extends Controller
     public function store(Request $request)
     {
         auth()->user()->favoritesGoods()->attach($request->goods_id);
-        return response()->json(['success' => true]);
+
+        $curGoods = Goods::with([
+            'article',
+            'metrics'
+        ])
+            ->find($request->goods_id);
+
+        return response()->json([
+            'success' => true,
+            'cur_goods' => $curGoods
+        ]);
     }
 
     /**
