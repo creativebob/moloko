@@ -24,8 +24,8 @@ class Article extends Model
         // TODO - 15.04.20 - Используется на Вкусняшке (пока еще не разведены запросы для пагинации и общей кучи)
         'attachments.article.photo',
 
-//        // TODO - 02.07.20 - Используется на РХ
-//        'goods.article',
+        // TODO - 02.07.20 - Используется на РХ
+        'goods.article',
     ];
 
     // Группа

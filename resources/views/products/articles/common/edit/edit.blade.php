@@ -402,9 +402,9 @@
 									{{ Form::text('video_url', $article->video_url, []) }}
 								</label>
 
-                                <label>Видео
-                                    @include('includes.inputs.textarea', ['name' => 'video', 'value' => $article->video])
-                                </label>
+{{--                                <label>Видео--}}
+{{--                                    @include('includes.inputs.textarea', ['name' => 'video', 'value' => $article->video])--}}
+{{--                                </label>--}}
 						</fieldset>
 
 					</div>
