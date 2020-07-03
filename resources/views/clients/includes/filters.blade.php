@@ -212,6 +212,14 @@
         </div>
 
         <div class="cell small-12 medium-6">
+            @include('includes.inputs.min_max', ['name' => 'discount', 'title' => 'Скидка'])
+        </div>
+
+        <div class="cell small-12 medium-6">
+            @include('includes.inputs.min_max', ['name' => 'points', 'title' => 'Внутренняя валюта'])
+        </div>
+
+        <div class="cell small-12 medium-6">
             <label>Чёрный список
                 {!! Form::select('blacklist', [false => 'Не в чёрном списке', true => 'В чёрном списке'], request()->blacklist, ['placeholder' => 'Все']) !!}
             </label>

@@ -272,6 +272,20 @@ class Client extends Model
             $query->where('customer_value', '<=', request('customer_value_max'));
         }
 
+        if (request('discount_min')) {
+            $query->where('discount', '>=', request('discount_min'));
+        }
+        if (request('discount_max')) {
+            $query->where('discount', '<=', request('discount_max'));
+        }
+
+        if (request('points_min')) {
+            $query->where('points', '>=', request('points_min'));
+        }
+        if (request('points_max')) {
+            $query->where('points', '<=', request('points_max'));
+        }
+
 //        if (request('ltv_min')) {
 //            $query->where('ltv', '>=', request('ltv_min'));
 //        }
