@@ -230,10 +230,10 @@
 					</div>
 					<div class="small-6 small-offset-1 medium-6 medium-offset-2 cell radiobutton">Пол<br>
 
-						{!! Form::radio('sex', 1, true, ['id'=>'radiobutton-man']) !!}
+						{!! Form::radio('gender', 1, $user->gender, ['id'=>'radiobutton-man']) !!}
 						<label for="radiobutton-man"><span>Мужской</span></label>
 
-						{!! Form::radio('sex', 0, false, ['id'=>'radiobutton-woman']) !!}
+						{!! Form::radio('gender', 0, $user->gender, ['id'=>'radiobutton-woman']) !!}
 						<label for="radiobutton-woman"><span>Женский</span></label>
 
 					</div>

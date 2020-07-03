@@ -649,7 +649,7 @@ class LeadController extends Controller
 
         $lead = Lead::findOrFail($request->id);
 
-        if ($user->sex == 1) {
+        if ($user->gender == 1) {
             $phrase_sex = 'освободил';
         } else {
             $phrase_sex = 'освободила';
@@ -744,7 +744,7 @@ class LeadController extends Controller
             // $lead->challenges()->save($challenge);
             // $lead->increment('challenges_active_count');
 
-            if ($user->sex == 1) {
+            if ($user->gender == 1) {
                 $phrase_sex = 'принял';
             } else {
                 $phrase_sex = 'приняла';
@@ -809,7 +809,7 @@ class LeadController extends Controller
         }
 
 
-        if ($user->sex == 1) {
+        if ($user->gender == 1) {
             $phrase_sex = 'назначил';
         } else {
             $phrase_sex = 'назначила';

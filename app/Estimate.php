@@ -45,7 +45,10 @@ class Estimate extends Model
         'registered_date',
 
         'is_produced',
+
         'is_saled',
+        'saled_date',
+
         'is_dismissed',
         'is_main',
         'is_create_parse',

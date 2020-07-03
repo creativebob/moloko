@@ -481,8 +481,8 @@ trait Photable
 
             if ($item->getTable() == 'users') {
 
-                if (isset($item->sex)) {
-                    $sex = ($item->sex == 1) ? 'man' : 'woman';
+                if (isset($item->gender)) {
+                    $sex = ($item->gender == 1) ? 'man' : 'woman';
                 } else {
                     $sex = 'man';
                 }

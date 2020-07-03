@@ -61,7 +61,9 @@ class CreateEstimatesTable extends Migration
             $table->boolean('is_main')->default(1)->comment('Главная');
 
             $table->boolean('is_produced')->default(0)->comment('Произведено');
+
             $table->boolean('is_saled')->default(0)->comment('Продано');
+            $table->date('saled_date')->nullable()->comment('Дата продажи');
 
             $table->boolean('is_dismissed')->default(0)->comment('Отменено');
 

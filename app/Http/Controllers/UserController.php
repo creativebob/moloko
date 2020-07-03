@@ -384,7 +384,7 @@ class UserController extends Controller
         $user->first_name = $request->first_name;
         $user->second_name = $request->second_name;
         $user->patronymic = $request->patronymic;
-        $user->sex = $request->sex;
+        $user->gender = $request->gender;
         $user->birthday_date = $request->birthday_date;
 
         // Телефон

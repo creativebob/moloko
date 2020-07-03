@@ -106,7 +106,9 @@
                         <td class="td-status">
 
                             @if (isset($employee->dismissal_date))
-                            {{ $employee->user->sex == 1 ? 'Уволен' : 'Уволена' }}
+                                @isset($employee->user->gender)
+                                    {{ $employee->user->gender == 1 ? 'Уволен' : 'Уволена' }}
+                                @endisset
                             @else
                             Работает
                             @endif

@@ -29,8 +29,10 @@
 {{-- Таблица --}}
 <div class="grid-x">
   <div class="small-12 cell">
-    <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="clients">
-      <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
+{{--    <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="clients">--}}
+{{--        <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">--}}
+    <table class="content-table tablesorter" id="content" data-entity-alias="clients">
+      <thead class="thead-width sticky sticky-topbar" id="thead-sticky">
         <tr id="thead-content">
           <th class="td-drop"></th>
           <th class="td-checkbox checkbox-th"><input type="checkbox" class="table-check-all" name="" id="check-all"><label class="label-check" for="check-all"></label></th>
@@ -38,7 +40,7 @@
           <th class="td-name" data-serversort="name">Клиент</th>
           <th class="td-address">Адрес</th>
           <th class="td-phone">Телефон</th>
-          <th class="td-leads-count">Кол-во обращений</th>
+          <th class="td-discount_pointst">Скидка / Поинты</th>
           <th class="td-orders_count">Кол-во заказов</th>
           <th class="td-customer_equity">Клиентский капитал</th>
           <th class="td-activity">Динамика активности</th>
@@ -86,7 +88,7 @@
           <td class="td-address">@if(!empty($client->clientable->location->address)){{ $client->clientable->location->city->name }}, {{ $client->clientable->location->address }}@endif </td>
           <td class="td-phone">{{ isset($client->clientable->main_phone->phone) ? decorPhone($client->clientable->main_phone->phone) : 'Номер не указан' }}</td>
 
-          <td class="td-leads-count">@if(!empty($client->leads)){{ $client->leads->count() }} @endif </td>
+          <td class="td-discount_pointst">{{ $client->discount }}% / {{ $client->points }}</td>
             <td class="td-orders_count">
                 @if($client->orders_count > 0)
                     <a  href="{{ route('estimates.index', ['client_id' => $client->id]) }}" class="filter_link" title="Заказы">{{ $client->orders_count }}</a>

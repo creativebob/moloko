@@ -1,6 +1,7 @@
 {{-- Заголовок и фильтры --}}
 <div data-sticky-container id="head-content">
-    <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
+    <div>
+{{--    <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">--}}
         <div class="top-bar head-content">
             <div class="top-bar-left">
                 <h2 class="header-content">{{ $page_info->title }}

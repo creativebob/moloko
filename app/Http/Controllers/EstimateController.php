@@ -419,6 +419,7 @@ class EstimateController extends Controller
 
             $estimate->update([
                 'is_saled' => true,
+                'saled_date' => today(),
             ]);
 
             return redirect()

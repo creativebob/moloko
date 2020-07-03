@@ -336,12 +336,12 @@ class Client extends Model
             });
         }
 
-        if (! is_null(request('sex'))) {
+        if (! is_null(request('gender'))) {
             $query->whereHasMorph(
                 'clientable',
                 [User::class],
                 function ($q) {
-                $q->where('sex', request()->sex);
+                $q->where('gender', request()->gender);
             });
         }
 

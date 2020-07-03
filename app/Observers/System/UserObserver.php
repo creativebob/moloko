@@ -24,7 +24,7 @@ class UserObserver
             $user->first_name = $mass_names['first_name'];
             $user->second_name = $mass_names['second_name'];
             $user->patronymic = $mass_names['patronymic'];
-            $user->sex = $mass_names['gender'];
+            $user->gender = $mass_names['gender'];
             $user->nickname = $request->name;
 
         }

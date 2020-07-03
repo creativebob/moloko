@@ -66,6 +66,8 @@ class Update210420Tables extends Migration
 
             $table->boolean('is_main')->default(1)->comment('Главная')->after('registered_date');
 
+            $table->date('saled_date')->nullable()->comment('Дата продажи')->after('is_saled');
+
             $table->boolean('is_dismissed')->default(0)->comment('Отменено')->after('is_main');
 
             $table->integer('external')->default(0)->comment('Внешний id')->after('is_dismissed');
@@ -180,7 +182,8 @@ class Update210420Tables extends Migration
                 'points',
                 'surplus',
                 'is_create_parse',
-                'certificate_amount'
+                'certificate_amount',
+                'saled_date'
             ]);
         });
 

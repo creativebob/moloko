@@ -251,7 +251,7 @@
 
         <div class="cell small-12 medium-6">
             <label>Пол
-                {!! Form::select('sex', [false => 'Женский', true => 'Мужской'], request()->sex, ['placeholder' => 'Все']) !!}
+                {!! Form::select('gender', [false => 'Женский', true => 'Мужской'], request()->gender, ['placeholder' => 'Все']) !!}
             </label>
         </div>
 

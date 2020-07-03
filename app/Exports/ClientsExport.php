@@ -129,11 +129,21 @@ class ClientsExport implements FromCollection, WithTitle, WithHeadings, ShouldAu
         foreach ($clients as $client) {
 //            dd($client);
 
+            $gender = null;
+            switch ($client->clientable->gender) {
+                case (1):
+                    $gender = 'мужской';
+                    break;
+                case (2):
+                    $gender = 'женский';
+                    break;
+            }
+
             $client = [
                 'id' => $client->id,
                 'name' => $client->clientable->name,
                 'birthday_date' => optional($client->clientable->birthday_date)->format('d.m.Y'),
-                'sex' => ($client->clientable->sex == 1) ? 'мужской' : 'женский',
+                'gender' => $gender,
                 'city' => $client->clientable->location->city->name,
                 'address' => $client->clientable->location->address,
 //                'city' => optional(optional($client->clientable->location)->city)->name,

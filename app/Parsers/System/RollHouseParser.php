@@ -122,7 +122,7 @@ class RollHouseParser
                             $user->first_name = $res['first_name'];
                             $user->second_name = $res['second_name'];
                             $user->patronymic = $res['patronymic'];
-                            $user->sex = $res['gender'];
+                            $user->gender = $res['gender'];
 
                             $user->name = $oldClient->name;
 
@@ -154,7 +154,7 @@ class RollHouseParser
                         $user->first_name = $res['first_name'];
                         $user->second_name = $res['second_name'];
                         $user->patronymic = $res['patronymic'];
-                        $user->sex = $res['gender'];
+                        $user->gender = $res['gender'];
 
                         $user->name = $oldClient->name;
 
@@ -372,12 +372,15 @@ class RollHouseParser
 
                                     'number' => $lead->case_number,
                                     'date' => $check->created->format('d.m.Y'),
-                                    'registered_date' => $check->created,
 
                                     'is_main' => 1,
                                     'is_dismissed' => ($check->progress == 2) ? 0 : 1,
+
                                     'is_registered' => 1,
+                                    'registered_date' => $check->created,
+
                                     'is_saled' => 1,
+                                    'saled_date' => $check->created,
 
                                     'created_at' => $check->created,
                                     'timestamps' => false,
@@ -762,7 +765,7 @@ class RollHouseParser
                             $user->first_name = $res['first_name'];
                             $user->second_name = $res['second_name'];
                             $user->patronymic = $res['patronymic'];
-                            $user->sex = $res['gender'];
+                            $user->gender = $res['gender'];
 
                             $user->name = $oldClient->name;
 
@@ -802,7 +805,7 @@ class RollHouseParser
                     $user->first_name = $res['first_name'];
                     $user->second_name = $res['second_name'];
                     $user->patronymic = $res['patronymic'];
-                    $user->sex = $res['gender'];
+                    $user->gender = $res['gender'];
 
                     $user->name = $oldClient->name;
 
@@ -1173,12 +1176,16 @@ class RollHouseParser
 
                         'number' => $lead->case_number,
                         'date' => $check->created->format('d.m.Y'),
-                        'registered_date' => $check->created,
+
 
                         'is_main' => 1,
                         'is_dismissed' => ($check->progress == 2) ? 0 : 1,
+
                         'is_registered' => 1,
+                        'registered_date' => $check->created,
+
                         'is_saled' => 1,
+                        'saled_date' => $check->created,
 
                         'created_at' => $check->created,
                         'timestamps' => false,

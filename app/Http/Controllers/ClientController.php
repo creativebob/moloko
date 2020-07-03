@@ -323,7 +323,7 @@ class ClientController extends Controller
                 $new_user->first_name = $mass_names['first_name'] ?? $request->name ?? 'Укажите фамилию';
                 $new_user->second_name = $mass_names['second_name'] ?? null;
                 $new_user->patronymic = $mass_names['patronymic'] ?? null;
-                $new_user->sex = $mass_names['gender'] ?? 1;
+                $new_user->gender = $mass_names['gender'] ?? 1;
 
                 $new_user->email = $request->email;
                 $new_user->save();
@@ -336,7 +336,7 @@ class ClientController extends Controller
                 if($new_user->first_name == null){
                     if(isset($mass_names['first_name'])){
                         $new_user->first_name = $mass_names['first_name'];
-                        $new_user->sex = $mass_names['gender'];
+                        $new_user->gender = $mass_names['gender'];
                     }
                 }
 

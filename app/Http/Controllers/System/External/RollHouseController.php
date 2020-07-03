@@ -558,7 +558,7 @@ class RollHouseController extends Controller
                 $user->first_name = $res['first_name'];
                 $user->second_name = $res['second_name'];
                 $user->patronymic = $res['patronymic'];
-                $user->sex = $res['gender'];
+                $user->gender = $res['gender'];
 
                 $user->name = $oldUser->name;
 

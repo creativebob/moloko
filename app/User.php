@@ -61,7 +61,7 @@ class User extends Authenticatable
         'second_name',
         'patronymic',
         'name',
-        'sex',
+        'gender',
         'birthday_date',
 
         'phone',
