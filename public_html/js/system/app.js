@@ -94038,6 +94038,437 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -94383,9 +94814,9 @@ var render = function() {
                     },
                     [
                       _vm._v(
-                        "\n                        " +
+                        "\n                            " +
                           _vm._s(month.name) +
-                          "\n                        "
+                          "\n                            "
                       ),
                       month.loading
                         ? _c("div", {
@@ -94408,7 +94839,9 @@ var render = function() {
                   }
                 },
                 [
-                  _vm._v("\n                    Год\n                    "),
+                  _vm._v(
+                    "\n                        Год\n                        "
+                  ),
                   _vm.loadingYear
                     ? _c("div", { staticClass: "sprite-input-right icon-load" })
                     : _vm._e()
@@ -94419,47 +94852,1343 @@ var render = function() {
           )
         ]),
         _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.data, function(item) {
-            return _c(
-              "tr",
-              [
-                _c("td", { staticClass: "right-border" }, [
-                  _vm._v(_vm._s(item.name))
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.months, function(month) {
-                  return [
-                    _vm.curIndicatorsMonth
-                      ? [
-                          _vm.curIndicatorsMonth[month.number]
-                            ? _c("td", [
-                                _vm._v(
-                                  _vm._s(
+        _c("tbody", [
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Общее количество контактов")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
                                     _vm.curIndicatorsMonth[month.number][
-                                      item.alias
+                                      "count"
                                     ]
                                   )
                                 )
-                              ])
-                            : _c("td", [_vm._v("0")])
-                        ]
-                      : _c("td", [_vm._v("0")])
-                  ]
-                }),
-                _vm._v(" "),
-                _vm.curIndicatorsYear
-                  ? _c("td", { staticClass: "border-left" }, [
-                      _vm._v(_vm._s(_vm.curIndicatorsYear[item.alias]))
-                    ])
-                  : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
-              ],
-              2
-            )
-          }),
-          0
-        )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(_vm._f("level")(_vm.curIndicatorsYear["count"]))
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v('Количество "Действующих" клиентов на начало периода')
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "active_previous_count"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(
+                          _vm.curIndicatorsYear["active_previous_count"]
+                        )
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v('Количество "Действующих" клиентов')
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "active_count"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(_vm.curIndicatorsYear["active_count"])
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v('Количество "Потерянных" клиентов')
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "lost_count"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(_vm.curIndicatorsYear["lost_count"])
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Количество исключеных из базы")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "deleted_count"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(_vm.curIndicatorsYear["deleted_count"])
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Количество контактов в черном списке")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "blacklist_count"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(
+                          _vm.curIndicatorsYear["blacklist_count"]
+                        )
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Кол-во новых клиентов в периоде")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "new_clients_period_count"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(
+                          _vm.curIndicatorsYear["new_clients_period_count"]
+                        )
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Кол-во ушедших клиентов в периоде")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "lost_clients_period_count"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(
+                          _vm.curIndicatorsYear["lost_clients_period_count"]
+                        )
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Коэффициент удержания")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.curIndicatorsMonth[month.number][
+                                    "customer_retention_rate"
+                                  ]
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(_vm.curIndicatorsYear["customer_retention_rate"])
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Оформленные сметы")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "orders_count"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(_vm.curIndicatorsYear["orders_count"])
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Оформленные сметы за период")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "orders_period_count"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(
+                          _vm.curIndicatorsYear["orders_period_count"]
+                        )
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Коэффициент оттока")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.curIndicatorsMonth[month.number][
+                                    "churn_rate"
+                                  ]
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(_vm._s(_vm.curIndicatorsYear["churn_rate"]))
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Количество покупателей из числа клиентов в периоде")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "customers_period_count"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(
+                          _vm.curIndicatorsYear["customers_period_count"]
+                        )
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Коэффициент закрытия лидов")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.curIndicatorsMonth[month.number][
+                                    "lead_close_rate"
+                                  ]
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(_vm._s(_vm.curIndicatorsYear["lead_close_rate"]))
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v(
+                  "Коэффициент удовлетворенности (Коэффициент повторных покупок)"
+                )
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.curIndicatorsMonth[month.number][
+                                    "repeat_purchase_rate"
+                                  ]
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(_vm.curIndicatorsYear["repeat_purchase_rate"])
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Частота заказов")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.curIndicatorsMonth[month.number][
+                                    "purchase_frequency"
+                                  ]
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(_vm._s(_vm.curIndicatorsYear["purchase_frequency"]))
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Частота заказов за период")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.curIndicatorsMonth[month.number][
+                                    "purchase_frequency_period"
+                                  ]
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(_vm.curIndicatorsYear["purchase_frequency_period"])
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Средний промежуток времени между покупками")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.curIndicatorsMonth[month.number][
+                                    "order_gap_analysis"
+                                  ]
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(_vm._s(_vm.curIndicatorsYear["order_gap_analysis"]))
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Общая выручка")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "orders_revenue"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(_vm.curIndicatorsYear["orders_revenue"])
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Общая выручка за период")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "orders_revenue_period"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(
+                          _vm.curIndicatorsYear["orders_revenue_period"]
+                        )
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Средний доход от клиента за период")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number]["arpu"]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(_vm._f("level")(_vm.curIndicatorsYear["arpu"]))
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Средний доход от платящего клиента за период")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "arppu"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(_vm._f("level")(_vm.curIndicatorsYear["arppu"]))
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Доля платящих клиентов")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.curIndicatorsMonth[month.number][
+                                    "paying_share"
+                                  ]
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(_vm._s(_vm.curIndicatorsYear["paying_share"]))
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Срок жизни по методике")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.curIndicatorsMonth[month.number][
+                                    "lifetime"
+                                  ]
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(_vm._s(_vm.curIndicatorsYear["lifetime"]))
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Срок жизни по нашим расчетам")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.curIndicatorsMonth[month.number][
+                                    "lifetime_fact"
+                                  ]
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(_vm._s(_vm.curIndicatorsYear["lifetime_fact"]))
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Средний чек")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "average_order_value"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(
+                          _vm.curIndicatorsYear["average_order_value"]
+                        )
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Средний чек за период")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "average_order_value_period"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(
+                          _vm.curIndicatorsYear["average_order_value_period"]
+                        )
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Ценность клиента")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "customer_value"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(_vm.curIndicatorsYear["customer_value"])
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Ценность клиента за период")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "customer_value_period"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(
+                          _vm.curIndicatorsYear["customer_value_period"]
+                        )
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Пожизненная ценность")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number]["ltv"]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(_vm._f("level")(_vm.curIndicatorsYear["ltv"]))
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Пожизненная ценность на основе данных за период")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "ltv_period"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(_vm.curIndicatorsYear["ltv_period"])
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Клиентский капитал")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm._f("level")(
+                                    _vm.curIndicatorsMonth[month.number][
+                                      "customer_equity"
+                                    ]
+                                  )
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(
+                      _vm._s(
+                        _vm._f("level")(
+                          _vm.curIndicatorsYear["customer_equity"]
+                        )
+                      )
+                    )
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "tr",
+            [
+              _c("td", { staticClass: "right-border" }, [
+                _vm._v("Индекс лояльности")
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.months, function(month) {
+                return [
+                  _vm.curIndicatorsMonth
+                    ? [
+                        _vm.curIndicatorsMonth[month.number]
+                          ? _c("td", [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.curIndicatorsMonth[month.number]["nps"]
+                                )
+                              )
+                            ])
+                          : _c("td", [_vm._v("0")])
+                      ]
+                    : _c("td", [_vm._v("0")])
+                ]
+              }),
+              _vm._v(" "),
+              _vm.curIndicatorsYear
+                ? _c("td", { staticClass: "border-left" }, [
+                    _vm._v(_vm._s(_vm.curIndicatorsYear["nps"]))
+                  ])
+                : _c("td", { staticClass: "border-left" }, [_vm._v("0")])
+            ],
+            2
+          )
+        ])
       ]
     )
   ])

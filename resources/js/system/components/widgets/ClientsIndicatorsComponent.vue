@@ -39,19 +39,450 @@
             </thead>
 
             <tbody>
-                <tr v-for="item in data">
-                    <td class="right-border">{{ item.name }}</td>
+<!--                <tr v-for="item in data">-->
+<!--                    <td class="right-border">{{ item.name }}</td>-->
+<!--                    <template v-for="month in months">-->
+<!--                        <template v-if="curIndicatorsMonth">-->
+<!--                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number][item.alias] }}</td>-->
+<!--                            <td v-else>0</td>-->
+<!--                        </template>-->
+<!--                        <td v-else>0</td>-->
+<!--                    </template>-->
+<!--    -->
+<!--                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear[item.alias] }}</td>-->
+<!--                    <td v-else class="border-left">0</td>-->
+<!--                </tr>-->
+
+                <tr>
+                    <td class="right-border">Общее количество контактов</td>
                     <template v-for="month in months">
                         <template v-if="curIndicatorsMonth">
-                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number][item.alias] }}</td>
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['count'] | level }}</td>
                             <td v-else>0</td>
                         </template>
                         <td v-else>0</td>
                     </template>
 
-                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear[item.alias] }}</td>
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['count'] | level }}</td>
                     <td v-else class="border-left">0</td>
                 </tr>
+                <tr>
+                    <td class="right-border">Количество "Действующих" клиентов на начало периода</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['active_previous_count'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['active_previous_count'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Количество "Действующих" клиентов</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['active_count'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['active_count'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Количество "Потерянных" клиентов</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['lost_count'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['lost_count'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Количество исключеных из базы</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['deleted_count'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['deleted_count'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Количество контактов в черном списке</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['blacklist_count'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['blacklist_count'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Кол-во новых клиентов в периоде</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['new_clients_period_count'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['new_clients_period_count'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Кол-во ушедших клиентов в периоде</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['lost_clients_period_count'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['lost_clients_period_count'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Коэффициент удержания</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['customer_retention_rate'] }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['customer_retention_rate'] }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Оформленные сметы</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['orders_count'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['orders_count'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Оформленные сметы за период</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['orders_period_count'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['orders_period_count'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Коэффициент оттока</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['churn_rate'] }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['churn_rate'] }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Количество покупателей из числа клиентов в периоде</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['customers_period_count'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['customers_period_count'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Коэффициент закрытия лидов</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['lead_close_rate'] }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['lead_close_rate'] }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Коэффициент удовлетворенности (Коэффициент повторных покупок)</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['repeat_purchase_rate'] }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['repeat_purchase_rate'] }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Частота заказов</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['purchase_frequency'] }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['purchase_frequency'] }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Частота заказов за период</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['purchase_frequency_period'] }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['purchase_frequency_period'] }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Средний промежуток времени между покупками</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['order_gap_analysis'] }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['order_gap_analysis'] }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Общая выручка</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['orders_revenue'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['orders_revenue'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Общая выручка за период</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['orders_revenue_period'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['orders_revenue_period'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Средний доход от клиента за период</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['arpu'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['arpu'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Средний доход от платящего клиента за период</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['arppu'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['arppu'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Доля платящих клиентов</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['paying_share'] }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['paying_share'] }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Срок жизни по методике</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['lifetime'] }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['lifetime'] }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Срок жизни по нашим расчетам</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['lifetime_fact'] }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['lifetime_fact'] }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Средний чек</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['average_order_value'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['average_order_value'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Средний чек за период</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['average_order_value_period'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['average_order_value_period'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Ценность клиента</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['customer_value'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['customer_value'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Ценность клиента за период</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['customer_value_period'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['customer_value_period'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Пожизненная ценность</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['ltv'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['ltv'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Пожизненная ценность на основе данных за период</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['ltv_period'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['ltv_period'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Клиентский капитал</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['customer_equity'] | level }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['customer_equity'] | level }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+                <tr>
+                    <td class="right-border">Индекс лояльности</td>
+                    <template v-for="month in months">
+                        <template v-if="curIndicatorsMonth">
+                            <td v-if="curIndicatorsMonth[month.number]">{{ curIndicatorsMonth[month.number]['nps'] }}</td>
+                            <td v-else>0</td>
+                        </template>
+                        <td v-else>0</td>
+                    </template>
+
+                    <td v-if="curIndicatorsYear" class="border-left">{{ curIndicatorsYear['nps'] }}</td>
+                    <td v-else class="border-left">0</td>
+                </tr>
+
             </tbody>
 
         </table>
