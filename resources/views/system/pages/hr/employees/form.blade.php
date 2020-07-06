@@ -1,4 +1,4 @@
-<div class="grid-x grid-padding-x inputs">
+<div class="grid-x grid-padding-x inputs tabs-margin-top">
     <div class="small-12 medium-12 large-12 cell">
         @if($list_user_employees->isNotEmpty())
             <table class="content-table list-employees">

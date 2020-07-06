@@ -14,6 +14,18 @@
             </label>
         </div>
 
+        <div class="cell small-12 medium-6">
+            <label>Чёрный список
+                {!! Form::select('blacklist', [false => 'Не в чёрном списке', true => 'В чёрном списке'], request()->blacklist, ['placeholder' => 'Все']) !!}
+            </label>
+        </div>
+
+        <div class="cell small-12 medium-6">
+            <label>Пол
+                {!! Form::select('gender', [false => 'Женский', true => 'Мужской'], request()->gender, ['placeholder' => 'Все']) !!}
+            </label>
+        </div>
+
  		<div class="cell small-12 medium-6 checkbox checkboxer">
             <checkboxer-component
                 name="sources"
@@ -220,20 +232,6 @@
         </div>
 
         <div class="cell small-12 medium-6">
-            <label>Чёрный список
-                {!! Form::select('blacklist', [false => 'Не в чёрном списке', true => 'В чёрном списке'], request()->blacklist, ['placeholder' => 'Все']) !!}
-            </label>
-        </div>
-
-        <div class="cell small-12 medium-6">
-            <lister-component
-                name="rfm"
-                title="RFM"
-                :items='@json(request()->rfm)'
-            ></lister-component>
-        </div>
-
-        <div class="cell small-12 medium-6">
             @include('includes.inputs.min_max_date', ['name' => 'first_order_date', 'title' => 'Дата первого заказа'])
         </div>
 
@@ -250,9 +248,11 @@
         </div>
 
         <div class="cell small-12 medium-6">
-            <label>Пол
-                {!! Form::select('gender', [false => 'Женский', true => 'Мужской'], request()->gender, ['placeholder' => 'Все']) !!}
-            </label>
+            <lister-component
+                name="rfm"
+                title="RFM"
+                :items='@json(request()->rfm)'
+            ></lister-component>
         </div>
 
     </div>

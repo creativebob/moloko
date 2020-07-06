@@ -1,6 +1,6 @@
 {{-- Заголовок и фильтры --}}
 <div data-sticky-container id="head-content">
-    <div>
+    <div class="sticky sticky-topbar" id="head-sticky">
 {{--    <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">--}}
         <div class="top-bar head-content">
             <div class="top-bar-left">
@@ -25,26 +25,14 @@
                 @endcan
 
             </div>
-            <div class="top-bar-right">
 
+            <div class="top-bar-right">
                 <a class="icon-filter sprite
                 @if(count(request()->input())) filtration-active @endif
                     "></a>
-
-                <search-clients-component
-                    entity="clients"
-                ></search-clients-component>
-
+                <search-clients-component></search-clients-component>
             </div>
-
-
         </div>
-
-
-
-        <div id="port-result-search">
-        </div>
-
 
         <div class="grid-x">
             <div class="small-12 cell filters fieldset-filters" id="filters">

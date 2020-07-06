@@ -704,6 +704,9 @@ class ClientController extends Controller
         $client->description = $request->description_client;
         $client->loyalty_id = $request->loyalty_id;
 
+        $client->discount = $request->discount;
+        $client->points = $request->points;
+
         $client->is_vip = $request->is_vip;
 
         $client->save();
