@@ -32,6 +32,8 @@ class EstimatesServicesItem extends Model
         'count',
         'price',
 
+        'comment',
+
         'cost',
         'margin_percent',
         'margin_currency',

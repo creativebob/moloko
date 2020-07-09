@@ -6,6 +6,7 @@
 		@keydown="checkAfter($event)"
 		@keyup="checkBefore($event)"
       	@input="$emit('myinput', $event.target.value)"
+        :disabled="disabled"
 	>
 </template>
 
@@ -27,6 +28,10 @@
             decimalPlace: {
                 type: Number,
                 default: 0
+            },
+            disabled: {
+                type: Boolean,
+                default: false
             }
         },
 		data() {

@@ -204,15 +204,24 @@ class EstimatesGoodsItemController extends Controller
         ->findOrFail($id);
         // dd($estimates_goods_item);
 
-        $data['count'] = $request->count;
-        $data['cost'] = $data['count'] * $estimates_goods_item->product->article->cost_default;
-        $data['amount'] = $estimates_goods_item->price * $data['count'];
-        $data['total'] = $estimates_goods_item->price * $data['count'];
+        $data = $request->input();
 
-        $data['margin_currency'] = $data['total'] - $data['cost'];
+        if ($request->has('count')) {
 
-//        $onePercent = $data['amount'] / 100;
-        $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
+            $data['count'] = $request->count;
+            $data['cost'] = $data['count'] * $estimates_goods_item->product->article->cost_default;
+            $data['amount'] = $estimates_goods_item->price * $data['count'];
+
+            $data['total'] = $estimates_goods_item->price * $data['count'];
+            $data['margin_currency'] = $data['total'] - $data['cost'];
+
+    //        $onePercent = $data['amount'] / 100;
+            $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
+        }
+
+        if ($request->has('comment')) {
+            $data['comment'] = $request->comment;
+        }
 
         $result = $estimates_goods_item->update($data);
 //        dd($result);
@@ -270,22 +279,27 @@ class EstimatesGoodsItemController extends Controller
 
         $cost = 0;
         $amount = 0;
-//        $total = 0;
+        $total = 0;
+        $points = 0;
+        $discount_items_currency = 0;
 
         if ($estimate->services_items->isNotEmpty()) {
             $cost += $estimate->services_items->sum('cost');
             $amount += $estimate->services_items->sum('amount');
-//            $total += $estimate->services_items->sum('total');
+            $total += $estimate->services_items->sum('total');
         }
         if ($estimate->goods_items->isNotEmpty()) {
             $cost += $estimate->goods_items->sum('cost');
             $amount += $estimate->goods_items->sum('amount');
-//            $total += $estimate->goods_items->sum('total');
+            $total += $estimate->goods_items->sum('total');
+            $points += $estimate->goods_items->sum('points');
+            $discount_items_currency += $estimate->goods_items->sum('discount_currency');
         }
+
 
         if ($amount > 0) {
             $discount = (($amount * $estimate->discount_percent) / 100);
-            $total = ($amount - $discount);
+//            $total = ($amount - $discount);
 
             $margin_currency = $total - $cost;
 
@@ -299,6 +313,8 @@ class EstimatesGoodsItemController extends Controller
                 'total' => $total,
                 'margin_currency' => $margin_currency,
                 'margin_percent' => $margin_percent,
+                'points' => $points,
+                'discount_items_currency' => $discount_items_currency,
             ];
 
         } else {
@@ -309,6 +325,8 @@ class EstimatesGoodsItemController extends Controller
                 'total' => 0,
                 'margin_currency' => 0,
                 'margin_percent' => 0,
+                'points' => $points,
+                'discount_items_currency' => $discount_items_currency,
             ];
         }
 

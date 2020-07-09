@@ -174,12 +174,21 @@ const moduleEstimate = {
         },
         goodsItemsTotal: state => {
             let total = 0;
-            let goodsItemsAmount = state.goodsItemsAmount;
-            if (goodsItemsAmount > 0) {
-                let discountAmount = (goodsItemsAmount * state.estimate.discount_percent) / 100;
-                total = goodsItemsAmount - discountAmount;
+            if (state.goodsItems.length) {
+                state.goodsItems.forEach(function(item) {
+                    return total += Number(item.total)
+                });
             }
             return total;
+        },
+        goodsItemsDiscount: state => {
+            let discount = 0;
+            if (state.goodsItems.length) {
+                state.goodsItems.forEach(function(item) {
+                    return discount += Number(item.discount_currency)
+                });
+            }
+            return discount;
         },
         servicesItemsAmount: state => {
             let amount = 0;

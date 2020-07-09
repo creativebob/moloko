@@ -58,10 +58,11 @@ class CreateEstimatesGoodsItemsTable extends Migration
             $table->decimal('total', 12, 4)->default(0)->comment('Итоговая сумма');
             $table->decimal('profit', 12, 4)->default(0)->comment('Прибыль');
 
+            $table->text('comment')->nullable()->comment('Комментарий');
+
             $table->boolean('is_reserved')->default(0)->comment('Зарезервировано');
 
             // Общие настройки
-
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 

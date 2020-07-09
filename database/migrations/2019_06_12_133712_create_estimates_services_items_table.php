@@ -51,8 +51,9 @@ class CreateEstimatesServicesItemsTable extends Migration
             $table->decimal('total', 12, 4)->default(0)->comment('Итоговая сумма');
             $table->decimal('profit', 12, 4)->default(0)->comment('Прибыль');
 
-            // Общие настройки
+            $table->text('comment')->nullable()->comment('Комментарий');
 
+            // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');
             $table->foreign('company_id')->references('id')->on('companies');
 

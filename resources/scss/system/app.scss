@@ -4229,7 +4229,7 @@ tr:hover .button-to-reserve{
     opacity: 0.3;
 }
 
-.icon-comment{
+.icon-comment {
     position: relative;
     top: 3px;
     display: inline-block;
@@ -4240,6 +4240,24 @@ tr:hover .button-to-reserve{
     // opacity: 0;
     transition: opacity 0.3s ease;
     cursor: pointer;
+}
+
+.commentable {
+
+    .icon-comment {
+        transition: all 0.5s;
+    }
+
+    .hide-comment {
+        display: none;
+    }
+
+    &:hover {
+
+        .icon-comment {
+            display: inline-block;
+        }
+    }
 }
 
 // tr th .button-to-reserve{

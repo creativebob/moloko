@@ -486,6 +486,10 @@
         <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
             <estimate-sale-button-component></estimate-sale-button-component>
         </div>
+
+    <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
+        <estimate-print-button-component></estimate-print-button-component>
+    </div>
 </div>
 
     {{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}
