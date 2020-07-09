@@ -14,7 +14,7 @@ class PositionObserver
     public function creating(Position $position)
     {
         $this->store($position);
-        $position->sector_id = auth()->user()->company->sector_id;
+        $position->sector_id = auth()->user()->company->sector_id ?? null;
 
         $page_id = Page::where('alias', 'dashboard')->value('id');
         $position->page_id = $page_id;

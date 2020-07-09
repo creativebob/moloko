@@ -28,7 +28,7 @@ class UsersTableSeeder extends Seeder
                 'god' => null,
                 'system' => true,
                 'author_id' => null,
-                'sex' => 1,
+                'gender' => 1,
             ],
             [
                 'login' => 'creativebob',
@@ -46,7 +46,7 @@ class UsersTableSeeder extends Seeder
                 'god' => 1,
                 'system' => false,
                 'author_id' => 1,
-                'sex' => 1,
+                'gender' => 1,
             ],
             [
                 'login' => 'makc_berluskone',
@@ -64,7 +64,7 @@ class UsersTableSeeder extends Seeder
                 'god' => 1,
                 'system' => false,
                 'author_id' => 1,
-                'sex' => 1,
+                'gender' => 1,
             ],
         ]);
 
