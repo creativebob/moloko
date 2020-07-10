@@ -2,8 +2,6 @@
     <div>
         <table class="table-estimate lead-estimate" id="table-estimate_goods_items">
 
-            <caption>Товары</caption>
-
             <thead>
             <tr>
                 <th>Наименование</th>

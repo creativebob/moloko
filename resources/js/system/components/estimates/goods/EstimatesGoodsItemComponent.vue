@@ -41,7 +41,10 @@
 <!--            {{ item.stock.name }}-->
 <!--        </td>-->
 
-        <td>{{ item.price | roundToTwo | level }} <span v-if="item.price_goods.point > 0">({{ item.price_goods.point }})</span></td>
+        <td>
+            {{ item.price | roundToTwo | level }} 
+            <span class="point-value" v-if="item.price_goods.point > 0">({{ item.price_goods.point }})</span>
+        </td>
 
         <!--        <td>{{ item.count }}</td>-->
         <td @click="checkChangeCount">
@@ -60,7 +63,10 @@
         <td class="td-discount">
             <template
                 v-if="item.discount_percent > 0"
-            >{{ item.discount_percent | roundToTwo | level }} %</template>
+            >
+                {{ item.discount_percent | roundToTwo | level }} 
+                <span class="percent-symbol">%</span>
+            </template>
         </td>
 
         <td class="td-amount">

@@ -5662,14 +5662,14 @@ a.thumbnail image {
   display: block;
   width: 0;
   height: 0;
-  border: inset 6px;
+  border: inset 4px;
   content: '';
   border-right-width: 0;
   border-left-style: solid;
   border-color: transparent transparent transparent #1779ba;
   position: absolute;
   top: 50%;
-  margin-top: -6px;
+  margin-top: -4px;
   right: 1rem;
 }
 
@@ -5703,7 +5703,7 @@ a.thumbnail image {
   display: block;
   width: 0;
   height: 0;
-  border: inset 6px;
+  border: inset 4px;
   content: '';
   border-left-width: 0;
   border-right-style: solid;
@@ -9466,6 +9466,105 @@ tr:hover .icon-display-show, tr:hover .icon-display-hide, tr:hover .icon-system-
   transition: 0.5s ease opacity;
 }
 
+.tabs-leads {
+  padding-top: 1rem;
+}
+
+.table-estimate {
+  border-collapse: separate;
+  border-spacing: 0px 2px !important;
+}
+
+.table-estimate thead tr th {
+  background-color: #eee;
+  border-bottom: 1px solid #000 !important;
+  font-style: 400;
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+.table-estimate tr td {
+  background-color: #f5f5f5 !important;
+  padding: 0.1rem 0.6rem 0.1rem !important;
+  font-size: 0.9rem;
+  line-height: 1.2rem;
+}
+
+.table-estimate tbody tr:first-child td {
+  border-top: 5px solid #eee;
+}
+
+.button-to-reserve {
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url("img/pushpin.svg") 4px 4px no-repeat;
+  background-size: 16px;
+  opacity: 0;
+  -webkit-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+tr:hover .button-to-reserve {
+  opacity: 0.3;
+}
+
+.icon-comment {
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  width: 20px;
+  height: 16px;
+  background: url("img/comment.svg") 0px 0px no-repeat;
+  background-size: 16px;
+  -webkit-transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.commentable .icon-comment {
+  position: relative;
+  -webkit-transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease;
+}
+
+.commentable .hide-comment {
+  opacity: 0;
+}
+
+.commentable:hover .icon-comment {
+  opacity: 1;
+}
+
+.button-to-reserve:hover {
+  opacity: 1 !important;
+}
+
+.lead-estimate .td-action {
+  max-width: 50px;
+}
+
+.lead-estimate .td-delete {
+  max-width: 50px;
+}
+
+.lead-estimate .td-amount {
+  max-width: 70px;
+}
+
+.lead-estimate .td-amount .button {
+  width: 70px;
+}
+
+.point-value, .percent-symbol {
+  font-size: 0.8rem;
+  color: #999;
+}
+
 a.has-tip {
   position: relative;
   display: inline-block;
@@ -10585,7 +10684,18 @@ table.list-employees {
 }
 
 .catalog-bar {
-  width: 200px !important;
+  width: 220px !important;
+}
+
+.catalog-bar .drilldown .is-drilldown-submenu {
+  background-color: #eeeeee;
+}
+
+.catalog-bar .drilldown a {
+  padding: 0.5rem 1rem;
+  background-color: #eeeeee;
+  font-size: 0.9rem;
+  color: #000;
 }
 
 .products-list li {
@@ -10759,34 +10869,6 @@ table.list-employees {
 
 .green-button:hover {
   background-color: #6e8a00;
-}
-
-.tabs-leads {
-  padding-top: 1rem;
-}
-
-#table-estimate.table-estimate {
-  border-collapse: separate;
-  border-spacing: 0px 2px !important;
-}
-
-#table-estimate.table-estimate thead tr th {
-  background-color: #eee;
-  border-bottom: 1px solid #000 !important;
-  font-style: 400;
-  font-size: 0.8rem;
-  font-weight: normal;
-}
-
-#table-estimate.table-estimate tr td {
-  background-color: #f5f5f5 !important;
-  padding: 0.3rem 0.6rem 0.3rem !important;
-  font-size: 0.9rem;
-  line-height: 1.2rem;
-}
-
-#table-estimate.table-estimate tbody tr:first-child td {
-  border-top: 5px solid #eee;
 }
 
 .table-notes, .table-challenges, .table-attributions {
@@ -11485,7 +11567,7 @@ a#task-toggle {
 
 .tabs-wrap .tabs-list li {
   border: 1px solid #eeeeee;
-  background-color: #a75252;
+  background-color: #ce0000;
 }
 
 .tabs-wrap .tabs-list li a {
@@ -12750,7 +12832,7 @@ a#task-toggle {
   position: absolute;
   top: 0px;
   left: 0px;
-  background-color: white;
+  background-color: #eeeeee;
   width: 500px;
 }
 
@@ -12838,66 +12920,6 @@ tr:hover .td-price-status .price_goods-status.hide {
 
 .wrap-reserved-info.active .button-to-reserve:active {
   opacity: 1 !important;
-}
-
-.button-to-reserve {
-  position: relative;
-  top: 3px;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background: url("img/pushpin.svg") 4px 4px no-repeat;
-  background-size: 16px;
-  opacity: 0;
-  -webkit-transition: opacity 0.3s ease;
-  transition: opacity 0.3s ease;
-  cursor: pointer;
-}
-
-tr:hover .button-to-reserve {
-  opacity: 0.3;
-}
-
-.icon-comment {
-  position: relative;
-  top: 3px;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background: url("img/comment.svg") 4px 4px no-repeat;
-  background-size: 16px;
-  -webkit-transition: opacity 0.3s ease;
-  transition: opacity 0.3s ease;
-  cursor: pointer;
-}
-
-.commentable .icon-comment {
-  -webkit-transition: all 0.5s;
-  transition: all 0.5s;
-}
-
-.commentable .hide-comment {
-  display: none;
-}
-
-.commentable:hover .icon-comment {
-  display: inline-block;
-}
-
-.button-to-reserve:hover {
-  opacity: 1 !important;
-}
-
-.lead-estimate .td-action {
-  max-width: 50px;
-}
-
-.lead-estimate .td-delete {
-  max-width: 50px;
-}
-
-.lead-estimate .td-amount {
-  max-width: 70px;
 }
 
 .catalog-name {

@@ -311,13 +311,7 @@
         <p>Безналичный расчет</p>
         
 
-        
-          
-            
-              <img src="/media/advert_Advert/a/0/1/1.jpeg" width="470px" />
-            
-          
-        
+
         <div class="clear clearfix"></div>
       </div>
       <div class="clear clearfix"></div>

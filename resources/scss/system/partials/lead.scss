@@ -1,0 +1,116 @@
+.tabs-leads{
+    padding-top: 1rem;
+}
+
+.table-estimate{
+
+    border-collapse: separate;
+    border-spacing: 0px 2px !important;
+
+    thead{
+
+        tr th{
+            background-color: #eee;
+            border-bottom: 1px solid #000 !important;
+            font-style: 400;
+            font-size: 0.8rem;
+            font-weight: normal;
+        }
+
+    }
+
+    tr td{
+
+        background-color: #f5f5f5 !important;
+        padding: 0.1rem 0.6rem 0.1rem !important;
+        font-size: 0.9rem;
+        line-height: 1.2rem;
+    }
+
+    tbody tr:first-child td {
+        border-top: 5px solid #eee;
+    }
+
+}
+
+// Оформлением сметы на ЛИДе
+.button-to-reserve{
+    position: relative;
+    top: 3px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url('img/pushpin.svg') 4px 4px no-repeat;
+    background-size: 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+}
+
+tr:hover .button-to-reserve{
+    opacity: 0.3;
+}
+
+.icon-comment {
+    position: relative;
+    top: 3px;
+    display: inline-block;
+    width: 20px;
+    height: 16px;
+    background: url('img/comment.svg') 0px 0px no-repeat;
+    background-size: 16px;
+    // opacity: 0;
+    transition: opacity 0.5s ease;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.commentable {
+
+    .icon-comment {
+        position: relative;
+        transition: opacity 0.5s ease;
+    }
+
+    .hide-comment {
+        opacity: 0;
+    }
+
+    &:hover {
+
+        .icon-comment {
+            opacity: 1;
+        }
+    }
+}
+
+// tr th .button-to-reserve{
+//     opacity: 0.3;
+// }
+
+.button-to-reserve:hover{
+    opacity: 1 !important;
+}
+
+.lead-estimate{
+    .td-action{
+        max-width: 50px;
+    }
+
+    .td-delete{
+        max-width: 50px;
+    }
+
+    .td-amount{
+        max-width: 70px;
+
+        .button{
+            width: 70px;
+        }
+    }
+}
+
+.point-value, .percent-symbol{
+    font-size: 0.8rem;
+    color: #999;
+}

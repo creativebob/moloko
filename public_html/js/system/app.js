@@ -82504,8 +82504,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -82711,6 +82709,12 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -83591,10 +83595,14 @@ var render = function() {
       _vm._v(" "),
       _c("td", [
         _vm._v(
-          _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))) + " "
+          "\n            " +
+            _vm._s(_vm._f("level")(_vm._f("roundToTwo")(_vm.item.price))) +
+            " \n            "
         ),
         _vm.item.price_goods.point > 0
-          ? _c("span", [_vm._v("(" + _vm._s(_vm.item.price_goods.point) + ")")])
+          ? _c("span", { staticClass: "point-value" }, [
+              _vm._v("(" + _vm._s(_vm.item.price_goods.point) + ")")
+            ])
           : _vm._e()
       ]),
       _vm._v(" "),
@@ -83655,12 +83663,15 @@ var render = function() {
           _vm.item.discount_percent > 0
             ? [
                 _vm._v(
-                  _vm._s(
-                    _vm._f("level")(
-                      _vm._f("roundToTwo")(_vm.item.discount_percent)
-                    )
-                  ) + " %"
-                )
+                  "\n                " +
+                    _vm._s(
+                      _vm._f("level")(
+                        _vm._f("roundToTwo")(_vm.item.discount_percent)
+                      )
+                    ) +
+                    " \n                "
+                ),
+                _c("span", { staticClass: "percent-symbol" }, [_vm._v("%")])
               ]
             : _vm._e()
         ],
@@ -84052,8 +84063,6 @@ var render = function() {
         attrs: { id: "table-estimate_goods_items" }
       },
       [
-        _c("caption", [_vm._v("Товары")]),
-        _vm._v(" "),
         _c("thead", [
           _c("tr", [
             _c("th", [_vm._v("Наименование")]),
@@ -84914,7 +84923,7 @@ var render = function() {
             _vm._v(" "),
             _c("div", [
               _vm._v(
-                "Скидка: " +
+                "Сумма скидок: " +
                   _vm._s(
                     _vm._f("level")(
                       _vm._f("roundToTwo")(_vm.estimateItemsDiscount)
@@ -84925,7 +84934,7 @@ var render = function() {
             _vm._v(" "),
             _c("div", [
               _vm._v(
-                "Итого: " +
+                "Итого к оплате: " +
                   _vm._s(
                     _vm._f("level")(_vm._f("roundToTwo")(_vm.estimateTotal))
                   )
