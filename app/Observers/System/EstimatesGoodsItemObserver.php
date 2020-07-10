@@ -20,6 +20,8 @@ class EstimatesGoodsItemObserver
     {
         $this->update($estimates_goods_item);
         $estimates_goods_item->amount = $estimates_goods_item->count * $estimates_goods_item->price;
+
+        $estimates_goods_item->total = $estimates_goods_item->amount - $estimates_goods_item->discount_currency;
     }
 
     public function deleting(EstimatesGoodsItem $estimates_goods_item)

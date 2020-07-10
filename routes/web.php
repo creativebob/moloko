@@ -731,6 +731,9 @@ Route::patch('/estimates/{id}/produce', 'EstimateController@produce');
 // Продажа
 Route::patch('/estimates/{id}/saling', 'EstimateController@saling');
 
+// Продажа
+Route::get('/estimates/{id}/print', 'EstimateController@print');
+
 // Резервирование
 Route::post('/estimates/{id}/reserving', 'EstimateController@reserving');
 Route::post('/estimates/{id}/unreserving', 'EstimateController@unreserving');

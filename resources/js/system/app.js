@@ -35,6 +35,7 @@ Vue.component('estimate-component', require('./components/estimates/EstimateComp
 Vue.component('estimate-register-button-component', require('./components/estimates/EstimateRegisterButtonComponent.vue'));
 Vue.component('estimate-sale-button-component', require('./components/estimates/EstimateSaleButtonComponent.vue'));
 Vue.component('estimate-production-button-component', require('./components/estimates/EstimateProductionButtonComponent.vue'));
+Vue.component('estimate-print-button-component', require('./components/estimates/EstimatePrintButtonComponent.vue'));
 Vue.component('payments-component', require('./components/PaymentsComponent.vue'));
 
 Vue.component('checkboxer-component', require('./components/common/CheckboxerComponent'));

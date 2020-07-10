@@ -435,6 +435,17 @@ class EstimateController extends Controller
 //        return redirect()->route('leads.index');
     }
 
+    public function print($id)
+    {
+        // ГЛАВНЫЙ ЗАПРОС:
+        $estimate = Estimate::with([
+            'goods_items',
+        ])
+            ->findOrFail($id);
+
+        dd($estimate);
+    }
+
     public function reserving(Request $request, $id)
     {
 //        dd($request);

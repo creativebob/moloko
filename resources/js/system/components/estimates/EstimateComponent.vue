@@ -13,8 +13,13 @@
             <estimates-services-items-component :items="servicesList"></estimates-services-items-component>
         </template>
 
-        <div v-if="estimateAmount > 0"
-        >Общая стоимость: {{ estimateAmount | roundToTwo | level }}</div>
+        <template
+            v-if="estimateAmount > 0"
+        >
+            <div>Общая стоимость: {{ estimateAmount | roundToTwo | level }}</div>
+            <div>Скидка: {{ estimateItemsDiscount | roundToTwo | level }}</div>
+            <div>Итого: {{ estimateTotal | roundToTwo | level }}</div>
+        </template>
 
 	</div>
 
@@ -64,6 +69,9 @@
             },
             estimateTotal() {
                 return this.$store.getters.estimateTotal;
+            },
+            estimateItemsDiscount() {
+                return this.$store.getters.goodsItemsDiscount;
             },
 		},
 

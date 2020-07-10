@@ -12871,6 +12871,19 @@ tr:hover .button-to-reserve {
   cursor: pointer;
 }
 
+.commentable .icon-comment {
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+.commentable .hide-comment {
+  display: none;
+}
+
+.commentable:hover .icon-comment {
+  display: inline-block;
+}
+
 .button-to-reserve:hover {
   opacity: 1 !important;
 }
