@@ -563,6 +563,22 @@ class LeadController extends Controller
         };
     }
 
+    /**
+     * Печать чека
+     *
+     * @param $id
+     */
+    public function print($id)
+    {
+        // ГЛАВНЫЙ ЗАПРОС:
+        $lead = Lead::with([
+            'estimate',
+        ])
+            ->findOrFail($id);
+
+        dd($lead);
+    }
+
     // --------------------------------------- Ajax ----------------------------------------------------------
 
     // Добавление комментария

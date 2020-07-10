@@ -488,7 +488,9 @@
         </div>
 
     <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-        <estimate-print-button-component></estimate-print-button-component>
+        <estimate-print-button-component
+            :lead-id="{{ $lead->id }}"
+        ></estimate-print-button-component>
     </div>
 </div>
 
