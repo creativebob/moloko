@@ -690,6 +690,10 @@ Route::get('plans/{alias}', 'PlanController@show')->name('plans.show');
 
 // ---------------------------------------------- Лиды -----------------------------------------------
 
+
+// Печать
+Route::get('/leads/{id}/print', 'LeadController@print');
+
 // Основные методы
 // Route::get('/lead/calls', 'LeadController@index')->middleware('auth');
 Route::resource('/leads', 'LeadController')->middleware('auth');
@@ -730,9 +734,6 @@ Route::patch('/estimates/{id}/produce', 'EstimateController@produce');
 
 // Продажа
 Route::patch('/estimates/{id}/saling', 'EstimateController@saling');
-
-// Продажа
-Route::get('/estimates/{id}/print', 'EstimateController@print');
 
 // Резервирование
 Route::post('/estimates/{id}/reserving', 'EstimateController@reserving');

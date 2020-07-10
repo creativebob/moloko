@@ -1,6 +1,6 @@
 <template>
     <a
-        :href="'/admin/estimates/' + estimate.id + '/print'"
+        :href="'/admin/leads/' + leadId + '/print'"
         target="_blank"
         class="button"
         v-if="isShow"
@@ -9,6 +9,9 @@
 
 <script>
     export default {
+        props: {
+            leadId: Number
+        },
         data() {
             return {
                 estimate: this.$store.state.estimate.estimate

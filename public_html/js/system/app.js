@@ -81569,6 +81569,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        leadId: Number
+    },
     data: function data() {
         return {
             estimate: this.$store.state.estimate.estimate
@@ -81596,7 +81599,7 @@ var render = function() {
         {
           staticClass: "button",
           attrs: {
-            href: "/admin/estimates/" + _vm.estimate.id + "/print",
+            href: "/admin/leads/" + _vm.leadId + "/print",
             target: "_blank"
           }
         },
