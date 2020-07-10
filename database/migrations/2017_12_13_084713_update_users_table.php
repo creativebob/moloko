@@ -23,7 +23,7 @@ class UpdateUsersTable extends Migration
             $table->string('name')->nullable()->index()->comment('Имя')->after('patronymic');
 
             $table->integer('gender')->nullable()->unsigned()->comment('Пол: 1 - м, 2 - ж')->after('name');
-            $table->date('birthday_date')->nullable()->comment('Дата рождения')->after('sex');
+            $table->date('birthday_date')->nullable()->comment('Дата рождения')->after('gender');
 
             $table->bigInteger('phone')->unique()->nullable()->comment('Телефон')->after('birthday_date');
             $table->bigInteger('extra_phone')->nullable()->comment('Дополнительный телефон')->after('phone');
