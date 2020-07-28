@@ -70,6 +70,8 @@ class StartTableSeeder extends Seeder
         $company = Company::first();
         $company->phones()->attach(1, ['main' => 1]);
 
+        $company->currencies()->sync(1);
+
         Department::insert([
         	[
         		'name' => 'Иркутский',

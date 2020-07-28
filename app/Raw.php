@@ -16,6 +16,10 @@ class Raw extends Model
     use Cachable;
     use Articlable;
 
+//    protected $appends   = [
+//        'cost_portion',
+//    ];
+
     protected $fillable = [
         'category_id',
         'article_id',

@@ -345,7 +345,7 @@ fieldset {
     .text-to-placeholder {
         display: inline-block;
         position: absolute;
-        margin-left: 55px;
+        margin-left: 45px;
         margin-top: -26px;
         font-size: 0.9rem;
         color: #000;
@@ -695,6 +695,9 @@ span.wrap-label-checkboxer {
 {
     border-top: 1px solid transparent;
 }
+
+// Чекбоксер категорий
+@import "./partials/checkboxers/checkboxer_categories";
 
 
 // ------------------------------------------ Оформление суперменю--------------------------------------------
@@ -4249,13 +4252,15 @@ tr:hover .button-to-reserve{
     }
 
     .hide-comment {
-        display: none;
+        //display: none;
+        opacity: 0;
     }
 
     &:hover {
 
         .icon-comment {
-            display: inline-block;
+            //display: inline-block;
+            opacity: 1;
         }
     }
 }

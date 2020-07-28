@@ -47,11 +47,14 @@ class Department extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'location_id',
         'name',
+        'email',
+
+        'location_id',
         'parent_id',
         'filial_id',
-        'email',
+
+        'code_map',
 
         'display',
         'system',
@@ -234,6 +237,12 @@ class Department extends Model
     public function domains()
     {
         return $this->belongsToMany(Domain::class, 'domain_filial');
+    }
+
+    // Зона ответственности
+    public function cities()
+    {
+        return $this->belongsToMany(City::class, 'city_filial', 'filial_id');
     }
 
 }

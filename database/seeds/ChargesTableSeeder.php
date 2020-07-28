@@ -69,14 +69,20 @@ class ChargesTableSeeder extends Seeder
                 'alias' => 'lead-challenge-remove',
                 'author_id' => 1,
             ],
+            [
+                'name' => 'Авторизация под юзером',
+                'description' => null,
+                'alias' => 'auth-under-user',
+                'author_id' => 1,
+            ],
 
 
 
         ]);
 
-        
+
         // Наваливаем права на лидов директору и менеджеру
-        
+
         $charges = Charge::get(['id']);
         $charges_array = [];
         foreach ($charges as $charge) {

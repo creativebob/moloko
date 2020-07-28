@@ -37,6 +37,8 @@ class CompanyRequest extends FormRequest
             'city_id' => 'integer|nullable',
             'address' => 'string|max:255|nullable',
 
+            'domain' => 'nullable|string|max:255',
+
             'account_settlement' => 'string|nullable',
             'account_correspondent' => 'string|nullable',
             'bank' => 'string|max:255|nullable',

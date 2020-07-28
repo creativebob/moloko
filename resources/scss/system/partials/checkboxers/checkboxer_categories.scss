@@ -1,0 +1,45 @@
+.checkboxer-categories {
+    width: 100%;
+    display: block;
+    top: 0px;
+    float: left;
+    border: none;
+    z-index: 1000;
+    margin-left: 0px;
+    padding-top: 1px;
+    box-sizing: border-box;
+    left: 0;
+    height: auto;
+
+    @for $i from 2 to 10 {
+        .level-#{$i} {
+            margin-left: 1rem;
+        }
+    }
+
+    li {
+        line-height: 1.2;
+        float: left;
+        background: #fff;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid transparent;
+        list-style-type: none;
+        width: 100%;
+
+        &:first-child {
+            border-top: 1px solid transparent;
+        }
+
+        &:hover {
+            background: #efefef;
+        }
+
+        label {
+            width: 100%;
+        }
+    }
+
+    span.wrap-label-checkboxer {
+        max-width: 80%;
+    }
+}

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Traits;
 
 // Модели
 use App\Position;
+use App\Role;
 use App\User;
 use App\Company;
 use App\Department;
@@ -55,46 +56,58 @@ trait DepartmentControllerTrait
             // dd(Company::where('id', $company->id)->get());
 
             // Создаем должность директора и валим ей права
-            $position = Position::create([
-                [
+            $position = Position::firstOrCreate([
                     'name' => 'Директор',
-                    'page_id' => 12,
+                    'page_id' => 19,
                     'direction' => true,
                     'company_id' => $company->id,
+
+                ], [
+                    'system' => false,
+            ]);
+
+            $position->company_id = $company->id;
+            $position->save();
+
+            $role = Role::firstOrCreate([
+                    'name' => 'Директор',
+                    'company_id' => $company->id,
+                ], [
                     'system' => false,
                     'author_id' => 1,
-                    'sector_id' => null,
-                ],
             ]);
+
+            $role->company_id = $company->id;
+            $role->save();
 
             DB::table('position_role')->insert([
                 [
                     'position_id' => $position->id,
-                    'role_id' => 2
+                    'role_id' => $role->id
                 ],
             ]);
 
             Log::info('В трейт создания директора пришла компания: ' . $company->name . ' с ID: ' . $company->id);
-            $staffer = new Staffer;
-            $staffer->user_id = $user->id;
-            $staffer->position_id = $position->id;
-            $staffer->department_id = $department->id;
-            $staffer->filial_id = $department->id;
+            $staffer = Staffer::firstOrcreate([
+                'user_id' => $user->id,
+                'position_id' => $position->id,
+                'department_id' => $department->id,
+                'filial_id' => $department->id,
+            ]);
+
             $staffer->company_id = $company->id;
-            $staffer->author_id = 1; // Робот
             $staffer->save();
             Log::info('Сохраняем штатную единицу');
 
-            $employee = new Employee;
+            $employee = Employee::firstOrCreate([
+                'staffer_id' => $staffer->id,
+                'user_id' => $user->id,
+                'employment_date' => today()->format('d.m.Y'),
+            ]);
+
             $employee->company_id = $company->id;
-            $employee->staffer_id = $staffer->id;
-            $employee->user_id = $user->id;
-            $employee->employment_date = Carbon::today()->format('Y-m-d');
-            $employee->author_id = 1; // Робот
-
-            Log::info($employee);
-
             $employee->save();
+
             $employee = Employee::where('id', $employee->id)->first();
 
             Log::info($employee);

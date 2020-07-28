@@ -104,11 +104,22 @@
                             @include('includes.inputs.address', ['value' => isset($company->location->address) ? $company->location->address : null, 'name'=>'address'])
                         </label>
                     </div>
+
+                    @if ($company->external_control == 0 && auth()->user()->company_id != $company->id)
+                        <div class="small-12 medium-6 cell">
+                            <label>Сайт
+                                @include('includes.inputs.name', ['value' => optional($company->domain)->domain, 'name' => 'domain'])
+                            </label>
+                        </div>
+                    @endif
+
                     <div class="small-12 medium-3 cell">
                         <label>Почтовый индекс
                             @include('includes.inputs.zip_code', ['value'=>isset($company->location->zip_code) ? $company->location->zip_code : null, 'name'=>'zip_code'])
                         </label>
                     </div>
+
+
 
                     {{-- $manufacturer->getTable() --}}
 

@@ -98,14 +98,14 @@ $drop = 1;
         {{-- Штат --}}
         @if ($department->staff_count > 0)
         @foreach($department->staff as $staffer)
-        @include('departments.staff_list', $staffer)
+        @include('system.pages.hr.departments.staff_list', $staffer)
         @endforeach
         @endif
 
         {{-- Отделы --}}
         @if (isset($department->childrens))
         @foreach($department->childrens as $department)
-        @include('departments.departments_list', $department)
+        @include('system.pages.hr.departments.departments_list', $department)
         @endforeach
         @endif
 

@@ -14,14 +14,27 @@ class AttachmentsComposer
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('attachments_categories', false, 'index');
 
-        $attachments_categories = AttachmentsCategory::with([
+        $attachmentsCategories = AttachmentsCategory::with([
             'attachments' => function ($q) {
-                $q->with([
-                    'article' => function ($q) {
-                        $q->where('draft', false);
-                    }
-                ])
-                    ->where('archive', false);
+                $q->where('archive', false)
+                    ->whereHas('article', function ($q) {
+                        $q->where([
+                            'draft' => false,
+                        ]);
+                    })
+                    ->with([
+                        'article' => function ($q) {
+                            $q->with([
+                                'unit'
+                            ])
+                                ->where([
+                                    'draft' => false,
+                                ]);
+                        },
+                        'category',
+                        'unit_for_composition'
+                    ])
+                    ->orderBy('sort');
             }
         ])
         ->whereHas('attachments', function ($q) {
@@ -33,11 +46,20 @@ class AttachmentsComposer
         ->moderatorLimit($answer)
         ->systemItem($answer)
         ->companiesLimit($answer)
-        ->orderBy('sort', 'asc')
+        ->orderBy('sort')
         ->get();
-//        dd($attachments_categories);
+//        dd($attachmentsCategories);
 
-        return $view->with(compact('attachments_categories'));
+        $attachments = [];
+        foreach($attachmentsCategories as $attachmentsCategory) {
+            foreach ($attachmentsCategory->attachments as $item) {
+//                $item->category = $relatedCategory;
+                $attachments[] = $item;
+            }
+        };
+        $attachments = collect($attachments);
+
+        return $view->with(compact('attachmentsCategories', 'attachments'));
     }
 
 }

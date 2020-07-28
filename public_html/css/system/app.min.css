@@ -9645,7 +9645,7 @@ fieldset legend {
 .wrap-input-table .text-to-placeholder {
   display: inline-block;
   position: absolute;
-  margin-left: 55px;
+  margin-left: 45px;
   margin-top: -26px;
   font-size: 0.9rem;
   color: #000;
@@ -9970,6 +9970,79 @@ span.wrap-label-checkboxer {
 
 .checkboxer-menu li:first-child > a {
   border-top: 1px solid transparent;
+}
+
+.checkboxer-categories {
+  width: 100%;
+  display: block;
+  top: 0px;
+  float: left;
+  border: none;
+  z-index: 1000;
+  margin-left: 0px;
+  padding-top: 1px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  left: 0;
+  height: auto;
+}
+
+.checkboxer-categories .level-2 {
+  margin-left: 1rem;
+}
+
+.checkboxer-categories .level-3 {
+  margin-left: 1rem;
+}
+
+.checkboxer-categories .level-4 {
+  margin-left: 1rem;
+}
+
+.checkboxer-categories .level-5 {
+  margin-left: 1rem;
+}
+
+.checkboxer-categories .level-6 {
+  margin-left: 1rem;
+}
+
+.checkboxer-categories .level-7 {
+  margin-left: 1rem;
+}
+
+.checkboxer-categories .level-8 {
+  margin-left: 1rem;
+}
+
+.checkboxer-categories .level-9 {
+  margin-left: 1rem;
+}
+
+.checkboxer-categories li {
+  line-height: 1.2;
+  float: left;
+  background: #fff;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid transparent;
+  list-style-type: none;
+  width: 100%;
+}
+
+.checkboxer-categories li:first-child {
+  border-top: 1px solid transparent;
+}
+
+.checkboxer-categories li:hover {
+  background: #efefef;
+}
+
+.checkboxer-categories li label {
+  width: 100%;
+}
+
+.checkboxer-categories span.wrap-label-checkboxer {
+  max-width: 80%;
 }
 
 .show-elem {
@@ -12869,11 +12942,11 @@ tr:hover .button-to-reserve {
 }
 
 .commentable .hide-comment {
-  display: none;
+  opacity: 0;
 }
 
 .commentable:hover .icon-comment {
-  display: inline-block;
+  opacity: 1;
 }
 
 .button-to-reserve:hover {

@@ -60,6 +60,7 @@ use App\Scopes\Filters\BooklistFilter;
 
             'is_controllable_mode',
             'is_show_subcategory',
+            'is_hide_submenu',
 
 			'display',
 			'system',

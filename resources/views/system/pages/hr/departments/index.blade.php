@@ -25,8 +25,8 @@
         <ul class="vertical menu accordion-menu content-list" id="content" data-accordion-menu data-multi-open="false" data-slide-speed="250" data-entity-alias="departments">
 
             @if($departments->isNotEmpty())
-            {{-- Шаблон вывода и динамического обновления --}}
-            @include('departments.filials_list')
+                {{-- Шаблон вывода и динамического обновления --}}
+                @include('system.pages.hr.departments.filials_list')
             @endif
 
         </ul>

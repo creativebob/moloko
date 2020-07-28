@@ -257,31 +257,17 @@ function isDomainAvailible($domain)
  * @return variable;
  */
 
-function create_location($request, $country_id = null, $city_id = null, $address = null) {
-
-    // Значения по умолчанию
-    $country_id_default = 1; // Страна: Россия
-    $city_id_default = 1; // Город: Иркутск
-    $address_default = null; // Адрес: не указываем
-    $zip_code_default = null; // Адрес: не указываем
-
-    $country_id = $country_id ?? $request->country_id ?? $country_id_default;
-    $city_id = $city_id ?? $request->city_id ??  $city_id_default;
-    $address = $address ?? $request->address ?? $address_default;
-    $zip_code = $request->zip_code ?? $zip_code_default;
-
-    // Скрываем бога
-    $user_id = hideGod($request->user());
-
+function create_location($request, $country_id = 1, $city_id = 1, $address = null, $zip_code = null)
+{
     // Ищем или создаем локацию
     $location = Location::with('city')
-        ->firstOrCreate(compact(
-            'country_id',
-            'city_id',
-            'address',
-            'zip_code'
-        ), [
-            'author_id' => $user_id
+        ->firstOrCreate([
+            'country_id' => $request->country_id ?? $country_id,
+            'city_id' => $request->city_id ?? $city_id,
+            'address' => $request->address ?? $address,
+            'zip_code' => $request->zip_code ?? $zip_code
+        ], [
+            'author_id' => hideGod($request->user())
         ]);
 
     yandexGeocoder($location);

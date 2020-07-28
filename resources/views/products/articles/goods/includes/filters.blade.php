@@ -1,9 +1,17 @@
 <div class="small-12 medium-6 large-6 cell checkbox checkboxer">
 	<legend>Фильтры:</legend>
 	<div class="grid-x">
- 		<div class="small-12 medium-6 cell">
-			@include('includes.inputs.checkboxer', ['name'=>'goods_category', 'value'=>$filter])
- 		</div>
+        <div class="cell small-12 medium-6 checkbox checkboxer">
+            <categorier-component
+                name="goods_categories"
+                title="Категория"
+                :categories-tree='@json($goodsCategoriesTree)'
+                :checkeds='@json(request()->goods_categories)'
+            ></categorier-component>
+        </div>
+{{-- 		<div class="small-12 medium-6 cell">--}}
+{{--			@include('includes.inputs.checkboxer', ['name'=>'goods_category', 'value'=>$filter])--}}
+{{-- 		</div>--}}
  	</div>
 	<div class="grid-x">
  		<div class="small-12 medium-6 cell">

@@ -22,6 +22,7 @@ use App\ContainersStock;
 use App\ContractsClient;
 use App\Cost;
 use App\CostsHistory;
+use App\Department;
 use App\Direction;
 use App\Dispatch;
 use App\Domain;
@@ -55,6 +56,7 @@ use App\Observers\System\ContainersStockObserver;
 use App\Observers\System\ContractsClientObserver;
 use App\Observers\System\CostObserver;
 use App\Observers\System\CostsHistoryObserver;
+use App\Observers\System\DepartmentObserver;
 use App\Observers\System\DirectionObserver;
 use App\Observers\System\DispatchObserver;
 use App\Observers\System\DomainObserver;
@@ -184,6 +186,7 @@ class ObserverServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
 
         // HR
+        Department::observe(DepartmentObserver::class);
         Position::observe(PositionObserver::class);
         Staffer::observe(StafferObserver::class);
         Employee::observe(EmployeeObserver::class);

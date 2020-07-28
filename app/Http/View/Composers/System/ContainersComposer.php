@@ -14,14 +14,27 @@ class ContainersComposer
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('containers_categories', false, 'index');
 
-        $containers_categories = ContainersCategory::with([
+        $containersCategories = ContainersCategory::with([
             'containers' => function ($q) {
-                $q->with([
-                    'article' => function ($q) {
-                        $q->where('draft', false);
-                    }
-                ])
-                    ->where('archive', false);
+                $q->where('archive', false)
+                    ->whereHas('article', function ($q) {
+                        $q->where([
+                            'draft' => false,
+                        ]);
+                    })
+                    ->with([
+                        'article' => function ($q) {
+                            $q->with([
+                                'unit'
+                            ])
+                                ->where([
+                                    'draft' => false,
+                                ]);
+                        },
+                        'category',
+                        'unit_for_composition'
+                    ])
+                    ->orderBy('sort');
             }
         ])
         ->whereHas('containers', function ($q) {
@@ -37,7 +50,16 @@ class ContainersComposer
         ->get();
 //        dd($containers_categories);
 
-        return $view->with(compact('containers_categories'));
+        $containers = [];
+        foreach($containersCategories as $containersCategory) {
+            foreach ($containersCategory->containers as $item) {
+//                $item->category = $relatedCategory;
+                $containers[] = $item;
+            }
+        };
+        $containers = collect($containers);
+
+        return $view->with(compact('containersCategories', 'containers'));
     }
 
 }

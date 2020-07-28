@@ -491,7 +491,7 @@
 @endsection
 
 @section('modals')
-	@include('includes.modals.modal_item_delete')
+{{--	@include('includes.modals.modal_item_delete')--}}
 	@includeIf($page_info->entity->view_path . '.modals')
 @endsection
 
@@ -568,7 +568,7 @@
 		});
 	</script>
 
-	@include('products.articles.common.edit.change_articles_groups_script')
+{{--	@include('products.articles.common.edit.change_articles_groups_script')--}}
 	@include('products.articles.common.edit.change_packages_script', [
 		'package_unit' => $article->unit->abbreviation
 	])
@@ -589,5 +589,5 @@
 		'id' => $article->id
 	])
 
-	@includeIf($page_info->entity->view_path . '.scripts')
+{{--	@includeIf($page_info->entity->view_path . '.scripts')--}}
 @endpush

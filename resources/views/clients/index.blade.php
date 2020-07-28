@@ -40,6 +40,7 @@
           <th class="td-name" data-serversort="name">Клиент</th>
           <th class="td-address">Адрес</th>
           <th class="td-phone">Телефон</th>
+            <th class="td-status">Статус</th>
           <th class="td-discount_pointst">Скидка / Поинты</th>
           <th class="td-orders_count">Кол-во заказов</th>
           <th class="td-customer_equity">Клиентский капитал</th>
@@ -53,7 +54,11 @@
       <tbody data-tbodyId="1" class="tbody-width">
         @if(!empty($clients))
         @foreach($clients as $client)
-        <tr class="item @if($client->moderation == 1)no-moderation @endif" id="clients-{{ $client->id }}" data-name="{{ $client->clientable->name }}">
+        <tr
+            class="item @if($client->moderation == 1)no-moderation @endif @if($client->is_lost == 1)client-lost @endif"
+            id="clients-{{ $client->id }}"
+            data-name="{{ $client->clientable->name }}"
+        >
           <td class="td-drop"><div class="sprite icon-drop"></div></td>
           <td class="td-checkbox checkbox">
             <input type="checkbox" class="table-check" name="dealer_id" id="check-{{ $client->id }}"
@@ -87,6 +92,14 @@
 
           <td class="td-address">@if(!empty($client->clientable->location->address)){{ $client->clientable->location->city->name }}, {{ $client->clientable->location->address }}@endif </td>
           <td class="td-phone">{{ isset($client->clientable->main_phone->phone) ? decorPhone($client->clientable->main_phone->phone) : 'Номер не указан' }}</td>
+
+            <td class="td-status">
+                @if($client->is_lost == 1)
+                    Ушедший
+                @else
+                    Действующий
+                @endif
+            </td>
 
           <td class="td-discount_pointst">{{ $client->discount }}% / {{ $client->points }}</td>
             <td class="td-orders_count">

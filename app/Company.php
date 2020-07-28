@@ -426,4 +426,14 @@ class Company extends Model
         return $this->morphToMany(Setting::class, 'entity', 'settingable');
     }
 
+    public function domain()
+    {
+        return $this->hasOne(Domain::class);
+    }
+
+    public function site()
+    {
+        return $this->hasOne(Site::class);
+    }
+
 }

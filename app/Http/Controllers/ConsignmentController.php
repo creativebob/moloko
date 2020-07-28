@@ -209,7 +209,8 @@ class ConsignmentController extends Controller
                         ->where('archive', false)
                         ->whereHas('article', function ($q) {
                             $q->where('draft', false)
-                            ->whereNotNull('manufacturer_id');
+//                            ->whereNotNull('manufacturer_id')
+                            ;
                         });
                 }
             ])

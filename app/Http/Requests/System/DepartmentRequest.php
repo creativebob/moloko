@@ -27,24 +27,26 @@ class DepartmentRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string|max:255',
-            'address' => 'string|nullable',
+            'name' => 'required|string|max:255',
+            'address' => 'nullable|string',
             'email' => 'nullable|string|email|max:255',
 
-            'main_phone' => 'string|max:17|nullable',
-            'extra_phones.*' => 'string|max:17|nullable',
+            'main_phone' => 'nullable|string|max:17',
+            'extra_phones.*' => 'nullable|string|max:17',
 
-            'filial_id' => 'integer|nullable',
-            'department_id' => 'integer|nullable',
-            'parent_id' => 'integer|nullable',
+            'cities.*' => 'nullable|integer',
 
-            'code_map' => 'string|nullable',
+            'filial_id' => 'nullable|integer',
+            'department_id' => 'nullable|integer',
+            'parent_id' => 'nullable|integer',
 
-            'city_id' => 'integer|nullable',
+            'code_map' => 'nullable|string',
 
-            'moderation' => 'integer|max:1|nullable',
-            'system' => 'integer|max:1|nullable',
-            'display' => 'integer|max:1|nullable',
+            'city_id' => 'nullable|integer',
+
+            'moderation' => 'nullable|integer|max:1',
+            'system' => 'nullable|integer|max:1',
+            'display' => 'nullable|integer|max:1',
         ];
     }
 }

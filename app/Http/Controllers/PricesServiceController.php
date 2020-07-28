@@ -125,7 +125,10 @@ class PricesServiceController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        $catalog = CatalogsService::findOrFail($catalog_id);
+        $catalog = CatalogsService::with([
+            'filials'
+        ])
+            ->findOrFail($catalog_id);
         $page_info->title = 'Прайс: ' . $catalog->name;
         $page_info->name = 'Прайс: ' . $catalog->name;
 

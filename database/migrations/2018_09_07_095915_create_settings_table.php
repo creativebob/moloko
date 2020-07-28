@@ -19,6 +19,9 @@ class CreateSettingsTable extends Migration
             $table->string('name')->index()->comment('Название');
             $table->string('alias')->index()->comment('Алиас');
 
+            $table->bigInteger('category_id')->unsigned()->nullable()->comment('Id категории');
+            $table->foreign('category_id')->references('id')->on('settings_categories');
+
         });
     }
 

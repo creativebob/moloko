@@ -43,6 +43,7 @@ class CreateCatalogsServicesItemsTable extends Migration
 
             $table->boolean('is_controllable_mode')->default(0)->comment('Контроль режима');
             $table->boolean('is_show_subcategory')->default(0)->comment('Отображать ВСЕ для субкатегорий');
+            $table->boolean('is_hide_submenu')->default(0)->comment('Не отображать субменю');
 
             $table->bigInteger('directive_category_id')->nullable()->unsigned()->comment('Основная мера');
             $table->foreign('directive_category_id')->references('id')->on('units_categories');

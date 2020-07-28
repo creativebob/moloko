@@ -1,5 +1,6 @@
-<related-component
-    :related-categories='@json($relatedCategories)'
-    :related-goods='@json($relatedGoods)'
-    :related='@json($category->related)'
-></related-component>
+<presets-component
+    :categories='@json($relatedCategories)'
+    :items='@json($related)'
+    :item-items='@json($category->related)'
+    name="related"
+></presets-component>

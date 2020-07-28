@@ -255,6 +255,30 @@ class LeadController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
 
+        // История лида
+        $finded_leads = Lead::with(
+            'location.city',
+            'choice',
+            'manager',
+            'stage',
+            'user',
+            'challenges.challenge_type',
+            'phones')
+            ->companiesLimit($answer)
+            // ->authors($answer_lead) // Не фильтруем по авторам
+            ->systemItem($answer) // Фильтр по системным записям
+            // ->whereNull('archive')
+            ->whereNull('draft')
+            ->whereHas('phones', function($query) use ($lead) {
+                $query->where('phone', $lead->main_phone->phone);
+            })
+            ->where('id', '!=', $lead->id)
+            ->orderBy('sort', 'asc')
+            ->get();
+
+        $lead->history = $finded_leads;
+//        dd($lead);
+
         $goods_categories_list = GoodsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {
             return ['goods-' . $item->id => $item->name];
         })->toArray();
@@ -281,6 +305,8 @@ class LeadController extends Controller
             'Услуги' => $services_categories_list,
             'Сырье' => $raws_categories_list,
         ];
+
+
 
         // Инфо о странице
         $page_info = pageInfo($this->entity_name);

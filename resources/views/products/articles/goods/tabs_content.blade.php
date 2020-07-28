@@ -29,23 +29,24 @@
 		</div>
 
 		<div class="small-12 medium-5 cell cmv-indicators">
-			<div class="grid-x grid-padding-x">
-				<fieldset class="small-12 cell goods-indicators">
-					<legend> Расчет по товару:</legend>
-					<div class="grid-x grid-padding-x">
-						<div class="small-12 cell indicators-item">
-							<span>Общая себестоимость: </span><span id="total_goods_cost" class="indicators_total">0</span><span> руб.</span>
-						</div>
-						<div class="small-12 cell indicators-item">
-							<span>Общий вес: </span><span id="total_goods_weight" class="indicators_total">0</span><span> гр.</span>
-						</div>
-						{{-- <div class="small-12 cell indicators-item">
-							<span>Желаемая наценка, %: </span>
-							<input-digit-component name="margin" v-on:countchanged="changePrice" class="goods-margin-calc"></input-digit-component>
-						</div> --}}
-					</div>
-				</fieldset>
-			</div>
+            <goods-store-component></goods-store-component>
+{{--			<div class="grid-x grid-padding-x">--}}
+{{--				<fieldset class="small-12 cell goods-indicators">--}}
+{{--					<legend> Расчет по товару:</legend>--}}
+{{--					<div class="grid-x grid-padding-x">--}}
+{{--						<div class="small-12 cell indicators-item">--}}
+{{--							<span>Общая себестоимость: </span><span id="total_goods_cost" class="indicators_total">0</span><span> руб.</span>--}}
+{{--						</div>--}}
+{{--						<div class="small-12 cell indicators-item">--}}
+{{--							<span>Общий вес: </span><span id="total_goods_weight" class="indicators_total">0</span><span> гр.</span>--}}
+{{--						</div>--}}
+{{--						--}}{{-- <div class="small-12 cell indicators-item">--}}
+{{--							<span>Желаемая наценка, %: </span>--}}
+{{--							<input-digit-component name="margin" v-on:countchanged="changePrice" class="goods-margin-calc"></input-digit-component>--}}
+{{--						</div> --}}
+{{--					</div>--}}
+{{--				</fieldset>--}}
+{{--			</div>--}}
 		</div>
 
 	</div>
@@ -56,12 +57,11 @@
 	<div class="tabs-panel" id="tab-goods">
 		@include('products.articles.goods.goods.goods')
 	</div>
-	@else
-
-<div class="tabs-panel" id="tab-raws">
-@include('products.articles.goods.raws.raws')
-</div>
-	@endif
+@else
+    <div class="tabs-panel" id="tab-raws">
+        @include('products.articles.goods.raws.raws')
+    </div>
+@endif
 
 @can('index', App\Container::class)
     <div class="tabs-panel" id="tab-containers">

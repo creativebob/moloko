@@ -70,6 +70,10 @@
                     <legend>Показатели клиента</legend>
                     <table>
                         <tbody>
+                        <tr>
+                            <td>Статус</td>
+                            <td>{{ $client->is_lost == 1 ? "Ушедший" : "Действующий" }}</td>
+                        </tr>
                             <tr>
                                 <td>Дата первого заказа</td>
                                 <td>{{ $client->first_order_date->format('d.m.Y') }}</td>

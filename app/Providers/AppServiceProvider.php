@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -36,6 +37,13 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('template', function ($item) {
             $result = is_null($item->company_id) && is_null($item->system);
             return $result;
+        });
+
+        // Для получения аксессоров моделей во Vue
+        Collection::macro('setAppends', function ($attributes) {
+            return $this->map(function ($item) use ($attributes) {
+                return $item->setAppends($attributes);
+            });
         });
 
     }

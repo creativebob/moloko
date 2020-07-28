@@ -73,7 +73,8 @@ $drop = 1;
             @endcan
 
             @can('update', $department)
-            <div class="icon-list-edit sprite sprite-edit" data-open="modal-edit"></div>
+                <a class="icon-list-edit sprite sprite-edit" href="{{ route('departments.edit', $department->id) }}"></a>
+{{--                <div class="icon-list-edit sprite sprite-edit" data-open="modal-edit"></div>--}}
             @endcan
 
             <div class="del">
@@ -108,16 +109,16 @@ $drop = 1;
 
         {{-- Штат --}}
         @if ($department->staff_count > 0)
-        @foreach($department->staff as $staffer)
-        @include('departments.staff_list', $staffer)
-        @endforeach
+            @foreach($department->staff as $staffer)
+                @include('system.pages.hr.departments.staff_list', $staffer)
+            @endforeach
         @endif
 
         {{-- Отделы --}}
         @if (isset($department->childrens))
-        @foreach($department->childrens as $department)
-        @include('departments.departments_list', $department)
-        @endforeach
+            @foreach($department->childrens as $department)
+                @include('system.pages.hr.departments.departments_list', $department)
+            @endforeach
         @endif
 
         @else

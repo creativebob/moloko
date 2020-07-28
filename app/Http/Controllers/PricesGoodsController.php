@@ -109,7 +109,7 @@ class PricesGoodsController extends Controller
                 'catalogs_goods_id' => $catalog_id,
                 'filial_id' => $filial_id,
             ])
-            ->orderBy('sort', 'asc')
+            ->orderBy('sort')
             ->paginate(300);
         // dd($prices_goods);
 
@@ -129,7 +129,11 @@ class PricesGoodsController extends Controller
         // Инфо о странице
         $page_info = pageInfo($this->entity_alias);
 
-        $catalog = CatalogsGoods::findOrFail($catalog_id);
+        $catalog = CatalogsGoods::with([
+            'filials'
+        ])
+        ->findOrFail($catalog_id);
+
         $page_info->title = 'Прайс: ' . $catalog->name;
         $page_info->name = 'Прайс: ' . $catalog->name;
 

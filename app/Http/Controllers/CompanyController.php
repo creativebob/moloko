@@ -176,6 +176,10 @@ class CompanyController extends Controller
             // Дописываем юзеру недостающие данные
             $new_user->company_id = $new_company->id;
             $new_user->filial_id = $new_department->id;
+
+            $new_user->site_id = 1;
+            $new_user->author_id = hideGod(auth()->user());
+
             $new_user->save();
 
         } else {
@@ -250,7 +254,6 @@ class CompanyController extends Controller
 
     public function update(CompanyRequest $request, $id)
     {
-
 
         // Получаем авторизованного пользователя
         $user = $request->user();

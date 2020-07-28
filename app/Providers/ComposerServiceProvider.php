@@ -25,6 +25,7 @@ use App\Http\View\Composers\System\DisplayModesComposer;
 use App\Http\View\Composers\System\EmployeesActiveCountComposer;
 use App\Http\View\Composers\System\EmployeesDismissalCountComposer;
 use App\Http\View\Composers\System\FiltersComposer;
+use App\Http\View\Composers\System\GoodsCategoriesTreeComposer;
 use App\Http\View\Composers\System\NotificationsComposer;
 use App\Http\View\Composers\System\PaymentsTypesComposer;
 use App\Http\View\Composers\System\ProcessesCategoriesWithGroupsComposer;
@@ -190,6 +191,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer([
             'system.common.includes.city_search',
+            'includes.lists.cities'
         ], CitiesComposer::class);
 
         view()->composer([
@@ -279,7 +281,7 @@ class ComposerServiceProvider extends ServiceProvider
         // Стандартные шаблоны типа "меню"
         view()->composer('system.common.categories.index.categories_list', AccordionsComposer::class);
         view()->composer('includes.menu_views.category_list', MenuViewComposer::class);
-        view()->composer('departments.filials_list', DepartmentsViewComposer::class);
+        view()->composer('system.pages.hr.departments.filials_list', DepartmentsViewComposer::class);
         view()->composer('includes.lists.departments', DepartmentsComposer::class);
 
         view()->composer([
@@ -295,7 +297,13 @@ class ComposerServiceProvider extends ServiceProvider
             'products.processes.common.create.categories_select'
         ], CategoriesComposer::class);
 
-        view()->composer('includes.selects.goods_categories', GoodsCategoriesComposer::class);
+        view()->composer([
+            'includes.selects.goods_categories',
+        ], GoodsCategoriesComposer::class);
+        view()->composer([
+            'products.articles.goods.includes.filters'
+        ], GoodsCategoriesTreeComposer::class);
+
         view()->composer('includes.selects.raws_categories', RawsCategoriesComposer::class);
         view()->composer('includes.selects.containers_categories', ContainersCategoriesComposer::class);
         view()->composer('includes.selects.goods_products', GoodsProductsComposer::class);
@@ -339,20 +347,20 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.processes_groups', ProcessesGroupsComposer::class);
 
         view()->composer([
-            'products.articles_categories.goods_categories.raws.raws_list',
-            'products.articles.goods.raws.raws_list'
+            'products.articles_categories.goods_categories.raws.raws',
+            'products.articles.goods.raws.raws'
         ], RawsComposer::class);
 
         view()->composer([
-            'products.articles.goods.containers.containers_list'
+            'products.articles.goods.containers.containers'
         ], ContainersComposer::class);
 
         view()->composer([
-            'products.articles.goods.attachments.attachments_list'
+            'products.articles.goods.attachments.attachments'
         ], AttachmentsComposer::class);
 
         view()->composer([
-            'products.articles.goods.goods.goods_list',
+            'products.articles.goods.goods.goods',
         ], GoodsComposer::class);
 
         view()->composer([

@@ -126,6 +126,12 @@
                                 {!! Form::checkbox('is_show_subcategory', 1, $catalogs_goods_item->is_show_subcategory, ['id' => 'checkbox-is_show_subcategory']) !!}
                                 <label for="checkbox-is_show_subcategory"><span>Отображать ВСЕ для субкатегорий</span></label>
                             </div>
+
+                            {!! Form::hidden('is_hide_submenu', 0) !!}
+                            <div class="small-12 cell checkbox">
+                                {!! Form::checkbox('is_hide_submenu', 1, $catalogs_goods_item->is_hide_submenu, ['id' => 'checkbox-is_hide_submenu']) !!}
+                                <label for="checkbox-is_hide_submenu"><span>Не отображать субменю</span></label>
+                            </div>
                         </div>
                     </div>
                     <div class="small-12 medium-6 cell">

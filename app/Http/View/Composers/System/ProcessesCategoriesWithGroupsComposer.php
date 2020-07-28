@@ -22,6 +22,7 @@ class ProcessesCategoriesWithGroupsComposer
         ->with([
             'groups:id,name'
         ])
+            ->orderBy('sort')
             ->get([
                 'id',
                 'name',

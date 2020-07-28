@@ -55,6 +55,9 @@ class GetAccessController extends Controller
         // Получаем пользователя в user
         $user = $request->user();
 
+        $user->login_date = now();
+        $user->save();
+
         if($user->access_block == 1){
             abort(403, "Сорян, вам сюда нельзя! Блокировочка!");
         };

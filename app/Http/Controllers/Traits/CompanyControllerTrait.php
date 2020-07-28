@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Traits;
 
 use App\Company;
+use App\Domain;
 use App\Manufacturer;
+use App\Site;
 use App\Supplier;
 use App\Vendor;
 use Illuminate\Support\Facades\Log;
@@ -107,6 +109,8 @@ trait CompanyControllerTrait
             setSchedule($request, $company);
             setProcessesType($request, $company);
 
+            $this->changeDomain($company);
+
             // Если компания производит для себя, создадим ее связь с собой как с производителем
             if($request->manufacturer_self == 1){
 
@@ -161,8 +165,8 @@ trait CompanyControllerTrait
     }
 
 
-    public function updateCompany($request, $company, $entity = null){
-
+    public function updateCompany($request, $company, $entity = null)
+    {
 
         // Подготовка: -------------------------------------------------------------------------------------
 
@@ -242,8 +246,7 @@ trait CompanyControllerTrait
             setSchedule($request, $company);
             setProcessesType($request, $company);
 
-
-
+            $this->changeDomain($company);
 
             // Логика создания на компанию связи: производитель / поставщик / и т.д.
 
@@ -339,6 +342,55 @@ trait CompanyControllerTrait
 
 
 
+        }
+    }
+
+    public function changeDomain($company){
+        // Проверяем домен
+        if ($company->external_control == 0 && auth()->user()->company_id != $company->id) {
+            $company->load('site');
+            $company->load('domain');
+            if (request()->get('domain')) {
+                if (is_null($company->site)) {
+                    $site = Site::firstOrcreate([
+                        'name' => "Сайт {$company->id}",
+                        'alias' => \Str::slug("Сайт {$company->id}"),
+                        'company_id' => $company->id
+                    ]);
+
+                    $site->author_id = 1;
+                    $site->editor_id = 1;
+                    $site->company_id = $company->id;
+                    $site->save();
+                }
+
+                if ($company->domain) {
+                    if ($company->domain != request()->domain) {
+                        $company->domain()->delete();
+                    }
+                }
+
+                $company->load('site');
+                $domain = Domain::firstOrCreate([
+                    'domain' => request()->domain,
+                    'site_id' => $company->site->id,
+                    'company_id' => $company->id
+                ]);
+
+                $domain->author_id = 1;
+                $domain->editor_id = 1;
+                $domain->company_id = $company->id;
+                $domain->save();
+
+
+            } else {
+                if ($company->site) {
+
+                    if ($company->domain) {
+                        $company->domain()->delete();
+                    }
+                }
+            }
         }
     }
 

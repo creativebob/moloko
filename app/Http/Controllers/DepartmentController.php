@@ -28,7 +28,10 @@ use Illuminate\Support\Facades\Storage;
 class DepartmentController extends Controller
 {
 
-    // Настройки сконтроллера
+    /**
+     * DepartmentController constructor.
+     * @param Department $department
+     */
     public function __construct(Department $department)
     {
         $this->middleware('auth');
@@ -37,13 +40,20 @@ class DepartmentController extends Controller
         $this->entity_dependence = true;
         $this->class = Department::class;
         $this->model = 'App\Department';
-        $this->type = 'menu';
+        $this->type = 'table';
     }
 
     // Подключаем трейт перезаписи списк отделов (филиалов) в сессии пользователя
     use RewriteSessionDepartments;
     use Phonable;
 
+    /**
+     * Отображение списка ресурсов
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function index(Request $request)
     {
 
@@ -102,7 +112,7 @@ class DepartmentController extends Controller
         // Отдаем Ajax
         if ($request->ajax()) {
 
-            return view('departments.filials_list',
+            return view('system.pages.hr.departments.filials_list',
                 [
                     'departments' => $departments,
                     'entity' => $this->entity_alias,
@@ -116,7 +126,7 @@ class DepartmentController extends Controller
         }
 
         // Отдаем на шаблон
-        return view('departments.index',
+        return view('system.pages.hr.departments.index',
             [
                 'departments' => $departments,
                 'page_info' => pageInfo($this->entity_alias),
@@ -129,21 +139,41 @@ class DepartmentController extends Controller
         );
     }
 
+    /**
+     * Показать форму для создания нового ресурса
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function create(Request $request)
     {
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
-        return view('departments.create', [
-            'department' => new $this->class,
-            'entity' => $this->entity_alias,
-            'title' => isset($request->parent_id) ? 'Добавление в структуру филиала' : 'Добавление филиала',
-            'parent_id' => $request->parent_id,
-            'filial_id' => $request->filial_id
-        ]);
+        if (isset($request->parent_id)) {
+            return view('system.pages.hr.departments.department.create', [
+                'department' => Department::make(),
+                'entity' => $this->entity_alias,
+                'parent_id' => $request->parent_id,
+                'filial_id' => $request->filial_id,
+            ]);
+        } else {
+            return view('system.pages.hr.departments.filial.create', [
+                'department' => Department::make(),
+                'page_info' => pageInfo($this->entity_alias),
+            ]);
+        }
     }
 
+    /**
+     * Сохранение только что созданного ресурса в хранилище
+     *
+     * @param DepartmentRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function store(DepartmentRequest $request)
     {
 
@@ -155,37 +185,14 @@ class DepartmentController extends Controller
         // Получаем данные для авторизованного пользователя
         $user = $request->user();
 
-        $department = Department::make();
-
-        if (isset($request->city_name)) {
-            $department->location_id = create_location($request);
-        }
-
-        $department->company_id = $user->company_id;
-
-        // Имя филиала / отдела
-        $first = mb_substr($request->name,0,1, 'UTF-8');
-        $last = mb_substr($request->name,1);
-        $first = mb_strtoupper($first, 'UTF-8');
-        $department->name = $first.$last;
-
-        if (isset($request->parent_id)) {
-            $department->filial_id = $request->filial_id;
-            $department->parent_id = $request->parent_id;
-        }
-
-        $department->code_map = $request->code_map;
-        $department->email = $request->email;
-
-        // Отображение на сайте
-        $department->display = $request->display;
-        $department->system = $request->system;
-
-        $department->author_id = hideGod($user);
-
-        $department->save();
+        $data = $request->validated();
+        $data['location_id'] = create_location($request);
+        $department = Department::create($data);
 
         if ($department) {
+
+
+            $department->cities()->sync($request->cities);
 
             // Расписание
             setSchedule($request, $department);
@@ -205,74 +212,87 @@ class DepartmentController extends Controller
         }
     }
 
+    /**
+     * Отображение указанного ресурса
+     *
+     * @param $id
+     */
     public function show($id)
     {
-
+        //
     }
 
+    /**
+     * Показать форму для редактирования указанного ресурса
+     *
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function edit($id)
     {
 
-        $department = Department::moderatorLimit(operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__)))->findOrFail($id);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $department = Department::with([
+            'cities'
+        ])
+        ->moderatorLimit($answer)
+            ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $department);
 
-        \JavaScript::put([
-            'city' => $department->location->city,
-        ]);
-
-        return view('departments.edit', [
-            'department' => $department,
-            'entity' => $this->entity_alias,
-            'title' => isset($department->parent_id) ? 'Редактирование отдела' : 'Редактирование филиала',
-            'parent_id' => $department->parent_id,
-            'category_id' => $department->category_id
-        ]);
+        if (isset($department->parent_id)) {
+            return view('system.pages.hr.departments.department.edit', [
+                'department' => $department,
+                'title' => isset($department->parent_id) ? 'Редактирование отдела' : 'Редактирование филиала',
+                'entity' => $this->entity_alias,
+                'parent_id' => $department->parent_id,
+                'filial_id' => $department->filial_id,
+            ]);
+        } else {
+            return view('system.pages.hr.departments.filial.edit', [
+                'department' => $department,
+                'page_info' => pageInfo($this->entity_alias),
+            ]);
+        }
     }
 
+    /**
+     * Обновление указанного ресурса в хранилище
+     *
+     * @param DepartmentRequest $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function update(DepartmentRequest $request, $id)
     {
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $department = Department::moderatorLimit(operator_right($this->entity_alias, $this->entity_alias, getmethod(__FUNCTION__)))
+        $department = Department::moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $department);
 
-        if (isset($department->location_id)) {
+        $data = $request->validated();
+        $data['location_id'] = create_location($request);
+        $result = $department->update($data);
+//        dd($department);
 
-            // Обновляем локацию
-            $department = update_location($request, $department);
-        }
-
-        // Имя филиала / отдела
-        $first = mb_substr($request->name,0,1, 'UTF-8'); //первая буква
-        $last = mb_substr($request->name,1); //все кроме первой буквы
-        $first = mb_strtoupper($first, 'UTF-8');
-        $department->name = $first.$last;
-
-        $department->editor_id = hideGod($request->user());
-
-        $status = isset($request->parent_id) ? 'отдела' : 'филиала';
-        $department->parent_id = $request->parent_id;
-
-        $department->code_map = $request->code_map;
-        $department->email = $request->email;
-
-        // Отображение на сайте
-        $department->display = $request->display;
-        $department->system = $request->system;
-
-        $department->save();
-
-        if ($department) {
+        if ($result) {
             // Расписание
             setSchedule($request, $department);
 
             // Телефон
             $this->savePhones($department);
 //            add_phones($request, $department);
+
+            $department->cities()->sync($request->cities);
 
             // Переадресовываем на index
             return redirect()->route('departments.index', ['id' => $department->id, 'item' => $this->entity_alias]);
@@ -281,6 +301,14 @@ class DepartmentController extends Controller
         }
     }
 
+    /**
+     * Удаление указанного ресурса из хранилища
+     *
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function destroy(Request $request, $id)
     {
 
@@ -288,7 +316,11 @@ class DepartmentController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $department = Department::with('staff', 'users', 'childs')
+        $department = Department::with([
+            'staff',
+            'users',
+            'childs'
+        ])
         ->moderatorLimit($answer)
         ->findOrFail($id);
 
@@ -298,13 +330,9 @@ class DepartmentController extends Controller
         // Получаем пользователя
         $user = $request->user();
 
-        // Скрываем бога
-        $department->editor_id = hideGod($user);
-        $department->save();
-
         $parent = $department->parent_id;
 
-        $department = Department::destroy($id);
+        $department->delete();
 
         if ($department) {
 

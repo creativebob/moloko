@@ -42,10 +42,6 @@ class UserObserver
 
     public function saving(User $user)
     {
-        if (isset($user->first_name) || isset($user->second_name)) {
-            $user->name = $user->first_name . ' ' . $user->second_name;
-        } else {
-            $user->name = $user->login;
-        }
+        $user->name = $user->first_name . ' ' . $user->second_name;
     }
 }

@@ -108,6 +108,7 @@ class ArticlesCategoriesWithItemsComposer
             'items' => $items,
             'manufacturers' => $manufacturers
         ];
+//        dd($articles_categories_with_items_data);
 
         return $view->with(compact('articles_categories_with_items_data'));
     }

@@ -107,7 +107,7 @@
           <th class="td-email">Почта</th>
           <th class="td-contragent-status">Статус</th>
           <th class="td-staffer">Должность</th>
-
+            @if(extra_right('auth-under-user'))<th class="td-getauth">Действие</th> @endif
           <th class="td-access-block">Доступ</th>
           <th class="td-control"></th>
           <th class="td-delete"></th>
@@ -128,28 +128,14 @@
             @endif
             ><label class="label-check" for="check-{{ $user->id }}"></label>
           </td>
-          <td class="td-second-name">
-            @php
-            $edit = 0;
-            @endphp
-            @can('update', $user)
-            @php
-            $edit = 1;
-            @endphp
-            @endcan
+          <td class="td-name">
 
-            @if($edit == 1)
-              <a href="{{ route('users.edit', [$site_id, $user->id]) }}">
-            @endif
+              @can('update', $user)
+                  <a href="{{ route('users.edit', [$site_id, $user->id]) }}">{{ $user->name ?? "Имя не указано" }}</a>
+              @else
+                  {{ $user->name ?? "Имя не указано" }}
+              @endcan
 
-              {{ $user->second_name . " " . $user->first_name }}
-              @if($user->nickname != null)
-                {{ $user->nickname }}
-              @endif
-
-            @if($edit == 1)
-              </a>
-            @endif
 
           </td>
           <td class="td-login">{{ $user->login }}</td>
@@ -158,6 +144,13 @@
           <td class="td-email">{{ $user->email }}</td>
           <td class="td-contragent-status">{{ decor_user_type($user->user_type) }}</td>
           <td class="td-staffer">@if(!empty($user->staff->first()->position->name)) {{ $user->staff->first()->position->name }} @endif</td>
+
+            @if(extra_right('auth-under-user') && !empty($user->company_id))
+                <td class="td-getauth">
+                    {{ link_to_route('users.getauthuser', "Авторизоваться", ['user_id' => $user->id], ['class' => "tiny button"]) }}
+                </td>
+            @endif
+
           <td class="td-access-block">{{ decor_access_block($user->access_block) }}</td>
 
           {{-- Элементы управления --}}

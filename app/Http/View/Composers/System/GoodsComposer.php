@@ -20,17 +20,27 @@ class GoodsComposer
         //     'parent_id'
         // ];
 
-        $goods_categories = GoodsCategory::with([
+        $goodsCategories = GoodsCategory::with([
             'goods' => function ($q) {
-                $q->with([
-                    'article' => function ($q) {
+                $q->where('archive', false)
+                    ->whereHas('article', function ($q) {
                         $q->where([
                             'draft' => false,
-                            'kit' => false
                         ]);
-                    }
-                ])
-                    ->where('archive', false);
+                    })
+                    ->with([
+                        'article' => function ($q) {
+                            $q->with([
+                                'unit'
+                            ])
+                                ->where([
+                                    'draft' => false,
+                                ]);
+                        },
+                        'category',
+                        'unit_for_composition'
+                    ])
+                    ->orderBy('sort');
             }
         ])
         ->whereHas('goods', function ($q) {
@@ -45,10 +55,19 @@ class GoodsComposer
         ->moderatorLimit($answer)
         ->systemItem($answer)
         ->companiesLimit($answer)
-        ->orderBy('sort', 'asc')
+        ->orderBy('sort')
         ->get();
 //         dd($goods_categories);
 
-        return $view->with(compact('goods_categories'));
+        $goods = [];
+        foreach($goodsCategories as $goodsCategory) {
+            foreach ($goodsCategory->goods as $item) {
+//                $item->category = $relatedCategory;
+                $goods[] = $item;
+            }
+        };
+        $goods = collect($goods);
+
+        return $view->with(compact('goodsCategories', 'goods'));
     }
 }

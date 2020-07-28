@@ -22,6 +22,7 @@ class ArticlesCategoriesWithGroupsComposer
         ->with([
             'groups:id,name'
         ])
+            ->orderBy('sort')
             ->get([
                 'id',
                 'name',

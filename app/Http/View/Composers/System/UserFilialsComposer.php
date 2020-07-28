@@ -8,8 +8,15 @@ class UserFilialsComposer
 {
 	public function compose(View $view)
 	{
-        $user_filials  = session('access.all_rights.index-prices_goods-allow.filials');
+	    $catalog = $view->catalog;
+	    $filials = $catalog->filials->pluck('name', 'id')->toArray();
 
-		return $view->with(compact('user_filials'));
+        $userFilials  = session('access.all_rights.index-prices_goods-allow.filials');
+//        dd($userFilials);
+
+        $filials = array_intersect_assoc($filials, $userFilials);
+//        dd($filials);
+
+		return $view->with(compact('filials'));
 	}
 }

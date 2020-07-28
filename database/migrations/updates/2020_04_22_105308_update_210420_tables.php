@@ -124,11 +124,20 @@ class Update210420Tables extends Migration
         });
 
         Schema::table('users', function (Blueprint $table) {
+            $table->dateTime('login_date')->nullable()->comment('Последняя авторизация')->after('login');
             $table->integer('external')->nullable()->comment('Внешний id')->after('filial_id');
         });
 
         Schema::table('articles', function (Blueprint $table) {
             $table->text('video')->nullable()->comment('Видео')->after('video_url');
+        });
+
+        Schema::table('catalogs_goods_items', function (Blueprint $table) {
+            $table->boolean('is_hide_submenu')->default(0)->comment('Не отображать субменю')->after('is_show_subcategory');
+        });
+
+        Schema::table('catalogs_services_items', function (Blueprint $table) {
+            $table->boolean('is_hide_submenu')->default(0)->comment('Не отображать субменю')->after('is_show_subcategory');
         });
     }
 
@@ -245,8 +254,9 @@ class Update210420Tables extends Migration
             ]);
         });
 
-        Schema::table('leads', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->dropColumn([
+                'login_date',
                 'external',
             ]);
         });
@@ -254,6 +264,18 @@ class Update210420Tables extends Migration
         Schema::table('articles', function (Blueprint $table) {
             $table->dropColumn([
                 'video',
+            ]);
+        });
+
+        Schema::table('catalogs_goods_items', function (Blueprint $table) {
+            $table->dropColumn([
+                'is_hide_submenu',
+            ]);
+        });
+
+        Schema::table('catalogs_services_items', function (Blueprint $table) {
+            $table->dropColumn([
+                'is_hide_submenu',
             ]);
         });
     }

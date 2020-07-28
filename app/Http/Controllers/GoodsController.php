@@ -29,7 +29,6 @@ class GoodsController extends Controller
 
     use Articlable;
 
-
     public function index(Request $request)
     {
 
@@ -480,8 +479,35 @@ class GoodsController extends Controller
             'article' => function ($q) {
                 $q->with([
                     'unit',
-                    'raws.article.group.unit',
-                    'raws.category'
+                    'goods' => function ($q) {
+                        $q->with([
+                            'category',
+                            'article.unit',
+                            'unit_for_composition'
+                        ]);
+                    },
+                    'raws'  => function ($q) {
+                        $q->with([
+                            'category',
+                            'article.unit',
+                            'unit_for_composition',
+                            'unit_portion'
+                        ]);
+                    },
+                    'attachments' => function ($q) {
+                        $q->with([
+                            'category',
+                            'article.unit',
+                            'unit_for_composition'
+                        ]);
+                    },
+                    'containers' => function ($q) {
+                        $q->with([
+                            'category',
+                            'article.unit',
+                            'unit_for_composition'
+                        ]);
+                    },
                 ]);
             },
             'metrics',
@@ -493,6 +519,7 @@ class GoodsController extends Controller
                     'currency'
                 ]);
             },
+
             'related' => function ($q) {
                 $q->with([
                    'category',

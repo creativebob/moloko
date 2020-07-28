@@ -120,7 +120,7 @@
     $(document).on('click', '.icon-add', function(event) {
 
         $.get('/admin/catalogs_goods/' + catalog_id + '/prices_goods/create', {
-            filial_id: $('#select-user_filials').val()
+            filial_id: $('#select-filials').val()
         }, function(html) {
             $('#modals').html(html);
             hidePrices();
@@ -143,10 +143,10 @@
     });
 
     // Перезагружаем страницу при смене select'a филиалов для пользователя
-    $(document).on('change', '#select-user_filials', function(event) {
+    $(document).on('change', '#select-filials', function(event) {
         event.preventDefault();
 
-        let fillial_id = $('#select-user_filials').val();
+        let fillial_id = $('#select-filials').val();
         let url = "prices_goods?filial_id=" + fillial_id;
         $(location).attr('href',url);
     });

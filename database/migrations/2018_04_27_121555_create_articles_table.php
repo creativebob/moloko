@@ -31,10 +31,10 @@ class CreateArticlesTable extends Migration
 
             $table->boolean('kit')->default(0)->unsigned()->comment('Статус набора');
 
-            $table->integer('cost_default')->nullable()->comment('Фиксированная себестоимость (руками)');
+            $table->integer('cost_default')->default(0)->comment('Фиксированная себестоимость (руками)');
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим определения себестоимости');
 
-            $table->integer('price_default')->nullable()->comment('Фиксированная цена (руками)');
+            $table->integer('price_default')->default(0)->comment('Фиксированная цена (руками)');
             $table->integer('price_mode')->nullable()->unsigned()->comment('Режим определения цены');
 
             $table->bigInteger('price_rule_id')->nullable()->unsigned()->comment('ID ценовой политики');
@@ -56,14 +56,14 @@ class CreateArticlesTable extends Migration
             $table->boolean('package_status')->default(0)->unsigned()->comment('Статус компоновки');
             $table->string('package_name')->nullable()->comment('Имя компоновки');
             $table->string('package_abbreviation')->nullable()->comment('Сокращение имени компоновки');
-            $table->integer('package_count')->nullable()->unsigned()->comment('Количество в компонвке');
+            $table->integer('package_count')->default(0)->unsigned()->comment('Количество в компонвке');
 
-            $table->decimal('weight', 15, 8)->nullable()->comment('Вес (кг)');
+            $table->decimal('weight', 15, 8)->default(0)->comment('Вес (кг)');
 
             $table->bigInteger('unit_weight_id')->nullable()->unsigned()->comment('Id единицы измерения для веса');
             $table->foreign('unit_weight_id')->references('id')->on('units');
 
-            $table->decimal('volume', 15, 8)->nullable()->comment('Объем (к.м.)');
+            $table->decimal('volume', 15, 8)->default(0)->comment('Объем (к.м.)');
 
             $table->bigInteger('unit_volume_id')->nullable()->unsigned()->comment('Id единицы измерения для объема');
             $table->foreign('unit_volume_id')->references('id')->on('units');

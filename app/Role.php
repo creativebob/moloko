@@ -46,18 +46,19 @@ class Role extends Model
     // use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at'
+    ];
+
     protected $fillable = [
-        'id',
-        'role_name',
-        'role_description',
-        'category_right_id',
+        'name',
+        'description',
 
         'display',
         'system',
         'moderation',
 
-        // TODO - 13.04.20 - Удалить, разлочено для обновы
+        'author_id',
         'company_id'
     ];
 

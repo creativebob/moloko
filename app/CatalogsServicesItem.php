@@ -60,6 +60,7 @@ class CatalogsServicesItem extends Model
 
         'is_controllable_mode',
         'is_show_subcategory',
+        'is_hide_submenu',
 
         'display',
         'system',

@@ -14,14 +14,28 @@ class RawsComposer
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('raws_categories', false, 'index');
 
-        $raws_categories = RawsCategory::with([
+        $rawsCategories = RawsCategory::with([
             'raws' => function ($q) {
-                $q->with([
-                    'article' => function ($q) {
-                        $q->where('draft', false);
-                    }
-                ])
-                    ->where('archive', false);
+                $q->where('archive', false)
+                    ->whereHas('article', function ($q) {
+                        $q->where([
+                            'draft' => false,
+                        ]);
+                    })
+                    ->with([
+                        'article' => function ($q) {
+                            $q->with([
+                                'unit',
+                            ])
+                                ->where([
+                                    'draft' => false,
+                                ]);
+                        },
+                        'category',
+                        'unit_for_composition',
+                        'unit_portion'
+                    ])
+                    ->orderBy('sort');
             }
         ])
         ->whereHas('raws', function ($q) {
@@ -37,7 +51,16 @@ class RawsComposer
         ->get();
 //        dd($raws_categories);
 
-        return $view->with(compact('raws_categories'));
+        $raws = [];
+        foreach($rawsCategories as $rawsCategory) {
+            foreach ($rawsCategory->raws as $item) {
+//                $item->category = $relatedCategory;
+                $raws[] = $item;
+            }
+        };
+        $raws = collect($raws);
+
+        return $view->with(compact('rawsCategories', 'raws'));
     }
 
 }

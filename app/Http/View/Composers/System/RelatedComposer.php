@@ -42,7 +42,8 @@ class RelatedComposer
                         ]);
                     },
                         'category'
-                ]);
+                ])
+                    ->orderBy('sort');
             }
         ])
         ->whereHas('goods', function ($q) {
@@ -60,14 +61,14 @@ class RelatedComposer
         ->get();
 //         dd($relatedCategories);
 
-        $relatedGoods = [];
+        $related = [];
         foreach($relatedCategories as $relatedCategory) {
             foreach ($relatedCategory->goods as $item) {
 //                $item->category = $relatedCategory;
-                $relatedGoods[] = $item;
+                $related[] = $item;
             }
         };
 
-        return $view->with(compact('relatedCategories', 'relatedGoods'));
+        return $view->with(compact('relatedCategories', 'related'));
     }
 }

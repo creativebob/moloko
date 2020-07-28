@@ -14,11 +14,13 @@ class CatalogsGoodsWithFilialsComposer
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right('catalogs_goods', false, 'index');
 
-        // TODO - 25.12.19 - Нужна разбивка каталогово по филиалау пользователя
+        // TODO - 25.12.19 - Нужна разбивка каталогов по филиалау пользователя
 
         // Главный запрос
         $catalogsGoods = CatalogsGoods::with([
-            'items',
+            'items' => function ($q) {
+                $q->orderBy('sort');
+            },
             'filials'
         ])
         ->moderatorLimit($answer)
