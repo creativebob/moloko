@@ -17,8 +17,8 @@
             v-if="estimateAmount > 0"
         >
             <div>Общая стоимость: {{ estimateAmount | roundToTwo | level }}</div>
-            <div>Скидка: {{ estimateItemsDiscount | roundToTwo | level }}</div>
-            <div>Итого: {{ estimateTotal | roundToTwo | level }}</div>
+            <div>Сумма скидок: {{ estimateItemsDiscount | roundToTwo | level }}</div>
+            <div>Итого к оплате: {{ estimateTotal | roundToTwo | level }}</div>
         </template>
 
 	</div>
