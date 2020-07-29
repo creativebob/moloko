@@ -42,6 +42,24 @@ class AppController extends Controller
         }
     }
 
+    public function filials(Request $request)
+    {
+        if (Cookie::get('domain') !== null) {
+            return \Redirect::away('https://'.Cookie::get('domain'));
+        } else {
+            $site = $this->site;
+        return view($site->alias.'.pages.start.index', compact('site'));
+        }
+    }
+
+    public function changeFilial(Request $request, $domain)
+    {
+        // dd(__METHOD__);
+        Cookie::queue(Cookie::forever('domain', $domain));
+        return \Redirect::away('https://'.$domain);
+
+    }
+
     /**
      * Перенаправление с одного города (поддомена) на другой, и записсь нового в куку
      *
@@ -207,7 +225,7 @@ class AppController extends Controller
                                 // Если проверка пройдена - АВТОРИЗУЕМ!
                                 Auth::loginUsingId($user->id);
                                 Log::info('Пользователь залогинился ==========================================================');
-                                return redirect('/cabinet');
+                                return redirect('estimates');
 
                         } else {
                             abort(403, 'Код устарел или введен с ошибками');
@@ -348,7 +366,6 @@ class AppController extends Controller
     }
 
 
-
     public function confirmation(Request $request)
     {
 
@@ -423,17 +440,17 @@ class AppController extends Controller
         }
     }
 
-	public function delivery_update(Request $request)
-	{
-		$data = Carbon::createFromFormat('d.m.Y H:i', $request->delivery_date . ' ' . $request->delivery_time);
-		$res = Lead::where('id', $request->lead_id)
-			->update([
-				'delivered_at' => $data
-			]);
+    public function delivery_update(Request $request)
+    {
+        $data = Carbon::createFromFormat('d.m.Y H:i', $request->delivery_date . ' ' . $request->delivery_time);
+        $res = Lead::where('id', $request->lead_id)
+            ->update([
+                'delivered_at' => $data
+            ]);
 
-		if ($res) {
-			return response()->json(true);
-		}
-	}
+        if ($res) {
+            return response()->json(true);
+        }
+    }
 
 }
