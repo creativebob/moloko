@@ -17,8 +17,8 @@ Route::get('/', 'AppController@start')
 
 
 // Смена города
-Route::get('/filials', 'AppController@filials')
-    ->name('project.filials');
+//Route::get('/filials', 'AppController@filials')
+//    ->name('project.filials');
 Route::get('/change_filial/{domain}', 'AppController@changeFilial')
     ->name('project.changeFilial');
 

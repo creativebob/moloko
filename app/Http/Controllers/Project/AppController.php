@@ -33,6 +33,13 @@ class AppController extends Controller
             if (isset($site->domain->start_url)) {
                 return redirect($site->domain->start_url . $request->getRequestUri());
             } else {
+
+                if (config('app.multidomains') == true) {
+                    if (Cookie::get('domain') !== null) {
+                        return \Redirect::away('https://'.Cookie::get('domain'));
+                    }
+                }
+
                 $page = $site->pages_public
                     ->where('alias', 'main')
                     ->first();
@@ -42,15 +49,15 @@ class AppController extends Controller
         }
     }
 
-    public function filials(Request $request)
-    {
-        if (Cookie::get('domain') !== null) {
-            return \Redirect::away('https://'.Cookie::get('domain'));
-        } else {
-            $site = $this->site;
-        return view($site->alias.'.pages.start.index', compact('site'));
-        }
-    }
+//    public function filials(Request $request)
+//    {
+//        if (Cookie::get('domain') !== null) {
+//            return \Redirect::away('https://'.Cookie::get('domain'));
+//        } else {
+//            $site = $this->site;
+//        return view($site->alias.'.pages.start.index', compact('site'));
+//        }
+//    }
 
     public function changeFilial(Request $request, $domain)
     {
