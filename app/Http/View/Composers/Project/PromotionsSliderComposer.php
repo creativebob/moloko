@@ -34,7 +34,13 @@ class PromotionsSliderComposer
                         ->where('is_slider', true)
                         ->where('begin_date', '<=', today())
                         ->where('end_date', '>=', today())
-                        ->whereIn('prom', $prom);
+
+                        ->when(is_array($prom), function ($q) use ($prom) {
+                            $q->whereIn('prom', $prom);
+                        })
+                        ->when(is_string($prom), function ($q) use ($prom) {
+                            $q->where('prom', $prom);
+                        });
                 });
             })
             ->orderBy('sort')

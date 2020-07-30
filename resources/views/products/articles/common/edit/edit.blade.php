@@ -250,7 +250,10 @@
 
 						{{-- Метрики --}}
 						@includeIf('products.articles.'.$item->getTable().'.metrics.metrics')
-						@include('products.common.edit.metrics.metrics')
+
+                        @if ($item->getTable() == 'goods') {
+                            @include('products.common.edit.metrics.metrics')
+                        }
 
 
 
