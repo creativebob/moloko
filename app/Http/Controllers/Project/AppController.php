@@ -63,7 +63,11 @@ class AppController extends Controller
     {
         // dd(__METHOD__);
         Cookie::queue(Cookie::forever('domain', $domain));
-        $path = 'https://' . $domain . '?' . http_build_query($request->input());
+        $path = 'https://' . $domain;
+        $params = $request->input();
+        if (isset($params)) {
+            $path .= '?' . http_build_query($params);
+        }
         return \Redirect::away($path);
     }
 
