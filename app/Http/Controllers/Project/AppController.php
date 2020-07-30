@@ -58,12 +58,13 @@ class AppController extends Controller
 //        return view($site->alias.'.pages.start.index', compact('site'));
 //        }
 //    }
-
+    
     public function changeFilial(Request $request, $domain)
     {
         // dd(__METHOD__);
         Cookie::queue(Cookie::forever('domain', $domain));
-        return \Redirect::away('https://' . $domain . '?' . $request->getRequestUri());
+        $path = 'https://' . $domain . '?' . http_build_query($request->input());
+        return \Redirect::away($path);
     }
 
     /**
