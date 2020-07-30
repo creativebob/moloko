@@ -44,7 +44,7 @@ class AppController extends Controller
                     ->where('alias', 'main')
                     ->first();
 
-                return view($site->alias.'.pages.main.index', compact('site',  'page'));
+                return view($site->alias . '.pages.main.index', compact('site',  'page'));
             }
         }
     }
@@ -63,8 +63,7 @@ class AppController extends Controller
     {
         // dd(__METHOD__);
         Cookie::queue(Cookie::forever('domain', $domain));
-        return \Redirect::away('https://'.$domain);
-
+        return \Redirect::away('https://' . $domain . '?' . $request->getRequestUri());
     }
 
     /**

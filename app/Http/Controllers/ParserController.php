@@ -59,8 +59,36 @@ class ParserController extends Controller
 
     public function test()
     {
-        $article = \App\Models\System\External\Article::first();
-        dd($article);
+        dd(__METHOD__);
+    }
+    
+    /**
+     * Архивирование товаров
+     *
+     * @return string
+     */
+    public function parserArchiveGoods()
+    {
+        $goods = Goods::with([
+            'prices'
+        ])
+            ->get();
+        
+        foreach ($goods as $curGood) {
+            if ($curGood->prices->isNotEmpty()) {
+                foreach ($curGood->prices as $price) {
+                    $result = $price->update([
+                        'archive' => true,
+                    ]);
+                }
+            }
+            
+            $curGood->update([
+                'archive' => true,
+            ]);
+        }
+    
+        return "Все товары найденные в системе и их прайсы перемещены в архив";
     }
 
     /**

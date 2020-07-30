@@ -37,6 +37,7 @@ Route::get('/update_parser', 'ParserController@parser');
 Route::get('/roll_house_parser', 'ParserController@roll_house_parser');
 Route::get('/parser_rh_goods_metrics', 'ParserController@parserRhGoodsMetrics');
 Route::get('/parsers/130420', 'ParserController@parser_130420');
+Route::get('/parsers/archive_goods', 'ParserController@parserArchiveGoods');
 
 Route::get('/parsers/test', 'ParserController@test');
 
@@ -62,7 +63,6 @@ Route::get('/img/{item_id}/{entity}/{size?}', 'ImageController@show')->name('get
 //    ->where('path', '.*')
 ;
 Route::get('/home', 'HomeController@index')->name('home');
-
 
 
 // ----------------------------- Рабочий стол -------------------------------------
