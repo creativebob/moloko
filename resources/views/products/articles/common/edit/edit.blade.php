@@ -251,9 +251,9 @@
 						{{-- Метрики --}}
 						@includeIf('products.articles.'.$item->getTable().'.metrics.metrics')
 
-                        @if ($item->getTable() == 'goods') {
+                        @if ($item->getTable() == 'goods')
                             @include('products.common.edit.metrics.metrics')
-                        }
+                        @endif
 
 
 
