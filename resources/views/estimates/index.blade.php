@@ -85,8 +85,8 @@
                     <span class="tiny-text">{{ $estimate->created_at->format('H:i') }}</span>
                 </td>
                 <td class="td-amount">{{ num_format($estimate->amount, 0) }}</td>
-                <td class="td-payment">{{ num_format($estimate->payment, 0) }}
-                  <br><span class="tiny-text">{{ num_format($estimate->amount - $estimate->payment, 0) }}</span>
+                <td class="td-payment">{{ num_format($estimate->payments->sum('amount'), 0) }}
+                  <br><span class="tiny-text">{{ num_format($estimate->total - $estimate->payments->sum('amount'), 0) }}</span>
               </td>
 
                   <td class="td-margin_currency">{{ num_format($estimate->margin_currency, 0) }}</td>

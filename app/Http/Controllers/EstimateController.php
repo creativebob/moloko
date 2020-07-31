@@ -51,7 +51,8 @@ class EstimateController extends Controller
         $estimates = Estimate::with([
             'client.clientable.location',
             'goods_items',
-            'author'
+            'author',
+            'payments'
         ])
             ->moderatorLimit($answer)
             ->companiesLimit($answer)

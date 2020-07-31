@@ -76,6 +76,8 @@ class CartController extends Controller
         // Грузим продвижения с отображением на корзине
         $filial_id = $site->filial->id;
 
+        $prom = json_decode(\Cookie::get('prom'), true) ?? request()->prom;
+
         $promotions = Promotion::with([
             'prices_goods' => function ($q) use ($filial_id) {
                 $q->with([
@@ -97,6 +99,26 @@ class CartController extends Controller
             })
             ->where('begin_date', '<=', today())
             ->where('end_date', '>=', today())
+            ->whereNull('prom')
+            ->when($prom, function ($q) use ($site, $prom) {
+                $q->orWhere(function($q) use ($site, $prom) {
+                    $q->display()
+                        ->company($site->company_id)
+                        ->whereHas('filials', function($q) use ($site) {
+                            $q->where('id', $site->filial->id);
+                        })
+                        ->where('is_slider', true)
+                        ->where('begin_date', '<=', today())
+                        ->where('end_date', '>=', today())
+
+                        ->when(is_array($prom), function ($q) use ($prom) {
+                            $q->whereIn('prom', $prom);
+                        })
+                        ->when(is_string($prom), function ($q) use ($prom) {
+                            $q->where('prom', $prom);
+                        });
+                });
+            })
             ->get();
 
         $page = $site->pages_public->firstWhere('alias', 'cart');
