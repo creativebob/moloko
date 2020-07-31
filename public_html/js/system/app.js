@@ -86861,7 +86861,7 @@ var render = function() {
     _c("input", {
       attrs: {
         type: "checkbox",
-        name: "related[]",
+        name: _vm.name + "[]",
         id: "checkbox-" + _vm.name + "-" + _vm.item.id
       },
       domProps: { value: _vm.item.id, checked: _vm.checkChecked },

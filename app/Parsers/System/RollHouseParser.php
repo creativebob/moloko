@@ -65,6 +65,7 @@ class RollHouseParser
 
         define("ANGARSK", 3);
         define("USOLYE", 2);
+        define("BRATSK", 8);
 
         $pricesGoods = PricesGoods::with([
             'goods.article'
@@ -72,7 +73,7 @@ class RollHouseParser
             ->where('archive', false)
             ->get();
 
-        $oldClients = ParseClient::whereIn('branch_id', [ANGARSK, USOLYE])
+        $oldClients = ParseClient::whereIn('branch_id', [ANGARSK, USOLYE, BRATSK])
             ->with([
                 'checks' => function ($q) {
                     $q->whereDate('created', '>', '2016-03-03')
@@ -134,12 +135,22 @@ class RollHouseParser
                     } else {
                         // если телефона нет в нашей БД, заводим юзера
 
-                        if ($oldClient->branch_id) {
-                            $city_id = ($oldClient->branch_id == ANGARSK) ? 2 : 4;
-                        } else {
-                            $city_id = 2;
+                        $city_id = 2;
+                        $filial_id = 1;
+                        switch ($oldClient->branch_id) {
+                            case (ANGARSK):
+                                $city_id = 2;
+                                $filial_id = 1;
+                                break;
+                            case (USOLYE):
+                                $city_id = 4;
+                                $filial_id = 2;
+                                break;
+                            case (BRATSK):
+                                $city_id = 3;
+                                $filial_id = 3;
+                                break;
                         }
-                        $filial_id = ($city_id == 2) ? 1 : 2;
 
                         $userNumber = ParseUser::withTrashed()
                             ->count();
@@ -264,12 +275,22 @@ class RollHouseParser
                     if ($oldClient->checks->isNotEmpty()) {
                         foreach($oldClient->checks as $check) {
 
-                            if ($check->branch_id) {
-                                $city_id = ($check->branch_id == ANGARSK) ? 2 : 4;
-                            } else {
-                                $city_id = 2;
+                            $city_id = 2;
+                            $filial_id = 1;
+                            switch ($check->branch_id) {
+                                case (ANGARSK):
+                                    $city_id = 2;
+                                    $filial_id = 1;
+                                    break;
+                                case (USOLYE):
+                                    $city_id = 4;
+                                    $filial_id = 2;
+                                    break;
+                                case (BRATSK):
+                                    $city_id = 3;
+                                    $filial_id = 3;
+                                    break;
                             }
-                            $filial_id = ($city_id == 2) ? 1 : 2;
 
                             $lead = ParseLead::with([
                                 'estimates'
@@ -702,6 +723,7 @@ class RollHouseParser
 
         define("ANGARSK", 3);
         define("USOLYE", 2);
+        define("BRATSK", 8);
         define("COMPANY", 1);
         define("AUTHOR", 1);
         $authUser = auth()->user();
@@ -785,12 +807,22 @@ class RollHouseParser
                 } else {
                     // если телефона нет в нашей БД, заводим юзера
 
-                    if ($oldClient->branch_id) {
-                        $city_id = ($oldClient->branch_id == ANGARSK) ? 2 : 4;
-                    } else {
-                        $city_id = 2;
+                    $city_id = 2;
+                    $filial_id = 1;
+                    switch ($oldClient->branch_id) {
+                        case (ANGARSK):
+                            $city_id = 2;
+                            $filial_id = 1;
+                            break;
+                        case (USOLYE):
+                            $city_id = 4;
+                            $filial_id = 2;
+                            break;
+                        case (BRATSK):
+                            $city_id = 3;
+                            $filial_id = 3;
+                            break;
                     }
-                    $filial_id = ($city_id == 2) ? 1 : 2;
 
                     $userNumber = ParseUser::withTrashed()
                         ->count();
@@ -914,12 +946,22 @@ class RollHouseParser
                 $estimate = Estimate::where('external', $check->id)
                     ->first();
                 if (! $estimate) {
-                    if ($check->branch_id) {
-                        $city_id = ($check->branch_id == ANGARSK) ? 2 : 4;
-                    } else {
-                        $city_id = 2;
+                    $city_id = 2;
+                    $filial_id = 1;
+                    switch ($check->branch_id) {
+                        case (ANGARSK):
+                            $city_id = 2;
+                            $filial_id = 1;
+                            break;
+                        case (USOLYE):
+                            $city_id = 4;
+                            $filial_id = 2;
+                            break;
+                        case (BRATSK):
+                            $city_id = 3;
+                            $filial_id = 3;
+                            break;
                     }
-                    $filial_id = ($city_id == 2) ? 1 : 2;
 
                     // стол (не сайт)
                     if (isset($check->table) && $check->table != 99) {
