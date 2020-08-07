@@ -7,12 +7,14 @@ use App\Http\View\Composers\System\ArticlesCategoriesWithGroupsComposer;
 use App\Http\View\Composers\System\ArticlesCategoriesWithItemsComposer;
 use App\Http\View\Composers\System\ArticlesCategoriesWithItemsComposerForManufacturer;
 use App\Http\View\Composers\System\AttachmentsComposer;
+use App\Http\View\Composers\System\AuthorsComposer;
 use App\Http\View\Composers\System\CatalogGoodsWithPricesComposer;
 use App\Http\View\Composers\System\CatalogServicesWithPricesComposer;
 use App\Http\View\Composers\System\CatalogsGoodsWithFilialsComposer;
 use App\Http\View\Composers\System\ChannelsComposer;
 use App\Http\View\Composers\System\ChargesComposer;
 use App\Http\View\Composers\System\CitiesComposer;
+use App\Http\View\Composers\System\CitiesWithAreaRegionCountryComposer;
 use App\Http\View\Composers\System\CitySearchComposer;
 use App\Http\View\Composers\System\ClientsCitiesComposer;
 use App\Http\View\Composers\System\ClientsCountComposer;
@@ -24,8 +26,12 @@ use App\Http\View\Composers\System\DirectiveCategoriesComposer;
 use App\Http\View\Composers\System\DisplayModesComposer;
 use App\Http\View\Composers\System\EmployeesActiveCountComposer;
 use App\Http\View\Composers\System\EmployeesDismissalCountComposer;
+use App\Http\View\Composers\System\Filters\GoodsComposer;
 use App\Http\View\Composers\System\FiltersComposer;
 use App\Http\View\Composers\System\GoodsCategoriesTreeComposer;
+use App\Http\View\Composers\System\LeadMethodsComposer;
+use App\Http\View\Composers\System\LeadTypesComposer;
+use App\Http\View\Composers\System\ManagersComposer;
 use App\Http\View\Composers\System\NotificationsComposer;
 use App\Http\View\Composers\System\PaymentsTypesComposer;
 use App\Http\View\Composers\System\ProcessesCategoriesWithGroupsComposer;
@@ -33,6 +39,7 @@ use App\Http\View\Composers\System\RelatedComposer;
 use App\Http\View\Composers\System\SettingsComposer;
 use App\Http\View\Composers\System\SitesWIthFilialsAndCatalogsComposer;
 use App\Http\View\Composers\System\SourcesComposer;
+use App\Http\View\Composers\System\StagesComposer;
 use App\Http\View\Composers\System\StocksComposer;
 use App\Http\View\Composers\System\WidgetsComposer;
 use Illuminate\Support\Facades\View;
@@ -41,7 +48,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Http\View\Composers\System\SidebarComposer;
 use App\Http\View\Composers\System\SectorsSelectComposer;
 
-use App\Http\View\Composers\System\StagesComposer;
+use App\Http\View\Composers\System\StagesListComposer;
 
 use App\Http\View\Composers\System\CountriesComposer;
 
@@ -130,7 +137,7 @@ use App\Http\View\Composers\System\ArticlesGroupsComposer;
 use App\Http\View\Composers\System\ProcessesGroupsComposer;
 
 use App\Http\View\Composers\System\RawsComposer;
-use App\Http\View\Composers\System\GoodsComposer;
+use App\Http\View\Composers\System\GoodsCategoriesWithGoodsComposer;
 use App\Http\View\Composers\System\TmcComposer;
 
 use App\Http\View\Composers\System\WorkflowsComposer;
@@ -147,7 +154,7 @@ use App\Http\View\Composers\System\RubricatorsItemsComposer;
 
 
 use App\Http\View\Composers\System\ListChallengesComposer;
-use App\Http\View\Composers\System\LeadMethodsComposer;
+use App\Http\View\Composers\System\LeadMethodsListComposer;
 
 class ComposerServiceProvider extends ServiceProvider
 {
@@ -159,7 +166,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('includes.selects.sectors_select', SectorsSelectComposer::class);
 
         view()->composer('includes.selects.countries', CountriesComposer::class);
-        view()->composer('includes.selects.stages', StagesComposer::class);
+        view()->composer('includes.selects.stages', StagesListComposer::class);
 
         view()->composer('includes.selects.filials_for_user', FilialsForUserComposer::class);
         view()->composer('includes.selects.departments_for_user', DepartmentsForUserComposer::class);
@@ -192,7 +199,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer([
             'system.common.includes.city_search',
             'includes.lists.cities'
-        ], CitiesComposer::class);
+        ], CitiesWithAreaRegionCountryComposer::class);
 
         view()->composer([
             'includes.inputs.checker_contragents',
@@ -284,6 +291,9 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('system.pages.hr.departments.filials_list', DepartmentsViewComposer::class);
         view()->composer('includes.lists.departments', DepartmentsComposer::class);
 
+        // Филиалы
+        view()->composer('system.pages.hr.departments.filial.form', CitiesWithAreaRegionCountryComposer::class);
+
         view()->composer([
             'includes.lists.filials',
             'menus.form'
@@ -300,9 +310,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer([
             'includes.selects.goods_categories',
         ], GoodsCategoriesComposer::class);
-        view()->composer([
-            'products.articles.goods.includes.filters'
-        ], GoodsCategoriesTreeComposer::class);
+
 
         view()->composer('includes.selects.raws_categories', RawsCategoriesComposer::class);
         view()->composer('includes.selects.containers_categories', ContainersCategoriesComposer::class);
@@ -361,7 +369,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer([
             'products.articles.goods.goods.goods',
-        ], GoodsComposer::class);
+        ], GoodsCategoriesWithGoodsComposer::class);
 
         view()->composer([
             'products.articles_categories.goods_categories.related.related',
@@ -392,7 +400,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('layouts.challenges_for_me', ListChallengesComposer::class);
 
-        view()->composer('includes.selects.lead_methods', LeadMethodsComposer::class);
+        view()->composer('includes.selects.lead_methods', LeadMethodsListComposer::class);
 
         view()->composer('includes.selects.channels', ChannelsComposer::class);
 
@@ -421,6 +429,19 @@ class ComposerServiceProvider extends ServiceProvider
 
         // ТМЦ
         view()->composer('products.articles.common.index.includes.title', CmvArchivesCountComposer::class);
+
+        // Товары
+        view()->composer('products.articles.goods.includes.filters', GoodsCategoriesTreeComposer::class);
+        view()->composer('products.articles.goods.includes.filters', AuthorsComposer::class);
+
+        // Лиды
+        view()->composer('leads.includes.filters', CitiesComposer::class);
+        view()->composer('leads.includes.filters', StagesComposer::class);
+        view()->composer('leads.includes.filters', ManagersComposer::class);
+        view()->composer('leads.includes.filters', LeadMethodsComposer::class);
+        view()->composer('leads.includes.filters', LeadTypesComposer::class);
+        view()->composer('leads.includes.filters', GoodsComposer::class);
+        view()->composer('leads.includes.filters', SourcesComposer::class);
 
     }
 

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class ArticleController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Отображение списка ресурсов.
      *
      * @return \Illuminate\Http\Response
      */
@@ -18,7 +18,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса.
      *
      * @return \Illuminate\Http\Response
      */
@@ -28,7 +28,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -39,7 +39,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param  \App\Article  $article
      * @return \Illuminate\Http\Response
@@ -50,7 +50,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param  \App\Article  $article
      * @return \Illuminate\Http\Response
@@ -61,7 +61,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Article  $article
@@ -73,7 +73,7 @@ class ArticleController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param  \App\Article  $article
      * @return \Illuminate\Http\Response

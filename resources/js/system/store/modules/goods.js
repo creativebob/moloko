@@ -1,4 +1,4 @@
-const modulePromotion = {
+const moduleGoods = {
     state: {
         compositions: [],
     },
@@ -56,4 +56,4 @@ const modulePromotion = {
 
 };
 
-export default modulePromotion;
+export default moduleGoods;

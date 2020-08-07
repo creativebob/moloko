@@ -27,7 +27,7 @@ class DomainController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Отображение списка ресурсов.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -85,7 +85,7 @@ class DomainController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса.
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
@@ -102,7 +102,7 @@ class DomainController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param DomainRequest $request
      * @return \Illuminate\Http\RedirectResponse
@@ -140,7 +140,7 @@ class DomainController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param  \App\Domain  $domain
      * @return \Illuminate\Http\Response
@@ -151,7 +151,7 @@ class DomainController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -188,7 +188,7 @@ class DomainController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param DomainRequest $request
      * @param $id
@@ -233,7 +233,7 @@ class DomainController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param $id
      * @return \Illuminate\Http\RedirectResponse

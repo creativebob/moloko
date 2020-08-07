@@ -13,13 +13,29 @@
             <estimates-services-items-component :items="servicesList"></estimates-services-items-component>
         </template>
 
-        <template
-            v-if="estimateAmount > 0"
-        >
-            <div>Общая стоимость: {{ estimateAmount | roundToTwo | level }}</div>
-            <div>Сумма скидок: {{ estimateItemsDiscount | roundToTwo | level }}</div>
-            <div>Итого к оплате: {{ estimateTotal | roundToTwo | level }}</div>
-        </template>
+        <div v-if="estimateAmount > 0">Общая стоимость: {{ estimateAmount | decimalPlaces | decimalLevel }}</div>
+        <div v-if="estimateItemsDiscount > 0">Сумма скидок: {{ estimateItemsDiscount | decimalPlaces | decimalLevel }}</div>
+        <div v-if="estimateTotalPoints > 0">Сумма поинтов: {{ estimateTotalPoints | onlyInteger | decimalLevel }}</div>
+        <div v-if="estimateTotal > 0">Итого к оплате: {{ estimateTotal | decimalPlaces | decimalLevel }}</div>
+
+        <div class="grid-x">
+            <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
+                <register-button-component></register-button-component>
+            </div>
+
+<!--            <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">-->
+<!--                <production-button-component></estimate-production-button-component>-->
+<!--            </div>-->
+
+            <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
+                <sale-button-component></sale-button-component>
+            </div>
+
+            <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
+                <print-button-component></print-button-component>
+            </div>
+
+        </div>
 
 	</div>
 
@@ -28,8 +44,11 @@
 <script>
     export default {
 		components: {
-			'estimates-goods-items-component': require('./goods/EstimatesGoodsItemsComponent.vue'),
-            'estimates-services-items-component': require('./services/EstimatesServicesItemsComponent.vue')
+			'estimates-goods-items-component': require('./goods/EstimatesGoodsItemsComponent'),
+            'estimates-services-items-component': require('./services/EstimatesServicesItemsComponent'),
+            'register-button-component': require('./buttons/RegisterButtonComponent'),
+            'sale-button-component': require('./buttons/SaleButtonComponent'),
+            'print-button-component': require('./buttons/SaleButtonComponent'),
 		},
         props: {
             estimate: Object,
@@ -58,23 +77,34 @@
 			}
 		},
 		computed: {
+		    // Товары
 			goodsList() {
 				return this.$store.state.estimate.goodsItems;
 			},
+
+            // Услуги
             servicesList() {
                 return this.$store.state.estimate.servicesItems;
             },
+
+            // Смета
             estimateAmount() {
                 return this.$store.getters.estimateAmount;
             },
+            estimateItemsDiscount() {
+                return this.$store.getters.estimateItemsDiscount;
+            },
+
             estimateTotal() {
                 return this.$store.getters.estimateTotal;
             },
-            estimateItemsDiscount() {
-                return this.$store.getters.goodsItemsDiscount;
+            estimateTotalPoints() {
+                return this.$store.getters.estimateTotalPoints;
             },
-		},
 
+
+
+		},
 		methods: {
             openModalServices(item, index) {
                 this.itemServicesIndex = index;
@@ -123,17 +153,26 @@
             },
 
 		},
+        filters: {
+            decimalPlaces(value) {
+                return parseFloat(value).toFixed(2);
+            },
+            decimalLevel: function (value) {
+                return parseFloat(value).toLocaleString();
+            },
+            roundToTwo: function (value) {
+                return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+            },
+            // Создает разделители разрядов в строке с числами
+            level: function (value) {
+                return parseInt(value).toLocaleString();
+            },
 
-		filters: {
-			roundToTwo: function (value) {
-				return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
-			},
-
-			// Создает разделители разрядов в строке с числами
-			level: function (value) {
-				return Number(value).toLocaleString();
-			},
-		},
+            // Отбраcывает дробную часть в строке с числами
+            onlyInteger(value) {
+                return Math.floor(value);
+            },
+        },
 
 	}
 </script>

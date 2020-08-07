@@ -89,7 +89,7 @@ class CreateLeadsTable extends Migration
 
             $table->integer('draft')->nullable()->unsigned()->comment('Черновик - удаляется по графику');
 
-	        $table->timestamp('delivered_at')->nullable()->comment('Дата доставки');
+	        $table->timestamp('shipment_at')->nullable()->comment('Дата отгрузки');
 
             $table->boolean('is_create_parse')->default(0)->comment('Создан парсером');
             $table->boolean('is_link_parse')->default(0)->comment('Связан парсером со сметой');

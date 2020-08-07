@@ -42,7 +42,6 @@
                     :item="item"
                     :index="index"
                     :key="item.id"
-                    :is-registered="isRegistered"
                     :settings="settings"
                     :stocks="stocks"
                     @open-modal-remove="openModal(item, index)"
@@ -65,7 +64,12 @@
 
         </table>
 
-        <div class="reveal rev-small" id="delete-estimates_goods_item" data-reveal>
+        <div
+            class="reveal rev-small"
+            id="delete-estimates_goods_item"
+            data-reveal
+            v-reveal
+        >
             <div class="grid-x">
                 <div class="small-12 cell modal-title">
                     <h5>Удаление</h5>
@@ -119,15 +123,48 @@
                 isRegistered: this.$store.state.estimate.estimate.is_registered === 1,
             }
         },
+        mounted() {
+            Foundation.reInit($('#delete-estimates_goods_item'));
+        },
         computed: {
             estimate() {
                 return this.$store.state.estimate.estimate;
             },
             itemsAmount() {
-                return this.$store.getters.goodsItemsAmount;
+                let amount = 0;
+                if (this.items.length) {
+                    this.items.forEach(item => {
+                        return amount += parseFloat(item.amount)
+                    });
+                }
+                return amount;
+            },
+            itemsDiscount() {
+                let discount = 0;
+                if (this.items.length) {
+                    this.items.forEach(item => {
+                        return discount += parseFloat(item.discount_currency)
+                    });
+                }
+                return discount;
             },
             itemsTotal() {
-                return this.$store.getters.goodsItemsTotal;
+                let total = 0;
+                if (this.items.length) {
+                    this.items.forEach(item => {
+                        return total += parseFloat(item.total)
+                    });
+                }
+                return total;
+            },
+            itemsTotalPoints() {
+                let points = 0;
+                if (this.items.length) {
+                    this.items.forEach(item => {
+                        return points += parseFloat(item.points)
+                    });
+                }
+                return points;
             },
             showButtonReserved() {
                 return this.estimate.is_reserved === 0;
@@ -145,44 +182,11 @@
             }
         },
         methods: {
-            changeCount: function(value) {
-                this.count = value;
-            },
             openModal(item, index) {
                 this.itemIndex = index;
                 this.item = item;
                 this.itemName = item.product.article.name;
             },
-            // changeCost: function(value) {
-            // 	this.cost = value;
-            // },
-            // checkChange: function () {
-            // 	this.change = false;
-            // },
-            // setId: function (id) {
-            // 	this.id = id;
-            // 	if (id != null) {
-            // 		this.categoriesItems.filter(item => {
-            // 			if (item.id === id && item.entity_id === this.entity_id) {
-            //
-            // 				// Смотрим в чем принимать
-            // 				if (item.article.package_status === 1) {
-            // 					this.itemUnit = item.article.package_abbreviation;
-            // 				} else {
-            // 					this.itemUnit = item.article.unit.abbreviation;
-            // 				}
-            //
-            // 				// Смотрим производителя
-            // 				if (item.article.manufacturer_id != null) {
-            // 					this.itemManufacturer = item.article.manufacturer_id;
-            // 				}
-            // 			}
-            // 		});
-            // 	} else {
-            // 		this.itemUnit = null;
-            // 		this.itemManufacturer = null;
-            // 	}
-            // },
             updateItem: function(item) {
                 this.$store.commit('UPDATE_GOODS_ITEM', item);
             },
@@ -244,5 +248,12 @@
                 return Number(value).toLocaleString();
             },
         },
+        directives: {
+            'reveal': {
+                bind: function (el) {
+                    new Foundation.Reveal($(el))
+                },
+            }
+        }
     }
 </script>

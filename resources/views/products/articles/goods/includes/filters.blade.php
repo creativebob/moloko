@@ -14,9 +14,16 @@
 {{-- 		</div>--}}
  	</div>
 	<div class="grid-x">
- 		<div class="small-12 medium-6 cell">
-			@include('includes.inputs.checkboxer', ['name'=>'author', 'value'=>$filter])
- 		</div>
+        <div class="cell small-12 medium-6 checkbox checkboxer">
+            <checkboxer-component
+                name="authors"
+                title="Автор"
+                :items='@json($authors)'
+                :checkeds='@json(request()->authors)'
+            ></checkboxer-component>
+{{--            @include('includes.inputs.checkboxer', ['name'=>'author', 'value'=>$filter])--}}
+        </div>
+
  	</div>
 </div>
 <div class="small-12 medium-6 large-6 cell checkbox checkboxer">

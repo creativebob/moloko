@@ -102,7 +102,8 @@ Route::post('/get_sms_code', 'AppController@get_sms_code')->name('project.get_sm
 // Route::post('/login_by_access_code', 'AppController@login_by_access_code')->name('project.login_by_access_code');
 Route::get('/telegram', 'AppController@telegram')->name('project.telegram');
 
-Route::post('/delivery_update', 'AppController@delivery_update')->name('project.delivery_update');
+Route::post('/shipment_update', 'AppController@shipment_update')
+    ->name('project.shipment_update');
 
 Route::post('logout_siteuser', 'AppController@logout_siteuser')
     ->name('project.logout_siteuser');

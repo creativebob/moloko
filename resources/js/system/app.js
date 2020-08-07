@@ -31,11 +31,8 @@ Vue.use(Vuex);
 Vue.component('consignment-component', require('./components/consignments/ConsignmentComponent.vue'));
 Vue.component('production-component', require('./components/productions/ProductionComponent.vue'));
 
+// Смета на лиде
 Vue.component('estimate-component', require('./components/estimates/EstimateComponent.vue'));
-Vue.component('estimate-register-button-component', require('./components/estimates/EstimateRegisterButtonComponent.vue'));
-Vue.component('estimate-sale-button-component', require('./components/estimates/EstimateSaleButtonComponent.vue'));
-Vue.component('estimate-production-button-component', require('./components/estimates/EstimateProductionButtonComponent.vue'));
-Vue.component('estimate-print-button-component', require('./components/estimates/EstimatePrintButtonComponent.vue'));
 Vue.component('payments-component', require('./components/PaymentsComponent.vue'));
 
 Vue.component('checkboxer-component', require('./components/common/CheckboxerComponent'));
@@ -61,6 +58,7 @@ Vue.component('catalog-goods-component', require('./components/catalogs/goods/Ca
 Vue.component('catalog-services-component', require('./components/catalogs/services/CatalogServicesComponent.vue'));
 Vue.component('lead-badget-component', require('./components/LeadBadgetComponent.vue'));
 Vue.component('select-stocks-component', require('./components/common/selects/SelectStocksComponent.vue'));
+Vue.component('goods-lister-component', require('./components/leads/GoodsListerComponent'));
 
 Vue.component('photo-upload-component', require('./components/PhotoUploadComponent.vue'));
 Vue.component('metrics-categories-component', require('./components/metrics/categories/MetricsCategoriesComponent'));
@@ -96,6 +94,8 @@ Vue.component('clients-indicators-component', require('./components/widgets/Clie
 
 // Прайсы
 Vue.component('prices-goods-component', require('./components/products/articles/prices/PricesGoodsComponent'));
+
+Vue.component('filial-cities-component', require('./components/filials/CitiesComponent'));
 
 
 /**

@@ -121,9 +121,9 @@ trait LeadControllerTrait
         $lead->choice_id = $choiceFromTag['id'];
 
         // TODO - 08.05.20 - Теперь приходит дата доставки, т.к. перевел даты на компонент, поэтому пока проверка на время, в дальнейшем дата вообще переедет
-        if (isset($request->delivery_date) && isset($request->delivery_time)) {
-	        $date = Carbon::createFromFormat('d.m.Y H:i', $request->delivery_date . ' ' . $request->delivery_time);
-	        $lead->delivered_at = $date;
+        if (isset($request->shipment_date) && isset($request->shipment_time)) {
+	        $date = Carbon::createFromFormat('d.m.Y H:i', $request->shipment_date . ' ' . $request->shipment_time);
+	        $lead->shipment_at = $date;
         }
 
         // Работаем с ПОЛЬЗОВАТЕЛЕМ лида ================================================================

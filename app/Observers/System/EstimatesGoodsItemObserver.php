@@ -11,21 +11,56 @@ class EstimatesGoodsItemObserver
 
     use Commonable;
 
-    public function creating(EstimatesGoodsItem $estimates_goods_item)
+    public function creating(EstimatesGoodsItem $estimatesGoodsItem)
     {
-        $this->store($estimates_goods_item);
+        $this->store($estimatesGoodsItem);
+
+        $this->setAggregations($estimatesGoodsItem);
     }
 
-    public function updating(EstimatesGoodsItem $estimates_goods_item)
+    public function updating(EstimatesGoodsItem $estimatesGoodsItem)
     {
-        $this->update($estimates_goods_item);
-        $estimates_goods_item->amount = $estimates_goods_item->count * $estimates_goods_item->price;
+        $this->update($estimatesGoodsItem);
 
-        $estimates_goods_item->total = $estimates_goods_item->amount - $estimates_goods_item->discount_currency;
+        $this->setAggregations($estimatesGoodsItem);
+
     }
 
-    public function deleting(EstimatesGoodsItem $estimates_goods_item)
+    public function deleting(EstimatesGoodsItem $estimatesGoodsItem)
     {
-        $this->destroy($estimates_goods_item);
+        $this->destroy($estimatesGoodsItem);
     }
+
+    public function setAggregations($estimatesGoodsItem)
+    {
+        $estimatesGoodsItem->load('product.article');
+        $saleMode = $estimatesGoodsItem->sale_mode;
+
+        switch ($saleMode) {
+            case (1):
+                $estimatesGoodsItem->total_points = 0;
+                $estimatesGoodsItem->total_bonuses = 0;
+
+                $estimatesGoodsItem->cost = $estimatesGoodsItem->count * $estimatesGoodsItem->product->article->cost_default;
+                $estimatesGoodsItem->amount = $estimatesGoodsItem->count * $estimatesGoodsItem->price;
+
+                $estimatesGoodsItem->total = $estimatesGoodsItem->amount - ($estimatesGoodsItem->discount_currency * $estimatesGoodsItem->count);
+
+                $estimatesGoodsItem->margin_currency = $estimatesGoodsItem->total - $estimatesGoodsItem->cost;
+                $estimatesGoodsItem->margin_percent = ($estimatesGoodsItem->margin_currency / $estimatesGoodsItem->total * 100);
+                break;
+
+            case (2):
+                $estimatesGoodsItem->amount = 0;
+                $estimatesGoodsItem->discount_currency = 0;
+                $estimatesGoodsItem->discount_percent = 0;
+                $estimatesGoodsItem->margin_currency = 0;
+                $estimatesGoodsItem->margin_percent = 0;
+                $estimatesGoodsItem->total = 0;
+                $estimatesGoodsItem->total_bonuses = 0;
+                $estimatesGoodsItem->total_points = $estimatesGoodsItem->count * $estimatesGoodsItem->points;
+                break;
+        }
+    }
+
 }

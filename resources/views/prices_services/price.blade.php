@@ -77,8 +77,8 @@
 
     </td>
 
-    <td class="td-point">
-        @include('prices_services.price_point')
+    <td class="td-points">
+        @include('prices_services.price_points')
     </td>
 
     <td class="td-price-status">

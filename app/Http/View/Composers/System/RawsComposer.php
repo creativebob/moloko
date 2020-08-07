@@ -33,7 +33,8 @@ class RawsComposer
                         },
                         'category',
                         'unit_for_composition',
-                        'unit_portion'
+                        'unit_portion',
+                        'costs',
                     ])
                     ->orderBy('sort');
             }

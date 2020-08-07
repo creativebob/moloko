@@ -18,43 +18,41 @@ class EstimatesGoodsItem extends Model
 
     use Commonable;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at'
+    ];
+
     protected $fillable = [
         'estimate_id',
-
         'price_id',
         'currency_id',
-
         'goods_id',
-
         'stock_id',
-
-        'company_id',
-        'author_id',
+        'comment',
 
         'count',
         'price',
-
         'cost',
         'points',
-
-        'comment',
+        'sale_mode',
 
         'margin_percent',
         'margin_currency',
-
         'discount_percent',
         'discount_currency',
 
-
         'amount',
         'total',
+        'total_points',
+        'total_bonuses',
 
         'is_reserved',
 
         'display',
         'system',
-        'moderation'
+        'moderation',
+        'company_id',
+        'author_id',
     ];
 
     // Смета
@@ -105,5 +103,10 @@ class EstimatesGoodsItem extends Model
     public function stock()
     {
         return $this->belongsTo(Stock::class);
+    }
+
+    public function currency()
+    {
+        return $this->belongsTo(Currency::class);
     }
 }

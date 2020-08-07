@@ -94,30 +94,40 @@
             @endcan
 
             @can('index', App\Site::class)
-                @empty($parent_id)
-                    {{-- Сайт --}}
-                    <div class="tabs-panel" id="tab-site">
-                        <div class="grid-x grid-padding-x">
-                            <div class="small-12 medium-5 cell">
-                                <label>Код для карты
-                                    {!! Form::textarea('code_map', null, []) !!}
-                                </label>
-                            </div>
+                {{-- Сайт --}}
+                <div class="tabs-panel" id="tab-site">
+                    <div class="grid-x grid-padding-x">
+                        <div class="small-12 medium-5 cell">
+                            <label>Код для карты
+                                {!! Form::textarea('code_map', null, []) !!}
+                            </label>
                         </div>
                     </div>
-                @endempty
+                </div>
             @endcan
 
             {{-- Сайт --}}
             <div class="tabs-panel" id="tab-responsibility">
                 <div class="grid-x grid-padding-x">
-                    <div class="small-12 medium-4 cell">
-                        <fieldset class="fieldset-access">
-                            <legend>Населенные пункты</legend>
-                                @include('includes.lists.cities')
-                        </fieldset>
+                    <div class="cell small-12 medium-4">
+                        <filial-cities-component
+                            :cities='@json($cities)'
+                            :filial-cities='@json($department->cities)'
+                            @if(optional($department->location)->city_id)
+                            :filial-city-id="{{ $department->location->city_id }}"
+                            @endif
+                        ></filial-cities-component>
                     </div>
                 </div>
+
+{{--                <div class="grid-x grid-padding-x">--}}
+{{--                    <div class="small-12 medium-4 cell">--}}
+{{--                        <fieldset class="fieldset-access">--}}
+{{--                            <legend>Населенные пункты</legend>--}}
+{{--                                @include('includes.lists.cities')--}}
+{{--                        </fieldset>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
             </div>
 
             {{-- Настройки дял продаж --}}

@@ -109,13 +109,14 @@ class LeadController extends Controller
         // ->authors($answer)
         ->whereNull('draft')
         ->systemItem($answer)
-        ->filter($request, 'city_id', 'location')
-        ->filter($request, 'stage_id')
-        ->filter($request, 'manager_id')
-        ->filter($request, 'lead_type_id')
-        ->filter($request, 'lead_method_id')
-        ->booleanArrayFilter($request, 'challenges_active_count')
-        ->dateIntervalFilter($request, 'created_at')
+            ->filters()
+//        ->filter($request, 'city_id', 'location')
+//        ->filter($request, 'stage_id')
+//        ->filter($request, 'manager_id')
+//        ->filter($request, 'lead_type_id')
+//        ->filter($request, 'lead_method_id')
+//        ->booleanArrayFilter($request, 'challenges_active_count')
+//        ->dateIntervalFilter($request, 'created_at')
         ->booklistFilter($request)
         ->orderBy('created_at', 'desc')
         ->paginate(30);
@@ -212,7 +213,8 @@ class LeadController extends Controller
                             'product.article',
                             'reserve',
                             'stock:id,name',
-                            'price_goods'
+                            'price_goods',
+                            'currency'
                         ]);
                     },
                     'services_items' => function ($q) {
@@ -255,28 +257,33 @@ class LeadController extends Controller
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $lead);
 
-        // История лида
-        $finded_leads = Lead::with(
-            'location.city',
-            'choice',
-            'manager',
-            'stage',
-            'user',
-            'challenges.challenge_type',
-            'phones')
-            ->companiesLimit($answer)
-            // ->authors($answer_lead) // Не фильтруем по авторам
-            ->systemItem($answer) // Фильтр по системным записям
-            // ->whereNull('archive')
-            ->whereNull('draft')
-            ->whereHas('phones', function($query) use ($lead) {
-                $query->where('phone', $lead->main_phone->phone);
-            })
-            ->where('id', '!=', $lead->id)
-            ->orderBy('sort', 'asc')
-            ->get();
+        $historyLeads = collect();
+        if ($lead->draft != 1) {
+            // История лида
+            $historyLeads = Lead::with([
+                'location.city',
+                'choice',
+                'manager',
+                'stage',
+                'user',
+                'challenges.challenge_type',
+                'phones'
+            ])
+                ->companiesLimit($answer)
+                // ->authors($answer_lead) // Не фильтруем по авторам
+                ->systemItem($answer) // Фильтр по системным записям
+                // ->whereNull('archive')
+                ->whereNull('draft')
+                ->whereHas('phones', function($query) use ($lead) {
+                    $query->where('phone', $lead->main_phone->phone);
+                })
+                ->where('id', '!=', $lead->id)
+                ->orderBy('sort', 'asc')
+                ->get();
+        }
 
-        $lead->history = $finded_leads;
+
+        $lead->history = $historyLeads;
 //        dd($lead);
 
         $goods_categories_list = GoodsCategory::whereNull('parent_id')->get()->mapWithKeys(function ($item) {

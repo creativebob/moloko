@@ -76,8 +76,8 @@
 
     </td>
 {{--    <price-goods-price-component :price="{{ $cur_prices_goods->price }}"></price-goods-price-component>--}}
-    <td class="td-point">
-        @include('prices_goods.price_point')
+    <td class="td-points">
+        @include('prices_goods.price_points')
     </td>
 
     <td class="td-price-status">

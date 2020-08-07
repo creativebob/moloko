@@ -73,16 +73,25 @@ class Update210420Tables extends Migration
             $table->integer('external')->default(0)->comment('Внешний id')->after('is_dismissed');
 
             $table->boolean('is_create_parse')->default(0)->comment('Создана парсером')->after('external');
+
+            $table->integer('total_points')->default(0)->comment('Итого поинтами')->after('total');
+            $table->integer('total_bonuses')->default(0)->comment('Итого бонусами')->after('total_points');
         });
 
         Schema::table('estimates_goods_items', function (Blueprint $table) {
             $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('amount');
             $table->text('comment')->nullable()->comment('Комментарий')->after('profit');
+            $table->tinyInteger('sale_mode')->default(1)->comment('Режим продажи: 1 - валюта, 2 - поинты')->after('goods_id');
+            $table->integer('total_points')->default(0)->comment('Итого поинтами')->after('total');
+            $table->integer('total_bonuses')->default(0)->comment('Итого бонусами')->after('total_points');
         });
 
         Schema::table('estimates_services_items', function (Blueprint $table) {
             $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('amount');
             $table->text('comment')->nullable()->comment('Комментарий')->after('profit');
+            $table->tinyInteger('sale_mode')->default(1)->comment('Режим продажи: 1 - валюта, 2 - поинты')->after('service_id');
+            $table->integer('total_points')->default(0)->comment('Итого поинтами')->after('total');
+            $table->integer('total_bonuses')->default(0)->comment('Итого бонусами')->after('total_points');
         });
 
         Schema::table('companies', function (Blueprint $table) {
@@ -194,21 +203,29 @@ class Update210420Tables extends Migration
                 'surplus',
                 'is_create_parse',
                 'certificate_amount',
-                'saled_date'
+                'saled_date',
+                'total_points',
+                'total_bonuses'
             ]);
         });
 
         Schema::table('estimates_goods_items', function (Blueprint $table) {
             $table->dropColumn([
                 'points',
-                'comment'
+                'comment',
+                'sale_mode',
+                'total_points',
+                'total_bonuses'
             ]);
         });
 
         Schema::table('estimates_services_items', function (Blueprint $table) {
             $table->dropColumn([
                 'points',
-                'comment'
+                'comment',
+                'sale_mode',
+                'total_points',
+                'total_bonuses'
             ]);
         });
 

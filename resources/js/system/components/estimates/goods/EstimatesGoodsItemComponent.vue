@@ -7,11 +7,9 @@
         :data-count="item.count"
         :data-price="item.price"
     >
-
         <comment-component
             :item="item"
         ></comment-component>
-
 <!--        <td v-if="settings.length && stocks.length">-->
 <!--            <select-->
 <!--                name="stock_id"-->
@@ -26,38 +24,49 @@
 <!--            {{ item.stock.name }}-->
 <!--        </td>-->
 
-        <td>
-            {{ item.price | roundToTwo | level }} 
-            <span class="point-value" v-if="item.price_goods.point > 0">({{ item.price_goods.point }})</span>
-        </td>
+        <template
+            v-if="item.sale_mode == 1"
+        >
+            <currency-component
+                :item="item"
+                :is-registered="isRegistered"
+                @update="updateItem"
+            ></currency-component>
+        </template>
+        <template
+            v-else
+        >
+            <points-component
+                :item="item"
+                :is-registered="isRegistered"
+                @update="updateItem"
+            ></points-component>
+        </template>
 
-        <td @click="checkChangeCount">
-            <template v-if="isChangeCount">
-                <input
-                    @keydown.enter.prevent="updateItemCount"
-                    type="number"
-                    v-focus
-                    @focusout="canChangeCount = false"
-
-                >
-            </template>
-            <template v-else>{{ item.count | roundToTwo | level }}</template>
-        </td>
+        <count-component
+            :item="item"
+            ref="countComponent"
+        ></count-component>
 
         <td class="td-discount">
             <template
                 v-if="item.discount_percent > 0"
             >
-                {{ item.discount_percent | roundToTwo | level }} 
+                {{ item.discount_percent | decimalPlaces | decimalLevel }}
                 <span class="percent-symbol">%</span>
             </template>
         </td>
 
-        <td class="td-amount">
+        <td class="td-total">
             <a
+                v-if="item.sale_mode == 1"
                 class="button green-button"
                 :data-open="'modal-estimates_goods_item-' + item.id"
-            >{{ item.total | roundToTwo | level }}</a>
+            >{{ item.total | decimalPlaces | decimalLevel }}</a>
+            <a
+                v-else
+                class="button green-button"
+            >{{ item.total_points | level }} поинтов</a>
         </td>
         <td class="td-delete">
             <div
@@ -96,6 +105,7 @@
         <modal-component
             :item="item"
             :is-registered="isRegistered"
+            ref="modalCurrencyComponent"
         ></modal-component>
     </tr>
 </template>
@@ -104,13 +114,15 @@
     export default {
         components: {
             'comment-component': require('./CommentComponent'),
-            'modal-component': require('./ModalSettingsComponent'),
+            'currency-component': require('./price/CurrencyComponent'),
+            'points-component': require('./price/PointsComponent'),
+            'count-component': require('./CountComponent'),
+            'modal-component': require('./ModalCurrencyComponent'),
             'digit-component': require('../../inputs/DigitComponent')
         },
         props: {
             item: Object,
             index: Number,
-            isRegistered: Boolean,
             settings: Array,
             stocks: Array,
         },
@@ -118,7 +130,6 @@
             return {
                 countInput: Number(this.item.count),
                 cost: Number(this.item.cost),
-                canChangeCount: false,
                 changeCost: false,
                 stockId: null,
             }
@@ -131,20 +142,9 @@
             }
         },
         computed: {
-            estimate() {
-                return this.$store.state.estimate.estimate;
+            isRegistered() {
+                return this.$store.state.estimate.estimate.is_registered == 1;
             },
-            isChangeCount() {
-                return this.canChangeCount
-            },
-            // count: {
-            //     get () {
-            //         return Number(this.item.count);
-            //     },
-            //     set (value) {
-            //         this.countInput = Number(value)
-            //     }
-            // },
             isReservedClass() {
                 if (this.item.reserve !== null) {
                     if (this.item.reserve.count > 0) {
@@ -169,6 +169,12 @@
                 }
                 return 0;
             },
+            total() {
+                return (this.item.price - this.discountCurrency) * this.itemCount;
+            },
+            itemCount() {
+                return Math.floor(this.item.count);
+            }
             //     isChangeCost() {
             //         if (this.changeCost) {
             //             this.canChangeCount = false
@@ -184,62 +190,30 @@
             //         }
             //         return abbr;
             //     }
-            //
-            total() {
-                return (this.item.price - this.discountCurrency) * this.itemCount;
-            },
-            itemCount() {
-                return Math.floor(this.item.count);
-            }
+            // count: {
+            //     get () {
+            //         return Number(this.item.count);
+            //     },
+            //     set (value) {
+            //         this.countInput = Number(value)
+            //     }
+            // },
         },
         methods: {
-            changeCount(value) {
-                this.item.count = value;
-            },
             openModalRemoveItem() {
                 this.$emit('open-modal-remove', this.item);
             },
-            checkChangeCount() {
-                if (this.item.product.serial === 0) {
-                    if (!this.isRegistered) {
-                        this.canChangeCount = !this.canChangeCount
-                    }
+            updateItem(item) {
+                if (item.sale_mode == 2) {
+                    this.$refs.modalCurrencyComponent.reset();
                 }
+
+                if (item.remove_from_page) {
+                    this.$store.dispatch('REMOVE_GOODS_ITEM_FROM_ESTIMATE', item.remove_from_page);
+                    // this.$refs.countComponent.setCount(item.count);
+                }
+                this.$emit('update', item);
             },
-            // checkChangeCost() {
-            //     if (!this.isRegistered) {
-            //         this.changeCost = !this.changeCost
-            //     }
-            // },
-            updateItemCount: function() {
-                this.canChangeCount = false;
-                // this.changeCost = false;
-                axios
-                    .patch('/admin/estimates_goods_items/' + this.item.id, {
-                        count: Number(this.countInput),
-                        // cost: Number(this.cost)
-                    })
-                    .then(response => {
-                        this.$emit('update', response.data);
-                        this.countInput = Number(response.data.count);
-                        // this.cost = Number(response.data.cost);
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    });
-            },
-            // deleteItem: function() {
-            //     axios
-            //         .delete('/admin/consignments_items/' + this.item.id)
-            //         .then(response => {
-            //             if(response.data > 0) {
-            //                 this.$emit('remove');
-            //             }
-            //         })
-            //         .catch(error => {
-            //             console.log(error)
-            //         });
-            // },
             reserveEstimateItem() {
                 axios
                     .post('/admin/estimates_goods_items/' + this.item.id + '/reserving')
@@ -276,6 +250,12 @@
             }
         },
         filters: {
+            decimalPlaces(value) {
+                return parseFloat(value).toFixed(2);
+            },
+            decimalLevel: function (value) {
+                return parseFloat(value).toLocaleString();
+            },
             roundToTwo: function (value) {
                 return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
             },

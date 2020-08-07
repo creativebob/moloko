@@ -65,6 +65,8 @@ class Estimate extends Model
 
         'amount',
         'total',
+        'total_points',
+        'total_bonuses',
 
         'margin_percent',
         'margin_currency',

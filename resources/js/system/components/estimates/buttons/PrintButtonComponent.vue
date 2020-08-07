@@ -9,17 +9,16 @@
 
 <script>
     export default {
-        props: {
-            leadId: Number
-        },
+
         data() {
             return {
-                estimate: this.$store.state.estimate.estimate
+                estimate: this.$store.state.estimate.estimate,
+                leadId: this.$store.state.estimate.estimate.lead_id
             }
         },
         computed: {
             isShow() {
-                return this.estimate.is_saled === 1;
+                return this.estimate.is_registered === 1;
             },
         },
     }

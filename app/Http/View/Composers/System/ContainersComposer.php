@@ -32,7 +32,8 @@ class ContainersComposer
                                 ]);
                         },
                         'category',
-                        'unit_for_composition'
+                        'unit_for_composition',
+                        'costs',
                     ])
                     ->orderBy('sort');
             }

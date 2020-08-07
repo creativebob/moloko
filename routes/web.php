@@ -746,6 +746,8 @@ Route::resource('/estimates', 'EstimateController');
 Route::any('/create_estimate', 'EstimateController@ajax_create');
 Route::any('/update_estimate', 'EstimateController@ajax_update');
 
+//Route::any('/estimates_goods_items/{id}', 'EstimatesGoodsItemController@update');
+
 Route::any('/estimates_goods_items/{id}/reserving', 'EstimatesGoodsItemController@reserving');
 Route::any('/estimates_goods_items/{id}/unreserving', 'EstimatesGoodsItemController@unreserving');
 Route::resource('/estimates_goods_items', 'EstimatesGoodsItemController');

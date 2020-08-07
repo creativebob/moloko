@@ -44,7 +44,7 @@ class ApiController extends Controller
             return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
         }
     }
-     
+
      // -------------------------------------------- API -----------------------------------------------
     // Получаем сайт по api
     public function api(Request $request, $alias)
@@ -60,12 +60,12 @@ class ApiController extends Controller
             // });
         } else {
             return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
-        }  
+        }
 
         return null;
     }
-    
-    
+
+
      // Конкретная категория
     public function api_show(Request $request, $id)
     {
@@ -85,12 +85,12 @@ class ApiController extends Controller
             return json_encode('Нет доступа, холмс!', JSON_UNESCAPED_UNICODE);
         }
     }
-    
+
     public function index(Request $request)
     {
     	switch ($request->alias) {
       case 'medcosm':
-      	
+
       	switch ($request->action) {
       		case 'boot':
 	        return Site::with(['company.departments.staff' => function ($query) {
@@ -115,7 +115,7 @@ class ApiController extends Controller
 	            ->orderBy('sort', 'asc')
 	            ->first();
 	        break;
-	      
+
 	      case ('page'):
 
             $page = null;
@@ -127,17 +127,17 @@ class ApiController extends Controller
 	        # code...
 	        break;
     	}
-      	
-      	
+
+
         return redirect()->action('ApiController@medcosm', ['action' => $request->action]);
         break;
-      
+
       default:
         # code...
         break;
     }
     }
-    
+
     public function medcosm(Request $request)
     {
     	switch ($request->action) {
@@ -165,16 +165,16 @@ class ApiController extends Controller
 	            ->orderBy('sort', 'asc')
 	            ->first();
 	        break;
-	      
+
 	      default:
 	        # code...
 	        break;
     	}
-    	
+
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса.
      *
      * @return \Illuminate\Http\Response
      */
@@ -184,7 +184,7 @@ class ApiController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -195,7 +195,7 @@ class ApiController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -206,7 +206,7 @@ class ApiController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -217,7 +217,7 @@ class ApiController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -229,7 +229,7 @@ class ApiController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

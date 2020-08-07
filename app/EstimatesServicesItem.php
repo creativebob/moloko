@@ -34,12 +34,16 @@ class EstimatesServicesItem extends Model
 
         'comment',
 
+        'sale_mode',
+
         'cost',
         'margin_percent',
         'margin_currency',
 
         'amount',
         'total',
+        'total_points',
+        'total_bonuses',
 
         'display',
         'system',

@@ -146,10 +146,9 @@
         },
         computed: {
             catalogGoodsItemsList() {
-                let itemsList = this.catalogsItems.filter(item => {
+                return this.catalogsItems.filter(item => {
                     return item.catalogs_goods_id === this.catalogId;
                 });
-                return itemsList;
             },
         },
         methods: {

@@ -36,7 +36,7 @@ class BusinessCaseController extends Controller
     use Photable;
 
     /**
-     * Display a listing of the resource.
+     * Отображение списка ресурсов.
      *
      * @param $portfolio_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -71,7 +71,7 @@ class BusinessCaseController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса.
      *
      * @param $portfolio_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -90,7 +90,7 @@ class BusinessCaseController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param BusinessCaseRequest $request
      * @param $portfolio_id
@@ -121,7 +121,7 @@ class BusinessCaseController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param $id
      */
@@ -131,7 +131,7 @@ class BusinessCaseController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param $portfolio_id
      * @param $id
@@ -159,7 +159,7 @@ class BusinessCaseController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param BusinessCaseRequest $request
      * @param $portfolio_id
@@ -197,7 +197,7 @@ class BusinessCaseController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param $portfolio_id
      * @param $id

@@ -3,18 +3,31 @@
 namespace App\Http\View\Composers\System;
 
 use App\LeadMethod;
-
 use Illuminate\View\View;
 
 class LeadMethodsComposer
 {
-	public function compose(View $view)
-	{
+    /**
+     * Методы лида
+     */
+    protected $leadMethods;
 
-        // Главный запрос
-        $lead_methods_list = LeadMethod::get()->pluck('name', 'id');
-
-        return $view->with('lead_methods_list', $lead_methods_list);
+    /**
+     * LeadMethodsComposer constructor.
+     */
+    public function __construct()
+    {
+        $this->leadMethods = LeadMethod::get();
     }
 
+    /**
+     * Отдаем методы лида на шаблон
+     *
+     * @param View $view
+     * @return View
+     */
+	public function compose(View $view)
+	{
+		return $view->with('leadMethods', $this->leadMethods);
+	}
 }

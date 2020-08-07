@@ -23,7 +23,7 @@ class RuleController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса.
      *
      * @return \Illuminate\Http\Response
      */
@@ -33,7 +33,7 @@ class RuleController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -45,7 +45,7 @@ class RuleController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -56,7 +56,7 @@ class RuleController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -67,7 +67,7 @@ class RuleController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -79,7 +79,7 @@ class RuleController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -121,7 +121,7 @@ class RuleController extends Controller
             $rule->description = $request->rule_description;
             $rule->error = $request->rule_error;
             $rule->company_id = $company_id;
-            $rule->author_id = $user_id; 
+            $rule->author_id = $user_id;
 
             $field->rules()->save($rule);
 
@@ -160,7 +160,7 @@ class RuleController extends Controller
             if ($rule) {
                 $result = [
                     'error_status' => 0,
-                ];  
+                ];
             } else {
 
                 $result = [

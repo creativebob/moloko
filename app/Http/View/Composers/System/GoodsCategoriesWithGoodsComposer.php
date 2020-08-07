@@ -6,7 +6,7 @@ use App\GoodsCategory;
 
 use Illuminate\View\View;
 
-class GoodsComposer
+class GoodsCategoriesWithGoodsComposer
 {
 	public function compose(View $view)
 	{

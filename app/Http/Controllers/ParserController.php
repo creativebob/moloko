@@ -61,7 +61,7 @@ class ParserController extends Controller
     {
         dd(__METHOD__);
     }
-    
+
     /**
      * Архивирование товаров
      *
@@ -73,7 +73,7 @@ class ParserController extends Controller
             'prices'
         ])
             ->get();
-        
+
         foreach ($goods as $curGood) {
             if ($curGood->prices->isNotEmpty()) {
                 foreach ($curGood->prices as $price) {
@@ -82,12 +82,12 @@ class ParserController extends Controller
                     ]);
                 }
             }
-            
+
             $curGood->update([
                 'archive' => true,
             ]);
         }
-    
+
         return "Все товары найденные в системе и их прайсы перемещены в архив";
     }
 
@@ -964,7 +964,7 @@ class ParserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса.
      *
      * @return \Illuminate\Http\Response
      */
@@ -1309,7 +1309,7 @@ class ParserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -1348,7 +1348,7 @@ class ParserController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -1359,7 +1359,7 @@ class ParserController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -1370,7 +1370,7 @@ class ParserController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -1382,7 +1382,7 @@ class ParserController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

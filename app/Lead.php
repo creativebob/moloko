@@ -63,11 +63,12 @@ class Lead extends Model
     protected $dates = [
     	'deleted_at',
 	    'created_at',
-	    'delivered_at'
+	    'shipment_at'
     ];
+
     protected $fillable = [
         'name',
-	    'delivered_at',
+	    'shipment_at',
 
         'order_amount_base',
         'need_delivery',
@@ -319,6 +320,76 @@ class Lead extends Model
     //     }
     //     return $value;
     // }
+
+    // Фильтры
+    public function scopeFilters($query)
+    {
+        if (request('cities')) {
+            $query->whereHas('location', function($q) {
+                $q->whereIn('city_id', request('cities'));
+            });
+        }
+
+        if (request('stages')) {
+            $query->whereIn('stage_id', request('stages'));
+        }
+
+        if (request('managers')) {
+            $query->whereIn('manager_id', request('managers'));
+        }
+
+        if (request('lead_methods')) {
+            $query->whereIn('lead_method_id', request('lead_methods'));
+        }
+
+        if (request('lead_types')) {
+            $query->whereIn('lead_type_id', request('lead_types'));
+        }
+
+        if (request('period_date_min')) {
+            $query->whereDate('created_at', '>=', Carbon::createFromFormat('d.m.Y', request()->period_date_min));
+        }
+        if (request('period_date_max')) {
+            $query->whereDate('created_at', '<=', Carbon::createFromFormat('d.m.Y', request()->period_date_max));
+        }
+
+        if (request('shipment_date_min')) {
+            $query->whereDate('shipment_at', '>=', Carbon::createFromFormat('d.m.Y', request()->shipment_date_min));
+        }
+        if (request('shipment_date_max')) {
+            $query->whereDate('shipment_at', '<=', Carbon::createFromFormat('d.m.Y', request()->shipment_date_max));
+        }
+
+        if (! is_null(request('status'))) {
+            if (request('status') == 'fiz') {
+                $query->whereNull('company_name');
+            }
+            if (request('status') == 'ur') {
+                $query->whereNotNull('company_name');
+            }
+        }
+
+        if (request('goods')) {
+            $query->whereHas('estimate', function ($q) {
+                $q->whereHas('goods_items', function ($q) {
+                    $q->whereIn('goods_id', request('goods'));
+                });
+            });
+        }
+
+        if (! is_null(request('challenges'))) {
+            if (request('challenges') == true) {
+                $query->where('challenges_active_count', '>', 0);
+            } else {
+                $query->where('challenges_active_count', 0);
+            }
+        }
+
+        if (request('sources')) {
+            $query->whereIn('source_id', request('sources'));
+        }
+
+    }
 
 
     // this is a recommended way to declare event handlers

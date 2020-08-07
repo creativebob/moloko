@@ -1,6 +1,6 @@
 <template>
     <div class="grid-x">
-        <div class="cell small-12 arrayer">
+        <div class="cell small-12 lister">
             <span
                 class="title"
                 @click="focusInput"
@@ -102,7 +102,6 @@
             checkInput(event) {
                 if (this.value.length <= 2) {
                     if ( /[1-5]/.test( event.key )) {
-
                         return true;
                     } else {
                         event.preventDefault();
@@ -113,7 +112,7 @@
             },
             addItem() {
                 if (this.value.length > 2) {
-                    if (!this.currentItems) {
+                    if (! this.currentItems) {
                         this.currentItems = [];
                     }
                     let found = this.currentItems.find(item => item == this.value);

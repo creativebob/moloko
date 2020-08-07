@@ -73,7 +73,7 @@
                     </label>
                     <ul
                         v-if="category.childrens && category.childrens.length"
-                        class="checkboxer-categories level-2"
+                        class="checkboxer-categories"
                     >
                         <childrens-component
                             v-for="children in category.childrens"

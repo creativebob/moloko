@@ -7,7 +7,7 @@ use App\Cost;
 use App\Metric;
 use App\Unit;
 
-trait Articlable
+trait Cmvable
 {
 
     // Артикул
@@ -48,13 +48,13 @@ trait Articlable
     // Себестоимость
     public function cost()
     {
-        return $this->morphOne(Cost::class, 'cmv')->where('filial_id', \Auth::user()->stafferFilialId);
+        return $this->morphOne(Cost::class, 'cmv')->where('filial_id', auth()->user()->stafferFilialId);
     }
 
-//	public function costs()
-//	{
-//		return $this->morphMany(Cost::class, 'cmv');
-//	}
+	public function costs()
+	{
+		return $this->morphMany(Cost::class, 'cmv');
+	}
 
     // Геттер: Функция получения веса в кг. учитывая все надстройки и переопределения в еденицах измерения
     public function getWeightAttribute()
@@ -63,7 +63,6 @@ trait Articlable
         if($this->portion_status){
             return $this->article->weight / $this->article->unit->ratio * $this->portion_count * $this->unit_portion->ratio;
         } else {
-
             return $this->article->weight;
         }
     }
@@ -75,7 +74,6 @@ trait Articlable
         if($this->portion_status){
             return $this->article->volume / $this->article->unit->ratio * $this->portion_count * $this->unit_portion->ratio;
         } else {
-
             return $this->article->volume;
         }
     }
@@ -119,10 +117,10 @@ trait Articlable
     {
 
         // Существует ли запись на складе
-        if($this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first() !== null){
+        if($this->costs->where('manufacturer_id', $this->article->manufacturer_id)->first() !== null){
 
             if($this->article->manufacturer_id){
-                return $this->morphMany(Cost::class, 'cmv')->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
+                return $this->costs->where('manufacturer_id', $this->article->manufacturer_id)->first()->average;
             } else {
                 return 0;
             }
@@ -130,4 +128,24 @@ trait Articlable
             return 0;
         }
     }
+
+//    public function cost_unit()
+//    {
+//        // Существует ли запись на складе
+//        if ($this->morphMany(Cost::class, 'cmv')
+//                ->where('manufacturer_id', $this->article->manufacturer_id)
+//                ->first() !== null){
+//
+//            if($this->article->manufacturer_id){
+//                return $this->morphMany(Cost::class, 'cmv')
+//                    ->where('manufacturer_id', $this->article->manufacturer_id)
+//                    ->first()
+//                    ->average;
+//            } else {
+//                return 0;
+//            }
+//        } else {
+//            return 0;
+//        }
+//    }
 }

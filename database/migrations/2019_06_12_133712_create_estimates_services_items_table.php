@@ -31,6 +31,8 @@ class CreateEstimatesServicesItemsTable extends Migration
             $table->bigInteger('service_id')->unsigned()->nullable()->comment('Id услуги');
             $table->foreign('service_id')->references('id')->on('services');
 
+            $table->tinyInteger('sale_mode')->default(1)->comment('Режим продажи: 1 - валюта, 2 - поинты');
+
             $table->integer('cost')->default(0)->comment('Себестоимость');
             $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим мебестоимости');
 
@@ -49,6 +51,9 @@ class CreateEstimatesServicesItemsTable extends Migration
             $table->decimal('extra_discount_currency', 10, 2)->default(0)->comment('Общая сумма скидки');
 
             $table->decimal('total', 12, 4)->default(0)->comment('Итоговая сумма');
+            $table->integer('total_points')->default(0)->comment('Итого поинтами');
+            $table->integer('total_bonuses')->default(0)->comment('Итого бонусами');
+
             $table->decimal('profit', 12, 4)->default(0)->comment('Прибыль');
 
             $table->text('comment')->nullable()->comment('Комментарий');

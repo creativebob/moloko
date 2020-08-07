@@ -29,7 +29,7 @@ class ServicesCategoryController extends Controller
     use Photable;
 
     /**
-     * Display a listing of the resource.
+     * Отображение списка ресурсов.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -94,7 +94,7 @@ class ServicesCategoryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -117,7 +117,7 @@ class ServicesCategoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param ServicesCategoryStoreRequest $request
      * @return \Illuminate\Http\RedirectResponse
@@ -144,7 +144,7 @@ class ServicesCategoryController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param $id
      */
@@ -154,7 +154,7 @@ class ServicesCategoryController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param Request $request
      * @param $id
@@ -214,7 +214,7 @@ class ServicesCategoryController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param ServicesCategoryUpdateRequest $request
      * @param $id
@@ -261,7 +261,7 @@ class ServicesCategoryController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param Request $request
      * @param $id

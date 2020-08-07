@@ -40,6 +40,8 @@ class CreateEstimatesTable extends Migration
             $table->decimal('certificate_amount', 12, 2)->default(0)->comment('Сумма оплаченная по сертификатам');
 
             $table->decimal('total', 12, 4)->default(0)->comment('Итоговая сумма по заказу');
+            $table->integer('total_points')->default(0)->comment('Итого поинтами');
+            $table->integer('total_bonuses')->default(0)->comment('Итого бонусами');
 
             $table->decimal('discount_items_currency', 10, 2)->default(0)->comment('Сумма скидки по позициям');
 

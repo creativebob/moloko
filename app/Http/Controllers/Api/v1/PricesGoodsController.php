@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 class PricesGoodsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Отображение списка ресурсов.
      *
      * @return \Illuminate\Http\Response
      */
@@ -19,7 +19,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -33,7 +33,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -44,7 +44,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -56,7 +56,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

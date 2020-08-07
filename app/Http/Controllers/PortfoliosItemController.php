@@ -30,7 +30,7 @@ class PortfoliosItemController extends Controller
     use Photable;
 
     /**
-     * Display a listing of the resource.
+     * Отображение списка ресурсов.
      *
      * @param Request $request
      * @param $portfolio_id
@@ -105,7 +105,7 @@ class PortfoliosItemController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса.
      *
      * @param Request $request
      * @param $portfolio_id
@@ -128,7 +128,7 @@ class PortfoliosItemController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param PortfoliosItemStoreRequest $request
      * @param $portfolio_id
@@ -158,7 +158,7 @@ class PortfoliosItemController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param $id
      */
@@ -168,7 +168,7 @@ class PortfoliosItemController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param $portfolio_id
      * @param $id
@@ -196,7 +196,7 @@ class PortfoliosItemController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param PortfoliosItemUpdateRequest $request
      * @param $portfolio_id
@@ -233,7 +233,7 @@ class PortfoliosItemController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param Request $request
      * @param $portfolio_id

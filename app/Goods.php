@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Models\System\Traits\Articlable;
+use App\Models\System\Traits\Cmvable;
 use App\Models\System\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -21,7 +21,7 @@ class Goods extends Model
     use SoftDeletes;
 
     use Commonable;
-    use Articlable;
+    use Cmvable;
 
     protected $fillable = [
         'article_id',
@@ -141,6 +141,18 @@ class Goods extends Model
 
         } else {
             return null;
+        }
+    }
+
+    // Фильтры
+    public function scopeFilters($query)
+    {
+        if (request('goods_categories')) {
+            $query->whereIn('category_id', request('goods_categories'));
+        }
+
+        if (request('authors')) {
+            $query->whereIn('author_id', request('authors'));
         }
     }
 

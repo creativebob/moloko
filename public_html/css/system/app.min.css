@@ -9972,6 +9972,79 @@ span.wrap-label-checkboxer {
   border-top: 1px solid transparent;
 }
 
+.checkboxer-categories {
+  width: 100%;
+  display: block;
+  top: 0px;
+  float: left;
+  border: none;
+  z-index: 1000;
+  margin-left: 0px;
+  padding-top: 1px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  left: 0;
+  height: auto;
+}
+
+.checkboxer-categories li {
+  line-height: 1.2;
+  float: left;
+  background: #fff;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid transparent;
+  list-style-type: none;
+  width: 100%;
+}
+
+.checkboxer-categories li:first-child {
+  border-top: 1px solid transparent;
+}
+
+.checkboxer-categories li:hover {
+  background: #efefef;
+}
+
+.checkboxer-categories li label {
+  width: 100%;
+}
+
+.checkboxer-categories li label .level-2 {
+  margin-left: 1rem;
+}
+
+.checkboxer-categories li label .level-3 {
+  margin-left: 2rem;
+}
+
+.checkboxer-categories li label .level-4 {
+  margin-left: 3rem;
+}
+
+.checkboxer-categories li label .level-5 {
+  margin-left: 4rem;
+}
+
+.checkboxer-categories li label .level-6 {
+  margin-left: 5rem;
+}
+
+.checkboxer-categories li label .level-7 {
+  margin-left: 6rem;
+}
+
+.checkboxer-categories li label .level-8 {
+  margin-left: 7rem;
+}
+
+.checkboxer-categories li label .level-9 {
+  margin-left: 8rem;
+}
+
+.checkboxer-categories li .checkboxer-categories {
+  margin-left: 0px;
+}
+
 .show-elem {
   display: inline-block !important;
 }
@@ -10743,6 +10816,113 @@ table.list-employees {
   padding: 1.2rem 1rem;
 }
 
+.tabs-leads {
+  padding-top: 1rem;
+}
+
+#table-estimate, .table-estimate {
+  border-collapse: separate;
+  border-spacing: 0px 2px !important;
+}
+
+#table-estimate thead tr th, .table-estimate thead tr th {
+  background-color: #eee;
+  border-bottom: 1px solid #000 !important;
+  font-style: 400;
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+#table-estimate tbody tr td, .table-estimate tbody tr td {
+  background-color: #f5f5f5 !important;
+  padding: 0.3rem 0.6rem 0.3rem !important;
+  font-size: 0.9rem;
+  line-height: 1.2rem;
+}
+
+#table-estimate tbody tr td .points, .table-estimate tbody tr td .points {
+  color: darkred;
+}
+
+#table-estimate tbody tr td .points-mode, .table-estimate tbody tr td .points-mode {
+  cursor: pointer;
+}
+
+#table-estimate tbody tr:first-child td, .table-estimate tbody tr:first-child td {
+  border-top: 5px solid #eee;
+}
+
+.button-to-reserve {
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url("img/pushpin.svg") 4px 4px no-repeat;
+  background-size: 16px;
+  opacity: 0;
+  -webkit-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+tr:hover .button-to-reserve {
+  opacity: 0.3;
+}
+
+.icon-comment {
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  width: 20px;
+  height: 16px;
+  background: url("img/comment.svg") 0px 0px no-repeat;
+  background-size: 16px;
+  -webkit-transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.commentable .icon-comment {
+  position: relative;
+  -webkit-transition: opacity 0.5s ease;
+  transition: opacity 0.5s ease;
+}
+
+.commentable .hide-comment {
+  opacity: 0;
+}
+
+.commentable:hover .icon-comment {
+  opacity: 1;
+}
+
+.button-to-reserve:hover {
+  opacity: 1 !important;
+}
+
+.lead-estimate .td-action {
+  max-width: 50px;
+}
+
+.lead-estimate .td-delete {
+  max-width: 50px;
+}
+
+.lead-estimate .td-amount {
+  max-width: 70px;
+}
+
+.lead-estimate .td-amount .button {
+  width: 70px;
+}
+
+.point-value, .percent-symbol {
+  font-size: 0.8rem;
+  color: #999;
+}
+
 .green-button {
   background-color: #7e9a06;
   padding: 0.3em 1em;
@@ -10751,34 +10931,6 @@ table.list-employees {
 
 .green-button:hover {
   background-color: #6e8a00;
-}
-
-.tabs-leads {
-  padding-top: 1rem;
-}
-
-#table-estimate.table-estimate {
-  border-collapse: separate;
-  border-spacing: 0px 2px !important;
-}
-
-#table-estimate.table-estimate thead tr th {
-  background-color: #eee;
-  border-bottom: 1px solid #000 !important;
-  font-style: 400;
-  font-size: 0.8rem;
-  font-weight: normal;
-}
-
-#table-estimate.table-estimate tr td {
-  background-color: #f5f5f5 !important;
-  padding: 0.3rem 0.6rem 0.3rem !important;
-  font-size: 0.9rem;
-  line-height: 1.2rem;
-}
-
-#table-estimate.table-estimate tbody tr:first-child td {
-  border-top: 5px solid #eee;
 }
 
 .table-notes, .table-challenges, .table-attributions {
@@ -12883,13 +13035,13 @@ tr:hover .button-to-reserve {
   color: #aaa;
 }
 
-.arrayer .title {
+.lister .title {
   font-family: "calibri";
   font-size: 0.8rem;
   color: #666666;
 }
 
-.arrayer ul li {
+.lister ul li {
   border: 1px solid blue;
   border-radius: 3px;
   padding: 5px;
@@ -12898,26 +13050,26 @@ tr:hover .button-to-reserve {
   margin-bottom: 0.4rem;
 }
 
-.arrayer ul li:last-child {
+.lister ul li:last-child {
   margin-right: 0;
 }
 
-.arrayer ul li .remove {
+.lister ul li .remove {
   position: relative;
   top: -5px;
 }
 
-.arrayer ul li .remove:hover {
+.lister ul li .remove:hover {
   color: red;
 }
 
-.arrayer .reset {
+.lister .reset {
   font-family: "calibri";
   font-size: 0.8rem;
   color: #666666;
   cursor: pointer;
 }
 
-.arrayer .reset:hover {
+.lister .reset:hover {
   color: blue;
 }

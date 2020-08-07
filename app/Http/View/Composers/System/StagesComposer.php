@@ -3,28 +3,32 @@
 namespace App\Http\View\Composers\System;
 
 use App\Stage;
-
 use Illuminate\View\View;
 
 class StagesComposer
 {
+    /**
+     * Эпаты
+     */
+    protected $stages;
+
+    /**
+     * StagesComposer constructor.
+     */
+    public function __construct()
+    {
+        $this->stages = Stage::orderBy('name')
+            ->get();
+    }
+
+    /**
+     * Отдаем этапы на шаблон
+     *
+     * @param View $view
+     * @return View
+     */
 	public function compose(View $view)
 	{
-
-        $answer_stages = operator_right('stages', false, 'index');
-
-		$stages_list = Stage::moderatorLimit($answer_stages)
-        // ->companiesLimit($answer_stages)
-        // ->authors($answer_stages)
-        // ->template($answer_stages)
-        // ->systemItem($answer_stages) // Фильтр по системным записям
-        ->where('display', true)
-        ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
-        ->get()->pluck('name', 'id');
-
-		return $view->with('stages_list', $stages_list);
-
+		return $view->with('stages', $this->stages);
 	}
-
 }

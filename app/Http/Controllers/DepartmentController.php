@@ -135,6 +135,8 @@ class DepartmentController extends Controller
                 'filter' => setFilter($this->entity_alias, $request, [
                     'booklist'
                 ]),
+                'id' => $request->id,
+                'item' => $request->item
             ]
         );
     }
@@ -176,9 +178,6 @@ class DepartmentController extends Controller
      */
     public function store(DepartmentRequest $request)
     {
-
-        // dd($request);
-
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
@@ -191,8 +190,9 @@ class DepartmentController extends Controller
 
         if ($department) {
 
-
-            $department->cities()->sync($request->cities);
+            if (is_null($department->filial_id)) {
+                $this->setCities($department);
+            }
 
             // Расписание
             setSchedule($request, $department);
@@ -236,7 +236,13 @@ class DepartmentController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         $department = Department::with([
-            'cities'
+            'cities' => function ($q) {
+                $q->with([
+                   'area',
+                   'region',
+                   'country'
+                ]);
+            }
         ])
         ->moderatorLimit($answer)
             ->findOrFail($id);
@@ -292,7 +298,9 @@ class DepartmentController extends Controller
             $this->savePhones($department);
 //            add_phones($request, $department);
 
-            $department->cities()->sync($request->cities);
+            if (is_null($department->filial_id)) {
+                $this->setCities($department);
+            }
 
             // Переадресовываем на index
             return redirect()->route('departments.index', ['id' => $department->id, 'item' => $this->entity_alias]);
@@ -348,6 +356,21 @@ class DepartmentController extends Controller
             ];
         }
 
+    }
+
+    /**
+     * Запись городов зоны ответственности с проверкой на существование в них города филиала
+     *
+     * @param $department
+     */
+    public function setCities($department)
+    {
+        $department->load('location');
+        $cities = request()->cities;
+        if (! in_array($department->location->city_id, $cities)) {
+            $cities[] = $department->location->city_id;
+        }
+        $department->cities()->sync($cities);
     }
 
     public function ajax_check(Request $request)

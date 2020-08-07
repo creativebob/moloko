@@ -11,11 +11,13 @@
             @change="change($event.target.checked)"
         >
         <label :for="'checkbox-' + name + '-' + category.id">
-            <span class="wrap-label-checkboxer">{{ category.name }}</span>
+            <span
+                :class="'wrap-label-checkboxer level-' + category.level"
+            >{{ category.name }}</span>
         </label>
         <ul
                 v-if="category.childrens && category.childrens.length"
-                :class="'checkboxer-categories level-' + category.level"
+                :class="'checkboxer-categories'"
         >
             <childrens-component
                     v-for="children in category.childrens"

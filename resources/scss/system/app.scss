@@ -467,16 +467,25 @@ p {
     }
 }
 
+// Скрывание стрелок в input[type=number]
+//input[type=number]::-webkit-inner-spin-button,
+//input[type=number]::-webkit-outer-spin-button {
+//    -webkit-appearance: none;
+//    margin:0;
+//}
+
 // --------------- Меняем стандартные чекбоксы и радиобуттоны ---------------------
 
 // Скрываем стандартный инпут
 input[type=checkbox], input[type=radio] {
     display:none;
 }
+
 // Убираем от инпута отступы фонды
 [type='checkbox'] + label, [type='radio'] + label {
     margin: 0;
 }
+
 // Ставим наши чекбоксы
 .checkbox {
 
@@ -696,6 +705,8 @@ span.wrap-label-checkboxer {
     border-top: 1px solid transparent;
 }
 
+// Чекбоксер категорий
+@import "./partials/checkboxers/checkboxer_categories";
 
 // ------------------------------------------ Оформление суперменю--------------------------------------------
 
@@ -1575,9 +1586,8 @@ $multilevel-accordion-separator: #41444a;
 //   }
 // }
 
-
-
-
+// Лиды
+@import "./partials/lead";
 
 // Вкладка задачи - НАЧАЛО =======================
 
@@ -1595,43 +1605,6 @@ $multilevel-accordion-separator: #41444a;
 
 // Вкладка задачи - КОНЕЦ =======================
 
-
-
-.tabs-leads{
-    padding-top: 1rem;
-}
-
-
-#table-estimate.table-estimate{
-
-    border-collapse: separate;
-    border-spacing: 0px 2px !important;
-
-    thead{
-
-        tr th{
-            background-color: #eee;
-            border-bottom: 1px solid #000 !important;
-            font-style: 400;
-            font-size: 0.8rem;
-            font-weight: normal;
-        }
-
-    }
-
-    tr td{
-
-        background-color: #f5f5f5 !important;
-        padding: 0.3rem 0.6rem 0.3rem !important;
-        font-size: 0.9rem;
-        line-height: 1.2rem;
-    }
-
-    tbody tr:first-child td {
-        border-top: 5px solid #eee;
-    }
-
-}
 
 .table-notes, .table-challenges, .table-attributions
 {
@@ -4268,7 +4241,7 @@ tr:hover .button-to-reserve{
     color: #aaa;
 }
 
-.arrayer {
+.lister {
 
     .title {
         font-family: "calibri";

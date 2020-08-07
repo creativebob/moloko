@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Models\System\Traits\Articlable;
+use App\Models\System\Traits\Cmvable;
 use App\Models\System\Traits\Commonable;
 use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +14,7 @@ class Raw extends Model
     use Commonable;
     use SoftDeletes;
     use Cachable;
-    use Articlable;
+    use Cmvable;
 
 //    protected $appends   = [
 //        'cost_portion',

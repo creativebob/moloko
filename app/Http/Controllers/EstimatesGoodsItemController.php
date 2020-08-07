@@ -15,12 +15,10 @@ class EstimatesGoodsItemController extends Controller
 
     /**
      * EstimatesGoodsItemController constructor.
-     * @param EstimatesGoodsItem $estimates_goods_item
      */
-    public function __construct(EstimatesGoodsItem $estimates_goods_item)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->estimate = $estimates_goods_item;
         $this->class = EstimatesGoodsItem::class;
         $this->model = 'App\EstimatesGoodsItem';
         $this->entity_alias = with(new $this->class)->getTable();
@@ -30,7 +28,7 @@ class EstimatesGoodsItemController extends Controller
     use Reservable;
 
     /**
-     * Display a listing of the resource.
+     * Отображение списка ресурсов.
      *
      * @return \Illuminate\Http\Response
      */
@@ -40,7 +38,7 @@ class EstimatesGoodsItemController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса.
      *
      * @return \Illuminate\Http\Response
      */
@@ -50,7 +48,7 @@ class EstimatesGoodsItemController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -76,99 +74,101 @@ class EstimatesGoodsItemController extends Controller
             }
         }
 
-        $price_goods = PricesGoods::with([
+        $priceGoods = PricesGoods::with([
             'product.article'
         ])
         ->findOrFail($request->price_id);
 
-        if ($price_goods->product->serial == 1) {
+        if ($priceGoods->product->serial == 1) {
 
             $data = [
                 'estimate_id' => $request->estimate_id,
-                'goods_id' => $price_goods->product->id,
-                'price_id' => $price_goods->id,
-                'currency_id' => $price_goods->currency_id,
+                'goods_id' => $priceGoods->product->id,
+                'price_id' => $priceGoods->id,
+                'currency_id' => $priceGoods->currency_id,
                 'stock_id' => $stock_id,
-                'price' => $price_goods->price,
+                'price' => $priceGoods->price,
                 'count' => 1,
-                'cost' => $price_goods->product->article->cost_default,
-                'amount' => $price_goods->price,
-                'margin_currency' => $price_goods->price - $price_goods->product->article->cost_default,
-                'total' => $price_goods->price,
+                'sale_mode' => 1,
+                'cost' => $priceGoods->product->article->cost_default,
+                'amount' => $priceGoods->price,
+                'margin_currency' => $priceGoods->price - $priceGoods->product->article->cost_default,
+                'total' => $priceGoods->price,
             ];
 
             // $onePercent = $data['amount'] / 100;
             $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
 
-            $estimates_goods_item = EstimatesGoodsItem::create($data);
+            $estimatesGoodsItem = EstimatesGoodsItem::create($data);
 
         } else {
-            $estimates_goods_item = EstimatesGoodsItem::firstOrNew([
+            $estimatesGoodsItem = EstimatesGoodsItem::firstOrNew([
                 'estimate_id' => $request->estimate_id,
-                'goods_id' => $price_goods->product->id,
-                'price_id' => $price_goods->id,
+                'goods_id' => $priceGoods->product->id,
+                'price_id' => $priceGoods->id,
                 'stock_id' => $stock_id,
+                'sale_mode' => 1,
             ], [
-                'price' => $price_goods->price,
+                'price' => $priceGoods->price,
                 'count' => 1,
-                'cost' => $price_goods->product->article->cost_default,
-                'amount' => $price_goods->price,
-                'margin_currency' => $price_goods->price - $price_goods->product->article->cost_default,
-                'currency_id' => $price_goods->currency_id,
-                'total' => $price_goods->price,
+                'cost' => $priceGoods->product->article->cost_default,
+                'points' => $priceGoods->points,
+                'currency_id' => $priceGoods->currency_id,
+                'amount' => $priceGoods->price,
+                'margin_currency' => $priceGoods->price - $priceGoods->product->article->cost_default,
+                'total' => $priceGoods->price,
             ]);
 
-//            $onePercent = $estimates_goods_item->amount / 100;
-            $estimates_goods_item->margin_percent = ($estimates_goods_item->margin_currency / $estimates_goods_item->amount * 100);
+//            $onePercent = $estimatesGoodsItem->amount / 100;
+            $estimatesGoodsItem->margin_percent = ($estimatesGoodsItem->margin_currency / $estimatesGoodsItem->amount * 100);
 
-            if ($estimates_goods_item->id) {
+            if ($estimatesGoodsItem->id) {
 
-                if ($estimates_goods_item->price != $price_goods->price) {
+                if ($estimatesGoodsItem->price != $priceGoods->price) {
                     $success = false;
                 } else {
 
-                    $data['count'] = $estimates_goods_item->count + 1;
-                    $data['cost'] = $data['count'] * $price_goods->product->article->cost_default;
-                    $data['amount'] = $data['count'] * $estimates_goods_item->price;
-                    $data['total'] = $data['count'] * $estimates_goods_item->price;
+                    $data['count'] = $estimatesGoodsItem->count + 1;
+                    $data['cost'] = $data['count'] * $priceGoods->product->article->cost_default;
+                    $data['amount'] = $data['count'] * $estimatesGoodsItem->price;
+                    $data['total'] = $data['count'] * $estimatesGoodsItem->price;
 
                     $data['margin_currency'] = $data['total'] - $data['cost'];
-
-//                    $onePercent = $data['amount'] / 100;
                     $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
 
-                    $estimates_goods_item->update($data);
+                    $estimatesGoodsItem->update($data);
                 }
             } else {
-                $estimates_goods_item->save();
+                $estimatesGoodsItem->save();
             }
         }
 
         if ($success) {
-            $estimates_goods_item->load([
-                'product.article',
-                'price_goods',
-                'reserve',
-                'stock:id,name',
-
-            ]);
-            $this->estimateUpdate($estimates_goods_item->estimate);
+            $this->estimateUpdate($estimatesGoodsItem->estimate);
 
             $result = [
                 'success' => $success,
-                'item' => $estimates_goods_item
+                'item' => $estimatesGoodsItem
             ];
         } else {
             $result = [
                 'success' => $success,
             ];
         }
+
+        $estimatesGoodsItem->load([
+            'product.article',
+            'price_goods',
+            'reserve',
+            'stock:id,name',
+            'currency'
+        ]);
 
         return response()->json($result);
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param  \App\EstimatesGoodsItem  $estimatesItem
      * @return \Illuminate\Http\Response
@@ -179,7 +179,7 @@ class EstimatesGoodsItemController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param  \App\EstimatesGoodsItem  $estimatesItem
      * @return \Illuminate\Http\Response
@@ -190,7 +190,7 @@ class EstimatesGoodsItemController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \App\EstimatesGoodsItem $estimatesItem
@@ -198,78 +198,107 @@ class EstimatesGoodsItemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $estimates_goods_item = EstimatesGoodsItem::with([
+        $estimatesGoodsItem = EstimatesGoodsItem::with([
             'product.article'
         ])
         ->findOrFail($id);
-        // dd($estimates_goods_item);
+//        dd($estimatesGoodsItem);
+
+        $merge = 0;
 
         $data = $request->input();
 
-        if ($request->has('count')) {
 
-            $data['count'] = $request->count;
-            $data['cost'] = $data['count'] * $estimates_goods_item->product->article->cost_default;
-            $data['amount'] = $estimates_goods_item->price * $data['count'];
-
-            $data['total'] = $estimates_goods_item->price * $data['count'];
-            $data['margin_currency'] = $data['total'] - $data['cost'];
-
-    //        $onePercent = $data['amount'] / 100;
-            $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
-        }
-
+        // Обновляем комментарий
         if ($request->has('comment')) {
             $data['comment'] = $request->comment;
         }
 
-        $result = $estimates_goods_item->update($data);
+        // Меняем режим продажи
+        if ($request->has('sale_mode')) {
+            $saleMode = $request->sale_mode;
+            $data['sale_mode'] = $saleMode;
+
+            // Проверяем на наличие в смете такого же товара с таким же режимом продажи
+            $oldEstimatesGoodsItem = EstimatesGoodsItem::where([
+                'estimate_id' => $estimatesGoodsItem->estimate_id,
+                'goods_id' => $estimatesGoodsItem->goods_id,
+                'price_id' => $estimatesGoodsItem->price_id,
+//                'stock_id' => $estimatesGoodsItem->stock_id,
+                'sale_mode' => $saleMode,
+            ])
+                ->where('id', '!=', $estimatesGoodsItem->id)
+            ->first();
+//            dd($oldEstimatesGoodsItem);
+
+            // Если существует позиция с режимом, на который мы поменяли текущую позицию (т.е. ее аналог)
+            if ($oldEstimatesGoodsItem) {
+                $merge = $estimatesGoodsItem->id;
+                $data['count'] = $oldEstimatesGoodsItem->count + $estimatesGoodsItem->count;
+                $estimatesGoodsItem = $oldEstimatesGoodsItem;
+            }
+
+        }
+
+        $result = $estimatesGoodsItem->update($data);
 //        dd($result);
 
-        $estimates_goods_item->load([
+        $estimatesGoodsItem->load([
             'product.article',
             'price_goods',
             'reserve',
             'stock:id,name',
+            'currency'
         ]);
-	    $this->estimateUpdate($estimates_goods_item->estimate);
+	    $this->estimateUpdate($estimatesGoodsItem->estimate);
 
-        return response()->json($estimates_goods_item);
+	    if ($merge > 0) {
+            $estimatesGoodsItem->remove_from_page = $merge;
+        }
+//	    dd($estimatesGoodsItem);
+
+        return response()->json($estimatesGoodsItem);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
-     * @param  \App\EstimatesGoodsItem  $estimatesItem
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function destroy($id)
     {
-	    $estimates_goods_item = EstimatesGoodsItem::with([
+	    $estimatesGoodsItem = EstimatesGoodsItem::with([
+	        'estimate',
             'product',
             'document',
             'reserve'
         ])
         ->findOrFail($id);
 
-	    if (isset($estimates_goods_item->reserve)) {
+	    if (isset($estimatesGoodsItem->reserve)) {
             Log::channel('documents')
-                ->info('========================================== УДАЛЯЕМ ПУНКТ СМЕТЫ, ИМЕЮЩИЙ РЕЗЕРВ, ID: ' . $estimates_goods_item->id . ' ==============================================');
-            $this->unreserve($estimates_goods_item);
-            $result = $estimates_goods_item->delete();
+                ->info('========================================== УДАЛЯЕМ ПУНКТ СМЕТЫ, ИМЕЮЩИЙ РЕЗЕРВ, ID: ' . $estimatesGoodsItem->id . ' ==============================================');
+            $this->unreserve($estimatesGoodsItem);
+            $result = $estimatesGoodsItem->delete();
             Log::channel('documents')
                 ->info('========================================== КОНЕЦ УДАЛЕНИЯ ПУНКТА СМЕТЫ, ИМЕЮЩЕГО РЕЗЕРВ ==============================================
-                
+
                 ');
         } else {
-            $result = $estimates_goods_item->forceDelete();
+            $result = $estimatesGoodsItem->forceDelete();
         }
 
-	    $this->estimateUpdate($estimates_goods_item->estimate);
-//        $result = EstimatesGoodsItem::destroy($id);
+	    $this->estimateUpdate($estimatesGoodsItem->estimate);
         return response()->json($result);
     }
 
+    /**
+     * Обновление итоговых значений сметы
+     *
+     * @param $estimate
+     */
     public function estimateUpdate($estimate)
     {
         $estimate->load([
@@ -281,7 +310,9 @@ class EstimatesGoodsItemController extends Controller
         $amount = 0;
         $total = 0;
         $points = 0;
-        $discount_items_currency = 0;
+        $discountItemsCurrency = 0;
+        $totalPoints = 0;
+        $totalBonuses = 0;
 
         if ($estimate->services_items->isNotEmpty()) {
             $cost += $estimate->services_items->sum('cost');
@@ -293,42 +324,33 @@ class EstimatesGoodsItemController extends Controller
             $amount += $estimate->goods_items->sum('amount');
             $total += $estimate->goods_items->sum('total');
             $points += $estimate->goods_items->sum('points');
-            $discount_items_currency += $estimate->goods_items->sum('discount_currency');
+            $discountItemsCurrency += $estimate->goods_items->sum('discount_currency');
+            $totalPoints += $estimate->goods_items->sum('total_points');
+            $totalBonuses += $estimate->goods_items->sum('total_bonuses');
         }
 
+        $marginCurrency = 0;
+        $marginPercent = 0;
+        $discount = 0;
 
         if ($amount > 0) {
             $discount = (($amount * $estimate->discount_percent) / 100);
-//            $total = ($amount - $discount);
-
-            $margin_currency = $total - $cost;
-
-//            $onePercent = $total / 100;
-            $margin_percent = ($margin_currency / $total * 100);
-
-            $data = [
-                'cost' => $cost,
-                'amount' => $amount,
-                'discount' => $discount,
-                'total' => $total,
-                'margin_currency' => $margin_currency,
-                'margin_percent' => $margin_percent,
-                'points' => $points,
-                'discount_items_currency' => $discount_items_currency,
-            ];
-
-        } else {
-            $data = [
-                'cost' => 0,
-                'amount' => 0,
-                'discount' => 0,
-                'total' => 0,
-                'margin_currency' => 0,
-                'margin_percent' => 0,
-                'points' => $points,
-                'discount_items_currency' => $discount_items_currency,
-            ];
+            $marginCurrency = $total - $cost;
+            $marginPercent = ($marginCurrency / $total * 100);
         }
+
+        $data = [
+            'cost' => $cost,
+            'amount' => $amount,
+            'discount' => $discount,
+            'total' => $total,
+            'margin_currency' => $marginCurrency,
+            'margin_percent' => $marginPercent,
+            'points' => $points,
+            'discount_items_currency' => $discountItemsCurrency,
+            'total_points' => $totalPoints,
+            'total_bonuses' => $totalBonuses,
+        ];
 
         $estimate->update($data);
     }
@@ -396,20 +418,4 @@ class EstimatesGoodsItemController extends Controller
             'msg' => $result
         ]);
     }
-
-
-//    public function ajax_edit(Request $request)
-//    {
-//
-//        // Получаем авторизованного пользователя
-//        $user = $request->user();
-//
-//        $user_id = hideGod($user);
-//        $company_id = $user->company_id;
-//
-//        $estimate_item = EstimatesGoodsItem::findOrFail($request->id);
-//
-//        return view('leads.pricing.pricing-modal', compact('estimate_item'));
-//
-//    }
 }

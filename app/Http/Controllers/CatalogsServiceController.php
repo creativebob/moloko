@@ -30,7 +30,7 @@ class CatalogsServiceController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Отображение списка ресурсов.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -65,7 +65,7 @@ class CatalogsServiceController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса.
      *
      * @param Request $request
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -83,7 +83,7 @@ class CatalogsServiceController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param CatalogsServiceRequest $request
      * @return \Illuminate\Http\RedirectResponse
@@ -112,7 +112,7 @@ class CatalogsServiceController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param $id
      */
@@ -122,7 +122,7 @@ class CatalogsServiceController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param Request $request
      * @param $id
@@ -150,7 +150,7 @@ class CatalogsServiceController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param CatalogsServiceRequest $request
      * @param $id
@@ -186,7 +186,7 @@ class CatalogsServiceController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param Request $request
      * @param $id

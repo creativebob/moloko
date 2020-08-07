@@ -36,7 +36,12 @@ class AppController extends Controller
 
                 if (config('app.multidomains') == true) {
                     if (Cookie::get('domain') !== null) {
-                        return \Redirect::away('https://'.Cookie::get('domain'));
+                        $path = 'https://' . Cookie::get('domain');
+                        $params = $request->input();
+                        if (count($params)) {
+                            $path .= '?' . http_build_query($params);
+                        }
+                        return \Redirect::away($path);
                     }
                 }
 
@@ -58,7 +63,7 @@ class AppController extends Controller
 //        return view($site->alias.'.pages.start.index', compact('site'));
 //        }
 //    }
-    
+
     public function changeFilial(Request $request, $domain)
     {
         // dd(__METHOD__);
@@ -451,12 +456,12 @@ class AppController extends Controller
         }
     }
 
-    public function delivery_update(Request $request)
+    public function shipment_update(Request $request)
     {
-        $data = Carbon::createFromFormat('d.m.Y H:i', $request->delivery_date . ' ' . $request->delivery_time);
+        $data = Carbon::createFromFormat('d.m.Y H:i', $request->shipment_date . ' ' . $request->shipment_time);
         $res = Lead::where('id', $request->lead_id)
             ->update([
-                'delivered_at' => $data
+                'shipment_at' => $data
             ]);
 
         if ($res) {

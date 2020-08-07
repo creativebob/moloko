@@ -14,13 +14,14 @@
 
                 <digit-component
                     :name="name + '[' + item.id + '][value]'"
-                    :rate="2"
+                    :decimal-place="2"
                     :value="value"
                     :disabled="disabled"
                     :id="'inupt-' + name + '-' + item.id + '-value'"
                     classes="compact"
                     :required="true"
                     @change="changeValue"
+                    ref="valueComponent"
                 ></digit-component>
                 <label :for="'inupt-' + name + '-' + item.id + '-value'" class="text-to-placeholder">{{ unitForLabel }}</label>
                 <div class="sprite-input-right find-status"></div>
@@ -32,13 +33,14 @@
 
                 <digit-component
                     :name="name + '[' + item.id + '][useful]'"
-                    :rate="2"
+                    :decimal-place="2"
                     :value="useful"
                     :disabled="disabled"
                     :id="'inupt-' + name + '-' + item.id + '-useful'"
                     classes="compact"
                     :required="true"
                     @change="changeUseful"
+                    ref="usefulComponent"
                 ></digit-component>
                 <label :for="'inupt-' + name + '-' + item.id + '-useful'" class="text-to-placeholder">{{ unitForLabel }}</label>
                 <div class="sprite-input-right find-status"></div>
@@ -116,6 +118,14 @@
                 }
             },
             weight() {
+                // let weight;
+                //
+                // if (this.item.portion_status == 1) {
+                //     weight =  this.item.article.weight / this.item.article.unit.ratio * this.item.portion_count * this.item.unit_portion.ratio;
+                // } else {
+                //     weight = this.item.article.weight;
+                // }
+
                 if (this.name == 'attachments' || this.name == 'containers') {
                     return parseFloat(this.item.weight * 1000 * this.useful).toFixed(2);
                 } else if (this.name == 'raws') {
@@ -141,27 +151,24 @@
                 this.$emit('open-modal', this.item)
             },
             changeValue(value) {
-                if (! Number.isNaN(value)) {
-                    if (! this.item.pivot) {
-                        this.item.pivot = {};
-                    }
-                    this.item.pivot.value = value;
-                    this.item.pivot.useful = value;
-                    this.$emit('update', this.item);
+                if (! this.item.pivot) {
+                    this.item.pivot = {};
                 }
+                this.item.pivot.value = value;
+                this.item.pivot.useful = value;
+                this.$refs.usefulComponent.update(value);
+                this.$emit('update', this.item);
             },
             changeUseful(value) {
-                if (! Number.isNaN(value)) {
-                    if (! this.item.pivot) {
-                        this.item.pivot = {};
-                    }
-
-                    if (value > this.item.pivot.value) {
-                        this.item.pivot.useful = this.item.pivot.value;
-                    } else {
-                        this.item.pivot.useful = value;
-                        this.$emit('update', this.item);
-                    }
+                if (! this.item.pivot) {
+                    this.item.pivot = {};
+                }
+                if (value > this.item.pivot.value) {
+                    this.item.pivot.useful = this.item.pivot.value;
+                    this.$refs.usefulComponent.update(this.item.pivot.useful);
+                } else {
+                    this.item.pivot.useful = value;
+                    this.$emit('update', this.item);
                 }
             }
         }

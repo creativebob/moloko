@@ -34,7 +34,7 @@ class ProductionController extends Controller
 
 
     /**
-     * Display a listing of the resource.
+     * Отображение списка ресурсов.
      *
      * @return \Illuminate\Http\Response
      */
@@ -81,7 +81,7 @@ class ProductionController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса.
      *
      * @return \Illuminate\Http\Response
      */
@@ -111,7 +111,7 @@ class ProductionController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -122,7 +122,7 @@ class ProductionController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param  \App\Production  $production
      * @return \Illuminate\Http\Response
@@ -133,7 +133,7 @@ class ProductionController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param integer $id
      * @return \Illuminate\Http\Response
@@ -170,7 +170,7 @@ class ProductionController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Production  $production
@@ -200,7 +200,7 @@ class ProductionController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param  \App\Production  $production
      * @return \Illuminate\Http\Response

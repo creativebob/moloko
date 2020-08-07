@@ -13,7 +13,7 @@ class PhotoController extends Controller
 
     use Photable;
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response

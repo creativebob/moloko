@@ -26,14 +26,14 @@ class TelegramController extends Controller
     public function get_bot()
     {
         $response = Telegram::getMe();
-        
+
         dd($response);
 
         $botId = $response->getId();
         $firstName = $response->getFirstName();
         $username = $response->getUsername();
     }
-    
+
     public function set_webhook()
     {
         $response = Telegram::setWebhook(['url' => asset('/admin/telegram_message')]);
@@ -46,7 +46,7 @@ class TelegramController extends Controller
         $response = Telegram::removeWebhook();
         dd($response);
     }
-    
+
     public function get_updates()
     {
         $response = Telegram::getUpdates();
@@ -54,7 +54,7 @@ class TelegramController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -116,7 +116,7 @@ class TelegramController extends Controller
                     Telegram::sendMessage([
                         'chat_id' => $update['callback_query']['message']['chat']['id'],
                         // именно в $update[message]['data'] - будет то что прописано у нажатой кнопки в качестве callback_data
-                        'text' => "Вы нажали на кнопку с кодом: " . $update['callback_query']['data'], 
+                        'text' => "Вы нажали на кнопку с кодом: " . $update['callback_query']['data'],
                     ]);
                     break;
                 }
@@ -218,7 +218,7 @@ class TelegramController extends Controller
                             $message .= "         Отработанные: " . $claims_done_count . "\r\n";
                         }
                         $message .= "\r\n";
-                    } 
+                    }
                 }
 
                 $leads_unaccepted_count = Lead::whereManager_id(1)
@@ -240,19 +240,19 @@ class TelegramController extends Controller
 
                 $response = Telegram::sendMessage([
                     'chat_id' => $update['callback_query']['message']['chat']['id'],
-                    'text' => $message, 
+                    'text' => $message,
                 ]);
 
                 // $response = Telegram::editMessageText([
                 //     'chat_id' => $update['callback_query']['message']['chat']['id'],
                 //     'message_id' => $update['callback_query']['message']['message_id'],
-                //     'text' => $message, 
+                //     'text' => $message,
                 // ]);
-                
+
                 // Отправляем телеграму отчет о получении, чтоб не дублировал ответы
                 $response = Telegram::answerCallbackQuery([
                     'callback_query_id' => $update['callback_query']['id']
-                ]);  
+                ]);
             }
         } else {
 
@@ -269,16 +269,16 @@ class TelegramController extends Controller
 
                     $response = Telegram::sendMessage([
                         'chat_id' => $update['message']['chat']['id'],
-                        'text' => $message, 
+                        'text' => $message,
                     ]);
 
                     // $response = Telegram::sendLocation([
-                    //     'chat_id' => $update['message']['chat']['id'], 
+                    //     'chat_id' => $update['message']['chat']['id'],
                     //     'latitude' => $update['message']['location']['latitude'],
                     //     'longitude' => $update['message']['location']['longitude'],
                     // ]);
-                    
-                    return 1;  
+
+                    return 1;
                 }
             }
 
@@ -291,8 +291,8 @@ class TelegramController extends Controller
 
                     if (isset($user->photo_id)) {
                         $response = Telegram::sendPhoto([
-                            'chat_id' => $update['message']['chat']['id'], 
-                            'photo' => asset('storage/'. $user->company_id .'/media/users/'. $user->id .'/img/medium/'. $user->avatar->name), 
+                            'chat_id' => $update['message']['chat']['id'],
+                            'photo' => asset('storage/'. $user->company_id .'/media/users/'. $user->id .'/img/medium/'. $user->avatar->name),
                             'caption' => 'Приветствую, ' . $user->first_name . ' ' . $user->second_name,
                         ]);
                     } else {
@@ -307,18 +307,18 @@ class TelegramController extends Controller
             // file_get_contents("https://api.telegram.org/bot".env('TELEGRAM_BOT_TOKEN')."/sendMessage?chat_id=".$update['update_id']."&text=Проврека");
 
             // if (isset($update['callback_query'])) {
-            
+
             // }
             // else {
-            return 1;   
+            return 1;
             // }
             // return 'ok';
             // return response('ok', 200);
-        } 
+        }
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -329,7 +329,7 @@ class TelegramController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -340,7 +340,7 @@ class TelegramController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -352,7 +352,7 @@ class TelegramController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response

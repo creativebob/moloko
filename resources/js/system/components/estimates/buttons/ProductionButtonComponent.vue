@@ -1,13 +1,11 @@
 <template>
-
-        <input
-                v-if="isShow"
-                type="submit"
-                value="Произвести"
-                class="button"
-                @click="produceEstimate"
-        >
-
+    <input
+        v-if="isShow"
+        type="submit"
+        value="Произвести"
+        class="button"
+        @click="produceEstimate"
+    >
 </template>
 
 <script>

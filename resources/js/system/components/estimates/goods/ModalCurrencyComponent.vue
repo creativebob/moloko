@@ -4,6 +4,7 @@
         :id="'modal-estimates_goods_item-' + item.id"
         data-reveal
         data-close-on-click="false"
+        v-reveal
    >
         <div class="grid-x">
             <div class="small-12 cell modal-title">
@@ -21,7 +22,7 @@
                             <digit-component
                                 name="cost"
                                 :value="item.cost"
-                                :rate="2"
+                                :decimal-place="2"
                                 :disabled="true"
                             ></digit-component>
                         </label>
@@ -31,6 +32,7 @@
                             <digit-component
                                 name="price"
                                 :value="item.price"
+                                :decimal-place="2"
                                 :disabled="true"
                             ></digit-component>
                         </label>
@@ -45,7 +47,7 @@
                                         <digit-component
                                             name="margin_percent"
                                             :value="markupPercent"
-                                            :rate="2"
+                                            :decimal-place="2"
                                             :disabled="true"
                                         ></digit-component>
                                     </label>
@@ -55,7 +57,7 @@
                                         <digit-component
                                             name="margin_currency"
                                             :value="markupCurrency"
-                                            :rate="2"
+                                            :decimal-place="2"
                                             :disabled="true"
                                         ></digit-component>
                                     </label>
@@ -73,9 +75,10 @@
                                         <digit-component
                                             name="discount_percent"
                                             :value="discountPercent"
-                                            :rate="2"
+                                            :decimal-place="2"
                                             @change="changeDiscountPercent"
                                             :disabled="isRegistered"
+                                            ref="discountPercentComponent"
                                         ></digit-component>
                                     </label>
                                 </div>
@@ -85,9 +88,10 @@
                                         <digit-component
                                             name="discount_currency"
                                             :value="discountCurrency"
-                                            :rate="2"
+                                            :decimal-place="2"
                                             @change="changeDiscountCurrency"
                                             :disabled="isRegistered"
+                                            ref="discountCurrencyComponent"
                                         ></digit-component>
                                     </label>
                                 </div>
@@ -114,7 +118,7 @@
                     </div>
 
                     <div class="small-12 medium-6 cell">
-                        Итоговая стоимость по позиции: {{ total }} руб.
+                        Итоговая стоимость по позиции: {{ total | decimalPlaces | decimalLevel }} руб.
                     </div>
 
                 </div>
@@ -161,6 +165,8 @@
             }
         },
         mounted() {
+            Foundation.reInit($('#modal-estimates_goods_item-' + this.item.id));
+
             this.markupCurrency = Number(this.item.price - this.item.cost);
             this.markupPercent = this.markupCurrency / (this.item.cost / 100);
         },
@@ -186,7 +192,6 @@
             changeCount(value) {
                 this.item.count = value;
             },
-
             checkChangeCount() {
                 if (this.item.product.serial === 0) {
                     if (!this.isRegistered) {
@@ -194,7 +199,6 @@
                     }
                 }
             },
-
             updateItem() {
                 axios
                     .patch('/admin/estimates_goods_items/' + this.item.id, {
@@ -213,12 +217,47 @@
                 let percent = this.item.price / 100;
                 this.discountPercent = value;
                 this.discountCurrency = value * percent;
+                this.$refs.discountCurrencyComponent.update(this.discountCurrency);
             },
             changeDiscountCurrency(value) {
                 let percent = this.item.price / 100;
                 this.discountCurrency = value;
                 this.discountPercent = value / percent;
+                this.$refs.discountPercentComponent.update(this.discountPercent);
+            },
+            reset() {
+                this.discountPercent = 0;
+                this.$refs.discountPercentComponent.update(this.discountPercent);
+                this.discountCurrency = 0;
+                this.$refs.discountCurrencyComponent.update(this.discountCurrency);
             }
+        },
+        directives: {
+            'reveal': {
+                bind: function (el) {
+                    new Foundation.Reveal($(el))
+                },
+            }
+        },
+        filters: {
+            decimalPlaces(value) {
+                return parseFloat(value).toFixed(2);
+            },
+            decimalLevel: function (value) {
+                return parseFloat(value).toLocaleString();
+            },
+            roundToTwo: function (value) {
+                return Math.trunc(parseFloat(Number(value).toFixed(2)) * 100) / 100;
+            },
+            // Создает разделители разрядов в строке с числами
+            level: function (value) {
+                return parseInt(value).toLocaleString();
+            },
+
+            // Отбраcывает дробную часть в строке с числами
+            onlyInteger(value) {
+                return Math.floor(value);
+            },
         },
 
     }

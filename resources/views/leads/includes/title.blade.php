@@ -57,18 +57,17 @@
                 <div class="small-12 cell filters fieldset-filters" id="filters">
                     <div class="grid-padding-x">
                         <div class="small-12 cell text-right">
-                            {{ link_to(Request::url() . '?filter=disable', 'Сбросить', ['class' => 'small-link']) }}
+                            {{ link_to(Request::url(), 'Сбросить', ['class' => 'small-link']) }}
                         </div>
                     </div>
                     <div class="grid-padding-x">
                         <div class="small-12 cell">
                             {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
-                            @includeIf($page_info->entity->view_path.'.filters')
+                            @includeIf('leads.includes.filters')
 
                             <div class="small-12 cell text-center">
-                                {{ Form::submit('Фильтрация', ['class'=>'button']) }}
-                                <input hidden name="filter" value="active">
+                                {{ Form::submit('Фильтрация', ['class' => 'button']) }}
                             </div>
                             {{ Form::close() }}
                         </div>
@@ -79,16 +78,6 @@
                         </a>
                     </div>
                 </div>
-
-                {{-- Дополнительные кнопки приходящие с контроллера --}}
-                <div class="black-button-group small-12 cell">
-                    @if(isset($add_buttons))
-                        @foreach($add_buttons as $add_button)
-                            <a class="button tiny hollow right {{ $add_button['class'] }}" href="{{ $add_button['href'] }}">{{ $add_button['text'] }}</a>
-                        @endforeach
-                    @endif
-                </div>
-
 
             </div>
 

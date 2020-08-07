@@ -1,14 +1,12 @@
 <template>
-
-        <input
-                v-if="isShow"
-                type="submit"
-                value="Оформить"
-                class="button"
-                @click="registerEstimate"
-                :disabled="isDisabled"
-        >
-
+    <input
+        v-if="isShow"
+        type="submit"
+        value="Оформить"
+        class="button"
+        @click="registerEstimate"
+        :disabled="isDisabled"
+    >
 </template>
 
 <script>

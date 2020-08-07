@@ -31,7 +31,7 @@ class CatalogsGoodsItemController extends Controller
     use Photable;
 
     /**
-     * Display a listing of the resource.
+     * Отображение списка ресурсов.
      *
      * @param Request $request
      * @param $catalog_id
@@ -106,7 +106,7 @@ class CatalogsGoodsItemController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса.
      *
      * @param Request $request
      * @param $catalog_id
@@ -129,7 +129,7 @@ class CatalogsGoodsItemController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param CatalogsGoodsItemStoreRequest $request
      * @param $catalog_id
@@ -159,7 +159,7 @@ class CatalogsGoodsItemController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param $id
      */
@@ -169,7 +169,7 @@ class CatalogsGoodsItemController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param Request $request
      * @param $catalog_id
@@ -199,7 +199,7 @@ class CatalogsGoodsItemController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param CatalogsGoodsItemUpdateRequest $request
      * @param $catalog_id
@@ -238,7 +238,7 @@ class CatalogsGoodsItemController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param Request $request
      * @param $catalog_id

@@ -15,7 +15,7 @@ class SettingController extends Controller
     use RewriteSessionUserSettings;
 
     /**
-     * Display a listing of the resource.
+     * Отображение списка ресурсов.
      *
      * @return \Illuminate\Http\Response
      */
@@ -25,7 +25,7 @@ class SettingController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса.
      *
      * @return \Illuminate\Http\Response
      */
@@ -35,7 +35,7 @@ class SettingController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -67,7 +67,7 @@ class SettingController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [
@@ -79,7 +79,7 @@ class SettingController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      *
      * @param  \App\Setting  $setting
      * @return \Illuminate\Http\Response
@@ -90,7 +90,7 @@ class SettingController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param  \App\Setting  $setting
      * @return \Illuminate\Http\Response
@@ -101,7 +101,7 @@ class SettingController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Setting  $setting
@@ -113,7 +113,7 @@ class SettingController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param  \App\Setting  $setting
      * @return \Illuminate\Http\Response
@@ -166,7 +166,7 @@ class SettingController extends Controller
 
             $result = [
                 'error_status' => 0,
-            ];  
+            ];
         } else {
 
             $result = [

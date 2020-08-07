@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Models\System\Traits\Articlable;
+use App\Models\System\Traits\Cmvable;
 use App\Models\System\Traits\Commonable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;

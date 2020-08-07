@@ -192,7 +192,7 @@ class Client extends Model
     }
 
 
-    // Фильтр
+    // Фильтры
     public function scopeFilters($query)
     {
 

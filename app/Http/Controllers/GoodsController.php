@@ -104,13 +104,12 @@ class GoodsController extends Controller
         ->authors($answer)
         ->systemItem($answer)
         ->booklistFilter($request)
-        ->filter($request, 'author_id')
 
         ->whereHas('article', function($q) use ($request){
             $q->filter($request, 'articles_group_id');
         })
 
-        ->filter($request, 'category_id')
+        ->filters()
         // ->filter($request, 'goods_product_id', 'article')
         ->where('archive', false)
 //        ->select($columns)
@@ -124,11 +123,12 @@ class GoodsController extends Controller
         // -----------------------------------------------------------------------------------------------------------
 
         $filter = setFilter($this->entity_alias, $request, [
-            'author',               // Автор записи
-            'goods_category',       // Категория товара
-            'articles_group',    // Группа артикула
+//            'author',               // Автор записи
+//            'goods_category',       // Категория товара
+//            'articles_group',    // Группа артикула
             'booklist'              // Списки пользователя
         ]);
+//        dd($filter);
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
@@ -483,7 +483,9 @@ class GoodsController extends Controller
                         $q->with([
                             'category',
                             'article.unit',
-                            'unit_for_composition'
+                            'unit_for_composition',
+                            'unit_portion',
+                            'costs',
                         ]);
                     },
                     'raws'  => function ($q) {
@@ -491,21 +493,26 @@ class GoodsController extends Controller
                             'category',
                             'article.unit',
                             'unit_for_composition',
-                            'unit_portion'
+                            'unit_portion',
+                            'costs',
                         ]);
                     },
                     'attachments' => function ($q) {
                         $q->with([
                             'category',
                             'article.unit',
-                            'unit_for_composition'
+                            'unit_for_composition',
+                            'unit_portion',
+                            'costs',
                         ]);
                     },
                     'containers' => function ($q) {
                         $q->with([
                             'category',
                             'article.unit',
-                            'unit_for_composition'
+                            'unit_for_composition',
+                            'unit_portion',
+                            'costs',
                         ]);
                     },
                 ]);
@@ -526,7 +533,8 @@ class GoodsController extends Controller
                    'article.unit'
                 ]);
             },
-            'category.manufacturers.company'
+            'category.manufacturers.company',
+            'unit_portion',
         ]);
 //        dd($cur_goods);
 

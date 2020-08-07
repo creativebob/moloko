@@ -25,7 +25,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Отображение списка ресурсов.
      *
      * @param Request $request
      * @param $catalog_id
@@ -152,7 +152,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Показать форму для создания нового ресурса.
      */
     public function create()
     {
@@ -160,7 +160,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранение созданного ресурса в хранилище.
      */
     public function store(Request $request)
     {
@@ -168,7 +168,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Отображение указанного ресурса.
      */
     public function show(PricesGoods $pricesGoods)
     {
@@ -176,7 +176,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Показать форму для редактирования указанного ресурса.
      *
      * @param Request $request
      * @param $catalog_id
@@ -190,7 +190,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновление указанного ресурса в хранилище.
      *
      * @param Request $request
      * @param $catalog_id
@@ -227,10 +227,10 @@ class PricesGoodsController extends Controller
             }
         }
 
-        if ($request->point) {
-            $point = $request->point;
+        if ($request->points) {
+            $points = $request->points;
             $cur_price_goods->update([
-                'point' => $point,
+                'points' => $points,
             ]);
             return view('prices_goods.price', ['cur_prices_goods' => $cur_price_goods]);
         }
@@ -238,7 +238,7 @@ class PricesGoodsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удаление указанного ресурса из хранилища.
      *
      * @param $id
      */

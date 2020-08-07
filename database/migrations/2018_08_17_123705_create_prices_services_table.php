@@ -34,7 +34,7 @@ class CreatePricesServicesTable extends Migration
             $table->integer('price')->default(0)->comment('Цена');
 //            $table->decimal('price', 12, 4)->default(0)->comment('Цена');
 
-            $table->integer('point')->default(0)->comment('Внутренняя валюта');
+            $table->integer('points')->default(0)->comment('Внутренняя валюта');
 //            $table->decimal('point', 12, 4)->default(0)->comment('Внутренняя валюта');
 
             $table->bigInteger('currency_id')->nullable()->unsigned()->comment('Id валюты');

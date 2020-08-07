@@ -282,13 +282,16 @@
 
                                     </div>
                                     <div class="small-3 medium-6 large-3 cell">
-                                        <label>Дата доставки:
-                                            @include('includes.inputs.date', ['name' => 'delivery_date', 'value' => isset($lead->delivered_at) ? $lead->delivered_at->format('d.m.Y') : null])
-                                        </label>
+                                        <pickmeup-component
+                                            name="shipment_date"
+                                            title="Дата отгрузки"
+                                            value="{{ isset($lead->shipment_at) ? $lead->shipment_at->format('d.m.Y') : null }}"
+                                        ></pickmeup-component>
+{{--                                        @include('includes.inputs.date', ['name' => 'shipment_date', 'value' => isset($lead->shipment_at) ? $lead->shipment_at->format('d.m.Y') : null])--}}
                                     </div>
                                     <div class="small-3 medium-6 large-3 cell">
-                                        <label>Время доставки:
-                                            @include('includes.inputs.time', ['name' => 'delivery_time', 'placeholder' => true, 'value' => isset($lead->delivered_at) ? $lead->delivered_at->format('H:i') : null])
+                                        <label>Время отгрузки:
+                                            @include('includes.inputs.time', ['name' => 'shipment_time', 'placeholder' => true, 'value' => isset($lead->shipment_at) ? $lead->shipment_at->format('H:i') : null])
                                         </label>
                                     </div>
                                 </div>
@@ -520,24 +523,6 @@
             {{ Form::submit($submitButtonText, ['class'=>'button', $disabled_leadbot]) }}
             @endcan
         </div>
-
-        <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-            <estimate-register-button-component></estimate-register-button-component>
-        </div>
-
-{{--        <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">--}}
-{{--            <estimate-production-button-component></estimate-production-button-component>--}}
-{{--        </div>--}}
-
-        <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-            <estimate-sale-button-component></estimate-sale-button-component>
-        </div>
-
-    <div class="small-12 medium-2 small-text-center medium-text-left cell tabs-button tabs-margin-top">
-        <estimate-print-button-component
-            :lead-id="{{ $lead->id }}"
-        ></estimate-print-button-component>
-    </div>
 </div>
 
     {{-- Подключаем ПОИСК обращений и заказов по номеру телефона --}}
