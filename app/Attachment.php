@@ -14,7 +14,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 class Attachment extends Model
 {
     // Включаем кеш
-    use Cachable;
+//    use Cachable;
 
     use Notifiable;
     use SoftDeletes;

@@ -13,7 +13,7 @@ class Raw extends Model
 
     use Commonable;
     use SoftDeletes;
-    use Cachable;
+//    use Cachable;
     use Cmvable;
 
 //    protected $appends   = [
