@@ -605,11 +605,13 @@ class LeadController extends Controller
     {
         // ГЛАВНЫЙ ЗАПРОС:
         $lead = Lead::with([
-            'estimate',
+            'estimate.goods_items.goods.article',
         ])
             ->findOrFail($id);
 
-        dd($lead);
+        // dd($lead);
+
+        return view('system.prints.check-order', compact('lead'));
     }
 
     // --------------------------------------- Ajax ----------------------------------------------------------
