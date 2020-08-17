@@ -10936,8 +10936,8 @@ table.list-employees {
 }
 
 #table-estimate tbody tr td, .table-estimate tbody tr td {
-  background-color: #f5f5f5 !important;
-  padding: 0.3rem 0.6rem 0.3rem !important;
+  background-color: #f9f9f9 !important;
+  padding: 0.15rem 0.6rem 0.15rem !important;
   font-size: 0.9rem;
   line-height: 1.2rem;
 }
@@ -10948,6 +10948,10 @@ table.list-employees {
 
 #table-estimate tbody tr td .points-mode, .table-estimate tbody tr td .points-mode {
   cursor: pointer;
+}
+
+#table-estimate tbody tr td .button, .table-estimate tbody tr td .button {
+  min-width: 70px;
 }
 
 #table-estimate tbody tr:first-child td, .table-estimate tbody tr:first-child td {
@@ -11023,6 +11027,47 @@ tr:hover .button-to-reserve {
 .point-value, .percent-symbol {
   font-size: 0.8rem;
   color: #999;
+}
+
+.lead-contacts-block {
+  margin-bottom: 1rem;
+  max-width: 500px;
+}
+
+.wrap-lead-address, .wrap-lead-name {
+  max-width: 350px;
+}
+
+.wrap-lead-email, .wrap-lead-company {
+  max-width: 250px;
+}
+
+.wrap-lead-add-contacts {
+  margin-left: 1rem;
+}
+
+.case_number_field {
+  padding: 5px 0.4rem;
+  width: auto;
+  height: 2.4rem;
+  background-color: #eeeeee;
+  cursor: text;
+  border-style: none;
+  border: 1px solid transparent;
+}
+
+input.case_number_field[readonly] {
+  background-color: #eeeeee;
+}
+
+.case_number_field:hover {
+  background-color: white;
+  cursor: text;
+  border: 1px solid #ddd;
+}
+
+.case_number_field:hover[readonly] {
+  cursor: text;
 }
 
 .green-button {
@@ -11731,18 +11776,18 @@ a#task-toggle {
 
 .tabs-wrap .tabs-list li {
   border: 1px solid #eeeeee;
-  background-color: #a75252;
+  background-color: #dd0000;
 }
 
 .tabs-wrap .tabs-list li a {
   color: #ffffff;
-  padding: 7px 20px 5px 20px;
+  padding: 7px 20px 7px 20px;
   font-size: 0.875rem;
   outline: none;
 }
 
 .tabs-wrap .tabs-list li a:hover {
-  background-color: #873232;
+  background-color: #990000;
 }
 
 .tabs-wrap .tabs-list li.is-active a:hover {
@@ -12319,7 +12364,7 @@ a#task-toggle {
 
 .content .content-table thead, .content .content-table tbody, .content .content-table tfoot {
   border: none;
-  background-color: #f6f6f6;
+  background-color: #f9f9f9;
 }
 
 .content .content-table .tbody-margin {
@@ -12382,7 +12427,7 @@ a#task-toggle {
 
 .content .content-table tbody tr:nth-child(even) {
   border-bottom: 0;
-  background-color: #f6f6f6;
+  background-color: #f9f9f9;
 }
 
 .content .content-table tbody tr:hover .icon-drop {
@@ -12470,27 +12515,6 @@ a#task-toggle {
 
 .content .content-table .tr-border tr:not(.tr-close) td label, .content .content-table .tr-border tr:not(.tr-close) td a {
   display: none;
-}
-
-.content .case_number_field {
-  padding: 5px 0.8rem;
-  width: 180px;
-  height: 2.4rem;
-  min-width: 4rem;
-  background-color: transparent;
-  cursor: text;
-  border-style: none;
-  border: 1px solid transparent;
-}
-
-.content .case_number_field:hover {
-  background-color: white;
-  cursor: text;
-  border: 1px solid #ddd;
-}
-
-.content .case_number_field:hover[readonly] {
-  cursor: text;
 }
 
 .content .tabs-wrap .tabs-content {

@@ -1,3 +1,44 @@
 /* Welcome to Compass. Use this file to define print styles.
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/print.css" media="print" rel="stylesheet" type="text/css" /> */
+.sidebar, .task-manager, .header, .breadcrumbs, .top-bar-right, .button-group, #pagination{
+	display: none;
+}
+
+a[href]:after {
+	content: "";
+}
+
+a{
+	text-decoration: none;
+}
+
+.content-table{
+	.td-checkbox, .td-drop, .td-control, .td-archive{
+		display: none;
+	}
+}
+
+.black-button-group{
+	display: none;
+}
+
+.top-bar{
+	padding-bottom: 0;
+}
+
+.filters{
+	padding-top: 0;
+}
+
+#wrapper{
+	height: 100%
+}
+
+.content{
+	padding-top: 1rem;
+}
+
+.head-content{
+	padding: 0;
+}

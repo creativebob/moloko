@@ -33,6 +33,21 @@ mix
 	.minify('public_html/css/system/app.css')
 	// .sourceMaps()
 ;
+
+mix
+	.sass('resources/scss/system/partials/print.scss', 'public_html/css/system', {
+
+	})
+	.options({
+		processCssUrls: false,
+		// postCss: [
+		// 	require('postcss-css-variables')()
+		// ]
+	})
+	.minify('public_html/css/system/print.css')
+	// .sourceMaps()
+;
+
 // mix.browserSync('crmsystem.local/admin/test');
 
 // Project

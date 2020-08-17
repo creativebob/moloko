@@ -26,8 +26,8 @@
 
             td {
 
-                background-color: #f5f5f5 !important;
-                padding: 0.3rem 0.6rem 0.3rem !important;
+                background-color: $table-bg-color !important;
+                padding: 0.15rem 0.6rem 0.15rem !important;
                 font-size: 0.9rem;
                 line-height: 1.2rem;
 
@@ -38,6 +38,10 @@
                 .points-mode {
                     cursor: pointer;
 
+                }
+
+                .button{
+                    min-width: 70px;
                 }
             }
         }
@@ -129,4 +133,43 @@ tr:hover .button-to-reserve{
 .point-value, .percent-symbol{
     font-size: 0.8rem;
     color: #999;
+}
+
+.lead-contacts-block{
+    margin-bottom: 1rem;
+    max-width: 500px;
+}
+
+.wrap-lead-address, .wrap-lead-name{
+    max-width: 350px;
+}
+.wrap-lead-email, .wrap-lead-company{
+    max-width: 250px;
+}
+
+.wrap-lead-add-contacts{
+    margin-left: 1rem;
+}
+
+.case_number_field{
+    padding: 5px 0.4rem;
+    width: auto;
+    height: 2.4rem;
+    background-color: $body-bg-color;
+    cursor: text;
+    border-style: none;
+    border: 1px solid transparent;
+}
+
+input.case_number_field[readonly]{
+    background-color: $body-bg-color;  
+}
+
+.case_number_field:hover{
+    background-color: white;
+    cursor: text;
+    border: 1px solid #ddd;
+    &[readonly]{
+        cursor: text;
+    }
 }

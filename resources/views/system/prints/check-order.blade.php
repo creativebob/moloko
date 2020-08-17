@@ -8,7 +8,7 @@
         <div class="cell small-6 left-part-check">
             <div class="grid-x company-info">
                 <div class="cell shrink">
-                    <img src="{{ $lead->company->black->path }}"  width="100mm" alt="Логотип Ролл-Хаус" title="На главную">
+                    <img src="{{ $lead->company->black->path }}"  width="100mm" alt="Логотип">
                 </div>
                 <div class="cell auto contact-info">
                     <span class="company-phone">{{ decorPhone($lead->filial->main_phone->phone) }}</span><br>
