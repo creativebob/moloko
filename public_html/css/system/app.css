@@ -8567,6 +8567,108 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   src: url("./fonts/SegoeUI/SegoeUISemiLight/SegoeUISemiLight.ttf") format("truetype");
 }
 
+.check-order {
+  width: 278mm;
+  height: 200mm;
+  padding: 1rem;
+}
+
+.check-order .left-part-check {
+  padding-right: 0.5rem;
+}
+
+.check-order .right-part-check {
+  padding-left: 0.5rem;
+}
+
+.check-order .contact-info {
+  padding-top: 1rem;
+  text-align: right;
+}
+
+.check-order .contact-info .company-phone {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.check-order .order-info {
+  font-family: "SegoeUIRegular";
+  line-height: 1.4;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.check-order .order-info .order-date,
+.check-order .order-info .order-time {
+  display: inline-block;
+  width: 25mm;
+  font-weight: bold;
+}
+
+.check-order .order-info .client-city,
+.check-order .order-info .client-address,
+.check-order .order-info .client-phone,
+.check-order .order-info .client-time,
+.check-order .order-info .client-points {
+  display: inline-block;
+  width: 28mm;
+  font-weight: bold;
+}
+
+.check-order .print_table {
+  font-family: "SegoeUIRegular";
+}
+
+.check-order .print_table tbody {
+  counter-reset: rowNumber;
+}
+
+.check-order .print_table tr.item td:first-child::before {
+  content: counter(rowNumber);
+  counter-increment: rowNumber;
+  min-width: 1em;
+  padding-left: .3em;
+  padding-right: .3em;
+}
+
+.check-order .print_table caption {
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.check-order .print_table tr td {
+  padding: 8px 2px 6px 2px;
+  font-size: 0.8rem;
+}
+
+.check-order .print_table tbody tr td {
+  border-bottom: dotted 1px #ccc !important;
+}
+
+.check-order .print_table thead {
+  border-bottom: 1px solid #000;
+}
+
+.check-order .print_table thead tr th {
+  padding: 4px 2px 8px 2px;
+  font-size: 0.7rem;
+}
+
+.check-order .print_table tfoot {
+  border-top: 2px solid #000;
+}
+
+.check-order .print_table {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.check-order .print_table tr td:first-child, .check-order .p_table tr th:first-child {
+  max-width: 20px !important;
+}
+
 /**
  * @package PickMeUp
  * @author  Nazar Mokrynskyi <nazar@mokrynskyi.com>
@@ -10836,8 +10938,8 @@ table.list-employees {
 }
 
 #table-estimate tbody tr td, .table-estimate tbody tr td {
-  background-color: #f5f5f5 !important;
-  padding: 0.3rem 0.6rem 0.3rem !important;
+  background-color: #f9f9f9 !important;
+  padding: 0.15rem 0.6rem 0.15rem !important;
   font-size: 0.9rem;
   line-height: 1.2rem;
 }
@@ -10848,6 +10950,10 @@ table.list-employees {
 
 #table-estimate tbody tr td .points-mode, .table-estimate tbody tr td .points-mode {
   cursor: pointer;
+}
+
+#table-estimate tbody tr td .button, .table-estimate tbody tr td .button {
+  min-width: 70px;
 }
 
 #table-estimate tbody tr:first-child td, .table-estimate tbody tr:first-child td {
@@ -10923,6 +11029,47 @@ tr:hover .button-to-reserve {
 .point-value, .percent-symbol {
   font-size: 0.8rem;
   color: #999;
+}
+
+.lead-contacts-block {
+  margin-bottom: 1rem;
+  max-width: 500px;
+}
+
+.wrap-lead-address, .wrap-lead-name {
+  max-width: 350px;
+}
+
+.wrap-lead-email, .wrap-lead-company {
+  max-width: 250px;
+}
+
+.wrap-lead-add-contacts {
+  margin-left: 1rem;
+}
+
+.case_number_field {
+  padding: 5px 0.4rem;
+  width: auto;
+  height: 2.4rem;
+  background-color: #eeeeee;
+  cursor: text;
+  border-style: none;
+  border: 1px solid transparent;
+}
+
+input.case_number_field[readonly] {
+  background-color: #eeeeee;
+}
+
+.case_number_field:hover {
+  background-color: white;
+  cursor: text;
+  border: 1px solid #ddd;
+}
+
+.case_number_field:hover[readonly] {
+  cursor: text;
 }
 
 .green-button {
@@ -11631,18 +11778,18 @@ a#task-toggle {
 
 .tabs-wrap .tabs-list li {
   border: 1px solid #eeeeee;
-  background-color: #a75252;
+  background-color: #dd0000;
 }
 
 .tabs-wrap .tabs-list li a {
   color: #ffffff;
-  padding: 7px 20px 5px 20px;
+  padding: 7px 20px 7px 20px;
   font-size: 0.875rem;
   outline: none;
 }
 
 .tabs-wrap .tabs-list li a:hover {
-  background-color: #873232;
+  background-color: #990000;
 }
 
 .tabs-wrap .tabs-list li.is-active a:hover {
@@ -12219,7 +12366,7 @@ a#task-toggle {
 
 .content .content-table thead, .content .content-table tbody, .content .content-table tfoot {
   border: none;
-  background-color: #f6f6f6;
+  background-color: #f9f9f9;
 }
 
 .content .content-table .tbody-margin {
@@ -12282,7 +12429,7 @@ a#task-toggle {
 
 .content .content-table tbody tr:nth-child(even) {
   border-bottom: 0;
-  background-color: #f6f6f6;
+  background-color: #f9f9f9;
 }
 
 .content .content-table tbody tr:hover .icon-drop {
@@ -12370,27 +12517,6 @@ a#task-toggle {
 
 .content .content-table .tr-border tr:not(.tr-close) td label, .content .content-table .tr-border tr:not(.tr-close) td a {
   display: none;
-}
-
-.content .case_number_field {
-  padding: 5px 0.8rem;
-  width: 180px;
-  height: 2.4rem;
-  min-width: 4rem;
-  background-color: transparent;
-  cursor: text;
-  border-style: none;
-  border: 1px solid transparent;
-}
-
-.content .case_number_field:hover {
-  background-color: white;
-  cursor: text;
-  border: 1px solid #ddd;
-}
-
-.content .case_number_field:hover[readonly] {
-  cursor: text;
 }
 
 .content .tabs-wrap .tabs-content {

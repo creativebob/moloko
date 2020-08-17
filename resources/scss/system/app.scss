@@ -28,6 +28,9 @@
 // ----------------------- Подключаем шрифты ----------------------------------------
 @import "./partials/fonts";
 
+// ------------------------ Чек ----------------------------------------
+@import "./partials/check-order";
+
 // ------------------------ Pickmeup ----------------------------------------
 @import "./partials/pickmeup";
 
@@ -56,8 +59,8 @@ $black: #000000;
 $body-bg-color: #eeeeee;
 $crm-blue: #1779ba;
 $green: #7e9a06;
-$mars-red-black: #a75252;
-$mars-red-black-dark: #873232;
+$mars-red-black: #dd0000;
+$mars-red-black-dark: #990000;
 
 $green-light: #6e8a00;
 $red-light: #ffc2c2;
@@ -143,7 +146,7 @@ $tabs-active-color: #ffffff;
 $tabs-fieldset-border-color: #d6d6d6;
 
 // Таблица в контенте
-$table-bg-color: #f6f6f6;
+$table-bg-color: #f9f9f9;
 $table-td-border: #eeeeee;
 $table-deleted-color: #646464;
 $table-active-border-color-blue: #5190ff;
@@ -2438,7 +2441,7 @@ a#task-toggle{
 
             a {
                 color: $white;
-                padding: 7px 20px 5px 20px;
+                padding: 7px 20px 7px 20px;
                 font-size: 0.875rem;
 
                 // Обнуляем фонду
@@ -3333,28 +3336,6 @@ a#task-toggle{
             }
         }
     }
-
-    .case_number_field{
-        padding: 5px 0.8rem;
-        width: 180px;
-        height: 2.4rem;
-        min-width: 4rem;
-        background-color: transparent;
-        cursor: text;
-        border-style: none;
-        border: 1px solid transparent;
-    }
-
-    .case_number_field:hover{
-        background-color: white;
-        cursor: text;
-        border: 1px solid #ddd;
-        &[readonly]{
-            cursor: text;
-        }
-
-    }
-
 
     // ---------------------------------------- Табы -----------------------------------------
     .tabs-wrap {

@@ -1,0 +1,124 @@
+
+.check-order{
+
+	.left-part-check{
+		padding-right: 0.5rem;
+	}
+	.right-part-check{
+		padding-left: 0.5rem;
+	}
+
+    width: 278mm;
+    height: 200mm;
+    padding: 1rem;
+
+    .contact-info{
+
+    	padding-top: 1rem;
+
+    	.company-phone{
+			font-size: 1.2rem;
+			font-weight: bold;
+    	}
+
+        text-align: right;
+        span{
+        
+        }
+    }
+
+	.order-info{
+
+		font-family: $SUIR;
+		line-height: 1.4;
+		font-size: 0.8rem;
+		margin-bottom: 1rem;
+
+		.order-date, 
+		.order-time
+		{
+			display: inline-block;
+			width: 25mm;
+			font-weight: bold;
+		}
+
+		.client-city, 
+		.client-address, 
+		.client-phone, 
+		.client-time, 
+		.client-points
+		{
+			display: inline-block;
+			width: 28mm;
+			font-weight: bold;
+		}
+	}
+
+
+	.print_table{
+		tbody{
+			counter-reset: rowNumber;
+		}
+
+		tr.item td:first-child::before {
+		    content: counter(rowNumber);
+		    counter-increment:rowNumber;
+		    min-width: 1em;
+		    padding-left: .3em;
+		    padding-right: .3em;
+		}
+
+		font-family: $SUIR;
+	}
+
+
+
+	.print_table caption
+	{
+		font-weight: bold;
+		font-size: 1rem;
+		text-align: center;
+		margin-bottom: 1rem;
+	}
+
+	.print_table tr td
+	{
+		padding: 8px 2px 6px 2px;
+		font-size: 0.8rem;
+	}
+
+	.print_table tbody tr td
+	{
+		border-bottom: dotted 1px #ccc !important;
+	}
+
+	.print_table thead{
+		
+		border-bottom: 1px solid #000;
+
+		tr th
+		{
+			padding: 4px 2px 8px 2px;
+			font-size: 0.7rem;
+		}
+	}
+
+	.print_table tfoot{
+		border-top: 2px solid #000;
+	}
+
+
+	.print_table
+	{
+		width: 100%;
+		margin-top: 10px;
+	}
+
+	.print_table tr td:first-child, .p_table tr th:first-child,
+	{
+		max-width: 20px !important;
+	}
+
+}
+
+

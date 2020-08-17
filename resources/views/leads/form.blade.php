@@ -1,7 +1,7 @@
 
 <div class="top-bar head-content">
     <div class="top-bar-left">
-        <h2 class="header-content">ЛИД №: <input id="show-case-number" name="show_case_number" readonly class="case_number_field" value="{{ $lead->case_number }}"> </h2>
+        <h2 class="header-content">ЛИД №:<input id="show-case-number" name="show_case_number" readonly class="case_number_field" value="{{ $lead->case_number }}"> </h2>
     </div>
     <div class="top-bar-right wrap_lead_badget">
         {{-- @include('includes.inputs.digit', ['name' => 'badget', 'value' => $lead->badget, 'decimal_place'=>2]) --}}
@@ -15,27 +15,27 @@
 
         <!-- Персональная информация -->
         <div class="grid-x">
-            <div class="small-12 medium-12 large-8 cell margin-left-15">
-                <div class="grid-x grid-padding-x">
-                    <div class="small-6 medium-6 cell">
+            <div class="small-12 large-shrink cell margin-left-15">
+                <div class="grid-x grid-padding-x lead-contacts-block">
+                    <div class="large-shrink cell">
                         <label>Телефон
                             {{ Form::text('main_phone', isset($lead->main_phone->phone) ? $lead->main_phone->phone : null, ['class'=>'phone-field', 'maxlength'=>'17', 'autocomplete'=>'off', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'id'=>'phone', $autofocus, $readonly]) }}
                             <span class="form-error">Укажите номер</span>
                         </label>
                     </div>
-                    <div class="small-6 medium-6 large-6 cell">
+                    <div class="large-auto cell">
                         <label>Контактное лицо
                             @include('includes.inputs.name', ['name'=>'name', 'value'=>$lead->name, 'required' => true, 'id' => 'lead_user_name'])
-                            <input type="hidden" name="lead_id" value="{{$lead->id }}" id="lead_id" data-lead-id="{{$lead->id }}">
+                            <input type="hidden" name="lead_id" value="{{$lead->id }}" id="lead_id" data-lead-id="{{$lead->id }}" class="wrap-lead-name">
                         </label>
                     </div>
                     <div id="port-autofind" class="small-12 cell">
                     </div>
 
-                    <div class="small-6 medium-6 large-6 cell">
+                    <div class="large-shrink cell">
                         @include('system.common.includes.city_search', ['item' => $lead, 'required' => true])
                     </div>
-                    <div class="small-6 medium-6 cell">
+                    <div class="large-auto cell wrap-lead-address">
                         <label>Адрес
                             @php
                             $address = null;
@@ -49,17 +49,17 @@
                 </div>
             </div>
 
-            <div class="small-12 medium-12 large-4 cell">
+            <div class="small-12 large-auto cell wrap-lead-add-contacts">
                 <!-- Пустой блок -->
                 <div class="grid-x grid-padding-x">
 
-                    <div class="small-12 cell">
+                    <div class="small-12 cell wrap-lead-company">
                         <label>Компания
                             @include('includes.inputs.string', ['name'=>'company_name', 'value'=>$lead->company_name])
                         </label>
                     </div>
 
-                    <div class="small-12 cell">
+                    <div class="small-12 cell wrap-lead-email">
                         <label>E-mail
                             @include('includes.inputs.email', ['value'=>$lead->email, 'name'=>'email'])
                         </label>
@@ -71,7 +71,7 @@
 
         <!-- ЗАКАЗ -->
         <div class="grid-x grid-padding-x">
-            <div class="small-12 medium-12 large-12 cell margin-left-15">
+            <div class="small-12 medium-12 large-12 cell margin-left-15 wrap-tabs-lead">
                 <ul class="tabs-list" data-tabs id="tabs-extra-leads">
                     <li class="tabs-title is-active" id="tab-order"><a href="#content-panel-order" aria-selected="true">Состав заказа</a></li>
 

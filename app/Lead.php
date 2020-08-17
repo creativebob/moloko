@@ -88,6 +88,12 @@ class Lead extends Model
         return $this->belongsTo('App\Company');
     }
 
+    // Получаем филиал в котором был принят лид
+    public function filial()
+    {
+        return $this->belongsTo('App\Department');
+    }
+
     public function filials()
     {
         return $this->hasMany('App\Department')->where('filial_status', 1);
