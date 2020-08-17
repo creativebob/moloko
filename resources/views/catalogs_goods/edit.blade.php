@@ -2,7 +2,7 @@
 
 @section('title', 'Редактировать каталог')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $catalogs_goods->name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $catalogs_goods->name))
 
 @section('title-content')
 <div class="top-bar head-content">

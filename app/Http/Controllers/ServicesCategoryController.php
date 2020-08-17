@@ -80,7 +80,7 @@ class ServicesCategoryController extends Controller
         return view('system.common.categories.index.index',
             [
                 'items' => $services_categories,
-                'page_info' => pageInfo($this->entity_alias),
+                'pageInfo' => pageInfo($this->entity_alias),
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
@@ -112,7 +112,7 @@ class ServicesCategoryController extends Controller
             'title' => 'Добавление категории услуг',
             'parent_id' => $request->parent_id,
             'category_id' => $request->category_id,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -192,7 +192,7 @@ class ServicesCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $services_category);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         $settings = getPhotoSettings($this->entity_alias);
 
@@ -200,14 +200,14 @@ class ServicesCategoryController extends Controller
         if ($request->ajax()) {
             return view('products.common.metrics.properties_list', [
                 'category' => $services_category,
-                'page_info' => $page_info,
+                'pageInfo' => $pageInfo,
             ]);
         }
 
         return view('products.processes_categories.common.edit.edit', [
             'title' => 'Редактирование категории услуг',
             'category' => $services_category,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'settings' => $settings,
             'entity' => $this->entity_alias,
         ]);

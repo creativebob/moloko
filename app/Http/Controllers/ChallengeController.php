@@ -88,9 +88,9 @@ class ChallengeController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('challenges.index', compact('challenges', 'page_info', 'filter'));
+        return view('challenges.index', compact('challenges', 'pageInfo', 'filter'));
     }
 
     public function create(Request $request)

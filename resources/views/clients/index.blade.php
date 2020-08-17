@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->page_description }}" />
+<meta name="description" content="{{ $pageInfo->page_description }}" />
 
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 @section('exсel')
     <a href="{{ route('clients.excel', request()->input()) }}" class="button tiny">Экспорт</a>

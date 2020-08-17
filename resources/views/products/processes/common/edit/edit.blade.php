@@ -14,7 +14,7 @@
 
 @section('title', $title)
 
-@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $process))
+@section('breadcrumbs', Breadcrumbs::render('alias-edit', $pageInfo, $process))
 
 @section('title-content')
 <div class="top-bar head-content">
@@ -40,7 +40,7 @@
             </li>
 
             {{-- Табы для сущности --}}
-            @includeIf($page_info->entity->view_path . '.tabs')
+            @includeIf($pageInfo->entity->view_path . '.tabs')
 
             <li class="tabs-title">
                 <a data-tabs-target="tab-photos" href="#tab-photos">Фотографии</a>
@@ -404,7 +404,7 @@
                 </div>
             </div>
 
-            @includeIf($page_info->entity->view_path . '.tabs_content')
+            @includeIf($pageInfo->entity->view_path . '.tabs_content')
 
             {{-- Сайт --}}
             @can('index', App\Site::class)
@@ -492,7 +492,7 @@
 @section('modals')
 @include('includes.modals.modal_item_delete')
 
-@includeIf($page_info->entity->view_path . '.modals')
+@includeIf($pageInfo->entity->view_path . '.modals')
 @endsection
 
 @push('scripts')
@@ -523,5 +523,5 @@
 ]
 )
 
-@includeIf($page_info->entity->view_path . '.scripts')
+@includeIf($pageInfo->entity->view_path . '.scripts')
 @endpush

@@ -28,6 +28,7 @@ use App\Company;
 use App\Department;
 use App\Payment;
 use App\Position;
+use App\PricesGoods;
 use App\Right;
 use App\Role;
 use App\Staffer;
@@ -60,6 +61,24 @@ class ParserController extends Controller
     public function test()
     {
         dd(__METHOD__);
+    }
+
+    /**
+     * Проставление total прайсам товаров
+     *
+     * @return string
+     */
+    public function parserPricesGoodsTotal()
+    {
+        $pricesGoods = PricesGoods::get();
+        foreach($pricesGoods as $priceGoods) {
+            $total = $pricesGoods->price - $pricesGoods->discount_currency;
+            $priceGoods->update([
+               'total' => $total
+            ]);
+        }
+        return "Прайсам товаров проставлен total";
+
     }
 
     /**

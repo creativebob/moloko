@@ -2,41 +2,23 @@
 
 namespace App\Http\Controllers;
 
-// Модели
 use App\Estimate;
 use App\Http\Controllers\Traits\Offable;
-use App\Stock;
-use Illuminate\Support\Facades\Log;
 use App\User;
 use App\Lead;
-use App\LeadMethod;
 use App\LeadType;
 use App\Note;
 use App\Challenge;
-
 use App\GoodsCategory;
 use App\ServicesCategory;
 use App\RawsCategory;
-
-use App\CatalogsService;
-use App\CatalogsGoods;
-
-// Валидация
 use Illuminate\Http\Request;
 use App\Http\Requests\System\LeadRequest;
 use App\Http\Requests\System\MyStageRequest;
-
-
-// Специфические классы
 use Carbon\Carbon;
-
-// На удаление
-use App\Http\Controllers\Session;
-
-// Подрубаем трейт записи и обновления компании
+use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\Traits\UserControllerTrait;
 use App\Http\Controllers\Traits\LeadControllerTrait;
-
 use App\Exports\LeadsExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -66,6 +48,21 @@ class LeadController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_name, $this->entity_dependence, getmethod(__FUNCTION__));
 
+//        $cookie = Cookie::get('filters');
+//        if (isset($cookie)) {
+//            $filters = json_decode($cookie, true);
+//            if (count($request->input())) {
+//                $filters[$this->entity_name] = $request->input();
+//            } else {
+//                if (isset($filters[$this->entity_name])) {
+//                    $request->request->add($filters[$this->entity_name]);
+//                }
+//            }
+//            Cookie::queue(Cookie::forever('filters', json_encode($filters)));
+//        } else {
+//            $data[$this->entity_name] = $request->input();
+//            Cookie::queue(Cookie::forever('filters', json_encode($data)));
+//        }
 
         // -----------------------------------------------------------------------------------------
         // ГЛАВНЫЙ ЗАПРОС
@@ -86,6 +83,11 @@ class LeadController extends Controller
                         $q->with([
                             'goods.article',
                             'reserve'
+                        ]);
+                    },
+                    'services_items' => function ($q) {
+                        $q->with([
+                            'service.process',
                         ]);
                     }
                 ]);
@@ -128,23 +130,23 @@ class LeadController extends Controller
         // -----------------------------------------------------------------------------------------------------------
 
         $filter = setFilter($this->entity_name, $request, [
-            'city',                 // Город
-            'stage',                // Этап
-            'lead_method',          // Способ обращения
-            'lead_type',            // Тип обращения
-            'manager',              // Менеджер
-            'date_interval',        // Дата обращения
+//            'city',                 // Город
+//            'stage',                // Этап
+//            'lead_method',          // Способ обращения
+//            'lead_type',            // Тип обращения
+//            'manager',              // Менеджер
+//            'date_interval',        // Дата обращения
             'booklist',               // Списки пользователя
-            'challenges_active_count' // Активные и не активные задачи
+//            'challenges_active_count' // Активные и не активные задачи
         ]);
 
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('leads.index', compact('leads', 'page_info', 'user', 'filter'));
+        return view('leads.index', compact('leads', 'pageInfo', 'user', 'filter'));
     }
 
 
@@ -316,7 +318,7 @@ class LeadController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
         $filial_id = $request->user()->filial_id;
 
@@ -329,7 +331,7 @@ class LeadController extends Controller
 
         $settings = auth()->user()->company->settings;
 
-        return view('leads.edit', compact('lead', 'page_info', 'choices', 'paginator_url', 'settings'));
+        return view('leads.edit', compact('lead', 'pageInfo', 'choices', 'paginator_url', 'settings'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request, $id)
@@ -444,9 +446,9 @@ class LeadController extends Controller
         $filter = addBooklist($filter, $filter_query, $request, $this->entity_name);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('leads.index', compact('leads', 'page_info', 'filter', 'user'));
+        return view('leads.index', compact('leads', 'pageInfo', 'filter', 'user'));
     }
 
     public function search(Request $request, $search)
@@ -594,6 +596,20 @@ class LeadController extends Controller
         } else {
             abort(403,'Что-то пошло не так!');
         };
+    }
+
+    public function resetFilter()
+    {
+        $cookie = Cookie::get('filters');
+        if (isset($cookie)) {
+            $filters = json_decode($cookie, true);
+            if (isset($filters[$this->entity_name])) {
+                unset($filters[$this->entity_name]);
+                Cookie::queue(Cookie::forever('filters', json_encode($filters)));
+            }
+        }
+
+        return redirect()->route('leads.index');
     }
 
     /**

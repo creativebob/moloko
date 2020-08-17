@@ -24,6 +24,7 @@ use App\Cost;
 use App\CostsHistory;
 use App\Department;
 use App\Direction;
+use App\Discount;
 use App\Dispatch;
 use App\Domain;
 use App\Employee;
@@ -58,6 +59,7 @@ use App\Observers\System\CostObserver;
 use App\Observers\System\CostsHistoryObserver;
 use App\Observers\System\DepartmentObserver;
 use App\Observers\System\DirectionObserver;
+use App\Observers\System\DiscountObserver;
 use App\Observers\System\DispatchObserver;
 use App\Observers\System\DomainObserver;
 use App\Observers\System\EmployeeObserver;
@@ -223,6 +225,9 @@ class ObserverServiceProvider extends ServiceProvider
         ProcessesGroup::observe(ProcessesGroupObserver::class);
         Service::observe(ServiceObserver::class);
         Workflow::observe(WorkflowObserver::class);
+
+        // Скидки
+        Discount::observe(DiscountObserver::class);
 
         // Направления
         Direction::observe(DirectionObserver::class);

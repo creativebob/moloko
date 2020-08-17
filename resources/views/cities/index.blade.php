@@ -1,23 +1,23 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->page_description }}" />
+<meta name="description" content="{{ $pageInfo->page_description }}" />
 {{-- Скрипты меню в шапке --}}
 @include('includes.scripts.sortable-inhead')
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
 @section('content-count')
 {{-- Количество элементов --}}
 {{ isset($count) ? num_format($count, 0) : 0 }}
 @endsection
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 @section('title-content')
 {{-- Меню --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\City::class, 'type' => 'menu'])
+@include('includes.title-content', ['pageInfo' => $pageInfo, 'class' => App\City::class, 'type' => 'menu'])
 @endsection
 
 @section('content')

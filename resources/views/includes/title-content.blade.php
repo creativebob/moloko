@@ -3,7 +3,7 @@
     <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
         <div class="top-bar head-content">
             <div class="top-bar-left">
-                <h2 class="header-content">{{ $page_info->title }}
+                <h2 class="header-content">{{ $pageInfo->title }}
                     <span class="content-count" title="Общее количество">
                         @yield('content-count')
                     </span>
@@ -15,7 +15,7 @@
                 @case('table')
 
                 {{-- Кнопки добавления для страницы ЛИДЫ --}}
-                @if($page_info->alias == 'leads')
+                @if($pageInfo->alias == 'leads')
 
                     @if(!empty(Auth::user()->staff[0]))
                         <div class="button-group">
@@ -34,7 +34,7 @@
                     @endif
 
 
-                @elseif($page_info->alias == 'dealers')
+                @elseif($pageInfo->alias == 'dealers')
 
                     @if(!empty(Auth::user()->staff[0]))
                         <div class="button-group">
@@ -49,7 +49,7 @@
                         </div>
                     @endif
 
-                @elseif($page_info->alias == 'clients')
+                @elseif($pageInfo->alias == 'clients')
 
                     @if(!empty(Auth::user()->staff[0]))
                         <div class="button-group">
@@ -71,7 +71,7 @@
                     @if (isset($page_alias))
                     <a href="/admin/{{ $page_alias }}/create" class="icon-add sprite" data-tooltip class="top" tabindex="2" title="Добавить позицию"></a>
                     @else
-                    <a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite" data-tooltip class="top" tabindex="2" title="Добавить позицию"></a>
+                    <a href="/admin/{{ $pageInfo->alias}}/create" class="icon-add sprite" data-tooltip class="top" tabindex="2" title="Добавить позицию"></a>
                     @endif
 
                 @endif
@@ -88,15 +88,15 @@
                 @break
 
                 @case('sections-menu')
-                {{-- <h2 class="header-content">{{ $page_info->title .' &laquo;'. $name .'&raquo;' }}</h2> --}}
+                {{-- <h2 class="header-content">{{ $pageInfo->title .' &laquo;'. $name .'&raquo;' }}</h2> --}}
                 <a class="icon-add sprite" data-open="modal-create"></a>
                 @break
 
                 @endswitch
-                @endcan  
+                @endcan
 
             </div>
-            <div class="top-bar-right">   
+            <div class="top-bar-right">
 
                 @if (isset($filter))
                 <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
@@ -132,7 +132,7 @@
                     <div class="small-12 cell">
                         {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
-                        @includeIf($page_info->entity->view_path.'.filters')
+                        @includeIf($pageInfo->entity->view_path.'.filters')
 
                         <div class="small-12 cell text-center">
                             {{ Form::submit('Фильтрация', ['class'=>'button']) }}

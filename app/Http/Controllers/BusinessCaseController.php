@@ -65,7 +65,7 @@ class BusinessCaseController extends Controller
 
         return view('system.pages.business_cases.index', [
             'business_cases' => $business_cases,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'portfolio' => $this->portfolio
         ]);
     }
@@ -84,7 +84,7 @@ class BusinessCaseController extends Controller
 
         return view('system.pages.business_cases.create', [
             'business_case' => BusinessCase::make(),
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'portfolio' => $this->portfolio
         ]);
     }
@@ -153,7 +153,7 @@ class BusinessCaseController extends Controller
 
         return view('system.pages.business_cases.edit', [
             'business_case' => $business_case,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'portfolio' => $this->portfolio
         ]);
     }

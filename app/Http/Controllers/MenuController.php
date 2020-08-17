@@ -66,7 +66,7 @@ class MenuController extends Controller
         // Отдаем на шаблон
         return view('menus.index', [
             'menus' => $menus,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'site_id' => $site_id,
             'navigation_id' => $navigation_id,
             'site' => $site,

@@ -64,9 +64,9 @@ class AccountController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('accounts.index', compact('accounts', 'page_info', 'filter', 'user'));
+        return view('accounts.index', compact('accounts', 'pageInfo', 'filter', 'user'));
     }
 
     public function create(Request $request)
@@ -77,7 +77,7 @@ class AccountController extends Controller
 
         return view('accounts.create', [
             'account' => new $this->class,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -164,7 +164,7 @@ class AccountController extends Controller
 
         return view('accounts.edit', [
             'account' => $account->load('source_service'),
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

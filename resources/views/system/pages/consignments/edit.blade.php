@@ -7,7 +7,7 @@
 
 @section('title', 'Редактировать товарную накладную')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $consignment->id))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $consignment->id))
 
 @section('title-content')
 <div class="top-bar head-content">

@@ -78,7 +78,7 @@ class RawsCategoryController extends Controller
         return view('system.common.categories.index.index',
             [
                 'items' => $raws_categories,
-                'page_info' => pageInfo($this->entity_alias),
+                'pageInfo' => pageInfo($this->entity_alias),
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
@@ -182,7 +182,7 @@ class RawsCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $raws_category);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         $settings = getPhotoSettings($this->entity_alias);
 
@@ -190,14 +190,14 @@ class RawsCategoryController extends Controller
         if ($request->ajax()) {
             return view('products.common.metrics.properties_list', [
                 'category' => $raws_category,
-                'page_info' => $page_info,
+                'pageInfo' => $pageInfo,
             ]);
         }
 
         return view('products.articles_categories.common.edit.edit', [
             'title' => 'Редактирование категории сырья',
             'category' => $raws_category,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'settings' => $settings,
             'entity' => $this->entity_alias,
         ]);

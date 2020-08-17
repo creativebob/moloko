@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 @section('content')
     <div class="container">

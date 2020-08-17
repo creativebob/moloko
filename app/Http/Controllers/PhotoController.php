@@ -71,8 +71,8 @@ class PhotoController extends Controller
 
         return view('photos.index', [
             'photos' => $photos,
-            'page_info' => pageInfo($this->entity_alias),
-            'parent_page_info' => pageInfo('albums'),
+            'pageInfo' => pageInfo($this->entity_alias),
+            'parent_pageInfo' => pageInfo('albums'),
             'album' => Album::moderatorLimit(operator_right('alias', false, getmethod('index')))
             ->whereAlias($alias)
             ->first(),
@@ -91,8 +91,8 @@ class PhotoController extends Controller
 
         return view('photos.create', [
             'photo' => new $this->class,
-            'page_info' => pageInfo($this->entity_alias),
-            'parent_page_info' => pageInfo('albums'),
+            'pageInfo' => pageInfo($this->entity_alias),
+            'parent_pageInfo' => pageInfo('albums'),
             'settings' => getPhotoSettings($this->entity_alias),
             'album' => Album::moderatorLimit(operator_right('alias', false, getmethod('index')))
             ->whereAlias($alias)
@@ -145,8 +145,8 @@ class PhotoController extends Controller
 
         return view('photos.edit', [
             'photo' => $photo,
-            'page_info' => pageInfo($this->entity_alias),
-            'parent_page_info' => pageInfo('albums'),
+            'pageInfo' => pageInfo($this->entity_alias),
+            'parent_pageInfo' => pageInfo('albums'),
             'album' => $photo->album
         ]);
     }

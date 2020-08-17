@@ -88,9 +88,9 @@ class StafferController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('system.pages.hr.staff.index', compact('staff', 'page_info', 'filter'));
+        return view('system.pages.hr.staff.index', compact('staff', 'pageInfo', 'filter'));
     }
 
     /**
@@ -166,9 +166,9 @@ class StafferController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $staffer);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('system.pages.hr.staff.edit', compact('staffer', 'page_info'));
+        return view('system.pages.hr.staff.edit', compact('staffer', 'pageInfo'));
     }
 
     /**

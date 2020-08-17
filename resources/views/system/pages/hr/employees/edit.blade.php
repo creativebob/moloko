@@ -7,7 +7,7 @@
 
 @section('title', 'Редактировать сотрудника')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, 'Редактировать сотрудника'))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, 'Редактировать сотрудника'))
 
 @section('title-content')
 	<div class="top-bar head-content">
@@ -25,7 +25,7 @@
   {{ method_field('PATCH') }}
 
     @include('users.form', ['submitButtonText' => 'Редактировать сотрудника', 'param'=>'', 'user'=>$employee->user])
-    
+
   {{ Form::close() }}
 
 @endsection

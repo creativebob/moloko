@@ -61,7 +61,7 @@ class SectorController extends Controller
         return view('system.common.categories.index.index',
             [
                 'items' => $sectors,
-                'page_info' => pageInfo($this->entity_alias),
+                'pageInfo' => pageInfo($this->entity_alias),
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,

@@ -82,7 +82,7 @@ class RawsProductController extends Controller
 
         return view('raws_products.index',[
             'raws_products' => $raws_products,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'filter' => $filter,
             'nested' => 'raws_articles_count'
         ]);
@@ -96,7 +96,7 @@ class RawsProductController extends Controller
 
         return view('raws_products.create', [
             'raws_product' => new $this->class,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -151,7 +151,7 @@ class RawsProductController extends Controller
 
         return view('raws_products.edit', [
             'raws_product' => $raws_product,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

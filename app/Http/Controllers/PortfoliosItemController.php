@@ -95,7 +95,7 @@ class PortfoliosItemController extends Controller
         // Отдаем на шаблон
         return view('system.pages.portfolios_items.index', [
             'portfolios_items' => $portfolios_items,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'id' => $request->id,
             'portfolio_id' => $portfolio_id,
             'portfolio' => $portfolio,
@@ -190,7 +190,7 @@ class PortfoliosItemController extends Controller
 
         return view('system.pages.portfolios_items.edit', [
             'portfolios_item' => $portfolios_item,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'portfolio' => $portfolio
         ]);
     }

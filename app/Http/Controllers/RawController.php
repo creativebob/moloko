@@ -18,12 +18,10 @@ class RawController extends Controller
 
     /**
      * RawController constructor.
-     * @param Raw $raw
      */
-    public function __construct(Raw $raw)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->raw = $raw;
         $this->class = Raw::class;
         $this->model = 'App\Raw';
         $this->entity_alias = with(new $this->class)->getTable();
@@ -132,11 +130,11 @@ class RawController extends Controller
         ]);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         return view('products.articles.common.index.index', [
             'items' => $raws,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'class' => $this->class,
             'entity' => $this->entity_alias,
             'category_entity' => 'raws_categories',
@@ -244,11 +242,11 @@ class RawController extends Controller
         ]);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         return view('products.articles.common.index.index', [
             'items' => $raws,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'class' => $this->class,
             'entity' => $this->entity_alias,
             'category_entity' => 'raws_categories',
@@ -443,14 +441,14 @@ class RawController extends Controller
         $settings = $this->getPhotoSettings($this->entity_alias);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
-        // dd($page_info);
+        $pageInfo = pageInfo($this->entity_alias);
+        // dd($pageInfo);
 
         return view('products.articles.common.edit.edit', [
             'title' => 'Редактировать сырье',
             'item' => $raw,
             'article' => $article,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'settings' => $settings,
 //            'dropzone' => json_encode($dropzone),
             'entity' => $this->entity_alias,

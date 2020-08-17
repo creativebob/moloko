@@ -20,17 +20,14 @@
     </td>
 
     <td class="td-name">
-        {{ $cur_prices_goods->goods->article->name }}
-        {{-- @can('update', $cur_prices_goods)
-        {{ link_to_route('prices_services.edit', $cur_prices_goods->name, $parameters = ['id' => $cur_prices_goods->id], $attributes = []) }}
+        @can('update', $cur_prices_goods)
+            <a href="prices_goods/{{ $cur_prices_goods->id }}/edit">{{ $cur_prices_goods->goods->article->name }}</a>
+{{--            <a href="{{ route('prices_goods.edit', ['catalog_id' => $cur_prices_goods->catalog_id, 'id' => $cur_prices_goods->id]) }}"></a>--}}
+        @else
+            {{ $cur_prices_goods->goods->article->name }}
         @endcan
 
-        @cannot('update', $cur_prices_goods)
-        {{ $cur_prices_goods->name }}
-        @endcannot
-
-        %5B%5D
-        ({{ link_to_route('goods.index', $cur_prices_goods->articles_count, $parameters = ['prices_service_id' => $cur_prices_goods->id], $attributes = ['class' => 'filter_link light-text', 'title' => 'Перейти на список артикулов']) }}) --}}
+        {{-- ({{ link_to_route('goods.index', $cur_prices_goods->articles_count, $parameters = ['prices_service_id' => $cur_prices_goods->id], $attributes = ['class' => 'filter_link light-text', 'title' => 'Перейти на список артикулов']) }}) %5B%5D --}}
 
         <br><span class="tiny-text">{{ $cur_prices_goods->goods->category->name }}</span>
 
@@ -49,7 +46,7 @@
     <td class="td-catalogs_item">{{ $cur_prices_goods->catalogs_item->name_with_parent }}</td>
 
     <td class="td-price">
-        @include('prices_goods.price_span')
+        @include('system.pages.catalogs.goods.prices_goods.price_span')
 
 
 
@@ -77,7 +74,7 @@
     </td>
 {{--    <price-goods-price-component :price="{{ $cur_prices_goods->price }}"></price-goods-price-component>--}}
     <td class="td-points">
-        @include('prices_goods.price_points')
+        @include('system.pages.catalogs.goods.prices_goods.price_points')
     </td>
 
     <td class="td-price-status">

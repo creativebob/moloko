@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->description }}" />
+<meta name="description" content="{{ $pageInfo->description }}" />
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 @section('content-count')
 {{-- Количество элементов --}}

@@ -126,9 +126,9 @@ class DealerController extends Controller
         // dd($dealers);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('dealers.index', compact('dealers', 'page_info', 'filter', 'user'));
+        return view('dealers.index', compact('dealers', 'pageInfo', 'filter', 'user'));
     }
 
     public function createDealerCompany(Request $request)
@@ -145,9 +145,9 @@ class DealerController extends Controller
         $company = new Company;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('dealers.create_dealer_company', compact('company', 'dealer', 'page_info'));
+        return view('dealers.create_dealer_company', compact('company', 'dealer', 'pageInfo'));
 
     }
 
@@ -165,11 +165,11 @@ class DealerController extends Controller
         $user = new User;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
 	    $auth_user = Auth::user();
 
-        return view('dealers.create_dealer_user', compact('user', 'dealer', 'page_info', 'auth_user'));
+        return view('dealers.create_dealer_user', compact('user', 'dealer', 'pageInfo', 'auth_user'));
 
     }
 
@@ -298,7 +298,7 @@ class DealerController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $dealer);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
         // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
         if($dealer->client->clientable_type == 'App\Company'){
@@ -316,7 +316,7 @@ class DealerController extends Controller
 
             $this->authorize(getmethod(__FUNCTION__), $company);
 
-            return view('dealers.edit_dealer_company', compact('dealer', 'page_info'));
+            return view('dealers.edit_dealer_company', compact('dealer', 'pageInfo'));
         }
 
         // ПОЛУЧАЕМ ФИЗ ЛИЦО ---------------------------------------------------------------------------------
@@ -338,7 +338,7 @@ class DealerController extends Controller
 
             $this->authorize(getmethod(__FUNCTION__), $user);
 
-            return view('dealers.edit_dealer_user', compact('dealer', 'user', 'page_info'));
+            return view('dealers.edit_dealer_user', compact('dealer', 'user', 'pageInfo'));
         }
 
     }

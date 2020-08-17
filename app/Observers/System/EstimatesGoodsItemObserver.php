@@ -47,7 +47,12 @@ class EstimatesGoodsItemObserver
                 $estimatesGoodsItem->total = $estimatesGoodsItem->amount - ($estimatesGoodsItem->discount_currency * $estimatesGoodsItem->count);
 
                 $estimatesGoodsItem->margin_currency = $estimatesGoodsItem->total - $estimatesGoodsItem->cost;
-                $estimatesGoodsItem->margin_percent = ($estimatesGoodsItem->margin_currency / $estimatesGoodsItem->total * 100);
+                if ($estimatesGoodsItem->total > 0) {
+                    $estimatesGoodsItem->margin_percent = ($estimatesGoodsItem->margin_currency / $estimatesGoodsItem->total * 100);
+                } else {
+                    $estimatesGoodsItem->margin_percent = ($estimatesGoodsItem->margin_currency * 100);
+                }
+
                 break;
 
             case (2):

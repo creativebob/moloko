@@ -1,8 +1,10 @@
 <template>
-    <tr>
+    <tr
+        :class="[{'cmv-archive' : isArchive}]"
+    >
         <td>{{ index + 1 }}</td>
         <td>{{ item.entity.name }}</td>
-        <td>{{ item.cmv.article.name }}</td>
+        <td>{{ item.cmv.article.name }}<span v-if="isArchive"> (Архивный)</span></td>
         <td @click="checkChangeCount">
             <template v-if="isChangeCount">
                 <input
@@ -46,6 +48,9 @@
             }
         },
         computed: {
+            isArchive() {
+                return this.item.cmv.archive == 1;
+            },
             isChangeCount() {
                 return this.changeCount
             },

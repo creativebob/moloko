@@ -1,53 +1,52 @@
 @extends('layouts.app')
 
 @section('inhead')
-	<meta name="description" content="{{ $page_info->description }}" />
+    <meta name="description" content="{{ $pageInfo->description }}" />
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('prices_goods-index', $catalog_goods, $page_info))
+@section('breadcrumbs', Breadcrumbs::render('prices_services-index', $catalog_services, $pageInfo))
 
 @section('content-count')
-	{{-- Количество элементов --}}
-	{{ $prices_goods->isNotEmpty() ? num_format($prices_goods->total(), 0) : 0 }}
+    {{-- Количество элементов --}}
+    {{ $prices_services->isNotEmpty() ? num_format($prices_services->total(), 0) : 0 }}
 @endsection
 
 @section('title-content')
 
-	{{-- Таблица --}}
-	{{-- @include('includes.title-content', ['page_info' => $page_info, 'class' => App\PricesGoods::class, 'type' => 'table']) --}}
-    @include('prices_goods.includes.title-prices_goods', ['page_info' => $page_info, 'class' => $class])
-@endsection
+    {{-- Таблица --}}
+{{--    @include('includes.title-content', ['pageInfo' => $pageInfo, 'class' => App\PricesService::class, 'type' => 'table'])--}}
+    @include('system.pages.catalogs.services.prices_services.includes.title-prices_services', ['pageInfo' => $pageInfo, 'class' => $class])
 
+@endsection
 
 @section('content')
 
-@if(isset($prices_goods))
+@if(isset($prices_services))
     <div class="grid-x">
         <div class="small-12 medium-12 large-12 extra-content cell">
-    		<div class="grid-x">
-		        <div class="small-12 medium-4 large-3 cell">
-		        </div>
-		        <div class="small-12 medium-4 large-3 cell">
-		        </div>
-		        <div class="small-12 medium-4 large-4 cell">
-		        </div>
-		        <div class="small-12 medium-4 large-2 cell text-right">
-		            @include('prices_goods.select_user_filials')
-		        </div>
-			</div>
+            <div class="grid-x">
+                <div class="small-12 medium-4 large-3 cell">
+                </div>
+                <div class="small-12 medium-4 large-3 cell">
+                </div>
+                <div class="small-12 medium-4 large-4 cell">
+                </div>
+                <div class="small-12 medium-4 large-2 cell text-right">
+                    @include('system.pages.catalogs.services.prices_services.select_user_filials')
+                </div>
+            </div>
         </div>
 
     </div>
 @endif
 
-
 {{-- Таблица --}}
 <div class="grid-x">
     <div class="small-12 cell">
 
-        <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="prices_goods">
+        <table class="content-table tablesorter" id="content" data-sticky-container data-entity-alias="prices_services">
 
             <thead class="thead-width sticky sticky-topbar" id="thead-sticky" data-sticky data-margin-top="6.2" data-sticky-on="medium" data-top-anchor="head-content:bottom">
                 <tr id="thead-content">
@@ -56,14 +55,13 @@
                     <th class="td-photo">Фото</th>
                     <th class="td-name" data-serversort="name">Название</th>
                     <th class="td-unit">Ед. измерения</th>
-                    <th class="td-weight">Вес</th>
+                    <th class="td-lenght">Продолжительность</th>
                     <th class="td-catalogs_item">Раздел прайса</th>
                     <th class="td-price">Цена</th>
                     <th class="td-points">Внут. вал</th>
                     <th class="td-price-status">Статус</th>
                     <th class="td-hit">Хит</th>
                     <th class="td-new">Новинка</th>
-                    <th class="td-likes">Лайки</th>
                     <th class="td-control"></th>
                     <th class="td-delete"></th>
                 </tr>
@@ -71,10 +69,12 @@
 
             <tbody data-tbodyId="1" class="tbody-width">
 
-                @if(isset($prices_goods) && $prices_goods->isNotEmpty())
-	                @foreach($prices_goods as $cur_prices_goods)
-	                	@include('prices_goods.price')
-	                @endforeach
+                @if(isset($prices_services) && $prices_services->isNotEmpty())
+                @foreach($prices_services as $prices_service)
+
+                @include('system.pages.catalogs.services.prices_services.price')
+
+                @endforeach
                 @endif
 
             </tbody>
@@ -86,8 +86,8 @@
 {{-- Pagination --}}
 <div class="grid-x" id="pagination">
     <div class="small-6 cell pagination-head">
-        <span class="pagination-title">Кол-во записей: {{ $prices_goods->count() }}</span>
-        {{ $prices_goods->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
+        <span class="pagination-title">Кол-во записей: {{ $prices_services->count() }}</span>
+        {{ $prices_services->appends(isset($filter['inputs']) ? $filter['inputs'] : null)->links() }}
     </div>
 </div>
 
@@ -119,7 +119,7 @@
     // При клике на создание открываем модалку синхронизации
     $(document).on('click', '.icon-add', function(event) {
 
-        $.get('/admin/catalogs_goods/' + catalog_id + '/prices_goods/create', {
+        $.get('/admin/catalogs_services/' + catalog_id + '/prices_services/create', {
             filial_id: $('#select-filials').val()
         }, function(html) {
             $('#modals').html(html);
@@ -147,7 +147,7 @@
         event.preventDefault();
 
         let fillial_id = $('#select-filials').val();
-        let url = "prices_goods?filial_id=" + fillial_id;
+        let url = "prices_services?filial_id=" + fillial_id;
         $(location).attr('href',url);
     });
 
@@ -158,8 +158,8 @@
         var parent = $(this).closest('.item');
         var id = parent.attr('id').split('-')[1];
 
-        $.get('/admin/catalogs_goods/' + catalog_id + '/prices_goods/' + id + '/edit', function(html) {
-            $('#prices_goods-' + id + ' .td-price').html(html).find('input[name=price]').focus();
+        $.get('/admin/catalogs_services/' + catalog_id + '/prices_services/' + id + '/edit', function(html) {
+            $('#prices_services-' + id + ' .td-price').html(html);
         });
     });
 
@@ -174,13 +174,13 @@
             event.preventDefault();
             // event.stopPropagation();
             $.ajax({
-                url: '/admin/catalogs_goods/' + catalog_id + '/prices_goods/' + id,
+                url: '/admin/catalogs_services/' + catalog_id + '/prices_services/' + id,
                 type: "PATCH",
                 data: {
                     price: $(this).val()
                 },
                 success: function(html){
-                    $('#prices_goods-' + id).replaceWith(html);
+                    $('#prices_services-' + id).replaceWith(html);
                 }
             });
         };
@@ -193,9 +193,21 @@
         var parent = $(this).closest('.item');
         var id = parent.attr('id').split('-')[1];
 
-        $.get('/admin/catalogs_goods/' + catalog_id + '/get_prices_goods/' + id, function(html) {
-            $('#prices_goods-' + id + ' .td-price').html(html);
+        $.get('/admin/catalogs_services/' + catalog_id + '/get_prices_service/' + id, function(html) {
+            $('#prices_services-' + id + ' .td-price').html(html);
         });
+    });
+
+    // Удаление ajax
+    $(document).on('click', '[data-open="delete-price"]', function() {
+
+        // находим описание сущности, id и название удаляемого элемента в родителе
+        var parent = $(this).closest('.item');
+        var id = parent.attr('id').split('-')[1];
+        var name = parent.data('name');
+
+        $('.title-price').text(name);
+        $('#form-delete-price').attr('action', '/admin/catalogs_services/' + catalog_id + '/prices_services/' + id);
     });
 
     /**
@@ -222,13 +234,13 @@
             event.preventDefault();
             // event.stopPropagation();
             $.ajax({
-                url: '/admin/catalogs_goods/' + catalog_id + '/prices_goods/' + id,
+                url: '/admin/catalogs_services/' + catalog_id + '/prices_services/' + id,
                 type: "PATCH",
                 data: {
                     points: $(this).val()
                 },
                 success: function(html){
-                    $('#prices_goods-' + id).replaceWith(html);
+                    $('#prices_services-' + id).replaceWith(html);
                 }
             });
         };
@@ -252,11 +264,11 @@
         var name = parent.data('name');
 
         $('.title-price').text(name);
-        $('#form-delete-price').attr('action', '/admin/catalogs_goods/' + catalog_id + '/prices_goods/' + id);
+        $('#form-delete-price').attr('action', '/admin/catalogs_services/' + catalog_id + '/prices_services/' + id);
     });
 
     // Статус
-    $(document).on('click', '.price_goods-status', function(event) {
+    $(document).on('click', '.price_services-status', function(event) {
         event.preventDefault();
 
         let item = $(this);
@@ -267,7 +279,7 @@
         // alert(catalog_id + ' ' + id + ' ' + status);
 
         // Ajax
-        $.post('/admin/catalogs_goods/' + catalog_id + '/prices_goods_status', {
+        $.post('/admin/catalogs_services/' + catalog_id + '/prices_services_status', {
             id: id,
             status: status,
         }, function (result) {
@@ -290,7 +302,7 @@
     });
 
     // Хит
-    $(document).on('click', '.price_goods-hit', function(event) {
+    $(document).on('click', '.price_services-hit', function(event) {
         event.preventDefault();
 
         let item = $(this);
@@ -301,7 +313,7 @@
         // alert(id + ' ' + hit);
 
         // Ajax
-        $.post('/admin/catalogs_goods/' + catalog_id + '/prices_goods_hit', {
+        $.post('/admin/catalogs_services/' + catalog_id + '/prices_services_hit', {
             id: id,
             is_hit: hit,
         }, function (result) {
@@ -322,7 +334,7 @@
     });
 
     // Хит
-    $(document).on('click', '.price_goods-new', function(event) {
+    $(document).on('click', '.price_services-new', function(event) {
         event.preventDefault();
 
         let item = $(this);
@@ -333,7 +345,7 @@
         // alert(id + ' ' + hit);
 
         // Ajax
-        $.post('/admin/catalogs_goods/' + catalog_id + '/prices_goods_new', {
+        $.post('/admin/catalogs_services/' + catalog_id + '/prices_services_new', {
             id: id,
             is_new: status,
         }, function (result) {

@@ -34,7 +34,7 @@
             @endcan
 
             {{-- Табы для сущности --}}
-            @includeIf($page_info->entity->view_path . '.tabs')
+            @includeIf($pageInfo->entity->view_path . '.tabs')
 
             {{-- <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li> --}}
         </ul>
@@ -121,7 +121,7 @@
             @endcan
 
             {{-- Табы для сущности --}}
-            @includeIf($page_info->entity->view_path . '.tabs_content')
+            @includeIf($pageInfo->entity->view_path . '.tabs_content')
 
             {{ Form::close() }}
         </div>

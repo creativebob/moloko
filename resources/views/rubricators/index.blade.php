@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->description }}" />
+<meta name="description" content="{{ $pageInfo->description }}" />
 
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 @section('title-content')
 {{-- Таблица --}}
@@ -16,7 +16,7 @@
     <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
         <div class="top-bar head-content">
             <div class="top-bar-left">
-                <h2 class="header-content">{{ $page_info->title }}
+                <h2 class="header-content">{{ $pageInfo->title }}
                     <span class="content-count" title="Общее количество">
                         {{ $rubricators->isNotEmpty() ? num_format($rubricators->total(), 0) : 0 }}
                     </span>
@@ -24,7 +24,7 @@
 
                 @can('create', App\Rubricator::class)
 
-                {{ link_to_route($page_info->alias.'.create', '', $parameters = [], $attributes = ['class' => 'icon-add sprite']) }}
+                {{ link_to_route($pageInfo->alias.'.create', '', $parameters = [], $attributes = ['class' => 'icon-add sprite']) }}
 
                 @endcan
             </div>
@@ -62,7 +62,7 @@
                     <div class="small-12 cell">
                         {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
-                        @include($page_info->alias.'.filters')
+                        @include($pageInfo->alias.'.filters')
 
                         <div class="small-12 cell text-center">
                             {{ Form::submit('Фильтрация', ['class'=>'button']) }}

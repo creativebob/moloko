@@ -87,9 +87,9 @@ class OutcomeController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('system.pages.outcomes.index', compact('outcomes', 'page_info', 'filter'));
+        return view('system.pages.outcomes.index', compact('outcomes', 'pageInfo', 'filter'));
     }
 
     /**
@@ -105,9 +105,9 @@ class OutcomeController extends Controller
 
         $outcome = Outcome::make();
 
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('system.pages.outcomes.create', compact('outcome', 'page_info'));
+        return view('system.pages.outcomes.create', compact('outcome', 'pageInfo'));
     }
 
     /**
@@ -172,7 +172,7 @@ class OutcomeController extends Controller
 
         return view('system.pages.outcomes.edit', [
             'outcome' => $outcome,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

@@ -2,7 +2,7 @@
 
 @section('title', 'Редактировать сущность')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $entity->entity_name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $entity->entity_name))
 
 @section('title-content')
 	<div class="top-bar head-content">
@@ -20,7 +20,7 @@
   {{ method_field('PATCH') }}
 
     @include('entities.form', ['submitButtonText' => 'Редактировать сущность', 'param'=>''])
-    
+
   {{ Form::close() }}
 
 @endsection

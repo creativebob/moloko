@@ -69,9 +69,9 @@ class ConsignmentController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('system.pages.consignments.index', compact('consignments', 'page_info', 'filter'));
+        return view('system.pages.consignments.index', compact('consignments', 'pageInfo', 'filter'));
     }
 
     public function create()
@@ -130,9 +130,9 @@ class ConsignmentController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $consignment);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('system.pages.consignments.edit', compact('consignment', 'page_info'));
+        return view('system.pages.consignments.edit', compact('consignment', 'pageInfo'));
     }
 
 
@@ -296,14 +296,16 @@ class ConsignmentController extends Controller
 
             if ($consignment->items->isNotEmpty()) {
 
+                foreach ($consignment->items as $item) {
+                    if ($item->cmv->archive == 1) {
+                        return back()
+                            ->withErrors(['msg' => 'Накладная содержит архивные позиции, оприходование невозможно!']);
+                    }
+                }
+
                 Log::channel('documents')
                     ->info('========================================== НАЧАЛО ОПРИХОДОВАНИЯ ТОВАРНОЙ НАКЛАДНОЙ, ID: ' . $consignment->id . ' ==============================================');
 
-//            $grouped_items = $document->items->groupBy('entity.alias');
-//			dd($grouped_items);
-//
-//            foreach ($grouped_items as $alias => $items) {
-                //            }
 
                 foreach ($consignment->items as $item) {
                     $this->receipt($item);

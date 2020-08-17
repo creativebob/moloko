@@ -68,7 +68,7 @@ class ContainersCategoryController extends Controller
         return view('system.common.categories.index.index',
             [
                 'items' => $containers_categories,
-                'page_info' => pageInfo($this->entity_alias),
+                'pageInfo' => pageInfo($this->entity_alias),
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
@@ -139,7 +139,7 @@ class ContainersCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $containers_category);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         $settings = getPhotoSettings($this->entity_alias);
 
@@ -147,14 +147,14 @@ class ContainersCategoryController extends Controller
         if ($request->ajax()) {
             return view('products.common.metrics.properties_list', [
                 'category' => $containers_category,
-                'page_info' => $page_info,
+                'pageInfo' => $pageInfo,
             ]);
         }
 
         return view('products.articles_categories.common.edit.edit', [
             'title' => 'Редактирование категории упаковок',
             'category' => $containers_category,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'settings' => $settings,
             'entity' => $this->entity_alias,
         ]);

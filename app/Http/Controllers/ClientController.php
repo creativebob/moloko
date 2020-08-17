@@ -140,9 +140,9 @@ class ClientController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('clients.index', compact('clients', 'page_info', 'user'));
+        return view('clients.index', compact('clients', 'pageInfo', 'user'));
     }
 
     public function createClientCompany(Request $request)
@@ -159,9 +159,9 @@ class ClientController extends Controller
         $company = new Company;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('clients.create_client_company', compact('company', 'client', 'page_info'));
+        return view('clients.create_client_company', compact('company', 'client', 'pageInfo'));
 
     }
 
@@ -179,11 +179,11 @@ class ClientController extends Controller
         $user = new User;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         $auth_user = Auth::user();
 
-        return view('clients.create_client_user', compact('user', 'client', 'page_info', 'auth_user'));
+        return view('clients.create_client_user', compact('user', 'client', 'pageInfo', 'auth_user'));
 
     }
 
@@ -597,7 +597,7 @@ class ClientController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $client);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
 
         // ПОЛУЧАЕМ КОМПАНИЮ ------------------------------------------------------------------------------------------------
@@ -616,7 +616,7 @@ class ClientController extends Controller
 
             $this->authorize(getmethod(__FUNCTION__), $company);
 
-            return view('clients.edit_client_company', compact('client', 'page_info'));
+            return view('clients.edit_client_company', compact('client', 'pageInfo'));
         }
 
         // ПОЛУЧАЕМ ФИЗ ЛИЦО ---------------------------------------------------------------------------------
@@ -640,7 +640,7 @@ class ClientController extends Controller
 
 //            dd($client);
 
-            return view('clients.edit_client_user', compact('client', 'user', 'page_info'));
+            return view('clients.edit_client_user', compact('client', 'user', 'pageInfo'));
         }
 
 

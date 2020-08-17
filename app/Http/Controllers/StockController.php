@@ -76,9 +76,9 @@ class StockController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('system.pages.stocks.index', compact('stocks', 'page_info', 'filter'));
+        return view('system.pages.stocks.index', compact('stocks', 'pageInfo', 'filter'));
     }
 
 
@@ -119,7 +119,7 @@ class StockController extends Controller
 
         return view('system.pages.stocks.create', [
             'stock' => Stock::make(),
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -165,7 +165,7 @@ class StockController extends Controller
 
         return view('system.pages.stocks.edit', [
             'stock' => $stock,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

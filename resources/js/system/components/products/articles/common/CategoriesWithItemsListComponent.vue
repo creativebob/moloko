@@ -218,7 +218,6 @@
             removeItem(id) {
                 this.$emit('remove', id);
             },
-
         }
     }
 </script>

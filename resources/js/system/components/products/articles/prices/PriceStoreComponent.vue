@@ -5,7 +5,7 @@
         id="form-prices_goods"
     >
 
-        <div class="cell small-12">
+        <div class="cell small-12 medium-7">
             <div class="grid-x grid-padding-x">
                 <div class="medium-3 cell">
                     <label>Каталог

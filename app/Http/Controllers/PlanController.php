@@ -47,9 +47,9 @@ class PlanController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('plans.index', compact('entities', 'page_info', 'filter'));
+        return view('plans.index', compact('entities', 'pageInfo', 'filter'));
     }
 
     /**
@@ -96,7 +96,7 @@ class PlanController extends Controller
 
         return view('plans.show', [
             'indicators' => $indicators,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

@@ -97,9 +97,9 @@ class AlbumController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('albums.index', compact('albums', 'page_info', 'filter'));
+        return view('albums.index', compact('albums', 'pageInfo', 'filter'));
     }
 
 
@@ -112,7 +112,7 @@ class AlbumController extends Controller
         return view('albums.create', [
             'album' => new $this->class,
             'album_settings' => new PhotoSetting,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -164,7 +164,7 @@ class AlbumController extends Controller
 
         return view('albums.show', [
             'album' => $album,
-            'page_info' => pageInfo($this->entity_alias)
+            'pageInfo' => pageInfo($this->entity_alias)
         ]);
     }
 
@@ -184,7 +184,7 @@ class AlbumController extends Controller
 
         return view('albums.edit', [
             'album' => $album,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -254,7 +254,7 @@ class AlbumController extends Controller
 
         return view('albums.sections', [
             'album' => $album,
-            'page_info' => pageInfo($this->entity_alias)
+            'pageInfo' => pageInfo($this->entity_alias)
         ]);
     }
 

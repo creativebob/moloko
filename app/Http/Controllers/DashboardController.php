@@ -43,10 +43,10 @@ class DashboardController extends Controller
         }
 
         // Инфо о странице
-        $page_info = pageInfo($this->entityAlias);
+        $pageInfo = pageInfo($this->entityAlias);
 //        dd($widgets);
 
-        return view('system.pages.dashboard.index', compact('page_info', 'widgets'));
+        return view('system.pages.dashboard.index', compact('pageInfo', 'widgets'));
     }
 
     /**

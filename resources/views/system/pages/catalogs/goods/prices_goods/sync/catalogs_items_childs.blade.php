@@ -7,7 +7,7 @@
 	@if ($catalogs_item->childs->isNotEmpty())
 
 	<ul class="menu vertical nested">
-        @include('prices_services.sync.catalogs_items_childs', ['catalogs_items' => $catalogs_item->childs])
+        @include('system.pages.catalogs.services.prices_services.sync.catalogs_items_childs', ['catalogs_items' => $catalogs_item->childs])
 	</ul>
 
 	@endif

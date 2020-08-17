@@ -4,9 +4,9 @@
 
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 @section('content-count')
 {{-- Количество элементов --}}
@@ -95,7 +95,7 @@
                     <td class="td-description">
 
                         @can('view', $consignment)
-                        
+
                             <span data-toggle="dropdown-{{ $consignment->id }}">{{ $consignment->name ?? '' }}</span>
                             <div class="dropdown-pane bottom right" id="dropdown-{{ $consignment->id }}" data-dropdown data-hover="true" data-hover-pane="true">
                               {!! $consignment->description ?? '' !!}

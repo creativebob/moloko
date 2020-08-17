@@ -56,9 +56,9 @@ class EntityController extends Controller
         ->paginate(30);
 
         // Информация о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('entities.index', compact('entities', 'page_info'));
+        return view('entities.index', compact('entities', 'pageInfo'));
     }
 
 
@@ -97,7 +97,7 @@ class EntityController extends Controller
 
         return view('entities.create', [
             'entity' => new Entity,
-            'page_info' => pageInfo($this->entity_name)
+            'pageInfo' => pageInfo($this->entity_name)
         ]);
     }
 
@@ -204,9 +204,9 @@ class EntityController extends Controller
         // $this->authorize(getmethod(__FUNCTION__), $entity);
 
         // // Инфо о странице
-        // $page_info = pageInfo($this->entity_name);
+        // $pageInfo = pageInfo($this->entity_name);
 
-        // return view('entities.show', compact('entity', 'page_info'));
+        // return view('entities.show', compact('entity', 'pageInfo'));
         //
         // ----------------------------------------------------------------------------------------------
 
@@ -219,7 +219,7 @@ class EntityController extends Controller
 
         return view('entities.edit', [
             'entity' => $entity,
-            'page_info' => pageInfo($this->entity_name)
+            'pageInfo' => pageInfo($this->entity_name)
         ]);
     }
 

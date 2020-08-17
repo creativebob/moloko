@@ -86,7 +86,7 @@ class GoodsProductController extends Controller
 
         return view('goods_products.index',[
             'goods_products' => $goods_products,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'filter' => $filter,
             'nested' => 'goods_articles_count'
         ]);
@@ -100,7 +100,7 @@ class GoodsProductController extends Controller
 
         return view('goods_products.create', [
             'goods_product' => new $this->class,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -163,7 +163,7 @@ class GoodsProductController extends Controller
 
         return view('goods_products.edit', [
             'goods_product' => $goods_product,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

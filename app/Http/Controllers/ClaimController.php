@@ -72,9 +72,9 @@ class ClaimController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('claims.index', compact('claims', 'page_info', 'filter', 'user'));
+        return view('claims.index', compact('claims', 'pageInfo', 'filter', 'user'));
     }
 
     public function create()

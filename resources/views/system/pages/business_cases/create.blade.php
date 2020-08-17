@@ -2,7 +2,7 @@
 
 @section('title', 'Новый кейс')
 
-@section('breadcrumbs', Breadcrumbs::render('portfolio-section-create', $portfolio, $page_info))
+@section('breadcrumbs', Breadcrumbs::render('portfolio-section-create', $portfolio, $pageInfo))
 
 @section('title-content')
 <div class="top-bar head-content">

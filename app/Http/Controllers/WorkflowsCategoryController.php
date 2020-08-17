@@ -79,7 +79,7 @@ class WorkflowsCategoryController extends Controller
         return view('system.common.categories.index.index',
             [
                 'items' => $workflows_categories,
-                'page_info' => pageInfo($this->entity_alias),
+                'pageInfo' => pageInfo($this->entity_alias),
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
@@ -183,7 +183,7 @@ class WorkflowsCategoryController extends Controller
         // dd($workflows_category_metrics);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         $settings = getPhotoSettings($this->entity_alias);
 
@@ -191,7 +191,7 @@ class WorkflowsCategoryController extends Controller
         if ($request->ajax()) {
             return view('products.common.metrics.properties_list', [
                 'category' => $workflows_category,
-                'page_info' => $page_info,
+                'pageInfo' => $pageInfo,
             ]);
         }
 
@@ -199,7 +199,7 @@ class WorkflowsCategoryController extends Controller
         return view('products.processes_categories.common.edit.edit', [
             'title' => 'Редактирование категории рабочих процессов',
             'category' => $workflows_category,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'settings' => $settings,
             'entity' => $this->entity_alias,
         ]);

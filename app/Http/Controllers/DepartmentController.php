@@ -129,7 +129,7 @@ class DepartmentController extends Controller
         return view('system.pages.hr.departments.index',
             [
                 'departments' => $departments,
-                'page_info' => pageInfo($this->entity_alias),
+                'pageInfo' => pageInfo($this->entity_alias),
                 'class' => $this->class,
                 'type' => $this->type,
                 'filter' => setFilter($this->entity_alias, $request, [
@@ -164,7 +164,7 @@ class DepartmentController extends Controller
         } else {
             return view('system.pages.hr.departments.filial.create', [
                 'department' => Department::make(),
-                'page_info' => pageInfo($this->entity_alias),
+                'pageInfo' => pageInfo($this->entity_alias),
             ]);
         }
     }
@@ -261,7 +261,7 @@ class DepartmentController extends Controller
         } else {
             return view('system.pages.hr.departments.filial.edit', [
                 'department' => $department,
-                'page_info' => pageInfo($this->entity_alias),
+                'pageInfo' => pageInfo($this->entity_alias),
             ]);
         }
     }

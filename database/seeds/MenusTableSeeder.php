@@ -1104,6 +1104,21 @@ Menu::insert([
         'sort' => 5,
     ],
 
+    [
+        'name' => 'Скидки',
+        'icon' => null,
+        'alias' => 'admin/discounts',
+        'tag' => 'discounts',
+        'parent_id' => $menus->where('tag', 'marketings')->first()->id,
+        'page_id' => $pages->where('alias', 'discounts')->first()->id,
+        'navigation_id' => 1,
+        'company_id' => null,
+        'system' => true,
+        'author_id' => 1,
+        'display' => true,
+        'sort' => 5,
+    ],
+
 
     // Справочники
     [

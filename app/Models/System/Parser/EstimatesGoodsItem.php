@@ -18,7 +18,10 @@ class EstimatesGoodsItem extends Model
 
     use Commonable;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at'
+    ];
+
     protected $fillable = [
         'estimate_id',
 
@@ -46,6 +49,7 @@ class EstimatesGoodsItem extends Model
 
         'amount',
         'total',
+        'total_points',
 
         'is_reserved',
 

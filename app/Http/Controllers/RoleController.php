@@ -86,10 +86,10 @@ class RoleController extends Controller
         };
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
         // dd($counts_directive_array);
-        return view('roles.index', compact('roles', 'counts_directive_array', 'page_info'));
+        return view('roles.index', compact('roles', 'counts_directive_array', 'pageInfo'));
     }
 
 
@@ -102,9 +102,9 @@ class RoleController extends Controller
         $role = new Role;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('roles.create', compact('role', 'page_info'));
+        return view('roles.create', compact('role', 'pageInfo'));
     }
 
 
@@ -168,9 +168,9 @@ class RoleController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $role);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('roles.edit', compact('role', 'page_info'));
+        return view('roles.edit', compact('role', 'pageInfo'));
     }
 
 

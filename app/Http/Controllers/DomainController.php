@@ -78,7 +78,7 @@ class DomainController extends Controller
 
         return view('system.pages.domains.index',[
             'domains' => $domains,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'filter' => $filter,
             'nested' => 'pages_count'
         ]);
@@ -97,7 +97,7 @@ class DomainController extends Controller
 
         return view('system.pages.domains.create', [
             'domain' => Domain::make(),
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -183,7 +183,7 @@ class DomainController extends Controller
 
         return view('system.pages.domains.edit', [
             'domain' => $domain,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -257,7 +257,7 @@ class DomainController extends Controller
         if ($domain) {
             return redirect()->route('domains.index');
         } else {
-            abort(403, 'Ошибка при удалении сайта');
+            abort(403, 'Ошибка при удалении');
         }
     }
 }

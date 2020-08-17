@@ -846,7 +846,7 @@ class RollHouseParser
                     $user->access_block = 0;
                     $user->user_type = 0;
 
-                    if ($oldClient->birthday){
+                    if ($oldClient->birthday) {
                         $user->birthday_date = Carbon::parse($oldClient->birthday)->format('d.m.Y');
                     }
 
@@ -1284,10 +1284,12 @@ class RollHouseParser
                                 'count' => $count ?? 0,
                                 'cost' => $priceGoods->goods->article->cost_default * $count,
                                 'amount' => $count * $consist->summa,
-                                'points' => $consist->rh ?? 0,
+                                'points' => $priceGoods->points,
 
                                 'created_at' => $consist->created,
                                 'timestamps' => false,
+
+                                'total_points' => $consist->rh ?? 0,
 
                                 'company_id' => COMPANY,
                                 'author_id' => AUTHOR,
@@ -1337,52 +1339,43 @@ class RollHouseParser
                     $amount = 0;
                     $total = 0;
                     $points = 0;
-                    $discount_items_currency = 0;
+                    $discountItemsCurrency = 0;
+                    $totalPoints = 0;
+                    $totalBonuses = 0;
 
                     if ($estimate->goods_items->isNotEmpty()) {
                         $cost += $estimate->goods_items->sum('cost');
                         $amount += $estimate->goods_items->sum('amount');
                         $total += $estimate->goods_items->sum('total');
                         $points += $estimate->goods_items->sum('points');
-                        $discount_items_currency += $estimate->goods_items->sum('discount_currency');
+                        $discountItemsCurrency += $estimate->goods_items->sum('discount_currency');
+                        $totalPoints += $estimate->goods_items->sum('total_points');
+                        $totalBonuses += $estimate->goods_items->sum('total_bonuses');
                     }
+
+                    $marginCurrency = 0;
+                    $marginPercent = 0;
+                    $discount = 0;
 
                     if ($amount > 0) {
                         $discount = (($amount * $estimate->discount_percent) / 100);
-
-                        $margin_currency = $total - $cost;
-
-                        if ($total > 0) {
-                            $margin_percent = ($margin_currency / $total * 100);
-                        } else {
-                            $margin_percent = 0;
-                        }
-
-                        $data = [
-                            'cost' => $cost,
-                            'amount' => $amount,
-                            'discount' => $discount,
-                            'total' => $total,
-                            'points' => $points,
-                            'discount_items_currency' => $discount_items_currency,
-                            'margin_currency' => $margin_currency,
-                            'margin_percent' => $margin_percent,
-                            'timestamps' => false
-                        ];
-
-                    } else {
-                        $data = [
-                            'cost' => 0,
-                            'amount' => 0,
-                            'discount' => 0,
-                            'total' => 0,
-                            'points' => 0,
-                            'discount_items_currency' => 0,
-                            'margin_currency' => 0,
-                            'margin_percent' => 0,
-                            'timestamps' => false
-                        ];
+                        $marginCurrency = $total - $cost;
+                        $marginPercent = ($marginCurrency / $total * 100);
                     }
+
+                    $data = [
+                        'cost' => $cost,
+                        'amount' => $amount,
+                        'discount' => $discount,
+                        'total' => $total,
+                        'margin_currency' => $marginCurrency,
+                        'margin_percent' => $marginPercent,
+                        'points' => $points,
+                        'discount_items_currency' => $discountItemsCurrency,
+                        'total_points' => $totalPoints,
+                        'total_bonuses' => $totalBonuses,
+                        'timestamps' => false
+                    ];
 
                     $estimate->update($data);
 

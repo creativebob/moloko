@@ -86,9 +86,9 @@ class BankController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('banks.index', compact('banks', 'page_info', 'filter', 'user'));
+        return view('banks.index', compact('banks', 'pageInfo', 'filter', 'user'));
     }
 
     public function create(Request $request)
@@ -125,7 +125,7 @@ class BankController extends Controller
         // $processes_types_list = ProcessesType::get()->pluck('name', 'id');
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
         // Запрос для чекбокса - список типов услуг
         $processes_types_query = ProcessesType::get();
@@ -153,7 +153,7 @@ class BankController extends Controller
         $worktime = [];
         for ($n = 1; $n < 8; $n++){$worktime[$n]['begin'] = null;$worktime[$n]['end'] = null;}
 
-        return view('banks.create', compact('company', 'bank', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'processes_types_checkboxer'));
+        return view('banks.create', compact('company', 'bank', 'sectors_list', 'pageInfo', 'worktime', 'countries_list', 'processes_types_checkboxer'));
     }
 
     public function store(CompanyRequest $request)
@@ -376,8 +376,8 @@ class BankController extends Controller
         $countries_list = Country::get()->pluck('name', 'id');
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-        return view('banks.edit', compact('company', 'bank', 'sectors_list', 'page_info', 'worktime', 'countries_list', 'processes_types_checkboxer'));
+        $pageInfo = pageInfo($this->entity_name);
+        return view('banks.edit', compact('company', 'bank', 'sectors_list', 'pageInfo', 'worktime', 'countries_list', 'processes_types_checkboxer'));
     }
 
 

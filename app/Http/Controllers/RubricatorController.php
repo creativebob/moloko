@@ -48,7 +48,7 @@ class RubricatorController extends Controller
 
         return view('rubricators.index',[
             'rubricators' => $rubricators,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -60,7 +60,7 @@ class RubricatorController extends Controller
 
         return view('rubricators.create', [
             'rubricator' => new $this->class,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -105,7 +105,7 @@ class RubricatorController extends Controller
         // dd($rubricator);
         return view('rubricators.edit', [
             'rubricator' => $rubricator,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

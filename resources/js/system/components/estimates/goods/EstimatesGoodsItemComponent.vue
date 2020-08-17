@@ -1,6 +1,7 @@
 <template>
     <tr
         class="item commentable"
+        :class="[{'cmv-archive' : isArchive}]"
         :id="'estimates_goods_items-' + item.id"
         :data-name="item.product.article.name"
         :data-price_id="item.price_id"
@@ -9,6 +10,7 @@
     >
         <comment-component
             :item="item"
+            :is-archive="isArchive"
         ></comment-component>
 <!--        <td v-if="settings.length && stocks.length">-->
 <!--            <select-->
@@ -118,7 +120,7 @@
             'points-component': require('./price/PointsComponent'),
             'count-component': require('./CountComponent'),
             'modal-component': require('./ModalCurrencyComponent'),
-            'digit-component': require('../../inputs/DigitComponent')
+            'digit-component': require('../../inputs/DigitNestedComponent')
         },
         props: {
             item: Object,
@@ -142,6 +144,9 @@
             }
         },
         computed: {
+            isArchive() {
+                return this.item.product.archive == 1;
+            },
             isRegistered() {
                 return this.$store.state.estimate.estimate.is_registered == 1;
             },

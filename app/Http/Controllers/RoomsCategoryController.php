@@ -71,7 +71,7 @@ class RoomsCategoryController extends Controller
         return view('system.common.categories.index.index',
             [
                 'items' => $rooms_categories,
-                'page_info' => pageInfo($this->entity_alias),
+                'pageInfo' => pageInfo($this->entity_alias),
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
@@ -148,7 +148,7 @@ class RoomsCategoryController extends Controller
         // dd($rooms_category_metrics);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         $settings = getPhotoSettings($this->entity_alias);
 
@@ -156,7 +156,7 @@ class RoomsCategoryController extends Controller
         if ($request->ajax()) {
             return view('products.common.metrics.properties_list', [
                 'category' => $rooms_category,
-                'page_info' => $page_info,
+                'pageInfo' => $pageInfo,
             ]);
         }
 
@@ -164,7 +164,7 @@ class RoomsCategoryController extends Controller
         return view('products.articles_categories.common.edit.edit', [
             'title' => 'Редактирование категории помещений',
             'category' => $rooms_category,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'settings' => $settings,
             'entity' => $this->entity_alias,
         ]);

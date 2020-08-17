@@ -27,8 +27,8 @@ class HomeController extends Controller
     public function index()
     {
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-        
-        return view('home', compact('page_info'));
+        $pageInfo = pageInfo($this->entity_name);
+
+        return view('home', compact('pageInfo'));
     }
 }

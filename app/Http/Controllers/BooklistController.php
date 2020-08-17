@@ -78,17 +78,17 @@ class BooklistController extends Controller
         ->paginate(30);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
         // dd($booklists);
 
-        return view('booklists.index', compact('booklists', 'page_info'));
+        return view('booklists.index', compact('booklists', 'pageInfo'));
     }
 
     public function create()
     {
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
     }
 
     public function store(Request $request)
@@ -158,7 +158,7 @@ class BooklistController extends Controller
     public function edit($id)
     {
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
     }
 
     public function update(Request $request, $id)

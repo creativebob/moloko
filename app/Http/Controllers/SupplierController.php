@@ -99,9 +99,9 @@ class SupplierController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('suppliers.index', compact('suppliers', 'page_info', 'filter', 'user'));
+        return view('suppliers.index', compact('suppliers', 'pageInfo', 'filter', 'user'));
     }
 
     public function create(Request $request)
@@ -118,9 +118,9 @@ class SupplierController extends Controller
         $company = new Company;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('suppliers.create', compact('company', 'supplier', 'page_info'));
+        return view('suppliers.create', compact('company', 'supplier', 'pageInfo'));
     }
 
     public function store(CompanyRequest $request)
@@ -217,10 +217,10 @@ class SupplierController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $company);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
 
-        return view('suppliers.edit', compact('supplier', 'page_info'));
+        return view('suppliers.edit', compact('supplier', 'pageInfo'));
     }
 
 

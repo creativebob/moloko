@@ -2,7 +2,7 @@
 
 @section('title', 'Редактировать навигацию')
 
-@section('breadcrumbs', Breadcrumbs::render('site-section-edit', $site, $page_info, $navigation))
+@section('breadcrumbs', Breadcrumbs::render('site-section-edit', $site, $pageInfo, $navigation))
 
 @section('title-content')
 <div class="top-bar head-content">

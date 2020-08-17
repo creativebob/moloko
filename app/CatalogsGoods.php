@@ -95,7 +95,7 @@ class CatalogsGoods extends Model
         return $this->hasMany(PricesGoods::class)
             ->where([
                 'archive' => false,
-                'display' => true
+//                'display' => true
             ]);
     }
 

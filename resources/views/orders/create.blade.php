@@ -2,7 +2,7 @@
 
 @section('title', 'Новая сущность')
 
-@section('breadcrumbs', Breadcrumbs::render('create', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('create', $pageInfo))
 
 @section('title-content')
 	<div class="top-bar head-content">
@@ -19,7 +19,7 @@
   {{ Form::open(['url' => '/admin/entities', 'data-abide', 'novalidate']) }}
 
     @include('entities.form', ['submitButtonText' => 'Зарегистрировать', 'param' => ''])
-    
+
   {{ Form::close() }}
 
 @endsection

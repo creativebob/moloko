@@ -34,27 +34,31 @@ class CreateEstimatesServicesItemsTable extends Migration
             $table->tinyInteger('sale_mode')->default(1)->comment('Режим продажи: 1 - валюта, 2 - поинты');
 
             $table->integer('cost')->default(0)->comment('Себестоимость');
-            $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим мебестоимости');
+            $table->integer('cost_mode')->nullable()->unsigned()->comment('Режим себестоимости');
+
+            $table->decimal('price', 10,2)->default(0)->comment('Цена');
+            $table->decimal('count', 10,2)->default(0)->comment('Количество');
+            $table->decimal('amount', 10,2)->default(0)->comment('Сумма');
 
             $table->integer('points')->default(0)->comment('Внутренняя валюта');
 
-            $table->decimal('margin_percent', 10, 2)->default(0)->comment('Процент маржи');
+            $table->decimal('margin_percent', 10,2)->default(0)->comment('Процент маржи');
             $table->decimal('margin_currency', 10, 2)->default(0)->comment('Сумма маржи');
 
-            $table->decimal('discount_percent', 10, 2)->default(0)->comment('Процент скидки');
-            $table->decimal('discount_currency', 10, 2)->default(0)->comment('Сумма скидки');
+            $table->decimal('discount_percent', 10,2)->default(0)->comment('Процент скидки');
+            $table->decimal('discount_currency', 10,2)->default(0)->comment('Сумма скидки');
 
-            $table->decimal('extra_margin_percent', 10, 2)->default(0)->comment('Общий процент маржи');
-            $table->decimal('extra_margin_currency', 10, 2)->default(0)->comment('Общая сумма маржи');
+            $table->decimal('extra_margin_percent', 10,2)->default(0)->comment('Общий процент маржи');
+            $table->decimal('extra_margin_currency', 10,2)->default(0)->comment('Общая сумма маржи');
 
-            $table->decimal('extra_discount_percent', 10, 2)->default(0)->comment('Общий процент скидки');
-            $table->decimal('extra_discount_currency', 10, 2)->default(0)->comment('Общая сумма скидки');
+            $table->decimal('extra_discount_percent', 10,2)->default(0)->comment('Общий процент скидки');
+            $table->decimal('extra_discount_currency', 10,2)->default(0)->comment('Общая сумма скидки');
 
-            $table->decimal('total', 12, 4)->default(0)->comment('Итоговая сумма');
+            $table->decimal('total', 10,2)->default(0)->comment('Итоговая сумма');
             $table->integer('total_points')->default(0)->comment('Итого поинтами');
             $table->integer('total_bonuses')->default(0)->comment('Итого бонусами');
 
-            $table->decimal('profit', 12, 4)->default(0)->comment('Прибыль');
+            $table->decimal('profit', 10,2)->default(0)->comment('Прибыль');
 
             $table->text('comment')->nullable()->comment('Комментарий');
 

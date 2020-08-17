@@ -65,9 +65,9 @@ class OrderController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('orders.index', compact('orders', 'page_info', 'filter'));
+        return view('orders.index', compact('orders', 'pageInfo', 'filter'));
     }
 
 

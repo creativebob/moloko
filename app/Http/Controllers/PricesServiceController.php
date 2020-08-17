@@ -12,12 +12,10 @@ class PricesServiceController extends Controller
 {
     /**
      * PricesServiceController constructor.
-     * @param PricesService $prices_service
      */
-    public function __construct(PricesService $prices_service)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->prices_service = $prices_service;
         $this->entity_alias = with(new PricesService)->getTable();;
         $this->entity_dependence = true;
         $this->class = PricesService::class;
@@ -123,18 +121,18 @@ class PricesServiceController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         $catalog = CatalogsService::with([
             'filials'
         ])
             ->findOrFail($catalog_id);
-        $page_info->title = 'Прайс: ' . $catalog->name;
-        $page_info->name = 'Прайс: ' . $catalog->name;
+        $pageInfo->title = 'Прайс: ' . $catalog->name;
+        $pageInfo->name = 'Прайс: ' . $catalog->name;
 
         return view('prices_services.index', [
             'prices_services' => $prices_services,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'class' => $this->class,
             'entity' => $this->entity_alias,
             'filter' => $filter,
@@ -160,7 +158,7 @@ class PricesServiceController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $this->class);
 
         $filial_id = $request->filial_id;
-        return view('prices_services.sync.modal', compact('catalog_id', 'filial_id'));
+        return view('syste.pages.catalogs.services.prices_services.sync.modal', compact('catalog_id', 'filial_id'));
     }
 
     /**
@@ -187,10 +185,27 @@ class PricesServiceController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function edit(Request $request, $catalog_id, $id)
+    public function edit(Request $request, $catalogId, $id)
     {
-        $price = PricesService::findOrFail($id);
-        return view('prices_services.price_edit', ['price' => $price->price]);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $priceService = PricesService::with([
+            'service.process'
+        ])
+            ->moderatorLimit($answer)
+            ->findOrFail($id);
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $priceService);
+
+        $catalogServices = CatalogsService::findOrFail($catalogId);
+
+        return view('system.pages.catalogs.services.prices_services.edit', [
+            'priceService' => $priceService,
+            'catalogId' => $catalogId,
+            'pageInfo' => pageInfo($this->entity_alias),
+            'catalogServices' => $catalogServices
+        ]);
     }
 
     /**
@@ -201,43 +216,31 @@ class PricesServiceController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function update(Request $request, $catalog_id, $id)
+    public function update(Request $request, $catalogId, $id)
     {
-        $price_service = PricesService::findOrFail($id);
+        $priceService = PricesService::findOrFail($id);
 
-        if ($request->price) {
+        $price = $request->price;
 
-            $price = $request->price;
-            if ($price_service->price == $price) {
-                return view('prices_services.price', ['prices_service' => $price_service]);
-            } else {
-                if ($price_service->price != $price) {
+        if ($priceService->price != $price) {
 
-                    $price_service->actual_price->update([
-                        'end_date' => now(),
-                    ]);
-
-                    $price_service->history()->create([
-                        'price' => $price,
-                    ]);
-
-                    $price_service->update([
-                        'price' => $price,
-                    ]);
-                }
-
-                // dd($price);
-                return view('prices_services.price', ['prices_service' => $price_service]);
-            }
-        }
-
-        if ($request->point) {
-            $point = $request->point;
-            $price_service->update([
-                'point' => $point,
+            $priceService->actual_price->update([
+                'end_date' => now(),
             ]);
-            return view('prices_services.price', ['prices_service' => $price_service]);
+
+            $priceService->history()->create([
+                'price' => $price,
+            ]);
+
+            $priceService->update([
+                'price' => $price,
+            ]);
         }
+
+        $data = $request->input();
+        $priceService->update($data);
+
+        return redirect()->route('prices_services.index', $catalogId);
     }
 
     /**

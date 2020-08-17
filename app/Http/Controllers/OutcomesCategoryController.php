@@ -76,7 +76,7 @@ class OutcomesCategoryController extends Controller
         return view('system.common.categories.index.index',
             [
                 'items' => $outcomes_categories,
-                'page_info' => pageInfo($this->entity_alias),
+                'pageInfo' => pageInfo($this->entity_alias),
                 'entity' => $this->entity_alias,
                 'class' => $this->model,
                 'type' => $this->type,
@@ -167,14 +167,14 @@ class OutcomesCategoryController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $outcomes_category);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         $settings = getPhotoSettings($this->entity_alias);
 
         return view('system.common.categories.edit.page.edit', [
             'title' => 'Редактирование категории выполненных работ',
             'category' => $outcomes_category,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'settings' => $settings,
             'entity' => $this->entity_alias,
         ]);

@@ -3,7 +3,7 @@
     <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
         <div class="top-bar head-content">
             <div class="top-bar-left">
-                <h2 class="header-content">{{ $page_info->title }}
+                <h2 class="header-content">{{ $pageInfo->title }}
                     <span class="content-count" title="Общее количество">
                         @yield('content-count')
                     </span>
@@ -30,9 +30,9 @@
             </div>
             <div class="top-bar-right">
 
-                @if (isset($filter))
-                    <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
-                @endif
+                <a class="icon-filter sprite
+                @if(count(request()->input())) filtration-active @endif
+                    "></a>
 
                     <search-leads-component></search-leads-component>
                 {{-- <button type="button" class="icon-search sprite button"></button> --}}
@@ -42,45 +42,35 @@
 
         </div>
 
-
-
-        <div id="port-result-search">
-        </div>
-        {{-- Подключаем стандартный ПОИСК --}}
-        @include('includes.scripts.search-script')
-
-        {{-- Блок фильтров --}}
-        @if (isset($filter))
-
-
-            <div class="grid-x">
-                <div class="small-12 cell filters fieldset-filters" id="filters">
-                    <div class="grid-padding-x">
-                        <div class="small-12 cell text-right">
-                            {{ link_to(Request::url(), 'Сбросить', ['class' => 'small-link']) }}
-                        </div>
-                    </div>
-                    <div class="grid-padding-x">
-                        <div class="small-12 cell">
-                            {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
-
-                            @includeIf('leads.includes.filters')
-
-                            <div class="small-12 cell text-center">
-                                {{ Form::submit('Фильтрация', ['class' => 'button']) }}
-                            </div>
-                            {{ Form::close() }}
-                        </div>
-                    </div>
-                    <div class="grid-x">
-                        <a class="small-12 cell text-center filter-close">
-                            <button type="button" class="icon-moveup sprite"></button>
-                        </a>
+        <div class="grid-x">
+            <div class="small-12 cell filters fieldset-filters" id="filters">
+                <div class="grid-padding-x">
+                    <div class="small-12 cell text-right">
+                        <a href="{{ route('leads.index') }}" class="small-link">Сбросить</a>
+{{--                        {{ Form::open(['route' => 'leads.resetFilter']) }}--}}
+{{--                        <button class="small-link">Сбросить</button>--}}
+{{--                        {{ Form::close() }}--}}
                     </div>
                 </div>
+                <div class="grid-padding-x">
+                    <div class="small-12 cell">
+                        {{ Form::open(['route' => 'leads.index', 'data-abide', 'novalidate', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
+                        @include('leads.includes.filters')
+
+                        <div class="small-12 cell text-center">
+                            {{ Form::submit('Фильтрация', ['class'=>'button']) }}
+                        </div>
+                        {{ Form::close() }}
+                    </div>
+                </div>
+                <div class="grid-x">
+                    <a class="small-12 cell text-center filter-close">
+                        <button type="button" class="icon-moveup sprite"></button>
+                    </a>
+                </div>
             </div>
 
-        @endif
+        </div>
     </div>
 </div>

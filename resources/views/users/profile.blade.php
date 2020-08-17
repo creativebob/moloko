@@ -6,7 +6,7 @@
 
 @section('title', 'Редактировать профиль')
 
-{{-- @section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $user->second_name.' '.$user->first_name)) --}}
+{{-- @section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $user->second_name.' '.$user->first_name)) --}}
 
 @section('title-content')
 <div class="top-bar head-content">

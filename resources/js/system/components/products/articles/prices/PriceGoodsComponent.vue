@@ -17,19 +17,32 @@
         <td v-if="priceGoods.filial">{{ priceGoods.filial.name }}</td>
         <td v-else>Общая</td>
         <td class="price">
-            <input
-                type="number"
-                v-model="price"
+<!--            <input-->
+<!--                type="number"-->
+<!--                v-model="price"-->
+<!--                v-if="change"-->
+<!--                @keydown.enter.prevent="updateItem()"-->
+<!--                v-focus-->
+<!--                @focusout="change = false"-->
+<!--            >-->
+            <digit-component
                 v-if="change"
-                @keydown.enter.prevent="updateItem()"
-                v-focus
-                @focusout="change = false"
-            >
+                :decimalPlace="2"
+                :value="priceGoods.price"
+                @change="changePrice"
+                :enter="true"
+                @enter="updateItem"
+                :blur="true"
+                @blur="change = false"
+                :focus="true"
+            ></digit-component>
             <span
                 v-else
                 @click="change = true"
             >{{ priceGoods.price }}</span> {{ priceGoods.currency.abbreviation }}
         </td>
+        <td>{{ priceGoods.discount_percent }}% / {{ priceGoods.discount_currency }} {{ priceGoods.currency.abbreviation }}</td>
+        <td>{{ priceGoods.total }} {{ priceGoods.currency.abbreviation }}</td>
 
         <td>
             <div
@@ -53,38 +66,42 @@
 
 <script>
     export default {
+        components: {
+            'digit-component': require('../../../inputs/DigitNestedComponent')
+        },
         props: {
             priceGoods: Object,
         },
         data() {
             return {
-                priceInput: parseInt(this.priceGoods.price),
+                price: parseFloat(this.priceGoods.price),
                 change: false
             }
         },
         computed: {
-            price: {
-                get () {
-                    return parseInt(this.priceGoods.price);
-                },
-                set (value) {
-                    this.priceInput = parseInt(value)
-                }
-            },
+            // price: {
+            //     get () {
+            //         return parseInt(this.priceGoods.price);
+            //     },
+            //     set (value) {
+            //         this.priceInput = parseInt(value)
+            //     }
+            // },
         },
 
         methods: {
-            updateItem: function() {
+            changePrice(value) {
+
+            },
+            updateItem(value) {
                 this.change = false;
 
                 axios
-                    .patch('/admin/catalogs_goods/' + this.priceGoods.catalogs_goods_id + '/update_prices_goods', {
-                        id: this.priceGoods.id,
-                        price: parseInt(this.priceInput),
+                    .patch('/admin/catalogs_goods/' + this.priceGoods.catalogs_goods_id + '/prices_goods/' + this.priceGoods.id, {
+                        price: parseFloat(value),
                     })
                     .then(response => {
                         this.$emit('update', response.data);
-                        this.priceInput = parseInt(response.data.price);
                     })
                     .catch(error => {
                         console.log(error)

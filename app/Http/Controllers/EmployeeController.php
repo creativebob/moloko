@@ -120,9 +120,9 @@ class EmployeeController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('system.pages.hr.employees.index', compact('employees', 'page_info', 'filter'));
+        return view('system.pages.hr.employees.index', compact('employees', 'pageInfo', 'filter'));
     }
 
     /**
@@ -159,11 +159,11 @@ class EmployeeController extends Controller
         ->get();
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         $auth_user = \Auth::user();
 
-        return view('system.pages.hr.employees.create', compact('user', 'employee', 'page_info', 'list_empty_staff', 'list_user_employees', 'auth_user'));
+        return view('system.pages.hr.employees.create', compact('user', 'employee', 'pageInfo', 'list_empty_staff', 'list_user_employees', 'auth_user'));
     }
 
     /**
@@ -277,9 +277,9 @@ class EmployeeController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $employee->user);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('system.pages.hr.employees.edit', compact('employee', 'page_info', 'list_user_employees', 'list_empty_staff'));
+        return view('system.pages.hr.employees.edit', compact('employee', 'pageInfo', 'list_user_employees', 'list_empty_staff'));
     }
 
     /**
@@ -512,12 +512,12 @@ class EmployeeController extends Controller
         // -----------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        $page_info->title = 'Уволенные сотрудники';
-        $page_info->name = 'Уволенные сотрудники';
+        $pageInfo->title = 'Уволенные сотрудники';
+        $pageInfo->name = 'Уволенные сотрудники';
 
-        return view('system.pages.hr.employees.dismissal', compact('employees', 'page_info', 'filter'));
+        return view('system.pages.hr.employees.dismissal', compact('employees', 'pageInfo', 'filter'));
     }
 
     public function ajax_employee_dismiss_modal(Request $request)

@@ -1,6 +1,6 @@
 <script type="application/javascript">
 
-var entity = '{{ $page_info->alias }}';
+var entity = '{{ $pageInfo->alias }}';
 // alert(entity);
 
 // Меняем режим отображения
@@ -22,4 +22,4 @@ $(document).on('click', '#add-extra-phone', function(event) {
         }
     });
 });
-</script> 
+</script>

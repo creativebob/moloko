@@ -48,11 +48,17 @@ class PricesService extends Model
         'catalogs_service_id',
         'service_id',
         'filial_id',
-        'price',
-        'archive',
 
-        'currency_id',
+        'price',
+        'discount_mode',
+        'discount_percent',
+        'discount_currency',
+        'total',
+
         'points',
+        'currency_id',
+
+        'archive',
 
         'status',
         'is_hit',

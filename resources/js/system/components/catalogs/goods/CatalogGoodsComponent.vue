@@ -75,7 +75,10 @@
 
                                             <div class="cell shrink wrap-product-price">
 
-                                                <span class="items-product-price">{{ price.price | roundToTwo | level }}</span>
+                                                <span
+                                                    class="items-product-price"
+                                                    :class="[{'with-discount' : price.total != price.totalWithDiscounts }]"
+                                                >{{ price.totalWithDiscounts | roundToTwo | level }}</span>
                                             </div>
                                         </div>
                                         <p class="items-product-description">{{ price.goods.description }}</p>

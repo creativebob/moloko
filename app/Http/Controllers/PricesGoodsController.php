@@ -12,12 +12,10 @@ class PricesGoodsController extends Controller
 {
     /**
      * PricesGoodsController constructor.
-     * @param PricesGoods $prices_goods
      */
-    public function __construct(PricesGoods $prices_goods)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->prices_goods = $prices_goods;
         $this->entity_alias = with(new PricesGoods)->getTable();
         $this->entity_dependence = true;
         $this->class = PricesGoods::class;
@@ -75,7 +73,8 @@ class PricesGoodsController extends Controller
                 ]);
             },
             'catalog',
-            'catalogs_item'
+            'catalogs_item',
+            'currency'
         ])
             ->withCount('likes')
 //        ->whereHas('service', function ($q) {
@@ -127,19 +126,19 @@ class PricesGoodsController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         $catalog = CatalogsGoods::with([
             'filials'
         ])
         ->findOrFail($catalog_id);
 
-        $page_info->title = 'Прайс: ' . $catalog->name;
-        $page_info->name = 'Прайс: ' . $catalog->name;
+        $pageInfo->title = 'Прайс: ' . $catalog->name;
+        $pageInfo->name = 'Прайс: ' . $catalog->name;
 
-        return view('prices_goods.index', [
+        return view('system.pages.catalogs.goods.prices_goods.index', [
             'prices_goods' => $prices_goods,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'class' => $this->class,
             'entity' => $this->entity_alias,
             'filter' => $filter,
@@ -179,14 +178,35 @@ class PricesGoodsController extends Controller
      * Показать форму для редактирования указанного ресурса.
      *
      * @param Request $request
-     * @param $catalog_id
+     * @param $catalogId
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function edit(Request $request, $catalog_id, $id)
+    public function edit(Request $request, $catalogId, $id)
     {
-        $price = PricesGoods::findOrFail($id);
-        return view('prices_goods.price_edit', ['price' => $price->price]);
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
+
+        $priceGoods = PricesGoods::with([
+            'goods.article',
+            'currency',
+            'discounts',
+            'discounts_actual'
+        ])
+        ->moderatorLimit($answer)
+            ->findOrFail($id);
+        // Подключение политики
+        $this->authorize(getmethod(__FUNCTION__), $priceGoods);
+
+        $catalogGoods = CatalogsGoods::findOrFail($catalogId);
+
+        return view('system.pages.catalogs.goods.prices_goods.edit', [
+            'priceGoods' => $priceGoods,
+            'catalogId' => $catalogId,
+            'pageInfo' => pageInfo($this->entity_alias),
+            'catalogGoods' => $catalogGoods
+        ]);
     }
 
     /**
@@ -197,44 +217,46 @@ class PricesGoodsController extends Controller
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function update(Request $request, $catalog_id, $id)
+    public function update(Request $request, $catalogId, $id)
     {
-        $cur_price_goods = PricesGoods::findOrFail($id);
+        $priceGoods = PricesGoods::findOrFail($id);
 
-        if ($request->price) {
+        $price = $request->price;
 
-            $price = $request->price;
-            if ($cur_price_goods->price == $price) {
-                return view('prices_goods.price', ['cur_prices_goods' => $cur_price_goods]);
-            } else {
-                if ($cur_price_goods->price != $price) {
+        if ($priceGoods->price != $price) {
 
-                    $cur_price_goods->actual_price->update([
-                        'end_date' => now(),
-                    ]);
-
-                    $cur_price_goods->history()->create([
-                        'price' => $price,
-                    ]);
-
-                    $cur_price_goods->update([
-                        'price' => $price,
-                    ]);
-                }
-
-                // dd($price);
-                return view('prices_goods.price', ['cur_prices_goods' => $cur_price_goods]);
-            }
-        }
-
-        if ($request->points) {
-            $points = $request->points;
-            $cur_price_goods->update([
-                'points' => $points,
+            $priceGoods->actual_price->update([
+                'end_date' => now(),
             ]);
-            return view('prices_goods.price', ['cur_prices_goods' => $cur_price_goods]);
+
+            $priceGoods->history()->create([
+                'price' => $price,
+            ]);
+
+            $priceGoods->update([
+                'price' => $price,
+            ]);
         }
 
+        $data = $request->input();
+        $priceGoods->update($data);
+
+        $priceGoods->discounts()->sync($request->discounts);
+
+        // Отдаем Ajax
+        if ($request->ajax()) {
+            $priceGoods = PricesGoods::with([
+                'catalog',
+                'catalogs_item.parent.parent',
+                'filial',
+                'currency'
+            ])
+            ->findOrFail($id);
+
+            return response()->json($priceGoods);
+        }
+
+        return redirect()->route('prices_goods.index', $catalogId);
     }
 
     /**
@@ -352,51 +374,53 @@ class PricesGoodsController extends Controller
 
     public function ajax_store(Request $request)
     {
-        $cur_price_goods = PricesGoods::firstOrNew([
+        $priceGoods = PricesGoods::firstOrNew([
             'catalogs_goods_item_id' => $request->catalogs_goods_item_id,
             'catalogs_goods_id' => $request->catalogs_goods_id,
             'goods_id' => $request->goods_id,
             'filial_id' => $request->filial_id,
             'currency_id' => $request->currency_id,
         ], [
-            'price' => $request->price
+            'price' => $request->price,
+            'discount_percent' => 0,
+            'discount_currency' => 0,
+            'total' => $request->price,
         ]);
 
-        if ($cur_price_goods->id) {
-            $cur_price_goods->update([
+        if ($priceGoods->id) {
+            $priceGoods->update([
                'archive' => false
             ]);
 
-            if ($cur_price_goods->price != $request->price) {
+            if ($priceGoods->price != $request->price) {
 
-                $cur_price_goods->actual_price->update([
+                $priceGoods->actual_price->update([
                     'end_date' => now(),
                 ]);
 
-                $cur_price_goods->history()->create([
+                $priceGoods->history()->create([
                     'price' => $request->price,
-                    'currency_id' => $cur_price_goods->currency_id,
+                    'currency_id' => $priceGoods->currency_id,
                 ]);
 
-                $cur_price_goods->update([
+                $priceGoods->update([
                     'price' => $request->price,
+                    'total' => $request->price
                 ]);
             }
 
         } else {
-            $cur_price_goods->save();
+            $priceGoods->save();
         }
 
-        $cur_price_goods->load([
+        $priceGoods->load([
             'catalog',
             'catalogs_item.parent.parent',
             'filial',
             'currency'
         ]);
 
-
-        return response()->json($cur_price_goods);
-//        return view('products.articles.goods.prices.price', compact('cur_price_goods'));
+        return response()->json($priceGoods);
     }
 
     public function ajax_edit(Request $request, $catalog_id)

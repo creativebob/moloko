@@ -27,7 +27,7 @@
             </li>
 
             @can('index', App\Metric::class)
-                @if($page_info->entity->metric)
+                @if($pageInfo->entity->metric)
                 <li class="tabs-title">
                     <a data-tabs-target="tab-metrics" href="#tab-metrics">Метрики</a>
                 </li>
@@ -41,7 +41,7 @@
             @endcan
 
             {{-- Табы для сущности --}}
-            @includeIf($page_info->entity->view_path . '.tabs')
+            @includeIf($pageInfo->entity->view_path . '.tabs')
 
             {{-- <li class="tabs-title"><a data-tabs-target="price-rules" href="#price-rules">Ценообразование</a></li> --}}
         </ul>
@@ -153,7 +153,7 @@
 
             {{-- Метрики --}}
             @can('index', App\Metric::class)
-                @if($page_info->entity->metric)
+                @if($pageInfo->entity->metric)
                     <div class="tabs-panel" id="tab-metrics">
                         @include('products.common.metrics.page')
                         {{--                @include('products.common.metrics.section')--}}
@@ -162,7 +162,7 @@
             @endcan
 
             {{-- Табы для сущности --}}
-            @includeIf("{$page_info->entity->view_path}.tabs_content")
+            @includeIf("{$pageInfo->entity->view_path}.tabs_content")
 
             {{ Form::close() }}
         </div>

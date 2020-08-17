@@ -56,7 +56,7 @@ class ArticlesGroupController extends Controller
 
         return view('products.articles_groups.index',[
             'articles_groups' => $articles_groups,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             // 'filter' => $filter,
             'nested' => 'articles_count'
         ]);
@@ -70,7 +70,7 @@ class ArticlesGroupController extends Controller
 
         return view('products.articles_groups.create', [
             'articles_group' => new $this->class,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -129,7 +129,7 @@ class ArticlesGroupController extends Controller
 
         return view('products.articles_groups.edit', [
             'articles_group' => $articles_group,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

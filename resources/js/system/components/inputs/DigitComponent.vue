@@ -3,22 +3,12 @@
 		type="number"
 		:name="name"
         v-model="count"
-        :id="id"
-        :class="classes"
         :required="required"
         :disabled="disabled"
         @input="changeCount($event.target.value)"
         @focus="checkDecimal($event.target.value)"
         @blur="returnDecimal($event.target.value)"
-        @keydown.enter.prevent="onEnter($event.target.value)"
-        v-focus
 	>
-<!--
-        @keydown="checkAfter($event)"
-		@keyup="checkBefore($event)"
-        :value="value"
-        @keypress="checkInput($event)"
--->
 </template>
 
 <script>
@@ -34,7 +24,7 @@
             },
             decimalPlace: {
                 type: Number,
-                default: 0,
+                default: 2,
             },
             id: {
                 type: String,
@@ -56,26 +46,10 @@
                 type: Number,
                 default: 99999999
             },
-            blur: {
-                type: Boolean,
-                default: false
-            },
-            focus: {
-                type: Boolean,
-                default: false
-            },
-            enter: {
-                type: Boolean,
-                default: false
-            },
         },
 		data() {
 			return {
                 count: parseFloat(this.value).toFixed(this.decimalPlace),
-				// point_status: false,
-				// limit_status: false,
-				// reg_rate: /^(\d+)(\.{1})(\d{3,})$/,
-				// count_item: this.value,
 			}
 		},
 		methods: {
@@ -103,6 +77,25 @@
                         this.count = array[0];
                     }
                 }
+            },
+            returnDecimal(value) {
+                let array = this.getDecimalArray(value),
+                    zeros = this.getZeros();
+
+                if (! array[1]) {
+                    let count = this.count.toString() + '.' + zeros;
+                    this.count = parseFloat(count).toFixed(this.decimalPlace);
+                }
+            },
+            checkDecimal(value) {
+                let array = this.getDecimalArray(value),
+                    zeros = this.getZeros();
+
+                if (array[1]) {
+                    if (array[1] == zeros) {
+                        this.count = array[0];
+                    }
+                }
                 if (this.focus) {
                     this.$emit('focus', parseFloat(this.count).toFixed(this.decimalPlace));
                 }
@@ -119,13 +112,6 @@
                     this.$emit('blur', parseFloat(this.count).toFixed(this.decimalPlace));
                 }
             },
-            // checkInput(event) {
-            //     if ( /(([0-9]{1,})?[\.]?[\,]?[0-9]{0,2})/.test( event.target.value )) {
-            //         return true;
-            //     } else {
-            //         event.preventDefault();
-            //     }
-            // },
             changeCount(value) {
 
                 // TODO - 04.08.20 - Здесть нужно валидировать получаемое значение, чтоб была только одна точка и ограниченное количество знаков после запятой, + еще какие огнраничения
@@ -140,90 +126,15 @@
                 if (value == '') {
                     value = 0;
                 }
+
+                if (value != '' && parseFloat(value) > this.limitMax) {
+                    this.count = this.limitMax;
+                }
                 // let reg = '/(([0-9]{1,})?[\\.]?[\\,]?[0-9]{0,' + this.decimalPlace + '})/';
                 // value = value.toString().replace(reg , '');
                 // console.log(value);
 
-                // this.count = value.toString().replace(reg , '');
-                this.$emit('change', parseFloat(value));
             },
-            onEnter(value) {
-                if (this.enter) {
-                    this.$emit('enter', parseFloat(value));
-                }
-            }
-
-            // checkAfter(event) {
-            //
-            //
-            // 	// if((event.key == 'Backspace')||(event.key == 'ArrowLeft')||(event.key == 'ArrowRight')){
-            //     //
-            // 	// } else {
-            //     //
-            // 	// 	if(this.count_item == '0'){
-            // 	// 		if(event.key == '0'){
-            // 	// 			event.preventDefault();
-            // 	// 		}
-            //     //
-            // 	// 		if ( /[1-9]/.test( event.key )) {
-            // 	// 			this.count_item = event.key;
-            // 	// 			event.preventDefault();
-            // 	// 		}
-            //     //
-            // 	// 	}
-            //     //
-            //     //
-            // 	// 	if(this.myrate == 2){
-            //     //
-            // 	// 		this.limit_status = this.reg_rate.test(this.count_item);
-            // 	// 		this.point_status = /[\.]/.test(this.count_item);
-            // 	// 		if(this.point_status == true) {
-            // 	// 			if(this.limit_status == false) {
-            // 	// 				if ( !/[0-9]/.test( event.key )) {
-            // 	// 					event.preventDefault();
-            // 	// 				}
-            // 	// 			} else {
-            // 	// 				event.preventDefault();
-            // 	// 			}
-            //     //
-            // 	// 		} else {
-            // 	// 	       if ( !/[0-9\x2e]/.test( event.key )) {
-            // 	// 	        	event.preventDefault();
-            // 	// 	       }
-            // 	// 		};
-            // 	// 	} else {
-            // 	// 		if ( !/[0-9]/.test( event.key )) {
-            // 	// 			event.preventDefault();
-            // 	// 		}
-            // 	// 	}
-            //     //
-            // 	// 	if(this.count_item * 1 > this.limitMax * 1){
-            // 	// 		event.preventDefault();
-            // 	// 		// this.count_item = this.limitMax;
-            // 	// 	}
-            // 	// };
-            // },
-            // checkBefore(event){
-            //
-            // 	// if(this.count_item == '.'){
-            // 	// 	this.count_item = '0.';
-            // 	// }
-            //     //
-            // 	// this.limit_status = this.reg_rate.test(this.count_item);
-            // 	// if(this.count_item * 1 > this.limitMax * 1){this.sliceLastChar();}
-            // 	// if(this.limit_status == true){this.sliceLastChar();}
-            // 	// // this.$emit('countchanged', this.count_item);
-            // },
-            // sliceLastChar() {
-            // 	this.count_item = this.count_item.slice(0, -1);
-            // }
 		},
-        directives: {
-            focus: {
-                inserted: function (el) {
-                    el.focus()
-                }
-            }
-        },
 	}
 </script>

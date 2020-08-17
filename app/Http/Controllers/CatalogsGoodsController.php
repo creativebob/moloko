@@ -59,7 +59,7 @@ class CatalogsGoodsController extends Controller
 
         return view('catalogs_goods.index',[
             'catalogs_goods' => $catalogs_goods,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -77,7 +77,7 @@ class CatalogsGoodsController extends Controller
 
         return view('catalogs_goods.create', [
             'catalogs_goods' => CatalogsGoods::make(),
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -144,7 +144,7 @@ class CatalogsGoodsController extends Controller
         // dd($catalogs_goods);
         return view('catalogs_goods.edit', [
             'catalogs_goods' => $catalogs_goods,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

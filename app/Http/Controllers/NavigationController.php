@@ -48,7 +48,7 @@ class NavigationController extends Controller
 
         return view('navigations.index', [
             'navigations' => $navigations,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'site_id' => $site_id,
             'site' => $site
         ]);
@@ -65,7 +65,7 @@ class NavigationController extends Controller
 
         return view('navigations.create', [
             'navigation' => new $this->class,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'site_id' => $site_id,
             'site' => $site
         ]);
@@ -143,7 +143,7 @@ class NavigationController extends Controller
 
         return view('navigations.edit', [
             'navigation' => $navigation,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'site_id' => $site_id,
             'site' => $site
         ]);

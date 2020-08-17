@@ -1,6 +1,6 @@
 <template>
     <td>
-        {{ item.product.article.name }}
+        {{ item.product.article.name }}<span v-if="isArchive"> (Архивный)</span>
         <span
             class="icon-comment"
             :class="[{ 'hide-comment' : ! showComment }]"
@@ -40,6 +40,7 @@
     export default {
         props: {
             item: Object,
+            isArchive: Boolean
         },
         data() {
             return {

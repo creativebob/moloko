@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->page_description }}" />
+<meta name="description" content="{{ $pageInfo->page_description }}" />
 
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 {{-- @section('exel')
-@include('includes.title-exel', ['entity' => $page_info->alias])
+@include('includes.title-exel', ['entity' => $pageInfo->alias])
 @endsection --}}
 
 @section('content-count')
@@ -20,7 +20,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Service::class, 'type' => 'menu'])
+@include('includes.title-content', ['pageInfo' => $pageInfo, 'class' => App\Service::class, 'type' => 'menu'])
 @endsection
 
 @section('content')

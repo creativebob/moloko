@@ -932,11 +932,13 @@ span.wrap-label-checkboxer {
 .small-link {
     font-size: 0.8rem;
     border-bottom: 1px dashed #888;
-}
+    color: #1779ba;
 
-.small-link:hover {
-    font-size: 0.8rem;
-    border-bottom: 1px solid transparent;
+    &:hover {
+        font-size: 0.8rem;
+        border-bottom: 1px solid transparent;
+        cursor: pointer;
+    }
 }
 
 // Закрытие модалки
@@ -4284,4 +4286,8 @@ tr:hover .button-to-reserve{
             color: blue;
         }
     }
+}
+
+.with-discount {
+    color: red;
 }

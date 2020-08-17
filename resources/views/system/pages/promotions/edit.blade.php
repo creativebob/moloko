@@ -2,7 +2,7 @@
 
 @section('title', 'Редактировать продвижение')
 
-@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $promotion))
+@section('breadcrumbs', Breadcrumbs::render('alias-edit', $pageInfo, $promotion))
 
 @section('title-content')
 <div class="top-bar head-content">

@@ -48,7 +48,7 @@ class IndicatorController extends Controller
         return view('indicators.index',
             [
                 'indicators' => $indicators,
-                'page_info' => pageInfo($this->entity_alias),
+                'pageInfo' => pageInfo($this->entity_alias),
             ]
         );
     }
@@ -61,7 +61,7 @@ class IndicatorController extends Controller
 
         return view('indicators.create', [
             'indicator' => new $this->class,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -143,7 +143,7 @@ class IndicatorController extends Controller
 
         return view('indicators.edit', [
             'indicator' => $indicator->load('category', 'entity', 'indicators_category'),
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

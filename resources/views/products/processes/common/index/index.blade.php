@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->page_description }}" />
+<meta name="description" content="{{ $pageInfo->page_description }}" />
 
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 {{-- @section('exel')
-@include('includes.title-exel', ['entity' => $page_info->alias])
+@include('includes.title-exel', ['entity' => $pageInfo->alias])
 @endsection --}}
 
 @section('content-count')
@@ -20,7 +20,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('products.processes.common.index.includes.title_processes', ['page_info' => $page_info, 'class' => $class])
+@include('products.processes.common.index.includes.title_processes', ['pageInfo' => $pageInfo, 'class' => $class])
 @endsection
 
 @section('content')
@@ -48,7 +48,7 @@
                     <th class="td-manually">Артикул</th>
                     <th class="td-cost">Себестоимость</th>
 
-                    @if($page_info->alias == 'services')
+                    @if($pageInfo->alias == 'services')
                         <th class="td-catalog">Прайсы</th>
                     @endif
 
@@ -126,7 +126,7 @@
 {{--                        @if($item->portion_status)<span>За порцию: </span><span>{{ num_format($item->cost_portion, 2) ?? '' }}</span>@endif--}}
                     </td>
 
-                    @if($page_info->alias == 'services')
+                    @if($pageInfo->alias == 'services')
                         <td class="td-catalog">
                             @php // dd($item); @endphp
                             @foreach($item->prices as $price)

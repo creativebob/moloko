@@ -75,9 +75,9 @@ class ProductionController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('system.pages.productions.index', compact('productions', 'page_info', 'filter'));
+        return view('system.pages.productions.index', compact('productions', 'pageInfo', 'filter'));
     }
 
     /**
@@ -164,9 +164,9 @@ class ProductionController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $production);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('system.pages.productions.edit', compact('production', 'page_info'));
+        return view('system.pages.productions.edit', compact('production', 'pageInfo'));
     }
 
     /**
@@ -370,6 +370,13 @@ class ProductionController extends Controller
 //		dd($production);
 
             if ($production->items->isNotEmpty()) {
+
+                foreach ($production->items as $item) {
+                    if ($item->cmv->archive == 1) {
+                        return back()
+                            ->withErrors(['msg' => 'Наряд содержит архивные позиции, оприходование невозможно!']);
+                    }
+                }
 
                 $stock_general = Stock::findOrFail($production->stock_id);
 

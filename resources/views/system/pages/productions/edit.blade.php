@@ -7,7 +7,7 @@
 
 @section('title', 'Редактировать наряд на производство')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $production->id))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $production->id))
 
 @section('title-content')
 <div class="top-bar head-content">

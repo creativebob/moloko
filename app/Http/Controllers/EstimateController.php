@@ -82,9 +82,9 @@ class EstimateController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('estimates.index', compact('estimates', 'page_info'));
+        return view('estimates.index', compact('estimates', 'pageInfo'));
     }
 
 
@@ -321,7 +321,7 @@ class EstimateController extends Controller
         // ГЛАВНЫЙ ЗАПРОС:
         $estimate = Estimate::with([
             'lead',
-            'goods_items'
+            'goods_items.goods'
         ])
         ->findOrFail($id);
 
@@ -329,6 +329,13 @@ class EstimateController extends Controller
 
             // Отдаем работу по редактировнию лида трейту
             $this->updateLead($request, $estimate->lead);
+
+            foreach ($estimate->goods_items as $goodsItem) {
+                if ($goodsItem->goods->archive == 1) {
+                    return back()
+                        ->withErrors(['msg' => 'Смета содержит архивные позиции, оформление невозможно!']);
+                }
+            }
 
             logs('documents')->info("========================================== НАЧАЛО РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
 

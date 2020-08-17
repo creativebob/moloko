@@ -2,7 +2,7 @@
 
 @section('title', 'Редактировать показатель')
 
-@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $indicator))
+@section('breadcrumbs', Breadcrumbs::render('alias-edit', $pageInfo, $indicator))
 
 @section('title-content')
 <div class="top-bar head-content">

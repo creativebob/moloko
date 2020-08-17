@@ -14,12 +14,10 @@ class PositionController extends Controller
 
     /**
      * PositionController constructor
-     * @param Position $position
      */
-    public function __construct(Position $position)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->position = $position;
         $this->class = Position::class;
         $this->model = 'App\Position';
         $this->entity_alias = with(new $this->class)->getTable();
@@ -85,9 +83,9 @@ class PositionController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('system.pages.hr.positions.index', compact('positions', 'page_info', 'filter'));
+        return view('system.pages.hr.positions.index', compact('positions', 'pageInfo', 'filter'));
     }
 
     /**
@@ -103,9 +101,9 @@ class PositionController extends Controller
 
         $position = Position::make();
 
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('system.pages.hr.positions.create', compact('position', 'page_info'));
+        return view('system.pages.hr.positions.create', compact('position', 'pageInfo'));
     }
 
     /**
@@ -175,9 +173,9 @@ class PositionController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $position);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('system.pages.hr.positions.edit', compact('position', 'page_info'));
+        return view('system.pages.hr.positions.edit', compact('position', 'pageInfo'));
     }
 
     /**

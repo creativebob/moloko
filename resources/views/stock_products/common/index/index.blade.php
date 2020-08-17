@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->description }}" />
+<meta name="description" content="{{ $pageInfo->description }}" />
 
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 {{-- @section('exel')
-@include('includes.title-exel', ['entity' => $page_info->alias])
+@include('includes.title-exel', ['entity' => $pageInfo->alias])
 @endsection --}}
 
 @section('content-count')
@@ -20,7 +20,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => $class, 'type' => 'menu'])
+@include('includes.title-content', ['pageInfo' => $pageInfo, 'class' => $class, 'type' => 'menu'])
 @endsection
 
 @section('content')
@@ -39,7 +39,7 @@
                     <th class="td-unit">Ед. измерения</th>
                     <th class="td-stock-count">Кол-во</th>
                     <th class="td-weight">Параметры</th>
-                    <th class="td-portion">Порция</th>  
+                    <th class="td-portion">Порция</th>
                     <th class="td-category">Категория</th>
                     {{-- <th class="td-description">Описание</th> --}}
                     <th class="td-cost">Себестоимость</th>
@@ -79,7 +79,7 @@
                                 {{ $item->goods->article->goods->count() }}</span>
                             @endif
                         @endif
-                        
+
                         <br><span class="tiny-text">{{ $item->goods->article->manufacturer->name ?? $item->manufacturer->name ?? '' }}</span>
                     </td>
                     <td class="td-unit">
@@ -102,7 +102,7 @@
                         @if($item->goods->article->portion_status == 1)
                             <span>{{ $item->goods->article->portion_abbreviation }}</span><br>
                             <span>{{ $item->goods->article->portion_count * $item->goods->article->unit->ratio }} {{ $item->goods->article->unit->abbreviation }}</span>
-                            
+
                         @endif
                     </td>
                     <td class="td-category">

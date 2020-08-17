@@ -2,7 +2,7 @@
 
 @section('title', 'Редактировать пользователя')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $booklist->booklist_name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $booklist->booklist_name))
 
 @section('title-content')
 	<div class="top-bar head-content">
@@ -20,7 +20,7 @@
   {{ method_field('PATCH') }}
 
     @include('users.form', ['submitButtonText' => 'Редактировать пользователя', 'param'=>''])
-    
+
   {{ Form::close() }}
 
 @endsection
@@ -54,7 +54,7 @@
       </div>
     </div>
   {{ Form::close() }}
-  <div data-close class="icon-close-modal sprite close-modal add-item"></div> 
+  <div data-close class="icon-close-modal sprite close-modal add-item"></div>
 </div>
 {{-- Конец модалки добавления роли --}}
 
@@ -91,7 +91,7 @@
     });
 
   });
-  
+
 </script>
 
 {{-- Скрипт модалки удаления --}}

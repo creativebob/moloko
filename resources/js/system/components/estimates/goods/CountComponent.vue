@@ -41,7 +41,7 @@
 <script>
     export default {
         components: {
-            'digit-component': require('../../inputs/DigitComponent')
+            'digit-component': require('../../inputs/DigitNestedComponent')
         },
         props: {
             item: Object,

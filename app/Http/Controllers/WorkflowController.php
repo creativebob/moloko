@@ -111,11 +111,11 @@ class WorkflowController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         return view('products.processes.common.index.index', [
             'items' => $workflows,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'class' => $this->class,
             'entity' => $this->entity_alias,
             'category_entity' => 'workflows_categories',
@@ -272,14 +272,14 @@ class WorkflowController extends Controller
 //        dd($settings);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
-        // dd($page_info);
+        $pageInfo = pageInfo($this->entity_alias);
+        // dd($pageInfo);
 
         return view('products.processes.common.edit.edit', [
             'title' => 'Редактировать рабочий процесс',
             'item' => $workflow,
             'process' => $process,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'settings' => $settings,
             'entity' => $this->entity_alias,
             'category_entity' => 'workflows_categories',

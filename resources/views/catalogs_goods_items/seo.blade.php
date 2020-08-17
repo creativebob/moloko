@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->page_description }}" />
+<meta name="description" content="{{ $pageInfo->page_description }}" />
 
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
 @section('content-count')
 {{-- Количество элементов --}}
@@ -16,8 +16,8 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@php $page_info->title = 'SEO Description: ' . $catalog_goods->name; @endphp
-@include('includes.title-content', ['page_info' => $page_info, 'class' => null, 'type' => 'table'])
+@php $pageInfo->title = 'SEO Description: ' . $catalog_goods->name; @endphp
+@include('includes.title-content', ['pageInfo' => $pageInfo, 'class' => null, 'type' => 'table'])
 @endsection
 
 @section('content')

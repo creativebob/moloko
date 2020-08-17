@@ -6,7 +6,7 @@
 
 @section('title', 'Редактировать сотрудника')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $staffer->position->name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $staffer->position->name))
 
 @section('title-content')
 	<div class="top-bar head-content">

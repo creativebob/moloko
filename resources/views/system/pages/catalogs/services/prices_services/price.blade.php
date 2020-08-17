@@ -49,7 +49,7 @@
     <td class="td-catalogs_item">{{ $prices_service->catalogs_item->name_with_parent }}</td>
 
     <td class="td-price">
-        @include('prices_services.price_span')
+        @include('system.pages.catalogs.services.prices_services.price_span')
 
 
 
@@ -78,7 +78,7 @@
     </td>
 
     <td class="td-points">
-        @include('prices_services.price_points')
+        @include('system.pages.catalogs.services.prices_services.price_points')
     </td>
 
     <td class="td-price-status">

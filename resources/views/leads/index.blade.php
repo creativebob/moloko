@@ -5,9 +5,9 @@
 @include('includes.scripts.pickmeup-inhead')
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 @section('exel')
 <!-- <a href="/admin/leads?calls=yes" class="button tiny">Перезвоны</a> -->

@@ -132,11 +132,11 @@ class AttachmentController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         return view('products.articles.common.index.index', [
             'items' => $attachments,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'class' => $this->class,
             'entity' => $this->entity_alias,
             'category_entity' => 'attachments_categories',
@@ -246,11 +246,11 @@ class AttachmentController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         return view('products.articles.common.index.index', [
             'items' => $attachments,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'class' => $this->class,
             'entity' => $this->entity_alias,
             'category_entity' => 'attachments_categories',
@@ -412,14 +412,14 @@ class AttachmentController extends Controller
         $settings = getPhotoSettings($this->entity_alias);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
-        // dd($page_info);
+        $pageInfo = pageInfo($this->entity_alias);
+        // dd($pageInfo);
 
         return view('products.articles.common.edit.edit', [
             'title' => 'Редактировать вложение',
             'item' => $attachment,
             'article' => $article,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'settings' => $settings,
 //            'dropzone' => json_encode($dropzone),
             'entity' => $this->entity_alias,

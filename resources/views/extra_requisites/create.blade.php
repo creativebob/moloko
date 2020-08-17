@@ -2,7 +2,7 @@
 
 @section('title', 'Новый дополнительный реквизит')
 
-@section('breadcrumbs', Breadcrumbs::render('create', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('create', $pageInfo))
 
 @section('title-content')
 	<div class="top-bar head-content">
@@ -25,7 +25,7 @@
 @section('scripts')
   @include('includes.scripts.cities-list')
   @include('includes.scripts.inputs-mask')
-  
+
 @endsection
 
 

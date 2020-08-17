@@ -6,7 +6,7 @@
 
 @section('title', 'Новая фотография')
 
-@section('breadcrumbs', Breadcrumbs::render('section-create', $parent_page_info, $album, $page_info))
+@section('breadcrumbs', Breadcrumbs::render('section-create', $parent_pageInfo, $album, $pageInfo))
 
 @section('title-content')
 <div class="top-bar head-content">

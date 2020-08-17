@@ -106,11 +106,11 @@ class ToolController extends Controller
         // dd($filter);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         return view('products.articles.common.index.index', [
             'items' => $tools,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'class' => $this->class,
             'entity' => $this->entity_alias,
             'category_entity' => 'tools_categories',
@@ -187,11 +187,11 @@ class ToolController extends Controller
         // dd($filter);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         return view('products.articles.common.index.index', [
             'items' => $tools,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'class' => $this->class,
             'entity' => $this->entity_alias,
             'category_entity' => 'tools_categories',
@@ -339,14 +339,14 @@ class ToolController extends Controller
         $settings = getPhotoSettings($this->entity_alias);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
-        // dd($page_info);
+        $pageInfo = pageInfo($this->entity_alias);
+        // dd($pageInfo);
 
         return view('products.articles.common.edit.edit', [
             'title' => 'Редактировать инструмент',
             'item' => $tool,
             'article' => $article,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'settings' => $settings,
             'entity' => $this->entity_alias,
             'category_entity' => 'tools_categories',

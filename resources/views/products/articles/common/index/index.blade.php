@@ -1,16 +1,16 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->description }}" />
+<meta name="description" content="{{ $pageInfo->description }}" />
 
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 {{-- @section('exel')
-@include('includes.title-exel', ['entity' => $page_info->alias])
+@include('includes.title-exel', ['entity' => $pageInfo->alias])
 @endsection --}}
 
 @section('content-count')
@@ -20,7 +20,7 @@
 
 @section('title-content')
 {{-- Таблица --}}
-@include('products.articles.common.index.includes.title', ['page_info' => $page_info, 'class' => $class])
+@include('products.articles.common.index.includes.title', ['pageInfo' => $pageInfo, 'class' => $class])
 @endsection
 
 @section('content')
@@ -53,7 +53,7 @@
                     <th class="td-cost">Себестоимость</th>
                     {{-- <th class="td-author">Автор</th> --}}
 
-                    @if($page_info->alias == 'goods')
+                    @if($pageInfo->alias == 'goods')
                         <th class="td-catalog">Прайсы</th>
                     @endif
 
@@ -169,7 +169,7 @@
 
                     {{-- <td class="td-author">@if(isset($item->author->first_name)) {{ $item->author->name }} @endif</td> --}}
 
-                    @if($page_info->alias == 'goods')
+                    @if($pageInfo->alias == 'goods')
                         <td class="td-catalog">
                             @php // dd($item); @endphp
                             @foreach($item->prices as $price)
@@ -216,12 +216,19 @@
 
                     <td class="td-archive">
                         <a class="button tiny" href="/admin/draft_article/{{ $item->getTable() }}/{{ $item->id }}">Ч</a>
-                        @if ($item->system != 1)
-                            @can('delete', $item)
-                                <a class="icon-delete sprite" data-open="item-archive"></a>
-                            @endcan
+                        @if ($item->system != 1 && $item->archive == 0)
+                            @if ($entity == 'goods')
+                                <a class="icon-delete sprite" data-open="modal-goods-{{ $item->id }}-archive"></a>
+                            @else
+                                @can('delete', $item)
+                                    <a class="icon-delete sprite" data-open="item-archive"></a>
+                                @endcan
+                            @endif
                         @endif
                     </td>
+                    @if ($entity == 'goods')
+                        @include('products.articles.goods.modal_archive')
+                    @endif
 
                 </tr>
                 @endforeach
@@ -244,7 +251,10 @@
 
 @section('modals')
     <section id="modal"></section>
-    @include('includes.modals.modal-archive')
+    @if ($entity != 'goods')
+        @include('includes.modals.modal-archive')
+    @endif
+
     @include('includes.modals.modal-replicate')
 @endsection
 

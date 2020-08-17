@@ -230,7 +230,7 @@
                 @if(! $lead->estimate->is_registered)
                     @can('create', App\Estimate::class)
                         <li class="tabs-title">
-                            <a data-tabs-target="tab-catalog-goods" href="#tab-catalog-goods">Товары</a>
+                            <a data-tabs-target="tab-catalog_goods" href="#tab-catalog_goods">Товары</a>
                         </li>
                     @endcan
                 @endif
@@ -238,7 +238,7 @@
                 @if(! $lead->estimate->is_registered)
                     @can('create', App\Estimate::class)
                         <li class="tabs-title">
-                            <a data-tabs-target="tab-catalog-services" href="#tab-catalog-services">Услуги</a>
+                            <a data-tabs-target="tab-catalog_services" href="#tab-catalog_services">Услуги</a>
                         </li>
                     @endcan
                 @endif
@@ -309,7 +309,7 @@
                 {{-- КАТАЛОГ ТОВАРОВ --}}
                 @if(! $lead->estimate->is_registered)
                     @can('index', App\CatalogsGoods::class)
-                        <div class="tabs-panel" id="tab-catalog-goods">
+                        <div class="tabs-panel" id="tab-catalog_goods">
                             @include('leads.catalogs.catalogs_goods')
                         </div>
                     @endcan
@@ -319,7 +319,7 @@
                 {{-- КАТАЛОГ УСЛУГ --}}
                 @if(! $lead->estimate->is_registered)
                     @can('index', App\CatalogsService::class)
-                        <div class="tabs-panel" id="tab-catalog-services">
+                        <div class="tabs-panel" id="tab-catalog_services">
                             @include('leads.catalogs.catalogs_services')
                         </div>
                     @endcan

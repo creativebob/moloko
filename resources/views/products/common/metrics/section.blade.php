@@ -39,7 +39,7 @@
 
 			{!! Form::hidden('category_id', $category->id) !!}
 			{!! Form::hidden('category_entity', $category->getTable()) !!}
-			{!! Form::hidden('entity_id', $page_info->entity->id) !!}
+			{!! Form::hidden('entity_id', $pageInfo->entity->id) !!}
 
 		</div>
 		{{-- {{ Form::close() }} --}}

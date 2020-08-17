@@ -6,6 +6,7 @@
             autocomplete="off"
             pattern="[0-9]{2}.[0-9]{2}.[0-9]{4}"
             :required="required"
+            :disabled="disabled"
             v-model="date"
             :name="name"
         >
@@ -37,6 +38,10 @@
             },
             required: {
                 type: Boolean,
+                default: false
+            },
+            disabled: {
+                type: [Boolean, Number],
                 default: false
             },
             // today: {

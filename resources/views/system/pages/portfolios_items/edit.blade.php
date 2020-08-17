@@ -6,7 +6,7 @@
 
 @section('title', 'Редактирование пунктапортфолио')
 
-@section('breadcrumbs', Breadcrumbs::render('portfolio-section-edit', $portfolio, $page_info, $portfolios_item))
+@section('breadcrumbs', Breadcrumbs::render('portfolio-section-edit', $portfolio, $pageInfo, $portfolios_item))
 
 @section('title-content')
 <div class="top-bar head-content">

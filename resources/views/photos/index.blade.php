@@ -5,9 +5,9 @@
 @include('includes.scripts.fancybox-inhead')
 @endsection
 
-@section('title', $page_info->title . ' ' . $album->name)
+@section('title', $pageInfo->title . ' ' . $album->name)
 
-@section('breadcrumbs', Breadcrumbs::render('section', $parent_page_info, $album, $page_info))
+@section('breadcrumbs', Breadcrumbs::render('section', $parent_pageInfo, $album, $pageInfo))
 
 @section('content-count')
 {{-- Количество элементов --}}
@@ -17,8 +17,8 @@
 @section('title-content')
 {{-- Таблица --}}
 @include('includes.title-content', [
-    'page_info' => $page_info,
-    'page_alias' => $parent_page_info->alias.'/'.$album->alias.'/'.$page_info->alias,
+    'pageInfo' => $pageInfo,
+    'page_alias' => $parent_pageInfo->alias.'/'.$album->alias.'/'.$pageInfo->alias,
     'class' => App\Photo::class,
     'type' => 'section-table',
     'name' => $album->name

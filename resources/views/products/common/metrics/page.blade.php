@@ -2,6 +2,6 @@
     :category='@json($category)'
     :properties='@json($properties)'
     entity="{{ $category->getTable() }}"
-    :entity-id="{{ $page_info->entity->id }}"
+    :entity-id="{{ $pageInfo->entity->id }}"
     :category-id="{{ $category->id }}"
 ></metrics-categories-component>

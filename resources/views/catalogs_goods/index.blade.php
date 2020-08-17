@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('inhead')
-	<meta name="description" content="{{ $page_info->page_description }}" />
+	<meta name="description" content="{{ $pageInfo->page_description }}" />
 
 
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 @section('content-count')
 
@@ -21,7 +21,7 @@
 @section('title-content')
 
 	{{-- Таблица --}}
-	@include('includes.title-content', ['page_info' => $page_info, 'class' => App\CatalogsGoods::class, 'type' => 'table'])
+	@include('includes.title-content', ['pageInfo' => $pageInfo, 'class' => App\CatalogsGoods::class, 'type' => 'table'])
 @endsection
 
 @section('content')
@@ -89,7 +89,7 @@
 
 	                    @can('index', App\PricesGoods::class)
 	                        <td class="td-services">
-								<a href="{{ route($page_info->alias.'.edit', $cur_catalogs_goods->id) }}" class="button tiny">Настройка</a>
+								<a href="{{ route($pageInfo->alias.'.edit', $cur_catalogs_goods->id) }}" class="button tiny">Настройка</a>
 	                        </td>
 	                    @endcan
 	                    <td class="td-author">{{ $cur_catalogs_goods->author->name}}</td>

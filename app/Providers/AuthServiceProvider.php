@@ -10,6 +10,7 @@ use App\Container;
 use App\ContainersCategory;
 use App\ContainersStock;
 
+use App\Discount;
 use App\Dispatch;
 use App\Domain;
 use App\GoodsStock;
@@ -27,6 +28,7 @@ use App\Policies\ContainerPolicy;
 use App\Policies\ContainersCategoryPolicy;
 use App\Policies\ContainersStockPolicy;
 
+use App\Policies\DiscountPolicy;
 use App\Policies\DispatchPolicy;
 use App\Policies\DomainPolicy;
 use App\Policies\GoodsStockPolicy;
@@ -413,6 +415,9 @@ class AuthServiceProvider extends ServiceProvider
 
         // Расходные материалы
         ExpendablesCategory::class => ExpendablesCategoryPolicy::class,
+
+        // Скидки
+        Discount::class => DiscountPolicy::class,
 
         // Товарные накладные
         Consignment::class => ConsignmentPolicy::class,

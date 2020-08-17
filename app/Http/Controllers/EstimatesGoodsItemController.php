@@ -79,6 +79,13 @@ class EstimatesGoodsItemController extends Controller
         ])
         ->findOrFail($request->price_id);
 
+        $discountCurrency = $priceGoods->total - $priceGoods->totalWithDiscounts;
+        $discountPercent = 0;
+        if ($discountCurrency > 0) {
+            $discountPercent = $discountCurrency * 100 / $priceGoods->total;
+        }
+
+
         if ($priceGoods->product->serial == 1) {
 
             $data = [
@@ -88,12 +95,14 @@ class EstimatesGoodsItemController extends Controller
                 'currency_id' => $priceGoods->currency_id,
                 'stock_id' => $stock_id,
                 'price' => $priceGoods->price,
+                'discount_percent' => $discountPercent,
+                'discount_currency' => $discountCurrency,
                 'count' => 1,
                 'sale_mode' => 1,
                 'cost' => $priceGoods->product->article->cost_default,
                 'amount' => $priceGoods->price,
-                'margin_currency' => $priceGoods->price - $priceGoods->product->article->cost_default,
-                'total' => $priceGoods->price,
+                'margin_currency' => ($priceGoods->price - $priceGoods->discount_currency) - $priceGoods->product->article->cost_default,
+                'total' => $priceGoods->price - $priceGoods->discount_currency,
             ];
 
             // $onePercent = $data['amount'] / 100;
@@ -110,13 +119,14 @@ class EstimatesGoodsItemController extends Controller
                 'sale_mode' => 1,
             ], [
                 'price' => $priceGoods->price,
+                'discount_percent' => $discountPercent,
+                'discount_currency' => $discountCurrency,
                 'count' => 1,
                 'cost' => $priceGoods->product->article->cost_default,
                 'points' => $priceGoods->points,
                 'currency_id' => $priceGoods->currency_id,
                 'amount' => $priceGoods->price,
-                'margin_currency' => $priceGoods->price - $priceGoods->product->article->cost_default,
-                'total' => $priceGoods->price,
+                'margin_currency' => ($priceGoods->price - $priceGoods->discount_currency) - $priceGoods->product->article->cost_default,
             ]);
 
 //            $onePercent = $estimatesGoodsItem->amount / 100;
@@ -131,7 +141,11 @@ class EstimatesGoodsItemController extends Controller
                     $data['count'] = $estimatesGoodsItem->count + 1;
                     $data['cost'] = $data['count'] * $priceGoods->product->article->cost_default;
                     $data['amount'] = $data['count'] * $estimatesGoodsItem->price;
-                    $data['total'] = $data['count'] * $estimatesGoodsItem->price;
+
+                    $data['discount_currency'] = $discountCurrency;
+                    $data['discount_percent'] = $discountPercent;
+
+                    $data['total'] = $data['count'] * ($estimatesGoodsItem->price - $estimatesGoodsItem->discount_currency);
 
                     $data['margin_currency'] = $data['total'] - $data['cost'];
                     $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
@@ -199,7 +213,7 @@ class EstimatesGoodsItemController extends Controller
     public function update(Request $request, $id)
     {
         $estimatesGoodsItem = EstimatesGoodsItem::with([
-            'product.article'
+            'product.article',
         ])
         ->findOrFail($id);
 //        dd($estimatesGoodsItem);

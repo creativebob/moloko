@@ -58,7 +58,7 @@ class PageController extends Controller
 
         return view('pages.index', [
             'pages' => $pages,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'site_id' => $site_id,
             'site' => $site
         ]);
@@ -74,7 +74,7 @@ class PageController extends Controller
 
         return view('pages.create', [
             'page' => Page::make(),
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'site_id' => $site_id,
             'site' => $site
         ]);
@@ -129,7 +129,7 @@ class PageController extends Controller
 
         return view('pages.edit', [
             'page' => $page,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'site_id' => $site_id,
             'site' => $site
         ]);

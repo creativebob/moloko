@@ -371,9 +371,12 @@ class Lead extends Model
 
         if (request('goods')) {
             $query->whereHas('estimate', function ($q) {
-                $q->whereHas('goods_items', function ($q) {
-                    $q->whereIn('goods_id', request('goods'));
-                });
+                foreach (request('goods') as $id) {
+                    $q->whereHas('goods_items', function ($q) use ($id) {
+                        $q->where('goods_id', $id);
+//                    $q->whereIn('goods_id', request('goods'));
+                    });
+                }
             });
         }
 

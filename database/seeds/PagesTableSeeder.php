@@ -1035,7 +1035,17 @@ class PagesTableSeeder extends Seeder
                 'author_id' => 1,
                 'display' => true,
             ],
-
+            [
+                'name' => 'Скидки',
+                'site_id' => 1,
+                'title' => 'Скидки',
+                'description' => 'Скидки',
+                'alias' => 'discounts',
+                'company_id' => null,
+                'system' => true,
+                'author_id' => 1,
+                'display' => true,
+            ],
         ]);
-}
+    }
 }

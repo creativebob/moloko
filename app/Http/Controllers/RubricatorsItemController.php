@@ -78,7 +78,7 @@ class RubricatorsItemController extends Controller
         // Отдаем на шаблон
         return view('rubricators_items.index', [
             'rubricators_items' => $rubricators_items,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'rubricator_id' => $rubricator_id,
         ]);
     }
@@ -95,7 +95,7 @@ class RubricatorsItemController extends Controller
             'parent_id' => $request->parent_id,
             'category_id' => $request->category_id,
             'rubricator_id' => $rubricator_id,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

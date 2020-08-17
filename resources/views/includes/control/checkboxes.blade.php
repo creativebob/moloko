@@ -2,8 +2,8 @@
 {!! Form::hidden('display', 0) !!}
 @can ('display', $item)
 <div class="small-12 cell checkbox">
-	{!! Form::checkbox('display', 1, $item->display, ['id' => 'display-checkbox']) !!}
-	<label for="display-checkbox"><span>Отображать на сайте</span></label>
+	{!! Form::checkbox('display', 1, $item->display, ['id' => 'checkbox-display']) !!}
+	<label for="checkbox-display"><span>Отображать на сайте</span></label>
 </div>
 @endcan
 
@@ -12,8 +12,8 @@
 @can ('moderator', $item)
 @moderation ($item)
 <div class="small-12 cell checkbox">
-	{!! Form::checkbox('moderation', 1, $item->moderation, ['id'=>'moderation-checkbox']) !!}
-	<label for="moderation-checkbox"><span>Временная запись.</span></label>
+	{!! Form::checkbox('moderation', 1, $item->moderation, ['id' => 'checkbox-moderation']) !!}
+	<label for="checkbox-moderation"><span>Временная запись.</span></label>
 </div>
 @endmoderation
 @endcan
@@ -22,7 +22,7 @@
 {!! Form::hidden('system', 0) !!}
 @can ('system', $item)
 <div class="small-12 cell checkbox">
-	{!! Form::checkbox('system', 1, $item->system, ['id'=>'system-item-checkbox']) !!}
-	<label for="system-item-checkbox"><span>Сделать запись системной.</span></label>
+	{!! Form::checkbox('system', 1, $item->system, ['id' => 'checkbox-system']) !!}
+	<label for="checkbox-system"><span>Сделать запись системной</span></label>
 </div>
 @endcan

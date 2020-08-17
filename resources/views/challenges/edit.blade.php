@@ -2,7 +2,7 @@
 
 @section('title', 'Редактировать группу пользователей')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $role->name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $role->name))
 
 @section('title-content')
 	<div class="top-bar head-content">
@@ -20,7 +20,7 @@
   {{ method_field('PATCH') }}
 
     @include('roles.form', ['submitButtonText' => 'Редактировать группу', 'param'=>''])
-    
+
   {{ Form::close() }}
 
 @endsection

@@ -69,7 +69,7 @@ class DispatchController extends Controller
 
         return view('system.pages.dispatches.index',[
             'dispatches' => $dispatches,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'filter' => $filter,
             'nested' => 'pages_count'
         ]);
@@ -87,7 +87,7 @@ class DispatchController extends Controller
 
         return view('system.pages.dispatches.create', [
             'dispatch' => Dispatch::make(),
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -143,7 +143,7 @@ class DispatchController extends Controller
 
         return view('system.pages.dispatches.edit', [
             'dispatch' => $dispatch,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

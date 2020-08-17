@@ -77,9 +77,9 @@ class ExtraRequisiteController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('extra_requisites.index', compact('extra_requisites', 'page_info', 'filter'));
+        return view('extra_requisites.index', compact('extra_requisites', 'pageInfo', 'filter'));
     }
 
     public function create(Request $request)
@@ -91,9 +91,9 @@ class ExtraRequisiteController extends Controller
         $extra_requisite = new ExtraRequisite;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('extra_requisites.create', compact('extra_requisite', 'page_info'));
+        return view('extra_requisites.create', compact('extra_requisite', 'pageInfo'));
     }
 
     public function store(ExtraRequisiteRequest $request)
@@ -172,9 +172,9 @@ class ExtraRequisiteController extends Controller
         // dd($fields_list);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('stages.edit', compact('stage', 'page_info', 'entities_list', 'fields_list'));
+        return view('stages.edit', compact('stage', 'pageInfo', 'entities_list', 'fields_list'));
     }
 
     public function update(StageRequest $request, $id)

@@ -7,7 +7,7 @@
 
 @section('title', 'Редактировать дилера')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $dealer->client->clientable->first_name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $dealer->client->clientable->first_name))
 
 @section('title-content')
 <div class="top-bar head-content">

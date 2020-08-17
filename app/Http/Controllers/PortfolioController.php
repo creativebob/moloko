@@ -77,7 +77,7 @@ class PortfolioController extends Controller
 
         return view('system.pages.portfolios.index',[
             'portfolios' => $portfolios,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'filter' => $filter,
             'nested' => 'cases_count'
         ]);
@@ -96,7 +96,7 @@ class PortfolioController extends Controller
 
         return view('system.pages.portfolios.create', [
             'portfolio' => Portfolio::make(),
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -162,7 +162,7 @@ class PortfolioController extends Controller
 
         return view('system.pages.portfolios.edit', [
             'portfolio' => $portfolio,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

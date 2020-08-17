@@ -6,7 +6,7 @@
 
 @section('title', 'Редактировать вендора')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $vendor->supplier->company->name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $vendor->supplier->company->name))
 
 @section('title-content')
 	<div class="top-bar head-content">

@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('inhead')
-<meta name="description" content="{{ $page_info->description }}" />
+<meta name="description" content="{{ $pageInfo->description }}" />
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('menus-index', $site, $navigation, $page_info))
+@section('breadcrumbs', Breadcrumbs::render('menus-index', $site, $navigation, $pageInfo))
 
 @section('content-count')
 {{-- Количество элементов --}}
@@ -16,7 +16,7 @@
 @section('title-content')
 {{-- Меню --}}
 @include('includes.title-content', [
-    'page_info' => $page_info,
+    'pageInfo' => $pageInfo,
     'class' => App\Menu::class,
     'type' => 'menu'
 ]

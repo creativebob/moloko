@@ -2,7 +2,7 @@
 
 @section('title', 'Редактировать группу артикулов')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $articles_group->name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $articles_group->name))
 
 @section('title-content')
 <div class="top-bar head-content">

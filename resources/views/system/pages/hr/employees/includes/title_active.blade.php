@@ -4,7 +4,7 @@
         <div class="top-bar head-content">
             <div class="top-bar-left">
 
-                <h2 class="header-content">{{ $page_info->title }}
+                <h2 class="header-content">{{ $pageInfo->title }}
                     <span class="content-count" title="Общее количество">
                         @yield('content-count')
                     </span>
@@ -42,7 +42,7 @@
                     <div class="small-12 cell">
                         {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
-                        @includeIf($page_info->entity->view_path.'.filters')
+                        @includeIf($pageInfo->entity->view_path.'.filters')
 
                         <div class="small-12 cell text-center">
                             {{ Form::submit('Фильтрация', ['class'=>'button']) }}

@@ -31,6 +31,7 @@ Route::get('/recache', 'System\CacheController@reCache');
 // Обновления системы
 Route::get('/update', 'System\UpdateController@update');
 Route::get('/updates/vkusnyashka', 'System\UpdateController@update_vkusnyashka');
+Route::get('/updates/add_discounts_entity', 'System\UpdateController@addDiscountsEntity');
 
 // Парсеры
 Route::get('/update_parser', 'ParserController@parser');
@@ -38,6 +39,7 @@ Route::get('/roll_house_parser', 'ParserController@roll_house_parser');
 Route::get('/parser_rh_goods_metrics', 'ParserController@parserRhGoodsMetrics');
 Route::get('/parsers/130420', 'ParserController@parser_130420');
 Route::get('/parsers/archive_goods', 'ParserController@parserArchiveGoods');
+Route::get('/parsers/prices_goods_total', 'ParserController@parserPricesGoodsTotal');
 
 Route::get('/parsers/test', 'ParserController@test');
 
@@ -459,10 +461,10 @@ Route::post('/attachments/replicate/{id}', 'AttachmentController@replicate');
 // Архивация
 Route::post('/attachments/archive/{id}', 'AttachmentController@archive');
 // Фото
-Route::any('/attachment/add_photo', 'СontainerController@add_photo');
+Route::any('/attachment/add_photo', 'ContainerController@add_photo');
 Route::post('/attachment/photos', 'AttachmentController@photos');
 
-Route::any('/attachments_create_mode', 'СontainerController@ajax_change_create_mode');
+Route::any('/attachments_create_mode', 'ContainerController@ajax_change_create_mode');
 
 
 // ---------------------------------- Склады вложений -------------------------------------------
@@ -562,7 +564,8 @@ Route::post('/goods/search/{text_fragment}', 'GoodsController@search');
 // Дублирование
 Route::post('/goods/replicate/{id}', 'GoodsController@replicate');
 // Архивация
-Route::post('/goods/archive/{id}', 'GoodsController@archive');
+Route::any('/goods/archive/{id}', 'GoodsController@archive')
+    ->name('goods.archive');
 
 
 // Отображение на сайте
@@ -696,6 +699,10 @@ Route::get('/leads/{id}/print', 'LeadController@print');
 
 // Основные методы
 // Route::get('/lead/calls', 'LeadController@index')->middleware('auth');
+Route::post('/leads', 'LeadController@resetFilter')
+    ->name('leads.resetFilter')
+    ->middleware('auth');
+
 Route::resource('/leads', 'LeadController')->middleware('auth');
 
 Route::get('/leads_export', 'LeadController@export')->middleware('auth');
@@ -753,7 +760,7 @@ Route::any('/estimates_goods_items/{id}/unreserving', 'EstimatesGoodsItemControl
 Route::resource('/estimates_goods_items', 'EstimatesGoodsItemController');
 Route::resource('/estimates_services_items', 'EstimatesServicesItemController');
 
-Route::any('/estimate_items_edit/{id}', 'EstimatesItemController@ajax_edit')->middleware('auth');
+//Route::any('/estimate_items_edit/{id}', 'EstimatesItemController@ajax_edit')->middleware('auth');
 
 
 // Route::delete('/workflows/{id}', 'EstimateController@ajax_destroy_composition')->middleware('auth');
@@ -1243,22 +1250,22 @@ Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
 
     Route::delete('/prices_goods/{id}', 'PricesGoodsController@archive');
 
-    Route::post('get_catalogs_goods_items', 'CatalogsGoodsItemController@ajax_get');
+    Route::post('/get_catalogs_goods_items', 'CatalogsGoodsItemController@ajax_get');
 
-    Route::any('get_prices_goods/{id}', 'PricesGoodsController@ajax_get');
-    Route::any('edit_prices_goods', 'PricesGoodsController@ajax_edit');
-    Route::any('update_prices_goods', 'PricesGoodsController@ajax_update');
-    Route::any('prices_goods/{id}/archive', 'PricesGoodsController@ajax_archive');
+    Route::any('/get_prices_goods/{id}', 'PricesGoodsController@ajax_get');
+    Route::any('/edit_prices_goods', 'PricesGoodsController@ajax_edit');
+    Route::any('/update_prices_goods', 'PricesGoodsController@ajax_update');
+    Route::any('/prices_goods/{id}/archive', 'PricesGoodsController@ajax_archive');
 
-    Route::any('prices_goods/ajax_store', 'PricesGoodsController@ajax_store');
+    Route::any('/prices_goods/ajax_store', 'PricesGoodsController@ajax_store');
 
-    Route::any('prices_goods_sync', 'PricesGoodsController@sync')->name('prices_goods.sync');
+    Route::any('/prices_goods_sync', 'PricesGoodsController@sync')->name('prices_goods.sync');
 
-	Route::any('prices_goods_status', 'PricesGoodsController@ajax_status');
-    Route::any('prices_goods_hit', 'PricesGoodsController@ajax_hit');
-    Route::any('prices_goods_new', 'PricesGoodsController@ajax_new');
+	Route::any('/prices_goods_status', 'PricesGoodsController@ajax_status');
+    Route::any('/prices_goods_hit', 'PricesGoodsController@ajax_hit');
+    Route::any('/prices_goods_new', 'PricesGoodsController@ajax_new');
 
-    Route::resource('prices_goods', 'PricesGoodsController');
+    Route::resource('/prices_goods', 'PricesGoodsController');
 });
 
 
@@ -1339,6 +1346,12 @@ Route::prefix('/portfolios/{portfolio_id}')->group(function () {
     Route::resource('/business_cases', 'BusinessCaseController');
 });
 
+
+// --------------------------- Скидки -------------------------------------
+// Архивация
+Route::post('/discounts/archive/{id}', 'DiscountController@archive');
+// Основные методы
+Route::resource('/discounts', 'DiscountController');
 
 // ---------------------- Показатели клиентской базы -----------------------
 Route::post('/clients_indicators/compute/month', 'System\Widgets\ClientsIndicatorController@computeIndicatorsForMonth');

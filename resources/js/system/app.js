@@ -27,6 +27,8 @@ Vue.use(Vuex);
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
+// Инпуты
+Vue.component('input-time-component', require('./components/inputs/TimeComponent'));
 
 Vue.component('consignment-component', require('./components/consignments/ConsignmentComponent.vue'));
 Vue.component('production-component', require('./components/productions/ProductionComponent.vue'));
@@ -59,6 +61,9 @@ Vue.component('catalog-services-component', require('./components/catalogs/servi
 Vue.component('lead-badget-component', require('./components/LeadBadgetComponent.vue'));
 Vue.component('select-stocks-component', require('./components/common/selects/SelectStocksComponent.vue'));
 Vue.component('goods-lister-component', require('./components/leads/GoodsListerComponent'));
+
+// Скидки
+Vue.component('discounts-component', require('./components/discounts/DiscountsComponent'));
 
 Vue.component('photo-upload-component', require('./components/PhotoUploadComponent.vue'));
 Vue.component('metrics-categories-component', require('./components/metrics/categories/MetricsCategoriesComponent'));
@@ -94,6 +99,7 @@ Vue.component('clients-indicators-component', require('./components/widgets/Clie
 
 // Прайсы
 Vue.component('prices-goods-component', require('./components/products/articles/prices/PricesGoodsComponent'));
+Vue.component('prices-goods-discount-component', require('./components/prices_goods/DiscountComponent'));
 
 Vue.component('filial-cities-component', require('./components/filials/CitiesComponent'));
 

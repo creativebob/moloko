@@ -56,9 +56,9 @@ class RightController extends Controller
         ->paginate(30);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('rights.index', compact('rights', 'page_info'));
+        return view('rights.index', compact('rights', 'pageInfo'));
     }
 
 
@@ -70,9 +70,9 @@ class RightController extends Controller
         $entities_list = Entity::get()->pluck('name', 'id');
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('rights.create', compact('right', 'entities_list', 'page_info'));
+        return view('rights.create', compact('right', 'entities_list', 'pageInfo'));
     }
 
 

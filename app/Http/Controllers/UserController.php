@@ -101,11 +101,11 @@ class UserController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         $site = Site::findOrFail($site_id);
 
-        return view('users.index', compact('users', 'page_info', 'filter', 'site_id', 'site'));
+        return view('users.index', compact('users', 'pageInfo', 'filter', 'site_id', 'site'));
     }
 
     public function create(Request $request, $site_id)
@@ -122,13 +122,13 @@ class UserController extends Controller
         $user = new User;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         $auth_user = Auth::user();
 
         $site = Site::findOrFail($site_id);
 
-        return view('users.create', compact('user', 'auth_user', 'page_info', 'site_id', 'site'));
+        return view('users.create', compact('user', 'auth_user', 'pageInfo', 'site_id', 'site'));
     }
 
     public function store(UserStoreRequest $request, $site_id)
@@ -177,13 +177,13 @@ class UserController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $user);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         $auth_user = \Auth::user();
 
         $site = Site::findOrFail($site_id);
 
-        return view('users.edit', compact('user', 'page_info', 'auth_user', 'site_id', 'site'));
+        return view('users.edit', compact('user', 'pageInfo', 'auth_user', 'site_id', 'site'));
     }
 
     public function update(UserUpdateRequest $request, $site_id, $id)
@@ -347,10 +347,10 @@ class UserController extends Controller
         $countries_list = Country::get()->pluck('name', 'id');
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 //         dd($user);
 
-        return view('users.profile', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'page_info', 'countries_list'));
+        return view('users.profile', compact('user', 'role', 'role_users', 'roles_list', 'departments_list', 'filials_list', 'pageInfo', 'countries_list'));
     }
 
 

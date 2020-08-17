@@ -89,7 +89,7 @@ class CatalogsServicesItemController extends Controller
         // Отдаем на шаблон
         return view('catalogs_services_items.index', [
             'catalogs_services_items' => $catalogs_services_items,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'id' => $request->id,
             'catalog_id' => $catalog_id,
             'catalog_service' => $catalog_service
@@ -185,7 +185,7 @@ class CatalogsServicesItemController extends Controller
         return view('catalogs_services_items.edit', [
             'catalogs_services_item' => $catalogs_services_item,
             'catalog_id' => $catalog_id,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'catalog_service' => $catalog_service
         ]);
     }

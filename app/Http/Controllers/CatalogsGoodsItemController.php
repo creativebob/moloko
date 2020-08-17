@@ -97,7 +97,7 @@ class CatalogsGoodsItemController extends Controller
         // Отдаем на шаблон
         return view($view_name, [
             'catalogs_goods_items' => $catalogs_goods_items,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'id' => $request->id,
             'catalog_id' => $catalog_id,
             'catalog_goods' => $catalog_goods,
@@ -187,13 +187,14 @@ class CatalogsGoodsItemController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods_item);
+        $catalogs_goods_item->load('discounts');
 
         $catalog_goods = CatalogsGoods::findOrFail($catalog_id);
 
         return view('catalogs_goods_items.edit', [
             'catalogs_goods_item' => $catalogs_goods_item,
             'catalog_id' => $catalog_id,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'catalog_goods' => $catalog_goods
         ]);
     }
@@ -226,6 +227,8 @@ class CatalogsGoodsItemController extends Controller
         if ($result) {
 
             $catalogs_goods_item->filters()->sync($request->filters);
+
+            $catalogs_goods_item->discounts()->sync($request->discounts);
 
             // Переадресовываем на index
             return redirect()->route('catalogs_goods_items.index', ['catalog_id' => $catalog_id, 'id' => $catalogs_goods_item->id]);

@@ -70,7 +70,7 @@ class SourceController extends Controller
 
         return view('sources.index',[
             'sources' => $sources,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'filter' => $filter
         ]);
 

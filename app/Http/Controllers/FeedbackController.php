@@ -52,9 +52,9 @@ class FeedbackController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('feedback.index', compact('feedback', 'page_info', 'filter', 'user'));
+        return view('feedback.index', compact('feedback', 'pageInfo', 'filter', 'user'));
     }
 
     public function create(Request $request)
@@ -66,9 +66,9 @@ class FeedbackController extends Controller
         $feedback = new Feedback;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('feedback.create', compact('feedback', 'page_info'));
+        return view('feedback.create', compact('feedback', 'pageInfo'));
     }
 
     public function store(FeedbackRequest $request)
@@ -145,9 +145,9 @@ class FeedbackController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $feedback);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('feedback.edit', compact('feedback', 'page_info'));
+        return view('feedback.edit', compact('feedback', 'pageInfo'));
     }
 
 

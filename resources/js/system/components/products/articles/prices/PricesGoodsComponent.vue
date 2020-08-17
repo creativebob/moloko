@@ -20,6 +20,8 @@
                     <th>Пункт:</th>
                     <th>Филиал:</th>
                     <th>Цена:</th>
+                    <th>Скидка:</th>
+                    <th>Итого:</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -103,8 +105,8 @@
                 this.prices.push(item);
             },
             updateItem(item) {
-                let found = this.prices.find(obj => obj.id == item.id);
-                Vue.set(found, 'price', item.price);
+                let index = this.prices.findIndex(obj => obj.id === item.id);
+                Vue.set(this.prices, index, item);
             },
             openModal(item) {
                 this.removeItem = item;

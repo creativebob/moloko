@@ -109,8 +109,8 @@ class CompanyController extends Controller
         // dd($companies->get(3)->director->user->name_reverse);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
-        return view('companies.index', compact('companies', 'page_info', 'filter', 'user'));
+        $pageInfo = pageInfo($this->entity_name);
+        return view('companies.index', compact('companies', 'pageInfo', 'filter', 'user'));
     }
 
     public function create(Request $request)
@@ -125,11 +125,11 @@ class CompanyController extends Controller
         $auth_user = Auth::user();
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
 
 
-        return view('companies.create', compact('company', 'user', 'auth_user', 'page_info'));
+        return view('companies.create', compact('company', 'user', 'auth_user', 'pageInfo'));
     }
 
     public function store(CompanyRequest $request)
@@ -247,9 +247,9 @@ class CompanyController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $company);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('companies.edit', compact('company', 'page_info', 'user'));
+        return view('companies.edit', compact('company', 'pageInfo', 'user'));
     }
 
     public function update(CompanyRequest $request, $id)

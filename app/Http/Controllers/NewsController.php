@@ -66,7 +66,7 @@ class NewsController extends Controller
 
         return view('news.index',[
             'news' => $news,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'filter' => $filter,
         ]);
     }
@@ -103,7 +103,7 @@ class NewsController extends Controller
 
         return view('news.create', [
             'cur_news' => new $this->class,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -151,7 +151,7 @@ class NewsController extends Controller
 
         return view('news.edit', [
             'cur_news' => $cur_news,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

@@ -87,9 +87,9 @@ class PostController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('posts.index', compact('posts', 'page_info', 'filter'));
+        return view('posts.index', compact('posts', 'pageInfo', 'filter'));
     }
 
     public function create(Request $request)
@@ -117,9 +117,9 @@ class PostController extends Controller
         $albums_categories_list = get_select_tree($albums_categories, null, null, null);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('posts.create', compact('post', 'page_info', 'albums_categories_list'));
+        return view('posts.create', compact('post', 'pageInfo', 'albums_categories_list'));
     }
 
     public function store(PostRequest $request)
@@ -286,9 +286,9 @@ class PostController extends Controller
         // dd($albums_categories_list);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('posts.edit', compact('post', 'page_info', 'albums_categories_list'));
+        return view('posts.edit', compact('post', 'pageInfo', 'albums_categories_list'));
     }
 
     public function update(PostRequest $request, $id)

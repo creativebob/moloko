@@ -28,9 +28,9 @@ class DirectoryController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('directories.index', compact('page_info', 'directories'));
+        return view('directories.index', compact('pageInfo', 'directories'));
 
     }
 

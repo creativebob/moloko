@@ -26,6 +26,7 @@ class GoodsCategoriesWithGoodsComposer
                     ->whereHas('article', function ($q) {
                         $q->where([
                             'draft' => false,
+                            'kit' => false
                         ]);
                     })
                     ->with([
@@ -35,6 +36,7 @@ class GoodsCategoriesWithGoodsComposer
                             ])
                                 ->where([
                                     'draft' => false,
+                                    'kit' => false
                                 ]);
                         },
                         'category',

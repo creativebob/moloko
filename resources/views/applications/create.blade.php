@@ -6,7 +6,7 @@
 
 @section('title', 'Новая заявка поставщику')
 
-@section('breadcrumbs', Breadcrumbs::render('create', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('create', $pageInfo))
 
 @section('title-content')
 <div class="top-bar head-content">
@@ -23,7 +23,7 @@
   {{ Form::open(['url' => '/admin/applications', 'data-abide', 'novalidate']) }}
 
     @include('applications.form', ['submitButtonText' => 'Отправить', 'param' => ''])
-    
+
   {{ Form::close() }}
 
 @endsection

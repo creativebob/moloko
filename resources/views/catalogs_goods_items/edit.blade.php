@@ -8,7 +8,7 @@
 
 @section('title', 'Редактирование пункта каталога услуг')
 
-@section('breadcrumbs', Breadcrumbs::render('catalogs_goods-section-edit', $catalog_goods,  $page_info, $catalogs_goods_item))
+@section('breadcrumbs', Breadcrumbs::render('catalogs_goods-section-edit', $catalog_goods,  $pageInfo, $catalogs_goods_item))
 
 @section('title-content')
 <div class="top-bar head-content">
@@ -27,12 +27,22 @@
             <li class="tabs-title is-active">
                 <a href="#tab-options" aria-selected="true">Общая информация</a>
             </li>
+
+            @can('index', App\Site::class)
             <li class="tabs-title">
                 <a data-tabs-target="tab-site" href="#tab-site">Настройка для сайта</a>
             </li>
+            @endcan
+
             <li class="tabs-title">
                 <a data-tabs-target="tab-filters" href="#tab-filters">Фильтры</a>
             </li>
+
+            @can('index', App\Discount::class)
+                <li class="tabs-title">
+                    <a href="#tab-discounts" data-tabs-target="tab-discounts">Скидки</a>
+                </li>
+            @endcan
         </ul>
     </div>
 </div>
@@ -175,6 +185,12 @@
                     </div>
                 </div>
             </div>
+
+            @can('index', App\Discount::class)
+                <div class="tabs-panel" id="tab-discounts">
+                    @include('system.common.discounts.discounts', ['item' => $catalogs_goods_item])
+                </div>
+            @endcan
 
             {!! Form::close() !!}
         </div>

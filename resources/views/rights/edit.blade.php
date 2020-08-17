@@ -2,7 +2,7 @@
 
 @section('title', 'Редактировать пользователя')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $right->right_name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $right->right_name))
 
 @section('title-content')
 	<div class="top-bar head-content">
@@ -20,7 +20,7 @@
   {{ method_field('PATCH') }}
 
     @include('rights.form', ['submitButtonText' => 'Редактировать пользователя', 'param'=>''])
-    
+
   {{ Form::close() }}
 
 @endsection

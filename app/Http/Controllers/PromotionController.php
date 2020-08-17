@@ -73,7 +73,7 @@ class PromotionController extends Controller
 
         return view('system.pages.promotions.index',[
             'promotions' => $promotions,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'filter' => $filter,
             'nested' => 'pages_count'
         ]);
@@ -91,7 +91,7 @@ class PromotionController extends Controller
 
         return view('system.pages.promotions.create', [
             'promotion' => Promotion::make(),
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -192,7 +192,7 @@ class PromotionController extends Controller
 
         return view('system.pages.promotions.edit', [
             'promotion' => $promotion,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

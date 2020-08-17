@@ -50,15 +50,23 @@ class PricesGoods extends Model
         'catalogs_goods_id',
         'goods_id',
         'filial_id',
-        'price',
-        'archive',
 
-        'currency_id',
+        'price',
+        'discount_mode',
+        'discount_percent',
+        'discount_currency',
+        'total',
+
         'points',
+        'currency_id',
+
+        'archive',
 
         'status',
         'is_hit',
         'is_new',
+
+        'is_discount',
 
         'display',
         'system',
@@ -162,12 +170,28 @@ class PricesGoods extends Model
 
     public function likes()
     {
-        return $this->belongsToMany(User::class, 'like_prices_goods', 'prices_goods_id','user_id');
+        return $this->belongsToMany(User::class, 'like_prices_goods', 'prices_goods_id', 'user_id');
     }
 
     public function promotions()
     {
         return $this->belongsToMany(PricesGoods::class, 'promotion_price_goods', 'price_goods_id', 'promotion_id');
+    }
+
+    public function discounts()
+    {
+        return $this->belongsToMany(Discount::class, 'discount_price_goods', 'price_goods_id', 'discount_id');
+    }
+
+    public function discounts_actual()
+    {
+        return $this->belongsToMany(Discount::class, 'discount_price_goods', 'price_goods_id', 'discount_id')
+            ->where('archive', false)
+            ->where('begined_at', '<=', now())
+            ->where(function ($q) {
+                $q->where('ended_at', '>=', now())
+                    ->orWhereNull('ended_at');
+            });
     }
 
     // Фильтр
@@ -186,8 +210,8 @@ class PricesGoods extends Model
 
         if (request('weight')) {
             $weight = request('weight');
-            $query->whereHas('goods_public', function($q) use ($weight) {
-                $q->whereHas('article', function($q) use ($weight) {
+            $query->whereHas('goods_public', function ($q) use ($weight) {
+                $q->whereHas('article', function ($q) use ($weight) {
                     $q->where('weight', '>=', $weight['min'] / 1000)
                         ->where('weight', '<=', $weight['max'] / 1000);
                 });
@@ -203,10 +227,10 @@ class PricesGoods extends Model
             $raws_articles_groups = request('raws_articles_groups');
 //		    dd($raws_articles_groups);
 
-            $query->whereHas('goods_public', function($q) use ($raws_articles_groups) {
-                $q->whereHas('article', function($q) use ($raws_articles_groups) {
-                    foreach($raws_articles_groups as $item){
-                        $q->whereHas('attachments',function($q) use ($item) {
+            $query->whereHas('goods_public', function ($q) use ($raws_articles_groups) {
+                $q->whereHas('article', function ($q) use ($raws_articles_groups) {
+                    foreach ($raws_articles_groups as $item) {
+                        $q->whereHas('attachments', function ($q) use ($item) {
                             $q->whereHas('article', function ($q) use ($item) {
                                 $q->where('articles_group_id', $item);
                             });
@@ -224,4 +248,66 @@ class PricesGoods extends Model
 //    {
 //        return $filters->apply($builder);
 //    }
+
+    /**
+     * Вычисление итоговой стоимости товара с учетом подключенных скидок.
+     * Сложение скидок прайса, раздела каталога.
+     *
+     * @return int|mixed
+     */
+    public function getTotalWithDiscountsAttribute()
+    {
+        $total = 0;
+        $res = [];
+
+        // Вычисление всех скидок на прайсе товара
+        if ($this->is_discount == 1) {
+            $priceGoodsDiscounts = $this->discounts_actual;
+            $totalWithoutDiscounts = $this->total;
+            $resPrice = $this->getDynamicDiscounts($priceGoodsDiscounts, $totalWithoutDiscounts);
+            $total = $resPrice['total'];
+        }
+
+        // Вычисление всех скидок на разделе каталога, в котором находится прайс
+        if (! $resPrice['break']) {
+            $catalogsGoodsItem = $this->catalogs_item;
+            if ($catalogsGoodsItem->is_discount == 1) {
+                $catalogsGoodsItemDiscounts = $catalogsGoodsItem->discounts_actual;
+                $resCatalogItem = $this->getDynamicDiscounts($catalogsGoodsItemDiscounts, $total);
+                $total = $resCatalogItem['total'];
+            }
+        }
+
+        return $total;
+    }
+
+    public function getDynamicDiscounts($discounts, $totalWithoutDiscounts)
+    {
+        $break = false;
+        $sumPercent = 0;
+        $sumCurrency = 0;
+        foreach ($discounts as $discount) {
+            switch ($discount->discount_mode) {
+                case(1):
+                    $sumPercent += $discount->percent;
+                    break;
+                case(2):
+                    $sumCurrency += $discount->currency;
+                    break;
+            }
+            if ($discount->is_block == 1) {
+                $break = true;
+                break;
+            }
+        }
+
+        $sumDiscountInCurrency = $totalWithoutDiscounts / 100 * $sumPercent;
+        $total = $totalWithoutDiscounts - $sumDiscountInCurrency - $sumCurrency;
+
+        $res = [
+            'total' => $total,
+            'break' => $break
+        ];
+        return $res;
+    }
 }

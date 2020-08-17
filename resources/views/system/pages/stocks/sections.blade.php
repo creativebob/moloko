@@ -6,7 +6,7 @@
 
 @section('title', 'Содержимое альбома ' . $album->name)
 
-@section('breadcrumbs', Breadcrumbs::render('show', $page_info, $album->name))
+@section('breadcrumbs', Breadcrumbs::render('show', $pageInfo, $album->name))
 
 @section('title-content')
 {{-- Заголовок и фильтры --}}
@@ -32,15 +32,15 @@
         @if (isset($filter))
         <div class="grid-x">
             <div class="small-12 cell filters fieldset-filters" id="filters">
-                {{ Form::open(['url' => $page_info->alias, 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
+                {{ Form::open(['url' => $pageInfo->alias, 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
                 {{-- Подключаем класс Checkboxer --}}
                 @include('includes.scripts.class.checkboxer')
-                @include($page_info->alias.'.filters')
+                @include($pageInfo->alias.'.filters')
                 <div class="small-12 cell text-left">
                     {{ Form::submit('Фильтрация', ['class'=>'button']) }}
                 </div>
                 <div class="small-12 cell text-right">
-                    {{ Form::submit('Сбросить', ['url' => $page_info->alias, 'class'=>'button']) }}
+                    {{ Form::submit('Сбросить', ['url' => $pageInfo->alias, 'class'=>'button']) }}
                 </div>
                 {{ Form::close() }}
 

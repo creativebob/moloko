@@ -13,7 +13,7 @@ class PropertiesComposer
         $answer_properties = operator_right('properties', false, 'index');
         $answer_metrics = operator_right('metrics', false, 'index');
 
-        $entity_id = $view->page_info->entity->id;
+        $entity_id = $view->pageInfo->entity->id;
 
         $properties = Property::moderatorLimit($answer_properties)
         ->companiesLimit($answer_properties)

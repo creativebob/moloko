@@ -22,7 +22,6 @@
                             <digit-component
                                 name="cost"
                                 :value="item.cost"
-                                :decimal-place="2"
                                 :disabled="true"
                             ></digit-component>
                         </label>
@@ -32,7 +31,6 @@
                             <digit-component
                                 name="price"
                                 :value="item.price"
-                                :decimal-place="2"
                                 :disabled="true"
                             ></digit-component>
                         </label>
@@ -47,7 +45,6 @@
                                         <digit-component
                                             name="margin_percent"
                                             :value="markupPercent"
-                                            :decimal-place="2"
                                             :disabled="true"
                                         ></digit-component>
                                     </label>
@@ -57,7 +54,6 @@
                                         <digit-component
                                             name="margin_currency"
                                             :value="markupCurrency"
-                                            :decimal-place="2"
                                             :disabled="true"
                                         ></digit-component>
                                     </label>
@@ -75,22 +71,21 @@
                                         <digit-component
                                             name="discount_percent"
                                             :value="discountPercent"
-                                            :decimal-place="2"
                                             @change="changeDiscountPercent"
                                             :disabled="isRegistered"
+                                            :limit-max="100"
                                             ref="discountPercentComponent"
                                         ></digit-component>
                                     </label>
                                 </div>
                                 <div class="small-12 medium-6 cell">
                                     <label>Скидка, руб
-
                                         <digit-component
                                             name="discount_currency"
                                             :value="discountCurrency"
-                                            :decimal-place="2"
                                             @change="changeDiscountCurrency"
                                             :disabled="isRegistered"
+                                            :limit-max="item.price"
                                             ref="discountCurrencyComponent"
                                         ></digit-component>
                                     </label>
@@ -112,6 +107,7 @@
                                 name="count"
                                 :value="itemCount"
                                 @change="changeCount"
+                                :decimal-place="0"
                                 :disabled="isRegistered"
                             ></digit-component>
                         </label>
@@ -149,7 +145,7 @@
 <script>
     export default {
         components: {
-            'digit-component': require('../../inputs/DigitComponent')
+            'digit-component': require('../../inputs/DigitNestedComponent')
         },
         props: {
             item: Object,
@@ -207,6 +203,7 @@
                         discount_percent: this.discountPercent,
                     })
                     .then(response => {
+                        $('#modal-estimates_goods_item-' + this.item.id).foundation('close');
                         this.$store.commit('UPDATE_GOODS_ITEM', response.data);
                     })
                     .catch(error => {

@@ -62,6 +62,8 @@ use App\Scopes\Filters\BooklistFilter;
             'is_show_subcategory',
             'is_hide_submenu',
 
+            'is_discount',
+
 			'display',
 			'system',
 			'moderation'
@@ -160,6 +162,22 @@ use App\Scopes\Filters\BooklistFilter;
         public function directive_category()
         {
             return $this->belongsTo(UnitsCategory::class);
+        }
+
+        public function discounts()
+        {
+            return $this->belongsToMany(Discount::class, 'discount_catalogs_goods_item', 'catalogs_goods_item_id', 'discount_id');
+        }
+
+        public function discounts_actual()
+        {
+            return $this->belongsToMany(Discount::class, 'discount_catalogs_goods_item', 'catalogs_goods_item_id', 'discount_id')
+                ->where('archive', false)
+                ->where('begined_at', '<=', now())
+                ->where(function ($q) {
+                    $q->where('ended_at', '>=', now())
+                        ->orWhereNull('ended_at');
+                });
         }
 
 	    public function getNameWithParentAttribute()

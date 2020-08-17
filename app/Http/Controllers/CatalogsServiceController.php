@@ -60,7 +60,7 @@ class CatalogsServiceController extends Controller
 
         return view('catalogs_services.index',[
             'catalogs_services' => $catalogs_services,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -78,7 +78,7 @@ class CatalogsServiceController extends Controller
 
         return view('catalogs_services.create', [
             'catalogs_service' => CatalogsService::make(),
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -145,7 +145,7 @@ class CatalogsServiceController extends Controller
         // dd($catalogs_service);
         return view('catalogs_services.edit', [
             'catalogs_service' => $catalogs_service,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 

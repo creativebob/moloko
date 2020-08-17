@@ -89,9 +89,9 @@ class CityController extends Controller
         ]);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('cities.index', compact('regions', 'page_info', 'count', 'filter'));
+        return view('cities.index', compact('regions', 'pageInfo', 'count', 'filter'));
     }
 
     public function create()

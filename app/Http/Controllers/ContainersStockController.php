@@ -53,10 +53,10 @@ class ContainersStockController extends Controller
 //         dd($stocks);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
-//        dd($page_info);
+        $pageInfo = pageInfo($this->entity_alias);
+//        dd($pageInfo);
 
-        return view('system.common.stocks.index', compact('stocks', 'page_info', 'filter'));
+        return view('system.common.stocks.index', compact('stocks', 'pageInfo', 'filter'));
     }
 
     /**

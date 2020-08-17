@@ -68,12 +68,12 @@ class GoodsController extends Controller
             'article' => function ($q) {
                 $q->with([
                     'photo',
-                    'goods.article',
                     'manufacturer.company',
                     'unit',
                     'unit_weight',
                     'unit_volume',
                     'group.unit',
+                    'goods.article',
                     'raws.article',
                     'attachments.article',
                     'containers.article'
@@ -95,8 +95,15 @@ class GoodsController extends Controller
 //                ]);
 //            }
             ,
-            'prices.catalog', 'prices.catalogs_item',
-            'in_kits'
+            'prices' => function ($q) {
+                $q->with([
+                    'catalog',
+                    'catalogs_item',
+                    'promotions'
+                ]);
+            },
+            'related',
+            'in_kits.cur_goods',
             // 'catalogs.site'
         ])
         ->moderatorLimit($answer)
@@ -133,11 +140,11 @@ class GoodsController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         return view('products.articles.common.index.index', [
             'items' => $goods,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'class' => $this->class,
             'entity' => $this->entity_alias,
             'category_entity' => 'goods_categories',
@@ -248,11 +255,11 @@ class GoodsController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         return view('products.articles.common.index.index', [
             'items' => $goods,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'class' => $this->class,
             'entity' => $this->entity_alias,
             'category_entity' => 'goods_categories',
@@ -550,13 +557,13 @@ class GoodsController extends Controller
         $settings = $this->getPhotoSettings($this->entity_alias);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         return view('products.articles.common.edit.edit', [
             'title' => 'Редактировать товар',
             'item' => $cur_goods,
             'article' => $article,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'settings' => $settings,
 //            'dropzone' => json_encode($dropzone),
             'entity' => $this->entity_alias,

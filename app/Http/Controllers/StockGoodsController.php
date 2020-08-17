@@ -109,11 +109,11 @@ class StockGoodsController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         return view('stock_products.common.index.index', [
             'items' => $stock_goods,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'class' => $this->class,
             'entity' => $this->entity_alias,
             'filter' => $filter,
@@ -255,13 +255,13 @@ class StockGoodsController extends Controller
         $dropzone['entity'] = $article->getTable();
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         return view('products.articles.common.edit.edit', [
             'title' => 'Редактировать товар',
             'item' => $cur_goods,
             'article' => $article,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'dropzone' => json_encode($dropzone),
             'entity' => $this->entity_alias,
             'category_entity' => 'goods_categories',

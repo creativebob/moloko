@@ -106,9 +106,9 @@ class VendorController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('vendors.index', compact('vendors', 'page_info', 'filter', 'user'));
+        return view('vendors.index', compact('vendors', 'pageInfo', 'filter', 'user'));
     }
 
     /**
@@ -126,9 +126,9 @@ class VendorController extends Controller
         $vendor = Vendor::make();
         $company = Company::make();
 
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('vendors.create', compact('company', 'vendor', 'page_info'));
+        return view('vendors.create', compact('company', 'vendor', 'pageInfo'));
     }
 
     /**
@@ -224,9 +224,9 @@ class VendorController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('vendors.edit', compact('vendor', 'page_info'));
+        return view('vendors.edit', compact('vendor', 'pageInfo'));
     }
 
     /**

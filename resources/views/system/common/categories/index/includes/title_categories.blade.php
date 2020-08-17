@@ -3,7 +3,7 @@
     <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
         <div class="top-bar head-content">
             <div class="top-bar-left">
-                <h2 class="header-content">{{ $page_info->title }}
+                <h2 class="header-content">{{ $pageInfo->title }}
                     <span class="content-count" title="Общее количество">
                         @yield('content-count')
                     </span>
@@ -16,11 +16,11 @@
                 @endcan
 
                 @if(Auth::user()->god)
-                <a href="/admin/recalculate_categories/{{ $page_info->alias }}" data-tooltip class="top" tabindex="2" title="Пересчитать уровни категорий">Бабах!</a>
+                <a href="/admin/recalculate_categories/{{ $pageInfo->alias }}" data-tooltip class="top" tabindex="2" title="Пересчитать уровни категорий">Бабах!</a>
                     @endif
 
             </div>
-            <div class="top-bar-right">   
+            <div class="top-bar-right">
 
                 @if (isset($filter))
                 <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
@@ -56,7 +56,7 @@
                     <div class="small-12 cell">
                         {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
-                        @includeIf($page_info->entity->view_path.'.filters')
+                        @includeIf($pageInfo->entity->view_path.'.filters')
 
                         <div class="small-12 cell text-center">
                             {{ Form::submit('Фильтрация', ['class'=>'button']) }}

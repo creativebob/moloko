@@ -3,7 +3,7 @@
     <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
         <div class="top-bar head-content">
             <div class="top-bar-left">
-                <h2 class="header-content">{{ $page_info->title }} @if(strpos(request()->url(), 'archives')) в архиве @endif
+                <h2 class="header-content">{{ $pageInfo->title }} @if(strpos(request()->url(), 'archives')) в архиве @endif
                     <span class="content-count" title="Общее количество">
                         @yield('content-count')
                     </span>
@@ -14,7 +14,7 @@
                 @endcan
 
                 @php
-                    $model = $page_info->entity->model;
+                    $model = $pageInfo->entity->model;
                     if ($model == 'Goods') {
                         $class = 'App\\' . $model . 'Category';
                     } else {
@@ -24,7 +24,7 @@
 {{--                {{ dd($class) }}--}}
 
                 @can('index', $class)
-                <a href="/admin/{{ $page_info->alias}}_categories" class="icon-category sprite top" data-tooltip tabindex="2" title="Настройка категорий"></a>
+                <a href="/admin/{{ $pageInfo->alias}}_categories" class="icon-category sprite top" data-tooltip tabindex="2" title="Настройка категорий"></a>
                 @endcan
 
                 @can('index', App\Consignment::class)
@@ -32,7 +32,7 @@
                 @endcan
 
                 @php
-                    $model = $page_info->entity->model;
+                    $model = $pageInfo->entity->model;
                     if ($model == 'Goods') {
                         $class = 'App\\' . $model . 'Stock';
                     } else {
@@ -41,7 +41,7 @@
                 @endphp
 
                 @can('index', $class)
-                <a href="/admin/{{ $page_info->alias}}_stocks" class="icon-stock sprite top" data-tooltip tabindex="2" title="Склад"></a>
+                <a href="/admin/{{ $pageInfo->alias}}_stocks" class="icon-stock sprite top" data-tooltip tabindex="2" title="Склад"></a>
                 @endcan
 
             </div>
@@ -52,7 +52,7 @@
                 @endif
 
 
-                <search-articles-component alias="{{ $page_info->alias }}"></search-articles-component>
+                <search-articles-component alias="{{ $pageInfo->alias }}"></search-articles-component>
 {{--                <input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />--}}
                 {{-- <button type="button" class="icon-search sprite button"></button> --}}
 
@@ -80,7 +80,7 @@
                     <div class="small-12 cell">
                         {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
-                        @includeIf($page_info->entity->view_path.'.includes.filters')
+                        @includeIf($pageInfo->entity->view_path.'.includes.filters')
 
                         <div class="small-12 cell text-center">
                             {{ Form::submit('Фильтрация', ['class'=>'button']) }}

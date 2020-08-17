@@ -31,8 +31,13 @@ class CreatePricesServicesTable extends Migration
             $table->bigInteger('ancestor_id')->nullable()->unsigned()->comment('Предок');
             $table->foreign('ancestor_id')->references('id')->on('prices_services');
 
-            $table->integer('price')->default(0)->comment('Цена');
-//            $table->decimal('price', 12, 4)->default(0)->comment('Цена');
+            $table->decimal('price', 10,2)->default(0)->comment('Цена');
+
+            $table->tinyInteger('discount_mode')->unsigned()->default(1)->comment('Тип скидки: 1 - проценты, 2 - валюта');
+            $table->decimal('discount_percent', 10,2)->default(0)->comment('Процент скидки');
+            $table->decimal('discount_currency', 10,2)->default(0)->comment('Сумма скидки');
+
+            $table->decimal('total', 10,2)->default(0)->comment('Итоговая сумма');
 
             $table->integer('points')->default(0)->comment('Внутренняя валюта');
 //            $table->decimal('point', 12, 4)->default(0)->comment('Внутренняя валюта');

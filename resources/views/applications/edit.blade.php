@@ -6,7 +6,7 @@
 
 @section('title', 'Редактировать заявку')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $application->name))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $application->name))
 
 @section('title-content')
 	<div class="top-bar head-content">
@@ -24,7 +24,7 @@
   {{ method_field('PATCH') }}
 
     @include('applications.form', ['submitButtonText' => 'Редактировать', 'param'=>''])
-    
+
   {{ Form::close() }}
 
 @endsection

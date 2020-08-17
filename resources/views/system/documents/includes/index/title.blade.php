@@ -3,18 +3,18 @@
     <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
         <div class="top-bar head-content">
             <div class="top-bar-left">
-                <h2 class="header-content">{{ $page_info->title }}
+                <h2 class="header-content">{{ $pageInfo->title }}
                     <span class="content-count" title="Общее количество">
                         @yield('content-count')
                     </span>
                 </h2>
 
                 @can('create', $class)
-                <a href="/admin/{{ $page_info->alias}}/create" class="icon-add sprite " data-tooltip tabindex="2" title="Добавить позицию"></a>
-                @endcan  
+                <a href="/admin/{{ $pageInfo->alias}}/create" class="icon-add sprite " data-tooltip tabindex="2" title="Добавить позицию"></a>
+                @endcan
 
             </div>
-            <div class="top-bar-right">   
+            <div class="top-bar-right">
 
                 @if (isset($filter))
                 <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
@@ -50,7 +50,7 @@
                     <div class="small-12 cell">
                         {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
-                        @includeIf($page_info->entity->view_path.'.filters')
+                        @includeIf($pageInfo->entity->view_path.'.filters')
 
                         <div class="small-12 cell text-center">
                             {{ Form::submit('Фильтрация', ['class'=>'button']) }}

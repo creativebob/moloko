@@ -6,7 +6,7 @@
 
 @section('title', 'Редактировать отзыв')
 
-@section('breadcrumbs', Breadcrumbs::render('edit', $page_info, $feedback->person))
+@section('breadcrumbs', Breadcrumbs::render('edit', $pageInfo, $feedback->person))
 
 @section('title-content')
 	<div class="top-bar head-content">

@@ -87,9 +87,9 @@ class ServicesProductController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('services_products.index', compact('services_products', 'page_info', 'product', 'filter'));
+        return view('services_products.index', compact('services_products', 'pageInfo', 'product', 'filter'));
     }
 
     public function create(Request $request)
@@ -122,9 +122,9 @@ class ServicesProductController extends Controller
         $services_categories_list = get_select_tree($services_categories, 1, null, null);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('services_products.create', compact('services_product', 'page_info', 'services_categories_list'));
+        return view('services_products.create', compact('services_product', 'pageInfo', 'services_categories_list'));
     }
 
     public function store(ServicesProductRequest $request)
@@ -200,9 +200,9 @@ class ServicesProductController extends Controller
         $services_categories_list = get_select_tree($services_categories, $services_product->services_category_id, null, null);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('services_products.edit', compact('services_product', 'page_info', 'services_categories_list'));
+        return view('services_products.edit', compact('services_product', 'pageInfo', 'services_categories_list'));
     }
 
     public function update(ServicesProductRequest $request, $id)
@@ -403,9 +403,9 @@ class ServicesProductController extends Controller
         $this->authorize(getmethod('edit'), $product);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('products.photos', compact('page_info', 'product'));
+        return view('products.photos', compact('pageInfo', 'product'));
 
     }
 

@@ -3,7 +3,7 @@
     <div class="sticky sticky-topbar" id="head-sticky" data-sticky data-margin-top="2.4" data-sticky-on="small" data-top-anchor="head-content:top">
         <div class="top-bar head-content">
             <div class="top-bar-left">
-                <h2 class="header-content">{{ $page_info->title }}
+                <h2 class="header-content">{{ $pageInfo->title }}
                     <span class="content-count" title="Общее количество">
                         @yield('content-count')
                     </span>
@@ -12,9 +12,9 @@
                 {{-- Блок дополнительных кнопок --}}
                 {{-- @can('create', $class)
                     <a class="icon-add sprite" data-open="modal-create" data-tooltip class="top" tabindex="2" title="Добавить позицию"></a>
-                    <a href="/admin/{{ $page_info->alias}}_categories" class="icon-category sprite" data-tooltip class="top" tabindex="2" title="Настройка категорий"></a>
-                    <a href="/admin/{{ $page_info->alias}}_consignments" class="icon-consignment sprite" data-tooltip class="top" tabindex="2" title="Накладные"></a>
-                    <a href="/admin/stock_{{ $page_info->alias}}" class="icon-stock sprite" data-tooltip class="top" tabindex="2" title="Склад"></a>
+                    <a href="/admin/{{ $pageInfo->alias}}_categories" class="icon-category sprite" data-tooltip class="top" tabindex="2" title="Настройка категорий"></a>
+                    <a href="/admin/{{ $pageInfo->alias}}_consignments" class="icon-consignment sprite" data-tooltip class="top" tabindex="2" title="Накладные"></a>
+                    <a href="/admin/stock_{{ $pageInfo->alias}}" class="icon-stock sprite" data-tooltip class="top" tabindex="2" title="Склад"></a>
                 @endcan  --}}
 
             </div>
@@ -54,7 +54,7 @@
                     <div class="small-12 cell">
                         {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
-                        @includeIf($page_info->entity->view_path.'.filters')
+                        @includeIf($pageInfo->entity->view_path.'.filters')
 
                         <div class="small-12 cell text-center">
                             {{ Form::submit('Фильтрация', ['class'=>'button']) }}

@@ -23,6 +23,7 @@ use App\Http\View\Composers\System\ContainersCategoriesComposer;
 use App\Http\View\Composers\System\ContainersComposer;
 use App\Http\View\Composers\System\CurrenciesComposer;
 use App\Http\View\Composers\System\DirectiveCategoriesComposer;
+use App\Http\View\Composers\System\DiscountsComposer;
 use App\Http\View\Composers\System\DisplayModesComposer;
 use App\Http\View\Composers\System\EmployeesActiveCountComposer;
 use App\Http\View\Composers\System\EmployeesDismissalCountComposer;
@@ -417,8 +418,11 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('system.pages.hr.employees.includes.title_active', EmployeesDismissalCountComposer::class);
         view()->composer('system.pages.hr.employees.includes.title_dismissal', EmployeesActiveCountComposer::class);
 
-        // ВЫполненные работы
+        // Выполненные работы
         view()->composer('system.pages.outcomes.includes.title', ClientsCountComposer::class);
+
+        // Скидки
+        view()->composer('system.common.discounts.discounts', DiscountsComposer::class);
 
 
         // Фильтры

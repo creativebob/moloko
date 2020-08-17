@@ -11,31 +11,39 @@ class PricesGoodsObserver
 
     use Commonable;
 
-    public function creating(PricesGoods $prices_goods)
+    public function creating(PricesGoods $priceGoods)
     {
-        $this->store($prices_goods);
-        $prices_goods->display = true;
+        $this->store($priceGoods);
+        $priceGoods->display = true;
 
         // TODO - 19.11.19 - Пока по дефолту рубль
-        $prices_goods->currency_id = 1;
+        $priceGoods->currency_id = 1;
+
+        $this->setTotal($priceGoods);
     }
 
-    public function created(PricesGoods $prices_goods)
+    public function created(PricesGoods $priceGoods)
     {
-        $prices_goods->history()->create([
-            'price' => $prices_goods->price,
-            'currency_id' => $prices_goods->currency_id,
+        $priceGoods->history()->create([
+            'price' => $priceGoods->price,
+            'currency_id' => $priceGoods->currency_id,
         ]);
     }
 
-    public function updating(PricesGoods $prices_goods)
+    public function updating(PricesGoods $priceGoods)
     {
-        $this->update($prices_goods);
+        $this->update($priceGoods);
+        $this->setTotal($priceGoods);
     }
 
-    public function deleting(PricesGoods $prices_goods)
+    public function deleting(PricesGoods $priceGoods)
     {
-        $this->destroy($prices_goods);
+        $this->destroy($priceGoods);
+    }
+
+    public function setTotal($priceGoods)
+    {
+        $priceGoods->total = $priceGoods->price - $priceGoods->discount_currency;
     }
 
 }

@@ -104,9 +104,9 @@ class ManufacturerController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('manufacturers.index', compact('manufacturers', 'page_info', 'filter', 'user'));
+        return view('manufacturers.index', compact('manufacturers', 'pageInfo', 'filter', 'user'));
     }
 
     public function create(Request $request)
@@ -123,9 +123,9 @@ class ManufacturerController extends Controller
         $company = new Company;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('manufacturers.create', compact('company', 'manufacturer', 'page_info'));
+        return view('manufacturers.create', compact('company', 'manufacturer', 'pageInfo'));
     }
 
     public function store(CompanyRequest $request)
@@ -211,9 +211,9 @@ class ManufacturerController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('manufacturers.edit', compact('manufacturer', 'page_info'));
+        return view('manufacturers.edit', compact('manufacturer', 'pageInfo'));
     }
 
 

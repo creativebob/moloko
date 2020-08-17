@@ -2,7 +2,7 @@
 
 @section('title', 'Редактировать альбом')
 
-@section('breadcrumbs', Breadcrumbs::render('alias-edit', $page_info, $album))
+@section('breadcrumbs', Breadcrumbs::render('alias-edit', $pageInfo, $album))
 
 @section('title-content')
 <div class="top-bar head-content">

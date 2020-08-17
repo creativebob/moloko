@@ -111,11 +111,11 @@ class ServiceController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
         return view('products.processes.common.index.index', [
             'items' => $services,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'class' => $this->class,
             'entity' => $this->entity_alias,
             'category_entity' => 'services_categories',
@@ -277,14 +277,14 @@ class ServiceController extends Controller
         $settings = $this->getPhotoSettings($this->entity_alias);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
-        // dd($page_info);
+        $pageInfo = pageInfo($this->entity_alias);
+        // dd($pageInfo);
 
         return view('products.processes.common.edit.edit', [
             'title' => 'Редактировать услугу',
             'item' => $service,
             'process' => $process,
-            'page_info' => $page_info,
+            'pageInfo' => $pageInfo,
             'settings' => $settings,
             'entity' => $this->entity_alias,
             'category_entity' => 'services_categories',

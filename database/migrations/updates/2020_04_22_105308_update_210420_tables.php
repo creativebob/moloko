@@ -148,6 +148,20 @@ class Update210420Tables extends Migration
         Schema::table('catalogs_services_items', function (Blueprint $table) {
             $table->boolean('is_hide_submenu')->default(0)->comment('Не отображать субменю')->after('is_show_subcategory');
         });
+
+        Schema::table('prices_goods', function (Blueprint $table) {
+            $table->tinyInteger('discount_mode')->unsigned()->default(1)->comment('Тип скидки: 1 - проценты, 2 - валюта')->after('price');
+            $table->decimal('discount_percent', 10,2)->default(0)->comment('Процент скидки')->after('discount_mode');
+            $table->decimal('discount_currency', 10,2)->default(0)->comment('Сумма скидки')->after('discount_percent');
+            $table->decimal('total', 12,2)->default(0)->comment('Итоговая сумма')->after('discount_currency');
+        });
+
+        Schema::table('prices_services', function (Blueprint $table) {
+            $table->tinyInteger('discount_mode')->unsigned()->default(1)->comment('Тип скидки: 1 - проценты, 2 - валюта')->after('price');
+            $table->decimal('discount_percent', 10,2)->default(0)->comment('Процент скидки')->after('discount_mode');
+            $table->decimal('discount_currency', 10,2)->default(0)->comment('Сумма скидки')->after('discount_percent');
+            $table->decimal('total', 12,2)->default(0)->comment('Итоговая сумма')->after('discount_currency');
+        });
     }
 
     /**
@@ -293,6 +307,24 @@ class Update210420Tables extends Migration
         Schema::table('catalogs_services_items', function (Blueprint $table) {
             $table->dropColumn([
                 'is_hide_submenu',
+            ]);
+        });
+
+        Schema::table('prices_goods', function (Blueprint $table) {
+            $table->dropColumn([
+                'discount_mode',
+                'discount_percent',
+                'discount_currency',
+                'total'
+            ]);
+        });
+
+        Schema::table('prices_services', function (Blueprint $table) {
+            $table->dropColumn([
+                'discount_mode',
+                'discount_percent',
+                'discount_currency',
+                'total'
             ]);
         });
     }

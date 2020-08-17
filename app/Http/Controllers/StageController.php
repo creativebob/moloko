@@ -76,9 +76,9 @@ class StageController extends Controller
         // Окончание фильтра -----------------------------------------------------------------------------------------
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('stages.index', compact('stages', 'page_info', 'filter'));
+        return view('stages.index', compact('stages', 'pageInfo', 'filter'));
     }
 
     public function create(Request $request)
@@ -95,9 +95,9 @@ class StageController extends Controller
         $fields_list = Schema::getColumnListing($entities->first()->alias);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('stages.create', compact('stage', 'page_info', 'entities_list', 'fields_list'));
+        return view('stages.create', compact('stage', 'pageInfo', 'entities_list', 'fields_list'));
     }
 
     public function store(StageRequest $request)
@@ -176,9 +176,9 @@ class StageController extends Controller
         // dd($fields_list);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('stages.edit', compact('stage', 'page_info', 'entities_list', 'fields_list'));
+        return view('stages.edit', compact('stage', 'pageInfo', 'entities_list', 'fields_list'));
     }
 
     public function update(StageRequest $request, $id)

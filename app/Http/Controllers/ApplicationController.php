@@ -59,9 +59,9 @@ class ApplicationController extends Controller
 
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('applications.index', compact('applications', 'page_info', 'filter'));
+        return view('applications.index', compact('applications', 'pageInfo', 'filter'));
     }
 
 
@@ -75,9 +75,9 @@ class ApplicationController extends Controller
         $application = new Application;
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('applications.create', compact('application', 'page_info'));
+        return view('applications.create', compact('application', 'pageInfo'));
     }
 
 
@@ -138,9 +138,9 @@ class ApplicationController extends Controller
         $this->authorize(getmethod(__FUNCTION__), $application);
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_name);
+        $pageInfo = pageInfo($this->entity_name);
 
-        return view('applications.edit', compact('application', 'page_info'));
+        return view('applications.edit', compact('application', 'pageInfo'));
     }
 
 

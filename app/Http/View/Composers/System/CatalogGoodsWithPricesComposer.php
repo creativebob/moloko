@@ -43,18 +43,19 @@ class CatalogGoodsWithPricesComposer
                     }
                 ])
                 ->whereHas('goods', function ($q) use ($settings) {
-                    $q->when($settings->firstWhere('alias', 'sale-for-order'), function ($q) {
-                        $q->where('is_ordered', true);
-                    })
-                    ->when($settings->firstWhere('alias', 'sale-for-production'), function ($q) {
-                        $q->where('is_produced', true);
-                    })
-                    ->when($settings->firstWhere('alias', 'sale-from-stock'), function ($q) {
-                        $q->whereHas('stocks', function ($q) {
-                            $q->where('filial_id', auth()->user()->StafferFilialId)
-                            ->where('free', '>', 0);
-                        });
-                    })
+                    $q
+//                        ->when($settings->firstWhere('alias', 'sale-for-order'), function ($q) {
+//                        $q->where('is_ordered', true);
+//                    })
+//                    ->when($settings->firstWhere('alias', 'sale-for-production'), function ($q) {
+//                        $q->where('is_produced', true);
+//                    })
+//                    ->when($settings->firstWhere('alias', 'sale-from-stock'), function ($q) {
+//                        $q->whereHas('stocks', function ($q) {
+//                            $q->where('filial_id', auth()->user()->StafferFilialId)
+//                            ->where('free', '>', 0);
+//                        });
+//                    })
                     ->where('archive', false)
                     ->whereHas('article', function ($q) {
                         $q->where('draft', false);
@@ -62,17 +63,18 @@ class CatalogGoodsWithPricesComposer
                 })
                 ->where([
                     'archive' => false,
-                    'filial_id' => \Auth::user()->StafferFilialId
+                    'filial_id' => auth()->user()->StafferFilialId
                 ])
-                ->select([
-                    'prices_goods.id',
-                    'archive',
-                    'prices_goods.catalogs_goods_id',
-                    'catalogs_goods_item_id',
-                    'price',
-                    'goods_id',
-                    'filial_id'
-                ]);
+//                ->select([
+//                    'prices_goods.id',
+//                    'archive',
+//                    'prices_goods.catalogs_goods_id',
+//                    'catalogs_goods_item_id',
+//                    'price',
+//                    'goods_id',
+//                    'filial_id'
+//                ])
+                ;
             },
         ])
         ->moderatorLimit($answer_cg)
@@ -89,7 +91,10 @@ class CatalogGoodsWithPricesComposer
         $catalogs_goods_prices = [];
         foreach ($catalogs_goods as $catalog_goods) {
             $catalogs_goods_items = array_merge($catalogs_goods_items, buildTreeArray($catalog_goods->items));
-            $catalogs_goods_prices = array_merge($catalogs_goods_prices, $catalog_goods->prices->toArray());
+
+            $catalogs_goods_prices = array_merge($catalogs_goods_prices, $catalog_goods->prices->setAppends([
+                'totalWithDiscounts',
+            ])->toArray());
         }
 //        dd($catalogs_goods_prices);
 

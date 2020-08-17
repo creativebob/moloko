@@ -4,13 +4,13 @@
 
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 @section('title-content')
 {{-- Таблица --}}
-@include('includes.title-content', ['page_info' => $page_info, 'class' => App\Folder::class, 'type' => 'table'])
+@include('includes.title-content', ['pageInfo' => $pageInfo, 'class' => App\Folder::class, 'type' => 'table'])
 @endsection
 
 @section('content')

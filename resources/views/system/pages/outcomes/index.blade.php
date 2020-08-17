@@ -4,9 +4,9 @@
 
 @endsection
 
-@section('title', $page_info->name)
+@section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('index', $page_info))
+@section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
 
 @section('content-count')
     {{ $outcomes->isNotEmpty() ? num_format($outcomes->total(), 0) : 0 }}

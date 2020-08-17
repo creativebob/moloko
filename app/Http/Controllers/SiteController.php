@@ -72,7 +72,7 @@ class SiteController extends Controller
 
         return view('sites.index',[
             'sites' => $sites,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
             'filter' => $filter,
             'nested' => 'pages_count'
         ]);
@@ -86,7 +86,7 @@ class SiteController extends Controller
 
         return view('sites.create', [
             'site' => Site::make(),
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -132,7 +132,7 @@ class SiteController extends Controller
         return view('sites.sections', [
             'site' => $site,
             'sections' => Entity::where('site', true)->get(),
-            'page_info' => pageInfo($this->entity_alias)
+            'pageInfo' => pageInfo($this->entity_alias)
         ]);
     }
 
@@ -151,7 +151,7 @@ class SiteController extends Controller
 
         return view('sites.edit', [
             'site' => $site,
-            'page_info' => pageInfo($this->entity_alias),
+            'pageInfo' => pageInfo($this->entity_alias),
         ]);
     }
 
@@ -228,9 +228,9 @@ class SiteController extends Controller
         $sections = Entity::where('site', true)->get();
 
         // Инфо о странице
-        $page_info = pageInfo($this->entity_alias);
+        $pageInfo = pageInfo($this->entity_alias);
 
-        return view('sites.sections', compact('site', 'sections', 'page_info'));
+        return view('sites.sections', compact('site', 'sections', 'pageInfo'));
     }
 
     public function getSite($id)
