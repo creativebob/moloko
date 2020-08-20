@@ -79,10 +79,12 @@ class EstimatesGoodsItemController extends Controller
         ])
         ->findOrFail($request->price_id);
 
-        $discountCurrency = $priceGoods->total - $priceGoods->totalWithDiscounts;
+        $discountCurrency = $priceGoods->price - $priceGoods->total;
         $discountPercent = 0;
         if ($discountCurrency > 0) {
-            $discountPercent = $discountCurrency * 100 / $priceGoods->total;
+//            $percent = $priceGoods->total / 100;
+//            $discountPercent = $discountCurrency / $percent;
+            $discountPercent = $discountCurrency * 100 / $priceGoods->price;
         }
 
 
@@ -123,6 +125,15 @@ class EstimatesGoodsItemController extends Controller
                 'discount_currency' => $discountCurrency,
                 'count' => 1,
                 'cost' => $priceGoods->product->article->cost_default,
+    
+                'price_discount_id' => $priceGoods->price_discount_id,
+                'price_discount' => $priceGoods->price_discount,
+                'total_price_discount' => $priceGoods->total_price_discount,
+    
+                'catalogs_item_discount_id' => $priceGoods->catalogs_item_discount_id,
+                'catalogs_item_discount' => $priceGoods->catalogs_item_discount,
+                'total_catalogs_item_discount' => $priceGoods->total_catalogs_item_discount,
+                
                 'points' => $priceGoods->points,
                 'currency_id' => $priceGoods->currency_id,
                 'amount' => $priceGoods->price,
@@ -317,7 +328,8 @@ class EstimatesGoodsItemController extends Controller
     {
         $estimate->load([
             'goods_items',
-            'services_items'
+            'services_items',
+            'discounts'
         ]);
 
         $cost = 0;
@@ -342,21 +354,38 @@ class EstimatesGoodsItemController extends Controller
             $totalPoints += $estimate->goods_items->sum('total_points');
             $totalBonuses += $estimate->goods_items->sum('total_bonuses');
         }
+        
+        $discountCurrency = 0;
+        $discountPercent = 0;
 
-        $marginCurrency = 0;
-        $marginPercent = 0;
-        $discount = 0;
-
-        if ($amount > 0) {
-            $discount = (($amount * $estimate->discount_percent) / 100);
-            $marginCurrency = $total - $cost;
-            $marginPercent = ($marginCurrency / $total * 100);
+        if ($total > 0) {
+            if ($estimate->discounts->isNotEmpty()) {
+                $discount = $estimate->discounts->first();
+    
+                switch ($discount->mode) {
+                    case(1):
+                        $discountCurrency = $total / 100 * $discount->percent;
+                        $discountPercent = $discount->percent;
+                        break;
+                    case(2):
+                        $discountCurrency = $discount->currency;
+                        $percent = $total / 100;
+                        $discountPercent = $discount->currency / $percent;
+                        break;
+                }
+    
+                $total -= $discountCurrency;
+            }
         }
+    
+        $marginCurrency = $total - $cost;
+        $marginPercent = ($marginCurrency / $total * 100);
 
         $data = [
             'cost' => $cost,
             'amount' => $amount,
-            'discount' => $discount,
+            'discount_currency' => $discountCurrency,
+            'discount_cpercent' => $discountPercent,
             'total' => $total,
             'margin_currency' => $marginCurrency,
             'margin_percent' => $marginPercent,

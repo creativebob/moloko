@@ -188,7 +188,7 @@
 
             @can('index', App\Discount::class)
                 <div class="tabs-panel" id="tab-discounts">
-                    @include('system.common.discounts.discounts', ['item' => $catalogs_goods_item])
+                    @include('system.common.discounts.discounts', ['item' => $catalogs_goods_item, 'entity' => 'catalogs_goods_items'])
                 </div>
             @endcan
 

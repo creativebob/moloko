@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Discount;
 use App\Estimate;
 use App\Http\Controllers\Traits\Offable;
 use App\User;
@@ -173,6 +174,32 @@ class LeadController extends Controller
         ]);
 
         $result = $lead->estimate()->save($estimate);
+    
+        // Получаем из сессии необходимые данные (Функция находиться в Helpers)
+        $answer = operator_right('discounts', true, getmethod('index'));
+        
+        $discounts = Discount::moderatorLimit($answer)
+            ->companiesLimit($answer)
+            ->filials($answer)
+            ->systemItem($answer)
+            ->whereHas('entity', function ($q) {
+                $q->where('alias', 'estimates');
+            })
+            ->where('archive', false)
+            ->where('begined_at', '<=', now())
+            ->where(function ($q) {
+                $q->where('ended_at', '>=', now())
+                    ->orWhereNull('ended_at');
+            })
+        ->get();
+//        dd($discounts);
+        
+        $discountsIds = $discounts->pluck('id');
+        
+        $lead->load('estimate');
+        $estimate = $lead->estimate;
+    
+        $estimate->discounts()->attach($discountsIds);
 
         return Redirect('/admin/leads/' . $lead->id . '/edit');
     }
@@ -230,7 +257,8 @@ class LeadController extends Controller
                            'currency'
                         ]);
                     },
-                    'lead.client.contract'
+                    'lead.client.contract',
+                    'discounts'
                 ]);
             },
             'client.contract',

@@ -142,25 +142,57 @@ class Update210420Tables extends Migration
         });
 
         Schema::table('catalogs_goods_items', function (Blueprint $table) {
+            $table->boolean('is_discount')->default(1)->unsigned()->comment('Режим скидок')->after('color');
             $table->boolean('is_hide_submenu')->default(0)->comment('Не отображать субменю')->after('is_show_subcategory');
         });
 
         Schema::table('catalogs_services_items', function (Blueprint $table) {
+            $table->boolean('is_discount')->default(1)->unsigned()->comment('Режим скидок')->after('color');
             $table->boolean('is_hide_submenu')->default(0)->comment('Не отображать субменю')->after('is_show_subcategory');
         });
 
         Schema::table('prices_goods', function (Blueprint $table) {
-            $table->tinyInteger('discount_mode')->unsigned()->default(1)->comment('Тип скидки: 1 - проценты, 2 - валюта')->after('price');
+            $table->boolean('is_discount')->default(1)->unsigned()->comment('Режим скидок')->after('price');
+            
+            $table->tinyInteger('discount_mode')->unsigned()->default(1)->comment('Тип скидки: 1 - проценты, 2 - валюта')->after('is_discount');
             $table->decimal('discount_percent', 10,2)->default(0)->comment('Процент скидки')->after('discount_mode');
             $table->decimal('discount_currency', 10,2)->default(0)->comment('Сумма скидки')->after('discount_percent');
-            $table->decimal('total', 12,2)->default(0)->comment('Итоговая сумма')->after('discount_currency');
+            
+            $table->bigInteger('price_discount_id')->nullable()->unsigned()->comment('Id скидки прайса')->after('discount_currency');
+//            $table->foreign('price_discount_id')->references('id')->on('discounts')->after('discount_currency');
+            $table->decimal('price_discount', 10, 2)->default(0)->comment('Скидка по прайсу')->after('price_discount_id');
+            $table->decimal('total_price_discount', 10, 2)->default(0)->comment('Сумма с скидкой по прайсу')->after('price_discount');
+    
+            $table->bigInteger('catalogs_item_discount_id')->nullable()->unsigned()->comment('Id скидки раздела каталога')->after('total_price_discount');
+//            $table->foreign('catalogs_item_discount_id')->references('id')->on('discounts')->after('discount_currency');
+            $table->decimal('catalogs_item_discount', 10, 2)->default(0)->comment('Скидкка по разделу каталога')->after('catalogs_item_discount_id');
+            $table->decimal('total_catalogs_item_discount', 10, 2)->default(0)->comment('Сумма с скидкой по разделу каталога')->after('catalogs_item_discount');
+    
+            $table->decimal('total', 12,2)->default(0)->comment('Итоговая сумма')->after('total_catalogs_item_discount');
+    
+            $table->boolean('is_show_price')->default(0)->comment('Показывать цену')->after('is_new');
         });
 
         Schema::table('prices_services', function (Blueprint $table) {
-            $table->tinyInteger('discount_mode')->unsigned()->default(1)->comment('Тип скидки: 1 - проценты, 2 - валюта')->after('price');
+            $table->boolean('is_discount')->default(1)->unsigned()->comment('Режим скидок')->after('price');
+    
+            $table->tinyInteger('discount_mode')->unsigned()->default(1)->comment('Тип скидки: 1 - проценты, 2 - валюта')->after('is_discount');
             $table->decimal('discount_percent', 10,2)->default(0)->comment('Процент скидки')->after('discount_mode');
             $table->decimal('discount_currency', 10,2)->default(0)->comment('Сумма скидки')->after('discount_percent');
-            $table->decimal('total', 12,2)->default(0)->comment('Итоговая сумма')->after('discount_currency');
+    
+            $table->bigInteger('price_discount_id')->nullable()->unsigned()->comment('Id скидки прайса')->after('discount_currency');
+//            $table->foreign('price_discount_id')->references('id')->on('discounts')->after('discount_currency');
+            $table->decimal('price_discount', 10, 2)->default(0)->comment('Скидка по прайсу')->after('price_discount_id');
+            $table->decimal('total_price_discount', 10, 2)->default(0)->comment('Сумма с скидкой по прайсу')->after('price_discount');
+    
+            $table->bigInteger('catalogs_item_discount_id')->nullable()->unsigned()->comment('Id скидки раздела каталога')->after('total_price_discount');
+//            $table->foreign('catalogs_item_discount_id')->references('id')->on('discounts')->after('discount_currency');
+            $table->decimal('catalogs_item_discount', 10, 2)->default(0)->comment('Скидкка по разделу каталога')->after('catalogs_item_discount_id');
+            $table->decimal('total_catalogs_item_discount', 10, 2)->default(0)->comment('Сумма с скидкой по разделу каталога')->after('catalogs_item_discount');
+    
+            $table->decimal('total', 12,2)->default(0)->comment('Итоговая сумма')->after('total_catalogs_item_discount');
+    
+            $table->boolean('is_show_price')->default(0)->comment('Показывать цену')->after('is_new');
         });
     }
 
@@ -300,31 +332,49 @@ class Update210420Tables extends Migration
 
         Schema::table('catalogs_goods_items', function (Blueprint $table) {
             $table->dropColumn([
+                'is_discount',
                 'is_hide_submenu',
             ]);
         });
 
         Schema::table('catalogs_services_items', function (Blueprint $table) {
             $table->dropColumn([
+                'is_discount',
                 'is_hide_submenu',
             ]);
         });
 
         Schema::table('prices_goods', function (Blueprint $table) {
             $table->dropColumn([
+                'is_discount',
                 'discount_mode',
                 'discount_percent',
                 'discount_currency',
-                'total'
+                'price_discount_id',
+                'price_discount',
+                'total_price_discount',
+                'catalogs_item_discount_id',
+                'catalogs_item_discount',
+                'total_catalogs_item_discount',
+                'total',
+                'is_show_price',
             ]);
         });
 
         Schema::table('prices_services', function (Blueprint $table) {
             $table->dropColumn([
+                'is_discount',
                 'discount_mode',
                 'discount_percent',
                 'discount_currency',
-                'total'
+                'price_discount_id',
+                'price_discount',
+                'total_price_discount',
+                'catalogs_item_discount_id',
+                'catalogs_item_discount',
+                'total_catalogs_item_discount',
+                'total',
+                'is_show_price',
             ]);
         });
     }

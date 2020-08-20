@@ -26,11 +26,19 @@
 
         mounted() {
 
-            this.pickmeup('.pickmeup-field', {
+            this.$pickmeup(".pickmeup-field", {
+                position : "bottom",
                 format	: 'd.m.Y',
                 hide_on_select : true,
-                locale : 'ru'
+                locale : 'ru',
+                default_date : this.required
             });
+
+            // this.pickmeup('.pickmeup-field', {
+            //     format	: 'd.m.Y',
+            //     hide_on_select : true,
+            //     locale : 'ru'
+            // });
 
             var $vm = this;
             $('.pickmeup-field').on('pickmeup-change', function (e) {

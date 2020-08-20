@@ -60,6 +60,12 @@
                                 </label>
                             </div>
 
+                            <div class="small-12 cell checkbox">
+                                {!! Form::hidden('is_show_price', 0) !!}
+                                {!! Form::checkbox('is_show_price', 1, $priceGoods->is_show_price, ['id' => 'checkbox-is_show_price']) !!}
+                                <label for="checkbox-is_show_price"><span>Показывать старую цену</span></label>
+                            </div>
+
 
                             <div class="small-12 cell checkbox">
                                 {!! Form::hidden('status', 0) !!}
@@ -94,7 +100,7 @@
 
             @can('index', App\Discount::class)
                 <div class="tabs-panel" id="tab-discounts">
-                    @include('system.common.discounts.discounts', ['item' => $priceGoods])
+                    @include('system.common.discounts.discounts', ['item' => $priceGoods, 'entity' => 'prices_goods'])
                 </div>
             @endcan
 

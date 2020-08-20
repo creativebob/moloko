@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\CatalogsGoodsItem;
+use App\Http\Controllers\System\Traits\Discountable;
 use App\PricesGoods;
 use App\CatalogsGoods;
 use Carbon\Carbon;
@@ -21,6 +23,8 @@ class PricesGoodsController extends Controller
         $this->class = PricesGoods::class;
         $this->model = 'App\PricesGoods';
     }
+    
+    use Discountable;
 
     /**
      * Отображение списка ресурсов.
@@ -237,12 +241,53 @@ class PricesGoodsController extends Controller
                 'price' => $price,
             ]);
         }
-
+    
         $data = $request->input();
-        $priceGoods->update($data);
-
+        
+//        if ($priceGoods->is_discount == 1) {
+//        $priceGoods->load('discounts_actual');
+//        if ($priceGoods->discounts_actual->isNotEmpty()) {
+//            $discountPrice = $priceGoods->discounts_actual->first();
+//            $resPrice = $this->getDynamicDiscounts($discountPrice, $priceGoods->price);
+//
+//            $data['price_discount_id'] = $discountPrice->id;
+//            $data['total_price_discount'] = $resPrice['total'];
+//
+//            if (! $resPrice['break']) {
+//                $priceGoods->load('catalogs_item');
+//                $catalogsGoodsItem = $priceGoods->catalogs_item;
+//                if ($catalogsGoodsItem->is_discount == 1) {
+//                    $catalogsGoodsItem->load('discounts_actual');
+//                    if ($catalogsGoodsItem->discounts_actual->isNotEmpty()) {
+//                        $discountCatalogsItem = $catalogsGoodsItem->discounts_actual->first();
+//
+//                        $resCatalogItem = $this->getDynamicDiscounts($discountCatalogsItem, $data['total_price_discount']);
+//
+//                        $data['catalogs_item_discount_id'] = $discountCatalogsItem->id;
+//                        $data['total_catalogs_item_discount'] = $resCatalogItem['total'];
+//                    }
+//                }
+//            }
+//        }
+//    }
+    
         $priceGoods->discounts()->sync($request->discounts);
-
+    
+        if ($request->is_discount == 1) {
+            $discountPrice = $priceGoods->discounts_actual->first();
+            $data['price_discount_id'] = $discountPrice->id ? $discountPrice->id : null;
+    
+            $discountCatalogsItem = $priceGoods->catalogs_item->discounts_actual->first();
+            $data['catalogs_item_discount_id'] = isset($discountCatalogsItem->id) ? $discountCatalogsItem->id : null;
+        } else {
+            $data['price_discount_id'] = null;
+            $data['catalogs_item_discount_id'] = null;
+        }
+        
+        $priceGoods->update($data);
+    
+        
+        
         // Отдаем Ajax
         if ($request->ajax()) {
             $priceGoods = PricesGoods::with([
@@ -374,20 +419,38 @@ class PricesGoodsController extends Controller
 
     public function ajax_store(Request $request)
     {
-        $priceGoods = PricesGoods::firstOrNew([
+//        $priceGoods = PricesGoods::firstOrNew([
+//            'catalogs_goods_item_id' => $request->catalogs_goods_item_id,
+//            'catalogs_goods_id' => $request->catalogs_goods_id,
+//            'goods_id' => $request->goods_id,
+//            'filial_id' => $request->filial_id,
+//            'currency_id' => $request->currency_id,
+//        ], [
+//            'price' => $request->price,
+//            'discount_mode' => 1,
+//            'discount_percent' => 0,
+//            'discount_currency' => 0,
+//        ]);
+    
+        $priceGoods = PricesGoods::where([
             'catalogs_goods_item_id' => $request->catalogs_goods_item_id,
             'catalogs_goods_id' => $request->catalogs_goods_id,
             'goods_id' => $request->goods_id,
             'filial_id' => $request->filial_id,
             'currency_id' => $request->currency_id,
-        ], [
-            'price' => $request->price,
-            'discount_percent' => 0,
-            'discount_currency' => 0,
-            'total' => $request->price,
-        ]);
+        ])
+        ->first();
+    
+        $catalogsGoodsItem = CatalogsGoodsItem::find($request->catalogs_goods_item_id);
+        $discountCatalogsItem = $catalogsGoodsItem->discounts_actual->first();
+    
 
-        if ($priceGoods->id) {
+        $discountCatalogsItemId = null;
+        if ($discountCatalogsItem) {
+            $discountCatalogsItemId = $discountCatalogsItem->id;
+        }
+
+        if ($priceGoods) {
             $priceGoods->update([
                'archive' => false
             ]);
@@ -405,12 +468,16 @@ class PricesGoodsController extends Controller
 
                 $priceGoods->update([
                     'price' => $request->price,
-                    'total' => $request->price
+                    'catalogs_item_discount_id' => $discountCatalogsItemId,
                 ]);
             }
 
         } else {
-            $priceGoods->save();
+            $data = $request->input();
+            $data['is_discount'] = 1;
+            $data['catalogs_item_discount_id'] = $discountCatalogsItemId;
+//            return $data;
+            $priceGoods = PricesGoods::create($data);
         }
 
         $priceGoods->load([

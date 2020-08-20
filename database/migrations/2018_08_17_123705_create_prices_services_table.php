@@ -32,10 +32,22 @@ class CreatePricesServicesTable extends Migration
             $table->foreign('ancestor_id')->references('id')->on('prices_services');
 
             $table->decimal('price', 10,2)->default(0)->comment('Цена');
+    
+            $table->boolean('is_discount')->default(1)->unsigned()->comment('Режим скидок');
 
             $table->tinyInteger('discount_mode')->unsigned()->default(1)->comment('Тип скидки: 1 - проценты, 2 - валюта');
             $table->decimal('discount_percent', 10,2)->default(0)->comment('Процент скидки');
             $table->decimal('discount_currency', 10,2)->default(0)->comment('Сумма скидки');
+    
+            $table->bigInteger('price_discount_id')->nullable()->unsigned()->comment('Id скидки прайса');
+            $table->foreign('price_discount_id')->references('id')->on('discounts');
+            $table->decimal('price_discount', 10, 2)->default(0)->comment('Скидка по прайсу');
+            $table->decimal('total_price_discount', 10, 2)->default(0)->comment('Сумма с скидкой по прайсу');
+    
+            $table->bigInteger('catalogs_item_discount_id')->nullable()->unsigned()->comment('Id скидки раздела каталога');
+            $table->foreign('catalogs_item_discount_id')->references('id')->on('discounts');
+            $table->decimal('catalogs_item_discount', 10, 2)->default(0)->comment('Скидка по разделу каталога');
+            $table->decimal('total_catalogs_item_discount', 10, 2)->default(0)->comment('Сумма с скидкой по разделу каталога');
 
             $table->decimal('total', 10,2)->default(0)->comment('Итоговая сумма');
 
@@ -50,6 +62,8 @@ class CreatePricesServicesTable extends Migration
             $table->boolean('status')->default(0)->comment('Статус');
             $table->boolean('is_hit')->default(0)->comment('Хит');
             $table->boolean('is_new')->default(0)->comment('Новинка');
+            
+            $table->boolean('is_show_price')->default(0)->comment('Показывать цену');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

@@ -72,7 +72,7 @@ class ParserController extends Controller
     {
         $pricesGoods = PricesGoods::get();
         foreach($pricesGoods as $priceGoods) {
-            $total = $pricesGoods->price - $pricesGoods->discount_currency;
+            $total = $priceGoods->price - $priceGoods->discount_currency;
             $priceGoods->update([
                'total' => $total
             ]);

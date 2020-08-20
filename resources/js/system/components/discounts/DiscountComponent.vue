@@ -3,7 +3,11 @@
         class="item"
     >
         <!--                                <td class="number_counter"></td>-->
-        <td>{{ index + 1 }}</td>
+        <td>{{ index + 1 }}<input
+            type="hidden"
+            :name="'discounts[' + item.id + '][sort]'"
+            :value="index + 1"
+        ></td>
         <td>{{ item.name }}</td>
         <td>{{ item.description }}</td>
         <td>{{ item.percent | decimalPlaces | decimalLevel }}</td>

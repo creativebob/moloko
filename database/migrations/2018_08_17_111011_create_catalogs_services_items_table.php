@@ -31,6 +31,8 @@ class CreateCatalogsServicesItemsTable extends Migration
             $table->foreign('photo_id')->references('id')->on('photos');
 
             $table->string('color', 7)->nullable()->comment('Цвет');
+    
+            $table->boolean('is_discount')->default(1)->unsigned()->comment('Режим скидок');
 
             $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id родителя');
             $table->foreign('parent_id')->references('id')->on('catalogs_services_items');

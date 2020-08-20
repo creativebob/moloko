@@ -71,7 +71,7 @@ class Estimate extends Model
         'margin_percent',
         'margin_currency',
 
-        'discount',
+        'discount_currency',
         'discount_percent',
 
         'display',
@@ -119,6 +119,11 @@ class Estimate extends Model
     public function payments()
     {
         return $this->morphMany(Payment::class, 'document');
+    }
+    
+    public function discounts()
+    {
+        return $this->belongsToMany(Discount::class);
     }
 
     // Фильтр

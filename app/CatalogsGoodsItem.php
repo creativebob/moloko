@@ -116,6 +116,12 @@ use App\Scopes\Filters\BooklistFilter;
 		{
 			return $this->hasMany(PricesGoods::class);
 		}
+        
+        public function prices_goods_actual()
+        {
+            return $this->hasMany(PricesGoods::class)
+                ->where('archive', false);
+        }
 
 		public function prices()
 		{
@@ -177,7 +183,17 @@ use App\Scopes\Filters\BooklistFilter;
                 ->where(function ($q) {
                     $q->where('ended_at', '>=', now())
                         ->orWhereNull('ended_at');
-                });
+                })
+                ->withPivot([
+                    'sort'
+                ])
+//                ->orderBy('pivot_sort')
+//                ->join('discount_catalogs_goods_item', 'discounts.id', '=', 'discount_catalogs_goods_item.discount_id')
+//                ->orderBy('sort')
+//                ->wherePivot(function ($q) {
+//                    $q->orderBy('sort');
+//                })
+                ;
         }
 
 	    public function getNameWithParentAttribute()

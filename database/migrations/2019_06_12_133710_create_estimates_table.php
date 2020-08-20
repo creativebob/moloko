@@ -34,7 +34,7 @@ class CreateEstimatesTable extends Migration
             $table->integer('cost')->default(0)->comment('Себестоимость');
 
             $table->decimal('amount', 12, 4)->default(0)->comment('Сумма');
-            $table->decimal('discount', 12, 4)->default(0)->comment('Скидка на заказ');
+            $table->decimal('discount_currency', 10, 4)->default(0)->comment('Скидка на заказ');
             $table->decimal('discount_percent', 5, 2)->default(0)->comment('Процент скидки');
 
             $table->decimal('certificate_amount', 12, 2)->default(0)->comment('Сумма оплаченная по сертификатам');

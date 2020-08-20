@@ -37,9 +37,18 @@
                                 </label>
                             </div>
 
+                            <div class="small-12 medium-6 cell">
+                            </div>
+
                             <div class="cell small-12 medium-6">
                                 <label>Тип скидки
-                                    {!! Form::select('discount_mode', [1 => 'Проценты', 2 => 'Валюта'], $discount->discount_mode, ['required']) !!}
+                                    {!! Form::select('mode', [1 => 'Проценты', 2 => 'Валюта'], $discount->mode, ['required']) !!}
+                                </label>
+                            </div>
+
+                            <div class="cell small-12 medium-6">
+                                <label>К чему привязана
+                                    {!! Form::select('entity_id', $entities->pluck('name', 'id'), $discount->entity_id, ['required', ($disabled == 'true') ? 'disabled' : '']) !!}
                                 </label>
                             </div>
 
@@ -103,6 +112,12 @@
                                     @include('includes.inputs.textarea', ['name' => 'description'])
                                 </label>
                             </div>
+
+{{--                            {!! Form::hidden('is_conditions', 0) !!}--}}
+{{--                            <div class="small-12 cell checkbox">--}}
+{{--                                {!! Form::checkbox('is_conditions', 1, $discount->is_conditions, ['id' => 'checkbox-is_conditions']) !!}--}}
+{{--                                <label for="checkbox-is_conditions"><span>Включить условия</span></label>--}}
+{{--                            </div>--}}
 
 
                             {!! Form::hidden('is_block', 0) !!}

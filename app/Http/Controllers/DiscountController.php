@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Discount;
+use App\Http\Controllers\System\Traits\Discountable;
 use App\Http\Requests\System\DiscountRequest;
 use Illuminate\Http\Request;
 
@@ -20,6 +21,8 @@ class DiscountController extends Controller
         $this->entity_alias = with(new $this->class)->getTable();
         $this->entity_dependence = true;
     }
+    
+    use Discountable;
 
     /**
      * Отображение списка ресурсов.
@@ -152,9 +155,63 @@ class DiscountController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $discount);
-
+        
+        $mode = $discount->mode;
         $data = $request->input();
         $result = $discount->update($data);
+    
+        $discount = Discount::with([
+            'entity'
+        ])
+            ->moderatorLimit($answer)
+            ->findOrFail($id);
+        
+        // Если изменен режим скидки (проценты / валюта), то пересчитываем итоговые по всем подключенным
+//        if ($mode != $data['mode']) {
+//            switch($discount->entity->alias) {
+//                case ('prices_goods'):
+//                    $discount->load('prices_goods_actual');
+//                    if ($discount->prices_goods_actual->isNotEmpty()) {
+//                        $priceGoods = $discount->prices_goods_actual->load([
+//                            'discounts_actual',
+//                            'catalogs_item.discounts_actual'
+//                        ]);
+//                        foreach ($discount->prices_goods_actual as $priceGoods) {
+//                            if ($priceGoods->is_discount == 1) {
+//                                if ($priceGoods->discounts_actual->isNotEmpty()) {
+//                                    $discountPrice = $priceGoods->discounts_actual->first();
+//                                    $resPrice = $this->getDynamicDiscounts($discountPrice, $priceGoods->price);
+//
+//                                    $data['price_discount_id'] = $discountPrice->id;
+//                                    $data['total_price_discount'] = $resPrice['total'];
+//
+//                                    if (! $resPrice['break']) {
+//                                        $catalogsGoodsItem = $priceGoods->catalogs_item;
+//                                        if ($catalogsGoodsItem->is_discount == 1) {
+//                                            if ($catalogsGoodsItem->discounts_actual->isNotEmpty()) {
+//                                                $discountCatalogsItem = $catalogsGoodsItem->discounts_actual->first();
+//
+//                                                $resCatalogItem = $this->getDynamicDiscounts($discountCatalogsItem, $data['total_price_discount']);
+//
+//                                                $data['catalogs_item_discount_id'] = $discountCatalogsItem->id;
+//                                                $data['total_catalogs_item_discount'] = $resCatalogItem['total'];
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                            $priceGoods->update($data);
+//                        }
+//                    }
+//                    break;
+//
+//                case ('catalogs_goods_item'):
+//
+//                    break;
+//            }
+//        }
+        
+        
         if ($result) {
             return redirect()->route('discounts.index');
         } else {
@@ -186,14 +243,16 @@ class DiscountController extends Controller
         // Получаем из сессии необходимые данные (Функция находиться в Helpers)
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
-        $discount = Discount::moderatorLimit($answer)
+        $discount = Discount::with('entity')
+        ->moderatorLimit($answer)
             ->findOrFail($id);
 
         // Подключение политики
         $this->authorize(getmethod('destroy'), $discount);
-
-        $discount->prices_goods()->detach();
-        $discount->catalogs_goods_items()->detach();
+        
+        $alias = $discount->entity->alias;
+//        dd($alias);
+        $discount->$alias()->detach();
 
         $discount->update([
             'archive' => true

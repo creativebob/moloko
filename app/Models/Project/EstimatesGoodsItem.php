@@ -19,37 +19,40 @@ class EstimatesGoodsItem extends Model
     protected $dates = ['deleted_at'];
     protected $fillable = [
         'estimate_id',
-        'currency_id',
-
         'price_id',
+        'currency_id',
         'goods_id',
         'stock_id',
-
-        'company_id',
-        'author_id',
-
+        'comment',
+    
         'count',
         'price',
         'cost',
         'points',
-
-        'amount',
-
+        'sale_mode',
+    
         'margin_percent',
         'margin_currency',
-
         'discount_percent',
         'discount_currency',
-
-        'extra_margin_percent',
-        'extra_margin_currency',
-
-        'extra_discount_percent',
-        'extra_discount_currency',
-
+    
+        'amount',
         'total',
+        'total_points',
+        'total_bonuses',
+    
+        'price_discount_id',
+        'price_discount',
+        'total_price_discount',
+    
+        'catalogs_item_discount_id',
+        'catalogs_item_discount',
+        'total_catalogs_item_discount',
+    
+        'is_reserved',
 
-        'profit',
+        'company_id',
+        'author_id',
     ];
 
     // Смета

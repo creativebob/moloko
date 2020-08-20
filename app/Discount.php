@@ -24,11 +24,14 @@ class Discount extends Model
 
         'percent',
         'currency',
-        'discount_mode',
+        
+        'mode',
+        'is_conditions',
 
         'is_block',
 
         'filial_id',
+        'entity_id',
 
         'begined_at',
         'ended_at',
@@ -53,15 +56,35 @@ class Discount extends Model
         }
         return $value;
     }
+    
+    public function estimates()
+    {
+        return $this->belongsToMany(Estimate::class);
+    }
 
     public function prices_goods()
     {
         return $this->belongsToMany(PricesGoods::class, 'discount_price_goods', 'discount_id', 'price_goods_id');
     }
+    
+    public function prices_goods_actual()
+    {
+        return $this->hasMany(PricesGoods::class, 'price_discount_id');
+    }
 
     public function catalogs_goods_items()
     {
         return $this->belongsToMany(CatalogsGoodsItem::class, 'discount_catalogs_goods_item', 'discount_id', 'catalogs_goods_item_id');
+    }
+    
+    public function prices_goods_catalogs_goods_items_actual()
+    {
+        return $this->hasMany(PricesGoods::class, 'catalogs_item_discount_id');
+    }
+    
+    public function entity()
+    {
+        return $this->belongsTo(Entity::class);
     }
 
 

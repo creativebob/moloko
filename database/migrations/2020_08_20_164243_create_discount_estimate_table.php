@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDiscountPriceGoodsTable extends Migration
+class CreateDiscountEstimateTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateDiscountPriceGoodsTable extends Migration
      */
     public function up()
     {
-        Schema::create('discount_price_goods', function (Blueprint $table) {
-            $table->bigInteger('price_goods_id')->unsigned()->comment('Id прайса товара');
-//            $table->foreign('price_goods_id')->references('id')->on('prices_goods');
-
+        Schema::create('discount_estimate', function (Blueprint $table) {
             $table->bigInteger('discount_id')->unsigned()->comment('Id скидки');
 //            $table->foreign('discount_id')->references('id')->on('discounts');
-    
-            $table->integer('sort')->nullable()->unsigned()->index()->comment('Поле для сортировки');
+            
+            $table->bigInteger('estimate_id')->unsigned()->comment('Id сметы');
+//            $table->foreign('estimate_id')->references('id')->on('estimates');
         });
     }
 
@@ -31,6 +29,6 @@ class CreateDiscountPriceGoodsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('discount_price_goods');
+        Schema::dropIfExists('discount_estimate');
     }
 }

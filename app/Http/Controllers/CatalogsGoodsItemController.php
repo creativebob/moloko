@@ -143,12 +143,12 @@ class CatalogsGoodsItemController extends Controller
 
         $data = $request->input();
         $data['catalogs_goods_id'] = $catalog_id;
-        $catalogs_goods_item = CatalogsGoodsItem::create($data);
+        $catalogsGoodsItem = CatalogsGoodsItem::create($data);
 
-        if ($catalogs_goods_item) {
+        if ($catalogsGoodsItem) {
 
             // Переадресовываем на index
-            return redirect()->route('catalogs_goods_items.index', ['catalog_id' => $catalog_id, 'id' => $catalogs_goods_item->id]);
+            return redirect()->route('catalogs_goods_items.index', ['catalog_id' => $catalog_id, 'id' => $catalogsGoodsItem->id]);
 
         } else {
             $result = [
@@ -187,7 +187,9 @@ class CatalogsGoodsItemController extends Controller
 
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $catalogs_goods_item);
-        $catalogs_goods_item->load('discounts');
+        $catalogs_goods_item->load([
+            'discounts'
+        ]);
 
         $catalog_goods = CatalogsGoods::findOrFail($catalog_id);
 
@@ -214,24 +216,43 @@ class CatalogsGoodsItemController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $catalogs_goods_item = CatalogsGoodsItem::moderatorLimit($answer)
+        $catalogsGoodsItem = CatalogsGoodsItem::moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $catalogs_goods_item);
+        $this->authorize(getmethod(__FUNCTION__), $catalogsGoodsItem);
 
         $data = $request->input();
-        $data['photo_id'] = $this->getPhotoId($request, $catalogs_goods_item);
-        $result = $catalogs_goods_item->update($data);
+        $data['photo_id'] = $this->getPhotoId($request, $catalogsGoodsItem);
+        $result = $catalogsGoodsItem->update($data);
 
         if ($result) {
 
-            $catalogs_goods_item->filters()->sync($request->filters);
+            $catalogsGoodsItem->filters()->sync($request->filters);
 
-            $catalogs_goods_item->discounts()->sync($request->discounts);
+            $catalogsGoodsItem->discounts()->sync($request->discounts);
+    
+            if ($request->is_discount == 1) {
+                $catalogsGoodsItem->load([
+                    'discounts_actual'
+                ]);
+                $discountCatalogsItem = $catalogsGoodsItem->discounts_actual->first();
+                foreach($catalogsGoodsItem->prices_goods_actual as $priceGoods) {
+                    $priceGoods->update([
+                        'catalogs_item_discount_id' => $discountCatalogsItem->id ? $discountCatalogsItem->id : null
+                    ]);
+                }
+                
+            } else {
+                foreach($catalogsGoodsItem->prices_goods_actual as $priceGoods) {
+                    $priceGoods->update([
+                        'catalogs_item_discount_id' => null
+                    ]);
+                }
+            }
 
             // Переадресовываем на index
-            return redirect()->route('catalogs_goods_items.index', ['catalog_id' => $catalog_id, 'id' => $catalogs_goods_item->id]);
+            return redirect()->route('catalogs_goods_items.index', ['catalog_id' => $catalog_id, 'id' => $catalogsGoodsItem->id]);
         } else {
             $result = [
                 'error_status' => 1,
@@ -255,17 +276,17 @@ class CatalogsGoodsItemController extends Controller
         $answer = operator_right($this->entity_alias, $this->entity_dependence, getmethod(__FUNCTION__));
 
         // ГЛАВНЫЙ ЗАПРОС:
-        $catalogs_goods_item = CatalogsGoodsItem::moderatorLimit($answer)
+        $catalogsGoodsItem = CatalogsGoodsItem::moderatorLimit($answer)
         ->findOrFail($id);
 
         // Подключение политики
-        $this->authorize(getmethod(__FUNCTION__), $catalogs_goods_item);
+        $this->authorize(getmethod(__FUNCTION__), $catalogsGoodsItem);
 
-        $parent_id = $catalogs_goods_item->parent_id;
+        $parent_id = $catalogsGoodsItem->parent_id;
 
-        $catalogs_goods_item->delete();
+        $catalogsGoodsItem->delete();
 
-        if ($catalogs_goods_item) {
+        if ($catalogsGoodsItem) {
 
             // Переадресовываем на index
             return redirect()->route('catalogs_goods_items.index', ['catalog_id' => $catalog_id, 'id' => $parent_id]);

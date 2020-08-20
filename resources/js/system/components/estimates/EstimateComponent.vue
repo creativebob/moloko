@@ -14,8 +14,9 @@
         </template>
 
         <div v-if="estimateAmount > 0">Общая стоимость: {{ estimateAmount | decimalPlaces | decimalLevel }}</div>
-        <div v-if="estimateItemsDiscount > 0">Сумма скидок: {{ estimateItemsDiscount | decimalPlaces | decimalLevel }}</div>
         <div v-if="estimateTotalPoints > 0">Сумма поинтов: {{ estimateTotalPoints | onlyInteger | decimalLevel }}</div>
+        <div v-if="estimateItemsDiscount > 0">Сумма скидок по позициям: {{ estimateItemsDiscount | decimalPlaces | decimalLevel }}</div>
+        <div v-if="estimateDiscountCurrency > 0">{{ estimateDiscount.name}}<span v-if="estimateDiscount.mode == 1"> {{ estimateDiscount.percent | decimalPlaces | decimalLevel }}%</span>: {{ estimateDiscountCurrency | decimalPlaces | decimalLevel }}</div>
         <div v-if="estimateTotal > 0">Итого к оплате: {{ estimateTotal | decimalPlaces | decimalLevel }}</div>
 
         <div class="grid-x">
@@ -48,7 +49,7 @@
             'estimates-services-items-component': require('./services/EstimatesServicesItemsComponent'),
             'register-button-component': require('./buttons/RegisterButtonComponent'),
             'sale-button-component': require('./buttons/SaleButtonComponent'),
-            'print-button-component': require('./buttons/SaleButtonComponent'),
+            'print-button-component': require('./buttons/PrintButtonComponent'),
 		},
         props: {
             estimate: Object,
@@ -59,6 +60,7 @@
             this.$store.commit('SET_ESTIMATE', this.estimate);
             this.$store.commit('SET_GOODS_ITEMS', this.estimate.goods_items);
             this.$store.commit('SET_SERVICES_ITEMS', this.estimate.services_items);
+            this.$store.commit('SET_DISCOUNTS', this.estimate.discounts);
         },
 		data() {
 			return {
@@ -94,7 +96,12 @@
             estimateItemsDiscount() {
                 return this.$store.getters.estimateItemsDiscount;
             },
-
+            estimateDiscount() {
+                return this.$store.getters.estimateDiscount;
+            },
+            estimateDiscountCurrency() {
+                return this.$store.getters.estimateDiscountCurrency;
+            },
             estimateTotal() {
                 return this.$store.getters.estimateTotal;
             },

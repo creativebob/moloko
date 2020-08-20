@@ -77,8 +77,8 @@
 
                                                 <span
                                                     class="items-product-price"
-                                                    :class="[{'with-discount' : price.total != price.totalWithDiscounts }]"
-                                                >{{ price.totalWithDiscounts | roundToTwo | level }}</span>
+                                                    :class="[{'with-discount' : price.price != price.total }]"
+                                                >{{ price.total | roundToTwo | level }}</span>
                                             </div>
                                         </div>
                                         <p class="items-product-description">{{ price.goods.description }}</p>

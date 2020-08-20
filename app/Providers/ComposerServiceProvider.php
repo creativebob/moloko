@@ -27,6 +27,7 @@ use App\Http\View\Composers\System\DiscountsComposer;
 use App\Http\View\Composers\System\DisplayModesComposer;
 use App\Http\View\Composers\System\EmployeesActiveCountComposer;
 use App\Http\View\Composers\System\EmployeesDismissalCountComposer;
+use App\Http\View\Composers\System\EntitiesForDiscountsComposer;
 use App\Http\View\Composers\System\Filters\GoodsComposer;
 use App\Http\View\Composers\System\FiltersComposer;
 use App\Http\View\Composers\System\GoodsCategoriesTreeComposer;
@@ -423,6 +424,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         // Скидки
         view()->composer('system.common.discounts.discounts', DiscountsComposer::class);
+        view()->composer('system.pages.marketings.discounts.form', EntitiesForDiscountsComposer::class);
 
 
         // Фильтры

@@ -3,6 +3,7 @@ const moduleEstimate = {
         estimate: null,
         goodsItems: [],
         servicesItems: [],
+        discounts: [],
     },
     mutations: {
         // Смета
@@ -68,6 +69,11 @@ const moduleEstimate = {
             state.servicesItems = servicesItems;
 
             this.commit('UPDATE_ESTIMATE');
+        },
+
+        // Скидки
+        SET_DISCOUNTS(state, discounts) {
+            state.discounts = discounts;
         },
 
         // Платежи
@@ -192,44 +198,6 @@ const moduleEstimate = {
             let amount = goodsAmount + servicesAmount;
             return amount.toFixed(2);
         },
-        estimateItemsDiscount: state => {
-            let goodsDiscount = 0,
-                servicesDiscount = 0;
-
-            if (state.goodsItems.length) {
-                state.goodsItems.forEach(item => {
-                    return goodsDiscount += (parseFloat(item.discount_currency) * parseInt(item.count))
-                });
-            }
-
-            if (state.servicesItems.length) {
-                state.servicesItems.forEach(item => {
-                    return servicesDiscount += (parseFloat(item.discount_currency) * parseInt(item.count))
-                });
-            }
-
-            let discount = goodsDiscount + servicesDiscount;
-            return discount.toFixed(2);
-        },
-        estimateTotal: state => {
-            let goodsTotal = 0,
-                servicesTotal = 0;
-
-            if (state.goodsItems.length) {
-                state.goodsItems.forEach(item => {
-                    return goodsTotal += parseFloat(item.total)
-                });
-            }
-
-            if (state.servicesItems.length) {
-                state.servicesItems.forEach(item => {
-                    return servicesTotal += parseFloat(item.total)
-                });
-            }
-
-            let total = goodsTotal + servicesTotal;
-            return total.toFixed(2);
-        },
         estimateTotalPoints: state => {
             let goodsTotalPoints = 0,
                 servicesTotalPoints = 0;
@@ -249,6 +217,110 @@ const moduleEstimate = {
             let totalPoints = goodsTotalPoints + servicesTotalPoints;
             return totalPoints.toFixed(2);
         },
+        estimateItemsDiscount: state => {
+            let goodsDiscount = 0,
+                servicesDiscount = 0;
+
+            if (state.goodsItems.length) {
+                state.goodsItems.forEach(item => {
+                    return goodsDiscount += (parseFloat(item.discount_currency) * parseInt(item.count))
+                });
+            }
+
+            if (state.servicesItems.length) {
+                state.servicesItems.forEach(item => {
+                    return servicesDiscount += (parseFloat(item.discount_currency) * parseInt(item.count))
+                });
+            }
+
+            let discount = goodsDiscount + servicesDiscount;
+            return discount.toFixed(2);
+        },
+        estimateDiscount: state => {
+            let discount = null;
+            if (state.discounts && state.discounts.length) {
+                discount = state.estimate.discounts[0];
+            }
+            return discount;
+        },
+        estimateDiscountCurrency: state => {
+            let goodsTotal = 0,
+                servicesTotal = 0;
+
+            if (state.goodsItems.length) {
+                state.goodsItems.forEach(item => {
+                    return goodsTotal += parseFloat(item.total)
+                });
+            }
+
+            if (state.servicesItems.length) {
+                state.servicesItems.forEach(item => {
+                    return servicesTotal += parseFloat(item.total)
+                });
+            }
+
+            let total = goodsTotal + servicesTotal;
+
+            let discount = null,
+                discountCurrency = 0;
+            if (state.discounts && state.discounts.length) {
+                discount = state.estimate.discounts[0];
+            }
+            if (discount) {
+                switch (discount.mode) {
+                    case (1):
+                        let percent = total / 100;
+                        discountCurrency = discount.percent * percent;
+                        break;
+
+                    case (2):
+                        discountCurrency = discount.currency;
+                        break;
+                }
+            }
+
+            return discountCurrency;
+        },
+        estimateTotal: state => {
+            let goodsTotal = 0,
+                servicesTotal = 0;
+
+            if (state.goodsItems.length) {
+                state.goodsItems.forEach(item => {
+                    return goodsTotal += parseFloat(item.total)
+                });
+            }
+
+            if (state.servicesItems.length) {
+                state.servicesItems.forEach(item => {
+                    return servicesTotal += parseFloat(item.total)
+                });
+            }
+
+            let total = goodsTotal + servicesTotal;
+
+            let discount = null,
+                discountCurrency = 0;
+            if (state.discounts && state.discounts.length) {
+                discount = state.estimate.discounts[0];
+            }
+            if (discount) {
+                switch (discount.mode) {
+                    case (1):
+                        let percent = total / 100;
+                        discountCurrency = discount.percent * percent;
+                        break;
+
+                    case (2):
+                        discountCurrency = discount.currency;
+                        break;
+                }
+            }
+
+            let totalWithDiscount = total - parseFloat(discountCurrency);
+            return totalWithDiscount.toFixed(2);
+        },
+
 
         // Платежи
         paymentsAmount: state => {

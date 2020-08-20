@@ -2,12 +2,14 @@
     <div>
         <input
             type="checkbox"
-            :name="name + '[]'"
+
             :id="'checkbox-' + name + '-' + item.id"
             :value="item.id"
             :checked="checkChecked"
             @change="change($event.target.checked)"
         >
+
+<!--        :name="name + '[]'"-->
 
         <label :for="'checkbox-' + name + '-' + item.id">
             <span>{{ item.name }}</span>

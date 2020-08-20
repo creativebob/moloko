@@ -52,9 +52,19 @@ class PricesGoods extends Model
         'filial_id',
 
         'price',
+        
         'discount_mode',
         'discount_percent',
         'discount_currency',
+        
+        'price_discount_id',
+        'price_discount',
+        'total_price_discount',
+        
+        'catalogs_item_discount_id',
+        'catalogs_item_discount',
+        'total_catalogs_item_discount',
+        
         'total',
 
         'points',
@@ -65,6 +75,8 @@ class PricesGoods extends Model
         'status',
         'is_hit',
         'is_new',
+        
+        'is_show_price',
 
         'is_discount',
 
@@ -191,7 +203,20 @@ class PricesGoods extends Model
             ->where(function ($q) {
                 $q->where('ended_at', '>=', now())
                     ->orWhereNull('ended_at');
-            });
+            })
+            ->withPivot([
+                'sort'
+            ]);
+    }
+    
+    public function discount_price()
+    {
+        return $this->belongsTo(Discount::class, 'price_discount_id');
+    }
+    
+    public function discount_catalogs_item()
+    {
+        return $this->belongsTo(Discount::class, 'catalogs_item_discount_id');
     }
 
     // Фильтр
@@ -287,7 +312,7 @@ class PricesGoods extends Model
         $sumPercent = 0;
         $sumCurrency = 0;
         foreach ($discounts as $discount) {
-            switch ($discount->discount_mode) {
+            switch ($discount->mode) {
                 case(1):
                     $sumPercent += $discount->percent;
                     break;

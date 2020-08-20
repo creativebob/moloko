@@ -22,7 +22,12 @@ class CreateDiscountsTable extends Migration
             $table->decimal('percent', 10,2)->default(0)->comment('Процент скидки');
             $table->decimal('currency', 10,2)->default(0)->comment('Сумма скидки');
 
-            $table->tinyInteger('discount_mode')->unsigned()->default(1)->comment('Тип скидки: 1 - проценты, 2 - валюта');
+            $table->tinyInteger('mode')->unsigned()->default(1)->comment('Режим скидки: 1 - проценты, 2 - валюта');
+            
+            $table->boolean('is_conditions')->unsigned()->default(0)->comment('0 - без условий, 1 -  с условиями');
+    
+            $table->bigInteger('entity_id')->unsigned()->nullable()->comment('Id сущности');
+//            $table->foreign('entity_id')->references('id')->on('entities');
 
             $table->boolean('is_block')->default(0)->unsigned()->comment('Блокировка дальнейших вычислений');
 
