@@ -574,7 +574,7 @@ class CartController extends Controller
             $message .= "Кол-во товаров: " . num_format($count, 0) . "\r\n";
             $message .= "Сумма заказа: " . num_format($estimate->amount, 0) . ' руб.' . "\r\n";
 
-            if(discountCurrency > 0){
+            if($discountCurrency > 0){
                 $message .= "Сумма со скидкой: " . num_format($estimate->total, 0) . ' руб.' . "\r\n";
                 $message .= "Скидка: " . num_format($estimate->discount_currency, 0) . ' руб.' . "\r\n";
             }
