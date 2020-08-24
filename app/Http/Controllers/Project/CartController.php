@@ -384,7 +384,7 @@ class CartController extends Controller
                     'author_id' => $lead->author_id,
                     'is_main' => true
                 ]);
-    
+
                 $discounts = Discount::where('company_id', $company->id)
                     ->whereHas('entity', function ($q) {
                         $q->where('alias', 'estimates');
@@ -397,12 +397,12 @@ class CartController extends Controller
                     })
                     ->get();
 //              dd($discounts);
-    
+
                 $discountsIds = $discounts->pluck('id');
-    
+
                 $lead->load('estimate');
                 $estimate = $lead->estimate;
-    
+
                 $estimate->discounts()->attach($discountsIds);
 
                 logs('leads_from_project')->info("Создана смета с id: [{$estimate->id}]");
@@ -441,15 +441,15 @@ class CartController extends Controller
                         'count' => $count,
                         'cost' => $price_goods->goods->article->cost_default * $count,
                         'amount' => $count * $price_goods->price,
-                        
+
                         'price_discount_id' => $price_goods->price_discount_id,
                         'price_discount' => $price_goods->price_discount,
                         'total_price_discount' => $price_goods->total_price_discount,
-                        
+
                         'catalogs_item_discount_id' => $price_goods->catalogs_item_discount_id,
                         'catalogs_item_discount' => $price_goods->catalogs_item_discount,
                         'total_catalogs_item_discount' => $price_goods->total_catalogs_item_discount,
-                        
+
                         'total' => $count * $price_goods->price,
                     ];
 
@@ -461,12 +461,12 @@ class CartController extends Controller
 
                 $estimate->goods_items()->saveMany($estimatesGoodsItemsInsert);
                 logs('leads_from_project')->info("Записаны товары сметы");
-    
+
                 $estimate->load([
                     'goods_items',
                     'discounts'
                 ]);
-    
+
                 $cost = 0;
                 $amount = 0;
                 $total = 0;
@@ -474,7 +474,7 @@ class CartController extends Controller
                 $discountItemsCurrency = 0;
                 $totalPoints = 0;
                 $totalBonuses = 0;
-    
+
                 if ($estimate->goods_items->isNotEmpty()) {
                     $cost += $estimate->goods_items->sum('cost');
                     $amount += $estimate->goods_items->sum('amount');
@@ -484,14 +484,14 @@ class CartController extends Controller
                     $totalPoints += $estimate->goods_items->sum('total_points');
                     $totalBonuses += $estimate->goods_items->sum('total_bonuses');
                 }
-    
+
                 $discountCurrency = 0;
                 $discountPercent = 0;
-    
+
                 if ($total > 0) {
                     if ($estimate->discounts->isNotEmpty()) {
                         $discount = $estimate->discounts->first();
-    
+
                         switch ($discount->mode) {
                             case(1):
                                 $discountCurrency = $total / 100 * $discount->percent;
@@ -503,7 +503,7 @@ class CartController extends Controller
                                 $discountPercent = $discount->currency / $percent;
                                 break;
                         }
-            
+
                         $total -= $discountCurrency;
                     }
                 }
@@ -574,9 +574,9 @@ class CartController extends Controller
             $message .= "Кол-во товаров: " . num_format($count, 0) . "\r\n";
             $message .= "Сумма заказа: " . num_format($estimate->amount, 0) . ' руб.' . "\r\n";
 
-            if($discount > 0){
+            if(discountCurrency > 0){
                 $message .= "Сумма со скидкой: " . num_format($estimate->total, 0) . ' руб.' . "\r\n";
-                $message .= "Скидка: " . num_format($estimate->discount, 0) . ' руб.' . "\r\n";
+                $message .= "Скидка: " . num_format($estimate->discount_currency, 0) . ' руб.' . "\r\n";
             }
 
             $message .= "\r\n";
