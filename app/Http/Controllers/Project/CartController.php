@@ -127,6 +127,9 @@ class CartController extends Controller
             'display' => true,
             'archive' => false
         ])
+            ->whereHas('entity', function ($q) {
+                $q->where('alias', 'estimates');
+            })
             ->where('begined_at', '<=', now())
             ->where(function ($q) {
                 $q->where('ended_at', '>=', now())
