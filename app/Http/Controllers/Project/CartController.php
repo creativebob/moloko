@@ -122,9 +122,21 @@ class CartController extends Controller
             })
             ->get();
 
+        $discount = Discount::where([
+            'company_id' => $site->company_id,
+            'display' => true,
+            'archive' => false
+        ])
+            ->where('begined_at', '<=', now())
+            ->where(function ($q) {
+                $q->where('ended_at', '>=', now())
+                    ->orWhereNull('ended_at');
+            })
+            ->first();
+
         $page = $site->pages_public->firstWhere('alias', 'cart');
 
-        return view($site->alias.'.pages.cart.index', compact('site',  'page', 'prices_goods', 'promotions'));
+        return view($site->alias.'.pages.cart.index', compact('site',  'page', 'prices_goods', 'promotions', 'discount'));
     }
 
     /**

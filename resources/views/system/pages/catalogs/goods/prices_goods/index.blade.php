@@ -127,7 +127,15 @@
 {{--        @include('system.pages.catalogs.goods.prices_goods.price_span')--}}
         <span>{{ num_format($cur_prices_goods->price, 0) }}</span>
     </td>
-    <td class="td-discount">{{ num_format($cur_prices_goods->discount_percent, 0) }}% / {{ num_format($cur_prices_goods->discount_currency, 0) }} {{ $cur_prices_goods->currency->abbreviation }}</td>
+    <td class="td-discount">
+        <span>Индивидуальная: {{ num_format($cur_prices_goods->discount_percent, 0) }}% / {{ num_format($cur_prices_goods->discount_currency, 0) }} {{ $cur_prices_goods->currency->abbreviation }}</span><br>
+        @isset($cur_prices_goods->discount_price)
+            <span>На прайс: {{ num_format($cur_prices_goods->discount_price->percent, 0) }}% / {{ num_format($cur_prices_goods->discount_price->currency, 0) }} {{ $cur_prices_goods->currency->abbreviation }}</span><br>
+        @endisset
+        @isset($cur_prices_goods->discount_catalogs_item)
+            <span>На раздел: {{ num_format($cur_prices_goods->discount_catalogs_item->percent, 0) }}% / {{ num_format($cur_prices_goods->discount_catalogs_item->currency, 0) }} {{ $cur_prices_goods->currency->abbreviation }}</span>
+        @endisset
+    </td>
     <td class="td-total">{{ num_format(($cur_prices_goods->total), 0) }}</td>
     {{--    <price-goods-price-component :price="{{ $cur_prices_goods->price }}"></price-goods-price-component>--}}
     <td class="td-points">

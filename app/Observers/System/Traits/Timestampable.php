@@ -35,7 +35,7 @@ trait Timestampable
             $time = Carbon::createFromFormat('H:i', $request->$timeFieldName);
         } else {
             if ($required) {
-                $time = now()->format('H:i');
+                $time = Carbon::createFromFormat('H:i', '00:00');
             } else {
                 if ($date) {
                     $time = Carbon::createFromFormat('H:i', '00:00');

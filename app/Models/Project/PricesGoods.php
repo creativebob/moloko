@@ -89,6 +89,16 @@ class PricesGoods extends Model
         return $this->belongsTo('App\Currency');
     }
 
+    public function discount_price()
+    {
+        return $this->belongsTo('App\Discount', 'price_discount_id');
+    }
+
+    public function discount_catalogs_item()
+    {
+        return $this->belongsTo('App\Discount', 'catalogs_item_discount_id');
+    }
+
     // Фильтр
     public function scopeFilter($query)
     {

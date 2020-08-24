@@ -23,7 +23,7 @@ class PricesGoodsController extends Controller
         $this->class = PricesGoods::class;
         $this->model = 'App\PricesGoods';
     }
-    
+
     use Discountable;
 
     /**
@@ -78,7 +78,9 @@ class PricesGoodsController extends Controller
             },
             'catalog',
             'catalogs_item',
-            'currency'
+            'currency',
+            'discount_price',
+            'discount_catalogs_item'
         ])
             ->withCount('likes')
 //        ->whereHas('service', function ($q) {
@@ -241,9 +243,9 @@ class PricesGoodsController extends Controller
                 'price' => $price,
             ]);
         }
-    
+
         $data = $request->input();
-        
+
 //        if ($priceGoods->is_discount == 1) {
 //        $priceGoods->load('discounts_actual');
 //        if ($priceGoods->discounts_actual->isNotEmpty()) {
@@ -270,24 +272,24 @@ class PricesGoodsController extends Controller
 //            }
 //        }
 //    }
-    
+
         $priceGoods->discounts()->sync($request->discounts);
-    
+
         if ($request->is_discount == 1) {
             $discountPrice = $priceGoods->discounts_actual->first();
             $data['price_discount_id'] = $discountPrice->id ? $discountPrice->id : null;
-    
+
             $discountCatalogsItem = $priceGoods->catalogs_item->discounts_actual->first();
             $data['catalogs_item_discount_id'] = isset($discountCatalogsItem->id) ? $discountCatalogsItem->id : null;
         } else {
             $data['price_discount_id'] = null;
             $data['catalogs_item_discount_id'] = null;
         }
-        
+
         $priceGoods->update($data);
-    
-        
-        
+
+
+
         // Отдаем Ajax
         if ($request->ajax()) {
             $priceGoods = PricesGoods::with([
@@ -431,7 +433,7 @@ class PricesGoodsController extends Controller
 //            'discount_percent' => 0,
 //            'discount_currency' => 0,
 //        ]);
-    
+
         $priceGoods = PricesGoods::where([
             'catalogs_goods_item_id' => $request->catalogs_goods_item_id,
             'catalogs_goods_id' => $request->catalogs_goods_id,
@@ -440,10 +442,10 @@ class PricesGoodsController extends Controller
             'currency_id' => $request->currency_id,
         ])
         ->first();
-    
+
         $catalogsGoodsItem = CatalogsGoodsItem::find($request->catalogs_goods_item_id);
         $discountCatalogsItem = $catalogsGoodsItem->discounts_actual->first();
-    
+
 
         $discountCatalogsItemId = null;
         if ($discountCatalogsItem) {

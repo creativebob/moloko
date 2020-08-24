@@ -90,7 +90,7 @@
 {{--                                        :required="true"--}}
 {{--                                    ></input-time-component>--}}
                                 <label>Время начала:
-                                    @include('includes.inputs.time', ['name' => 'begin_time', 'placeholder' => true, 'value' => isset($discount->begined_at) ? $discount->begined_at->format('H:i') : null, 'required' => true, 'disabled' => null])
+                                    @include('includes.inputs.time', ['name' => 'begin_time', 'placeholder' => true, 'value' => isset($discount->begined_at) ? $discount->begined_at->format('H:i') : null, 'required' => null, 'disabled' => null])
                                 </label>
                             </div>
 
