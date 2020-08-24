@@ -231,18 +231,25 @@ class CatalogsGoodsItemController extends Controller
             $catalogsGoodsItem->filters()->sync($request->filters);
 
             $catalogsGoodsItem->discounts()->sync($request->discounts);
-    
+
             if ($request->is_discount == 1) {
                 $catalogsGoodsItem->load([
                     'discounts_actual'
                 ]);
                 $discountCatalogsItem = $catalogsGoodsItem->discounts_actual->first();
-                foreach($catalogsGoodsItem->prices_goods_actual as $priceGoods) {
-                    $priceGoods->update([
-                        'catalogs_item_discount_id' => $discountCatalogsItem->id ? $discountCatalogsItem->id : null
-                    ]);
+                if ($discountCatalogsItem) {
+                    foreach($catalogsGoodsItem->prices_goods_actual as $priceGoods) {
+                        $priceGoods->update([
+                            'catalogs_item_discount_id' => $discountCatalogsItem->id ? $discountCatalogsItem->id : null
+                        ]);
+                    }
+                } else {
+                    foreach($catalogsGoodsItem->prices_goods_actual as $priceGoods) {
+                        $priceGoods->update([
+                            'catalogs_item_discount_id' => null
+                        ]);
+                    }
                 }
-                
             } else {
                 foreach($catalogsGoodsItem->prices_goods_actual as $priceGoods) {
                     $priceGoods->update([

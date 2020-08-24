@@ -97,7 +97,7 @@
 
 
                     <div class="small-12 medium-6 cell">
-                        <label>Количество, единиц
+                        <label>Количество
 <!--                                <input-->
 <!--                                    type="number"-->
 <!--                                    name="count"-->
