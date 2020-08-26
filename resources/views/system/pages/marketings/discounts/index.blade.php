@@ -28,6 +28,7 @@
                         </th>
                         <th class="td-name">Название</th>
                         <th class="td-entity">Название</th>
+                        <th class="td-block">Блокировка</th>
                         <th class="td-description">Описание</th>
                         <th class="td-percent">Проценты</th>
                         <th class="td-currency">Валюта</th>
@@ -65,6 +66,7 @@
 
                             </td>
                             <td class="td-entity">{{ $discount->entity->name }}</td>
+                            <td class="td-block">{{ $discount->is_block == 1 ? 'Да' : 'Нет' }}</td>
                             <td class="td-description">{{ $discount->description }}</td>
                             <td class="td-percent">{{ $discount->percent }}%</td>
                             <td class="td-currency">{{ $discount->currency }}</td>
