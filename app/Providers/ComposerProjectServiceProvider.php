@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Http\View\Composers\Project\CatalogsServiceComposer;
 use App\Http\View\Composers\Project\CatalogsGoodsComposer;
+use App\Http\View\Composers\Project\DiscountsForEstimatesComposer;
 use App\Http\View\Composers\Project\DisplayModesComposer;
 use App\Http\View\Composers\Project\NavigationByAlignComposer;
 use App\Http\View\Composers\Project\NavigationsComposer;
@@ -80,6 +81,8 @@ class ComposerProjectServiceProvider extends ServiceProvider
         view()->composer('project.composers.display_modes.section', DisplayModesComposer::class);
         view()->composer('project.composers.tools_categories.sidebar_with_items', ToolsCategoriesWithToolsComposer::class);
         view()->composer('project.composers.prices_services.providers', ProvidersComposer::class);
+
+        view()->composer('project.composers.estimates.discounts.header_component', DiscountsForEstimatesComposer::class);
     }
 
     public function register()
