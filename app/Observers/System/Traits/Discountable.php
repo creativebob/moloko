@@ -8,7 +8,7 @@ use App\Discount;
 
 trait Discountable
 {
-    
+
     public function getDynamicDiscount($discount, $totalWithoutDiscounts)
     {
         $break = false;
@@ -21,24 +21,24 @@ trait Discountable
                 $amount = $discount->currency;
                 break;
         }
-        
+
         if ($discount->is_block == 1) {
             $break = true;
         }
-        
+
         $result = [
             'amount' => $amount,
             'break' => $break
         ];
-        
+
         return $result;
     }
-    
+
     public function setDiscountsPriceGoods($priceGoods)
     {
         if ($priceGoods->is_discount == 1) {
             $break = false;
-        
+
             if ($priceGoods->price_discount_id) {
                 $discountPrice = Discount::find($priceGoods->price_discount_id);
                 $resPriceDiscount = $this->getDynamicDiscount($discountPrice, $priceGoods->price);
@@ -50,7 +50,8 @@ trait Discountable
                 $priceGoods->price_discount = 0;
                 $priceGoods->total_price_discount = $priceGoods->price;
             }
-        
+//            dd($break);
+
             if ($break) {
                 $priceGoods->catalogs_item_discount_id = null;
                 $priceGoods->catalogs_item_discount = 0;
@@ -74,18 +75,18 @@ trait Discountable
                     $priceGoods->total_catalogs_item_discount = $priceGoods->total_price_discount;
                 }
             }
-        
+
             $priceGoods->total = $priceGoods->total_catalogs_item_discount;
 //            dd($priceGoods);
         } else {
             $priceGoods->price_discount_id = null;
             $priceGoods->price_discount = 0;
             $priceGoods->total_price_discount = $priceGoods->price;
-        
+
             $priceGoods->catalogs_item_discount_id = null;
             $priceGoods->catalogs_item_discount = 0;
             $priceGoods->total_catalogs_item_discount = $priceGoods->price;
-        
+
             $priceGoods->total = $priceGoods->price;
         }
 //        dd($priceGoods);
@@ -123,17 +124,17 @@ trait Discountable
 //        dd($data);
 //        $priceGoods->update($data);
     }
-    
+
     public function updateDiscountCatalogsGoodsItem($catalogsGoodsItem, $discount)
     {
-        
+
         $discountCatalogsItem = $discount;
         foreach ($catalogsGoodsItem->prices_goods_actual as $priceGoods) {
-    
+
             if ($priceGoods->is_discount == 1) {
                 $resPrice = $this->getDynamicDiscount($priceGoods->discounts_actual->first(), $priceGoods->price);
                 $data['price_discount'] = $resPrice['amount'];
-        
+
                 if (! $resPrice['break']) {
                     if ($catalogsGoodsItem->is_discount == 1) {
                         $resCatalogItem = $this->getDynamicDiscount($discount, $priceGoods->price);
@@ -143,16 +144,16 @@ trait Discountable
                         $data['catalogs_item_discount'] = 0;
                     }
                 }
-        
+
             } else {
                 $data['price_discount_id'] = null;
                 $data['price_discount'] = 0;
             }
 //            dd($data);
             $priceGoods->update($data);
-            
-            
+
+
         }
-        
+
     }
 }
