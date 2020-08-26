@@ -128,12 +128,27 @@
         <span>{{ num_format($cur_prices_goods->price, 0) }}</span>
     </td>
     <td class="td-discount">
-        <span>Индивидуальная: {{ num_format($cur_prices_goods->discount_percent, 0) }}% / {{ num_format($cur_prices_goods->discount_currency, 0) }} {{ $cur_prices_goods->currency->abbreviation }}</span><br>
         @isset($cur_prices_goods->discount_price)
-            <span>На прайс: {{ num_format($cur_prices_goods->discount_price->percent, 0) }}% / {{ num_format($cur_prices_goods->discount_price->currency, 0) }} {{ $cur_prices_goods->currency->abbreviation }}</span><br>
+            @switch($cur_prices_goods->discount_price->mode)
+                @case(1)
+                <span>На товар: {{ num_format($cur_prices_goods->discount_price->percent, 0) }}% / {{ num_format($cur_prices_goods->price_discount, 0) }} {{ $cur_prices_goods->currency->abbreviation }}</span><br>
+                @break
+
+                @case(2)
+                <span>На товар: {{ num_format($cur_prices_goods->discount_price->currency, 0) }} {{ $cur_prices_goods->currency->abbreviation }}</span><br>
+                @break
+            @endswitch
         @endisset
         @isset($cur_prices_goods->discount_catalogs_item)
-            <span>На раздел: {{ num_format($cur_prices_goods->discount_catalogs_item->percent, 0) }}% / {{ num_format($cur_prices_goods->discount_catalogs_item->currency, 0) }} {{ $cur_prices_goods->currency->abbreviation }}</span>
+            @switch($cur_prices_goods->discount_catalogs_item->mode)
+                @case(1)
+                <span>На раздел: {{ num_format($cur_prices_goods->discount_catalogs_item->percent, 0) }}% / {{ num_format($cur_prices_goods->catalogs_item_discount, 0) }} {{ $cur_prices_goods->currency->abbreviation }}</span><br>
+                @break
+
+                @case(2)
+                <span>На раздел: {{ num_format($cur_prices_goods->discount_catalogs_item->currency, 0) }} {{ $cur_prices_goods->currency->abbreviation }}</span><br>
+                @break
+            @endswitch
         @endisset
     </td>
     <td class="td-total">{{ num_format(($cur_prices_goods->total), 0) }}</td>

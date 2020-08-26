@@ -94,6 +94,10 @@
             name: String,
             items: Array,
             actualItems: Array,
+            limit: {
+                type: Number,
+                default: 1
+            }
         },
         data() {
             return {
@@ -122,7 +126,7 @@
                 return this.items.filter(item => item.category_id === categoryId);
             },
             check() {
-                if (this.text.length >= 2) {
+                if (this.text.length >= this.limit) {
                     this.results = this.items.filter(item => {
                         return item.name.toLowerCase().includes(this.text.toLowerCase());
                     });
@@ -151,7 +155,7 @@
                 this.search = false;
                 this.results = [];
 
-                if (this.text && this.text.length > 2) {
+                if (this.text && this.text.length >= this.limit) {
                     this.check();
                 }
             },

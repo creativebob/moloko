@@ -43,10 +43,20 @@
                 <div class="grid-x grid-padding-x">
 
                     <div class="small-12 medium-6 cell">
-                        <prices-goods-discount-component
-                            :item="{{ $priceGoods }}"
-                        ></prices-goods-discount-component>
+{{--                        <prices-goods-discount-component--}}
+{{--                            :item="{{ $priceGoods }}"--}}
+{{--                        ></prices-goods-discount-component>--}}
                         <div class="grid-x grid-padding-x">
+
+                            <div class="cell small-12 medium-4">
+                                <label>Цена
+                                    <digit-component
+                                        name="price"
+                                        :value="{{ $priceGoods->price }}"
+                                    ></digit-component>
+                                    {{--                                    {!! Form::number('percent', null, ['disabled' => $disabled]) !!}--}}
+                                </label>
+                            </div>
 
                             <div class="cell small-12 medium-4">
                                 <label>Внут. валюта
@@ -54,11 +64,11 @@
                                 </label>
                             </div>
 
-                            <div class="cell small-12 medium-4">
-                                <label>Тип скидки
-                                    {!! Form::select('discount_mode', [1 => 'Проценты', 2 => 'Валюта'], $priceGoods->discount_mode, ['required']) !!}
-                                </label>
-                            </div>
+{{--                            <div class="cell small-12 medium-4">--}}
+{{--                                <label>Тип скидки--}}
+{{--                                    {!! Form::select('discount_mode', [1 => 'Проценты', 2 => 'Валюта'], $priceGoods->discount_mode, ['required']) !!}--}}
+{{--                                </label>--}}
+{{--                            </div>--}}
 
                             <div class="small-12 cell checkbox">
                                 {!! Form::hidden('is_show_price', 0) !!}

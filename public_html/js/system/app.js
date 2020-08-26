@@ -92093,7 +92093,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: {
         name: String,
         items: Array,
-        actualItems: Array
+        actualItems: Array,
+        limit: {
+            type: Number,
+            default: 1
+        }
     },
     data: function data() {
         return {
@@ -92126,7 +92130,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         check: function check() {
             var _this = this;
 
-            if (this.text.length >= 2) {
+            if (this.text.length >= this.limit) {
                 this.results = this.items.filter(function (item) {
                     return item.name.toLowerCase().includes(_this.text.toLowerCase());
                 });
@@ -92155,7 +92159,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.search = false;
             this.results = [];
 
-            if (this.text && this.text.length > 2) {
+            if (this.text && this.text.length >= this.limit) {
                 this.check();
             }
         },
@@ -102888,6 +102892,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     computed: {
+        discount: function discount() {
+            return parseFloat((this.priceGoods.price - this.priceGoods.total) / (this.priceGoods.price / 100));
+        }
         // price: {
         //     get () {
         //         return parseInt(this.priceGoods.price);
@@ -102896,6 +102903,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         //         this.priceInput = parseInt(value)
         //     }
         // },
+
     },
 
     methods: {
@@ -103015,15 +103023,7 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c("td", [
-        _vm._v(
-          _vm._s(_vm.priceGoods.discount_percent) +
-            "% / " +
-            _vm._s(_vm.priceGoods.discount_currency) +
-            " " +
-            _vm._s(_vm.priceGoods.currency.abbreviation)
-        )
-      ]),
+      _c("td", [_vm._v(_vm._s(_vm.discount) + "%")]),
       _vm._v(" "),
       _c("td", [
         _vm._v(

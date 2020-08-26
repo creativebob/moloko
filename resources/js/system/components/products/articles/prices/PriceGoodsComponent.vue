@@ -41,7 +41,7 @@
                 @click="change = true"
             >{{ priceGoods.price }}</span> {{ priceGoods.currency.abbreviation }}
         </td>
-        <td>{{ priceGoods.discount_percent }}% / {{ priceGoods.discount_currency }} {{ priceGoods.currency.abbreviation }}</td>
+        <td>{{ discount }}%</td>
         <td>{{ priceGoods.total }} {{ priceGoods.currency.abbreviation }}</td>
 
         <td>
@@ -79,6 +79,9 @@
             }
         },
         computed: {
+            discount() {
+                return parseFloat((this.priceGoods.price - this.priceGoods.total) / (this.priceGoods.price / 100));
+            }
             // price: {
             //     get () {
             //         return parseInt(this.priceGoods.price);
