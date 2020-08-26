@@ -47,7 +47,7 @@
                             </div>
 
                             <div class="cell small-12 medium-6">
-                                <label>К чему привязана
+                                <label>Назначение
                                     {!! Form::select('entity_id', $entities->pluck('name', 'id'), $discount->entity_id, ['required', ($disabled == 'true') ? 'disabled' : '']) !!}
                                 </label>
                             </div>

@@ -27,6 +27,7 @@
                             <label class="label-check" for="check-all"></label>
                         </th>
                         <th class="td-name">Название</th>
+                        <th class="td-entity">Название</th>
                         <th class="td-description">Описание</th>
                         <th class="td-percent">Проценты</th>
                         <th class="td-currency">Валюта</th>
@@ -63,6 +64,7 @@
                                 @endcan
 
                             </td>
+                            <td class="td-entity">{{ $discount->entity->name }}</td>
                             <td class="td-description">{{ $discount->description }}</td>
                             <td class="td-percent">{{ $discount->percent }}%</td>
                             <td class="td-currency">{{ $discount->currency }}</td>

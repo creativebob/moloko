@@ -12,18 +12,18 @@ class EntitiesForDiscountsComposer
      * Скидки
      */
     protected $entities;
-    
+
     /**
      * EntitiesForDiscountsComposer constructor.
      */
     public function __construct()
     {
         $entities = [
-            'estimates',
             'prices_goods',
-            'catalogs_goods_items'
+            'catalogs_goods_items',
+            'estimates',
         ];
-        
+
         // Главный запрос
         $this->entities = Entity::whereIn('alias', $entities)
             ->get();

@@ -44,6 +44,7 @@ class DiscountController extends Controller
         $discounts = Discount::with([
             'author',
             'company',
+            'entity'
         ])
             ->where('archive', false)
             ->moderatorLimit($answer)
