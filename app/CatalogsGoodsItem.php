@@ -48,6 +48,7 @@ use App\Scopes\Filters\BooklistFilter;
 		protected $fillable = [
 			'name',
 			'description',
+            'header',
 			'title',
 			'seo_description',
 			'parent_id',
@@ -116,7 +117,7 @@ use App\Scopes\Filters\BooklistFilter;
 		{
 			return $this->hasMany(PricesGoods::class);
 		}
-        
+
         public function prices_goods_actual()
         {
             return $this->hasMany(PricesGoods::class)

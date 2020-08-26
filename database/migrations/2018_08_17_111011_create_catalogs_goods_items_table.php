@@ -23,7 +23,8 @@ class CreateCatalogsGoodsItemsTable extends Migration
             $table->string('slug')->index()->nullable()->comment('Слаг');
             $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
 
-            $table->string('title')->nullable()->comment('Заголовок');
+            $table->string('header')->nullable()->comment('Заголовок');
+            $table->string('title')->nullable()->comment('Название страницы');
             $table->text('description')->nullable()->comment('Описание');
             $table->text('seo_description')->nullable()->comment('Описание для сайта');
 
@@ -31,7 +32,7 @@ class CreateCatalogsGoodsItemsTable extends Migration
             $table->foreign('photo_id')->references('id')->on('photos');
 
             $table->string('color', 7)->nullable()->comment('Цвет');
-    
+
             $table->boolean('is_discount')->default(1)->unsigned()->comment('Режим скидок');
 
             $table->bigInteger('parent_id')->nullable()->unsigned()->comment('Id родителя');

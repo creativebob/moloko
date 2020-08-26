@@ -89,8 +89,13 @@
                         <div class="small-12 medium-6 cell">
                             <div class="grid-x grid-padding-x">
                                 <div class="small-12 cell">
-                                    <label>Заголовок страницы
+                                    <label>Название страницы
                                         @include('includes.inputs.string', ['name' => 'title'])
+                                    </label>
+                                </div>
+                                <div class="small-12 cell">
+                                    <label>Заголовок страницы
+                                        @include('includes.inputs.string', ['name' => 'header'])
                                     </label>
                                 </div>
                                 <div class="small-12 cell">
