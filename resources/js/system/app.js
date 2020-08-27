@@ -10,11 +10,15 @@ require('../common/bootstrap');
 // window.Vuex = require('vuex');
 
 import Vue from 'vue';
-import Vuex from 'vuex';
 window.Vue = Vue;
-window.Vuex = Vuex;
 
+import Vuex from 'vuex';
+window.Vuex = Vuex;
 Vue.use(Vuex);
+
+import VueDraggable from 'vue-draggable'
+window.VueDraggable = VueDraggable;
+Vue.use(VueDraggable)
 
 /**
  * The following block of code may be used to automatically register your

@@ -19,6 +19,7 @@ class DiscountObserver
 
     public function updating(Discount $discount)
     {
+
         $this->update($discount);
     }
 
@@ -38,10 +39,16 @@ class DiscountObserver
     public function recalculating($discount)
     {
         if ($discount->isDirty('mode') || $discount->isDirty('is_block')) {
-//            dd($discount->isDirty('is_block'));
             switch($discount->entity->alias) {
                 case ('prices_goods'):
-                    $discount->load('prices_goods_actual');
+                    $discount->load([
+                        'prices_goods_actual' => function ($q) {
+                            $q->with([
+                                'discounts_actual',
+                                'catalogs_item.discounts_actual'
+                            ]);
+                        }
+                    ]);
 
                     foreach ($discount->prices_goods_actual as $priceGoods) {
                         $priceGoods = $this->setDiscountsPriceGoods($priceGoods);
@@ -56,7 +63,14 @@ class DiscountObserver
                             $q->whereHas('discounts_actual', function ($q) use ($discount) {
                                 $q->where('id', $discount->id);
                             })
-                            ->with('prices_goods_actual');
+                            ->with([
+                                'prices_goods_actual' => function ($q) {
+                                    $q->with([
+                                        'discounts_actual',
+                                        'catalogs_item.discounts_actual'
+                                    ]);
+                                }
+                            ]);
                         }
                     ]);
                     foreach ($discount->catalogs_goods_items as $catalogsGoodsItem) {

@@ -65,7 +65,19 @@
                                 @endcan
 
                             </td>
-                            <td class="td-entity">{{ $discount->entity->name }}</td>
+                            <td class="td-entity">
+                                @switch($discount->entity->alias)
+                                    @case('estimates')
+                                        Чек
+                                    @break
+                                    @case('prices_goods')
+                                        Товар
+                                    @break
+                                    @case('catalogs_goods_items')
+                                        Раздел каталога
+                                    @break
+                                @endswitch
+                            </td>
                             <td class="td-block">{{ $discount->is_block == 1 ? 'Да' : 'Нет' }}</td>
                             <td class="td-description">{{ $discount->description }}</td>
                             <td class="td-percent">{{ $discount->percent }}%</td>

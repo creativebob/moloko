@@ -45,7 +45,10 @@
                 </tr>
                 </thead>
 
-                <tbody id="table-prices">
+                <tbody
+                    v-drag-and-drop:options="dragAndDropOptions"
+                    id="table-prices"
+                >
 
                 <discount-component
                     v-for="(item, index) in actualDiscounts"
@@ -60,6 +63,8 @@
 </template>
 
 <script>
+    import { VueDraggableDirective } from 'vue-draggable'
+
     export default {
         components: {
             'items-list-component': require('../common/dropdowns/items/ItemsListComponent'),
@@ -72,6 +77,19 @@
         data() {
             return {
                 actualDiscounts: this.item.discounts,
+                dragAndDropOptions: {
+                    dropzoneSelector: 'tbody',
+                    draggableSelector: 'tr',
+                    handlerSelector: null,
+                    reactivityEnabled: true,
+                    multipleDropzonesItemsDraggingEnabled: false,
+                    showDropzoneAreas: true,
+                    onDrop: function(event) {},
+                    onDragstart: function(event) {},
+                    onDragenter: function(event) {},
+                    onDragover: function(event) {},
+                    onDragend: function(event) {console.log(event)}
+                }
             }
         },
         methods: {
@@ -83,6 +101,9 @@
                 let index = this.actualDiscounts.findIndex(item => item.id == id);
                 this.actualDiscounts.splice(index, 1);
             },
+        },
+        directives: {
+            dragAndDrop: VueDraggableDirective
         }
 
     }

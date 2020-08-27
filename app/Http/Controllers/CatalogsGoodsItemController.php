@@ -234,7 +234,8 @@ class CatalogsGoodsItemController extends Controller
 
             if ($request->is_discount == 1) {
                 $catalogsGoodsItem->load([
-                    'discounts_actual'
+                    'discounts_actual',
+                    'prices_goods_actual'
                 ]);
                 $discountCatalogsItem = $catalogsGoodsItem->discounts_actual->first();
                 if ($discountCatalogsItem) {

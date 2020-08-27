@@ -52,19 +52,19 @@ class PricesGoods extends Model
         'filial_id',
 
         'price',
-        
+
         'discount_mode',
         'discount_percent',
         'discount_currency',
-        
+
         'price_discount_id',
         'price_discount',
         'total_price_discount',
-        
+
         'catalogs_item_discount_id',
         'catalogs_item_discount',
         'total_catalogs_item_discount',
-        
+
         'total',
 
         'points',
@@ -75,7 +75,7 @@ class PricesGoods extends Model
         'status',
         'is_hit',
         'is_new',
-        
+
         'is_show_price',
 
         'is_discount',
@@ -192,7 +192,11 @@ class PricesGoods extends Model
 
     public function discounts()
     {
-        return $this->belongsToMany(Discount::class, 'discount_price_goods', 'price_goods_id', 'discount_id');
+        return $this->belongsToMany(Discount::class, 'discount_price_goods', 'price_goods_id', 'discount_id')
+            ->withPivot([
+                'sort'
+            ])
+            ->orderBy('pivot_sort');
     }
 
     public function discounts_actual()
@@ -206,14 +210,15 @@ class PricesGoods extends Model
             })
             ->withPivot([
                 'sort'
-            ]);
+            ])
+            ->orderBy('pivot_sort');
     }
-    
+
     public function discount_price()
     {
         return $this->belongsTo(Discount::class, 'price_discount_id');
     }
-    
+
     public function discount_catalogs_item()
     {
         return $this->belongsTo(Discount::class, 'catalogs_item_discount_id');

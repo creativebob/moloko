@@ -246,49 +246,38 @@ class PricesGoodsController extends Controller
 
         $data = $request->input();
 
-//        if ($priceGoods->is_discount == 1) {
-//        $priceGoods->load('discounts_actual');
-//        if ($priceGoods->discounts_actual->isNotEmpty()) {
-//            $discountPrice = $priceGoods->discounts_actual->first();
-//            $resPrice = $this->getDynamicDiscounts($discountPrice, $priceGoods->price);
-//
-//            $data['price_discount_id'] = $discountPrice->id;
-//            $data['total_price_discount'] = $resPrice['total'];
-//
-//            if (! $resPrice['break']) {
-//                $priceGoods->load('catalogs_item');
-//                $catalogsGoodsItem = $priceGoods->catalogs_item;
-//                if ($catalogsGoodsItem->is_discount == 1) {
-//                    $catalogsGoodsItem->load('discounts_actual');
-//                    if ($catalogsGoodsItem->discounts_actual->isNotEmpty()) {
-//                        $discountCatalogsItem = $catalogsGoodsItem->discounts_actual->first();
-//
-//                        $resCatalogItem = $this->getDynamicDiscounts($discountCatalogsItem, $data['total_price_discount']);
-//
-//                        $data['catalogs_item_discount_id'] = $discountCatalogsItem->id;
-//                        $data['total_catalogs_item_discount'] = $resCatalogItem['total'];
-//                    }
-//                }
-//            }
-//        }
-//    }
+        if ($request->ajax()) {
+            if ($priceGoods->is_discount == 1) {
+                $discountPrice = $priceGoods->discounts_actual->first();
+                $data['price_discount_id'] = $discountPrice->id ?? null;
 
-        $priceGoods->discounts()->sync($request->discounts);
-
-        if ($request->is_discount == 1) {
-            $discountPrice = $priceGoods->discounts_actual->first();
-            $data['price_discount_id'] = $discountPrice->id ? $discountPrice->id : null;
-
-            $discountCatalogsItem = $priceGoods->catalogs_item->discounts_actual->first();
-            $data['catalogs_item_discount_id'] = isset($discountCatalogsItem->id) ? $discountCatalogsItem->id : null;
+                $discountCatalogsItem = $priceGoods->catalogs_item->discounts_actual->first();
+                $data['catalogs_item_discount_id'] = $discountCatalogsItem->id ?? null;
+            } else {
+                $data['price_discount_id'] = null;
+                $data['catalogs_item_discount_id'] = null;
+            }
         } else {
-            $data['price_discount_id'] = null;
-            $data['catalogs_item_discount_id'] = null;
+            $priceGoods->discounts()->sync($request->discounts);
+
+            if ($request->is_discount == 1) {
+                $priceGoods->load([
+                    'discounts_actual',
+                    'catalogs_item.discounts_actual'
+                ]);
+
+                $discountPrice = $priceGoods->discounts_actual->first();
+                $data['price_discount_id'] = $discountPrice->id ?? null;
+
+                $discountCatalogsItem = $priceGoods->catalogs_item->discounts_actual->first();
+                $data['catalogs_item_discount_id'] = $discountCatalogsItem->id ?? null;
+            } else {
+                $data['price_discount_id'] = null;
+                $data['catalogs_item_discount_id'] = null;
+            }
         }
 
         $priceGoods->update($data);
-
-
 
         // Отдаем Ajax
         if ($request->ajax()) {
@@ -444,35 +433,31 @@ class PricesGoodsController extends Controller
         ->first();
 
         $catalogsGoodsItem = CatalogsGoodsItem::find($request->catalogs_goods_item_id);
-        $discountCatalogsItem = $catalogsGoodsItem->discounts_actual->first();
-
 
         $discountCatalogsItemId = null;
-        if ($discountCatalogsItem) {
+        if ($catalogsGoodsItem) {
+            $discountCatalogsItem = $catalogsGoodsItem->discounts_actual->first();
             $discountCatalogsItemId = $discountCatalogsItem->id;
         }
 
+
         if ($priceGoods) {
-            $priceGoods->update([
-               'archive' => false
-            ]);
 
             if ($priceGoods->price != $request->price) {
-
                 $priceGoods->actual_price->update([
                     'end_date' => now(),
                 ]);
-
                 $priceGoods->history()->create([
                     'price' => $request->price,
                     'currency_id' => $priceGoods->currency_id,
                 ]);
-
-                $priceGoods->update([
-                    'price' => $request->price,
-                    'catalogs_item_discount_id' => $discountCatalogsItemId,
-                ]);
             }
+
+            $priceGoods->update([
+                'price' => $request->price,
+                'catalogs_item_discount_id' => $discountCatalogsItemId,
+                'archive' => false
+            ]);
 
         } else {
             $data = $request->input();

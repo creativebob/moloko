@@ -173,7 +173,11 @@ use App\Scopes\Filters\BooklistFilter;
 
         public function discounts()
         {
-            return $this->belongsToMany(Discount::class, 'discount_catalogs_goods_item', 'catalogs_goods_item_id', 'discount_id');
+            return $this->belongsToMany(Discount::class, 'discount_catalogs_goods_item', 'catalogs_goods_item_id', 'discount_id')
+                ->withPivot([
+                    'sort'
+                ])
+                ->orderBy('pivot_sort');
         }
 
         public function discounts_actual()
@@ -188,13 +192,7 @@ use App\Scopes\Filters\BooklistFilter;
                 ->withPivot([
                     'sort'
                 ])
-//                ->orderBy('pivot_sort')
-//                ->join('discount_catalogs_goods_item', 'discounts.id', '=', 'discount_catalogs_goods_item.discount_id')
-//                ->orderBy('sort')
-//                ->wherePivot(function ($q) {
-//                    $q->orderBy('sort');
-//                })
-                ;
+                ->orderBy('pivot_sort');
         }
 
 	    public function getNameWithParentAttribute()
