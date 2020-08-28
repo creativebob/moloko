@@ -20,8 +20,6 @@ class PricesGoodsObserver
 
         // TODO - 19.11.19 - Пока по дефолту рубль
         $priceGoods->currency_id = 1;
-
-        $this->setDiscountsPriceGoods($priceGoods);
     }
 
     public function created(PricesGoods $priceGoods)
@@ -30,6 +28,10 @@ class PricesGoodsObserver
             'price' => $priceGoods->price,
             'currency_id' => $priceGoods->currency_id,
         ]);
+
+        // TODO - 28.08.20 - Костыль для сохранения настроек
+        $this->setDiscountsPriceGoods($priceGoods);
+        $priceGoods->save();
     }
 
     public function updating(PricesGoods $priceGoods)

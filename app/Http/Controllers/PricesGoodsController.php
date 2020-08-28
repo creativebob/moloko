@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CatalogsGoodsItem;
+use App\Discount;
 use App\Http\Controllers\System\Traits\Discountable;
 use App\PricesGoods;
 use App\CatalogsGoods;
@@ -437,9 +438,27 @@ class PricesGoodsController extends Controller
         $discountCatalogsItemId = null;
         if ($catalogsGoodsItem) {
             $discountCatalogsItem = $catalogsGoodsItem->discounts_actual->first();
-            $discountCatalogsItemId = $discountCatalogsItem->id;
+
+            if ($discountCatalogsItem) {
+                $discountCatalogsItemId = $discountCatalogsItem->id;
+            }
         }
 
+        $discountEstimate = Discount::where([
+            'company_id' => auth()->user()->company_id,
+            'archive' => false
+        ])
+            ->whereHas('entity', function ($q) {
+                $q->where('alias', 'estimates');
+            })
+            ->where('begined_at', '<=', now())
+            ->where(function ($q) {
+                $q->where('ended_at', '>=', now())
+                    ->orWhereNull('ended_at');
+            })
+            ->first();
+
+        $discountEstimateId = $discountEstimate->id ?? null;
 
         if ($priceGoods) {
 
@@ -455,14 +474,17 @@ class PricesGoodsController extends Controller
 
             $priceGoods->update([
                 'price' => $request->price,
+                'is_discount' => 1,
                 'catalogs_item_discount_id' => $discountCatalogsItemId,
+                'estimate_discount_id' => $discountEstimateId,
                 'archive' => false
             ]);
 
         } else {
             $data = $request->input();
-            $data['is_discount'] = 1;
+//            $data['is_discount'] = 1;
             $data['catalogs_item_discount_id'] = $discountCatalogsItemId;
+            $data['estimate_discount_id'] = $discountEstimateId;
 //            return $data;
             $priceGoods = PricesGoods::create($data);
         }
