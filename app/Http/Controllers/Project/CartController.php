@@ -400,25 +400,25 @@ class CartController extends Controller
                     'is_main' => true
                 ]);
 
-                $discounts = Discount::where('company_id', $company->id)
-                    ->whereHas('entity', function ($q) {
-                        $q->where('alias', 'estimates');
-                    })
-                    ->where('archive', false)
-                    ->where('begined_at', '<=', now())
-                    ->where(function ($q) {
-                        $q->where('ended_at', '>=', now())
-                            ->orWhereNull('ended_at');
-                    })
-                    ->get();
-//              dd($discounts);
-
-                $discountsIds = $discounts->pluck('id');
+//                $discounts = Discount::where('company_id', $company->id)
+//                    ->whereHas('entity', function ($q) {
+//                        $q->where('alias', 'estimates');
+//                    })
+//                    ->where('archive', false)
+//                    ->where('begined_at', '<=', now())
+//                    ->where(function ($q) {
+//                        $q->where('ended_at', '>=', now())
+//                            ->orWhereNull('ended_at');
+//                    })
+//                    ->get();
+////              dd($discounts);
+//
+//                $discountsIds = $discounts->pluck('id');
 
                 $lead->load('estimate');
                 $estimate = $lead->estimate;
 
-                $estimate->discounts()->attach($discountsIds);
+//                $estimate->discounts()->attach($discountsIds);
 
                 logs('leads_from_project')->info("Создана смета с id: [{$estimate->id}]");
 
@@ -465,7 +465,11 @@ class CartController extends Controller
                         'catalogs_item_discount' => $price_goods->catalogs_item_discount,
                         'total_catalogs_item_discount' => $price_goods->total_catalogs_item_discount,
 
-                        'total' => $count * $price_goods->price,
+                        'estimate_discount_id' => $price_goods->estimate_discount_id,
+                        'estimate_discount' => $price_goods->estimate_discount,
+                        'total_estimate_discount' => $price_goods->total_estimate_discount,
+
+                        'total' => $count * $price_goods->total_estimate_discount,
                     ];
 
                     $data['margin_currency'] = $data['total'] - $data['cost'];
@@ -503,25 +507,25 @@ class CartController extends Controller
                 $discountCurrency = 0;
                 $discountPercent = 0;
 
-                if ($total > 0) {
-                    if ($estimate->discounts->isNotEmpty()) {
-                        $discount = $estimate->discounts->first();
-
-                        switch ($discount->mode) {
-                            case(1):
-                                $discountCurrency = $total / 100 * $discount->percent;
-                                $discountPercent = $discount->percent;
-                                break;
-                            case(2):
-                                $discountCurrency = $discount->currency;
-                                $percent = $total / 100;
-                                $discountPercent = $discount->currency / $percent;
-                                break;
-                        }
-
-                        $total -= $discountCurrency;
-                    }
-                }
+//                if ($total > 0) {
+//                    if ($estimate->discounts->isNotEmpty()) {
+//                        $discount = $estimate->discounts->first();
+//
+//                        switch ($discount->mode) {
+//                            case(1):
+//                                $discountCurrency = $total / 100 * $discount->percent;
+//                                $discountPercent = $discount->percent;
+//                                break;
+//                            case(2):
+//                                $discountCurrency = $discount->currency;
+//                                $percent = $total / 100;
+//                                $discountPercent = $discount->currency / $percent;
+//                                break;
+//                        }
+//
+//                        $total -= $discountCurrency;
+//                    }
+//                }
 
                 $estimate->amount = $lead->badget;
                 $estimate->total = $total;

@@ -3,7 +3,7 @@ const moduleEstimate = {
         estimate: null,
         goodsItems: [],
         servicesItems: [],
-        discounts: [],
+        // discounts: [],
     },
     mutations: {
         // Смета
@@ -72,9 +72,9 @@ const moduleEstimate = {
         },
 
         // Скидки
-        SET_DISCOUNTS(state, discounts) {
-            state.discounts = discounts;
-        },
+        // SET_DISCOUNTS(state, discounts) {
+        //     state.discounts = discounts;
+        // },
 
         // Платежи
         ADD_PAYMENT(state, payment) {
@@ -82,6 +82,7 @@ const moduleEstimate = {
         }
     },
     actions: {
+        // Товары
         ADD_GOODS_ITEM_TO_ESTIMATE({ state }, priceId) {
             if (state.estimate.is_registered === 0) {
                 axios
@@ -129,6 +130,8 @@ const moduleEstimate = {
                     });
             }
         },
+
+        // Услуги
         ADD_SERVICES_ITEM_TO_ESTIMATE({ state }, priceId) {
             if (state.estimate.is_registered === 0) {
                 axios
@@ -236,51 +239,51 @@ const moduleEstimate = {
             let discount = goodsDiscount + servicesDiscount;
             return discount.toFixed(2);
         },
-        estimateDiscount: state => {
-            let discount = null;
-            if (state.discounts && state.discounts.length) {
-                discount = state.estimate.discounts[0];
-            }
-            return discount;
-        },
-        estimateDiscountCurrency: state => {
-            let goodsTotal = 0,
-                servicesTotal = 0;
-
-            if (state.goodsItems.length) {
-                state.goodsItems.forEach(item => {
-                    return goodsTotal += parseFloat(item.total)
-                });
-            }
-
-            if (state.servicesItems.length) {
-                state.servicesItems.forEach(item => {
-                    return servicesTotal += parseFloat(item.total)
-                });
-            }
-
-            let total = goodsTotal + servicesTotal;
-
-            let discount = null,
-                discountCurrency = 0;
-            if (state.discounts && state.discounts.length) {
-                discount = state.estimate.discounts[0];
-            }
-            if (discount) {
-                switch (discount.mode) {
-                    case (1):
-                        let percent = total / 100;
-                        discountCurrency = discount.percent * percent;
-                        break;
-
-                    case (2):
-                        discountCurrency = discount.currency;
-                        break;
-                }
-            }
-
-            return discountCurrency;
-        },
+        // estimateDiscount: state => {
+        //     let discount = null;
+        //     if (state.discounts && state.discounts.length) {
+        //         discount = state.estimate.discounts[0];
+        //     }
+        //     return discount;
+        // },
+        // estimateDiscountCurrency: state => {
+        //     let goodsTotal = 0,
+        //         servicesTotal = 0;
+        //
+        //     if (state.goodsItems.length) {
+        //         state.goodsItems.forEach(item => {
+        //             return goodsTotal += parseFloat(item.total)
+        //         });
+        //     }
+        //
+        //     if (state.servicesItems.length) {
+        //         state.servicesItems.forEach(item => {
+        //             return servicesTotal += parseFloat(item.total)
+        //         });
+        //     }
+        //
+        //     let total = goodsTotal + servicesTotal;
+        //
+        //     let discount = null,
+        //         discountCurrency = 0;
+        //     if (state.discounts && state.discounts.length) {
+        //         discount = state.estimate.discounts[0];
+        //     }
+        //     if (discount) {
+        //         switch (discount.mode) {
+        //             case (1):
+        //                 let percent = total / 100;
+        //                 discountCurrency = discount.percent * percent;
+        //                 break;
+        //
+        //             case (2):
+        //                 discountCurrency = discount.currency;
+        //                 break;
+        //         }
+        //     }
+        //
+        //     return discountCurrency;
+        // },
         estimateTotal: state => {
             let goodsTotal = 0,
                 servicesTotal = 0;
@@ -299,26 +302,26 @@ const moduleEstimate = {
 
             let total = goodsTotal + servicesTotal;
 
-            let discount = null,
-                discountCurrency = 0;
-            if (state.discounts && state.discounts.length) {
-                discount = state.estimate.discounts[0];
-            }
-            if (discount) {
-                switch (discount.mode) {
-                    case (1):
-                        let percent = total / 100;
-                        discountCurrency = discount.percent * percent;
-                        break;
-
-                    case (2):
-                        discountCurrency = discount.currency;
-                        break;
-                }
-            }
-
-            let totalWithDiscount = total - parseFloat(discountCurrency);
-            return totalWithDiscount.toFixed(2);
+            // let discount = null,
+            //     discountCurrency = 0;
+            // if (state.discounts && state.discounts.length) {
+            //     discount = state.estimate.discounts[0];
+            // }
+            // if (discount) {
+            //     switch (discount.mode) {
+            //         case (1):
+            //             let percent = total / 100;
+            //             discountCurrency = discount.percent * percent;
+            //             break;
+            //
+            //         case (2):
+            //             discountCurrency = discount.currency;
+            //             break;
+            //     }
+            // }
+            //
+            // let totalWithDiscount = total - parseFloat(discountCurrency);
+            return total.toFixed(2);
         },
 
 

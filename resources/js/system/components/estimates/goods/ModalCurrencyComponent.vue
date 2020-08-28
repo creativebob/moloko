@@ -109,6 +109,7 @@
                                 @change="changeCount"
                                 :decimal-place="0"
                                 :disabled="isRegistered"
+                                ref="countComponent"
                             ></digit-component>
                         </label>
                     </div>
@@ -187,6 +188,7 @@
         methods: {
             changeCount(value) {
                 this.item.count = value;
+                this.$refs.countComponent.update(value);
             },
             checkChangeCount() {
                 if (this.item.product.serial === 0) {
@@ -205,6 +207,7 @@
                     .then(response => {
                         $('#modal-estimates_goods_item-' + this.item.id).foundation('close');
                         this.$store.commit('UPDATE_GOODS_ITEM', response.data);
+                        this.$emit('update-count', parseInt(response.data.count));
                     })
                     .catch(error => {
                         console.log(error)

@@ -213,13 +213,77 @@ class DiscountController extends Controller
         // Подключение политики
         $this->authorize(getmethod('destroy'), $discount);
 
-        $alias = $discount->entity->alias;
-//        dd($alias);
-        $discount->$alias()->detach();
-
         $discount->update([
             'archive' => true
         ]);
+
+        switch($discount->entity->alias) {
+            case('prices_goods'):
+                $discount->load([
+                    'prices_goods_actual'
+                ]);
+
+                $pricesGoods = $discount->prices_goods_actual;
+
+                $discount->prices_goods()->detach();
+
+                foreach($pricesGoods as $priceGoods) {
+                    $priceGoods->update([
+                        'price_discount_id' => null
+                    ]);
+                }
+                break;
+
+            case('catalogs_goods_items'):
+                $discount->load([
+                    'catalogs_goods_items_prices_goods_actual'
+                ]);
+
+                $pricesGoods = $discount->catalogs_goods_items_prices_goods_actual;
+
+                $discount->catalogs_goods_items()->detach();
+
+                foreach($pricesGoods as $priceGoods) {
+                    $priceGoods->update([
+                        'catalogs_item_discount_id' => null
+                    ]);
+                }
+                break;
+
+//                $discount->load([
+//                    'catalogs_goods_items' => function ($q) {
+//                        $q->with([
+//                            'prices_goods_actual'
+//                        ]);
+//                    }
+//                ]);
+//                $catalogsGoodsItems = $discount->catalogs_goods_items;
+//
+
+//
+//                foreach($catalogsGoodsItems as $catalogsGoodsItem) {
+//                    foreach($catalogsGoodsItem->prices_goods_actual as $priceGoods) {
+//                        $priceGoods->update([
+//                            'catalogs_item_discount_id' => null
+//                        ]);
+//                    }
+//                }
+                break;
+
+            case('estimates'):
+                $discount->load([
+                    'estimates_prices_goods_actual'
+                ]);
+
+                $pricesGoods = $discount->estimates_prices_goods_actual;
+
+                foreach($pricesGoods as $priceGoods) {
+                    $priceGoods->update([
+                        'estimate_discount_id' => null
+                    ]);
+                }
+                break;
+        }
 
         if ($discount) {
             return redirect()->route('discounts.index');

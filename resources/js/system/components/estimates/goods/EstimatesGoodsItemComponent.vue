@@ -47,6 +47,7 @@
 
         <count-component
             :item="item"
+            @update="updateModalCount"
             ref="countComponent"
         ></count-component>
 
@@ -108,6 +109,7 @@
             :item="item"
             :is-registered="isRegistered"
             ref="modalCurrencyComponent"
+            @update-count="updateCount"
         ></modal-component>
     </tr>
 </template>
@@ -205,6 +207,16 @@
             // },
         },
         methods: {
+            updateModalCount(count) {
+                if (this.item.sale_mode == 1) {
+                    this.$refs.modalCurrencyComponent.changeCount(count);
+                }
+            },
+            updateCount(count) {
+                if (this.item.sale_mode == 1) {
+                    this.$refs.countComponent.changeValue(count);
+                }
+            },
             openModalRemoveItem() {
                 this.$emit('open-modal-remove', this.item);
             },

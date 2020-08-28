@@ -42,7 +42,9 @@ trait Discountable
 //                'discounts_actual',
 //                'catalogs_item.discounts_actual'
 //            ]);
-
+            $priceGoods->load([
+                'discounts_actual'
+            ]);
             if ($priceGoods->discounts_actual->first()) {
                 $discountPrice = $priceGoods->discounts_actual->first();
                 $priceGoods->price_discount_id = $discountPrice->id;
@@ -66,25 +68,65 @@ trait Discountable
                 $catalogsItem = $priceGoods->catalogs_item;
 
                 if ($catalogsItem->is_discount == 1) {
+                    $catalogsItem->load([
+                        'discounts_actual'
+                    ]);
                     if ($catalogsItem->discounts_actual->first()) {
                         $discountCatalogsItem = $catalogsItem->discounts_actual->first();
                         $priceGoods->catalogs_item_discount_id = $discountCatalogsItem->id;
 //                            $discountCatalogsItem = Discount::find($priceGoods->catalogs_item_discount_id);
-                        $resCatalogsItemDiscount = $this->getDynamicDiscount($discountCatalogsItem, $priceGoods->price);
+                        $resCatalogsItemDiscount = $this->getDynamicDiscount($discountCatalogsItem, $priceGoods->total_price_discount);
                         $priceGoods->catalogs_item_discount = $resCatalogsItemDiscount['amount'];
                         $priceGoods->total_catalogs_item_discount = $priceGoods->total_price_discount - $resCatalogsItemDiscount['amount'];
+                        $break = $resCatalogsItemDiscount['break'];
                     } else {
                         $priceGoods->catalogs_item_discount_id = null;
                         $priceGoods->catalogs_item_discount = 0;
                         $priceGoods->total_catalogs_item_discount = $priceGoods->total_price_discount;
                     }
+
+                    if ($break) {
+                        $priceGoods->estimate_discount_id = null;
+                        $priceGoods->estimate_discount = 0;
+                        $priceGoods->total_estimate_discount = $priceGoods->total_catalogs_item_discount;
+                    } else {
+                        $discountEstimate = Discount::where([
+                            'company_id' => $priceGoods->company_id,
+                            'archive' => false
+                        ])
+                            ->whereHas('entity', function ($q) {
+                                $q->where('alias', 'estimates');
+                            })
+                            ->where('begined_at', '<=', now())
+                            ->where(function ($q) {
+                                $q->where('ended_at', '>=', now())
+                                    ->orWhereNull('ended_at');
+                            })
+                            ->first();
+
+                        if ($discountEstimate) {
+                            $priceGoods->estimate_discount_id = $discountEstimate->id;
+                            $resEstimateDiscount = $this->getDynamicDiscount($discountEstimate, $priceGoods->total_catalogs_item_discount);
+                            $priceGoods->estimate_discount = $resEstimateDiscount['amount'];
+                            $priceGoods->total_estimate_discount = $priceGoods->total_catalogs_item_discount - $resEstimateDiscount['amount'];
+//                            $break = $resEstimateDiscount['break'];
+                        } else {
+                            $priceGoods->estimate_discount_id = null;
+                            $priceGoods->estimate_discount = 0;
+                            $priceGoods->total_estimate_discount = $priceGoods->total_catalogs_item_discount;
+                        }
+                    }
                 } else {
                     $priceGoods->catalogs_item_discount_id = null;
                     $priceGoods->catalogs_item_discount = 0;
                     $priceGoods->total_catalogs_item_discount = $priceGoods->total_price_discount;
+
+                    $priceGoods->estimate_discount_id = null;
+                    $priceGoods->estimate_discount = 0;
+                    $priceGoods->total_estimate_discount = $priceGoods->total_catalogs_item_discount;
                 }
             }
-            $priceGoods->total = $priceGoods->total_catalogs_item_discount;
+            $priceGoods->total = $priceGoods->total_estimate_discount;
 //            dd($priceGoods);
         } else {
             $priceGoods->price_discount_id = null;
@@ -94,6 +136,10 @@ trait Discountable
             $priceGoods->catalogs_item_discount_id = null;
             $priceGoods->catalogs_item_discount = 0;
             $priceGoods->total_catalogs_item_discount = $priceGoods->price;
+
+            $priceGoods->estimate_discount_id = null;
+            $priceGoods->estimate_discount = 0;
+            $priceGoods->total_estimate_discount = $priceGoods->price;
 
             $priceGoods->total = $priceGoods->price;
         }

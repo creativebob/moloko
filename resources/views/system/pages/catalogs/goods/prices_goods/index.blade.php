@@ -150,6 +150,17 @@
                 @break
             @endswitch
         @endisset
+            @isset($cur_prices_goods->discount_estimate)
+                @switch($cur_prices_goods->discount_estimate->mode)
+                    @case(1)
+                    <span>На чек: {{ num_format($cur_prices_goods->discount_estimate->percent, 0) }}% / {{ num_format($cur_prices_goods->estimate_discount, 0) }} {{ $cur_prices_goods->currency->abbreviation }}</span><br>
+                    @break
+
+                    @case(2)
+                    <span>На чек: {{ num_format($cur_prices_goods->discount_estimate->currency, 0) }} {{ $cur_prices_goods->currency->abbreviation }}</span><br>
+                    @break
+                @endswitch
+            @endisset
     </td>
     <td class="td-total">{{ num_format(($cur_prices_goods->total), 0) }}</td>
     {{--    <price-goods-price-component :price="{{ $cur_prices_goods->price }}"></price-goods-price-component>--}}

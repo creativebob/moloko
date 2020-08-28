@@ -72,11 +72,17 @@
                     .then(response => {
                         this.$store.commit('UPDATE_GOODS_ITEM', response.data);
                         this.curCount = parseInt(response.data.count);
+                        this.$emit('update', this.curCount);
                         this.changeCount = false;
                     })
                     .catch(error => {
                         console.log(error)
                     });
+            },
+            changeValue(value) {
+                this.item.count = value;
+                this.curCount = value;
+                this.$refs.inputComponent.update(value);
             },
         },
         filters: {

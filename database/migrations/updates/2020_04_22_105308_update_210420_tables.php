@@ -80,14 +80,47 @@ class Update210420Tables extends Migration
 
         Schema::table('estimates_goods_items', function (Blueprint $table) {
             $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('amount');
+
+            $table->bigInteger('price_discount_id')->nullable()->unsigned()->comment('Id скидки прайса')->after('amount');
+//            $table->foreign('price_discount_id')->references('id')->on('discounts')->after('discount_currency');
+            $table->decimal('price_discount', 10, 2)->default(0)->comment('Скидка по прайсу')->after('price_discount_id');
+            $table->decimal('total_price_discount', 10, 2)->default(0)->comment('Сумма с скидкой по прайсу')->after('price_discount');
+
+            $table->bigInteger('catalogs_item_discount_id')->nullable()->unsigned()->comment('Id скидки раздела каталога')->after('total_price_discount');
+//            $table->foreign('catalogs_item_discount_id')->references('id')->on('discounts')->after('discount_currency');
+            $table->decimal('catalogs_item_discount', 10, 2)->default(0)->comment('Скидкка по разделу каталога')->after('catalogs_item_discount_id');
+            $table->decimal('total_catalogs_item_discount', 10, 2)->default(0)->comment('Сумма с скидкой по разделу каталога')->after('catalogs_item_discount');
+
+            $table->bigInteger('estimate_discount_id')->nullable()->unsigned()->comment('Id скидки сметы')->after('total_catalogs_item_discount');
+//            $table->foreign('estimate_discount_id')->references('id')->on('discounts');
+            $table->decimal('estimate_discount', 10, 2)->default(0)->comment('Скидкка по смете')->after('estimate_discount_id');
+            $table->decimal('total_estimate_discount', 10, 2)->default(0)->comment('Сумма с скидкой по смете')->after('estimate_discount');
+
             $table->text('comment')->nullable()->comment('Комментарий')->after('profit');
             $table->tinyInteger('sale_mode')->default(1)->comment('Режим продажи: 1 - валюта, 2 - поинты')->after('goods_id');
             $table->integer('total_points')->default(0)->comment('Итого поинтами')->after('total');
             $table->integer('total_bonuses')->default(0)->comment('Итого бонусами')->after('total_points');
+
         });
 
         Schema::table('estimates_services_items', function (Blueprint $table) {
             $table->integer('points')->default(0)->comment('Внутренняя валюта')->after('amount');
+
+            $table->bigInteger('price_discount_id')->nullable()->unsigned()->comment('Id скидки прайса')->after('amount');
+//            $table->foreign('price_discount_id')->references('id')->on('discounts')->after('discount_currency');
+            $table->decimal('price_discount', 10, 2)->default(0)->comment('Скидка по прайсу')->after('price_discount_id');
+            $table->decimal('total_price_discount', 10, 2)->default(0)->comment('Сумма с скидкой по прайсу')->after('price_discount');
+
+            $table->bigInteger('catalogs_item_discount_id')->nullable()->unsigned()->comment('Id скидки раздела каталога')->after('total_price_discount');
+//            $table->foreign('catalogs_item_discount_id')->references('id')->on('discounts')->after('discount_currency');
+            $table->decimal('catalogs_item_discount', 10, 2)->default(0)->comment('Скидкка по разделу каталога')->after('catalogs_item_discount_id');
+            $table->decimal('total_catalogs_item_discount', 10, 2)->default(0)->comment('Сумма с скидкой по разделу каталога')->after('catalogs_item_discount');
+
+            $table->bigInteger('estimate_discount_id')->nullable()->unsigned()->comment('Id скидки сметы')->after('total_catalogs_item_discount');
+//            $table->foreign('estimate_discount_id')->references('id')->on('discounts');
+            $table->decimal('estimate_discount', 10, 2)->default(0)->comment('Скидкка по смете')->after('estimate_discount_id');
+            $table->decimal('total_estimate_discount', 10, 2)->default(0)->comment('Сумма с скидкой по смете')->after('estimate_discount');
+
             $table->text('comment')->nullable()->comment('Комментарий')->after('profit');
             $table->tinyInteger('sale_mode')->default(1)->comment('Режим продажи: 1 - валюта, 2 - поинты')->after('service_id');
             $table->integer('total_points')->default(0)->comment('Итого поинтами')->after('total');
@@ -170,7 +203,12 @@ class Update210420Tables extends Migration
             $table->decimal('catalogs_item_discount', 10, 2)->default(0)->comment('Скидкка по разделу каталога')->after('catalogs_item_discount_id');
             $table->decimal('total_catalogs_item_discount', 10, 2)->default(0)->comment('Сумма с скидкой по разделу каталога')->after('catalogs_item_discount');
 
-            $table->decimal('total', 12,2)->default(0)->comment('Итоговая сумма')->after('total_catalogs_item_discount');
+            $table->bigInteger('estimate_discount_id')->nullable()->unsigned()->comment('Id скидки сметы')->after('total_catalogs_item_discount');
+//            $table->foreign('estimate_discount_id')->references('id')->on('discounts');
+            $table->decimal('estimate_discount', 10, 2)->default(0)->comment('Скидкка по смете')->after('estimate_discount_id');
+            $table->decimal('total_estimate_discount', 10, 2)->default(0)->comment('Сумма с скидкой по смете')->after('estimate_discount');
+
+            $table->decimal('total', 12,2)->default(0)->comment('Итоговая сумма')->after('total_estimate_discount');
 
             $table->boolean('is_show_price')->default(0)->comment('Показывать цену')->after('is_new');
         });
@@ -192,7 +230,12 @@ class Update210420Tables extends Migration
             $table->decimal('catalogs_item_discount', 10, 2)->default(0)->comment('Скидкка по разделу каталога')->after('catalogs_item_discount_id');
             $table->decimal('total_catalogs_item_discount', 10, 2)->default(0)->comment('Сумма с скидкой по разделу каталога')->after('catalogs_item_discount');
 
-            $table->decimal('total', 12,2)->default(0)->comment('Итоговая сумма')->after('total_catalogs_item_discount');
+            $table->bigInteger('estimate_discount_id')->nullable()->unsigned()->comment('Id скидки сметы')->after('total_catalogs_item_discount');
+//            $table->foreign('estimate_discount_id')->references('id')->on('discounts');
+            $table->decimal('estimate_discount', 10, 2)->default(0)->comment('Скидкка по смете')->after('estimate_discount_id');
+            $table->decimal('total_estimate_discount', 10, 2)->default(0)->comment('Сумма с скидкой по смете')->after('estimate_discount');
+
+            $table->decimal('total', 12,2)->default(0)->comment('Итоговая сумма')->after('total_estimate_discount');
 
             $table->boolean('is_show_price')->default(0)->comment('Показывать цену')->after('is_new');
         });
@@ -260,6 +303,15 @@ class Update210420Tables extends Migration
         Schema::table('estimates_goods_items', function (Blueprint $table) {
             $table->dropColumn([
                 'points',
+                'price_discount_id',
+                'price_discount',
+                'total_price_discount',
+                'catalogs_item_discount_id',
+                'catalogs_item_discount',
+                'total_catalogs_item_discount',
+                'estimate_discount_id',
+                'estimate_discount',
+                'total_estimate_discount',
                 'comment',
                 'sale_mode',
                 'total_points',
@@ -270,6 +322,15 @@ class Update210420Tables extends Migration
         Schema::table('estimates_services_items', function (Blueprint $table) {
             $table->dropColumn([
                 'points',
+                'price_discount_id',
+                'price_discount',
+                'total_price_discount',
+                'catalogs_item_discount_id',
+                'catalogs_item_discount',
+                'total_catalogs_item_discount',
+                'estimate_discount_id',
+                'estimate_discount',
+                'total_estimate_discount',
                 'comment',
                 'sale_mode',
                 'total_points',
@@ -360,6 +421,9 @@ class Update210420Tables extends Migration
                 'catalogs_item_discount_id',
                 'catalogs_item_discount',
                 'total_catalogs_item_discount',
+                'estimate_discount_id',
+                'estimate_discount',
+                'total_estimate_discount',
                 'total',
                 'is_show_price',
             ]);
@@ -377,6 +441,9 @@ class Update210420Tables extends Migration
                 'catalogs_item_discount_id',
                 'catalogs_item_discount',
                 'total_catalogs_item_discount',
+                'estimate_discount_id',
+                'estimate_discount',
+                'total_estimate_discount',
                 'total',
                 'is_show_price',
             ]);

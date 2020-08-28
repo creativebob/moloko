@@ -44,14 +44,18 @@ class EstimatesServicesItem extends Model
         'total',
         'total_points',
         'total_bonuses',
-    
+
         'price_discount_id',
         'price_discount',
         'total_price_discount',
-    
+
         'catalogs_item_discount_id',
         'catalogs_item_discount',
         'total_catalogs_item_discount',
+
+        'estimate_discount_id',
+        'estimate_discount',
+        'total_estimate_discount',
 
         'display',
         'system',

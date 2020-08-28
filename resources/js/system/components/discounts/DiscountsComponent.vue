@@ -45,34 +45,37 @@
                 </tr>
                 </thead>
 
-                <tbody
-                    v-drag-and-drop:options="dragAndDropOptions"
+                <draggable
+                    v-model="actualDiscounts"
+                    tag="tbody"
                     id="table-prices"
+                    @input="updateSort"
                 >
+                    <discount-component
+                        v-for="(item, index) in actualDiscounts"
+                        :item="item"
+                        :index="index"
+                        :key="item.id"
+                    ></discount-component>
+                </draggable>
 
-                <discount-component
-                    v-for="(item, index) in actualDiscounts"
-                    :item="item"
-                    :index="index"
-                    :key="item.id"
-                    @remove="removeItem"
-                ></discount-component>
-                </tbody>
             </table>
     </div>
 </template>
 
 <script>
-    import { VueDraggableDirective } from 'vue-draggable'
+    import draggable from 'vuedraggable'
 
     export default {
         components: {
             'items-list-component': require('../common/dropdowns/items/ItemsListComponent'),
             'discount-component': require('./DiscountComponent'),
+            draggable,
         },
         props: {
             discounts: Array,
             item: Object,
+            entity: String
         },
         data() {
             return {
@@ -102,9 +105,5 @@
                 this.actualDiscounts.splice(index, 1);
             },
         },
-        directives: {
-            dragAndDrop: VueDraggableDirective
-        }
-
     }
 </script>

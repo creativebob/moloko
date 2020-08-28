@@ -16,10 +16,6 @@ import Vuex from 'vuex';
 window.Vuex = Vuex;
 Vue.use(Vuex);
 
-import VueDraggable from 'vue-draggable'
-window.VueDraggable = VueDraggable;
-Vue.use(VueDraggable)
-
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

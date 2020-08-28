@@ -48,21 +48,25 @@ class PricesService extends Model
         'catalogs_service_id',
         'service_id',
         'filial_id',
-    
+
         'price',
-    
+
         'discount_mode',
         'discount_percent',
         'discount_currency',
-    
+
         'price_discount_id',
         'price_discount',
         'total_price_discount',
-    
+
         'catalogs_item_discount_id',
         'catalogs_item_discount',
         'total_catalogs_item_discount',
-    
+
+        'estimate_discount_id',
+        'estimate_discount',
+        'total_estimate_discount',
+
         'total',
 
         'points',
@@ -73,7 +77,7 @@ class PricesService extends Model
         'status',
         'is_hit',
         'is_new',
-    
+
         'is_show_price',
 
         'display',

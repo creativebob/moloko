@@ -100,12 +100,14 @@
                         <div class="grid-x grid-padding-x">
                             <div class="small-12 cell">
                                 <label>Название страницы
-                                    @include('includes.inputs.string', ['name' => 'title'])
+                                    {!! Form::text('title', null, ['maxlength'=>'250', 'autocomplete'=>'off', 'autofocus', 'data']) !!}
+{{--                                    @include('includes.inputs.string', ['name' => 'title'])--}}
                                 </label>
                             </div>
                             <div class="small-12 cell">
                                 <label>Заголовок страницы
-                                    @include('includes.inputs.string', ['name' => 'header'])
+                                    {!! Form::text('header', null, ['maxlength'=>'250', 'autocomplete'=>'off', 'autofocus', 'data']) !!}
+{{--                                    @include('includes.inputs.string', ['name' => 'header'])--}}
                                 </label>
                             </div>
                             <div class="small-12 cell">

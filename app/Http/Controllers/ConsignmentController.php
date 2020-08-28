@@ -53,7 +53,7 @@ class ConsignmentController extends Controller
         ->booklistFilter($request)
         ->filter($request, 'supplier_id')
         ->orderBy('moderation', 'desc')
-        ->orderBy('sort', 'asc')
+        ->latest('created_at')
         ->paginate(30);
         // dd($consignments);
 

@@ -1243,10 +1243,10 @@ Route::resource('/catalogs_goods', 'CatalogsGoodsController');
 Route::prefix('catalogs_goods/{catalog_id}')->group(function () {
 
 	// Текущий добавленный/удаленный пунк меню
-	Route::any('catalogs_goods_items', 'CatalogsGoodsItemController@index');
+	Route::any('/catalogs_goods_items', 'CatalogsGoodsItemController@index');
 
 	// Основные методы
-	Route::resource('catalogs_goods_items', 'CatalogsGoodsItemController');
+	Route::resource('/catalogs_goods_items', 'CatalogsGoodsItemController');
 
     Route::delete('/prices_goods/{id}', 'PricesGoodsController@archive');
 

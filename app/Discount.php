@@ -72,6 +72,16 @@ class Discount extends Model
         return $this->hasMany(PricesGoods::class, 'price_discount_id');
     }
 
+    public function catalogs_goods_items_prices_goods_actual()
+    {
+        return $this->hasMany(PricesGoods::class, 'catalogs_item_discount_id');
+    }
+
+    public function estimates_prices_goods_actual()
+    {
+        return $this->hasMany(PricesGoods::class, 'estimate_discount_id');
+    }
+
     public function catalogs_goods_items()
     {
         return $this->belongsToMany(CatalogsGoodsItem::class, 'discount_catalogs_goods_item', 'discount_id', 'catalogs_goods_item_id');

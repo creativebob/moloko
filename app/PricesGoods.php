@@ -65,6 +65,10 @@ class PricesGoods extends Model
         'catalogs_item_discount',
         'total_catalogs_item_discount',
 
+        'estimate_discount_id',
+        'estimate_discount',
+        'total_estimate_discount',
+
         'total',
 
         'points',
@@ -222,6 +226,11 @@ class PricesGoods extends Model
     public function discount_catalogs_item()
     {
         return $this->belongsTo(Discount::class, 'catalogs_item_discount_id');
+    }
+
+    public function discount_estimate()
+    {
+        return $this->belongsTo(Discount::class, 'estimate_discount_id');
     }
 
     // Фильтр
