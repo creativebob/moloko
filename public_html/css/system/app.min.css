@@ -12853,6 +12853,18 @@ a#task-toggle {
   background-color: #fff;
 }
 
+.table-compositions tbody tr .icon-drop {
+  opacity: 0;
+}
+
+.table-compositions tbody tr:hover .icon-drop {
+  opacity: 0.3;
+}
+
+.table-compositions tbody tr:hover .icon-drop:hover {
+  opacity: 1;
+}
+
 .table-compositions tfoot {
   background-color: transparent;
 }

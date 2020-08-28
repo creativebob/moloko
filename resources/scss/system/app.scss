@@ -3804,6 +3804,27 @@ a#task-toggle{
         background-color: #fff;
     }
 
+    tbody {
+
+        tr {
+
+            .icon-drop {
+                opacity: 0;
+            }
+
+            &:hover {
+
+                .icon-drop {
+                    opacity: 0.3;
+
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+
     tfoot{
         background-color: transparent;
 

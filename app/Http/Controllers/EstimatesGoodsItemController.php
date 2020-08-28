@@ -333,7 +333,7 @@ class EstimatesGoodsItemController extends Controller
         $estimate->load([
             'goods_items',
             'services_items',
-            'discounts'
+//            'discounts'
         ]);
 
         $cost = 0;
@@ -362,34 +362,18 @@ class EstimatesGoodsItemController extends Controller
         $discountCurrency = 0;
         $discountPercent = 0;
 
-//        if ($total > 0) {
-//            if ($estimate->discounts->isNotEmpty()) {
-//                $discount = $estimate->discounts->first();
-//
-//                switch ($discount->mode) {
-//                    case(1):
-//                        $discountCurrency = $total / 100 * $discount->percent;
-//                        $discountPercent = $discount->percent;
-//                        break;
-//                    case(2):
-//                        $discountCurrency = $discount->currency;
-//                        $percent = $total / 100;
-//                        $discountPercent = $discount->currency / $percent;
-//                        break;
-//                }
-//
-//                $total -= $discountCurrency;
-//            }
-//        }
-
         $marginCurrency = $total - $cost;
-        $marginPercent = ($marginCurrency / $total * 100);
+        $marginPercent = 0;
+        if ($marginCurrency > 0) {
+            $marginPercent = ($marginCurrency / $total * 100);
+        }
+
 
         $data = [
             'cost' => $cost,
             'amount' => $amount,
             'discount_currency' => $discountCurrency,
-            'discount_cpercent' => $discountPercent,
+            'discount_percent' => $discountPercent,
             'total' => $total,
             'margin_currency' => $marginCurrency,
             'margin_percent' => $marginPercent,

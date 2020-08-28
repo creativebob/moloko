@@ -91945,6 +91945,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -98808,6 +98810,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -98846,6 +98849,8 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("tr", { staticClass: "item" }, [
+    _vm._m(0),
+    _vm._v(" "),
     _c("td", [
       _vm._v(_vm._s(_vm.index + 1) + "\n        "),
       _c("input", {
@@ -98886,7 +98891,16 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "td-drop" }, [
+      _c("div", { staticClass: "sprite icon-drop" })
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -98949,7 +98963,7 @@ var render = function() {
             _c(
               "draggable",
               {
-                attrs: { tag: "tbody", id: "table-prices" },
+                attrs: { tag: "tbody", id: "table-prices", handle: ".td-drop" },
                 on: { input: _vm.updateSort },
                 model: {
                   value: _vm.actualDiscounts,
@@ -98988,6 +99002,8 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
+        _c("th", { staticClass: "td-drop" }),
+        _vm._v(" "),
         _c("th", [_vm._v("№:")]),
         _vm._v(" "),
         _c("th", [_vm._v("Название:")]),

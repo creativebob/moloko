@@ -2,6 +2,7 @@
     <tr
         class="item"
     >
+        <td class="td-drop"><div class="sprite icon-drop"></div></td>
         <!--                                <td class="number_counter"></td>-->
         <td>{{ index + 1 }}
             <input

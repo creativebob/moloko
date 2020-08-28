@@ -34,6 +34,7 @@
             >
                 <thead>
                 <tr>
+                    <th class="td-drop"></th>
                     <th>№:</th>
                     <th>Название:</th>
                     <th>Описание:</th>
@@ -50,6 +51,7 @@
                     tag="tbody"
                     id="table-prices"
                     @input="updateSort"
+                    handle=".td-drop"
                 >
                     <discount-component
                         v-for="(item, index) in actualDiscounts"
