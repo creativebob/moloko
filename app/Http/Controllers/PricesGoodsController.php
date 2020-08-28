@@ -482,7 +482,7 @@ class PricesGoodsController extends Controller
 
         } else {
             $data = $request->input();
-//            $data['is_discount'] = 1;
+            $data['is_discount'] = 1;
             $data['catalogs_item_discount_id'] = $discountCatalogsItemId;
             $data['estimate_discount_id'] = $discountEstimateId;
 //            return $data;

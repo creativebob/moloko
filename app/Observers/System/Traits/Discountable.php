@@ -38,26 +38,29 @@ trait Discountable
     {
         if ($priceGoods->is_discount == 1) {
             $break = false;
-//            $priceGoods->load([
-//                'discounts_actual',
-//                'catalogs_item.discounts_actual'
-//            ]);
-            $priceGoods->load([
-                'discounts_actual'
-            ]);
-            if ($priceGoods->discounts_actual->first()) {
-                $discountPrice = $priceGoods->discounts_actual->first();
-                $priceGoods->price_discount_id = $discountPrice->id;
+            if ($priceGoods->id) {
+                $priceGoods->load([
+                    'discounts_actual'
+                ]);
+                if ($priceGoods->discounts_actual->first()) {
+                    $discountPrice = $priceGoods->discounts_actual->first();
+                    $priceGoods->price_discount_id = $discountPrice->id;
 //                $discountPrice = Discount::find($priceGoods->discounts_actual->first()->id);
-                $resPriceDiscount = $this->getDynamicDiscount($discountPrice, $priceGoods->price);
-                $priceGoods->price_discount = $resPriceDiscount['amount'];
-                $priceGoods->total_price_discount = $priceGoods->price - $resPriceDiscount['amount'];
-                $break = $resPriceDiscount['break'];
+                    $resPriceDiscount = $this->getDynamicDiscount($discountPrice, $priceGoods->price);
+                    $priceGoods->price_discount = $resPriceDiscount['amount'];
+                    $priceGoods->total_price_discount = $priceGoods->price - $resPriceDiscount['amount'];
+                    $break = $resPriceDiscount['break'];
+                } else {
+                    $priceGoods->price_discount_id = null;
+                    $priceGoods->price_discount = 0;
+                    $priceGoods->total_price_discount = $priceGoods->price;
+                }
             } else {
                 $priceGoods->price_discount_id = null;
                 $priceGoods->price_discount = 0;
                 $priceGoods->total_price_discount = $priceGoods->price;
             }
+
 //            dd($break);
 
             if ($break) {
@@ -65,12 +68,16 @@ trait Discountable
                 $priceGoods->catalogs_item_discount = 0;
                 $priceGoods->total_catalogs_item_discount = $priceGoods->total_price_discount;
             } else {
-                $catalogsItem = $priceGoods->catalogs_item;
-
+                if ($priceGoods->id) {
+                    $catalogsItem = $priceGoods->catalogs_item;
+                } else {
+                    $catalogsItem = CatalogsGoodsItem::find($priceGoods->catalogs_goods_item_id);
+                }
                 if ($catalogsItem->is_discount == 1) {
-                    $catalogsItem->load([
-                        'discounts_actual'
-                    ]);
+                        $catalogsItem->load([
+                            'discounts_actual'
+                        ]);
+
                     if ($catalogsItem->discounts_actual->first()) {
                         $discountCatalogsItem = $catalogsItem->discounts_actual->first();
                         $priceGoods->catalogs_item_discount_id = $discountCatalogsItem->id;
@@ -91,7 +98,7 @@ trait Discountable
                         $priceGoods->total_estimate_discount = $priceGoods->total_catalogs_item_discount;
                     } else {
                         $discountEstimate = Discount::where([
-                            'company_id' => $priceGoods->company_id,
+                            'company_id' => auth()->user()->company_id,
                             'archive' => false
                         ])
                             ->whereHas('entity', function ($q) {
