@@ -445,6 +445,14 @@ class CartController extends Controller
 
                 $estimatesGoodsItemsInsert = [];
                 foreach ($prices_goods as $price_goods) {
+
+                    $discountCurrency = $price_goods->price - $price_goods->total;
+                    $discountPercent = 0;
+                    if ($discountCurrency > 0) {
+//            $percent = $priceGoods->total / 100;
+//            $discountPercent = $discountCurrency / $percent;
+                        $discountPercent = $discountCurrency * 100 / $price_goods->price;
+                    }
                     $count = $cart['prices'][$price_goods->id]['count'];
                     $data = [
                         'currency_id' => 1,
@@ -456,6 +464,9 @@ class CartController extends Controller
                         'count' => $count,
                         'cost' => $price_goods->goods->article->cost_default * $count,
                         'amount' => $count * $price_goods->price,
+
+                        'discount_percent' => $discountPercent,
+                        'discount_currency' => $discountCurrency,
 
                         'price_discount_id' => $price_goods->price_discount_id,
                         'price_discount' => $price_goods->price_discount,
