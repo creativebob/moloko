@@ -484,7 +484,12 @@ class CartController extends Controller
                     ];
 
                     $data['margin_currency'] = $data['total'] - ($data['cost'] * $count);
-                    $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
+                    if ($data['total'] > 0) {
+                        $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
+                    } else {
+                        $data['margin_percent'] = 0;
+                    }
+
 
                     $estimatesGoodsItemsInsert[] = EstimatesGoodsItem::make($data);
                 }
