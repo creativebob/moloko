@@ -50,7 +50,6 @@
                     v-model="actualDiscounts"
                     tag="tbody"
                     id="table-prices"
-                    @input="updateSort"
                     handle=".td-drop"
                 >
                     <discount-component
@@ -82,19 +81,6 @@
         data() {
             return {
                 actualDiscounts: this.item.discounts,
-                dragAndDropOptions: {
-                    dropzoneSelector: 'tbody',
-                    draggableSelector: 'tr',
-                    handlerSelector: null,
-                    reactivityEnabled: true,
-                    multipleDropzonesItemsDraggingEnabled: false,
-                    showDropzoneAreas: true,
-                    onDrop: function(event) {},
-                    onDragstart: function(event) {},
-                    onDragenter: function(event) {},
-                    onDragover: function(event) {},
-                    onDragend: function(event) {console.log(event)}
-                }
             }
         },
         methods: {

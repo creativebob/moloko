@@ -11,7 +11,11 @@
             :id="'comment-dropdown-' + item.id"
             data-dropdown
             data-auto-focus="true"
+
+
         >
+<!--            data-close-on-click="true"-->
+<!--            v-dropdown-->
             <template v-if="editComment">
                 <textarea
                     name="comment"
@@ -49,6 +53,8 @@
             }
         },
         mounted() {
+            // Foundation.reInit($('#comment-dropdown-' + this.item.id));
+
             if (this.item.comment == null) {
                 this.editComment = true
             }
@@ -74,6 +80,7 @@
                         comment: this.comment,
                     })
                     .then(response => {
+                        $('comment-dropdown-' + this.item.id).foundation('close');
                         this.$store.commit('UPDATE_GOODS_ITEM', response.data);
                         this.comment = response.data.comment;
                     })
@@ -83,6 +90,11 @@
             },
         },
         directives: {
+            // 'dropdown': {
+            //     bind: function (el) {
+            //         new Foundation.Dropdown($(el))
+            //     },
+            // },
             focus: {
                 inserted: function (el) {
                     el.focus()

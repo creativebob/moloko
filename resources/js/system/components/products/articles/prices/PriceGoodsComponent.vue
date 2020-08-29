@@ -27,7 +27,6 @@
 <!--            >-->
             <digit-component
                 v-if="change"
-                :decimalPlace="2"
                 :value="priceGoods.price"
                 @change="changePrice"
                 :enter="true"
@@ -39,10 +38,10 @@
             <span
                 v-else
                 @click="change = true"
-            >{{ priceGoods.price }}</span> {{ priceGoods.currency.abbreviation }}
+            >{{ priceGoods.price | decimalPlaces | decimalLevel }}</span> {{ priceGoods.currency.abbreviation }}
         </td>
-        <td>{{ discount }}%</td>
-        <td>{{ priceGoods.total }} {{ priceGoods.currency.abbreviation }}</td>
+        <td>{{ discount | decimalPlaces | decimalLevel }}%</td>
+        <td>{{ priceGoods.total | decimalPlaces | decimalLevel }} {{ priceGoods.currency.abbreviation }}</td>
 
         <td>
             <div
@@ -120,6 +119,14 @@
                     el.focus()
                 }
             }
+        },
+        filters: {
+            decimalPlaces(value) {
+                return parseFloat(value).toFixed(2);
+            },
+            decimalLevel: function (value) {
+                return parseFloat(value).toLocaleString();
+            },
         },
     }
 </script>

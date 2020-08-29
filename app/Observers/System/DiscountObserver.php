@@ -38,47 +38,38 @@ class DiscountObserver
 
     public function recalculating($discount)
     {
-        if ($discount->isDirty('mode') || $discount->isDirty('is_block')) {
+
+        if ($discount->isDirty('mode') || $discount->isDirty('is_block') || $discount->isDirty('begined_at') || $discount->isDirty('ended_at')) {
             switch($discount->entity->alias) {
                 case ('prices_goods'):
                     $discount->load([
-                        'prices_goods_actual' => function ($q) {
-                            $q->with([
-                                'discounts_actual',
-                                'catalogs_item.discounts_actual'
-                            ]);
-                        }
+                        'prices_goods_actual'
                     ]);
-
                     foreach ($discount->prices_goods_actual as $priceGoods) {
                         $priceGoods = $this->setDiscountsPriceGoods($priceGoods);
                         $priceGoods->save();
                     }
-
                     break;
 
                 case ('catalogs_goods_items'):
                     $discount->load([
-                        'catalogs_goods_items' => function ($q) use ($discount) {
-                            $q->whereHas('discounts_actual', function ($q) use ($discount) {
-                                $q->where('id', $discount->id);
-                            })
-                            ->with([
-                                'prices_goods_actual' => function ($q) {
-                                    $q->with([
-                                        'discounts_actual',
-                                        'catalogs_item.discounts_actual'
-                                    ]);
-                                }
-                            ]);
-                        }
+                        'catalogs_goods_items_prices_goods_actual'
                     ]);
-                    foreach ($discount->catalogs_goods_items as $catalogsGoodsItem) {
-                        foreach ($catalogsGoodsItem->prices_goods_actual as $priceGoods) {
-                            $priceGoods = $this->setDiscountsPriceGoods($priceGoods);
-                            $priceGoods->save();
-                        }
-//                        $this->updateDiscountCatalogsGoodsItem($catalogsGoodsItem, $discount);
+                    foreach ($discount->catalogs_goods_items_prices_goods_actual as $priceGoods) {
+                        $priceGoods = $this->setDiscountsPriceGoods($priceGoods);
+                        $priceGoods->save();
+                    }
+                    break;
+
+                case('estimates'):
+                    $discount->load([
+                        'estimates_prices_goods_actual'
+                    ]);
+
+                    foreach($discount->estimates_prices_goods_actual as $priceGoods) {
+                        $priceGoods->update([
+                            'estimate_discount_id' => null
+                        ]);
                     }
                     break;
             }

@@ -462,7 +462,7 @@ class CartController extends Controller
                         'company_id' => $estimate->company_id,
                         'price' => $price_goods->price,
                         'count' => $count,
-                        'cost' => $price_goods->goods->article->cost_default * $count,
+                        'cost' => $price_goods->goods->article->cost_default,
                         'amount' => $count * $price_goods->price,
 
                         'discount_percent' => $discountPercent,
@@ -483,7 +483,7 @@ class CartController extends Controller
                         'total' => $count * $price_goods->total_estimate_discount,
                     ];
 
-                    $data['margin_currency'] = $data['total'] - $data['cost'];
+                    $data['margin_currency'] = $data['total'] - ($data['cost'] * $count);
                     $data['margin_percent'] = ($data['margin_currency'] / $data['total'] * 100);
 
                     $estimatesGoodsItemsInsert[] = EstimatesGoodsItem::make($data);

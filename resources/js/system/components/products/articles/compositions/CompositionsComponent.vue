@@ -34,6 +34,7 @@
                         :name="name"
                         @add="addItem"
                         @remove="removeItem"
+                        ref="categoriesListComponent"
                     ></categories-list-component>
                 </div>
 
@@ -193,6 +194,7 @@
             removeItem(id) {
                 let index = this.curItems.findIndex(item => item.id == id);
                 this.curItems.splice(index, 1);
+                this.$refs.categoriesListComponent.clear();
                 this.updateStore();
             },
             openModal(item) {

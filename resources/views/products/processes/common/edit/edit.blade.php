@@ -78,7 +78,7 @@
             ) }}
             @method('PATCH')
 
-            {!! Form::hidden('paginator_url', $paginator_url ?? null) !!}
+            {!! Form::hidden('previous_url', $previous_url ?? null) !!}
 
             {{-- Общая информация --}}
             <div class="tabs-panel is-active" id="tab-options">

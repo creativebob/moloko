@@ -110,6 +110,7 @@ trait Discountable
                                     ->orWhereNull('ended_at');
                             })
                             ->first();
+//                        dd($discountEstimate);
 
                         if ($discountEstimate) {
                             $priceGoods->estimate_discount_id = $discountEstimate->id;

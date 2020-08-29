@@ -80540,6 +80540,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -80553,6 +80557,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
     mounted: function mounted() {
+        // Foundation.reInit($('#comment-dropdown-' + this.item.id));
+
         if (this.item.comment == null) {
             this.editComment = true;
         }
@@ -80579,6 +80585,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.patch('/admin/estimates_goods_items/' + this.item.id, {
                 comment: this.comment
             }).then(function (response) {
+                $('comment-dropdown-' + _this.item.id).foundation('close');
                 _this.$store.commit('UPDATE_GOODS_ITEM', response.data);
                 _this.comment = response.data.comment;
             }).catch(function (error) {
@@ -80587,6 +80594,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     directives: {
+        // 'dropdown': {
+        //     bind: function (el) {
+        //         new Foundation.Dropdown($(el))
+        //     },
+        // },
         focus: {
             inserted: function inserted(el) {
                 el.focus();
@@ -80604,7 +80616,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("td", [
-    _vm._v("\n    " + _vm._s(_vm.item.product.article.name)),
+    _vm._v("\n        " + _vm._s(_vm.item.product.article.name)),
     _vm.isArchive ? _c("span", [_vm._v(" (Архивный)")]) : _vm._e(),
     _vm._v(" "),
     _c("span", {
@@ -87980,6 +87992,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -88073,6 +88086,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return item.id == id;
             });
             this.curItems.splice(index, 1);
+            this.$refs.categoriesListComponent.clear();
             this.updateStore();
         },
         openModal: function openModal(item) {
@@ -88798,15 +88812,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.search = this.results.length > 0;
             if (this.search) {
-                var curItems = this.curItems;
+                var $vm = this;
                 this.results.forEach(function (searchItem) {
-                    curItems.find(function (item) {
-                        if (item.id == searchItem.id) {
-                            searchItem.add = true;
-                        }
+                    console.log($vm.curItems);
+                    var found = $vm.curItems.find(function (item) {
+                        return item.id == searchItem.id;
                     });
+                    if (found) {
+                        searchItem.add = true;
+                    } else {
+                        searchItem.add = false;
+                    }
                 });
-            }
+            } else {}
 
             this.error = this.results.length == 0;
 
@@ -89074,7 +89092,7 @@ var render = function() {
               ? _vm._l(_vm.results, function(item) {
                   return _c("tr", [
                     _c("td", [
-                      item.add
+                      item.add == true
                         ? _c("span", [
                             _vm._v(_vm._s(item.article.name) + " (добавлен)")
                           ])
@@ -89257,6 +89275,7 @@ var render = function() {
                 { staticClass: "small-12 medium-6 large-3 cell" },
                 [
                   _c("categories-list-component", {
+                    ref: "categoriesListComponent",
                     attrs: {
                       categories: _vm.categories,
                       items: _vm.items,
@@ -91946,7 +91965,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 
@@ -91963,22 +91981,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            actualDiscounts: this.item.discounts,
-            dragAndDropOptions: {
-                dropzoneSelector: 'tbody',
-                draggableSelector: 'tr',
-                handlerSelector: null,
-                reactivityEnabled: true,
-                multipleDropzonesItemsDraggingEnabled: false,
-                showDropzoneAreas: true,
-                onDrop: function onDrop(event) {},
-                onDragstart: function onDragstart(event) {},
-                onDragenter: function onDragenter(event) {},
-                onDragover: function onDragover(event) {},
-                onDragend: function onDragend(event) {
-                    console.log(event);
-                }
-            }
+            actualDiscounts: this.item.discounts
         };
     },
 
@@ -98964,7 +98967,6 @@ var render = function() {
               "draggable",
               {
                 attrs: { tag: "tbody", id: "table-prices", handle: ".td-drop" },
-                on: { input: _vm.updateSort },
                 model: {
                   value: _vm.actualDiscounts,
                   callback: function($$v) {
@@ -109124,7 +109126,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -109179,6 +109180,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             inserted: function inserted(el) {
                 el.focus();
             }
+        }
+    },
+    filters: {
+        decimalPlaces: function decimalPlaces(value) {
+            return parseFloat(value).toFixed(2);
+        },
+
+        decimalLevel: function decimalLevel(value) {
+            return parseFloat(value).toLocaleString();
         }
     }
 });
@@ -109240,7 +109250,6 @@ var render = function() {
           _vm.change
             ? _c("digit-component", {
                 attrs: {
-                  decimalPlace: 2,
                   value: _vm.priceGoods.price,
                   enter: true,
                   blur: true,
@@ -109263,7 +109272,15 @@ var render = function() {
                     }
                   }
                 },
-                [_vm._v(_vm._s(_vm.priceGoods.price))]
+                [
+                  _vm._v(
+                    _vm._s(
+                      _vm._f("decimalLevel")(
+                        _vm._f("decimalPlaces")(_vm.priceGoods.price)
+                      )
+                    )
+                  )
+                ]
               ),
           _vm._v(
             " " + _vm._s(_vm.priceGoods.currency.abbreviation) + "\n        "
@@ -109272,11 +109289,21 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c("td", [_vm._v(_vm._s(_vm.discount) + "%")]),
+      _c("td", [
+        _vm._v(
+          _vm._s(
+            _vm._f("decimalLevel")(_vm._f("decimalPlaces")(_vm.discount))
+          ) + "%"
+        )
+      ]),
       _vm._v(" "),
       _c("td", [
         _vm._v(
-          _vm._s(_vm.priceGoods.total) +
+          _vm._s(
+            _vm._f("decimalLevel")(
+              _vm._f("decimalPlaces")(_vm.priceGoods.total)
+            )
+          ) +
             " " +
             _vm._s(_vm.priceGoods.currency.abbreviation)
         )

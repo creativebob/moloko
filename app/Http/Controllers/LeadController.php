@@ -355,11 +355,11 @@ class LeadController extends Controller
 
         // dd($catalog_service);
 
-        $paginator_url = url()->previous();
+        $previous_url = url()->previous();
 
         $settings = auth()->user()->company->settings;
 
-        return view('leads.edit', compact('lead', 'pageInfo', 'choices', 'paginator_url', 'settings'));
+        return view('leads.edit', compact('lead', 'pageInfo', 'choices', 'previous_url', 'settings'));
     }
 
     public function update(LeadRequest $request, MyStageRequest $my_request, $id)
@@ -386,8 +386,8 @@ class LeadController extends Controller
 //           'stock_id' => $request->stock_id
 //        ]);
 
-        if ($request->has('paginator_url')) {
-            return redirect($request->paginator_url);
+        if ($request->has('previous_url')) {
+            return redirect($request->previous_url);
         }
 
         return redirect('/admin/leads');

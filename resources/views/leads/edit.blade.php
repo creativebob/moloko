@@ -30,7 +30,7 @@
 
 {{ method_field('PATCH') }}
 
-{!! Form::hidden('paginator_url', $paginator_url ?? null) !!}
+{!! Form::hidden('previous_url', $previous_url ?? null) !!}
 
 @php
 

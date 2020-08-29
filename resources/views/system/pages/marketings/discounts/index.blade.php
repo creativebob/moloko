@@ -27,7 +27,7 @@
                             <label class="label-check" for="check-all"></label>
                         </th>
                         <th class="td-name">Название</th>
-                        <th class="td-entity">Название</th>
+                        <th class="td-entity">Назначение</th>
                         <th class="td-block">Блокировка</th>
                         <th class="td-description">Описание</th>
                         <th class="td-percent">Проценты</th>

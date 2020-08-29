@@ -455,7 +455,7 @@ class RawController extends Controller
             'category_entity' => 'raws_categories',
             'categories_select_name' => 'raws_category_id',
             'raw' => $raw,
-            'paginator_url' => url()->previous()
+            'previous_url' => url()->previous()
         ]);
     }
 
@@ -529,8 +529,8 @@ class RawController extends Controller
                 return Redirect($backlink);
             }
 
-            if ($request->has('paginator_url')) {
-                return redirect($request->paginator_url);
+            if ($request->has('previous_url')) {
+                return redirect($request->previous_url);
             }
 
             if ($raw->archive) {

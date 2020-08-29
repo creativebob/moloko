@@ -250,26 +250,6 @@ class DiscountController extends Controller
                 }
                 break;
 
-//                $discount->load([
-//                    'catalogs_goods_items' => function ($q) {
-//                        $q->with([
-//                            'prices_goods_actual'
-//                        ]);
-//                    }
-//                ]);
-//                $catalogsGoodsItems = $discount->catalogs_goods_items;
-//
-
-//
-//                foreach($catalogsGoodsItems as $catalogsGoodsItem) {
-//                    foreach($catalogsGoodsItem->prices_goods_actual as $priceGoods) {
-//                        $priceGoods->update([
-//                            'catalogs_item_discount_id' => null
-//                        ]);
-//                    }
-//                }
-                break;
-
             case('estimates'):
                 $discount->load([
                     'estimates_prices_goods_actual'

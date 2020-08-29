@@ -289,7 +289,7 @@ class ServiceController extends Controller
             'entity' => $this->entity_alias,
             'category_entity' => 'services_categories',
             'categories_select_name' => 'services_category_id',
-            'paginator_url' => url()->previous()
+            'previous_url' => url()->previous()
         ]);
     }
 

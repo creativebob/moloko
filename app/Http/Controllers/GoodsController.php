@@ -569,7 +569,7 @@ class GoodsController extends Controller
             'entity' => $this->entity_alias,
             'category_entity' => 'goods_categories',
             'categories_select_name' => 'goods_category_id',
-            'paginator_url' => url()->previous()
+            'previous_url' => url()->previous()
         ]);
     }
 
@@ -630,8 +630,8 @@ class GoodsController extends Controller
                 return Redirect($backlink);
             }
 
-            if ($request->has('paginator_url')) {
-                return redirect($request->paginator_url);
+            if ($request->has('previous_url')) {
+                return redirect($request->previous_url);
             }
 
             if ($cur_goods->archive) {

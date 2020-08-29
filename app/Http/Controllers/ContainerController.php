@@ -426,7 +426,7 @@ class ContainerController extends Controller
             'category_entity' => 'containers_categories',
             'categories_select_name' => 'containers_category_id',
             'container' => $container,
-            'paginator_url' => url()->previous()
+            'previous_url' => url()->previous()
         ]);
     }
 
@@ -496,8 +496,8 @@ class ContainerController extends Controller
                 return Redirect($backlink);
             }
 
-            if ($request->has('paginator_url')) {
-                return redirect($request->paginator_url);
+            if ($request->has('previous_url')) {
+                return redirect($request->previous_url);
             }
 
             if ($container->archive) {

@@ -285,7 +285,7 @@ class WorkflowController extends Controller
             'category_entity' => 'workflows_categories',
             'categories_select_name' => 'workflows_category_id',
             'workflow' => $workflow,
-            'paginator_url' => url()->previous()
+            'previous_url' => url()->previous()
         ]);
     }
 
@@ -348,8 +348,8 @@ class WorkflowController extends Controller
                 return Redirect($backlink);
             }
 
-            if ($request->has('paginator_url')) {
-                return redirect($request->paginator_url);
+            if ($request->has('previous_url')) {
+                return redirect($request->previous_url);
             }
 
             return redirect()->route('workflows.index');

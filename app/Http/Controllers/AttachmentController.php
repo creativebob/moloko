@@ -426,7 +426,7 @@ class AttachmentController extends Controller
             'category_entity' => 'attachments_categories',
             'categories_select_name' => 'attachments_category_id',
             'attachment' => $attachment,
-            'paginator_url' => url()->previous()
+            'previous_url' => url()->previous()
         ]);
     }
 
@@ -497,8 +497,8 @@ class AttachmentController extends Controller
                 return Redirect($backlink);
             }
 
-            if ($request->has('paginator_url')) {
-                return redirect($request->paginator_url);
+            if ($request->has('previous_url')) {
+                return redirect($request->previous_url);
             }
 
             if ($attachment->archive) {

@@ -24,7 +24,7 @@
                 <template v-if=search>
                     <tr v-for="item in results">
                         <td>
-                            <span v-if="item.add">{{ item.article.name }} (добавлен)</span>
+                            <span v-if="item.add == true">{{ item.article.name }} (добавлен)</span>
                             <a
                                 v-else
                                 @click="addFromSearch(item.id)"
@@ -144,14 +144,18 @@
 
                 this.search = (this.results.length > 0);
                 if (this.search) {
-                    var curItems = this.curItems;
-                    this.results.forEach(function(searchItem) {
-                        curItems.find(item => {
-                            if (item.id == searchItem.id) {
-                                searchItem.add = true;
-                            }
-                        })
+                    var $vm = this;
+                    this.results.forEach(searchItem => {
+                        console.log($vm.curItems);
+                        let found = $vm.curItems.find(item => item.id == searchItem.id);
+                        if (found) {
+                            searchItem.add = true;
+                        } else {
+                            searchItem.add = false;
+                        }
                     });
+                } else {
+
                 }
 
                 this.error = (this.results.length == 0);
