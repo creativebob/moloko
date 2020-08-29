@@ -550,7 +550,12 @@ class CartController extends Controller
 
                 $estimate->cost = $estimate->goods_items->sum('cost');
                 $estimate->margin_currency = $estimate->total - $estimate->cost;
-                $estimate->margin_percent = ($estimate->margin_currency / $estimate->total * 100);
+                if ($estimate->margin_currency > 0) {
+                    $estimate->margin_percent = ($estimate->margin_currency / $estimate->total * 100);
+                } else {
+                    $estimate->margin_percent = 0;
+                }
+
 
                 $estimate->save();
 
