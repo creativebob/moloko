@@ -13,6 +13,10 @@
             @include('includes.inputs.string', ['name' => 'subtitle'])
         </label>
 
+        <label>Заголовок
+            @include('includes.inputs.string', ['name' => 'header'])
+        </label>
+
         <label>Описание страницы
             @include('includes.inputs.textarea', ['name' => 'description'])
         </label>

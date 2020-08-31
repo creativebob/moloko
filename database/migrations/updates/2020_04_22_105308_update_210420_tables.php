@@ -239,6 +239,10 @@ class Update210420Tables extends Migration
 
             $table->boolean('is_show_price')->default(0)->comment('Показывать цену')->after('is_new');
         });
+
+        Schema::table('pages', function (Blueprint $table) {
+            $table->string('header')->nullable()->comment('Header для страницы')->after('title');
+        });
     }
 
     /**
@@ -447,6 +451,10 @@ class Update210420Tables extends Migration
                 'total',
                 'is_show_price',
             ]);
+        });
+
+        Schema::table('pages', function (Blueprint $table) {
+            $table->dropColumn('header');
         });
     }
 }

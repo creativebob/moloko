@@ -87,7 +87,7 @@ class PageController extends Controller
 
         $data = $request->input();
         $data['site_id'] = $site_id;
-        $page = (new Page())->create($data);
+        $page = Page::create($data);
 
 
         $page->alias = empty($request->alias) ? Str::slug($request->title) : $request->alias;

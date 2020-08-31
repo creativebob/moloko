@@ -43,12 +43,15 @@ class Page extends Model
     // use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
+    protected $dates = [
+        'deleted_at'
+    ];
 
     protected $fillable = [
         'name',
         'site_id',
         'title',
+        'header',
         'subtitle',
         'description',
         'content',
