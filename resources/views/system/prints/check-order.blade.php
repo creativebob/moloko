@@ -27,8 +27,8 @@
                         <li><span class="client-city">Город: </span><span>{{ $lead->location->city->name }}</span></li>
                         <li><span class="client-address">Адрес клиента: </span><span>{{ $lead->location->address }}</span></li>
                         <li><span class="client-phone">Телефон: </span><span>{{ decorPhone($lead->main_phone->phone) }}</span></li>
-                        <li><span class="client-time">Заказ на: </span><span class="shipment_time">{{ isset($lead->shipment_at) ? $lead->shipment_at->format('H:i') : 'Время не указано' }}</span></li>
-                        <li><span class="client-points">Р/х для клиента:</span><span> </span></li>
+                        <li><span class="client-time">Заказ на: </span><span class="shipment_time">{{ isset($lead->shipment_at) ? $lead->shipment_at->format('d.m.Y H:i') : 'Время не указано' }}</span></li>
+                        {{-- <li><span class="client-points">Р/х для клиента:</span><span> </span></li> --}}
                     </ul>
                 </div>                
             </div>
@@ -69,6 +69,14 @@
                             <td></td>
                             <td>{{ num_format($lead->estimate->total, 0) }} {{ $item->currency->symbol }}</td>
                         </tr>
+                        <tr>
+                            <td colspan="2">Сумма всех скидок:</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ num_format($lead->estimate->discount_currency, 0) }} {{ $item->currency->symbol }}</td>
+                        </tr>                        
                     </tfoot>
                 </table>
             </div>
@@ -76,7 +84,7 @@
         <div class="cell small-6 right-part-check">
             <div class="grid-x company-info">
                 <div class="cell shrink">
-                    <img src="{{ $lead->company->black->path }}"  width="100mm" alt="Логотип Ролл-Хаус" title="На главную">
+                    <img src="{{ $lead->company->black->path }}"  width="100mm" alt="Логотип">
                 </div>
                 <div class="cell auto contact-info">
                     <span class="company-phone">{{ decorPhone($lead->filial->main_phone->phone) }}</span><br>
@@ -95,8 +103,8 @@
                         <li><span class="client-city">Город: </span><span>{{ $lead->location->city->name }}</span></li>
                         <li><span class="client-address">Адрес клиента: </span><span>{{ $lead->location->address }}</span></li>
                         <li><span class="client-phone">Телефон: </span><span>{{ decorPhone($lead->main_phone->phone) }}</span></li>
-                        <li><span class="client-time">Заказ на: </span><span class="shipment_time">{{ isset($lead->shipment_at) ? $lead->shipment_at->format('H:i') : 'Время не указано' }}</span></li>
-                        <li><span class="client-points">Р/х для клиента:</span><span> </span></li>
+                        <li><span class="client-time">Заказ на: </span><span class="shipment_time">{{ isset($lead->shipment_at) ? $lead->shipment_at->format('d.m.Y H:i') : 'Время не указано' }}</span></li>
+                        {{-- <li><span class="client-points">Р/х для клиента:</span><span> </span></li> --}}
                     </ul>
                 </div>                
             </div>
@@ -137,6 +145,14 @@
                             <td></td>
                             <td>{{ num_format($lead->estimate->total, 0) }} {{ $item->currency->symbol }}</td>
                         </tr>
+                        <tr>
+                            <td colspan="2">Сумма всех скидок:</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{ num_format($lead->estimate->discount_currency, 0) }} {{ $item->currency->symbol }}</td>
+                        </tr>                        
                     </tfoot>
                 </table>
             </div>
