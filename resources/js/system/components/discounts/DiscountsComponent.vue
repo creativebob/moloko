@@ -57,6 +57,7 @@
                         :item="item"
                         :index="index"
                         :key="item.id"
+                        @remove="removeItem"
                     ></discount-component>
                 </draggable>
 

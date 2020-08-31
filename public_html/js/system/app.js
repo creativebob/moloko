@@ -34267,13 +34267,13 @@ window._ = __webpack_require__(5);
  */
 
 try {
-    // window.Popper = require('popper.js').default;
-    window.$ = window.jQuery = __webpack_require__(3);
+  // window.Popper = require('popper.js').default;
+  window.$ = window.jQuery = __webpack_require__(3);
 
-    __webpack_require__(7);
-    __webpack_require__(19);
+  __webpack_require__(7);
+  __webpack_require__(19);
 
-    __webpack_require__(23); // 'foundation.min' can also be used if you like
+  __webpack_require__(23); // 'foundation.min' can also be used if you like
 } catch (e) {}
 
 /**
@@ -34295,9 +34295,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
 /**
@@ -91965,6 +91965,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -98978,7 +98979,8 @@ var render = function() {
               _vm._l(_vm.actualDiscounts, function(item, index) {
                 return _c("discount-component", {
                   key: item.id,
-                  attrs: { item: item, index: index }
+                  attrs: { item: item, index: index },
+                  on: { remove: _vm.removeItem }
                 })
               }),
               1
