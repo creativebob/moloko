@@ -25,6 +25,7 @@ use App\Http\View\Composers\System\CurrenciesComposer;
 use App\Http\View\Composers\System\DirectiveCategoriesComposer;
 use App\Http\View\Composers\System\DiscountsComposer;
 use App\Http\View\Composers\System\DisplayModesComposer;
+use App\Http\View\Composers\System\DomainsForFilialComposer;
 use App\Http\View\Composers\System\EmployeesActiveCountComposer;
 use App\Http\View\Composers\System\EmployeesDismissalCountComposer;
 use App\Http\View\Composers\System\EntitiesForDiscountsComposer;
@@ -425,6 +426,8 @@ class ComposerServiceProvider extends ServiceProvider
         // Скидки
         view()->composer('system.common.discounts.discounts', DiscountsComposer::class);
         view()->composer('system.pages.marketings.discounts.form', EntitiesForDiscountsComposer::class);
+
+        view()->composer('system.prints.check_order', DomainsForFilialComposer::class);
 
 
         // Фильтры

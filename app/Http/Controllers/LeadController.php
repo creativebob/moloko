@@ -644,6 +644,7 @@ class LeadController extends Controller
      * Печать чека
      *
      * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function print($id)
     {
@@ -655,7 +656,7 @@ class LeadController extends Controller
 
         // dd($lead);
 
-        return view('system.prints.check-order', compact('lead'));
+        return view('system.prints.check_order', compact('lead'));
     }
 
     // --------------------------------------- Ajax ----------------------------------------------------------

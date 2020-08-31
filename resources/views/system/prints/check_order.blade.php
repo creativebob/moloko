@@ -8,12 +8,12 @@
         <div class="cell small-6 left-part-check">
             <div class="grid-x company-info">
                 <div class="cell shrink">
-                    <img src="{{ $lead->company->black->path }}"  width="100mm" alt="Логотип">
+                    <img src="{{ $lead->company->black->path }}" width="100mm" alt="Логотип">
                 </div>
                 <div class="cell auto contact-info">
                     <span class="company-phone">{{ decorPhone($lead->filial->main_phone->phone) }}</span><br>
                     <span class="company-site">{{ $lead->filial->name }}</span>
-                </div>                
+                </div>
             </div>
             <div class="grid-x order-info">
                 <div class="cell small-6">
@@ -30,7 +30,7 @@
                         <li><span class="client-time">Заказ на: </span><span class="shipment_time">{{ isset($lead->shipment_at) ? $lead->shipment_at->format('H:i') : 'Время не указано' }}</span></li>
                         <li><span class="client-points">Р/х для клиента:</span><span> </span></li>
                     </ul>
-                </div>                
+                </div>
             </div>
             <div class="grid-x estimate-info">
                 <table class="print_table">
@@ -81,7 +81,7 @@
                 <div class="cell auto contact-info">
                     <span class="company-phone">{{ decorPhone($lead->filial->main_phone->phone) }}</span><br>
                     <span class="company-site">{{ $lead->filial->name }}</span>
-                </div>                
+                </div>
             </div>
             <div class="grid-x order-info">
                 <div class="cell small-6">
@@ -98,7 +98,7 @@
                         <li><span class="client-time">Заказ на: </span><span class="shipment_time">{{ isset($lead->shipment_at) ? $lead->shipment_at->format('H:i') : 'Время не указано' }}</span></li>
                         <li><span class="client-points">Р/х для клиента:</span><span> </span></li>
                     </ul>
-                </div>                
+                </div>
             </div>
             <div class="grid-x estimate-info">
                 <table class="print_table">

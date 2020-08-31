@@ -362,12 +362,17 @@ class EstimatesGoodsItemController extends Controller
         $discountCurrency = 0;
         $discountPercent = 0;
 
+        if ($amount > 0) {
+            $discountCurrency = $amount - $total;
+            $percent = $amount / 100;
+            $discountPercent = $discountCurrency / $percent;
+        }
+
         $marginCurrency = $total - $cost;
         $marginPercent = 0;
         if ($marginCurrency > 0) {
             $marginPercent = ($marginCurrency / $total * 100);
         }
-
 
         $data = [
             'cost' => $cost,

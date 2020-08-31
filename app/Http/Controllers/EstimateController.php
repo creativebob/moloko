@@ -340,16 +340,16 @@ class EstimateController extends Controller
             logs('documents')->info("========================================== НАЧАЛО РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
 
             // Обновляем смету
-            $amount = 0;
-            $discount = 0;
-            $total = 0;
-
-            if ($estimate->goods_items->isNotEmpty()) {
-
-                $amount = $estimate->goods_items->sum('amount');
-                $discount = (($amount * $estimate->discount_percent) / 100);
-                $total = ($amount - $discount);
-            }
+//            $amount = 0;
+//            $discount = 0;
+//            $total = 0;
+//
+//            if ($estimate->goods_items->isNotEmpty()) {
+//
+//                $amount = $estimate->goods_items->sum('amount');
+//                $discount = (($amount * $estimate->discount_percent) / 100);
+//                $total = ($amount - $discount);
+//            }
 
             // Пишем склады при оформлении
             $settings = getSettings();
@@ -379,16 +379,13 @@ class EstimateController extends Controller
 
             $contracts_client = ContractsClient::create([
                 'client_id' => $client->id,
-                'amount' => $total,
+                'amount' => $estimate->total,
             ]);
 
             $estimate->update([
                 'client_id' => $client->id,
                 'is_registered' => true,
                 'registered_date' => today(),
-                'amount' => $amount,
-                'discount' => $discount,
-                'total' => $total,
             ]);
 
             logs('documents')->info("========================================== КОНЕЦ РЕГИСТРАЦИИ СМЕТЫ, ID: {$estimate->id} =============================================== ");
