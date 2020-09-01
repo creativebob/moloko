@@ -110876,7 +110876,9 @@ var modulePromotion = {
 "use strict";
 var moduleGoods = {
     state: {
-        compositions: []
+        compositions: [],
+        totalWeight: 0,
+        totalCost: 0
     },
     mutations: {
         SET_COMPOSITION: function SET_COMPOSITION(state, composition) {
@@ -110888,30 +110890,31 @@ var moduleGoods = {
                     state.compositions[index] = composition;
                 } else {
                     state.compositions.push(composition);
-                };
+                }
             } else {
                 state.compositions.push(composition);
             }
-        }
-    },
-    getters: {
-        totalWeight: function totalWeight(state) {
+
+            this.commit('SET_TOTAL_WEIGHT');
+            this.commit('SET_TOTAL_COST');
+        },
+        SET_TOTAL_WEIGHT: function SET_TOTAL_WEIGHT(state) {
             var weight = 0;
             if (state.compositions.length) {
                 state.compositions.forEach(function (composition) {
                     if (composition.items.length) {
                         composition.items.forEach(function (item) {
-                            // weight = parseFloat(weight) + parseFloat(item.totalWeight);
-                            if (item.pivot) {
-                                weight = parseFloat(weight) + parseFloat(item.weight) * 1000 * parseFloat(item.pivot.useful);
-                            }
+                            weight = parseFloat(weight) + parseFloat(item.totalWeight);
+                            // if (item.pivot) {
+                            //     weight = parseFloat(weight) + (parseFloat(item.weight) * 1000 * parseFloat(item.pivot.useful));
+                            // }
                         });
                     }
                 });
             }
-            return weight.toFixed(2);
+            state.totalWeight = weight.toFixed(2);
         },
-        totalCost: function totalCost(state) {
+        SET_TOTAL_COST: function SET_TOTAL_COST(state) {
             var cost = 0;
             if (state.compositions.length) {
                 state.compositions.forEach(function (composition) {
@@ -110929,11 +110932,17 @@ var moduleGoods = {
                     }
                 });
             }
-            return cost.toFixed(2);
+            state.totalCost = cost.toFixed(2);
         }
-
+    },
+    getters: {
+        totalWeight: function totalWeight(state) {
+            return state.totalWeight;
+        },
+        totalCost: function totalCost(state) {
+            return state.totalCost;
+        }
     }
-
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (moduleGoods);
