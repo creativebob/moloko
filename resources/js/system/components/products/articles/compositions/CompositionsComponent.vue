@@ -64,32 +64,32 @@
                             :id="'table-' + name"
                         >
 
-                        <template v-if="actualItems && actualItems.length">
-                            <composition-component
-                                v-for="(item, index) in actualItems"
-                                :item="item"
-                                :index="index"
-                                :name="name"
-                                :key="item.id"
-                                @open-modal="openModal"
-                                :disabled="disabled"
-                                @update="updateItem"
-                            ></composition-component>
-                        </template>
+                            <template v-if="actualItems && actualItems.length">
+                                <composition-component
+                                    v-for="(item, index) in actualItems"
+                                    :item="item"
+                                    :index="index"
+                                    :name="name"
+                                    :key="item.id"
+                                    @open-modal="openModal"
+                                    :disabled="disabled"
+                                    @update="updateItem"
+                                ></composition-component>
+                            </template>
 
                         </tbody>
 
                         <tfoot>
-                        <tr>
-                            <td colspan="5"></td>
-                            <td>
-                                <span>{{ totalWeight }}</span> <span>гр.</span>
-                            </td>
-                            <td>
-                                <span>{{ totalCost }}</span> <span>руб.</span>
-                            </td>
-                            <td></td>
-                        </tr>
+                            <tr>
+                                <td colspan="5"></td>
+                                <td>
+                                    <span>{{ totalWeight }}</span> <span>гр.</span>
+                                </td>
+                                <td>
+                                    <span>{{ totalCost }}</span> <span>руб.</span>
+                                </td>
+                                <td></td>
+                            </tr>
                         </tfoot>
                     </table>
                 </div>
@@ -133,45 +133,39 @@
                     article: {
                         name: null
                     }
-                }
+                },
+                totalWeight: 0,
+                totalCost: 0
             }
         },
-        mounted() {
-            // let composition = {
-            //         name: this.name,
-            //         items: this.actualItems
-            //     };
+        created() {
+            var totalWeight = 0,
+                totalCost = 0;
+
+            this.curItems.forEach(item => {
+                let weight = parseFloat(item.weight * 1000 * item.pivot.useful).toFixed(2);
+                totalWeight = parseFloat(totalWeight) + parseFloat(weight);
+                item.totalWeight = weight;
+
+                let cost = 0;
+                if (this.name == 'attachments' || this.name == 'containers') {
+                    cost = parseFloat(item.cost_unit * item.pivot.useful).toFixed(2);
+                } else if (this.name == 'raws') {
+                    cost = parseFloat(item.cost_portion * item.pivot.useful).toFixed(2);
+                }
+
+                totalCost = parseFloat(totalCost) + parseFloat(cost);
+                item.totalCost = cost;
+            });
+
+            this.totalWeight = totalWeight.toFixed(2);
+            this.totalCost = totalCost.toFixed(2);
+
             this.updateStore();
         },
         computed: {
             actualItems() {
                 return this.curItems;
-            },
-            totalWeight() {
-                var weight = 0;
-                this.curItems.forEach(item => {
-                    if (item.pivot) {
-                        weight = parseFloat(weight) + (parseFloat(item.weight) * 1000 *  parseFloat(item.pivot.useful));
-                    }
-                });
-                return weight.toFixed(2);
-            },
-            totalCost() {
-                var cost = 0;
-                if (this.name == 'attachments' || this.name == 'containers') {
-                    this.curItems.forEach(item => {
-                        if (item.pivot) {
-                            cost = parseFloat(cost) + (parseFloat(item.cost_unit) * parseFloat(item.pivot.useful));
-                        }
-                    });
-                } else if (this.name == 'raws') {
-                    this.curItems.forEach(item => {
-                        if (item.pivot) {
-                            cost = parseFloat(cost) + (parseFloat(item.cost_portion) * parseFloat(item.pivot.useful));
-                        }
-                    });
-                }
-                return cost.toFixed(2);
             },
             composition() {
                 return {
@@ -179,22 +173,48 @@
                     items: this.actualItems
                 };
             }
-
         },
         methods: {
+            setTotalWeight() {
+                var weight = 0;
+                this.curItems.forEach(item => {
+                    weight += parseFloat(item.totalWeight);
+                });
+                this.totalWeight = weight.toFixed(2);
+            },
+            setTotalCost() {
+                var cost = 0;
+                this.curItems.forEach(item => {
+                    cost += parseFloat(item.totalCost);
+                });
+                this.totalCost = cost.toFixed(2);
+            },
             addItem(item) {
+                item.pivot = {
+                    value: 0,
+                    useful: 0
+                };
+                item.totalWeight = parseFloat('0').toFixed(2);
+                item.totalCost = parseFloat('0').toFixed(2);
+
                 this.curItems.push(item);
+                this.setTotalWeight();
+                this.setTotalCost();
                 this.updateStore();
             },
             updateItem(item){
                 let found = this.curItems.find(obj => obj.id == item.id);
                 Vue.set(found, 'item', item);
+                this.setTotalWeight();
+                this.setTotalCost();
                 this.updateStore();
             },
             removeItem(id) {
                 let index = this.curItems.findIndex(item => item.id == id);
                 this.curItems.splice(index, 1);
                 this.$refs.categoriesListComponent.clear();
+                this.setTotalWeight();
+                this.setTotalCost();
                 this.updateStore();
             },
             openModal(item) {

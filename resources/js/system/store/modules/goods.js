@@ -23,6 +23,7 @@ const moduleGoods = {
                 state.compositions.forEach(composition => {
                     if (composition.items.length) {
                         composition.items.forEach(item => {
+                            // weight = parseFloat(weight) + parseFloat(item.totalWeight);
                             if (item.pivot) {
                                 weight = parseFloat(weight) + (parseFloat(item.weight) * 1000 * parseFloat(item.pivot.useful));
                             }
@@ -38,6 +39,7 @@ const moduleGoods = {
                 state.compositions.forEach(composition => {
                     if (composition.items.length) {
                         composition.items.forEach(item => {
+                            // cost = parseFloat(cost) + parseFloat(item.totalCost);
                             if (item.pivot) {
                                 if (composition.name == 'attachments' || composition.name == 'containers') {
                                     cost = parseFloat(cost) + (parseFloat(item.cost_unit) * parseFloat(item.pivot.useful));

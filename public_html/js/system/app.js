@@ -88021,46 +88021,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 article: {
                     name: null
                 }
-            }
+            },
+            totalWeight: 0,
+            totalCost: 0
         };
     },
-    mounted: function mounted() {
-        // let composition = {
-        //         name: this.name,
-        //         items: this.actualItems
-        //     };
+    created: function created() {
+        var _this = this;
+
+        var totalWeight = 0,
+            totalCost = 0;
+
+        this.curItems.forEach(function (item) {
+            var weight = parseFloat(item.weight * 1000 * item.pivot.useful).toFixed(2);
+            totalWeight = parseFloat(totalWeight) + parseFloat(weight);
+            item.totalWeight = weight;
+
+            var cost = 0;
+            if (_this.name == 'attachments' || _this.name == 'containers') {
+                cost = parseFloat(item.cost_unit * item.pivot.useful).toFixed(2);
+            } else if (_this.name == 'raws') {
+                cost = parseFloat(item.cost_portion * item.pivot.useful).toFixed(2);
+            }
+
+            totalCost = parseFloat(totalCost) + parseFloat(cost);
+            item.totalCost = cost;
+        });
+
+        this.totalWeight = totalWeight.toFixed(2);
+        this.totalCost = totalCost.toFixed(2);
+
         this.updateStore();
     },
 
     computed: {
         actualItems: function actualItems() {
             return this.curItems;
-        },
-        totalWeight: function totalWeight() {
-            var weight = 0;
-            this.curItems.forEach(function (item) {
-                if (item.pivot) {
-                    weight = parseFloat(weight) + parseFloat(item.weight) * 1000 * parseFloat(item.pivot.useful);
-                }
-            });
-            return weight.toFixed(2);
-        },
-        totalCost: function totalCost() {
-            var cost = 0;
-            if (this.name == 'attachments' || this.name == 'containers') {
-                this.curItems.forEach(function (item) {
-                    if (item.pivot) {
-                        cost = parseFloat(cost) + parseFloat(item.cost_unit) * parseFloat(item.pivot.useful);
-                    }
-                });
-            } else if (this.name == 'raws') {
-                this.curItems.forEach(function (item) {
-                    if (item.pivot) {
-                        cost = parseFloat(cost) + parseFloat(item.cost_portion) * parseFloat(item.pivot.useful);
-                    }
-                });
-            }
-            return cost.toFixed(2);
         },
         composition: function composition() {
             return {
@@ -88070,8 +88066,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        setTotalWeight: function setTotalWeight() {
+            var weight = 0;
+            this.curItems.forEach(function (item) {
+                weight += parseFloat(item.totalWeight);
+            });
+            this.totalWeight = weight.toFixed(2);
+        },
+        setTotalCost: function setTotalCost() {
+            var cost = 0;
+            this.curItems.forEach(function (item) {
+                cost += parseFloat(item.totalCost);
+            });
+            this.totalCost = cost.toFixed(2);
+        },
         addItem: function addItem(item) {
+            item.pivot = {
+                value: 0,
+                useful: 0
+            };
+            item.totalWeight = parseFloat('0').toFixed(2);
+            item.totalCost = parseFloat('0').toFixed(2);
+
             this.curItems.push(item);
+            this.setTotalWeight();
+            this.setTotalCost();
             this.updateStore();
         },
         updateItem: function updateItem(item) {
@@ -88079,6 +88098,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return obj.id == item.id;
             });
             Vue.set(found, 'item', item);
+            this.setTotalWeight();
+            this.setTotalCost();
             this.updateStore();
         },
         removeItem: function removeItem(id) {
@@ -88087,6 +88108,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
             this.curItems.splice(index, 1);
             this.$refs.categoriesListComponent.clear();
+            this.setTotalWeight();
+            this.setTotalCost();
             this.updateStore();
         },
         openModal: function openModal(item) {
@@ -88216,14 +88239,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -88238,27 +88253,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             default: false
         }
     },
-    // mounted() {
-    //     if (this.item.pivot) {
-    //         this.value = this.item.pivot.value;
-    //         this.useful = this.item.pivot.useful;
-    //     }
-    // },
+    data: function data() {
+        return {
+            value: this.item.pivot.value,
+            useful: this.item.pivot.useful
+        };
+    },
+
     computed: {
-        value: function value() {
-            if (this.item.pivot) {
-                return this.item.pivot.value;
-            } else {
-                return 0;
-            }
-        },
-        useful: function useful() {
-            if (this.item.pivot) {
-                return this.item.pivot.useful;
-            } else {
-                return 0;
-            }
-        },
         unitForLabel: function unitForLabel() {
             if (this.item.portion_abbreviation) {
                 return this.item.portion_abbreviation;
@@ -88271,19 +88273,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         weight: function weight() {
-            // let weight;
-            //
-            // if (this.item.portion_status == 1) {
-            //     weight =  this.item.article.weight / this.item.article.unit.ratio * this.item.portion_count * this.item.unit_portion.ratio;
-            // } else {
-            //     weight = this.item.article.weight;
-            // }
-
-            if (this.name == 'attachments' || this.name == 'containers') {
-                return parseFloat(this.item.weight * 1000 * this.useful).toFixed(2);
-            } else if (this.name == 'raws') {
-                return parseFloat(this.item.weight * 1000 * this.useful).toFixed(2);
-            }
+            return parseFloat(this.item.weight * 1000 * this.useful).toFixed(2);
         },
         cost: function cost() {
             if (this.name == 'attachments' || this.name == 'containers') {
@@ -88293,35 +88283,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         }
     },
-    data: function data() {
-        return {
-            // value: 0,
-            // useful: 0
-        };
-    },
-
     methods: {
         openModalRemove: function openModalRemove() {
             this.$emit('open-modal', this.item);
         },
         changeValue: function changeValue(value) {
-            if (!this.item.pivot) {
-                this.item.pivot = {};
-            }
+            this.value = value;
+            this.useful = value;
+
             this.item.pivot.value = value;
             this.item.pivot.useful = value;
+
+            this.item.totalWeight = this.weight;
+            this.item.totalCost = this.cost;
+
             this.$refs.usefulComponent.update(value);
             this.$emit('update', this.item);
         },
         changeUseful: function changeUseful(value) {
-            if (!this.item.pivot) {
-                this.item.pivot = {};
-            }
             if (value > this.item.pivot.value) {
+                this.useful = this.item.pivot.value;
                 this.item.pivot.useful = this.item.pivot.value;
                 this.$refs.usefulComponent.update(this.item.pivot.useful);
             } else {
+                this.useful = value;
                 this.item.pivot.useful = value;
+
+                this.item.totalWeight = this.weight;
+                this.item.totalCost = this.cost;
+
                 this.$emit('update', this.item);
             }
         }
@@ -88366,7 +88356,6 @@ var render = function() {
               ref: "valueComponent",
               attrs: {
                 name: _vm.name + "[" + _vm.item.id + "][value]",
-                "decimal-place": 2,
                 value: _vm.value,
                 disabled: _vm.disabled,
                 id: "inupt-" + _vm.name + "-" + _vm.item.id + "-value",
@@ -88406,7 +88395,6 @@ var render = function() {
               ref: "usefulComponent",
               attrs: {
                 name: _vm.name + "[" + _vm.item.id + "][useful]",
-                "decimal-place": 2,
                 value: _vm.useful,
                 disabled: _vm.disabled,
                 id: "inupt-" + _vm.name + "-" + _vm.item.id + "-useful",
@@ -88438,13 +88426,13 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("td", [
-        _c("span", [_vm._v(_vm._s(_vm.weight))]),
+        _c("span", [_vm._v(_vm._s(_vm.item.totalWeight))]),
         _vm._v(" "),
         _c("span", [_vm._v("гр.")])
       ]),
       _vm._v(" "),
       _c("td", [
-        _c("span", [_vm._v(_vm._s(_vm.cost))]),
+        _c("span", [_vm._v(_vm._s(_vm.item.totalCost))]),
         _vm._v(" "),
         _c("span", [_vm._v("руб.")])
       ]),
@@ -110913,6 +110901,7 @@ var moduleGoods = {
                 state.compositions.forEach(function (composition) {
                     if (composition.items.length) {
                         composition.items.forEach(function (item) {
+                            // weight = parseFloat(weight) + parseFloat(item.totalWeight);
                             if (item.pivot) {
                                 weight = parseFloat(weight) + parseFloat(item.weight) * 1000 * parseFloat(item.pivot.useful);
                             }
@@ -110928,6 +110917,7 @@ var moduleGoods = {
                 state.compositions.forEach(function (composition) {
                     if (composition.items.length) {
                         composition.items.forEach(function (item) {
+                            // cost = parseFloat(cost) + parseFloat(item.totalCost);
                             if (item.pivot) {
                                 if (composition.name == 'attachments' || composition.name == 'containers') {
                                     cost = parseFloat(cost) + parseFloat(item.cost_unit) * parseFloat(item.pivot.useful);
