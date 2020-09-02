@@ -2,7 +2,7 @@
     <div>
         <input
             type="checkbox"
-            :name="name + '[]'"
+            :name="name + '[' + item.id +']'"
             :id="'checkbox-' + name + '-' + item.id"
             :value="item.id"
             :checked="checkChecked"
