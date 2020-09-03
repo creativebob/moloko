@@ -285,7 +285,7 @@
                                         <pickmeup-component
                                             name="shipment_date"
                                             title="Дата отгрузки"
-                                            value="{{ isset($lead->shipment_at) ? $lead->shipment_at->format('d.m.Y') : null }}"
+                                            value="{{ isset($lead->shipment_at) ? $lead->shipment_at : null }}"
                                         ></pickmeup-component>
 {{--                                        @include('includes.inputs.date', ['name' => 'shipment_date', 'value' => isset($lead->shipment_at) ? $lead->shipment_at->format('d.m.Y') : null])--}}
                                     </div>

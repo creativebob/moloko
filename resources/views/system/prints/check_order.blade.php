@@ -12,7 +12,10 @@
                 </div>
                 <div class="cell auto contact-info">
                     <span class="company-phone">{{ decorPhone($lead->filial->main_phone->phone) }}</span><br>
-                    <span class="company-site">{{ $lead->filial->name }}</span>
+                    @isset($domain)
+                        <span class="company-site">{{ $domain->domain }}</span>
+                    @endisset
+{{--                    <span class="company-site">{{ $lead->filial->name }}</span>--}}
                 </div>
             </div>
             <div class="grid-x order-info">
@@ -24,6 +27,7 @@
                 </div>
                 <div class="cell small-6 client-info">
                     <ul class="client-info-list">
+                        <li><span class="client-name">Имя: </span><span>{{ $lead->name }}</span></li>
                         <li><span class="client-city">Город: </span><span>{{ $lead->location->city->name }}</span></li>
                         <li><span class="client-address">Адрес клиента: </span><span>{{ $lead->location->address }}</span></li>
                         <li><span class="client-phone">Телефон: </span><span>{{ decorPhone($lead->main_phone->phone) }}</span></li>
@@ -76,7 +80,7 @@
                             <td></td>
                             <td></td>
                             <td>{{ num_format($lead->estimate->discount_currency, 0) }} {{ $item->currency->symbol }}</td>
-                        </tr>                        
+                        </tr>
                     </tfoot>
                 </table>
             </div>
@@ -88,7 +92,10 @@
                 </div>
                 <div class="cell auto contact-info">
                     <span class="company-phone">{{ decorPhone($lead->filial->main_phone->phone) }}</span><br>
-                    <span class="company-site">{{ $lead->filial->name }}</span>
+                    @isset($domain)
+                        <span class="company-site">{{ $domain->domain }}</span>
+                    @endisset
+{{--                    <span class="company-site">{{ $lead->filial->name }}</span>--}}
                 </div>
             </div>
             <div class="grid-x order-info">
@@ -100,6 +107,7 @@
                 </div>
                 <div class="cell small-6 client-info">
                     <ul class="client-info-list">
+                        <li><span class="client-name">Имя: </span><span>{{ $lead->name }}</span></li>
                         <li><span class="client-city">Город: </span><span>{{ $lead->location->city->name }}</span></li>
                         <li><span class="client-address">Адрес клиента: </span><span>{{ $lead->location->address }}</span></li>
                         <li><span class="client-phone">Телефон: </span><span>{{ decorPhone($lead->main_phone->phone) }}</span></li>
@@ -152,7 +160,7 @@
                             <td></td>
                             <td></td>
                             <td>{{ num_format($lead->estimate->discount_currency, 0) }} {{ $item->currency->symbol }}</td>
-                        </tr>                        
+                        </tr>
                     </tfoot>
                 </table>
             </div>

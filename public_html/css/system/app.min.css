@@ -8605,6 +8605,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, menu,
   font-weight: bold;
 }
 
+.check-order .order-info .client-name,
 .check-order .order-info .client-city,
 .check-order .order-info .client-address,
 .check-order .order-info .client-phone,

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Traits;
 
+use App\Http\Controllers\System\Traits\Timestampable;
 use App\User;
 use App\Lead;
 use App\Phone;
@@ -18,6 +19,8 @@ use Carbon\Carbon;
 
 trait LeadControllerTrait
 {
+
+    use Timestampable;
 
 	public function createLead($request){
 
@@ -120,11 +123,13 @@ trait LeadControllerTrait
         $lead->choice_type = $choiceFromTag['type'];
         $lead->choice_id = $choiceFromTag['id'];
 
-        // TODO - 08.05.20 - Теперь приходит дата доставки, т.к. перевел даты на компонент, поэтому пока проверка на время, в дальнейшем дата вообще переедет
-        if (isset($request->shipment_date) && isset($request->shipment_time)) {
-	        $date = Carbon::createFromFormat('d.m.Y H:i', $request->shipment_date . ' ' . $request->shipment_time);
-	        $lead->shipment_at = $date;
-        }
+//        // TODO - 08.05.20 - Теперь приходит дата доставки, т.к. перевел даты на компонент, поэтому пока проверка на время, в дальнейшем дата вообще переедет
+//        if (isset($request->shipment_date) && isset($request->shipment_time)) {
+//	        $date = Carbon::createFromFormat('d.m.Y H:i', $request->shipment_date . ' ' . $request->shipment_time);
+//	        $lead->shipment_at = $date;
+//        }
+        $shipmentAt = $this->getTimestamp('shipment');
+        $lead->shipment_at = $shipmentAt;
 
         // Работаем с ПОЛЬЗОВАТЕЛЕМ лида ================================================================
 

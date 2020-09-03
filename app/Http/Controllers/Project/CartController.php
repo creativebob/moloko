@@ -520,35 +520,26 @@ class CartController extends Controller
                     $totalBonuses += $estimate->goods_items->sum('total_bonuses');
                 }
 
+                $estimate->total_points = $totalPoints;
+                $estimate->total_bonuses = $totalBonuses;
+                $estimate->discount_items_currency = $discountItemsCurrency;
+
                 $discountCurrency = 0;
                 $discountPercent = 0;
 
-//                if ($total > 0) {
-//                    if ($estimate->discounts->isNotEmpty()) {
-//                        $discount = $estimate->discounts->first();
-//
-//                        switch ($discount->mode) {
-//                            case(1):
-//                                $discountCurrency = $total / 100 * $discount->percent;
-//                                $discountPercent = $discount->percent;
-//                                break;
-//                            case(2):
-//                                $discountCurrency = $discount->currency;
-//                                $percent = $total / 100;
-//                                $discountPercent = $discount->currency / $percent;
-//                                break;
-//                        }
-//
-//                        $total -= $discountCurrency;
-//                    }
-//                }
+                if ($total > 0) {
+                    $discountCurrency = $amount - $total;
+                    $percent = $amount / 100;
+                    $discountPercent = $discountCurrency / $percent;
+                }
 
                 $estimate->amount = $amount;
                 $estimate->total = $total;
                 $estimate->discount_currency = $discountCurrency;
                 $estimate->discount_percent = $discountPercent;
 
-                $estimate->cost = $estimate->goods_items->sum('cost');
+                $estimate->cost = $cost;
+
                 $estimate->margin_currency = $estimate->total - $estimate->cost;
                 if ($estimate->margin_currency > 0) {
                     $estimate->margin_percent = ($estimate->margin_currency / $estimate->total * 100);

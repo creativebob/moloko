@@ -23,7 +23,7 @@
 
         text-align: right;
         span{
-        
+
         }
     }
 
@@ -34,7 +34,7 @@
 		font-size: 0.8rem;
 		margin-bottom: 1rem;
 
-		.order-date, 
+		.order-date,
 		.order-time
 		{
 			display: inline-block;
@@ -42,10 +42,11 @@
 			font-weight: bold;
 		}
 
-		.client-city, 
-		.client-address, 
-		.client-phone, 
-		.client-time, 
+        .client-name,
+        .client-city,
+		.client-address,
+		.client-phone,
+		.client-time,
 		.client-points
 		{
 			display: inline-block;
@@ -93,7 +94,7 @@
 	}
 
 	.print_table thead{
-		
+
 		border-bottom: 1px solid #000;
 
 		tr th
@@ -114,7 +115,7 @@
 		margin-top: 10px;
 	}
 
-	.print_table tr td:first-child, .p_table tr th:first-child,
+	.print_table tr td:first-child, .p_table tr th:first-child
 	{
 		max-width: 20px !important;
 	}
