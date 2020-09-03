@@ -395,7 +395,7 @@ class CartController extends Controller
                     'filial_id' => $lead->filial_id,
                     'company_id' => $lead->company->id,
                     'date' => today(),
-                    'number' => $lead->case_number,
+                    'number' => $lead->id,
                     'author_id' => $lead->author_id,
                     'is_main' => true
                 ]);

@@ -1,10 +1,5 @@
 @extends('layouts.app')
 
-@section('inhead')
-
-@include('includes.scripts.pickmeup-inhead')
-@endsection
-
 @section('title', $pageInfo->name)
 
 @section('breadcrumbs', Breadcrumbs::render('index', $pageInfo))
@@ -221,116 +216,113 @@
 
         @endsection
 
-        @section('scripts')
+@push('scripts')
+    <script type="application/javascript">
 
-        <script type="application/javascript">
+      $(document).on('click', '.take-lead', function(event) {
+        event.preventDefault();
 
-          $(document).on('click', '.take-lead', function(event) {
-            event.preventDefault();
+        $(this).prop('disabled', true);
 
-            $(this).prop('disabled', true);
+        var id = $(this).closest('.item').attr('id').split('-')[1];
 
-            var id = $(this).closest('.item').attr('id').split('-')[1];
+        $.get("/admin/lead_appointed_check", function(data){
+            if (data === 1) {
 
-            $.get("/admin/lead_appointed_check", function(data){
-                if (data === 1) {
+              $.get("/admin/lead_appointed", {id: id}, function(html){
+                  $('#modal').html(html);
+                  $('#add-appointed').foundation();
+                  $('#add-appointed').foundation('open');
+              });
+            } else {
 
-                  $.get("/admin/lead_appointed", {id: id}, function(html){
-                      $('#modal').html(html);
-                      $('#add-appointed').foundation();
-                      $('#add-appointed').foundation('open');
-                  });
-                } else {
+              $.get("/admin/lead_take", {id: id}, function(date){
+                  $('#leads-' + date.id + ' .td-case-number').text(date.case_number);
+                  $('#leads-' + date.id + ' .td-name').html('<a href="/admin/leads/' + date.id + '/edit">' + date.name + '</a>');
+                  $('#leads-' + date.id + ' .td-action').html('');
+                  $('#leads-' + date.id + ' .td-manager').text(date.manager);
+              });
+            };
+        });
+        /* Act on the event */
+      });
 
-                  $.get("/admin/lead_take", {id: id}, function(date){
-                      $('#leads-' + date.id + ' .td-case-number').text(date.case_number);
-                      $('#leads-' + date.id + ' .td-name').html('<a href="/admin/leads/' + date.id + '/edit">' + date.name + '</a>');
-                      $('#leads-' + date.id + ' .td-action').html('');
-                      $('#leads-' + date.id + ' .td-manager').text(date.manager);
-                  });
-                };
-            });
-            /* Act on the event */
-          });
+      $(document).on('click', '#submit-appointed', function(event) {
+        event.preventDefault();
 
-          $(document).on('click', '#submit-appointed', function(event) {
-            event.preventDefault();
+        $(this).prop('disabled', true);
 
-            $(this).prop('disabled', true);
+        $.ajax({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          url: "/admin/lead_distribute",
+          type: "POST",
+          data: $(this).closest('form').serialize(),
+          success: function(date){
 
-            $.ajax({
-              headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-              },
-              url: "/admin/lead_distribute",
-              type: "POST",
-              data: $(this).closest('form').serialize(),
-              success: function(date){
+            $('#add-appointed').foundation('close');
 
-                $('#add-appointed').foundation('close');
+            var result = $.parseJSON(date);
 
-                var result = $.parseJSON(date);
+            $('#leads-' + result.id + ' .td-case-number').text(result.case_number);
+            $('#leads-' + result.id + ' .td-name').html('<a href="/admin/leads/' + result.id + '/edit">' + result.name + '</a>');
+            $('#leads-' + result.id + ' .td-action').html('');
+            $('#leads-' + result.id + ' .td-manager').text(result.manager);
 
-                $('#leads-' + result.id + ' .td-case-number').text(result.case_number);
-                $('#leads-' + result.id + ' .td-name').html('<a href="/admin/leads/' + result.id + '/edit">' + result.name + '</a>');
-                $('#leads-' + result.id + ' .td-action').html('');
-                $('#leads-' + result.id + ' .td-manager').text(result.manager);
+          }
+        });
+      });
 
-              }
-            });
-          });
+    // $(document).on('click', '.take-lead', function(event) {
+    //   event.preventDefault();
 
-  // $(document).on('click', '.take-lead', function(event) {
-  //   event.preventDefault();
+    //   var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
+    //   var id = $(this).closest('.item').attr('id').split('-')[1];
+    //   var item = $(this);
 
-  //   var entity_alias = $(this).closest('.item').attr('id').split('-')[0];
-  //   var id = $(this).closest('.item').attr('id').split('-')[1];
-  //   var item = $(this);
+    //   $.ajax({
+    //     headers: {
+    //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    //     },
+    //     url: "/admin/lead_take",
+    //     type: "POST",
+    //     data: {id: id},
+    //     success: function(date){
+    //       var result = $.parseJSON(date);
+    //       // alert(result);
 
-  //   $.ajax({
-  //     headers: {
-  //       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  //     },
-  //     url: "/admin/lead_take",
-  //     type: "POST",
-  //     data: {id: id},
-  //     success: function(date){
-  //       var result = $.parseJSON(date);
-  //       // alert(result);
-
-  //       $('#leads-' + result.id + ' .td-case-number').text(result.case_number);
-  //       $('#leads-' + result.id + ' .td-name').html('<a href="/admin/leads/' + result.id + '/edit">' + result.name + '</a>');
-  //       $('#leads-' + result.id + ' .td-action').html('');
-  //       $('#leads-' + result.id + ' .td-manager').text(result.manager);
-  //     }
-  //   });
+    //       $('#leads-' + result.id + ' .td-case-number').text(result.case_number);
+    //       $('#leads-' + result.id + ' .td-name').html('<a href="/admin/leads/' + result.id + '/edit">' + result.name + '</a>');
+    //       $('#leads-' + result.id + ' .td-action').html('');
+    //       $('#leads-' + result.id + ' .td-manager').text(result.manager);
+    //     }
+    //   });
 
 
-  //   /* Act on the event */
-  // });
+    //   /* Act on the event */
+    // });
 
-// ---------------------------------- Закрытие модалки -----------------------------------
-$(document).on('click', '.remove-modal, .submit-edit, .submit-add, .submit-appointed', function() {
-  $(this).closest('.reveal-overlay').remove();
-});
+    // ---------------------------------- Закрытие модалки -----------------------------------
+    $(document).on('click', '.remove-modal, .submit-edit, .submit-add, .submit-appointed', function() {
+    $(this).closest('.reveal-overlay').remove();
+    });
 
-</script>
-{{-- Скрипт сортировки и перетаскивания для таблицы --}}
-@include('includes.scripts.tablesorter-script')
-@include('includes.scripts.sortable-table-script')
-@include('includes.scripts.pickmeup-script')
+    </script>
+    {{-- Скрипт сортировки и перетаскивания для таблицы --}}
+    @include('includes.scripts.tablesorter-script')
+    @include('includes.scripts.sortable-table-script')
 
-{{-- Скрипт отображения на сайте --}}
-@include('includes.scripts.ajax-display')
+    {{-- Скрипт отображения на сайте --}}
+    @include('includes.scripts.ajax-display')
 
-{{-- Скрипт системной записи --}}
-@include('includes.scripts.ajax-system')
+    {{-- Скрипт системной записи --}}
+    @include('includes.scripts.ajax-system')
 
-{{-- Скрипт чекбоксов --}}
-@include('includes.scripts.checkbox-control')
+    {{-- Скрипт чекбоксов --}}
+    @include('includes.scripts.checkbox-control')
 
-{{-- Скрипт модалки удаления --}}
-@include('includes.scripts.modal-delete-script')
-@include('includes.scripts.delete-ajax-script')
-
-@endsection
+    {{-- Скрипт модалки удаления --}}
+    @include('includes.scripts.modal-delete-script')
+    @include('includes.scripts.delete-ajax-script')
+@endpush
