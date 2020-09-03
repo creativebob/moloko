@@ -582,7 +582,9 @@ class CartController extends Controller
 
             $message .= "Имя клиента: " . $lead->name . "\r\n";
             $message .= "Тел: " . decorPhone($phone) . "\r\n";
-            if($lead->description){$message .= "Примечание: " . $lead->description . "\r\n";};
+            if ($lead->description) {
+                $message .= "Примечание: " . $lead->description . "\r\n";
+            };
 
             if ($estimate->goods_items->isNotEmpty()) {
                 $estimate->goods_items->load([
@@ -595,7 +597,7 @@ class CartController extends Controller
                     $message .= $num . ' - ' . $item->product->article->name . ": " . num_format($item->count, 0) .
                         ' ' . $item->product->article->unit->abbreviation .
 
-                        " (" . num_format($item->amount, 0) . " руб.) \r\n";
+                        " (" . num_format($item->total, 0) . " руб.) \r\n";
                     $num++;
                 }
                 $message .= "\r\n";
@@ -604,14 +606,15 @@ class CartController extends Controller
             $message .= "Кол-во товаров: " . num_format($count, 0) . "\r\n";
             $message .= "Сумма заказа: " . num_format($estimate->amount, 0) . ' руб.' . "\r\n";
 
-            if($discountCurrency > 0){
+            if ($estimate->discount_currency > 0){
                 $message .= "Сумма со скидкой: " . num_format($estimate->total, 0) . ' руб.' . "\r\n";
                 $message .= "Скидка: " . num_format($estimate->discount_currency, 0) . ' руб.' . "\r\n";
             }
 
             $message .= "\r\n";
             // Маржа
-            $message .= "Маржинальность: " . num_format($estimate->margin_currency, 0) . " руб. (" . round($estimate->margin_percent, 2) . "%)\r\n";
+            $message .= ($estimate->margin_currency < 0) ? "Убыток: " : "Маржинальность: ";
+            $message .= num_format($estimate->margin_currency, 0) . " руб. (" . round($estimate->margin_percent, 2) . "%)\r\n";
             $message .= "\r\n";
 
             // Ролл Хаус
