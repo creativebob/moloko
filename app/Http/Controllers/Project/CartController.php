@@ -543,7 +543,7 @@ class CartController extends Controller
 //                    }
 //                }
 
-                $estimate->amount = $lead->badget;
+                $estimate->amount = $amount;
                 $estimate->total = $total;
                 $estimate->discount_currency = $discountCurrency;
                 $estimate->discount_percent = $discountPercent;
