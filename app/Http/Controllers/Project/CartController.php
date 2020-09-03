@@ -124,7 +124,7 @@ class CartController extends Controller
 
         $discount = Discount::where([
             'company_id' => $site->company_id,
-            'display' => true,
+//            'display' => true,
             'archive' => false
         ])
             ->whereHas('entity', function ($q) {
