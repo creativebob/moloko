@@ -81,6 +81,9 @@
                                     title="Дата начала"
                                     value="{{ isset($discount->begined_at) ? $discount->begined_at->format('Y-m-d') : null }}"
                                     :required="true"
+                                    @if($discount->id)
+                                        :disabled="true"
+                                    @endif
                                 ></pickmeup-component>
                             </div>
                             <div class="small-3 medium-6 large-3 cell">
@@ -90,7 +93,7 @@
 {{--                                        :required="true"--}}
 {{--                                    ></input-time-component>--}}
                                 <label>Время начала:
-                                    @include('includes.inputs.time', ['name' => 'begin_time', 'placeholder' => true, 'value' => isset($discount->begined_at) ? $discount->begined_at->format('H:i') : null, 'required' => null, 'disabled' => null])
+                                    @include('includes.inputs.time', ['name' => 'begin_time', 'placeholder' => true, 'value' => isset($discount->begined_at) ? $discount->begined_at->format('H:i') : null, 'required' => null, 'disabled' => $discount->id ? true : null])
                                 </label>
                             </div>
 
@@ -99,11 +102,14 @@
                                     name="end_date"
                                     title="Дата окончания"
                                     value="{{ isset($discount->ended_at) ? $discount->ended_at->format('Y-m-d') : null }}"
+                                    @if($discount->id)
+                                        :disabled="true"
+                                    @endif
                                 ></pickmeup-component>
                             </div>
                             <div class="small-3 medium-6 large-3 cell">
                                 <label>Время окончания:
-                                    @include('includes.inputs.time', ['name' => 'end_time', 'placeholder' => true, 'value' => isset($discount->ended_at) ? $discount->ended_at->format('H:i') : null, 'disabled' => null])
+                                    @include('includes.inputs.time', ['name' => 'end_time', 'placeholder' => true, 'value' => isset($discount->ended_at) ? $discount->ended_at->format('H:i') : null, 'disabled' => $discount->id ? true : null])
                                 </label>
                             </div>
 

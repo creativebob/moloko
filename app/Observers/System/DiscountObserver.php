@@ -5,6 +5,7 @@ namespace App\Observers\System;
 use App\Discount;
 use App\Observers\System\Traits\Commonable;
 use App\Observers\System\Traits\Discountable;
+use App\PricesGoods;
 
 class DiscountObserver
 {
@@ -15,6 +16,13 @@ class DiscountObserver
     public function creating(Discount $discount)
     {
         $this->store($discount);
+    }
+
+    public function created(Discount $discount)
+    {
+        if ($discount->entity->alias == 'estimates') {
+            $this->recalculatingPrices($discount);
+        }
     }
 
     public function updating(Discount $discount)
@@ -36,10 +44,30 @@ class DiscountObserver
         $this->destroy($discount);
     }
 
-    public function recalculating($discount)
+    public function recalculatingPrices(Discount $discount)
+    {
+        $pricesGoods = PricesGoods::where([
+            'company_id' => auth()->user()->company_id,
+            'archive' => false
+        ])
+            ->get();
+
+        foreach ($pricesGoods as $priceGoods) {
+            $priceGoods->update([
+                'estimate_discount_id' => $discount->id
+            ]);
+        }
+    }
+
+    /**
+     * Пересчитываем скидки при изменении самой скидки к подключенным к ней сущностям, в зависимости от типа
+     *
+     * @param $discount
+     */
+    public function recalculating(Discount $discount)
     {
 
-        if ($discount->isDirty('mode') || $discount->isDirty('is_block') || $discount->isDirty('begined_at') || $discount->isDirty('ended_at')) {
+        if ($discount->isDirty('mode') || $discount->isDirty('is_block')) {
             switch($discount->entity->alias) {
                 case ('prices_goods'):
                     $discount->load([

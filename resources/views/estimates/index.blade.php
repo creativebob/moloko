@@ -34,7 +34,7 @@
                     <th class="td-phone">Телефон</th>
                     <th class="td-number">Номер заказа</th>
                     <th class="td-date">Дата заказа</th>
-                    <th class="td-amount">Сумма</th>
+                    <th class="td-total">Сумма</th>
                     <th class="td-payment">Оплачено</th>
                     <th class="td-margin_currency">Маржа</th>
                     <th class="td-margin_percent">% маржи</th>
@@ -84,7 +84,7 @@
                     <span>{{ $estimate->created_at->format('d.m.Y') }}</span><br>
                     <span class="tiny-text">{{ $estimate->created_at->format('H:i') }}</span>
                 </td>
-                <td class="td-amount">{{ num_format($estimate->amount, 0) }}</td>
+                <td class="td-total">{{ num_format($estimate->total, 0) }}</td>
                 <td class="td-payment">{{ num_format($estimate->payments->sum('amount'), 0) }}
                   <br><span class="tiny-text">{{ num_format($estimate->total - $estimate->payments->sum('amount'), 0) }}</span>
               </td>

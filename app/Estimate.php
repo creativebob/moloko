@@ -34,9 +34,10 @@ class Estimate extends Model
         'company_id',
 
         'number',
+        'date',
+
         'cost',
 
-        'date',
         'description',
         'author_id',
         'draft',
@@ -120,7 +121,7 @@ class Estimate extends Model
     {
         return $this->morphMany(Payment::class, 'document');
     }
-    
+
     public function discounts()
     {
         return $this->belongsToMany(Discount::class);

@@ -50,7 +50,6 @@ class PricesGoodsController extends Controller
 
         $user_filials = session('access.all_rights.index-prices_goods-allow.filials');
 //        $user_filials = session('access.all_rights.index-leads-allow');
-
         // dd($request);
 
         if (isset($request->filial_id)) {
@@ -84,26 +83,22 @@ class PricesGoodsController extends Controller
             'discount_catalogs_item'
         ])
             ->withCount('likes')
-//        ->whereHas('service', function ($q) {
-//            $q->whereHas('process', function ($q) {
-//                $q->where('draft', false);
-//            })
-//            ->where('archive', false);
-//        })
             // ->moderatorLimit($answer)
             ->companiesLimit($answer)
             ->booklistFilter($request)
 
-            ->whereHas('catalogs_item', function($q) use ($request){
-                $q->filter($request, 'author_id');
-            })
+//            ->whereHas('catalogs_item', function($q) use ($request){
+//                $q->filter($request, 'author_id');
+//            })
+//
+//            ->whereHas('catalogs_item', function($q) use ($request){
+//                $q->filter($request, 'catalogs_goods_item_id');
+//            })
 
-            ->whereHas('catalogs_item', function($q) use ($request){
-                $q->filter($request, 'catalogs_goods_item_id');
-            })
-
-            ->whereHas('goods.article', function($q){
-                $q->where('draft', false)
+            ->whereHas('goods', function($q){
+                $q->whereHas('article', function ($q) {
+                    $q->where('draft', false);
+                })
                     ->where('archive', false);
             })
 
@@ -117,7 +112,7 @@ class PricesGoodsController extends Controller
             ])
             ->orderBy('sort')
             ->paginate(300);
-        // dd($prices_goods);
+//         dd($prices_goods);
 
 
         // -----------------------------------------------------------------------------------------------------------

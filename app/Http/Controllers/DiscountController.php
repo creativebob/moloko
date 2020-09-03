@@ -168,10 +168,10 @@ class DiscountController extends Controller
 
         $data = $request->input();
 
-        $beginedAt = $this->getTimestamp('begin', true);
-        $data['begined_at'] = $beginedAt;
-        $endedAt = $this->getTimestamp('end');
-        $data['ended_at'] = $endedAt;
+//        $beginedAt = $this->getTimestamp('begin', true);
+//        $data['begined_at'] = $beginedAt;
+//        $endedAt = $this->getTimestamp('end');
+//        $data['ended_at'] = $endedAt;
 
         $result = $discount->update($data);
 

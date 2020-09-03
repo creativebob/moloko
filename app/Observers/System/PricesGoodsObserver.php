@@ -30,6 +30,9 @@ class PricesGoodsObserver
             'price' => $priceGoods->price,
             'currency_id' => $priceGoods->currency_id,
         ]);
+
+        $priceGoods->sort = $priceGoods->id;
+        $priceGoods->save();
     }
 
     public function updating(PricesGoods $priceGoods)

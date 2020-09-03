@@ -170,7 +170,9 @@ class LeadController extends Controller
         $estimate = Estimate::make([
             'filial_id' => $lead->filial_id,
             'discount_percent' => 0,
-            'is_main' => true
+            'is_main' => true,
+            'number' => $lead->id,
+            'date' => today()->format('d.m.Y')
         ]);
 
         $result = $lead->estimate()->save($estimate);
