@@ -81241,7 +81241,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -81288,6 +81287,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         enter: {
             type: Boolean,
             default: false
+        },
+
+        // TODO - 04.09.20 - Костыль для вкусняшки, в инпутах указан тип digit, Хотя такого не существует
+        type: {
+            type: String,
+            default: 'number'
         }
     },
     data: function data() {
@@ -81328,8 +81333,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (this.focus) {
                 this.$emit('focus', parseFloat(this.count).toFixed(this.decimalPlace));
             }
+            if (this.count == 0) {
+                this.count = '';
+            }
         },
         returnDecimal: function returnDecimal(value) {
+            if (this.count == '') {
+                this.count = 0;
+            }
+
             var array = this.getDecimalArray(value),
                 zeros = this.getZeros();
 
@@ -81446,14 +81458,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         // 	this.count_item = this.count_item.slice(0, -1);
         // }
 
-    },
-    directives: {
-        focus: {
-            inserted: function inserted(el) {
-                el.focus();
-            }
-        }
     }
+    // directives: {
+    //     focus: {
+    //         inserted: function (el) {
+    //             el.focus()
+    //         }
+    //     }
+    // },
 });
 
 /***/ }),
@@ -81464,55 +81476,160 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("input", {
-    directives: [
-      {
-        name: "model",
-        rawName: "v-model",
-        value: _vm.count,
-        expression: "count"
-      },
-      { name: "focus", rawName: "v-focus" }
-    ],
-    class: _vm.classes,
-    attrs: {
-      type: "number",
-      name: _vm.name,
-      id: _vm.id,
-      required: _vm.required,
-      disabled: _vm.disabled
-    },
-    domProps: { value: _vm.count },
-    on: {
-      input: [
-        function($event) {
-          if ($event.target.composing) {
-            return
+  return _vm.type === "checkbox"
+    ? _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.count,
+            expression: "count"
           }
-          _vm.count = $event.target.value
+        ],
+        class: _vm.classes,
+        attrs: {
+          name: _vm.name,
+          id: _vm.id,
+          required: _vm.required,
+          disabled: _vm.disabled,
+          type: "checkbox"
         },
-        function($event) {
-          return _vm.changeCount($event.target.value)
+        domProps: {
+          checked: Array.isArray(_vm.count)
+            ? _vm._i(_vm.count, null) > -1
+            : _vm.count
+        },
+        on: {
+          input: function($event) {
+            return _vm.changeCount($event.target.value)
+          },
+          focus: function($event) {
+            return _vm.checkDecimal($event.target.value)
+          },
+          blur: function($event) {
+            return _vm.returnDecimal($event.target.value)
+          },
+          keydown: function($event) {
+            if (
+              !$event.type.indexOf("key") &&
+              _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+            ) {
+              return null
+            }
+            $event.preventDefault()
+            return _vm.onEnter($event.target.value)
+          },
+          change: function($event) {
+            var $$a = _vm.count,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false
+            if (Array.isArray($$a)) {
+              var $$v = null,
+                $$i = _vm._i($$a, $$v)
+              if ($$el.checked) {
+                $$i < 0 && (_vm.count = $$a.concat([$$v]))
+              } else {
+                $$i > -1 &&
+                  (_vm.count = $$a.slice(0, $$i).concat($$a.slice($$i + 1)))
+              }
+            } else {
+              _vm.count = $$c
+            }
+          }
         }
-      ],
-      focus: function($event) {
-        return _vm.checkDecimal($event.target.value)
-      },
-      blur: function($event) {
-        return _vm.returnDecimal($event.target.value)
-      },
-      keydown: function($event) {
-        if (
-          !$event.type.indexOf("key") &&
-          _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-        ) {
-          return null
+      })
+    : _vm.type === "radio"
+    ? _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.count,
+            expression: "count"
+          }
+        ],
+        class: _vm.classes,
+        attrs: {
+          name: _vm.name,
+          id: _vm.id,
+          required: _vm.required,
+          disabled: _vm.disabled,
+          type: "radio"
+        },
+        domProps: { checked: _vm._q(_vm.count, null) },
+        on: {
+          input: function($event) {
+            return _vm.changeCount($event.target.value)
+          },
+          focus: function($event) {
+            return _vm.checkDecimal($event.target.value)
+          },
+          blur: function($event) {
+            return _vm.returnDecimal($event.target.value)
+          },
+          keydown: function($event) {
+            if (
+              !$event.type.indexOf("key") &&
+              _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+            ) {
+              return null
+            }
+            $event.preventDefault()
+            return _vm.onEnter($event.target.value)
+          },
+          change: function($event) {
+            _vm.count = null
+          }
         }
-        $event.preventDefault()
-        return _vm.onEnter($event.target.value)
-      }
-    }
-  })
+      })
+    : _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.count,
+            expression: "count"
+          }
+        ],
+        class: _vm.classes,
+        attrs: {
+          name: _vm.name,
+          id: _vm.id,
+          required: _vm.required,
+          disabled: _vm.disabled,
+          type: _vm.type
+        },
+        domProps: { value: _vm.count },
+        on: {
+          input: [
+            function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.count = $event.target.value
+            },
+            function($event) {
+              return _vm.changeCount($event.target.value)
+            }
+          ],
+          focus: function($event) {
+            return _vm.checkDecimal($event.target.value)
+          },
+          blur: function($event) {
+            return _vm.returnDecimal($event.target.value)
+          },
+          keydown: function($event) {
+            if (
+              !$event.type.indexOf("key") &&
+              _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+            ) {
+              return null
+            }
+            $event.preventDefault()
+            return _vm.onEnter($event.target.value)
+          }
+        }
+      })
 }
 var staticRenderFns = []
 render._withStripped = true

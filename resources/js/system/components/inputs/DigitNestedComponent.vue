@@ -1,6 +1,6 @@
 <template>
 	<input
-		type="number"
+		:type="type"
 		:name="name"
         v-model="count"
         :id="id"
@@ -11,7 +11,6 @@
         @focus="checkDecimal($event.target.value)"
         @blur="returnDecimal($event.target.value)"
         @keydown.enter.prevent="onEnter($event.target.value)"
-        v-focus
 	>
 <!--
         @keydown="checkAfter($event)"
@@ -68,6 +67,12 @@
                 type: Boolean,
                 default: false
             },
+
+            // TODO - 04.09.20 - Костыль для вкусняшки, в инпутах указан тип digit, Хотя такого не существует
+            type: {
+                type: String,
+                default: 'number'
+            },
         },
 		data() {
 			return {
@@ -106,8 +111,15 @@
                 if (this.focus) {
                     this.$emit('focus', parseFloat(this.count).toFixed(this.decimalPlace));
                 }
+                if (this.count == 0) {
+                    this.count = '';
+                }
             },
             returnDecimal(value) {
+                if (this.count == '') {
+                    this.count = 0;
+                }
+
                 let array = this.getDecimalArray(value),
                     zeros = this.getZeros();
 
@@ -223,12 +235,12 @@
             // 	this.count_item = this.count_item.slice(0, -1);
             // }
 		},
-        directives: {
-            focus: {
-                inserted: function (el) {
-                    el.focus()
-                }
-            }
-        },
+        // directives: {
+        //     focus: {
+        //         inserted: function (el) {
+        //             el.focus()
+        //         }
+        //     }
+        // },
 	}
 </script>
