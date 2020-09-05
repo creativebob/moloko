@@ -14,7 +14,7 @@
     export default {
         props: {
             name: String,
-            limitMax: {
+            limit: {
                 type: Number,
                 default: 99999999
             },

@@ -6,7 +6,7 @@ use App\CatalogsGoodsItem;
 
 use Illuminate\View\View;
 
-class CatalogsGoodsItemsComposer
+class CatalogsGoodsItemsSelectComposer
 {
 	public function compose(View $view)
 	{

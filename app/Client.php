@@ -193,7 +193,7 @@ class Client extends Model
 
 
     // Фильтры
-    public function scopeFilters($query)
+    public function scopeFilter($query)
     {
 
         if (! is_null(request('lost'))) {

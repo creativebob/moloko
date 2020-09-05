@@ -145,7 +145,7 @@ class Goods extends Model
     }
 
     // Фильтры
-    public function scopeFilters($query)
+    public function scopeFilter($query)
     {
         if (request('goods_categories')) {
             $query->whereIn('category_id', request('goods_categories'));

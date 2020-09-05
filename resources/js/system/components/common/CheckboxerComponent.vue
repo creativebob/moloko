@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="checkbox checkboxer">
         <div
             class="checkboxer-wrap"
             :class="name"

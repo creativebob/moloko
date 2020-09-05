@@ -10,6 +10,7 @@ use App\Http\View\Composers\System\AttachmentsComposer;
 use App\Http\View\Composers\System\AuthorsComposer;
 use App\Http\View\Composers\System\CatalogGoodsWithPricesComposer;
 use App\Http\View\Composers\System\CatalogServicesWithPricesComposer;
+use App\Http\View\Composers\System\CatalogsGoodsItemsTreeComposer;
 use App\Http\View\Composers\System\CatalogsGoodsWithFilialsComposer;
 use App\Http\View\Composers\System\ChannelsComposer;
 use App\Http\View\Composers\System\ChargesComposer;
@@ -131,7 +132,7 @@ use App\Http\View\Composers\System\CatalogsServicesItemsComposer;
 use App\Http\View\Composers\System\FilialsForCatalogsServicesComposer;
 
 use App\Http\View\Composers\System\CatalogsGoodsComposer;
-use App\Http\View\Composers\System\CatalogsGoodsItemsComposer;
+use App\Http\View\Composers\System\CatalogsGoodsItemsSelectComposer;
 use App\Http\View\Composers\System\FilialsForCatalogsGoodsComposer;
 
 use App\Http\View\Composers\System\CatalogsTypesComposer;
@@ -348,7 +349,7 @@ class ComposerServiceProvider extends ServiceProvider
         ], CatalogsGoodsComposer::class);
         view()->composer('products.articles.goods.prices.prices', CatalogsGoodsWithFilialsComposer::class);
 
-        view()->composer('products.articles.goods.prices.catalogs_items', CatalogsGoodsItemsComposer::class);
+        view()->composer('products.articles.goods.prices.catalogs_items', CatalogsGoodsItemsSelectComposer::class);
         view()->composer('products.articles.goods.prices.filials', FilialsForCatalogsGoodsComposer::class);
 
         view()->composer('leads.catalogs.catalogs_goods', CatalogGoodsWithPricesComposer::class);
@@ -442,6 +443,9 @@ class ComposerServiceProvider extends ServiceProvider
         // Товары
         view()->composer('products.articles.goods.includes.filters', GoodsCategoriesTreeComposer::class);
         view()->composer('products.articles.goods.includes.filters', AuthorsComposer::class);
+
+        // Прайсы товаров
+        view()->composer('system.pages.catalogs.goods.prices_goods.includes.filters', CatalogsGoodsItemsTreeComposer::class);
 
         // Лиды
         view()->composer('leads.includes.filters', CitiesComposer::class);

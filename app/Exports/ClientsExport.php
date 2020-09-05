@@ -98,7 +98,7 @@ class ClientsExport implements FromCollection, WithTitle, WithHeadings, ShouldAu
             ->moderatorLimit($answer)
             ->authors($answer)
             ->systemItem($answer)
-            ->filters()
+            ->filter()
             ->orderBy('id')
 //            ->get([
 //                'loyalty_id',

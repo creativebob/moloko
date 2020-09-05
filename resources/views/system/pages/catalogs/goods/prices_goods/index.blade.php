@@ -6,7 +6,7 @@
 
 @section('title', $pageInfo->name)
 
-@section('breadcrumbs', Breadcrumbs::render('prices_goods-index', $catalog_goods, $pageInfo))
+@section('breadcrumbs', Breadcrumbs::render('prices_goods-index', $catalogGoods, $pageInfo))
 
 @section('content-count')
 	{{-- Количество элементов --}}
@@ -14,10 +14,7 @@
 @endsection
 
 @section('title-content')
-
-	{{-- Таблица --}}
-	{{-- @include('includes.title-content', ['pageInfo' => $pageInfo, 'class' => App\PricesGoods::class, 'type' => 'table']) --}}
-    @include('system.pages.catalogs.goods.prices_goods.includes.title-prices_goods', ['pageInfo' => $pageInfo, 'class' => $class])
+    @include('system.pages.catalogs.goods.prices_goods.includes.title')
 @endsection
 
 
@@ -243,7 +240,7 @@
 
 <script>
 
-    var catalog_id = '{{ $catalog_id }}';
+    var catalog_id = '{{ $catalogGoods->id }}';
 
     // При клике на создание открываем модалку синхронизации
     $(document).on('click', '.icon-add', function(event) {

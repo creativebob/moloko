@@ -236,50 +236,9 @@ class PricesGoods extends Model
     // Фильтр
     public function scopeFilter($query)
     {
-        if (request('price')) {
-            $price = request('price');
-            if (isset($price['min'])) {
-                $query->where('price', '>=', $price['min']);
-            }
-            if (isset($price['max'])) {
-                $query->where('price', '<=', $price['max']);
-            }
-            $query->orderBy('price');
+        if (request('catalogs_goods_items')) {
+            $query->whereIn('catalogs_goods_item_id', request('catalogs_goods_items'));
         }
-
-        if (request('weight')) {
-            $weight = request('weight');
-            $query->whereHas('goods_public', function ($q) use ($weight) {
-                $q->whereHas('article', function ($q) use ($weight) {
-                    $q->where('weight', '>=', $weight['min'] / 1000)
-                        ->where('weight', '<=', $weight['max'] / 1000);
-                });
-            });
-        }
-
-        if (request('catalogs_goods_item')) {
-            $catalogs_goods_item = request('catalogs_goods_item');
-            $query->where('catalogs_goods_item_id', $catalogs_goods_item);
-        }
-
-        if (request('raws_articles_groups')) {
-            $raws_articles_groups = request('raws_articles_groups');
-//		    dd($raws_articles_groups);
-
-            $query->whereHas('goods_public', function ($q) use ($raws_articles_groups) {
-                $q->whereHas('article', function ($q) use ($raws_articles_groups) {
-                    foreach ($raws_articles_groups as $item) {
-                        $q->whereHas('attachments', function ($q) use ($item) {
-                            $q->whereHas('article', function ($q) use ($item) {
-                                $q->where('articles_group_id', $item);
-                            });
-                        });
-                    }
-                });
-            });
-        }
-
-        return $query;
     }
 
 

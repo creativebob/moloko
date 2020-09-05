@@ -128,7 +128,7 @@ class Estimate extends Model
     }
 
     // Фильтр
-    public function scopeFilters($query)
+    public function scopeFilter($query)
     {
 
         if (request('client_id')) {

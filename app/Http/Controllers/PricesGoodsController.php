@@ -31,11 +31,11 @@ class PricesGoodsController extends Controller
      * Отображение списка ресурсов.
      *
      * @param Request $request
-     * @param $catalog_id
+     * @param $catalogId
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function index(Request $request, $catalog_id)
+    public function index(Request $request, $catalogId)
     {
         // Подключение политики
         $this->authorize(getmethod(__FUNCTION__), $this->class);
@@ -85,6 +85,8 @@ class PricesGoodsController extends Controller
             ->withCount('likes')
             // ->moderatorLimit($answer)
             ->companiesLimit($answer)
+            ->filter()
+
             ->booklistFilter($request)
 
 //            ->whereHas('catalogs_item', function($q) use ($request){
@@ -107,7 +109,7 @@ class PricesGoodsController extends Controller
             // ->systemItem($answer)
             ->where([
                 'archive' => false,
-                'catalogs_goods_id' => $catalog_id,
+                'catalogs_goods_id' => $catalogId,
                 'filial_id' => $filial_id,
             ])
             ->orderBy('sort')
@@ -130,13 +132,13 @@ class PricesGoodsController extends Controller
         // Инфо о странице
         $pageInfo = pageInfo($this->entity_alias);
 
-        $catalog = CatalogsGoods::with([
+        $catalogGoods = CatalogsGoods::with([
             'filials'
         ])
-        ->findOrFail($catalog_id);
+        ->findOrFail($catalogId);
 
-        $pageInfo->title = 'Прайс: ' . $catalog->name;
-        $pageInfo->name = 'Прайс: ' . $catalog->name;
+        $pageInfo->title = 'Прайс: ' . $catalogGoods->name;
+        $pageInfo->name = 'Прайс: ' . $catalogGoods->name;
 
         return view('system.pages.catalogs.goods.prices_goods.index', [
             'prices_goods' => $prices_goods,
@@ -145,10 +147,8 @@ class PricesGoodsController extends Controller
             'entity' => $this->entity_alias,
             'filter' => $filter,
             'nested' => null,
-            'catalog_id' => $catalog_id,
-            'catalog' => $catalog,
             'filial_id' => $filial_id,
-            'catalog_goods' => $catalog
+            'catalogGoods' => $catalogGoods
         ]);
     }
 
@@ -215,7 +215,7 @@ class PricesGoodsController extends Controller
      * Обновление указанного ресурса в хранилище.
      *
      * @param Request $request
-     * @param $catalog_id
+     * @param $catalogId
      * @param $id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -305,11 +305,11 @@ class PricesGoodsController extends Controller
      * Архивирование
      *
      * @param Request $request
-     * @param $catalog_id
+     * @param $catalogId
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function archive(Request $request, $catalog_id, $id)
+    public function archive(Request $request, $catalogId, $id)
     {
         $user = $request->user();
 
@@ -325,7 +325,7 @@ class PricesGoodsController extends Controller
         if ($result) {
             // Переадресовываем на index
             return redirect()->route('prices_goods.index', [
-                'catalog_id' => $catalog_id,
+                'catalogId' => $catalogId,
                 'filial_id' => $filial_id
             ]);
         } else {
@@ -336,7 +336,7 @@ class PricesGoodsController extends Controller
 
     // --------------------------------- Ajax ----------------------------------------
 
-    public function sync(Request $request, $catalog_id)
+    public function sync(Request $request, $catalogId)
     {
 
         $prices_ids = array_keys($request->prices);
@@ -390,12 +390,12 @@ class PricesGoodsController extends Controller
 
         // Переадресовываем на index
         return redirect()->route('prices_goods.index', [
-            'catalog_id' => $catalog_id,
+            'catalogId' => $catalogId,
             'filial_id' => $filial_id
         ]);
     }
 
-    public function ajax_get(Request $request, $catalog_id, $id)
+    public function ajax_get(Request $request, $catalogId, $id)
     {
         $cur_price_goods = PricesGoods::findOrFail($id);
         // dd($price);
@@ -494,14 +494,14 @@ class PricesGoodsController extends Controller
         return response()->json($priceGoods);
     }
 
-    public function ajax_edit(Request $request, $catalog_id)
+    public function ajax_edit(Request $request, $catalogId)
     {
         $price = PricesGoods::findOrFail($request->id);
         // dd($price);
         return view('products.articles.goods.prices.catalogs_item_edit', compact('price'));
     }
 
-    public function ajax_update(Request $request, $catalog_id)
+    public function ajax_update(Request $request, $catalogId)
     {
         $cur_price_goods = PricesGoods::findOrFail($request->id);
 

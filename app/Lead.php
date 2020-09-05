@@ -328,7 +328,7 @@ class Lead extends Model
     // }
 
     // Фильтры
-    public function scopeFilters($query)
+    public function scopeFilter($query)
     {
         if (request('cities')) {
             $query->whereHas('location', function($q) {

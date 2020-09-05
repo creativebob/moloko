@@ -19,12 +19,10 @@
 
             </div>
             <div class="top-bar-right">
-
-                @if (isset($filter))
-                <a class="icon-filter sprite @if ($filter['status'] == 'active') filtration-active @endif"></a>
-                @endif
-
-                <input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />
+                <a class="icon-filter sprite
+                @if(count(request()->input())) filtration-active @endif
+                    "></a>
+{{--                <input class="search-field" type="search" id="search_field" name="search_field" placeholder="Поиск" />--}}
                 {{-- <button type="button" class="icon-search sprite button"></button> --}}
 
             </div>
@@ -40,25 +38,21 @@
         @include('includes.scripts.search-script')
 
         {{-- Блок фильтров --}}
-        @if (isset($filter))
-
-
         <div class="grid-x">
             <div class="small-12 cell filters fieldset-filters" id="filters">
                 <div class="grid-padding-x">
                     <div class="small-12 cell text-right">
-                        {{ link_to(Request::url() . '?filter=disable', 'Сбросить', ['class' => 'small-link']) }}
+                        <a href="{{ route('prices_goods.index', ['catalog_id' => $catalogGoods->id]) }}" class="small-link">Сбросить</a>
                     </div>
                 </div>
                 <div class="grid-padding-x">
                     <div class="small-12 cell">
-                        {{ Form::open(['url' => Request::url(), 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
+                        {{ Form::open(['route' => ['prices_goods.index', $catalogGoods->id], 'data-abide', 'novalidate', 'name'=>'filter', 'method'=>'GET', 'id' => 'filter-form', 'class' => 'grid-x grid-padding-x inputs']) }}
 
-                        @includeIf($pageInfo->entity->view_path.'.filters')
+                        @includeIf('system.pages.catalogs.goods.prices_goods.includes.filters')
 
                         <div class="small-12 cell text-center">
                             {{ Form::submit('Фильтрация', ['class'=>'button']) }}
-                            <input hidden name="filter" value="active">
                         </div>
                         {{ Form::close() }}
                     </div>
@@ -81,7 +75,5 @@
 
 
         </div>
-
-        @endif
     </div>
 </div>

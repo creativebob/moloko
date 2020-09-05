@@ -116,7 +116,7 @@ class GoodsController extends Controller
             $q->filter($request, 'articles_group_id');
         })
 
-        ->filters()
+        ->filter()
         // ->filter($request, 'goods_product_id', 'article')
         ->where('archive', false)
 //        ->select($columns)

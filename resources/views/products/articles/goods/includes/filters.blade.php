@@ -1,11 +1,11 @@
 <div class="small-12 medium-6 large-6 cell checkbox checkboxer">
 	<legend>Фильтры:</legend>
 	<div class="grid-x">
-        <div class="cell small-12 medium-6 checkbox checkboxer">
+        <div class="cell small-12 medium-6">
             <categorier-component
                 name="goods_categories"
                 title="Категория"
-                :categories-tree='@json($goodsCategoriesTree)'
+                :tree='@json($goodsCategoriesTree)'
                 :checkeds='@json(request()->goods_categories)'
             ></categorier-component>
         </div>
@@ -14,7 +14,7 @@
 {{-- 		</div>--}}
  	</div>
 	<div class="grid-x">
-        <div class="cell small-12 medium-6 checkbox checkboxer">
+        <div class="cell small-12 medium-6">
             <checkboxer-component
                 name="authors"
                 title="Автор"

@@ -117,7 +117,7 @@ class ClientController extends Controller
             ->systemItem($answer)
             ->where('orders_count', '>', 0)
 //            ->whereNotNull('first_order_date')
-            ->filters()
+            ->filter()
         // ->filter($request, 'city_id', 'location')
         // ->filter($request, 'sector_id')
             ->booklistFilter($request)

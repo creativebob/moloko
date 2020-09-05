@@ -112,7 +112,7 @@ class LeadController extends Controller
         // ->authors($answer)
         ->whereNull('draft')
         ->systemItem($answer)
-            ->filters()
+            ->filter()
 //        ->filter($request, 'city_id', 'location')
 //        ->filter($request, 'stage_id')
 //        ->filter($request, 'manager_id')

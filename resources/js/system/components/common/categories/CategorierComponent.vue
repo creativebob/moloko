@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="checkbox checkboxer">
         <div
             class="checkboxer-wrap"
             :class="name"
@@ -53,7 +53,7 @@
                 :class="name"
                 :data-name="name"
             >
-                <li v-for="category in categoriesTree">
+                <li v-for="category in tree">
 <!--                    <checkbox-component-->
 <!--                        :name="name"-->
 <!--                        :item="item"-->
@@ -107,7 +107,7 @@
                 type: String,
                 default: null
             },
-            categoriesTree: Array,
+            tree: Array,
             checkeds: Array,
         },
         data() {
@@ -124,7 +124,7 @@
             if (this.checkeds) {
                 var $vm = this,
                     categoriesIds = [];
-                this.categoriesTree.forEach(category => {
+                this.tree.forEach(category => {
                     categoriesIds.push(category.id);
                     $vm.checkChildrens(category, categoriesIds);
                     // console.log(categoriesIds);
