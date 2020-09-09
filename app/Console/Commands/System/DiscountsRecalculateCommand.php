@@ -51,6 +51,9 @@ class DiscountsRecalculateCommand extends Command
         $now = Carbon::createFromFormat('Y-m-d H:i:s', now()->format('Y-m-d H:i') . ':00');
 //        dd($now);
 
+
+
+
         $discounts = Discount::with([
             'entity'
         ])
@@ -64,6 +67,11 @@ class DiscountsRecalculateCommand extends Command
             ])
             ->get();
 //        dd($discounts->count());
+
+        $response = Telegram::sendMessage([
+            'chat_id' => 228265675,
+            'text' => "Попали в перерасчет скидок. Время {$now->format('d.m.Y H:i:s')}, Id: {$companyId}, Скидок: {$discounts->count()}"
+        ]);
 
         $pricesGoodsIds = [];
 
