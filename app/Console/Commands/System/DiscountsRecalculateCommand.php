@@ -158,7 +158,7 @@ class DiscountsRecalculateCommand extends Command
                 $message .= "\r\n";
             }
 
-            $message .= "\r\n\r\n";
+            $message .= "\r\n";
             $message .= "Затронуто позиций: " . count($pricesGoodsIds) .  " шт.";
 
             $destinations = User::whereHas('staff', function ($query) {
