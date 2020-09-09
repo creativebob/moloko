@@ -51,9 +51,6 @@ class DiscountsRecalculateCommand extends Command
         $now = Carbon::createFromFormat('Y-m-d H:i:s', now()->format('Y-m-d H:i') . ':00');
 //        dd($now);
 
-
-
-
         $discounts = Discount::with([
             'entity'
         ])
