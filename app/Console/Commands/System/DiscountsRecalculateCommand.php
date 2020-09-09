@@ -4,11 +4,9 @@ namespace App\Console\Commands\System;
 
 use App\Discount;
 use App\PricesGoods;
-use App\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Telegram;
-use Telegram\Bot\Exceptions\TelegramResponseException;
+use App\Notifications\System\Notifications;
 
 class DiscountsRecalculateCommand extends Command
 {
@@ -161,36 +159,9 @@ class DiscountsRecalculateCommand extends Command
             $message .= "\r\n";
             $message .= "Затронуто позиций: " . count($pricesGoodsIds) .  " шт.";
 
-            $destinations = User::whereHas('staff', function ($query) {
-                $query->whereHas('position', function ($query) {
-                    $query->whereHas('notifications', function ($query) {
-                        $query->where('notification_id', 5);
-                    });
-                });
-            })
-                ->whereNotNull('telegram')
-                ->get([
-                    'telegram'
-                ]);
+            // отправляем мессагу подписанным
+            Notifications::sendNotification(5, $message, $companyId);
 
-            if (isset($destinations)) {
-
-                // Отправляем на каждый telegram
-                foreach ($destinations as $destination) {
-
-                    if (isset($destination->telegram)) {
-
-                        try {
-                            $response = Telegram::sendMessage([
-                                'chat_id' => $destination->telegram,
-                                'text' => $message
-                            ]);
-                        } catch (TelegramResponseException $exception) {
-                            // Юзера нет в боте, не отправляем ему мессагу
-                        }
-                    }
-                }
-            }
         }
     }
 }

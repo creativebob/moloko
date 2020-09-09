@@ -6,6 +6,7 @@ use App\Discount;
 use App\Http\Controllers\System\Traits\Discountable;
 use App\Http\Controllers\System\Traits\Timestampable;
 use App\Http\Requests\System\DiscountRequest;
+use App\Notifications\System\Notifications;
 use Illuminate\Http\Request;
 
 class DiscountController extends Controller
@@ -267,6 +268,20 @@ class DiscountController extends Controller
                 }
                 break;
         }
+
+        // Сообщение
+        $message = "ИЗМЕНЕНИЯ НА СКИДКАХ\r\n\r\n";
+        $message .= "{$discount->name} ";
+        $message .= ($discount->mode == 1) ? "({$discount->percent}%)" : "({$discount->cyrrency} руб.)";
+        $message .= ' ';
+        $message .= ' - снята';
+        $message .= "\r\n";
+
+        $message .= "\r\n";
+        $message .= "Затронуто позиций: " . $pricesGoods->count() .  " шт.";
+
+        // отправляем мессагу подписанным
+        Notifications::sendNotification(5, $message, $discount->company_id);
 
         if ($discount) {
             return redirect()->route('discounts.index');
