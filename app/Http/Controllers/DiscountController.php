@@ -274,7 +274,7 @@ class DiscountController extends Controller
         $message .= "{$discount->name} ";
         $message .= ($discount->mode == 1) ? "({$discount->percent}%)" : "({$discount->cyrrency} руб.)";
         $message .= ' ';
-        $message .= ' - снята';
+        $message .= ' - архивирована';
         $message .= "\r\n";
 
         $message .= "\r\n";
