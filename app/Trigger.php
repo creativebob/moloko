@@ -10,6 +10,8 @@ class Trigger extends Model
     // Включаем кеш
     use Cachable;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'name',
         'description',
