@@ -14,7 +14,7 @@
 <script>
     export default {
         components: {
-            'childrens-component': require('../catalogs/common/CatalogsItemsChildrensComponent.vue')
+            'childrens-component': require('../leads/catalogs/common/CatalogsItemsChildrensComponent.vue')
         },
         name: 'drilldown',
         props: {

@@ -27,8 +27,13 @@ class DiscountRequest extends FormRequest
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
 
+//            'percent' => 'nullable|integer',
+//            'currency' => 'nullable|integer',
+
             'end_date' => 'nullable|string',
             'end_time' => 'nullable|string',
+
+            'is_block' => 'integer|max:1',
 
             'display' => 'nullable|integer|max:1',
             'moderation' => 'nullable|integer|max:1',

@@ -40,7 +40,7 @@ use App\Http\View\Composers\System\NotificationsComposer;
 use App\Http\View\Composers\System\PaymentsTypesComposer;
 use App\Http\View\Composers\System\ProcessesCategoriesWithGroupsComposer;
 use App\Http\View\Composers\System\RelatedComposer;
-use App\Http\View\Composers\System\SettingsComposer;
+use App\Http\View\Composers\System\CompaniesSettingsComposer;
 use App\Http\View\Composers\System\SitesWIthFilialsAndCatalogsComposer;
 use App\Http\View\Composers\System\SourcesComposer;
 use App\Http\View\Composers\System\StagesComposer;
@@ -415,7 +415,7 @@ class ComposerServiceProvider extends ServiceProvider
 
         view()->composer('includes.lists.currencies', CurrenciesComposer::class);
 
-        view()->composer('system.common.includes.settings.list', SettingsComposer::class);
+        view()->composer('system.common.includes.settings.list', CompaniesSettingsComposer::class);
 
         // Сотрудники
         view()->composer('system.pages.hr.employees.includes.title_active', EmployeesDismissalCountComposer::class);

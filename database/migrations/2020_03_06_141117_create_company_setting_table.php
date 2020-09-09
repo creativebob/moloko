@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSettingableTable extends Migration
+class CreateCompanySettingTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateSettingableTable extends Migration
      */
     public function up()
     {
-        Schema::create('settingable', function (Blueprint $table) {
-
-            $table->morphs('entity');
+        Schema::create('company_setting', function (Blueprint $table) {
+            $table->bigInteger('company_id')->nullable()->unsigned()->comment('Id компании');
+            $table->foreign('company_id')->references('id')->on('companies');
 
             $table->bigInteger('setting_id')->nullable()->unsigned()->comment('Id настройки');
             $table->foreign('setting_id')->references('id')->on('settings');
-
         });
     }
 
@@ -30,6 +29,6 @@ class CreateSettingableTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('settingable');
+        Schema::dropIfExists('company_setting');
     }
 }

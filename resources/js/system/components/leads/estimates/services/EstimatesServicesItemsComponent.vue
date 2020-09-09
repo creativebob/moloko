@@ -75,7 +75,7 @@
 <script>
     export default {
         components: {
-            'estimates-services-item-component': require('./EstimatesSErvicesItemComponent.vue')
+            'estimates-services-item-component': require('./EstimatesServicesItemComponent.vue')
         },
         props: {
             items: Array,

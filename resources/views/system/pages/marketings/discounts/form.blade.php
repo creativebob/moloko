@@ -41,37 +41,15 @@
                             </div>
 
                             <div class="cell small-12 medium-6">
-                                <label>Тип скидки
-                                    {!! Form::select('mode', [1 => 'Проценты', 2 => 'Валюта'], $discount->mode, ['required']) !!}
-                                </label>
+                                <discount-mode-component
+                                    :discount="{{ $discount }}"
+                                    :disabled="{{ (($disabled == 'true') ? 'true' : 'false') }}"
+                                ></discount-mode-component>
                             </div>
 
                             <div class="cell small-12 medium-6">
                                 <label>Назначение
                                     {!! Form::select('entity_id', $entities->pluck('name', 'id'), $discount->entity_id, ['required', ($disabled == 'true') ? 'disabled' : '']) !!}
-                                </label>
-                            </div>
-
-                            <div class="small-12 medium-6 cell">
-                                <label>Проценты
-                                    <digit-component
-                                        name="percent"
-                                        :value="{{ $discount->percent ?? 0 }}"
-                                        :limit-max="100"
-                                        :disabled="{{ $disabled }}"
-                                    ></digit-component>
-{{--                                    {!! Form::number('percent', null, ['disabled' => $disabled]) !!}--}}
-                                </label>
-                            </div>
-
-                            <div class="small-12 medium-6 cell">
-                                <label>Валюта
-                                    <digit-component
-                                        name="currency"
-                                        :value="{{ $discount->currency ?? 0 }}"
-                                        :disabled="{{ $disabled }}"
-                                    ></digit-component>
-{{--                                    {!! Form::number('currency', null, ['disabled' => $disabled]) !!}--}}
                                 </label>
                             </div>
 
@@ -126,9 +104,9 @@
 {{--                            </div>--}}
 
 
-                            {!! Form::hidden('is_block', 0) !!}
+                            {!! Form::hidden('is_block', ($disabled == 'true') ? $discount->is_block : 0 ) !!}
                             <div class="small-12 cell checkbox">
-                                {!! Form::checkbox('is_block', 1, $discount->is_block, ['id' => 'checkbox-is_block']) !!}
+                                {!! Form::checkbox('is_block', 1, $discount->is_block, ['id' => 'checkbox-is_block', ($disabled == 'true') ? 'disabled' : '']) !!}
                                 <label for="checkbox-is_block"><span>Запрет на наложение последующих скидок</span></label>
                             </div>
 

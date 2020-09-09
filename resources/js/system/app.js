@@ -29,13 +29,16 @@ Vue.use(Vuex);
 
 // Инпуты
 Vue.component('input-time-component', require('./components/inputs/TimeComponent'));
+Vue.component('input-phone-component', require('./components/inputs/PhoneComponent'));
+
+Vue.component('discount-mode-component', require('./components/discounts/DiscountModeComponent'));
 
 Vue.component('consignment-component', require('./components/consignments/ConsignmentComponent.vue'));
 Vue.component('production-component', require('./components/productions/ProductionComponent.vue'));
 
 // Смета на лиде
-Vue.component('estimate-component', require('./components/estimates/EstimateComponent.vue'));
-Vue.component('payments-component', require('./components/PaymentsComponent.vue'));
+Vue.component('estimate-component', require('./components/leads/estimates/EstimateComponent.vue'));
+Vue.component('payments-component', require('./components/leads/PaymentsComponent.vue'));
 
 Vue.component('checkboxer-component', require('./components/common/CheckboxerComponent'));
 Vue.component('lister-component', require('./components/common/ListerComponent'));
@@ -56,14 +59,14 @@ Vue.component('presets-component', require('./components/products/articles/prese
 // Услуги
 Vue.component('processes-categories-with-groups-component', require('./components/ProcessesCategoriesWithGroupsComponent.vue'));
 
-Vue.component('catalog-goods-component', require('./components/catalogs/goods/CatalogGoodsComponent.vue'));
-Vue.component('catalog-services-component', require('./components/catalogs/services/CatalogServicesComponent.vue'));
+Vue.component('catalog-goods-component', require('./components/leads/catalogs/goods/CatalogGoodsComponent.vue'));
+Vue.component('catalog-services-component', require('./components/leads/catalogs/services/CatalogServicesComponent.vue'));
 Vue.component('lead-badget-component', require('./components/LeadBadgetComponent.vue'));
 Vue.component('select-stocks-component', require('./components/common/selects/SelectStocksComponent.vue'));
 Vue.component('goods-lister-component', require('./components/leads/GoodsListerComponent'));
 
 // Скидки
-Vue.component('discounts-component', require('./components/discounts/DiscountsComponent'));
+Vue.component('discounts-component', require('./components/common/discounts/DiscountsComponent'));
 
 Vue.component('photo-upload-component', require('./components/PhotoUploadComponent.vue'));
 Vue.component('metrics-categories-component', require('./components/metrics/categories/MetricsCategoriesComponent'));
@@ -124,6 +127,7 @@ Vue.prototype.$pickmeup = window.pickmeup;
 
 // Vuex хранилище
 import store from './store/index.js';
+// window.store = store;
 
 const app = new Vue({
     el: '#app',

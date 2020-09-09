@@ -76,7 +76,7 @@
     };
 
 
-    $('#port-autofind').hide();
+    // $('#port-autofind').hide();
 
 });
 

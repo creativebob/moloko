@@ -7,19 +7,12 @@
                 <digit-component
                     :value="curCount"
                     @change="setCount"
-                    :blur="true"
                     @blur="changeCount = false"
-                    :enter="true"
                     @enter="updateCount"
                     :decimal-place="0"
                     ref="inputComponent"
+                    v-focus
                 ></digit-component>
-                <!--            <input-->
-                <!--                @keydown.enter.prevent="updateItemCount"-->
-                <!--                type="number"-->
-                <!--                v-focus-->
-                <!--                @focusout="canChangeCount = false"-->
-                <!--            >-->
             </template>
             <template
                 v-else
@@ -41,7 +34,7 @@
 <script>
     export default {
         components: {
-            'digit-component': require('../../inputs/DigitComponent')
+            'digit-component': require('../../../inputs/DigitComponent')
         },
         props: {
             item: Object,
@@ -64,26 +57,47 @@
             setCount(value) {
                 this.curCount = value;
             },
-            updateCount() {
-                axios
-                    .patch('/admin/estimates_goods_items/' + this.item.id, {
-                        count: parseInt(this.curCount),
-                    })
-                    .then(response => {
-                        this.$store.commit('UPDATE_GOODS_ITEM', response.data);
-                        this.curCount = parseInt(response.data.count);
-                        this.$emit('update', this.curCount);
-                        this.changeCount = false;
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    });
+            async updateCount() {
+                try {
+                    const {data} = await axios
+                        .patch('/admin/estimates_goods_items/' + this.item.id, {
+                            count: parseInt(this.curCount),
+                        });
+                    this.$store.commit('UPDATE_GOODS_ITEM', data);
+                    this.curCount = parseInt(data.count);
+                    this.$emit('update', this.curCount);
+                    this.changeCount = false;
+                } catch(error) {
+                    console.log(error)
+                }
             },
+            // updateCount() {
+            //     axios
+            //         .patch('/admin/estimates_goods_items/' + this.item.id, {
+            //             count: parseInt(this.curCount),
+            //         })
+            //         .then(response => {
+            //             this.$store.commit('UPDATE_GOODS_ITEM', response.data);
+            //             this.curCount = parseInt(response.data.count);
+            //             this.$emit('update', this.curCount);
+            //             this.changeCount = false;
+            //         })
+            //         .catch(error => {
+            //             console.log(error)
+            //         });
+            // },
             changeValue(value) {
                 this.item.count = value;
                 this.curCount = value;
                 this.$refs.inputComponent.update(value);
             },
+        },
+        directives: {
+            focus: {
+                inserted: function (el) {
+                    el.focus()
+                }
+            }
         },
         filters: {
             decimalPlaces(value) {

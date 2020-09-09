@@ -2,10 +2,10 @@
 
 use Illuminate\Database\Seeder;
 
-use App\Setting;
-use App\SettingsCategory;
+use App\CompaniesSetting;
+use App\CompaniesSettingsCategory;
 
-class SettingsTableSeeder extends Seeder
+class CompaniesSettingsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,9 +14,9 @@ class SettingsTableSeeder extends Seeder
      */
     public function run()
     {
-        $settingsCategories = SettingsCategory::get();
+        $settingsCategories = CompaniesSettingsCategory::get();
 
-        Setting::insert([
+        CompaniesSetting::insert([
         	[
                 'name' => 'Продажа со склада',
                 'alias' => 'sale-from-stock',
@@ -31,6 +31,16 @@ class SettingsTableSeeder extends Seeder
                 'name' => 'Продажа под производство',
                 'alias' => 'sale-for-production',
                 'category_id' => $settingsCategories->firstWhere('alias', 'sales')->id
+            ],
+            [
+                'name' => 'Показатели клиетской базы',
+                'alias' => 'clients_indicators',
+                'category_id' => $settingsCategories->firstWhere('alias', 'cron')->id
+            ],
+            [
+                'name' => 'Перерасчет скидок',
+                'alias' => 'discounts',
+                'category_id' => $settingsCategories->firstWhere('alias', 'cron')->id
             ],
         ]);
     }

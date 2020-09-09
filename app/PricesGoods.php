@@ -209,7 +209,7 @@ class PricesGoods extends Model
             ->where('archive', false)
             ->where('begined_at', '<=', now())
             ->where(function ($q) {
-                $q->where('ended_at', '>=', now())
+                $q->where('ended_at', '>', now())
                     ->orWhereNull('ended_at');
             })
             ->withPivot([

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSettingsTable extends Migration
+class CreateCompaniesSettingsCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class CreateSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('settings', function (Blueprint $table) {
+        Schema::create('companies_settings_categories', function (Blueprint $table) {
             $table->bigIncrements('id');
 
             $table->string('name')->index()->comment('Название');
-            $table->string('alias')->index()->comment('Алиас');
+            $table->string('slug')->index()->nullable()->comment('Слаг');
+            $table->integer('level')->nullable()->unsigned()->comment('Уровень вложенности');
 
-            $table->bigInteger('category_id')->unsigned()->nullable()->comment('Id категории');
-            $table->foreign('category_id')->references('id')->on('settings_categories');
+            $table->string('alias')->index()->comment('Алиас');
 
         });
     }
@@ -32,6 +32,6 @@ class CreateSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('settings');
+        Schema::dropIfExists('companies_settings_categories');
     }
 }

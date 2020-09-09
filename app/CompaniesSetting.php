@@ -26,7 +26,7 @@ use GeneaLabs\LaravelModelCaching\Traits\Cachable;
 use App\Scopes\Filters\Filter;
 use App\Scopes\Filters\BooklistFilter;
 
-class Setting extends Model
+class CompaniesSetting extends Model
 {
     // Включаем кеш
     use Cachable;

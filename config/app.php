@@ -264,10 +264,15 @@ return [
     // Показатели по клиентской базе
     'clients_indicators' => env('CLIENTS_INDICATORS', false),
 
+    // Перерасчет скидок
+    'discounts' => env('DISCOUNTS', false),
+
     // Парсер лидов для РХ
     'roll_house_parser' => env('ROLL_HOUSE_PARSER', false),
 
     // Мультидоменность (для РХ)
     'multidomains' => env('MULTI_DOMAINS', false),
+
+
 
 ];

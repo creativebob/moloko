@@ -2,15 +2,15 @@
 
 namespace App\Http\View\Composers\System;
 
-use App\Setting;
+use App\CompaniesSetting;
 
 use Illuminate\View\View;
 
-class SettingsComposer
+class CompaniesSettingsComposer
 {
 	public function compose(View $view)
 	{
-        $settings = Setting::get();
+        $settings = CompaniesSetting::get();
 
 
         return $view->with(compact('settings'));

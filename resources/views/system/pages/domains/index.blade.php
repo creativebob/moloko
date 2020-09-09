@@ -65,9 +65,9 @@
                     <td class="td-domain">
 
                         @can('update', $domain)
-                            <a href="{{ route('domains.edit', $domain->id) }}">{{ idn_to_utf8($domain->domain) }}</a>
+                            <a href="{{ route('domains.edit', $domain->id) }}">{{ idn_to_utf8($domain->domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46) }}</a>
                             @else
-                            {{ idn_to_utf8($domain->domain) }}
+                            {{ idn_to_utf8($domain->domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46) }}
                         @endcan
 
                     </td>

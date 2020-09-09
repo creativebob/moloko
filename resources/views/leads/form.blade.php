@@ -18,8 +18,24 @@
             <div class="small-12 large-shrink cell margin-left-15">
                 <div class="grid-x grid-padding-x lead-contacts-block">
                     <div class="large-shrink cell">
+{{--                        <input-phone-component--}}
+{{--                            @isset($lead->main_phone->phone)--}}
+{{--                                :value="{{ $lead->main_phone->phone }}"--}}
+{{--                                :readonly="true"--}}
+{{--                            @else--}}
+{{--                                :autofocus="true"--}}
+{{--                            @endisset--}}
+{{--                        ></input-phone-component>--}}
                         <label>Телефон
-                            {{ Form::text('main_phone', isset($lead->main_phone->phone) ? $lead->main_phone->phone : null, ['class'=>'phone-field', 'maxlength'=>'17', 'autocomplete'=>'off', 'pattern'=>'8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}', 'id'=>'phone', $autofocus, $readonly]) }}
+                            {{ Form::text('main_phone', optional($lead->main_phone)->phone, [
+                                'class' => 'phone-field',
+                                'maxlength' => '17',
+                                'autocomplete' => 'off',
+                                'pattern' => '8 \([0-9]{3}\) [0-9]{3}-[0-9]{2}-[0-9]{2}',
+                                'id' => 'phone',
+                                isset($lead->main_phone->phone) ? 'readonly' : '',
+                                isset($lead->main_phone->phone) ? '' : 'autofocus'
+                            ]) }}
                             <span class="form-error">Укажите номер</span>
                         </label>
                     </div>
@@ -123,10 +139,11 @@
                                 </div>
 
                                 @if($lead->client)
-                                <span>Клиент: <a href="/admin/clients/{{$lead->client->id}}/edit">{{ $lead->client->clientable->name ?? '' }}</a></span><br>
+                                    @if ($lead->client->orders_count > 0)
+                                        <span>Клиент: <a href="{{ route('clients.edit', $lead->client_id) }}">{{ $lead->client->clientable->name ?? '' }}</a></span><br>
+                                    @endif
 
-                                <span>Лояльность: {{ $lead->client->loyalty->name ?? '' }}</span>
-
+                                    <span>Лояльность: {{ $lead->client->loyalty->name ?? '' }}</span>
                                 @else
 
                                 {{-- Подключаем клиентов --}}

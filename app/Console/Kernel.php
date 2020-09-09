@@ -2,8 +2,10 @@
 
 namespace App\Console;
 
+use App\Company;
 use App\Console\Commands\System\ClientsIndicatorsDay;
 use App\Console\Commands\System\ClientsIndicatorsCommand;
+use App\Console\Commands\System\DiscountsRecalculateCommand;
 use App\Console\Commands\System\Parsers\RollHouseCommand;
 use App\Console\Commands\System\TestCommand;
 use Illuminate\Console\Scheduling\Schedule;
@@ -41,9 +43,46 @@ class Kernel extends ConsoleKernel
     {
         // Тестовая команда
 //        $schedule->command(TestCommand::class)
-//            ->everyMinute()
-//            ->timezone('Asia/Irkutsk');
+//            ->everyMinute();
 
+        $companies = Company::with([
+            'settings'
+        ])
+            ->has('settings')
+            ->get();
+
+        if ($companies->isNotEmpty()) {
+            foreach ($companies as $company) {
+                foreach ($company->settings as $setting) {
+                    switch ($setting->alias) {
+
+                        // Показатели клиентской базы
+//                        case 'clients_indicators':
+//                            // Ежедневные показатели клиентской базы
+//                            $schedule->command(ClientsIndicatorsDay::class, $companyId = $company->id)
+//                                ->dailyAt('03:00');
+//
+//                            // Ежемесячные показатели клиентской базы
+//                            $schedule->command(ClientsIndicatorsCommand::class)
+//                                ->monthlyOn(1, '04:00');
+//                            break;
+
+                        // Скидки
+                        case 'discounts':
+                            // Перерасчет скидок
+                            $schedule->command(DiscountsRecalculateCommand::class, [
+                                    'companyId' => $company->id
+                                ])
+                                ->everyMinute();
+                            break;
+
+                    }
+                }
+            }
+        }
+
+
+        // Показатели клиентской базы
         if (config('app.clients_indicators')) {
             // Ежедневные показатели клиентской базы
             $schedule->command(ClientsIndicatorsDay::class)
@@ -53,6 +92,13 @@ class Kernel extends ConsoleKernel
             $schedule->command(ClientsIndicatorsCommand::class)
                 ->monthlyOn(1, '04:00');
         }
+//
+//        // Скидки
+//        if (config('app.discounts')) {
+//            // Перерасчет скидок
+//            $schedule->command(DiscountsCommand::class)
+//                ->everyMinute();
+//        }
 
         if (config('app.roll_house_parser')) {
             // Парсер лидов для РХ

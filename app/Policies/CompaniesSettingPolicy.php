@@ -3,12 +3,12 @@
 namespace App\Policies;
 
 use App\User;
-use App\Setting as Model;
+use App\CompaniesSetting as Model;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Auth;
 use App\Policies\Traits\PoliticTrait;
 
-class SettingPolicy
+class CompaniesSettingPolicy
 {
     use HandlesAuthorization;
     use PoliticTrait;

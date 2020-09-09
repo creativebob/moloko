@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Setting;
+use App\CompaniesSetting;
 use Illuminate\Http\Request;
 
 // Подрубаем трейт перезаписи сессии
@@ -53,7 +53,7 @@ class SettingController extends Controller
         $user_id = hideGod($user);
 
         // Пишем в базу
-        $setting = new Setting;
+        $setting = new CompaniesSetting;
         $setting->company_id = $company_id;
         $setting->author_id = $user_id;
 
@@ -81,10 +81,10 @@ class SettingController extends Controller
     /**
      * Отображение указанного ресурса.
      *
-     * @param  \App\Setting  $setting
+     * @param  \App\CompaniesSetting  $setting
      * @return \Illuminate\Http\Response
      */
-    public function show(Setting $setting)
+    public function show(CompaniesSetting $setting)
     {
         //
     }
@@ -92,10 +92,10 @@ class SettingController extends Controller
     /**
      * Показать форму для редактирования указанного ресурса.
      *
-     * @param  \App\Setting  $setting
+     * @param  \App\CompaniesSetting  $setting
      * @return \Illuminate\Http\Response
      */
-    public function edit(Setting $setting)
+    public function edit(CompaniesSetting $setting)
     {
         //
     }
@@ -104,10 +104,10 @@ class SettingController extends Controller
      * Обновление указанного ресурса в хранилище.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Setting  $setting
+     * @param  \App\CompaniesSetting  $setting
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Setting $setting)
+    public function update(Request $request, CompaniesSetting $setting)
     {
         //
     }
@@ -115,10 +115,10 @@ class SettingController extends Controller
     /**
      * Удаление указанного ресурса из хранилища.
      *
-     * @param  \App\Setting  $setting
+     * @param  \App\CompaniesSetting  $setting
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Setting $setting)
+    public function destroy(CompaniesSetting $setting)
     {
         //
     }
@@ -147,7 +147,7 @@ class SettingController extends Controller
         } else {
 
             // Пишем в базу
-            $setting = new Setting;
+            $setting = new CompaniesSetting;
             $setting->company_id = $company_id;
             $setting->author_id = $user_id;
 

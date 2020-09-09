@@ -29,11 +29,8 @@
                 v-if="change"
                 :value="priceGoods.price"
                 @change="changePrice"
-                :enter="true"
                 @enter="updateItem"
-                :blur="true"
                 @blur="change = false"
-                :focus="true"
             ></digit-component>
             <span
                 v-else

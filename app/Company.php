@@ -423,7 +423,7 @@ class Company extends Model
     // Настройки
     public function settings()
     {
-        return $this->morphToMany(Setting::class, 'entity', 'settingable');
+        return $this->belongsToMany(CompaniesSetting::class);
     }
 
     public function domain()

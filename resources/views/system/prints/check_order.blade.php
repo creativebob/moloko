@@ -13,7 +13,7 @@
                 <div class="cell auto contact-info">
                     <span class="company-phone">{{ decorPhone($lead->filial->main_phone->phone) }}</span><br>
                     @isset($domain)
-                        <span class="company-site">{{ idn_to_utf8($domain->domain) }}</span>
+                        <span class="company-site">{{ idn_to_utf8($domain->domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46) }}</span>
                     @endisset
 {{--                    <span class="company-site">{{ $lead->filial->name }}</span>--}}
                 </div>
@@ -93,7 +93,7 @@
                 <div class="cell auto contact-info">
                     <span class="company-phone">{{ decorPhone($lead->filial->main_phone->phone) }}</span><br>
                     @isset($domain)
-                        <span class="company-site">{{ idn_to_utf8($domain->domain) }}</span>
+                        <span class="company-site">{{ idn_to_utf8($domain->domain, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46) }}</span>
                     @endisset
 {{--                    <span class="company-site">{{ $lead->filial->name }}</span>--}}
                 </div>

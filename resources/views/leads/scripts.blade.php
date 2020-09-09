@@ -1,5 +1,4 @@
-<script type="application/javascript">
-
+<script>
     $(document).ready(function () {
 
         $('.view-list').each(function(index) {

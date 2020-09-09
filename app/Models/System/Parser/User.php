@@ -408,7 +408,7 @@ class User extends Authenticatable
     // Настройки
     public function settings()
     {
-        $result = $this->hasMany('App\Setting');
+        $result = $this->hasMany('App\CompaniesSetting');
         return $result;
     }
 

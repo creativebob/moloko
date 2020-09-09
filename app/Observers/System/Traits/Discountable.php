@@ -61,6 +61,7 @@ trait Discountable
                 $priceGoods->total_price_discount = $priceGoods->price;
             }
 
+
 //            dd($break);
 
             if ($break) {
@@ -98,7 +99,7 @@ trait Discountable
                         $priceGoods->total_estimate_discount = $priceGoods->total_catalogs_item_discount;
                     } else {
                         $discountEstimate = Discount::where([
-                            'company_id' => auth()->user()->company_id,
+                            'company_id' => $priceGoods->company_id,
                             'archive' => false
                         ])
                             ->whereHas('entity', function ($q) {
@@ -106,7 +107,7 @@ trait Discountable
                             })
                             ->where('begined_at', '<=', now())
                             ->where(function ($q) {
-                                $q->where('ended_at', '>=', now())
+                                $q->where('ended_at', '>', now())
                                     ->orWhereNull('ended_at');
                             })
                             ->first();

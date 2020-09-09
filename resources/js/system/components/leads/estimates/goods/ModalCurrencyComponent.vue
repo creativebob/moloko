@@ -73,7 +73,7 @@
                                             :value="discountPercent"
                                             @change="changeDiscountPercent"
                                             :disabled="isRegistered"
-                                            :limit-max="100"
+                                            :limit="100"
                                             ref="discountPercentComponent"
                                         ></digit-component>
                                     </label>
@@ -85,7 +85,7 @@
                                             :value="discountCurrency"
                                             @change="changeDiscountCurrency"
                                             :disabled="isRegistered"
-                                            :limit-max="item.price"
+                                            :limit="item.price"
                                             ref="discountCurrencyComponent"
                                         ></digit-component>
                                     </label>
@@ -146,7 +146,7 @@
 <script>
     export default {
         components: {
-            'digit-component': require('../../inputs/DigitComponent')
+            'digit-component': require('../../../inputs/DigitComponent')
         },
         props: {
             item: Object,

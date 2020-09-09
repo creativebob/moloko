@@ -164,6 +164,20 @@ class UpdateController extends Controller
         ]);
         echo "Обновлен тег виджета нагружки отдела продаж<br><br>";
 
+        $estimatesEntity = Entity::where('alias', 'estimates')
+        ->first();
+        $estimatesEntity->update([
+            'name' => 'Клиентские заказы'
+        ]);
+        echo "Обновлено имя сущности [Сметы] в [Клиентские заказы]<br><br>";
+
+        $pricesGoodsEntity = Entity::where('alias', 'prices_goods')
+            ->first();
+        $pricesGoodsEntity->update([
+            'name' => 'Позиции товара в прайсе'
+        ]);
+        echo "Обновлено имя сущности [Прайсы товаров] в [Позиции товара в прайсе]<br><br>";
+
         Widget::insert([
             'name' => 'Показатели клиентской базы',
             'description' => 'Показатели клиентской базы',

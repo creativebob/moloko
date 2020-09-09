@@ -53,16 +53,16 @@ trait Commonable
      * @param  $user
      * @return int
      */
-    function getUserId($user){
-
-        // Если пользователь не авторизован, например отправка заказа с сайта
-        if (empty($user)) {
-            $user_id = 1;
-        } else {
+    function getUserId($user = null)
+    {
+        if ($user) {
             // Если бог, то ставим автором робота
-            $user_id = $user->god == 1 ? 1 : $user->id;
+            $userId = $user->god == 1 ? 1 : $user->id;
+        } else {
+            // Если пользователь не авторизован, например cron
+            $userId = 1;
         }
 
-        return $user_id;
+        return $userId;
     }
 }

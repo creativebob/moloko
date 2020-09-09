@@ -15,7 +15,7 @@ use App\Booklist;
 use App\List_item;
 use App\Position;
 use App\Challenge;
-use App\Setting;
+use App\CompaniesSetting;
 
 
 // Модели которые отвечают за работу с правами + политики

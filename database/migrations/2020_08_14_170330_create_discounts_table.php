@@ -23,9 +23,9 @@ class CreateDiscountsTable extends Migration
             $table->decimal('currency', 10,2)->default(0)->comment('Сумма скидки');
 
             $table->tinyInteger('mode')->unsigned()->default(1)->comment('Режим скидки: 1 - проценты, 2 - валюта');
-            
+
             $table->boolean('is_conditions')->unsigned()->default(0)->comment('0 - без условий, 1 -  с условиями');
-    
+
             $table->bigInteger('entity_id')->unsigned()->nullable()->comment('Id сущности');
 //            $table->foreign('entity_id')->references('id')->on('entities');
 
@@ -38,6 +38,7 @@ class CreateDiscountsTable extends Migration
             $table->timestamp('ended_at')->nullable()->comment('Время окончания');
 
             $table->boolean('archive')->default(0)->unsigned()->comment('Архив');
+            $table->boolean('is_actual')->default(0)->comment('Актуальность');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

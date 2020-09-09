@@ -1,5 +1,4 @@
 <template>
-
 	<input
 		:type="type"
 		:name="name"
@@ -56,18 +55,6 @@
                 type: [Number, String],
                 default: 99999999
             },
-            blur: {
-                type: Boolean,
-                default: false
-            },
-            focus: {
-                type: Boolean,
-                default: false
-            },
-            enter: {
-                type: Boolean,
-                default: false
-            },
 
             // TODO - 04.09.20 - Костыль для вкусняшки, в инпутах указан тип digit, Хотя такого не существует
             type: {
@@ -109,9 +96,9 @@
                         this.count = array[0];
                     }
                 }
-                if (this.focus) {
-                    this.$emit('focus', parseFloat(this.count).toFixed(this.decimalPlace));
-                }
+
+                this.$emit('focus', parseFloat(this.count).toFixed(this.decimalPlace));
+
                 if (this.count == 0) {
                     this.count = '';
                 }
@@ -128,9 +115,8 @@
                     let count = this.count.toString() + '.' + zeros;
                     this.count = parseFloat(count).toFixed(this.decimalPlace);
                 }
-                if (this.blur) {
-                    this.$emit('blur', parseFloat(this.count).toFixed(this.decimalPlace));
-                }
+
+                this.$emit('blur', parseFloat(this.count).toFixed(this.decimalPlace));
             },
             // checkInput(event) {
             //     if ( /(([0-9]{1,})?[\.]?[\,]?[0-9]{0,2})/.test( event.target.value )) {
@@ -166,9 +152,7 @@
                 this.$emit('change', parseFloat(value));
             },
             onEnter(value) {
-                if (this.enter) {
-                    this.$emit('enter', parseFloat(value));
-                }
+                this.$emit('enter', parseFloat(value));
             }
 
             // checkAfter(event) {

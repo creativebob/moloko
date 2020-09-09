@@ -70,7 +70,7 @@
 
     export default {
         components: {
-            'items-list-component': require('../common/dropdowns/items/ItemsListComponent'),
+            'items-list-component': require('../dropdowns/items/ItemsListComponent'),
             'discount-component': require('./DiscountComponent'),
             draggable,
         },

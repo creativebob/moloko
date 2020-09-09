@@ -44,8 +44,10 @@ class Entity extends Model
     // use BooklistFilter;
     // use DateIntervalFilter;
 
-    protected $dates = ['deleted_at'];
-    
+    protected $dates = [
+        'deleted_at'
+    ];
+
     protected $fillable = [
         'name',
         'alias',

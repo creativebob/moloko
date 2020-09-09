@@ -37,6 +37,7 @@ class Discount extends Model
         'ended_at',
 
         'archive',
+        'is_actual',
 
         'display',
         'system',

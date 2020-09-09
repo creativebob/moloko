@@ -38,7 +38,7 @@
             <li class="tabs-title"><a data-tabs-target="content-panel-brand" href="#content-panel-brand">Брендирование</a></li>
             <li class="tabs-title"><a data-tabs-target="content-panel-5" href="#content-panel-5">Настройка</a></li>
 
-            @can('index', App\Setting::class)
+            @can('index', App\CompaniesSetting::class)
                 <li class="tabs-title">
                     <a data-tabs-target="tab-settings" href="#tab-settings">Настройки работы</a>
                 </li>
@@ -413,7 +413,7 @@
             </div>
 
             {{-- Настройки продаж --}}
-            @can('index', App\Setting::class)
+            @can('index', App\CompaniesSetting::class)
                 <div class="tabs-panel" id="tab-settings">
                     <div class="grid-x grid-padding-x">
                         <div class="cell small-12">

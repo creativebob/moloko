@@ -122,7 +122,7 @@
             'points-component': require('./price/PointsComponent'),
             'count-component': require('./CountComponent'),
             'modal-component': require('./ModalCurrencyComponent'),
-            'digit-component': require('../../inputs/DigitComponent')
+            'digit-component': require('../../../inputs/DigitComponent')
         },
         props: {
             item: Object,
