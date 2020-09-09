@@ -1,10 +1,10 @@
 <template>
     <fieldset>
-        <legend>Настройки для продажи</legend>
+        <legend>{{ category.name }}</legend>
 
         <ul>
             <li
-                v-for="setting in settings"
+                v-for="setting in category.settings"
                 class="checkbox"
             >
                 <input
@@ -12,7 +12,7 @@
                     name="settings[]"
                     :value="setting.id"
                     :id="'checkbox-setting-' + setting.id"
-                     :checked="checkChecked(setting.id)"
+                    :checked="checkChecked(setting.id)"
                     :disabled="checkDisabled"
                 >
                 <label
@@ -33,7 +33,7 @@
 <script>
 	export default {
 	    props: {
-	        settings: Array,
+	        category: Object,
             item: Object
         },
 		data() {

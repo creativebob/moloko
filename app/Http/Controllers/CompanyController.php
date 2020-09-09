@@ -240,6 +240,7 @@ class CompanyController extends Controller
         ->authors($answer)
         ->systemItem($answer)
         ->findOrFail($id);
+//        dd($company);
 
         $user = $company->director->user;
         // dd($user);

@@ -33,5 +33,8 @@ class CompaniesSettingsCategory extends Model
 
 //    use SoftDeletes;
 
-
+    public function settings()
+    {
+        return $this->hasMany(CompaniesSetting::class, 'category_id');
+    }
 }

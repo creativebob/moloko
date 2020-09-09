@@ -413,15 +413,15 @@
             </div>
 
             {{-- Настройки продаж --}}
-            @can('index', App\CompaniesSetting::class)
+{{--            @can('index', App\CompaniesSetting::class)--}}
                 <div class="tabs-panel" id="tab-settings">
                     <div class="grid-x grid-padding-x">
                         <div class="cell small-12">
-                            @include('system.common.includes.settings.list', ['item' => $company])
+                            @include('companies.settings.list')
                         </div>
                     </div>
                 </div>
-            @endcan
+{{--            @endcan--}}
 
             <!-- Настройки -->
             <div class="tabs-panel" id="content-panel-5">

@@ -91,7 +91,7 @@ Vue.component('sites-component', require('./components/promotions/SitesComponent
 Vue.component('promotion-component', require('./components/promotions/PromotionComponent'));
 Vue.component('promotion-catalog-goods-component', require('./components/promotions/CatalogGoodsComponent'));
 
-Vue.component('settings-stocks-component', require('./components/settings/SettingsStocksComponent'));
+Vue.component('settings-stocks-component', require('./components/companies/settings/SettingsStocksComponent'));
 
 // Vue.component('price-goods-price-component', require('./components/prices_goods/PriceGoodsPriceComponent.vue'));
 

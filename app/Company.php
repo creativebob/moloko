@@ -423,7 +423,7 @@ class Company extends Model
     // Настройки
     public function settings()
     {
-        return $this->belongsToMany(CompaniesSetting::class);
+        return $this->belongsToMany(CompaniesSetting::class, 'company_setting', 'company_id', 'setting_id');
     }
 
     public function domain()
