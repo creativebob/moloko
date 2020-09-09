@@ -45,11 +45,8 @@ class DiscountsRecalculateCommand extends Command
         set_time_limit(0);
 
         $companyId = $this->argument('companyId');
-//        dd($companyId);
-
 //        $now = Carbon::createFromFormat('Y-m-d H:i:s', '2020-09-09 00:00:00');
         $now = Carbon::createFromFormat('Y-m-d H:i:s', now()->format('Y-m-d H:i') . ':00');
-//        dd($now);
 
         $discounts = Discount::with([
             'entity'
@@ -137,6 +134,7 @@ class DiscountsRecalculateCommand extends Command
                 }
             }
         }
+
 //        dd($pricesGoodsIds);
         $pricesGoodsIds = array_unique($pricesGoodsIds);
 //        dd($pricesGoodsIds);
@@ -154,13 +152,13 @@ class DiscountsRecalculateCommand extends Command
             $message = "ИЗМЕНЕНИЯ НА СКИДКАХ\r\n\r\n";
             foreach ($discounts as $discount) {
                 $message .= "{$discount->name} ";
-                $message .=  ($discount->mode == 1) ? "{$discount->percent}%" : "{$discount->cyrrency} руб.";
+                $message .= ($discount->mode == 1) ? "({$discount->percent}%)" : "({$discount->cyrrency} руб.)";
                 $message .= ' ';
                 $message .= ($discount->is_actual == 1) ? ' - установлена' : ' - снята' .
                 $message .= "\r\n";
             }
 
-            $message .= "\r\n";
+            $message .= "\r\n\r\n";
             $message .= "Затронуто позиций: " . count($pricesGoodsIds) .  " шт.";
 
             $destinations = User::whereHas('staff', function ($query) {
