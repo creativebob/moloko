@@ -72,7 +72,7 @@ class Kernel extends ConsoleKernel
                         case 'discounts':
                             // Перерасчет скидок
                             $schedule->command(DiscountsRecalculateCommand::class, [
-                                    'companyId' => $company->id
+                                    $company->id
                                 ])
                                 ->everyMinute();
                             break;
