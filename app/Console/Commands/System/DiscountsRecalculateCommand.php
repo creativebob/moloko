@@ -65,11 +65,6 @@ class DiscountsRecalculateCommand extends Command
             ->get();
 //        dd($discounts->count());
 
-        $response = Telegram::sendMessage([
-            'chat_id' => 228265675,
-            'text' => "Попали в перерасчет скидок. Время {$now->format('d.m.Y H:i:s')}, Id: {$companyId}, Скидок: {$discounts->count()}"
-        ]);
-
         $pricesGoodsIds = [];
 
         foreach ($discounts as $discount) {
@@ -154,11 +149,18 @@ class DiscountsRecalculateCommand extends Command
         }
 
         if ($discounts->isNotEmpty()) {
+            $discounts = Discount::find($discounts->pluck('id')->toArray());
             // Сообщение
-            $message = "Изменены скидки:\r\n";
+            $message = "ИЗМЕНЕНИЯ НА СКИДКАХ\r\n\r\n";
             foreach ($discounts as $discount) {
-                $message .= $discount->name . ' ' . ($discount->mode == 1) ? "{$discount->percent}%" : "{$discount->cyrrency} руб." . ($discount->is_actual == 1) ? ' - установлена' : ' - снята' . "\r\n";
+                $message .= "{$discount->name} ";
+                $message .=  ($discount->mode == 1) ? "{$discount->percent}%" : "{$discount->cyrrency} руб.";
+                $message .= ' ';
+                $message .= ($discount->is_actual == 1) ? ' - установлена' : ' - снята' .
+                $message .= "\r\n";
             }
+
+            $message .= "\r\n";
             $message .= "Затронуто позиций: " . count($pricesGoodsIds) .  " шт.";
 
             $destinations = User::whereHas('staff', function ($query) {
