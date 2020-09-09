@@ -33,7 +33,7 @@ class CompaniesSettingsTableSeeder extends Seeder
                 'category_id' => $settingsCategories->firstWhere('alias', 'sales')->id
             ],
             [
-                'name' => 'Показатели клиетской базы',
+                'name' => 'Показатели клиентской базы',
                 'alias' => 'clients_indicators',
                 'category_id' => $settingsCategories->firstWhere('alias', 'cron')->id
             ],
