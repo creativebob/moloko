@@ -45,6 +45,7 @@ class UpdateController extends Controller
             'alias' => 'discounts-recalculate',
             'description' => null,
             'entity_id' => $entities->firstWhere('alias', 'discounts')->id,
+            'timestamps' => false
         ]);
 
         $channels = Channel::get();
