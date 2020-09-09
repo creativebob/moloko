@@ -154,7 +154,7 @@ class DiscountsRecalculateCommand extends Command
                 $message .= "{$discount->name} ";
                 $message .= ($discount->mode == 1) ? "({$discount->percent}%)" : "({$discount->cyrrency} руб.)";
                 $message .= ' ';
-                $message .= ($discount->is_actual == 1) ? ' - установлена' : ' - снята' .
+                $message .= ($discount->is_actual == 1) ? ' - установлена' : ' - снята';
                 $message .= "\r\n";
             }
 
