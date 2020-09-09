@@ -148,40 +148,41 @@ class DiscountsRecalculateCommand extends Command
             ]);
         }
 
+        if ($discounts->isNotEmpty()) {
+            // Сообщение
+            $message = "Изменены скидки:\r\n";
+            foreach ($discounts as $discount) {
+                $message .= $discount->name . ' ' . ($discount->mode == 1) ? "{$discount->percent}%" : "{$discount->cyrrency} руб." . ($discount->is_actual == 1) ? ' - установлена' : ' - снята' . "\r\n";
+            }
+            $message .= "Затронуто позиций: " . count($pricesGoodsIds) .  " шт.";
 
-        // Сообщение
-        $message = "Изменены скидки:\r\n";
-        foreach ($discounts as $discount) {
-            $message .= $discount->name . ' ' . ($discount->mode == 1) ? "{$discount->percent}%" : "{$discount->cyrrency} руб." . ($discount->is_actual == 1) ? ' - установлена' : ' - снята' . "\r\n";
-        }
-        $message .= "Затронуто позиций: " . count($pricesGoodsIds) .  " шт.";
-
-        $destinations = User::whereHas('staff', function ($query) {
-            $query->whereHas('position', function ($query) {
-                $query->whereHas('notifications', function ($query) {
-                    $query->where('notification_id', 5);
+            $destinations = User::whereHas('staff', function ($query) {
+                $query->whereHas('position', function ($query) {
+                    $query->whereHas('notifications', function ($query) {
+                        $query->where('notification_id', 5);
+                    });
                 });
-            });
-        })
-            ->whereNotNull('telegram')
-            ->get([
-                'telegram'
-            ]);
+            })
+                ->whereNotNull('telegram')
+                ->get([
+                    'telegram'
+                ]);
 
-        if (isset($destinations)) {
+            if (isset($destinations)) {
 
-            // Отправляем на каждый telegram
-            foreach ($destinations as $destination) {
+                // Отправляем на каждый telegram
+                foreach ($destinations as $destination) {
 
-                if (isset($destination->telegram)) {
+                    if (isset($destination->telegram)) {
 
-                    try {
-                        $response = Telegram::sendMessage([
-                            'chat_id' => $destination->telegram,
-                            'text' => $message
-                        ]);
-                    } catch (TelegramResponseException $exception) {
-                        // Юзера нет в боте, не отправляем ему мессагу
+                        try {
+                            $response = Telegram::sendMessage([
+                                'chat_id' => $destination->telegram,
+                                'text' => $message
+                            ]);
+                        } catch (TelegramResponseException $exception) {
+                            // Юзера нет в боте, не отправляем ему мессагу
+                        }
                     }
                 }
             }
