@@ -229,7 +229,8 @@ class DiscountController extends Controller
 
                 foreach($pricesGoods as $priceGoods) {
                     $priceGoods->update([
-                        'price_discount_id' => null
+                        'is_need_recalculate' => true
+//                        'price_discount_id' => null
                     ]);
                 }
                 break;
@@ -245,7 +246,8 @@ class DiscountController extends Controller
 
                 foreach($pricesGoods as $priceGoods) {
                     $priceGoods->update([
-                        'catalogs_item_discount_id' => null
+                        'is_need_recalculate' => true
+//                        'catalogs_item_discount_id' => null
                     ]);
                 }
                 break;
@@ -259,7 +261,8 @@ class DiscountController extends Controller
 
                 foreach($pricesGoods as $priceGoods) {
                     $priceGoods->update([
-                        'estimate_discount_id' => null
+                        'is_need_recalculate' => true
+//                        'estimate_discount_id' => null
                     ]);
                 }
                 break;

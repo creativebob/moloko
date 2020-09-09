@@ -79,6 +79,7 @@ class PricesService extends Model
         'is_new',
 
         'is_show_price',
+        'is_need_recalculate',
 
         'display',
         'system',

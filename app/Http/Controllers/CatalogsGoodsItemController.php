@@ -241,20 +241,23 @@ class CatalogsGoodsItemController extends Controller
                 if ($discountCatalogsItem) {
                     foreach($catalogsGoodsItem->prices_goods_actual as $priceGoods) {
                         $priceGoods->update([
-                            'catalogs_item_discount_id' => $discountCatalogsItem->id ? $discountCatalogsItem->id : null
+                            'is_need_recalculate' => true
+//                            'catalogs_item_discount_id' => $discountCatalogsItem->id ? $discountCatalogsItem->id : null
                         ]);
                     }
                 } else {
                     foreach($catalogsGoodsItem->prices_goods_actual as $priceGoods) {
                         $priceGoods->update([
-                            'catalogs_item_discount_id' => null
+                            'is_need_recalculate' => true
+//                            'catalogs_item_discount_id' => null
                         ]);
                     }
                 }
             } else {
                 foreach($catalogsGoodsItem->prices_goods_actual as $priceGoods) {
                     $priceGoods->update([
-                        'catalogs_item_discount_id' => null
+                        'is_need_recalculate' => true
+//                        'catalogs_item_discount_id' => null
                     ]);
                 }
             }

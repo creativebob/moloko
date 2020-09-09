@@ -83,6 +83,7 @@ class PricesGoods extends Model
         'is_show_price',
 
         'is_discount',
+        'is_need_recalculate',
 
         'display',
         'system',

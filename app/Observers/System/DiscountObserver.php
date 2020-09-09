@@ -50,7 +50,8 @@ class DiscountObserver
 
         foreach ($pricesGoods as $priceGoods) {
             $priceGoods->update([
-                'estimate_discount_id' => $discount->id
+                'is_need_recalculate' => true
+//                'estimate_discount_id' => $discount->id
             ]);
         }
     }
@@ -102,7 +103,8 @@ class DiscountObserver
 
                     foreach($discount->estimates_prices_goods_actual as $priceGoods) {
                         $priceGoods->update([
-                            'estimate_discount_id' => null
+                            'is_need_recalculate' => true
+//                            'estimate_discount_id' => null
                         ]);
                     }
                     break;

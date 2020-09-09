@@ -39,6 +39,7 @@ class PricesGoodsObserver
     {
         $this->update($priceGoods);
         $this->setDiscountsPriceGoods($priceGoods);
+        $priceGoods->is_need_recalculate = false;
     }
 
     public function deleting(PricesGoods $priceGoods)

@@ -10,6 +10,7 @@ use App\Console\Commands\System\Parsers\RollHouseCommand;
 use App\Console\Commands\System\TestCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Telegram;
 
 class Kernel extends ConsoleKernel
 {
@@ -69,6 +70,19 @@ class Kernel extends ConsoleKernel
 
                         // Скидки
                         case 'discounts':
+
+                            $destinations = [
+//                                293282078,
+                                228265675
+                            ];
+
+                            // Отправляем на каждый telegram
+                            foreach ($destinations as $destination) {
+                                $response = Telegram::sendMessage([
+                                    'chat_id' => $destination,
+                                    'text' => 'Попали в перерасчет скидок'
+                                ]);
+                            }
                             // Перерасчет скидок
                             $schedule->command(DiscountsRecalculateCommand::class, [
                                     'companyId' => $company->id

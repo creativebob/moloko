@@ -3,10 +3,12 @@
 namespace App\Console\Commands\System;
 
 use App\Discount;
-use App\Observers\System\Traits\Discountable;
 use App\PricesGoods;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Telegram;
+use Telegram\Bot\Exceptions\TelegramResponseException;
 
 class DiscountsRecalculateCommand extends Command
 {
@@ -35,8 +37,6 @@ class DiscountsRecalculateCommand extends Command
         parent::__construct();
     }
 
-    use Discountable;
-
     /**
      * Execute the console command.
      */
@@ -47,8 +47,8 @@ class DiscountsRecalculateCommand extends Command
         $companyId = $this->argument('companyId');
 //        dd($companyId);
 
-        $now = Carbon::createFromFormat('Y-m-d H:i:s', '2020-09-09 13:18:00');
-//        $now = Carbon::createFromFormat('Y-m-d H:i:s', now()->format('Y-m-d H:i') . ':00');
+//        $now = Carbon::createFromFormat('Y-m-d H:i:s', '2020-09-09 00:00:00');
+        $now = Carbon::createFromFormat('Y-m-d H:i:s', now()->format('Y-m-d H:i') . ':00');
 //        dd($now);
 
         $discounts = Discount::with([
@@ -90,7 +90,6 @@ class DiscountsRecalculateCommand extends Command
                         ]);
 
                         foreach ($discount->catalogs_goods_items as $catalogsGoodsItem) {
-//                            $pricesGoodsIds += array_values($catalogsGoodsItem->prices_goods_actual->pluck('id')->toArray());
                             $pricesGoodsIds = array_merge(array_values($pricesGoodsIds), array_values($catalogsGoodsItem->prices_goods_actual->pluck('id')->toArray()));
                         }
                         break;
@@ -103,7 +102,6 @@ class DiscountsRecalculateCommand extends Command
                             ->get([
                                 'id'
                             ]);
-//                        $pricesGoodsIds += array_values($pricesGoods->pluck('id')->toArray());
                         $pricesGoodsIds = array_merge(array_values($pricesGoodsIds), array_values($pricesGoods->pluck('id')->toArray()));
                         break;
                 }
@@ -120,7 +118,6 @@ class DiscountsRecalculateCommand extends Command
                         $discount->load([
                             'prices_goods_actual'
                         ]);
-//                        $pricesGoodsIds += array_values($discount->prices_goods_actual->pluck('id')->toArray());
                         $pricesGoodsIds = array_merge(array_values($pricesGoodsIds), array_values($discount->prices_goods_actual->pluck('id')->toArray()));
                         break;
 
@@ -128,7 +125,6 @@ class DiscountsRecalculateCommand extends Command
                         $discount->load([
                             'catalogs_goods_items_prices_goods_actual'
                         ]);
-//                        $pricesGoodsIds += array_values($discount->catalogs_goods_items_prices_goods_actual->pluck('id')->toArray());
                         $pricesGoodsIds = array_merge(array_values($pricesGoodsIds), array_values($discount->catalogs_goods_items_prices_goods_actual->pluck('id')->toArray()));
                         break;
 
@@ -136,21 +132,59 @@ class DiscountsRecalculateCommand extends Command
                         $discount->load([
                             'estimates_prices_goods_actual'
                         ]);
-//                        $pricesGoodsIds += array_values($discount->estimates_prices_goods_actual->pluck('id')->toArray());
                         $pricesGoodsIds = array_merge(array_values($pricesGoodsIds), array_values($discount->estimates_prices_goods_actual->pluck('id')->toArray()));
                         break;
                 }
             }
         }
 //        dd($pricesGoodsIds);
+        $pricesGoodsIds = array_unique($pricesGoodsIds);
+//        dd($pricesGoodsIds);
 
         $pricesGoods = PricesGoods::find($pricesGoodsIds);
         foreach ($pricesGoods as $priceGoods) {
-            $priceGoods = $this->setDiscountsPriceGoods($priceGoods);
-            $priceGoods->save();
-//            $priceGoods->update([
-//                'is_need_recalculate' => true
-//            ]);
+            $priceGoods->update([
+                'is_need_recalculate' => true
+            ]);
+        }
+
+
+        // Сообщение
+        $message = "Изменены скидки:\r\n";
+        foreach ($discounts as $discount) {
+            $message .= $discount->name . ' ' . ($discount->mode == 1) ? "{$discount->percent}%" : "{$discount->cyrrency} руб." . ($discount->is_actual == 1) ? ' - установлена' : ' - снята' . "\r\n";
+        }
+        $message .= "Затронуто позиций: " . count($pricesGoodsIds) .  " шт.";
+
+        $destinations = User::whereHas('staff', function ($query) {
+            $query->whereHas('position', function ($query) {
+                $query->whereHas('notifications', function ($query) {
+                    $query->where('notification_id', 5);
+                });
+            });
+        })
+            ->whereNotNull('telegram')
+            ->get([
+                'telegram'
+            ]);
+
+        if (isset($destinations)) {
+
+            // Отправляем на каждый telegram
+            foreach ($destinations as $destination) {
+
+                if (isset($destination->telegram)) {
+
+                    try {
+                        $response = Telegram::sendMessage([
+                            'chat_id' => $destination->telegram,
+                            'text' => $message
+                        ]);
+                    } catch (TelegramResponseException $exception) {
+                        // Юзера нет в боте, не отправляем ему мессагу
+                    }
+                }
+            }
         }
     }
 }
