@@ -64,6 +64,26 @@ class ParserController extends Controller
     }
 
     /**
+     * Для добавления мне прав на ВК (т.к. у Маши отклдчены права на роли)
+     *
+     * @return string
+     */
+    public function addRole()
+    {
+        $user = User::where('login', 'developer_vk')
+            ->first();
+
+        $user->roles()->attach(2, [
+            'department_id' => 1,
+            'role_id' => 1,
+            'position_id' => 1,
+            'user_id' => $user->id,
+        ]);
+
+        return "developer_vk добавлены права";
+    }
+
+    /**
      * Проставление total прайсам товаров
      *
      * @return string

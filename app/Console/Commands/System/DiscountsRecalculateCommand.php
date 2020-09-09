@@ -47,8 +47,8 @@ class DiscountsRecalculateCommand extends Command
         $companyId = $this->argument('companyId');
 //        dd($companyId);
 
-//        $now = Carbon::createFromFormat('Y-m-d H:i:s', '2020-09-09 13:18:00');
-        $now = Carbon::createFromFormat('Y-m-d H:i:s', now()->format('Y-m-d H:i') . ':00');
+        $now = Carbon::createFromFormat('Y-m-d H:i:s', '2020-09-09 13:18:00');
+//        $now = Carbon::createFromFormat('Y-m-d H:i:s', now()->format('Y-m-d H:i') . ':00');
 //        dd($now);
 
         $discounts = Discount::with([
@@ -80,7 +80,8 @@ class DiscountsRecalculateCommand extends Command
                         $discount->load([
                             'prices_goods'
                         ]);
-                        $pricesGoodsIds += array_values($discount->prices_goods->pluck('id')->toArray());
+//                        $pricesGoodsIds += array_values($discount->prices_goods->pluck('id')->toArray());
+                        $pricesGoodsIds = array_merge(array_values($pricesGoodsIds), array_values($discount->prices_goods->pluck('id')->toArray()));
                         break;
 
                     case ('catalogs_goods_items'):
@@ -89,7 +90,8 @@ class DiscountsRecalculateCommand extends Command
                         ]);
 
                         foreach ($discount->catalogs_goods_items as $catalogsGoodsItem) {
-                            $pricesGoodsIds += array_values($catalogsGoodsItem->prices_goods_actual->pluck('id')->toArray());
+//                            $pricesGoodsIds += array_values($catalogsGoodsItem->prices_goods_actual->pluck('id')->toArray());
+                            $pricesGoodsIds = array_merge(array_values($pricesGoodsIds), array_values($catalogsGoodsItem->prices_goods_actual->pluck('id')->toArray()));
                         }
                         break;
 
@@ -101,7 +103,8 @@ class DiscountsRecalculateCommand extends Command
                             ->get([
                                 'id'
                             ]);
-                        $pricesGoodsIds +=  array_values($pricesGoods->pluck('id')->toArray());
+//                        $pricesGoodsIds += array_values($pricesGoods->pluck('id')->toArray());
+                        $pricesGoodsIds = array_merge(array_values($pricesGoodsIds), array_values($pricesGoods->pluck('id')->toArray()));
                         break;
                 }
             }
@@ -117,22 +120,24 @@ class DiscountsRecalculateCommand extends Command
                         $discount->load([
                             'prices_goods_actual'
                         ]);
-                        $pricesGoodsIds += array_values($discount->prices_goods_actual->pluck('id')->toArray());
+//                        $pricesGoodsIds += array_values($discount->prices_goods_actual->pluck('id')->toArray());
+                        $pricesGoodsIds = array_merge(array_values($pricesGoodsIds), array_values($discount->prices_goods_actual->pluck('id')->toArray()));
                         break;
 
                     case ('catalogs_goods_items'):
                         $discount->load([
                             'catalogs_goods_items_prices_goods_actual'
                         ]);
-                        $pricesGoodsIds += array_values($discount->catalogs_goods_items_prices_goods_actual->pluck('id')->toArray());
+//                        $pricesGoodsIds += array_values($discount->catalogs_goods_items_prices_goods_actual->pluck('id')->toArray());
+                        $pricesGoodsIds = array_merge(array_values($pricesGoodsIds), array_values($discount->catalogs_goods_items_prices_goods_actual->pluck('id')->toArray()));
                         break;
 
                     case('estimates'):
                         $discount->load([
                             'estimates_prices_goods_actual'
                         ]);
-                        $pricesGoodsIds += array_values($discount->estimates_prices_goods_actual->pluck('id')->toArray());
-//                        $pricesGoodsIds = array_merge(array_values($pricesGoodsIds), array_values($discount->estimates_prices_goods_actual->pluck('id')->toArray()));
+//                        $pricesGoodsIds += array_values($discount->estimates_prices_goods_actual->pluck('id')->toArray());
+                        $pricesGoodsIds = array_merge(array_values($pricesGoodsIds), array_values($discount->estimates_prices_goods_actual->pluck('id')->toArray()));
                         break;
                 }
             }
@@ -143,6 +148,9 @@ class DiscountsRecalculateCommand extends Command
         foreach ($pricesGoods as $priceGoods) {
             $priceGoods = $this->setDiscountsPriceGoods($priceGoods);
             $priceGoods->save();
+//            $priceGoods->update([
+//                'is_need_recalculate' => true
+//            ]);
         }
     }
 }

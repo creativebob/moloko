@@ -44,7 +44,7 @@
 
                     @foreach($discounts as $discount)
 
-                        <tr class="item @if($discount->moderation == 1)no-moderation @endif" id="discounts-{{ $discount->id }}" data-name="{{ $discount->name }}">
+                        <tr class="item @if($discount->moderation == 1)no-moderation @endif @if($discount->is_actual == 1)is-actual @endif" id="discounts-{{ $discount->id }}" data-name="{{ $discount->name }}">
                             <td class="td-drop"><div class="sprite icon-drop"></div></td>
                             <td class="td-checkbox checkbox">
 

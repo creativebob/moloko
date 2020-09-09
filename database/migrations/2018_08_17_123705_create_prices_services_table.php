@@ -68,6 +68,7 @@ class CreatePricesServicesTable extends Migration
             $table->boolean('is_new')->default(0)->comment('Новинка');
 
             $table->boolean('is_show_price')->default(0)->comment('Показывать цену');
+            $table->boolean('is_need_recalculate')->default(0)->comment('Требуется перерасчет');
 
             // Общие настройки
             $table->bigInteger('company_id')->unsigned()->nullable()->comment('Id компании');

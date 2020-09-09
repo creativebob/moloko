@@ -211,6 +211,7 @@ class Update210420Tables extends Migration
             $table->decimal('total', 12,2)->default(0)->comment('Итоговая сумма')->after('total_estimate_discount');
 
             $table->boolean('is_show_price')->default(0)->comment('Показывать цену')->after('is_new');
+            $table->boolean('is_need_recalculate')->default(0)->comment('Требуется перерасчет')->after('is_show_price');
         });
 
         Schema::table('prices_services', function (Blueprint $table) {
@@ -238,6 +239,7 @@ class Update210420Tables extends Migration
             $table->decimal('total', 12,2)->default(0)->comment('Итоговая сумма')->after('total_estimate_discount');
 
             $table->boolean('is_show_price')->default(0)->comment('Показывать цену')->after('is_new');
+            $table->boolean('is_need_recalculate')->default(0)->comment('Требуется перерасчет')->after('is_show_price');
         });
 
         Schema::table('pages', function (Blueprint $table) {
@@ -430,6 +432,7 @@ class Update210420Tables extends Migration
                 'total_estimate_discount',
                 'total',
                 'is_show_price',
+                'is_need_recalculate',
             ]);
         });
 
@@ -450,6 +453,7 @@ class Update210420Tables extends Migration
                 'total_estimate_discount',
                 'total',
                 'is_show_price',
+                'is_need_recalculate',
             ]);
         });
 

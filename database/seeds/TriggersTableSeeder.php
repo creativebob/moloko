@@ -41,6 +41,12 @@ class TriggersTableSeeder extends Seeder
                 'description' => null,
                 'entity_id' => null,
             ],
+            [
+                'name' => 'Контроль вкл / выкл скидок',
+                'alias' => 'discounts-recalculate',
+                'description' => null,
+                'entity_id' => $entities->firstWhere('alias', 'discounts')->id,
+            ],
         ]);
     }
 }

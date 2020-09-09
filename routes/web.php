@@ -32,6 +32,7 @@ Route::get('/recache', 'System\CacheController@reCache');
 Route::get('/update', 'System\UpdateController@update');
 Route::get('/updates/vkusnyashka', 'System\UpdateController@update_vkusnyashka');
 Route::get('/updates/add_discounts_entity', 'System\UpdateController@addDiscountsEntity');
+Route::get('/updates/add_discounts_recalculate_notification', 'System\UpdateController@addDiscountsRecalculateNotification');
 
 // Парсеры
 Route::get('/update_parser', 'ParserController@parser');
@@ -40,6 +41,7 @@ Route::get('/parser_rh_goods_metrics', 'ParserController@parserRhGoodsMetrics');
 Route::get('/parsers/130420', 'ParserController@parser_130420');
 Route::get('/parsers/archive_goods', 'ParserController@parserArchiveGoods');
 Route::get('/parsers/prices_goods_total', 'ParserController@parserPricesGoodsTotal');
+Route::get('/parsers/add_role', 'ParserController@addRole');
 
 Route::get('/parsers/test', 'ParserController@test');
 

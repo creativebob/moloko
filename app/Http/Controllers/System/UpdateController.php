@@ -4,15 +4,18 @@ namespace App\Http\Controllers\System;
 
 use App\Action;
 use App\ActionEntity;
+use App\Channel;
 use App\Entity;
 use App\EstimatesGoodsItem;
 use App\Http\Controllers\Controller;
 use App\Menu;
+use App\Notification;
 use App\Page;
 use App\PhotoSetting;
 use App\Position;
 use App\Right;
 use App\Role;
+use App\Trigger;
 use App\User;
 use App\Widget;
 use DB;
@@ -26,6 +29,36 @@ class UpdateController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    /**
+     * Добавление в развернутую систему оповещения о контроле скидок
+     *
+     * @return string
+     */
+    public function addDiscountsRecalculateNotification()
+    {
+        $entities = Entity::get();
+
+        $trigger = Trigger::firstOrCreate([
+            'name' => 'Контроль вкл / выкл скидок',
+            'alias' => 'discounts-recalculate',
+            'description' => null,
+            'entity_id' => $entities->firstWhere('alias', 'discounts')->id,
+        ]);
+
+        $channels = Channel::get();
+        $triggers = Trigger::get();
+
+        $notiification = Notification::firstOrCreate([
+            'name' => 'Контроль вкл / выкл скидок',
+            'channel_id' => $channels->firstWhere('name', 'Telegram')->id,
+            'trigger_id' => $triggers->firstWhere('alias', 'discounts-recalculate')->id,
+        ]);
+
+        $notiification->sites()->attach(1);
+
+        return " Добавлено оповещение о скидках и подключено к системе, так же добавлен триггер";
     }
 
     /**
